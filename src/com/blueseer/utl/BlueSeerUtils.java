@@ -109,6 +109,7 @@ public class BlueSeerUtils {
     
     public static DateFormat mysqlDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     public static DateFormat bsdate = new SimpleDateFormat("yyyy-MM-dd");
+    public static ImageIcon clickchange = new ImageIcon(BlueSeerUtils.class.getResource("/images/change.png")); 
     public static ImageIcon clickflag = new ImageIcon(BlueSeerUtils.class.getResource("/images/flag.png")); 
     public static ImageIcon clickbasket = new ImageIcon(BlueSeerUtils.class.getResource("/images/basket.png")); 
     public static ImageIcon clickfind = new ImageIcon(BlueSeerUtils.class.getResource("/images/find.png")); 
@@ -227,6 +228,46 @@ public class BlueSeerUtils {
         countrydialog.setResizable(false);
         countrydialog.setVisible(true);
         ddcountries.requestFocus();
+    } 
+    
+    public static void callChangeDialog(String x, String y) {
+        
+        String[] keys = new String[]{x,y};
+        JDialog changedialog = new JDialog();
+        changedialog.setTitle("Change Logging...");
+        changedialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        javax.swing.JTextArea ta = new javax.swing.JTextArea();
+        
+        JScrollPane scroll = new JScrollPane(ta);
+        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+
+        
+              
+        ArrayList<change_log> changes = admData.getChangeLog(keys);
+        ta.setText("Change Log:  " + "\n\n");
+        for (change_log cl : changes) {
+            ta.append("TimeStamp: " + cl.chg_ts() + "\n" + "User: " +  cl.chg_userid() + "\n" +  "Change: " +  cl.chg_desc() + "\n\n");
+        }
+        ta.setCaretPosition(0);
+        ta.setEditable(false);
+        
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
+        GridBagConstraints panelGBC = new GridBagConstraints();
+
+        panelGBC.weightx = 1;                    //I want to fill whole panel with JTextArea
+        panelGBC.weighty = 1;                    //so both weights =1
+        panelGBC.fill = GridBagConstraints.BOTH; //and fill is set to BOTH
+        
+        
+        
+        panel.add(scroll, panelGBC);
+        changedialog.add(panel);
+        changedialog.setPreferredSize(new Dimension(400, 300));
+        changedialog.pack();
+        changedialog.setLocationRelativeTo( null );
+        changedialog.setResizable(false);
+        changedialog.setVisible(true);
     } 
     
     
@@ -1362,3 +1403,6 @@ public class BlueSeerUtils {
   
      
 }
+
+
+

@@ -1508,6 +1508,44 @@ public class admData {
          ArrayList<change_log> list = new ArrayList<change_log>();
         change_log r = null;
         String[] m = new String[2];
+        String sql = "select * from change_log where chg_key = ? and chg_class = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+        ps.setString(2, x[1]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new change_log(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new change_log(m, res.getString("chg_id"), 
+                            res.getString("chg_key"),
+                            res.getString("chg_table"),
+                            res.getString("chg_class"),    
+                            res.getString("chg_userid"),
+                            res.getString("chg_desc"),
+                            res.getString("chg_ts"),
+                            res.getString("chg_type"),
+                            res.getString("chg_ref")
+                        );
+                        list.add(r);
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new change_log(m);
+        }
+        return list;
+    }
+    
+    public static ArrayList<change_log> getChangeLogByTable(String[] x) {
+         ArrayList<change_log> list = new ArrayList<change_log>();
+        change_log r = null;
+        String[] m = new String[2];
         String sql = "select * from change_log where chg_key = ? and chg_table = ? ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {

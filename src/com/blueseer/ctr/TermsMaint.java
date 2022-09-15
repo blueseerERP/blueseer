@@ -45,6 +45,7 @@ import static com.blueseer.ctr.cusData.deleteTermsMstr;
 import static com.blueseer.ctr.cusData.getTermsMstr;
 import static com.blueseer.ctr.cusData.getTermsUsage;
 import static com.blueseer.ctr.cusData.updateTermsMstr;
+import static com.blueseer.utl.BlueSeerUtils.callChangeDialog;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import static com.blueseer.utl.BlueSeerUtils.clog;
@@ -614,6 +615,7 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel7 = new javax.swing.JLabel();
         cbmfi = new javax.swing.JCheckBox();
         cbsystemcode = new javax.swing.JCheckBox();
+        btchangelog = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -712,6 +714,13 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
         cbsystemcode.setText("System Code");
         cbsystemcode.setName("cbsyscode"); // NOI18N
 
+        btchangelog.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/change.png"))); // NOI18N
+        btchangelog.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btchangelogActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -732,17 +741,17 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(13, 13, 13)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btchangelog, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnew)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btclear))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbsystemcode)
                             .addComponent(cbmfi)
                             .addComponent(discpercent, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(discduedays, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(duedays, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -752,7 +761,9 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btdelete)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btupdate)))
+                                .addComponent(btupdate))
+                            .addComponent(cbsystemcode)
+                            .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -767,7 +778,8 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnew)
                         .addComponent(btclear))
-                    .addComponent(btlookup))
+                    .addComponent(btlookup)
+                    .addComponent(btchangelog))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -848,9 +860,14 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
         lookUpFrame();
     }//GEN-LAST:event_btlookupActionPerformed
 
+    private void btchangelogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btchangelogActionPerformed
+        callChangeDialog(tbkey.getText(), this.getClass().getSimpleName());
+    }//GEN-LAST:event_btchangelogActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
+    private javax.swing.JButton btchangelog;
     private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btlookup;
