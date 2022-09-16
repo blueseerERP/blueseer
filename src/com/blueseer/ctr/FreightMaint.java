@@ -39,6 +39,7 @@ import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callChangeDialog;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
+import static com.blueseer.utl.BlueSeerUtils.clog;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -371,6 +372,19 @@ public class FreightMaint extends javax.swing.JPanel implements IBlueSeerT {
          initvars(null);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
+        }
+        // change log check
+        if (m[0].equals("0")) {
+            ArrayList<admData.change_log> c = new ArrayList<admData.change_log>();
+            c.add(clog(this.x.frt_code(), 
+                     this.x.getClass().getName(), 
+                     this.getClass().getSimpleName(), 
+                     "deletion", 
+                     "", 
+                     ""));
+            if (! c.isEmpty()) {
+               addChangeLog(c);
+            } 
         }
          return m;
      }

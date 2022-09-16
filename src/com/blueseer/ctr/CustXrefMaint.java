@@ -32,6 +32,8 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.adm.admData.addChangeLog;
+import com.blueseer.adm.admData.change_log;
 import static com.blueseer.ctr.cusData.addCupMstr;
 import com.blueseer.ctr.cusData.cup_mstr;
 import static com.blueseer.ctr.cusData.deleteCupMstr;
@@ -39,11 +41,14 @@ import static com.blueseer.ctr.cusData.getCupMstr;
 import static com.blueseer.ctr.cusData.updateCupMstr;
 import com.blueseer.inv.invData;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.callChangeDialog;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
+import static com.blueseer.utl.BlueSeerUtils.clog;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.logChange;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -409,7 +414,18 @@ public class CustXrefMaint extends javax.swing.JPanel implements IBlueSeerT {
      }
      
     public String[] updateRecord(String[] x) {
-     String[] m = updateCupMstr(createRecord());
+     cup_mstr _x = this.x;
+     cup_mstr _y = createRecord();
+     String[] m = updateCupMstr(_y);
+     
+     // change log check
+     if (m[0].equals("0")) {
+       ArrayList<change_log> c = logChange(tbkey.getText(), this.getClass().getSimpleName(),_x,_y);
+       if (! c.isEmpty()) {
+           addChangeLog(c);
+       } 
+     }
+        
          return m;
      }
      
@@ -421,6 +437,19 @@ public class CustXrefMaint extends javax.swing.JPanel implements IBlueSeerT {
          initvars(null);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
+        }
+        // change log check
+        if (m[0].equals("0")) {
+            ArrayList<change_log> c = new ArrayList<change_log>();
+            c.add(clog(this.x.cup_cust() + "/" + this.x.cup_item(), 
+                     this.x.getClass().getName(), 
+                     this.getClass().getSimpleName(), 
+                     "deletion", 
+                     "", 
+                     ""));
+            if (! c.isEmpty()) {
+               addChangeLog(c);
+            } 
         }
          return m;
      }
@@ -540,6 +569,7 @@ public class CustXrefMaint extends javax.swing.JPanel implements IBlueSeerT {
         btnew = new javax.swing.JButton();
         btclear = new javax.swing.JButton();
         btlookup = new javax.swing.JButton();
+        btchangelog = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -620,6 +650,13 @@ public class CustXrefMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
+        btchangelog.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/change.png"))); // NOI18N
+        btchangelog.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btchangelogActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -646,14 +683,16 @@ public class CustXrefMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addComponent(ddcust, 0, 142, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(13, 13, 13)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btchangelog, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnew)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btclear))
                     .addComponent(ddpart, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(52, Short.MAX_VALUE)
+                .addContainerGap(76, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(btupdate)
@@ -670,14 +709,18 @@ public class CustXrefMaint extends javax.swing.JPanel implements IBlueSeerT {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(19, 19, 19)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnew)
-                        .addComponent(btclear))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel2))
-                    .addComponent(btlookup))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(btchangelog, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnew)
+                            .addComponent(btclear))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2))
+                        .addComponent(btlookup)))
                 .addGap(11, 11, 11)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ddcust, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -754,9 +797,14 @@ public class CustXrefMaint extends javax.swing.JPanel implements IBlueSeerT {
         lookUpFrame();
     }//GEN-LAST:event_btlookupActionPerformed
 
+    private void btchangelogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btchangelogActionPerformed
+        callChangeDialog(tbkey.getText(), this.getClass().getSimpleName());
+    }//GEN-LAST:event_btchangelogActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
+    private javax.swing.JButton btchangelog;
     private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btlookup;
