@@ -650,6 +650,7 @@ public class cusData {
         return r;
     }
     
+    
     public static String[] addCarrierMstr(car_mstr x) {
         String[] m = new String[2];
         String sqlSelect = "select * from car_mstr where car_code = ?";
