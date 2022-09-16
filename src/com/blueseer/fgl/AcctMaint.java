@@ -279,10 +279,7 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
         cbdisplay.setSelected(false);
         
         ddcur.removeAllItems();
-        ArrayList<String> curr = fglData.getCurrlist();
-        for (int i = 0; i < curr.size(); i++) {
-            ddcur.addItem(curr.get(i));
-        }
+        fglData.getCurrlist().stream().forEach((s) -> ddcur.addItem(s));
         ddcur.setSelectedItem(OVData.getDefaultCurrency());
         
        isLoad = false;
