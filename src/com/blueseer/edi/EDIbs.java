@@ -33,6 +33,8 @@ import static bsmf.MainFrame.tags;
 import static com.blueseer.adm.admData.runClient;
 import static com.blueseer.utl.BlueSeerUtils.isParsableToInt;
 import java.io.*;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -46,6 +48,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.stream.Stream;
 
 public class EDIbs {
     
@@ -286,31 +289,29 @@ public static void main(String args[]) throws IOException {
      boolean isMatch = false;
     
      if (! indir.isEmpty() && ! outdir.isEmpty() && ! key.isEmpty()) {
-          
-               File folder = new File(indir);
-               File[] listOfFiles = folder.listFiles();
-               if (listOfFiles.length == 0) {
-                   System.out.println("No files to process");
-                   System.exit(1);
-               }
-              for (int i = 0; i < listOfFiles.length; i++) {
-                  isMatch = false;
-                if (listOfFiles[i].isFile()) {
-               // System.out.println("processing file " + listOfFiles[i].getName());
-                 List<String> fc = Files.readAllLines(Paths.get(listOfFiles[i].getPath()));
-                 for (String x : fc ) {
-                     if (x.contains(key)) {
-                         isMatch = true;
-                         break;
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(FileSystems.getDefault().getPath(indir))) {
+            int f = 0;
+            for (Path path : stream) {
+                isMatch = false;
+                if (! Files.isDirectory(path)) {
+                    f++;
+                    List<String> fc = Files.readAllLines(path);
+                     for (String x : fc ) {
+                         if (x.contains(key)) {
+                             isMatch = true;
+                             break;
+                         }
                      }
-                 }
                  if (isMatch) {
-                     Path newpath = Paths.get(outdir + listOfFiles[i].getName());
-                     Files.copy(Paths.get(listOfFiles[i].getPath()), newpath);
+                     Path newpath = FileSystems.getDefault().getPath(outdir + "/" + path.getFileName());
+                     Files.copy(path, newpath);
                  }
                 }
-              }
-        
+            }
+            if (f == 0) {
+                   System.out.println("No files to process");
+            }
+        }  
     } 
  }
  
@@ -470,6 +471,7 @@ public static void main(String args[]) throws IOException {
                  return name.endsWith(".txt");
              }
          };
+      
       FileFilter byfiletype = new FileFilter() {
              @Override
              public boolean accept(File f) {
