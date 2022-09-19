@@ -32,7 +32,9 @@ import static com.blueseer.ctr.cusData.addUpdateCMCtrl;
 import com.blueseer.ctr.cusData.cm_ctrl;
 import static com.blueseer.ctr.cusData.getCMCtrl;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.IBlueSeerc;
+import static com.blueseer.utl.OVData.deleteUSStates;
 import java.awt.Component;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -232,6 +234,7 @@ public class CustControl extends javax.swing.JPanel implements IBlueSeerc {
         jPanel1 = new javax.swing.JPanel();
         cbautocust = new javax.swing.JCheckBox();
         btupdate = new javax.swing.JButton();
+        btremoveUSStates = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -254,25 +257,38 @@ public class CustControl extends javax.swing.JPanel implements IBlueSeerc {
             }
         });
 
+        btremoveUSStates.setText("Remove US States");
+        btremoveUSStates.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btremoveUSStatesActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btupdate)
-                    .addComponent(cbautocust))
-                .addGap(25, 25, 25))
+                .addComponent(cbautocust)
+                .addGap(73, 73, 73))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btremoveUSStates)
+                    .addComponent(btupdate))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(29, 29, 29)
                 .addComponent(cbautocust, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btupdate)
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                .addComponent(btremoveUSStates)
+                .addContainerGap())
         );
 
         add(jPanel1);
@@ -289,8 +305,17 @@ public class CustControl extends javax.swing.JPanel implements IBlueSeerc {
         // TODO add your handling code here:
     }//GEN-LAST:event_cbautocustActionPerformed
 
+    private void btremoveUSStatesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btremoveUSStatesActionPerformed
+        boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
+        if (proceed) {
+          deleteUSStates(); 
+          bsmf.MainFrame.warn(getMessageTag(1125));
+        }
+    }//GEN-LAST:event_btremoveUSStatesActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btremoveUSStates;
     private javax.swing.JButton btupdate;
     private javax.swing.JCheckBox cbautocust;
     private javax.swing.JPanel jPanel1;

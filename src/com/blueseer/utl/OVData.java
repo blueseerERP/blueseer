@@ -628,7 +628,51 @@ public class OVData {
         }  
            return r; 
        }
-        
+    
+    public static void deleteUSStates() {
+        try {
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                int i = 0;
+                String[] permlist = null;
+
+                ArrayList<String> users = new ArrayList();
+                ArrayList<String> perms = new ArrayList();
+
+                st.executeUpdate("delete from code_mstr where "
+                        + " code_code = " + "'state'"
+                        + " and code_internal = '1' "
+                        + ";");
+
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+    }
+
+    
     public static String addMenuToUser(String menu, String thisuser) {
             String mystring = "";  // 0 = assigned; 1 = already assigned; 2 = error
          try {
