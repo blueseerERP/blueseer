@@ -2234,7 +2234,7 @@ CREATE TABLE IF NOT EXISTS `counter` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `code_mstr` (
   `code_code` varchar(30) NOT NULL  DEFAULT '',
-  `code_key` varchar(30) NOT NULL  DEFAULT '',
+  `code_key` varchar(50) NOT NULL  DEFAULT '',
   `code_value` varchar(50) NOT NULL  DEFAULT '',
   `code_internal` tinyint(1) NOT NULL  DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

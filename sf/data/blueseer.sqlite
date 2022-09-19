@@ -2733,7 +2733,7 @@ CREATE TABLE "counter" (
 );
 CREATE TABLE "code_mstr" (
   "code_code" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "code_key" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "code_key" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
   "code_value" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
   "code_internal" tinyint(1) NOT NULL DEFAULT '0'
 );

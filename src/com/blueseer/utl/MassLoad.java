@@ -620,7 +620,7 @@ public class MassLoad extends javax.swing.JPanel {
     public ArrayList<String> defineGenericCode() {
         ArrayList<String> list = new ArrayList<String>();
         list.add("code_code,s,30,mandatory,unvalidated");
-        list.add("code_key,s,30,mandatory,unvalidated(field dependent)");
+        list.add("code_key,s,50,mandatory,unvalidated(field dependent)");
         list.add("code_value,s,50,optional,unvalidated");
         return list;
     }
@@ -1740,12 +1740,12 @@ public class MassLoad extends javax.swing.JPanel {
         ArrayList<String> list = new ArrayList<String>();
         list.add("cm_code,s,10,mandatory,unvalidated");
         list.add("cm_site,s,10,optional,unvalidated");
-        list.add("cm_name,s,30,optional,unvalidated");
-        list.add("cm_line1,s,30,optional,unvalidated");
-        list.add("cm_line2,s,30,optional,unvalidated");
-        list.add("cm_line3,s,30,optional,unvalidated");
-        list.add("cm_city,s,30,optional,unvalidated");
-        list.add("cm_state,s,2,mandatory,validated");
+        list.add("cm_name,s,50,optional,unvalidated");
+        list.add("cm_line1,s,50,optional,unvalidated");
+        list.add("cm_line2,s,50,optional,unvalidated");
+        list.add("cm_line3,s,50,optional,unvalidated");
+        list.add("cm_city,s,50,optional,unvalidated");
+        list.add("cm_state,s,30,mandatory,validated");
         list.add("cm_zip,s,10,optional,unvalidated");
         list.add("cm_country,s,50,mandatory,validated");
         list.add("cm_group,s,50,optional,unvalidated");
@@ -1777,9 +1777,8 @@ public class MassLoad extends javax.swing.JPanel {
         return list;
     }
     
-    public boolean checkCustMstr(String[] rs, int i) {
+    public boolean checkCustMstr(String[] rs, int i, ArrayList<String> list) {
         boolean proceed = true;
-        ArrayList<String> list = defineCustMstr();
         // first check for correct number of fields
         if (rs.length != list.size()) {
                    tacomments.append("line " + i + " does not have correct number of fields. " + String.valueOf(rs.length) + " ...should have " + String.valueOf(list.size()) + " fields \n" );
@@ -1798,15 +1797,15 @@ public class MassLoad extends javax.swing.JPanel {
                     tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field length too long" + "\n" );
                        proceed = false;
                 }
-                if (ld[1].compareTo("i") == 0 && ! BlueSeerUtils.isParsableToInt(rs[j])) {
+                if (ld[1].compareTo("i") == 0 && ! rs[j].isBlank() &&  ! BlueSeerUtils.isParsableToInt(rs[j])) {
                     tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field must be of type integer" + "\n" );
                        proceed = false;
                 }
-                if (ld[1].compareTo("b") == 0 && ! BlueSeerUtils.isParsableToInt(rs[j])) {
+                if (ld[1].compareTo("b") == 0 && ! rs[j].isBlank() &&   ! BlueSeerUtils.isParsableToInt(rs[j])) {
                     tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " must be integer 1 or 0...(true or false)" + "\n" );
                        proceed = false;
                 }
-                if (ld[1].compareTo("d") == 0 && ! BlueSeerUtils.isParsableToDouble(rs[j])) {
+                if (ld[1].compareTo("d") == 0 && ! rs[j].isBlank() &&  ! BlueSeerUtils.isParsableToDouble(rs[j])) {
                     tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field must be of type double" + "\n" );
                        proceed = false;
                 }
@@ -1848,6 +1847,7 @@ public class MassLoad extends javax.swing.JPanel {
         
             boolean proceed = true;
             boolean temp = true;
+            ArrayList<String> checklist = defineCustMstr();
             ArrayList<String> list = new ArrayList<String>();
             BufferedReader fsr = new BufferedReader(new FileReader(myfile));
             String line = "";
@@ -1860,7 +1860,7 @@ public class MassLoad extends javax.swing.JPanel {
                 } 
                 list.add(line);
                String[] recs = line.split(tbdelimiter.getText().trim(), -1);
-               temp = checkCustMstr(recs, i);
+               temp = checkCustMstr(recs, i, checklist);
                    if (! temp) {
                        proceed = false;
                        m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
@@ -1872,10 +1872,12 @@ public class MassLoad extends javax.swing.JPanel {
                  if (cbignoreheader.isSelected()) {
                     i--; // reduce line count by 1 if ignore header
                    } 
-                   if(! addCustMstrMass(list))
-                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
+                 ArrayList<String> newlist = cleanList(list, checklist, tbdelimiter.getText().trim());
+                   if(! addCustMstrMass(newlist)) {
+                       m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151, String.valueOf(i))};
                    } else {
-                  m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
+                       m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
+                   }
             }
              return m;
             
@@ -1892,7 +1894,7 @@ public class MassLoad extends javax.swing.JPanel {
         list.add("cms_line2,s,50,optional,unvalidated");
         list.add("cms_line3,s,50,optional,unvalidated");
         list.add("cms_city,s,50,optional,unvalidated");
-        list.add("cms_state,s,2,mandatory,validated");
+        list.add("cms_state,s,30,mandatory,validated");
         list.add("cms_zip,s,10,optional,unvalidated");
         list.add("cms_country,s,50,mandatory,validated");
         list.add("cms_plantcode,s,30,optional,unvalidated");
@@ -2591,7 +2593,7 @@ public class MassLoad extends javax.swing.JPanel {
                 list.add(line);
                String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                if (ddtable.getSelectedItem().toString().compareTo("Item Master") == 0) {
-                   temp = checkItemMaster(recs, i, defineShopifyOrderCSV());
+                   temp = checkItemMaster(recs, i, defineItemMaster());
                    if (! temp) {
                        proceed = false;
                    }
@@ -2615,7 +2617,7 @@ public class MassLoad extends javax.swing.JPanel {
                    }
                }
                if (ddtable.getSelectedItem().toString().compareTo("Customer Master") == 0) {
-                   temp = checkCustMstr(recs, i);
+                   temp = checkCustMstr(recs, i, defineCustMstr());
                    if (! temp) {
                        proceed = false;
                    }
