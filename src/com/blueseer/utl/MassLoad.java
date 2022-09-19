@@ -440,17 +440,12 @@ public class MassLoad extends javax.swing.JPanel {
         return list;
     }
     
-    public boolean checkBOMMaster(String[] rs, int i) {
+    public boolean checkBOMMaster(String[] rs, int i, ArrayList<String> list) {
         boolean proceed = true;
-        
-       ArrayList<String> list = defineBOMMaster();
         if (rs.length != list.size()) {
                    tacomments.append("line " + i + " does not have correct number of fields. " + String.valueOf(rs.length) + "\n" );
                    proceed = false;
         }
-        
-       
-        
        
         if (rs.length == list.size()) {
             String[] ld = null;
@@ -461,15 +456,15 @@ public class MassLoad extends javax.swing.JPanel {
                     tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field length too long" + "\n" );
                        proceed = false;
                 }
-                if (ld[1].compareTo("i") == 0 && ! BlueSeerUtils.isParsableToInt(rs[j])) {
-                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field must be of type integer (set 0 if unknown)" + "\n" );
+                if (ld[1].compareTo("i") == 0 && ! rs[j].isBlank() && ! BlueSeerUtils.isParsableToInt(rs[j])) {
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field must be of type integer " + "\n" );
                        proceed = false;
                 }
-                if (ld[1].compareTo("b") == 0 && ! BlueSeerUtils.isParsableToInt(rs[j])) {
+                if (ld[1].compareTo("b") == 0 && ! rs[j].isBlank() && ! BlueSeerUtils.isParsableToInt(rs[j])) {
                     tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " must be integer 1 or 0...(true or false)" + "\n" );
                        proceed = false;
                 }
-                if (ld[1].compareTo("d") == 0 && ! BlueSeerUtils.isParsableToDouble(rs[j])) {
+                if (ld[1].compareTo("d") == 0 && ! rs[j].isBlank() && ! BlueSeerUtils.isParsableToDouble(rs[j])) {
                     tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field must be of type double" + "\n" );
                        proceed = false;
                 }
@@ -492,6 +487,7 @@ public class MassLoad extends javax.swing.JPanel {
         
             boolean proceed = true;
             boolean temp = true;
+            ArrayList<String> checklist = defineBOMMaster();
             ArrayList<String> list = new ArrayList<String>();
             BufferedReader fsr = new BufferedReader(new FileReader(myfile));
             String line = "";
@@ -503,7 +499,7 @@ public class MassLoad extends javax.swing.JPanel {
                 } 
                 list.add(line);
                String[] recs = line.split(tbdelimiter.getText().trim(), -1);
-               temp = checkBOMMaster(recs, i);
+               temp = checkBOMMaster(recs, i, checklist);
                    if (! temp) {
                        proceed = false;
                        m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
@@ -515,7 +511,8 @@ public class MassLoad extends javax.swing.JPanel {
                  if (cbignoreheader.isSelected()) {
                     i--; // reduce line count by 1 if ignore header
                    } 
-                   if(! OVData.addBOMMstrRecord(list, tbdelimiter.getText().trim()))
+                   ArrayList<String> newlist = cleanList(list, checklist, tbdelimiter.getText().trim());
+                   if(! OVData.addBOMMstrRecord(newlist, tbdelimiter.getText().trim()))
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
@@ -1632,9 +1629,9 @@ public class MassLoad extends javax.swing.JPanel {
         return list;
     }
     
-    public boolean checkVendMstr(String[] rs, int i) {
+    public boolean checkVendMstr(String[] rs, int i, ArrayList<String> list) {
         boolean proceed = true;
-        ArrayList<String> list = defineVendMstr();
+        
         // first check for correct number of fields
         if (rs.length != list.size()) {
                    tacomments.append("line " + i + " does not have correct number of fields. " + String.valueOf(rs.length) + " ...should have " + String.valueOf(list.size()) + " fields \n" );
@@ -1653,15 +1650,15 @@ public class MassLoad extends javax.swing.JPanel {
                     tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field length too long" + "\n" );
                        proceed = false;
                 }
-                if (ld[1].compareTo("i") == 0 && ! BlueSeerUtils.isParsableToInt(rs[j])) {
+                if (ld[1].compareTo("i") == 0 && ! rs[j].isBlank() && ! BlueSeerUtils.isParsableToInt(rs[j])) {
                     tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field must be of type integer" + "\n" );
                        proceed = false;
                 }
-                if (ld[1].compareTo("b") == 0 && ! BlueSeerUtils.isParsableToInt(rs[j])) {
+                if (ld[1].compareTo("b") == 0 && ! rs[j].isBlank() && ! BlueSeerUtils.isParsableToInt(rs[j])) {
                     tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " must be integer 1 or 0...(true or false)" + "\n" );
                        proceed = false;
                 }
-                if (ld[1].compareTo("d") == 0 && ! BlueSeerUtils.isParsableToDouble(rs[j])) {
+                if (ld[1].compareTo("d") == 0 && ! rs[j].isBlank() && ! BlueSeerUtils.isParsableToDouble(rs[j])) {
                     tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field must be of type double" + "\n" );
                        proceed = false;
                 }
@@ -1703,6 +1700,7 @@ public class MassLoad extends javax.swing.JPanel {
         
             boolean proceed = true;
             boolean temp = true;
+            ArrayList<String> checklist = defineVendMstr();
             ArrayList<String> list = new ArrayList<String>();
             BufferedReader fsr = new BufferedReader(new FileReader(myfile));
             String line = "";
@@ -1714,7 +1712,7 @@ public class MassLoad extends javax.swing.JPanel {
                 } 
                 list.add(line);
                String[] recs = line.split(tbdelimiter.getText().trim(), -1);
-               temp = checkVendMstr(recs, i);
+               temp = checkVendMstr(recs, i, checklist);
                    if (! temp) {
                        proceed = false;
                        m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
@@ -1726,7 +1724,8 @@ public class MassLoad extends javax.swing.JPanel {
                  if (cbignoreheader.isSelected()) {
                     i--; // reduce line count by 1 if ignore header
                    } 
-                   if(! venData.addVendMstrMass(list))
+                   ArrayList<String> newlist = cleanList(list, checklist, tbdelimiter.getText().trim());
+                   if(! venData.addVendMstrMass(newlist))
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
@@ -1905,9 +1904,9 @@ public class MassLoad extends javax.swing.JPanel {
         return list;
     }
     
-    public boolean checkCustShipToMstr(String[] rs, int i) {
+    public boolean checkCustShipToMstr(String[] rs, int i, ArrayList<String> list) {
         boolean proceed = true;
-        ArrayList<String> list = defineCustShipToMstr();
+        
         // first check for correct number of fields
         if (rs.length != list.size()) {
                    tacomments.append("line " + i + " does not have correct number of fields. " + String.valueOf(rs.length) + " ...should have " + String.valueOf(list.size()) + " fields \n" );
@@ -1925,15 +1924,15 @@ public class MassLoad extends javax.swing.JPanel {
                     tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field length too long" + "\n" );
                        proceed = false;
                 }
-                if (ld[1].compareTo("i") == 0 && ! BlueSeerUtils.isParsableToInt(rs[j])) {
+                if (ld[1].compareTo("i") == 0 && ! rs[j].isBlank() && ! BlueSeerUtils.isParsableToInt(rs[j])) {
                     tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field must be of type integer" + "\n" );
                        proceed = false;
                 }
-                if (ld[1].compareTo("b") == 0 && ! BlueSeerUtils.isParsableToInt(rs[j])) {
+                if (ld[1].compareTo("b") == 0 && ! rs[j].isBlank() && ! BlueSeerUtils.isParsableToInt(rs[j])) {
                     tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " must be integer 1 or 0...(true or false)" + "\n" );
                        proceed = false;
                 }
-                if (ld[1].compareTo("d") == 0 && ! BlueSeerUtils.isParsableToDouble(rs[j])) {
+                if (ld[1].compareTo("d") == 0 && ! rs[j].isBlank() && ! BlueSeerUtils.isParsableToDouble(rs[j])) {
                     tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field must be of type double" + "\n" );
                        proceed = false;
                 }
@@ -1960,6 +1959,7 @@ public class MassLoad extends javax.swing.JPanel {
         
             boolean proceed = true;
             boolean temp = true;
+            ArrayList<String> checklist = defineCustShipToMstr();
             ArrayList<String> list = new ArrayList<String>();
             BufferedReader fsr = new BufferedReader(new FileReader(myfile));
             String line = "";
@@ -1971,7 +1971,7 @@ public class MassLoad extends javax.swing.JPanel {
                 } 
                 list.add(line);
                String[] recs = line.split(tbdelimiter.getText().trim(), -1);
-               temp = checkCustShipToMstr(recs, i);
+               temp = checkCustShipToMstr(recs, i, checklist);
                    if (! temp) {
                        proceed = false;
                        m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
@@ -1983,7 +1983,8 @@ public class MassLoad extends javax.swing.JPanel {
                 if (cbignoreheader.isSelected()) {
                     i--; // reduce line count by 1 if ignore header
                    } 
-                   if(! OVData.addCustShipToMstr(list, tbdelimiter.getText().trim()))
+                   ArrayList<String> newlist = cleanList(list, checklist, tbdelimiter.getText().trim());
+                   if(! OVData.addCustShipToMstr(newlist, tbdelimiter.getText().trim()))
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
@@ -2611,7 +2612,7 @@ public class MassLoad extends javax.swing.JPanel {
                    }
                }
                if (ddtable.getSelectedItem().toString().compareTo("Vendor Master") == 0) {
-                   temp = checkVendMstr(recs, i);
+                   temp = checkVendMstr(recs, i, defineVendMstr());
                    if (! temp) {
                        proceed = false;
                    }
@@ -2623,7 +2624,7 @@ public class MassLoad extends javax.swing.JPanel {
                    }
                }
                if (ddtable.getSelectedItem().toString().compareTo("Customer ShipTo Master") == 0) {
-                   temp = checkCustShipToMstr(recs, i);
+                   temp = checkCustShipToMstr(recs, i, defineCustShipToMstr());
                    if (! temp) {
                        proceed = false;
                    }
@@ -2683,7 +2684,7 @@ public class MassLoad extends javax.swing.JPanel {
                    }
                }
                if (ddtable.getSelectedItem().toString().compareTo("BOM Master") == 0) {
-                   temp = checkBOMMaster(recs, i);
+                   temp = checkBOMMaster(recs, i, defineBOMMaster());
                    if (! temp) {
                        proceed = false;
                    }
@@ -2710,6 +2711,9 @@ public class MassLoad extends javax.swing.JPanel {
     public String[] processfile(String x, File myfile) throws IOException { 
          String[] m = new String[2];
          if (myfile != null) {
+               if (x.compareTo("Generic Code") == 0) {
+                 m = processGenericCode(myfile);
+               }
                if (x.compareTo("Item Master") == 0) {
                  m = processItemMaster(myfile);
                }
