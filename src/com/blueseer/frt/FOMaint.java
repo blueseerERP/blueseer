@@ -896,13 +896,10 @@ public class FOMaint extends javax.swing.JPanel {
       
         
         ddstate.removeAllItems();
-        ArrayList states = OVData.getCodeMstrKeyList("state");
-        for (int i = 0; i < states.size(); i++) {
-            ddstate.addItem(states.get(i).toString());
-        }
-        if (ddstate.getItemCount() > 0) {
-           ddstate.setSelectedIndex(0); 
-        }
+        ddstate.addItem("");
+        OVData.getCodeMstrKeyList("state").stream().forEach((s) -> ddstate.addItem(s));
+        ddstate.setSelectedIndex(0);
+        
         
          
         if (arg != null && arg.length > 0) {
