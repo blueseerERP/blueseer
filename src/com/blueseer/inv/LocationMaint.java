@@ -270,22 +270,31 @@ public class LocationMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbdesc.setText("");
          cbactive.setSelected(false);
          
+        String defaultsite = "";
+        ArrayList<String[]> initDataSets = invData.getLocationMaintInit();
+        
+       
+        ddsite.removeAllItems();
         ddwh.removeAllItems();
-        ArrayList<String> whs = OVData.getWareHouseList();
-        for (String wh : whs) {
-            ddwh.addItem(wh);
+        ddsite.removeAllItems();
+        
+        for (String[] s : initDataSets) {
+           
+            if (s[0].equals("sites")) {
+              ddsite.addItem(s[1]); 
+            }
+            if (s[0].equals("site")) {
+              defaultsite = s[1]; 
+            }
+            if (s[0].equals("warehouses")) {
+              ddwh.addItem(s[1]);  
+            }
+           
         }
         ddwh.insertItemAt("", 0);
         ddwh.setSelectedIndex(0);
-         
-         
-        ddsite.removeAllItems();
-        ArrayList<String> mylist = OVData.getSiteList();
-        for (String code : mylist) {
-            ddsite.addItem(code);
-        }
-       ddsite.setSelectedItem(OVData.getDefaultSite());
-        
+        ddsite.setSelectedItem(defaultsite);
+       
        isLoad = false;
     }
     
