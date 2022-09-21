@@ -274,26 +274,36 @@ public class WareHouseMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbcity.setText("");
         tbzip.setText("");
         
+        String defaultsite = "";
+        ArrayList<String[]> initDataSets = invData.getWareHouseMaintInit();
         
         ddstate.removeAllItems();
-        ddstate.addItem("");
-        OVData.getCodeMstrKeyList("state").stream().forEach((s) -> ddstate.addItem(s));
-        ddstate.setSelectedIndex(0);
-        
         ddcountry.removeAllItems();
-        ddcountry.addItem("");
-        OVData.getCodeMstrKeyList("country").stream().forEach((s) -> ddcountry.addItem(s));  
-        ddcountry.setSelectedIndex(0);
-        ddcountry.setSelectedItem("USA"); 
-        
-         
-         
         ddsite.removeAllItems();
-        ArrayList<String> mylist = OVData.getSiteList();
-        for (String code : mylist) {
-            ddsite.addItem(code);
+        
+        for (String[] s : initDataSets) {
+           
+            if (s[0].equals("sites")) {
+              ddsite.addItem(s[1]); 
+            }
+            if (s[0].equals("site")) {
+              defaultsite = s[1]; 
+            }
+            if (s[0].equals("states")) {
+              ddstate.addItem(s[1]); 
+            }
+            if (s[0].equals("countries")) {
+              ddcountry.addItem(s[1]); 
+            }
+            
         }
-        ddsite.setSelectedItem(OVData.getDefaultSite());
+        ddsite.setSelectedItem(defaultsite);
+        ddstate.insertItemAt("", 0);
+        ddstate.setSelectedIndex(0);
+        ddcountry.insertItemAt("", 0);
+        ddcountry.setSelectedItem("USA");
+        
+       
        isLoad = false;
     }
     

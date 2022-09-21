@@ -336,19 +336,6 @@ public class hrmData {
                lines.add(s);
             }
             
-            res = st.executeQuery("select ov_site, ov_currency from ov_mstr;" );
-            while (res.next()) {
-               String[] s = new String[2];
-               s[0] = "currency";
-               s[1] = res.getString("ov_currency");
-               lines.add(s);
-               s = new String[2];
-               s[0] = "site";
-               s[1] = res.getString("ov_site");
-               lines.add(s);
-               defaultsite = s[1];
-            }
-            
            
             res = st.executeQuery("select code_key from code_mstr where code_code = 'state' order by code_key ;");
             while (res.next()) {
