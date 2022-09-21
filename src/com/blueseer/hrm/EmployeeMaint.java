@@ -388,6 +388,9 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT  {
         jTabbedPane1.add("PayHistory", jPanelHistory);
         
          
+        ArrayList<String[]> initDataSets = hrmData.getHRInit();
+        
+        
         mymodel.setNumRows(0);
         modeldetail.setNumRows(0);
         excmodel.setNumRows(0);
@@ -438,44 +441,42 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT  {
         tbaccount.setText("");
         tbroute.setText("");
         ddpayfrequency.setSelectedIndex(0); 
-         cbautoclock.setSelected(false);
-       
+        cbautoclock.setSelected(false);
         ddsite.removeAllItems();
-        ArrayList<String> site = OVData.getSiteList();
-        for (int i = 0; i < site.size(); i++) {
-            ddsite.addItem(site.get(i));
-        }
-        ddsite.setSelectedItem(OVData.getDefaultSite());
-         
         dddept.removeAllItems();
-        ArrayList<String> mylist = new ArrayList();
-        mylist = fglData.getdeptidlist();
-        for (String dept : mylist) {
-            dddept.addItem(dept);
-        }
-       
-        
         ddshift.removeAllItems();
-        ArrayList<String> shifts = new ArrayList();
-        shifts = OVData.getShiftCodes();
-        for (String shift : shifts) {
-            ddshift.addItem(shift);
+        ddstate.removeAllItems();
+        ddcountry.removeAllItems();
+        String defaultsite = "";
+        
+        for (String[] s : initDataSets) {
+           
+            if (s[0].equals("sites")) {
+              ddsite.addItem(s[1]); 
+            }
+            if (s[0].equals("site")) {
+              defaultsite = s[1]; 
+            }
+            if (s[0].equals("shifts")) {
+              ddshift.addItem(s[1]); 
+            }
+            if (s[0].equals("departments")) {
+              dddept.addItem(s[1]); 
+            }
+           
+            if (s[0].equals("states")) {
+              ddstate.addItem(s[1]); 
+            }
+            if (s[0].equals("countries")) {
+              ddcountry.addItem(s[1]); 
+            }
+            
         }
+        ddsite.setSelectedItem(defaultsite);
         if (ddshift.getItemCount() == 0) {
             ddshift.addItem("NotDef");
         }
         
-        
-        ddstate.removeAllItems();
-        ddstate.addItem("");
-        OVData.getCodeMstrKeyList("state").stream().forEach((s) -> ddstate.addItem(s));
-        ddstate.setSelectedIndex(0);
-        
-        ddcountry.removeAllItems();
-        ddcountry.addItem("");
-        OVData.getCodeMstrKeyList("country").stream().forEach((s) -> ddcountry.addItem(s));  
-        ddcountry.setSelectedIndex(0);
-        ddcountry.setSelectedItem("USA"); 
         
        isLoad = false;
     }
