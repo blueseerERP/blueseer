@@ -92,6 +92,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -1833,6 +1834,13 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
          
     public void sumlinecount() {
          totlines.setText(String.valueOf(orddet.getRowCount()));
+         if (orddet.getRowCount() > 0) {
+             ddcurr.setEnabled(false);
+             ddcust.setEnabled(false);
+         } else {
+             ddcurr.setEnabled(true);
+             ddcust.setEnabled(true);
+         }
     }
             
     public void sumqty() {
