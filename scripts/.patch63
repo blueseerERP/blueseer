@@ -12,3 +12,5 @@ patch=2
 # AS2 related bug fixes #71, #72, #74 and cron update #73  
 patch=3
 # bug fix for #77...and intro mechanics for change log
+patch=4
+# bug fix for #78
