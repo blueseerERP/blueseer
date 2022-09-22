@@ -753,6 +753,29 @@ public class BlueSeerUtils {
         return x;
     }
     
+    public static String currformatWithSymbol(String invalue) {
+        // invalue will come over as a . decimal regardless of Locale
+        // currformat will return 3,56 for the following scenarios if
+        // default separator is ','   
+        // currformat("3.56")
+        // currformat("3,56") 
+         
+        String x = "0";
+        String pattern = "¤#0.00###";
+        if (! invalue.isEmpty()) {
+        String adjvalue = invalue.replace('.', defaultDecimalSeparator);
+       // DecimalFormat df = new DecimalFormat("#0.00###", new DecimalFormatSymbols(Locale.getDefault())); 
+     //  NumberFormat nf = NumberFormat.getInstance(Locale.getDefault()); 
+       DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());
+        df.applyPattern(pattern);
+        try { 
+            x = df.format(df.parse(adjvalue));
+        } catch (ParseException ex) {
+            bslog(ex);
+        }
+        }
+        return x;
+    }
     
     public static String currformat(String invalue) {
         // invalue will come over as a . decimal regardless of Locale
@@ -778,11 +801,24 @@ public class BlueSeerUtils {
         return x;
     }
     
+    
     public static String currformatDouble(double invalue) {
         String x = "";
         String pattern = "#0.00";
        // DecimalFormat df = new DecimalFormat("#0.00###", new DecimalFormatSymbols(Locale.getDefault())); 
         DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());
+        df.applyPattern(pattern);
+        x = df.format(invalue);
+        return x;
+    }
+    
+    public static String currformatDoubleWithSymbol(double invalue, String currency) {
+        String x = "";
+        String pattern = "¤#0.00";
+       // DecimalFormat df = new DecimalFormat("#0.00###", new DecimalFormatSymbols(Locale.getDefault())); 
+        Currency c = Currency.getInstance(currency);
+        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());
+        df.setCurrency(c);
         df.applyPattern(pattern);
         x = df.format(invalue);
         return x;

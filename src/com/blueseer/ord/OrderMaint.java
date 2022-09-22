@@ -65,6 +65,7 @@ import static com.blueseer.utl.BlueSeerUtils.bsNumber;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
+import static com.blueseer.utl.BlueSeerUtils.currformatDoubleWithSymbol;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
@@ -1895,7 +1896,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         
          tbtottax.setText(currformatDouble(totaltax));
          tbtotdollars.setText(currformatDouble(dol));
-         lbltotdollars.setText(currformatDouble(dol));
+         lbltotdollars.setText(currformatDoubleWithSymbol(dol, ddcurr.getSelectedItem().toString()));
          lblcurr.setText(ddcurr.getSelectedItem().toString());
     }
       
