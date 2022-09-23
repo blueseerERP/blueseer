@@ -28,6 +28,7 @@ package com.blueseer.adm;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.tags;
+import static com.blueseer.adm.admData.addChangeLog;
 import static com.blueseer.adm.admData.addCronMstr;
 import com.blueseer.adm.admData.cron_mstr;
 import static com.blueseer.adm.admData.deleteCronMstr;
@@ -36,11 +37,14 @@ import static com.blueseer.adm.admData.updateCronMstr;
 import com.blueseer.utl.OVData;
 import java.util.ArrayList;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.callChangeDialog;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
+import static com.blueseer.utl.BlueSeerUtils.clog;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.logChange;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -446,7 +450,17 @@ public class CronMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }
         
     public String[] updateRecord(String[] key) {
-         String[] m = updateCronMstr(createRecord());
+        cron_mstr _x = this.x;
+        cron_mstr _y = createRecord();
+        String[] m = updateCronMstr(_y);
+         
+        if (m[0].equals("0")) {
+            ArrayList<admData.change_log> c = logChange(tbkey.getText(), this.getClass().getSimpleName(),_x,_y);
+            if (! c.isEmpty()) {
+                addChangeLog(c);
+            } 
+        }
+         
          return m;
     }
     
@@ -458,6 +472,19 @@ public class CronMaint extends javax.swing.JPanel implements IBlueSeerT  {
          initvars(null);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
+        }
+        
+        if (m[0].equals("0")) {
+            ArrayList<admData.change_log> c = new ArrayList<admData.change_log>();
+            c.add(clog(this.x.cron_jobid(), 
+                     this.x.getClass().getName(), 
+                     this.getClass().getSimpleName(), 
+                     "deletion", 
+                     "", 
+                     ""));
+            if (! c.isEmpty()) {
+               addChangeLog(c);
+            } 
         }
          return m;
     }
@@ -557,6 +584,7 @@ public class CronMaint extends javax.swing.JPanel implements IBlueSeerT  {
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         ddjobclass = new javax.swing.JComboBox<>();
+        btchangelog = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -658,6 +686,13 @@ public class CronMaint extends javax.swing.JPanel implements IBlueSeerT  {
         jLabel9.setForeground(new java.awt.Color(0, 0, 255));
         jLabel9.setText("Ex:  0 0 0/2 * * ?   ...every 2 hours");
 
+        btchangelog.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/change.png"))); // NOI18N
+        btchangelog.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btchangelogActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelmaintLayout = new javax.swing.GroupLayout(panelmaint);
         panelmaint.setLayout(panelmaintLayout);
         panelmaintLayout.setHorizontalGroup(
@@ -681,7 +716,9 @@ public class CronMaint extends javax.swing.JPanel implements IBlueSeerT  {
                         .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(13, 13, 13)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btchangelog, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnew)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btclear))
@@ -718,10 +755,12 @@ public class CronMaint extends javax.swing.JPanel implements IBlueSeerT  {
                     .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(lblid))
-                    .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnew)
-                        .addComponent(btclear))
-                    .addComponent(btlookup))
+                    .addComponent(btlookup)
+                    .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(btchangelog)
+                        .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnew)
+                            .addComponent(btclear))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -818,9 +857,14 @@ public class CronMaint extends javax.swing.JPanel implements IBlueSeerT  {
         lookUpFrame();
     }//GEN-LAST:event_btlookupActionPerformed
 
+    private void btchangelogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btchangelogActionPerformed
+        callChangeDialog(tbkey.getText(), this.getClass().getSimpleName());
+    }//GEN-LAST:event_btchangelogActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
+    private javax.swing.JButton btchangelog;
     private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btlookup;
