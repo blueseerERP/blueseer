@@ -62,6 +62,7 @@ import static com.blueseer.utl.BlueSeerUtils.bsdate;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
+import static com.blueseer.utl.BlueSeerUtils.currformatDoubleWithSymbol;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
@@ -391,6 +392,8 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         remarks.setText("");
         tbtotqty.setText("");
         tbtotdollars.setText("");
+        lbltotdollars.setText("0.00");
+        lbltotdollars.setForeground(Color.blue);
         totlines.setText("");
         vendnumber.setText("");
         tbbuyer.setText("");
@@ -1337,6 +1340,13 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
       
     public void sumlinecount() {
          totlines.setText(String.valueOf(orddet.getRowCount()));
+         if (orddet.getRowCount() > 0) {
+             ddcurr.setEnabled(false);
+             ddvend.setEnabled(false);
+         } else {
+             ddcurr.setEnabled(true);
+             ddvend.setEnabled(true);
+         }
     }
     
     public void sumqty() {
@@ -1365,6 +1375,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
              dol = dol + ( bsParseDouble(orddet.getValueAt(j, 5).toString()) * bsParseDouble(orddet.getValueAt(j, 9).toString()) ); 
          }
          tbtotdollars.setText(currformatDouble(dol));
+         lbltotdollars.setText(currformatDoubleWithSymbol(dol, ddcurr.getSelectedItem().toString()));
          lblcurr.setText(ddcurr.getSelectedItem().toString());
     }
    
@@ -1505,6 +1516,8 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddedistatus = new javax.swing.JComboBox<>();
         jLabel11 = new javax.swing.JLabel();
         cbconfirm = new javax.swing.JCheckBox();
+        jLabel12 = new javax.swing.JLabel();
+        lbltotdollars = new javax.swing.JLabel();
         panelDetail = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         qtyshipped = new javax.swing.JTextField();
@@ -1711,6 +1724,9 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         cbconfirm.setText("Confirmed");
 
+        jLabel12.setText("Total:");
+        jLabel12.setName("lbltotdollars"); // NOI18N
+
         javax.swing.GroupLayout panelMainLayout = new javax.swing.GroupLayout(panelMain);
         panelMain.setLayout(panelMainLayout);
         panelMainLayout.setHorizontalGroup(
@@ -1775,7 +1791,11 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addGap(10, 10, 10)
                         .addComponent(btadd)
                         .addGap(3, 3, 3)))
-                .addContainerGap(235, Short.MAX_VALUE))
+                .addGap(58, 58, 58)
+                .addComponent(jLabel12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbltotdollars, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(56, Short.MAX_VALUE))
         );
         panelMainLayout.setVerticalGroup(
             panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1821,7 +1841,10 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addGroup(panelMainLayout.createSequentialGroup()
                                 .addGap(5, 5, 5)
                                 .addComponent(jLabel81))
-                            .addComponent(duedate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(duedate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel12)
+                                .addComponent(lbltotdollars, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(6, 6, 6)
                         .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panelMainLayout.createSequentialGroup()
@@ -2611,6 +2634,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel30;
@@ -2650,6 +2674,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel lblcurr;
+    private javax.swing.JLabel lbltotdollars;
     private javax.swing.JLabel lbvend;
     private javax.swing.JTextField listprice;
     private javax.swing.JTextField netprice;
