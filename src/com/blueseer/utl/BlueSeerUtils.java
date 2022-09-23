@@ -761,7 +761,7 @@ public class BlueSeerUtils {
         // currformat("3,56") 
          
         String x = "0";
-        String pattern = "¤#0.00###";
+        String pattern = "Â¤#0.00###"; 
         if (! invalue.isEmpty()) {
         String adjvalue = invalue.replace('.', defaultDecimalSeparator);
        // DecimalFormat df = new DecimalFormat("#0.00###", new DecimalFormatSymbols(Locale.getDefault())); 
@@ -814,7 +814,7 @@ public class BlueSeerUtils {
     
     public static String currformatDoubleWithSymbol(double invalue, String currency) {
         String x = "";
-        String pattern = "¤#0.00";
+        String pattern = "Â¤#0.00"; 
        // DecimalFormat df = new DecimalFormat("#0.00###", new DecimalFormatSymbols(Locale.getDefault())); 
         Currency c = Currency.getInstance(currency);
         DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());
