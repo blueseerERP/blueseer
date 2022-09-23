@@ -29,6 +29,8 @@ package com.blueseer.ctr;
 import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.tags;
+import com.blueseer.adm.admData;
+import static com.blueseer.adm.admData.addChangeLog;
 import static com.blueseer.ctr.cusData.addCarrierMstr;
 import static com.blueseer.ctr.cusData.addUpdateCarrierDet;
 import com.blueseer.ctr.cusData.car_mstr;
@@ -36,11 +38,14 @@ import static com.blueseer.ctr.cusData.deleteCarrierMstr;
 import static com.blueseer.ctr.cusData.getCarrierMstr;
 import static com.blueseer.ctr.cusData.updateCarrierMstr;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.callChangeDialog;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
+import static com.blueseer.utl.BlueSeerUtils.clog;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.logChange;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -52,6 +57,9 @@ import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeerT;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -62,6 +70,7 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -400,7 +409,18 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
          }
          addUpdateCarrierDet(x[0], k);
      }
-     String[] m = updateCarrierMstr(createRecord());
+     
+     car_mstr _x = this.x;
+     car_mstr _y = createRecord();
+     String[] m = updateCarrierMstr(_y);
+     
+     if (m[0].equals("0")) {
+       ArrayList<admData.change_log> c = logChange(tbkey.getText(), this.getClass().getSimpleName(),_x,_y);
+       if (! c.isEmpty()) {
+           addChangeLog(c);
+       } 
+     }
+     
      return m;
      }
      
@@ -413,6 +433,20 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
         }
+        
+        if (m[0].equals("0")) {
+            ArrayList<admData.change_log> c = new ArrayList<admData.change_log>();
+            c.add(clog(this.x.car_code(), 
+                     this.x.getClass().getName(), 
+                     this.getClass().getSimpleName(), 
+                     "deletion", 
+                     "", 
+                     ""));
+            if (! c.isEmpty()) {
+               addChangeLog(c);
+            } 
+        }
+        
          return m;
      }
       
@@ -546,6 +580,7 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
         carrierlist = new javax.swing.JList<>();
         btclear = new javax.swing.JButton();
         btlookup = new javax.swing.JButton();
+        btchangelog = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -647,6 +682,13 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
+        btchangelog.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/change.png"))); // NOI18N
+        btchangelog.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btchangelogActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -658,7 +700,9 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(13, 13, 13)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btchangelog, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnew)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btclear)
@@ -707,15 +751,13 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(13, 13, 13)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnew)
-                        .addComponent(btclear))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(btlookup)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1))))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btlookup)
+                    .addComponent(btchangelog)
+                    .addComponent(btnew)
+                    .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1)
+                    .addComponent(btclear))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(rbcarrier)
@@ -812,10 +854,15 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
         lookUpFrame();
     }//GEN-LAST:event_btlookupActionPerformed
 
+    private void btchangelogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btchangelogActionPerformed
+        callChangeDialog(tbkey.getText(), this.getClass().getSimpleName());
+    }//GEN-LAST:event_btchangelogActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btaddgroup;
+    private javax.swing.JButton btchangelog;
     private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btdeletegroup;
