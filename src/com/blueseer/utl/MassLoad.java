@@ -2805,7 +2805,8 @@ public class MassLoad extends javax.swing.JPanel {
         tacomments.setText("");
             tacomments.append("NOTE:  THE FIELD VALUES CANNOT CONTAIN THE DELIMITER!! \n");
             tacomments.append("NOTE:  DO NOT USE DOUBLE QUOTES IN THE DATA!! \n");
-            tacomments.append("DEFINITION: Field, Data Type, Field Size \n" );
+            tacomments.append("DEFINITION: Field, Data Type, Field Size, Required, Validation \n" );
+            tacomments.append("\n" );
         
         if (key.compareTo("Item Master") == 0) { 
              list = defineItemMaster();
@@ -2869,6 +2870,7 @@ public class MassLoad extends javax.swing.JPanel {
              list = defineShopifyFulfillmentCSV();
          }
        
+        tacomments.append("Total Field Count: " + list.size()  + "\n\n");
         
         for (String rec : list) {
                 tacomments.append(rec + "\n");
