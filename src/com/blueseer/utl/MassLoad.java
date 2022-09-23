@@ -2803,8 +2803,8 @@ public class MassLoad extends javax.swing.JPanel {
         ArrayList<String> list = new ArrayList();
         
         tacomments.setText("");
-            tacomments.append("ALL FIELDS MUST BE DELIMITED BY A COLON ':' \n");
-            tacomments.append("NOTE:  THE FIELD VALUES CANNOT CONTAIN A COLON! \n");
+            tacomments.append("NOTE:  THE FIELD VALUES CANNOT CONTAIN THE DELIMITER!! \n");
+            tacomments.append("NOTE:  DO NOT USE DOUBLE QUOTES IN THE DATA!! \n");
             tacomments.append("DEFINITION: Field, Data Type, Field Size \n" );
         
         if (key.compareTo("Item Master") == 0) { 
