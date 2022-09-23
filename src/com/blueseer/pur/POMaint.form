@@ -540,7 +540,7 @@
         <Component class="javax.swing.JLabel" name="jLabel12">
           <Properties>
             <Property name="text" type="java.lang.String" value="Total:"/>
-            <Property name="name" type="java.lang.String" value="lbltotdollars" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="lbltotalamt" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lbltotdollars">

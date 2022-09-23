@@ -1725,7 +1725,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         cbconfirm.setText("Confirmed");
 
         jLabel12.setText("Total:");
-        jLabel12.setName("lbltotdollars"); // NOI18N
+        jLabel12.setName("lbltotalamt"); // NOI18N
 
         javax.swing.GroupLayout panelMainLayout = new javax.swing.GroupLayout(panelMain);
         panelMain.setLayout(panelMainLayout);
