@@ -282,24 +282,24 @@ public class CustXrefMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public void setComponentDefaultValues() {
        isLoad = true;
-         ArrayList mycust = cusData.getcustmstrlist();
+        
+        
         ddcust.removeAllItems();
-        for (int i = 0; i < mycust.size(); i++) {
-            ddcust.addItem(mycust.get(i));
-        }
-        ArrayList mypart = invData.getItemMasterMCodelist();
+        cusData.getcustmstrlist().stream().forEach((s) -> ddcust.addItem(s));
+       
+        
         ddpart.removeAllItems();
-        for (int i = 0; i < mypart.size(); i++) {
-            ddpart.addItem(mypart.get(i));
-        }
-         if (ddcust.getItemCount()> 0) {        
+        invData.getItemMasterMCodelist().stream().forEach((s) -> ddpart.addItem(s));
+        
+        
+        if (ddcust.getItemCount()> 0) {        
          ddcust.setSelectedIndex(0);
-         }
+        }
         if (ddpart.getItemCount() > 0) { 
         ddpart.setSelectedIndex(0);
         }
-         tbkey.setText("");
-         custitem2.setText("");
+        tbkey.setText("");
+        custitem2.setText("");
         skunbr.setText("");
         upcnbr.setText("");
         misc.setText("");
