@@ -138,17 +138,12 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
             String[] message = get();
            
             BlueSeerUtils.endTask(message);
-           if (this.type.equals("delete")) {
-             initvars(null);  
-           } else if (this.type.equals("get") && message[0].equals("1")) {
-             updateForm();
-             tbkey.requestFocus();
-           } else if (this.type.equals("get") && message[0].equals("0")) {
-             updateForm();  
-             tbkey.requestFocus();
-           } else {
-             initvars(null);  
-           }
+               if (this.type.equals("get")) {
+                 updateForm();
+                 tbkey.requestFocus();
+               } else {
+                 initvars(null);  
+               }
             
             } catch (Exception e) {
                 MainFrame.bslog(e);
