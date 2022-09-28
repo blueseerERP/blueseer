@@ -309,9 +309,9 @@ public class MapTester extends javax.swing.JPanel  {
             ddmap.addItem(maps.get(i));
         }
         
-        btdetail.setEnabled(false);
-        btRun.setEnabled(false);
-        outputpanel.setVisible(false);
+        bthide.setEnabled(false);
+        btrun.setEnabled(false);
+        //outputpanel.setVisible(false);
           
     }
    
@@ -355,15 +355,17 @@ public class MapTester extends javax.swing.JPanel  {
         outputpanel = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         taoutput = new javax.swing.JTextArea();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        taoutput1 = new javax.swing.JTextArea();
         jPanel2 = new javax.swing.JPanel();
-        btdetail = new javax.swing.JButton();
-        btRun = new javax.swing.JButton();
         ddmap = new javax.swing.JComboBox();
         jLabel6 = new javax.swing.JLabel();
-        btupload = new javax.swing.JButton();
         jToolBar1 = new javax.swing.JToolBar();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btinput = new javax.swing.JButton();
+        btoutput = new javax.swing.JButton();
+        btcompile = new javax.swing.JButton();
+        btrun = new javax.swing.JButton();
+        bthide = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
 
         setBackground(new java.awt.Color(0, 102, 204));
@@ -373,68 +375,89 @@ public class MapTester extends javax.swing.JPanel  {
 
         tablepanel.setLayout(new javax.swing.BoxLayout(tablepanel, javax.swing.BoxLayout.LINE_AXIS));
 
-        inputpanel.setLayout(new java.awt.BorderLayout());
+        inputpanel.setLayout(new javax.swing.BoxLayout(inputpanel, javax.swing.BoxLayout.LINE_AXIS));
 
         tainput.setColumns(20);
         tainput.setRows(5);
         jScrollPane4.setViewportView(tainput);
 
-        inputpanel.add(jScrollPane4, java.awt.BorderLayout.CENTER);
+        inputpanel.add(jScrollPane4);
 
         tablepanel.add(inputpanel);
 
-        outputpanel.setLayout(new java.awt.BorderLayout());
+        outputpanel.setLayout(new javax.swing.BoxLayout(outputpanel, javax.swing.BoxLayout.Y_AXIS));
 
         taoutput.setColumns(20);
         taoutput.setRows(5);
         jScrollPane3.setViewportView(taoutput);
 
-        outputpanel.add(jScrollPane3, java.awt.BorderLayout.CENTER);
+        outputpanel.add(jScrollPane3);
+
+        taoutput1.setBackground(new java.awt.Color(204, 255, 204));
+        taoutput1.setColumns(20);
+        taoutput1.setRows(5);
+        jScrollPane5.setViewportView(taoutput1);
+
+        outputpanel.add(jScrollPane5);
 
         tablepanel.add(outputpanel);
 
-        btdetail.setText("Hide Detail");
-        btdetail.setName("bthidedetail"); // NOI18N
-        btdetail.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btdetailActionPerformed(evt);
-            }
-        });
-
-        btRun.setText("Run");
-        btRun.setName("btrun"); // NOI18N
-        btRun.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btRunActionPerformed(evt);
-            }
-        });
-
         jLabel6.setText("Map");
         jLabel6.setName("lblfromreceiver"); // NOI18N
-
-        btupload.setText("Upload");
-        btupload.setName("btupload"); // NOI18N
-        btupload.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btuploadActionPerformed(evt);
-            }
-        });
 
         jToolBar1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/add.png"))); // NOI18N
-        jButton1.setFocusable(false);
-        jButton1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton1.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(jButton1);
+        btinput.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/leftdoc.png"))); // NOI18N
+        btinput.setFocusable(false);
+        btinput.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btinput.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btinput.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btinputActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btinput);
 
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/flag.png"))); // NOI18N
-        jButton2.setFocusable(false);
-        jButton2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        jButton2.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(jButton2);
+        btoutput.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/rightdoc.png"))); // NOI18N
+        btoutput.setFocusable(false);
+        btoutput.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btoutput.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(btoutput);
+
+        btcompile.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/coffee.png"))); // NOI18N
+        btcompile.setFocusable(false);
+        btcompile.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btcompile.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btcompile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btcompileActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btcompile);
+
+        btrun.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lightning.png"))); // NOI18N
+        btrun.setFocusable(false);
+        btrun.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btrun.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btrun.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btrunActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btrun);
+
+        bthide.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/hide.png"))); // NOI18N
+        bthide.setFocusable(false);
+        bthide.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        bthide.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        bthide.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bthideActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(bthide);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -445,29 +468,20 @@ public class MapTester extends javax.swing.JPanel  {
                 .addComponent(jLabel6)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ddmap, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btRun)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 158, Short.MAX_VALUE)
-                .addComponent(btupload)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btdetail)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 281, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ddmap, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btRun)
-                    .addComponent(btdetail)
-                    .addComponent(jLabel6)
-                    .addComponent(btupload))
-                .addContainerGap(30, Short.MAX_VALUE))
+                    .addComponent(jLabel6))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -478,7 +492,7 @@ public class MapTester extends javax.swing.JPanel  {
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 57, Short.MAX_VALUE)
+            .addGap(0, 26, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -500,10 +514,10 @@ public class MapTester extends javax.swing.JPanel  {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 346, Short.MAX_VALUE)
+                .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 383, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -519,7 +533,7 @@ public class MapTester extends javax.swing.JPanel  {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRunActionPerformed
+    private void btrunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrunActionPerformed
         String[] c = EDI.initEDIControl();
         map_mstr x = getMapMstr(new String[]{ddmap.getSelectedItem().toString()});
         
@@ -669,21 +683,15 @@ public class MapTester extends javax.swing.JPanel  {
                          sw.close();
                         }
                      outputpanel.setVisible(true);
-                     btdetail.setEnabled(true);   
+                     bthide.setEnabled(true);   
                     } catch (IOException ex1) {
                         edilog(ex1);
                     }
                 }
+    }//GEN-LAST:event_btrunActionPerformed
 
-    }//GEN-LAST:event_btRunActionPerformed
-
-    private void btdetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdetailActionPerformed
-       outputpanel.setVisible(false);
-       btdetail.setEnabled(false);
-    }//GEN-LAST:event_btdetailActionPerformed
-
-    private void btuploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btuploadActionPerformed
-        infile = getfile();
+    private void btinputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btinputActionPerformed
+         infile = getfile();
         tainput.setText("");
         if (infile != null) {
             try {   
@@ -692,35 +700,46 @@ public class MapTester extends javax.swing.JPanel  {
                         tainput.append(segment);
                         tainput.append("\n");
                 }
-                btRun.setEnabled(true);
+                btrun.setEnabled(true);
             } catch (IOException ex) {
                 bslog(ex);
             }   
         } else {
-            btRun.setEnabled(false);
+            btrun.setEnabled(false);
         }
-    }//GEN-LAST:event_btuploadActionPerformed
+    }//GEN-LAST:event_btinputActionPerformed
+
+    private void bthideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bthideActionPerformed
+        outputpanel.setVisible(false);
+       bthide.setEnabled(false);
+    }//GEN-LAST:event_bthideActionPerformed
+
+    private void btcompileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcompileActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btcompileActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btRun;
-    private javax.swing.JButton btdetail;
-    private javax.swing.JButton btupload;
+    private javax.swing.JButton btcompile;
+    private javax.swing.JButton bthide;
+    private javax.swing.JButton btinput;
+    private javax.swing.JButton btoutput;
+    private javax.swing.JButton btrun;
     private javax.swing.JComboBox ddmap;
     private javax.swing.JFileChooser fc;
     private javax.swing.JPanel inputpanel;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JPanel outputpanel;
     private javax.swing.JPanel tablepanel;
     private javax.swing.JTextArea tainput;
     private javax.swing.JTextArea taoutput;
+    private javax.swing.JTextArea taoutput1;
     // End of variables declaration//GEN-END:variables
 }
