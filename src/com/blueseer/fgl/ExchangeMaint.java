@@ -36,6 +36,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.bsformat;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Component;
 import java.sql.Connection;
@@ -61,8 +62,10 @@ import javax.swing.JTabbedPane;
  */
 public class ExchangeMaint extends javax.swing.JPanel {
 
+    boolean isLoad = false;
     
-     javax.swing.table.DefaultTableModel exchangemodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+    
+    javax.swing.table.DefaultTableModel exchangemodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
                 "BaseCurrency", "ForeignCurrency", "Rate"
             });
@@ -235,6 +238,7 @@ public class ExchangeMaint extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Exchange Rate Maintenance"));
         jPanel1.setName("panelmain"); // NOI18N
 
         jLabel1.setText("Base Code:");
@@ -282,6 +286,13 @@ public class ExchangeMaint extends javax.swing.JPanel {
             }
         ));
         ratetable.setEnabled(false);
+        ratetable.setRowSelectionAllowed(true);
+        ratetable.setShowGrid(true);
+        ratetable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ratetableMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(ratetable);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -289,7 +300,7 @@ public class ExchangeMaint extends javax.swing.JPanel {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(25, 25, 25)
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 341, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -495,6 +506,12 @@ public class ExchangeMaint extends javax.swing.JPanel {
             MainFrame.bslog(e);
         }
     }//GEN-LAST:event_btdeleteActionPerformed
+
+    private void ratetableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ratetableMouseClicked
+        int row = ratetable.rowAtPoint(evt.getPoint());
+        ddforeign.setSelectedItem(ratetable.getValueAt(row, 1).toString());
+        tbrate.setText(ratetable.getValueAt(row,2).toString());
+    }//GEN-LAST:event_ratetableMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
