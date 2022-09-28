@@ -16,3 +16,5 @@ patch=4
 # bug fix for #78
 patch=5
 # mass import notes adjustment and additional change log menus
+patch=6
+# bug fix #79 and misc init changes for performance

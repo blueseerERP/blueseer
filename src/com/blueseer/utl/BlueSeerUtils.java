@@ -814,13 +814,13 @@ public class BlueSeerUtils {
     
     public static String currformatDoubleWithSymbol(double invalue, String currency) {
         String x = "";
-        String pattern = "¤#0.00"; 
+        String pattern = "¤0.00";
        // DecimalFormat df = new DecimalFormat("#0.00###", new DecimalFormatSymbols(Locale.getDefault())); 
         Currency c = Currency.getInstance(currency);
-        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());
-        df.setCurrency(c);
-        df.applyPattern(pattern);
-        x = df.format(invalue);
+        NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.getDefault());
+        nf.setCurrency(c);
+       // nf.applyPattern(pattern);
+        x = nf.format(invalue);
         return x;
     }
     
