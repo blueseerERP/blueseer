@@ -2559,7 +2559,7 @@ public class MassLoad extends javax.swing.JPanel {
                 if ( (cols[1].compareTo("i") == 0 || cols[1].compareTo("d") == 0) && rows[j].isBlank()  ) {
                     newstring.append("0").append(delim);
                 } else if (cols[1].compareTo("b") == 0) {
-                    if (rows[j].equals("true")) {
+                    if (rows[j].equals("true") || rows[j].equals("1")) {
                        newstring.append("1").append(delim); 
                     } else {
                        newstring.append("0").append(delim); 
