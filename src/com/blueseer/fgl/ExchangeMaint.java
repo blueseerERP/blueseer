@@ -36,6 +36,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsformat;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Component;
@@ -235,6 +236,7 @@ public class ExchangeMaint extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         ratetable = new javax.swing.JTable();
+        btclear = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -295,6 +297,14 @@ public class ExchangeMaint extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(ratetable);
 
+        btclear.setText("Clear");
+        btclear.setName("btclear"); // NOI18N
+        btclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btclearActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -319,7 +329,8 @@ public class ExchangeMaint extends javax.swing.JPanel {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btadd, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(btupdate, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btdelete, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addComponent(btdelete, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btclear, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addGap(34, 34, 34))))
         );
         jPanel1Layout.setVerticalGroup(
@@ -340,6 +351,8 @@ public class ExchangeMaint extends javax.swing.JPanel {
                     .addComponent(tbrate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
                     .addComponent(btdelete))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btclear)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -513,9 +526,15 @@ public class ExchangeMaint extends javax.swing.JPanel {
         tbrate.setText(ratetable.getValueAt(row,2).toString());
     }//GEN-LAST:event_ratetableMouseClicked
 
+    private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
+        BlueSeerUtils.messagereset();
+        initvars(null);
+    }//GEN-LAST:event_btclearActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
+    private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btupdate;
     private javax.swing.JComboBox<String> ddforeign;

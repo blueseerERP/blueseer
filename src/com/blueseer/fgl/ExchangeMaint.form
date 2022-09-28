@@ -58,6 +58,7 @@
                               <Component id="btadd" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Component id="btupdate" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Component id="btdelete" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="btclear" alignment="1" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
                       </Group>
@@ -86,6 +87,8 @@
                       <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btdelete" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="btclear" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jScrollPane1" min="-2" pref="252" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
@@ -175,6 +178,15 @@
             </Component>
           </SubComponents>
         </Container>
+        <Component class="javax.swing.JButton" name="btclear">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Clear"/>
+            <Property name="name" type="java.lang.String" value="btclear" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btclearActionPerformed"/>
+          </Events>
+        </Component>
       </SubComponents>
     </Container>
   </SubComponents>
