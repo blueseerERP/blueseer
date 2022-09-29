@@ -300,8 +300,8 @@ public class MapTester extends javax.swing.JPanel  {
         DateFormat dfyear = new SimpleDateFormat("yyyy");
         DateFormat dfperiod = new SimpleDateFormat("M");
        
-        tainput.setText("");
-        taoutput.setText("");
+        tamap.setText("");
+        tasource.setText("");
         
         ddmap.removeAllItems();
         ArrayList<String> maps = ediData.getMapMstrList();
@@ -315,7 +315,28 @@ public class MapTester extends javax.swing.JPanel  {
           
     }
    
-     public File getfile() {
+    public File getfile() {
+        
+        File file = null;
+        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        int returnVal = fc.showOpenDialog(this);
+       
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            try {
+            file = fc.getSelectedFile();
+            String SourceDir = file.getAbsolutePath();
+            file = new File(SourceDir);
+            
+            }
+            catch (Exception ex) {
+            ex.printStackTrace();
+            }
+        } 
+        return file;
+    }
+    
+    public File getMapfile() {
         
         File file = null;
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -351,21 +372,24 @@ public class MapTester extends javax.swing.JPanel  {
         tablepanel = new javax.swing.JPanel();
         inputpanel = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
-        tainput = new javax.swing.JTextArea();
+        tamap = new javax.swing.JTextArea();
         outputpanel = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        taoutput = new javax.swing.JTextArea();
+        tasource = new javax.swing.JTextArea();
         jScrollPane5 = new javax.swing.JScrollPane();
-        taoutput1 = new javax.swing.JTextArea();
+        taoutput = new javax.swing.JTextArea();
         jPanel2 = new javax.swing.JPanel();
         ddmap = new javax.swing.JComboBox();
         jLabel6 = new javax.swing.JLabel();
         jToolBar1 = new javax.swing.JToolBar();
+        btcheckout = new javax.swing.JButton();
+        btsave = new javax.swing.JButton();
+        btcompile = new javax.swing.JButton();
         btinput = new javax.swing.JButton();
         btoutput = new javax.swing.JButton();
-        btcompile = new javax.swing.JButton();
-        btrun = new javax.swing.JButton();
         bthide = new javax.swing.JButton();
+        btunhide = new javax.swing.JButton();
+        btrun = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
 
         setBackground(new java.awt.Color(0, 102, 204));
@@ -377,9 +401,9 @@ public class MapTester extends javax.swing.JPanel  {
 
         inputpanel.setLayout(new javax.swing.BoxLayout(inputpanel, javax.swing.BoxLayout.LINE_AXIS));
 
-        tainput.setColumns(20);
-        tainput.setRows(5);
-        jScrollPane4.setViewportView(tainput);
+        tamap.setColumns(20);
+        tamap.setRows(5);
+        jScrollPane4.setViewportView(tamap);
 
         inputpanel.add(jScrollPane4);
 
@@ -387,16 +411,15 @@ public class MapTester extends javax.swing.JPanel  {
 
         outputpanel.setLayout(new javax.swing.BoxLayout(outputpanel, javax.swing.BoxLayout.Y_AXIS));
 
-        taoutput.setColumns(20);
-        taoutput.setRows(5);
-        jScrollPane3.setViewportView(taoutput);
+        tasource.setColumns(20);
+        tasource.setRows(5);
+        jScrollPane3.setViewportView(tasource);
 
         outputpanel.add(jScrollPane3);
 
-        taoutput1.setBackground(new java.awt.Color(204, 255, 204));
-        taoutput1.setColumns(20);
-        taoutput1.setRows(5);
-        jScrollPane5.setViewportView(taoutput1);
+        taoutput.setColumns(20);
+        taoutput.setRows(5);
+        jScrollPane5.setViewportView(taoutput);
 
         outputpanel.add(jScrollPane5);
 
@@ -408,6 +431,34 @@ public class MapTester extends javax.swing.JPanel  {
         jToolBar1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
+
+        btcheckout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/checkout2.png"))); // NOI18N
+        btcheckout.setFocusable(false);
+        btcheckout.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btcheckout.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btcheckout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btcheckoutActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btcheckout);
+
+        btsave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/save.png"))); // NOI18N
+        btsave.setFocusable(false);
+        btsave.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btsave.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBar1.add(btsave);
+
+        btcompile.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/coffee.png"))); // NOI18N
+        btcompile.setFocusable(false);
+        btcompile.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btcompile.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btcompile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btcompileActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btcompile);
 
         btinput.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/leftdoc.png"))); // NOI18N
         btinput.setFocusable(false);
@@ -426,16 +477,27 @@ public class MapTester extends javax.swing.JPanel  {
         btoutput.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar1.add(btoutput);
 
-        btcompile.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/coffee.png"))); // NOI18N
-        btcompile.setFocusable(false);
-        btcompile.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btcompile.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btcompile.addActionListener(new java.awt.event.ActionListener() {
+        bthide.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/hide.png"))); // NOI18N
+        bthide.setFocusable(false);
+        bthide.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        bthide.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        bthide.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btcompileActionPerformed(evt);
+                bthideActionPerformed(evt);
             }
         });
-        jToolBar1.add(btcompile);
+        jToolBar1.add(bthide);
+
+        btunhide.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/unhide.png"))); // NOI18N
+        btunhide.setFocusable(false);
+        btunhide.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btunhide.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btunhide.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btunhideActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btunhide);
 
         btrun.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lightning.png"))); // NOI18N
         btrun.setFocusable(false);
@@ -447,17 +509,6 @@ public class MapTester extends javax.swing.JPanel  {
             }
         });
         jToolBar1.add(btrun);
-
-        bthide.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/hide.png"))); // NOI18N
-        bthide.setFocusable(false);
-        bthide.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        bthide.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        bthide.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bthideActionPerformed(evt);
-            }
-        });
-        jToolBar1.add(bthide);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -547,7 +598,7 @@ public class MapTester extends javax.swing.JPanel  {
          cbuf = new char[(int) infile.length()];
          f.read(cbuf); 
          } catch (IOException ex) {
-             taoutput.setText(ex.toString());
+             tasource.setText(ex.toString());
              return;
          }
        
@@ -644,29 +695,29 @@ public class MapTester extends javax.swing.JPanel  {
                 Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
                 Object oc = method.invoke(obj, doc, c);
                 String[] oString = (String[]) oc;
-                taoutput.setText(oString[0]);
+                tasource.setText(oString[0]);
                 
                 if (oString.length > 1) {
-                    taoutput.append("\n" + oString[1]);
+                    tasource.append("\n" + oString[1]);
                 }
                 
                 
                 } catch (InvocationTargetException ex) {
                   sw = new StringWriter();
                   ex.printStackTrace(new PrintWriter(sw));
-                  taoutput.setText(sw.toString());
+                  tasource.setText(sw.toString());
                   edilog(ex);
                 } catch (ClassNotFoundException ex) {
                   sw = new StringWriter();
                   ex.printStackTrace(new PrintWriter(sw));
-                  taoutput.setText(sw.toString());
+                  tasource.setText(sw.toString());
                   edilog(ex);
                 } catch (IllegalAccessException |
                          InstantiationException | NoSuchMethodException ex
                         ) {
                   sw = new StringWriter();  
                   ex.printStackTrace(new PrintWriter(sw));
-                  taoutput.setText(sw.toString());
+                  tasource.setText(sw.toString());
                   edilog(ex);
                 } finally {
                     
@@ -692,13 +743,13 @@ public class MapTester extends javax.swing.JPanel  {
 
     private void btinputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btinputActionPerformed
          infile = getfile();
-        tainput.setText("");
+        tasource.setText("");
         if (infile != null) {
             try {   
                 List<String> lines = Files.readAllLines(infile.toPath());
                 for (String segment : lines ) {
-                        tainput.append(segment);
-                        tainput.append("\n");
+                        tasource.append(segment);
+                        tasource.append("\n");
                 }
                 btrun.setEnabled(true);
             } catch (IOException ex) {
@@ -710,7 +761,7 @@ public class MapTester extends javax.swing.JPanel  {
     }//GEN-LAST:event_btinputActionPerformed
 
     private void bthideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bthideActionPerformed
-        outputpanel.setVisible(false);
+       outputpanel.setVisible(false);
        bthide.setEnabled(false);
     }//GEN-LAST:event_bthideActionPerformed
 
@@ -718,13 +769,40 @@ public class MapTester extends javax.swing.JPanel  {
         // TODO add your handling code here:
     }//GEN-LAST:event_btcompileActionPerformed
 
+    private void btunhideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btunhideActionPerformed
+       outputpanel.setVisible(true);
+       bthide.setEnabled(true);
+    }//GEN-LAST:event_btunhideActionPerformed
+
+    private void btcheckoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcheckoutActionPerformed
+        infile = getMapfile();
+        tamap.setText("");
+        if (infile != null) {
+            try {   
+                List<String> lines = Files.readAllLines(infile.toPath());
+                for (String segment : lines ) {
+                        tamap.append(segment);
+                        tamap.append("\n");
+                }
+                btrun.setEnabled(true);
+            } catch (IOException ex) {
+                bslog(ex);
+            }   
+        } else {
+            btrun.setEnabled(false);
+        }
+    }//GEN-LAST:event_btcheckoutActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btcheckout;
     private javax.swing.JButton btcompile;
     private javax.swing.JButton bthide;
     private javax.swing.JButton btinput;
     private javax.swing.JButton btoutput;
     private javax.swing.JButton btrun;
+    private javax.swing.JButton btsave;
+    private javax.swing.JButton btunhide;
     private javax.swing.JComboBox ddmap;
     private javax.swing.JFileChooser fc;
     private javax.swing.JPanel inputpanel;
@@ -738,8 +816,8 @@ public class MapTester extends javax.swing.JPanel  {
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JPanel outputpanel;
     private javax.swing.JPanel tablepanel;
-    private javax.swing.JTextArea tainput;
+    private javax.swing.JTextArea tamap;
     private javax.swing.JTextArea taoutput;
-    private javax.swing.JTextArea taoutput1;
+    private javax.swing.JTextArea tasource;
     // End of variables declaration//GEN-END:variables
 }
