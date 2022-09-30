@@ -81,7 +81,10 @@ import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.EDData;
 import com.blueseer.vdr.venData;
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.PrintStream;
@@ -90,6 +93,7 @@ import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
@@ -99,6 +103,10 @@ import java.text.DecimalFormatSymbols;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.jar.Attributes;
+import java.util.jar.JarEntry;
+import java.util.jar.JarOutputStream;
+import java.util.jar.Manifest;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
@@ -107,6 +115,13 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.tools.Diagnostic;
+import javax.tools.DiagnosticCollector;
+import javax.tools.JavaCompiler;
+import javax.tools.JavaCompiler.CompilationTask;
+import javax.tools.JavaFileObject;
+import javax.tools.SimpleJavaFileObject;
+import javax.tools.ToolProvider;
 
 /**
  *
@@ -169,7 +184,7 @@ public class MapTester extends javax.swing.JPanel  {
     }
     
    
-      public class MyClassLoader extends ClassLoader {
+    public class MyClassLoader extends ClassLoader {
     
         private String classFileLocation;
     
@@ -193,7 +208,19 @@ public class MapTester extends javax.swing.JPanel  {
         }
     }
     
-    
+    class JavaSourceFromString extends SimpleJavaFileObject {
+      final String code;
+
+      JavaSourceFromString(String name, String code) {
+            super(URI.create("string:///" + name.replace('.','/') + Kind.SOURCE.extension),Kind.SOURCE);
+            this.code = code;
+          }
+
+          @Override
+          public CharSequence getCharContent(boolean ignoreEncodingErrors) {
+            return code;
+          }
+}
     
     /**
      * Creates new form ScrapReportPanel
@@ -357,6 +384,49 @@ public class MapTester extends javax.swing.JPanel  {
         return file;
     }
     
+     private void addToJar(File source, JarOutputStream target) throws IOException
+    {
+        BufferedInputStream in = null;
+        try
+        {
+            if (source.isDirectory())
+            {
+                String name = source.getPath().replace("\\", "/");
+                if (!name.isEmpty())
+                {
+                    if (!name.endsWith("/"))
+                        name += "/";
+                    JarEntry entry = new JarEntry(name);
+                    entry.setTime(source.lastModified());
+                    target.putNextEntry(entry);
+                    target.closeEntry();
+                }
+                for (File nestedFile: source.listFiles())
+                    addToJar(nestedFile, target);
+                return;
+            }
+            
+            JarEntry entry = new JarEntry(source.getPath().replace("\\", ""));
+            entry.setTime(source.lastModified());
+            target.putNextEntry(entry);
+            in = new BufferedInputStream(new FileInputStream(source.getPath().replace("\\", "")));
+
+            byte[] buffer = new byte[1024];
+            while (true)
+            {
+                int count = in.read(buffer);
+                if (count == -1)
+                    break;
+                target.write(buffer, 0, count);
+            }
+            target.closeEntry();
+        }
+        finally
+        {
+            if (in != null)
+                in.close();
+        }
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -383,6 +453,8 @@ public class MapTester extends javax.swing.JPanel  {
         jLabel6 = new javax.swing.JLabel();
         jToolBar1 = new javax.swing.JToolBar();
         btcheckout = new javax.swing.JButton();
+        btnew = new javax.swing.JButton();
+        btdelete = new javax.swing.JButton();
         btsave = new javax.swing.JButton();
         btcompile = new javax.swing.JButton();
         btinput = new javax.swing.JButton();
@@ -390,6 +462,8 @@ public class MapTester extends javax.swing.JPanel  {
         bthide = new javax.swing.JButton();
         btunhide = new javax.swing.JButton();
         btrun = new javax.swing.JButton();
+        btshiftleft = new javax.swing.JButton();
+        btshiftright = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
 
         setBackground(new java.awt.Color(0, 102, 204));
@@ -432,7 +506,7 @@ public class MapTester extends javax.swing.JPanel  {
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
 
-        btcheckout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/checkout2.png"))); // NOI18N
+        btcheckout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/file.png"))); // NOI18N
         btcheckout.setFocusable(false);
         btcheckout.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btcheckout.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -442,6 +516,28 @@ public class MapTester extends javax.swing.JPanel  {
             }
         });
         jToolBar1.add(btcheckout);
+
+        btnew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/addfile.png"))); // NOI18N
+        btnew.setFocusable(false);
+        btnew.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnew.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnewActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btnew);
+
+        btdelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/deletefile.png"))); // NOI18N
+        btdelete.setFocusable(false);
+        btdelete.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btdelete.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btdelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btdeleteActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btdelete);
 
         btsave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/save.png"))); // NOI18N
         btsave.setFocusable(false);
@@ -509,6 +605,28 @@ public class MapTester extends javax.swing.JPanel  {
             }
         });
         jToolBar1.add(btrun);
+
+        btshiftleft.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/doubleleft.png"))); // NOI18N
+        btshiftleft.setFocusable(false);
+        btshiftleft.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btshiftleft.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btshiftleft.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btshiftleftActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btshiftleft);
+
+        btshiftright.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/doubleright.png"))); // NOI18N
+        btshiftright.setFocusable(false);
+        btshiftright.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btshiftright.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btshiftright.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btshiftrightActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btshiftright);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -766,7 +884,75 @@ public class MapTester extends javax.swing.JPanel  {
     }//GEN-LAST:event_bthideActionPerformed
 
     private void btcompileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcompileActionPerformed
-        // TODO add your handling code here:
+    JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+    DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
+
+    StringWriter writer = new StringWriter();
+    PrintWriter out = new PrintWriter(writer);
+    out.println("public class HelloWorld {");
+    out.println("  public static void main(String args[]) {");
+    out.println("    System.out.println(\"This is in another java file\");");    
+    out.println("  }");
+    out.println("}");
+    out.close();
+    JavaFileObject file = new JavaSourceFromString("HelloWorld", writer.toString());
+
+    Iterable<? extends JavaFileObject> compilationUnits = Arrays.asList(file);
+    CompilationTask task = compiler.getTask(null, null, diagnostics, null, null, compilationUnits);
+
+    boolean success = task.call();
+    
+    // let's create the jar
+            Manifest manifest = new Manifest();
+            manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
+            manifest.getMainAttributes().put(Attributes.Name.MAIN_CLASS, "HelloWorld");
+            JarOutputStream target;
+         try {
+             target = new JarOutputStream(new FileOutputStream(new File("output.jar")), manifest);
+        //     String path = Bootstrapper.class.getProtectionDomain().getCodeSource().getLocation().getPath() + "HelloWorld.class";
+          //  System.out.println(path);
+            //Error with the path I guess.
+         //   addToJar(file.toUri().getPath(), target);
+            String fileclass = file.getName().split("\\.")[0] + ".class";
+            addToJar(new File(fileclass), target);
+            target.close();
+         } catch (FileNotFoundException ex) {
+             Logger.getLogger(MapTester.class.getName()).log(Level.SEVERE, null, ex);
+         } catch (IOException ex) {
+             Logger.getLogger(MapTester.class.getName()).log(Level.SEVERE, null, ex);
+         }
+            
+    
+    taoutput.setText("");
+    for (Diagnostic diagnostic : diagnostics.getDiagnostics()) {
+      taoutput.append(diagnostic.getCode() + "\n");
+      taoutput.append(String.valueOf(diagnostic.getKind()) + "\n");
+      taoutput.append(String.valueOf(diagnostic.getPosition()) + "\n");
+      taoutput.append(String.valueOf(diagnostic.getStartPosition()) + "\n");
+      taoutput.append(String.valueOf(diagnostic.getEndPosition()) + "\n");
+      taoutput.append(String.valueOf(diagnostic.getSource()) + "\n");
+      taoutput.append(diagnostic.getMessage(null) + "\n");
+      
+    }
+    taoutput.append("Success: " + success + "\n");
+    
+/*
+    if (success) {
+      try {
+        Class.forName("HelloWorld").getDeclaredMethod("main", new Class[] { String[].class })
+            .invoke(null, new Object[] { null });
+      } catch (ClassNotFoundException e) {
+        taoutput.append("Class not found: " + e);
+      } catch (NoSuchMethodException e) {
+        taoutput.append("No such method: " + e);
+      } catch (IllegalAccessException e) {
+        taoutput.append("Illegal access: " + e);
+      } catch (InvocationTargetException e) {
+        taoutput.append("Invocation target: " + e);
+      }
+    }
+    */
+    
     }//GEN-LAST:event_btcompileActionPerformed
 
     private void btunhideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btunhideActionPerformed
@@ -793,15 +979,35 @@ public class MapTester extends javax.swing.JPanel  {
         }
     }//GEN-LAST:event_btcheckoutActionPerformed
 
+    private void btshiftleftActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btshiftleftActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btshiftleftActionPerformed
+
+    private void btshiftrightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btshiftrightActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btshiftrightActionPerformed
+
+    private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnewActionPerformed
+
+    private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btdeleteActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btcheckout;
     private javax.swing.JButton btcompile;
+    private javax.swing.JButton btdelete;
     private javax.swing.JButton bthide;
     private javax.swing.JButton btinput;
+    private javax.swing.JButton btnew;
     private javax.swing.JButton btoutput;
     private javax.swing.JButton btrun;
     private javax.swing.JButton btsave;
+    private javax.swing.JButton btshiftleft;
+    private javax.swing.JButton btshiftright;
     private javax.swing.JButton btunhide;
     private javax.swing.JComboBox ddmap;
     private javax.swing.JFileChooser fc;
