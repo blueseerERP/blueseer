@@ -74,13 +74,31 @@ import static com.blueseer.edi.EDI.createIMAP;
 import static com.blueseer.edi.EDI.edilog;
 import static com.blueseer.edi.EDI.getEDIType;
 import com.blueseer.edi.EDIMap.UserDefinedException;
+import static com.blueseer.edi.MapMaint.x;
+import static com.blueseer.edi.ediData.addMapMstr;
+import static com.blueseer.edi.ediData.deleteMapMstr;
 import static com.blueseer.edi.ediData.getMapMstr;
 import com.blueseer.edi.ediData.map_mstr;
+import static com.blueseer.edi.ediData.updateMapMstr;
+import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.luModel;
+import static com.blueseer.utl.BlueSeerUtils.luTable;
+import static com.blueseer.utl.BlueSeerUtils.lual;
+import static com.blueseer.utl.BlueSeerUtils.ludialog;
+import static com.blueseer.utl.BlueSeerUtils.luinput;
+import static com.blueseer.utl.BlueSeerUtils.luml;
+import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import com.blueseer.utl.DTData;
 import com.blueseer.utl.EDData;
+import com.blueseer.utl.IBlueSeerT;
 import com.blueseer.vdr.venData;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -115,6 +133,8 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JViewport;
+import javax.swing.SwingWorker;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaCompiler;
@@ -127,11 +147,15 @@ import javax.tools.ToolProvider;
  *
  * @author vaughnte
  */
-public class MapTester extends javax.swing.JPanel  {
+public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
  
      public Map<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
      File infile = null;
-     
+     // global variable declarations
+                boolean isLoad = false;
+                public static map_mstr x = null;
+                
+                
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{
                             getGlobalColumnTag("select"), 
@@ -230,50 +254,136 @@ public class MapTester extends javax.swing.JPanel  {
         setLanguageTags(this);
     }
 
-    public void getdetail(String rvid) {
+           // interface functions implemented
+    public void executeTask(BlueSeerUtils.dbaction x, String[] y) { 
       
-         modeldetail.setNumRows(0);
-         double total = 0;
-        
-        try {
-
-            Class.forName(bsmf.MainFrame.driver).newInstance();
-            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
-            try {
-                Statement st = bsmf.MainFrame.con.createStatement();
-                ResultSet res = null;
-                int i = 0;
-                String blanket = "";
-                
-                res = st.executeQuery("select rvd_id, rvd_po, rvd_poline, rvd_item, rvd_packingslip, rvd_date, rvd_netprice, rvd_qty, rvd_voqty " +
-                        " from recv_det " +
-                        " where rvd_id = " + "'" + rvid + "'" + ";");
-                while (res.next()) {
-                   modeldetail.addRow(new Object[]{ 
-                      res.getString("rvd_id"), 
-                       res.getString("rvd_po"),
-                       res.getString("rvd_poline"),
-                       res.getString("rvd_item"),
-                       res.getString("rvd_packingslip"),
-                       res.getString("rvd_date"),
-                       currformatDouble(res.getDouble("rvd_netprice")),
-                      res.getInt("rvd_qty"), 
-                      res.getInt("rvd_voqty")});
-                }
-               
-              
+        class Task extends SwingWorker<String[], Void> {
+       
+          String type = "";
+          String[] key = null;
+          
+          public Task(BlueSeerUtils.dbaction type, String[] key) { 
+              this.type = type.name();
+              this.key = key;
+          } 
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
             
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            
+             switch(this.type) {
+                case "add":
+                    message = addRecord(key);
+                    break;
+                case "update":
+                    message = updateRecord(key);
+                    break;
+                case "delete":
+                    message = deleteRecord(key);    
+                    break;
+                case "get":
+                    message = getRecord(key);    
+                    break;    
+                default:
+                    message = new String[]{"1", "unknown action"};
             }
-            bsmf.MainFrame.con.close();
-        } catch (Exception e) {
-            MainFrame.bslog(e);
+            
+            return message;
         }
-
+ 
+        
+       public void done() {
+            try {
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+           if (this.type.equals("delete")) {
+             initvars(null);  
+           } else if (this.type.equals("get")) {
+             updateForm();
+             tbkey.requestFocus();
+           } else {
+             initvars(null);  
+           }
+            
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x, y); 
+       z.execute(); 
+       
     }
+   
+    public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+        
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                if (component instanceof JLabel || component instanceof JTable ) {
+                     continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                if (component instanceof JScrollPane) {
+                    setPanelComponentState((JScrollPane) component, b);
+                }
+                
+                component.setEnabled(b);
+            }
+        }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    
+                    component.setEnabled(b);
+                    
+                }
+            }
+            if (scrollpane != null) {
+                scrollpane.setEnabled(b);
+                JViewport viewport = scrollpane.getViewport();
+                Component[] componentspane = viewport.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    component.setEnabled(b);
+                }
+            }
+    } 
     
     public void setLanguageTags(Object myobj) {
        JPanel panel = null;
@@ -319,29 +429,260 @@ public class MapTester extends javax.swing.JPanel  {
        }
     }
     
-    public void initvars(String[] arg) {
-     
+    public void setComponentDefaultValues() {
+        isLoad = true;
+        tbkey.setText("");
+        tbdesc.setText("");
+        tbversion.setText("");
         
-        java.util.Date now = new java.util.Date();
-        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-        DateFormat dfyear = new SimpleDateFormat("yyyy");
-        DateFormat dfperiod = new SimpleDateFormat("M");
-       
-        tamap.setText("");
-        tasource.setText("");
-        
-        ddmap.removeAllItems();
-        ArrayList<String> maps = ediData.getMapMstrList();
-        for (int i = 0; i < maps.size(); i++) {
-            ddmap.addItem(maps.get(i));
+        ddofs.removeAllItems();
+        ddifs.removeAllItems();
+        ArrayList<String> structs = ediData.getMapStructList();
+        for (int i = 0; i < structs.size(); i++) {
+            ddofs.addItem(structs.get(i));
+        }
+        for (int i = 0; i < structs.size(); i++) {
+            ddifs.addItem(structs.get(i));
         }
         
-        bthide.setEnabled(false);
-        btrun.setEnabled(false);
-        //outputpanel.setVisible(false);
-          
+        ddoutdoctype.removeAllItems();
+        ddindoctype.removeAllItems();
+        ArrayList<String> mylist = OVData.getCodeMstrKeyList("edidoctype");
+        for (int i = 0; i < mylist.size(); i++) {
+            ddoutdoctype.addItem(mylist.get(i));
+            ddindoctype.addItem(mylist.get(i));
+        }
+        
+        
+       isLoad = false;
+    }
+    
+    public void newAction(String x) {
+       setPanelComponentState(this, true);
+        setComponentDefaultValues();
+        BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
+        btupdate.setEnabled(false);
+        btdelete.setEnabled(false);
+        btadd.setEnabled(false);
+        tbkey.setEditable(true);
+        tbkey.setForeground(Color.blue);
+        if (! x.isEmpty()) {
+          tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
+          tbkey.setEditable(false);
+        } 
+        tbkey.requestFocus();
+    }
+    
+    public void setAction(String[] x) {
+        if (x[0].equals("0")) { 
+                   setPanelComponentState(this, true);
+                   btadd.setEnabled(false);
+                   tbkey.setEditable(false);
+                   tbkey.setForeground(Color.blue);
+        } else {
+                   tbkey.setForeground(Color.red); 
+        }
+    }
+     
+    public boolean validateInput(BlueSeerUtils.dbaction x) {
+        Map<String,Integer> f = OVData.getTableInfo("map_mstr");
+        int fc;
+
+        fc = checkLength(f,"map_id");
+        if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbkey.requestFocus();
+            return false;
+        }
+
+         fc = checkLength(f,"map_desc");
+        if (tbdesc.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbdesc.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"map_version");
+        if (tbversion.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbversion.requestFocus();
+            return false;
+        }
+       
+         if (! BlueSeerUtils.isEDIClassFile(tbkey.getText())) {
+                    bsmf.MainFrame.show(getMessageTag(1145,tbkey.getText()));
+                    tbkey.requestFocus();
+                    return false;
+        }
+        
+      return true;
+    }
+    
+    public void initvars(String[] arg) {
+       
+       setPanelComponentState(this, false); 
+       setComponentDefaultValues();
+        btadd.setEnabled(true);
+        btlookup.setEnabled(true);
+      
+       
+        
+        if (arg != null && arg.length > 0) {
+            executeTask(BlueSeerUtils.dbaction.get,arg);
+        } else {
+            tbkey.setEnabled(true);
+            tbkey.setEditable(true);
+            tbkey.requestFocus();
+        }
     }
    
+    public String[] getRecord(String[] key) {
+        x = getMapMstr(key);   
+        return x.m();
+    }
+    
+    public map_mstr createRecord() { 
+        map_mstr x = new map_mstr(null, tbkey.getText(),
+                tbdesc.getText(),
+                tbversion.getText(),
+                ddifs.getSelectedItem().toString(),
+                ddofs.getSelectedItem().toString(),
+                ddindoctype.getSelectedItem().toString(),
+                ddinfiletype.getSelectedItem().toString(),
+                ddoutdoctype.getSelectedItem().toString(),
+                ddoutfiletype.getSelectedItem().toString()
+                );
+        /* potential validation mechanism...would need association between record field and input field
+        for(Field f : x.getClass().getDeclaredFields()){
+        System.out.println(f.getName());
+        }
+        */
+        return x;
+    }
+       
+    public String[] addRecord(String[] key) {
+         String[] m = addMapMstr(createRecord());
+         return m;
+    }
+        
+    public String[] updateRecord(String[] key) {
+         String[] m = updateMapMstr(createRecord());
+         return m;
+    }
+    
+    public String[] deleteRecord(String[] key) {
+        String[] m = new String[2];
+        boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
+        if (proceed) {
+         m = deleteMapMstr(createRecord()); 
+         initvars(null);
+        } else {
+           m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
+        }
+         return m;
+    }
+    
+    public void lookUpFrame() {
+        
+        luinput.removeActionListener(lual);
+        lual = new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        if (lurb1.isSelected()) {  
+         luModel = DTData.getMapBrowseUtil(luinput.getText(),0, "map_id"); 
+        } else {
+         luModel = DTData.getMapBrowseUtil(luinput.getText(),0, "map_desc");   
+        }
+        luTable.setModel(luModel);
+        luTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (luModel.getRowCount() < 1) {
+            ludialog.setTitle(getMessageTag(1001));
+        } else {
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
+        }
+        }
+        };
+        luinput.addActionListener(lual);
+        
+        luTable.removeMouseListener(luml);
+        luml = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0) {
+                ludialog.dispose();
+                initvars(new String[]{target.getValueAt(row,1).toString()});
+                }
+            }
+        };
+        luTable.addMouseListener(luml);
+      
+        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), 
+                getClassLabelTag("lbldesc", this.getClass().getSimpleName())); 
+        
+        
+    }
+
+    public void updateForm() {
+        tbdesc.setText(x.map_desc());
+        tbkey.setText(x.map_id());
+        tbversion.setText(x.map_version());
+        ddofs.setSelectedItem(x.map_ofs());
+        ddifs.setSelectedItem(x.map_ifs());
+        ddindoctype.setSelectedItem(x.map_indoctype());
+        ddinfiletype.setSelectedItem(x.map_infiletype());
+        ddoutdoctype.setSelectedItem(x.map_outdoctype());
+        ddoutfiletype.setSelectedItem(x.map_outfiletype());
+        setAction(x.m()); 
+    }
+    
+    
+    
+    public void getdetail(String rvid) {
+      
+         modeldetail.setNumRows(0);
+         double total = 0;
+        
+        try {
+
+            Class.forName(bsmf.MainFrame.driver).newInstance();
+            bsmf.MainFrame.con = DriverManager.getConnection(bsmf.MainFrame.url + bsmf.MainFrame.db, bsmf.MainFrame.user, bsmf.MainFrame.pass);
+            try {
+                Statement st = bsmf.MainFrame.con.createStatement();
+                ResultSet res = null;
+                int i = 0;
+                String blanket = "";
+                
+                res = st.executeQuery("select rvd_id, rvd_po, rvd_poline, rvd_item, rvd_packingslip, rvd_date, rvd_netprice, rvd_qty, rvd_voqty " +
+                        " from recv_det " +
+                        " where rvd_id = " + "'" + rvid + "'" + ";");
+                while (res.next()) {
+                   modeldetail.addRow(new Object[]{ 
+                      res.getString("rvd_id"), 
+                       res.getString("rvd_po"),
+                       res.getString("rvd_poline"),
+                       res.getString("rvd_item"),
+                       res.getString("rvd_packingslip"),
+                       res.getString("rvd_date"),
+                       currformatDouble(res.getDouble("rvd_netprice")),
+                      res.getInt("rvd_qty"), 
+                      res.getInt("rvd_voqty")});
+                }
+               
+              
+            
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            }
+            bsmf.MainFrame.con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+
+    }
+    
     public File getfile() {
         
         File file = null;
@@ -449,13 +790,13 @@ public class MapTester extends javax.swing.JPanel  {
         jScrollPane5 = new javax.swing.JScrollPane();
         taoutput = new javax.swing.JTextArea();
         jPanel2 = new javax.swing.JPanel();
-        ddmap = new javax.swing.JComboBox();
         jLabel6 = new javax.swing.JLabel();
         jToolBar1 = new javax.swing.JToolBar();
-        btcheckout = new javax.swing.JButton();
         btnew = new javax.swing.JButton();
+        btlookup = new javax.swing.JButton();
+        btadd = new javax.swing.JButton();
         btdelete = new javax.swing.JButton();
-        btsave = new javax.swing.JButton();
+        btupdate = new javax.swing.JButton();
         btcompile = new javax.swing.JButton();
         btinput = new javax.swing.JButton();
         btoutput = new javax.swing.JButton();
@@ -464,11 +805,30 @@ public class MapTester extends javax.swing.JPanel  {
         btrun = new javax.swing.JButton();
         btshiftleft = new javax.swing.JButton();
         btshiftright = new javax.swing.JButton();
+        tbkey = new javax.swing.JTextField();
+        tbpath = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        ddifs = new javax.swing.JComboBox<>();
+        ddofs = new javax.swing.JComboBox<>();
+        ddindoctype = new javax.swing.JComboBox<>();
+        ddoutdoctype = new javax.swing.JComboBox<>();
+        ddinfiletype = new javax.swing.JComboBox<>();
+        ddoutfiletype = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        tbdesc = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
+        tbversion = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Map Tester"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Mapper"));
         jPanel1.setName("panelmain"); // NOI18N
 
         tablepanel.setLayout(new javax.swing.BoxLayout(tablepanel, javax.swing.BoxLayout.LINE_AXIS));
@@ -502,22 +862,11 @@ public class MapTester extends javax.swing.JPanel  {
         jLabel6.setText("Map");
         jLabel6.setName("lblfromreceiver"); // NOI18N
 
-        jToolBar1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jToolBar1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
 
-        btcheckout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/file.png"))); // NOI18N
-        btcheckout.setFocusable(false);
-        btcheckout.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btcheckout.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btcheckout.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btcheckoutActionPerformed(evt);
-            }
-        });
-        jToolBar1.add(btcheckout);
-
-        btnew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/addfile.png"))); // NOI18N
+        btnew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/file.png"))); // NOI18N
         btnew.setFocusable(false);
         btnew.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnew.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -527,6 +876,29 @@ public class MapTester extends javax.swing.JPanel  {
             }
         });
         jToolBar1.add(btnew);
+
+        btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/checkout.png"))); // NOI18N
+        btlookup.setFocusable(false);
+        btlookup.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btlookup.setName("btlookup"); // NOI18N
+        btlookup.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btlookup.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btlookupActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btlookup);
+
+        btadd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/addfile.png"))); // NOI18N
+        btadd.setFocusable(false);
+        btadd.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btadd.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btadd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btaddActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btadd);
 
         btdelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/deletefile.png"))); // NOI18N
         btdelete.setFocusable(false);
@@ -539,11 +911,16 @@ public class MapTester extends javax.swing.JPanel  {
         });
         jToolBar1.add(btdelete);
 
-        btsave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/save.png"))); // NOI18N
-        btsave.setFocusable(false);
-        btsave.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btsave.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(btsave);
+        btupdate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/save.png"))); // NOI18N
+        btupdate.setFocusable(false);
+        btupdate.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btupdate.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btupdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btupdateActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(btupdate);
 
         btcompile.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/coffee.png"))); // NOI18N
         btcompile.setFocusable(false);
@@ -628,28 +1005,112 @@ public class MapTester extends javax.swing.JPanel  {
         });
         jToolBar1.add(btshiftright);
 
+        jLabel1.setText("Path");
+
+        ddinfiletype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "FF", "X12", "DB" }));
+
+        ddoutfiletype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "FF", "X12", "DB" }));
+
+        jLabel2.setText("IFS");
+
+        jLabel3.setText("OFS");
+
+        jLabel4.setText("In Doc Type");
+
+        jLabel5.setText("Out Doc Type");
+
+        jLabel7.setText("In File Type");
+
+        jLabel8.setText("Out File Type");
+
+        jLabel9.setText("Desc");
+
+        jLabel10.setText("Version");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel6)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
+                        .addComponent(jLabel2))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel9))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(tbpath)
+                                        .addGap(96, 96, 96)))
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel5)))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ddmap, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 281, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(ddoutdoctype, 0, 138, Short.MAX_VALUE)
+                    .addComponent(ddofs, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ddindoctype, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ddifs, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel10))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(ddinfiletype, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(ddoutfiletype, 0, 93, Short.MAX_VALUE))
+                    .addComponent(tbversion, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(19, 19, 19))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(ddifs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(ddinfiletype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel2)
+                        .addComponent(jLabel7)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ddmap, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6))
+                    .addComponent(jLabel6)
+                    .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ddofs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ddoutfiletype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ddindoctype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbpath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel4)
+                    .addComponent(tbversion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ddoutdoctype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5)
+                    .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -960,7 +1421,7 @@ public class MapTester extends javax.swing.JPanel  {
        bthide.setEnabled(true);
     }//GEN-LAST:event_btunhideActionPerformed
 
-    private void btcheckoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcheckoutActionPerformed
+    private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
         infile = getMapfile();
         tamap.setText("");
         if (infile != null) {
@@ -977,7 +1438,7 @@ public class MapTester extends javax.swing.JPanel  {
         } else {
             btrun.setEnabled(false);
         }
-    }//GEN-LAST:event_btcheckoutActionPerformed
+    }//GEN-LAST:event_btnewActionPerformed
 
     private void btshiftleftActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btshiftleftActionPerformed
         // TODO add your handling code here:
@@ -987,32 +1448,55 @@ public class MapTester extends javax.swing.JPanel  {
         // TODO add your handling code here:
     }//GEN-LAST:event_btshiftrightActionPerformed
 
-    private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnewActionPerformed
+    private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
+        newAction("");
+    }//GEN-LAST:event_btaddActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btdeleteActionPerformed
 
+    private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btupdateActionPerformed
+
+    private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
+        lookUpFrame();
+    }//GEN-LAST:event_btlookupActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btcheckout;
+    private javax.swing.JButton btadd;
     private javax.swing.JButton btcompile;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton bthide;
     private javax.swing.JButton btinput;
+    private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btoutput;
     private javax.swing.JButton btrun;
-    private javax.swing.JButton btsave;
     private javax.swing.JButton btshiftleft;
     private javax.swing.JButton btshiftright;
     private javax.swing.JButton btunhide;
-    private javax.swing.JComboBox ddmap;
+    private javax.swing.JButton btupdate;
+    private javax.swing.JComboBox<String> ddifs;
+    private javax.swing.JComboBox<String> ddindoctype;
+    private javax.swing.JComboBox<String> ddinfiletype;
+    private javax.swing.JComboBox<String> ddofs;
+    private javax.swing.JComboBox<String> ddoutdoctype;
+    private javax.swing.JComboBox<String> ddoutfiletype;
     private javax.swing.JFileChooser fc;
     private javax.swing.JPanel inputpanel;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -1025,5 +1509,9 @@ public class MapTester extends javax.swing.JPanel  {
     private javax.swing.JTextArea tamap;
     private javax.swing.JTextArea taoutput;
     private javax.swing.JTextArea tasource;
+    private javax.swing.JTextField tbdesc;
+    private javax.swing.JTextField tbkey;
+    private javax.swing.JTextField tbpath;
+    private javax.swing.JTextField tbversion;
     // End of variables declaration//GEN-END:variables
 }
