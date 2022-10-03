@@ -133,6 +133,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JToolBar;
 import javax.swing.JViewport;
 import javax.swing.SwingWorker;
 import javax.tools.Diagnostic;
@@ -326,12 +327,15 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
         JPanel panel = null;
         JTabbedPane tabpane = null;
         JScrollPane scrollpane = null;
+        JToolBar toolbarpane = null;
         if (myobj instanceof JPanel) {
             panel = (JPanel) myobj;
         } else if (myobj instanceof JTabbedPane) {
            tabpane = (JTabbedPane) myobj; 
         } else if (myobj instanceof JScrollPane) {
-           scrollpane = (JScrollPane) myobj;    
+           scrollpane = (JScrollPane) myobj; 
+        } else if (myobj instanceof JToolBar) {
+           toolbarpane = (JToolBar) myobj;      
         } else {
             return;
         }
@@ -353,6 +357,9 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
                 if (component instanceof JScrollPane) {
                     setPanelComponentState((JScrollPane) component, b);
                 }
+                if (component instanceof JToolBar) {
+                    setPanelComponentState((JToolBar) component, b);
+                }
                 
                 component.setEnabled(b);
             }
@@ -370,6 +377,16 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
                     
                     component.setEnabled(b);
                     
+                }
+            }
+            if (toolbarpane != null) {
+                toolbarpane.setEnabled(b);
+                Component[] componentspane = toolbarpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    component.setEnabled(b);
                 }
             }
             if (scrollpane != null) {
@@ -463,7 +480,7 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
         BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
         btupdate.setEnabled(false);
         btdelete.setEnabled(false);
-        btadd.setEnabled(false);
+        btnew.setEnabled(false);
         tbkey.setEditable(true);
         tbkey.setForeground(Color.blue);
         if (! x.isEmpty()) {
@@ -522,7 +539,7 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
        
        setPanelComponentState(this, false); 
        setComponentDefaultValues();
-        btadd.setEnabled(true);
+        btnew.setEnabled(true);
         btlookup.setEnabled(true);
       
        
@@ -535,6 +552,7 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
             tbkey.requestFocus();
         }
     }
+   
    
     public String[] getRecord(String[] key) {
         x = getMapMstr(key);   
@@ -791,8 +809,9 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
         taoutput = new javax.swing.JTextArea();
         jPanel2 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
-        jToolBar1 = new javax.swing.JToolBar();
+        toolbar = new javax.swing.JToolBar();
         btnew = new javax.swing.JButton();
+        btclear = new javax.swing.JButton();
         btlookup = new javax.swing.JButton();
         btadd = new javax.swing.JButton();
         btdelete = new javax.swing.JButton();
@@ -862,11 +881,12 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
         jLabel6.setText("Map");
         jLabel6.setName("lblfromreceiver"); // NOI18N
 
-        jToolBar1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        jToolBar1.setFloatable(false);
-        jToolBar1.setRollover(true);
+        toolbar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        toolbar.setFloatable(false);
+        toolbar.setRollover(true);
 
-        btnew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/file.png"))); // NOI18N
+        btnew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/newfile.png"))); // NOI18N
+        btnew.setToolTipText("new");
         btnew.setFocusable(false);
         btnew.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnew.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -875,7 +895,18 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
                 btnewActionPerformed(evt);
             }
         });
-        jToolBar1.add(btnew);
+        toolbar.add(btnew);
+
+        btclear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/file.png"))); // NOI18N
+        btclear.setFocusable(false);
+        btclear.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btclear.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btclearActionPerformed(evt);
+            }
+        });
+        toolbar.add(btclear);
 
         btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/checkout.png"))); // NOI18N
         btlookup.setFocusable(false);
@@ -887,7 +918,7 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
                 btlookupActionPerformed(evt);
             }
         });
-        jToolBar1.add(btlookup);
+        toolbar.add(btlookup);
 
         btadd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/addfile.png"))); // NOI18N
         btadd.setFocusable(false);
@@ -898,7 +929,7 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
                 btaddActionPerformed(evt);
             }
         });
-        jToolBar1.add(btadd);
+        toolbar.add(btadd);
 
         btdelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/deletefile.png"))); // NOI18N
         btdelete.setFocusable(false);
@@ -909,7 +940,7 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
                 btdeleteActionPerformed(evt);
             }
         });
-        jToolBar1.add(btdelete);
+        toolbar.add(btdelete);
 
         btupdate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/save.png"))); // NOI18N
         btupdate.setFocusable(false);
@@ -920,7 +951,7 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
                 btupdateActionPerformed(evt);
             }
         });
-        jToolBar1.add(btupdate);
+        toolbar.add(btupdate);
 
         btcompile.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/coffee.png"))); // NOI18N
         btcompile.setFocusable(false);
@@ -931,7 +962,7 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
                 btcompileActionPerformed(evt);
             }
         });
-        jToolBar1.add(btcompile);
+        toolbar.add(btcompile);
 
         btinput.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/leftdoc.png"))); // NOI18N
         btinput.setFocusable(false);
@@ -942,13 +973,13 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
                 btinputActionPerformed(evt);
             }
         });
-        jToolBar1.add(btinput);
+        toolbar.add(btinput);
 
         btoutput.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/rightdoc.png"))); // NOI18N
         btoutput.setFocusable(false);
         btoutput.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btoutput.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToolBar1.add(btoutput);
+        toolbar.add(btoutput);
 
         bthide.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/hide.png"))); // NOI18N
         bthide.setFocusable(false);
@@ -959,7 +990,7 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
                 bthideActionPerformed(evt);
             }
         });
-        jToolBar1.add(bthide);
+        toolbar.add(bthide);
 
         btunhide.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/unhide.png"))); // NOI18N
         btunhide.setFocusable(false);
@@ -970,7 +1001,7 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
                 btunhideActionPerformed(evt);
             }
         });
-        jToolBar1.add(btunhide);
+        toolbar.add(btunhide);
 
         btrun.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lightning.png"))); // NOI18N
         btrun.setFocusable(false);
@@ -981,7 +1012,7 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
                 btrunActionPerformed(evt);
             }
         });
-        jToolBar1.add(btrun);
+        toolbar.add(btrun);
 
         btshiftleft.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/doubleleft.png"))); // NOI18N
         btshiftleft.setFocusable(false);
@@ -992,7 +1023,7 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
                 btshiftleftActionPerformed(evt);
             }
         });
-        jToolBar1.add(btshiftleft);
+        toolbar.add(btshiftleft);
 
         btshiftright.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/doubleright.png"))); // NOI18N
         btshiftright.setFocusable(false);
@@ -1003,7 +1034,7 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
                 btshiftrightActionPerformed(evt);
             }
         });
-        jToolBar1.add(btshiftright);
+        toolbar.add(btshiftright);
 
         jLabel1.setText("Path");
 
@@ -1034,7 +1065,7 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(toolbar, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
                         .addComponent(jLabel2))
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -1083,7 +1114,7 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(toolbar, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(ddifs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(ddinfiletype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1165,7 +1196,7 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
 
     private void btrunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrunActionPerformed
         String[] c = EDI.initEDIControl();
-        map_mstr x = getMapMstr(new String[]{ddmap.getSelectedItem().toString()});
+        map_mstr x = getMapMstr(new String[]{tbkey.getText()});
         
         
         // now absorb file into doc structure for input into map
@@ -1422,6 +1453,8 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
     }//GEN-LAST:event_btunhideActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
+        newAction("");
+        /*
         infile = getMapfile();
         tamap.setText("");
         if (infile != null) {
@@ -1438,6 +1471,7 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
         } else {
             btrun.setEnabled(false);
         }
+        */
     }//GEN-LAST:event_btnewActionPerformed
 
     private void btshiftleftActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btshiftleftActionPerformed
@@ -1449,7 +1483,11 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
     }//GEN-LAST:event_btshiftrightActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-        newAction("");
+        if (! validateInput(BlueSeerUtils.dbaction.add)) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask(BlueSeerUtils.dbaction.add, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
@@ -1457,16 +1495,26 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-        // TODO add your handling code here:
+         if (! validateInput(BlueSeerUtils.dbaction.update)) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask(BlueSeerUtils.dbaction.update, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
         lookUpFrame();
     }//GEN-LAST:event_btlookupActionPerformed
 
+    private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
+        BlueSeerUtils.messagereset();
+        initvars(null);
+    }//GEN-LAST:event_btclearActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
+    private javax.swing.JButton btclear;
     private javax.swing.JButton btcompile;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton bthide;
@@ -1503,7 +1551,6 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JToolBar jToolBar1;
     private javax.swing.JPanel outputpanel;
     private javax.swing.JPanel tablepanel;
     private javax.swing.JTextArea tamap;
@@ -1513,5 +1560,6 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
     private javax.swing.JTextField tbkey;
     private javax.swing.JTextField tbpath;
     private javax.swing.JTextField tbversion;
+    private javax.swing.JToolBar toolbar;
     // End of variables declaration//GEN-END:variables
 }

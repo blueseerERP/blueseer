@@ -152,7 +152,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <Component id="jToolBar1" min="-2" pref="371" max="-2" attributes="0"/>
+                              <Component id="toolbar" min="-2" pref="371" max="-2" attributes="0"/>
                               <EmptySpace pref="47" max="32767" attributes="0"/>
                               <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -218,7 +218,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="jToolBar1" min="-2" pref="28" max="-2" attributes="0"/>
+                          <Component id="toolbar" min="-2" pref="28" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="ddifs" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="ddinfiletype" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -263,7 +263,7 @@
                 <Property name="name" type="java.lang.String" value="lblfromreceiver" noResource="true"/>
               </Properties>
             </Component>
-            <Container class="javax.swing.JToolBar" name="jToolBar1">
+            <Container class="javax.swing.JToolBar" name="toolbar">
               <Properties>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
@@ -279,6 +279,20 @@
                 <Component class="javax.swing.JButton" name="btnew">
                   <Properties>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/images/newfile.png"/>
+                    </Property>
+                    <Property name="toolTipText" type="java.lang.String" value="new"/>
+                    <Property name="focusable" type="boolean" value="false"/>
+                    <Property name="horizontalTextPosition" type="int" value="0"/>
+                    <Property name="verticalTextPosition" type="int" value="3"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnewActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JButton" name="btclear">
+                  <Properties>
+                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                       <Image iconType="3" name="/images/file.png"/>
                     </Property>
                     <Property name="focusable" type="boolean" value="false"/>
@@ -286,7 +300,7 @@
                     <Property name="verticalTextPosition" type="int" value="3"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnewActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btclearActionPerformed"/>
                   </Events>
                 </Component>
                 <Component class="javax.swing.JButton" name="btlookup">
