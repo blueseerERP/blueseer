@@ -694,7 +694,9 @@ CREATE TABLE "map_mstr" (
   "map_indoctype" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "map_infiletype" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "map_outdoctype" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "map_outfiletype" varchar(30) NOT NULL COLLATE NOCASE DEFAULT ''
+  "map_outfiletype" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "map_source" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
+  "map_package" varchar(30) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
