@@ -662,6 +662,20 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
         ddinfiletype.setSelectedItem(x.map_infiletype());
         ddoutdoctype.setSelectedItem(x.map_outdoctype());
         ddoutfiletype.setSelectedItem(x.map_outfiletype());
+        Path path = FileSystems.getDefault().getPath(tbpath.getText());
+        tamap.setText("");
+        if (path.toFile().exists()) {
+            try {   
+                List<String> lines = Files.readAllLines(path);
+                for (String segment : lines ) {
+                        tamap.append(segment);
+                        tamap.append("\n");
+                }
+            } catch (IOException ex) {
+                bslog(ex);
+            }   
+        }
+        
         setAction(x.m()); 
     }
     
@@ -727,15 +741,18 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
     
     public void jarFile(JavaFileObject file) {
         // let's create the jar
+            String filename = file.getName().split("\\.")[0].replace("\\", "").replace("/", "");  // strip leading dir backslash
+            String fileclass = filename + ".class";
+            String jarname = filename + ".jar";
+          //  bsmf.MainFrame.show(filename + "/" + jarname);
             Manifest manifest = new Manifest();
             manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
-            manifest.getMainAttributes().put(Attributes.Name.MAIN_CLASS, file.getName().split("\\.")[0]);
+            manifest.getMainAttributes().put(Attributes.Name.MAIN_CLASS, filename);
             JarOutputStream target;
-            String fileclass = file.getName().split("\\.")[0] + ".class";
-            String jarname = file.getName().split("\\.")[0] + ".jar";
+            Path path = FileSystems.getDefault().getPath("edi/maps/" + jarname);
             
          try {
-             target = new JarOutputStream(new FileOutputStream(new File(jarname)), manifest);
+             target = new JarOutputStream(new FileOutputStream(path.toFile()), manifest);
         //     String path = Bootstrapper.class.getProtectionDomain().getCodeSource().getLocation().getPath() + "HelloWorld.class";
           //  System.out.println(path);
             //Error with the path I guess.
@@ -779,6 +796,9 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
         
         taoutput.setText("");
         for (Diagnostic diagnostic : diagnostics.getDiagnostics()) {
+          if (String.valueOf(diagnostic.getKind()).equals("NOTE")) {
+              continue;
+          }
           taoutput.append(diagnostic.getCode() + "\n");
           taoutput.append(String.valueOf(diagnostic.getKind()) + "\n");
           taoutput.append(String.valueOf(diagnostic.getPosition()) + "\n");
@@ -786,7 +806,7 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
           taoutput.append(String.valueOf(diagnostic.getEndPosition()) + "\n");
           taoutput.append(String.valueOf(diagnostic.getSource()) + "\n");
           taoutput.append(diagnostic.getMessage(null) + "\n");
-
+          taoutput.append("\n");
         }
         taoutput.append("Success: " + success + "\n");
 
@@ -857,7 +877,7 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
                     addToJar(nestedFile, target);
                 return;
             }
-            
+          //  bsmf.MainFrame.show(source.getName() + "<->" + source.getPath());
             JarEntry entry = new JarEntry(source.getPath().replace("\\", ""));
             entry.setTime(source.lastModified());
             target.putNextEntry(entry);
@@ -1299,13 +1319,15 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
 
     private void btrunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrunActionPerformed
         String[] c = EDI.initEDIControl();
-        map_mstr x = getMapMstr(new String[]{tbkey.getText()});
+        map_mstr m = getMapMstr(new String[]{tbkey.getText()});
         
         
         // now absorb file into doc structure for input into map
         // ...only processing the first doc in a envelope if file contains multiple...for testing purposes
-         BufferedReader f = null;
-         char[] cbuf = null;
+         
+        // BufferedReader f = null;
+         char[] cbuf  = tasource.getText().toCharArray();
+         /*
          try {
          f = new BufferedReader(new FileReader(infile));
          cbuf = new char[(int) infile.length()];
@@ -1315,8 +1337,9 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
              return;
          }
        
+         */
         // beginning of needs revamping 
-        String[] editype = getEDIType(cbuf, infile.getName());
+        String[] editype = getEDIType(cbuf, "testdata");
         ArrayList<String> doc = new ArrayList<String>();
         
         if (editype[0].equals("X12")) {
@@ -1408,29 +1431,29 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
                 Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
                 Object oc = method.invoke(obj, doc, c);
                 String[] oString = (String[]) oc;
-                tasource.setText(oString[0]);
+                taoutput.setText(oString[0]);
                 
                 if (oString.length > 1) {
-                    tasource.append("\n" + oString[1]);
+                    taoutput.append("\n" + oString[1]);
                 }
                 
                 
                 } catch (InvocationTargetException ex) {
                   sw = new StringWriter();
                   ex.printStackTrace(new PrintWriter(sw));
-                  tasource.setText(sw.toString());
+                  taoutput.setText(sw.toString());
                   edilog(ex);
                 } catch (ClassNotFoundException ex) {
                   sw = new StringWriter();
                   ex.printStackTrace(new PrintWriter(sw));
-                  tasource.setText(sw.toString());
+                  taoutput.setText(sw.toString());
                   edilog(ex);
                 } catch (IllegalAccessException |
                          InstantiationException | NoSuchMethodException ex
                         ) {
                   sw = new StringWriter();  
                   ex.printStackTrace(new PrintWriter(sw));
-                  tasource.setText(sw.toString());
+                  taoutput.setText(sw.toString());
                   edilog(ex);
                 } finally {
                     
@@ -1520,7 +1543,7 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
     }//GEN-LAST:event_btshiftleftActionPerformed
 
     private void btshiftrightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btshiftrightActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_btshiftrightActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
@@ -1539,7 +1562,7 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
          if (! validateInput(BlueSeerUtils.dbaction.update)) {
            return;
        }
-        setPanelComponentState(this, false);
+        // setPanelComponentState(this, false);
         executeTask(BlueSeerUtils.dbaction.update, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btupdateActionPerformed
 
@@ -1555,9 +1578,11 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
     private void btfindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btfindActionPerformed
         
         infile = getMapfile();
-        tbpath.setText(infile.getAbsolutePath());
+        
       //  Path path = FileSystems.getDefault().getPath(infile.getAbsolutePath());
         if (infile != null && infile.exists()) {
+            tbpath.setText(infile.getAbsolutePath());
+            tamap.setText("");
             try {   
                 List<String> lines = Files.readAllLines(infile.toPath());
                 for (String segment : lines ) {
