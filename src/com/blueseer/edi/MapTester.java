@@ -532,13 +532,13 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
             tbversion.requestFocus();
             return false;
         }
-       
+       /*
          if (! BlueSeerUtils.isEDIClassFile(tbkey.getText())) {
                     bsmf.MainFrame.show(getMessageTag(1145,tbkey.getText()));
                     tbkey.requestFocus();
                     return false;
         }
-        
+        */
       return true;
     }
     
@@ -756,14 +756,18 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
 
         StringWriter writer = new StringWriter();
         PrintWriter out = new PrintWriter(writer);
-        out.println("public class HelloWorld {");
-        out.println("  public static void main(String args[]) {");
-        out.println("    System.out.println(\"This is in another java file\");");    
-        out.println("  }");
+        out.println("import java.util.ArrayList;");
+        out.println("import java.io.IOException;");
+        out.println("public class " + tbkey.getText() + " extends com.blueseer.edi.EDIMap " +  " {");
+        out.println("  public String[] Mapdata(ArrayList doc, String[] c) throws IOException, UserDefinedException  {");
+        out.println(tamap.getText());   
+        out.println("return packagePayLoad(c);  }");
         out.println("}");
         out.close();
         JavaFileObject file = new JavaSourceFromString(tbkey.getText(), writer.toString());
 
+        
+        
         Iterable<? extends JavaFileObject> compilationUnits = Arrays.asList(file);
         CompilationTask task = compiler.getTask(null, null, diagnostics, null, null, compilationUnits);
 
