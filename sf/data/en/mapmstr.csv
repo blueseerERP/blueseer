@@ -1,7 +1,7 @@
-EDIMaps.ACME850,ACME Purchase Order,generic,X12850.csv,ORDERS05.csv,850,X12,850idoc,FF
-EDIMaps.ACME856,ACME Advance Shipping Notice,generic,SHPMNT05.csv,X12856.csv,856idoc,FF,856,X12
-EDIMaps.Generic850i,Purchase Order to Database,generic,X12850.csv,850db,850,X12,850,DB
-EDIMaps.Generic855i,Acknowledgment Order to Database,generic,X12855.csv,855db,855,X12,855,DB
-EDIMaps.Generic856o,Database to ASN,generic,856db,X12856.csv,856db,DB,856,X12
-EDIMaps.Generic810o,Database to Invoice,generic,810db,X12810.csv,810db,DB,810,X12
-EDIMaps.Generic855o,Database to Acknowledgement,generic,855db,X12855.csv,855db,DB,855,X12
+EDIMaps.ACME850,ACME Purchase Order,generic,X12850.csv,ORDERS05.csv,850,X12,850idoc,FF,,
+EDIMaps.ACME856,ACME Advance Shipping Notice,generic,SHPMNT05.csv,X12856.csv,856idoc,FF,856,X12,,
+EDIMaps.Generic850i,Purchase Order to Database,generic,X12850.csv,850db,850,X12,850,DB,,
+EDIMaps.Generic855i,Acknowledgment Order to Database,generic,X12855.csv,855db,855,X12,855,DB,,
+EDIMaps.Generic856o,Database to ASN,generic,856db,X12856.csv,856db,DB,856,X12,,
+EDIMaps.Generic810o,Database to Invoice,generic,810db,X12810.csv,810db,DB,810,X12,,
+EDIMaps.Generic855o,Database to Acknowledgement,generic,855db,X12855.csv,855db,DB,855,X12,,

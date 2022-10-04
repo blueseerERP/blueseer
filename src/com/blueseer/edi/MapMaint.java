@@ -384,7 +384,9 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 ddindoctype.getSelectedItem().toString(),
                 ddinfiletype.getSelectedItem().toString(),
                 ddoutdoctype.getSelectedItem().toString(),
-                ddoutfiletype.getSelectedItem().toString()
+                ddoutfiletype.getSelectedItem().toString(),
+                "",
+                ""
                 );
         /* potential validation mechanism...would need association between record field and input field
         for(Field f : x.getClass().getDeclaredFields()){

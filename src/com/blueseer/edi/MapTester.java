@@ -456,6 +456,8 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
         tbkey.setText("");
         tbdesc.setText("");
         tbversion.setText("");
+        tbpath.setText("");
+        tamap.setText("");
         
         ddofs.removeAllItems();
         ddifs.removeAllItems();
@@ -723,6 +725,70 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
          }
     }
     
+    public void jarFile(JavaFileObject file) {
+        // let's create the jar
+            Manifest manifest = new Manifest();
+            manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
+            manifest.getMainAttributes().put(Attributes.Name.MAIN_CLASS, file.getName().split("\\.")[0]);
+            JarOutputStream target;
+            String fileclass = file.getName().split("\\.")[0] + ".class";
+            String jarname = file.getName().split("\\.")[0] + ".jar";
+            
+         try {
+             target = new JarOutputStream(new FileOutputStream(new File(jarname)), manifest);
+        //     String path = Bootstrapper.class.getProtectionDomain().getCodeSource().getLocation().getPath() + "HelloWorld.class";
+          //  System.out.println(path);
+            //Error with the path I guess.
+         //   addToJar(file.toUri().getPath(), target);
+            
+            addToJar(new File(fileclass), target);
+            target.close();
+         } catch (FileNotFoundException ex) {
+             bslog(ex);
+         } catch (IOException ex) {
+             bslog(ex);
+         }
+    }
+    
+    public JavaFileObject compileFile() {
+        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
+
+        StringWriter writer = new StringWriter();
+        PrintWriter out = new PrintWriter(writer);
+        out.println("public class HelloWorld {");
+        out.println("  public static void main(String args[]) {");
+        out.println("    System.out.println(\"This is in another java file\");");    
+        out.println("  }");
+        out.println("}");
+        out.close();
+        JavaFileObject file = new JavaSourceFromString(tbkey.getText(), writer.toString());
+
+        Iterable<? extends JavaFileObject> compilationUnits = Arrays.asList(file);
+        CompilationTask task = compiler.getTask(null, null, diagnostics, null, null, compilationUnits);
+
+        boolean success = task.call();
+
+        if (! success) {
+            file = null;
+        }
+        
+        taoutput.setText("");
+        for (Diagnostic diagnostic : diagnostics.getDiagnostics()) {
+          taoutput.append(diagnostic.getCode() + "\n");
+          taoutput.append(String.valueOf(diagnostic.getKind()) + "\n");
+          taoutput.append(String.valueOf(diagnostic.getPosition()) + "\n");
+          taoutput.append(String.valueOf(diagnostic.getStartPosition()) + "\n");
+          taoutput.append(String.valueOf(diagnostic.getEndPosition()) + "\n");
+          taoutput.append(String.valueOf(diagnostic.getSource()) + "\n");
+          taoutput.append(diagnostic.getMessage(null) + "\n");
+
+        }
+        taoutput.append("Success: " + success + "\n");
+
+        return file;
+    }
+    
     public File getfile() {
         
         File file = null;
@@ -765,7 +831,8 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
         return file;
     }
     
-     private void addToJar(File source, JarOutputStream target) throws IOException
+    
+    private void addToJar(File source, JarOutputStream target) throws IOException
     {
         BufferedInputStream in = null;
         try
@@ -1408,57 +1475,12 @@ public class MapTester extends javax.swing.JPanel implements IBlueSeerT  {
     }//GEN-LAST:event_bthideActionPerformed
 
     private void btcompileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcompileActionPerformed
-    JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-    DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
-
-    StringWriter writer = new StringWriter();
-    PrintWriter out = new PrintWriter(writer);
-    out.println("public class HelloWorld {");
-    out.println("  public static void main(String args[]) {");
-    out.println("    System.out.println(\"This is in another java file\");");    
-    out.println("  }");
-    out.println("}");
-    out.close();
-    JavaFileObject file = new JavaSourceFromString("HelloWorld", writer.toString());
-
-    Iterable<? extends JavaFileObject> compilationUnits = Arrays.asList(file);
-    CompilationTask task = compiler.getTask(null, null, diagnostics, null, null, compilationUnits);
-
-    boolean success = task.call();
-    
-    // let's create the jar
-            Manifest manifest = new Manifest();
-            manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
-            manifest.getMainAttributes().put(Attributes.Name.MAIN_CLASS, "HelloWorld");
-            JarOutputStream target;
-         try {
-             target = new JarOutputStream(new FileOutputStream(new File("output.jar")), manifest);
-        //     String path = Bootstrapper.class.getProtectionDomain().getCodeSource().getLocation().getPath() + "HelloWorld.class";
-          //  System.out.println(path);
-            //Error with the path I guess.
-         //   addToJar(file.toUri().getPath(), target);
-            String fileclass = file.getName().split("\\.")[0] + ".class";
-            addToJar(new File(fileclass), target);
-            target.close();
-         } catch (FileNotFoundException ex) {
-             Logger.getLogger(MapTester.class.getName()).log(Level.SEVERE, null, ex);
-         } catch (IOException ex) {
-             Logger.getLogger(MapTester.class.getName()).log(Level.SEVERE, null, ex);
-         }
-            
-    
-    taoutput.setText("");
-    for (Diagnostic diagnostic : diagnostics.getDiagnostics()) {
-      taoutput.append(diagnostic.getCode() + "\n");
-      taoutput.append(String.valueOf(diagnostic.getKind()) + "\n");
-      taoutput.append(String.valueOf(diagnostic.getPosition()) + "\n");
-      taoutput.append(String.valueOf(diagnostic.getStartPosition()) + "\n");
-      taoutput.append(String.valueOf(diagnostic.getEndPosition()) + "\n");
-      taoutput.append(String.valueOf(diagnostic.getSource()) + "\n");
-      taoutput.append(diagnostic.getMessage(null) + "\n");
-      
+    JavaFileObject file = compileFile();
+    if (file != null) {
+        jarFile(file);
     }
-    taoutput.append("Success: " + success + "\n");
+    
+    
     
 /*
     if (success) {
