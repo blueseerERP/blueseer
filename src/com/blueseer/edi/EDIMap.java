@@ -958,6 +958,10 @@ public abstract class EDIMap implements EDIMapi {
          int start = 0;
          ArrayList<String> list = new ArrayList<String>();
          for (String[] z : ISF) {
+            // break if more ISF fields than actual segment  // TEV 20221005
+            if ((Integer.valueOf(z[7]) + start) > segment.length()) {
+                break;
+            }
             // skip non-landmarks
             if (segment.startsWith(z[0])) {
                 inside = true;
