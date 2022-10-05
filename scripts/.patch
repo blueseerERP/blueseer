@@ -18,3 +18,5 @@ patch=5
 # mass import notes adjustment and additional change log menus
 patch=6
 # bug fix #79, #80 and misc init changes for performance
+patch=7
+# initial launch of merged map tester into map maint and reclass; three new map_mstr db fields added
