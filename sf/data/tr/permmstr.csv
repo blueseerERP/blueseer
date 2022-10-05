@@ -300,7 +300,6 @@ admin,EDIXrefMaint
 admin,EDIExport
 admin,MapMaint
 admin,StructMaint
-admin,MapTester
 admin,APIMaint
 admin,AS2Maint
 admin,AS2Log

@@ -217,7 +217,6 @@ EDIXrefMaint,,com.blueseer.edi.EDIXrefMaint,JMenuItem,edix
 EDIExport,,com.blueseer.edi.EDIExport,JMenuItem,edit
 MapMaint,,com.blueseer.edi.MapMaint,JMenuItem,mapm
 StructMaint,,com.blueseer.edi.StructMaint,JMenuItem,mpsm
-MapTester,,com.blueseer.edi.MapTester,JMenuItem,mapt
 AS2Maint,,com.blueseer.edi.AS2Maint,JMenuItem,as2m
 AS2Browse,,com.blueseer.utl.ReportPanel,JMenuItem,as2b
 AS2Log,,com.blueseer.edi.AS2Log,JMenuItem,as2l
