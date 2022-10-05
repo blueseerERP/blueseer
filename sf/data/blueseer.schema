@@ -101,7 +101,8 @@ CREATE TABLE IF NOT EXISTS `map_mstr` (
   `map_outdoctype` varchar(30)  NOT NULL DEFAULT '',
   `map_outfiletype` varchar(30)  NOT NULL DEFAULT '',
   `map_source` varchar(200)  NOT NULL DEFAULT '',
-  `map_package` varchar(30)  NOT NULL DEFAULT ''
+  `map_package` varchar(30)  NOT NULL DEFAULT '',
+  `map_internal` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `map_struct` (
   `mps_id` varchar(30)  NOT NULL DEFAULT '',

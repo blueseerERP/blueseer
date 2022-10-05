@@ -1,62 +1,16 @@
-/*
-The MIT License (MIT)
-
-Copyright (c) Terry Evans Vaughn 
-
-All rights reserved.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
- */
-
-package EDIMaps;
 
 import com.blueseer.ctr.cusData;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import com.blueseer.utl.OVData;
 import com.blueseer.edi.EDI.*;
-import static com.blueseer.utl.BlueSeerUtils.*;
 import com.blueseer.inv.invData;
 import com.blueseer.utl.EDData;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 
-/**
- *
- * @author vaughnte
- */
-public class Generic850i extends com.blueseer.edi.EDIMap {
-    
-    public String[] Mapdata(ArrayList doc, String[] c) throws IOException, UserDefinedException {
-   
-    setControl(c);    //required...set the super class variables per the inbound array passed from the Processor (See EDIMap javadoc for defs)
-    
-    if (isError) { return error;}  //required...check errors for master variables
-    
-    mappedInput = mapInput(c, doc, ISF); //required...sets the source data structure for all subsequent map functions
-    
     setReference(getInput("BEG","e03")); //optional...but must be ran after mappedInput
    
-    debuginput(mappedInput);  //optional... for debug purposes
-
     isDBWrite(c);// optional...unless this map is writing to internal database tables (orders, etc)
     
     //since this is a DB entry map, create class object specific to inbound doctype (edi850, edi824, etc)
@@ -158,7 +112,7 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
         e.setDetListPrice(i-1,String.valueOf(currformatDouble(listprice)));
         e.setDetDisc(i-1,String.valueOf(currformatDouble(discount)));
         } else {
-         if (isParsableToDouble(getInput(i,"PO1",4))) {
+         if (BlueSeerUtils.isParsableToDouble(getInput(i,"PO1",4))) {
             e.setDetNetPrice(i-1, df.format(Double.valueOf(getInput(i,"PO1",4))));
             e.setDetListPrice(i-1, df.format(Double.valueOf(getInput(i,"PO1",4))));
          } else {
@@ -176,13 +130,4 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
      /* Load Sales Order */
      /* call processDB ONLY if the output is database write */
     processDB(c,com.blueseer.edi.EDI.createSOFrom850(e, c));
-
-    return packagePayLoad(c);  //required...
-        
-    }
-
- 
- 
-}
-
 

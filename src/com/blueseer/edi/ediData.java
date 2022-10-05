@@ -216,8 +216,8 @@ public class ediData {
         String[] m = new String[2];
         String sqlSelect = "select * from map_mstr where map_id = ?";
         String sqlInsert = "insert into map_mstr (map_id, map_desc, map_version, map_ifs, map_ofs, "
-                + " map_indoctype, map_infiletype, map_outdoctype, map_outfiletype, map_source, map_package )  " +
-                " values (?,?,?,?,?,?,?,?,?,?,?); "; 
+                + " map_indoctype, map_infiletype, map_outdoctype, map_outfiletype, map_source, map_package, map_internal )  " +
+                " values (?,?,?,?,?,?,?,?,?,?,?,?); "; 
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.map_id);
@@ -235,6 +235,7 @@ public class ediData {
             psi.setString(9, x.map_outfiletype);
             psi.setString(10, x.map_source);
             psi.setString(11, x.map_package);
+            psi.setString(12, x.map_internal);
             
             int rows = psi.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
@@ -253,7 +254,7 @@ public class ediData {
         String[] m = new String[2];
         String sql = "update map_mstr set map_desc = ?, map_version = ?, map_ifs = ?, " +
                 " map_ofs = ?, map_indoctype = ?, map_infiletype = ?, map_outdoctype = ?, map_outfiletype = ?, " +
-                " map_source = ?, map_package = ? " +
+                " map_source = ?, map_package = ?, map_internal = ? " +
                 " where map_id = ? ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
@@ -267,7 +268,8 @@ public class ediData {
         ps.setString(8, x.map_outfiletype);
         ps.setString(9, x.map_source);
         ps.setString(10, x.map_package);
-        ps.setString(11, x.map_id);
+        ps.setString(11, x.map_internal);
+        ps.setString(12, x.map_id);
         int rows = ps.executeUpdate();
         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
         } catch (SQLException s) {
@@ -316,7 +318,8 @@ public class ediData {
                             res.getString("map_outdoctype"),
                             res.getString("map_outfiletype"),
                             res.getString("map_source"),
-                            res.getString("map_package")    
+                            res.getString("map_package"),
+                            res.getString("map_internal")    
                                 
 
                         );
@@ -1549,9 +1552,9 @@ public class ediData {
     
     public record map_mstr(String[] m, String map_id, String map_desc, String map_version,
         String map_ifs, String map_ofs, String map_indoctype, String map_infiletype ,
-        String map_outdoctype, String map_outfiletype, String map_source, String map_package ) {
+        String map_outdoctype, String map_outfiletype, String map_source, String map_package, String map_internal ) {
         public map_mstr(String[] m) {
-            this(m, "", "", "", "", "", "", "", "", "", "", "");
+            this(m, "", "", "", "", "", "", "", "", "", "", "", "");
         }
     }
     
