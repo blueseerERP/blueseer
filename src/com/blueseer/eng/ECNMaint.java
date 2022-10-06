@@ -901,6 +901,7 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeerT  {
        tree.setModel(treeModel);
        ToolTipManager.sharedInstance().registerComponent(tree);
        ECNMaint.PopupHandler handler = new ECNMaint.PopupHandler(tree);
+       
        tree.add(handler.getPopup());
        tree.getSelectionModel().setSelectionMode
             (TreeSelectionModel.SINGLE_TREE_SELECTION);

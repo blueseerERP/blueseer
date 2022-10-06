@@ -98,6 +98,7 @@ import com.blueseer.utl.IBlueSeerT;
 import com.blueseer.vdr.venData;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -131,13 +132,19 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 import javax.swing.JViewport;
+import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaCompiler;
@@ -157,6 +164,10 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
      // global variable declarations
                 boolean isLoad = false;
                 public static map_mstr x = null;
+                JPopupMenu mymenu = new JPopupMenu();
+                JMenuItem menuraw = new JMenuItem("Raw Format");
+                JMenuItem menulabeled = new JMenuItem("Labeled Format");
+                JMenuItem menuhide = new JMenuItem("Hide Panel");
                 
                 
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -190,7 +201,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                             getGlobalColumnTag("recvqty"), 
                             getGlobalColumnTag("vouchqty")});
     
-     class ButtonRenderer extends JButton implements TableCellRenderer {
+    class ButtonRenderer extends JButton implements TableCellRenderer {
 
         public ButtonRenderer() {
             setOpaque(true);
@@ -210,7 +221,83 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         }
     }
     
-   
+    public class myPopupHandler implements ActionListener,
+                              PopupMenuListener {
+        
+        JTextArea ta; 
+        JPopupMenu popup;
+       
+        
+        public myPopupHandler(JTextArea ta) {
+        this.ta = ta;
+        popup = new JPopupMenu();
+        popup.setInvoker(ta);
+       
+        popup.add(setMenuItem("Raw Format"));
+        popup.add(setMenuItem("Labeled Format"));
+        popup.add(setMenuItem("Hide Panel"));
+        
+        ta.addMouseListener(ma);
+        popup.addPopupMenuListener(this);
+    }
+ 
+        public JPopupMenu getPopup() {
+        return popup;
+        }
+        
+        private JMenuItem setMenuItem(String s) {
+        JMenuItem menuItem = new JMenuItem(s);
+        menuItem.setActionCommand(s);
+        menuItem.addActionListener(this);
+        return menuItem;
+    }
+        
+        
+        private MouseListener ma = new MouseAdapter() {
+            private void checkForPopup(MouseEvent e) {
+               if (SwingUtilities.isRightMouseButton(e)) {
+                  if (! ta.isEnabled()) {
+                      return;
+                  } 
+                popup.show(ta, e.getX(), e.getY());
+                } 
+            }
+            public void mousePressed(MouseEvent e)  { checkForPopup(e); }
+            
+        };
+
+        @Override
+        public void actionPerformed(ActionEvent e) { 
+             String ac = e.getActionCommand();
+             switch (ac) {
+               case "Hide Panel" :
+                    sourcepanel.setVisible(false);
+                    break;       
+                default:
+                    System.out.println("unknown: " + ac);
+                    
+             }
+             
+        }
+
+        @Override
+        public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+          //  throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+           // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public void popupMenuCanceled(PopupMenuEvent e) {
+           // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+      
+        
+    }
+    
     public class MyClassLoader extends ClassLoader {
     
         private String classFileLocation;
@@ -255,6 +342,14 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     public MapMaint() {
         initComponents();
         setLanguageTags(this);
+        
+        MapMaint.myPopupHandler handler = new MapMaint.myPopupHandler(tasource);
+        tasource.add(handler.getPopup());
+        /*
+        mymenu.add(menuraw);
+        mymenu.add(menulabeled);
+        mymenu.add(menuhide);
+        */
     }
 
            // interface functions implemented
@@ -1610,6 +1705,8 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
     private void btunhideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btunhideActionPerformed
        outputpanel.setVisible(true);
+       sourcepanel.setVisible(true);
+       taoutputpanel.setVisible(true);
        bthide.setEnabled(true);
     }//GEN-LAST:event_btunhideActionPerformed
 
