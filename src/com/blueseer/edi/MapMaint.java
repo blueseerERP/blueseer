@@ -230,6 +230,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         
         public myPopupHandler(JTextArea ta) {
         this.ta = ta;
+        this.ta.setName(ta.getName());
         popup = new JPopupMenu();
         popup.setInvoker(ta);
        
@@ -248,6 +249,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         private JMenuItem setMenuItem(String s) {
         JMenuItem menuItem = new JMenuItem(s);
         menuItem.setActionCommand(s);
+        menuItem.setName(this.ta.getName());
         menuItem.addActionListener(this);
         return menuItem;
     }
@@ -269,9 +271,10 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         @Override
         public void actionPerformed(ActionEvent e) { 
              String ac = e.getActionCommand();
+             JMenuItem parentname = (JMenuItem) e.getSource();
              switch (ac) {
                case "Hide Panel" :
-                    sourcepanel.setVisible(false);
+                    hidePanel(parentname.getName());
                     break;       
                 default:
                     System.out.println("unknown: " + ac);
@@ -345,6 +348,9 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         
         MapMaint.myPopupHandler handler = new MapMaint.myPopupHandler(tasource);
         tasource.add(handler.getPopup());
+        
+        MapMaint.myPopupHandler handler2 = new MapMaint.myPopupHandler(taoutput);
+        taoutput.add(handler2.getPopup());
         /*
         mymenu.add(menuraw);
         mymenu.add(menulabeled);
@@ -803,6 +809,18 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         return s;
     }
     
+    public void hidePanel(String panel) {
+        if (panel.equals("tasource")) {
+            sourcepanel.setVisible(false);
+        }
+        if (panel.equals("taoutput")) {
+            taoutputpanel.setVisible(false);
+        }
+        
+        if (! sourcepanel.isVisible() && ! taoutputpanel.isVisible()) {
+            outputpanel.setVisible(false);
+        }
+    }
     
     public void getdetail(String rvid) {
       
@@ -1131,6 +1149,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
         tasource.setColumns(20);
         tasource.setRows(5);
+        tasource.setName("tasource"); // NOI18N
         jScrollPane3.setViewportView(tasource);
 
         sourcepanel.add(jScrollPane3);
@@ -1143,6 +1162,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
         taoutput.setColumns(20);
         taoutput.setRows(5);
+        taoutput.setName("taoutput"); // NOI18N
         jScrollPane5.setViewportView(taoutput);
 
         taoutputpanel.add(jScrollPane5);

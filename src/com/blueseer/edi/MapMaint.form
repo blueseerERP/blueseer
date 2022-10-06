@@ -140,6 +140,7 @@
                           <Properties>
                             <Property name="columns" type="int" value="20"/>
                             <Property name="rows" type="int" value="5"/>
+                            <Property name="name" type="java.lang.String" value="tasource" noResource="true"/>
                           </Properties>
                         </Component>
                       </SubComponents>
@@ -171,6 +172,7 @@
                           <Properties>
                             <Property name="columns" type="int" value="20"/>
                             <Property name="rows" type="int" value="5"/>
+                            <Property name="name" type="java.lang.String" value="taoutput" noResource="true"/>
                           </Properties>
                         </Component>
                       </SubComponents>
