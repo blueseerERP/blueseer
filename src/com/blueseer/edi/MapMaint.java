@@ -961,8 +961,10 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         jScrollPane4 = new javax.swing.JScrollPane();
         tamap = new javax.swing.JTextArea();
         outputpanel = new javax.swing.JPanel();
+        sourcepanel = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tasource = new javax.swing.JTextArea();
+        taoutputpanel = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         taoutput = new javax.swing.JTextArea();
         jPanel2 = new javax.swing.JPanel();
@@ -1013,6 +1015,8 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
         tablepanel.setLayout(new javax.swing.BoxLayout(tablepanel, javax.swing.BoxLayout.LINE_AXIS));
 
+        inputpanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Source"));
+        inputpanel.setPreferredSize(new java.awt.Dimension(525, 76));
         inputpanel.setLayout(new javax.swing.BoxLayout(inputpanel, javax.swing.BoxLayout.LINE_AXIS));
 
         tamap.setColumns(20);
@@ -1023,19 +1027,32 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
         tablepanel.add(inputpanel);
 
-        outputpanel.setLayout(new javax.swing.BoxLayout(outputpanel, javax.swing.BoxLayout.Y_AXIS));
+        outputpanel.setPreferredSize(new java.awt.Dimension(525, 764));
+        outputpanel.setLayout(new javax.swing.BoxLayout(outputpanel, javax.swing.BoxLayout.LINE_AXIS));
+
+        sourcepanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Input"));
+        sourcepanel.setPreferredSize(new java.awt.Dimension(260, 764));
+        sourcepanel.setLayout(new javax.swing.BoxLayout(sourcepanel, javax.swing.BoxLayout.LINE_AXIS));
 
         tasource.setColumns(20);
         tasource.setRows(5);
         jScrollPane3.setViewportView(tasource);
 
-        outputpanel.add(jScrollPane3);
+        sourcepanel.add(jScrollPane3);
+
+        outputpanel.add(sourcepanel);
+
+        taoutputpanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Output"));
+        taoutputpanel.setPreferredSize(new java.awt.Dimension(260, 764));
+        taoutputpanel.setLayout(new javax.swing.BoxLayout(taoutputpanel, javax.swing.BoxLayout.LINE_AXIS));
 
         taoutput.setColumns(20);
         taoutput.setRows(5);
         jScrollPane5.setViewportView(taoutput);
 
-        outputpanel.add(jScrollPane5);
+        taoutputpanel.add(jScrollPane5);
+
+        outputpanel.add(taoutputpanel);
 
         tablepanel.add(outputpanel);
 
@@ -1363,7 +1380,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 382, Short.MAX_VALUE)
+                .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1602,11 +1619,13 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }//GEN-LAST:event_btnewActionPerformed
 
     private void btshiftleftActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btshiftleftActionPerformed
-        // TODO add your handling code here:
+        taoutputpanel.setVisible(true);
+        sourcepanel.setVisible(false);
     }//GEN-LAST:event_btshiftleftActionPerformed
 
     private void btshiftrightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btshiftrightActionPerformed
-        
+        taoutputpanel.setVisible(false);
+        sourcepanel.setVisible(true);
     }//GEN-LAST:event_btshiftrightActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
@@ -1707,9 +1726,11 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JPanel outputpanel;
+    private javax.swing.JPanel sourcepanel;
     private javax.swing.JPanel tablepanel;
     private javax.swing.JTextArea tamap;
     private javax.swing.JTextArea taoutput;
+    private javax.swing.JPanel taoutputpanel;
     private javax.swing.JTextArea tasource;
     private javax.swing.JTextField tbdesc;
     private javax.swing.JTextField tbkey;
