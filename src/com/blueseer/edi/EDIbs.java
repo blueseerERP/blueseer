@@ -44,6 +44,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -108,7 +109,10 @@ public static void main(String args[]) throws IOException {
             break;   
         case "purgeDir" :
             purgeDir(indir, map, isOverride);
-            break;      
+            break; 
+        case "purgeDirRecurse" :
+            purgeDirRecurse(indir, map, isOverride);
+            break;    
         case "ftpClient" :
             ftpClient(map);
             break;       
@@ -212,7 +216,13 @@ public static void main(String args[]) throws IOException {
                         vals[4] = args[i+2];
                         vals[5] = args[i+3];
                         vals[7] = "purgeDir"; 
-                        break;      
+                        break;  
+                    case "-pdr" :
+                        vals[2] = args[i+1];
+                        vals[4] = args[i+2];
+                        vals[5] = args[i+3];
+                        vals[7] = "purgeDirRecurse"; 
+                        break;          
                     case "-tf" :
                         vals[4] = args[i+1];
                         break;      
@@ -616,5 +626,50 @@ public static void main(String args[]) throws IOException {
         System.out.println("file count is: " + listOfFiles.length);
         System.out.println("delete count is: " + count);
  }
+
+ public static void purgeDirRecurse(String dir, String days, String flag) throws IOException {
+     
+        int daysBack = 0;
+        boolean isDelete = false;
+        if (flag != null && flag.equals("dElEtE")) {
+            isDelete = true;
+        }
+        if (isParsableToInt(days)) {
+            daysBack = Integer.valueOf(days);
+        } else {
+         System.out.println("parameter 2 is not an integer");
+         System.exit(1);
+        }
+        File folder = new File(dir);
+        if (! folder.isDirectory()) {
+         System.out.println("parameter 1 is not a valid directory");
+         System.exit(1);   
+        }
+        
+        long z = System.currentTimeMillis() - ((long)daysBack * 24L * 60L * 60L * 1000L);
+        
+        Path targetdir = FileSystems.getDefault().getPath(dir);
+	
+        long count = Files.walk(targetdir)
+	      .sorted(Comparator.reverseOrder())
+	      .map(Path::toFile)
+		  .filter(e -> e.lastModified() < z)
+	      .count();
+        
+        if (isDelete) {	
+        Files.walk(targetdir)
+	      .sorted(Comparator.reverseOrder())
+	      .map(Path::toFile)
+	      .filter(e -> e.lastModified() < z)
+	     // .forEach(e -> System.out.println(e.getAbsolutePath().toString() + " " + new Date(e.lastModified())));
+	      .forEach(File::delete);
+        }	
+        
+        System.out.println("For Files/Dirs older than this number of days: " + days);
+        System.out.println("delete is set to: " + isDelete);
+        System.out.println("delete count is: " + count);
+ }
+
+ 
 } // class
 

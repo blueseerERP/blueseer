@@ -234,8 +234,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         popup = new JPopupMenu();
         popup.setInvoker(ta);
        
-        popup.add(setMenuItem("Raw Format"));
-        popup.add(setMenuItem("Labeled Format"));
+        popup.add(setMenuItem("Toggle Lines"));
         popup.add(setMenuItem("Hide Panel"));
         
         ta.addMouseListener(ma);
@@ -273,9 +272,14 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
              String ac = e.getActionCommand();
              JMenuItem parentname = (JMenuItem) e.getSource();
              switch (ac) {
-               case "Hide Panel" :
+                case "Hide Panel" :
                     hidePanel(parentname.getName());
-                    break;       
+                    break;
+                    
+                case "Toggle Lines" :
+                    numberLines(parentname.getName());
+                    break;
+                    
                 default:
                     System.out.println("unknown: " + ac);
                     
@@ -346,11 +350,15 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         initComponents();
         setLanguageTags(this);
         
-        MapMaint.myPopupHandler handler = new MapMaint.myPopupHandler(tasource);
-        tasource.add(handler.getPopup());
+        MapMaint.myPopupHandler handler = new MapMaint.myPopupHandler(tamap);
+        tamap.add(handler.getPopup());
         
-        MapMaint.myPopupHandler handler2 = new MapMaint.myPopupHandler(taoutput);
-        taoutput.add(handler2.getPopup());
+        MapMaint.myPopupHandler handler2 = new MapMaint.myPopupHandler(tasource);
+        tasource.add(handler2.getPopup());
+        
+        MapMaint.myPopupHandler handler3 = new MapMaint.myPopupHandler(taoutput);
+        taoutput.add(handler3.getPopup());
+        
         /*
         mymenu.add(menuraw);
         mymenu.add(menulabeled);
@@ -798,6 +806,44 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         return s;
     }
     
+    public void numberLines(String taname) {
+        
+        int i = 0;
+        String[] x;
+        
+        JTextArea lines = new JTextArea();
+        lines.setBackground(Color.LIGHT_GRAY);
+        lines.setEditable(false);
+        jScrollPane4.setRowHeaderView(lines);
+        
+        if (taname.equals("tamap")) {
+          x = tamap.getText().split("\n");
+          tamap.setText("");
+            for (String e : x) {
+                i++;
+                lines.append(String.valueOf(i) + "\n");
+                tamap.append(e + "\n");
+            }  
+        }
+        if (taname.equals("tasource")) {
+          x = tasource.getText().split("\n");
+          tasource.setText("");
+            for (String e : x) {
+                i++;
+                tasource.append(String.valueOf(i) + "  " + e + "\n");
+            }  
+        }
+        if (taname.equals("taoutput")) {
+          x = taoutput.getText().split("\n");
+          taoutput.setText("");
+            for (String e : x) {
+                i++;
+                taoutput.append(String.valueOf(i) + "  " + e + "\n");
+            }  
+        }
+    }
+    
+    
     public ArrayList<String> cleanText() {
         ArrayList<String> s = new ArrayList<String>();
         String[] x = tamap.getText().split("\n");
@@ -1134,6 +1180,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
         tamap.setColumns(20);
         tamap.setRows(5);
+        tamap.setName("tamap"); // NOI18N
         jScrollPane4.setViewportView(tamap);
 
         inputpanel.add(jScrollPane4);
