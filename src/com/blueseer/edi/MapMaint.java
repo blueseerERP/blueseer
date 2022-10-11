@@ -98,6 +98,8 @@ import com.blueseer.utl.DTData;
 import com.blueseer.utl.EDData;
 import com.blueseer.utl.IBlueSeerT;
 import com.blueseer.vdr.venData;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -131,8 +133,12 @@ import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.InputMap;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -144,6 +150,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 import javax.swing.JViewport;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.event.DocumentEvent;
@@ -253,6 +260,8 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
        
         if (ta.getName().equals("tamap")) {
             popup.add(setMenuItem("Toggle Lines"));
+            popup.add(setMenuItem("Search"));
+            popup.add(setMenuItem("Clear Highlights"));
             popup.add(setMenuItem("Hide Panel"));
         }
         if (ta.getName().equals("tainput")) {
@@ -261,12 +270,15 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             popup.add(setMenuItem("Input"));
             popup.add(setMenuItem("Structure"));
             popup.add(setMenuItem("Overlay"));
+            popup.add(setMenuItem("Clear Highlights"));
             popup.add(setMenuItem("Hide Panel"));
         }
         if (ta.getName().equals("taoutput")) {
             popup.add(setMenuItem("Toggle Lines"));
+            popup.add(setMenuItem("Search"));
             popup.add(setMenuItem("Structure"));
             popup.add(setMenuItem("Overlay"));
+            popup.add(setMenuItem("Clear Highlights"));
             popup.add(setMenuItem("Hide Panel"));
         }
         
@@ -302,6 +314,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
         @Override
         public void actionPerformed(ActionEvent e) { 
+             lbloccurences.setText("");
              String ac = e.getActionCommand();
              JMenuItem parentname = (JMenuItem) e.getSource();
              switch (ac) {
@@ -315,7 +328,11 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                     
                 case "Structure" :
                     showStructure(parentname.getName());
-                    break;   
+                    break; 
+                
+                case "Input" :
+                    getInput();
+                    break;
                     
                 case "Overlay" :
                     showOverlay(parentname.getName());
@@ -323,7 +340,11 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                  
                 case "Search" :
                     searchTextArea(parentname.getName());
-                    break;      
+                    break;  
+                    
+                case "Clear Highlights":
+                    cleanHighlights(parentname.getName());
+                    break;
                     
                 default:
                     System.out.println("unknown action: " + ac);
@@ -611,7 +632,17 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         tbdesc.setText("");
         tbversion.setText("");
         tbpath.setText("");
+        
         tamap.setText("");
+        tainput.setText("");
+        taoutput.setText("");
+        
+        addKeyBind(tamap);
+        addKeyBind(tainput);
+        addKeyBind(taoutput);
+        
+        lbloccurences.setText("");
+        
         cbinternal.setEnabled(false);
         ddofs.removeAllItems();
         ddifs.removeAllItems();
@@ -1011,7 +1042,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         }
     }
     
-    public static LinkedHashMap<String, String[]> mapInput(String filetype, ArrayList<String> data, ArrayList<String[]> ISF) {
+    public static LinkedHashMap<String, String[]> mapInput(String filetype, List<String> data, ArrayList<String[]> ISF) {
         LinkedHashMap<String,String[]> mappedData = new LinkedHashMap<String,String[]>();
         HashMap<String,Integer> groupcount = new HashMap<String,Integer>();
         HashMap<String,Integer> set = new HashMap<String,Integer>();
@@ -1091,14 +1122,54 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         return mappedData;
     }
 
+    
+    Action actionSearch = new AbstractAction() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      JTextComponent s = (JTextComponent) e.getSource();
+      searchTextArea(s.getName());
+    }
+    };
+
+    
+    private void addKeyBind(JTextComponent ta) {
+        ta.getInputMap().put(KeyStroke.getKeyStroke("control F"), ta.getName());
+        ta.getActionMap().put(ta.getName(), actionSearch);
+   // InputMap iMap = ta.getInputMap().put(KeyStroke.getKeyStroke("F2"), actionSearch);
+   // ActionMap aMap = ta.getActionMap();
+   // iMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_MASK), ta.getName());
+   // aMap.put(ta.getName(), actionSearch);
+    
+  }
+    
     public void showOverlay(String taname) {
+        List<String> structure = null;
+        List<String> input = null;
+        File file = null;
+        String fs = "";
+        boolean isInput = false;
+        
         if (taname.equals("tainput")) {
-            File file = getfile();
-            List<String> input = getfiledata(file.toPath());
-            List<String> structure = getStructure("ifs"); 
-            Map<String, HashMap<Integer,String[]>> msf = getStructureAsHashMap(structure); 
-            LinkedHashMap<String, String[]> mappedData = mapInput(ddinfiletype.getSelectedItem().toString(), (ArrayList<String>) input, getStructureSplit(structure));
+            structure = getStructure("ifs"); 
+            file = getfile();
+            input = getfiledata(file.toPath());
+            fs = ddinfiletype.getSelectedItem().toString();
             tainput.setText("");
+            isInput = true;
+        }
+        if (taname.equals("taoutput")) {
+            structure = getStructure("ofs");
+            fs = ddoutfiletype.getSelectedItem().toString();
+            if (! taoutput.getText().isBlank()) {
+                input = Arrays.asList(taoutput.getText().split("\n"));
+            }
+            taoutput.setText("");
+            isInput = false;
+        }
+                    
+            Map<String, HashMap<Integer,String[]>> msf = getStructureAsHashMap(structure); 
+            LinkedHashMap<String, String[]> mappedData = mapInput(fs, input, getStructureSplit(structure));
+            
             
             for (Map.Entry<String, String[]> z : mappedData.entrySet()) {
                     String value = String.join(",", z.getValue());
@@ -1126,19 +1197,33 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                              desc = "unknown";
                          }
                      }
-                     tainput.append(z.getKey() + "\t" + fieldname + "\t" + desc +  " / Field: " + i + " value: " + s + "\n");   
+                     if (isInput) {
+                        tainput.append(z.getKey() + "\t" + fieldname + "\t" + desc +  " / Field: " + i + " value: " + s + "\n");   
+                     } else {
+                        taoutput.append(z.getKey() + "\t" + fieldname + "\t" + desc +  " / Field: " + i + " value: " + s + "\n");    
+                     }
                      i++;
                     }
                    
             }
-        }
+        
     }
     
     public void searchTextArea(String taname) {
         if (taname.equals("tainput")) {
-            cleanHighlights(tainput);
+            cleanHighlights(taname);
             String text = bsmf.MainFrame.input("Text: ");
             highlightSearch(tainput, text);            
+        }
+        if (taname.equals("tamap")) {
+            cleanHighlights(taname);
+            String text = bsmf.MainFrame.input("Text: ");
+            highlightSearch(tamap, text);            
+        }
+        if (taname.equals("taoutput")) {
+            cleanHighlights(taname);
+            String text = bsmf.MainFrame.input("Text: ");
+            highlightSearch(taoutput, text);            
         }
     }
     
@@ -1148,27 +1233,56 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         }
     }
     
-    public void cleanHighlights(JTextComponent ta) {
-        Highlighter h = ta.getHighlighter();
-        Highlighter.Highlight[] hl = h.getHighlights();
-        for (int i = 0; i < hl.length; i++) {
-            if (hl[i].getPainter() instanceof MyHighlightPainter) {
-                h.removeHighlight(hl[i]);
+    public void cleanHighlights(String taname) {
+        lbloccurences.setText("");
+        
+        if (taname.equals("tainput")) {
+            Highlighter h = tainput.getHighlighter();
+            Highlighter.Highlight[] hl = h.getHighlights();
+            for (int i = 0; i < hl.length; i++) {
+                if (hl[i].getPainter() instanceof MyHighlightPainter) {
+                    h.removeHighlight(hl[i]);
+                }
+            }
+        }
+        if (taname.equals("tamap")) {
+            Highlighter h = tamap.getHighlighter();
+            Highlighter.Highlight[] hl = h.getHighlights();
+            for (int i = 0; i < hl.length; i++) {
+                if (hl[i].getPainter() instanceof MyHighlightPainter) {
+                    h.removeHighlight(hl[i]);
+                }
+            }
+        }
+        if (taname.equals("taoutput")) {
+            Highlighter h = taoutput.getHighlighter();
+            Highlighter.Highlight[] hl = h.getHighlights();
+            for (int i = 0; i < hl.length; i++) {
+                if (hl[i].getPainter() instanceof MyHighlightPainter) {
+                    h.removeHighlight(hl[i]);
+                }
             }
         }
     }
     
     public void highlightSearch(JTextComponent ta, String phrase) {
+        if (phrase == null || phrase.isBlank()) {
+            return;
+        }
         Highlighter h = ta.getHighlighter();
         Document d = ta.getDocument();
         int pos = 0;
+        int count = 0;
         String text;
          try {
             text = d.getText(0, d.getLength());
             while ((pos = text.toUpperCase().indexOf(phrase.toUpperCase(),pos)) >= 0) {
                 h.addHighlight(pos, pos + phrase.length(), myHighlightPainter);
-                pos += phrase.length();             
+                pos += phrase.length();
+                count++;
             }
+            lbloccurences.setText("Occurences: " + count);
+            
          } catch (BadLocationException ex) {
              bslog(ex);
          }
@@ -1380,6 +1494,24 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         return lines;  
     }
     
+    public void getInput() {
+        infile = getfile();
+        tainput.setText("");
+        if (infile != null) {
+            try {   
+                List<String> lines = Files.readAllLines(infile.toPath());
+                for (String segment : lines ) {
+                        tainput.append(segment);
+                        tainput.append("\n");
+                }
+                btrun.setEnabled(true);
+            } catch (IOException ex) {
+                bslog(ex);
+            }   
+        } else {
+            btrun.setEnabled(false);
+        }
+    }
     
     private void addToJar(File source, JarOutputStream target) throws IOException
     {
@@ -1486,6 +1618,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         tbpackage = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         cbinternal = new javax.swing.JCheckBox();
+        lbloccurences = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -1736,7 +1869,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(toolbar, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -1755,13 +1888,13 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                                 .addComponent(btfind, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(28, 28, 28))
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(cbinternal)
-                                .addGap(10, 10, 10)))))
+                                .addGap(10, 10, 10))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -1772,7 +1905,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                     .addComponent(ddifs, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(ddofs, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(ddindoctype, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(ddoutdoctype, 0, 162, Short.MAX_VALUE))
+                    .addComponent(ddoutdoctype, 0, 161, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel7)
@@ -1837,7 +1970,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(ddoutdoctype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel5))))
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -1850,12 +1983,16 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 .addContainerGap())
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lbloccurences, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(22, 22, 22))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbloccurences, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -2034,22 +2171,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }//GEN-LAST:event_btrunActionPerformed
 
     private void btinputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btinputActionPerformed
-         infile = getfile();
-        tainput.setText("");
-        if (infile != null) {
-            try {   
-                List<String> lines = Files.readAllLines(infile.toPath());
-                for (String segment : lines ) {
-                        tainput.append(segment);
-                        tainput.append("\n");
-                }
-                btrun.setEnabled(true);
-            } catch (IOException ex) {
-                bslog(ex);
-            }   
-        } else {
-            btrun.setEnabled(false);
-        }
+        getInput();
     }//GEN-LAST:event_btinputActionPerformed
 
     private void bthideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bthideActionPerformed
@@ -2204,6 +2326,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JLabel lbloccurences;
     private javax.swing.JPanel mappanel;
     private javax.swing.JPanel outputpanel;
     private javax.swing.JPanel tablepanel;
