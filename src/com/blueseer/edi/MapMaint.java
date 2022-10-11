@@ -73,7 +73,9 @@ import static bsmf.MainFrame.user;
 import static com.blueseer.edi.EDI.createIMAP;
 import static com.blueseer.edi.EDI.edilog;
 import static com.blueseer.edi.EDI.getEDIType;
+import static com.blueseer.edi.EDIMap.SegmentCounter;
 import com.blueseer.edi.EDIMap.UserDefinedException;
+import static com.blueseer.edi.EDIMap.splitFFSegment;
 import static com.blueseer.edi.ediData.addMapMstr;
 import static com.blueseer.edi.ediData.deleteMapMstr;
 import static com.blueseer.edi.ediData.getMapMstr;
@@ -122,6 +124,7 @@ import java.nio.file.Paths;
 import java.sql.Connection;
 import java.text.DecimalFormatSymbols;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.jar.Attributes;
@@ -242,11 +245,21 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
        
         if (ta.getName().equals("tamap")) {
             popup.add(setMenuItem("Toggle Lines"));
-        }
-        if (ta.getName().equals("tainput") || ta.getName().equals("taoutput")) {
             popup.add(setMenuItem("Hide Panel"));
         }
-        
+        if (ta.getName().equals("tainput")) {
+            popup.add(setMenuItem("Toggle Lines"));
+            popup.add(setMenuItem("Input"));
+            popup.add(setMenuItem("Structure"));
+            popup.add(setMenuItem("Overlay"));
+            popup.add(setMenuItem("Hide Panel"));
+        }
+        if (ta.getName().equals("taoutput")) {
+            popup.add(setMenuItem("Toggle Lines"));
+            popup.add(setMenuItem("Structure"));
+            popup.add(setMenuItem("Overlay"));
+            popup.add(setMenuItem("Hide Panel"));
+        }
         
         ta.addMouseListener(ma);
         popup.addPopupMenuListener(this);
@@ -291,8 +304,16 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                     toggleLines(parentname.getName());
                     break;
                     
+                case "Structure" :
+                    showStructure(parentname.getName());
+                    break;   
+                    
+                case "Overlay" :
+                    showOverlay(parentname.getName());
+                    break;        
+                    
                 default:
-                    System.out.println("unknown: " + ac);
+                    System.out.println("unknown action: " + ac);
                     
              }
              
@@ -897,6 +918,204 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         }
     }
     
+    public List<String> getStructure(String structureName) {
+        List<String> lines = new ArrayList<>();
+        String dirpath;
+        if (structureName.equals("ifs")) {
+            dirpath = "edi/structure/" + ddifs.getSelectedItem().toString();
+        } else {
+            dirpath = "edi/structure/" + ddofs.getSelectedItem().toString();
+        }
+        Path path = FileSystems.getDefault().getPath(dirpath);
+        File file = path.toFile();
+        if (file != null && file.exists()) {
+                try {   
+                    lines = Files.readAllLines(file.toPath());
+                } catch (IOException ex) {
+                    bslog(ex);
+                }   
+            }
+        return lines;
+    }
+    
+    public ArrayList<String[]> getStructureSplit(List<String> lines) {
+        ArrayList<String[]> linessplit = new ArrayList<>();
+        for (String s : lines) {
+          if (s.startsWith("#")) {
+              continue;
+          }
+          linessplit.add(s.split(","));
+        }
+        return linessplit;
+    }
+    
+    public Map<String, HashMap<Integer,String[]>> getStructureAsHashMap(List<String> lines) {
+        Map<String, HashMap<Integer,String[]>> msf = new HashMap<String, HashMap<Integer,String[]>>();
+        ArrayList<String[]> linessplit = new ArrayList<>();
+        LinkedHashMap<Integer, String[]> z = new LinkedHashMap<Integer, String[]>();
+        int i = 0;
+        String lastkey = "";
+        for (String s : lines) {
+            if (s.startsWith("#")) {
+              continue;
+            }
+            String[] t = s.split(",",-1);
+             if (i == 0) { lastkey = t[0];}
+
+            i++;
+            if (! t[0].equals(lastkey)) {
+                LinkedHashMap<Integer, String[]> w = z;
+                msf.put(t[0], w);
+                z = new LinkedHashMap<Integer, String[]>();
+                i = 0;
+                z.put(i, t);
+
+            } else {
+                z.put(i, t);
+                msf.put(t[0], z);
+            }
+            lastkey = t[0];
+        }
+        return msf;
+    }
+       
+    public void showStructure(String taname) {
+        if (taname.equals("tainput")) {
+            List<String> lines = getStructure("ifs");
+            tainput.setText("");
+            for (String segment : lines ) {
+                            tainput.append(segment);
+                            tainput.append("\n");
+            }
+        }
+        if (taname.equals("taoutput")) {
+            List<String> lines = getStructure("ofs");
+            taoutput.setText("");
+            for (String segment : lines ) {
+                            taoutput.append(segment);
+                            taoutput.append("\n");
+            }
+        }
+    }
+    
+    public static LinkedHashMap<String, String[]> mapInput(String filetype, ArrayList<String> data, ArrayList<String[]> ISF) {
+        LinkedHashMap<String,String[]> mappedData = new LinkedHashMap<String,String[]>();
+        HashMap<String,Integer> groupcount = new HashMap<String,Integer>();
+        HashMap<String,Integer> set = new HashMap<String,Integer>();
+        String parenthead = "";
+        String groupkey = "";
+        String previouskey = "";
+        for (String s : data) {
+                String[] x = null;
+                if (filetype.equals("FF")) {
+                    x = splitFFSegment(s, ISF);
+                } else {
+                    x = s.split("\\*",-1); // if x12
+                }
+
+                for (String[] z : ISF) {
+                    // skip non-landmarks
+                    if (! z[4].equals("yes")) {
+                        continue;
+                    }
+                        if (x != null && (x.length > 1) && x[0].equals(z[0])) {
+                                boolean foundit = false;
+                                boolean hasloop = false;
+                                String[] temp = parenthead.split(":");
+                                for (int i = temp.length - 1; i >= 0; i--) {
+                                        if (z[1].compareTo(temp[i]) == 0) {
+                                                foundit = true;
+                                                String[] newarray = Arrays.copyOfRange(temp, 0, i + 1);
+                                                parenthead = String.join(":", newarray);							
+                                                break;
+                                        }
+                                }
+                                if (! foundit) {
+                                continue;	
+                                } else {
+                                        int loop = 1;
+                                        String groupparent = parenthead + ":" + x[0];
+                                        if (groupcount.containsKey(groupparent)) {
+                                                int g = groupcount.get(groupparent);
+
+                                                if (previouskey.equals(parenthead + ":" + x[0] + "+" + g) && ! z[3].equals("yes")) {
+                                                        loop = set.get(parenthead + ":" + x[0] + "+" + groupcount.get(groupparent));	
+                                                        hasloop = true;
+                                                        loop++;
+                                                        set.put(parenthead + ":" + x[0] + "+" + groupcount.get(groupparent), loop);
+                                                } else {
+                                                        g++;	
+                                                        groupcount.put(groupparent, g);
+                                                }
+                                        } else {
+                                               // groupcount.put(groupparent, 1);
+                                               if (groupcount.get(parenthead) != null) {
+                                                  groupcount.put(groupparent, groupcount.get(parenthead)); 
+                                               } else {
+                                                  groupcount.put(groupparent, 1); 
+                                               }
+                                               
+                                        }
+
+                                        previouskey = parenthead + ":" + x[0] + "+" + groupcount.get(groupparent);	
+                                        if (hasloop) {
+                                            groupkey = parenthead + ":" + x[0] + "+" + groupcount.get(groupparent) + "+" + loop;
+                                        } else {
+                                            groupkey = parenthead + ":" + x[0] + "+" + groupcount.get(groupparent);
+                                        }
+
+                                        set.put(groupkey, loop);
+                                        mappedData.put(parenthead + ":" + x[0] + "+" + groupcount.get(groupparent) + "+" + loop , x);
+                                        SegmentCounter.add(parenthead + ":" + x[0] + "+" + groupcount.get(groupparent));
+                                        if (z[3].equals("yes")) {
+                                                parenthead = parenthead + (":" + z[0]);
+                                        }
+                                        break;
+                                }
+                        }
+                }
+        }
+        return mappedData;
+    }
+
+    public void showOverlay(String taname) {
+        if (taname.equals("tainput")) {
+            File file = getfile();
+            List<String> input = getfiledata(file.toPath());
+            List<String> structure = getStructure("ifs"); 
+            Map<String, HashMap<Integer,String[]>> msf = getStructureAsHashMap(structure); 
+            LinkedHashMap<String, String[]> mappedData = mapInput(ddinfiletype.getSelectedItem().toString(), (ArrayList<String>) input, getStructureSplit(structure));
+            tainput.setText("");
+            
+            for (Map.Entry<String, String[]> z : mappedData.entrySet()) {
+                    String value = String.join(",", z.getValue());
+                    String[] keyx = z.getKey().split("\\+", -1);
+                    String key = "";
+                    if (keyx[0].contains(":")) {
+                        key = keyx[0].substring(1);
+                    } else {
+                        key = keyx[0];
+                    }
+                    
+                    int i = 0;
+                    String fieldname = "";
+                    for (String s : z.getValue()) {
+                     if (msf.get(key) != null && msf.get(key).get(i) != null) {
+                         String[] j = msf.get(key).get(i);
+                         if (j != null && j.length > 4) {
+                             fieldname = j[5];
+                         } else {
+                             fieldname = "unknown";
+                         }
+                     }
+                     tainput.append(z.getKey() + " " + fieldname +  " / Field: " + i + " value: " + s + "\n");   
+                     i++;
+                    }
+            }
+        }
+        
+        bsmf.MainFrame.show("yep");
+    }
     
     public ArrayList<String> cleanText() {
         ArrayList<String> s = new ArrayList<String>();
@@ -915,6 +1134,9 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         }
         if (panel.equals("taoutput")) {
             outputpanel.setVisible(false);
+        }
+        if (panel.equals("tamap")) {
+            mappanel.setVisible(false);
         }
     }
     
@@ -1088,25 +1310,17 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         return file;
     }
     
-    public File getMapfile() {
-        
-        File file = null;
-        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        int returnVal = fc.showOpenDialog(this);
-       
-
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            try {
-            file = fc.getSelectedFile();
-            String SourceDir = file.getAbsolutePath();
-            file = new File(SourceDir);
-            
+    public List<String> getfiledata(Path path) {
+      List<String> lines = new ArrayList<>();
+        File file = path.toFile();
+        if (file != null && file.exists()) {
+                try {   
+                    lines = Files.readAllLines(file.toPath());
+                } catch (IOException ex) {
+                    bslog(ex);
+                }   
             }
-            catch (Exception ex) {
-            ex.printStackTrace();
-            }
-        } 
-        return file;
+        return lines;  
     }
     
     
@@ -1817,6 +2031,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     private void btunhideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btunhideActionPerformed
        outputpanel.setVisible(true);
        inputpanel.setVisible(true);
+       mappanel.setVisible(true);
        bthide.setEnabled(true);
     }//GEN-LAST:event_btunhideActionPerformed
 
@@ -1866,7 +2081,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
     private void btfindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btfindActionPerformed
         
-        infile = getMapfile();
+        infile = getfile();
         
       //  Path path = FileSystems.getDefault().getPath(infile.getAbsolutePath());
         if (infile != null && infile.exists()) {

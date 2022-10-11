@@ -978,7 +978,34 @@ public abstract class EDIMap implements EDIMapi {
         x = list.toArray(x);
          return x;
      }
+    
+    public static String[] splitFFSegment(String segment, ArrayList<String[]> isf) {
+         boolean inside = false;
+         int start = 0;
+         ArrayList<String> list = new ArrayList<String>();
+         for (String[] z : isf) {
+            // break if more ISF fields than actual segment  // TEV 20221005
+            if ((Integer.valueOf(z[7]) + start) > segment.length()) {
+                break;
+            }
+            // skip non-landmarks
+            if (segment.startsWith(z[0])) {
+                inside = true;
+                 list.add(segment.substring(start,(Integer.valueOf(z[7]) + start)));
+                 start += Integer.valueOf(z[7]);
+            } else {
+                inside = false;
+            }
+            if (! inside && start > 0) {  // should break out if end of target ISF definitions...to improve performance
+                break;
+            }
+         }
+        String[] x = new String[list.size()];
+        x = list.toArray(x);
+         return x;
+     }
      
+    
     public static LinkedHashMap<String, String[]> mapInput(String[] c, ArrayList<String> data, ArrayList<String[]> ISF) throws IOException {
         LinkedHashMap<String,String[]> mappedData = new LinkedHashMap<String,String[]>();
         HashMap<String,Integer> groupcount = new HashMap<String,Integer>();
