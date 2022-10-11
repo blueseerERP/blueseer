@@ -150,7 +150,13 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
+import javax.swing.text.Document;
 import javax.swing.text.Element;
+import javax.swing.text.Highlighter;
+import javax.swing.text.JTextComponent;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaCompiler;
@@ -174,6 +180,8 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 JMenuItem menuraw = new JMenuItem("Raw Format");
                 JMenuItem menulabeled = new JMenuItem("Labeled Format");
                 JMenuItem menuhide = new JMenuItem("Hide Panel");
+                
+                Highlighter.HighlightPainter myHighlightPainter = new MyHighlightPainter(Color.YELLOW);
                 
                 boolean tamapLineToggle = false;
                 boolean tainputLineToggle = false;
@@ -249,6 +257,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         }
         if (ta.getName().equals("tainput")) {
             popup.add(setMenuItem("Toggle Lines"));
+            popup.add(setMenuItem("Search"));
             popup.add(setMenuItem("Input"));
             popup.add(setMenuItem("Structure"));
             popup.add(setMenuItem("Overlay"));
@@ -310,7 +319,11 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                     
                 case "Overlay" :
                     showOverlay(parentname.getName());
-                    break;        
+                    break;  
+                 
+                case "Search" :
+                    searchTextArea(parentname.getName());
+                    break;      
                     
                 default:
                     System.out.println("unknown action: " + ac);
@@ -1099,22 +1112,66 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                     
                     int i = 0;
                     String fieldname = "";
+                    String desc = "";
                     for (String s : z.getValue()) {
+                     fieldname = "";
+                     desc = "";
                      if (msf.get(key) != null && msf.get(key).get(i) != null) {
                          String[] j = msf.get(key).get(i);
                          if (j != null && j.length > 4) {
                              fieldname = j[5];
+                             desc = j[6];
                          } else {
                              fieldname = "unknown";
+                             desc = "unknown";
                          }
                      }
-                     tainput.append(z.getKey() + " " + fieldname +  " / Field: " + i + " value: " + s + "\n");   
+                     tainput.append(z.getKey() + "\t" + fieldname + "\t" + desc +  " / Field: " + i + " value: " + s + "\n");   
                      i++;
                     }
+                   
             }
         }
-        
-        bsmf.MainFrame.show("yep");
+    }
+    
+    public void searchTextArea(String taname) {
+        if (taname.equals("tainput")) {
+            cleanHighlights(tainput);
+            String text = bsmf.MainFrame.input("Text: ");
+            highlightSearch(tainput, text);            
+        }
+    }
+    
+    class MyHighlightPainter extends DefaultHighlighter.DefaultHighlightPainter {
+        public MyHighlightPainter(Color color) {
+            super(color);
+        }
+    }
+    
+    public void cleanHighlights(JTextComponent ta) {
+        Highlighter h = ta.getHighlighter();
+        Highlighter.Highlight[] hl = h.getHighlights();
+        for (int i = 0; i < hl.length; i++) {
+            if (hl[i].getPainter() instanceof MyHighlightPainter) {
+                h.removeHighlight(hl[i]);
+            }
+        }
+    }
+    
+    public void highlightSearch(JTextComponent ta, String phrase) {
+        Highlighter h = ta.getHighlighter();
+        Document d = ta.getDocument();
+        int pos = 0;
+        String text;
+         try {
+            text = d.getText(0, d.getLength());
+            while ((pos = text.toUpperCase().indexOf(phrase.toUpperCase(),pos)) >= 0) {
+                h.addHighlight(pos, pos + phrase.length(), myHighlightPainter);
+                pos += phrase.length();             
+            }
+         } catch (BadLocationException ex) {
+             bslog(ex);
+         }
     }
     
     public ArrayList<String> cleanText() {
