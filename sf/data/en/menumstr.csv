@@ -213,7 +213,7 @@ EDILoad,,com.blueseer.edi.EDILoadMaint,JMenuItem,edip
 EDILog,,com.blueseer.edi.EDITransactionBrowse,JMenuItem,edil
 EDIXrefMaint,,com.blueseer.edi.EDIXrefMaint,JMenuItem,edix
 EDIExport,,com.blueseer.edi.EDIExport,JMenuItem,edit
-MapMaint,,com.blueseer.edi.MapMaint,JMenuItem,mapm
+MapMaint,,com.blueseer.edi.MapMaint,JMenuItem,map
 StructMaint,,com.blueseer.edi.StructMaint,JMenuItem,mpsm
 APIMaint,,com.blueseer.edi.APIMaint,JMenuItem,apim
 AS2Maint,,com.blueseer.edi.AS2Maint,JMenuItem,as2m
