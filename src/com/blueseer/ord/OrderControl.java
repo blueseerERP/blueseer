@@ -26,6 +26,7 @@ SOFTWARE.
 package com.blueseer.ord;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
@@ -34,16 +35,26 @@ import static bsmf.MainFrame.user;
 import static com.blueseer.ord.ordData.addUpdateORCtrl;
 import static com.blueseer.ord.ordData.getORCtrl;
 import com.blueseer.ord.ordData.order_ctrl;
+import static com.blueseer.srv.SalesOrdServ.getSalesOrderJSON;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.IBlueSeerc;
 import java.awt.Component;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -260,6 +271,7 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
         cbsrvmtype = new javax.swing.JCheckBox();
         cballocate = new javax.swing.JCheckBox();
         cbexceedQOHU = new javax.swing.JCheckBox();
+        btjson = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -319,6 +331,13 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
         cbexceedQOHU.setText("Exceed QOHU?");
         cbexceedQOHU.setName("cbexceed"); // NOI18N
 
+        btjson.setText("Export (JSON)");
+        btjson.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btjsonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -332,12 +351,11 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
                     .addComponent(cbautoinvoice)
                     .addComponent(cbcustitem))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btupdate)
+                    .addComponent(btjson))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btupdate)
-                .addGap(50, 50, 50))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -345,9 +363,11 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(29, 29, 29)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btupdate)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btjson)
                         .addContainerGap())
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(5, 5, 5)
@@ -360,7 +380,7 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
                         .addComponent(cballocate)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbexceedQOHU)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addGap(0, 48, Short.MAX_VALUE))))
         );
 
         add(jPanel1);
@@ -373,8 +393,30 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
         executeTask(dbaction.update, null);     
     }//GEN-LAST:event_btupdateActionPerformed
 
+    private void btjsonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btjsonActionPerformed
+        String ordnbr = bsmf.MainFrame.input("order number: ");
+        Path path = FileSystems.getDefault().getPath("temp" + "/" + "order.json");
+        BufferedWriter output;
+        if (ordnbr == null || ordnbr.isBlank()) {
+            return;
+        }
+        String filecontent = getSalesOrderJSON(ordnbr);
+        try {
+            output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path.toFile(),false)));
+            output.write(filecontent);
+            output.close();  
+        } catch (FileNotFoundException ex) {
+            bslog(ex);
+        } catch (IOException ex) {
+            bslog(ex);
+        }
+        
+        
+    }//GEN-LAST:event_btjsonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btjson;
     private javax.swing.JButton btupdate;
     private javax.swing.JCheckBox cballocate;
     private javax.swing.JCheckBox cbautoinvoice;

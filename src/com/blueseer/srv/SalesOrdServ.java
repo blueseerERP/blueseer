@@ -36,6 +36,10 @@ import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.createMessage;
 import static com.blueseer.utl.BlueSeerUtils.createMessageJSON;
 import com.blueseer.utl.OVData;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -47,6 +51,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -274,8 +279,8 @@ public static String getSalesOrderJSON(String id) {
                " where so_nbr = " + "'" + id + "'" + ";");
                 
                
-                    JSONArray json = new JSONArray();
-                    JSONArray jsondet = new JSONArray();
+                    org.json.simple.JsonArray json = new org.json.simple.JsonArray();
+                    org.json.simple.JsonArray jsondet = new org.json.simple.JsonArray();
                     ResultSetMetaData rsmd = res.getMetaData(); 
                     LinkedHashMap<String, Object> jsonOrderedMapHdr = new LinkedHashMap<String, Object>();
                         
@@ -289,6 +294,11 @@ public static String getSalesOrderJSON(String id) {
                          // json.add(jsonOrderedMap);
                     }
                     
+                    /*
+                    for (Map.Entry<String, Object> z : jsonOrderedMapHdr.entrySet()) {
+                        System.out.println(z.getKey());
+                    }
+                    */
                     res = st.executeQuery("select sod_item as 'ItemNumber', " +
                " sod_line as 'Line', sod_uom as 'UOM', sod_custitem as 'CustItem',  " +
                " sod_ord_qty as 'OrderQty', sod_shipped_qty as 'ShippedQty', sod_status as 'LineStatus', " +
@@ -304,11 +314,16 @@ public static String getSalesOrderJSON(String id) {
                         String column_name = rsmd.getColumnName(i);
                         jsonOrderedMap.put(column_name, res.getObject(column_name));
                       }
-                      jsondet.put(jsonOrderedMap);
+                      jsondet.add(jsonOrderedMap);
                 }
                     jsonOrderedMapHdr.put("Items", jsondet);
-                    json.put(jsonOrderedMapHdr);
-                    x = json.toString(1);
+                    json.add(jsonOrderedMapHdr);
+                    x = json.toJson();
+                    // added to prettify
+                    Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                    JsonElement je = JsonParser.parseString(x);
+                    x = gson.toJson(je);
+                   
                     
            }
             catch (SQLException s){
