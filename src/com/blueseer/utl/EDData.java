@@ -26,6 +26,7 @@ SOFTWARE.
 package com.blueseer.utl;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.dbtype;
 import static bsmf.MainFrame.driver;
@@ -44,6 +45,7 @@ import java.io.InputStreamReader;
 import java.io.RandomAccessFile;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
+import java.nio.file.Path;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -54,6 +56,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import jcifs.smb.NtlmPasswordAuthentication;
 import jcifs.smb.SmbException;
 import jcifs.smb.SmbFile;
@@ -1764,7 +1769,67 @@ public class EDData {
         return x;
         
     }
-         
+
+    public static char[] readEDIRawFileIntoCbuf(Path filepath) {
+        char[] cbuf = null;
+        try {
+            File file = filepath.toFile();
+               if (! file.exists()) {
+                 return null;
+               }
+            BufferedReader reader = new BufferedReader(new InputStreamReader(new BufferedInputStream(new FileInputStream(file))));
+            cbuf = new char[(int) file.length()];
+            reader.read(cbuf,0,cbuf.length); 
+            reader.close();
+        } catch (IOException ex) {
+            bslog(ex);
+        }
+       return cbuf;
+    }
+    
+    
+    public static List<String> readEDIRawFileIntoArrayList(Path filepath)  {
+       ArrayList<String> segments = new ArrayList<String>();
+       try {
+           if (OVData.getSystemFileServerType().toString().equals("S")) {  // if Samba type
+               NtlmPasswordAuthentication auth = NtlmPasswordAuthentication.ANONYMOUS;
+               SmbFile smbfile;
+
+                   smbfile = new SmbFile(filepath.toString(), auth);
+
+                   if (! smbfile.exists()) {
+                     return segments;
+                   }
+               BufferedReader reader = new BufferedReader(new InputStreamReader(new BufferedInputStream(new SmbFileInputStream(smbfile))));
+               char[] cbuf = new char[(int) smbfile.length()];
+               reader.read(cbuf,0,cbuf.length); 
+               reader.close();
+               segments = EDData.parseFile(cbuf, smbfile.getName());
+           } else {
+
+               File file = filepath.toFile();
+                   if (! file.exists()) {
+                     return segments;
+                   }
+
+               BufferedReader reader = new BufferedReader(new InputStreamReader(new BufferedInputStream(new FileInputStream(file))));
+               char[] cbuf = new char[(int) file.length()];
+               reader.read(cbuf,0,cbuf.length); 
+               reader.close();
+               segments = EDData.parseFile(cbuf, file.getName());
+           }
+       } catch (MalformedURLException ex) {
+            bslog(ex);
+           } catch (SmbException ex) {
+            bslog(ex);
+        } catch (UnknownHostException ex) {
+            bslog(ex);
+        } catch (IOException ex) {
+            bslog(ex);
+        }
+       return segments;
+    }
+        
     public static ArrayList readEDIRawFileIntoArrayList(String filename, String dir) throws MalformedURLException, SmbException, UnknownHostException, IOException {
        ArrayList<String> segments = new ArrayList<String>();
        String path = "";
@@ -3397,7 +3462,7 @@ public class EDData {
     } 
     
     /* lets set delimiters for CSV */
-    if (filename.toString().toUpperCase().endsWith(".CSV") ) {
+    if (filename.toUpperCase().endsWith(".CSV") ) {
            flddelim = ',';
            subdelim = ':';
            segdelim = '\n';
@@ -3407,7 +3472,7 @@ public class EDData {
     }
     
     /* lets set delimiters for XML */
-    if (filename.toString().toUpperCase().endsWith(".XML") ) {
+    if (filename.toUpperCase().endsWith(".XML") ) {
            segdelim = '\n';
         segdelim_str = String.valueOf(segdelim);
     }
@@ -3415,7 +3480,7 @@ public class EDData {
     
     
     StringBuilder segment = new StringBuilder();
-    if (filename.toString().toUpperCase().endsWith(".XML") ) {
+    if (filename.toUpperCase().endsWith(".XML") ) {
         for (int i = 0; i < cbuf.length; i++) {
         segment.append(cbuf[i]);
         }
@@ -3436,6 +3501,112 @@ public class EDData {
     }
     
     return doc;
+    }
+   
+    public static ArrayList parseCbuf(char[] cbuf, String[] delims)   {
+    // delims should be in ele,sub,seg order
+    ArrayList<String> doc = new ArrayList<String>();
+    char segdelim = (char) delims[2].charAt(0);
+    StringBuilder segment = new StringBuilder();
+    
+    for (int i = 0; i < cbuf.length; i++) {
+        if (cbuf[i] == segdelim) {
+            doc.add(segment.toString());
+            segment.delete(0, segment.length());
+        } else {
+            if (! (String.format("%02x",(int) cbuf[i]).equals("0d") || String.format("%02x",(int) cbuf[i]).equals("0a")) ) {
+                segment.append(cbuf[i]);
+            } 
+        }
+    } 
+    
+   
+    
+    return doc;
+    }
+   
+    public static List<String> cbufToList(char[] cbuf, String[] delims) {
+        ArrayList<String> x = new ArrayList<String>();
+        x = EDData.parseCbuf(cbuf, delims);
+        return x;
+    }
+    
+    
+    public static String[] getDelimiters(char[] cbuf, String filename)   {
+    String[] x = new String[]{"","",""};
+    
+    char flddelim = 0;
+    char subdelim = 0;
+    char segdelim = 0;
+    
+    
+    /* lets set the delimiters X12 */
+    if (cbuf[0] == 'I' &&
+        cbuf[1] == 'S' &&
+        cbuf[2] == 'A') {
+           flddelim = cbuf[103];
+           subdelim = cbuf[104];
+           segdelim = cbuf[105];
+        x[0] = String.valueOf(flddelim);
+        x[1] = String.valueOf(subdelim);
+        x[2] = String.valueOf(segdelim);
+        
+          // special case for 0d0a ...if so use both characters as segment delimiter
+           if (String.format("%02x",(int) cbuf[105]).equals("0d") && String.format("%02x",(int) cbuf[106]).equals("0a")) {
+            x[2] = String.valueOf(cbuf[105]) + String.valueOf(cbuf[106]);  
+           }
+        
+        
+        
+        if (x[0].equals("*")) {
+            x[0] = "\\*";
+        }
+        if (x[0].equals("^")) {
+            x[0] = "\\^";
+        }
+        
+        return x;
+    } 
+    
+     /* lets set the delimiters EDIFACT */
+    if (cbuf[0] == 'U' &&
+        cbuf[1] == 'N' &&
+        cbuf[2] == 'B') {
+           flddelim = '+';
+           subdelim = ':';
+           segdelim = '\'';
+        x[0] = String.valueOf(flddelim);
+        x[1] = String.valueOf(subdelim);
+        x[2] = String.valueOf(segdelim);
+        
+        if (x[0].equals("*")) {
+            x[0] = "\\*";
+        }
+        if (x[0].equals("^")) {
+            x[0] = "\\^";
+        }
+         return x;     
+    } 
+    
+    /* lets set delimiters for CSV */
+    if (filename.toUpperCase().endsWith(".CSV") ) {
+           flddelim = ',';
+           subdelim = ':';
+           segdelim = '\n';
+        x[0] = String.valueOf(flddelim);
+        x[1] = String.valueOf(subdelim);
+        x[2] = String.valueOf(segdelim);
+        return x;
+    }
+    
+    /* lets set delimiters for XML */
+    if (filename.toUpperCase().endsWith(".XML") ) {
+           segdelim = '\n';
+        x[2] = String.valueOf(segdelim);
+        return x;
+    }
+    
+    return x;
     }
    
      

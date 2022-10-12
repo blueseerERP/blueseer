@@ -96,6 +96,10 @@ import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.EDData;
+import static com.blueseer.utl.EDData.cbufToList;
+import static com.blueseer.utl.EDData.getDelimiters;
+import static com.blueseer.utl.EDData.readEDIRawFileIntoArrayList;
+import static com.blueseer.utl.EDData.readEDIRawFileIntoCbuf;
 import com.blueseer.utl.IBlueSeerT;
 import com.blueseer.vdr.venData;
 import java.awt.event.InputEvent;
@@ -736,6 +740,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
        setComponentDefaultValues();
         btnew.setEnabled(true);
         btlookup.setEnabled(true);
+        btoverlay.setEnabled(true);
       
        
         
@@ -1042,19 +1047,20 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         }
     }
     
-    public static LinkedHashMap<String, String[]> mapInput(String filetype, List<String> data, ArrayList<String[]> ISF) {
+    public static LinkedHashMap<String, String[]> mapInput(String filetype, List<String> data, ArrayList<String[]> ISF, String[] delims) {
         LinkedHashMap<String,String[]> mappedData = new LinkedHashMap<String,String[]>();
         HashMap<String,Integer> groupcount = new HashMap<String,Integer>();
         HashMap<String,Integer> set = new HashMap<String,Integer>();
         String parenthead = "";
         String groupkey = "";
         String previouskey = "";
+        bsmf.MainFrame.show(filetype);
         for (String s : data) {
                 String[] x = null;
                 if (filetype.equals("FF")) {
                     x = splitFFSegment(s, ISF);
                 } else {
-                    x = s.split("\\*",-1); // if x12
+                    x = s.split(EDI.escapeDelimiter(delims[0]),-1); // delims = ele, sub, seg
                 }
 
                 for (String[] z : ISF) {
@@ -1145,6 +1151,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     public void showOverlay(String taname) {
         List<String> structure = null;
         List<String> input = null;
+        String[] delims = new String[]{"","",""};
         File file = null;
         String fs = "";
         boolean isInput = false;
@@ -1152,9 +1159,22 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         if (taname.equals("tainput")) {
             structure = getStructure("ifs"); 
             file = getfile();
-            input = getfiledata(file.toPath());
-            fs = ddinfiletype.getSelectedItem().toString();
             tainput.setText("");
+            if (file != null) {
+            char[] cbuf = readEDIRawFileIntoCbuf(file.toPath());
+            delims = getDelimiters(cbuf, file.getName());
+            input = cbufToList(cbuf, delims);
+            } else {
+                tainput.setText("unable to read file");
+                return;
+            }
+            // needs revisiting
+            if (ddifs.getSelectedItem().toString().startsWith("X12")) {
+                fs = "X12";
+            } else {
+                fs = "FF";
+            }
+            
             isInput = true;
         }
         if (taname.equals("taoutput")) {
@@ -1168,7 +1188,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         }
                     
             Map<String, HashMap<Integer,String[]>> msf = getStructureAsHashMap(structure); 
-            LinkedHashMap<String, String[]> mappedData = mapInput(fs, input, getStructureSplit(structure));
+            LinkedHashMap<String, String[]> mappedData = mapInput(fs, input, getStructureSplit(structure), delims);
             
             
             for (Map.Entry<String, String[]> z : mappedData.entrySet()) {
@@ -1480,20 +1500,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         } 
         return file;
     }
-    
-    public List<String> getfiledata(Path path) {
-      List<String> lines = new ArrayList<>();
-        File file = path.toFile();
-        if (file != null && file.exists()) {
-                try {   
-                    lines = Files.readAllLines(file.toPath());
-                } catch (IOException ex) {
-                    bslog(ex);
-                }   
-            }
-        return lines;  
-    }
-    
+        
     public void getInput() {
         infile = getfile();
         tainput.setText("");
@@ -1583,6 +1590,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         toolbar = new javax.swing.JToolBar();
         btnew = new javax.swing.JButton();
         btlookup = new javax.swing.JButton();
+        btoverlay = new javax.swing.JButton();
         btclear = new javax.swing.JButton();
         btadd = new javax.swing.JButton();
         btdelete = new javax.swing.JButton();
@@ -1696,6 +1704,17 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             }
         });
         toolbar.add(btlookup);
+
+        btoverlay.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/gear.png"))); // NOI18N
+        btoverlay.setFocusable(false);
+        btoverlay.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btoverlay.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btoverlay.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btoverlayActionPerformed(evt);
+            }
+        });
+        toolbar.add(btoverlay);
 
         btclear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/file.png"))); // NOI18N
         btclear.setFocusable(false);
@@ -2284,6 +2303,15 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         
     }//GEN-LAST:event_btfindActionPerformed
 
+    private void btoverlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btoverlayActionPerformed
+        mappanel.setVisible(false);
+        outputpanel.setVisible(false);
+        inputpanel.setVisible(true);
+        ddifs.setEnabled(true);
+        tbkey.setEnabled(false);
+        setPanelComponentState(inputpanel, true);
+    }//GEN-LAST:event_btoverlayActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
@@ -2296,6 +2324,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btoutput;
+    private javax.swing.JButton btoverlay;
     private javax.swing.JButton btrun;
     private javax.swing.JButton btshiftleft;
     private javax.swing.JButton btshiftright;
