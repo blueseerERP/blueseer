@@ -56,6 +56,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -273,8 +274,8 @@ public static String getSalesOrderJSON(String id) {
                " where so_nbr = " + "'" + id + "'" + ";");
                 
                
-                    org.json.simple.JsonArray json = new org.json.simple.JsonArray();
-                    org.json.simple.JsonArray jsondet = new org.json.simple.JsonArray();
+                    JSONArray json = new JSONArray();
+                    JSONArray jsondet = new JSONArray();
                     ResultSetMetaData rsmd = res.getMetaData(); 
                     LinkedHashMap<String, Object> jsonOrderedMapHdr = new LinkedHashMap<String, Object>();
                         
@@ -303,11 +304,11 @@ public static String getSalesOrderJSON(String id) {
                         String column_name = rsmd.getColumnName(i);
                         jsonOrderedMap.put(column_name, res.getObject(column_name));
                       }
-                      jsondet.add(jsonOrderedMap);
+                      jsondet.put(jsonOrderedMap);
                 }
                     jsonOrderedMapHdr.put("Items", jsondet);
-                    json.add(jsonOrderedMapHdr);
-                    x = json.toJson();
+                    json.put(jsonOrderedMapHdr);
+                    x = json.toString(1);
                     
            }
             catch (SQLException s){
