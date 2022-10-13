@@ -215,7 +215,9 @@ public abstract class EDIMap implements EDIMapi {
         outreceiver = receiver;
     }
 
-    
+    public void kill(String messg) throws UserDefinedException {
+        throw new UserDefinedException(messg);
+    }
     
     public void setControl(String[] c) throws UserDefinedException {
         

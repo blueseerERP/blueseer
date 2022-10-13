@@ -54,7 +54,9 @@ public class ACME810 extends com.blueseer.edi.EDIMap {
 		    int itemLoopCount = 0;
 		    double totalqty = 0;
 		    java.text.DecimalFormat decimalFormat = new java.text.DecimalFormat("0.#####");
-		     
+		    
+                    
+                    
 		    /* Begin Mapping Segments */ 
 		    mapSegment("BIG","e01",getInput("E2EDK02","qualf:009", "datum"));
 		    mapSegment("BIG","e02",getInput("E2EDK02","qualf:009", "belnr"));
