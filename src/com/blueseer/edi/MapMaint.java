@@ -319,7 +319,6 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
         @Override
         public void actionPerformed(ActionEvent e) { 
-             lbloccurences.setText("");
              String ac = e.getActionCommand();
              JMenuItem parentname = (JMenuItem) e.getSource();
              switch (ac) {
@@ -652,8 +651,6 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         tamap.setFont(new Font("monospaced", Font.PLAIN, 12));
         taoutput.setFont(new Font("monospaced", Font.PLAIN, 12));
         
-        
-        lbloccurences.setText("");
         
         cbinternal.setEnabled(false);
         ddofs.removeAllItems();
@@ -1145,6 +1142,16 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }
 
     
+    Action actionNext = new AbstractAction() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      JTextComponent s = (JTextComponent) e.getSource();
+      searchTextNext(s.getName());
+    }
+    };
+    
+    
+    
     Action actionSearch = new AbstractAction() {
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -1157,11 +1164,8 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     private void addKeyBind(JTextComponent ta) {
         ta.getInputMap().put(KeyStroke.getKeyStroke("control F"), ta.getName());
         ta.getActionMap().put(ta.getName(), actionSearch);
-   // InputMap iMap = ta.getInputMap().put(KeyStroke.getKeyStroke("F2"), actionSearch);
-   // ActionMap aMap = ta.getActionMap();
-   // iMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_A, InputEvent.CTRL_MASK), ta.getName());
-   // aMap.put(ta.getName(), actionSearch);
-    
+        ta.getInputMap().put(KeyStroke.getKeyStroke("control N"), ta.getName() + "_next");
+        ta.getActionMap().put(ta.getName() + "_next", actionNext);
   }
     
     public void showOverlay(String taname) {
@@ -1272,6 +1276,19 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         }
     }
     
+    public void searchTextNext(String taname) {
+        if (taname.equals("tainput")) {
+            highlightNext(tainput);            
+        }
+        if (taname.equals("tamap")) {
+            highlightNext(tamap);            
+        }
+        if (taname.equals("taoutput")) {
+            highlightNext(taoutput);            
+        }
+    }
+    
+    
     class MyHighlightPainter extends DefaultHighlighter.DefaultHighlightPainter {
         public MyHighlightPainter(Color color) {
             super(color);
@@ -1279,13 +1296,13 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }
     
     public void cleanHighlights(String taname) {
-        lbloccurences.setText("");
-        
+               
         if (taname.equals("tainput")) {
             Highlighter h = tainput.getHighlighter();
             Highlighter.Highlight[] hl = h.getHighlights();
             for (int i = 0; i < hl.length; i++) {
                 if (hl[i].getPainter() instanceof MyHighlightPainter) {
+                    
                     h.removeHighlight(hl[i]);
                 }
             }
@@ -1326,12 +1343,53 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 pos += phrase.length();
                 count++;
             }
-            lbloccurences.setText("Occurences: " + count);
+            bsmf.MainFrame.show("Occurences: " + count);
             
          } catch (BadLocationException ex) {
              bslog(ex);
          }
     }
+    
+    public void highlightNext(JTextComponent ta) {
+       int current = tainput.getCaretPosition();
+       if (ta.getName().equals("tainput")) {
+            Highlighter h = tainput.getHighlighter();
+            Highlighter.Highlight[] hl = h.getHighlights();
+            for (int i = 0; i < hl.length; i++) {
+                if (hl[i].getPainter() instanceof MyHighlightPainter) {
+                    if (hl[i].getStartOffset() > current) {
+                      tainput.setCaretPosition(hl[i].getStartOffset());
+                      break;
+                    }
+                }
+            }
+        }
+        if (ta.getName().equals("tamap")) {
+            Highlighter h = tamap.getHighlighter();
+            Highlighter.Highlight[] hl = h.getHighlights();
+            for (int i = 0; i < hl.length; i++) {
+                if (hl[i].getPainter() instanceof MyHighlightPainter) {
+                    if (hl[i].getStartOffset() > current) {
+                      tamap.setCaretPosition(hl[i].getStartOffset());
+                      break;
+                    }
+                }
+            }
+        }
+        if (ta.getName().equals("taoutput")) {
+            Highlighter h = taoutput.getHighlighter();
+            Highlighter.Highlight[] hl = h.getHighlights();
+            for (int i = 0; i < hl.length; i++) {
+                if (hl[i].getPainter() instanceof MyHighlightPainter) {
+                    if (hl[i].getStartOffset() > current) {
+                      taoutput.setCaretPosition(hl[i].getStartOffset());
+                      break;
+                    }
+                }
+            }
+        }
+    }
+    
     
     public ArrayList<String> cleanText() {
         ArrayList<String> s = new ArrayList<String>();
@@ -1654,7 +1712,6 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         tbpackage = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         cbinternal = new javax.swing.JCheckBox();
-        lbloccurences = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -2030,16 +2087,12 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 .addContainerGap())
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lbloccurences, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(22, 22, 22))
+                .addGap(22, 266, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbloccurences, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -2401,7 +2454,6 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane7;
-    private javax.swing.JLabel lbloccurences;
     private javax.swing.JPanel mappanel;
     private javax.swing.JPanel outputpanel;
     private javax.swing.JPanel tablepanel;
