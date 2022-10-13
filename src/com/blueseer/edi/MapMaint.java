@@ -102,6 +102,7 @@ import static com.blueseer.utl.EDData.readEDIRawFileIntoArrayList;
 import static com.blueseer.utl.EDData.readEDIRawFileIntoCbuf;
 import com.blueseer.utl.IBlueSeerT;
 import com.blueseer.vdr.venData;
+import java.awt.Font;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -637,13 +638,20 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         tbversion.setText("");
         tbpath.setText("");
         
+        
+        
         tamap.setText("");
         tainput.setText("");
         taoutput.setText("");
-        
+               
         addKeyBind(tamap);
         addKeyBind(tainput);
         addKeyBind(taoutput);
+        
+        tainput.setFont(new Font("monospaced", Font.PLAIN, 12));
+        tamap.setFont(new Font("monospaced", Font.PLAIN, 12));
+        taoutput.setFont(new Font("monospaced", Font.PLAIN, 12));
+        
         
         lbloccurences.setText("");
         
@@ -742,7 +750,9 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         btlookup.setEnabled(true);
         btoverlay.setEnabled(true);
         btclear.setEnabled(true);
-      
+        mappanel.setVisible(true);
+        inputpanel.setVisible(true);
+        outputpanel.setVisible(true);
        
         
         if (arg != null && arg.length > 0) {
@@ -1037,6 +1047,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                             tainput.append(segment);
                             tainput.append("\n");
             }
+            tainput.setCaretPosition(0);
         }
         if (taname.equals("taoutput")) {
             List<String> lines = getStructure("ofs");
@@ -1045,7 +1056,11 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                             taoutput.append(segment);
                             taoutput.append("\n");
             }
+            taoutput.setCaretPosition(0);
         }
+        
+         
+
     }
     
     public static LinkedHashMap<String, String[]> mapInput(String filetype, List<String> data, ArrayList<String[]> ISF, String[] delims) {
@@ -1235,7 +1250,8 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                     }
                    
             }
-        
+        tainput.setCaretPosition(0);
+        taoutput.setCaretPosition(0);
     }
     
     public void searchTextArea(String taname) {
@@ -1484,7 +1500,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
           taoutput.append(diagnostic.getMessage(null) + "\n");
           taoutput.append("\n");
         }
-        taoutput.append("Success: " + success + "\n");
+        taoutput.append("Compilation Success: " + success + "\n");
 
         return file;
     }
@@ -1520,6 +1536,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                         tainput.append(segment);
                         tainput.append("\n");
                 }
+                tainput.setCaretPosition(0);
                 if (! tbkey.getText().isBlank()) {
                 btrun.setEnabled(true);
                 }
@@ -1704,7 +1721,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         });
         toolbar.add(btnew);
 
-        btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/checkout.png"))); // NOI18N
+        btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/map.png"))); // NOI18N
         btlookup.setFocusable(false);
         btlookup.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btlookup.setName("btlookup"); // NOI18N
@@ -1716,7 +1733,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         });
         toolbar.add(btlookup);
 
-        btoverlay.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/gear.png"))); // NOI18N
+        btoverlay.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/spy.png"))); // NOI18N
         btoverlay.setFocusable(false);
         btoverlay.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btoverlay.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -2131,10 +2148,9 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 }
             }
         }
-        
+                       
          if (editype[0].isEmpty()) {
              taoutput.setText("unknown file type");
-           
             return;
          }
       
@@ -2214,6 +2230,8 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                     } catch (IOException ex1) {
                         edilog(ex1);
                     }
+                    
+                    taoutput.setCaretPosition(0); 
                 }
     }//GEN-LAST:event_btrunActionPerformed
 

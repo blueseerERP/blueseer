@@ -3601,8 +3601,12 @@ public class EDData {
     if (filename.toUpperCase().endsWith(".XML") ) {
            segdelim = '\n';
         x = new String[]{"","",String.valueOf(segdelim)};
-        
         return x;
+    }
+    
+    if (x == null) {
+           segdelim = '\n';
+        x = new String[]{"","",String.valueOf(segdelim)};
     }
     
     return x;
