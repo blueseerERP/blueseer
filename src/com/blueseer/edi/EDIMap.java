@@ -132,7 +132,7 @@ public abstract class EDIMap implements EDIMapi {
      public static String sd = "";
      public static String ed = "";
      public static String ud = "";
-
+     
      public static String content = "";
 
     public static Map<String, HashMap<Integer,String[]>> mISF = new LinkedHashMap<String, HashMap<Integer,String[]>>();
@@ -314,7 +314,9 @@ public abstract class EDIMap implements EDIMapi {
     delim = String.valueOf(Character.toString((char) x));
     return delim;
   }
+   
      
+    
     public void setOutPutEnvelopeStrings(String[] c) {         
          if ( ! isOverride) {  // if not override...use internal partner / doc lookup for envelope info
            
@@ -876,8 +878,8 @@ public abstract class EDIMap implements EDIMapi {
 			if (! line.isEmpty()) {
 			String[] t = line.split(",",-1);
                              if (i == 0) { lastkey = t[0];}
-                        if (GlobalDebug && t.length != 10) {
-                        System.out.println("readISF: line " + i + " delimited count is not 10 " + t.length);
+                        if (GlobalDebug && t.length >= 10) {
+                        System.out.println("readISF: line " + i + " delimited count is less than 10 " + t.length);
                         }
                         list.add(t);
                         
@@ -1018,7 +1020,7 @@ public abstract class EDIMap implements EDIMapi {
                 if (c[28].equals("FF")) {
                     x = splitFFSegment(s);
                 } else {
-                    x = s.split("\\*",-1); // if x12
+                    x = s.split(EDI.escapeDelimiter(ed)); // delims = ele, sub, seg
                 }
 
                 for (String[] z : ISF) {

@@ -741,6 +741,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         btnew.setEnabled(true);
         btlookup.setEnabled(true);
         btoverlay.setEnabled(true);
+        btclear.setEnabled(true);
       
        
         
@@ -1054,7 +1055,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         String parenthead = "";
         String groupkey = "";
         String previouskey = "";
-        bsmf.MainFrame.show(filetype);
+       // bsmf.MainFrame.show(filetype);
         for (String s : data) {
                 String[] x = null;
                 if (filetype.equals("FF")) {
@@ -1162,7 +1163,15 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             tainput.setText("");
             if (file != null) {
             char[] cbuf = readEDIRawFileIntoCbuf(file.toPath());
+            if (cbuf == null) {
+              tainput.setText("file cbuf content is null");
+                return;  
+            }
             delims = getDelimiters(cbuf, file.getName());
+            if (delims == null) {
+              tainput.setText("unable to determine delimiters (null array returned) ");
+                return;  
+            }
             input = cbufToList(cbuf, delims);
             } else {
                 tainput.setText("unable to read file");
@@ -1511,7 +1520,9 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                         tainput.append(segment);
                         tainput.append("\n");
                 }
+                if (! tbkey.getText().isBlank()) {
                 btrun.setEnabled(true);
+                }
             } catch (IOException ex) {
                 bslog(ex);
             }   
@@ -2031,14 +2042,20 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
     private void btrunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrunActionPerformed
         String[] c = EDI.initEDIControl();
+        
+        if (tbkey.getText().isBlank()) {
+            return;
+        }
         map_mstr m = getMapMstr(new String[]{tbkey.getText()});
         
+        taoutput.setText("");
         
         // now absorb file into doc structure for input into map
         // ...only processing the first doc in a envelope if file contains multiple...for testing purposes
          
         // BufferedReader f = null;
          char[] cbuf  = tainput.getText().toCharArray();
+         
          /*
          try {
          f = new BufferedReader(new FileReader(infile));
@@ -2053,11 +2070,14 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         // beginning of needs revamping 
         String[] editype = getEDIType(cbuf, "testdata");
         ArrayList<String> doc = new ArrayList<String>();
+        char segdelim = 0;
+        char eledelim = 0;
+        
         
         if (editype[0].equals("X12")) {
         Map<Integer, Object[]> ISAmap = createIMAP(cbuf, c, "", "", "", "");
         Map<Integer, ArrayList> d = null;
-        char segdelim = 0;
+        
         int loopcount = 0;
         for (Map.Entry<Integer, Object[]> isa : ISAmap.entrySet()) {
            loopcount++;
@@ -2066,7 +2086,13 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
            }
            d = (HashMap<Integer, ArrayList>) isa.getValue()[5];
            segdelim = (char) Integer.valueOf(isa.getValue()[2].toString()).intValue();
+           eledelim = (char) Integer.valueOf(isa.getValue()[3].toString()).intValue();
         }
+        
+        if (d == null) {
+            taoutput.setText("unable to establish isaMAP...check structure of input...possible double delimiters");
+            return;
+         }
         
         Integer[] k = null;
         for (Map.Entry<Integer, ArrayList> z : d.entrySet()) {
@@ -2090,9 +2116,9 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             }
         }
         }
-        
-        char segdelim = (char) Integer.valueOf("10").intValue(); 
+         
         if (editype[0].equals("FF")) {
+            segdelim = (char) Integer.valueOf("10").intValue(); 
            StringBuilder segment = new StringBuilder();
            for (int i = 0; i < cbuf.length; i++) {
                 if (cbuf[i] == segdelim) {
@@ -2107,17 +2133,19 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         }
         
          if (editype[0].isEmpty()) {
-            bsmf.MainFrame.show("unknown file type");
+             taoutput.setText("unknown file type");
+           
             return;
          }
       
    // end of needs revamping
-   
+      
+        
         c[0] = "MapTester";
         c[21] = "MapTester";
         c[1] = x.map_indoctype();
-       // c[9] = "10";
-       // c[10] = "42";
+        c[9] = String.valueOf(Integer.valueOf(segdelim));
+        c[10] = String.valueOf(Integer.valueOf(eledelim));
        // c[11] = "0";
         c[15] = x.map_outdoctype();
         c[2] = x.map_id();

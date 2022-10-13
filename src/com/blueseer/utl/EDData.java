@@ -3533,7 +3533,7 @@ public class EDData {
     
     
     public static String[] getDelimiters(char[] cbuf, String filename)   {
-    String[] x = new String[]{"","",""};
+    String[] x = null;
     
     char flddelim = 0;
     char subdelim = 0;
@@ -3547,9 +3547,8 @@ public class EDData {
            flddelim = cbuf[103];
            subdelim = cbuf[104];
            segdelim = cbuf[105];
-        x[0] = String.valueOf(flddelim);
-        x[1] = String.valueOf(subdelim);
-        x[2] = String.valueOf(segdelim);
+           x = new String[]{String.valueOf(flddelim),String.valueOf(subdelim),String.valueOf(segdelim)};
+        
         
           // special case for 0d0a ...if so use both characters as segment delimiter
            if (String.format("%02x",(int) cbuf[105]).equals("0d") && String.format("%02x",(int) cbuf[106]).equals("0a")) {
@@ -3575,9 +3574,9 @@ public class EDData {
            flddelim = '+';
            subdelim = ':';
            segdelim = '\'';
-        x[0] = String.valueOf(flddelim);
-        x[1] = String.valueOf(subdelim);
-        x[2] = String.valueOf(segdelim);
+           
+           x = new String[]{String.valueOf(flddelim),String.valueOf(subdelim),String.valueOf(segdelim)};
+           
         
         if (x[0].equals("*")) {
             x[0] = "\\*";
@@ -3593,22 +3592,22 @@ public class EDData {
            flddelim = ',';
            subdelim = ':';
            segdelim = '\n';
-        x[0] = String.valueOf(flddelim);
-        x[1] = String.valueOf(subdelim);
-        x[2] = String.valueOf(segdelim);
+        x = new String[]{String.valueOf(flddelim),String.valueOf(subdelim),String.valueOf(segdelim)};
+        
         return x;
     }
     
     /* lets set delimiters for XML */
     if (filename.toUpperCase().endsWith(".XML") ) {
            segdelim = '\n';
-        x[2] = String.valueOf(segdelim);
+        x = new String[]{"","",String.valueOf(segdelim)};
+        
         return x;
     }
     
     return x;
     }
-   
+       
      
     public static boolean CreateShipperHdrEDI(String[] control, String nbr, String bol, String billto, String shipto, String so, String po, String shipdate, String orddate, String remarks, String shipvia ) {
           boolean isError = false; 
