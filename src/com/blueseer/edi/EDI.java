@@ -45,6 +45,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
@@ -1465,15 +1466,19 @@ public class EDI {
                // at this point I should have a doc set (ST to SE) and a map ...now call map to operate on doc 
                 URLClassLoader cl = null;
                 try {
-                    List<File> jars = Arrays.asList(new File("edi/maps").listFiles());
-                    URL[] urls = new URL[jars.size()];
-                    for (int i = 0; i < jars.size(); i++) {
-                    try {
-                        urls[i] = jars.get(i).toURI().toURL();
-                    } catch (Exception e) {
-                        edilog(e);
-                    }
-                    }
+                    List<File> jars = Arrays.asList(new File("edi/maps").listFiles(new FilenameFilter() {
+                    public boolean accept(File dir, String name) {
+                    return name.toLowerCase().endsWith(".jar");
+                }
+                }));
+                URL[] urls = new URL[jars.size()];
+                for (int i = 0; i < jars.size(); i++) {
+                try {
+                  urls[i] = jars.get(i).toURI().toURL();
+                } catch (Exception e) {
+                    edilog(e);
+                }
+                }
                 cl = new URLClassLoader(urls);
                 
                     Class cls = Class.forName(map,true,cl);  
@@ -1613,7 +1618,9 @@ public class EDI {
                     URL[] urls = new URL[jars.size()];
                     for (int i = 0; i < jars.size(); i++) {
                     try {
-                        urls[i] = jars.get(i).toURI().toURL();
+                        if (jars.get(i).getName().endsWith(".jar")) {
+                            urls[i] = jars.get(i).toURI().toURL();
+                        }
                     } catch (Exception e) {
                         edilog(e);
                     }

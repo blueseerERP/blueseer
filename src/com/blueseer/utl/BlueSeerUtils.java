@@ -44,6 +44,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
@@ -910,11 +911,15 @@ public class BlueSeerUtils {
          // lets check and see if class exists in package
        URLClassLoader cl = null;
        try {
-           List<File> jars = Arrays.asList(new File("edi/maps").listFiles());
+           List<File> jars = Arrays.asList(new File("edi/maps").listFiles(new FilenameFilter() {
+                    public boolean accept(File dir, String name) {
+                    return name.toLowerCase().endsWith(".jar");
+                }
+                }));
                 URL[] urls = new URL[jars.size()];
                 for (int i = 0; i < jars.size(); i++) {
                 try {
-                    urls[i] = jars.get(i).toURI().toURL();
+                  urls[i] = jars.get(i).toURI().toURL();
                 } catch (Exception e) {
                     edilog(e);
                 }

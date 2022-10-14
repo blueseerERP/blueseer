@@ -103,6 +103,7 @@ import static com.blueseer.utl.EDData.readEDIRawFileIntoCbuf;
 import com.blueseer.utl.IBlueSeerT;
 import com.blueseer.vdr.venData;
 import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -114,6 +115,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FilenameFilter;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.PrintWriter;
@@ -162,6 +164,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.event.UndoableEditListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
@@ -169,6 +173,8 @@ import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.Highlighter;
 import javax.swing.text.JTextComponent;
+import javax.swing.undo.CannotUndoException;
+import javax.swing.undo.UndoManager;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaCompiler;
@@ -192,6 +198,10 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 JMenuItem menuraw = new JMenuItem("Raw Format");
                 JMenuItem menulabeled = new JMenuItem("Labeled Format");
                 JMenuItem menuhide = new JMenuItem("Hide Panel");
+                
+                private UndoManager undoManagerTAINPUT = new UndoManager();
+                private UndoManager undoManagerTAOUTPUT = new UndoManager();
+                private UndoManager undoManagerTAMAP = new UndoManager();
                 
                 Highlighter.HighlightPainter myHighlightPainter = new MyHighlightPainter(Color.YELLOW);
                 
@@ -429,6 +439,29 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         MapMaint.myPopupHandler handler3 = new MapMaint.myPopupHandler(taoutput);
         taoutput.add(handler3.getPopup());
         
+        Document docmap = tamap.getDocument();
+        docmap.addUndoableEditListener(new UndoableEditListener() {
+        @Override
+        public void undoableEditHappened(UndoableEditEvent e) {
+        undoManagerTAMAP.addEdit(e.getEdit());
+        }
+        });
+        
+        Document docinput = tainput.getDocument();
+        docinput.addUndoableEditListener(new UndoableEditListener() {
+        @Override
+        public void undoableEditHappened(UndoableEditEvent e) {
+        undoManagerTAINPUT.addEdit(e.getEdit());
+        }
+        });
+        
+        Document docoutput = taoutput.getDocument();
+        docoutput.addUndoableEditListener(new UndoableEditListener() {
+        @Override
+        public void undoableEditHappened(UndoableEditEvent e) {
+        undoManagerTAOUTPUT.addEdit(e.getEdit());
+        }
+        });
         
         /*
         mymenu.add(menuraw);
@@ -879,7 +912,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 bslog(ex);
             }   
         }
-        
+        tamap.setCaretPosition(0);
         setAction(x.m()); 
     }
     
@@ -1149,14 +1182,38 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
       searchTextNext(s.getName());
     }
     };
-    
-    
-    
+        
     Action actionSearch = new AbstractAction() {
     @Override
     public void actionPerformed(ActionEvent e) {
       JTextComponent s = (JTextComponent) e.getSource();
       searchTextArea(s.getName());
+    }
+    };
+    
+    Action actionUndo = new AbstractAction() {
+    @Override
+    public void actionPerformed(ActionEvent e) {
+      JTextComponent s = (JTextComponent) e.getSource();
+      try {
+           if (s.getName().equals("tamap")) {
+            if (undoManagerTAMAP.canUndo()) {
+                undoManagerTAMAP.undo();
+            }
+           }
+           if (s.getName().equals("tainput")) {
+            if (undoManagerTAINPUT.canUndo()) {
+                undoManagerTAINPUT.undo();
+            }
+           }
+           if (s.getName().equals("taoutput")) {
+            if (undoManagerTAOUTPUT.canUndo()) {
+                undoManagerTAOUTPUT.undo();
+            }
+           }
+        } catch (CannotUndoException exp) {
+            exp.printStackTrace();
+        }
     }
     };
 
@@ -1166,6 +1223,10 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         ta.getActionMap().put(ta.getName(), actionSearch);
         ta.getInputMap().put(KeyStroke.getKeyStroke("control N"), ta.getName() + "_next");
         ta.getActionMap().put(ta.getName() + "_next", actionNext);
+        
+        ta.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), "Undo");
+        ta.getActionMap().put("Undo", actionUndo);
+        
   }
     
     public void showOverlay(String taname) {
@@ -2226,11 +2287,15 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         URLClassLoader cl = null;
         try {
                 // hot reloadable class capability...new classloader created and closed in finally block
-                List<File> jars = Arrays.asList(new File("edi/maps").listFiles());
+                List<File> jars = Arrays.asList(new File("edi/maps").listFiles(new FilenameFilter() {
+                    public boolean accept(File dir, String name) {
+                    return name.toLowerCase().endsWith(".jar");
+                }
+                }));
                 URL[] urls = new URL[jars.size()];
                 for (int i = 0; i < jars.size(); i++) {
                 try {
-                    urls[i] = jars.get(i).toURI().toURL();
+                  urls[i] = jars.get(i).toURI().toURL();
                 } catch (Exception e) {
                     edilog(e);
                 }
