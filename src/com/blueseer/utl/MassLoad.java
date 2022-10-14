@@ -2782,6 +2782,7 @@ public class MassLoad extends javax.swing.JPanel {
         
         File file = null;
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fc.setCurrentDirectory(FileSystems.getDefault().getPath("data/sampledir").toFile());
         int returnVal = fc.showOpenDialog(this);
        
 
