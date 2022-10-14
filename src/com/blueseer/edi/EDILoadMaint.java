@@ -468,8 +468,9 @@ public class EDILoadMaint extends javax.swing.JPanel {
         String filename = "";
         
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fc.setCurrentDirectory(FileSystems.getDefault().getPath("edi").toFile());
         int returnVal = fc.showOpenDialog(this);
-       
+        
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
@@ -540,6 +541,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         lbcount = new javax.swing.JLabel();
         cbdebug = new javax.swing.JCheckBox();
+        cbno = new javax.swing.JCheckBox();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -627,6 +629,8 @@ public class EDILoadMaint extends javax.swing.JPanel {
         cbdebug.setText("Debug");
         cbdebug.setName("cbdebug"); // NOI18N
 
+        cbno.setText("No Delete/Archive");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -642,6 +646,8 @@ public class EDILoadMaint extends javax.swing.JPanel {
                         .addComponent(btProcess)
                         .addGap(74, 74, 74)
                         .addComponent(cbdebug)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbno)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -662,7 +668,8 @@ public class EDILoadMaint extends javax.swing.JPanel {
                         .addComponent(btrefresh)
                         .addComponent(jLabel1)
                         .addComponent(btProcess)
-                        .addComponent(cbdebug)))
+                        .addComponent(cbdebug)
+                        .addComponent(cbno)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
                 .addComponent(btmanual)
                 .addContainerGap())
@@ -710,7 +717,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
                          continue;  // bale from here
                     }
                     
-                     
+                     if (! cbno.isSelected()) {
                          // if delete set in control panel...remove file and continue;
                          if (EDData.isEDIDeleteFlag()) {
                           Path filetodelete = FileSystems.getDefault().getPath(inDir + "/" + mymodel.getValueAt(i,0).toString());
@@ -725,6 +732,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
                          Files.move(movefrom, target, StandardCopyOption.REPLACE_EXISTING);
                           // now remove from list
                          }
+                     }
                          
                      //  mymodel.removeRow(i);   
                          
@@ -791,6 +799,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
     private javax.swing.JButton btmanual;
     private javax.swing.JButton btrefresh;
     private javax.swing.JCheckBox cbdebug;
+    private javax.swing.JCheckBox cbno;
     private javax.swing.JCheckBox cbtoggle;
     private javax.swing.JFileChooser fc;
     private javax.swing.JLabel jLabel1;

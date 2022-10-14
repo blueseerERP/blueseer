@@ -138,6 +138,8 @@
                               <Component id="btProcess" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="74" max="-2" attributes="0"/>
                               <Component id="cbdebug" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="cbno" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
                               <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
@@ -164,6 +166,7 @@
                               <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="btProcess" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="cbdebug" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="cbno" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace pref="9" max="32767" attributes="0"/>
@@ -222,6 +225,11 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Debug"/>
                 <Property name="name" type="java.lang.String" value="cbdebug" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JCheckBox" name="cbno">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="No Delete/Archive"/>
               </Properties>
             </Component>
           </SubComponents>
