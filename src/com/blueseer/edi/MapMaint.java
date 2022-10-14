@@ -1567,6 +1567,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         
         File file = null;
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fc.setCurrentDirectory(FileSystems.getDefault().getPath("edi").toFile());
         int returnVal = fc.showOpenDialog(this);
        
 
