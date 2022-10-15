@@ -730,6 +730,41 @@ public class BlueSeerUtils {
         return outvalue;
     }
     
+    public static String bsformat(String invalue, String precision) {
+        String pattern = "";
+        String outvalue = "";
+        
+        if (invalue.isEmpty()) {
+           return "0";
+        }
+        if (precision.equals("2")) {
+         pattern = "#0.00"; 
+        } else if (precision.equals("3")) {
+         pattern = "#0.000";  
+        } else if (precision.equals("4")) {
+         pattern = "#0.0000";   
+        } else if (precision.equals("5")) {
+         pattern = "#0.00000";    
+        } else if (precision.equals("0")) {
+         pattern = "#0";   
+        } else if (precision.equals("1")) {
+         pattern = "#0.0";   
+        } else {
+         pattern = "#0.00";    
+        }
+       
+        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());    
+        df.applyPattern(pattern);
+        try {   
+            outvalue = df.format(df.parse(invalue));
+        } catch (ParseException ex) {
+            outvalue = "error";
+        }
+       
+        return outvalue;
+    }
+    
+    
     public static String bsNumber(String invalue) {
         // invalue will come over as a . decimal regardless of Locale
         // currformat will return 3,56 for the following scenarios if

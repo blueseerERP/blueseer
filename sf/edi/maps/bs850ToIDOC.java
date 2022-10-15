@@ -5,12 +5,12 @@ setReference(getInput("BEG",3)); //optional...but must be ran after mappedInput
 
 
 //optional...set some global variables as necessary
-String  now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-String mandt = "110";
-String docnum = String.format("%016d",Integer.valueOf(c[4]));
-int segnum = 0;
-int psgnum = 0;
-int hlevel = 0;
+var now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+var mandt = "110";
+var docnum = String.format("%016d",Integer.valueOf(c[4]));
+var segnum = 0;
+var psgnum = 0;
+var hlevel = 0;
 
 // begin mapping  /* SECTION 2*/
 
@@ -44,8 +44,8 @@ commitSegment("E2EDK01");
 
 
 // E2EDK14 loop
-ArrayList<String> addrloop = getLoopKeys("N1");
-for (String key : addrloop) {
+var addrloop = getLoopKeys("N1");
+for (var key : addrloop) {
 segnum++;
 hlevel++;
 mapSegment("E2EDK14","mandt",mandt);
@@ -61,8 +61,8 @@ commitSegment("E2EDK14");
 
 
 // DTM Loop
-ArrayList<String> dtmloop = getLoopKeys("DTM");
-for (String key : dtmloop) {
+var dtmloop = getLoopKeys("DTM");
+for (var key : dtmloop) {
 segnum++;
 hlevel++;
 mapSegment("E2EDK03","mandt",mandt);
@@ -77,8 +77,8 @@ commitSegment("E2EDK03");
 
 
 // N1..N4 group loop for E2EDKA1 segments
-int n1count = getGroupCount("N1");
-for (int i = 1; i <= n1count; i++) {
+var n1count = getGroupCount("N1");
+for (var i = 1; i <= n1count; i++) {
 segnum++;
 hlevel++;
 mapSegment("E2EDKA1","mandt",mandt);
@@ -125,8 +125,8 @@ mapSegment("E2EDKT1","tsspras_iso","EN");
 commitSegment("E2EDKT1");
 
 // MSG segments
-ArrayList<String> msgloop = getLoopKeys("MSG");
-for (String key : msgloop) {
+var msgloop = getLoopKeys("MSG");
+for (var key : msgloop) {
 segnum++;
 hlevel++;
 mapSegment("E2EDKT2","mandt",mandt);
@@ -139,8 +139,8 @@ commitSegment("E2EDKT2");
 } 
 
 // line items  PO1..PID group 
-int po1count = getGroupCount("PO1");
-for (int i = 1; i <= po1count; i++) {
+var po1count = getGroupCount("PO1");
+for (var i = 1; i <= po1count; i++) {
 segnum++;
 hlevel++;  
 mapSegment("E2EDP01","mandt",mandt);

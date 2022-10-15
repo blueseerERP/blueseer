@@ -1,16 +1,15 @@
-import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 setReference(getInput("E2EDT20","TKNUM")); 
 
 // set some global variables if necessary
-String  now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-int i = 0;
-int hlcounter = 0;
-int itemLoopCount = 0;
-double totalqty = 0;
-java.text.DecimalFormat decimalFormat = new java.text.DecimalFormat("0.#####");
+var now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+var i = 0;
+var hlcounter = 0;
+var itemLoopCount = 0;
+var totalqty = 0;
+
 
 /* Begin Mapping Segments */ 
 mapSegment("BIG","e01",getInput("E2EDK02","qualf:009", "datum"));
@@ -27,10 +26,10 @@ commitSegment("REF");
 
 
 // addresses
-ArrayList<String> addrloop = getLoopKeys("E2EDKA1");
+var addrloop = getLoopKeys("E2EDKA1");
 
-String addrtype;
-for (String key : addrloop) {
+var addrtype = "";
+for (var key : addrloop) {
 
 addrtype = getInput(key,7);
 if (addrtype.trim().equals("WE")) {
@@ -90,17 +89,16 @@ commitSegment("DTM");
 
 
 // Item Loop 
-DecimalFormat df = new java.text.DecimalFormat("0.#####");
-int itemcount = getGroupCount("E2EDP01");
+var itemcount = getGroupCount("E2EDP01");
 
 for (i = 1; i <= itemcount; i++) {
 itemLoopCount++;
 totalqty += Double.valueOf(getInput(i,"E2EDP01",11).trim());
 
 mapSegment("IT1","e01", String.valueOf(i));
-mapSegment("IT1","e02", decimalFormat.format(Double.valueOf(getInput(i,"E2EDP01",11))));  // menge
+mapSegment("IT1","e02", bsformat(getInput(i,"E2EDP01",11),"4"));  // menge
 mapSegment("IT1","e03", getInput(i,"E2EDP01",12));  // menee
-mapSegment("IT1","e04",decimalFormat.format(Double.valueOf(getInput(i,"E2EDP26","qualf:001", 8))));  // price
+mapSegment("IT1","e04", bsformat(getInput(i,"E2EDP26","qualf:001", 8),"4"));  // price
 mapSegment("IT1","e06","IN");
 mapSegment("IT1","e07",getInput(i,"E2EDP19","qualf:002", 8));  // mfg item
 mapSegment("IT1","e08","UP");
@@ -116,8 +114,6 @@ commitSegment("PID");
 
 /* end of item loop */
 
-double tds_sum = Double.valueOf(getInput("E2EDS01","sumid:010", "summe").trim()) * 100;
-mapSegment("TDS","e01",String.valueOf(decimalFormat.format(tds_sum)));
+var tds_sum = Double.valueOf(getInput("E2EDS01","sumid:010", "summe").trim()) * 100;
+mapSegment("TDS","e01",bsformat(String.valueOf(tds_sum),"4"));
 commitSegment("TDS");
-
-

@@ -6,11 +6,11 @@ import java.time.format.DateTimeFormatter;
 setReference(getInput("E2EDT20","TKNUM")); // must be ran after mappedInput
 
 // set some global variables if necessary
-String  now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-int i = 0;
-int hlcounter = 0;
-int itemLoopCount = 0;
-double totalqty = 0;
+var now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+var i = 0;
+var hlcounter = 0;
+var itemLoopCount = 0;
+var totalqty = 0;
 
 
 /* Begin Mapping Segments */ 
@@ -69,10 +69,10 @@ mapSegment("N4","e02",getInput("ZELEDL20","ZREGION_OB"));
 mapSegment("N4","e03",getInput("ZELEDL20","ZPOSTL_OB"));
 commitSegment("N4");
 }
-ArrayList<String> addrloop = getLoopKeys("E2ADRM1");
-int j = 0;
-String addrtype = "";
-for (String key : addrloop) {
+var addrloop = getLoopKeys("E2ADRM1");
+var j = 0;
+var addrtype = "";
+for (var key : addrloop) {
 addrtype = getInput(key,7);
 if (addrtype.trim().equals("WE")) {
 mapSegment("N1","e01", "ST");
@@ -118,10 +118,10 @@ commitSegment("N4");
 
 
 // PO loop
-ArrayList<String> loop = getLoopKeys("E2EDL41");
+var loop = getLoopKeys("E2EDL41");
 j = 0;
-String po = "";
-for (String key : loop) {
+var po = "";
+for (var key : loop) {
 j++;
 po = getInput(key,8);
 }
@@ -137,8 +137,7 @@ commitSegment("PRF");
 
 
 // Item Loop 
-DecimalFormat df = new java.text.DecimalFormat("0.#####");
-int itemcount = getGroupCount("E2EDL24");
+var itemcount = getGroupCount("E2EDL24");
 
 for (i = 1; i <= itemcount; i++) {
 itemLoopCount++;
@@ -170,11 +169,8 @@ mapSegment("LIN","e07",getInput(i,"E2EDL24",8));
 commitSegment("LIN");
 
 
-if (BlueSeerUtils.isParsableToDouble(getInput(i,"E2EDL24",19))) {
-mapSegment("SN1","e02",df.format(Double.valueOf(getInput(i,"E2EDL24",19).trim())));
-} else {
-mapSegment("SN1","e02",getInput(i,"E2EDL24",19).trim());	
-}
+
+mapSegment("SN1","e02",bsformat(getInput(i,"E2EDL24",19).trim(),"4"));
 mapSegment("SN1","e03","PC");
 commitSegment("SN1");
 

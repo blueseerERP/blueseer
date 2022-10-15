@@ -1744,8 +1744,6 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         btdelete = new javax.swing.JButton();
         btupdate = new javax.swing.JButton();
         btcompile = new javax.swing.JButton();
-        btinput = new javax.swing.JButton();
-        btoutput = new javax.swing.JButton();
         bthide = new javax.swing.JButton();
         btunhide = new javax.swing.JButton();
         btrun = new javax.swing.JButton();
@@ -1917,23 +1915,6 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             }
         });
         toolbar.add(btcompile);
-
-        btinput.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/leftdoc.png"))); // NOI18N
-        btinput.setFocusable(false);
-        btinput.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btinput.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btinput.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btinputActionPerformed(evt);
-            }
-        });
-        toolbar.add(btinput);
-
-        btoutput.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/rightdoc.png"))); // NOI18N
-        btoutput.setFocusable(false);
-        btoutput.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btoutput.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        toolbar.add(btoutput);
 
         bthide.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/hide.png"))); // NOI18N
         bthide.setFocusable(false);
@@ -2354,10 +2335,6 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 }
     }//GEN-LAST:event_btrunActionPerformed
 
-    private void btinputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btinputActionPerformed
-        getInput();
-    }//GEN-LAST:event_btinputActionPerformed
-
     private void bthideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bthideActionPerformed
        outputpanel.setVisible(false);
        bthide.setEnabled(false);
@@ -2485,10 +2462,8 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btfind;
     private javax.swing.JButton bthide;
-    private javax.swing.JButton btinput;
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
-    private javax.swing.JButton btoutput;
     private javax.swing.JButton btoverlay;
     private javax.swing.JButton btrun;
     private javax.swing.JButton btshiftleft;
