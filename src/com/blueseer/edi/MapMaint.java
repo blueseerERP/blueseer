@@ -2442,7 +2442,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             btrun.setEnabled(false);
             btcompile.setEnabled(false);
         }
-        
+       tamap.setCaretPosition(0);
     }//GEN-LAST:event_btfindActionPerformed
 
     private void btoverlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btoverlayActionPerformed
