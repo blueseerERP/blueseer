@@ -1823,7 +1823,6 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         btdelete = new javax.swing.JButton();
         btupdate = new javax.swing.JButton();
         btcompile = new javax.swing.JButton();
-        bthide = new javax.swing.JButton();
         btunhide = new javax.swing.JButton();
         btrun = new javax.swing.JButton();
         btshiftleft = new javax.swing.JButton();
@@ -1994,17 +1993,6 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             }
         });
         toolbar.add(btcompile);
-
-        bthide.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/hide.png"))); // NOI18N
-        bthide.setFocusable(false);
-        bthide.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        bthide.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        bthide.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bthideActionPerformed(evt);
-            }
-        });
-        toolbar.add(bthide);
 
         btunhide.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/unhide.png"))); // NOI18N
         btunhide.setFocusable(false);
@@ -2405,7 +2393,6 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                          sw.close();
                         }
                      outputpanel.setVisible(true);
-                     bthide.setEnabled(true);   
                     } catch (IOException ex1) {
                         edilog(ex1);
                     }
@@ -2413,11 +2400,6 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                     taoutput.setCaretPosition(0); 
                 }
     }//GEN-LAST:event_btrunActionPerformed
-
-    private void bthideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bthideActionPerformed
-       outputpanel.setVisible(false);
-       bthide.setEnabled(false);
-    }//GEN-LAST:event_bthideActionPerformed
 
     private void btcompileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcompileActionPerformed
     taoutput.setText("");
@@ -2451,7 +2433,6 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
        outputpanel.setVisible(true);
        inputpanel.setVisible(true);
        mappanel.setVisible(true);
-       bthide.setEnabled(true);
     }//GEN-LAST:event_btunhideActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
@@ -2540,7 +2521,6 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     private javax.swing.JButton btcompile;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btfind;
-    private javax.swing.JButton bthide;
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btoverlay;

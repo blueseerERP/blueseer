@@ -1181,7 +1181,12 @@ public abstract class EDIMap implements EDIMapi {
                       //  System.out.println(">:" + segment);
                         ArrayList<String[]> fields = OSF.get(segment);
                         if (fields != null) { 
+                        int fc = 0;    
                         for (String[] f : fields) {
+                                fc++;
+                                if (fc == 1) {
+                                    continue;  //skip first field (landmark) since assigned above
+                                }
                                 if (f[9].equals("+")) {
                                         f[9] = "";
                                 }
@@ -1198,6 +1203,7 @@ public abstract class EDIMap implements EDIMapi {
                                 } else {
                                         segment += String.format(format, ""); // properly formatted
                                 }
+                                
                         }
                         } // if fields not null
                         
