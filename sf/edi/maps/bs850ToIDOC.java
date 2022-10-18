@@ -1,10 +1,10 @@
-setReference(getInput("BEG",3)); //optional...but must be ran after mappedInput
+setReference(getInput("BEG",3)); //optional...
 
 
 //optional...set some global variables as necessary
 var now = now();
 var mandt = "110";
-var docnum = String.format("%016d",Integer.valueOf(c[4]));
+var docnum = padNumber(c[4],16);
 var segnum = 0;
 var psgnum = 0;
 var hlevel = 0;

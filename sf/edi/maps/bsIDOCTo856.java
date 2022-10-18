@@ -1,4 +1,4 @@
-setReference(getInput("E2EDT20","TKNUM")); // must be ran after mappedInput
+setReference(getInput("E2EDT20","TKNUM")); // optional...
 
 // set some global variables if necessary
 var now = now();
@@ -14,8 +14,6 @@ mapSegment("BSN","e02",getInput("E2EDT20","tknum"));
 mapSegment("BSN","e03",now.substring(0,8));
 mapSegment("BSN","e04",now.substring(8,12));
 commitSegment("BSN");
-//mapSegment("BEG","e05",getInput("E2EDK03","7:012",8));
-// mapSegment("BEG","e05",getInput("E2EDK03","iddat:011","datum"));
 
 
 hlcounter++;   
@@ -187,3 +185,4 @@ mapSegment("CTT","e01",String.valueOf(hlcounter));
 mapSegment("CTT","e02",String.valueOf(totalqty));
 commitSegment("CTT");
 
+/* end of mapping */

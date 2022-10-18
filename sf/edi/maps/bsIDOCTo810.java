@@ -1,4 +1,4 @@
-setReference(getInput("E2EDT20","TKNUM")); 
+setReference(getInput("E2EDT20","TKNUM"));  // optional...
 
 // set some global variables if necessary
 var now = now();
@@ -114,3 +114,5 @@ commitSegment("PID");
 var tds_sum = Double.valueOf(getInput("E2EDS01","sumid:010", "summe").trim()) * 100;
 mapSegment("TDS","e01",bsformat(String.valueOf(tds_sum),"4"));
 commitSegment("TDS");
+
+/* end of mapping */
