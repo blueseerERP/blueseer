@@ -43,7 +43,7 @@ import java.util.Locale;
  */
 public class MapperUtils {
    
-    @EDI.AnnoDoc(desc = {"method pads value (numeric) with leading zeros as defined by padCount",
+    @EDI.AnnoDoc(desc = {"method pads value (String) with leading zeros as defined by padCount",
                         "Example:  padNumber(\"5343\",8) returns: 00005343"},
             params = {"String targetValue","Integer padCount"})  
     public static String padNumber(String invalue, int padCount) {
@@ -51,6 +51,15 @@ public class MapperUtils {
         return String.format(format,Integer.valueOf(invalue));
     }
  
+    @EDI.AnnoDoc(desc = {"method pads value (Integer) with leading zeros as defined by padCount",
+                        "Example:  padNumber(5343,8) returns: 00005343"},
+            params = {"Integer targetValue","Integer padCount"})  
+    public static String padNumber(int invalue, int padCount) {
+        String format = "%0" + String.valueOf(padCount) + "d";
+        return String.format(format,Integer.valueOf(invalue));
+    }
+ 
+    
     @EDI.AnnoDoc(desc = {"method converts targetValue to a String",
                         "Example:  string(55) returns: \"55\" as String"},
             params = {"String targetValue"})  

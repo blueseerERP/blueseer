@@ -145,7 +145,7 @@ mapSegment("E2EDP01","docnum",docnum);
 mapSegment("E2EDP01", "segnum", padNumber(segnum,6));
 mapSegment("E2EDP01", "psgnum", padNumber(segnum,6));
 mapSegment("E2EDP01", "hlevel", padNumber(hlevel,2));
-mapSegment("E2EDP01", "posex", padNumber(string(i),6));
+mapSegment("E2EDP01", "posex", padNumber(i,6));
 mapSegment("E2EDP01","menge",getInput(i,"PO1",2));
 mapSegment("E2EDP01","menee",getInput(i,"PO1",3));
 mapSegment("E2EDP01","pmene","EA");
