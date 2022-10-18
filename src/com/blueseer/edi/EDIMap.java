@@ -1420,6 +1420,11 @@ public abstract class EDIMap implements EDIMapi {
      }
     
     // looping getInput
+    
+    @EDI.AnnoDoc(desc = {"method reads value from source at segment and element (by integer) for a Group Segment.",
+                      "Note:  this is typically used in a looping construct in conjunction with getGroupCount()",  
+                      "Example:  getInput(i,\"PO1\",4) returns: 4th element/field of PO1 segment in loop index 'i' "},
+            params = {"Integer LoopIndex", "String segment", "Integer fieldnumber"})  
     public static String getInput(Integer gloop, String segment, Integer elementNbr) {
          String x = "";
          String[] k = null;
@@ -1435,7 +1440,11 @@ public abstract class EDIMap implements EDIMapi {
          }
          return x;
      }
-       
+    
+    @EDI.AnnoDoc(desc = {"method reads value from source at segment and element (by fieldname) for a Group Segment.",
+                      "Note:  this is typically used in a looping construct in conjunction with getGroupCount()",  
+                      "Example:  getInput(i,\"E2EDP01\",\"belnr\") returns: fieldname 'belnr' of idoc segment ED2EDP01 in loop index 'i' "},
+            params = {"Integer LoopIndex", "String segment", "String fieldname"})  
     public static String getInput(Integer gloop, String segment, String elementName) {
          String x = "";
          int elementNbr = getElementNumber(segment, elementName); 
@@ -1457,6 +1466,10 @@ public abstract class EDIMap implements EDIMapi {
          return x;
      }
     
+    @EDI.AnnoDoc(desc = {"method reads value from source at segment and element (by integer) for a Group Segment.",
+                      "Note:  this is typically used in a looping construct in conjunction with getGroupCount()",  
+                      "Example:  getInput(i,\"E2EDP19\",\"qualf:002\", 8) returns: 4th element/field of idoc segment 'E2EDP19' with fieldname 'qualf' value = '002' in loop index 'i' "},
+            params = {"Integer LoopIndex", "String segment", "String qualfieldname:value", "Integer fieldnumber"})
     public static String getInput(Integer gloop, String segment, String qual, Integer elementNbr) {
          String x = "";
          String[] k = null;
@@ -1482,6 +1495,10 @@ public abstract class EDIMap implements EDIMapi {
          return x;
      }
     
+    @EDI.AnnoDoc(desc = {"method reads value from source at segment and element (by fieldname) for a Group Segment.",
+                      "Note:  this is typically used in a looping construct in conjunction with getGroupCount()",  
+                      "Example:  getInput(i,\"E2EDP19\",\"qualf:002\", \"iddat\") returns: fieldname 'iddat' value of idoc segment 'E2EDP19' ...if value of fieldname 'qualf' = '002'... in loop index 'i' "},
+            params = {"Integer LoopIndex", "String segment", "String qualfieldname:value", "String fieldname"})
     public static String getInput(Integer gloop, String segment, String qual, String elementName) {
          String x = "";
          String[] k = null;
@@ -1541,6 +1558,10 @@ public abstract class EDIMap implements EDIMapi {
          return r;
      }
     
+    @EDI.AnnoDoc(desc = {"method reads the loop count of a specific group segment.",
+                     "NOTE: This is particularly useful for grouping segments like N1 (N2,N3) where the number of N1 loops is required",
+                     "Example:  getGroupCount(\"N1\") returns: Number of N1 'group' occurences in source file"},
+                 params = {"String segment"}) 
     public static int getGroupCount(String segment) {
          
          int count = 0;
@@ -1554,7 +1575,12 @@ public abstract class EDIMap implements EDIMapi {
         
          return count;
      }
-     
+    
+    @EDI.AnnoDoc(desc = {"method retrieves the keys for a specific repeating segment...such as a REF segment.",
+                     "NOTE: The keys are defined as unique identifier tags for each occurence of the repeating segment.",
+                     "Example:  getLoopKeys(\"REF\") returns: all repeating occurences of REF scoped to header",
+                     "Example:  getLoopKeys(\"PO1:PID\") returns: all repeating occurences of PID for a specific PO1 index"},
+                 params = {"String segment"}) 
     public static ArrayList<String> getLoopKeys(String segment) {
          ArrayList<String> k = new ArrayList<String>();
          segment = ":" + segment; // preprend blank
@@ -1567,6 +1593,10 @@ public abstract class EDIMap implements EDIMapi {
          return k;
      }
     
+    @EDI.AnnoDoc(desc = {"method retrieves the keys for a specific repeating segment...such as a REF segment.",
+                     "NOTE: The keys are defined as unique identifier tags for each occurence of the repeating segment.",
+                     "Example:  getLoopKeys(\"PO1:PID\", i) returns: all repeating occurences of PID for a specific PO1 loop index 'i'"},
+                 params = {"String segment", "Integer LoopIndex"}) 
     public static ArrayList<String> getLoopKeys(String segment, Integer g) {
          ArrayList<String> k = new ArrayList<String>();
          segment = ":" + segment; // preprend blank

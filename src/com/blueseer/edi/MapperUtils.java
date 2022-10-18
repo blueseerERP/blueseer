@@ -51,6 +51,22 @@ public class MapperUtils {
         return String.format(format,Integer.valueOf(invalue));
     }
  
+    @EDI.AnnoDoc(desc = {"method converts targetValue to a String",
+                        "Example:  string(55) returns: \"55\" as String"},
+            params = {"String targetValue"})  
+    public static String string(Object invalue) {
+        if (invalue == null) {
+		  return "";	
+        }
+        if (invalue instanceof Integer) {
+		  return String.valueOf((Integer) invalue);	
+        }
+        if (invalue instanceof Double) {
+                  System.out.println("double...");
+                  return String.valueOf((Double) invalue);	
+        }
+		return invalue.toString();
+    }
 
     @EDI.AnnoDoc(desc = {"method formats parameter 1 (as String) to a specified number of decimals places (precision).",
                         "Example:  bsformat(\"4.3552\",\"3\") returns: 4.355"},
