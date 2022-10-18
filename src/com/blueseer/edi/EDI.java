@@ -49,6 +49,10 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
+import static java.lang.annotation.ElementType.METHOD;
+import java.lang.annotation.Retention;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import java.lang.annotation.Target;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -5499,4 +5503,17 @@ public class EDI {
         
     }
     
+    @Retention(RUNTIME)
+    @Target(value = METHOD)
+    public @interface AnnoDoc {
+      /**
+       * This provides description when generating docs.
+       */
+      public String[] desc();
+      /**
+       * This provides params when generating docs.
+       */
+      public String[] params();
+    }
+     
 }

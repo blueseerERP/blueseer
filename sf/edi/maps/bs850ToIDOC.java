@@ -1,11 +1,8 @@
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 setReference(getInput("BEG",3)); //optional...but must be ran after mappedInput
 
 
 //optional...set some global variables as necessary
-var now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+var now = now();
 var mandt = "110";
 var docnum = String.format("%016d",Integer.valueOf(c[4]));
 var segnum = 0;

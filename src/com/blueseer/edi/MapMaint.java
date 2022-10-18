@@ -70,6 +70,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.edi.EDI.AnnoDoc;
 import static com.blueseer.edi.EDI.createIMAP;
 import static com.blueseer.edi.EDI.edilog;
 import static com.blueseer.edi.EDI.getEDIType;
@@ -120,8 +121,12 @@ import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Parameter;
+import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -133,6 +138,8 @@ import java.nio.file.Paths;
 import java.sql.Connection;
 import java.text.DecimalFormatSymbols;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -277,6 +284,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             popup.add(setMenuItem("Toggle Lines"));
             popup.add(setMenuItem("Search"));
             popup.add(setMenuItem("Clear Highlights"));
+            popup.add(setMenuItem("List Methods"));
             popup.add(setMenuItem("Hide Panel"));
         }
         if (ta.getName().equals("tainput")) {
@@ -359,6 +367,10 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 case "Clear Highlights":
                     cleanHighlights(parentname.getName());
                     break;
+                    
+                case "List Methods":
+                     listInternalMethods();
+                     break;
                     
                 default:
                     System.out.println("unknown action: " + ac);
@@ -732,6 +744,8 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
                    cbinternal.setEnabled(false);
+                   btfind.setEnabled(false);
+                   tbpath.setEnabled(false);
         } else {
                    tbkey.setForeground(Color.red); 
                    cbinternal.setEnabled(false);
@@ -1464,6 +1478,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }
     
     public void hidePanel(String panel) {
+       
         if (panel.equals("tainput")) {
             inputpanel.setVisible(false);
         }
@@ -1573,7 +1588,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         PrintWriter out = new PrintWriter(writer);
         out.println("import java.util.ArrayList;");
         out.println("import java.io.IOException;");
-        out.println("import static com.blueseer.utl.BlueSeerUtils.*;");
+        out.println("import static com.blueseer.edi.MapperUtils.*;");
         out.println("import static com.blueseer.edi.EDI.*;");
         
         for (String s : imports) {
@@ -1667,6 +1682,70 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             btrun.setEnabled(false);
         }
     }
+    
+    public void listInternalMethods() {
+        
+        taoutput.setText("");
+        Method[] methods = MapperUtils.class.getDeclaredMethods();
+        Method[] edimap_methods = EDIMap.class.getDeclaredMethods();
+        List<Method> ml = new ArrayList<Method>();
+        for (Method m : methods ) {
+           ml.add(m);
+        }
+        for (Method m : edimap_methods ) {
+           AnnoDoc serviceDef = m.getAnnotation(AnnoDoc.class);
+            if (serviceDef != null) { 
+                ml.add(m);
+            }
+        }
+        Collections.sort(ml, (o1, o2) -> (o1.getName().compareTo(o2.getName())));
+                
+                for (Method m : ml ) {
+                        taoutput.append(m.getName());
+                        taoutput.append("() \n");
+                        Type[] types = m.getGenericParameterTypes();
+                        
+                        String[] desc = null;
+                        String[] params = null;
+                        if (Modifier.isPublic(m.getModifiers())) {
+                        AnnoDoc serviceDef = m.getAnnotation(AnnoDoc.class);
+                            if (serviceDef != null) {
+                              params = serviceDef.params();
+                              desc = serviceDef.desc();
+                            }
+                        }
+                        int i = 1;
+                        for (String s : params) {
+                            if (i ==1) {
+                                taoutput.append("  Parameters: ");
+                            }
+                            taoutput.append(s);
+                            if (i < params.length) {
+                            taoutput.append(",");
+                            }
+                            i++;
+                        }
+                        taoutput.append("\n");
+                        i = 1;
+                        for (String s : desc) {
+                            if (i ==1) {
+                                taoutput.append("  Desc: ");
+                            }
+                            taoutput.append("  " + s);
+                            taoutput.append("\n");
+                            i++;
+                        }
+                        taoutput.append("  return type: " + m.getReturnType().getSimpleName() + "\n");
+                       
+                }
+                taoutput.setCaretPosition(0);
+                if (! tbkey.getText().isBlank()) {
+                btrun.setEnabled(true);
+                }
+          
+        
+    }
+    
     
     private void addToJar(File source, JarOutputStream target) throws IOException
     {

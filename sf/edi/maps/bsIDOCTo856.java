@@ -1,12 +1,7 @@
-import java.text.DecimalFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
-
 setReference(getInput("E2EDT20","TKNUM")); // must be ran after mappedInput
 
 // set some global variables if necessary
-var now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+var now = now();
 var i = 0;
 var hlcounter = 0;
 var itemLoopCount = 0;

@@ -784,39 +784,7 @@ public abstract class EDIMap implements EDIMapi {
         c[38] = m[1];
     }
     
-    public static void mapSegment(String segment, String element, String value) {
-    	 String[] z = new String[] {element,value};
-    	 // get old arraylist and add to it
-    	 ArrayList<String[]> old = new ArrayList<String[]>();
-    	 if (HASH.get(segment) != null) {
-    		 old = HASH.get(segment);
-    	 }
-    	 old.add(z);
-    	 HASH.put(segment, old);
-     }
-     
-    public static void commitSegment(String segment) {
-    	 // loop through HASH and create t for this segment
-         commit++;
-    	 HashMap<String, String> t = new LinkedHashMap<String,String>();
-    	 Map<String, ArrayList<String[]>> X = new  LinkedHashMap<String, ArrayList<String[]>>(HASH);
-    	 for (Map.Entry<String, ArrayList<String[]>> z : X.entrySet()) {
-    		 if (z.getKey().equals(segment)) {
-    			 ArrayList<String[]> k = z.getValue();
-    			 for (String[] g : k) {
-    				 t.put(g[0], g[1]);
-    			 }
-    			 
-    		 }
-    	 }
-    	// HashMap<String, String> t = new HashMap<String,String>(j);
-    	 if (! OMD.containsKey(segment)) {
-    		OMD.put(segment + ":" + commit, t);
-    	 }	
-         
-         HASH.clear();
-     }
-        
+       
     public void readOSF(String osf)  {
         
 	        Map<String, ArrayList<String[]>> hm = new LinkedHashMap<String, ArrayList<String[]>>();
@@ -1252,6 +1220,47 @@ public abstract class EDIMap implements EDIMapi {
     	 return r;
      }
     
+    @EDI.AnnoDoc(desc = {"method assigns output value for element of specific segment.",
+                     "NOTE: 2nd parameter...element...must be named element...not position",
+                     "Example:  mapSegment(\"BIG\",\"e02\",\"12345678\") assigns: 2nd element/field of BIG segment with value 12345678"},
+                 params = {"String segment","String element","String value"}) 
+    public static void mapSegment(String segment, String element, String value) {
+    	 String[] z = new String[] {element,value};
+    	 // get old arraylist and add to it
+    	 ArrayList<String[]> old = new ArrayList<String[]>();
+    	 if (HASH.get(segment) != null) {
+    		 old = HASH.get(segment);
+    	 }
+    	 old.add(z);
+    	 HASH.put(segment, old);
+     }
+     
+    @EDI.AnnoDoc(desc = {"method commits all assigned elements/fields of segment to output array.",
+                     "NOTE: after all elements/fields have been assigned, the commitSegment method must be called",
+                     "Example:  commitSegment(\"BIG\") writes BIG segment (and all assigned fields) to output"},
+                 params = {"String segment"}) 
+    public static void commitSegment(String segment) {
+    	 // loop through HASH and create t for this segment
+         commit++;
+    	 HashMap<String, String> t = new LinkedHashMap<String,String>();
+    	 Map<String, ArrayList<String[]>> X = new  LinkedHashMap<String, ArrayList<String[]>>(HASH);
+    	 for (Map.Entry<String, ArrayList<String[]>> z : X.entrySet()) {
+    		 if (z.getKey().equals(segment)) {
+    			 ArrayList<String[]> k = z.getValue();
+    			 for (String[] g : k) {
+    				 t.put(g[0], g[1]);
+    			 }
+    			 
+    		 }
+    	 }
+    	// HashMap<String, String> t = new HashMap<String,String>(j);
+    	 if (! OMD.containsKey(segment)) {
+    		OMD.put(segment + ":" + commit, t);
+    	 }	
+         
+         HASH.clear();
+     }
+        
     public static boolean segmentExists(String segment, String qual, String elementName) {
         boolean segexists = false;
          int elementNbr = getElementNumber(segment, elementName); 
@@ -1280,6 +1289,11 @@ public abstract class EDIMap implements EDIMapi {
     }
     
     // non-looping getInput
+    @EDI.AnnoDoc(desc = {"method reads value from source at segment and element (by integer) with qualifier x.",
+                     "NOTE: Qualifier has a position indicator of which field/element the qualifier is in",
+                     "NOTE: this method only supports integer qualifier positions...not named",
+                     "Example:  getInput(\"N1\",\"1:ST\",4) returns: 4th element/field of N1 segment...if field 1 = ST"},
+            params = {"String segment","String position:qualifier","Integer fieldnumber"})  
     public static String getInput(String segment, String qual, Integer elementNbr) {
         String x = "";
          int count = 0;
@@ -1304,6 +1318,11 @@ public abstract class EDIMap implements EDIMapi {
          return x;
      }
     
+    
+    @EDI.AnnoDoc(desc = {"method reads value from source at segment and element (by integer) with qualifier x.",
+                     "NOTE: Qualifier has a position indicator of which field/element the qualifier is in",   
+                     "Example:  getInput(\"E2EDK02\",\"qualf:009\",\"belnr\") returns: specific value of field named belnr of IDOC segment E2EDK02...if qualf fieldname = 009"},
+            params = {"String segment","String position:qualifier","Integer fieldnumber"})  
     public static String getInput(String segment, String qual, String elementName) {
         String x = "";
          int elementNbr = getElementNumber(segment, elementName); 
@@ -1331,7 +1350,10 @@ public abstract class EDIMap implements EDIMapi {
          }
          return x;
      }
-        
+    
+    @EDI.AnnoDoc(desc = {"method reads value from source at segment and element (by integer).",
+                        "Example:  getInput(\"BEG\",3) returns: 3rd element/field of BEG segment"},
+            params = {"String segment","Integer fieldnumber"})      
     public static String getInput(String segment, Integer elementNbr) {
          String x = "";
          int count = 0;
@@ -1359,6 +1381,9 @@ public abstract class EDIMap implements EDIMapi {
          return x;
      }
     
+    @EDI.AnnoDoc(desc = {"method reads value from source at segment and element (by name).",
+                        "Example:  getInput(\"BEG\",\"fieldname\") returns: specific field of BEG segment"},
+            params = {"String segment","String fieldname"}) 
     public static String getInput(String segment, String elementName) {
          String x = "";
          int elementNbr = getElementNumber(segment, elementName); 
