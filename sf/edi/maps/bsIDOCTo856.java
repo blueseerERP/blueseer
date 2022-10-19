@@ -163,7 +163,7 @@ commitSegment("LIN");
 
 
 
-mapSegment("SN1","e02",bsformat(getInput(i,"E2EDL24",19).trim(),"4"));
+mapSegment("SN1","e02",formatNumber(getInput(i,"E2EDL24",19).trim(),"4"));
 mapSegment("SN1","e03","PC");
 commitSegment("SN1");
 

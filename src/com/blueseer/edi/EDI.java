@@ -847,11 +847,16 @@ public class EDI {
     }
     
     public static String[] getEDIType(char[] cbuf, String filename) {
+    
+       
+        
     String[] type = new String[]{"",""};
     // type = filetype, doctype
     String[] filenamesplit = null;
         
-    
+     if (cbuf == null || cbuf.length < 4) {
+            return type;
+        }
     
     // filename check for csv or xml 
     // filename convention must be tpid.uniquewhatever.csv or tpid.uniquewhatever.xml

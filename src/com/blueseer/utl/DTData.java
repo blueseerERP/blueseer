@@ -914,7 +914,7 @@ public class DTData {
             
             // visible = <any char but '1' or blank>, not visible = 1
             String internal;
-            internal = OVData.getCodeValueByCodeKey("EDIMAPS","INTERNAL"); 
+            internal = OVData.getCodeValueByCodeKey("edimaps","internal"); 
             
             
             Connection con = null;
