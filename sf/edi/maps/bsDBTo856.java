@@ -1,22 +1,13 @@
 import com.blueseer.ctr.cusData;
-import java.util.ArrayList;
-import com.blueseer.edi.EDI;
 import com.blueseer.shp.shpData;
 import com.blueseer.utl.BlueSeerUtils;
-import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
-import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import com.blueseer.utl.OVData;
-import java.io.IOException;
-import java.text.DecimalFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 
      com.blueseer.edi.EDI edi = new com.blueseer.edi.EDI();
      String doctype = c[1];
      String shipper = doc.get(0).toString();
 
-		    String  now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+		    String  now = now();
 		    int i = 0;
 		    int hlcounter = 0;
 		    int itemLoopCount = 0;
@@ -31,7 +22,7 @@ import java.time.format.DateTimeFormatter;
     commitSegment("BSN");
     
      hlcounter++;   
-        mapSegment("HL","e01", String.valueOf(hlcounter));
+        mapSegment("HL","e01", string(hlcounter));
         mapSegment("HL","e03","S");
         mapSegment("HL","e04","1");
         commitSegment("HL");
@@ -78,7 +69,6 @@ import java.time.format.DateTimeFormatter;
 	
 
         // Item Loop 
-        DecimalFormat df = new java.text.DecimalFormat("0.#####");
         // item, custitem, qty, po, cumqty, listprice, netprice, reference, sku, desc
          ArrayList<String[]> lines = shpData.getShipperLines(shipper);
               for (String[] d : lines) {
@@ -88,7 +78,7 @@ import java.time.format.DateTimeFormatter;
                 // do PRF once...this map is one PRF only
                 if (itemLoopCount == 1) {
                 hlcounter++;
-                mapSegment("HL","e01", String.valueOf(hlcounter));
+                mapSegment("HL","e01", string(hlcounter));
                 mapSegment("HL","e02","1");
                 mapSegment("HL","e03","O");
                 mapSegment("HL","e04","1");
@@ -98,7 +88,7 @@ import java.time.format.DateTimeFormatter;
                 }
                 
                 hlcounter++;
-                mapSegment("HL","e01", String.valueOf(hlcounter));
+                mapSegment("HL","e01", string(hlcounter));
                 mapSegment("HL","e02","2");
                 mapSegment("HL","e03","I");
                 mapSegment("HL","e04","1");
@@ -115,7 +105,7 @@ import java.time.format.DateTimeFormatter;
 
 
                 if (BlueSeerUtils.isParsableToDouble(d[2])) {
-                    mapSegment("SN1","e02",df.format(Double.valueOf(d[2])));
+                    mapSegment("SN1","e02",formatNumber(Double.valueOf(d[2]),"0"));
                 } else {
                     mapSegment("SN1","e02","0");	
                 }
@@ -136,6 +126,7 @@ import java.time.format.DateTimeFormatter;
 
             /* end of item loop */
 
-        mapSegment("CTT","e01",String.valueOf(hlcounter));
-        mapSegment("CTT","e02",String.valueOf(totalqty));
+        mapSegment("CTT","e01",string(hlcounter));
+        mapSegment("CTT","e02",string(totalqty));
         commitSegment("CTT");
+

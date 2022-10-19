@@ -1,13 +1,6 @@
-import com.blueseer.ctr.cusData;
-import java.util.ArrayList;
-import com.blueseer.edi.EDI;
 import com.blueseer.pur.purData;
-import com.blueseer.shp.shpData;
-import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
-import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
+import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.OVData;
-import java.io.IOException;
-import java.text.DecimalFormat;
 
 
      com.blueseer.edi.EDI edi = new com.blueseer.edi.EDI();
@@ -51,12 +44,12 @@ import java.text.DecimalFormat;
                   i++;
                                     
                   sumqty = sumqty + Integer.valueOf(d[3]);
-                  sumamt = sumamt + (bsParseDouble(d[3]) * bsParseDouble(d[4]));
+                  sumamt = sumamt + (BlueSeerUtils.bsParseDouble(d[3]) * BlueSeerUtils.bsParseDouble(d[4]));
                   
                 mapSegment("PO1","e01",d[0]);
                 mapSegment("PO1","e02",d[3]);
                 mapSegment("PO1","e03",d[5]);
-                mapSegment("PO1","e04",currformatDouble(bsParseDouble(d[4])));
+                mapSegment("PO1","e04",formatNumber(BlueSeerUtils.bsParseDouble(d[4]),"2"));
                 mapSegment("PO1","e06","BP");
                 mapSegment("PO1","e07",d[1]);
                 if (! d[2].isEmpty()) {
@@ -70,6 +63,7 @@ import java.text.DecimalFormat;
                 commitSegment("PID");
               }
          
-         mapSegment("CTT","e01",String.valueOf(i));
+         mapSegment("CTT","e01",string(i));
          commitSegment("CTT");
         
+

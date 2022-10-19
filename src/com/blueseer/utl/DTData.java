@@ -912,6 +912,11 @@ public class DTData {
               
         try{
             
+            // visible = <any char but '1' or blank>, not visible = 1
+            String internal;
+            internal = OVData.getCodeValueByCodeKey("EDIMAPS","INTERNAL"); 
+            
+            
             Connection con = null;
             if (ds != null) {
               con = ds.getConnection();
@@ -924,17 +929,17 @@ public class DTData {
                 if (state == 1) { // begins
                     res = st.executeQuery("SELECT map_id, map_desc, map_ifs, map_ofs  " +
                         " FROM  map_mstr where " + myfield + " like " + "'" + str + "%'" +
-                        " order by map_id ;");
+                        " and map_internal <> " + "'" + internal + "'" + " order by map_id ;");
                 }
                 if (state == 2) { // ends
                     res = st.executeQuery("SELECT map_id, map_desc, map_ifs, map_ofs  " +
                         " FROM  map_mstr where " + myfield + " like " + "'%" + str + "'" +
-                        " order by map_id ;");
+                        " and map_internal <> " + "'" + internal + "'" + " order by map_id ;");
                 }
                  if (state == 0) { // match
                  res = st.executeQuery("SELECT map_id, map_desc, map_ifs, map_ofs   " +
                         " FROM  map_mstr where " + myfield + " like " + "'%" + str + "%'" +
-                        " order by map_id ;");
+                        " and map_internal <> " + "'" + internal + "'" + " order by map_id ;");
                  }
                     while (res.next()) {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("map_id"),

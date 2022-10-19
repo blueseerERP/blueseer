@@ -1628,7 +1628,7 @@ public class EDData {
             ResultSet res = null;
             try{
                       res = st.executeQuery("select * from edi_xref where " +
-                              " exr_tpid = " + "'" + isaid.trim() + "'" + 
+                              " exr_tpid = " + "'" + isaid + "'" + 
                               " AND exr_gsid = " + "'" + gsid + "'" +
                               " AND exr_tpaddr = " + "'" + addrcode + "'" + 
                               " AND exr_type = " + "'" + editype + "'" +        

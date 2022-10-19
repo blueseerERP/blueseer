@@ -24,7 +24,7 @@ import com.blueseer.utl.EDData;
 
     // begin mapping
     
-    e.setOVBillTo(EDData.getEDIXrefIn(getInputISA(6), getInputGS(2), "BT", getInputGS(2))); 
+    e.setOVBillTo(EDData.getEDIXrefIn(getInputISA(6).trim(), getInputGS(2), "BT", getInputISA(8).trim())); 
     po = getInput("BEG","e03");
     e.setPO(po);  
     e.setPODate(convertDate("yyyyMMdd", getInput("BEG","e05")));

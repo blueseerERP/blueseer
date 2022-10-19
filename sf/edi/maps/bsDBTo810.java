@@ -1,14 +1,7 @@
-
-import com.blueseer.ctr.cusData;
-import java.util.ArrayList;
-import com.blueseer.edi.EDI;
 import com.blueseer.shp.shpData;
-import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
-import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
+import com.blueseer.ctr.cusData;
 import com.blueseer.utl.OVData;
-import java.io.IOException;
-import java.text.DecimalFormat;
-
+import com.blueseer.utl.BlueSeerUtils;
 
      com.blueseer.edi.EDI edi = new com.blueseer.edi.EDI();
      String doctype = c[1];
@@ -55,13 +48,13 @@ import java.text.DecimalFormat;
                   }
                                     
                   sumqty = sumqty + Integer.valueOf(d[2]);
-                  sumamt = sumamt + (bsParseDouble(d[2]) * bsParseDouble(d[6]));
-                  sumlistamt = sumlistamt + (bsParseDouble(d[2]) * bsParseDouble(d[5]));
+                  sumamt = sumamt + (BlueSeerUtils.bsParseDouble(d[2]) * BlueSeerUtils.bsParseDouble(d[6]));
+                  sumlistamt = sumlistamt + (BlueSeerUtils.bsParseDouble(d[2]) * BlueSeerUtils.bsParseDouble(d[5]));
                   
                 mapSegment("IT1","e01",String.valueOf(i));
                 mapSegment("IT1","e02",d[2]);
                 mapSegment("IT1","e03","EA");
-                mapSegment("IT1","e04",currformatDouble(bsParseDouble(d[5])));
+                mapSegment("IT1","e04",formatNumber(BlueSeerUtils.bsParseDouble(d[5]),"2"));
                 mapSegment("IT1","e06","IN");
                 mapSegment("IT1","e07",sku);
                 mapSegment("IT1","e08","VP");
@@ -72,15 +65,16 @@ import java.text.DecimalFormat;
             sumamtTDS = (sumamt * 100);
             
             // trailer
-         mapSegment("TDS","e01",currformatDouble(sumamtTDS));
+         mapSegment("TDS","e01",formatNumber(sumamtTDS,"2"));
          commitSegment("TDS");
          
-         mapSegment("ISS","e01",String.valueOf(sumqty));
+         mapSegment("ISS","e01",string(sumqty));
          mapSegment("ISS","e02","EA");
-         mapSegment("ISS","e03",String.valueOf(sumqty));
+         mapSegment("ISS","e03",string(sumqty));
          mapSegment("ISS","e04","LB");
          commitSegment("ISS");
          
-         mapSegment("CTT","e01",String.valueOf(i));
+         mapSegment("CTT","e01",string(i));
          commitSegment("CTT");
         
+
