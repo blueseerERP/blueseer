@@ -59,6 +59,28 @@ public class MapperUtils {
         return String.format(format,Integer.valueOf(invalue));
     }
  
+    @EDI.AnnoDoc(desc = {"method checks to see if value is numeric (integer or double)",
+                        "Example:  isNumber(\"445.55\") returns: true",
+                        "Example:  isNumber(\"a123\") returns: false"},
+            params = {"String targetValue"})
+    public static boolean isNumber(String i) {
+        boolean r;
+        try {
+            Integer.parseInt(i);
+            return true;
+        } catch (NumberFormatException nfe) {
+            r = false;
+        }
+        
+        try {
+            Double.parseDouble(i);
+            return true;
+        } catch (NumberFormatException nfe) {
+            r = false;
+        }
+        return r;
+    }
+    
     
     @EDI.AnnoDoc(desc = {"method converts targetValue to a String",
                         "Example:  string(55) returns: \"55\" as String"},
@@ -77,7 +99,7 @@ public class MapperUtils {
 		return invalue.toString();
     }
 
-    @EDI.AnnoDoc(desc = {"method formats parameter 1 (as String) to a specified number of decimals places (precision).",
+    @EDI.AnnoDoc(desc = {"method formats parameter 1 (passed as String) to a specified number of decimals places (precision).",
                         "Example:  bsformat(\"4.3552\",\"3\") returns: 4.355"},
             params = {"String targetValue","String precision"})  
     public static String formatNumber(String invalue, String precision) {
@@ -113,6 +135,40 @@ public class MapperUtils {
        
         return outvalue;
     }
+    
+    @EDI.AnnoDoc(desc = {"method formats parameter 1 (passed as Double) to a specified number of decimals places (precision).",
+                        "Example:  bsformat(4.3552,\"3\") returns: 4.355"},
+            params = {"Double targetValue","String precision"})  
+    public static String formatNumber(Double invalue, String precision) {
+        String pattern = "";
+        String outvalue = "";
+        
+        if (invalue == null) {
+           return "0";
+        }
+        if (precision.equals("2")) {
+         pattern = "#0.00"; 
+        } else if (precision.equals("3")) {
+         pattern = "#0.000";  
+        } else if (precision.equals("4")) {
+         pattern = "#0.0000";   
+        } else if (precision.equals("5")) {
+         pattern = "#0.00000";    
+        } else if (precision.equals("0")) {
+         pattern = "#0";   
+        } else if (precision.equals("1")) {
+         pattern = "#0.0";   
+        } else {
+         pattern = "#0.00";    
+        }
+       
+        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());    
+        df.applyPattern(pattern);
+        outvalue = df.format(invalue); 
+        return outvalue;
+       
+    }
+    
     
     @EDI.AnnoDoc(desc = {"method returns current datetime in format: yyyyMMddHHmmssSSS."},
             params = {"None"})  

@@ -1,12 +1,9 @@
 
 import com.blueseer.ctr.cusData;
-import java.text.DecimalFormat;
 import com.blueseer.utl.OVData;
 import com.blueseer.edi.EDI.*;
 import com.blueseer.inv.invData;
 import com.blueseer.utl.EDData;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 
     setReference(getInput("BEG","e03")); //optional...but must be ran after mappedInput
@@ -17,7 +14,7 @@ import java.time.format.DateTimeFormatter;
     edi850 e = new edi850(getInputISA(6), getInputISA(8), getInputGS(2), getInputGS(3), getInputISA(13), getInputISA(9), doctype, stctrl);  // mandatory class creation
     
     //optional...set some global variables as necessary
-    String  now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+    String  now = now();
     int i = 0; 
     String po;
     double discount;
@@ -27,13 +24,13 @@ import java.time.format.DateTimeFormatter;
 
     // begin mapping
     
-    e.setOVBillTo(EDData.getEDIXrefIn(getInputISA(6), getInputGS(2), "BT", ""));   // 3rd parameter '0' is outbound direction '1' is inbound
+    e.setOVBillTo(EDData.getEDIXrefIn(getInputISA(6), getInputGS(2), "BT", getInputGS(2))); 
     po = getInput("BEG","e03");
     e.setPO(po);  
-    e.setPODate(convertDateFormat("yyyyMMdd", getInput("BEG","e05")));
+    e.setPODate(convertDate("yyyyMMdd", getInput("BEG","e05")));
 
     if (segmentExists("DTM","1:002","e01")) {
-    e.setDueDate(convertDateFormat("yyyyMMdd", getInput("DTM","1:002","e02")));
+    e.setDueDate(convertDate("yyyyMMdd", getInput("DTM","1:002","e02")));
     } else {
     e.setDueDate(now);    
     }   
@@ -71,7 +68,6 @@ import java.time.format.DateTimeFormatter;
 
        /* Now the Detail LOOP  */ 
        /* Item Loop */
-    DecimalFormat df = new java.text.DecimalFormat("0.000##");
     int itemcount = getGroupCount("PO1");
     int itemLoopCount = 0;
     int totalqty = 0;
@@ -108,13 +104,13 @@ import java.time.format.DateTimeFormatter;
         if (discount != 0) {
         netprice = listprice - (listprice * (discount / 100));
         }
-        e.setDetNetPrice(i-1,String.valueOf(currformatDouble(netprice)));
-        e.setDetListPrice(i-1,String.valueOf(currformatDouble(listprice)));
-        e.setDetDisc(i-1,String.valueOf(currformatDouble(discount)));
+        e.setDetNetPrice(i-1,formatNumber(netprice,"2"));
+        e.setDetListPrice(i-1,formatNumber(listprice,"2"));
+        e.setDetDisc(i-1,formatNumber(discount,"2"));
         } else {
-         if (BlueSeerUtils.isParsableToDouble(getInput(i,"PO1",4))) {
-            e.setDetNetPrice(i-1, df.format(Double.valueOf(getInput(i,"PO1",4))));
-            e.setDetListPrice(i-1, df.format(Double.valueOf(getInput(i,"PO1",4))));
+         if (isNumber(getInput(i,"PO1",4))) {
+            e.setDetNetPrice(i-1, formatNumber(getInput(i,"PO1",4),"3"));
+            e.setDetListPrice(i-1, formatNumber(getInput(i,"PO1",4),"3"));
          } else {
             e.setDetNetPrice(i-1, "0");
             e.setDetListPrice(i-1, "0");	

@@ -14,6 +14,7 @@ load data local infile 'edidocdet.csv' replace into table edi_docdet fields term
 load data local infile 'edistds.csv' replace into table edi_stds fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'edimstr.csv' replace into table edi_mstr fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'edictrl.csv' replace into table edi_ctrl fields terminated by ',' ignore 0 Lines; show errors; 
+load data local infile 'edixref.csv' replace into table edi_xref fields terminated by ',' ignore 0 Lines; show errors; 
 insert into car_mstr (car_code, car_desc, car_scac, car_type) values ('USPS','US POSTAL SERVICE','USPS','carrier') ; 
 insert into cust_term (cut_code, cut_desc, cut_days) values ('N30','NET 30','30') ; 
 insert into cust_term (cut_code, cut_desc, cut_days) values ('N00','Due Now','0') ; 
@@ -58,4 +59,4 @@ load data local infile 'mapmstr.csv' replace into table map_mstr fields terminat
 load data local infile 'pksmstr.csv' replace into table pks_mstr fields terminated by ',' ignore 0 Lines; show errors;  
 load data local infile 'as2mstr.csv' replace into table as2_mstr fields terminated by ',' ignore 0 Lines; show errors;  
 load data local infile 'apimstr.csv' replace into table api_mstr fields terminated by ',' ignore 0 Lines; show errors;  
-load data local infile 'apidet.csv' replace into table api_det fields terminated by ',' ignore 0 Lines; show errors;  
+load data local infile 'apidet.csv' replace into table api_det fields terminated by ':' ignore 0 Lines; show errors;  

@@ -298,10 +298,10 @@ public abstract class EDIMap implements EDIMapi {
     //    bsmf.MainFrame.show(tp[14] + "/" + tp[15] + "/" + tp[16] + "/" + tp[17] );
         setOutPutDocType(tp[14]);
         setOutPutFileType(tp[15]);
-        if (! tp[16].equals("DB")) {
+        if (! tp[21].equals("DB")) {
         setInputStructureFile(tp[16]);
         }
-        if (! tp[17].equals("DB")) {
+        if (! tp[15].equals("DB")) {
         setOutputStructureFile(tp[17]);
         }
      }
