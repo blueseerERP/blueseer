@@ -373,4 +373,4 @@ country,ZWE,Zimbabwe,1
 sys_job_class,com.blueseer.crn.jobAS2,,1
 sys_job_class,com.blueseer.crn.jobSys,,1
 sys_job_class,com.blueseer.crn.jobBatch,,1
-edimaps,internal,1
+edimaps,internal,1,1
