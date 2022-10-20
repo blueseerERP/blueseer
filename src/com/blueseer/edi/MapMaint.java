@@ -960,6 +960,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         
         
         JTextArea lines = new JTextArea();
+        lines.setFont(new Font("monospaced", Font.PLAIN, 12));
         lines.setBackground(Color.LIGHT_GRAY);
         lines.setEditable(false);
         
@@ -1626,10 +1627,10 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
           }
           taoutput.append(diagnostic.getCode() + "\n");
           taoutput.append(String.valueOf(diagnostic.getKind()) + "\n");
-          taoutput.append(String.valueOf(diagnostic.getLineNumber()) + "\n");
-          taoutput.append(String.valueOf(diagnostic.getPosition()) + "\n");
-          taoutput.append(String.valueOf(diagnostic.getStartPosition()) + "\n");
-          taoutput.append(String.valueOf(diagnostic.getEndPosition()) + "\n");
+          taoutput.append(String.valueOf(diagnostic.getLineNumber() - 9) + "\n"); // 9 prefix lines added to source
+       //   taoutput.append(String.valueOf(diagnostic.getPosition()) + "\n");
+       //   taoutput.append(String.valueOf(diagnostic.getStartPosition()) + "\n");
+       //   taoutput.append(String.valueOf(diagnostic.getEndPosition()) + "\n");
           taoutput.append(String.valueOf(diagnostic.getSource()) + "\n");
           taoutput.append(diagnostic.getMessage(null) + "\n");
           taoutput.append("\n");
