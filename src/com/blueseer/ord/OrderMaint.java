@@ -1427,11 +1427,13 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         // summary charges and discounts
         if (soslist != null) {
         for (sos_det sos : soslist) {
+            if (! sos.sos_type().equals("tax")) {
             sacmodel.addRow(new Object[]{
                       sos.sos_type(), 
                       sos.sos_desc(),
                       sos.sos_amttype(),
                       sos.sos_amt()});
+            }
         }
         }
         
@@ -1491,8 +1493,11 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public void custChangeEvent(String mykey) {
-            clearShipAddress();
-            ddship.removeAllItems();
+        
+        if (! isLoad) {
+        
+        clearShipAddress();
+        ddship.removeAllItems();
             
             
            if (ddcust.getSelectedItem() == null || ddcust.getSelectedItem().toString().isEmpty() ) {
@@ -1529,12 +1534,13 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
             ResultSet res = null;
             try {
                 
-                res = st.executeQuery("select cm_name, cm_carrier, cm_tax_code, cm_curr from cm_mstr where cm_code = " + "'" + mykey + "'" + ";");
+                res = st.executeQuery("select cm_name, cm_carrier, cm_tax_code, cm_curr, cm_remarks from cm_mstr where cm_code = " + "'" + mykey + "'" + ";");
                 while (res.next()) {
                     lblcustname.setText(res.getString("cm_name"));
                     ddshipvia.setSelectedItem((res.getString("cm_carrier")));
                     ddtax.setSelectedItem((res.getString("cm_tax_code")));
                     ddcurr.setSelectedItem((res.getString("cm_curr")));
+                    remarks.setText(res.getString("cm_remarks"));
                 }
                 
                 if (custitemonly) {
@@ -1566,6 +1572,8 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
+        
+        } // if ! isLoad
     }
   
     public void reinitCustandShip(String mykey, String shipto) {
