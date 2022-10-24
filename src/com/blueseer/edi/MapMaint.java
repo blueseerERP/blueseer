@@ -972,6 +972,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             lines.setVisible(false);
             return;
         }
+        
          tamap.getDocument().addDocumentListener(new DocumentListener() {
          public String getText() {
             int caretPosition = tamap.getDocument().getLength();
@@ -1875,6 +1876,8 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         mappanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Map"));
         mappanel.setPreferredSize(new java.awt.Dimension(525, 76));
         mappanel.setLayout(new javax.swing.BoxLayout(mappanel, javax.swing.BoxLayout.LINE_AXIS));
+
+        jScrollPane4.setAutoscrolls(true);
 
         tamap.setColumns(20);
         tamap.setRows(5);
