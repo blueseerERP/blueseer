@@ -1427,7 +1427,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         // summary charges and discounts
         if (soslist != null) {
         for (sos_det sos : soslist) {
-            if (! sos.sos_type().equals("tax")) {
+            if (! sos.sos_type().equals("tax")) {  // don't show header tax again...
             sacmodel.addRow(new Object[]{
                       sos.sos_type(), 
                       sos.sos_desc(),
