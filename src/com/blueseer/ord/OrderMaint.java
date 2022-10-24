@@ -3833,6 +3833,10 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     private void btupdateitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateitemActionPerformed
         int line = 0;
+        String bom = "";
+        if (ddbom.getSelectedItem() != null) {
+            bom = ddbom.getSelectedItem().toString();
+        }
         
         line = getmaxline();
         line++;
@@ -3861,7 +3865,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                 orddet.setValueAt(tbdesc.getText(), i, 14);
                 orddet.setValueAt(ddwh.getSelectedItem().toString(), i, 12);
                 orddet.setValueAt(ddloc.getSelectedItem().toString(), i, 13);
-                orddet.setValueAt(ddbom.getSelectedItem().toString(), i, 16);
+                orddet.setValueAt(bom, i, 16);
                 
                 refreshDisplayTotals();         
                 listprice.setText("");
