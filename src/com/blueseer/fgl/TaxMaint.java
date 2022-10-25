@@ -246,7 +246,7 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeer {
            tbdesc.setText("");
            tbtaxelement.setText("");
            tbtaxpercent.setText("");
-           cbenabled.setSelected(false);
+           cbenabled.setSelected(true);
         
        isLoad = false;
     }
