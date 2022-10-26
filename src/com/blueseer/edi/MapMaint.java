@@ -103,8 +103,15 @@ import static com.blueseer.utl.EDData.readEDIRawFileIntoArrayList;
 import static com.blueseer.utl.EDData.readEDIRawFileIntoCbuf;
 import com.blueseer.utl.IBlueSeerT;
 import com.blueseer.vdr.venData;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -153,12 +160,14 @@ import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.InputMap;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
@@ -167,6 +176,8 @@ import javax.swing.JViewport;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.PopupMenuEvent;
@@ -180,6 +191,7 @@ import javax.swing.text.Document;
 import javax.swing.text.Element;
 import javax.swing.text.Highlighter;
 import javax.swing.text.JTextComponent;
+import javax.swing.text.Utilities;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 import javax.tools.Diagnostic;
@@ -206,6 +218,10 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 JMenuItem menulabeled = new JMenuItem("Labeled Format");
                 JMenuItem menuhide = new JMenuItem("Hide Panel");
                 
+                public final int MARGIN_WIDTH_PX = 28;
+                
+                private JScrollBar verticalScrollBar;
+                
                 private UndoManager undoManagerTAINPUT = new UndoManager();
                 private UndoManager undoManagerTAOUTPUT = new UndoManager();
                 private UndoManager undoManagerTAMAP = new UndoManager();
@@ -215,6 +231,8 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 boolean tamapLineToggle = false;
                 boolean tainputLineToggle = false;
                 boolean taoutputLineToggle = false;
+                
+                JTextArea lines = new JTextArea();
                 
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{
@@ -343,11 +361,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 case "Hide Panel" :
                     hidePanel(parentname.getName());
                     break;
-                    
-                case "Toggle Lines" :
-                    toggleLines(parentname.getName());
-                    break;
-                    
+                
                 case "Structure" :
                     showStructure(parentname.getName());
                     break; 
@@ -435,6 +449,151 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
           }
 }
     
+    class LineNumbersView extends JComponent implements DocumentListener, CaretListener, ComponentListener {
+
+        // this class was borrowed from :  rememberjava.com/ui/2017/02/19/line_numbers.html  Thank you!!
+	    private JTextComponent editor;
+
+	    private Font font;
+
+	    public LineNumbersView(JTextComponent editor) {
+	      this.editor = editor;
+
+	      editor.getDocument().addDocumentListener(this);
+	      editor.addComponentListener(this);
+	      editor.addCaretListener(this);
+	    }
+
+	    @Override
+	    public void paintComponent(Graphics g) {
+	      super.paintComponent(g);
+
+	      Rectangle clip = g.getClipBounds();
+	      int startOffset = editor.viewToModel(new Point(0, clip.y));
+	      int endOffset = editor.viewToModel(new Point(0, clip.y + clip.height));
+
+                            
+	      while (startOffset <= endOffset && endOffset != 0 ) {
+	        try {
+	          String lineNumber = getLineNumber(startOffset);
+	          if (lineNumber != null) {
+	            int x = getInsets().left + 2;
+	            int y = getOffsetY(startOffset);
+
+	            font = font != null ? font : new Font(Font.MONOSPACED, Font.BOLD, editor.getFont().getSize());
+	            g.setFont(font);
+
+	            g.setColor(isCurrentLine(startOffset) ? Color.RED : Color.BLACK);
+
+	            g.drawString(lineNumber, x, y);
+	          }
+
+	          startOffset = Utilities.getRowEnd(editor, startOffset) + 1;
+	        } catch (BadLocationException e) {
+	          e.printStackTrace();
+	          // ignore and continue
+	        }
+	      }
+	    }
+
+	    /**
+	     * Returns the line number of the element based on the given (start) offset
+	     * in the editor model. Returns null if no line number should or could be
+	     * provided (e.g. for wrapped lines).
+	     */
+	    private String getLineNumber(int offset) {
+	      Element root = editor.getDocument().getDefaultRootElement();
+	      int index = root.getElementIndex(offset);
+	      Element line = root.getElement(index);
+
+	      return line.getStartOffset() == offset ? String.format("%3d", index + 1) : null;
+	    }
+
+	    /**
+	     * Returns the y axis position for the line number belonging to the element
+	     * at the given (start) offset in the model.
+	     */
+	    private int getOffsetY(int offset) throws BadLocationException {
+	      FontMetrics fontMetrics = editor.getFontMetrics(editor.getFont());
+	      int descent = fontMetrics.getDescent();
+
+	      Rectangle r = editor.modelToView(offset);
+	      int y = r.y + r.height - descent;
+
+	      return y;
+	    }
+
+	    /**
+	     * Returns true if the given start offset in the model is the selected (by
+	     * cursor position) element.
+	     */
+	    private boolean isCurrentLine(int offset) {
+	      int caretPosition = editor.getCaretPosition();
+	      Element root = editor.getDocument().getDefaultRootElement();
+	      return root.getElementIndex(offset) == root.getElementIndex(caretPosition);
+	    }
+
+	    /**
+	     * Schedules a refresh of the line number margin on a separate thread.
+	     */
+	    private void documentChanged() {
+	      SwingUtilities.invokeLater(() -> {
+	        repaint();
+	      });
+	    }
+
+	    /**
+	     * Updates the size of the line number margin based on the editor height.
+	     */
+	    private void updateSize() {
+	      Dimension size = new Dimension(MARGIN_WIDTH_PX, editor.getHeight());
+	      setPreferredSize(size);
+	      setSize(size);
+	    }
+
+	    @Override
+	    public void insertUpdate(DocumentEvent e) {
+	      documentChanged();
+	    }
+
+	    @Override
+	    public void removeUpdate(DocumentEvent e) {
+	      documentChanged();
+	    }
+
+	    @Override
+	    public void changedUpdate(DocumentEvent e) {
+	      documentChanged();
+	    }
+
+	    @Override
+	    public void caretUpdate(CaretEvent e) {
+	      documentChanged();
+	    }
+
+	    @Override
+	    public void componentResized(ComponentEvent e) {
+	      updateSize();
+	      documentChanged();
+	    }
+
+	    @Override
+	    public void componentMoved(ComponentEvent e) {
+	    }
+
+	    @Override
+	    public void componentShown(ComponentEvent e) {
+	      updateSize();
+	      documentChanged();
+	    }
+
+	    @Override
+	    public void componentHidden(ComponentEvent e) {
+	    }
+	  }
+	  
+	  
+    
     /**
      * Creates new form ScrapReportPanel
      */
@@ -475,11 +634,17 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         }
         });
         
+        LineNumbersView lineNumbers = new LineNumbersView(tamap);
+        scrollMap.setRowHeaderView(lineNumbers);
+        
         /*
         mymenu.add(menuraw);
         mymenu.add(menulabeled);
         mymenu.add(menuhide);
         */
+        
+        
+       
     }
 
            // interface functions implemented
@@ -942,88 +1107,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
       //  bsmf.MainFrame.show(String.valueOf(s.size()));
         return s;
     }
-    
-    public void toggleLines(String taname) {
         
-        int i = 0;
-        String[] x;
-        
-        if (taname.equals("tamap")) {
-            tamapLineToggle = ! tamapLineToggle;
-        }
-        if (taname.equals("tainput")) {
-            tainputLineToggle = ! tainputLineToggle;
-        }
-        if (taname.equals("taoutput")) {
-            taoutputLineToggle = ! taoutputLineToggle;
-        }
-        
-        
-        JTextArea lines = new JTextArea();
-        lines.setFont(new Font("monospaced", Font.PLAIN, 12));
-        lines.setBackground(Color.LIGHT_GRAY);
-        lines.setEditable(false);
-        
-        if (tamapLineToggle) {
-            jScrollPane4.setRowHeaderView(lines);
-            lines.setVisible(true);
-        } else {
-            jScrollPane4.setRowHeaderView(null);
-            lines.setVisible(false);
-            return;
-        }
-        
-         tamap.getDocument().addDocumentListener(new DocumentListener() {
-         public String getText() {
-            int caretPosition = tamap.getDocument().getLength();
-            Element root = tamap.getDocument().getDefaultRootElement();
-            String text = "1" + System.getProperty("line.separator");
-               for(int i = 2; i < root.getElementIndex(caretPosition) + 2; i++) {
-                  text += i + System.getProperty("line.separator");
-               }
-            return text;
-         }
-         @Override
-         public void changedUpdate(DocumentEvent de) {
-            lines.setText(getText());
-         }
-         @Override
-         public void insertUpdate(DocumentEvent de) {
-            lines.setText(getText());
-         }
-         @Override
-         public void removeUpdate(DocumentEvent de) {
-            lines.setText(getText());
-         }
-      });
-        
-        if (taname.equals("tamap")) {
-          x = tamap.getText().split("\n");
-          tamap.setText("");
-            for (String e : x) {
-                i++;
-                lines.append(String.valueOf(i) + "\n");
-                tamap.append(e + "\n");
-            }  
-        }
-        if (taname.equals("tainput")) {
-          x = tainput.getText().split("\n");
-          tainput.setText("");
-            for (String e : x) {
-                i++;
-                tainput.append(String.valueOf(i) + "  " + e + "\n");
-            }  
-        }
-        if (taname.equals("taoutput")) {
-          x = taoutput.getText().split("\n");
-          taoutput.setText("");
-            for (String e : x) {
-                i++;
-                taoutput.append(String.valueOf(i) + "  " + e + "\n");
-            }  
-        }
-    }
-    
     public List<String> getStructure(String structureName) {
         List<String> lines = new ArrayList<>();
         String dirpath;
@@ -1233,6 +1317,11 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }
     };
 
+     private void documentChanged() {
+	      SwingUtilities.invokeLater(() -> {
+	        repaint();
+	      });
+	    }
     
     private void addKeyBind(JTextComponent ta) {
         ta.getInputMap().put(KeyStroke.getKeyStroke("control F"), ta.getName());
@@ -1809,7 +1898,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         jScrollPane7 = new javax.swing.JScrollPane();
         tainput = new javax.swing.JTextArea();
         mappanel = new javax.swing.JPanel();
-        jScrollPane4 = new javax.swing.JScrollPane();
+        scrollMap = new javax.swing.JScrollPane();
         tamap = new javax.swing.JTextArea();
         outputpanel = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
@@ -1877,14 +1966,14 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         mappanel.setPreferredSize(new java.awt.Dimension(525, 76));
         mappanel.setLayout(new javax.swing.BoxLayout(mappanel, javax.swing.BoxLayout.LINE_AXIS));
 
-        jScrollPane4.setAutoscrolls(true);
+        scrollMap.setAutoscrolls(true);
 
         tamap.setColumns(20);
         tamap.setRows(5);
         tamap.setName("tamap"); // NOI18N
-        jScrollPane4.setViewportView(tamap);
+        scrollMap.setViewportView(tamap);
 
-        mappanel.add(jScrollPane4);
+        mappanel.add(scrollMap);
 
         tablepanel.add(mappanel);
 
@@ -2555,11 +2644,11 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JPanel mappanel;
     private javax.swing.JPanel outputpanel;
+    private javax.swing.JScrollPane scrollMap;
     private javax.swing.JPanel tablepanel;
     private javax.swing.JTextArea tainput;
     private javax.swing.JTextArea tamap;
