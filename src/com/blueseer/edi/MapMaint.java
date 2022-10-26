@@ -299,14 +299,12 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         popup.setInvoker(ta);
        
         if (ta.getName().equals("tamap")) {
-            popup.add(setMenuItem("Toggle Lines"));
             popup.add(setMenuItem("Search"));
             popup.add(setMenuItem("Clear Highlights"));
             popup.add(setMenuItem("List Methods"));
             popup.add(setMenuItem("Hide Panel"));
         }
         if (ta.getName().equals("tainput")) {
-            popup.add(setMenuItem("Toggle Lines"));
             popup.add(setMenuItem("Search"));
             popup.add(setMenuItem("Input"));
             popup.add(setMenuItem("Structure"));
@@ -315,7 +313,6 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             popup.add(setMenuItem("Hide Panel"));
         }
         if (ta.getName().equals("taoutput")) {
-            popup.add(setMenuItem("Toggle Lines"));
             popup.add(setMenuItem("Search"));
             popup.add(setMenuItem("Structure"));
             popup.add(setMenuItem("Overlay"));
