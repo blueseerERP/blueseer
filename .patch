@@ -24,3 +24,5 @@ patch=8
 # major mods to new EDI mapper class
 patch=9
 # mods to mapper class and visibility toggle option on internal EDI maps
+patch=10
+# removed old mapper line number scheme and replaced with new class; issue #82 resolved
