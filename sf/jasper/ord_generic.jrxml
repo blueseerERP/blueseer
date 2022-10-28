@@ -26,7 +26,9 @@
 	<parameter name="taxes" class="java.lang.Double"/>
 	<queryString>
 		<![CDATA[select so_nbr, sod_nbr, so_curr, sod_desc, 
-(select case when sum(sos_amt) is null then 0 else sum(sos_amt) end from sos_det where sos_nbr = $P{myid} and sos_amttype = 'amount' and sos_type <> 'tax') as charges, 
+(select case when sum(sos_amt) is null then 0 else sum(sos_amt) end from sos_det 
+	where sos_nbr = $P{myid} and sos_amttype = 'amount' and sos_type <> 'tax' and sos_type <> 'passive'
+) as charges, 
 so_cust, so_create_date,  so_rmks, sod_po, sod_item, sod_custitem, sod_ord_qty, 
 sod_netprice, sod_listprice, sod_taxamt, cm_code, cm_name, cm_line1, cm_line2,  
 cms_name, cms_line1, cms_line2,  site_desc, site_line1 
