@@ -35,6 +35,7 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.fgl.fglData;
+import com.blueseer.ord.ordData;
 import com.blueseer.shp.shpData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
@@ -88,7 +89,7 @@ public class InvoiceMaint extends javax.swing.JPanel {
                 int ordercount = 0;
                 String status = "";
                
-              
+             
             
                 
       // global datatablemodel declarations     
@@ -723,6 +724,17 @@ public class InvoiceMaint extends javax.swing.JPanel {
                     lbladdr.setText(res.getString("cms_name") + "  " + res.getString("cms_line1") + "..." + res.getString("cms_city") +
                                     ", " + res.getString("cms_state") + " " + res.getString("cms_zip"));
                 }
+                
+                    // now get sac table
+                    ArrayList<String[]> sac = shpData.getShipperSAC(x[0]);
+                 //write to shs_det
+                     for (String[] s : sac) {
+                         sacmodel.addRow(new Object[]{
+                         s[0], s[1], s[2], s[3], s[4]
+                         });
+                     }
+                   sactable.setModel(sacmodel);
+                
                 
                 retotal();
                

@@ -1169,6 +1169,282 @@ public class shpData {
 
     }
 
+    public static ArrayList<String[]> getShipperSAC(String shipper) {
+      ArrayList<String[]> sac = new ArrayList<String[]>();
+      ArrayList<String> orders = new ArrayList<String>();
+      
+      try{
+
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+            
+            // get Orders on shipper
+             res = st.executeQuery("select shd_so from ship_det where shd_id = " + "'" + shipper + "'" + " group by shd_so;");
+             while (res.next()) {
+                 orders.add(res.getString("shd_so"));
+             }
+            
+             for (String o : orders) {
+                 res = st.executeQuery("select * from shs_det " +
+                         " where shs_nbr = " + "'" + shipper + "'" +
+                         " and shs_so = " + "'" + o + "'" + 
+                         ";");
+                 while (res.next()) {
+                     String[] myarray = new String[5];
+                     myarray[0] = res.getString("shs_so");
+                     myarray[1] = res.getString("shs_desc");
+                     myarray[2] = res.getString("shs_type");
+                     myarray[3] = res.getString("shs_amttype");
+                     myarray[4] = res.getString("shs_amt");
+                     sac.add(myarray);
+                 }
+             }
+             
+        }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+            if (res != null) {
+                res.close();
+            }
+            if (st != null) {
+                st.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+      return sac;
+   }
+
+    public static double getShipperSACTotal(String nbr) {
+       double tax = 0;
+       double disc = 0;
+       double charge = 0;
+       double shippertotal = 0;
+     try{
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        
+        try{
+            res = st.executeQuery("SELECT  sum(shd_netprice * shd_qty) as mytotal  " +
+                                    " FROM  ship_det  " +
+                                    " where shd_nbr = " + "'" + nbr + "'" +       
+                                    ";");
+                while (res.next()) {
+                    shippertotal += res.getDouble("mytotal");
+                }
+            
+            res = st.executeQuery("SELECT * " +
+                                    " FROM  shs_det  " +
+                                    " where shs_nbr = " + "'" + nbr + "'" +
+                                    " and shs_type = 'tax' " +        
+                                    " ;");
+
+                double shsamt = 0;
+                while (res.next()) {
+                    shsamt = res.getDouble("shs_amt");
+                    if (res.getString("shs_amttype").equals("percent")) {
+                        if (shsamt > 0)
+                        tax += (shippertotal * (shsamt / 100)); 
+                    } else {
+                       tax += shsamt;
+                    }
+                }
+            
+                res = st.executeQuery("SELECT * " +
+                                    " FROM  shs_det  " +
+                                    " where shs_nbr = " + "'" + nbr + "'" +
+                                    " and shs_type <> 'tax' " +        
+                                    " ;");
+
+                shsamt = 0;
+                while (res.next()) {
+                    shsamt = res.getDouble("shs_amt");
+                    if (res.getString("shs_type").equals("charge")) {
+                       charge += shsamt; 
+                    }
+                    if (res.getString("shs_type").equals("discount")) {
+                       if (shsamt > 0)
+                        disc += (shippertotal * (shsamt / 100)); 
+                    }
+                }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return charge + tax;
+
+    }
+
+    public static double getShipperTAXTotal(String nbr) {
+       double tax = 0;
+       double disc = 0;
+       double charge = 0;
+       double shippertotal = 0;
+     try{
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        
+        try{
+            res = st.executeQuery("SELECT  sum(shd_netprice * shd_qty) as mytotal  " +
+                                    " FROM  ship_det  " +
+                                    " where shd_nbr = " + "'" + nbr + "'" +       
+                                    ";");
+                while (res.next()) {
+                    shippertotal += res.getDouble("mytotal");
+                }
+            
+            res = st.executeQuery("SELECT * " +
+                                    " FROM  shs_det  " +
+                                    " where shs_nbr = " + "'" + nbr + "'" +
+                                    " and shs_type = 'tax' " +        
+                                    " ;");
+
+                double shsamt = 0;
+                while (res.next()) {
+                    shsamt = res.getDouble("shs_amt");
+                    if (res.getString("shs_amttype").equals("percent")) {
+                        if (shsamt > 0)
+                        tax += (shippertotal * (shsamt / 100)); 
+                    } else {
+                       tax += shsamt;
+                    }
+                }
+                
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return tax;
+
+    }
+    
+    public static double getShipperTotal(String nbr) {
+       double tax = 0;
+       double disc = 0;
+       double charge = 0;
+       double shippertotal = 0;
+     try{
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        
+        try{
+            res = st.executeQuery("SELECT  sum(shd_netprice * shd_qty) as mytotal  " +
+                                    " FROM  ship_det  " +
+                                    " where shd_nbr = " + "'" + nbr + "'" +       
+                                    ";");
+                while (res.next()) {
+                    shippertotal += res.getDouble("mytotal");
+                }
+            
+            res = st.executeQuery("SELECT * " +
+                                    " FROM  shs_det  " +
+                                    " where shs_nbr = " + "'" + nbr + "'" +
+                                    " and shs_type = 'tax' " +        
+                                    " ;");
+
+                double shsamt = 0;
+                while (res.next()) {
+                    shsamt = res.getDouble("shs_amt");
+                    if (res.getString("shs_amttype").equals("percent")) {
+                        if (shsamt > 0)
+                        tax += (shippertotal * (shsamt / 100)); 
+                    } else {
+                       tax += shsamt;
+                    }
+                }
+            
+                res = st.executeQuery("SELECT * " +
+                                    " FROM  shs_det  " +
+                                    " where shs_nbr = " + "'" + nbr + "'" +
+                                    " and shs_type <> 'tax' " +        
+                                    " ;");
+
+                shsamt = 0;
+                while (res.next()) {
+                    shsamt = res.getDouble("shs_amt");
+                    if (res.getString("shs_type").equals("charge")) {
+                       charge += shsamt; 
+                    }
+                    if (res.getString("shs_type").equals("discount")) {
+                       if (shsamt > 0)
+                        disc += (shippertotal * (shsamt / 100)); 
+                    }
+                }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return shippertotal + charge + tax;
+
+    }
+    
     public static double getTaxAmtApplicableByShipper(String shipper, double amt) {
         double taxamt = 0.00;
         double taxpercent = 0.00;
