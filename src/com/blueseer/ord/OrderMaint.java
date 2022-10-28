@@ -1887,6 +1887,9 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
          // now lets get summary tax
          // now add trailer/summary charges if any
          for (int j = 0; j < sactable.getRowCount(); j++) {
+            if (sactable.getValueAt(j,0).toString().equals("passive")) { // skip passive (info only)
+            continue;
+            } 
             if (! sactable.getValueAt(j,0).toString().equals("tax") && ! sactable.getValueAt(j,2).toString().equals("percent") ) {
             dol += bsParseDouble(sactable.getValueAt(j,3).toString());  // add charges to total net charge
             }
@@ -3196,7 +3199,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
-        ddsactype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "discount", "charge" }));
+        ddsactype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "discount", "charge", "passive" }));
 
         ddsacamttype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "amount", "percent" }));
         ddsacamttype.addActionListener(new java.awt.event.ActionListener() {
