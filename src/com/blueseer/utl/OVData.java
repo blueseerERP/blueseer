@@ -15656,7 +15656,10 @@ return mystring;
         Statement st = con.createStatement();
         ResultSet res = null;
         try{
-             res = st.executeQuery("select sos_nbr, sos_desc, sos_type, sos_amttype, sos_amt from sos_det where sos_nbr = " + "'" + order + "'" + ";");
+             res = st.executeQuery("select sos_nbr, sos_desc, sos_type, sos_amttype, sos_amt " +
+                     " from sos_det where sos_nbr = " + "'" + order + "'" + 
+                     " and sos_type <> 'passive' " + 
+                     ";");
              while (res.next()) {
                  String[] myarray = new String[5];
                  myarray[0] = res.getString("sos_nbr");

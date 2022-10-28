@@ -752,7 +752,7 @@ try {
                  res = st.executeQuery("SELECT so_nbr, so_rmks, so_cust, so_curr, so_po, so_ord_date, so_due_date, so_status, " +
                         " sum(sod_ord_qty) as totqty, sum(sod_ord_qty * sod_netprice) as totdol, " +
                         " (select sum(case when sos_type = 'discount' and sos_amttype = 'percent' then sos_amt else '0' end) from sos_det where sos_nbr = so_nbr) as 'discountpercent', " +
-                        " (select sum(case when sos_type <> 'tax' then sos_amt else '0' end) from sos_det where sos_nbr = so_nbr) as 'charge'," + 
+                        " (select sum(case when sos_type <> 'tax' and sos_type <> 'passive' then sos_amt else '0' end) from sos_det where sos_nbr = so_nbr) as 'charge'," + 
                         " (select sum(case when sos_type = 'tax' and sos_amttype = 'percent' then sos_amt end) from sos_det where sos_nbr = so_nbr)as 'taxpercent', " +
                         " (select sum(case when sos_type = 'tax' and sos_amttype = 'amount' then sos_amt end) from sos_det where sos_nbr = so_nbr) as 'taxcharge' " +
                         " FROM  so_mstr left outer join sod_det on sod_nbr = so_nbr " +
