@@ -803,24 +803,28 @@ public abstract class EDIMap implements EDIMapi {
 			        }
 				if (! line.isEmpty()) {
 				String[] t = line.split(",",-1);
-				list.add(t);
-				set.add(t[0]);
+                                       list.add(t);
+                                      set.add(t[0]);
 				}
 			}
 			reader.close();
 			
-			
+			ArrayList<String> excludes = new ArrayList<String>();
 			for (String s : set) {
 				ArrayList<String[]> x = new ArrayList<String[]>();
 				for (String[] ss : list) {
-					if (ss[0].equals(s)) {
+					if (ss[0].equals(s) && ! excludes.contains(s + ss[5])) {  //prevent duplicate fields
 						x.add(ss);
+                                                excludes.add(s + ss[5]);
 					}
 				}
 				hm.put(s, x);
 			}
 			
 		OSF = hm;
+                
+                
+                
                 } catch (FileNotFoundException ex) {
              edilog(ex);
             setError("outbound structure file not found: " + EDData.getEDIStructureDir() + "/" + osf);
@@ -1219,13 +1223,14 @@ public abstract class EDIMap implements EDIMapi {
                     System.out.println("OMD key/value: " + z.getKey() + " : " + mapValues);
                 }
                         segment = z.getKey().split(":")[0];  // start with landmark
-                
+                      
                         ArrayList<String[]> fields = OSF.get(segment);
                         ArrayList<String> segaccum = new ArrayList<String>();
                         segaccum.add(segment); 
                         
                         if (fields != null) { 
                         for (String[] f : fields) {
+                        //    System.out.println(f[0] + "/" + f[6]);
                                 if (f[5].equals("landmark")) {
                                     continue;
                                 }
