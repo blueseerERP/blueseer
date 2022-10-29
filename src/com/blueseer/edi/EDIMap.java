@@ -55,6 +55,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jcifs.smb.SmbException;
@@ -976,7 +977,85 @@ public abstract class EDIMap implements EDIMapi {
         x = list.toArray(x);
          return x;
      }
-     
+    
+    public static String[] getSegmentInISF(String rawSegmentLM, String rawGroupHeadLM, ArrayList<String[]> isf) {
+        
+        String[] segment = null;
+        for (String[] x : isf) {
+            if (rawSegmentLM.equals(x[0]) && rawGroupHeadLM.equals(x[1])) {
+                segment = x;
+                break;
+            }
+        }
+        return segment;
+    }
+    
+    public static Stack<String> preGroupHead(String rawSegmentLM, Stack<String> instack, ArrayList<String[]> isf) {
+        String currentGroupHeadLM = String.join(":",instack.toArray(new String[instack.size()])); 
+        Stack<String> stack = new Stack<String>();
+        stack = (Stack<String>) instack.clone();
+        int i = 0;
+        for (String[] x : isf) {
+            i++;
+            if (! x[4].equals("yes")) {
+                continue;
+            }
+            
+            if (rawSegmentLM.equals(x[0]) && currentGroupHeadLM.equals(x[1]) && x[3].equals("yes")) {
+                if (x[1].isBlank()) {
+                  stack.removeAllElements();
+              //    System.out.println("preRemoveAll:" + currentGroupHeadLM + " / " + x[1] + " position: " + i + " incoming:" + x[0]);
+                }
+               // stack.push(rawSegmentLM);
+               // System.out.println("push:" + rawSegmentLM + " position: " + i + " incoming:" + x[0]);
+                break;
+            }
+            
+            if (rawSegmentLM.equals(x[0]) && ! currentGroupHeadLM.equals(x[1]) && x[3].equals("yes")) {
+                if (x[1].isBlank()) {
+                  stack.removeAllElements();
+               //   System.out.println("RemoveAll:" + currentGroupHeadLM + " / " + x[1] + " position: " + i + " incoming:" + x[0]);
+                } else {
+                  stack.removeAllElements();
+                  if (! x[1].contains(":")) {
+                      stack.push(x[1]);
+                  } else {
+                      String[] arr = x[1].split(":");
+                      for (String e : arr) {
+                          stack.push(e);
+                      }
+                  }
+              //    System.out.println("RemoveSome:" + currentGroupHeadLM + " / " + x[1] + " position: " + i + " incoming:" + x[0]);
+                }
+             //   System.out.println("pop:" + rawSegmentLM + " position: " + i + " incoming:" + x[0]);
+                break;
+            }
+            
+        }
+        return stack;
+    }
+    
+    public static Stack<String> postGroupHead(String rawSegmentLM, Stack<String> instack, ArrayList<String[]> isf) {
+        String currentGroupHeadLM = String.join(":",instack.toArray(new String[instack.size()])); 
+        Stack<String> stack = new Stack<String>();
+        stack = (Stack<String>) instack.clone();
+        int i = 0;
+        for (String[] x : isf) {
+            i++;
+            if (! x[4].equals("yes")) {
+                continue;
+            }
+           
+            if (rawSegmentLM.equals(x[0]) && ! currentGroupHeadLM.equals(x[1]) && x[3].equals("yes")) {
+                stack.push(rawSegmentLM);
+              //  System.out.println("afterpush:" + rawSegmentLM + " position: " + i + " incoming:" + x[0]);
+                break;
+            }
+            
+        }
+        return stack;
+    }
+    
     
     public static LinkedHashMap<String, String[]> mapInput(String[] c, ArrayList<String> data, ArrayList<String[]> ISF) throws IOException {
         LinkedHashMap<String,String[]> mappedData = new LinkedHashMap<String,String[]>();
@@ -985,6 +1064,8 @@ public abstract class EDIMap implements EDIMapi {
         String parenthead = "";
         String groupkey = "";
         String previouskey = "";
+        String mappedinput = "";
+        Stack<String> stack = new Stack<String>();
         for (String s : data) {
                 String[] x = null;
                 if (c[28].equals("FF")) {
@@ -992,72 +1073,81 @@ public abstract class EDIMap implements EDIMapi {
                 } else {
                     x = s.split(EDI.escapeDelimiter(ed)); // delims = ele, sub, seg
                 }
-
-                for (String[] z : ISF) {
-                    // skip non-landmarks
-                    if (! z[4].equals("yes")) {
-                        continue;
-                    }
-                        if (x != null && (x.length > 1) && x[0].equals(z[0])) {
-                                boolean foundit = false;
-                                boolean hasloop = false;
-                                String[] temp = parenthead.split(":");
-                                for (int i = temp.length - 1; i >= 0; i--) {
-                                        if (z[1].compareTo(temp[i]) == 0) {
-                                                foundit = true;
-                                                String[] newarray = Arrays.copyOfRange(temp, 0, i + 1);
-                                                parenthead = String.join(":", newarray);							
-                                                break;
-                                        }
-                                }
-                                if (! foundit) {
-                                continue;	
-                                } else {
-                                        int loop = 1;
-                                        String groupparent = parenthead + ":" + x[0];
-                                        if (groupcount.containsKey(groupparent)) {
-                                                int g = groupcount.get(groupparent);
-
-                                                if (previouskey.equals(parenthead + ":" + x[0] + "+" + g) && ! z[3].equals("yes")) {
-                                                        loop = set.get(parenthead + ":" + x[0] + "+" + groupcount.get(groupparent));	
-                                                        hasloop = true;
-                                                        loop++;
-                                                        set.put(parenthead + ":" + x[0] + "+" + groupcount.get(groupparent), loop);
-                                                } else {
-                                                        g++;	
-                                                        groupcount.put(groupparent, g);
-                                                }
-                                        } else {
-                                               // groupcount.put(groupparent, 1);
-                                               if (groupcount.get(parenthead) != null) {
-                                                  groupcount.put(groupparent, groupcount.get(parenthead)); 
-                                               } else {
-                                                  groupcount.put(groupparent, 1); 
-                                               }
-                                               
-                                        }
-
-                                        previouskey = parenthead + ":" + x[0] + "+" + groupcount.get(groupparent);	
-                                        if (hasloop) {
-                                            groupkey = parenthead + ":" + x[0] + "+" + groupcount.get(groupparent) + "+" + loop;
-                                        } else {
-                                            groupkey = parenthead + ":" + x[0] + "+" + groupcount.get(groupparent);
-                                        }
-
-                                        set.put(groupkey, loop);
-                                        mappedData.put(parenthead + ":" + x[0] + "+" + groupcount.get(groupparent) + "+" + loop , x);
-                                        SegmentCounter.add(parenthead + ":" + x[0] + "+" + groupcount.get(groupparent));
-                                        if (z[3].equals("yes")) {
-                                                parenthead = parenthead + (":" + z[0]);
-                                        }
-                                        break;
-                                }
-                        }
+                
+                if (x == null || x.length == 0) {
+                    continue;
                 }
+                // identify immediate parent/group head
+                stack = preGroupHead(x[0], stack, ISF);
+                parenthead = String.join(":",stack.toArray(new String[stack.size()]));
+                
+                // now lets find segments place in ISF
+               // System.out.println("incoming segment:" + x[0] + " with parenthead: " + parenthead);
+                String[] IFSseg = getSegmentInISF(x[0], parenthead, ISF);
+                
+                
+               
+                
+                if (IFSseg != null) {
+                    
+                    if (! parenthead.isBlank()) {
+                        parenthead = parenthead + ":";
+                    }
+                    
+                    int loop = 1;
+                    boolean hasloop = false;
+                    String groupparent = parenthead + x[0];
+                    if (groupcount.containsKey(groupparent)) {
+                            int g = groupcount.get(groupparent);
+
+                            if (previouskey.equals(parenthead + x[0] + "+" + g) && ! IFSseg[3].equals("yes")) {
+                                    loop = set.get(parenthead + x[0] + "+" + groupcount.get(groupparent));	
+                                    hasloop = true;
+                                    loop++;
+                                    set.put(parenthead + x[0] + "+" + groupcount.get(groupparent), loop);
+                            } else {
+                                    g++;	
+                                    groupcount.put(groupparent, g);
+                            }
+                    } else {
+                           // groupcount.put(groupparent, 1);
+                           if (groupcount.get(parenthead) != null) {
+                              groupcount.put(groupparent, groupcount.get(parenthead)); 
+                           } else {
+                              groupcount.put(groupparent, 1); 
+                           }
+
+                    }
+
+                    previouskey = parenthead + x[0] + "+" + groupcount.get(groupparent);	
+                    if (hasloop) {
+                        groupkey = parenthead + x[0] + "+" + groupcount.get(groupparent) + "+" + loop;
+                    } else {
+                        groupkey = parenthead + x[0] + "+" + groupcount.get(groupparent);
+                    }
+
+                    mappedinput = parenthead + x[0] + "+" + groupcount.get(groupparent) + "+" + loop + "=" + String.join(",",x);
+                  //  System.out.println(mappedinput);
+                    set.put(groupkey, loop);
+                    mappedData.put(parenthead + x[0] + "+" + groupcount.get(groupparent) + "+" + loop , x);
+                    SegmentCounter.add(parenthead + x[0] + "+" + groupcount.get(groupparent));
+                    /*
+                    if (z[3].equals("yes")) {
+                            parenthead = parenthead + (":" + z[0]);
+                    }
+                    */
+                } else {  // if foundit
+                    System.out.println("ifSeg is null: " + x[0] + " with parenthead: " + parenthead);
+                }
+            
+               stack = postGroupHead(x[0], stack, ISF);
+                parenthead = String.join(":",stack.toArray(new String[stack.size()])); 
+                
         }
         return mappedData;
     }
-
+  
+    
     public static void debuginput(Map<String, String[]> mappedData) {
         if (GlobalDebug) {
             for (Map.Entry<String, String[]> z : mappedData.entrySet()) {
@@ -1280,7 +1370,7 @@ public abstract class EDIMap implements EDIMapi {
          }
         
          String[] t = null;
-         segment = ":" + segment; // preprend blank
+        // segment = ":" + segment; // preprend blank
          for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
              if (z.getKey().split("\\+")[0].equals(segment)) {
                  t = z.getValue();
@@ -1306,7 +1396,7 @@ public abstract class EDIMap implements EDIMapi {
          String[] q = qual.split(":",-1);
          String[] k = null;
          String[] t = null;
-         segment = ":" + segment; // preprend blank
+        // segment = ":" + segment; // preprend blank
          for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
              if (z.getKey().split("\\+")[0].equals(segment)) {
                  count++;
@@ -1342,7 +1432,7 @@ public abstract class EDIMap implements EDIMapi {
          }
          String[] k = null;
          String[] t = null;
-         segment = ":" + segment; // preprend blank
+        // segment = ":" + segment; // preprend blank
          for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
              if (z.getKey().split("\\+")[0].equals(segment)) {
                  t = z.getValue();
@@ -1368,7 +1458,7 @@ public abstract class EDIMap implements EDIMapi {
          if (segment.startsWith(":") && segment.contains("+")) {  // overloading (again) as key type entry (used with getLoopKeys)
            k = mappedInput.get(segment);  
          } else { // else as actual segment entry
-             segment = ":" + segment; // preprend blank
+           //  segment = ":" + segment; // preprend blank
              for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
                  if (z.getKey().split("\\+")[0].equals(segment)) {
                      count++;
@@ -1400,7 +1490,7 @@ public abstract class EDIMap implements EDIMapi {
          if (segment.startsWith(":") && segment.contains("+")) {  // overloading (again) as key type entry (used with getLoopKeys)
            k = mappedInput.get(segment);  
          } else { // else as actual segment entry
-             segment = ":" + segment; // preprend blank
+            // segment = ":" + segment; // preprend blank
              for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
                  if (z.getKey().split("\\+")[0].equals(segment)) {
                      k = z.getValue();
@@ -1428,7 +1518,7 @@ public abstract class EDIMap implements EDIMapi {
     public static String getInput(Integer gloop, String segment, Integer elementNbr) {
          String x = "";
          String[] k = null;
-         segment = ":" + segment; // preprend blank
+        // segment = ":" + segment; // preprend blank
          for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
              String[] v = z.getKey().split("\\+");
              if (v[0].equals(segment) && v[1].equals(String.valueOf(gloop))) {
@@ -1453,7 +1543,7 @@ public abstract class EDIMap implements EDIMapi {
          }
         
          String[] k = null;
-         segment = ":" + segment; // preprend blank
+        // segment = ":" + segment; // preprend blank
          for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
              String[] v = z.getKey().split("\\+");
              if (v[0].equals(segment) && v[1].equals(String.valueOf(gloop))) {
@@ -1479,7 +1569,7 @@ public abstract class EDIMap implements EDIMapi {
              return x;
          }
          String[] t = null;
-         segment = ":" + segment; // preprend blank
+        // segment = ":" + segment; // preprend blank
          for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
              String[] v = z.getKey().split("\\+");
              if (v[0].equals(segment) && v[1].equals(String.valueOf(gloop))) {
@@ -1512,7 +1602,7 @@ public abstract class EDIMap implements EDIMapi {
              return x;
          }
          String[] t = null;
-         segment = ":" + segment; // preprend blank
+        // segment = ":" + segment; // preprend blank
          for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
              String[] v = z.getKey().split("\\+");
              if (v[0].equals(segment) && v[1].equals(String.valueOf(gloop))) {
@@ -1566,7 +1656,7 @@ public abstract class EDIMap implements EDIMapi {
          
          int count = 0;
          String[] k = null;
-         segment = ":" + segment; // preprend blank
+        // segment = ":" + segment; // preprend blank
          for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
              if (z.getKey().split("\\+")[0].equals(segment)) {
                  count++;
@@ -1583,7 +1673,7 @@ public abstract class EDIMap implements EDIMapi {
                  params = {"String segment"}) 
     public static ArrayList<String> getLoopKeys(String segment) {
          ArrayList<String> k = new ArrayList<String>();
-         segment = ":" + segment; // preprend blank
+       //  segment = ":" + segment; // preprend blank
          for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
              String[] v = z.getKey().split("\\+");
              if (v[0].equals(segment) && v.length == 3) {
@@ -1599,7 +1689,7 @@ public abstract class EDIMap implements EDIMapi {
                  params = {"String segment", "Integer LoopIndex"}) 
     public static ArrayList<String> getLoopKeys(String segment, Integer g) {
          ArrayList<String> k = new ArrayList<String>();
-         segment = ":" + segment; // preprend blank
+       //  segment = ":" + segment; // preprend blank
          for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
              String[] v = z.getKey().split("\\+");
              if (v[0].equals(segment) && v[1].equals(String.valueOf(g)) && v.length == 3) {
