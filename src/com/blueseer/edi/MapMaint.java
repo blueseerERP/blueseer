@@ -1389,7 +1389,11 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             taoutput.setText("");
             isInput = false;
         }
-                    
+         
+        if (input == null || structure == null) {
+            return;
+        }
+        
             Map<String, HashMap<Integer,String[]>> msf = getStructureAsHashMap(structure); 
             LinkedHashMap<String, String[]> mappedData = mapInput(fs, input, getStructureSplit(structure), delims);
             
@@ -1752,18 +1756,19 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     public File getfile() {
         
         File file = null;
-        fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-        fc.setCurrentDirectory(FileSystems.getDefault().getPath("edi").toFile());
-        
-        int returnVal = fc.showOpenDialog(this);
+        JFileChooser jfc = new JFileChooser(FileSystems.getDefault().getPath("edi").toFile());
+        jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        int returnVal = jfc.showOpenDialog(this);
        
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
-            file = fc.getSelectedFile();
+            file = jfc.getSelectedFile();
             String SourceDir = file.getAbsolutePath();
             file = new File(SourceDir);
-            
+               if (! file.exists()) {
+                 return null;
+               }
             }
             catch (Exception ex) {
             ex.printStackTrace();
