@@ -769,7 +769,7 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
         jLabel4.setText("Role");
         jLabel4.setName("lblrole"); // NOI18N
 
-        ddrectype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "fixed", "regex" }));
+        ddrectype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "fixed", "delimited", "regex" }));
 
         jLabel7.setText("RecordType");
         jLabel7.setName("lblrecordtype"); // NOI18N

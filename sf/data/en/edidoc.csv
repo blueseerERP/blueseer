@@ -2,3 +2,7 @@
 810idoc,810 IDOC,810idoc,,10,1,EDIDC_40,1
 856idoc,856 IDOC,856idoc,,10,1,EDIDC_40,1
 850idoc,850 IDOC,850idoc,,10,1,EDIDC_40,1
+850csv,CSV Order,850csv,,10,1,,1
+855csv,CSV Acknowledgment,855csv,,10,1,,1
+856csv,CSV ASN,856csv,,10,1,,1
+810csv,CSV Invoice,810csv,,10,1,,1

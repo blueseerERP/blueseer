@@ -19,6 +19,14 @@ ItemType,ASSET,Anlage,1
 ItemType,SERVICE,Service,1
 edidoctype,dbin,,1
 edidoctype,dbout,,1
+edidoctype,850csv,,1
+edidoctype,856csv,,1
+edidoctype,810csv,,1
+edidoctype,855csv,,1
+edidoctype,850xml,,1
+edidoctype,856xml,,1
+edidoctype,810xml,,1
+edidoctype,855xml,,1
 edidoctype,850idoc,,1
 edidoctype,856idoc,,1
 edidoctype,810idoc,,1

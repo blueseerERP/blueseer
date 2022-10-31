@@ -609,114 +609,7 @@ public class EDI {
          // now lets see how many ISAs and STs within those ISAs and write character positions of each
          
          Map<Integer, Object[]> ISAmap = createIMAP(cbuf, c, "", "", "", "");
-        /* 
-         Map<Integer, Object[]> ISAmap = new HashMap<Integer, Object[]>();
-         int start = 0;
-         int end = 0;
-         int isacount = 0;
-         int isactrl = 0;
-         int gscount = 0;
-         int stcount = 0;
-         int ststart = 0;
-         int sestart = 0;
-         String ed_escape = "";
-         String sd_escape = "";
-         int gsstart = 0;
-         String doctype = "";
-         String docid = "";
-         ArrayList<String> isaList = new ArrayList<String>();
-          
-          char e = 0;
-          char s = 0;
-          char u = 0;
-          int mark = 0;
-          
-           
-           Map<Integer, ArrayList> stse_hash = new HashMap<Integer, ArrayList>();
-           ArrayList<Object> docs = new ArrayList<Object>();
-          
-            for (int i = 0; i < cbuf.length; i++) {
-             if ( ((i+103) <= max) && cbuf[i] == 'I' && cbuf[i+1] == 'S' && cbuf[i+2] == 'A' 
-                        && (cbuf[i+103] == cbuf[i+3]) && (cbuf[i+103] == cbuf[i+6]) ) {
-                    e = cbuf[i+103];
-                    u = cbuf[i+104];
-                    s = cbuf[i+105];
-                    mark = i;
-                    // lets bale if not proper ISA envelope.....unless the 106 is carriage return...then ok
-                if (i == mark && cbuf[mark+106] != 'G' && cbuf[mark+107] != 'S' && ! String.format("%02x",(int) cbuf[mark+106]).equals("0a")) {
-                        return m = new String[]{"1","malformed envelope"};
-                    }
-                    ed_escape = escapeDelimiter(String.valueOf(e));
-                    sd_escape = escapeDelimiter(String.valueOf(s));
-                    if (String.format("%02x",(int) cbuf[i+105]).equals("0d") && String.format("%02x",(int) cbuf[i+106]).equals("0a"))
-                        s = cbuf[i+106];
-                    start = i;
-                    isaList.add("ISA" + ":" + String.valueOf(i) + ":" + String.format("%02x",(int) s) );
-                    isacount++;
-                    String[] isa = new String(cbuf, i, 105).split(ed_escape);
-                    isactrl = Integer.valueOf(isa[13]);
-                    
-                     // set control
-                   
-                    c[0] = isa[6].trim(); // senderid
-                    c[21] = isa[8].trim(); // receiverid
-                    c[2] = map;
-                    c[3] = infile;
-                    c[4] = isa[13]; //isactrlnbr
-                    c[8] = outfile;
-                    c[9] = String.valueOf((int) s);
-                    c[10] = String.valueOf((int) e);
-                    c[11] = String.valueOf((int) u);
-                    c[12] = isOverride;
-                    c[13] = new String(cbuf,i,105);
-                    c[15] = "0"; // inbound
-                    
-                }
-                if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'G' && cbuf[i+1] == 'S') {
-                    gscount++;
-                    isaList.add("GS" + ":" + String.valueOf(i));
-                    gsstart = i;
-                    String[] gs = new String(cbuf, gsstart, 90).split(ed_escape);
-                    c[5] = gs[6]; // gsctrlnbr
-                    gs[8] = gs[8].split(sd_escape)[0];
-                    c[14] = String.join(String.valueOf(e), Arrays.copyOfRange(gs, 0, 9));
-                    
-                }
-                if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'S' && cbuf[i+1] == 'T') {
-                   
-                    stcount++;
-                    isaList.add("ST" + ":" + String.valueOf(i));
-                    ststart = i;
-                    
-                    String[] st = new String(cbuf, i, 16).split(ed_escape);
-                    doctype = st[1]; // doctype
-                    docid = st[2].split(sd_escape)[0]; //docID  // to separate 2nd element of ST because grabbing 16 characters in buffer
-                   
-                   // System.out.println(c[0] + "/" + c[1] + "/" + c[4] + "/" + c[5]);
-                } 
-                if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'S' && cbuf[i+1] == 'E') {
-                    isaList.add("SE" + ":" + String.valueOf(i));
-                    sestart = i;
-                    // add to hash if hash doesn't exist or insert into hash
-                    docs.add(new Object[] {new Integer[] {ststart, sestart}, doctype, docid});
-                    // painful reminder that you have to create copy of array at instance in time
-                    ArrayList copydocs = new ArrayList(docs);
-                    stse_hash.put(isacount, copydocs);
-                }
-                if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'I' && cbuf[i+1] == 'E' && cbuf[i+2] == 'A') {
-                    end = i + 14 + Integer.valueOf(String.valueOf(gscount).length()) + 1;
-                    // now add to ISAmap
-                   HashMap<Integer,ArrayList> mycopy = new HashMap<Integer,ArrayList>(stse_hash);
-                  ISAmap.put(isacount, new Object[] {start, end, (int) s, (int) e, (int) u, mycopy, c});
-                    isaList.add("IEA" + ":" + String.valueOf(i));
-                    stcount = 0;
-                    docs.clear();
-                    stse_hash.remove(isacount);
-                    
-                } 
-            }
-        */
-            
+      
              if (isOverride.isEmpty()) {
              processX12(ISAmap, cbuf, batchfile, idxnbr);
              } else {
@@ -724,7 +617,44 @@ public class EDI {
              }
              
          }  // if x12
-         
+        
+        // if type is CSV
+        if (editype[0].equals("CSV")) {
+            ArrayList<String[]> ffdata = EDData.getEDIFFDataRules(editype[1]);
+            
+            StringBuilder segment = new StringBuilder();
+            char segdelim = (char) Integer.valueOf("10").intValue(); 
+           // for (int i = 0; i < cbuf.length; i++) {
+           ArrayList<String> doc = new ArrayList<String>();
+           for (int i = 0; i < cbuf.length; i++) {
+                if (cbuf[i] == segdelim) {
+                    doc.add(segment.toString());
+                    segment.delete(0, segment.length());
+                } else {
+                    if (! (String.format("%02x",(int) cbuf[i]).equals("0d") || String.format("%02x",(int) cbuf[i]).equals("0a")) ) {
+                        segment.append(cbuf[i]);
+                    } 
+                }
+            }
+           // loop through file and count each Doc landmarks of FF type in case of concatenation
+           Map<Integer, ArrayList<String>> docRegister = new HashMap<Integer, ArrayList<String>>();
+           Map<Integer, Integer[]> docPosition = new HashMap<Integer, Integer[]>();
+          
+           ArrayList<String> singledoc = new ArrayList<String>();
+           int doccount = 0;
+           int linecount = 0;
+           int startline = 0;
+           for (String x : doc) {
+               linecount++;
+               singledoc.add(x);
+           }
+           docRegister.put(doccount, singledoc);
+           docPosition.put(doccount, new Integer[]{0,cbuf.length,startline,linecount - 1});       
+           
+           processCSV(docRegister, docPosition, c, ffdata, idxnbr);
+           
+        }
+        
        EDData.updateEDIFileLogStatus(c[22], c[0], editype[0], editype[1]);   
        
        // if hanoi is not empty...must have some multi-doc envelopes to create
@@ -854,13 +784,123 @@ public class EDI {
     // type = filetype, doctype
     String[] filenamesplit = null;
         
-     if (cbuf == null || cbuf.length < 4) {
+    if (cbuf == null || cbuf.length < 4) {
+            return type;
+    }
+    
+    if (GlobalDebug) {  
+     System.out.println("getEDIType: checking for X12 type... " + filename );
+    }
+    
+    int gs01Start = 109;
+    StringBuilder sb = new StringBuilder();
+    StringBuilder gs01 = new StringBuilder();
+    sb.append(cbuf, 0, 3);
+    if (sb.toString().equals("ISA")) {
+         if ((String.format("%02x",(int) cbuf[106]).equals("0a")) ) {
+                    gs01Start = 110;
+         }
+         gs01.append(cbuf,gs01Start,2);
+         type[0] = "X12";
+         type[1] = EDData.getEDIDocTypeFromStds(gs01.toString()); 
+         if (GlobalDebug)
+               System.out.println("getEDIType X12 type in/out: " + gs01 + "/" + type[1] );
+
+         return type;
+    }
+         
+    if (GlobalDebug) {
+     System.out.println("Fell through...Not X12 " + filename );    
+     System.out.println("getEDIType: checking for EDIFACT type... " + filename );
+    } 
+    
+    if (sb.toString().equals("UNB")) {
+         type[0] = "EDIFACT";
+         type[1] = "TBD";
+         return type;
+    }
+      
+    if (GlobalDebug) {
+     System.out.println("Fell through...Not EDIFACT " + filename );    
+     System.out.println("getEDIType: checking for FF,CSV,XML type via Doc Recognition Rules... " + filename );
+    }  
+    // let's try flatfile....let's create arraylist of segments based on assumed newline delimiter     
+    StringBuilder segment = new StringBuilder();
+    char segdelim = (char) Integer.valueOf("10").intValue(); 
+    ArrayList<String> doc = new ArrayList<String>();
+    for (int i = 0; i < cbuf.length; i++) {
+        if (cbuf[i] == segdelim) {
+            doc.add(segment.toString());
+            segment.delete(0, segment.length());
+        } else {
+            if (! (String.format("%02x",(int) cbuf[i]).equals("0d") || String.format("%02x",(int) cbuf[i]).equals("0a")) ) {
+                segment.append(cbuf[i]);
+            } 
+        }
+    }   
+    // now run doc array through rules engine to determine doctype
+    int k = 0; 
+    boolean match = false;
+    HashMap<String, ArrayList<String[]>> rules = EDData.getEDIFFSelectionRules();
+    for (String s : doc) {
+        k++;
+        int rulecount = 0;
+        int matchcount = 0;
+        for (Map.Entry<String, ArrayList<String[]>> z : rules.entrySet()) {
+            String key = z.getKey();
+            ArrayList<String[]> v = z.getValue();
+            // row, column, length, value, rectype
+            rulecount = 0;
+            matchcount = 0;
+            for (String[] r : v) {
+                rulecount++;
+
+             if (GlobalDebug)   
+             System.out.println("getEDIType: FF rules: " + key + "/" + r[0] + "/" + r[1] + "/" + r[2] + "/" + r[3] + "/" + r[4]);
+
+              if (r[4].equals("fixed")) {             
+                if (Integer.valueOf(r[0]) == k) { // row check
+                    if (((Integer.valueOf(r[1]) - 1) + Integer.valueOf(r[2])) > s.length()) {
+                        continue;
+                    }
+                    if (s.substring(Integer.valueOf(r[1]) - 1, ((Integer.valueOf(r[1]) - 1) + Integer.valueOf(r[2]))).trim().equals(r[3])) {
+                      matchcount++;
+                    }
+                }
+              } else { // must be delimited rule...delimiter in r[2]
+                if (Integer.valueOf(r[0]) == k) { // row check
+                    String[] delarr = s.split(delimConvertIntToStr(r[2]), -1);
+                    if (delarr.length >= Integer.valueOf(r[1])) {
+                        if (delarr[Integer.valueOf(r[1]) - 1].trim().equals(r[3])) {
+                          matchcount++;  
+                        }
+                    }
+                }  
+              }
+            }
+            if ( (matchcount != 0) && (matchcount == rulecount)) {
+                match = true;
+                
+                type[1] = key;
+                if (key.contains("xml")) {
+                 type[0] = "XML";   
+                } else if (key.contains("csv")) {
+                 type[0] = "CSV";   
+                } else {
+                 type[0] = "FF";   
+                }
+                break;
+            }
+        }
+        if (match) {
             return type;
         }
+        
+    }  //for each Segment in Doc
     
-    // filename check for csv or xml 
+    /*
     // filename convention must be tpid.uniquewhatever.csv or tpid.uniquewhatever.xml
-    if (filename.toString().toUpperCase().endsWith(".CSV") || filename.toString().toUpperCase().endsWith(".XML") ) {
+    if (filename.toString().toUpperCase().endsWith(".CSV")) {
         filenamesplit = filename.split("\\.", -1);
         if (filenamesplit.length >= 3 ) {
             type[0] = filenamesplit[filenamesplit.length - 1].toString().toUpperCase();
@@ -868,99 +908,32 @@ public class EDI {
         return type;
     }
     
+    if (GlobalDebug) {
+     System.out.println("Fell through...Not CSV " + filename );    
+     System.out.println("getEDIType: checking for XML type... " + filename );
+    }
     
+    if (filename.toString().toUpperCase().endsWith(".XML")) {
+        filenamesplit = filename.split("\\.", -1);
+        if (filenamesplit.length >= 3 ) {
+            type[0] = filenamesplit[filenamesplit.length - 1].toString().toUpperCase();
+        } 
+        return type;
+    }
     
-    // check for EDI x12 or Edifact
-    // look at first three characters of file content
-    if (GlobalDebug)
+    if (GlobalDebug) {
+     System.out.println("Fell through...Not XML " + filename );    
      System.out.println("getEDIType: checking for X12 type... " + filename );
-             
-    int gs01Start = 109;
-    StringBuilder sb = new StringBuilder();
-    StringBuilder gs01 = new StringBuilder();
-         sb.append(cbuf, 0, 3);
-         
-         if (sb.toString().equals("ISA")) {
-             if ((String.format("%02x",(int) cbuf[106]).equals("0a")) ) {
-                        gs01Start = 110;
-             }
-             gs01.append(cbuf,gs01Start,2);
-             type[0] = "X12";
-             type[1] = EDData.getEDIDocTypeFromStds(gs01.toString()); 
-             if (GlobalDebug)
-                   System.out.println("getEDIType X12 type in/out: " + gs01 + "/" + type[1] );
-             
-             return type;
-         }
-         if (sb.toString().equals("UNB")) {
-             type[0] = "EDIFACT";
-             type[1] = "TBD";
-             return type;
-         }
-        
-    if (GlobalDebug)
-     System.out.println("getEDIType: checking for FF type... " + filename );     
+    } 
+    */
     
-    // must be flatfile....let's create arraylist of segments based on assumed newline delimiter     
-    StringBuilder segment = new StringBuilder();
-    char segdelim = (char) Integer.valueOf("10").intValue(); 
-    ArrayList<String> doc = new ArrayList<String>();
-           for (int i = 0; i < cbuf.length; i++) {
-                if (cbuf[i] == segdelim) {
-                    doc.add(segment.toString());
-                    segment.delete(0, segment.length());
-                } else {
-                    if (! (String.format("%02x",(int) cbuf[i]).equals("0d") || String.format("%02x",(int) cbuf[i]).equals("0a")) ) {
-                        segment.append(cbuf[i]);
-                    } 
-                }
-            }   
-        // now run doc array through rules engine to determine doctype
-        int k = 0; 
-        boolean match = false;
-        HashMap<String, ArrayList<String[]>> rules = EDData.getEDIFFSelectionRules();
-        for (String s : doc) {
-            k++;
-            int rulecount = 0;
-            int matchcount = 0;
-            for (Map.Entry<String, ArrayList<String[]>> z : rules.entrySet()) {
-                String key = z.getKey();
-                ArrayList<String[]> v = z.getValue();
-                // row, column, length, value, id
-                rulecount = 0;
-                matchcount = 0;
-                for (String[] r : v) {
-                    rulecount++;
-                    
-                 if (GlobalDebug)   
-                 System.out.println("getEDIType: FF rules: " + key + "/" + r[0] + "/" + r[1] + "/" + r[2] + "/" + r[3]);
-                     
-                    if (Integer.valueOf(r[0]) == k) {
-                        if (((Integer.valueOf(r[1]) - 1) + Integer.valueOf(r[2])) > s.length()) {
-                            continue;
-                        }
-                        if (s.substring(Integer.valueOf(r[1]) - 1, ((Integer.valueOf(r[1]) - 1) + Integer.valueOf(r[2]))).trim().equals(r[3])) {
-                          matchcount++;
-                        }
-                        
-                    //    System.out.println("here?: " + k + "/" + matchcount + "/" + rulecount + "/" + s.substring(Integer.valueOf(r[1]) - 1, ((Integer.valueOf(r[1]) - 1) + Integer.valueOf(r[2]))).trim() + "/" + r[3]);
-                        
-                    }
-                }
-                if ( (matchcount != 0) && (matchcount == rulecount)) {
-                    match = true;
-                    type[0] = "FF";
-                    type[1] = key;
-                    break;
-                }
-            }
-            if (match) break;
-        }
-         
+    if (GlobalDebug && type[0].isBlank()) {
+     System.out.println("Fell through...Unknown File type!! " + filename );  
+    }
     return type;
 }
     
-    public static String[] getFFInfo(ArrayList<String> docs, ArrayList<String[]> tags) {
+    public static String[] getFileInfo(ArrayList<String> docs, ArrayList<String[]> tags) {
         // hm is list of variables and coordinates to find variables (f,m) r,c,l
         // f = fixed, m = regex, r = row, c = column, l = length
         String[] x = new String[]{"","","",""}; // doctype, rcvid, parentpartner, sndid
@@ -977,6 +950,12 @@ public class EDI {
                     if (t[2].toLowerCase().equals("constant")) {
                         x[0] = t[7];
                     } else {
+                        if (t[1].toLowerCase().equals("delimited") && i == Integer.valueOf(t[3])) {
+                        String[] delarr = s.split(delimConvertIntToStr(t[5]), -1);
+                            if (delarr.length >= Integer.valueOf(t[4])) {
+                                x[0] = delarr[Integer.valueOf(t[4]) - 1].trim();
+                            }
+                        }
                         if (t[1].toLowerCase().equals("fixed") && i == Integer.valueOf(t[3])) {
                         x[0] = s.substring(Integer.valueOf(t[4]) - 1,(Integer.valueOf(t[4]) - 1 + Integer.valueOf(t[5]))).trim();
                         }
@@ -987,10 +966,15 @@ public class EDI {
                     
                 }
                 if (t[0].toLowerCase().equals("rcvid")) {
-                  //  System.out.println("getFFInfo:" + t[0] + "/" + t[1] + "/" + t[2] + "/" + t[3] + "/" + t[4] + "/" + t[5] + "/" + t[6]);
                     if (t[2].toLowerCase().equals("constant")) {
                         x[1] = t[7];
                     } else {
+                        if (t[1].toLowerCase().equals("delimited") && i == Integer.valueOf(t[3])) {
+                        String[] delarr = s.split(delimConvertIntToStr(t[5]), -1);
+                            if (delarr.length >= Integer.valueOf(t[4])) {
+                                x[1] = delarr[Integer.valueOf(t[4]) - 1].trim();
+                            }
+                        }
                         if (t[1].toLowerCase().equals("fixed") && i == Integer.valueOf(t[3])) {
                         x[1] = s.substring(Integer.valueOf(t[4]) - 1,(Integer.valueOf(t[4]) - 1 + Integer.valueOf(t[5]))).trim();
                         }
@@ -1004,10 +988,15 @@ public class EDI {
                     }
                 }
                  if (t[0].toLowerCase().equals("sndid")) {
-                  //  System.out.println("getFFInfo:" + t[0] + "/" + t[1] + "/" + t[2] + "/" + t[3] + "/" + t[4] + "/" + t[5] + "/" + t[6]);
                     if (t[2].toLowerCase().equals("constant")) {
                         x[3] = t[7];
                     } else {
+                        if (t[1].toLowerCase().equals("delimited") && i == Integer.valueOf(t[3])) {
+                        String[] delarr = s.split(delimConvertIntToStr(t[5]), -1);
+                            if (delarr.length >= Integer.valueOf(t[4])) {
+                                x[3] = delarr[Integer.valueOf(t[4]) - 1].trim();
+                            }
+                        }
                         if (t[1].toLowerCase().equals("fixed") && i == Integer.valueOf(t[3])) {
                         x[3] = s.substring(Integer.valueOf(t[4]) - 1,(Integer.valueOf(t[4]) - 1 + Integer.valueOf(t[5]))).trim();
                         }
@@ -1025,7 +1014,7 @@ public class EDI {
             }
         }
         if (GlobalDebug) {
-            System.out.println("getFFInfo: doc/rcv/partner/snd " + x[0] + "/" + x[1] + "/" + x[2] + "/" + x[3]);
+            System.out.println("getFileInfo: doc/rcv/partner/snd " + x[0] + "/" + x[1] + "/" + x[2] + "/" + x[3]);
         }
         return x;
     }
@@ -1092,75 +1081,123 @@ public class EDI {
     
     }
     
-    public static void processCSV(char[] cbuf, String filename)   {
-    ArrayList<String> doc = new ArrayList<String>();
-    String[] filenamesplit = null;
-        String doctype = "CSV";
-        String controlnum = "-1";
-        String docid = "-1";
-        String map = "";
-        String senderid = "";
-        String[] control= initEDIControl();
-        boolean proceed = true;
-    //lets first get the tpid from the filename convention.....
-    // filename convention must be tpid.uniquewhatever.csv or tpid.uniquewhatever.xml
-    if (filename.toString().toUpperCase().endsWith(".CSV") || filename.toString().toUpperCase().endsWith(".XML") ) {
-        filenamesplit = filename.split("\\.", -1);
-        if (filenamesplit.length >= 3 ) {
-               senderid = filenamesplit[0].toString().toUpperCase();  // tpid will be first element in filename
-        } 
-    }
-            control[0] = senderid;
-            control[1] = "CSV";
-            control[2] = "";
-            control[3] = filename;
-            control[4] = "-1";
-            control[5] = "-1";
-            control[6] = "-1";
-            control[7] = "";
+    public static void processCSV(Map<Integer, ArrayList<String>> CSVDocs, Map<Integer, Integer[]> CSVPositions, String[] c, ArrayList<String[]> tags, int idxnbr)   {
     
-    if (senderid.isEmpty()) {
-        EDData.writeEDILog(control, "error", "CSV file with no senderid " + filename);
-        proceed = false;
-    }
-    
-    if (proceed) {
-        
-        // build array of character buffers...elements separated by newline
-         StringBuilder segment = new StringBuilder();
-    for (int i = 0; i < cbuf.length; i++) {
-        if (cbuf[i] == '\n') {
-            doc.add(segment.toString());
-            segment.delete(0, segment.length());
-        } else {
-        segment.append(cbuf[i]);
-        }
-    }
-        
-        // now lets get map
-        //     map = EDData.getEDIMap(senderid, doctype);
-               if (! map.isEmpty()) {
-                    try {
-                    Class cls = Class.forName("EDIMaps." + map);
-                    Object obj = cls.newInstance();
-                    Method method = cls.getDeclaredMethod("MapCSVdata", ArrayList.class, String.class, String.class);
-                    method.invoke(obj, doc, control, senderid);
-                   // EDData.writeEDILog(control, "INFO", "processing inbound file");
-                    } catch (IllegalAccessException | ClassNotFoundException |
-                             InstantiationException | NoSuchMethodException |
-                            InvocationTargetException ex) {
-                        EDData.writeEDILog(control, "error", "CSV: unable to find map class for " + senderid + " / " + doctype);
-                        edilog(ex);
-                    }
-               }   else {
-                   EDData.writeEDILog(control, "error", "no edi_mstr map for " + senderid + " / " + doctype);
-                   return;
-               }
+    int callingidxnbr = idxnbr;      
+    for (Map.Entry<Integer, ArrayList<String>> z : CSVDocs.entrySet()) {
+            ArrayList<String> doc = z.getValue();
+            Integer[] positions = CSVPositions.get(z.getKey());
+            
+            if (GlobalDebug)
+            System.out.println("processCSV: " + z.getKey());
+            
+            String[] x = getFileInfo(doc, tags);  // doctype, rcvid, parentpartner, sndid
+            
+             if (x[2].isEmpty()) {
+                  EDData.writeEDILog(c, "error", "unable to determine parent partner with alias: " + x[1] ); 
+             return;  
              }
-    
-    
-    
-    }
+           
+            c[1] = x[0];  // doctype
+            c[0] = x[3];  // senderid
+            c[21] = x[1]; // receiverID
+      
+            String[] defaults = EDData.getEDITPDefaults(x[0], x[3], x[1]);
+            c[9] = defaults[7]; 
+            c[10] = defaults[6]; 
+            c[11] = defaults[8];   
+                 
+             
+        // insert isa and st start and stop integer points within the file
+        
+          c[17] = String.valueOf(positions[0]);
+          c[18] = String.valueOf(positions[1]);
+          c[19] = String.valueOf(positions[2]);
+          c[20] = String.valueOf(positions[3]);
+          
+          
+          
+          // at this point...we need to log this doc in edi_idx table and use return ID for further logs against this doc idx.
+         
+          if (c[12].isEmpty() && callingidxnbr == 0) {   // if not override
+          idxnbr = EDData.writeEDIIDX(c);
+          }
+          
+          c[16] = String.valueOf(idxnbr);
+             String map = c[2];
+             
+               if (map.isEmpty() && c[12].isEmpty()) {
+                   if (GlobalDebug)   
+                   System.out.println("Searching for Map (CSV in) with values type/x[3]/x[1]: " + c[1] + "/" + x[3] + "/" + x[1]);    
+                
+                   map = EDData.getEDIMap(c[1], c[0], c[21]); // doctype, senderid, receiverid 
+               } 
+            
+               // if no map then bail
+               if (map.isEmpty()) {
+                  EDData.writeEDILog(c, "error", "CSV: map variable is empty for: " + c[1] + " / " + c[0] + " / " + x[1]); 
+               } else if (! BlueSeerUtils.isEDIClassFile(map) && c[12].isEmpty()) { 
+                  EDData.writeEDILog(c, "error", "CSV: unable to locate compiled map (" + map + ") for: " + c[1] + " / " + c[0] + " / " + x[1]); 
+               } else {
+                   
+                   // at this point I should have a doc set (ST to SE) and a map ...now call map to operate on doc 
+                URLClassLoader cl = null;
+                try {
+                    List<File> jars = Arrays.asList(new File("edi/maps").listFiles());
+                    URL[] urls = new URL[jars.size()];
+                    for (int i = 0; i < jars.size(); i++) {
+                    try {
+                        if (jars.get(i).getName().endsWith(".jar")) {
+                            urls[i] = jars.get(i).toURI().toURL();
+                        }
+                    } catch (Exception e) {
+                        edilog(e);
+                    }
+                    }
+                cl = new URLClassLoader(urls);
+                
+                    Class cls = Class.forName(map,true,cl);  
+                    Object obj = cls.newInstance();
+                    Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
+                    Object oc = method.invoke(obj, doc, c);
+                    String[] oString = (String[]) oc;
+                        EDData.writeEDILog(c, oString[0], oString[1]);
+                        EDData.updateEDIIDX(idxnbr, c); 
+                    } catch (InvocationTargetException ex) {
+                        if (c[12].isEmpty()) {
+                        EDData.writeEDILog(c, "error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1]);
+                        } 
+                        edilog(ex);
+                    } catch (ClassNotFoundException ex) {
+                        if (c[12].isEmpty()) {
+                        EDData.writeEDILog(c, "error", "Map Class not found " + map + "/" + c[0] + " / " + c[1]);
+                        }
+                        edilog(ex); 
+                    } catch (IllegalAccessException |
+                             InstantiationException | NoSuchMethodException ex
+                            ) {
+                        if (c[12].isEmpty()) {
+                        EDData.writeEDILog(c, "error", "IllegalAccess|Instantiation|NoSuchMethod " + map + "/" + c[0] + " / " + c[1]);
+                        }
+                        edilog(ex);
+                    } finally {
+                        if (cl != null) {
+                           try {
+                               cl.close();
+                           } catch (IOException ex) {
+                               edilog(ex);
+                           }
+                        }
+                    }
+                   
+               }
+              
+     
+    } // FFDocs entries
+   
+  
+}
+   
     
     public static void processEDIFACT(char[] cbuf, String filename)   {
     ArrayList<String> doc = new ArrayList<String>();
@@ -1565,7 +1602,7 @@ public class EDI {
             if (GlobalDebug)
             System.out.println("processFF: " + z.getKey());
             
-            String[] x = getFFInfo(doc, tags);  // doctype, rcvid, parentpartner, sndid
+            String[] x = getFileInfo(doc, tags);  // doctype, rcvid, parentpartner, sndid
             
              if (x[2].isEmpty()) {
                   EDData.writeEDILog(c, "error", "unable to determine parent partner with alias: " + x[1] ); 

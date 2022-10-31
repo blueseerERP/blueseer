@@ -442,7 +442,8 @@ public class EDData {
                            String[] s = new String[]{res.getString("edid_row"),
                                                      res.getString("edid_col"),
                                                      res.getString("edid_length"),
-                                                     res.getString("edid_value")
+                                                     res.getString("edid_value"),
+                                                     res.getString("edid_rectype")
                            };
                            x.add(s);
                         }

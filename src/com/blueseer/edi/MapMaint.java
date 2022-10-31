@@ -2429,6 +2429,22 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 }
             }
         }
+        
+         if (editype[0].equals("CSV")) {
+            segdelim = (char) Integer.valueOf("10").intValue(); 
+           StringBuilder segment = new StringBuilder();
+           for (int i = 0; i < cbuf.length; i++) {
+                if (cbuf[i] == segdelim) {
+                    doc.add(segment.toString());
+                    segment.delete(0, segment.length());
+                } else {
+                    if (! (String.format("%02x",(int) cbuf[i]).equals("0d") || String.format("%02x",(int) cbuf[i]).equals("0a")) ) {
+                        segment.append(cbuf[i]);
+                    } 
+                }
+            }
+        }
+        
                        
          if (editype[0].isEmpty()) {
              taoutput.setText("unknown file type");

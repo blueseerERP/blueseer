@@ -17,6 +17,14 @@ ItemType,RAW,Raw Material,1
 ItemType,SUB,Sub Assembly,1
 ItemType,ASSET,Asset,1
 ItemType,SERVICE,Service,1
+edidoctype,850csv,,1
+edidoctype,856csv,,1
+edidoctype,810csv,,1
+edidoctype,855csv,,1
+edidoctype,850xml,,1
+edidoctype,856xml,,1
+edidoctype,810xml,,1
+edidoctype,855xml,,1
 edidoctype,850db,,1
 edidoctype,856db,,1
 edidoctype,855db,,1

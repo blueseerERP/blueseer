@@ -710,11 +710,13 @@ public class EDILoadMaint extends javax.swing.JPanel {
                     if (m[0].equals("1")) {
                         bsmf.MainFrame.show(m[1]);
                         // now move to error folder
+                        if (! cbno.isSelected()) {
                         Path movefrom = FileSystems.getDefault().getPath(inDir + "/" + mymodel.getValueAt(i,0).toString());
-                         Path errortarget = FileSystems.getDefault().getPath(ErrorDir + "/" + mymodel.getValueAt(i,0).toString());
+                        Path errortarget = FileSystems.getDefault().getPath(ErrorDir + "/" + mymodel.getValueAt(i,0).toString());
                         // bsmf.MainFrame.show(movefrom.toString() + "  /  " + target.toString());
-                         Files.move(movefrom, errortarget, StandardCopyOption.REPLACE_EXISTING);
-                         continue;  // bale from here
+                        Files.move(movefrom, errortarget, StandardCopyOption.REPLACE_EXISTING);
+                        }
+                        continue;  // bale from here
                     }
                     
                      if (! cbno.isSelected()) {
