@@ -2158,9 +2158,9 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
         jLabel1.setText("Source");
 
-        ddinfiletype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "FF", "X12", "DB" }));
+        ddinfiletype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "FF", "X12", "DB", "CSV" }));
 
-        ddoutfiletype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "FF", "X12", "DB" }));
+        ddoutfiletype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "FF", "X12", "DB", "CSV" }));
 
         jLabel2.setText("IFS");
 

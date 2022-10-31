@@ -1342,6 +1342,61 @@ public abstract class EDIMap implements EDIMapi {
  		}
          } // if FF
          
+          if (outputfiletype.equals("CSV")) {
+    	 for (Map.Entry<String, HashMap<String,String>> z : MD.entrySet()) {
+ 		//	ArrayList<String[]> fields = z.getValue();
+ 			
+                // write out all fields of this segment
+                HashMap<String,String> mapValues = MD.get(z.getKey());
+        //	System.out.println("loopentrycount:" + mapValuesLoops.keySet());
+                // loop through integers
+ 
+                if (GlobalDebug) {
+                    System.out.println("OMD: " + z.getKey() + " : " + mapValues);
+                }               
+                          String landmark = z.getKey().split(":")[0];  // start with landmark
+                      //  System.out.println(">:" + segment);
+                        ArrayList<String[]> fields = OSF.get(landmark);
+                        if (fields != null) { 
+                        int fc = 0;    
+                        for (String[] f : fields) {
+                                fc++;
+                                if (fc == 1) {
+                                    continue;  //skip first field (landmark) since assigned above
+                                }
+                                if (f[5].equals("groupend")) {
+                                        continue;
+                                }
+                                
+
+                                // overlay with values that were actually assigned...otherwise blanks
+                                if (mapValues.containsKey(f[5])) {
+                                        if (mapValues.get(f[5]).length() > Integer.valueOf(f[7])) {
+                                                segment += mapValues.get(f[5]).substring(0, Integer.valueOf(f[7])) + ","; // properly formatted
+                                        } else {
+                                                segment += mapValues.get(f[5]) + ","; // properly formatted
+                                        }
+
+                                } else {
+                                        segment += "" + ","; // properly formatted
+                                }
+                                
+                        }
+                        } // if fields not null
+                        
+                         if (GlobalDebug) {
+                            System.out.println("OMD segment: " + segment);
+                        }
+                        
+                        // trim off last ,
+                        if (segment.endsWith(",")) {
+                            segment = segment.substring(0, segment.length() - 1);
+                        }
+                         
+                        content += segment + "\n";
+                        segment = ""; // reset the segment string
+ 		}
+         } // if CSV
        
         // bsmf.MainFrame.show("here..." + outputfiletype + ": " + content);
     	OMD.clear();
