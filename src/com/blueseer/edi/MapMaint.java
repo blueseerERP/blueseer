@@ -1211,6 +1211,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
        // bsmf.MainFrame.show(filetype);
         for (String s : data) {
                 String[] x = null;
+                
                 if (filetype.equals("FF")) {
                     x = splitFFSegment(s, ISF);
                 } else {
@@ -1751,8 +1752,9 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     public File getfile() {
         
         File file = null;
-        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         fc.setCurrentDirectory(FileSystems.getDefault().getPath("edi").toFile());
+        
         int returnVal = fc.showOpenDialog(this);
        
 

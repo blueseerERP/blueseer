@@ -856,6 +856,7 @@ public abstract class EDIMap implements EDIMapi {
                         if (GlobalDebug && t.length >= 10) {
                         System.out.println("readISF: line " + i + " delimited count is less than 10 " + t.length);
                         }
+                        
                         list.add(t);
                         
                         i++;
@@ -934,6 +935,9 @@ public abstract class EDIMap implements EDIMapi {
          boolean inside = false;
          int start = 0;
          ArrayList<String> list = new ArrayList<String>();
+         
+         
+         
          for (String[] z : ISF) {
             if (z[5].equals("groupend")) {
                   continue;
@@ -943,7 +947,9 @@ public abstract class EDIMap implements EDIMapi {
                 break;
             }
             // skip non-landmarks
+                       
             if (segment.startsWith(z[0])) {
+                
                 inside = true;
                  list.add(segment.substring(start,(Integer.valueOf(z[7]) + start)));
                  start += Integer.valueOf(z[7]);
@@ -956,23 +962,27 @@ public abstract class EDIMap implements EDIMapi {
          }
         String[] x = new String[list.size()];
         x = list.toArray(x);
-         return x;
+        
+        return x;
      }
     
     public static String[] splitFFSegment(String segment, ArrayList<String[]> isf) {
          boolean inside = false;
          int start = 0;
+         
          ArrayList<String> list = new ArrayList<String>();
          for (String[] z : isf) {
             if (z[5].equals("groupend")) {
                   continue;
             }  
-            // break if more ISF fields than actual segment  // TEV 20221005
-            if ((Integer.valueOf(z[7]) + start) > segment.length()) {
-                break;
-            }
+            
+            
             // skip non-landmarks
             if (segment.startsWith(z[0])) {
+                // break if more ISF fields than actual segment  // TEV 20221005
+                if ((Integer.valueOf(z[7]) + start) > segment.length()) {
+                    break;
+                }
                 inside = true;
                  list.add(segment.substring(start,(Integer.valueOf(z[7]) + start)));
                  start += Integer.valueOf(z[7]);
@@ -985,6 +995,7 @@ public abstract class EDIMap implements EDIMapi {
          }
         String[] x = new String[list.size()];
         x = list.toArray(x);
+        
          return x;
      }
     
@@ -1085,10 +1096,12 @@ public abstract class EDIMap implements EDIMapi {
         String previouskey = "";
         String mappedinput = "";
         Stack<String> stack = new Stack<String>();
+        
+                
         for (String s : data) {
                 String[] x = null;
                 if (c[28].equals("FF")) {
-                    x = splitFFSegment(s);
+                    x = splitFFSegment(s, ISF);
                 } else {
                     x = s.split(EDI.escapeDelimiter(ed)); // delims = ele, sub, seg
                 }
@@ -1478,7 +1491,7 @@ public abstract class EDIMap implements EDIMapi {
          int count = 0;
          String[] k = null;
          
-         if (segment.startsWith(":") && segment.contains("+")) {  // overloading (again) as key type entry (used with getLoopKeys)
+         if (segment.contains("+")) {  // overloading (again) as key type entry (used with getLoopKeys)
            k = mappedInput.get(segment);  
          } else { // else as actual segment entry
            //  segment = ":" + segment; // preprend blank
@@ -1510,7 +1523,7 @@ public abstract class EDIMap implements EDIMapi {
              return x;
          }
          String[] k = null;
-         if (segment.startsWith(":") && segment.contains("+")) {  // overloading (again) as key type entry (used with getLoopKeys)
+         if (segment.contains("+")) {  // overloading (again) as key type entry (used with getLoopKeys)
            k = mappedInput.get(segment);  
          } else { // else as actual segment entry
             // segment = ":" + segment; // preprend blank
