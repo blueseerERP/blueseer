@@ -935,6 +935,9 @@ public abstract class EDIMap implements EDIMapi {
          int start = 0;
          ArrayList<String> list = new ArrayList<String>();
          for (String[] z : ISF) {
+            if (z[5].equals("groupend")) {
+                  continue;
+            }  
             // break if more ISF fields than actual segment  // TEV 20221005
             if ((Integer.valueOf(z[7]) + start) > segment.length()) {
                 break;
@@ -961,6 +964,9 @@ public abstract class EDIMap implements EDIMapi {
          int start = 0;
          ArrayList<String> list = new ArrayList<String>();
          for (String[] z : isf) {
+            if (z[5].equals("groupend")) {
+                  continue;
+            }  
             // break if more ISF fields than actual segment  // TEV 20221005
             if ((Integer.valueOf(z[7]) + start) > segment.length()) {
                 break;
@@ -986,6 +992,9 @@ public abstract class EDIMap implements EDIMapi {
         
         String[] segment = null;
         for (String[] x : isf) {
+            if (x[5].equals("groupend")) {
+                  continue;
+            } 
             if (rawSegmentLM.equals(x[0]) && rawGroupHeadLM.equals(x[1])) {
                 segment = x;
                 break;
@@ -1004,6 +1013,9 @@ public abstract class EDIMap implements EDIMapi {
             if (! x[4].equals("yes")) {
                 continue;
             }
+            if (x[5].equals("groupend")) {
+                  continue;
+            } 
             
             if (rawSegmentLM.equals(x[0]) && currentGroupHeadLM.equals(x[1]) && x[3].equals("yes")) {
                 if (x[1].isBlank()) {
@@ -1049,6 +1061,9 @@ public abstract class EDIMap implements EDIMapi {
             if (! x[4].equals("yes")) {
                 continue;
             }
+            if (x[5].equals("groupend")) {
+                  continue;
+            } 
            
             if (rawSegmentLM.equals(x[0]) && ! currentGroupHeadLM.equals(x[1]) && x[3].equals("yes")) {
                 stack.push(rawSegmentLM);
@@ -1231,7 +1246,7 @@ public abstract class EDIMap implements EDIMapi {
                         if (fields != null) { 
                         for (String[] f : fields) {
                         //    System.out.println(f[0] + "/" + f[6]);
-                                if (f[5].equals("landmark")) {
+                                if (f[5].equals("landmark") || f[5].equals("groupend")) {
                                     continue;
                                 }
                                 // overlay with values that were actually assigned...otherwise blanks
@@ -1281,6 +1296,9 @@ public abstract class EDIMap implements EDIMapi {
                                 fc++;
                                 if (fc == 1) {
                                     continue;  //skip first field (landmark) since assigned above
+                                }
+                                if (f[5].equals("groupend")) {
+                                        continue;
                                 }
                                 if (f[9].equals("+")) {
                                         f[9] = "";
@@ -1631,7 +1649,10 @@ public abstract class EDIMap implements EDIMapi {
              return Integer.valueOf(element);
          }
          
-         for (String[] z : ISF) {
+         for (String[] z : ISF) {  
+            if (z[5].equals("groupend")) {
+                  continue;
+            } 
             if (segment.startsWith(z[0])) {
                 if (! z[5].equals("landmark")) {
                   x++;

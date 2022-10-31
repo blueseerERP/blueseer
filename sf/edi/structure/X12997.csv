@@ -1,0 +1,45 @@
+#997 - Functional Acknowledgment
+#segment,parent,loopcount,isgroup,islandmark,field,desc,min,max,align,status
+ST,,1,no,yes,landmark,Transaction Set Header,2,2,-,M
+ST,,1,no,no,e01,Transaction Set Identifier Code,3,3,-,M/Z
+ST,,1,no,no,e02,Transaction Set Control Number,4,9,-,M
+ST,,1,no,no,e03,Implementation Convention Reference,1,35,-,O/Z
+AK1,,1,no,yes,landmark,Functional Group Response Header,3,3,-,M
+AK1,,1,no,no,e01,Functional Identifier Code,2,2,-,M/Z
+AK1,,1,no,no,e02,Group Control Number,1,9,-,M/Z
+AK1,,1,no,no,e03,Version / Release / Industry Identifier Code,1,12,-,O/Z
+AK2,,99999,yes,yes,landmark,Transaction Set Response Header,3,3,-,O
+AK2,,1,no,no,e01,Transaction Set Identifier Code,3,3,-,M/Z
+AK2,,1,no,no,e02,Transaction Set Control Number,4,9,-,M/Z
+AK2,,1,no,no,e03,Implementation Convention Reference,1,35,-,O/Z
+AK3,AK2,99999,yes,yes,landmark,Data Segment Note,3,3,-,O
+AK3,AK2,1,no,no,e01,Segment ID Code,2,3,-,M
+AK3,AK2,1,no,no,e02,Segment Position in Transaction Set,1,10,-,M
+AK3,AK2,1,no,no,e03,Loop Identifier Code,1,4,-,O
+AK3,AK2,1,no,no,e04,Segment Syntax Error Code,1,3,-,O
+AK4,AK2:AK3,99,no,yes,landmark,Data Element Note,3,3,-,O
+AK4,AK2:AK3,1,no,no,e02,Data Element Reference Number,1,4,-,O
+AK4,AK2:AK3,1,no,no,e03,Data Element Syntax Error Code,1,3,-,M
+AK4,AK2:AK3,1,no,no,e04,Copy of Bad Data Element,1,99,-,O/Z
+AK3,,,,,groupend,,,,,
+AK5,AK2,1,no,yes,landmark,Transaction Set Response Trailer,3,3,-,M
+AK5,AK2,1,no,no,e01,Transaction Set Acknowledgment Code,1,1,-,M
+AK5,AK2,1,no,no,e02,Transaction Set Syntax Error Code,1,3,-,O
+AK5,AK2,1,no,no,e03,Transaction Set Syntax Error Code,1,3,-,O
+AK5,AK2,1,no,no,e04,Transaction Set Syntax Error Code,1,3,-,O
+AK5,AK2,1,no,no,e05,Transaction Set Syntax Error Code,1,3,-,O
+AK5,AK2,1,no,no,e06,Transaction Set Syntax Error Code,1,3,-,O
+AK2,,,,,groupend,,,,,
+AK9,,1,no,yes,landmark,Functional Group Response Trailer,3,3,-,M
+AK9,,1,no,no,e01,Functional Group Acknowledge Code,1,1,-,M
+AK9,,1,no,no,e02,Number of Transaction Sets Included,1,6,-,M
+AK9,,1,no,no,e03,Number of Received Transaction Sets,1,6,-,M
+AK9,,1,no,no,e04,Number of Accepted Transaction Sets,1,6,-,M
+AK9,,1,no,no,e05,Functional Group Syntax Error Code,1,3,-,O
+AK9,,1,no,no,e06,Functional Group Syntax Error Code,1,3,-,O
+AK9,,1,no,no,e07,Functional Group Syntax Error Code,1,3,-,O
+AK9,,1,no,no,e08,Functional Group Syntax Error Code,1,3,-,O
+AK9,,1,no,no,e09,Functional Group Syntax Error Code,1,3,-,O
+SE,,1,no,yes,landmark,Transaction Set Trailer,2,2,-,M
+SE,,1,no,no,e01,Number of Included Segments,1,10,-,M
+SE,,1,no,no,e02,Transaction Set Control Number,4,9,-,M

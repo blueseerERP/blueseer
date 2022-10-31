@@ -1,0 +1,153 @@
+#824 - Application Advice
+#segment,parent,loopcount,isgroup,islandmark,field,desc,min,max,align,status
+ST,,1,no,yes,landmark,Transaction Set Header,2,2,-,M
+ST,,1,no,no,e01,Transaction Set Identifier Code,3,3,-,M/Z
+ST,,1,no,no,e02,Transaction Set Control Number,4,9,-,M
+ST,,1,no,no,e03,Implementation Convention Reference,1,35,-,O/Z
+BGN,,1,no,yes,landmark,Beginning Segment,3,3,-,M
+BGN,,1,no,no,e01,Transaction Set Purpose Code,2,2,-,M
+BGN,,1,no,no,e02,Reference Identification,1,50,-,M/Z
+BGN,,1,no,no,e03,Date,8,8,-,M/Z
+BGN,,1,no,no,e04,Time,4,8,-,X/Z
+BGN,,1,no,no,e05,Time Code,2,2,-,O/Z
+BGN,,1,no,no,e06,Reference Identification,1,50,-,O/Z
+BGN,,1,no,no,e07,Transaction Type Code,2,2,-,O
+BGN,,1,no,no,e08,Action Code,1,2,-,O
+BGN,,1,no,no,e09,Security Level Code,2,2,-,O
+N1,,99999,yes,yes,landmark,Party Identification,2,2,-,O
+N1,,1,no,no,e01,Entity Identifier Code,2,3,-,M
+N1,,1,no,no,e02,Name,1,60,-,X
+N1,,1,no,no,e03,Identification Code Qualifier,1,2,-,X
+N1,,1,no,no,e04,Identification Code,2,80,-,X
+N1,,1,no,no,e05,Entity Relationship Code,2,2,-,O
+N1,,1,no,no,e06,Entity Identifier Code,2,3,-,O
+N2,N1,2,no,yes,landmark,Additional Name Information,2,2,-,O
+N2,N1,1,no,no,e01,Name,1,60,-,M
+N2,N1,1,no,no,e02,Name,1,60,-,O
+N3,N1,2,no,yes,landmark,Party Location,2,2,-,O
+N3,N1,1,no,no,e01,Address Information,1,55,-,M
+N3,N1,1,no,no,e02,Address Information,1,55,-,O
+N4,N1,1,no,yes,landmark,Geographic Location,2,2,-,O
+N4,N1,1,no,no,e01,City Name,2,30,-,O
+N4,N1,1,no,no,e02,State or Province Code,2,2,-,X
+N4,N1,1,no,no,e03,Postal Code,3,15,-,O
+N4,N1,1,no,no,e04,Country Code,2,3,-,X
+N4,N1,1,no,no,e05,Location Qualifier,1,2,-,X
+N4,N1,1,no,no,e06,Location Identifier,1,30,-,O
+N4,N1,1,no,no,e07,Country Subdivision Code,1,3,-,X
+REF,N1,12,no,yes,landmark,Reference Information,3,3,-,O
+REF,N1,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
+REF,N1,1,no,no,e02,Reference Identification,1,50,-,X
+REF,N1,1,no,no,e03,Description,1,80,-,X
+PER,N1,3,no,yes,landmark,Administrative Communications Contact,3,3,-,O
+PER,N1,1,no,no,e01,Contact Function Code,2,2,-,M
+PER,N1,1,no,no,e02,Name,1,60,-,O
+PER,N1,1,no,no,e03,Communication Number Qualifier,2,2,-,X
+PER,N1,1,no,no,e04,Communication Number,1,256,-,X
+PER,N1,1,no,no,e05,Communication Number Qualifier,2,2,-,X
+PER,N1,1,no,no,e06,Communication Number,1,256,-,X
+PER,N1,1,no,no,e07,Communication Number Qualifier,2,2,-,X
+PER,N1,1,no,no,e08,Communication Number,1,256,-,X
+PER,N1,1,no,no,e09,Contact Inquiry Reference,1,20,-,O
+N1,,,,,groupend,,,,,
+OTI,,99999,yes,yes,landmark,Original Transaction Identification,3,3,-,M
+OTI,,1,no,no,e01,Application Acknowledgment Code,1,2,-,M
+OTI,,1,no,no,e02,Reference Identification Qualifier,2,3,-,M
+OTI,,1,no,no,e03,Reference Identification,1,50,-,M/Z
+OTI,,1,no,no,e04,Application Sender's Code,2,15,-,O
+OTI,,1,no,no,e05,Application Receiver's Code,2,15,-,O
+OTI,,1,no,no,e06,Date,8,8,-,O/Z
+OTI,,1,no,no,e07,Time,4,8,-,O/Z
+OTI,,1,no,no,e08,Group Control Number,1,9,-,X
+OTI,,1,no,no,e09,Transaction Set Control Number,4,9,-,O
+OTI,,1,no,no,e10,Transaction Set Identifier Code,3,3,-,O
+OTI,,1,no,no,e11,Version / Release / Industry Identifier Code,1,12,-,O/Z
+OTI,,1,no,no,e12,Transaction Set Purpose Code,2,2,-,O/Z
+OTI,,1,no,no,e13,Transaction Type Code,2,2,-,O/Z
+OTI,,1,no,no,e14,Application Type,2,2,-,O/Z
+OTI,,1,no,no,e15,Action Code,1,2,-,O/Z
+OTI,,1,no,no,e16,Transaction Handling Code,1,2,-,O/Z
+OTI,,1,no,no,e17,Status Reason Code,3,3,-,O/Z
+REF,OTI,12,no,yes,landmark,Reference Information,3,3,-,O
+REF,OTI,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
+REF,OTI,1,no,no,e02,Reference Identification,1,50,-,X
+REF,OTI,1,no,no,e03,Description,1,80,-,X
+DTM,OTI,2,no,yes,landmark,Date/Time Reference,3,3,-,O
+DTM,OTI,1,no,no,e01,Date/Time Qualifier,3,3,-,M
+DTM,OTI,1,no,no,e02,Date,8,8,-,X
+DTM,OTI,1,no,no,e03,Time,4,8,-,X
+DTM,OTI,1,no,no,e04,Time Code,2,2,-,O
+DTM,OTI,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X
+DTM,OTI,1,no,no,e06,Date Time Period,1,35,-,X
+PER,OTI,3,no,yes,landmark,Administrative Communications Contact,3,3,-,O
+PER,OTI,1,no,no,e01,Contact Function Code,2,2,-,M
+PER,OTI,1,no,no,e02,Name,1,60,-,O
+PER,OTI,1,no,no,e03,Communication Number Qualifier,2,2,-,X
+PER,OTI,1,no,no,e04,Communication Number,1,256,-,X
+PER,OTI,1,no,no,e05,Communication Number Qualifier,2,2,-,X
+PER,OTI,1,no,no,e06,Communication Number,1,256,-,X
+PER,OTI,1,no,no,e07,Communication Number Qualifier,2,2,-,X
+PER,OTI,1,no,no,e08,Communication Number,1,256,-,X
+PER,OTI,1,no,no,e09,Contact Inquiry Reference,1,20,-,O
+AMT,OTI,99999,no,yes,landmark,Monetary Amount Information,3,3,-,O
+AMT,OTI,1,no,no,e01,Amount Qualifier Code,1,3,-,M
+AMT,OTI,1,no,no,e02,Monetary Amount,1,18,-,M
+AMT,OTI,1,no,no,e03,Credit/Debit Flag Code,1,1,-,O
+QTY,OTI,99999,no,yes,landmark,Quantity Information,3,3,-,O
+QTY,OTI,1,no,no,e01,Quantity Qualifier,2,2,-,M
+QTY,OTI,1,no,no,e02,Quantity,1,15,-,X
+QTY,OTI,1,no,no,e04,Free-form Information,1,30,-,X/Z
+NM1,OTI,9,no,yes,landmark,Individual or Organizational Name,3,3,-,O
+NM1,OTI,1,no,no,e01,Entity Identifier Code,2,3,-,M
+NM1,OTI,1,no,no,e02,Entity Type Qualifier,1,1,-,M/Z
+NM1,OTI,1,no,no,e03,Name Last or Organization Name,1,60,-,X
+NM1,OTI,1,no,no,e04,Name First,1,35,-,O
+NM1,OTI,1,no,no,e05,Name Middle,1,25,-,O
+NM1,OTI,1,no,no,e06,Name Prefix,1,10,-,O
+NM1,OTI,1,no,no,e07,Name Suffix,1,10,-,O
+NM1,OTI,1,no,no,e08,Identification Code Qualifier,1,2,-,X
+NM1,OTI,1,no,no,e09,Identification Code,2,80,-,X
+NM1,OTI,1,no,no,e10,Entity Relationship Code,2,2,-,X
+NM1,OTI,1,no,no,e11,Entity Identifier Code,2,3,-,O
+NM1,OTI,1,no,no,e12,Name Last or Organization Name,1,60,-,O
+TED,OTI,99999,yes,yes,landmark,Technical Error Description,3,3,-,O
+TED,OTI,1,no,no,e01,Application Error Condition Code,1,3,-,M
+TED,OTI,1,no,no,e02,Free-form Message,1,60,-,O
+TED,OTI,1,no,no,e03,Segment ID Code,2,3,-,O
+TED,OTI,1,no,no,e04,Segment Position in Transaction Set,1,10,-,O
+TED,OTI,1,no,no,e07,Copy of Bad Data Element,1,99,-,O
+TED,OTI,1,no,no,e08,Data Element New Content,1,99,-,O
+CTX,OTI:TED,10,no,yes,landmark,Context,3,3,-,O
+CTX,OTI:TED,1,no,no,e02,Segment ID Code,2,3,-,O
+CTX,OTI:TED,1,no,no,e03,Segment Position in Transaction Set,1,10,-,O
+CTX,OTI:TED,1,no,no,e04,Loop Identifier Code,1,4,-,O
+NTE,OTI:TED,100,no,yes,landmark,Note/Special Instruction,3,3,-,O
+NTE,OTI:TED,1,no,no,e01,Note Reference Code,3,3,-,O
+NTE,OTI:TED,1,no,no,e02,Description,1,80,-,M
+RED,OTI:TED,100,no,yes,landmark,Related Data,3,3,-,O
+RED,OTI:TED,1,no,no,e01,Description,1,80,-,M/Z
+RED,OTI:TED,1,no,no,e02,Related Data Identification Code,2,3,-,X/Z
+RED,OTI:TED,1,no,no,e03,Agency Qualifier Code,2,2,-,X/Z
+RED,OTI:TED,1,no,no,e04,Source Subqualifier,1,15,-,O/Z
+RED,OTI:TED,1,no,no,e05,Code List Qualifier Code,1,3,-,X/Z
+RED,OTI:TED,1,no,no,e06,Industry Code,1,30,-,X/Z
+TED,,,,,groupend,,,,,
+LM,OTI,99999,yes,yes,landmark,Code Source Information,2,2,-,O
+LM,OTI,1,no,no,e01,Agency Qualifier Code,2,2,-,M
+LM,OTI,1,no,no,e02,Source Subqualifier,1,15,-,O
+LQ,OTI:LM,100,yes,yes,landmark,Industry Code Identification,2,2,-,M
+LQ,OTI:LM,1,no,no,e01,Code List Qualifier Code,1,3,-,O
+LQ,OTI:LM,1,no,no,e02,Industry Code,1,30,-,X
+RED,OTI:LM:LQ,100,no,yes,landmark,Related Data,3,3,-,O
+RED,OTI:LM:LQ,1,no,no,e01,Description,1,80,-,M/Z
+RED,OTI:LM:LQ,1,no,no,e02,Related Data Identification Code,2,3,-,X/Z
+RED,OTI:LM:LQ,1,no,no,e03,Agency Qualifier Code,2,2,-,X/Z
+RED,OTI:LM:LQ,1,no,no,e04,Source Subqualifier,1,15,-,O/Z
+RED,OTI:LM:LQ,1,no,no,e05,Code List Qualifier Code,1,3,-,X/Z
+RED,OTI:LM:LQ,1,no,no,e06,Industry Code,1,30,-,X/Z
+LQ,,,,,groupend,,,,,
+LM,,,,,groupend,,,,,
+OTI,,,,,groupend,,,,,
+SE,OTI:LM,1,no,yes,landmark,Transaction Set Trailer,2,2,-,M
+SE,OTI:LM,1,no,no,e01,Number of Included Segments,1,10,-,M
+SE,OTI:LM,1,no,no,e02,Transaction Set Control Number,4,9,-,M

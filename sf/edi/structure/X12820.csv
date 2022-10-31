@@ -1,0 +1,1088 @@
+#820 - Payment Order/Remittance Advice
+#segment,parent,loopcount,isgroup,islandmark,field,desc,min,max,align,status
+ST,,1,no,yes,landmark,Transaction Set Header,2,2,-,M
+ST,,1,no,no,e01,Transaction Set Identifier Code,3,3,-,M/Z
+ST,,1,no,no,e02,Transaction Set Control Number,4,9,-,M
+ST,,1,no,no,e03,Implementation Convention Reference,1,35,-,O/Z
+BPR,,1,no,yes,landmark,Beginning Segment for Payment Order/Remittance Advice,3,3,-,M
+BPR,,1,no,no,e01,Transaction Handling Code,1,2,-,M
+BPR,,1,no,no,e02,Monetary Amount,1,18,-,M/Z
+BPR,,1,no,no,e03,Credit/Debit Flag Code,1,1,-,M
+BPR,,1,no,no,e04,Payment Method Code,3,3,-,M
+BPR,,1,no,no,e05,Payment Format Code,1,10,-,O
+BPR,,1,no,no,e06,(DFI) ID Number Qualifier,2,2,-,X/Z
+BPR,,1,no,no,e07,(DFI) Identification Number,3,12,-,X
+BPR,,1,no,no,e08,Account Number Qualifier,1,3,-,O/Z
+BPR,,1,no,no,e09,Account Number,1,35,-,X/Z
+BPR,,1,no,no,e10,Originating Company Identifier,10,10,-,O/Z
+BPR,,1,no,no,e11,Originating Company Supplemental Code,9,9,-,O
+BPR,,1,no,no,e12,(DFI) ID Number Qualifier,2,2,-,X/Z
+BPR,,1,no,no,e13,(DFI) Identification Number,3,12,-,X
+BPR,,1,no,no,e14,Account Number Qualifier,1,3,-,O/Z
+BPR,,1,no,no,e15,Account Number,1,35,-,X/Z
+BPR,,1,no,no,e16,Date,8,8,-,O/Z
+BPR,,1,no,no,e17,Business Function Code,1,3,-,O/Z
+BPR,,1,no,no,e18,(DFI) ID Number Qualifier,2,2,-,X/Z
+BPR,,1,no,no,e19,(DFI) Identification Number,3,12,-,X
+BPR,,1,no,no,e20,Account Number Qualifier,1,3,-,O/Z
+BPR,,1,no,no,e21,Account Number,1,35,-,X
+NTE,,99999,no,yes,landmark,Note/Special Instruction,3,3,-,O
+NTE,,1,no,no,e01,Note Reference Code,3,3,-,O
+NTE,,1,no,no,e02,Description,1,80,-,M
+TRN,,1,no,yes,landmark,Trace,3,3,-,O
+TRN,,1,no,no,e01,Trace Type Code,1,2,-,M
+TRN,,1,no,no,e02,Reference Identification,1,50,-,M/Z
+TRN,,1,no,no,e03,Originating Company Identifier,10,10,-,O/Z
+TRN,,1,no,no,e04,Reference Identification,1,50,-,O/Z
+CUR,,1,no,yes,landmark,Currency,3,3,-,O
+CUR,,1,no,no,e01,Entity Identifier Code,2,3,-,M
+CUR,,1,no,no,e02,Currency Code,3,3,-,M
+CUR,,1,no,no,e03,Exchange Rate,4,10,-,O
+CUR,,1,no,no,e04,Entity Identifier Code,2,3,-,O
+CUR,,1,no,no,e05,Currency Code,3,3,-,O
+CUR,,1,no,no,e06,Currency Market/Exchange Code,3,3,-,O
+CUR,,1,no,no,e07,Date/Time Qualifier,3,3,-,X
+CUR,,1,no,no,e08,Date,8,8,-,O
+CUR,,1,no,no,e09,Time,4,8,-,O
+CUR,,1,no,no,e10,Date/Time Qualifier,3,3,-,X
+CUR,,1,no,no,e11,Date,8,8,-,X
+CUR,,1,no,no,e12,Time,4,8,-,X
+CUR,,1,no,no,e13,Date/Time Qualifier,3,3,-,X
+CUR,,1,no,no,e14,Date,8,8,-,X
+CUR,,1,no,no,e15,Time,4,8,-,X
+CUR,,1,no,no,e16,Date/Time Qualifier,3,3,-,X
+CUR,,1,no,no,e17,Date,8,8,-,X
+CUR,,1,no,no,e18,Time,4,8,-,X
+CUR,,1,no,no,e19,Date/Time Qualifier,3,3,-,X
+CUR,,1,no,no,e20,Date,8,8,-,X
+CUR,,1,no,no,e21,Time,4,8,-,X
+REF,,99999,no,yes,landmark,Reference Information,3,3,-,O
+REF,,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
+REF,,1,no,no,e02,Reference Identification,1,50,-,X
+REF,,1,no,no,e03,Description,1,80,-,X
+DTM,,99999,no,yes,landmark,Date/Time Reference,3,3,-,O
+DTM,,1,no,no,e01,Date/Time Qualifier,3,3,-,M
+DTM,,1,no,no,e02,Date,8,8,-,X
+DTM,,1,no,no,e03,Time,4,8,-,X
+DTM,,1,no,no,e04,Time Code,2,2,-,O
+DTM,,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X
+DTM,,1,no,no,e06,Date Time Period,1,35,-,X
+N1,,99999,yes,yes,landmark,Party Identification,2,2,-,O
+N1,,1,no,no,e01,Entity Identifier Code,2,3,-,M
+N1,,1,no,no,e02,Name,1,60,-,X
+N1,,1,no,no,e03,Identification Code Qualifier,1,2,-,X
+N1,,1,no,no,e04,Identification Code,2,80,-,X
+N1,,1,no,no,e05,Entity Relationship Code,2,2,-,O
+N1,,1,no,no,e06,Entity Identifier Code,2,3,-,O
+N2,N1,99999,no,yes,landmark,Additional Name Information,2,2,-,O
+N2,N1,1,no,no,e01,Name,1,60,-,M
+N2,N1,1,no,no,e02,Name,1,60,-,O
+N3,N1,99999,no,yes,landmark,Party Location,2,2,-,O
+N3,N1,1,no,no,e01,Address Information,1,55,-,M
+N3,N1,1,no,no,e02,Address Information,1,55,-,O
+N4,N1,1,no,yes,landmark,Geographic Location,2,2,-,O
+N4,N1,1,no,no,e01,City Name,2,30,-,O
+N4,N1,1,no,no,e02,State or Province Code,2,2,-,X
+N4,N1,1,no,no,e03,Postal Code,3,15,-,O
+N4,N1,1,no,no,e04,Country Code,2,3,-,X
+N4,N1,1,no,no,e05,Location Qualifier,1,2,-,X
+N4,N1,1,no,no,e06,Location Identifier,1,30,-,O
+N4,N1,1,no,no,e07,Country Subdivision Code,1,3,-,X
+REF,N1,99999,no,yes,landmark,Reference Information,3,3,-,O
+REF,N1,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
+REF,N1,1,no,no,e02,Reference Identification,1,50,-,X
+REF,N1,1,no,no,e03,Description,1,80,-,X
+PER,N1,99999,no,yes,landmark,Administrative Communications Contact,3,3,-,O
+PER,N1,1,no,no,e01,Contact Function Code,2,2,-,M
+PER,N1,1,no,no,e02,Name,1,60,-,O
+PER,N1,1,no,no,e03,Communication Number Qualifier,2,2,-,X
+PER,N1,1,no,no,e04,Communication Number,1,256,-,X
+PER,N1,1,no,no,e05,Communication Number Qualifier,2,2,-,X
+PER,N1,1,no,no,e06,Communication Number,1,256,-,X
+PER,N1,1,no,no,e07,Communication Number Qualifier,2,2,-,X
+PER,N1,1,no,no,e08,Communication Number,1,256,-,X
+PER,N1,1,no,no,e09,Contact Inquiry Reference,1,20,-,O
+RDM,N1,1,no,yes,landmark,Remittance Delivery Method,3,3,-,O
+RDM,N1,1,no,no,e01,Report Transmission Code,1,2,-,M
+RDM,N1,1,no,no,e02,Name,1,60,-,O
+RDM,N1,1,no,no,e03,Communication Number,1,256,-,O
+DTM,N1,1,no,yes,landmark,Date/Time Reference,3,3,-,O
+DTM,N1,1,no,no,e01,Date/Time Qualifier,3,3,-,M
+DTM,N1,1,no,no,e02,Date,8,8,-,X
+DTM,N1,1,no,no,e03,Time,4,8,-,X
+DTM,N1,1,no,no,e04,Time Code,2,2,-,O
+DTM,N1,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X
+DTM,N1,1,no,no,e06,Date Time Period,1,35,-,X
+N1,,,,,groupend,,,,,
+ENT,,99999,yes,yes,landmark,Entity,3,3,-,O
+ENT,,1,no,no,e01,Assigned Number,1,6,-,O
+ENT,,1,no,no,e02,Entity Identifier Code,2,3,-,X
+ENT,,1,no,no,e03,Identification Code Qualifier,1,2,-,X
+ENT,,1,no,no,e04,Identification Code,2,80,-,X
+ENT,,1,no,no,e05,Entity Identifier Code,2,3,-,X
+ENT,,1,no,no,e06,Identification Code Qualifier,1,2,-,X
+ENT,,1,no,no,e07,Identification Code,2,80,-,X
+ENT,,1,no,no,e08,Reference Identification Qualifier,2,3,-,X
+ENT,,1,no,no,e09,Reference Identification,1,50,-,X
+FA1,ENT,99999,yes,yes,landmark,Type of Financial Accounting Data,3,3,-,O
+FA1,ENT,1,no,no,e01,Agency Qualifier Code,2,2,-,M/Z
+FA1,ENT,1,no,no,e02,Service, Promotion, Allowance, or Charge Code,4,4,-,O/Z
+FA1,ENT,1,no,no,e03,Allowance or Charge Indicator,1,1,-,O
+FA2,ENT:FA1,99999,no,yes,landmark,Accounting Data,3,3,-,M
+FA2,ENT:FA1,1,no,no,e01,Breakdown Structure Detail Code,2,2,-,M
+FA2,ENT:FA1,1,no,no,e02,Financial Information Code,1,80,-,M
+FA1,,,,,groupend,,,,,
+NM1,ENT,99999,yes,yes,landmark,Individual or Organizational Name,3,3,-,O
+NM1,ENT,1,no,no,e01,Entity Identifier Code,2,3,-,M
+NM1,ENT,1,no,no,e02,Entity Type Qualifier,1,1,-,M/Z
+NM1,ENT,1,no,no,e03,Name Last or Organization Name,1,60,-,X
+NM1,ENT,1,no,no,e04,Name First,1,35,-,O
+NM1,ENT,1,no,no,e05,Name Middle,1,25,-,O
+NM1,ENT,1,no,no,e06,Name Prefix,1,10,-,O
+NM1,ENT,1,no,no,e07,Name Suffix,1,10,-,O
+NM1,ENT,1,no,no,e08,Identification Code Qualifier,1,2,-,X
+NM1,ENT,1,no,no,e09,Identification Code,2,80,-,X
+NM1,ENT,1,no,no,e10,Entity Relationship Code,2,2,-,X
+NM1,ENT,1,no,no,e11,Entity Identifier Code,2,3,-,O
+NM1,ENT,1,no,no,e12,Name Last or Organization Name,1,60,-,O
+N2,ENT:NM1,99999,no,yes,landmark,Additional Name Information,2,2,-,O
+N2,ENT:NM1,1,no,no,e01,Name,1,60,-,M
+N2,ENT:NM1,1,no,no,e02,Name,1,60,-,O
+N3,ENT:NM1,99999,no,yes,landmark,Party Location,2,2,-,O
+N3,ENT:NM1,1,no,no,e01,Address Information,1,55,-,M
+N3,ENT:NM1,1,no,no,e02,Address Information,1,55,-,O
+N4,ENT:NM1,1,no,yes,landmark,Geographic Location,2,2,-,O
+N4,ENT:NM1,1,no,no,e01,City Name,2,30,-,O
+N4,ENT:NM1,1,no,no,e02,State or Province Code,2,2,-,X
+N4,ENT:NM1,1,no,no,e03,Postal Code,3,15,-,O
+N4,ENT:NM1,1,no,no,e04,Country Code,2,3,-,X
+N4,ENT:NM1,1,no,no,e05,Location Qualifier,1,2,-,X
+N4,ENT:NM1,1,no,no,e06,Location Identifier,1,30,-,O
+N4,ENT:NM1,1,no,no,e07,Country Subdivision Code,1,3,-,X
+REF,ENT:NM1,99999,no,yes,landmark,Reference Information,3,3,-,O
+REF,ENT:NM1,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
+REF,ENT:NM1,1,no,no,e02,Reference Identification,1,50,-,X
+REF,ENT:NM1,1,no,no,e03,Description,1,80,-,X
+PER,ENT:NM1,99999,no,yes,landmark,Administrative Communications Contact,3,3,-,O
+PER,ENT:NM1,1,no,no,e01,Contact Function Code,2,2,-,M
+PER,ENT:NM1,1,no,no,e02,Name,1,60,-,O
+PER,ENT:NM1,1,no,no,e03,Communication Number Qualifier,2,2,-,X
+PER,ENT:NM1,1,no,no,e04,Communication Number,1,256,-,X
+PER,ENT:NM1,1,no,no,e05,Communication Number Qualifier,2,2,-,X
+PER,ENT:NM1,1,no,no,e06,Communication Number,1,256,-,X
+PER,ENT:NM1,1,no,no,e07,Communication Number Qualifier,2,2,-,X
+PER,ENT:NM1,1,no,no,e08,Communication Number,1,256,-,X
+PER,ENT:NM1,1,no,no,e09,Contact Inquiry Reference,1,20,-,O
+NM1,,,,,groupend,,,,,
+ADX,ENT,99999,yes,yes,landmark,Adjustment,3,3,-,O
+ADX,ENT,1,no,no,e01,Monetary Amount,1,18,-,M/Z
+ADX,ENT,1,no,no,e02,Adjustment Reason Code,2,2,-,M/Z
+ADX,ENT,1,no,no,e03,Reference Identification Qualifier,2,3,-,X/Z
+ADX,ENT,1,no,no,e04,Reference Identification,1,50,-,X
+NTE,ENT:ADX,99999,no,yes,landmark,Note/Special Instruction,3,3,-,O
+NTE,ENT:ADX,1,no,no,e01,Note Reference Code,3,3,-,O
+NTE,ENT:ADX,1,no,no,e02,Description,1,80,-,M
+PER,ENT:ADX,99999,no,yes,landmark,Administrative Communications Contact,3,3,-,O
+PER,ENT:ADX,1,no,no,e01,Contact Function Code,2,2,-,M
+PER,ENT:ADX,1,no,no,e02,Name,1,60,-,O
+PER,ENT:ADX,1,no,no,e03,Communication Number Qualifier,2,2,-,X
+PER,ENT:ADX,1,no,no,e04,Communication Number,1,256,-,X
+PER,ENT:ADX,1,no,no,e05,Communication Number Qualifier,2,2,-,X
+PER,ENT:ADX,1,no,no,e06,Communication Number,1,256,-,X
+PER,ENT:ADX,1,no,no,e07,Communication Number Qualifier,2,2,-,X
+PER,ENT:ADX,1,no,no,e08,Communication Number,1,256,-,X
+PER,ENT:ADX,1,no,no,e09,Contact Inquiry Reference,1,20,-,O
+DTM,ENT:ADX,1,no,yes,landmark,Date/Time Reference,3,3,-,O
+DTM,ENT:ADX,1,no,no,e01,Date/Time Qualifier,3,3,-,M
+DTM,ENT:ADX,1,no,no,e02,Date,8,8,-,X
+DTM,ENT:ADX,1,no,no,e03,Time,4,8,-,X
+DTM,ENT:ADX,1,no,no,e04,Time Code,2,2,-,O
+DTM,ENT:ADX,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X
+DTM,ENT:ADX,1,no,no,e06,Date Time Period,1,35,-,X
+REF,ENT:ADX,99999,yes,yes,landmark,Reference Information,3,3,-,O
+REF,ENT:ADX,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
+REF,ENT:ADX,1,no,no,e02,Reference Identification,1,50,-,X
+REF,ENT:ADX,1,no,no,e03,Description,1,80,-,X
+DTM,ENT:ADX:REF,99999,no,yes,landmark,Date/Time Reference,3,3,-,O
+DTM,ENT:ADX:REF,1,no,no,e01,Date/Time Qualifier,3,3,-,M
+DTM,ENT:ADX:REF,1,no,no,e02,Date,8,8,-,X
+DTM,ENT:ADX:REF,1,no,no,e03,Time,4,8,-,X
+DTM,ENT:ADX:REF,1,no,no,e04,Time Code,2,2,-,O
+DTM,ENT:ADX:REF,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X
+DTM,ENT:ADX:REF,1,no,no,e06,Date Time Period,1,35,-,X
+REF,,,,,groupend,,,,,
+IT1,ENT:ADX,99999,yes,yes,landmark,Baseline Item Data (Invoice),3,3,-,O
+IT1,ENT:ADX,1,no,no,e01,Assigned Identification,1,20,-,O/Z
+IT1,ENT:ADX,1,no,no,e02,Quantity Invoiced,1,15,-,X
+IT1,ENT:ADX,1,no,no,e03,Unit or Basis for Measurement Code,2,2,-,X
+IT1,ENT:ADX,1,no,no,e04,Unit Price,1,17,-,X
+IT1,ENT:ADX,1,no,no,e05,Basis of Unit Price Code,2,2,-,O
+IT1,ENT:ADX,1,no,no,e06,Product/Service ID Qualifier,2,2,-,X
+IT1,ENT:ADX,1,no,no,e07,Product/Service ID,1,48,-,X
+IT1,ENT:ADX,1,no,no,e08,Product/Service ID Qualifier,2,2,-,X
+IT1,ENT:ADX,1,no,no,e09,Product/Service ID,1,48,-,X
+IT1,ENT:ADX,1,no,no,e10,Product/Service ID Qualifier,2,2,-,X
+IT1,ENT:ADX,1,no,no,e11,Product/Service ID,1,48,-,X
+IT1,ENT:ADX,1,no,no,e12,Product/Service ID Qualifier,2,2,-,X
+IT1,ENT:ADX,1,no,no,e13,Product/Service ID,1,48,-,X
+IT1,ENT:ADX,1,no,no,e14,Product/Service ID Qualifier,2,2,-,X
+IT1,ENT:ADX,1,no,no,e15,Product/Service ID,1,48,-,X
+IT1,ENT:ADX,1,no,no,e16,Product/Service ID Qualifier,2,2,-,X
+IT1,ENT:ADX,1,no,no,e17,Product/Service ID,1,48,-,X
+IT1,ENT:ADX,1,no,no,e18,Product/Service ID Qualifier,2,2,-,X
+IT1,ENT:ADX,1,no,no,e19,Product/Service ID,1,48,-,X
+IT1,ENT:ADX,1,no,no,e20,Product/Service ID Qualifier,2,2,-,X
+IT1,ENT:ADX,1,no,no,e21,Product/Service ID,1,48,-,X
+IT1,ENT:ADX,1,no,no,e22,Product/Service ID Qualifier,2,2,-,X
+IT1,ENT:ADX,1,no,no,e23,Product/Service ID,1,48,-,X
+IT1,ENT:ADX,1,no,no,e24,Product/Service ID Qualifier,2,2,-,X
+IT1,ENT:ADX,1,no,no,e25,Product/Service ID,1,48,-,X
+RPA,ENT:ADX:IT1,1,no,yes,landmark,Rate Amounts or Percents,3,3,-,O
+RPA,ENT:ADX:IT1,1,no,no,e01,Rate or Value Type Code,1,2,-,M
+RPA,ENT:ADX:IT1,1,no,no,e02,Monetary Amount,1,18,-,X
+RPA,ENT:ADX:IT1,1,no,no,e03,Rate,1,9,-,X
+RPA,ENT:ADX:IT1,1,no,no,e05,Percentage as Decimal,1,10,-,X
+QTY,ENT:ADX:IT1,1,no,yes,landmark,Quantity Information,3,3,-,O
+QTY,ENT:ADX:IT1,1,no,no,e01,Quantity Qualifier,2,2,-,M
+QTY,ENT:ADX:IT1,1,no,no,e02,Quantity,1,15,-,X
+QTY,ENT:ADX:IT1,1,no,no,e04,Free-form Information,1,30,-,X/Z
+REF,ENT:ADX:IT1,99999,yes,yes,landmark,Reference Information,3,3,-,O
+REF,ENT:ADX:IT1,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
+REF,ENT:ADX:IT1,1,no,no,e02,Reference Identification,1,50,-,X
+REF,ENT:ADX:IT1,1,no,no,e03,Description,1,80,-,X
+DTM,ENT:ADX:IT1:REF,1,no,yes,landmark,Date/Time Reference,3,3,-,O
+DTM,ENT:ADX:IT1:REF,1,no,no,e01,Date/Time Qualifier,3,3,-,M
+DTM,ENT:ADX:IT1:REF,1,no,no,e02,Date,8,8,-,X
+DTM,ENT:ADX:IT1:REF,1,no,no,e03,Time,4,8,-,X
+DTM,ENT:ADX:IT1:REF,1,no,no,e04,Time Code,2,2,-,O
+DTM,ENT:ADX:IT1:REF,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X
+DTM,ENT:ADX:IT1:REF,1,no,no,e06,Date Time Period,1,35,-,X
+REF,,,,,groupend,,,,,
+SAC,ENT:ADX:IT1,99999,yes,yes,landmark,Service, Promotion, Allowance, or Charge Information,3,3,-,O
+SAC,ENT:ADX:IT1,1,no,no,e01,Allowance or Charge Indicator,1,1,-,M/Z
+SAC,ENT:ADX:IT1,1,no,no,e02,Service, Promotion, Allowance, or Charge Code,4,4,-,X
+SAC,ENT:ADX:IT1,1,no,no,e03,Agency Qualifier Code,2,2,-,X
+SAC,ENT:ADX:IT1,1,no,no,e04,Agency Service, Promotion, Allowance, or Charge Code,1,10,-,X
+SAC,ENT:ADX:IT1,1,no,no,e05,Amount,1,15,-,O/Z
+SAC,ENT:ADX:IT1,1,no,no,e06,Allowance/Charge Percent Qualifier,1,1,-,X
+SAC,ENT:ADX:IT1,1,no,no,e07,Percent, Decimal Format,1,6,-,X
+SAC,ENT:ADX:IT1,1,no,no,e08,Rate,1,9,-,O/Z
+SAC,ENT:ADX:IT1,1,no,no,e09,Unit or Basis for Measurement Code,2,2,-,X
+SAC,ENT:ADX:IT1,1,no,no,e10,Quantity,1,15,-,X/Z
+SAC,ENT:ADX:IT1,1,no,no,e11,Quantity,1,15,-,O
+SAC,ENT:ADX:IT1,1,no,no,e12,Allowance or Charge Method of Handling Code,2,2,-,O
+SAC,ENT:ADX:IT1,1,no,no,e13,Reference Identification,1,50,-,X/Z
+SAC,ENT:ADX:IT1,1,no,no,e14,Option Number,1,20,-,O/Z
+SAC,ENT:ADX:IT1,1,no,no,e15,Description,1,80,-,X
+SAC,ENT:ADX:IT1,1,no,no,e16,Language Code,2,3,-,O/Z
+TXI,ENT:ADX:IT1:SAC,99999,no,yes,landmark,Tax Information,3,3,-,O
+TXI,ENT:ADX:IT1:SAC,1,no,no,e01,Tax Type Code,2,2,-,M
+TXI,ENT:ADX:IT1:SAC,1,no,no,e02,Monetary Amount,1,18,-,X/Z
+TXI,ENT:ADX:IT1:SAC,1,no,no,e03,Percentage as Decimal,1,10,-,X/Z
+TXI,ENT:ADX:IT1:SAC,1,no,no,e04,Tax Jurisdiction Code Qualifier,2,2,-,X
+TXI,ENT:ADX:IT1:SAC,1,no,no,e05,Tax Jurisdiction Code,1,10,-,X
+TXI,ENT:ADX:IT1:SAC,1,no,no,e06,Tax Exempt Code,1,1,-,X
+TXI,ENT:ADX:IT1:SAC,1,no,no,e07,Relationship Code,1,1,-,O/Z
+TXI,ENT:ADX:IT1:SAC,1,no,no,e08,Dollar Basis For Percent,1,9,-,O
+TXI,ENT:ADX:IT1:SAC,1,no,no,e09,Tax Identification Number,1,20,-,O
+TXI,ENT:ADX:IT1:SAC,1,no,no,e10,Assigned Identification,1,20,-,O
+DTM,ENT:ADX:IT1:SAC,10,no,yes,landmark,Date/Time Reference,3,3,-,O
+DTM,ENT:ADX:IT1:SAC,1,no,no,e01,Date/Time Qualifier,3,3,-,M
+DTM,ENT:ADX:IT1:SAC,1,no,no,e02,Date,8,8,-,X
+DTM,ENT:ADX:IT1:SAC,1,no,no,e03,Time,4,8,-,X
+DTM,ENT:ADX:IT1:SAC,1,no,no,e04,Time Code,2,2,-,O
+DTM,ENT:ADX:IT1:SAC,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X
+DTM,ENT:ADX:IT1:SAC,1,no,no,e06,Date Time Period,1,35,-,X
+SAC,,,,,groupend,,,,,
+SLN,ENT:ADX:IT1,99999,yes,yes,landmark,Subline Item Detail,3,3,-,O
+SLN,ENT:ADX:IT1,1,no,no,e01,Assigned Identification,1,20,-,M/Z
+SLN,ENT:ADX:IT1,1,no,no,e02,Assigned Identification,1,20,-,O/Z
+SLN,ENT:ADX:IT1,1,no,no,e03,Relationship Code,1,1,-,M/Z
+SLN,ENT:ADX:IT1,1,no,no,e04,Quantity,1,15,-,X
+SLN,ENT:ADX:IT1,1,no,no,e06,Unit Price,1,17,-,X
+SLN,ENT:ADX:IT1,1,no,no,e07,Basis of Unit Price Code,2,2,-,O
+SLN,ENT:ADX:IT1,1,no,no,e08,Relationship Code,1,1,-,O/Z
+SLN,ENT:ADX:IT1,1,no,no,e09,Product/Service ID Qualifier,2,2,-,X
+SLN,ENT:ADX:IT1,1,no,no,e10,Product/Service ID,1,48,-,X
+SLN,ENT:ADX:IT1,1,no,no,e11,Product/Service ID Qualifier,2,2,-,X
+SLN,ENT:ADX:IT1,1,no,no,e12,Product/Service ID,1,48,-,X
+SLN,ENT:ADX:IT1,1,no,no,e13,Product/Service ID Qualifier,2,2,-,X
+SLN,ENT:ADX:IT1,1,no,no,e14,Product/Service ID,1,48,-,X
+SLN,ENT:ADX:IT1,1,no,no,e15,Product/Service ID Qualifier,2,2,-,X
+SLN,ENT:ADX:IT1,1,no,no,e16,Product/Service ID,1,48,-,X
+SLN,ENT:ADX:IT1,1,no,no,e17,Product/Service ID Qualifier,2,2,-,X
+SLN,ENT:ADX:IT1,1,no,no,e18,Product/Service ID,1,48,-,X
+SLN,ENT:ADX:IT1,1,no,no,e19,Product/Service ID Qualifier,2,2,-,X
+SLN,ENT:ADX:IT1,1,no,no,e20,Product/Service ID,1,48,-,X
+SLN,ENT:ADX:IT1,1,no,no,e21,Product/Service ID Qualifier,2,2,-,X
+SLN,ENT:ADX:IT1,1,no,no,e22,Product/Service ID,1,48,-,X
+SLN,ENT:ADX:IT1,1,no,no,e23,Product/Service ID Qualifier,2,2,-,X
+SLN,ENT:ADX:IT1,1,no,no,e24,Product/Service ID,1,48,-,X
+SLN,ENT:ADX:IT1,1,no,no,e25,Product/Service ID Qualifier,2,2,-,X
+SLN,ENT:ADX:IT1,1,no,no,e26,Product/Service ID,1,48,-,X
+SLN,ENT:ADX:IT1,1,no,no,e27,Product/Service ID Qualifier,2,2,-,X
+SLN,ENT:ADX:IT1,1,no,no,e28,Product/Service ID,1,48,-,X
+REF,ENT:ADX:IT1:SLN,99999,yes,yes,landmark,Reference Information,3,3,-,O
+REF,ENT:ADX:IT1:SLN,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
+REF,ENT:ADX:IT1:SLN,1,no,no,e02,Reference Identification,1,50,-,X
+REF,ENT:ADX:IT1:SLN,1,no,no,e03,Description,1,80,-,X
+DTM,ENT:ADX:IT1:SLN:REF,99999,no,yes,landmark,Date/Time Reference,3,3,-,O
+DTM,ENT:ADX:IT1:SLN:REF,1,no,no,e01,Date/Time Qualifier,3,3,-,M
+DTM,ENT:ADX:IT1:SLN:REF,1,no,no,e02,Date,8,8,-,X
+DTM,ENT:ADX:IT1:SLN:REF,1,no,no,e03,Time,4,8,-,X
+DTM,ENT:ADX:IT1:SLN:REF,1,no,no,e04,Time Code,2,2,-,O
+DTM,ENT:ADX:IT1:SLN:REF,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X
+DTM,ENT:ADX:IT1:SLN:REF,1,no,no,e06,Date Time Period,1,35,-,X
+REF,,,,,groupend,,,,,
+SAC,ENT:ADX:IT1:SLN,99999,yes,yes,landmark,Service, Promotion, Allowance, or Charge Information,3,3,-,O
+SAC,ENT:ADX:IT1:SLN,1,no,no,e01,Allowance or Charge Indicator,1,1,-,M/Z
+SAC,ENT:ADX:IT1:SLN,1,no,no,e02,Service, Promotion, Allowance, or Charge Code,4,4,-,X
+SAC,ENT:ADX:IT1:SLN,1,no,no,e03,Agency Qualifier Code,2,2,-,X
+SAC,ENT:ADX:IT1:SLN,1,no,no,e04,Agency Service, Promotion, Allowance, or Charge Code,1,10,-,X
+SAC,ENT:ADX:IT1:SLN,1,no,no,e05,Amount,1,15,-,O/Z
+SAC,ENT:ADX:IT1:SLN,1,no,no,e06,Allowance/Charge Percent Qualifier,1,1,-,X
+SAC,ENT:ADX:IT1:SLN,1,no,no,e07,Percent, Decimal Format,1,6,-,X
+SAC,ENT:ADX:IT1:SLN,1,no,no,e08,Rate,1,9,-,O/Z
+SAC,ENT:ADX:IT1:SLN,1,no,no,e09,Unit or Basis for Measurement Code,2,2,-,X
+SAC,ENT:ADX:IT1:SLN,1,no,no,e10,Quantity,1,15,-,X/Z
+SAC,ENT:ADX:IT1:SLN,1,no,no,e11,Quantity,1,15,-,O
+SAC,ENT:ADX:IT1:SLN,1,no,no,e12,Allowance or Charge Method of Handling Code,2,2,-,O
+SAC,ENT:ADX:IT1:SLN,1,no,no,e13,Reference Identification,1,50,-,X/Z
+SAC,ENT:ADX:IT1:SLN,1,no,no,e14,Option Number,1,20,-,O/Z
+SAC,ENT:ADX:IT1:SLN,1,no,no,e15,Description,1,80,-,X
+SAC,ENT:ADX:IT1:SLN,1,no,no,e16,Language Code,2,3,-,O/Z
+TXI,ENT:ADX:IT1:SLN:SAC,99999,no,yes,landmark,Tax Information,3,3,-,O
+TXI,ENT:ADX:IT1:SLN:SAC,1,no,no,e01,Tax Type Code,2,2,-,M
+TXI,ENT:ADX:IT1:SLN:SAC,1,no,no,e02,Monetary Amount,1,18,-,X/Z
+TXI,ENT:ADX:IT1:SLN:SAC,1,no,no,e03,Percentage as Decimal,1,10,-,X/Z
+TXI,ENT:ADX:IT1:SLN:SAC,1,no,no,e04,Tax Jurisdiction Code Qualifier,2,2,-,X
+TXI,ENT:ADX:IT1:SLN:SAC,1,no,no,e05,Tax Jurisdiction Code,1,10,-,X
+TXI,ENT:ADX:IT1:SLN:SAC,1,no,no,e06,Tax Exempt Code,1,1,-,X
+TXI,ENT:ADX:IT1:SLN:SAC,1,no,no,e07,Relationship Code,1,1,-,O/Z
+TXI,ENT:ADX:IT1:SLN:SAC,1,no,no,e08,Dollar Basis For Percent,1,9,-,O
+TXI,ENT:ADX:IT1:SLN:SAC,1,no,no,e09,Tax Identification Number,1,20,-,O
+TXI,ENT:ADX:IT1:SLN:SAC,1,no,no,e10,Assigned Identification,1,20,-,O
+SAC,,,,,groupend,,,,,
+SLN,,,,,groupend,,,,,
+IT1,,,,,groupend,,,,,
+FA1,ENT:ADX:SLN,99999,yes,yes,landmark,Type of Financial Accounting Data,3,3,-,O
+FA1,ENT:ADX:SLN,1,no,no,e01,Agency Qualifier Code,2,2,-,M/Z
+FA1,ENT:ADX:SLN,1,no,no,e02,Service, Promotion, Allowance, or Charge Code,4,4,-,O/Z
+FA1,ENT:ADX:SLN,1,no,no,e03,Allowance or Charge Indicator,1,1,-,O
+FA2,ENT:ADX:SLN:FA1,99999,no,yes,landmark,Accounting Data,3,3,-,M
+FA2,ENT:ADX:SLN:FA1,1,no,no,e01,Breakdown Structure Detail Code,2,2,-,M
+FA2,ENT:ADX:SLN:FA1,1,no,no,e02,Financial Information Code,1,80,-,M
+FA1,,,,,groupend,,,,,
+SLN,,,,,groupend,,,,,
+RMR,ENT,99999,yes,yes,landmark,Remittance Advice Accounts Receivable Open Item Reference,3,3,-,O
+RMR,ENT,1,no,no,e01,Reference Identification Qualifier,2,3,-,X
+RMR,ENT,1,no,no,e02,Reference Identification,1,50,-,X
+RMR,ENT,1,no,no,e03,Payment Action Code,2,2,-,O/Z
+RMR,ENT,1,no,no,e04,Monetary Amount,1,18,-,O/Z
+RMR,ENT,1,no,no,e05,Monetary Amount,1,18,-,O/Z
+RMR,ENT,1,no,no,e06,Monetary Amount,1,18,-,O/Z
+RMR,ENT,1,no,no,e07,Adjustment Reason Code,2,2,-,X
+RMR,ENT,1,no,no,e08,Monetary Amount,1,18,-,X/Z
+NTE,ENT:RMR,99999,no,yes,landmark,Note/Special Instruction,3,3,-,O
+NTE,ENT:RMR,1,no,no,e01,Note Reference Code,3,3,-,O
+NTE,ENT:RMR,1,no,no,e02,Description,1,80,-,M
+REF,ENT:RMR,99999,no,yes,landmark,Reference Information,3,3,-,O
+REF,ENT:RMR,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
+REF,ENT:RMR,1,no,no,e02,Reference Identification,1,50,-,X
+REF,ENT:RMR,1,no,no,e03,Description,1,80,-,X
+DTM,ENT:RMR,99999,no,yes,landmark,Date/Time Reference,3,3,-,O
+DTM,ENT:RMR,1,no,no,e01,Date/Time Qualifier,3,3,-,M
+DTM,ENT:RMR,1,no,no,e02,Date,8,8,-,X
+DTM,ENT:RMR,1,no,no,e03,Time,4,8,-,X
+DTM,ENT:RMR,1,no,no,e04,Time Code,2,2,-,O
+DTM,ENT:RMR,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X
+DTM,ENT:RMR,1,no,no,e06,Date Time Period,1,35,-,X
+VEH,ENT:RMR,1,no,yes,landmark,Vehicle Information,3,3,-,O
+VEH,ENT:RMR,1,no,no,e01,Assigned Number,1,6,-,O
+VEH,ENT:RMR,1,no,no,e02,Vehicle Identification Number,1,30,-,O
+VEH,ENT:RMR,1,no,no,e03,Year,4,4,-,O
+VEH,ENT:RMR,1,no,no,e04,Agency Qualifier Code,2,2,-,X/Z
+VEH,ENT:RMR,1,no,no,e05,Reference Identification,1,50,-,X/Z
+VEH,ENT:RMR,1,no,no,e06,Reference Identification,1,50,-,O/Z
+VEH,ENT:RMR,1,no,no,e07,Reference Identification,1,50,-,X/Z
+VEH,ENT:RMR,1,no,no,e08,Length,1,8,-,O/Z
+VEH,ENT:RMR,1,no,no,e09,Reference Identification,1,50,-,O/Z
+VEH,ENT:RMR,1,no,no,e10,State or Province Code,2,2,-,O/Z
+VEH,ENT:RMR,1,no,no,e11,Location Identifier,1,30,-,O/Z
+VEH,ENT:RMR,1,no,no,e12,Yes/No Condition or Response Code,1,1,-,O/Z
+VEH,ENT:RMR,1,no,no,e13,Amount,1,15,-,O/Z
+VEH,ENT:RMR,1,no,no,e14,Yes/No Condition or Response Code,1,1,-,O/Z
+VEH,ENT:RMR,1,no,no,e15,Amount,1,15,-,O/Z
+VEH,ENT:RMR,1,no,no,e16,Action Code,1,2,-,O
+VEH,ENT:RMR,1,no,no,e17,Country Code,2,3,-,O/Z
+VEH,ENT:RMR,1,no,no,e18,Name,1,60,-,X/Z
+VEH,ENT:RMR,1,no,no,e19,Country Code,2,3,-,X/Z
+IT1,ENT:RMR,99999,yes,yes,landmark,Baseline Item Data (Invoice),3,3,-,O
+IT1,ENT:RMR,1,no,no,e01,Assigned Identification,1,20,-,O/Z
+IT1,ENT:RMR,1,no,no,e02,Quantity Invoiced,1,15,-,X
+IT1,ENT:RMR,1,no,no,e03,Unit or Basis for Measurement Code,2,2,-,X
+IT1,ENT:RMR,1,no,no,e04,Unit Price,1,17,-,X
+IT1,ENT:RMR,1,no,no,e05,Basis of Unit Price Code,2,2,-,O
+IT1,ENT:RMR,1,no,no,e06,Product/Service ID Qualifier,2,2,-,X
+IT1,ENT:RMR,1,no,no,e07,Product/Service ID,1,48,-,X
+IT1,ENT:RMR,1,no,no,e08,Product/Service ID Qualifier,2,2,-,X
+IT1,ENT:RMR,1,no,no,e09,Product/Service ID,1,48,-,X
+IT1,ENT:RMR,1,no,no,e10,Product/Service ID Qualifier,2,2,-,X
+IT1,ENT:RMR,1,no,no,e11,Product/Service ID,1,48,-,X
+IT1,ENT:RMR,1,no,no,e12,Product/Service ID Qualifier,2,2,-,X
+IT1,ENT:RMR,1,no,no,e13,Product/Service ID,1,48,-,X
+IT1,ENT:RMR,1,no,no,e14,Product/Service ID Qualifier,2,2,-,X
+IT1,ENT:RMR,1,no,no,e15,Product/Service ID,1,48,-,X
+IT1,ENT:RMR,1,no,no,e16,Product/Service ID Qualifier,2,2,-,X
+IT1,ENT:RMR,1,no,no,e17,Product/Service ID,1,48,-,X
+IT1,ENT:RMR,1,no,no,e18,Product/Service ID Qualifier,2,2,-,X
+IT1,ENT:RMR,1,no,no,e19,Product/Service ID,1,48,-,X
+IT1,ENT:RMR,1,no,no,e20,Product/Service ID Qualifier,2,2,-,X
+IT1,ENT:RMR,1,no,no,e21,Product/Service ID,1,48,-,X
+IT1,ENT:RMR,1,no,no,e22,Product/Service ID Qualifier,2,2,-,X
+IT1,ENT:RMR,1,no,no,e23,Product/Service ID,1,48,-,X
+IT1,ENT:RMR,1,no,no,e24,Product/Service ID Qualifier,2,2,-,X
+IT1,ENT:RMR,1,no,no,e25,Product/Service ID,1,48,-,X
+RPA,ENT:RMR:IT1,1,no,yes,landmark,Rate Amounts or Percents,3,3,-,O
+RPA,ENT:RMR:IT1,1,no,no,e01,Rate or Value Type Code,1,2,-,M
+RPA,ENT:RMR:IT1,1,no,no,e02,Monetary Amount,1,18,-,X
+RPA,ENT:RMR:IT1,1,no,no,e03,Rate,1,9,-,X
+RPA,ENT:RMR:IT1,1,no,no,e05,Percentage as Decimal,1,10,-,X
+QTY,ENT:RMR:IT1,1,no,yes,landmark,Quantity Information,3,3,-,O
+QTY,ENT:RMR:IT1,1,no,no,e01,Quantity Qualifier,2,2,-,M
+QTY,ENT:RMR:IT1,1,no,no,e02,Quantity,1,15,-,X
+QTY,ENT:RMR:IT1,1,no,no,e04,Free-form Information,1,30,-,X/Z
+REF,ENT:RMR:IT1,99999,yes,yes,landmark,Reference Information,3,3,-,O
+REF,ENT:RMR:IT1,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
+REF,ENT:RMR:IT1,1,no,no,e02,Reference Identification,1,50,-,X
+REF,ENT:RMR:IT1,1,no,no,e03,Description,1,80,-,X
+DTM,ENT:RMR:IT1:REF,1,no,yes,landmark,Date/Time Reference,3,3,-,O
+DTM,ENT:RMR:IT1:REF,1,no,no,e01,Date/Time Qualifier,3,3,-,M
+DTM,ENT:RMR:IT1:REF,1,no,no,e02,Date,8,8,-,X
+DTM,ENT:RMR:IT1:REF,1,no,no,e03,Time,4,8,-,X
+DTM,ENT:RMR:IT1:REF,1,no,no,e04,Time Code,2,2,-,O
+DTM,ENT:RMR:IT1:REF,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X
+DTM,ENT:RMR:IT1:REF,1,no,no,e06,Date Time Period,1,35,-,X
+REF,,,,,groupend,,,,,
+IT1,,,,,groupend,,,,,
+RMR,,,,,groupend,,,,,
+SLN,,,,,groupend,,,,,
+ENT,,,,,groupend,,,,,
+SAC,ENT:RMR,99999,yes,yes,landmark,Service, Promotion, Allowance, or Charge Information,3,3,-,O
+SAC,ENT:RMR,1,no,no,e01,Allowance or Charge Indicator,1,1,-,M/Z
+SAC,ENT:RMR,1,no,no,e02,Service, Promotion, Allowance, or Charge Code,4,4,-,X
+SAC,ENT:RMR,1,no,no,e03,Agency Qualifier Code,2,2,-,X
+SAC,ENT:RMR,1,no,no,e04,Agency Service, Promotion, Allowance, or Charge Code,1,10,-,X
+SAC,ENT:RMR,1,no,no,e05,Amount,1,15,-,O/Z
+SAC,ENT:RMR,1,no,no,e06,Allowance/Charge Percent Qualifier,1,1,-,X
+SAC,ENT:RMR,1,no,no,e07,Percent, Decimal Format,1,6,-,X
+SAC,ENT:RMR,1,no,no,e08,Rate,1,9,-,O/Z
+SAC,ENT:RMR,1,no,no,e09,Unit or Basis for Measurement Code,2,2,-,X
+SAC,ENT:RMR,1,no,no,e10,Quantity,1,15,-,X/Z
+SAC,ENT:RMR,1,no,no,e11,Quantity,1,15,-,O
+SAC,ENT:RMR,1,no,no,e12,Allowance or Charge Method of Handling Code,2,2,-,O
+SAC,ENT:RMR,1,no,no,e13,Reference Identification,1,50,-,X/Z
+SAC,ENT:RMR,1,no,no,e14,Option Number,1,20,-,O/Z
+SAC,ENT:RMR,1,no,no,e15,Description,1,80,-,X
+SAC,ENT:RMR,1,no,no,e16,Language Code,2,3,-,O/Z
+TXI,ENT:RMR:SAC,99999,no,yes,landmark,Tax Information,3,3,-,O
+TXI,ENT:RMR:SAC,1,no,no,e01,Tax Type Code,2,2,-,M
+TXI,ENT:RMR:SAC,1,no,no,e02,Monetary Amount,1,18,-,X/Z
+TXI,ENT:RMR:SAC,1,no,no,e03,Percentage as Decimal,1,10,-,X/Z
+TXI,ENT:RMR:SAC,1,no,no,e04,Tax Jurisdiction Code Qualifier,2,2,-,X
+TXI,ENT:RMR:SAC,1,no,no,e05,Tax Jurisdiction Code,1,10,-,X
+TXI,ENT:RMR:SAC,1,no,no,e06,Tax Exempt Code,1,1,-,X
+TXI,ENT:RMR:SAC,1,no,no,e07,Relationship Code,1,1,-,O/Z
+TXI,ENT:RMR:SAC,1,no,no,e08,Dollar Basis For Percent,1,9,-,O
+TXI,ENT:RMR:SAC,1,no,no,e09,Tax Identification Number,1,20,-,O
+TXI,ENT:RMR:SAC,1,no,no,e10,Assigned Identification,1,20,-,O
+SAC,,,,,groupend,,,,,
+RMR,,,,,groupend,,,,,
+SLN,,,,,groupend,,,,,
+ENT,,,,,groupend,,,,,
+SLN,ENT:RMR,99999,yes,yes,landmark,Subline Item Detail,3,3,-,O
+SLN,ENT:RMR,1,no,no,e01,Assigned Identification,1,20,-,M/Z
+SLN,ENT:RMR,1,no,no,e02,Assigned Identification,1,20,-,O/Z
+SLN,ENT:RMR,1,no,no,e03,Relationship Code,1,1,-,M/Z
+SLN,ENT:RMR,1,no,no,e04,Quantity,1,15,-,X
+SLN,ENT:RMR,1,no,no,e06,Unit Price,1,17,-,X
+SLN,ENT:RMR,1,no,no,e07,Basis of Unit Price Code,2,2,-,O
+SLN,ENT:RMR,1,no,no,e08,Relationship Code,1,1,-,O/Z
+SLN,ENT:RMR,1,no,no,e09,Product/Service ID Qualifier,2,2,-,X
+SLN,ENT:RMR,1,no,no,e10,Product/Service ID,1,48,-,X
+SLN,ENT:RMR,1,no,no,e11,Product/Service ID Qualifier,2,2,-,X
+SLN,ENT:RMR,1,no,no,e12,Product/Service ID,1,48,-,X
+SLN,ENT:RMR,1,no,no,e13,Product/Service ID Qualifier,2,2,-,X
+SLN,ENT:RMR,1,no,no,e14,Product/Service ID,1,48,-,X
+SLN,ENT:RMR,1,no,no,e15,Product/Service ID Qualifier,2,2,-,X
+SLN,ENT:RMR,1,no,no,e16,Product/Service ID,1,48,-,X
+SLN,ENT:RMR,1,no,no,e17,Product/Service ID Qualifier,2,2,-,X
+SLN,ENT:RMR,1,no,no,e18,Product/Service ID,1,48,-,X
+SLN,ENT:RMR,1,no,no,e19,Product/Service ID Qualifier,2,2,-,X
+SLN,ENT:RMR,1,no,no,e20,Product/Service ID,1,48,-,X
+SLN,ENT:RMR,1,no,no,e21,Product/Service ID Qualifier,2,2,-,X
+SLN,ENT:RMR,1,no,no,e22,Product/Service ID,1,48,-,X
+SLN,ENT:RMR,1,no,no,e23,Product/Service ID Qualifier,2,2,-,X
+SLN,ENT:RMR,1,no,no,e24,Product/Service ID,1,48,-,X
+SLN,ENT:RMR,1,no,no,e25,Product/Service ID Qualifier,2,2,-,X
+SLN,ENT:RMR,1,no,no,e26,Product/Service ID,1,48,-,X
+SLN,ENT:RMR,1,no,no,e27,Product/Service ID Qualifier,2,2,-,X
+SLN,ENT:RMR,1,no,no,e28,Product/Service ID,1,48,-,X
+REF,ENT:RMR:SLN,99999,yes,yes,landmark,Reference Information,3,3,-,O
+REF,ENT:RMR:SLN,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
+REF,ENT:RMR:SLN,1,no,no,e02,Reference Identification,1,50,-,X
+REF,ENT:RMR:SLN,1,no,no,e03,Description,1,80,-,X
+DTM,ENT:RMR:SLN:REF,99999,no,yes,landmark,Date/Time Reference,3,3,-,O
+DTM,ENT:RMR:SLN:REF,1,no,no,e01,Date/Time Qualifier,3,3,-,M
+DTM,ENT:RMR:SLN:REF,1,no,no,e02,Date,8,8,-,X
+DTM,ENT:RMR:SLN:REF,1,no,no,e03,Time,4,8,-,X
+DTM,ENT:RMR:SLN:REF,1,no,no,e04,Time Code,2,2,-,O
+DTM,ENT:RMR:SLN:REF,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X
+DTM,ENT:RMR:SLN:REF,1,no,no,e06,Date Time Period,1,35,-,X
+REF,,,,,groupend,,,,,
+SLN,,,,,groupend,,,,,
+RMR,,,,,groupend,,,,,
+SLN,,,,,groupend,,,,,
+ENT,,,,,groupend,,,,,
+SAC,ENT:RMR:SLN,99999,yes,yes,landmark,Service, Promotion, Allowance, or Charge Information,3,3,-,O
+SAC,ENT:RMR:SLN,1,no,no,e01,Allowance or Charge Indicator,1,1,-,M/Z
+SAC,ENT:RMR:SLN,1,no,no,e02,Service, Promotion, Allowance, or Charge Code,4,4,-,X
+SAC,ENT:RMR:SLN,1,no,no,e03,Agency Qualifier Code,2,2,-,X
+SAC,ENT:RMR:SLN,1,no,no,e04,Agency Service, Promotion, Allowance, or Charge Code,1,10,-,X
+SAC,ENT:RMR:SLN,1,no,no,e05,Amount,1,15,-,O/Z
+SAC,ENT:RMR:SLN,1,no,no,e06,Allowance/Charge Percent Qualifier,1,1,-,X
+SAC,ENT:RMR:SLN,1,no,no,e07,Percent, Decimal Format,1,6,-,X
+SAC,ENT:RMR:SLN,1,no,no,e08,Rate,1,9,-,O/Z
+SAC,ENT:RMR:SLN,1,no,no,e09,Unit or Basis for Measurement Code,2,2,-,X
+SAC,ENT:RMR:SLN,1,no,no,e10,Quantity,1,15,-,X/Z
+SAC,ENT:RMR:SLN,1,no,no,e11,Quantity,1,15,-,O
+SAC,ENT:RMR:SLN,1,no,no,e12,Allowance or Charge Method of Handling Code,2,2,-,O
+SAC,ENT:RMR:SLN,1,no,no,e13,Reference Identification,1,50,-,X/Z
+SAC,ENT:RMR:SLN,1,no,no,e14,Option Number,1,20,-,O/Z
+SAC,ENT:RMR:SLN,1,no,no,e15,Description,1,80,-,X
+SAC,ENT:RMR:SLN,1,no,no,e16,Language Code,2,3,-,O/Z
+TXI,ENT:RMR:SLN:SAC,99999,no,yes,landmark,Tax Information,3,3,-,O
+TXI,ENT:RMR:SLN:SAC,1,no,no,e01,Tax Type Code,2,2,-,M
+TXI,ENT:RMR:SLN:SAC,1,no,no,e02,Monetary Amount,1,18,-,X/Z
+TXI,ENT:RMR:SLN:SAC,1,no,no,e03,Percentage as Decimal,1,10,-,X/Z
+TXI,ENT:RMR:SLN:SAC,1,no,no,e04,Tax Jurisdiction Code Qualifier,2,2,-,X
+TXI,ENT:RMR:SLN:SAC,1,no,no,e05,Tax Jurisdiction Code,1,10,-,X
+TXI,ENT:RMR:SLN:SAC,1,no,no,e06,Tax Exempt Code,1,1,-,X
+TXI,ENT:RMR:SLN:SAC,1,no,no,e07,Relationship Code,1,1,-,O/Z
+TXI,ENT:RMR:SLN:SAC,1,no,no,e08,Dollar Basis For Percent,1,9,-,O
+TXI,ENT:RMR:SLN:SAC,1,no,no,e09,Tax Identification Number,1,20,-,O
+TXI,ENT:RMR:SLN:SAC,1,no,no,e10,Assigned Identification,1,20,-,O
+SAC,,,,,groupend,,,,,
+SLN,,,,,groupend,,,,,
+ADX,ENT:SLN:SLN,99999,yes,yes,landmark,Adjustment,3,3,-,O
+ADX,ENT:SLN:SLN,1,no,no,e01,Monetary Amount,1,18,-,M/Z
+ADX,ENT:SLN:SLN,1,no,no,e02,Adjustment Reason Code,2,2,-,M/Z
+ADX,ENT:SLN:SLN,1,no,no,e03,Reference Identification Qualifier,2,3,-,X/Z
+ADX,ENT:SLN:SLN,1,no,no,e04,Reference Identification,1,50,-,X
+NTE,ENT:SLN:SLN:ADX,99999,no,yes,landmark,Note/Special Instruction,3,3,-,O
+NTE,ENT:SLN:SLN:ADX,1,no,no,e01,Note Reference Code,3,3,-,O
+NTE,ENT:SLN:SLN:ADX,1,no,no,e02,Description,1,80,-,M
+PER,ENT:SLN:SLN:ADX,99999,no,yes,landmark,Administrative Communications Contact,3,3,-,O
+PER,ENT:SLN:SLN:ADX,1,no,no,e01,Contact Function Code,2,2,-,M
+PER,ENT:SLN:SLN:ADX,1,no,no,e02,Name,1,60,-,O
+PER,ENT:SLN:SLN:ADX,1,no,no,e03,Communication Number Qualifier,2,2,-,X
+PER,ENT:SLN:SLN:ADX,1,no,no,e04,Communication Number,1,256,-,X
+PER,ENT:SLN:SLN:ADX,1,no,no,e05,Communication Number Qualifier,2,2,-,X
+PER,ENT:SLN:SLN:ADX,1,no,no,e06,Communication Number,1,256,-,X
+PER,ENT:SLN:SLN:ADX,1,no,no,e07,Communication Number Qualifier,2,2,-,X
+PER,ENT:SLN:SLN:ADX,1,no,no,e08,Communication Number,1,256,-,X
+PER,ENT:SLN:SLN:ADX,1,no,no,e09,Contact Inquiry Reference,1,20,-,O
+REF,ENT:SLN:SLN:ADX,99999,yes,yes,landmark,Reference Information,3,3,-,O
+REF,ENT:SLN:SLN:ADX,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
+REF,ENT:SLN:SLN:ADX,1,no,no,e02,Reference Identification,1,50,-,X
+REF,ENT:SLN:SLN:ADX,1,no,no,e03,Description,1,80,-,X
+DTM,ENT:SLN:SLN:ADX:REF,99999,no,yes,landmark,Date/Time Reference,3,3,-,O
+DTM,ENT:SLN:SLN:ADX:REF,1,no,no,e01,Date/Time Qualifier,3,3,-,M
+DTM,ENT:SLN:SLN:ADX:REF,1,no,no,e02,Date,8,8,-,X
+DTM,ENT:SLN:SLN:ADX:REF,1,no,no,e03,Time,4,8,-,X
+DTM,ENT:SLN:SLN:ADX:REF,1,no,no,e04,Time Code,2,2,-,O
+DTM,ENT:SLN:SLN:ADX:REF,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X
+DTM,ENT:SLN:SLN:ADX:REF,1,no,no,e06,Date Time Period,1,35,-,X
+REF,,,,,groupend,,,,,
+ADX,,,,,groupend,,,,,
+SLN,,,,,groupend,,,,,
+SLN,,,,,groupend,,,,,
+ENT,,,,,groupend,,,,,
+IT1,ENT:SLN:SLN,99999,yes,yes,landmark,Baseline Item Data (Invoice),3,3,-,O
+IT1,ENT:SLN:SLN,1,no,no,e01,Assigned Identification,1,20,-,O/Z
+IT1,ENT:SLN:SLN,1,no,no,e02,Quantity Invoiced,1,15,-,X
+IT1,ENT:SLN:SLN,1,no,no,e03,Unit or Basis for Measurement Code,2,2,-,X
+IT1,ENT:SLN:SLN,1,no,no,e04,Unit Price,1,17,-,X
+IT1,ENT:SLN:SLN,1,no,no,e05,Basis of Unit Price Code,2,2,-,O
+IT1,ENT:SLN:SLN,1,no,no,e06,Product/Service ID Qualifier,2,2,-,X
+IT1,ENT:SLN:SLN,1,no,no,e07,Product/Service ID,1,48,-,X
+IT1,ENT:SLN:SLN,1,no,no,e08,Product/Service ID Qualifier,2,2,-,X
+IT1,ENT:SLN:SLN,1,no,no,e09,Product/Service ID,1,48,-,X
+IT1,ENT:SLN:SLN,1,no,no,e10,Product/Service ID Qualifier,2,2,-,X
+IT1,ENT:SLN:SLN,1,no,no,e11,Product/Service ID,1,48,-,X
+IT1,ENT:SLN:SLN,1,no,no,e12,Product/Service ID Qualifier,2,2,-,X
+IT1,ENT:SLN:SLN,1,no,no,e13,Product/Service ID,1,48,-,X
+IT1,ENT:SLN:SLN,1,no,no,e14,Product/Service ID Qualifier,2,2,-,X
+IT1,ENT:SLN:SLN,1,no,no,e15,Product/Service ID,1,48,-,X
+IT1,ENT:SLN:SLN,1,no,no,e16,Product/Service ID Qualifier,2,2,-,X
+IT1,ENT:SLN:SLN,1,no,no,e17,Product/Service ID,1,48,-,X
+IT1,ENT:SLN:SLN,1,no,no,e18,Product/Service ID Qualifier,2,2,-,X
+IT1,ENT:SLN:SLN,1,no,no,e19,Product/Service ID,1,48,-,X
+IT1,ENT:SLN:SLN,1,no,no,e20,Product/Service ID Qualifier,2,2,-,X
+IT1,ENT:SLN:SLN,1,no,no,e21,Product/Service ID,1,48,-,X
+IT1,ENT:SLN:SLN,1,no,no,e22,Product/Service ID Qualifier,2,2,-,X
+IT1,ENT:SLN:SLN,1,no,no,e23,Product/Service ID,1,48,-,X
+IT1,ENT:SLN:SLN,1,no,no,e24,Product/Service ID Qualifier,2,2,-,X
+IT1,ENT:SLN:SLN,1,no,no,e25,Product/Service ID,1,48,-,X
+RPA,ENT:SLN:SLN:IT1,1,no,yes,landmark,Rate Amounts or Percents,3,3,-,O
+RPA,ENT:SLN:SLN:IT1,1,no,no,e01,Rate or Value Type Code,1,2,-,M
+RPA,ENT:SLN:SLN:IT1,1,no,no,e02,Monetary Amount,1,18,-,X
+RPA,ENT:SLN:SLN:IT1,1,no,no,e03,Rate,1,9,-,X
+RPA,ENT:SLN:SLN:IT1,1,no,no,e05,Percentage as Decimal,1,10,-,X
+QTY,ENT:SLN:SLN:IT1,1,no,yes,landmark,Quantity Information,3,3,-,O
+QTY,ENT:SLN:SLN:IT1,1,no,no,e01,Quantity Qualifier,2,2,-,M
+QTY,ENT:SLN:SLN:IT1,1,no,no,e02,Quantity,1,15,-,X
+QTY,ENT:SLN:SLN:IT1,1,no,no,e04,Free-form Information,1,30,-,X/Z
+REF,ENT:SLN:SLN:IT1,99999,yes,yes,landmark,Reference Information,3,3,-,O
+REF,ENT:SLN:SLN:IT1,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
+REF,ENT:SLN:SLN:IT1,1,no,no,e02,Reference Identification,1,50,-,X
+REF,ENT:SLN:SLN:IT1,1,no,no,e03,Description,1,80,-,X
+DTM,ENT:SLN:SLN:IT1:REF,1,no,yes,landmark,Date/Time Reference,3,3,-,O
+DTM,ENT:SLN:SLN:IT1:REF,1,no,no,e01,Date/Time Qualifier,3,3,-,M
+DTM,ENT:SLN:SLN:IT1:REF,1,no,no,e02,Date,8,8,-,X
+DTM,ENT:SLN:SLN:IT1:REF,1,no,no,e03,Time,4,8,-,X
+DTM,ENT:SLN:SLN:IT1:REF,1,no,no,e04,Time Code,2,2,-,O
+DTM,ENT:SLN:SLN:IT1:REF,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X
+DTM,ENT:SLN:SLN:IT1:REF,1,no,no,e06,Date Time Period,1,35,-,X
+REF,,,,,groupend,,,,,
+IT1,,,,,groupend,,,,,
+SLN,,,,,groupend,,,,,
+SLN,,,,,groupend,,,,,
+ENT,,,,,groupend,,,,,
+SAC,ENT:SLN:SLN:IT1,99999,yes,yes,landmark,Service, Promotion, Allowance, or Charge Information,3,3,-,O
+SAC,ENT:SLN:SLN:IT1,1,no,no,e01,Allowance or Charge Indicator,1,1,-,M/Z
+SAC,ENT:SLN:SLN:IT1,1,no,no,e02,Service, Promotion, Allowance, or Charge Code,4,4,-,X
+SAC,ENT:SLN:SLN:IT1,1,no,no,e03,Agency Qualifier Code,2,2,-,X
+SAC,ENT:SLN:SLN:IT1,1,no,no,e04,Agency Service, Promotion, Allowance, or Charge Code,1,10,-,X
+SAC,ENT:SLN:SLN:IT1,1,no,no,e05,Amount,1,15,-,O/Z
+SAC,ENT:SLN:SLN:IT1,1,no,no,e06,Allowance/Charge Percent Qualifier,1,1,-,X
+SAC,ENT:SLN:SLN:IT1,1,no,no,e07,Percent, Decimal Format,1,6,-,X
+SAC,ENT:SLN:SLN:IT1,1,no,no,e08,Rate,1,9,-,O/Z
+SAC,ENT:SLN:SLN:IT1,1,no,no,e09,Unit or Basis for Measurement Code,2,2,-,X
+SAC,ENT:SLN:SLN:IT1,1,no,no,e10,Quantity,1,15,-,X/Z
+SAC,ENT:SLN:SLN:IT1,1,no,no,e11,Quantity,1,15,-,O
+SAC,ENT:SLN:SLN:IT1,1,no,no,e12,Allowance or Charge Method of Handling Code,2,2,-,O
+SAC,ENT:SLN:SLN:IT1,1,no,no,e13,Reference Identification,1,50,-,X/Z
+SAC,ENT:SLN:SLN:IT1,1,no,no,e14,Option Number,1,20,-,O/Z
+SAC,ENT:SLN:SLN:IT1,1,no,no,e15,Description,1,80,-,X
+SAC,ENT:SLN:SLN:IT1,1,no,no,e16,Language Code,2,3,-,O/Z
+TXI,ENT:SLN:SLN:IT1:SAC,99999,no,yes,landmark,Tax Information,3,3,-,O
+TXI,ENT:SLN:SLN:IT1:SAC,1,no,no,e01,Tax Type Code,2,2,-,M
+TXI,ENT:SLN:SLN:IT1:SAC,1,no,no,e02,Monetary Amount,1,18,-,X/Z
+TXI,ENT:SLN:SLN:IT1:SAC,1,no,no,e03,Percentage as Decimal,1,10,-,X/Z
+TXI,ENT:SLN:SLN:IT1:SAC,1,no,no,e04,Tax Jurisdiction Code Qualifier,2,2,-,X
+TXI,ENT:SLN:SLN:IT1:SAC,1,no,no,e05,Tax Jurisdiction Code,1,10,-,X
+TXI,ENT:SLN:SLN:IT1:SAC,1,no,no,e06,Tax Exempt Code,1,1,-,X
+TXI,ENT:SLN:SLN:IT1:SAC,1,no,no,e07,Relationship Code,1,1,-,O/Z
+TXI,ENT:SLN:SLN:IT1:SAC,1,no,no,e08,Dollar Basis For Percent,1,9,-,O
+TXI,ENT:SLN:SLN:IT1:SAC,1,no,no,e09,Tax Identification Number,1,20,-,O
+TXI,ENT:SLN:SLN:IT1:SAC,1,no,no,e10,Assigned Identification,1,20,-,O
+DTM,ENT:SLN:SLN:IT1:SAC,10,no,yes,landmark,Date/Time Reference,3,3,-,O
+DTM,ENT:SLN:SLN:IT1:SAC,1,no,no,e01,Date/Time Qualifier,3,3,-,M
+DTM,ENT:SLN:SLN:IT1:SAC,1,no,no,e02,Date,8,8,-,X
+DTM,ENT:SLN:SLN:IT1:SAC,1,no,no,e03,Time,4,8,-,X
+DTM,ENT:SLN:SLN:IT1:SAC,1,no,no,e04,Time Code,2,2,-,O
+DTM,ENT:SLN:SLN:IT1:SAC,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X
+DTM,ENT:SLN:SLN:IT1:SAC,1,no,no,e06,Date Time Period,1,35,-,X
+SAC,,,,,groupend,,,,,
+IT1,,,,,groupend,,,,,
+SLN,,,,,groupend,,,,,
+SLN,,,,,groupend,,,,,
+ENT,,,,,groupend,,,,,
+SLN,ENT:SLN:SLN:IT1,99999,yes,yes,landmark,Subline Item Detail,3,3,-,O
+SLN,ENT:SLN:SLN:IT1,1,no,no,e01,Assigned Identification,1,20,-,M/Z
+SLN,ENT:SLN:SLN:IT1,1,no,no,e02,Assigned Identification,1,20,-,O/Z
+SLN,ENT:SLN:SLN:IT1,1,no,no,e03,Relationship Code,1,1,-,M/Z
+SLN,ENT:SLN:SLN:IT1,1,no,no,e04,Quantity,1,15,-,X
+SLN,ENT:SLN:SLN:IT1,1,no,no,e06,Unit Price,1,17,-,X
+SLN,ENT:SLN:SLN:IT1,1,no,no,e07,Basis of Unit Price Code,2,2,-,O
+SLN,ENT:SLN:SLN:IT1,1,no,no,e08,Relationship Code,1,1,-,O/Z
+SLN,ENT:SLN:SLN:IT1,1,no,no,e09,Product/Service ID Qualifier,2,2,-,X
+SLN,ENT:SLN:SLN:IT1,1,no,no,e10,Product/Service ID,1,48,-,X
+SLN,ENT:SLN:SLN:IT1,1,no,no,e11,Product/Service ID Qualifier,2,2,-,X
+SLN,ENT:SLN:SLN:IT1,1,no,no,e12,Product/Service ID,1,48,-,X
+SLN,ENT:SLN:SLN:IT1,1,no,no,e13,Product/Service ID Qualifier,2,2,-,X
+SLN,ENT:SLN:SLN:IT1,1,no,no,e14,Product/Service ID,1,48,-,X
+SLN,ENT:SLN:SLN:IT1,1,no,no,e15,Product/Service ID Qualifier,2,2,-,X
+SLN,ENT:SLN:SLN:IT1,1,no,no,e16,Product/Service ID,1,48,-,X
+SLN,ENT:SLN:SLN:IT1,1,no,no,e17,Product/Service ID Qualifier,2,2,-,X
+SLN,ENT:SLN:SLN:IT1,1,no,no,e18,Product/Service ID,1,48,-,X
+SLN,ENT:SLN:SLN:IT1,1,no,no,e19,Product/Service ID Qualifier,2,2,-,X
+SLN,ENT:SLN:SLN:IT1,1,no,no,e20,Product/Service ID,1,48,-,X
+SLN,ENT:SLN:SLN:IT1,1,no,no,e21,Product/Service ID Qualifier,2,2,-,X
+SLN,ENT:SLN:SLN:IT1,1,no,no,e22,Product/Service ID,1,48,-,X
+SLN,ENT:SLN:SLN:IT1,1,no,no,e23,Product/Service ID Qualifier,2,2,-,X
+SLN,ENT:SLN:SLN:IT1,1,no,no,e24,Product/Service ID,1,48,-,X
+SLN,ENT:SLN:SLN:IT1,1,no,no,e25,Product/Service ID Qualifier,2,2,-,X
+SLN,ENT:SLN:SLN:IT1,1,no,no,e26,Product/Service ID,1,48,-,X
+SLN,ENT:SLN:SLN:IT1,1,no,no,e27,Product/Service ID Qualifier,2,2,-,X
+SLN,ENT:SLN:SLN:IT1,1,no,no,e28,Product/Service ID,1,48,-,X
+REF,ENT:SLN:SLN:IT1:SLN,99999,yes,yes,landmark,Reference Information,3,3,-,O
+REF,ENT:SLN:SLN:IT1:SLN,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
+REF,ENT:SLN:SLN:IT1:SLN,1,no,no,e02,Reference Identification,1,50,-,X
+REF,ENT:SLN:SLN:IT1:SLN,1,no,no,e03,Description,1,80,-,X
+DTM,ENT:SLN:SLN:IT1:SLN:REF,99999,no,yes,landmark,Date/Time Reference,3,3,-,O
+DTM,ENT:SLN:SLN:IT1:SLN:REF,1,no,no,e01,Date/Time Qualifier,3,3,-,M
+DTM,ENT:SLN:SLN:IT1:SLN:REF,1,no,no,e02,Date,8,8,-,X
+DTM,ENT:SLN:SLN:IT1:SLN:REF,1,no,no,e03,Time,4,8,-,X
+DTM,ENT:SLN:SLN:IT1:SLN:REF,1,no,no,e04,Time Code,2,2,-,O
+DTM,ENT:SLN:SLN:IT1:SLN:REF,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X
+DTM,ENT:SLN:SLN:IT1:SLN:REF,1,no,no,e06,Date Time Period,1,35,-,X
+REF,,,,,groupend,,,,,
+SLN,,,,,groupend,,,,,
+IT1,,,,,groupend,,,,,
+SLN,,,,,groupend,,,,,
+SLN,,,,,groupend,,,,,
+ENT,,,,,groupend,,,,,
+SAC,ENT:SLN:SLN:IT1:SLN,99999,yes,yes,landmark,Service, Promotion, Allowance, or Charge Information,3,3,-,O
+SAC,ENT:SLN:SLN:IT1:SLN,1,no,no,e01,Allowance or Charge Indicator,1,1,-,M/Z
+SAC,ENT:SLN:SLN:IT1:SLN,1,no,no,e02,Service, Promotion, Allowance, or Charge Code,4,4,-,X
+SAC,ENT:SLN:SLN:IT1:SLN,1,no,no,e03,Agency Qualifier Code,2,2,-,X
+SAC,ENT:SLN:SLN:IT1:SLN,1,no,no,e04,Agency Service, Promotion, Allowance, or Charge Code,1,10,-,X
+SAC,ENT:SLN:SLN:IT1:SLN,1,no,no,e05,Amount,1,15,-,O/Z
+SAC,ENT:SLN:SLN:IT1:SLN,1,no,no,e06,Allowance/Charge Percent Qualifier,1,1,-,X
+SAC,ENT:SLN:SLN:IT1:SLN,1,no,no,e07,Percent, Decimal Format,1,6,-,X
+SAC,ENT:SLN:SLN:IT1:SLN,1,no,no,e08,Rate,1,9,-,O/Z
+SAC,ENT:SLN:SLN:IT1:SLN,1,no,no,e09,Unit or Basis for Measurement Code,2,2,-,X
+SAC,ENT:SLN:SLN:IT1:SLN,1,no,no,e10,Quantity,1,15,-,X/Z
+SAC,ENT:SLN:SLN:IT1:SLN,1,no,no,e11,Quantity,1,15,-,O
+SAC,ENT:SLN:SLN:IT1:SLN,1,no,no,e12,Allowance or Charge Method of Handling Code,2,2,-,O
+SAC,ENT:SLN:SLN:IT1:SLN,1,no,no,e13,Reference Identification,1,50,-,X/Z
+SAC,ENT:SLN:SLN:IT1:SLN,1,no,no,e14,Option Number,1,20,-,O/Z
+SAC,ENT:SLN:SLN:IT1:SLN,1,no,no,e15,Description,1,80,-,X
+SAC,ENT:SLN:SLN:IT1:SLN,1,no,no,e16,Language Code,2,3,-,O/Z
+TXI,ENT:SLN:SLN:IT1:SLN:SAC,99999,no,yes,landmark,Tax Information,3,3,-,O
+TXI,ENT:SLN:SLN:IT1:SLN:SAC,1,no,no,e01,Tax Type Code,2,2,-,M
+TXI,ENT:SLN:SLN:IT1:SLN:SAC,1,no,no,e02,Monetary Amount,1,18,-,X/Z
+TXI,ENT:SLN:SLN:IT1:SLN:SAC,1,no,no,e03,Percentage as Decimal,1,10,-,X/Z
+TXI,ENT:SLN:SLN:IT1:SLN:SAC,1,no,no,e04,Tax Jurisdiction Code Qualifier,2,2,-,X
+TXI,ENT:SLN:SLN:IT1:SLN:SAC,1,no,no,e05,Tax Jurisdiction Code,1,10,-,X
+TXI,ENT:SLN:SLN:IT1:SLN:SAC,1,no,no,e06,Tax Exempt Code,1,1,-,X
+TXI,ENT:SLN:SLN:IT1:SLN:SAC,1,no,no,e07,Relationship Code,1,1,-,O/Z
+TXI,ENT:SLN:SLN:IT1:SLN:SAC,1,no,no,e08,Dollar Basis For Percent,1,9,-,O
+TXI,ENT:SLN:SLN:IT1:SLN:SAC,1,no,no,e09,Tax Identification Number,1,20,-,O
+TXI,ENT:SLN:SLN:IT1:SLN:SAC,1,no,no,e10,Assigned Identification,1,20,-,O
+SAC,,,,,groupend,,,,,
+SLN,,,,,groupend,,,,,
+IT1,,,,,groupend,,,,,
+SLN,,,,,groupend,,,,,
+FA1,ENT:RMR,99999,yes,yes,landmark,Type of Financial Accounting Data,3,3,-,O
+FA1,ENT:RMR,1,no,no,e01,Agency Qualifier Code,2,2,-,M/Z
+FA1,ENT:RMR,1,no,no,e02,Service, Promotion, Allowance, or Charge Code,4,4,-,O/Z
+FA1,ENT:RMR,1,no,no,e03,Allowance or Charge Indicator,1,1,-,O
+FA2,ENT:RMR:FA1,99999,no,yes,landmark,Accounting Data,3,3,-,M
+FA2,ENT:RMR:FA1,1,no,no,e01,Breakdown Structure Detail Code,2,2,-,M
+FA2,ENT:RMR:FA1,1,no,no,e02,Financial Information Code,1,80,-,M
+FA1,,,,,groupend,,,,,
+RMR,,,,,groupend,,,,,
+ENT,,,,,groupend,,,,,
+TXP,,99999,yes,yes,landmark,Tax Payment,3,3,-,O
+TXP,,1,no,no,e01,Tax Identification Number,1,20,-,M
+TXP,,1,no,no,e02,Tax Payment Type Code,1,5,-,M
+TXP,,1,no,no,e03,Date,8,8,-,M
+TXP,,1,no,no,e04,Tax Information Identification Number,1,30,-,M
+TXP,,1,no,no,e05,Tax Amount,1,10,-,M
+TXP,,1,no,no,e06,Tax Information Identification Number,1,30,-,X
+TXP,,1,no,no,e07,Tax Amount,1,10,-,X
+TXP,,1,no,no,e08,Tax Information Identification Number,1,30,-,X
+TXP,,1,no,no,e09,Tax Amount,1,10,-,X
+TXP,,1,no,no,e10,Taxpayer Verification,1,6,-,O
+TXI,TXP,99999,no,yes,landmark,Tax Information,3,3,-,O
+TXI,TXP,1,no,no,e01,Tax Type Code,2,2,-,M
+TXI,TXP,1,no,no,e02,Monetary Amount,1,18,-,X/Z
+TXI,TXP,1,no,no,e03,Percentage as Decimal,1,10,-,X/Z
+TXI,TXP,1,no,no,e04,Tax Jurisdiction Code Qualifier,2,2,-,X
+TXI,TXP,1,no,no,e05,Tax Jurisdiction Code,1,10,-,X
+TXI,TXP,1,no,no,e06,Tax Exempt Code,1,1,-,X
+TXI,TXP,1,no,no,e07,Relationship Code,1,1,-,O/Z
+TXI,TXP,1,no,no,e08,Dollar Basis For Percent,1,9,-,O
+TXI,TXP,1,no,no,e09,Tax Identification Number,1,20,-,O
+TXI,TXP,1,no,no,e10,Assigned Identification,1,20,-,O
+REF,TXP,99999,no,yes,landmark,Reference Information,3,3,-,O
+REF,TXP,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
+REF,TXP,1,no,no,e02,Reference Identification,1,50,-,X
+REF,TXP,1,no,no,e03,Description,1,80,-,X
+DTM,TXP,99999,no,yes,landmark,Date/Time Reference,3,3,-,O
+DTM,TXP,1,no,no,e01,Date/Time Qualifier,3,3,-,M
+DTM,TXP,1,no,no,e02,Date,8,8,-,X
+DTM,TXP,1,no,no,e03,Time,4,8,-,X
+DTM,TXP,1,no,no,e04,Time Code,2,2,-,O
+DTM,TXP,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X
+DTM,TXP,1,no,no,e06,Date Time Period,1,35,-,X
+TXP,,,,,groupend,,,,,
+DED,,99999,yes,yes,landmark,Deductions,3,3,-,O
+DED,,1,no,no,e01,Type of Deduction,2,2,-,M/Z
+DED,,1,no,no,e02,Reference Identification,1,50,-,M/Z
+DED,,1,no,no,e03,Date,8,8,-,M/Z
+DED,,1,no,no,e04,Amount,1,15,-,M/Z
+DED,,1,no,no,e05,Reference Identification,1,50,-,M/Z
+DED,,1,no,no,e06,Yes/No Condition or Response Code,1,1,-,M/Z
+DED,,1,no,no,e07,Name,1,60,-,O/Z
+DED,,1,no,no,e08,Reference Identification,1,50,-,O/Z
+DED,,1,no,no,e09,Yes/No Condition or Response Code,1,1,-,O/Z
+DED,,,,,groupend,,,,,
+LX,,99999,yes,yes,landmark,Transaction Set Line Number,2,2,-,O
+LX,,1,no,no,e01,Assigned Number,1,6,-,M
+REF,LX,99999,no,yes,landmark,Reference Information,3,3,-,O
+REF,LX,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
+REF,LX,1,no,no,e02,Reference Identification,1,50,-,X
+REF,LX,1,no,no,e03,Description,1,80,-,X
+TRN,LX,99999,no,yes,landmark,Trace,3,3,-,O
+TRN,LX,1,no,no,e01,Trace Type Code,1,2,-,M
+TRN,LX,1,no,no,e02,Reference Identification,1,50,-,M/Z
+TRN,LX,1,no,no,e03,Originating Company Identifier,10,10,-,O/Z
+TRN,LX,1,no,no,e04,Reference Identification,1,50,-,O/Z
+NM1,LX,99999,yes,yes,landmark,Individual or Organizational Name,3,3,-,O
+NM1,LX,1,no,no,e01,Entity Identifier Code,2,3,-,M
+NM1,LX,1,no,no,e02,Entity Type Qualifier,1,1,-,M/Z
+NM1,LX,1,no,no,e03,Name Last or Organization Name,1,60,-,X
+NM1,LX,1,no,no,e04,Name First,1,35,-,O
+NM1,LX,1,no,no,e05,Name Middle,1,25,-,O
+NM1,LX,1,no,no,e06,Name Prefix,1,10,-,O
+NM1,LX,1,no,no,e07,Name Suffix,1,10,-,O
+NM1,LX,1,no,no,e08,Identification Code Qualifier,1,2,-,X
+NM1,LX,1,no,no,e09,Identification Code,2,80,-,X
+NM1,LX,1,no,no,e10,Entity Relationship Code,2,2,-,X
+NM1,LX,1,no,no,e11,Entity Identifier Code,2,3,-,O
+NM1,LX,1,no,no,e12,Name Last or Organization Name,1,60,-,O
+REF,LX:NM1,99999,no,yes,landmark,Reference Information,3,3,-,O
+REF,LX:NM1,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
+REF,LX:NM1,1,no,no,e02,Reference Identification,1,50,-,X
+REF,LX:NM1,1,no,no,e03,Description,1,80,-,X
+G53,LX:NM1,1,no,yes,landmark,Maintenance Type,3,3,-,O
+G53,LX:NM1,1,no,no,e01,Maintenance Type Code,3,3,-,M
+AIN,LX:NM1,99999,yes,yes,landmark,Income,3,3,-,O
+AIN,LX:NM1,1,no,no,e01,Type of Income Code,2,2,-,M/Z
+AIN,LX:NM1,1,no,no,e02,Frequency Code,1,1,-,M/Z
+AIN,LX:NM1,1,no,no,e03,Monetary Amount,1,18,-,M/Z
+AIN,LX:NM1,1,no,no,e04,Quantity,1,15,-,O/Z
+AIN,LX:NM1,1,no,no,e05,Yes/No Condition or Response Code,1,1,-,O/Z
+AIN,LX:NM1,1,no,no,e06,Reference Identification,1,50,-,O/Z
+AIN,LX:NM1,1,no,no,e07,Amount Qualifier Code,1,3,-,O/Z
+AIN,LX:NM1,1,no,no,e08,Tax Treatment Code,1,1,-,O/Z
+AIN,LX:NM1,1,no,no,e09,Earnings Rate of Pay,1,15,-,X
+AIN,LX:NM1,1,no,no,e10,Unit or Basis for Measurement Code,2,2,-,X
+AIN,LX:NM1,1,no,no,e11,Quantity,1,15,-,X/Z
+AIN,LX:NM1,1,no,no,e12,Industry Code,1,30,-,O/Z
+AIN,LX:NM1,1,no,no,e13,Description,1,80,-,O/Z
+QTY,LX:NM1:AIN,99999,no,yes,landmark,Quantity Information,3,3,-,O
+QTY,LX:NM1:AIN,1,no,no,e01,Quantity Qualifier,2,2,-,M
+QTY,LX:NM1:AIN,1,no,no,e02,Quantity,1,15,-,X
+QTY,LX:NM1:AIN,1,no,no,e04,Free-form Information,1,30,-,X/Z
+DTP,LX:NM1:AIN,99999,no,yes,landmark,Date or Time or Period,3,3,-,O
+DTP,LX:NM1:AIN,1,no,no,e01,Date/Time Qualifier,3,3,-,M
+DTP,LX:NM1:AIN,1,no,no,e02,Date Time Period Format Qualifier,2,3,-,M/Z
+DTP,LX:NM1:AIN,1,no,no,e03,Date Time Period,1,35,-,M
+AIN,,,,,groupend,,,,,
+PEN,LX:NM1,99999,yes,yes,landmark,Pension Information,3,3,-,O
+PEN,LX:NM1,1,no,no,e01,Transaction Type Code,2,2,-,M
+PEN,LX:NM1,1,no,no,e02,Monetary Amount,1,18,-,X/Z
+PEN,LX:NM1,1,no,no,e03,Contribution Code,2,2,-,O
+PEN,LX:NM1,1,no,no,e04,Percentage as Decimal,1,10,-,X/Z
+PEN,LX:NM1,1,no,no,e05,Special Processing Type,1,6,-,O/Z
+PEN,LX:NM1,1,no,no,e06,Reference Identification,1,50,-,O/Z
+PEN,LX:NM1,1,no,no,e07,Number,1,9,-,O/Z
+PEN,LX:NM1,1,no,no,e08,Loan Type Code,1,2,-,O
+PEN,LX:NM1,1,no,no,e09,Maintenance Type Code,3,3,-,O
+AMT,LX:NM1:PEN,99999,no,yes,landmark,Monetary Amount Information,3,3,-,O
+AMT,LX:NM1:PEN,1,no,no,e01,Amount Qualifier Code,1,3,-,M
+AMT,LX:NM1:PEN,1,no,no,e02,Monetary Amount,1,18,-,M
+AMT,LX:NM1:PEN,1,no,no,e03,Credit/Debit Flag Code,1,1,-,O
+DTP,LX:NM1:PEN,99999,no,yes,landmark,Date or Time or Period,3,3,-,O
+DTP,LX:NM1:PEN,1,no,no,e01,Date/Time Qualifier,3,3,-,M
+DTP,LX:NM1:PEN,1,no,no,e02,Date Time Period Format Qualifier,2,3,-,M/Z
+DTP,LX:NM1:PEN,1,no,no,e03,Date Time Period,1,35,-,M
+INV,LX:NM1:PEN,99999,yes,yes,landmark,Investment Vehicle Selection,3,3,-,O
+INV,LX:NM1:PEN,1,no,no,e01,Description,1,80,-,M/Z
+INV,LX:NM1:PEN,1,no,no,e02,Percentage as Decimal,1,10,-,X/Z
+INV,LX:NM1:PEN,1,no,no,e03,Monetary Amount,1,18,-,X/Z
+INV,LX:NM1:PEN,1,no,no,e04,Quantity,1,15,-,X/Z
+INV,LX:NM1:PEN,1,no,no,e05,State or Province Code,2,2,-,O/Z
+INV,LX:NM1:PEN,1,no,no,e06,Description,1,80,-,O/Z
+INV,LX:NM1:PEN,1,no,no,e07,Monetary Amount,1,18,-,O/Z
+DTP,LX:NM1:PEN:INV,99999,no,yes,landmark,Date or Time or Period,3,3,-,O
+DTP,LX:NM1:PEN:INV,1,no,no,e01,Date/Time Qualifier,3,3,-,M
+DTP,LX:NM1:PEN:INV,1,no,no,e02,Date Time Period Format Qualifier,2,3,-,M/Z
+DTP,LX:NM1:PEN:INV,1,no,no,e03,Date Time Period,1,35,-,M
+INV,,,,,groupend,,,,,
+PEN,,,,,groupend,,,,,
+NM1,,,,,groupend,,,,,
+LX,,,,,groupend,,,,,
+N9,,1,yes,yes,landmark,Extended Reference Information,2,2,-,O
+N9,,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
+N9,,1,no,no,e02,Reference Identification,1,50,-,X
+N9,,1,no,no,e03,Free-form Description,1,45,-,X
+N9,,1,no,no,e04,Date,8,8,-,O
+N9,,1,no,no,e05,Time,4,8,-,X
+N9,,1,no,no,e06,Time Code,2,2,-,O/Z
+REF,N9,99999,no,yes,landmark,Reference Information,3,3,-,O
+REF,N9,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
+REF,N9,1,no,no,e02,Reference Identification,1,50,-,X
+REF,N9,1,no,no,e03,Description,1,80,-,X
+AMT,N9,99999,yes,yes,landmark,Monetary Amount Information,3,3,-,O
+AMT,N9,1,no,no,e01,Amount Qualifier Code,1,3,-,M
+AMT,N9,1,no,no,e02,Monetary Amount,1,18,-,M
+AMT,N9,1,no,no,e03,Credit/Debit Flag Code,1,1,-,O
+REF,N9:AMT,99999,no,yes,landmark,Reference Information,3,3,-,O
+REF,N9:AMT,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
+REF,N9:AMT,1,no,no,e02,Reference Identification,1,50,-,X
+REF,N9:AMT,1,no,no,e03,Description,1,80,-,X
+AMT,,,,,groupend,,,,,
+N1,N9,99999,yes,yes,landmark,Party Identification,2,2,-,O
+N1,N9,1,no,no,e01,Entity Identifier Code,2,3,-,M
+N1,N9,1,no,no,e02,Name,1,60,-,X
+N1,N9,1,no,no,e03,Identification Code Qualifier,1,2,-,X
+N1,N9,1,no,no,e04,Identification Code,2,80,-,X
+N1,N9,1,no,no,e05,Entity Relationship Code,2,2,-,O
+N1,N9,1,no,no,e06,Entity Identifier Code,2,3,-,O
+REF,N9:N1,99999,no,yes,landmark,Reference Information,3,3,-,O
+REF,N9:N1,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
+REF,N9:N1,1,no,no,e02,Reference Identification,1,50,-,X
+REF,N9:N1,1,no,no,e03,Description,1,80,-,X
+EMS,N9:N1,99999,yes,yes,landmark,Employment Position,3,3,-,O
+EMS,N9:N1,1,no,no,e01,Description,1,80,-,O/Z
+EMS,N9:N1,1,no,no,e02,Employment Class Code,2,3,-,O/Z
+EMS,N9:N1,1,no,no,e03,Occupation Code,4,6,-,O/Z
+EMS,N9:N1,1,no,no,e04,Employment Status Code,2,2,-,O/Z
+EMS,N9:N1,1,no,no,e05,Reference Identification Qualifier,2,3,-,X/Z
+EMS,N9:N1,1,no,no,e06,Reference Identification,1,50,-,X/Z
+EMS,N9:N1,1,no,no,e07,Reference Identification,1,50,-,X
+EMS,N9:N1,1,no,no,e08,Reference Identification Qualifier,2,3,-,X
+EMS,N9:N1,1,no,no,e09,Identification Code Qualifier,1,2,-,X/Z
+EMS,N9:N1,1,no,no,e10,Identification Code,2,80,-,X
+EMS,N9:N1,1,no,no,e11,Percent, Decimal Format,1,6,-,O/Z
+EMS,N9:N1,1,no,no,e12,Employment Status Code,2,2,-,O/Z
+EMS,N9:N1,1,no,no,e13,Identification Code Qualifier,1,2,-,X/Z
+EMS,N9:N1,1,no,no,e14,Identification Code,2,80,-,X
+EMS,N9:N1,1,no,no,e15,Employment Class Code,2,3,-,O/Z
+ATN,N9:N1:EMS,99999,no,yes,landmark,Attendance,3,3,-,O
+ATN,N9:N1:EMS,1,no,no,e01,Quantity,1,15,-,M/Z
+ATN,N9:N1:EMS,1,no,no,e02,Unit or Basis for Measurement Code,2,2,-,O
+ATN,N9:N1:EMS,1,no,no,e03,Quantity Qualifier,2,2,-,O/Z
+ATN,N9:N1:EMS,1,no,no,e04,Frequency Code,1,1,-,O
+ATN,N9:N1:EMS,1,no,no,e05,Attendance Type Code,1,4,-,O/Z
+ATN,N9:N1:EMS,1,no,no,e06,Description,1,80,-,O/Z
+AIN,N9:N1:EMS,99999,no,yes,landmark,Income,3,3,-,O
+AIN,N9:N1:EMS,1,no,no,e01,Type of Income Code,2,2,-,M/Z
+AIN,N9:N1:EMS,1,no,no,e02,Frequency Code,1,1,-,M/Z
+AIN,N9:N1:EMS,1,no,no,e03,Monetary Amount,1,18,-,M/Z
+AIN,N9:N1:EMS,1,no,no,e04,Quantity,1,15,-,O/Z
+AIN,N9:N1:EMS,1,no,no,e05,Yes/No Condition or Response Code,1,1,-,O/Z
+AIN,N9:N1:EMS,1,no,no,e06,Reference Identification,1,50,-,O/Z
+AIN,N9:N1:EMS,1,no,no,e07,Amount Qualifier Code,1,3,-,O/Z
+AIN,N9:N1:EMS,1,no,no,e08,Tax Treatment Code,1,1,-,O/Z
+AIN,N9:N1:EMS,1,no,no,e09,Earnings Rate of Pay,1,15,-,X
+AIN,N9:N1:EMS,1,no,no,e10,Unit or Basis for Measurement Code,2,2,-,X
+AIN,N9:N1:EMS,1,no,no,e11,Quantity,1,15,-,X/Z
+AIN,N9:N1:EMS,1,no,no,e12,Industry Code,1,30,-,O/Z
+AIN,N9:N1:EMS,1,no,no,e13,Description,1,80,-,O/Z
+PYD,N9:N1:EMS,99999,no,yes,landmark,Payroll Deduction,3,3,-,O
+PYD,N9:N1:EMS,1,no,no,e01,Monetary Amount,1,18,-,M
+PYD,N9:N1:EMS,1,no,no,e02,Frequency Code,1,1,-,O
+PYD,N9:N1:EMS,1,no,no,e03,Tax Treatment Code,1,1,-,O
+PYD,N9:N1:EMS,1,no,no,e04,Deduction Type Code,1,4,-,O
+PYD,N9:N1:EMS,1,no,no,e05,Description,1,80,-,O/Z
+EMS,,,,,groupend,,,,,
+N1,,,,,groupend,,,,,
+N9,,,,,groupend,,,,,
+RYL,,99999,yes,yes,landmark,Royalty Payment,3,3,-,O
+RYL,,1,no,no,e01,Assigned Number,1,6,-,M/Z
+RYL,,1,no,no,e02,Name Last or Organization Name,1,60,-,O/Z
+RYL,,1,no,no,e03,Identification Code Qualifier,1,2,-,X
+RYL,,1,no,no,e04,Identification Code,2,80,-,X
+NM1,RYL,99999,yes,yes,landmark,Individual or Organizational Name,3,3,-,O
+NM1,RYL,1,no,no,e01,Entity Identifier Code,2,3,-,M
+NM1,RYL,1,no,no,e02,Entity Type Qualifier,1,1,-,M/Z
+NM1,RYL,1,no,no,e03,Name Last or Organization Name,1,60,-,X
+NM1,RYL,1,no,no,e04,Name First,1,35,-,O
+NM1,RYL,1,no,no,e05,Name Middle,1,25,-,O
+NM1,RYL,1,no,no,e06,Name Prefix,1,10,-,O
+NM1,RYL,1,no,no,e07,Name Suffix,1,10,-,O
+NM1,RYL,1,no,no,e08,Identification Code Qualifier,1,2,-,X
+NM1,RYL,1,no,no,e09,Identification Code,2,80,-,X
+NM1,RYL,1,no,no,e10,Entity Relationship Code,2,2,-,X
+NM1,RYL,1,no,no,e11,Entity Identifier Code,2,3,-,O
+NM1,RYL,1,no,no,e12,Name Last or Organization Name,1,60,-,O
+LOC,RYL:NM1,99999,yes,yes,landmark,Location,3,3,-,O
+LOC,RYL:NM1,1,no,no,e01,Reference Identification Qualifier,2,3,-,M/Z
+LOC,RYL:NM1,1,no,no,e02,Reference Identification,1,50,-,M
+LOC,RYL:NM1,1,no,no,e03,Description,1,80,-,O
+LOC,RYL:NM1,1,no,no,e04,Reference Identification,1,50,-,O/Z
+LOC,RYL:NM1,1,no,no,e05,Category,1,6,-,O
+LOC,RYL:NM1,1,no,no,e06,Reference Identification Qualifier,2,3,-,X
+LOC,RYL:NM1,1,no,no,e07,Reference Identification,1,50,-,X
+LOC,RYL:NM1,1,no,no,e08,Description,1,80,-,O/Z
+LOC,RYL:NM1,1,no,no,e09,Reference Identification,1,50,-,O/Z
+LOC,RYL:NM1,1,no,no,e10,Measurement Value,1,20,-,X/Z
+LOC,RYL:NM1,1,no,no,e12,Measurement Value,1,20,-,X
+LOC,RYL:NM1,1,no,no,e14,Measurement Value,1,20,-,X
+LOC,RYL:NM1,1,no,no,e16,Measurement Value,1,20,-,X/Z
+LOC,RYL:NM1,1,no,no,e18,Measurement Value,1,20,-,X/Z
+LOC,RYL:NM1,1,no,no,e20,Measurement Value,1,20,-,X/Z
+LOC,RYL:NM1,1,no,no,e22,Reference Identification Qualifier,2,3,-,X
+LOC,RYL:NM1,1,no,no,e23,Reference Identification,1,50,-,X
+LOC,RYL:NM1,1,no,no,e24,Description,1,80,-,O
+PID,RYL:NM1:LOC,99999,yes,yes,landmark,Product/Item Description,3,3,-,O
+PID,RYL:NM1:LOC,1,no,no,e01,Item Description Type,1,1,-,M
+PID,RYL:NM1:LOC,1,no,no,e02,Product/Process Characteristic Code,2,3,-,O
+PID,RYL:NM1:LOC,1,no,no,e03,Agency Qualifier Code,2,2,-,X/Z
+PID,RYL:NM1:LOC,1,no,no,e04,Product Description Code,1,12,-,X/Z
+PID,RYL:NM1:LOC,1,no,no,e05,Description,1,80,-,X
+PID,RYL:NM1:LOC,1,no,no,e06,Surface/Layer/Position Code,2,2,-,O
+PID,RYL:NM1:LOC,1,no,no,e07,Source Subqualifier,1,15,-,O
+PID,RYL:NM1:LOC,1,no,no,e08,Yes/No Condition or Response Code,1,1,-,O/Z
+PID,RYL:NM1:LOC,1,no,no,e09,Language Code,2,3,-,O/Z
+DTM,RYL:NM1:LOC:PID,1,no,yes,landmark,Date/Time Reference,3,3,-,O
+DTM,RYL:NM1:LOC:PID,1,no,no,e01,Date/Time Qualifier,3,3,-,M
+DTM,RYL:NM1:LOC:PID,1,no,no,e02,Date,8,8,-,X
+DTM,RYL:NM1:LOC:PID,1,no,no,e03,Time,4,8,-,X
+DTM,RYL:NM1:LOC:PID,1,no,no,e04,Time Code,2,2,-,O
+DTM,RYL:NM1:LOC:PID,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X
+DTM,RYL:NM1:LOC:PID,1,no,no,e06,Date Time Period,1,35,-,X
+PCT,RYL:NM1:LOC:PID,99999,yes,yes,landmark,Percent Amounts,3,3,-,O
+PCT,RYL:NM1:LOC:PID,1,no,no,e01,Percent Qualifier,1,2,-,M
+PCT,RYL:NM1:LOC:PID,1,no,no,e02,Percentage as Decimal,1,10,-,M
+QTY,RYL:NM1:LOC:PID:PCT,1,no,yes,landmark,Quantity Information,3,3,-,O
+QTY,RYL:NM1:LOC:PID:PCT,1,no,no,e01,Quantity Qualifier,2,2,-,M
+QTY,RYL:NM1:LOC:PID:PCT,1,no,no,e02,Quantity,1,15,-,X
+QTY,RYL:NM1:LOC:PID:PCT,1,no,no,e04,Free-form Information,1,30,-,X/Z
+AMT,RYL:NM1:LOC:PID:PCT,99999,yes,yes,landmark,Monetary Amount Information,3,3,-,O
+AMT,RYL:NM1:LOC:PID:PCT,1,no,no,e01,Amount Qualifier Code,1,3,-,M
+AMT,RYL:NM1:LOC:PID:PCT,1,no,no,e02,Monetary Amount,1,18,-,M
+AMT,RYL:NM1:LOC:PID:PCT,1,no,no,e03,Credit/Debit Flag Code,1,1,-,O
+ADX,RYL:NM1:LOC:PID:PCT:AMT,99999,no,yes,landmark,Adjustment,3,3,-,O
+ADX,RYL:NM1:LOC:PID:PCT:AMT,1,no,no,e01,Monetary Amount,1,18,-,M/Z
+ADX,RYL:NM1:LOC:PID:PCT:AMT,1,no,no,e02,Adjustment Reason Code,2,2,-,M/Z
+ADX,RYL:NM1:LOC:PID:PCT:AMT,1,no,no,e03,Reference Identification Qualifier,2,3,-,X/Z
+ADX,RYL:NM1:LOC:PID:PCT:AMT,1,no,no,e04,Reference Identification,1,50,-,X
+LOC,,,,,groupend,,,,,
+PID,,,,,groupend,,,,,
+PCT,,,,,groupend,,,,,
+AMT,,,,,groupend,,,,,
+ASM,RYL:NM1,1,yes,yes,landmark,Amount and Settlement Method,3,3,-,O
+ASM,RYL:NM1,1,no,no,e01,Amount,1,15,-,M
+ASM,RYL:NM1,1,no,no,e02,Payment Method Type Code,1,2,-,O
+ASM,RYL:NM1,1,no,no,e03,Amount Qualifier Code,1,3,-,O
+ADX,RYL:NM1:ASM,1,no,yes,landmark,Adjustment,3,3,-,O
+ADX,RYL:NM1:ASM,1,no,no,e01,Monetary Amount,1,18,-,M/Z
+ADX,RYL:NM1:ASM,1,no,no,e02,Adjustment Reason Code,2,2,-,M/Z
+ADX,RYL:NM1:ASM,1,no,no,e03,Reference Identification Qualifier,2,3,-,X/Z
+ADX,RYL:NM1:ASM,1,no,no,e04,Reference Identification,1,50,-,X
+ASM,,,,,groupend,,,,,
+PCT,,,,,groupend,,,,,
+PID,,,,,groupend,,,,,
+NM1,,,,,groupend,,,,,
+RYL,,,,,groupend,,,,,
+SE,,1,no,yes,landmark,Transaction Set Trailer,2,2,-,M
+SE,,1,no,no,e01,Number of Included Segments,1,10,-,M
+SE,,1,no,no,e02,Transaction Set Control Number,4,9,-,M

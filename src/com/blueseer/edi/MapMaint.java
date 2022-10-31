@@ -1147,7 +1147,17 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             if (s.startsWith("#")) {
               continue;
             }
+            
             String[] t = s.split(",",-1);
+            
+            if (t == null || t.length < 11) {  // should be 11 fields in each line of a structure file
+                continue;
+            }
+            
+            if (t[5].equals("groupend")) {
+              continue;
+            }
+            
              if (i == 0) { lastkey = t[0];}
 
             i++;
