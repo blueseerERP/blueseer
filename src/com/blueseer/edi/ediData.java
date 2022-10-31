@@ -1306,7 +1306,7 @@ public class ediData {
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
-                res = st.executeQuery("select mps_id from map_struct; ");
+                res = st.executeQuery("select mps_id from map_struct order by mps_id ; ");
                while (res.next()) {
                    mylist.add(res.getString("mps_id"));
                 }

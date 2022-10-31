@@ -1237,7 +1237,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_btlookupActionPerformed
 
     private void ddmapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddmapActionPerformed
-        if (! isLoad) {
+        if (! isLoad && ddmap.getSelectedItem() != null) {
             ediData.map_mstr x = getMapMstr(new String[]{ddmap.getSelectedItem().toString()});
             ddoutdoctype.setSelectedItem(x.map_outdoctype());
             ddoutfiletype.setSelectedItem(x.map_outfiletype());
