@@ -229,7 +229,7 @@ public abstract class EDIMap implements EDIMapi {
      //   outsender = insender;  // can override within map
     //    outreceiver = inreceiver; // can override within map
         doctype = c[1];
-        outputdoctype = c[1]; // can override within map
+        outputdoctype = c[15]; // can override within map
         map = c[2];
         infile = c[3];
         isactrl = c[4];
@@ -294,7 +294,7 @@ public abstract class EDIMap implements EDIMapi {
         outreceiver = c[21]; // receiverid
         }
         
-        String[] tp = EDData.getEDITPDefaults(outputdoctype, outsender, outreceiver );
+        String[] tp = EDData.getEDITPDefaults(c[1], outsender, outreceiver );
     //    bsmf.MainFrame.show(outputdoctype + "/" + outsender + "/" + outreceiver );
     //    bsmf.MainFrame.show(tp[14] + "/" + tp[15] + "/" + tp[16] + "/" + tp[17] );
         setOutPutDocType(tp[14]);
@@ -323,7 +323,8 @@ public abstract class EDIMap implements EDIMapi {
     public void setOutPutEnvelopeStrings(String[] c) {         
          if ( ! isOverride) {  // if not override...use internal partner / doc lookup for envelope info
            
-           envelope = EDI.generateEnvelope(outputdoctype, outsender, outreceiver); // envelope array holds in this order (isa, gs, ge, iea, filename, controlnumber, gsctrlnbr)
+             
+           envelope = EDI.generateEnvelope(c[1], c[0], c[21]); // envelope array holds in this order (isa, gs, ge, iea, filename, controlnumber, gsctrlnbr)
            String ed = envelope[8];
            ISA = envelope[0];
            isaArray = ISA.split(EDI.escapeDelimiter(ed), -1);
@@ -339,9 +340,11 @@ public abstract class EDIMap implements EDIMapi {
            ST = "ST" + ed + outputdoctype + ed + stctrl ;
            SE = "SE" + ed + String.valueOf(segcount) + ed + stctrl;  
            
+           
            overrideISAWithMapEntries(); 
            overrideGSWithMapEntries();
            
+          
            } else {
              // you can override elements within the envelope xxArray fields at this point....or merge into segment string
              // need to figure out what kind of error this bullshit is....

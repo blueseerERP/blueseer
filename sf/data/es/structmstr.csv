@@ -20,3 +20,4 @@ X12944.csv,X12 Warehouse Stock Transfer Receipt Advice,generic
 X12945.csv,X12 Warehouse Shipping Advice,generic
 X12997.csv,X12 Functional Acknowledgment,generic
 DB,System Database I/O,generic
+CSVGenericOrder.csv,Comma Delimited Order,generic

@@ -19,6 +19,6 @@
 856idoc,data,fixed,constant,0,0,0,,856,DOCTYPE,1
 856idoc,data,fixed,constant,0,0,0,,BLUESEER,sndid,1
 850csv,selection,delimited,constant,1,1,44,,PONumberLM,,1
-850csv,data,delimited,variable,2,2,44,,,rcvid,1
+850csv,data,delimited,variable,2,2,44,,,sndid,1
 850csv,data,fixed,constant,0,0,0,,850csv,DOCTYPE,1
-850csv,data,fixed,constant,0,0,0,,BLUESEER,sndid,1
+850csv,data,fixed,constant,0,0,0,,BLUESEER,rcvid,1

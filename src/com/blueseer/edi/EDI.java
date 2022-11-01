@@ -982,10 +982,7 @@ public class EDI {
                         x[1] = s.substring(Integer.valueOf(t[4]) - 1,(Integer.valueOf(t[4]) - 1 + Integer.valueOf(t[5]))).trim();
                         }
                     }
-                    if (! x[1].isEmpty()) {
-                        // look up parent partner
-                        x[2] = EDData.getEDIPartnerFromAlias(x[1]);
-                    }
+                    
                 }
                  if (t[0].toLowerCase().equals("sndid")) {
                     if (t[2].toLowerCase().equals("constant")) {
@@ -1003,6 +1000,10 @@ public class EDI {
                         if (t[1].toLowerCase().equals("regex") && s.matches(t[6])) {
                         x[3] = s.substring(Integer.valueOf(t[4]) - 1,(Integer.valueOf(t[4]) - 1 + Integer.valueOf(t[5]))).trim();
                         }
+                    }
+                    if (! x[3].isEmpty()) {
+                        // look up parent partner
+                        x[2] = EDData.getEDIPartnerFromAlias(x[3]);
                     }
                 }
                 
@@ -3052,6 +3053,7 @@ public class EDI {
         
         //  * @return Array with 0=ISA, 1=ISAQUAL, 2=GS, 3=BS_ISA, 4=BS_ISA_QUAL, 5=BS_GS, 6=ELEMDELIM, 7=SEGDELIM, 8=SUBDELIM, 9=FILEPATH, 10=FILEPREFIX, 11=FILESUFFIX,
         //  * @return 12=X12VERSION, 13=SUPPCODE, 14=DIRECTION
+        
         String[] defaults = EDData.getEDITPDefaults(doctype, sndid, rcvid);
         ArrayList<String> attrs = EDData.getEDIAttributesList(doctype, sndid, rcvid); 
         Map<String, String> attrkeys = new HashMap<String, String>();
