@@ -1669,17 +1669,19 @@ public class EDI {
                    // at this point I should have a doc set (ST to SE) and a map ...now call map to operate on doc 
                 URLClassLoader cl = null;
                 try {
-                    List<File> jars = Arrays.asList(new File("edi/maps").listFiles());
-                    URL[] urls = new URL[jars.size()];
-                    for (int i = 0; i < jars.size(); i++) {
-                    try {
-                        if (jars.get(i).getName().endsWith(".jar")) {
-                            urls[i] = jars.get(i).toURI().toURL();
-                        }
-                    } catch (Exception e) {
-                        edilog(e);
-                    }
-                    }
+                      List<File> jars = Arrays.asList(new File("edi/maps").listFiles(new FilenameFilter() {
+                    public boolean accept(File dir, String name) {
+                    return name.toLowerCase().endsWith(".jar");
+                }
+                }));
+                URL[] urls = new URL[jars.size()];
+                for (int i = 0; i < jars.size(); i++) {
+                try {
+                  urls[i] = jars.get(i).toURI().toURL();
+                } catch (Exception e) {
+                    edilog(e);
+                }
+                }
                 cl = new URLClassLoader(urls);
                 
                     Class cls = Class.forName(map,true,cl);  
@@ -3136,7 +3138,7 @@ public class EDI {
          
          String isa16 = ud;
          
-         String gs1 = EDData.getEDIGSTypeFromStds(doctype); 
+         String gs1 = EDData.getEDIGSTypeFromStds(defaults[14]);   // defaults[14] = outdoctype 
          
          String gs2 = defaults[2];
          if (attrkeys.containsKey("GS02")) {gs2 = attrkeys.get("GS02");}

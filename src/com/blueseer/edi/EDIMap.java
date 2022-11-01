@@ -1117,7 +1117,7 @@ public abstract class EDIMap implements EDIMapi {
                     s = "ROW," + s;
                     x = s.split(",",-1);
                 } else {
-                    x = s.split(EDI.escapeDelimiter(delims[0]),-1); // delims = ele, sub, seg
+                    x = s.split(EDI.escapeDelimiter(delimConvertIntToStr(delims[1])),-1); // delims = ele, sub, seg
                 }
                 
                 if (x == null || x.length == 0) {
