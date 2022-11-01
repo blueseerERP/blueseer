@@ -60,6 +60,7 @@ import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -911,6 +912,7 @@ public class BlueSeerUtils {
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
     }
     
+    
     public static String convertDateFormat(String format, String indate) {
        String mydate = "";
         if (format.equals("yyyyMMdd") && indate.length() == 8) {
@@ -1112,6 +1114,20 @@ public class BlueSeerUtils {
         }
         return r;
     }
+    
+    public static Date parseDate(String indate, String format) {
+        SimpleDateFormat sdf = new SimpleDateFormat(format);  // "yyyy-MM-dd"
+        Date r = null;
+        if (indate != null && ! indate.isEmpty()) {
+            try {
+                r = sdf.parse(indate);
+            } catch (ParseException ex) {
+                bsmf.MainFrame.show("parseDate Exception");
+            }
+        }
+        return r;
+    }
+        
     
     public static String setDateFormat(Date date) {
        String mydate = "";

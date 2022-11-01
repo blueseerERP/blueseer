@@ -33,8 +33,10 @@ import java.lang.annotation.Target;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Locale;
 
 /**
@@ -196,5 +198,24 @@ public class MapperUtils {
         }
        return mydate;
     }
+    
+    @EDI.AnnoDoc(desc = {"method adds/subtracts days to source date.  Output date format is governed by 2nd parameter",
+                        "Example:  addDays(\"20210101\", \"yyyyMMdd\",5) returns: 20210106",
+                        "Example:  addDays(\"20210101\", \"yyyyMMdd\",-5) returns: 20201226",
+                        "NOTE:  input date format and output date format must match!!",
+                        "NOTE:  date format can be yyyyMMdd or yyyy-MM-dd",
+                        "NOTE:  if cannot be parsed, returns original date string"},
+            params = {"String date", "String format","long Days"})  
+    public static String addDays(String date, String format, long days) {
+         LocalDate x;
+         try {
+              x = LocalDate.parse(date, DateTimeFormatter.ofPattern(format)); 
+              x = x.plusDays(days);
+              return x.format(DateTimeFormatter.ofPattern(format));
+            } catch (DateTimeParseException ex) {
+              return date;
+            }
+    }
+    
     
 }

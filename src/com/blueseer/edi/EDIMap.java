@@ -1095,7 +1095,7 @@ public abstract class EDIMap implements EDIMapi {
     }
     
     
-    public static LinkedHashMap<String, String[]> mapInput(String[] c, ArrayList<String> data, ArrayList<String[]> ISF) throws IOException {
+    public static LinkedHashMap<String, String[]> mapInput(String[] c, ArrayList<String> data, ArrayList<String[]> ISF)  {
         LinkedHashMap<String,String[]> mappedData = new LinkedHashMap<String,String[]>();
         HashMap<String,Integer> groupcount = new HashMap<String,Integer>();
         HashMap<String,Integer> set = new HashMap<String,Integer>();
@@ -1104,17 +1104,17 @@ public abstract class EDIMap implements EDIMapi {
         String previouskey = "";
         String mappedinput = "";
         Stack<String> stack = new Stack<String>();
-        
+        String[] delims = new String[]{c[9], c[10], c[11]};
                 
         for (String s : data) {
                 String[] x = null;
                 if (c[28].equals("FF")) {
                     x = splitFFSegment(s, ISF);
-                } if (c[28].equals("CSV")) {
+                } else if (c[28].equals("CSV")) {
                     s = "ROW," + s;
                     x = s.split(",",-1);
                 } else {
-                    x = s.split(EDI.escapeDelimiter(ed)); // delims = ele, sub, seg
+                    x = s.split(EDI.escapeDelimiter(delims[0]),-1); // delims = ele, sub, seg
                 }
                 
                 if (x == null || x.length == 0) {

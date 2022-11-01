@@ -53,7 +53,6 @@ public class Generic855i extends com.blueseer.edi.EDIMap {
    
         setControl(c); // as defined by EDI.initEDIControl() and EDIMap.setControl()
         if (isError) { return error;}  // check errors for master variables
-
         mappedInput = mapInput(c, doc, ISF);
         String status = getInput("BAK","e02");
         String po = getInput("BAK","e03");

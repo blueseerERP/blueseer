@@ -51,6 +51,7 @@ public class Generic850i extends com.blueseer.edi.EDIMap {
     
     if (isError) { return error;}  //required...check errors for master variables
     
+    
     mappedInput = mapInput(c, doc, ISF); //required...sets the source data structure for all subsequent map functions
     
     setReference(getInput("BEG","e03")); //optional...but must be ran after mappedInput

@@ -1160,7 +1160,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             
              if (i == 0) { lastkey = t[0];}
 
-            i++;
+            
             if (! t[0].equals(lastkey)) {
                 LinkedHashMap<Integer, String[]> w = z;
                 msf.put(t[0], w);
@@ -1172,6 +1172,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 z.put(i, t);
                 msf.put(t[0], z);
             }
+            i++;
             lastkey = t[0];
         }
         return msf;
@@ -1200,7 +1201,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
          
 
     }
-    
+    /*
     public static LinkedHashMap<String, String[]> mapInput(String filetype, List<String> data, ArrayList<String[]> ISF, String[] delims) {
         LinkedHashMap<String,String[]> mappedData = new LinkedHashMap<String,String[]>();
         HashMap<String,Integer> groupcount = new HashMap<String,Integer>();
@@ -1214,10 +1215,15 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 
                 if (filetype.equals("FF")) {
                     x = splitFFSegment(s, ISF);
+                } else if (filetype.equals("CSV")) {
+                    s = "ROW," + s;
+                    x = s.split(",",-1);
                 } else {
                     x = s.split(EDI.escapeDelimiter(delims[0]),-1); // delims = ele, sub, seg
                 }
 
+               
+                
                 for (String[] z : ISF) {
                     // skip non-landmarks
                     if (! z[4].equals("yes")) {
@@ -1283,7 +1289,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         return mappedData;
     }
 
-    
+    */
     Action actionNext = new AbstractAction() {
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -1345,7 +1351,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     
     public void showOverlay(String taname) {
         List<String> structure = null;
-        List<String> input = null;
+        ArrayList<String> input = null;
         String[] delims = new String[]{"","",""};
         File file = null;
         String fs = "";
@@ -1374,6 +1380,8 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             // needs revisiting
             if (ddifs.getSelectedItem().toString().startsWith("X12")) {
                 fs = "X12";
+            } else if (ddifs.getSelectedItem().toString().startsWith("CSV")) {
+                fs = "CSV";
             } else {
                 fs = "FF";
             }
@@ -1384,7 +1392,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             structure = getStructure("ofs");
             fs = ddoutfiletype.getSelectedItem().toString();
             if (! taoutput.getText().isBlank()) {
-                input = Arrays.asList(taoutput.getText().split("\n"));
+                input = (ArrayList) Arrays.asList(taoutput.getText().split("\n"));
             }
             taoutput.setText("");
             isInput = false;
@@ -1394,12 +1402,16 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             return;
         }
         
-            Map<String, HashMap<Integer,String[]>> msf = getStructureAsHashMap(structure); 
-            LinkedHashMap<String, String[]> mappedData = mapInput(fs, input, getStructureSplit(structure), delims);
+            Map<String, HashMap<Integer,String[]>> msf = getStructureAsHashMap(structure);
+            String[] c = new String[39];
+            c[28] = fs;
+            c[9] = delims[0];
+            c[10] = delims[1];
+            c[11] = delims[2];
+            LinkedHashMap<String, String[]> mappedData = EDIMap.mapInput(c, input, getStructureSplit(structure));
             
             
             for (Map.Entry<String, String[]> z : mappedData.entrySet()) {
-                    String value = String.join(",", z.getValue());
                     String[] keyx = z.getKey().split("\\+", -1);
                     String key = "";
                     if (keyx[0].contains(":")) {
@@ -1414,9 +1426,10 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                     for (String s : z.getValue()) {
                      fieldname = "";
                      desc = "";
+                 //    System.out.println("HERE: " + msf.get(key).toString() + "/" + msf.get(key).get(i).toString() + "/" + s);
                      if (msf.get(key) != null && msf.get(key).get(i) != null) {
                          String[] j = msf.get(key).get(i);
-                         if (j != null && j.length > 4) {
+                         if (j != null && j.length > 5) {
                              fieldname = j[5];
                              desc = j[6];
                          } else {

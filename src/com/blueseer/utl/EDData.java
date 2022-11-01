@@ -3527,7 +3527,7 @@ public class EDData {
     return doc;
     }
    
-    public static List<String> cbufToList(char[] cbuf, String[] delims) {
+    public static ArrayList<String> cbufToList(char[] cbuf, String[] delims) {
         ArrayList<String> x = new ArrayList<String>();
         x = EDData.parseCbuf(cbuf, delims);
         return x;
