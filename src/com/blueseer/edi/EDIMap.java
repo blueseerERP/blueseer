@@ -342,10 +342,13 @@ public abstract class EDIMap implements EDIMapi {
            overrideISAWithMapEntries(); 
            overrideGSWithMapEntries();
            
-           
            } else {
              // you can override elements within the envelope xxArray fields at this point....or merge into segment string
              // need to figure out what kind of error this bullshit is....
+             
+             if (ed.isBlank()) {
+              ed = delimConvertIntToStr("42");   
+             }
              ISA = c[13];
              GS = c[14];
              GE = "GE" + ed + "1" + ed + c[5];
@@ -656,6 +659,11 @@ public abstract class EDIMap implements EDIMapi {
         
         if (tp[15].equals("X12")) {
            setOutPutEnvelopeStrings(c);
+          
+           tp[7] = (tp[7].isBlank() || tp[7].equals("0")) ? "10" : tp[7];
+           tp[6] = (tp[6].isBlank() || tp[6].equals("0")) ? "42" : tp[6];
+           tp[8] = (tp[8].isBlank() || tp[8].equals("0")) ? "126" : tp[8];
+          
            String s = delimConvertIntToStr(tp[7]); // segment delimiter
            if (tp[20].equals("1")) { // if envelopeall...then multi envelope
             // content = ST + s + content  + SE + s;
@@ -1102,6 +1110,9 @@ public abstract class EDIMap implements EDIMapi {
                 String[] x = null;
                 if (c[28].equals("FF")) {
                     x = splitFFSegment(s, ISF);
+                } if (c[28].equals("CSV")) {
+                    s = "ROW," + s;
+                    x = s.split(",",-1);
                 } else {
                     x = s.split(EDI.escapeDelimiter(ed)); // delims = ele, sub, seg
                 }
@@ -1109,13 +1120,19 @@ public abstract class EDIMap implements EDIMapi {
                 if (x == null || x.length == 0) {
                     continue;
                 }
+                
+                
+                String[] IFSseg = null;
+                if (c[28].equals("CSV")) {
+                   IFSseg = getSegmentInISF(x[0], "", ISF); 
+                } else {
                 // identify immediate parent/group head
                 stack = preGroupHead(x[0], stack, ISF);
                 parenthead = String.join(":",stack.toArray(new String[stack.size()]));
-                
                 // now lets find segments place in ISF
-               // System.out.println("incoming segment:" + x[0] + " with parenthead: " + parenthead);
-                String[] IFSseg = getSegmentInISF(x[0], parenthead, ISF);
+                // System.out.println("incoming segment:" + x[0] + " with parenthead: " + parenthead);
+                IFSseg = getSegmentInISF(x[0], parenthead, ISF); 
+                }
                 
                 
                
@@ -1229,15 +1246,15 @@ public abstract class EDIMap implements EDIMapi {
     	 
     	 if (outputfiletype.equals("X12")) {
          segcount = 0;  // init segment count for this doc
-         if (tp == null || tp[7].equals("0")) {
+         if (tp == null || tp[7].equals("0") || tp[7].isBlank()) {
             s = delimConvertIntToStr("10"); // segment delimiter 
          } else {
             s = delimConvertIntToStr(tp[7]); // segment delimiter 
          }
-         if (tp == null || tp[6].equals("0")) {
-            e = delimConvertIntToStr("42"); // segment delimiter 
+         if (tp == null || tp[6].equals("0") || tp[6].isBlank()) {
+            e = delimConvertIntToStr("42"); // element delimiter 
          } else {
-            e = delimConvertIntToStr(tp[6]); // segment delimiter 
+            e = delimConvertIntToStr(tp[6]); // element delimiter 
          }
          
     	 for (Map.Entry<String, HashMap<String,String>> z : MD.entrySet()) {
@@ -1708,7 +1725,33 @@ public abstract class EDIMap implements EDIMapi {
          }
          return x;
      }
-        
+     
+    @EDI.AnnoDoc(desc = {"method used for CSV files to read rows and fields from source.",
+                      "Note:  this is typically used CSV files where the landmark tag is always 'ROW'",  
+                      "Example:  getRow(i,j) returns: jth element/field of row i "},
+            params = {"Integer row", "Integer field"})  
+    public static String getRow(Integer row, Integer field) {
+         String x = "";
+         String[] k = null;
+        // segment = ":" + segment; // preprend blank
+         for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
+             String[] v = z.getKey().split("\\+");
+             if (v[2].equals(String.valueOf(row))) {
+                 k = z.getValue();
+             }
+         }
+         if (k != null && k.length > field) {
+          x =  k[field];
+         }
+         return x;
+     }
+    
+    public static int getRowCount() {
+         ArrayList<String> k = new ArrayList<String>();
+         return mappedInput.size();
+     }
+    
+    
     public static int getElementNumber(String segment, String element) {
          boolean inside = false;
          int x = 0;

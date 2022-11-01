@@ -1103,10 +1103,10 @@ public class EDI {
             c[21] = x[1]; // receiverID
       
             String[] defaults = EDData.getEDITPDefaults(x[0], x[3], x[1]);
-            c[9] = defaults[7]; 
-            c[10] = defaults[6]; 
-            c[11] = defaults[8];   
-                 
+            
+            c[9]  = defaults[7].isBlank() ? "10" : defaults[7];
+            c[10] = defaults[6].isBlank() ? "42" : defaults[6];
+            c[11] = defaults[8].isBlank() ? "126" : defaults[8];
              
         // insert isa and st start and stop integer points within the file
         
@@ -1141,19 +1141,25 @@ public class EDI {
                } else {
                    
                    // at this point I should have a doc set (ST to SE) and a map ...now call map to operate on doc 
+                if (GlobalDebug)   
+                   System.out.println("Found map: " + map);    
+                
+                   
                 URLClassLoader cl = null;
                 try {
-                    List<File> jars = Arrays.asList(new File("edi/maps").listFiles());
-                    URL[] urls = new URL[jars.size()];
-                    for (int i = 0; i < jars.size(); i++) {
-                    try {
-                        if (jars.get(i).getName().endsWith(".jar")) {
-                            urls[i] = jars.get(i).toURI().toURL();
-                        }
-                    } catch (Exception e) {
-                        edilog(e);
-                    }
-                    }
+                      List<File> jars = Arrays.asList(new File("edi/maps").listFiles(new FilenameFilter() {
+                    public boolean accept(File dir, String name) {
+                    return name.toLowerCase().endsWith(".jar");
+                }
+                }));
+                URL[] urls = new URL[jars.size()];
+                for (int i = 0; i < jars.size(); i++) {
+                try {
+                  urls[i] = jars.get(i).toURI().toURL();
+                } catch (Exception e) {
+                    edilog(e);
+                }
+                }
                 cl = new URLClassLoader(urls);
                 
                     Class cls = Class.forName(map,true,cl);  
@@ -1620,9 +1626,11 @@ public class EDI {
             c[21] = x[1]; // receiverID
       
             String[] defaults = EDData.getEDITPDefaults(x[0], x[3], x[1]);
-            c[9] = defaults[7]; 
-            c[10] = defaults[6]; 
-            c[11] = defaults[8];   
+            
+            c[9] = defaults[7].isBlank() ? "10" : defaults[7];
+            c[10] = defaults[6].isBlank() ? "42" : defaults[6];
+            c[11] = defaults[8].isBlank() ? "126" : defaults[8];
+            
                  
              
         // insert isa and st start and stop integer points within the file
@@ -3055,15 +3063,16 @@ public class EDI {
         }
         
         // get counter for ediout
-        int filenumber = OVData.getNextNbr("ediout");
-        
+       int filenumber = OVData.getNextNbr("ediout");
+       defaults[7] = (defaults[7].isBlank() || defaults[7].equals("0")) ? "10" : defaults[7];
+       defaults[6] = (defaults[6].isBlank() || defaults[6].equals("0")) ? "42" : defaults[6];
+       defaults[8] = (defaults[8].isBlank() || defaults[8].equals("0")) ? "126" : defaults[8];
        int sdint = Integer.valueOf(defaults[7]);
        int edint = Integer.valueOf(defaults[6]);
        int udint = Integer.valueOf(defaults[8]);
          String sd = Character.toString((char) sdint );   // "\n"  or "\u001c"
          String ed = Character.toString((char) edint );
          String ud = Character.toString((char) udint );
-         
             
         //  if default filename is empty..set as generic
          if (defaults[10].isEmpty()) {
