@@ -185,9 +185,17 @@ public class EDILoadMaint extends javax.swing.JPanel {
         /*
          * Main task. Executed in background thread.
          */
+        String filepath;
+        boolean isdebug;
+         
+        public myTask(String filepath, boolean isdebug) { 
+              this.filepath = filepath;
+              this.isdebug = isdebug;
+          }
+         
         @Override
         public Void doInBackground() throws IOException, FileNotFoundException, ClassNotFoundException {
-            EDI.processFile(getFileName(),"","","", cbdebug.isSelected(), false, 0, 0);
+            EDI.processFile(this.filepath,"","","", this.isdebug, false, 0, 0);
             return null;
         }
  
@@ -464,15 +472,14 @@ public class EDILoadMaint extends javax.swing.JPanel {
      
       public String getFileName() {
         String filename = "";
-        
-        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fc.setCurrentDirectory(FileSystems.getDefault().getPath("edi").toFile());
-        int returnVal = fc.showOpenDialog(this);
+        JFileChooser jfc = new JFileChooser(FileSystems.getDefault().getPath("edi").toFile());
+        jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        int returnVal = jfc.showOpenDialog(this);
         
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
-                filename = fc.getSelectedFile().getAbsolutePath();
+                filename = jfc.getSelectedFile().getAbsolutePath();
                 BlueSeerUtils.startTask(new String[]{"","Processing..."});
             }
             catch (Exception ex) {
@@ -524,7 +531,6 @@ public class EDILoadMaint extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        fc = new javax.swing.JFileChooser();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -781,7 +787,8 @@ public class EDILoadMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_cbtoggleActionPerformed
 
     private void btmanualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btmanualActionPerformed
-        myTask task = new myTask();
+        String filepath = getFileName();
+        myTask task = new myTask(filepath, cbdebug.isSelected());
         task.execute();  
     }//GEN-LAST:event_btmanualActionPerformed
 
@@ -797,7 +804,6 @@ public class EDILoadMaint extends javax.swing.JPanel {
     private javax.swing.JCheckBox cbdebug;
     private javax.swing.JCheckBox cbno;
     private javax.swing.JCheckBox cbtoggle;
-    private javax.swing.JFileChooser fc;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
