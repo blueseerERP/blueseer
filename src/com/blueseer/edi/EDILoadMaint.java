@@ -286,7 +286,6 @@ public class EDILoadMaint extends javax.swing.JPanel {
           reader.read(cbuf,0,cbuf.length); 
           reader.close();
          
-        // bsmf.MainFrame.show(String.valueOf(cbuf.length) + " " + String.valueOf(cbuf[8192]));
         int i = 0;
         if (smbfile.toString().toUpperCase().endsWith(".XML") ) {
             tafile.append(parseXMLsmb(smbfile));
@@ -299,7 +298,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
             }
         }
        }catch(Exception e){
-          System.out.println("Error while reading smb file line by line:" + e.getMessage());                      
+          tafile.append("Error while reading smb file line by line:" + e.getMessage());                      
        }
         
     }   else {
@@ -315,7 +314,6 @@ public class EDILoadMaint extends javax.swing.JPanel {
           reader.read(cbuf,0,cbuf.length); 
           reader.close();
          
-        // bsmf.MainFrame.show(String.valueOf(cbuf.length) + " " + String.valueOf(cbuf[8192]));
         int i = 0;
         if (edifile.toString().toUpperCase().endsWith(".XML") ) {
             tafile.append(parseXML(edifile));
@@ -701,19 +699,16 @@ public class EDILoadMaint extends javax.swing.JPanel {
             for (int i = 0 ; i < mymodel.getRowCount(); i++) {    
                  if ( (boolean) mymodel.getValueAt(i, 1) ) {
                      String infile = inDir + "/" + mymodel.getValueAt(i,0).toString();
-                   //  bsmf.MainFrame.show(String.valueOf(i));
-                    // File edifile = new File(inDir + "/" + mymodel.getValueAt(i,0).toString());
-                    // EDI.processFile(edifile);
+                   
                     String[] m = EDI.processFile(infile,"","","", cbdebug.isSelected(), false, 0, 0);
                     
                     // show error if exists...usually malformed envelopes
                     if (m[0].equals("1")) {
-                        bsmf.MainFrame.show(m[1]);
+                       tafile.append(m[1]);
                         // now move to error folder
                         if (! cbno.isSelected()) {
                         Path movefrom = FileSystems.getDefault().getPath(inDir + "/" + mymodel.getValueAt(i,0).toString());
                         Path errortarget = FileSystems.getDefault().getPath(ErrorDir + "/" + mymodel.getValueAt(i,0).toString());
-                        // bsmf.MainFrame.show(movefrom.toString() + "  /  " + target.toString());
                         Files.move(movefrom, errortarget, StandardCopyOption.REPLACE_EXISTING);
                         }
                         continue;  // bale from here
@@ -730,8 +725,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
                          if (! inArch.isEmpty() && ! EDData.isEDIDeleteFlag() && EDData.isEDIArchFlag() ) {
                          Path movefrom = FileSystems.getDefault().getPath(inDir + "/" + mymodel.getValueAt(i,0).toString());
                          Path target = FileSystems.getDefault().getPath(inArch + "/" + mymodel.getValueAt(i,0).toString());
-                        // bsmf.MainFrame.show(movefrom.toString() + "  /  " + target.toString());
-                         Files.move(movefrom, target, StandardCopyOption.REPLACE_EXISTING);
+                        Files.move(movefrom, target, StandardCopyOption.REPLACE_EXISTING);
                           // now remove from list
                          }
                      }
@@ -742,16 +736,16 @@ public class EDILoadMaint extends javax.swing.JPanel {
                  }
              }
               
-            bsmf.MainFrame.show(getMessageTag(1121,String.valueOf(j)));
+            tafile.append(getMessageTag(1121,String.valueOf(j)));
             
             getFiles();
             
        } catch (IOException ex) {
            ex.printStackTrace();
-          bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+          tafile.append(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
          
        }  catch (ClassNotFoundException ex) {
-          bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+          tafile.append(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
        }
          
     }//GEN-LAST:event_btProcessActionPerformed
