@@ -618,6 +618,22 @@ public class EDI {
              
          }  // if x12
         
+        // if file type is EDIFACT 
+        if (editype[0].equals("UNE")) {
+            // create batch file and assign to control replacing infile name 
+         // now lets see how many ISAs and STs within those ISAs and write character positions of each
+         
+         Map<Integer, Object[]> ISAmap = createMAPUNE(cbuf, c, "", "", "", "");
+      
+             if (isOverride.isEmpty()) {
+             processUNE(ISAmap, cbuf, batchfile, idxnbr);
+             } else {
+              processUNE(ISAmap, cbuf, infile, idxnbr);   
+             }
+             
+         }  // if EDIFACT
+        
+        
         // if type is CSV
         if (editype[0].equals("CSV")) {
             ArrayList<String[]> ffdata = EDData.getEDIFFDataRules(editype[1]);
@@ -663,6 +679,120 @@ public class EDI {
        return m;  
     }
     
+    // needs rewriting for UNA, UNB service tags of EDIFACT
+    public static Map<Integer, Object[]> createMAPUNE(char[] cbuf, String[] c, String infile, String outfile, String map, String isOverride) {
+         Map<Integer, Object[]> ISAmap = new HashMap<Integer, Object[]>();
+         String[] m = new String[]{"0",""};
+         int start = 0;
+         int end = 0;
+         int isacount = 0;
+         int isactrl = 0;
+         int gscount = 0;
+         int stcount = 0;
+         int ststart = 0;
+         int sestart = 0;
+         String ed_escape = "";
+         String sd_escape = "";
+         int gsstart = 0;
+         String doctype = "";
+         String docid = "";
+         ArrayList<String> isaList = new ArrayList<String>();
+          
+          char e = 0;
+          char s = 0;
+          char u = 0;
+          int mark = 0;
+          
+           
+           Map<Integer, ArrayList> stse_hash = new HashMap<Integer, ArrayList>();
+           ArrayList<Object> docs = new ArrayList<Object>();
+          
+            for (int i = 0; i < cbuf.length; i++) {
+             if ( ((i+103) <= cbuf.length) && cbuf[i] == 'I' && cbuf[i+1] == 'S' && cbuf[i+2] == 'A' 
+                        && (cbuf[i+103] == cbuf[i+3]) && (cbuf[i+103] == cbuf[i+6]) ) {
+                    e = cbuf[i+103];
+                    u = cbuf[i+104];
+                    s = cbuf[i+105];
+                    mark = i;
+                    // lets bale if not proper ISA envelope.....unless the 106 is carriage return...then ok
+                /*
+                if (i == mark && cbuf[mark+106] != 'G' && cbuf[mark+107] != 'S' && ! String.format("%02x",(int) cbuf[mark+106]).equals("0a")) {
+                        return m = new String[]{"1","malformed envelope"};
+                }
+                */
+                    ed_escape = escapeDelimiter(String.valueOf(e));
+                    sd_escape = escapeDelimiter(String.valueOf(s));
+                    if (String.format("%02x",(int) cbuf[i+105]).equals("0d") && String.format("%02x",(int) cbuf[i+106]).equals("0a"))
+                        s = cbuf[i+106];
+                    start = i;
+                    isaList.add("ISA" + ":" + String.valueOf(i) + ":" + String.format("%02x",(int) s) );
+                    isacount++;
+                    String[] isa = new String(cbuf, i, 105).split(ed_escape);
+                    isactrl = Integer.valueOf(isa[13]);
+                    
+                     // set control
+                   
+                    c[0] = isa[6].trim(); // senderid
+                    c[21] = isa[8].trim(); // receiverid
+                    c[2] = map;
+                    c[3] = infile;
+                    c[4] = isa[13]; //isactrlnbr
+                    c[8] = outfile;
+                    c[9] = String.valueOf((int) s);
+                    c[10] = String.valueOf((int) e);
+                    c[11] = String.valueOf((int) u);
+                    c[12] = isOverride;
+                    c[13] = new String(cbuf,i,105);
+                    c[15] = "0"; // inbound
+                    
+                }
+                if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'G' && cbuf[i+1] == 'S') {
+                    gscount++;
+                    isaList.add("GS" + ":" + String.valueOf(i));
+                    gsstart = i;
+                    String[] gs = new String(cbuf, gsstart, 90).split(ed_escape);
+                    c[5] = gs[6]; // gsctrlnbr
+                    gs[8] = gs[8].split(sd_escape)[0];
+                    c[14] = String.join(String.valueOf(e), Arrays.copyOfRange(gs, 0, 9));
+                    
+                }
+                if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'S' && cbuf[i+1] == 'T') {
+                   
+                    stcount++;
+                    isaList.add("ST" + ":" + String.valueOf(i));
+                    ststart = i;
+                    
+                    String[] st = new String(cbuf, i, 16).split(ed_escape);
+                    doctype = st[1]; // doctype
+                    docid = st[2].split(sd_escape)[0]; //docID  // to separate 2nd element of ST because grabbing 16 characters in buffer
+                   
+                   // System.out.println(c[0] + "/" + c[1] + "/" + c[4] + "/" + c[5]);
+                } 
+                if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'S' && cbuf[i+1] == 'E') {
+                    isaList.add("SE" + ":" + String.valueOf(i));
+                    sestart = i;
+                    // add to hash if hash doesn't exist or insert into hash
+                    docs.add(new Object[] {new Integer[] {ststart, sestart}, doctype, docid});
+                    // painful reminder that you have to create copy of array at instance in time
+                    ArrayList copydocs = new ArrayList(docs);
+                    stse_hash.put(isacount, copydocs);
+                }
+                if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'I' && cbuf[i+1] == 'E' && cbuf[i+2] == 'A') {
+                    end = i + 14 + Integer.valueOf(String.valueOf(gscount).length()) + 1;
+                    // now add to ISAmap
+                   HashMap<Integer,ArrayList> mycopy = new HashMap<Integer,ArrayList>(stse_hash);
+                  ISAmap.put(isacount, new Object[] {start, end, (int) s, (int) e, (int) u, mycopy, c});
+                    isaList.add("IEA" + ":" + String.valueOf(i));
+                    stcount = 0;
+                    docs.clear();
+                    stse_hash.remove(isacount);
+                    
+                } 
+            }
+            
+            return ISAmap;
+    }
+        
     public static Map<Integer, Object[]> createIMAP(char[] cbuf, String[] c, String infile, String outfile, String map, String isOverride) {
          Map<Integer, Object[]> ISAmap = new HashMap<Integer, Object[]>();
          String[] m = new String[]{"0",""};
@@ -811,13 +941,42 @@ public class EDI {
          
     if (GlobalDebug) {
      System.out.println("Fell through...Not X12 " + filename );    
-     System.out.println("getEDIType: checking for EDIFACT type... " + filename );
+     System.out.println("getEDIType: checking for EDIFACT (UNE) type... " + filename );
     } 
     
-    if (sb.toString().equals("UNB")) {
-         type[0] = "EDIFACT";
-         type[1] = "TBD";
-         return type;
+    // check EDIFACT (UNE)
+    String una_unb = new String(cbuf,9,3); // file may be prefixed with UNA service tag...EX: UNAxxxxx'UNB
+    if (sb.toString().equals("UNB") || ( sb.toString().equals("UNA") && una_unb.equals("UNB")) ) {
+         type[0] = "UNE";
+         type[1] = "";
+         // 39 = '
+         // 58 = :
+         // 43 = +
+         // 63 = ?
+         char segdelim = (char) Integer.valueOf("39").intValue(); 
+         if (sb.toString().equals("UNA")) {
+             segdelim = cbuf[8];
+         }
+        StringBuilder segment = new StringBuilder();
+        ArrayList<String> doc = new ArrayList<String>();
+        for (int i = 0; i < cbuf.length; i++) {
+            if (cbuf[i] == segdelim) {
+                doc.add(segment.toString());
+                segment.delete(0, segment.length());
+            } else {
+                segment.append(cbuf[i]);
+            }
+        }   
+        for (String s : doc) {
+            if (s.startsWith("UNH")) {
+                String[] x = s.split("+",-1);
+                if (x.length > 2) {
+                type[1] = x[2].substring(0,6);   // UNH+72+ORDERS:D:97A:UN'
+                break;
+                }
+            }
+        }
+        return type;
     }
       
     if (GlobalDebug) {
@@ -1369,6 +1528,236 @@ public class EDI {
         hanoi.clear();
     }
     
+    public static void processUNE(Map<Integer, Object[]> ISAmap, char[] cbuf, String batchfile, int idxnbr)   {
+    
+    
+    
+    // ISAmap is defined as new Integer[] {start, end, (int) s, (int) e, (int) u});
+    
+    // loop through ISAMap entries
+    
+             
+    int callingidxnbr = idxnbr;         
+    for (Map.Entry<Integer, Object[]> isa : ISAmap.entrySet()) {
+        ArrayList<String[]> messages = new ArrayList<String[]>();
+        
+        int start =  Integer.valueOf(isa.getValue()[0].toString());  //starting ISA position in file
+        int end = Integer.valueOf(isa.getValue()[1].toString());  // ending IEA position in file
+        char segdelim = (char) Integer.valueOf(isa.getValue()[2].toString()).intValue(); // get segment delimiter
+        String gs02 = ""; 
+        String gs03 = "";       
+//  System.out.println("envelope key/start/end : " + isa.getKey() + "/" + isa.getValue()[0] + "/" + isa.getValue()[1]);
+    
+    
+        String[] c = (String[]) isa.getValue()[6];
+        
+       // ArrayList d = (ArrayList) isa.getValue()[5];
+        Map<Integer, ArrayList> d = (HashMap<Integer, ArrayList>)isa.getValue()[5];
+        
+     //   System.out.println("doc entryset is : " + d.entrySet());
+        
+        ArrayList<String> falist = new ArrayList<String>();
+        
+       //for (Object z : d) {
+       for (Map.Entry<Integer, ArrayList> z : d.entrySet()) {
+         
+       //    System.out.println("doc May entry key: " + z.getKey());
+           
+         for (Object r : z.getValue()) {
+            Object[] x = (Object[]) r;
+         
+            Integer[] k = (Integer[])x[0];
+            String doctype = (String)x[1];
+            String docid = (String)x[2];
+           
+            c[1] = doctype;
+            c[6] = docid;
+      
+            messages.add(new String[]{"info","File: " + c[3]});
+            messages.add(new String[]{"info","ISA#: " + c[4] + " / " + "GS#: " + c[5]});
+            messages.add(new String[]{"info","Doc Type: " + c[1] + " / " + "DocID: " + c[6]});
+       //    System.out.println("doc key/{start/end},doctype,docid " + k[0] + "/" + k[1] + "/" + doctype + "/" + docid);
+            
+           // Integer[] k = (Integer[])z.getValue()[0];
+           // String doctype = (String)z.getValue()[1];
+           // String docid = (String)z.getValue()[2];
+           
+            
+         //   System.out.println("doc start/end : " + k[0] + "/" + k[1]);
+         if (! doctype.equals("997"))
+         falist.add(docid); // add ST doc id to falist for functional acknowledgement
+      //        System.out.println("control values: " + docid + "/" + k[0] + "/" + k[1] );
+       
+    //  you are inserting 'segments' into ArrayList doc
+    StringBuilder segment = new StringBuilder();
+   // for (int i = 0; i < cbuf.length; i++) {
+   ArrayList<String> doc = new ArrayList<String>();
+   for (int i = k[0]; i < k[1]; i++) {
+        if (cbuf[i] == segdelim) {
+            doc.add(segment.toString());
+            segment.delete(0, segment.length());
+        } else {
+            if (! (String.format("%02x",(int) cbuf[i]).equals("0d") || String.format("%02x",(int) cbuf[i]).equals("0a")) ) {
+                segment.append(cbuf[i]);
+            } 
+        }
+    }
+     
+             c[24] = batchfile;
+             messages.add(new String[]{"info","Processing Batch File: " + c[24]});
+             
+        // insert isa and st start and stop integer points within the file
+        
+          c[17] = String.valueOf(start);
+          c[18] = String.valueOf(end);
+          c[19] = String.valueOf(k[0]);
+          c[20] = String.valueOf(k[1]);
+          
+          
+          int j = Integer.valueOf(c[10]);
+          String delim = String.valueOf(Character.toString((char) j));
+          String[] gs = c[14].split(escapeDelimiter(delim));
+          
+          if (gs != null && gs.length > 2) {
+              gs02 = gs[2];
+              gs03 = gs[3];
+          }
+          String parentPartner = EDData.getEDIPartnerFromAlias(gs02);
+          if (parentPartner == null || parentPartner.isEmpty()) {
+             parentPartner = EDData.getEDIPartnerFromAlias(c[0]); 
+          }
+          
+          messages.add(new String[]{"info","Found parent partner: " + parentPartner});
+          
+          // at this point...we need to log this doc in edi_idx table and use return ID for further logs against this doc idx.
+          if (c[12].isEmpty() && callingidxnbr == 0) {   // if not override
+              idxnbr = EDData.writeEDIIDX(c);
+              if (GlobalDebug) 
+                  System.out.println("insert edi_idx " + idxnbr + ": " + c);
+              
+          }
+          
+          c[16] = String.valueOf(idxnbr);
+          EDData.writeEDILogMulti(c, messages);
+          messages.clear();  // clear message here...and at 997...and at end
+          
+          String map = c[2];
+             
+          if (doctype.equals("997")) {
+            if (GlobalDebug)   {
+            System.out.println("Encountered 997...processing and return" + c[1] + "/" + gs02 + "/" + gs03);    
+            }
+            String[] m = process997(doc, c);
+            messages.add(new String[]{m[0], m[1]});
+            EDData.updateEDIIDXStatus(idxnbr, m[0]);
+            EDData.writeEDILogMulti(c, messages);
+            messages.clear();
+            continue;
+          }   
+          
+           if (map.isEmpty() && c[12].isEmpty()) {
+            if (GlobalDebug)   
+            System.out.println("Searching for Map (X12 in) with GS values type/gs02/gs03: " + c[1] + "/" + gs02 + "/" + gs03);    
+
+              map = EDData.getEDIMap(c[1], gs02, gs03); 
+           } 
+
+           // if no map then bail
+           if (map.isEmpty()) {
+                messages.add(new String[]{"error","X12:  map variable is empty for parent/gs02/gs03/doc: " + parentPartner + "/" + gs02 + "/" + gs03 + " / " + c[1]});
+           } else if (! BlueSeerUtils.isEDIClassFile(map) && c[12].isEmpty()) {
+                messages.add(new String[]{"error","X12: unable to locate compiled map (" + map + ") for parent/gs02/gs03/doc: " + parentPartner + "/" + gs02 + "/" + gs03 + " / " + c[1]});
+           } else {
+               
+            if (GlobalDebug)   
+            System.out.println("Entering Map " + map + " with: " +  c[1] + "/" + gs02 + "/" + gs03);    
+
+            messages.add(new String[]{"info","Found Map: " + map + " with " + c[1] + "/" + gs02 + "/" + gs03});
+            messages.add(new String[]{"info","Using Map: " + map + " for docID: " + c[6]});
+            
+               // at this point I should have a doc set (ST to SE) and a map ...now call map to operate on doc 
+                URLClassLoader cl = null;
+                try {
+                    List<File> jars = Arrays.asList(new File("edi/maps").listFiles(new FilenameFilter() {
+                    public boolean accept(File dir, String name) {
+                    return name.toLowerCase().endsWith(".jar");
+                }
+                }));
+                URL[] urls = new URL[jars.size()];
+                for (int i = 0; i < jars.size(); i++) {
+                try {
+                  urls[i] = jars.get(i).toURI().toURL();
+                } catch (Exception e) {
+                    edilog(e);
+                }
+                }
+                cl = new URLClassLoader(urls);
+                
+                    Class cls = Class.forName(map,true,cl);  
+                Object obj = cls.newInstance();
+                Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
+                Object oc = method.invoke(obj, doc, c);
+                String[] oString = (String[]) oc;
+                messages.add(new String[]{oString[0], oString[1]});
+                EDData.updateEDIIDX(idxnbr, c); 
+
+                } catch (InvocationTargetException ex) {
+                    if (c[12].isEmpty()) {
+                        
+                    messages.add(new String[]{"error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1] + " : " + ex.getCause().getMessage()});    
+                    }
+                    edilog(ex);  
+                } catch (ClassNotFoundException ex) {
+                    if (c[12].isEmpty()) {
+                    messages.add(new String[]{"error", "Map Class not found " + map + "/" + c[0] + " / " + c[1]});        
+                    }
+                    edilog(ex); 
+                } catch (IllegalAccessException |
+                         InstantiationException | NoSuchMethodException ex
+                        ) {
+                    if (c[12].isEmpty()) {
+                    messages.add(new String[]{"error", "IllegalAccess|Instantiation|NoSuchMethod " + map + "/" + c[0] + " / " + c[1]});        
+                   }
+                    edilog(ex);
+                } finally {
+                        if (cl != null) {
+                           try {
+                               cl.close();
+                           } catch (IOException ex) {
+                               edilog(ex);
+                           }
+                        }
+                }
+
+           }
+           
+           EDData.writeEDILogMulti(c, messages);
+           messages.clear();
+            
+               
+      } // r         
+               
+    } // object k
+        
+             
+       
+            // 997
+            ArrayList<String> falistcopy = new ArrayList<String>(falist);
+            falist.clear();
+            if (GlobalDebug)   
+            System.out.println("997 potential: " + c[12] + "/" +  (falistcopy.size() > 0) + "/" + BlueSeerUtils.ConvertStringToBool(EDData.getEDIFuncAck(c[1], c[0].trim(), c[21].trim())) );    
+
+            if (c[12].isEmpty() && falistcopy.size() > 0 && BlueSeerUtils.ConvertStringToBool(EDData.getEDIFuncAck(c[1], gs02, gs03))) {
+             generate997(falistcopy, c);
+            }
+            
+     
+     
+    } // ISAMap entries
+   
+  
+}
+        
     public static void processX12(Map<Integer, Object[]> ISAmap, char[] cbuf, String batchfile, int idxnbr)   {
     
     
