@@ -26,6 +26,7 @@ SOFTWARE.
 
 package com.blueseer.edi;
 
+import bsmf.MainFrame;
 import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -59,6 +60,8 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.JToolBar;
+import javax.swing.JViewport;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -261,6 +264,122 @@ public class EDILoadMaint extends javax.swing.JPanel {
        }
     }
     
+    public void executeTask() { 
+      
+        class Task extends SwingWorker<String[], Void> {
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
+            message = processFiles();
+            
+            return message;
+        }
+ 
+        
+       public void done() {
+            try {
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+            initvars(null);  
+          
+            
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(); 
+       z.execute(); 
+       
+    }
+   
+    public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        JToolBar toolbarpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj; 
+        } else if (myobj instanceof JToolBar) {
+           toolbarpane = (JToolBar) myobj;      
+        } else {
+            return;
+        }
+        
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                if (component instanceof JLabel || component instanceof JTable ) {
+                     continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                if (component instanceof JScrollPane) {
+                    setPanelComponentState((JScrollPane) component, b);
+                }
+                if (component instanceof JToolBar) {
+                    setPanelComponentState((JToolBar) component, b);
+                }
+                
+                component.setEnabled(b);
+            }
+        }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    
+                    component.setEnabled(b);
+                    
+                }
+            }
+            if (toolbarpane != null) {
+                toolbarpane.setEnabled(b);
+                Component[] componentspane = toolbarpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    component.setEnabled(b);
+                }
+            }
+            if (scrollpane != null) {
+                scrollpane.setEnabled(b);
+                JViewport viewport = scrollpane.getViewport();
+                Component[] componentspane = viewport.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    component.setEnabled(b);
+                }
+            }
+    } 
+    
     
     public void readFile(String file, String dir) throws MalformedURLException, SmbException {
     tafile.setText("");
@@ -306,7 +425,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
             }
         }
        }catch(Exception e){
-          tafile.append("Error while reading smb file line by line:" + e.getMessage());                      
+          tafile.append("Error while reading smb file line by line:" + e.getMessage()  + "\n");                      
        }
         
     }   else {
@@ -470,7 +589,72 @@ public class EDILoadMaint extends javax.swing.JPanel {
     return doc;
     }
      
-      public String getFileName() {
+    public String[] processFiles() {
+        String[] x = new String[2];
+        
+        int j = 0;  
+       tafile.setText("");
+       try {
+            
+            
+            for (int i = 0 ; i < mymodel.getRowCount(); i++) {    
+                 if ( (boolean) mymodel.getValueAt(i, 1) ) {
+                    String infile = inDir + "/" + mymodel.getValueAt(i,0).toString();
+                    tafile.append("FilePath: " + infile  + "\n");
+                    String[] m = EDI.processFile(infile,"","","", cbdebug.isSelected(), false, 0, 0);
+                    
+                    // show error if exists...usually malformed envelopes
+                    if (m[0].equals("1")) {
+                       tafile.append(m[1]  + "\n");
+                        // now move to error folder
+                        if (! cbno.isSelected()) {
+                        Path movefrom = FileSystems.getDefault().getPath(inDir + "/" + mymodel.getValueAt(i,0).toString());
+                        Path errortarget = FileSystems.getDefault().getPath(ErrorDir + "/" + mymodel.getValueAt(i,0).toString());
+                        Files.move(movefrom, errortarget, StandardCopyOption.REPLACE_EXISTING);
+                        }
+                        continue;  // bale from here
+                    }
+                    
+                     if (! cbno.isSelected()) {
+                         // if delete set in control panel...remove file and continue;
+                         if (EDData.isEDIDeleteFlag()) {
+                          Path filetodelete = FileSystems.getDefault().getPath(inDir + "/" + mymodel.getValueAt(i,0).toString());
+                          Files.delete(filetodelete);
+                         }
+                     
+                         // now archive file
+                         if (! inArch.isEmpty() && ! EDData.isEDIDeleteFlag() && EDData.isEDIArchFlag() ) {
+                         Path movefrom = FileSystems.getDefault().getPath(inDir + "/" + mymodel.getValueAt(i,0).toString());
+                         Path target = FileSystems.getDefault().getPath(inArch + "/" + mymodel.getValueAt(i,0).toString());
+                        Files.move(movefrom, target, StandardCopyOption.REPLACE_EXISTING);
+                          // now remove from list
+                         }
+                     }
+                         
+                     //  mymodel.removeRow(i);   
+                         
+                     j++;
+                 }
+             }
+              
+            tafile.append(getMessageTag(1121,String.valueOf(j)) + "\n");
+            
+            getFiles();
+            x[0] = "0";
+            x[1] = "processing complete";
+            
+       } catch (IOException ex) {
+           ex.printStackTrace();
+          tafile.append(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()) + "\n");
+         
+       }  catch (ClassNotFoundException ex) {
+          tafile.append(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()) + "\n");
+       }
+        
+        return x;
+    }
+    
+    public String getFileName() {
         String filename = "";
         JFileChooser jfc = new JFileChooser(FileSystems.getDefault().getPath("edi").toFile());
         jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -490,7 +674,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
     }
     
     public void getFiles() {
-         tafile.setText("");
+         
    
    File folder = new File(inDir);
    File[] listOfFiles = folder.listFiles();
@@ -516,10 +700,11 @@ public class EDILoadMaint extends javax.swing.JPanel {
     }  
       
     public void initvars(String[] arg) throws MalformedURLException, SmbException {
+    setPanelComponentState(this, true);
     inDir = EDData.getEDIInDir();
     inArch = EDData.getEDIInArch(); 
-    ErrorDir = EDData.getEDIErrorDir();   
-      getFiles();        
+    ErrorDir = EDData.getEDIErrorDir(); 
+    getFiles();        
     }
     
     /**
@@ -698,62 +883,26 @@ public class EDILoadMaint extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btProcessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btProcessActionPerformed
-       int j = 0;  
-       tafile.setText("");
-       try {
-           
-            for (int i = 0 ; i < mymodel.getRowCount(); i++) {    
-                 if ( (boolean) mymodel.getValueAt(i, 1) ) {
-                     String infile = inDir + "/" + mymodel.getValueAt(i,0).toString();
-                   
-                    String[] m = EDI.processFile(infile,"","","", cbdebug.isSelected(), false, 0, 0);
-                    
-                    // show error if exists...usually malformed envelopes
-                    if (m[0].equals("1")) {
-                       tafile.append(m[1]);
-                        // now move to error folder
-                        if (! cbno.isSelected()) {
-                        Path movefrom = FileSystems.getDefault().getPath(inDir + "/" + mymodel.getValueAt(i,0).toString());
-                        Path errortarget = FileSystems.getDefault().getPath(ErrorDir + "/" + mymodel.getValueAt(i,0).toString());
-                        Files.move(movefrom, errortarget, StandardCopyOption.REPLACE_EXISTING);
-                        }
-                        continue;  // bale from here
-                    }
-                    
-                     if (! cbno.isSelected()) {
-                         // if delete set in control panel...remove file and continue;
-                         if (EDData.isEDIDeleteFlag()) {
-                          Path filetodelete = FileSystems.getDefault().getPath(inDir + "/" + mymodel.getValueAt(i,0).toString());
-                          Files.delete(filetodelete);
-                         }
-                     
-                         // now archive file
-                         if (! inArch.isEmpty() && ! EDData.isEDIDeleteFlag() && EDData.isEDIArchFlag() ) {
-                         Path movefrom = FileSystems.getDefault().getPath(inDir + "/" + mymodel.getValueAt(i,0).toString());
-                         Path target = FileSystems.getDefault().getPath(inArch + "/" + mymodel.getValueAt(i,0).toString());
-                        Files.move(movefrom, target, StandardCopyOption.REPLACE_EXISTING);
-                          // now remove from list
-                         }
-                     }
-                         
-                     //  mymodel.removeRow(i);   
-                         
-                     j++;
-                 }
+        tafile.setText("");
+        
+        int count = 0;
+        for (int i = 0 ; i < mymodel.getRowCount(); i++) {    
+             if ( (boolean) mymodel.getValueAt(i, 1) ) {
+                 count++;
              }
-              
-            tafile.append(getMessageTag(1121,String.valueOf(j)));
-            
-            getFiles();
-            
-       } catch (IOException ex) {
-           ex.printStackTrace();
-          tafile.append(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-         
-       }  catch (ClassNotFoundException ex) {
-          tafile.append(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-       }
-         
+        }
+        
+        if (cbdebug.isSelected() && count > 1) {
+            bsmf.MainFrame.show("debug option is selected...only one file can be processed");
+            return;
+        }
+        
+        setPanelComponentState(this, false);
+        
+        
+        tafile.append("Loading " + String.valueOf(count) + " File(s)..." + "\n");
+        
+        executeTask();
     }//GEN-LAST:event_btProcessActionPerformed
 
     private void tablereportMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablereportMouseClicked
@@ -793,6 +942,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_btmanualActionPerformed
 
     private void btrefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrefreshActionPerformed
+        tafile.setText("");
         getFiles();
     }//GEN-LAST:event_btrefreshActionPerformed
 
