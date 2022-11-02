@@ -1367,7 +1367,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
               tainput.setText("file cbuf content is null");
                 return;  
             }
-            delims = getDelimiters(cbuf, file.getName());
+            delims = getDelimiters(cbuf, file.getName()); // seg, ele, sub
             if (delims == null) {
               tainput.setText("unable to determine delimiters (null array returned) ");
                 return;  

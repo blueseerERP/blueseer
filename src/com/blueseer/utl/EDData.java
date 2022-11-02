@@ -3506,9 +3506,9 @@ public class EDData {
     }
    
     public static ArrayList parseCbuf(char[] cbuf, String[] delims)   {
-    // delims should be in ele,sub,seg order
+    // delims should be in seg,ele,sub order
     ArrayList<String> doc = new ArrayList<String>();
-    char segdelim = (char) delims[2].charAt(0);
+    char segdelim = (char) delims[0].charAt(0);
     StringBuilder segment = new StringBuilder();
     
     for (int i = 0; i < cbuf.length; i++) {
@@ -3535,7 +3535,9 @@ public class EDData {
     
     
     public static String[] getDelimiters(char[] cbuf, String filename)   {
-    String[] x = null;
+    // returns as string characters "*" ...not decimal
+        
+        String[] x = null;
     
     char flddelim = 0;
     char subdelim = 0;
@@ -3549,23 +3551,25 @@ public class EDData {
            flddelim = cbuf[103];
            subdelim = cbuf[104];
            segdelim = cbuf[105];
-           x = new String[]{String.valueOf(flddelim),String.valueOf(subdelim),String.valueOf(segdelim)};
+           x = new String[]{String.valueOf(segdelim), String.valueOf(flddelim), String.valueOf(subdelim)};
         
         
           // special case for 0d0a ...if so use both characters as segment delimiter
+           
            if (String.format("%02x",(int) cbuf[105]).equals("0d") && String.format("%02x",(int) cbuf[106]).equals("0a")) {
-            x[2] = String.valueOf(cbuf[105]) + String.valueOf(cbuf[106]);  
+            x[0] = String.valueOf(cbuf[105]) + String.valueOf(cbuf[106]);  
            }
+          
         
         
-        
+        /*
         if (x[0].equals("*")) {
             x[0] = "\\*";
         }
         if (x[0].equals("^")) {
             x[0] = "\\^";
         }
-        
+        */
         return x;
     } 
     

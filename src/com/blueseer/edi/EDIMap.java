@@ -1106,9 +1106,16 @@ public abstract class EDIMap implements EDIMapi {
         String groupkey = "";
         String previouskey = "";
         String mappedinput = "";
+        String eledelim = "";
         Stack<String> stack = new Stack<String>();
-        String[] delims = new String[]{c[9], c[10], c[11]};
-                
+        String[] delims = new String[]{c[9], c[10], c[11]}; 
+        if (BlueSeerUtils.isParsableToInt(delims[1])) {
+            eledelim = EDI.escapeDelimiter(delimConvertIntToStr(delims[1]));
+        } else {
+            eledelim = EDI.escapeDelimiter(delims[1]);
+        }
+        
+        
         for (String s : data) {
                 String[] x = null;
                 if (c[28].equals("FF")) {
@@ -1117,14 +1124,14 @@ public abstract class EDIMap implements EDIMapi {
                     s = "ROW," + s;
                     x = s.split(",",-1);
                 } else {
-                    x = s.split(EDI.escapeDelimiter(delimConvertIntToStr(delims[1])),-1); // delims = ele, sub, seg
+                    
+                    x = s.split(eledelim,-1); // delims = seg, ele, sub
                 }
                 
                 if (x == null || x.length == 0) {
                     continue;
                 }
-                
-                
+                             
                 String[] IFSseg = null;
                 if (c[28].equals("CSV")) {
                    IFSseg = getSegmentInISF(x[0], "", ISF); 
