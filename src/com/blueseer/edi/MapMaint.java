@@ -1415,7 +1415,8 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                     String[] keyx = z.getKey().split("\\+", -1);
                     String key = "";
                     if (keyx[0].contains(":")) {
-                        key = keyx[0].substring(1);
+                        String[] keyp = keyx[0].split(":", -1); 
+                        key = keyp[keyp.length - 1];
                     } else {
                         key = keyx[0];
                     }

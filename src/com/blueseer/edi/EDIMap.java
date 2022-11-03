@@ -1449,6 +1449,23 @@ public abstract class EDIMap implements EDIMapi {
     	 HASH.put(segment, old);
      }
      
+    @EDI.AnnoDoc(desc = {"method assigns output component of element of segment.",
+                     "NOTE: Used primarily for EDIFACT composites within elements",
+                     "NOTE: 2nd parameter...element...must be named element...not position",
+                     "NOTE: 3nd parameter...comp...must be sub-element position (integer) of element",
+                     "Example:  mapSegment(\"QTY\",\"e01\",2,\"50\") assigns: 2nd comp of 1st element of QTY (EDIFACT) segment with value 50...QTY+21:50:EA"},
+                 params = {"String segment","String element","String value"}) 
+    public static void mapSegment(String segment, String element, Integer comp, String value) {
+    	 String[] z = new String[] {element,value};
+    	 // get old arraylist and add to it
+    	 ArrayList<String[]> old = new ArrayList<String[]>();
+    	 if (HASH.get(segment) != null) {
+    		 old = HASH.get(segment);
+    	 }
+    	 old.add(z);
+    	 HASH.put(segment, old);
+     }
+    
     @EDI.AnnoDoc(desc = {"method commits all assigned elements/fields of segment to output array.",
                      "NOTE: after all elements/fields have been assigned, the commitSegment method must be called",
                      "Example:  commitSegment(\"BIG\") writes BIG segment (and all assigned fields) to output"},
@@ -1507,7 +1524,7 @@ public abstract class EDIMap implements EDIMapi {
                      "NOTE: Qualifier has a position indicator of which field/element the qualifier is in",
                      "NOTE: this method only supports integer qualifier positions...not named",
                      "Example:  getInput(\"N1\",\"1:ST\",4) returns: 4th element/field of N1 segment...if field 1 = ST"},
-            params = {"String segment","String position:qualifier","Integer fieldnumber"})  
+            params = {"String segment","String position:qualifier","Integer ElementNumber"})  
     public static String getInput(String segment, String qual, Integer elementNbr) {
         String x = "";
          int count = 0;
@@ -1536,7 +1553,7 @@ public abstract class EDIMap implements EDIMapi {
     @EDI.AnnoDoc(desc = {"method reads value from source at segment and element (by integer) with qualifier x.",
                      "NOTE: Qualifier has a position indicator of which field/element the qualifier is in",   
                      "Example:  getInput(\"E2EDK02\",\"qualf:009\",\"belnr\") returns: specific value of field named belnr of IDOC segment E2EDK02...if qualf fieldname = 009"},
-            params = {"String segment","String position:qualifier","Integer fieldnumber"})  
+            params = {"String segment","String position:qualifier","Integer ElementName"})  
     public static String getInput(String segment, String qual, String elementName) {
         String x = "";
          int elementNbr = getElementNumber(segment, elementName); 
@@ -1567,7 +1584,7 @@ public abstract class EDIMap implements EDIMapi {
     
     @EDI.AnnoDoc(desc = {"method reads value from source at segment and element (by integer).",
                         "Example:  getInput(\"BEG\",3) returns: 3rd element/field of BEG segment"},
-            params = {"String segment","Integer fieldnumber"})      
+            params = {"String segment","Integer ElementNumber"})      
     public static String getInput(String segment, Integer elementNbr) {
          String x = "";
          int count = 0;
@@ -1597,7 +1614,7 @@ public abstract class EDIMap implements EDIMapi {
     
     @EDI.AnnoDoc(desc = {"method reads value from source at segment and element (by name).",
                         "Example:  getInput(\"BEG\",\"fieldname\") returns: specific field of BEG segment"},
-            params = {"String segment","String fieldname"}) 
+            params = {"String segment","String ElementName"}) 
     public static String getInput(String segment, String elementName) {
          String x = "";
          int elementNbr = getElementNumber(segment, elementName); 
@@ -1632,7 +1649,7 @@ public abstract class EDIMap implements EDIMapi {
     @EDI.AnnoDoc(desc = {"method reads value from source at segment and element (by integer) for a Group Segment.",
                       "Note:  this is typically used in a looping construct in conjunction with getGroupCount()",  
                       "Example:  getInput(i,\"PO1\",4) returns: 4th element/field of PO1 segment in loop index 'i' "},
-            params = {"Integer LoopIndex", "String segment", "Integer fieldnumber"})  
+            params = {"Integer LoopIndex", "String segment", "Integer ElementNumber"})  
     public static String getInput(Integer gloop, String segment, Integer elementNbr) {
          String x = "";
          String[] k = null;
@@ -1652,7 +1669,7 @@ public abstract class EDIMap implements EDIMapi {
     @EDI.AnnoDoc(desc = {"method reads value from source at segment and element (by fieldname) for a Group Segment.",
                       "Note:  this is typically used in a looping construct in conjunction with getGroupCount()",  
                       "Example:  getInput(i,\"E2EDP01\",\"belnr\") returns: fieldname 'belnr' of idoc segment ED2EDP01 in loop index 'i' "},
-            params = {"Integer LoopIndex", "String segment", "String fieldname"})  
+            params = {"Integer LoopIndex", "String segment", "String ElementName"})  
     public static String getInput(Integer gloop, String segment, String elementName) {
          String x = "";
          int elementNbr = getElementNumber(segment, elementName); 
@@ -1677,7 +1694,7 @@ public abstract class EDIMap implements EDIMapi {
     @EDI.AnnoDoc(desc = {"method reads value from source at segment and element (by integer) for a Group Segment.",
                       "Note:  this is typically used in a looping construct in conjunction with getGroupCount()",  
                       "Example:  getInput(i,\"E2EDP19\",\"qualf:002\", 8) returns: 4th element/field of idoc segment 'E2EDP19' with fieldname 'qualf' value = '002' in loop index 'i' "},
-            params = {"Integer LoopIndex", "String segment", "String qualfieldname:value", "Integer fieldnumber"})
+            params = {"Integer LoopIndex", "String segment", "String qualfieldname:value", "Integer ElementNumber"})
     public static String getInput(Integer gloop, String segment, String qual, Integer elementNbr) {
          String x = "";
          String[] k = null;
@@ -1706,7 +1723,7 @@ public abstract class EDIMap implements EDIMapi {
     @EDI.AnnoDoc(desc = {"method reads value from source at segment and element (by fieldname) for a Group Segment.",
                       "Note:  this is typically used in a looping construct in conjunction with getGroupCount()",  
                       "Example:  getInput(i,\"E2EDP19\",\"qualf:002\", \"iddat\") returns: fieldname 'iddat' value of idoc segment 'E2EDP19' ...if value of fieldname 'qualf' = '002'... in loop index 'i' "},
-            params = {"Integer LoopIndex", "String segment", "String qualfieldname:value", "String fieldname"})
+            params = {"Integer LoopIndex", "String segment", "String qualfieldname:value", "String ElementName"})
     public static String getInput(Integer gloop, String segment, String qual, String elementName) {
          String x = "";
          String[] k = null;
@@ -1738,8 +1755,8 @@ public abstract class EDIMap implements EDIMapi {
      
     @EDI.AnnoDoc(desc = {"method used for CSV files to read rows and fields from source.",
                       "Note:  this is typically used CSV files where the landmark tag is always 'ROW'",  
-                      "Example:  getRow(i,j) returns: jth element/field of row i "},
-            params = {"Integer row", "Integer field"})  
+                      "Example:  getRow(i,j) returns: jth column of row i "},
+            params = {"Integer row", "Integer column"})  
     public static String getRow(Integer row, Integer field) {
          String x = "";
          String[] k = null;
