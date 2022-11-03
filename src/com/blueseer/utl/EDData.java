@@ -51,6 +51,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -2561,40 +2562,39 @@ public class EDData {
           try {
             Class.forName(driver);
             Connection con = null;
+            PreparedStatement ps = null;
             if (ds != null) {
               con = ds.getConnection();
             } else {
               con = DriverManager.getConnection(url + db, user, pass);  
             }
-            Statement st = con.createStatement();
             try {
-                
                 String[] c = control;
-              
-                 // controlarray in this order : senderid, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
+                String sqlInsert = "insert into edi_log ( elg_comkey, elg_idxnbr, elg_severity, elg_desc, elg_isa, elg_doc, elg_map, elg_file, elg_batch, elg_ctrlnum, elg_gsctrlnum, elg_stctrlnum, elg_ref ) "
+                            + " values ( ?,?,?,?,?,?,?,?,?,?,?,?,?); " ; 
+                ps = con.prepareStatement(sqlInsert);
+                // controlarray in this order : senderid, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
+                
                 for (String[] s : messages) {
-                        st.executeUpdate("insert into edi_log ( elg_comkey, elg_idxnbr, elg_severity, elg_desc, elg_isa, elg_doc, elg_map, elg_file, elg_batch, elg_ctrlnum, elg_gsctrlnum, elg_stctrlnum, elg_ref ) "
-                            + " values ( " 
-                            + "'" + c[22] + "'" + ","    
-                            + "'" + c[16] + "'" + ","
-                            + "'" + s[0] + "'" + ","
-                            + "'" + s[1] + "'" + ","
-                            + "'" + c[0] + "'" + ","
-                            + "'" + c[1] + "'" + ","
-                            + "'" + c[2] + "'" + ","
-                            + "'" + c[3] + "'" + ","
-                            + "'" + c[24] + "'" + ","        
-                            + "'" + c[4] + "'" + ","
-                            + "'" + c[5] + "'" + ","
-                            + "'" + c[6] + "'" + ","
-                            + "'" + c[7] + "'"
-                            + ")"
-                            + ";");
-                }
+                            ps.setString(1, c[22]);
+                            ps.setString(2, c[16]);
+                            ps.setString(3, s[0]);
+                            ps.setString(4, s[1]);
+                            ps.setString(5, c[0]);
+                            ps.setString(6, c[1]);
+                            ps.setString(7, c[2]);
+                            ps.setString(8, c[3]);
+                            ps.setString(9, c[24]);      
+                            ps.setString(10, c[4]);
+                            ps.setString(11, c[5]);
+                            ps.setString(12, c[6]);
+                            ps.setString(13, c[7]);
+                            ps.executeUpdate();
+                }  
             } catch (SQLException s) {
                  MainFrame.bslog(s);
             } finally {
-               if (st != null) st.close();
+               if (ps != null) ps.close();
                con.close();
             }
         } catch (Exception e) {
@@ -3110,7 +3110,88 @@ public class EDData {
          
       }
     
+    public static int writeEDIIDX(String[] c) {
+            int returnkey = 0;
+          try {
+            Class.forName(driver);
+            Connection con = null;
+            PreparedStatement ps = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            
+            try {
+            String sqlInsert = "insert into edi_idx ( edx_comkey, edx_sender, edx_receiver, " +
+                                " edx_infiletype, edx_indoctype, edx_inbatch, " +
+                                " edx_outfiletype, edx_outdoctype, edx_outbatch, " +
+                                " edx_ctrlnum, edx_gsctrlnum, edx_stctrlnum, " +
+                                " edx_isastart, edx_isaend, edx_docstart, edx_docend, " +
+                                " edx_outisastart, edx_outisaend, edx_outdocstart, edx_outdocend, " + 
+                                "  edx_ref, " +
+                                " edx_indir, edx_infile, edx_outdir, edx_outfile, " +
+                                " edx_ackfile, edx_ack, " +
+                                " edx_segdelim, edx_elmdelim, edx_subdelim, " +
+                                " edx_outsegdelim, edx_outelmdelim, edx_outsubdelim, " + 
+                                " edx_status )" +
+                                " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,? ) ";
+                            ps = con.prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS );    
+                            ps.setString(1, c[22]);
+                            ps.setString(2, c[0]); // sender
+                            ps.setString(3, c[21]);     // receiver
+                            ps.setString(4, c[28]); // infiletype
+                            ps.setString(5, c[1]);  // indoctype
+                            ps.setString(6, c[24]);  // inbatch
+                            ps.setString(7, c[29]); // outfiletype
+                            ps.setString(8, c[15]);  // outdoctype
+                            ps.setString(9, c[25]);  // outbatch
+                            ps.setString(10, c[4]);  // isactrlnum
+                            ps.setString(11, c[5]); // gsctrlnum
+                            ps.setString(12, c[6]);  // st ctrlnum
+                            ps.setString(13, c[17]);  // isastart
+                            ps.setString(14, c[18]); // isaend
+                            ps.setString(15, c[19]);   // docstart
+                            ps.setString(16, c[20]);  //docend
+                            ps.setString(17, c[31]);  // outisastart
+                            ps.setString(18, c[32]);  // outisaend
+                            ps.setString(19, c[33]);  // outdocstart
+                            ps.setString(20, c[34]);  // outdocend        
+                            ps.setString(21, c[7]);   //ref
+                            ps.setString(22, c[26]);    // indir 
+                            ps.setString(23, c[3]);  // infile
+                            ps.setString(24, c[27]);    // outdir
+                            ps.setString(25, c[8]);       // outfile
+                            ps.setString(26, "");  // ack file   ...need to do
+                            ps.setString(27, "0");  // ack yes or no 1 or 0        ....need to do
+                            ps.setInt(28, Integer.valueOf(c[9].toString()));
+                            ps.setInt(29, Integer.valueOf(c[10].toString()));
+                            ps.setInt(30, Integer.valueOf(c[11].toString()));
+                            ps.setInt(31, Integer.valueOf(c[35].toString()));
+                            ps.setInt(32, Integer.valueOf(c[36].toString()));
+                            ps.setInt(33, Integer.valueOf(c[37].toString()));       
+                            ps.setString(34, "success");  // status 
+                            ps.executeUpdate();
+            
+                
+                        ResultSet rs = ps.getGeneratedKeys();
+                        while (rs.next()) {
+                         returnkey = rs.getInt(1);
+                        }
+                        
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (ps != null) ps.close();
+               con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+          return returnkey;
+      }
     
+    /*
     public static int writeEDIIDX(String[] c) {
             int returnkey = 0;
           try {
@@ -3241,7 +3322,8 @@ public class EDData {
         }
           return returnkey;
       }
-     
+    
+    */
     public static void updateEDIIDX(int key, String[] c) {
             
           try {
