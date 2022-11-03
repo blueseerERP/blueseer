@@ -1143,6 +1143,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         LinkedHashMap<Integer, String[]> z = new LinkedHashMap<Integer, String[]>();
         int i = 0;
         String lastkey = "";
+        String currentkey = "";
         for (String s : lines) {
             if (s.startsWith("#")) {
               continue;
@@ -1158,23 +1159,37 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
               continue;
             }
             
-             if (i == 0) { lastkey = t[0];}
-
+            currentkey = (t[1].isBlank()) ? t[0] : t[1] + ":" + t[0];
             
-            if (! t[0].equals(lastkey)) {
+             //if (i == 0) { lastkey = t[0];}
+               if (i == 0) { lastkey = currentkey; }
+               
+            
+            if (! currentkey.equals(lastkey)) {
                 LinkedHashMap<Integer, String[]> w = z;
-                msf.put(t[0], w);
+                msf.put(currentkey, w);
                 z = new LinkedHashMap<Integer, String[]>();
                 i = 0;
                 z.put(i, t);
 
             } else {
                 z.put(i, t);
-                msf.put(t[0], z);
+                msf.put(currentkey, z);
             }
             i++;
-            lastkey = t[0];
+            lastkey = currentkey;
         }
+        /*
+        for (Map.Entry<String, HashMap<Integer,String[]>> u : msf.entrySet()) {
+            HashMap<Integer,String[]> y = u.getValue();
+            for (Map.Entry<Integer,String[]> t : y.entrySet()) {
+            System.out.println("KEY:" + u.getKey());
+            System.out.println("INTEGER:" + t.getKey());
+            System.out.println("VALUE:" + String.join(",", t.getValue()));
+            }
+        }
+        */
+        
         return msf;
     }
        
@@ -1413,14 +1428,16 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             
             for (Map.Entry<String, String[]> z : mappedData.entrySet()) {
                     String[] keyx = z.getKey().split("\\+", -1);
-                    String key = "";
+                    String key = keyx[0];
+                   
+                    /*
                     if (keyx[0].contains(":")) {
                         String[] keyp = keyx[0].split(":", -1); 
                         key = keyp[keyp.length - 1];
                     } else {
                         key = keyx[0];
                     }
-                    
+                    */
                     int i = 0;
                     String fieldname = "";
                     String desc = "";
@@ -1437,7 +1454,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                              fieldname = "unknown";
                              desc = "unknown";
                          }
-                     }
+                     } 
                      if (isInput) {
                         tainput.append(z.getKey() + "\t" + fieldname + "\t" + desc +  " / Field: " + i + " value: " + s + "\n");   
                      } else {

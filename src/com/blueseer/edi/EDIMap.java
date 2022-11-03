@@ -1190,15 +1190,13 @@ public abstract class EDIMap implements EDIMapi {
                     set.put(groupkey, loop);
                     mappedData.put(parenthead + x[0] + "+" + groupcount.get(groupparent) + "+" + loop , x);
                     SegmentCounter.add(parenthead + x[0] + "+" + groupcount.get(groupparent));
-                    /*
-                    if (z[3].equals("yes")) {
-                            parenthead = parenthead + (":" + z[0]);
-                    }
-                    */
-                } else {  // if foundit
-                    System.out.println("ifSeg is null: " + x[0] + " with parenthead: " + parenthead);
-                }
+                   
+                }  // if foundit
+              
+                //if (IFSseg == null)
+                //System.out.println("ifSeg is null: " + x[0] + " with parenthead: " + parenthead);
             
+                
                stack = postGroupHead(x[0], stack, ISF);
                 parenthead = String.join(":",stack.toArray(new String[stack.size()])); 
                 
