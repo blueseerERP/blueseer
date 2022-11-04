@@ -30,3 +30,5 @@ patch=11
 # modification to mapper class and EDI Structure files
 patch=12
 # added sample EDI files; restructured delimiter methods
+patch=13
+# modifications to EDI classes to support EDIFACT
