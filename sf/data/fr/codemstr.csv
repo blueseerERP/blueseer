@@ -3,22 +3,20 @@ Discounts,Freight,Freight,1
 Discounts,Volume,Volume,1
 Discounts,Other,Other,1
 Discounts,Promo,Promo,1
-orderstatus,annuler,,1
-orderstatus,fermé,,1
-orderstatus,erreur,,1
-orderstatus,prise,,1
-orderstatus,ouvert,,1
-orderstatus,engager,,1
-orderstatus,ordredifférée,,1
+orderstatus,cancel,,1
+orderstatus,closed,,1
+orderstatus,error,,1
+orderstatus,hold,,1
+orderstatus,open,,1
+orderstatus,commit,,1
+orderstatus,backorder,,1
 engineer,frank,,1
-ItemType,CONT,Conteneur,1
-ItemType,FG,Produits finis,1
-ItemType,RAW,Matière première,1
-ItemType,SUB,Sous-assemblage,1
-ItemType,ASSET,Actif,1
+ItemType,CONT,Container,1
+ItemType,FG,Finished Goods,1
+ItemType,RAW,Raw Material,1
+ItemType,SUB,Sub Assembly,1
+ItemType,ASSET,Asset,1
 ItemType,SERVICE,Service,1
-edidoctype,dbin,,1
-edidoctype,dbout,,1
 edidoctype,850csv,,1
 edidoctype,856csv,,1
 edidoctype,810csv,,1
@@ -27,11 +25,17 @@ edidoctype,850xml,,1
 edidoctype,856xml,,1
 edidoctype,810xml,,1
 edidoctype,855xml,,1
+edidoctype,850db,,1
+edidoctype,856db,,1
+edidoctype,855db,,1
+edidoctype,810db,,1
 edidoctype,850idoc,,1
 edidoctype,856idoc,,1
 edidoctype,810idoc,,1
 edidoctype,855idoc,,1
 edidoctype,850,,1
+edidoctype,830,,1
+edidoctype,862,,1
 edidoctype,810,,1
 edidoctype,812,,1
 edidoctype,856,,1
@@ -41,14 +45,16 @@ edidoctype,940,,1
 edidoctype,943,,1
 edidoctype,944,,1
 edidoctype,945,,1
-edidoctype,830,,1
-edidoctype,862,,1
 edidoctype,204,,1
 edidoctype,990,,1
 edidoctype,214,,1
 edidoctype,997,,1
 edidoctype,864,,1
 edidoctype,824,,1
+edidoctype,ORDERS,,1
+edidoctype,DESADV,,1
+edidoctype,INVOIC,,1
+edidoctype,ORDRSP,,1
 trantype,ISS-SALES,,1
 trantype,ISS-SCRAP,,1
 trantype,WIP-ISFG,,1

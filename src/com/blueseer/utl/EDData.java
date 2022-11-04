@@ -35,6 +35,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.edi.EDI;
+import static com.blueseer.edi.EDI.escapeDelimiter;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -3655,24 +3656,35 @@ public class EDData {
         return x;
     } 
     
-     /* lets set the delimiters EDIFACT */
-    if (cbuf[0] == 'U' &&
-        cbuf[1] == 'N' &&
-        cbuf[2] == 'B') {
+    StringBuilder sb = new StringBuilder();
+    sb.append(cbuf, 0, 3);
+    String una_unb = new String(cbuf,9,3); // file may be prefixed with UNA service tag...EX: UNAxxxxx'UNB
+    if (sb.toString().equals("UNB") || ( sb.toString().equals("UNA") && una_unb.equals("UNB")) ) {
+         
+         // 39 = '
+         // 58 = :
+         // 43 = +
+         // 63 = ?
+         // char segdelim = (char) Integer.valueOf("39").intValue(); 
+         if (sb.toString().equals("UNA")) {
+             segdelim = cbuf[8];
+             flddelim = cbuf[4];
+             subdelim = cbuf[3];
+         } else {
            flddelim = '+';
            subdelim = ':';
            segdelim = '\'';
+         }
+    
            
-           x = new String[]{String.valueOf(flddelim),String.valueOf(subdelim),String.valueOf(segdelim)};
            
-        
-        if (x[0].equals("*")) {
-            x[0] = "\\*";
-        }
-        if (x[0].equals("^")) {
-            x[0] = "\\^";
-        }
-         return x;     
+        x = new String[]{String.valueOf(segdelim), String.valueOf(flddelim), String.valueOf(subdelim)};
+           
+        x[0] = escapeDelimiter(x[0]);
+        x[1] = escapeDelimiter(x[1]);
+        x[2] = escapeDelimiter(x[2]);
+       
+        return x;     
     } 
     
     /* lets set delimiters for CSV */

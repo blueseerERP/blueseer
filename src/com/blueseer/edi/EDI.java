@@ -183,7 +183,7 @@ public class EDI {
             
               */
                for (int i = 0; i < 39; i++) {
-                   controlarray[i] = (i == 31 || i == 32 || i == 33 || i == 34 || i == 35 || i == 36 || i == 37 ||
+                   controlarray[i] = (i == 4 || i == 5 || i == 6 || i == 31 || i == 32 || i == 33 || i == 34 || i == 35 || i == 36 || i == 37 ||
                            i == 9 || i == 10 || i == 11) ? "0" : "";
                 }
                 return controlarray;
@@ -745,8 +745,15 @@ public class EDI {
                             break;
                         }
                     }
-                    String[] unb = new String(cbufx, i, unb_end - 1).split(ed_escape);
+                    System.out.println("HERE: " + s + "/" + i + "/" +  (unb_end - 1) + "/" + String.valueOf(cbufx[unb_end - 1]));
+                    StringBuilder sb_obj = new StringBuilder();
+                    for(int v = i; v <= (unb_end - 1); v++) {
+                        sb_obj.append(cbufx[v]);
+                    }
                     
+                    System.out.println("HERE: " + sb_obj.toString());
+                    String[] unb = sb_obj.toString().split(ed_escape);
+                    System.out.println("HERE: " + String.join(",", unb));
                      // set control
                    
                     c[0] = unb[2].split(":")[0].trim(); // senderid

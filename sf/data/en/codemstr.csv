@@ -51,6 +51,10 @@ edidoctype,214,,1
 edidoctype,997,,1
 edidoctype,864,,1
 edidoctype,824,,1
+edidoctype,ORDERS,,1
+edidoctype,DESADV,,1
+edidoctype,INVOIC,,1
+edidoctype,ORDRSP,,1
 trantype,ISS-SALES,,1
 trantype,ISS-SCRAP,,1
 trantype,WIP-ISFG,,1

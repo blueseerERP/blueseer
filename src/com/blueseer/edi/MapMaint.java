@@ -72,6 +72,7 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.edi.EDI.AnnoDoc;
 import static com.blueseer.edi.EDI.createIMAP;
+import static com.blueseer.edi.EDI.createMAPUNE;
 import static com.blueseer.edi.EDI.edilog;
 import static com.blueseer.edi.EDI.getEDIType;
 import static com.blueseer.edi.EDIMap.SegmentCounter;
@@ -1373,9 +1374,13 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         boolean isInput = false;
         
         if (taname.equals("tainput")) {
+            tainput.setText("");
             structure = getStructure("ifs"); 
             file = getfile();
-            tainput.setText("");
+            if (structure.size() == 0) {
+              tainput.setText("unable to read structure file");
+              return;
+            }            
             if (file != null) {
             char[] cbuf = readEDIRawFileIntoCbuf(file.toPath());
             if (cbuf == null) {
@@ -1383,6 +1388,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 return;  
             }
             delims = getDelimiters(cbuf, file.getName()); // seg, ele, sub
+           // bsmf.MainFrame.show(delims[0] + "/" + delims[1] + "/" + delims[2]);
             if (delims == null) {
               tainput.setText("unable to determine delimiters (null array returned) ");
                 return;  
@@ -1397,6 +1403,12 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 fs = "X12";
             } else if (ddifs.getSelectedItem().toString().startsWith("CSV")) {
                 fs = "CSV";
+            } else if (ddifs.getSelectedItem().toString().startsWith("UNE")) {
+                fs = "UNE";  
+            } else if (ddifs.getSelectedItem().toString().startsWith("XML")) {
+                fs = "XML";  
+            } else if (ddifs.getSelectedItem().toString().startsWith("JSON")) {
+                fs = "JSON";      
             } else {
                 fs = "FF";
             }
@@ -1424,7 +1436,6 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             c[10] = delims[1];
             c[11] = delims[2];
             LinkedHashMap<String, String[]> mappedData = EDIMap.mapInput(c, input, getStructureSplit(structure));
-            
             
             for (Map.Entry<String, String[]> z : mappedData.entrySet()) {
                     String[] keyx = z.getKey().split("\\+", -1);
@@ -2189,9 +2200,9 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
         jLabel1.setText("Source");
 
-        ddinfiletype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "FF", "X12", "DB", "CSV" }));
+        ddinfiletype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "FF", "X12", "DB", "CSV", "UNE", "XML", "JSON" }));
 
-        ddoutfiletype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "FF", "X12", "DB", "CSV" }));
+        ddoutfiletype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "FF", "X12", "DB", "CSV", "UNE", "XML", "JSON" }));
 
         jLabel2.setText("IFS");
 
@@ -2433,19 +2444,64 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
          }
         }
        
-        StringBuilder segment = new StringBuilder();
-        for (int i = k[0]; i < k[1]; i++) {
-            if (cbuf[i] == segdelim) {
-                doc.add(segment.toString());
-                segment.delete(0, segment.length());
-            } else {
-                if (! (String.format("%02x",(int) cbuf[i]).equals("0d") || String.format("%02x",(int) cbuf[i]).equals("0a")) ) {
-                    segment.append(cbuf[i]);
-                } 
+            StringBuilder segment = new StringBuilder();
+            for (int i = k[0]; i < k[1]; i++) {
+                if (cbuf[i] == segdelim) {
+                    doc.add(segment.toString());
+                    segment.delete(0, segment.length());
+                } else {
+                    if (! (String.format("%02x",(int) cbuf[i]).equals("0d") || String.format("%02x",(int) cbuf[i]).equals("0a")) ) {
+                        segment.append(cbuf[i]);
+                    } 
+                }
             }
         }
-        }
          
+        
+         if (editype[0].equals("UNE")) {
+        Map<Integer, Object[]> UNBmap = createMAPUNE(cbuf, c, "", "", "", "");
+        Map<Integer, ArrayList> d = null;
+        
+        int loopcount = 0;
+        for (Map.Entry<Integer, Object[]> isa : UNBmap.entrySet()) {
+           loopcount++;
+           if (loopcount > 1) {
+               break;
+           }
+           d = (HashMap<Integer, ArrayList>) isa.getValue()[5];
+           segdelim = (char) Integer.valueOf(isa.getValue()[2].toString()).intValue();
+           eledelim = (char) Integer.valueOf(isa.getValue()[3].toString()).intValue();
+        }
+        
+        if (d == null) {
+            taoutput.setText("unable to establish UNBmap...check structure of input...possible double delimiters");
+            return;
+         }
+        
+        Integer[] k = null;
+        for (Map.Entry<Integer, ArrayList> z : d.entrySet()) {
+         for (Object r : z.getValue()) {
+            Object[] b = (Object[]) r ;        
+            k = (Integer[])b[0];
+            //String doctype = (String)b[1];
+            //String docid = (String)b[2];
+         }
+        }
+       
+            StringBuilder segment = new StringBuilder();
+            for (int i = k[0]; i < k[1]; i++) {
+                if (cbuf[i] == segdelim) {
+                    doc.add(segment.toString());
+                    segment.delete(0, segment.length());
+                } else {
+                    if (! (String.format("%02x",(int) cbuf[i]).equals("0d") || String.format("%02x",(int) cbuf[i]).equals("0a")) ) {
+                        segment.append(cbuf[i]);
+                    } 
+                }
+            }
+        }
+        
+        
         if (editype[0].equals("FF")) {
             segdelim = (char) Integer.valueOf("10").intValue(); 
            StringBuilder segment = new StringBuilder();

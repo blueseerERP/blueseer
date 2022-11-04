@@ -1016,7 +1016,8 @@ public abstract class EDIMap implements EDIMapi {
         for (String[] x : isf) {
             if (x[5].equals("groupend")) {
                   continue;
-            } 
+            }
+          //  System.out.println("HERE: " + rawSegmentLM + "/" + rawGroupHeadLM + "/" + x[0] + "/" + x[1]);
             if (rawSegmentLM.equals(x[0]) && rawGroupHeadLM.equals(x[1])) {
                 segment = x;
                 break;
@@ -1115,6 +1116,7 @@ public abstract class EDIMap implements EDIMapi {
             eledelim = EDI.escapeDelimiter(delims[1]);
         }
         
+       // bsmf.MainFrame.show(delims[0] + "/" + delims[1] + "/" + delims[2]);
         
         for (String s : data) {
                 String[] x = null;
@@ -1124,14 +1126,14 @@ public abstract class EDIMap implements EDIMapi {
                     s = "ROW," + s;
                     x = s.split(",",-1);
                 } else {
-                    
                     x = s.split(eledelim,-1); // delims = seg, ele, sub
                 }
                 
                 if (x == null || x.length == 0) {
                     continue;
                 }
-                             
+                
+                
                 String[] IFSseg = null;
                 if (c[28].equals("CSV")) {
                    IFSseg = getSegmentInISF(x[0], "", ISF); 
@@ -1186,15 +1188,15 @@ public abstract class EDIMap implements EDIMapi {
                     }
 
                     mappedinput = parenthead + x[0] + "+" + groupcount.get(groupparent) + "+" + loop + "=" + String.join(",",x);
-                  //  System.out.println(mappedinput);
+                   // System.out.println("HERE: " + mappedinput);
                     set.put(groupkey, loop);
                     mappedData.put(parenthead + x[0] + "+" + groupcount.get(groupparent) + "+" + loop , x);
                     SegmentCounter.add(parenthead + x[0] + "+" + groupcount.get(groupparent));
                    
                 }  // if foundit
               
-                //if (IFSseg == null)
-                //System.out.println("ifSeg is null: " + x[0] + " with parenthead: " + parenthead);
+                if (IFSseg == null)
+                System.out.println("ifSeg is null: " + x[0] + " with parenthead: " + parenthead);
             
                 
                stack = postGroupHead(x[0], stack, ISF);
@@ -1587,7 +1589,6 @@ public abstract class EDIMap implements EDIMapi {
          String x = "";
          int count = 0;
          String[] k = null;
-         
          if (segment.contains("+")) {  // overloading (again) as key type entry (used with getLoopKeys)
            k = mappedInput.get(segment);  
          } else { // else as actual segment entry

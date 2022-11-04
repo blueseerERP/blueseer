@@ -555,11 +555,14 @@
             <Component class="javax.swing.JComboBox" name="ddinfiletype">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="4">
+                  <StringArray count="7">
                     <StringItem index="0" value="FF"/>
                     <StringItem index="1" value="X12"/>
                     <StringItem index="2" value="DB"/>
                     <StringItem index="3" value="CSV"/>
+                    <StringItem index="4" value="UNE"/>
+                    <StringItem index="5" value="XML"/>
+                    <StringItem index="6" value="JSON"/>
                   </StringArray>
                 </Property>
               </Properties>
@@ -570,11 +573,14 @@
             <Component class="javax.swing.JComboBox" name="ddoutfiletype">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="4">
+                  <StringArray count="7">
                     <StringItem index="0" value="FF"/>
                     <StringItem index="1" value="X12"/>
                     <StringItem index="2" value="DB"/>
                     <StringItem index="3" value="CSV"/>
+                    <StringItem index="4" value="UNE"/>
+                    <StringItem index="5" value="XML"/>
+                    <StringItem index="6" value="JSON"/>
                   </StringArray>
                 </Property>
               </Properties>

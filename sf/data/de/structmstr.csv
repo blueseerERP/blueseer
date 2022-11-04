@@ -1,5 +1,5 @@
 ORDERS05.csv,SAP ORDERS IDOC,generic
-SHPMNT05.csv,SAP SHIPMENT IDOC,generic
+SHPMNT02.csv,SAP SHIPMENT IDOC,generic
 INVOIC02.csv,SAP INVOICE IDOC,generic
 X12856.csv,X12 Advance Shipping Notice,generic
 X12850.csv,X12 Purchase Order,generic
@@ -21,3 +21,7 @@ X12945.csv,X12 Warehouse Shipping Advice,generic
 X12997.csv,X12 Functional Acknowledgment,generic
 DB,System Database I/O,generic
 CSVGenericOrder.csv,Comma Delimited Order,generic
+UNEorders.csv,EDIFACT Purchase Order,generic
+UNEdesadv.csv,EDIFACT Shipping Advice,generic
+UNEinvoic.csv,EDIFACT Invoice,generic
+UNEordrsp.csv,EDIFACT Order Response,generic
