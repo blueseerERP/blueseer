@@ -1,6 +1,6 @@
-ORDERS05.csv,SAP ORDERS IDOC,generic
-SHPMNT02.csv,SAP SHIPMENT IDOC,generic
-INVOIC02.csv,SAP INVOICE IDOC,generic
+IDOCorders05.csv,SAP ORDERS IDOC,generic
+IDOCshpmnt02.csv,SAP SHIPMENT IDOC,generic
+IDOCinvoic02.csv,SAP INVOICE IDOC,generic
 X12856.csv,X12 Advance Shipping Notice,generic
 X12850.csv,X12 Purchase Order,generic
 X12855.csv,X12 Order Acknowledgment,generic

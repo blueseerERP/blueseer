@@ -25,6 +25,14 @@ edidoctype,850xml,,1
 edidoctype,856xml,,1
 edidoctype,810xml,,1
 edidoctype,855xml,,1
+edidoctype,850json,,1
+edidoctype,856json,,1
+edidoctype,810json,,1
+edidoctype,855json,,1
+edidoctype,850une,ORDERS,1
+edidoctype,856une,DESADV,1
+edidoctype,810une,INVOIC,1
+edidoctype,855une,ORDRSP,1
 edidoctype,850db,,1
 edidoctype,856db,,1
 edidoctype,855db,,1
@@ -51,10 +59,6 @@ edidoctype,214,,1
 edidoctype,997,,1
 edidoctype,864,,1
 edidoctype,824,,1
-edidoctype,ORDERS,,1
-edidoctype,DESADV,,1
-edidoctype,INVOIC,,1
-edidoctype,ORDRSP,,1
 trantype,ISS-SALES,,1
 trantype,ISS-SCRAP,,1
 trantype,WIP-ISFG,,1

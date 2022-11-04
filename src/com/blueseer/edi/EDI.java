@@ -37,6 +37,7 @@ import com.blueseer.shp.shpData;
 import com.blueseer.utl.EDData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
+import static com.blueseer.utl.EDData.getBSDocTypeFromStds;
 import com.blueseer.utl.OVData;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -796,7 +797,8 @@ public class EDI {
                     String[] st = new String(cbufx, i, unh_end - 1).split(ed_escape);
                     doctype = st[2].split(ud_escape)[0]; // doctype
                     docid = st[1]; //docID  
-                   
+                    // covert actual doctype to blueseer doctype
+                    doctype = getBSDocTypeFromStds(doctype);
                    // System.out.println(c[0] + "/" + c[1] + "/" + c[4] + "/" + c[5]);
                 } 
                 if (i > 1 && cbufx[i-1] == s && cbufx[i] == 'U' && cbufx[i+1] == 'N' && cbufx[i+2] == 'T') {
