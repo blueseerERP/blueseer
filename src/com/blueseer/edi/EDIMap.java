@@ -1881,7 +1881,9 @@ public abstract class EDIMap implements EDIMapi {
                         "Example:  composite(\"x\", \"y\", \"z\") returns: \"x:y:z\" as String"},
             params = {"String 1stvalue, String 2ndvalue, String 3rdvalue"})  
     public static String composite(String a, String b, String c) {
-        return a + oud + b + oud + c;
+        String[] segaccum = new String[]{a,b,c};
+        trimSegment(String.join(oud,segaccum), oud);
+        return trimSegment(String.join(oud,segaccum), oud);
     }
 
     // looping getInput
