@@ -14,3 +14,4 @@ bsDBTo856,Database to ASN,generic,856db,X12856.csv,856db,DB,856,X12,edi/maps/bsD
 bsDBTo810,Database to Invoice,generic,810db,X12810.csv,810db,DB,810,X12,edi/maps/bsDBTo810.java,,1
 bsDBTo855,Database to Acknowledgement,generic,855db,X12855.csv,855db,DB,855,X12,bsDBTo855.java,,1
 bsCSVTo850,CSV to Purchase Order,generic,CSVGenericOrder.csv,X12850.csv,850csv,CSV,850,X12,edi/maps/bsCSVTo850.java,,0
+bsUNEordersToIDOC,UNE EDIFACT ORDERS to IDOC,generic,UNEorders.csv,IDOCorders05.csv,850une,UNE,850idoc,FF,edi/maps/bsUNEordersToiDOC.java,,0

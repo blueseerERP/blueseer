@@ -307,6 +307,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         }
         if (ta.getName().equals("tainput")) {
             popup.add(setMenuItem("Search"));
+            popup.add(setMenuItem("Hex Replace"));
             popup.add(setMenuItem("Input"));
             popup.add(setMenuItem("Structure"));
             popup.add(setMenuItem("Overlay"));
@@ -371,7 +372,11 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 case "Overlay" :
                     showOverlay(parentname.getName());
                     break;  
-                 
+                
+                case "Hex Replace" :
+                    hexReplace(parentname.getName());
+                    break;      
+                    
                 case "Search" :
                     searchTextArea(parentname.getName());
                     break;  
@@ -1466,17 +1471,46 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                              desc = "unknown";
                          }
                      } 
-                     if (isInput) {
-                        tainput.append(z.getKey() + "\t" + fieldname + "\t" + desc +  " / Field: " + i + " value: " + s + "\n");   
-                     } else {
-                        taoutput.append(z.getKey() + "\t" + fieldname + "\t" + desc +  " / Field: " + i + " value: " + s + "\n");    
-                     }
+                     tainput.append(z.getKey() + "\t" + fieldname + "\t" + desc +  " --> FieldNumber: " + i + "   " + "ValueLength: " + s.length() + " value: " + s +  "\n");   
                      i++;
                     }
                    
             }
         tainput.setCaretPosition(0);
         taoutput.setCaretPosition(0);
+    }
+    
+    public void hexReplace(String taname) {
+        JTextComponent ta = null;
+        if (taname.equals("tainput")) {
+            ta = tainput;
+        } else {
+            return; // bail...only for tainput at this stage
+        }
+        String text = bsmf.MainFrame.input("Hex Chars: ");
+        String[] replacehex = text.split("\\|",-1);
+        if (replacehex == null || replacehex.length != 2 || replacehex[0].isBlank() || replacehex[1].isBlank()) {
+            return;
+        }
+        char fromHex = (char) Integer.parseInt(replacehex[0], 16);
+        char toHex = (char) Integer.parseInt(replacehex[1], 16);
+        
+        Document d = ta.getDocument();
+         try {
+             String data = d.getText(0, d.getLength());
+             char[] carray = data.toCharArray();
+             for (int i = 0; i < carray.length; i++) {
+                 if (carray[i] == fromHex) {
+                    carray[i] = toHex; 
+                 }
+             }
+             tainput.setText("");
+             tainput.setText(String.valueOf(carray));
+         } catch (BadLocationException ex) {
+             taoutput.setText("");
+             taoutput.setText(ex.getMessage());
+         }
+        
     }
     
     public void searchTextArea(String taname) {

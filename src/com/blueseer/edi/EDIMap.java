@@ -136,6 +136,13 @@ public abstract class EDIMap implements EDIMapi {
      
      public static String content = "";
 
+    public record segRecord(int p, String[] m) {
+    }
+    
+    public record stackGHP(Stack<String> s, int i) {
+    }
+     
+     
     public static Map<String, HashMap<Integer,String[]>> mISF = new LinkedHashMap<String, HashMap<Integer,String[]>>();
 		 
     public static Map<String, ArrayList<String[]>> HASH = new  LinkedHashMap<String, ArrayList<String[]>>();
@@ -1010,10 +1017,12 @@ public abstract class EDIMap implements EDIMapi {
          return x;
      }
     
-    public static String[] getSegmentInISF(String rawSegmentLM, String rawGroupHeadLM, ArrayList<String[]> isf) {
+    public static segRecord getSegmentInISF(String rawSegmentLM, String rawGroupHeadLM, ArrayList<String[]> isf) {
         
         String[] segment = null;
+        int i = 0;
         for (String[] x : isf) {
+            i++;
             if (x[5].equals("groupend")) {
                   continue;
             }
@@ -1023,38 +1032,51 @@ public abstract class EDIMap implements EDIMapi {
                 break;
             }
         }
-        return segment;
+        return new segRecord(i,segment);
     }
     
-    public static Stack<String> preGroupHead(String rawSegmentLM, Stack<String> instack, ArrayList<String[]> isf) {
+    public static stackGHP preGroupHead(String rawSegmentLM, Stack<String> instack, ArrayList<String[]> isf, int GHP) {
         String currentGroupHeadLM = String.join(":",instack.toArray(new String[instack.size()])); 
         Stack<String> stack = new Stack<String>();
         stack = (Stack<String>) instack.clone();
         int i = 0;
+        
         for (String[] x : isf) {
             i++;
+            if (i < GHP) {
+                continue;
+            }
+           
+            
             if (! x[4].equals("yes")) {
                 continue;
             }
+            
             if (x[5].equals("groupend")) {
                   continue;
             } 
+            /*
+            if (rawSegmentLM.equals(x[0])) {
+            System.out.println("RawSegment:" + rawSegmentLM + " currentgrouphead=" + currentGroupHeadLM + "  x01=" + x[1] + "  GHP=" + GHP );
+            }
+            */
+            if (rawSegmentLM.equals(x[0]) && x[1].isBlank()) {
+               stack.removeAllElements();
+               GHP = i;
+               
+               if (GlobalDebug) {
+               System.out.println("PRE:" + " IncomingSegment: " + rawSegmentLM + "  GroupHead:" + currentGroupHeadLM + "  x[1]: " + x[1] + " GHP=" + GHP);
+               }
+               
+               break;  
+            }
             
-            if (rawSegmentLM.equals(x[0]) && currentGroupHeadLM.equals(x[1]) && x[3].equals("yes")) {
-                if (x[1].isBlank()) {
-                  stack.removeAllElements();
-              //    System.out.println("preRemoveAll:" + currentGroupHeadLM + " / " + x[1] + " position: " + i + " incoming:" + x[0]);
-                }
-               // stack.push(rawSegmentLM);
-               // System.out.println("push:" + rawSegmentLM + " position: " + i + " incoming:" + x[0]);
+            if (rawSegmentLM.equals(x[0]) && currentGroupHeadLM.equals(x[1])) {
                 break;
             }
             
-            if (rawSegmentLM.equals(x[0]) && ! currentGroupHeadLM.equals(x[1]) && x[3].equals("yes")) {
-                if (x[1].isBlank()) {
-                  stack.removeAllElements();
-               //   System.out.println("RemoveAll:" + currentGroupHeadLM + " / " + x[1] + " position: " + i + " incoming:" + x[0]);
-                } else {
+            if (rawSegmentLM.equals(x[0]) && ! currentGroupHeadLM.equals(x[1])) {
+                if (! x[1].isBlank()) {
                   stack.removeAllElements();
                   if (! x[1].contains(":")) {
                       stack.push(x[1]);
@@ -1064,38 +1086,54 @@ public abstract class EDIMap implements EDIMapi {
                           stack.push(e);
                       }
                   }
-              //    System.out.println("RemoveSome:" + currentGroupHeadLM + " / " + x[1] + " position: " + i + " incoming:" + x[0]);
+                  String newGroup = String.join(":",stack.toArray(new String[stack.size()]));
+                  if (GlobalDebug) {
+                  System.out.println("DropDown:" + " IncomingSegment: " + rawSegmentLM + "  OldGroupHead:" + currentGroupHeadLM +  "  NewGroupHead:" + newGroup + "  x[1]: " + x[1] + " GHP=" + GHP);
+                  }
                 }
-             //   System.out.println("pop:" + rawSegmentLM + " position: " + i + " incoming:" + x[0]);
                 break;
             }
             
-        }
-        return stack;
+        } // for each isf
+        
+        return new stackGHP(stack, GHP);
     }
     
-    public static Stack<String> postGroupHead(String rawSegmentLM, Stack<String> instack, ArrayList<String[]> isf) {
+    public static stackGHP postGroupHead(String rawSegmentLM, Stack<String> instack, ArrayList<String[]> isf, int GHP) {
         String currentGroupHeadLM = String.join(":",instack.toArray(new String[instack.size()])); 
         Stack<String> stack = new Stack<String>();
         stack = (Stack<String>) instack.clone();
         int i = 0;
         for (String[] x : isf) {
             i++;
+            
+            if (i < GHP) {
+                continue;
+            }
+            
             if (! x[4].equals("yes")) {
                 continue;
             }
             if (x[5].equals("groupend")) {
                   continue;
             } 
-           
-            if (rawSegmentLM.equals(x[0]) && ! currentGroupHeadLM.equals(x[1]) && x[3].equals("yes")) {
+            /*
+            if (rawSegmentLM.equals(x[0])) {
+              System.out.println("PostCheck:" + rawSegmentLM + " currentGroup= " + currentGroupHeadLM +  " incoming:" + x[0]);  
+            }
+            */
+            
+            if (rawSegmentLM.equals(x[0]) && (currentGroupHeadLM.equals(x[1])) && x[3].equals("yes")) {
                 stack.push(rawSegmentLM);
-              //  System.out.println("afterpush:" + rawSegmentLM + " position: " + i + " incoming:" + x[0]);
+                if (stack.get(0).equals(x[0]) && x[1].isBlank()) {
+                    GHP = i;
+                }
+                System.out.println("POST:" + " IncomingSegment: " + rawSegmentLM + "  GroupHead:" + currentGroupHeadLM + "  x[1]: " + x[1] + " GHP=" + GHP);
                 break;
             }
             
         }
-        return stack;
+        return new stackGHP(stack, GHP);
     }
     
     
@@ -1117,7 +1155,9 @@ public abstract class EDIMap implements EDIMapi {
         }
         
        // bsmf.MainFrame.show(delims[0] + "/" + delims[1] + "/" + delims[2]);
-        
+        int currentPosition = 0;
+        int GHP = 0;
+        Stack<Integer> positionStack = new Stack<Integer>();
         for (String s : data) {
                 String[] x = null;
                 if (c[28].equals("FF")) {
@@ -1136,20 +1176,29 @@ public abstract class EDIMap implements EDIMapi {
                 
                 String[] IFSseg = null;
                 if (c[28].equals("CSV")) {
-                   IFSseg = getSegmentInISF(x[0], "", ISF); 
+                    segRecord sr = getSegmentInISF(x[0], "", ISF);
+                    IFSseg = sr.m();
+                    currentPosition = sr.p();
                 } else {
                 // identify immediate parent/group head
-                stack = preGroupHead(x[0], stack, ISF);
+                stackGHP sp = preGroupHead(x[0], stack, ISF, GHP);
+                stack = sp.s();
+                GHP = sp.i();
                 parenthead = String.join(":",stack.toArray(new String[stack.size()]));
                 // now lets find segments place in ISF
-                // System.out.println("incoming segment:" + x[0] + " with parenthead: " + parenthead);
-                IFSseg = getSegmentInISF(x[0], parenthead, ISF); 
+              //   System.out.println("incoming segment:" + x[0] + " with parenthead: " + parenthead);
+                segRecord sr = getSegmentInISF(x[0], parenthead, ISF);
+                IFSseg = sr.m();
+                currentPosition = sr.p();
                 }
                 
                 
                
                 
                 if (IFSseg != null) {
+                   if (GlobalDebug) {
+                   System.out.println("WRITE:" + " IncomingSegment: " + x[0] +  "  x[1]: " + IFSseg[1] + "  ParentHead:" + parenthead + " GHP=" + GHP);
+                   }
                     
                     if (! parenthead.isBlank()) {
                         parenthead = parenthead + ":";
@@ -1198,8 +1247,12 @@ public abstract class EDIMap implements EDIMapi {
                 if (IFSseg == null)
                 System.out.println("ifSeg is null: " + x[0] + " with parenthead: " + parenthead);
             
+               
                 
-               stack = postGroupHead(x[0], stack, ISF);
+                stackGHP postGH = postGroupHead(x[0], stack, ISF, GHP);
+                stack = postGH.s();
+                GHP = postGH.i(); 
+                
                 parenthead = String.join(":",stack.toArray(new String[stack.size()])); 
                 
         }
@@ -1610,7 +1663,7 @@ public abstract class EDIMap implements EDIMapi {
          
          return x;
      }
-    
+        
     @EDI.AnnoDoc(desc = {"method reads value from source at segment and element (by name).",
                         "Example:  getInput(\"BEG\",\"fieldname\") returns: specific field of BEG segment"},
             params = {"String segment","String ElementName"}) 
@@ -1642,6 +1695,82 @@ public abstract class EDIMap implements EDIMapi {
          
          return x;
      }
+    
+    // composite methods
+    @EDI.AnnoDoc(desc = {"method reads composite element identified at segment and elementNumber and compNumber.",
+                        "Example:  getInput(\"UNB\",2,2) returns: 2nd component of 2rd element of UNB segment (EDIFACT sender qualifier)"},
+            params = {"String segment","Integer ElementNumber","Integer compNumber"})      
+    public static String getInputComp(String segment, Integer elementNbr, Integer comp) {
+         String x = "";
+         String r = "";
+         int count = 0;
+         String[] k = null;
+         
+         if (comp <= 0) {
+             return x;
+         }
+         
+         if (segment.contains("+")) {  // overloading (again) as key type entry (used with getLoopKeys)
+           k = mappedInput.get(segment);  
+         } else { // else as actual segment entry
+           //  segment = ":" + segment; // preprend blank
+             for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
+                 if (z.getKey().split("\\+")[0].equals(segment)) {
+                     count++;
+                     k = z.getValue();
+                 }
+             }
+         }
+       
+         if (k != null && k.length > elementNbr) {
+          x =  k[elementNbr];
+         }
+        
+         if (x.contains(ud)) {
+            String[] y = x.split(ud,-1);
+            if (y != null && y.length >= comp) {
+              r = y[comp - 1];  
+            }
+         }
+         
+         if (GlobalDebug) {
+         System.out.println("getInputComp:" + segment + "/" + r);
+         }
+         
+         return r;
+     }
+    
+    @EDI.AnnoDoc(desc = {"method reads composite element identified at segment and elementNumber and compNumber for a Group Segment.",
+                      "Note:  this is typically used in a looping construct in conjunction with getGroupCount()",  
+                      "Example:  getInput(i,\"LIN\",3, 2) returns: 2st composite value of 3th element of Edifact LIN segment in loop index 'i' "},
+            params = {"Integer LoopIndex", "String segment", "Integer ElementNumber", "Integer compNumber"})  
+    public static String getInputComp(Integer gloop, String segment, Integer elementNbr, Integer comp) {
+         String x = "";
+         String r = "";
+         String[] k = null;
+         
+         if (comp <= 0) {
+             return x;
+         }
+        // segment = ":" + segment; // preprend blank
+         for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
+             String[] v = z.getKey().split("\\+");
+             if (v[0].equals(segment) && v[1].equals(String.valueOf(gloop))) {
+                 k = z.getValue();
+             }
+         }
+         if (k != null && k.length > elementNbr) {
+          x =  k[elementNbr];
+         }
+         if (x.contains(ud)) {
+            String[] y = x.split(ud,-1);
+            if (y != null && y.length >= comp) {
+              r = y[comp - 1];  
+            }
+         }
+         return r;
+     }
+    
     
     // looping getInput
     

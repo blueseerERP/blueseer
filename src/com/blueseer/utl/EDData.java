@@ -3730,7 +3730,7 @@ public class EDData {
            flddelim = ',';
            subdelim = ':';
            segdelim = '\n';
-        x = new String[]{String.valueOf(flddelim),String.valueOf(subdelim),String.valueOf(segdelim)};
+        x = new String[]{String.valueOf(segdelim), String.valueOf(flddelim), String.valueOf(subdelim)};
         
         return x;
     }
@@ -3738,13 +3738,13 @@ public class EDData {
     /* lets set delimiters for XML */
     if (filename.toUpperCase().endsWith(".XML") ) {
            segdelim = '\n';
-        x = new String[]{"","",String.valueOf(segdelim)};
+        x = new String[]{String.valueOf(segdelim),"",""};
         return x;
     }
     
     if (x == null) {
            segdelim = '\n';
-        x = new String[]{"","",String.valueOf(segdelim)};
+        x = new String[]{String.valueOf(segdelim),"",""};
     }
     
     return x;

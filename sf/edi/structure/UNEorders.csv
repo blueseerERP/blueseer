@@ -14,6 +14,7 @@ RFF,,1,yes,yes,landmark,Reference,3,3,-,M
 RFF,,1,no,no,e01,Composite Reference (Qualifier:Value) ,1,75,-,M
 DTM,RFF,35,no,yes,landmark,DateTime Period,3,3,-,M
 DTM,RFF,1,no,no,e01,Composite DateTime (Type:Value:FormatCode) ,1,40,-,M
+RFF,,,,,groupend,,,,,
 NAD,,99,yes,yes,landmark,Name And Address Info,3,3,-,M
 NAD,,1,no,no,e01,Code Qualifier,1,3,-,M
 NAD,,1,no,no,e02,Party Identifier,1,55,-,M
@@ -29,6 +30,7 @@ CTA,NAD,1,no,no,e01,Contact Type Code,2,3,-,M
 CTA,NAD,1,no,no,e02,Composite Code:Name,1,80,-,M
 COM,NAD,1,no,yes,landmark,Communication Info,3,3,-,M
 COM,NAD,1,no,no,e01,Composite (Number:Qualifier),1,80,-,M
+NAD,,,,,groupend,,,,,
 CUX,,1,no,yes,landmark,Currencies Info,3,3,-,M
 CUX,,1,no,no,e01,Composite (Usage Qualifier:Currency Code:Type Qualifier),1,80,-,M
 PYT,,1,no,yes,landmark,Payment Terms Basis,3,3,-,M
@@ -49,10 +51,11 @@ IMD,LIN,1,no,yes,landmark,Description Info,3,3,-,M
 IMD,LIN,1,no,no,e01,Description Code,1,3,-,M
 IMD,LIN,1,no,no,e02,Composite Characteristic Code (:::),1,3,-,M
 IMD,LIN,1,no,no,e03,Composite Description (:::Qualifier) ,1,80,-,M
-QTY,LIN,1,no,yes,landmark,Quantity Info,3,3,-,M
+QTY,LIN,1,yes,yes,landmark,Quantity Info,3,3,-,M
 QTY,LIN,1,no,no,e01,Composite Qty (Qualifier:Quantity:UOM),1,80,-,M
-DTM,LIN,35,no,yes,landmark,DateTime Period,3,3,-,M
-DTM,LIN,1,no,no,e01,Composite DateTime (Type:Value:FormatCode) ,1,40,-,M
+DTM,LIN:QTY,35,no,yes,landmark,DateTime Period,3,3,-,M
+DTM,LIN:QTY,1,no,no,e01,Composite DateTime (Type:Value:FormatCode) ,1,40,-,M
+QTY,,,,,groupend,,,,,
 PRI,LIN,1,no,yes,landmark,Price Info,3,3,-,M
 PRI,LIN,1,no,no,e01,Composite Price (Qualifier:Amount) ,1,40,-,M
 TDT,LIN,1,no,yes,landmark,Transport Info,3,3,-,M
@@ -69,6 +72,9 @@ QTY,LIN:SCC,1,yes,yes,landmark,Quantity Info,3,3,-,M
 QTY,LIN:SCC,1,no,no,e01,Composite Qty (Qualifier:Quantity:UOM),1,80,-,M
 DTM,LIN:SCC:QTY,35,no,yes,landmark,DateTime Period,3,3,-,M
 DTM,LIN:SCC:QTY,1,no,no,e01,Composite DateTime (Type:Value:FormatCode) ,1,40,-,M
+QTY,,,,,groupend,,,,,
+SCC,,,,,groupend,,,,,
+LIN,,,,,groupend,,,,,
 UNS,,1,no,yes,landmark,Section Control,3,3,-,M
 UNS,,1,no,no,e01,Code,1,80,-,M
 UNT,,1,no,yes,landmark,Message Trailer,3,3,-,M
