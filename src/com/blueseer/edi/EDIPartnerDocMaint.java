@@ -495,16 +495,16 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         jLabel5.setText("Code:");
         jLabel5.setName("lblcode"); // NOI18N
 
-        jLabel15.setText("Snd GS");
+        jLabel15.setText("Snd GS/UNG");
         jLabel15.setName("lblsndgs"); // NOI18N
 
-        jLabel7.setText("Rcv GS");
+        jLabel7.setText("Rcv GS/UNG");
         jLabel7.setName("lblrcvgs"); // NOI18N
 
-        jLabel1.setText("Rcv ISA");
+        jLabel1.setText("Rcv ISA/UNB");
         jLabel1.setName("lblrcvisa"); // NOI18N
 
-        jLabel13.setText("Snd ISA");
+        jLabel13.setText("Snd ISA/UNB");
         jLabel13.setName("lblsndisa"); // NOI18N
 
         jLabel9.setText("Map");
@@ -586,7 +586,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(ddmap, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

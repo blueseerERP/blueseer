@@ -180,7 +180,7 @@
                               <Component id="ddmap" min="-2" pref="201" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace pref="17" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -270,13 +270,13 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel15">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Snd GS"/>
+                <Property name="text" type="java.lang.String" value="Snd GS/UNG"/>
                 <Property name="name" type="java.lang.String" value="lblsndgs" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel7">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Rcv GS"/>
+                <Property name="text" type="java.lang.String" value="Rcv GS/UNG"/>
                 <Property name="name" type="java.lang.String" value="lblrcvgs" noResource="true"/>
               </Properties>
             </Component>
@@ -284,13 +284,13 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel1">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Rcv ISA"/>
+                <Property name="text" type="java.lang.String" value="Rcv ISA/UNB"/>
                 <Property name="name" type="java.lang.String" value="lblrcvisa" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel13">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Snd ISA"/>
+                <Property name="text" type="java.lang.String" value="Snd ISA/UNB"/>
                 <Property name="name" type="java.lang.String" value="lblsndisa" noResource="true"/>
               </Properties>
             </Component>

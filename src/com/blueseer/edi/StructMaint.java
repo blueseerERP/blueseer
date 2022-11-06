@@ -48,6 +48,7 @@ import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
+import com.blueseer.utl.EDData;
 import com.blueseer.utl.IBlueSeerT;
 import java.awt.Color;
 import java.awt.Component;
@@ -323,7 +324,7 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
             return false;
         }
        
-         if (! BlueSeerUtils.isFile("edi/structure", tbkey.getText())) {
+         if (! BlueSeerUtils.isFile(EDData.getEDIStructureDir(), tbkey.getText())) {
                     bsmf.MainFrame.show(getMessageTag(1145,tbkey.getText()));
                     tbkey.requestFocus();
                     return false;

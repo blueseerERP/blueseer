@@ -746,15 +746,15 @@ public class EDI {
                             break;
                         }
                     }
-                    System.out.println("HERE: " + s + "/" + i + "/" +  (unb_end - 1) + "/" + String.valueOf(cbufx[unb_end - 1]));
+                  //  System.out.println("HERE: " + s + "/" + i + "/" +  (unb_end - 1) + "/" + String.valueOf(cbufx[unb_end - 1]));
                     StringBuilder sb_obj = new StringBuilder();
                     for(int v = i; v <= (unb_end - 1); v++) {
                         sb_obj.append(cbufx[v]);
                     }
                     
-                    System.out.println("HERE: " + sb_obj.toString());
+                 //   System.out.println("HERE: " + sb_obj.toString());
                     String[] unb = sb_obj.toString().split(ed_escape);
-                    System.out.println("HERE: " + String.join(",", unb));
+                  //  System.out.println("HERE: " + String.join(",", unb));
                      // set control
                    
                     c[0] = unb[2].split(":")[0].trim(); // senderid
@@ -3489,6 +3489,104 @@ public class EDI {
            
             return envelope;
       }
+      
+      public static String[] generateEnvelopeUNE(String doctype, String sndid, String rcvid) {
+        
+        String [] envelope = new String[9];  
+        String[] defaults = EDData.getEDITPDefaults(doctype, sndid, rcvid);
+        ArrayList<String> attrs = EDData.getEDIAttributesList(doctype, sndid, rcvid); 
+        Map<String, String> attrkeys = new HashMap<String, String>();
+        for (String x : attrs) {
+            String[] z = x.split(":", -1);
+            if (z != null && ! z[0].isEmpty()) {
+                attrkeys.put(z[0], z[1]);
+            }
+        }
+        
+        // get counter for ediout
+       int filenumber = OVData.getNextNbr("ediout");
+       defaults[7] = (defaults[7].isBlank() || defaults[7].equals("0")) ? "39" : defaults[7];
+       defaults[6] = (defaults[6].isBlank() || defaults[6].equals("0")) ? "43" : defaults[6];
+       defaults[8] = (defaults[8].isBlank() || defaults[8].equals("0")) ? "58" : defaults[8];
+       int sdint = Integer.valueOf(defaults[7]);
+       int edint = Integer.valueOf(defaults[6]);
+       int udint = Integer.valueOf(defaults[8]);
+         String sd = Character.toString((char) sdint );   // "\n"  or "\u001c"
+         String ed = Character.toString((char) edint );
+         String ud = Character.toString((char) udint );
+            
+        //  if default filename is empty..set as generic
+         if (defaults[10].isEmpty()) {
+             defaults[10] = "generic";
+         }
+         
+         String filename = defaults[10] + "." + String.valueOf(filenumber) + "." + defaults[11];
+        
+         //  if filepath is defined...use this for explicit file path relative to root
+        /*  don't do this...TEV 20220505...done downstream
+         if (! defaults[9].isEmpty()) {
+             filename = defaults[9] + "/" + filename;
+         }
+         */
+         
+         //File f = new File(defaults[9] + defaults[10] + "." + String.valueOf(filenumber) + "." + defaults[11]);
+         //BufferedWriter output;
+         //output = new BufferedWriter(new FileWriter(f));
+         DateFormat isadfdate = new SimpleDateFormat("yyMMdd");
+         DateFormat gsdfdate = new SimpleDateFormat("yyyyMMdd");
+         DateFormat isadftime = new SimpleDateFormat("HHmm");
+         DateFormat gsdftime = new SimpleDateFormat("HHmm");
+         Date now = new Date();
+        
+         
+         String unb1 = "";
+         if (attrkeys.containsKey("UNB01")) {unb1 = attrkeys.get("UNB01");}
+         
+         
+         String unb2 = defaults[0] + ud + defaults[4];
+         
+         String unb3 = defaults[3] + ud + defaults[1];
+         
+         String unb4 = isadfdate.format(now) + ud + isadftime.format(now);
+         
+         String unb5 = String.valueOf(filenumber);
+         
+         
+         String ung1 = EDData.getEDIGSTypeFromStds(defaults[14]);   // defaults[14] = outdoctype 
+         
+         String ung2 = defaults[2];
+         if (attrkeys.containsKey("UNG02")) {ung2 = attrkeys.get("UNG02");}
+         
+         String ung3 = defaults[5];
+         if (attrkeys.containsKey("UNG03")) {ung3 = attrkeys.get("UNG03");}
+         
+         String ung4 = gsdfdate.format(now) + ud + gsdftime.format(now);
+         
+         String ung5 = String.valueOf(filenumber);
+         
+         String ung6 = "UN";
+         
+         String ung7 = defaults[12];
+                
+          
+           envelope[0] = "UNB" + ed + unb1 + ed + unb2 + ed + unb3 + ed + unb4 + ed + unb5; 
+           envelope[0] = envelope[0].toUpperCase();
+           envelope[1] = "UNG" + ed + ung1 + ed + ung2 + ed + ung3 + ed + ung4 + ed + ung5 + ed + ung6 + ed + ung7;
+            envelope[1] = envelope[1].toUpperCase();
+           envelope[2] = "UNE" + ed + "1" + ed + String.valueOf(filenumber);
+            envelope[2] = envelope[2].toUpperCase();
+           envelope[3] = "UNZ" + ed + "1" + ed + String.valueOf(filenumber);
+            envelope[3] = envelope[3].toUpperCase();
+            
+           envelope[4] = filename;
+           envelope[5] = String.valueOf(filenumber);
+           envelope[6] = String.valueOf(filenumber);
+           envelope[7] = sd;
+           envelope[8] = ed;
+           
+            return envelope;
+      }
+      
       
       public static String[] generate997(ArrayList<String> docs, String[] c) {
         String[] m = new String[]{"",""};

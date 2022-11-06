@@ -134,6 +134,10 @@ public abstract class EDIMap implements EDIMapi {
      public static String ed = "";
      public static String ud = "";
      
+     public static String osd = "";
+     public static String oed = "";
+     public static String oud = "";
+     
      public static String content = "";
 
     public record segRecord(int p, String[] m) {
@@ -247,6 +251,12 @@ public abstract class EDIMap implements EDIMapi {
         sd = delimConvertIntToStr(c[9]);
         ed = delimConvertIntToStr(c[10]);
         ud = delimConvertIntToStr(c[11]);
+        
+        osd = EDI.escapeDelimiter(delimConvertIntToStr(c[35]));
+        oed = EDI.escapeDelimiter(delimConvertIntToStr(c[36]));
+        oud = EDI.escapeDelimiter(delimConvertIntToStr(c[37]));
+        
+        
         isOverride = Boolean.valueOf(c[12]); // isOverrideEnvelope
         GlobalDebug = Boolean.valueOf(c[30]);
         
@@ -304,6 +314,11 @@ public abstract class EDIMap implements EDIMapi {
         String[] tp = EDData.getEDITPDefaults(c[1], outsender, outreceiver );
     //    bsmf.MainFrame.show(outputdoctype + "/" + outsender + "/" + outreceiver );
     //    bsmf.MainFrame.show(tp[14] + "/" + tp[15] + "/" + tp[16] + "/" + tp[17] );
+        
+        osd = EDI.escapeDelimiter(delimConvertIntToStr(tp[7]));
+        oed = EDI.escapeDelimiter(delimConvertIntToStr(tp[6]));
+        oud = EDI.escapeDelimiter(delimConvertIntToStr(tp[8]));
+    
         setOutPutDocType(tp[14]);
         setOutPutFileType(tp[15]);
         if (! tp[21].equals("DB")) {
@@ -330,8 +345,15 @@ public abstract class EDIMap implements EDIMapi {
     public void setOutPutEnvelopeStrings(String[] c) {         
          if ( ! isOverride) {  // if not override...use internal partner / doc lookup for envelope info
            
-             
-           envelope = EDI.generateEnvelope(c[1], c[0], c[21]); // envelope array holds in this order (isa, gs, ge, iea, filename, controlnumber, gsctrlnbr)
+           if (c[29].equals("X12")) {  
+             envelope = EDI.generateEnvelope(c[1], c[0], c[21]); // envelope array holds in this order (isa, gs, ge, iea, filename, controlnumber, gsctrlnbr)
+           } else if(c[29].equals("UNE")) {
+             envelope = EDI.generateEnvelopeUNE(c[1], c[0], c[21]); // envelope array holds in this order (isa, gs, ge, iea, filename, controlnumber, gsctrlnbr)
+           } else {
+               return;
+           }
+           
+           
            String ed = envelope[8];
            ISA = envelope[0];
            isaArray = ISA.split(EDI.escapeDelimiter(ed), -1);
@@ -344,9 +366,14 @@ public abstract class EDIMap implements EDIMapi {
            isactrl = envelope[5];
            gsctrl = envelope[6];
            stctrl = String.format("%04d", 1);
-           ST = "ST" + ed + outputdoctype + ed + stctrl ;
-           SE = "SE" + ed + String.valueOf(segcount) + ed + stctrl;  
            
+                   if (c[29].equals("X12")) { 
+                   ST = "ST" + ed + outputdoctype + ed + stctrl ;
+                   SE = "SE" + ed + String.valueOf(segcount) + ed + stctrl;  
+                   }  else {
+                   ST = "UNH" + ed + stctrl + ed + outputdoctype;
+                   SE = "UNT" + ed + String.valueOf(segcount) + ed + stctrl;  
+                   }
            
            overrideISAWithMapEntries(); 
            overrideGSWithMapEntries();
@@ -427,7 +454,7 @@ public abstract class EDIMap implements EDIMapi {
                case 15 :
                  isaArray[i] = String.format("%-1s", mapISAArray[i]);  
                  break; 
-                 case 16 :
+               case 16 :
                  isaArray[i] = String.format("%-1s", mapISAArray[i]);  
                  break; 
                default :
@@ -667,13 +694,21 @@ public abstract class EDIMap implements EDIMapi {
             outfile = tp[10] + String.format("%07d", filenumber) + "." + tp[11];
         }
         
-        if (tp[15].equals("X12")) {
+        if (c[29].equals("X12") || c[29].equals("UNE")) {
            setOutPutEnvelopeStrings(c);
           
+           if (c[29].equals("X12")) {
            tp[7] = (tp[7].isBlank() || tp[7].equals("0")) ? "10" : tp[7];
            tp[6] = (tp[6].isBlank() || tp[6].equals("0")) ? "42" : tp[6];
            tp[8] = (tp[8].isBlank() || tp[8].equals("0")) ? "126" : tp[8];
-          
+           }
+           
+           if (c[29].equals("UNE")) {
+           tp[7] = (tp[7].isBlank() || tp[7].equals("0")) ? "39" : tp[7];
+           tp[6] = (tp[6].isBlank() || tp[6].equals("0")) ? "43" : tp[6];
+           tp[8] = (tp[8].isBlank() || tp[8].equals("0")) ? "58" : tp[8];
+           }
+           
            String s = delimConvertIntToStr(tp[7]); // segment delimiter
            if (tp[20].equals("1")) { // if envelopeall...then multi envelope
             // content = ST + s + content  + SE + s;
@@ -1128,7 +1163,11 @@ public abstract class EDIMap implements EDIMapi {
                 if (stack.get(0).equals(x[0]) && x[1].isBlank()) {
                     GHP = i;
                 }
-                System.out.println("POST:" + " IncomingSegment: " + rawSegmentLM + "  GroupHead:" + currentGroupHeadLM + "  x[1]: " + x[1] + " GHP=" + GHP);
+                
+                if (GlobalDebug) {
+                System.out.println("POST:" + " IncomingSegment: " + rawSegmentLM + "  GroupHead:" + currentGroupHeadLM + "  xx[1]: " + x[1] + " GHP=" + GHP);
+                }
+                
                 break;
             }
             
@@ -1303,6 +1342,7 @@ public abstract class EDIMap implements EDIMapi {
     	 String segment = "";
          String s = "";
          String e = "";
+         String u = "";
     	 content = "";
         
     	 Map<String, HashMap<String,String>> MD = new LinkedHashMap<String, HashMap<String,String>>(OMD);
@@ -1367,6 +1407,72 @@ public abstract class EDIMap implements EDIMapi {
          segcount += 2; // include ST and SE
          // wrap content with envelope
          } // if x12
+         
+          if (outputfiletype.equals("UNE")) {
+         segcount = 0;  // init segment count for this doc
+         if (tp == null || tp[7].equals("0") || tp[7].isBlank()) {
+            s = delimConvertIntToStr("39"); // segment delimiter 
+         } else {
+            s = delimConvertIntToStr(tp[7]); // segment delimiter 
+         }
+         if (tp == null || tp[6].equals("0") || tp[6].isBlank()) {
+            e = delimConvertIntToStr("43"); // element delimiter 
+         } else {
+            e = delimConvertIntToStr(tp[6]); // element delimiter 
+         }
+         if (tp == null || tp[8].equals("0") || tp[8].isBlank()) {
+            u = delimConvertIntToStr("58"); // element delimiter 
+         } else {
+            u = delimConvertIntToStr(tp[8]); // element delimiter 
+         }
+         
+    	 for (Map.Entry<String, HashMap<String,String>> z : MD.entrySet()) {
+ 		//	ArrayList<String[]> fields = z.getValue();
+ 			
+                // write out all fields of this segment
+                HashMap<String,String> mapValues = MD.get(z.getKey());
+                // loop through integers
+
+                if (GlobalDebug) {
+                    System.out.println("OMD key/value: " + z.getKey() + " : " + mapValues);
+                }
+                        segment = z.getKey().split(":")[0];  // start with landmark
+                      
+                        ArrayList<String[]> fields = OSF.get(segment);
+                        ArrayList<String> segaccum = new ArrayList<String>();
+                        segaccum.add(segment); 
+                        
+                        if (fields != null) { 
+                        for (String[] f : fields) {
+                        //    System.out.println(f[0] + "/" + f[6]);
+                                if (f[5].equals("landmark") || f[5].equals("groupend")) {
+                                    continue;
+                                }
+                                // overlay with values that were actually assigned...otherwise blanks
+                                if (mapValues.containsKey(f[5])) {
+                                        if (mapValues.get(f[5]).length() > Integer.valueOf(f[8])) {
+                                                segaccum.add(mapValues.get(f[5]).substring(0, Integer.valueOf(f[8])).trim()); // properly formatted
+                                        } else {
+                                                segaccum.add(mapValues.get(f[5]).trim()); // properly formatted
+                                        }
+
+                                } else {
+                                    segaccum.add("");
+                                }
+                        }
+                        } // if fields not null
+                        segment = trimSegment(String.join(e,segaccum), e);
+                        if (GlobalDebug) {
+                            System.out.println("SegBeforeTrim: " + segaccum);
+                            System.out.println("SegAfterTrim: " + segment);
+                        }
+                        segcount++;
+                        content += segment + s;
+                        segment = ""; // reset the segment string
+ 		}
+         segcount += 2; // include ST and SE
+         // wrap content with envelope
+         } // if UNE edifact
          
          if (outputfiletype.equals("FF")) {
     	 for (Map.Entry<String, HashMap<String,String>> z : MD.entrySet()) {
@@ -1771,7 +1877,13 @@ public abstract class EDIMap implements EDIMapi {
          return r;
      }
     
-    
+    @EDI.AnnoDoc(desc = {"method concatenates values into String delimited by sub elmement delimiter (oud) ",
+                        "Example:  composite(\"x\", \"y\", \"z\") returns: \"x:y:z\" as String"},
+            params = {"String 1stvalue, String 2ndvalue, String 3rdvalue"})  
+    public static String composite(String a, String b, String c) {
+        return a + oud + b + oud + c;
+    }
+
     // looping getInput
     
     @EDI.AnnoDoc(desc = {"method reads value from source at segment and element (by integer) for a Group Segment.",
@@ -1990,7 +2102,9 @@ public abstract class EDIMap implements EDIMapi {
          }
          return k;
      }
-        
+     
+    
+    
     public class UserDefinedException extends Exception  
     {  
         public UserDefinedException(String str)  

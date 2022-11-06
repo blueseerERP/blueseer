@@ -1116,9 +1116,9 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         List<String> lines = new ArrayList<>();
         String dirpath;
         if (structureName.equals("ifs")) {
-            dirpath = "edi/structure/" + ddifs.getSelectedItem().toString();
+            dirpath = EDData.getEDIStructureDir() + "/" + ddifs.getSelectedItem().toString();
         } else {
-            dirpath = "edi/structure/" + ddofs.getSelectedItem().toString();
+            dirpath = EDData.getEDIStructureDir() + "/" + ddofs.getSelectedItem().toString();
         }
         Path path = FileSystems.getDefault().getPath(dirpath);
         File file = path.toFile();
@@ -2586,6 +2586,27 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         c[28] = x.map_infiletype();
         c[29] = x.map_outfiletype();
         c[30] = "1";
+        // without a trading partner...outbound delimiters are default for the type
+        if (x.map_outfiletype().equals("CSV")) {
+        c[35] = "10"; // outseg
+        c[36] = ""; // outele
+        c[37] = ""; // outsub
+        }
+        if (x.map_outfiletype().equals("FF")) {
+        c[35] = "10"; // outseg
+        c[36] = ""; // outele
+        c[37] = ""; // outsub
+        }
+        if (x.map_outfiletype().equals("UNE")) {
+        c[35] = "39"; // outseg
+        c[36] = "43"; // outele
+        c[37] = "58"; // outsub
+        }
+        if (x.map_outfiletype().equals("X12")) {
+        c[35] = "10";  // outseg
+        c[36] = "42"; // outele
+        c[37] = "126"; // outsub
+        }
         StringWriter sw = null;
         URLClassLoader cl = null;
         try {
