@@ -188,7 +188,7 @@ public class EDIControl extends javax.swing.JPanel {
                     i++;
                     tboutdir.setText(res.getString("edic_outdir"));
                     tbindir.setText(res.getString("edic_indir"));
-                    tboutscript.setText(res.getString("edic_outftp"));
+                    tboutscript.setText(res.getString("edic_scriptdir"));
                     tbmaps.setText(res.getString("edic_mapdir"));
                     tbinarch.setText(res.getString("edic_inarch"));
                     tboutarch.setText(res.getString("edic_outarch"));
@@ -332,7 +332,7 @@ public class EDIControl extends javax.swing.JPanel {
         jLabel1.setText("Default Out Dir");
         jLabel1.setName("lbloutdir"); // NOI18N
 
-        jLabel3.setText("Default Out Script");
+        jLabel3.setText("Script Directory");
         jLabel3.setName("lblscriptdir"); // NOI18N
 
         btupdate.setText("Update");
@@ -469,8 +469,6 @@ public class EDIControl extends javax.swing.JPanel {
         jLabel20.setText("Signing Cert");
 
         jLabel21.setText("Encryption Cert");
-
-        tbmaps.setText("jTextField1");
 
         jLabel22.setText("Maps Directory");
         jLabel22.setName("lblmapsdir"); // NOI18N
@@ -664,7 +662,9 @@ public class EDIControl extends javax.swing.JPanel {
                     }
                 if (i == 0) {
                     
-                    st.executeUpdate("insert into edi_ctrl values (" + "'" + tboutdir.getText().replace("\\","\\\\") + "'" + ","
+                    st.executeUpdate("insert into edi_ctrl (edic_outdir, edic_indir, edic_scriptdir, edic_inarch, edic_outarch, " 
+                            + " edic_batch, edic_structure, edic_errordir, edic_mapdir, edic_archyesno, edic_delete, "
+                            + " edic_tpid, edic_gsid, edic_as2id, edic_as2url, edic_signkey, edic_enckey ) values (" + "'" + tboutdir.getText().replace("\\","\\\\") + "'" + ","
                             + "'" + tbindir.getText().replace("\\","\\\\") + "'" + "," 
                             + "'" + tboutscript.getText().replace("\\","\\\\") + "'" + ","   
                             + "'" + tbinarch.getText().replace("\\","\\\\") + "'" + "," 
@@ -694,7 +694,7 @@ public class EDIControl extends javax.swing.JPanel {
                             + "edic_errordir = " + "'" + tberrordir.getText().replace("\\","\\\\") + "'" + ","            
                             + "edic_delete = " + "'" + BlueSeerUtils.boolToInt(cbdelete.isSelected()) + "'" + ","         
                             + "edic_archyesno = " + "'" + BlueSeerUtils.boolToInt(cbarchive.isSelected()) + "'" + "," 
-                            + "edic_outftp = " + "'" + tboutscript.getText() + "'" + "," 
+                            + "edic_scriptdir = " + "'" + tboutscript.getText() + "'" + "," 
                             + "edic_mapdir = " + "'" + tbmaps.getText() + "'" + ","         
                             + "edic_tpid = " + "'" + tbtpid.getText() + "'" + ","
                             + "edic_gsid = " + "'" + tbgsid.getText() + "'" + ","

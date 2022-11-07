@@ -472,7 +472,7 @@ CREATE TABLE IF NOT EXISTS `ftp_mstr` (
 CREATE TABLE IF NOT EXISTS `edi_ctrl` (
   `edic_indir` varchar(200) NOT NULL  DEFAULT '',
   `edic_outdir` varchar(200) NOT NULL  DEFAULT '',
-  `edic_outftp` varchar(50) NOT NULL  DEFAULT '',
+  `edic_scriptdir` varchar(200) NOT NULL  DEFAULT '',
   `edic_inarch` varchar(200) NOT NULL  DEFAULT '',
   `edic_outarch` varchar(200) NOT NULL  DEFAULT '',
   `edic_batch` varchar(200) NOT NULL  DEFAULT '',

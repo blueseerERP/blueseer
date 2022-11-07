@@ -273,7 +273,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Default Out Script"/>
+            <Property name="text" type="java.lang.String" value="Script Directory"/>
             <Property name="name" type="java.lang.String" value="lblscriptdir" noResource="true"/>
           </Properties>
         </Component>
@@ -568,9 +568,6 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbmaps">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="jTextField1"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel22">
           <Properties>

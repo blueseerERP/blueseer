@@ -462,7 +462,7 @@ CREATE TABLE "ftp_mstr" (
 CREATE TABLE "edi_ctrl" (
   "edic_indir" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
   "edic_outdir" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
-  "edic_outftp" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edic_scriptdir" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
   "edic_inarch" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
   "edic_outarch" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
   "edic_batch" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
