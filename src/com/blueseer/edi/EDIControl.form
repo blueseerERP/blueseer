@@ -572,7 +572,7 @@
         <Component class="javax.swing.JLabel" name="jLabel22">
           <Properties>
             <Property name="text" type="java.lang.String" value="Maps Directory"/>
-            <Property name="name" type="java.lang.String" value="lblmapsdir" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="lblmapdir" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>

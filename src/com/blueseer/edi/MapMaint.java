@@ -1748,7 +1748,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
             manifest.getMainAttributes().put(Attributes.Name.MAIN_CLASS, filename);
             JarOutputStream target;
-            Path path = FileSystems.getDefault().getPath("edi/maps/" + jarname);
+            Path path = FileSystems.getDefault().getPath(EDData.getEDIMapDir() + "/" + jarname);
             
          try {
              target = new JarOutputStream(new FileOutputStream(path.toFile()), manifest);
@@ -2611,7 +2611,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         URLClassLoader cl = null;
         try {
                 // hot reloadable class capability...new classloader created and closed in finally block
-                List<File> jars = Arrays.asList(new File("edi/maps").listFiles(new FilenameFilter() {
+                List<File> jars = Arrays.asList(new File(EDData.getEDIMapDir()).listFiles(new FilenameFilter() {
                     public boolean accept(File dir, String name) {
                     return name.toLowerCase().endsWith(".jar");
                 }

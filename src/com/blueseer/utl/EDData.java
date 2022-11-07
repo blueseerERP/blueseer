@@ -2294,7 +2294,43 @@ public class EDData {
         return mystring;
         
     }
-     
+    
+    public static String getEDIMapDir() {
+       String mystring = "";
+        try{
+            Class.forName(driver);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                
+
+                res = st.executeQuery("select edic_mapdir from edi_ctrl ;");
+               while (res.next()) {
+                   mystring = res.getString("edic_mapdir");
+                }
+               
+           }
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return mystring;
+        
+    }
+    
      
     public static String getEDIInDir() {
        String mystring = "";

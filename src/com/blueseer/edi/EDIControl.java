@@ -471,7 +471,7 @@ public class EDIControl extends javax.swing.JPanel {
         jLabel21.setText("Encryption Cert");
 
         jLabel22.setText("Maps Directory");
-        jLabel22.setName("lblmapsdir"); // NOI18N
+        jLabel22.setName("lblmapdir"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
