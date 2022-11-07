@@ -155,6 +155,8 @@ import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ActionMap;
@@ -1128,7 +1130,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 } catch (IOException ex) {
                     bslog(ex);
                 }   
-            }
+        }
         return lines;
     }
     
@@ -1381,7 +1383,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         if (taname.equals("tainput")) {
             tainput.setText("");
             structure = getStructure("ifs"); 
-            file = getfile();
+            file = getfile("Open Structure File");
             if (structure.size() == 0) {
               tainput.setText("unable to read structure file");
               return;
@@ -1829,11 +1831,12 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         return file;
     }
     
-    public File getfile() {
+    public File getfile(String title) {
         
         File file = null;
         JFileChooser jfc = new JFileChooser(FileSystems.getDefault().getPath("edi").toFile());
         jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        jfc.setDialogTitle(title);
         int returnVal = jfc.showOpenDialog(this);
        
 
@@ -1854,7 +1857,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }
         
     public void getInput() {
-        infile = getfile();
+        infile = getfile("Open Test File");
         tainput.setText("");
         if (infile != null) {
             try {   
@@ -2019,6 +2022,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         btrun = new javax.swing.JButton();
         btshiftleft = new javax.swing.JButton();
         btshiftright = new javax.swing.JButton();
+        btzip = new javax.swing.JButton();
         tbkey = new javax.swing.JTextField();
         tbpath = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
@@ -2231,6 +2235,17 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             }
         });
         toolbar.add(btshiftright);
+
+        btzip.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/zip.png"))); // NOI18N
+        btzip.setFocusable(false);
+        btzip.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btzip.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btzip.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btzipActionPerformed(evt);
+            }
+        });
+        toolbar.add(btzip);
 
         jLabel1.setText("Source");
 
@@ -2757,7 +2772,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
     private void btfindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btfindActionPerformed
         
-        infile = getfile();
+        infile = getfile("Select Map File");
         
       //  Path path = FileSystems.getDefault().getPath(infile.getAbsolutePath());
         if (infile != null && infile.exists()) {
@@ -2790,6 +2805,120 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         setPanelComponentState(inputpanel, true);
     }//GEN-LAST:event_btoverlayActionPerformed
 
+    private void btzipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btzipActionPerformed
+        
+        ZipOutputStream out;
+        ZipEntry e;
+        File f = new File("edi/map.zip");
+        String dirpath;
+        Path path;
+        File file;
+        byte[] data = null;
+        
+        // clean out old map.zip
+        if (Files.exists(f.toPath())) {
+            try {
+                Files.delete(f.toPath());
+            } catch (IOException ex) {
+                bsmf.MainFrame.show("unable to remove old edi/map.zip");
+                return;
+            }
+        }
+        
+        // make call to grab a test file
+        File testfile = getfile("Open Test Data File to be Zipped");
+        
+        
+        // now try to zip all 4, testfile, ifs, ofs, and map
+    try {
+        out = new ZipOutputStream(new FileOutputStream(f));
+        
+        // IFS file into Zip
+        e = new ZipEntry(ddifs.getSelectedItem().toString());
+        out.putNextEntry(e);
+        dirpath = EDData.getEDIStructureDir() + "/" + ddifs.getSelectedItem().toString();
+        path = FileSystems.getDefault().getPath(dirpath);
+        file = path.toFile();
+        data = null;
+        if (file != null && file.exists()) {
+                try {   
+                    data = Files.readAllBytes(file.toPath());
+                } catch (IOException ex) {
+                    bslog(ex);
+                }   
+        }
+        out.write(data, 0, data.length);
+        out.closeEntry();
+        
+        // OFS file into Zip
+        e = new ZipEntry(ddofs.getSelectedItem().toString());
+        out.putNextEntry(e);
+        dirpath = EDData.getEDIStructureDir() + "/" + ddofs.getSelectedItem().toString();
+        path = FileSystems.getDefault().getPath(dirpath);
+        file = path.toFile();
+        data = null;
+        if (file != null && file.exists()) {
+                try {   
+                    data = Files.readAllBytes(file.toPath());
+                } catch (IOException ex) {
+                    bslog(ex);
+                }   
+        }
+        out.write(data, 0, data.length);
+        out.closeEntry();
+        
+        
+        // Map file into Zip
+        e = new ZipEntry(tbkey.getText() + ".java");
+        out.putNextEntry(e);
+        dirpath = EDData.getEDIMapDir() + "/" + tbkey.getText() + ".java";
+        path = FileSystems.getDefault().getPath(dirpath);
+        file = path.toFile();
+        data = null;
+        if (file != null && file.exists()) {
+                try {   
+                    data = Files.readAllBytes(file.toPath());
+                } catch (IOException ex) {
+                    bslog(ex);
+                }   
+        }
+        out.write(data, 0, data.length);
+        out.closeEntry();
+        
+        // now test file
+        if (testfile != null && testfile.exists()) {
+            e = new ZipEntry(testfile.getName());
+            out.putNextEntry(e);
+            data = null;
+
+            try {   
+                data = Files.readAllBytes(testfile.toPath());
+            } catch (IOException ex) {
+                bslog(ex);
+            }   
+
+            out.write(data, 0, data.length);
+            out.closeEntry();
+        }
+        out.close();
+        
+     } catch (FileNotFoundException ex) {
+         bslog(ex);
+     } catch (IOException ex) {
+         bslog(ex);
+     }
+    
+    if (Files.exists(f.toPath())) {
+     if (testfile != null) {   
+       bsmf.MainFrame.show("created map.zip file in edi directory");
+     } else {
+       bsmf.MainFrame.show("created map.zip file without test data in edi directory");  
+     }
+    } else {
+     bsmf.MainFrame.show("unable to create map.zip file in edi directory");   
+    }
+    }//GEN-LAST:event_btzipActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
@@ -2805,6 +2934,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     private javax.swing.JButton btshiftright;
     private javax.swing.JButton btunhide;
     private javax.swing.JButton btupdate;
+    private javax.swing.JButton btzip;
     private javax.swing.JCheckBox cbinternal;
     private javax.swing.JComboBox<String> ddifs;
     private javax.swing.JComboBox<String> ddindoctype;
