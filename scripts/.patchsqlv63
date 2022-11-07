@@ -1,2 +1,4 @@
 /* sql updates for  v6.3 */
+alter table edi_ctrl add column edic_mapdir varchar(200) COLLATE NOCASE DEFAULT '';
+
 
