@@ -313,13 +313,16 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             popup.add(setMenuItem("Input"));
             popup.add(setMenuItem("Structure"));
             popup.add(setMenuItem("Overlay"));
+            popup.add(setMenuItem("Download"));
             popup.add(setMenuItem("Clear Highlights"));
             popup.add(setMenuItem("Hide Panel"));
         }
         if (ta.getName().equals("taoutput")) {
             popup.add(setMenuItem("Search"));
+            popup.add(setMenuItem("Hex Replace"));
             popup.add(setMenuItem("Structure"));
             popup.add(setMenuItem("Overlay"));
+            popup.add(setMenuItem("Download"));
             popup.add(setMenuItem("Clear Highlights"));
             popup.add(setMenuItem("Hide Panel"));
         }
@@ -377,7 +380,11 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 
                 case "Hex Replace" :
                     hexReplace(parentname.getName());
-                    break;      
+                    break; 
+                    
+                case "Download" :
+                    download(parentname.getName());
+                    break;    
                     
                 case "Search" :
                     searchTextArea(parentname.getName());
@@ -1224,95 +1231,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
          
 
     }
-    /*
-    public static LinkedHashMap<String, String[]> mapInput(String filetype, List<String> data, ArrayList<String[]> ISF, String[] delims) {
-        LinkedHashMap<String,String[]> mappedData = new LinkedHashMap<String,String[]>();
-        HashMap<String,Integer> groupcount = new HashMap<String,Integer>();
-        HashMap<String,Integer> set = new HashMap<String,Integer>();
-        String parenthead = "";
-        String groupkey = "";
-        String previouskey = "";
-       // bsmf.MainFrame.show(filetype);
-        for (String s : data) {
-                String[] x = null;
-                
-                if (filetype.equals("FF")) {
-                    x = splitFFSegment(s, ISF);
-                } else if (filetype.equals("CSV")) {
-                    s = "ROW," + s;
-                    x = s.split(",",-1);
-                } else {
-                    x = s.split(EDI.escapeDelimiter(delims[0]),-1); // delims = ele, sub, seg
-                }
-
-               
-                
-                for (String[] z : ISF) {
-                    // skip non-landmarks
-                    if (! z[4].equals("yes")) {
-                        continue;
-                    }
-                        if (x != null && (x.length > 1) && x[0].equals(z[0])) {
-                                boolean foundit = false;
-                                boolean hasloop = false;
-                                String[] temp = parenthead.split(":");
-                                for (int i = temp.length - 1; i >= 0; i--) {
-                                        if (z[1].compareTo(temp[i]) == 0) {
-                                                foundit = true;
-                                                String[] newarray = Arrays.copyOfRange(temp, 0, i + 1);
-                                                parenthead = String.join(":", newarray);							
-                                                break;
-                                        }
-                                }
-                                if (! foundit) {
-                                continue;	
-                                } else {
-                                        int loop = 1;
-                                        String groupparent = parenthead + ":" + x[0];
-                                        if (groupcount.containsKey(groupparent)) {
-                                                int g = groupcount.get(groupparent);
-
-                                                if (previouskey.equals(parenthead + ":" + x[0] + "+" + g) && ! z[3].equals("yes")) {
-                                                        loop = set.get(parenthead + ":" + x[0] + "+" + groupcount.get(groupparent));	
-                                                        hasloop = true;
-                                                        loop++;
-                                                        set.put(parenthead + ":" + x[0] + "+" + groupcount.get(groupparent), loop);
-                                                } else {
-                                                        g++;	
-                                                        groupcount.put(groupparent, g);
-                                                }
-                                        } else {
-                                               // groupcount.put(groupparent, 1);
-                                               if (groupcount.get(parenthead) != null) {
-                                                  groupcount.put(groupparent, groupcount.get(parenthead)); 
-                                               } else {
-                                                  groupcount.put(groupparent, 1); 
-                                               }
-                                               
-                                        }
-
-                                        previouskey = parenthead + ":" + x[0] + "+" + groupcount.get(groupparent);	
-                                        if (hasloop) {
-                                            groupkey = parenthead + ":" + x[0] + "+" + groupcount.get(groupparent) + "+" + loop;
-                                        } else {
-                                            groupkey = parenthead + ":" + x[0] + "+" + groupcount.get(groupparent);
-                                        }
-
-                                        set.put(groupkey, loop);
-                                        mappedData.put(parenthead + ":" + x[0] + "+" + groupcount.get(groupparent) + "+" + loop , x);
-                                        SegmentCounter.add(parenthead + ":" + x[0] + "+" + groupcount.get(groupparent));
-                                        if (z[3].equals("yes")) {
-                                                parenthead = parenthead + (":" + z[0]);
-                                        }
-                                        break;
-                                }
-                        }
-                }
-        }
-        return mappedData;
-    }
-
-    */
+   
     Action actionNext = new AbstractAction() {
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -1484,35 +1403,86 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     
     public void hexReplace(String taname) {
         JTextComponent ta = null;
+        char toHex = 0;
         if (taname.equals("tainput")) {
             ta = tainput;
-        } else {
-            return; // bail...only for tainput at this stage
+        } 
+        if (taname.equals("taoutput")) {
+            ta = taoutput;
         }
         String text = bsmf.MainFrame.input("Hex Chars: ");
         String[] replacehex = text.split("\\|",-1);
-        if (replacehex == null || replacehex.length != 2 || replacehex[0].isBlank() || replacehex[1].isBlank()) {
+        if (replacehex == null || replacehex.length != 2 || replacehex[0].isBlank()) {
             return;
         }
         char fromHex = (char) Integer.parseInt(replacehex[0], 16);
-        char toHex = (char) Integer.parseInt(replacehex[1], 16);
+        if (! replacehex[1].isBlank()) { 
+        toHex = (char) Integer.parseInt(replacehex[1], 16);
+        }
         
         Document d = ta.getDocument();
+        int count = 0;
          try {
              String data = d.getText(0, d.getLength());
              char[] carray = data.toCharArray();
+             StringBuilder sb = new StringBuilder();
+             
              for (int i = 0; i < carray.length; i++) {
                  if (carray[i] == fromHex) {
-                    carray[i] = toHex; 
+                    if (toHex > 0) {
+                        sb.append(toHex);  // skip is toHex is blank (0)...removes character
+                    } 
+                    count++;
+                 } else {
+                     sb.append(carray[i]);
                  }
              }
+             if (taname.equals("tainput")) {
              tainput.setText("");
-             tainput.setText(String.valueOf(carray));
-         } catch (BadLocationException ex) {
+             tainput.setText(sb.toString());
+             }
+             
+             if (taname.equals("taoutput")) {
              taoutput.setText("");
-             taoutput.setText(ex.getMessage());
+             taoutput.setText(sb.toString());
+             }
+             bsmf.MainFrame.show("Occurences: " + count);
+         } catch (BadLocationException ex) {
+             bslog(ex);
+             bsmf.MainFrame.show(ex.getMessage());
          }
         
+    }
+    
+    public void download(String taname) {
+       JTextComponent ta = null; 
+       if (taname.equals("tainput")) {
+            ta = tainput;
+        } 
+        if (taname.equals("taoutput")) {
+            ta = taoutput;
+        }
+        
+        if (ta != null) {
+           if (ta.getText().isBlank()) {
+               bsmf.MainFrame.show("Panel is empty");
+               return;
+           }
+        }
+        
+        String dir = bsmf.MainFrame.temp + "/" + "file." + Long.toHexString(System.currentTimeMillis()) + ".txt";
+        Path path = FileSystems.getDefault().getPath(dir);
+         try {
+             if (ta != null) {
+             Files.write(path, ta.getText().getBytes());
+             bsmf.MainFrame.show("File written to: " + dir);
+             } else {
+               bsmf.MainFrame.show("input panel unknown!");  
+             }
+             
+         } catch (IOException ex) {
+             bsmf.MainFrame.show("unable to write to: " + dir);
+         } 
     }
     
     public void searchTextArea(String taname) {
