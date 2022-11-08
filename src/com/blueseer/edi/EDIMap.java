@@ -335,6 +335,9 @@ public abstract class EDIMap implements EDIMapi {
     
     public static String delimConvertIntToStr(String intdelim) {
     String delim = "";
+    if (intdelim.isBlank()) {
+        return "";
+    }
     int x = Integer.valueOf(intdelim);
     delim = String.valueOf(Character.toString((char) x));
     return delim;
