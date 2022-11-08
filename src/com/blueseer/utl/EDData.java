@@ -601,7 +601,7 @@ public class EDData {
     public static String[] getEDITPDefaults(String doctype, String gssndid, String gsrcvid) {
            
                     
-             String[] mystring = new String[]{"","","","","","","0","0","0","","","","","","","","","","","","",""};
+             String[] mystring = new String[]{"","","","","","","0","0","0","","","","","","","","","","","","","","",""};
         try{
             Class.forName(driver);
             Connection con = null;
@@ -643,6 +643,8 @@ public class EDData {
                         mystring[19] = res.getString("edi_doc");
                         mystring[20] = res.getString("edi_envelopeall");
                         mystring[21] = res.getString("edi_filetype");
+                        mystring[22] = res.getString("edi_una");
+                        mystring[23] = res.getString("edi_ung");
                     }
            }
             catch (SQLException s) {
@@ -1734,8 +1736,7 @@ public class EDData {
         return x;
         
     }
-    
-    
+        
     public static String getEDIDocTypeFromStds(String gs) {
        String x = "??";
         try{
@@ -1812,6 +1813,45 @@ public class EDData {
         
     }
 
+    public static String getEDIGSTypeFromBSDoc(String doc) {
+       String x = "??";
+        try{
+            Class.forName(driver);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                
+
+                res = st.executeQuery("select eds_gs from edi_stds " +
+                        " where eds_bsdoc = " + "'" + doc + "'" + 
+                        " order by eds_bsdoc; ");
+               while (res.next()) {
+                   x = res.getString("eds_gs");
+                }
+               
+           }
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return x;
+        
+    }
+
+    
     public static char[] readEDIRawFileIntoCbuf(Path filepath) {
         char[] cbuf = null;
         try {

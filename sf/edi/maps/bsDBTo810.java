@@ -68,13 +68,13 @@ import com.blueseer.utl.BlueSeerUtils;
          mapSegment("TDS","e01",formatNumber(sumamtTDS,"2"));
          commitSegment("TDS");
          
-         mapSegment("ISS","e01",string(sumqty));
+         mapSegment("ISS","e01",snum(sumqty));
          mapSegment("ISS","e02","EA");
-         mapSegment("ISS","e03",string(sumqty));
+         mapSegment("ISS","e03",snum(sumqty));
          mapSegment("ISS","e04","LB");
          commitSegment("ISS");
          
-         mapSegment("CTT","e01",string(i));
+         mapSegment("CTT","e01",snum(i));
          commitSegment("CTT");
         
 

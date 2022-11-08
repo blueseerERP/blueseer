@@ -5,8 +5,8 @@
 855idoc,data,fixed,constant,0,0,0,,BLUESEER,sndid,1
 850idoc,selection,fixed,constant,1,40,30,,ORDERS05,,1
 850idoc,selection,fixed,constant,1,264,3,,EDI,,1
-850idoc,data,regex,variable,0,276,15,^E2EDK01.*,,rcvid,1
-850idoc,data,fixed,constant,0,0,0,,850,DOCTYPE,1
+850idoc,data,fixed,variable,1,162,10,,,rcvid,1
+850idoc,data,fixed,constant,0,0,0,,850idoc,DOCTYPE,1
 850idoc,data,fixed,constant,0,0,0,,BLUESEER,sndid,1
 810idoc,selection,fixed,constant,1,40,30,,INVOIC02,,1
 810idoc,selection,fixed,constant,1,130,3,,810,,1

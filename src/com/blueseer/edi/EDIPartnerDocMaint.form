@@ -173,6 +173,8 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="cbenvelopeall" min="-2" max="-2" attributes="0"/>
                                   <Component id="tbsndq" min="-2" pref="51" max="-2" attributes="0"/>
+                                  <Component id="cbuna" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cbung" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
@@ -239,6 +241,9 @@
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="cbenvelopeall" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
+                      <Component id="cbuna" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="cbung" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -358,6 +363,16 @@
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>
+            </Component>
+            <Component class="javax.swing.JCheckBox" name="cbuna">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="UNA Segment"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JCheckBox" name="cbung">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="UNG Segment"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>

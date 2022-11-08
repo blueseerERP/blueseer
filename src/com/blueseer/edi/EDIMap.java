@@ -355,6 +355,7 @@ public abstract class EDIMap implements EDIMapi {
            
            
            String ed = envelope[8];
+           String ud = envelope[9];
            ISA = envelope[0];
            isaArray = ISA.split(EDI.escapeDelimiter(ed), -1);
            GS = envelope[1];
@@ -367,13 +368,41 @@ public abstract class EDIMap implements EDIMapi {
            gsctrl = envelope[6];
            stctrl = String.format("%04d", 1);
            
-                   if (c[29].equals("X12")) { 
-                   ST = "ST" + ed + outputdoctype + ed + stctrl ;
-                   SE = "SE" + ed + String.valueOf(segcount) + ed + stctrl;  
-                   }  else {
-                   ST = "UNH" + ed + stctrl + ed + outputdoctype;
-                   SE = "UNT" + ed + String.valueOf(segcount) + ed + stctrl;  
+            ArrayList<String> attrs = EDData.getEDIAttributesList(c[1], c[0], c[21]); 
+            Map<String, String> attrkeys = new HashMap<String, String>();
+            for (String x : attrs) {
+                String[] z = x.split(":", -1);
+                if (z != null && ! z[0].isEmpty()) {
+                    attrkeys.put(z[0], z[1]);
+                }
+            }
+           
+           // for UNH of Edifact UNH+1+ORDERS:D:98A:UN:FUN02G' // last one is conditional
+           StringBuilder unhe02 = new StringBuilder();
+           String[] unhe02_array = null;
+           if (attrkeys.containsKey("UNHE02")) {
+               unhe02_array = attrkeys.get("UNHE02").split(":",-1);
+           }
+           unhe02.append(EDData.getEDIGSTypeFromBSDoc(outputdoctype));
+           if (unhe02_array == null || unhe02_array.length == 0) {
+             unhe02.append(":D:98A:UN"); // fallback if no EDI attributes found for key UNHE02
+           } else {
+               for (String ux : unhe02_array ) {
+                   if (! ux.isBlank()) {
+                     unhe02.append(ud);
+                     unhe02.append(ux);
                    }
+               }
+           }
+           
+           
+           if (c[29].equals("X12")) { 
+           ST = "ST" + ed + outputdoctype + ed + stctrl ;
+           SE = "SE" + ed + String.valueOf(segcount) + ed + stctrl;  
+           }  else {
+           ST = "UNH" + ed + stctrl + ed + unhe02;
+           SE = "UNT" + ed + String.valueOf(segcount) + ed + stctrl;  
+           }
            
            overrideISAWithMapEntries(); 
            overrideGSWithMapEntries();
@@ -756,7 +785,7 @@ public abstract class EDIMap implements EDIMapi {
             c[8] = outfilemulti;    
         }
         c[27] = outdir;
-        c[29] = tp[15];
+        // c[29] ...(outboundfiletype) should be defined at first available getTPDefaults prior to mapping
         c[6] = stctrl;
         c[5] = gsctrl;
         c[4] = isactrl;
@@ -906,8 +935,8 @@ public abstract class EDIMap implements EDIMapi {
 			if (! line.isEmpty()) {
 			String[] t = line.split(",",-1);
                              if (i == 0) { lastkey = t[0];}
-                        if (GlobalDebug && t.length >= 10) {
-                        System.out.println("readISF: line " + i + " delimited count is less than 10 " + t.length);
+                        if (GlobalDebug && t.length < 11) {
+                        System.out.println("readISF: line " + i + " delimited count is less than 11 " + t.length);
                         }
                         
                         list.add(t);
@@ -1615,7 +1644,7 @@ public abstract class EDIMap implements EDIMapi {
                      "Example:  mapSegment(\"QTY\",\"e01\",2,\"50\") assigns: 2nd comp of 1st element of QTY (EDIFACT) segment with value 50...QTY+21:50:EA"},
                  params = {"String segment","String element","String value"}) 
     public static void mapSegment(String segment, String element, Integer comp, String value) {
-    	 String[] z = new String[] {element,value};
+    	 String[] z = new String[] {element, value};
     	 // get old arraylist and add to it
     	 ArrayList<String[]> old = new ArrayList<String[]>();
     	 if (HASH.get(segment) != null) {
@@ -1736,7 +1765,7 @@ public abstract class EDIMap implements EDIMapi {
              }
          }
          if (k != null && k.length > elementNbr) {
-          x =  k[elementNbr];
+          x =  k[elementNbr].trim();
          }
          return x;
      }
@@ -1761,7 +1790,7 @@ public abstract class EDIMap implements EDIMapi {
          }
        
          if (k != null && k.length > elementNbr) {
-          x =  k[elementNbr];
+          x =  k[elementNbr].trim();
          }
         
          if (GlobalDebug)
@@ -1794,7 +1823,7 @@ public abstract class EDIMap implements EDIMapi {
         //     System.out.println("getInput:" + segment + "/" + g);
         // }
          if (k != null && k.length > elementNbr) {
-          x =  k[elementNbr];
+          x =  k[elementNbr].trim();
          }
          if (GlobalDebug)
          System.out.println("getInput:" + segment + "/" + x);
@@ -1829,13 +1858,13 @@ public abstract class EDIMap implements EDIMapi {
          }
        
          if (k != null && k.length > elementNbr) {
-          x =  k[elementNbr];
+          x =  k[elementNbr].trim();
          }
         
          if (x.contains(ud)) {
             String[] y = x.split(ud,-1);
             if (y != null && y.length >= comp) {
-              r = y[comp - 1];  
+              r = y[comp - 1].trim();  
             }
          }
          
@@ -1866,22 +1895,40 @@ public abstract class EDIMap implements EDIMapi {
              }
          }
          if (k != null && k.length > elementNbr) {
-          x =  k[elementNbr];
+          x =  k[elementNbr].trim();
          }
          if (x.contains(ud)) {
             String[] y = x.split(ud,-1);
             if (y != null && y.length >= comp) {
-              r = y[comp - 1];  
+              r = y[comp - 1].trim();  
             }
          }
          return r;
      }
     
     @EDI.AnnoDoc(desc = {"method concatenates values into String delimited by sub elmement delimiter (oud) ",
+                        "Example:  composite(\"w\", \"x\", \"y\", \"z\") returns: \"w:x:y:z\" as String"},
+            params = {"String 1stvalue, String 2ndvalue, String 3rdvalue, String 4thvalue"})  
+    public static String composite(String a, String b, String c, String d) {
+        String[] segaccum = new String[]{a,b,c,d};
+        trimSegment(String.join(oud,segaccum), oud);
+        return trimSegment(String.join(oud,segaccum), oud);
+    }
+
+    @EDI.AnnoDoc(desc = {"method concatenates values into String delimited by sub elmement delimiter (oud) ",
                         "Example:  composite(\"x\", \"y\", \"z\") returns: \"x:y:z\" as String"},
             params = {"String 1stvalue, String 2ndvalue, String 3rdvalue"})  
     public static String composite(String a, String b, String c) {
         String[] segaccum = new String[]{a,b,c};
+        trimSegment(String.join(oud,segaccum), oud);
+        return trimSegment(String.join(oud,segaccum), oud);
+    }
+
+    @EDI.AnnoDoc(desc = {"method concatenates values into String delimited by sub elmement delimiter (oud) ",
+                        "Example:  composite(\"x\", \"y\") returns: \"x:y\" as String"},
+            params = {"String 1stvalue, String 2ndvalue"})  
+    public static String composite(String a, String b) {
+        String[] segaccum = new String[]{a,b};
         trimSegment(String.join(oud,segaccum), oud);
         return trimSegment(String.join(oud,segaccum), oud);
     }
@@ -1903,7 +1950,7 @@ public abstract class EDIMap implements EDIMapi {
              }
          }
          if (k != null && k.length > elementNbr) {
-          x =  k[elementNbr];
+          x =  k[elementNbr].trim();
          }
          return x;
      }
@@ -1928,7 +1975,7 @@ public abstract class EDIMap implements EDIMapi {
              }
          }
          if (k != null && k.length > elementNbr) {
-          x =  k[elementNbr];
+          x =  k[elementNbr].trim();
          }
          return x;
      }
@@ -1957,7 +2004,7 @@ public abstract class EDIMap implements EDIMapi {
              }
          }
          if (k != null && k.length > elementNbr) {
-          x =  k[elementNbr];
+          x =  k[elementNbr].trim();
          }
          return x;
      }
@@ -1990,7 +2037,7 @@ public abstract class EDIMap implements EDIMapi {
              }
          }
          if (k != null && k.length > elementNbr) {
-          x =  k[elementNbr];
+          x =  k[elementNbr].trim();
          }
          return x;
      }
@@ -2010,7 +2057,7 @@ public abstract class EDIMap implements EDIMapi {
              }
          }
          if (k != null && k.length > field) {
-          x =  k[field];
+          x =  k[field].trim();
          }
          return x;
      }

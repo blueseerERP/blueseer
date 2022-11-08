@@ -32,3 +32,5 @@ patch=12
 # added sample EDI files; restructured delimiter methods
 patch=13
 # modifications to EDI classes to support EDIFACT
+patch=14
+# sql mods to edi_ctrl and edi_mstr and patches to EDI engine processing

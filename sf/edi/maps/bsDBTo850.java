@@ -63,7 +63,7 @@ import com.blueseer.utl.OVData;
                 commitSegment("PID");
               }
          
-         mapSegment("CTT","e01",string(i));
+         mapSegment("CTT","e01",snum(i));
          commitSegment("CTT");
         
 

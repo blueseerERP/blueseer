@@ -17,7 +17,7 @@ commitSegment("BSN");
 
 
 hlcounter++;   
-mapSegment("HL","e01", string(hlcounter));
+mapSegment("HL","e01", snum(hlcounter));
 mapSegment("HL","e03","S");
 mapSegment("HL","e04","1");
 commitSegment("HL");
@@ -119,7 +119,7 @@ j++;
 po = getInput(key,8);
 }
 hlcounter++;
-mapSegment("HL","e01", string(hlcounter));
+mapSegment("HL","e01", snum(hlcounter));
 mapSegment("HL","e02","1");
 mapSegment("HL","e03","O");
 mapSegment("HL","e04","1");
@@ -137,7 +137,7 @@ itemLoopCount++;
 totalqty += Double.valueOf(getInput(i,"E2EDL24",19).trim());
 
 hlcounter++;
-mapSegment("HL","e01", string(hlcounter));
+mapSegment("HL","e01", snum(hlcounter));
 mapSegment("HL","e02","2");
 mapSegment("HL","e03","I");
 mapSegment("HL","e04","1");
@@ -181,8 +181,8 @@ commitSegment("PID");
 
 /* end of item loop */
 
-mapSegment("CTT","e01",string(hlcounter));
-mapSegment("CTT","e02",string(totalqty));
+mapSegment("CTT","e01",snum(hlcounter));
+mapSegment("CTT","e02",snum(totalqty));
 commitSegment("CTT");
 
 /* end of mapping */

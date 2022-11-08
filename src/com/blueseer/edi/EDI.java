@@ -1308,9 +1308,11 @@ public class EDI {
             String[] defaults = EDData.getEDITPDefaults(x[0], x[3], x[1]);
             
             c[9]  = defaults[7].isBlank() ? "10" : defaults[7];
-            c[10] = defaults[6].isBlank() ? "42" : defaults[6];
-            c[11] = defaults[8].isBlank() ? "126" : defaults[8];
-             
+            c[10] = defaults[6].isBlank() ? "" : defaults[6];
+            c[11] = defaults[8].isBlank() ? "" : defaults[8];
+            
+            c[29] = defaults[15]; // defines outputfiletype
+            
         // insert isa and st start and stop integer points within the file
         
           c[17] = String.valueOf(positions[0]);
@@ -1584,6 +1586,10 @@ public class EDI {
               map = EDData.getEDIMap(c[1], c[0], c[21]); 
            } 
 
+            // should have partner by now
+            String[] defaults = EDData.getEDITPDefaults(c[1], c[0], c[21]);
+            c[29] = defaults[15]; // defines outputfiletype
+           
            // if no map then bail
            if (map.isEmpty()) {
                 messages.add(new String[]{"error","UNE:  map variable is empty for parent/gs02/gs03/doc: " + parentPartner + "/" + c[0] + "/" + c[21] + " / " + c[1]});
@@ -1807,6 +1813,9 @@ public class EDI {
             continue;
           }   
           
+            
+            
+          
            if (map.isEmpty() && c[12].isEmpty()) {
             if (GlobalDebug)   
             System.out.println("Searching for Map (X12 in) with GS values type/gs02/gs03: " + c[1] + "/" + gs02 + "/" + gs03);    
@@ -1814,6 +1823,10 @@ public class EDI {
               map = EDData.getEDIMap(c[1], gs02, gs03); 
            } 
 
+           // should have partner by now
+            String[] defaults = EDData.getEDITPDefaults(c[1], gs02, gs03);
+            c[29] = defaults[15]; // defines outputfiletype
+           
            // if no map then bail
            if (map.isEmpty()) {
                 messages.add(new String[]{"error","X12:  map variable is empty for parent/gs02/gs03/doc: " + parentPartner + "/" + gs02 + "/" + gs03 + " / " + c[1]});
@@ -1845,7 +1858,7 @@ public class EDI {
                 }
                 cl = new URLClassLoader(urls);
                 
-                    Class cls = Class.forName(map,true,cl);  
+                Class cls = Class.forName(map,true,cl);  
                 Object obj = cls.newInstance();
                 Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
                 Object oc = method.invoke(obj, doc, c);
@@ -1914,6 +1927,7 @@ public class EDI {
     
     int callingidxnbr = idxnbr;      
     for (Map.Entry<Integer, ArrayList<String>> z : FFDocs.entrySet()) {
+            ArrayList<String[]> messages = new ArrayList<String[]>();
             ArrayList<String> doc = z.getValue();
             Integer[] positions = FFPositions.get(z.getKey());
             
@@ -1922,26 +1936,27 @@ public class EDI {
             
             String[] x = getFileInfo(doc, tags);  // doctype, rcvid, parentpartner, sndid
             
+            
+            
              if (x[2].isEmpty()) {
-                  EDData.writeEDILog(c, "error", "unable to determine parent partner with alias: " + x[1] ); 
-             return;  
+                messages.add(new String[]{"error", "unable to determine parent partner with alias: " + x[1]} ); 
+                return;  
              }
             
-            /*
-            int j = 0;
-            for (String xc : c) {
-            System.out.println("HERE:C " + j + "/" + xc);
-            }
-            */
+            messages.add(new String[]{"info","FF: (doctype,rcvid,parent,sndid) (" + x[0] + "," + x[1] + "," + x[2] + "," + x[3] + ")"});
+            
             c[1] = x[0];  // doctype
             c[0] = x[3];  // senderid
             c[21] = x[1]; // receiverID
       
             String[] defaults = EDData.getEDITPDefaults(x[0], x[3], x[1]);
             
+            c[29] = defaults[15]; // defines outputfiletype
+            
+            // governs inbound only ...for outbound file...let postmap delimiters kick in
             c[9] = defaults[7].isBlank() ? "10" : defaults[7];
-            c[10] = defaults[6].isBlank() ? "42" : defaults[6];
-            c[11] = defaults[8].isBlank() ? "126" : defaults[8];
+            c[10] = defaults[6].isBlank() ? "" : defaults[6];
+            c[11] = defaults[8].isBlank() ? "" : defaults[8];
             
                  
              
@@ -1959,23 +1974,29 @@ public class EDI {
           if (c[12].isEmpty() && callingidxnbr == 0) {   // if not override
           idxnbr = EDData.writeEDIIDX(c);
           }
-          
+          //EDData.writeEDILogMulti(c, messages);
+         // messages.clear();  // clear message here...and at end
           c[16] = String.valueOf(idxnbr);
-             String map = c[2];
+          String map = c[2];
              
                if (map.isEmpty() && c[12].isEmpty()) {
-                   if (GlobalDebug)   
+                   
+                   if (GlobalDebug)  { 
                    System.out.println("Searching for Map (FF in) with values type/x[3]/x[1]: " + c[1] + "/" + x[3] + "/" + x[1]);    
-                
+                   }
+                   
                    map = EDData.getEDIMap(c[1], c[0], c[21]); // doctype, senderid, receiverid 
                } 
             
                // if no map then bail
                if (map.isEmpty()) {
-                  EDData.writeEDILog(c, "error", "FF: map variable is empty for: " + c[1] + " / " + c[0] + " / " + x[1]); 
+                  messages.add(new String[]{"error", "FF: map variable is empty for: " + c[1] + " / " + c[0] + " / " + x[1]}); 
                } else if (! BlueSeerUtils.isEDIClassFile(map) && c[12].isEmpty()) { 
-                  EDData.writeEDILog(c, "error", "FF: unable to locate compiled map (" + map + ") for: " + c[1] + " / " + c[0] + " / " + x[1]); 
+                  messages.add(new String[]{"error", "FF: unable to locate compiled map (" + map + ") for: " + c[1] + " / " + c[0] + " / " + x[1]}); 
                } else {
+                
+                messages.add(new String[]{"info","FF: Found map: " + map});
+               
                    
                    // at this point I should have a doc set (ST to SE) and a map ...now call map to operate on doc 
                 URLClassLoader cl = null;
@@ -1995,31 +2016,33 @@ public class EDI {
                 }
                 cl = new URLClassLoader(urls);
                 
-                    Class cls = Class.forName(map,true,cl);  
-                    Object obj = cls.newInstance();
-                    Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
-                    Object oc = method.invoke(obj, doc, c);
-                    String[] oString = (String[]) oc;
-                        EDData.writeEDILog(c, oString[0], oString[1]);
-                        EDData.updateEDIIDX(idxnbr, c); 
-                    } catch (InvocationTargetException ex) {
-                        if (c[12].isEmpty()) {
-                        EDData.writeEDILog(c, "error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1]);
-                        } 
-                        edilog(ex);
-                    } catch (ClassNotFoundException ex) {
-                        if (c[12].isEmpty()) {
-                        EDData.writeEDILog(c, "error", "Map Class not found " + map + "/" + c[0] + " / " + c[1]);
-                        }
-                        edilog(ex); 
-                    } catch (IllegalAccessException |
-                             InstantiationException | NoSuchMethodException ex
-                            ) {
-                        if (c[12].isEmpty()) {
-                        EDData.writeEDILog(c, "error", "IllegalAccess|Instantiation|NoSuchMethod " + map + "/" + c[0] + " / " + c[1]);
-                        }
-                        edilog(ex);
-                    } finally {
+                Class cls = Class.forName(map,true,cl);  
+                Object obj = cls.newInstance();
+                Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
+                Object oc = method.invoke(obj, doc, c);
+                String[] oString = (String[]) oc;
+                messages.add(new String[]{oString[0], oString[1]});
+                EDData.updateEDIIDX(idxnbr, c); 
+
+                } catch (InvocationTargetException ex) {
+                    if (c[12].isEmpty()) {
+                        
+                    messages.add(new String[]{"error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1] + " : " + ex.getCause().getMessage()});    
+                    }
+                    edilog(ex);  
+                } catch (ClassNotFoundException ex) {
+                    if (c[12].isEmpty()) {
+                    messages.add(new String[]{"error", "Map Class not found " + map + "/" + c[0] + " / " + c[1]});        
+                    }
+                    edilog(ex); 
+                } catch (IllegalAccessException |
+                         InstantiationException | NoSuchMethodException ex
+                        ) {
+                    if (c[12].isEmpty()) {
+                    messages.add(new String[]{"error", "IllegalAccess|Instantiation|NoSuchMethod " + map + "/" + c[0] + " / " + c[1]});        
+                   }
+                    edilog(ex);
+                } finally {
                         if (cl != null) {
                            try {
                                cl.close();
@@ -2027,10 +2050,11 @@ public class EDI {
                                edilog(ex);
                            }
                         }
-                    }
+                }
                    
                }
-              
+         EDData.writeEDILogMulti(c, messages);
+           messages.clear();     
      
     } // FFDocs entries
    
@@ -3362,7 +3386,7 @@ public class EDI {
      // miscellaneous 
       public static String[] generateEnvelope(String doctype, String sndid, String rcvid) {
         
-        String [] envelope = new String[9];  // will hold 7 elements.... ISA, GS, GE,IEA, filename, isactrl, gsctrl, sd, ed
+        String [] envelope = new String[10];  // will hold 7 elements.... ISA, GS, GE,IEA, filename, isactrl, gsctrl, sd, ed, ud
         
         //  * @return Array with 0=ISA, 1=ISAQUAL, 2=GS, 3=BS_ISA, 4=BS_ISA_QUAL, 5=BS_GS, 6=ELEMDELIM, 7=SEGDELIM, 8=SUBDELIM, 9=FILEPATH, 10=FILEPREFIX, 11=FILESUFFIX,
         //  * @return 12=X12VERSION, 13=SUPPCODE, 14=DIRECTION
@@ -3426,9 +3450,23 @@ public class EDI {
          if (attrkeys.containsKey("ISA04")) {isa4 = String.format("%10s",attrkeys.get("ISA04"));}
          
          String isa5 = String.format("%2s", defaults[4]);
-         String isa6 = String.format("%-15s", defaults[0]);
+         
+         String isa6 = "";
+         if (attrkeys.containsKey("ISA06")) {
+             isa6 = String.format("%-15s",attrkeys.get("ISA06"));
+         } else {
+             isa6 = String.format("%-15s", defaults[0]); // turnaround receiver ID as sender 
+         }
+         
          String isa7 = String.format("%2s", defaults[1]);
-         String isa8 = String.format("%-15s", defaults[3]);
+         
+         String isa8 = "";
+         if (attrkeys.containsKey("ISA08")) {
+             isa8 = String.format("%-15s",attrkeys.get("ISA08"));
+         } else {
+             isa8 = String.format("%-15s", defaults[3]); // turnaround receiver ID as sender 
+         }
+        
          String isa9 = isadfdate.format(now);
          String isa10 = isadftime.format(now);
          String isa11 = "U";
@@ -3486,13 +3524,14 @@ public class EDI {
            envelope[6] = String.valueOf(filenumber);
            envelope[7] = sd;
            envelope[8] = ed;
+           envelope[9] = ud;
            
             return envelope;
       }
       
       public static String[] generateEnvelopeUNE(String doctype, String sndid, String rcvid) {
         
-        String [] envelope = new String[9];  
+        String [] envelope = new String[]{"","","","","","","","","",""};  
         String[] defaults = EDData.getEDITPDefaults(doctype, sndid, rcvid);
         ArrayList<String> attrs = EDData.getEDIAttributesList(doctype, sndid, rcvid); 
         Map<String, String> attrkeys = new HashMap<String, String>();
@@ -3540,7 +3579,11 @@ public class EDI {
         
          
          String unb1 = "";
-         if (attrkeys.containsKey("UNB01")) {unb1 = attrkeys.get("UNB01");}
+         if (attrkeys.containsKey("UNB01")) {
+             unb1 = attrkeys.get("UNB01");
+         } else {
+             unb1 = "UNOC";
+         }
          
          
          String unb2 = defaults[0] + ud + defaults[4];
@@ -3552,7 +3595,7 @@ public class EDI {
          String unb5 = String.valueOf(filenumber);
          
          
-         String ung1 = EDData.getEDIGSTypeFromStds(defaults[14]);   // defaults[14] = outdoctype 
+         String ung1 = EDData.getEDIGSTypeFromBSDoc(defaults[14]);   // defaults[14] = outdoctype 
          
          String ung2 = defaults[2];
          if (attrkeys.containsKey("UNG02")) {ung2 = attrkeys.get("UNG02");}
@@ -3568,13 +3611,19 @@ public class EDI {
          
          String ung7 = defaults[12];
                 
-          
-           envelope[0] = "UNB" + ed + unb1 + ed + unb2 + ed + unb3 + ed + unb4 + ed + unb5; 
+           
+           envelope[0] = "UNB" + ed + unb1 + ed + unb2 + ed + unb3 + ed + unb4 + ed + unb5;
+           if (defaults[22].equals("1")) { // prefix UNA if una checkbox is checked  
+             envelope[0] = "UNA:+.? '" + envelope[0];  
+           }
            envelope[0] = envelope[0].toUpperCase();
+           
+           if (defaults[23].equals("1")) {  // if ung checkbox is checked write UNG
            envelope[1] = "UNG" + ed + ung1 + ed + ung2 + ed + ung3 + ed + ung4 + ed + ung5 + ed + ung6 + ed + ung7;
             envelope[1] = envelope[1].toUpperCase();
            envelope[2] = "UNE" + ed + "1" + ed + String.valueOf(filenumber);
-            envelope[2] = envelope[2].toUpperCase();
+           envelope[2] = envelope[2].toUpperCase();
+           }
            envelope[3] = "UNZ" + ed + "1" + ed + String.valueOf(filenumber);
             envelope[3] = envelope[3].toUpperCase();
             
@@ -3583,6 +3632,7 @@ public class EDI {
            envelope[6] = String.valueOf(filenumber);
            envelope[7] = sd;
            envelope[8] = ed;
+           envelope[9] = ud;
            
             return envelope;
       }
@@ -3647,9 +3697,23 @@ public class EDI {
          if (attrkeys.containsKey("ISA04")) {isa4 = String.format("%10s",attrkeys.get("ISA04"));}
          
          String isa5 = String.format("%2s", _isa[7]);
-         String isa6 = String.format("%-15s", _isa[8]);
+         
+         String isa6 = "";
+         if (attrkeys.containsKey("ISA06")) {
+             isa6 = String.format("%-15s",attrkeys.get("ISA06"));
+         } else {
+             isa6 = String.format("%-15s", _isa[8]); // turnaround receiver ID as sender 
+         }
+         
          String isa7 = String.format("%2s", _isa[5]);
-         String isa8 = String.format("%-15s", _isa[6]);
+         
+         String isa8 = "";
+         if (attrkeys.containsKey("ISA08")) {
+             isa8 = String.format("%-15s",attrkeys.get("ISA08"));
+         } else {
+             isa8 = String.format("%-15s", _isa[6]); // turnaround receiver ID as sender 
+         }
+         
          String isa9 = isadfdate.format(now);
          String isa10 = isadftime.format(now);
          String isa11 = _isa[11];
@@ -3668,6 +3732,7 @@ public class EDI {
          String isa16 = ud;
          
          String gs1 = EDData.getEDIGSTypeFromStds("997"); 
+         
          
          String gs2 = _gs[3];
          if (attrkeys.containsKey("GS02")) {gs2 = attrkeys.get("GS02");}
@@ -3939,7 +4004,7 @@ public class EDI {
           String mystring = "";
           if ( delimiter.charAt(0) == segment.charAt(segment.length()- 1) ) {
               mystring = segment.substring(0, segment.length() - 1);
-              if ( delimiter.charAt(0) == mystring.charAt(mystring.length()- 1) ) {
+              if (mystring.length() > 0 && delimiter.charAt(0) == mystring.charAt(mystring.length()- 1) ) {
                return trimSegment(mystring, delimiter);
               }
           } else {

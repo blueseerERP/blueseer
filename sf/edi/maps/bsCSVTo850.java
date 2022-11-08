@@ -33,7 +33,7 @@ for (int i = 2; i <= rows; i++) {
 lines++;  // count lines
 total += Integer.valueOf(getRow(i,7));  // sum total qty
 
-mapSegment("PO1","e01",string(i - 1));
+mapSegment("PO1","e01",snum(i - 1));
 mapSegment("PO1","e02",getRow(i,7));
 mapSegment("PO1","e03",getRow(i,8));
 mapSegment("PO1","e04",getRow(i,9));
@@ -42,6 +42,6 @@ mapSegment("PO1","e07",getRow(i,6));
 commitSegment("PO1");
 }
 
-mapSegment("CTT","e01",string(lines));
-mapSegment("CTT","e02",string(total));
+mapSegment("CTT","e01",snum(lines));
+mapSegment("CTT","e02",snum(total));
 commitSegment("CTT");

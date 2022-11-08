@@ -1,5 +1,7 @@
 /* sql updates for  v6.3 */
 alter table edi_ctrl add column edic_mapdir varchar(200) COLLATE NOCASE DEFAULT '';
 alter table edi_ctrl rename column edic_outftp to edic_scriptdir;
+alter table edi_mstr add column edi_una tinyint(1) DEFAULT '0';
+alter table edi_mstr add column edi_ung tinyint(1) DEFAULT '0';
 
 

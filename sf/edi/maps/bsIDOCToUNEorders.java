@@ -3,11 +3,6 @@ setReference(getInput("E2EDK01","belnr")); //optional...
 
 //optional...set some global variables as necessary
 var now = now();
-var mandt = "110";
-var docnum = padNumber(c[4],16);
-var segnum = 0;
-var psgnum = 0;
-var hlevel = 0;
 
 // begin mapping  /* SECTION 2*/
 
@@ -20,172 +15,60 @@ var shipdate = composite("4",getInput("E2EDK03","iddat:4","datum"),"102");
 mapSegment("DTM","e01",shipdate);
 commitSegment("DTM");
 
-/*
-segnum++;
-hlevel++;
-mapSegment("E2EDK01","mandt",mandt);
-mapSegment("E2EDK01","docnum",docnum);
-mapSegment("EDEDK01", "segnum", padNumber(segnum,6));
-mapSegment("EDEDK01", "psgnum", padNumber(psgnum,6));
-mapSegment("EDEDK01", "hlevel", padNumber(hlevel,2));
-mapSegment("E2EDK01","curcy","USD");
-mapSegment("E2EDK01","hwaer","USD");
-mapSegment("E2EDK01","wkurs",getInput("N1","1:DP",2));
-mapSegment("E2EDK01","belnr",getInput("BGM",2));
-commitSegment("E2EDK01");
+mapSegment("RFF","e01",composite("CT","MYREFERENCE"));
+commitSegment("RFF");
 
-
-// E2EDK14 loop
-var addrloop = getLoopKeys("NAD");
+var addrloop = getLoopKeys("E2EDKA1");
 for (var key : addrloop) {
-segnum++;
-hlevel++;
-mapSegment("E2EDK14","mandt",mandt);
-mapSegment("E2EDK14","docnum",docnum);
-mapSegment("E2EDK14", "segnum", padNumber(segnum,6));
-mapSegment("E2EDK14", "psgnum", padNumber(psgnum,6));
-mapSegment("E2EDK14", "hlevel", padNumber(hlevel,2));
-mapSegment("E2EDK14","qualf",getInput(key,1));
-mapSegment("E2EDK14","orgid",getInput(key,2));
-commitSegment("E2EDK14");  
+mapSegment("NAD","e01",getInput(key,"qualf"));
+mapSegment("NAD","e02",getInput(key,"orgid"));
+mapSegment("NAD","e05",getInput(key,"stras"));
+mapSegment("NAD","e06",getInput(key,"ort01"));
+mapSegment("NAD","e07",getInput(key,"regio"));
+mapSegment("NAD","e08",getInput(key,"pstlz"));
+commitSegment("NAD");  
+
+mapSegment("CTA","e01","PD");
+mapSegment("CTA","e02",composite("","JOHN DOE"));
+commitSegment("CTA"); 
+
+mapSegment("COM","e01",composite("999-999-9999","TE"));
+commitSegment("COM"); 
+
 }
 
+mapSegment("CUX","e01",composite("2",getInput("E2EDK01",9),"9"));
+commitSegment("CUX"); 
 
+mapSegment("PYT","e01","1");
+mapSegment("PYT","e01",composite("5","1","CD","45"));
+commitSegment("PYT");
 
-// DTM Loop
-var dtmloop = getLoopKeys("DTM");
-for (var key : dtmloop) {
-segnum++;
-hlevel++;
-mapSegment("E2EDK03","mandt",mandt);
-mapSegment("E2EDK03","docnum",docnum);
-mapSegment("E2EDK03", "segnum", padNumber(segnum,6));
-mapSegment("E2EDK03", "psgnum", padNumber(psgnum,6));
-mapSegment("E2EDK03", "hlevel", padNumber(hlevel,2));
-mapSegment("E2EDK03","iddat",getInputComp(key,1,1));
-mapSegment("E2EDK03","datum",getInputComp(key,1,2));
-commitSegment("E2EDK03");   
-}
-
-
-// NAD group loop for E2EDKA1 segments
-var nadcount = getGroupCount("NAD");
-for (var i = 1; i <= nadcount; i++) {
-segnum++;
-hlevel++;
-mapSegment("E2EDKA1","mandt",mandt);
-mapSegment("E2EDKA1","docnum",docnum);
-mapSegment("E2EDKA1", "segnum", padNumber(segnum,6));
-mapSegment("E2EDKA1", "psgnum", padNumber(psgnum,6));
-mapSegment("E2EDKA1", "hlevel", padNumber(hlevel,2));
-mapSegment("E2EDKA1","parvw",getInput(i,"NAD",1));
-mapSegment("E2EDKA1","lifnr",getInput(i,"NAD",2));
-mapSegment("E2EDKA1","name1",getInput(i,"NAD",3));
-mapSegment("E2EDKA1","stras",getInput(i,"NAD",5));
-mapSegment("E2EDKA1","ort01",getInput(i,"NAD",6));
-mapSegment("E2EDKA1","regio",getInput(i,"NAD",7));
-mapSegment("E2EDKA1","pstlz",getInput(i,"NAD",8));
-mapSegment("E2EDKA1","isoal",getInput(i,"NAD",9));
-commitSegment("E2EDKA1");
-}
-
-
-segnum++;
-hlevel++;         
-mapSegment("E2EDK17","mandt",mandt);
-mapSegment("E2EDK17","docnum",docnum);
-mapSegment("E2EDK17", "segnum", padNumber(segnum,6));
-mapSegment("E2EDK17", "psgnum", padNumber(psgnum,6));
-mapSegment("E2EDK17", "hlevel", padNumber(hlevel,2));
-mapSegment("E2EDK17","qualf","001");
-mapSegment("E2EDK17","lkond","ZZ");
-mapSegment("E2EDK17","lktxt",getInput("TDT",5));
-commitSegment("E2EDK17");
-
-
-// comments // E2EDKT1, E2EDKT2 (hard coded source)
-segnum++;
-hlevel++;
-mapSegment("E2EDKT1","mandt",mandt);
-mapSegment("E2EDKT1","docnum",docnum);
-mapSegment("E2EDKT1", "segnum", padNumber(segnum,6));
-mapSegment("E2EDKT1", "psgnum", padNumber(psgnum,6));
-mapSegment("E2EDKT1", "hlevel", padNumber(hlevel,2));
-mapSegment("E2EDKT1","tdid","0001");
-mapSegment("E2EDKT1","tsspras_iso","EN");
-commitSegment("E2EDKT1");
-
-// MSG segments
-var msgloop = getLoopKeys("FTX");
-for (var key : msgloop) {
-segnum++;
-hlevel++;
-mapSegment("E2EDKT2","mandt",mandt);
-mapSegment("E2EDKT2","docnum",docnum);
-mapSegment("E2EDKT2", "segnum", padNumber(segnum,6));
-mapSegment("E2EDKT2", "psgnum", padNumber(psgnum,6));
-mapSegment("E2EDKT2", "hlevel", padNumber(hlevel,2));
-mapSegment("E2EDKT2","tdline",getInput(key,4));
-commitSegment("E2EDKT2");  
-} 
-
-// line items  LIN group 
-var lincount = getGroupCount("LIN");
+// line items  E2EDP01 group 
+var lincount = getGroupCount("E2EDP01");
 for (var i = 1; i <= lincount; i++) {
-segnum++;
-hlevel++;  
-mapSegment("E2EDP01","mandt",mandt);
-mapSegment("E2EDP01","docnum",docnum);
-mapSegment("E2EDP01", "segnum", padNumber(segnum,6));
-mapSegment("E2EDP01", "psgnum", padNumber(segnum,6));
-mapSegment("E2EDP01", "hlevel", padNumber(hlevel,2));
-mapSegment("E2EDP01", "posex", padNumber(i,6));
-mapSegment("E2EDP01","menge",getInputComp(i,"LIN:QTY",1,2));
-mapSegment("E2EDP01","menee",getInputComp(i,"LIN:QTY",1,3));
-mapSegment("E2EDP01","pmene","EA");
-mapSegment("E2EDP01","vprei",getInputComp(i,"LIN:PRI",1,2));
-mapSegment("E2EDP01","matnr",getInputComp(i,"LIN",3,1));
-mapSegment("E2EDP01","matnr_external",getInputComp(i,"LIN",3,1));
-commitSegment("E2EDP01");
+mapSegment("LIN","e01",snum(i));
+mapSegment("LIN","e03",composite(getInput(i,"E2EDP01","matnr"),"BP"));
+commitSegment("LIN");
 
-segnum++;
-hlevel++;
-mapSegment("E2EDP02","mandt",mandt);
-mapSegment("E2EDP02","docnum",docnum);
-mapSegment("E2EDP02", "segnum", padNumber(segnum,6));
-mapSegment("E2EDP02", "psgnum", padNumber(segnum,6));
-mapSegment("E2EDP02", "hlevel", padNumber(hlevel,2));
-mapSegment("E2EDP02", "qualf", "001");
-mapSegment("E2EDP02","belnr",getInputComp(i,"LIN:QTY",1,2));
-commitSegment("E2EDP02");
+mapSegment("IMD","e02","3");
+mapSegment("IMD","e03",composite("","","",getInput(i,"E2EDP01:E2EDP19",9)));
+commitSegment("IMD");
 
-segnum++;
-hlevel++;
-mapSegment("E2EDP20","mandt",mandt);
-mapSegment("E2EDP20","docnum",docnum);
-mapSegment("E2EDP20", "segnum", padNumber(segnum,6));
-mapSegment("E2EDP20", "psgnum", padNumber(segnum,6));
-mapSegment("E2EDP20", "hlevel", padNumber(hlevel,2));
-mapSegment("E2EDP20", "wmeng", getInputComp(i,"LIN:QTY",1,2));
-commitSegment("E2EDP20");
+mapSegment("QTY","e01",composite("21",getInput(i,"E2EDP01","menge"),"EA"));
+commitSegment("QTY");
 
-segnum++;
-hlevel++;
-mapSegment("E2EDP19","mandt",mandt);
-mapSegment("E2EDP19","docnum",docnum);
-mapSegment("E2EDP19", "segnum", padNumber(segnum,6));
-mapSegment("E2EDP19", "psgnum", padNumber(psgnum,6));
-mapSegment("E2EDP19", "hlevel", padNumber(hlevel,2));
-if (i == 0) {
-mapSegment("E2EDP19", "qualf", "001");
-mapSegment("E2EDP19", "idtnr", getInputComp(i,"LIN",3,1));
-} else {
-mapSegment("E2EDP19", "qualf", "002");
-mapSegment("E2EDP19", "idtnr", getInputComp(i,"LIN",3,1));  
+var pricedate = composite("2",getInput("E2EDK03","iddat:4","datum"),"102");
+mapSegment("DTM","e01",pricedate);
+commitSegment("DTM");
+
+mapSegment("PRI","e01",composite("INF",getInput(i,"E2EDP01","vprei")));
+commitSegment("PRI");
+
 }
-mapSegment("E2EDP19", "ktext", getInputComp(i,"LIN:IMD",3,4));
-commitSegment("E2EDP19");
-}
-*/
+
+mapSegment("UNS","e01","S");
+commitSegment("UNS");
+
 // end mapping
 

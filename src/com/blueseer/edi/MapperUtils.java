@@ -87,7 +87,7 @@ public class MapperUtils {
     @EDI.AnnoDoc(desc = {"method converts targetValue to a String",
                         "Example:  string(55) returns: \"55\" as String"},
             params = {"String targetValue"})  
-    public static String string(Object invalue) {
+    public static String snum(Object invalue) {
         if (invalue == null) {
 		  return "";	
         }

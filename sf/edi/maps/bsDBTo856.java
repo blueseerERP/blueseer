@@ -22,7 +22,7 @@ import com.blueseer.utl.OVData;
     commitSegment("BSN");
     
      hlcounter++;   
-        mapSegment("HL","e01", string(hlcounter));
+        mapSegment("HL","e01", snum(hlcounter));
         mapSegment("HL","e03","S");
         mapSegment("HL","e04","1");
         commitSegment("HL");
@@ -78,7 +78,7 @@ import com.blueseer.utl.OVData;
                 // do PRF once...this map is one PRF only
                 if (itemLoopCount == 1) {
                 hlcounter++;
-                mapSegment("HL","e01", string(hlcounter));
+                mapSegment("HL","e01", snum(hlcounter));
                 mapSegment("HL","e02","1");
                 mapSegment("HL","e03","O");
                 mapSegment("HL","e04","1");
@@ -88,7 +88,7 @@ import com.blueseer.utl.OVData;
                 }
                 
                 hlcounter++;
-                mapSegment("HL","e01", string(hlcounter));
+                mapSegment("HL","e01", snum(hlcounter));
                 mapSegment("HL","e02","2");
                 mapSegment("HL","e03","I");
                 mapSegment("HL","e04","1");
@@ -126,7 +126,7 @@ import com.blueseer.utl.OVData;
 
             /* end of item loop */
 
-        mapSegment("CTT","e01",string(hlcounter));
-        mapSegment("CTT","e02",string(totalqty));
+        mapSegment("CTT","e01",snum(hlcounter));
+        mapSegment("CTT","e02",snum(totalqty));
         commitSegment("CTT");
 
