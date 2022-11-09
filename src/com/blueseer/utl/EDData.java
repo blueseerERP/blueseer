@@ -3568,10 +3568,11 @@ public class EDData {
          
       }
     
-    public static void updateEDIIDXAcksAllGroup(String doctype, String groupid, String ackfile) {
+    public static int updateEDIIDXAcksAllGroup(String doctype, String groupid, String senderid, String ackfile) {
         // some 997s do not send ST specific...but GS (group specific)...update all doc of GS group ID
             // keys is a string[] with doctype, groupctrlnum, ackfile 
-          try {
+            int count = 0;
+            try {
             Class.forName(driver);
             Connection con = null;
             if (ds != null) {
@@ -3581,13 +3582,13 @@ public class EDData {
             }
             Statement st = con.createStatement();
             try {
-                    st.executeUpdate("update edi_idx set " +
+                   count = st.executeUpdate("update edi_idx set " +
                             " edx_ackfile = " + "'" + ackfile + "'" + "," +
                             " edx_ack = '1' " +        
                             " where edx_outdoctype = " + "'" + doctype + "'" +     
                             " and edx_gsctrlnum = " + "'" + groupid + "'" +
+                            " and edx_receiver = " + "'" + senderid + "'" +   // sender should be receiver of original outbound transmission     
                             ";");
-                   
                         
             } catch (SQLException s) {
                 MainFrame.bslog(s);
@@ -3598,7 +3599,41 @@ public class EDData {
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
-         
+        return count; 
+      }
+    
+    public static int updateEDIIDXAcksAllGroupCONTRL(String doctype, String controlnbr, String senderid, String ackfile) {
+        // some 997s do not send ST specific...but GS (group specific)...update all doc of GS group ID
+            // keys is a string[] with doctype, groupctrlnum, ackfile 
+            int count = 0;
+            try {
+            Class.forName(driver);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            try {
+                   count = st.executeUpdate("update edi_idx set " +
+                            " edx_ackfile = " + "'" + ackfile + "'" + "," +
+                            " edx_ack = '1' " +        
+                            " where edx_outdoctype = " + "'" + doctype + "'" +     
+                            " and edx_ctrlnum = " + "'" + controlnbr + "'" +
+                            " and edx_receiver = " + "'" + senderid + "'" +   // sender should be receiver of original outbound transmission     
+                            ";");
+                        
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (st != null) st.close();
+               con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return count; 
       }
     
     

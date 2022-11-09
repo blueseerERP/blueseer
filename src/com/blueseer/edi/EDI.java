@@ -1515,7 +1515,7 @@ public class EDI {
            
             
          //   System.out.println("doc start/end : " + k[0] + "/" + k[1]);
-         if (! doctype.equals("997"))
+         if (! doctype.equals("997une"))
          falist.add(docid); // add ST doc id to falist for functional acknowledgement
       //        System.out.println("control values: " + docid + "/" + k[0] + "/" + k[1] );
        
@@ -1567,11 +1567,11 @@ public class EDI {
           
           String map = c[2];
              
-          if (doctype.equals("997")) {
+          if (doctype.equals("997une")) {
             if (GlobalDebug)   {
-            System.out.println("Encountered 997...processing and return" + c[1] + "/" + c[0] + "/" + c[21]);    
+            System.out.println("Encountered 997une...processing and return" + c[1] + "/" + c[0] + "/" + c[21]);    
             }
-            String[] m = process997(doc, c);
+            String[] m = processCONTRL(doc, c);
             messages.add(new String[]{m[0], m[1]});
             EDData.updateEDIIDXStatus(idxnbr, m[0]);
             EDData.writeEDILogMulti(c, messages);
@@ -1669,14 +1669,15 @@ public class EDI {
         
              
        
-            // 997
+            // 997une
             ArrayList<String> falistcopy = new ArrayList<String>(falist);
             falist.clear();
+            
             if (GlobalDebug)   
             System.out.println("997 potential: " + c[12] + "/" +  (falistcopy.size() > 0) + "/" + BlueSeerUtils.ConvertStringToBool(EDData.getEDIFuncAck(c[1], c[0].trim(), c[21].trim())) );    
 
             if (c[12].isEmpty() && falistcopy.size() > 0 && BlueSeerUtils.ConvertStringToBool(EDData.getEDIFuncAck(c[1], c[0], c[21]))) {
-             generate997(falistcopy, c);
+             generateCONTRL(falistcopy, c);
             }
             
      
@@ -3837,8 +3838,213 @@ public class EDI {
          return m;
       }
       
-      public static String[] process997(ArrayList<String> docs, String[] c) {
+      public static String[] generateCONTRL(ArrayList<String> docs, String[] c) {
+        String[] m = new String[]{"",""};
         
+        
+        
+        
+        String sd = delimConvertIntToStr(c[9]);
+        String ed = delimConvertIntToStr(c[10]);
+        String ud = delimConvertIntToStr(c[11]);
+        
+       
+        
+        String[] _unb = c[13].split(EDI.escapeDelimiter(delimConvertIntToStr(c[10])), -1);
+        
+        String sender = _unb[2];
+        String senderQ = "ZZ";
+        if (_unb[2].contains(ud)) {
+            sender = _unb[2].split(ud)[0];
+            senderQ = _unb[2].split(ud)[1];
+        }
+        String receiver = _unb[3];
+        String receiverQ = "ZZ";
+        if (_unb[3].contains(ud)) {
+            receiver = _unb[3].split(ud)[0];
+            receiverQ = _unb[3].split(ud)[1];
+        }
+       // String[] _ung = c[14].split(EDI.escapeDelimiter(delimConvertIntToStr(c[10])), -1);
+         
+         DateFormat isadfdate = new SimpleDateFormat("yyMMdd");
+         DateFormat gsdfdate = new SimpleDateFormat("yyyyMMdd");
+         DateFormat isadftime = new SimpleDateFormat("HHmm");
+         DateFormat gsdftime = new SimpleDateFormat("HHmm");
+         DateFormat tsdfdate = new SimpleDateFormat("yyMMddHHmmssSSS");
+         Date now = new Date();
+        int segcount = 0;
+        int hdrsegcount = 0;
+        String stctrl = "0001";
+        int filenumber = OVData.getNextNbr("ediout");
+        String filename = "CONTRL_" + c[0] + "_" + tsdfdate.format(now) + ".txt";
+        // create envelope segments
+        
+        // 997s are generated first without regards to specific 997 partner relationship setup
+        // if relationship record found...this overrides filename, and various ISA and GS attributes as found
+        
+        String unb2 = receiver + ud + receiverQ;
+        String unb3 = sender + ud + senderQ;
+        
+        String[] defaults = EDData.getEDITPDefaults("997une", sender, receiver);
+        ArrayList<String> attrs = EDData.getEDIAttributesList("997une", sender, receiver); 
+        Map<String, String> attrkeys = new HashMap<String, String>();
+        for (String x : attrs) {
+            String[] z = x.split(":", -1);
+            if (z != null && ! z[0].isEmpty()) {
+                attrkeys.put(z[0], z[1]);
+            }
+        }
+         
+        //  Override filename with defaults values if found for partner relationship
+         if (! defaults[0].isBlank()) {
+             filename = defaults[10] + "." + String.valueOf(filenumber) + "." + defaults[11];
+             //  if filepath is defined...use this for explicit file path relative to root
+             if (! defaults[9].isEmpty()) {
+                 filename = defaults[9] + "/" + filename;
+             }
+         }
+         
+         String unb1 = "";
+         if (attrkeys.containsKey("UNB01")) {
+             unb1 = attrkeys.get("UNB01");
+         } else {
+             unb1 = "UNOC";
+         }
+         
+         if (! defaults[0].isBlank()) {
+         unb2 = defaults[0] + ud + defaults[4];
+         unb3 = defaults[3] + ud + defaults[1];
+         }
+         
+         String unb4 = isadfdate.format(now) + ud + isadftime.format(now);
+         String unb5 = String.valueOf(filenumber);
+         
+         /*
+         String ung1 = EDData.getEDIGSTypeFromBSDoc("997une");   // defaults[14] = outdoctype 
+         
+         String ung2 = defaults[2];
+         if (attrkeys.containsKey("UNG02")) {ung2 = attrkeys.get("UNG02");}
+         
+         String ung3 = defaults[5];
+         if (attrkeys.containsKey("UNG03")) {ung3 = attrkeys.get("UNG03");}
+         
+         String ung4 = gsdfdate.format(now) + ud + gsdftime.format(now);
+         
+         String ung5 = String.valueOf(filenumber);
+         
+         String ung6 = "UN";
+         
+         String ung7 = defaults[12];
+         */
+         
+         
+           String UNB = "";
+           String UNG = "";
+           String UNE = "";
+           String UNZ = "";
+          
+           UNB = "UNB" + ed + unb1 + ed + unb2 + ed + unb3 + ed + unb4 + ed + unb5;
+           if (defaults[22].equals("1")) { // prefix UNA if una checkbox is checked  
+             UNB = "UNA:+.? '" + UNB;  
+           }
+           /*
+           if (defaults[23].equals("1")) {  // if ung checkbox is checked write UNG
+            UNG = "UNG" + ed + ung1 + ed + ung2 + ed + ung3 + ed + ung4 + ed + ung5 + ed + ung6 + ed + ung7;
+            UNE = "UNE" + ed + "1" + ed + String.valueOf(filenumber);
+           }
+          */ 
+            UNZ = "UNZ" + ed + "1" + ed + String.valueOf(filenumber);
+            
+            
+        // now create body
+        StringBuilder unhe02 = new StringBuilder();
+           String[] unhe02_array = null;
+           if (attrkeys.containsKey("UNHE02")) {
+               unhe02_array = attrkeys.get("UNHE02").split(":",-1);
+           }
+           unhe02.append(EDData.getEDIGSTypeFromBSDoc("997une"));
+           if (unhe02_array == null || unhe02_array.length == 0) {
+             unhe02.append(":D:98A:UN"); // fallback if no EDI attributes found for key UNHE02
+           } else {
+               for (String ux : unhe02_array ) {
+                   if (! ux.isBlank()) {
+                     unhe02.append(ud);
+                     unhe02.append(ux);
+                   }
+               }
+           }
+        
+        
+        String UNH = "UNH" + ed + stctrl + ed + unhe02;
+        hdrsegcount = 2; // "ST and SE" included
+         
+         String Header = "";
+       
+         ArrayList<String> S = new ArrayList();
+         S.add("UCI" + ed + c[4].trim() + ed + unb3 + ed + unb2 + ed + "8");
+         hdrsegcount += 1;
+         
+         // S.add("UCM" + ed + "A" + ed + docs.size() + ed + docs.size() + ed + docs.size());
+         // hdrsegcount += 1;
+         
+         // now cleanup
+         for (String s : S) {
+             Header += (EDI.trimSegment(s, ed).toUpperCase() + sd);
+         }
+         segcount = hdrsegcount;
+         
+         String UNT = "UNT" + ed + String.valueOf(segcount) + ed + stctrl;
+                         
+         
+                 
+         // concat and send content to edi.writeFile
+        // String content = UNB + sd + UNG + sd + UNH + Header + UNT + UNE + sd + UNZ + sd;
+         String content = UNB + sd + UNH + sd + Header + UNT + sd + UNZ + sd;
+         
+        
+         
+         // create batch file
+          String batchfile = "S" + String.format("%07d", filenumber); 
+          
+          
+               // update c for edi_idx
+         String[] cc = c.clone();
+         cc[0] = c[21];
+         cc[1] = "997une";
+         cc[15] = "997une";
+         cc[8] = filename;
+         cc[21] = c[0];
+         cc[24] = batchfile;
+         cc[25] = batchfile;
+         cc[28] = "UNE";
+         cc[29] = "UNE";
+         cc[31] = "0";
+         cc[32]  = "99999";
+         cc[33] = "0";
+         cc[34] = "99999";
+         cc[35] = c[9];
+         cc[36] = c[10];
+         cc[37] = c[11];
+         EDData.writeEDIIDX(cc);
+         
+        try {
+            // write to file
+            EDI.writeFile(content, EDData.getEDIOutDir(), filename);
+            Files.copy(new File(EDData.getEDIOutDir() + "/" + filename).toPath(), new File(EDData.getEDIBatchDir() + "/" + batchfile).toPath(), StandardCopyOption.REPLACE_EXISTING);
+           
+        } catch (SmbException ex) {
+            edilog(ex);
+        } catch (IOException ex) {
+            edilog(ex);
+        }
+         
+         
+         return m;
+      }
+      
+      
+      public static String[] process997(ArrayList<String> docs, String[] c) {
+         // used for inbound 997s to match outbound transmissions
          String[] _isa = c[13].split(EDI.escapeDelimiter(delimConvertIntToStr(c[10])), -1);
          String[] _gs = c[14].split(EDI.escapeDelimiter(delimConvertIntToStr(c[10])), -1);  
          ArrayList<String[]> docids = new ArrayList<String[]>();
@@ -3857,24 +4063,67 @@ public class EDI {
             }
          }
          
+         // acknowledge original envelope as a whole...ALL docs of envelope
+         int count = EDData.updateEDIIDXAcksAllGroup(doctype, groupid, c[0].trim(), c[24]);
          // find edi_idx record of groupid, doctype, and docid ...for each element of docids
+         // may do this later
+         /*
          if (! docids.isEmpty()) {
             EDData.updateEDIIDXAcks(docids);
          } else {
              // some 997s do not send ST specific...AK2,AK5...but GS (group specific) only AK1...update all doc of GS group ID
-            EDData.updateEDIIDXAcksAllGroup(doctype, groupid, c[24]);
+            EDData.updateEDIIDXAcksAllGroup(doctype, groupid, c[0].trim(), c[24]);
          }
-         if (groupid.isEmpty() || doctype.isEmpty()) {
+         */
+         if (groupid.isEmpty() || count == 0) {
              return new String[]{"error","unrecognized gscntrlnum in AK1"};
-         } else if (docids.isEmpty()) {
-             return new String[]{"success","AK1 only...all docs acknowledged"};
-         } else if (doctype.equals("??")) {
-             return new String[]{"error","unknown doctype in 997"};
          } else {
              return new String[]{"success","997 loaded"};
          }
          
       }
+      
+      public static String[] processCONTRL(ArrayList<String> docs, String[] c) {
+         // used for inbound 997s to match outbound transmissions
+         String[] _isa = c[13].split(EDI.escapeDelimiter(delimConvertIntToStr(c[10])), -1);
+         String[] _gs = c[14].split(EDI.escapeDelimiter(delimConvertIntToStr(c[10])), -1);  
+         ArrayList<String[]> docids = new ArrayList<String[]>();
+         String controlnbr = "";
+         for (Object seg : docs) {
+            String ea[] = seg.toString().split(EDI.escapeDelimiter(delimConvertIntToStr(c[10])), -1);
+            if (ea[0] != null && ea.length > 2 && ea[0].equals("UCI")) {
+                controlnbr = ea[1];
+            }
+            /*
+            if (ea[0] != null && ea.length > 2 && ea[0].equals("AK2")) {
+                String[] temp = new String[]{doctype, groupid, ea[2], c[24]};
+               docids.add(temp);
+            }
+            */
+         }
+        
+         
+          // acknowledge original envelope as a whole...ALL docs of envelope
+         int count = EDData.updateEDIIDXAcksAllGroup(c[1], controlnbr, c[0].trim(), c[24]);
+         // find edi_idx record of groupid, doctype, and docid ...for each element of docids
+         // may do this later
+         /*
+         if (! docids.isEmpty()) {
+            EDData.updateEDIIDXAcks(docids);
+         } else {
+             // some 997s do not send ST specific...AK2,AK5...but GS (group specific) only AK1...update all doc of GS group ID
+            EDData.updateEDIIDXAcksAllGroup(doctype, groupid, c[0].trim(), c[24]);
+         }
+         */
+         
+         if (controlnbr.isEmpty() || count == 0) {
+             return new String[]{"error","unrecognized gscntrlnum in UCI"};
+         } else {
+             return new String[]{"success","997une loaded"};
+         }
+         
+      }
+      
       
       public static String[] generate997Envelope(String[] in_isa, String[] in_gs) {
         
