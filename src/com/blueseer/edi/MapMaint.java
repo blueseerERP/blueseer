@@ -2085,6 +2085,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         toolbar.add(btnew);
 
         btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/map.png"))); // NOI18N
+        btlookup.setToolTipText("Get Map");
         btlookup.setFocusable(false);
         btlookup.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btlookup.setName("btlookup"); // NOI18N
@@ -2097,6 +2098,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         toolbar.add(btlookup);
 
         btoverlay.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/spy.png"))); // NOI18N
+        btoverlay.setToolTipText("Inspect");
         btoverlay.setFocusable(false);
         btoverlay.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btoverlay.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -2108,6 +2110,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         toolbar.add(btoverlay);
 
         btclear.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/file.png"))); // NOI18N
+        btclear.setToolTipText("Clear");
         btclear.setFocusable(false);
         btclear.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btclear.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -2119,6 +2122,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         toolbar.add(btclear);
 
         btadd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/addfile.png"))); // NOI18N
+        btadd.setToolTipText("Add");
         btadd.setFocusable(false);
         btadd.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btadd.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -2130,6 +2134,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         toolbar.add(btadd);
 
         btdelete.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/deletefile.png"))); // NOI18N
+        btdelete.setToolTipText("Delete");
         btdelete.setFocusable(false);
         btdelete.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btdelete.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -2141,6 +2146,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         toolbar.add(btdelete);
 
         btupdate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/save.png"))); // NOI18N
+        btupdate.setToolTipText("Save");
         btupdate.setFocusable(false);
         btupdate.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btupdate.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -2152,6 +2158,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         toolbar.add(btupdate);
 
         btcompile.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/coffee.png"))); // NOI18N
+        btcompile.setToolTipText("Compile");
         btcompile.setFocusable(false);
         btcompile.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btcompile.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -2163,6 +2170,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         toolbar.add(btcompile);
 
         btunhide.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/unhide.png"))); // NOI18N
+        btunhide.setToolTipText("Unhide");
         btunhide.setFocusable(false);
         btunhide.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btunhide.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -2174,6 +2182,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         toolbar.add(btunhide);
 
         btrun.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lightning.png"))); // NOI18N
+        btrun.setToolTipText("Execute");
         btrun.setFocusable(false);
         btrun.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btrun.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -2185,6 +2194,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         toolbar.add(btrun);
 
         btshiftleft.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/doubleleft.png"))); // NOI18N
+        btshiftleft.setToolTipText("Palnels Left");
         btshiftleft.setFocusable(false);
         btshiftleft.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btshiftleft.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -2196,6 +2206,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         toolbar.add(btshiftleft);
 
         btshiftright.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/doubleright.png"))); // NOI18N
+        btshiftright.setToolTipText("Panels Right");
         btshiftright.setFocusable(false);
         btshiftright.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btshiftright.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -2207,6 +2218,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         toolbar.add(btshiftright);
 
         btzip.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/zip.png"))); // NOI18N
+        btzip.setToolTipText("Zip Map");
         btzip.setFocusable(false);
         btzip.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btzip.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
