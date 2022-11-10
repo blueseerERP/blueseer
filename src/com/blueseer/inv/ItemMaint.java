@@ -73,6 +73,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -2229,8 +2231,8 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
         if (! isLoad) {
             imagelabel.setIcon(null);
         if (ddimage.getSelectedItem() != null && ! ddimage.getSelectedItem().toString().isEmpty()) {
-            String ImageDir = OVData.getSystemImageDirectory();
-          ImageIcon imageIcon = new ImageIcon(ImageDir + ddimage.getSelectedItem().toString());
+          Path filepath = FileSystems.getDefault().getPath(OVData.getSystemImageDirectory() + "/" + ddimage.getSelectedItem().toString() );
+          ImageIcon imageIcon = new ImageIcon(filepath.toString());
           btdeleteimage.setEnabled(true);
       /* 
       ImageIcon imageIcon = new ImageIcon((new ImageIcon("images/vcs.png"))
@@ -2251,7 +2253,6 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
         DateFormat dfdate = new SimpleDateFormat("yyyyMMddHHmmss");
         Date now = new Date();
         File file = null;
-        String ImageDir = OVData.getSystemImageDirectory();
         
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         int returnVal = fc.showOpenDialog(this);
@@ -2265,12 +2266,13 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
             String newFileName = tbkey.getText() + "_" + dfdate.format(now) + "." + suffix;
             // insert image filename into database
             OVData.addItemImage(tbkey.getText(), newFileName);
-            
+            Path filepath = FileSystems.getDefault().getPath(OVData.getSystemImageDirectory() + "/" + newFileName );
+          
             // now lets copy the file over to the appropriate directory  
             file = new File(SourceDir);
             
        //     java.nio.file.Files.copy(file.toPath(), new File("images/" + newFileName).toPath(), 
-                 java.nio.file.Files.copy(file.toPath(), new File(ImageDir + newFileName).toPath(), 
+                 java.nio.file.Files.copy(file.toPath(), filepath, 
                  java.nio.file.StandardCopyOption.REPLACE_EXISTING,
                  java.nio.file.StandardCopyOption.COPY_ATTRIBUTES,
                  java.nio.file.LinkOption.NOFOLLOW_LINKS);
@@ -2304,8 +2306,8 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
                            + " AND iti_file = " + "'" + ddimage.getSelectedItem().toString() + "'"
                            + " ;");
                     if (i > 0) {
-                        String ImageDir = OVData.getSystemImageDirectory();
-                        java.nio.file.Files.deleteIfExists(new File(ImageDir + ddimage.getSelectedItem().toString()).toPath());
+                        Path filepath = FileSystems.getDefault().getPath(OVData.getSystemImageDirectory() + "/" + ddimage.getSelectedItem().toString() );
+                        java.nio.file.Files.deleteIfExists(filepath);
                         getItemImages(tbkey.getText());
                     }
                 } catch (SQLException s) {
