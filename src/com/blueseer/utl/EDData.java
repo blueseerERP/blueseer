@@ -601,7 +601,7 @@ public class EDData {
     public static String[] getEDITPDefaults(String doctype, String gssndid, String gsrcvid) {
            
                     
-             String[] mystring = new String[]{"","","","","","","0","0","0","","","","","","","","","","","","","","",""};
+             String[] mystring = new String[]{"","","","","","","0","0","0","","","","","","","","","","","","","","","",""};
         try{
             Class.forName(driver);
             Connection con = null;
@@ -645,6 +645,7 @@ public class EDData {
                         mystring[21] = res.getString("edi_filetype");
                         mystring[22] = res.getString("edi_una");
                         mystring[23] = res.getString("edi_ung");
+                        mystring[24] = res.getString("edi_map");
                     }
            }
             catch (SQLException s) {

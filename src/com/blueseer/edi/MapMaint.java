@@ -74,6 +74,7 @@ import com.blueseer.edi.EDI.AnnoDoc;
 import static com.blueseer.edi.EDI.createIMAP;
 import static com.blueseer.edi.EDI.createMAPUNE;
 import static com.blueseer.edi.EDI.edilog;
+import static com.blueseer.edi.EDI.escapeDelimiter;
 import static com.blueseer.edi.EDI.getEDIType;
 import static com.blueseer.edi.EDIMap.SegmentCounter;
 import com.blueseer.edi.EDIMap.UserDefinedException;
@@ -99,6 +100,7 @@ import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.EDData;
 import static com.blueseer.utl.EDData.cbufToList;
+import static com.blueseer.utl.EDData.getBSDocTypeFromStds;
 import static com.blueseer.utl.EDData.getDelimiters;
 import static com.blueseer.utl.EDData.readEDIRawFileIntoArrayList;
 import static com.blueseer.utl.EDData.readEDIRawFileIntoCbuf;
@@ -303,22 +305,26 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
        
         if (ta.getName().equals("tamap")) {
             popup.add(setMenuItem("Search"));
+            popup.add(setMenuItem("Clear"));
             popup.add(setMenuItem("Clear Highlights"));
             popup.add(setMenuItem("List Methods"));
             popup.add(setMenuItem("Hide Panel"));
         }
         if (ta.getName().equals("tainput")) {
             popup.add(setMenuItem("Search"));
+            popup.add(setMenuItem("Clear"));
             popup.add(setMenuItem("Hex Replace"));
             popup.add(setMenuItem("Input"));
             popup.add(setMenuItem("Structure"));
             popup.add(setMenuItem("Overlay"));
+            popup.add(setMenuItem("Identify"));
             popup.add(setMenuItem("Download"));
             popup.add(setMenuItem("Clear Highlights"));
             popup.add(setMenuItem("Hide Panel"));
         }
         if (ta.getName().equals("taoutput")) {
             popup.add(setMenuItem("Search"));
+            popup.add(setMenuItem("Clear"));
             popup.add(setMenuItem("Hex Replace"));
             popup.add(setMenuItem("Structure"));
             popup.add(setMenuItem("Overlay"));
@@ -377,6 +383,10 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 case "Overlay" :
                     showOverlay(parentname.getName());
                     break;  
+                    
+                case "Identify" :
+                    identify();
+                    break;    
                 
                 case "Hex Replace" :
                     hexReplace(parentname.getName());
@@ -393,6 +403,10 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 case "Clear Highlights":
                     cleanHighlights(parentname.getName());
                     break;
+                
+                case "Clear":
+                    clear(parentname.getName());
+                    break;    
                     
                 case "List Methods":
                      listInternalMethods();
@@ -1401,6 +1415,84 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         taoutput.setCaretPosition(0);
     }
     
+    public void identify() {
+        
+        String bsdoctype = "";
+        String sender = "";
+        String receiver = "";
+        
+        ArrayList<String> input = null;
+        String[] delims = new String[]{"","",""};
+        char[] cbuf = tainput.getText().toCharArray();
+        String[] editype = getEDIType(cbuf, "");
+        if (editype != null) {
+            taoutput.setText("");
+            taoutput.append("File Type: " + editype[0] + "\n");
+            bsdoctype = getBSDocTypeFromStds(editype[1]);
+            taoutput.append("Document Type: " + bsdoctype + "\n");
+        }
+        
+        String dummyName = "";
+        if (editype[0].equals("CSV")) {
+            dummyName = "dummy.CSV";
+        }
+        if (editype[0].equals("XML")) {
+            dummyName = "dummy.XML";
+        }
+        delims = getDelimiters(cbuf, dummyName); // seg, ele, sub
+           // bsmf.MainFrame.show(delims[0] + "/" + delims[1] + "/" + delims[2]);
+            if (delims == null) {
+              taoutput.append("unable to determine delimiters (null array returned) \n");
+                return;  
+            }
+        input = cbufToList(cbuf, delims);
+        if (editype[0].equals("X12")) {
+            String[] s = input.get(1).split(escapeDelimiter(delims[1]));
+            if (s != null && s.length > 2) {
+                taoutput.append("GS SENDER: " + s[2].trim() + "\n");
+                sender = s[2].trim();
+            }
+            if (s != null && s.length > 2) {
+                taoutput.append("GS RECEIVER: " + s[3].trim() + "\n");
+                receiver = s[3].trim();
+            }            
+        }
+        if (editype[0].equals("UNE")) {
+            String[] s = null;
+            if (input.get(0).startsWith("UNA")) {
+               s = input.get(1).split(escapeDelimiter(delims[1])); 
+            } else {
+               s = input.get(0).split(escapeDelimiter(delims[1])); 
+            }
+                  
+            if (s != null && s.length > 2) {
+                if (s[2].contains(":")) {
+                 sender = s[2].split(":")[0];
+                 receiver = s[3].split(":")[0];
+                 taoutput.append("UNB SENDER: " + sender + "\n");
+                 taoutput.append("UNB RECEIVER: " + receiver + "\n");   
+                } else {
+                 sender = s[2];
+                 receiver = s[3];
+                 taoutput.append("UNB SENDER: " + sender + "\n");
+                 taoutput.append("UNB RECEIVER: " + receiver + "\n");   
+                }
+                
+            }         
+        }
+        
+        String[] tp = EDData.getEDITPDefaults(bsdoctype, sender, receiver );
+        if (! tp[0].isBlank()) {
+            taoutput.append("Found Partner Record: " + tp[18]  + "\n");
+            taoutput.append("In Doc Type: " + tp[0]  + "\n");
+            taoutput.append("Out Doc Type: " + tp[14]  + "\n");
+            taoutput.append("MAP: " + tp[24]  + "\n");
+        } else {
+            taoutput.append("Could not identify Partner Record for this document"  + "\n");
+        }
+        
+    }
+    
     public void hexReplace(String taname) {
         JTextComponent ta = null;
         char toHex = 0;
@@ -1512,6 +1604,18 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         }
         if (taname.equals("taoutput")) {
             highlightNext(taoutput);            
+        }
+    }
+    
+    public void clear(String taname) {
+        if (taname.equals("tainput")) {
+            tainput.setText("");            
+        }
+        if (taname.equals("tamap")) {
+            tamap.setText("");            
+        }
+        if (taname.equals("taoutput")) {
+            taoutput.setText("");          
         }
     }
     
@@ -2786,11 +2890,12 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
     private void btoverlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btoverlayActionPerformed
         mappanel.setVisible(false);
-        outputpanel.setVisible(false);
+        outputpanel.setVisible(true);
         inputpanel.setVisible(true);
         ddifs.setEnabled(true);
         tbkey.setEnabled(false);
         setPanelComponentState(inputpanel, true);
+        setPanelComponentState(outputpanel, true);
     }//GEN-LAST:event_btoverlayActionPerformed
 
     private void btzipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btzipActionPerformed
