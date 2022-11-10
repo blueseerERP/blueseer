@@ -44,6 +44,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,6 +56,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
@@ -1589,10 +1593,10 @@ public abstract class EDIMap implements EDIMapi {
 
                                 // overlay with values that were actually assigned...otherwise blanks
                                 if (mapValues.containsKey(f[5])) {
-                                        if (mapValues.get(f[5]).length() > Integer.valueOf(f[7])) {
-                                                segment += mapValues.get(f[5]).substring(0, Integer.valueOf(f[7])) + ","; // properly formatted
+                                        if (mapValues.get(f[5]).length() > Integer.valueOf(f[8])) {
+                                                segment += mapValues.get(f[5]).substring(0, Integer.valueOf(f[8])).trim() + ","; // properly formatted
                                         } else {
-                                                segment += mapValues.get(f[5]) + ","; // properly formatted
+                                                segment += mapValues.get(f[5]).trim() + ","; // properly formatted
                                         }
 
                                 } else {
@@ -1834,6 +1838,43 @@ public abstract class EDIMap implements EDIMapi {
          return x;
      }
     
+    @EDI.AnnoDoc(desc = {"method returns numeric (double) value from source at segment and element.",
+                        "Example:  getInput(\"BEG\",3) returns: 3rd element/field of BEG segment as double"},
+            params = {"String segment","Integer ElementNumber"})      
+    public static double getInputNumber(String segment, Integer elementNbr) {
+         String x = "";
+         double d = 0;
+         int count = 0;
+         String[] k = null;
+         DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());
+         df.applyPattern("#0.####");
+         if (segment.contains("+")) {  // overloading (again) as key type entry (used with getLoopKeys)
+           k = mappedInput.get(segment);  
+         } else { // else as actual segment entry
+           //  segment = ":" + segment; // preprend blank
+             for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
+                 if (z.getKey().split("\\+")[0].equals(segment)) {
+                     count++;
+                     k = z.getValue();
+                 }
+             }
+         }
+       
+         if (k != null && k.length > elementNbr) {
+          x =  k[elementNbr].trim();
+         }
+        
+         try {
+           d = df.parse(x).doubleValue();
+         } catch (ParseException ex) {
+         }
+         
+         if (GlobalDebug)
+         System.out.println("getInputNumber:" + segment + "/" + x);
+         
+         return d;
+     }
+    
     // composite methods
     @EDI.AnnoDoc(desc = {"method reads composite element identified at segment and elementNumber and compNumber.",
                         "Example:  getInput(\"UNB\",2,2) returns: 2nd component of 2rd element of UNB segment (EDIFACT sender qualifier)"},
@@ -1958,6 +1999,36 @@ public abstract class EDIMap implements EDIMapi {
          return x;
      }
     
+    @EDI.AnnoDoc(desc = {"method returns numeric (double) value from source at segment and element for a Group Segment.",
+                      "Note:  this is typically used in a looping construct in conjunction with getGroupCount()",  
+                      "Example:  getInput(i,\"PO1\",4) returns: 4th element/field of PO1 segment as double in loop index 'i' "},
+            params = {"Integer LoopIndex", "String segment", "Integer ElementNumber"})  
+    public static double getInputNumber(Integer gloop, String segment, Integer elementNbr) {
+         String x = "";
+         double d = 0;
+         String[] k = null;
+         DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());
+         df.applyPattern("#0.####");
+        // segment = ":" + segment; // preprend blank
+         for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
+             String[] v = z.getKey().split("\\+");
+             if (v[0].equals(segment) && v[1].equals(String.valueOf(gloop))) {
+                 k = z.getValue();
+             }
+         }
+         if (k != null && k.length > elementNbr) {
+          x =  k[elementNbr].trim();
+         }
+         
+         try {
+           d = df.parse(x).doubleValue();
+         } catch (ParseException ex) {
+         }
+         
+         return d;
+     }
+    
+    
     @EDI.AnnoDoc(desc = {"method reads value from source at segment and element (by fieldname) for a Group Segment.",
                       "Note:  this is typically used in a looping construct in conjunction with getGroupCount()",  
                       "Example:  getInput(i,\"E2EDP01\",\"belnr\") returns: fieldname 'belnr' of idoc segment ED2EDP01 in loop index 'i' "},
@@ -2065,9 +2136,38 @@ public abstract class EDIMap implements EDIMapi {
          return x;
      }
     
+    @EDI.AnnoDoc(desc = {"method returns row count (as integer) of rows in a CSV file",
+                      "Note:  this is exclusively used for CSV files",  
+                      "Example:  getRowCount() returns: x number of rows "},
+            params = {})  
     public static int getRowCount() {
          ArrayList<String> k = new ArrayList<String>();
          return mappedInput.size();
+     }
+    
+    @EDI.AnnoDoc(desc = {"method returns sum of all row of column x in a CSV file",
+                      "Note:  this is exclusively used with CSV files",  
+                      "Note:  returned format is #0.####",
+                      "Example:  getRowSum(7) returns: sum of all values in column 7"},
+            params = {"Integer field"})  
+    public static String getRowSum(Integer field) {
+         double sum = 0;
+         double d = 0;
+         String[] k = null;
+         DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());
+         df.applyPattern("#0.####");
+        // segment = ":" + segment; // preprend blank
+         for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
+             String[] v = z.getKey().split("\\+");
+                 k = z.getValue();
+                 try {
+                       d = df.parse(k[field]).doubleValue();
+                    } catch (ParseException ex) {
+                    }
+                 sum += d;
+         }
+         
+         return df.format(sum);
      }
     
     

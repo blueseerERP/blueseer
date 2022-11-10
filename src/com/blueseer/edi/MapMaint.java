@@ -2229,6 +2229,12 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         });
         toolbar.add(btzip);
 
+        tbkey.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbkeyFocusLost(evt);
+            }
+        });
+
         jLabel1.setText("Source");
 
         ddinfiletype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "FF", "X12", "DB", "CSV", "UNE", "XML", "JSON" }));
@@ -2900,6 +2906,12 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
      bsmf.MainFrame.show("unable to create map.zip file in edi directory");   
     }
     }//GEN-LAST:event_btzipActionPerformed
+
+    private void tbkeyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbkeyFocusLost
+        if (! tbkey.getText().isBlank() && tbkey.isEditable() && tbpath.isEnabled()) {
+            tbpath.setText(EDData.getEDIMapDir() + "/" + tbkey.getText() + ".java");
+        }
+    }//GEN-LAST:event_tbkeyFocusLost
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
