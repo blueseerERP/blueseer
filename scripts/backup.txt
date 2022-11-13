@@ -1,0 +1,14 @@
+to backup the production bsdb database...open command prompt and type:
+mysqldump -u root -p bsdb > c:\some\dir\that\is\backed\up\bsdb.backup
+
+
+to create a test database instance using command prompt type:
+mysql -u root -p -e "create database bstest"
+
+to restore prod database into test database using command prompt type:
+mysql -u root -p bstest < c:\some\dir\that\is\backed\up\bsdb.backup
+
+to confirm bstest has data in it using command prompt type:
+mysql -u root -p bstest -e "select * from ov_ctrl;"
+
+
