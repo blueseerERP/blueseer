@@ -36,3 +36,5 @@ patch=14
 # sql mods to edi_ctrl and edi_mstr and patches to EDI engine processing
 patch=15
 # redesign of partner trans maint form and addition of download option for input/output mapper panel
+patch=16
+# added jdk.compiler to jre17
