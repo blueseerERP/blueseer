@@ -1043,7 +1043,28 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         String[] m = new String[2];
         boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
+         Path filetodelete = FileSystems.getDefault().getPath(tbpath.getText());
+            try {
+                if (Files.exists(filetodelete)) {
+                Files.delete(filetodelete);
+                }
+            } catch (IOException ex) {
+                bslog(ex);
+            }
+            String jarfile = tbpath.getText();
+            if (tbpath.getText().endsWith(".java")) {
+                jarfile = tbpath.getText().substring(0,tbpath.getText().length() - 5) + ".jar"; 
+            }
+            filetodelete = FileSystems.getDefault().getPath(jarfile);
+            try {
+                if (Files.exists(filetodelete)) {
+                Files.delete(filetodelete);
+                }
+            } catch (IOException ex) {
+                bslog(ex);
+            }
          m = deleteMapMstr(createRecord()); 
+         
          initvars(null);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
@@ -2842,7 +2863,11 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
-        // TODO add your handling code here:
+         if (! validateInput(BlueSeerUtils.dbaction.delete)) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask(BlueSeerUtils.dbaction.delete, new String[]{tbkey.getText()});   
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
