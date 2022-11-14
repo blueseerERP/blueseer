@@ -1404,7 +1404,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
             try {
                 if (venditemonly) {
                     ddpart.removeAllItems();
-                    res = st.executeQuery("select vdp_item from vdp_mstr where vdp_vend = " + "'" + ddvend.getSelectedItem().toString() + "'" + ";");
+                    res = st.executeQuery("select distinct vdp_item from vdp_mstr where vdp_vend = " + "'" + ddvend.getSelectedItem().toString() + "'" + ";");
                     while (res.next()) {
                         ddpart.addItem(res.getString("vdp_item"));
                     }
