@@ -39,6 +39,8 @@ import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.EDData.getBSDocTypeFromStds;
 import com.blueseer.utl.OVData;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -539,9 +541,12 @@ public class EDI {
            m = new String[]{"1","unknown file type: " + infile};
            EDData.writeEDILog(c, "error", "Unknown File Type: " + infile + " DOCTYPE:FILETYPE " + editype[1] + ":" + editype[0]); 
            return m; 
+         } else if (editype[1].isEmpty()) {
+            m = new String[]{"1","unknown doc type: " + infile};
+           EDData.writeEDILog(c, "error", "Unknown Doc Type: " + infile + " DOCTYPE:FILETYPE " + editype[1] + ":" + editype[0]); 
+           return m;    
          } else {
            EDData.writeEDILog(c, "info", "File Type Info: " + " DOCTYPE:FILETYPE " + editype[1] + ":" + editype[0]);
-              
          }
              
         
@@ -670,6 +675,11 @@ public class EDI {
            
            processCSV(docRegister, docPosition, c, ffdata, idxnbr);
            
+        }
+        
+         // if type is JSON
+        if (editype[0].equals("JSON")) {
+            
         }
         
        EDData.updateEDIFileLogStatus(c[22], c[0], editype[0], editype[1]);   
@@ -1020,11 +1030,43 @@ public class EDI {
         
         
         return type;
-    }
-      
+    } // if edifact UNE
+    
     if (GlobalDebug) {
      System.out.println("Fell through...Not EDIFACT " + filename );    
-     System.out.println("getEDIType: checking for FF,CSV,XML type via Doc Recognition Rules... " + filename );
+     System.out.println("getEDIType: checking for JSON... " + filename );
+    }
+    
+    // lets check for JSON
+    char firstchar = 0;
+    char lastchar = 0;
+    for (int i = 0; i < cbuf.length; i++) {
+        if(! Character.isWhitespace(cbuf[i])){
+            firstchar = cbuf[i];
+            break;
+        }
+    }  
+    for (int i = cbuf.length - 1; i >= 0; i--) {
+        if(! Character.isWhitespace(cbuf[i])){
+            lastchar = cbuf[i];
+            break;
+        }
+    }
+    if (firstchar == '{' && lastchar == '}') {
+        StringBuilder jsonstring = new StringBuilder();
+        for (int i = 0; i < cbuf.length; i++) {
+            jsonstring.append(cbuf[i]);
+        }
+        type[0] = "JSON";
+        type[1] = getDocTypeJson(jsonstring.toString());
+        return type;
+    }
+    
+    
+    
+    if (GlobalDebug) {
+     System.out.println("Fell through...Not JSON " + filename );    
+     System.out.println("getEDIType: checking for FF,CSV type via Doc Recognition Rules... " + filename );
     }  
     // let's try flatfile....let's create arraylist of segments based on assumed newline delimiter     
     StringBuilder segment = new StringBuilder();
@@ -1098,7 +1140,11 @@ public class EDI {
             return type;
         }
         
-    }  //for each Segment in Doc
+    }  //for each Segment in Doc  FF check
+    
+    
+    
+    
     
     /*
     // filename convention must be tpid.uniquewhatever.csv or tpid.uniquewhatever.xml
@@ -1134,6 +1180,53 @@ public class EDI {
     }
     return type;
 }
+    
+    public static String getDocTypeJson(String x) {
+        String doctype = "";
+        ObjectMapper mapper = new ObjectMapper();
+        Map<?, ?> map = null;
+        try {
+            map = mapper.readValue(x, Map.class);
+        } catch (JsonProcessingException ex) {
+            edilog(ex);
+        }
+        
+        int k = 0; 
+        boolean match = false;
+        HashMap<String, ArrayList<String[]>> rules = EDData.getEDIFFSelectionRules();
+        
+        outerloop:
+        for (Map.Entry<?, ?> entry : map.entrySet()) {
+        k++;
+        int rulecount = 0;
+        int matchcount = 0;
+        
+        for (Map.Entry<String, ArrayList<String[]>> z : rules.entrySet()) {
+            String key = z.getKey();
+            ArrayList<String[]> v = z.getValue();
+            // row, column, length, value, rectype
+            rulecount = 0;
+            matchcount = 0;
+            for (String[] r : v) {
+              if (r[4].equals("json")) {
+                rulecount++;
+                if (r[5].equals(entry.getKey()) && r[3].equals(entry.getValue())) {
+                  matchcount++;
+                }
+              } 
+            }
+            if ( (matchcount != 0) && (matchcount == rulecount)) {
+                match = true;
+                doctype = key;
+                break outerloop;
+            }
+        } // for each rule
+        
+        } // for each Json root node
+         
+        
+        return doctype;
+    }
     
     public static String[] getFileInfo(ArrayList<String> docs, ArrayList<String[]> tags) {
         // hm is list of variables and coordinates to find variables (f,m) r,c,l

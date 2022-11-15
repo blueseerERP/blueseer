@@ -1524,6 +1524,9 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             ta = taoutput;
         }
         String text = bsmf.MainFrame.input("Hex Chars: ");
+        if (text == null || text.isBlank()) {
+            return;
+        }
         String[] replacehex = text.split("\\|",-1);
         if (replacehex == null || replacehex.length != 2 || replacehex[0].isBlank()) {
             return;
