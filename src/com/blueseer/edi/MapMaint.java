@@ -1128,12 +1128,19 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         cbinternal.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.map_internal())));
         Path path = FileSystems.getDefault().getPath(tbpath.getText());
         tamap.setText("");
+        int i = 0;
         if (path.toFile().exists()) {
             try {   
                 List<String> lines = Files.readAllLines(path);
                 for (String segment : lines ) {
+                        i++;
                         tamap.append(segment);
                         tamap.append("\n");
+                }
+                if (i == 0) {
+                    tamap.append("// Example methods" + "\n");
+                    tamap.append("// mapSegment(\"SEGMENT\",\"FIELD\",getInput(\"BEG\",3));" + "\n");
+                    tamap.append("// commitSegment(\"SEGMENT\");" + "\n");
                 }
             } catch (IOException ex) {
                 bslog(ex);
@@ -2901,9 +2908,10 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             try {   
                 List<String> lines = Files.readAllLines(infile.toPath());
                 for (String segment : lines ) {
-                        tamap.append(segment);
-                        tamap.append("\n");
+                    tamap.append(segment);
+                    tamap.append("\n");
                 }
+                
                 btrun.setEnabled(true);
                 btcompile.setEnabled(true);
             } catch (IOException ex) {
