@@ -40,3 +40,5 @@ patch=16
 # added jdk.compiler to jre17
 patch=17
 # cleaup method to remove jar and java source file for delete method in mapper class
+patch=18
+# langpack column name adjustments for edi menus and EDI Partner Maintenance mods for default alias assignment
