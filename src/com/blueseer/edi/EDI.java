@@ -1880,12 +1880,18 @@ public class EDI {
               gs02 = gs[2];
               gs03 = gs[3];
           }
+          
           String parentPartner = EDData.getEDIPartnerFromAlias(gs02);
-          if (parentPartner == null || parentPartner.isEmpty()) {
+          if (parentPartner == null || parentPartner.isBlank()) {
              parentPartner = EDData.getEDIPartnerFromAlias(c[0]); 
           }
           
-          messages.add(new String[]{"info","Found parent partner: " + parentPartner});
+          if (parentPartner == null || parentPartner.isBlank()) {
+            messages.add(new String[]{"info","Unknown parent partner"});  
+          } else {
+            messages.add(new String[]{"info","Found parent partner: " + parentPartner});  
+          }
+          
           
           // at this point...we need to log this doc in edi_idx table and use return ID for further logs against this doc idx.
           if (c[12].isEmpty() && callingidxnbr == 0) {   // if not override
@@ -1933,6 +1939,7 @@ public class EDI {
            } else if (! BlueSeerUtils.isEDIClassFile(map) && c[12].isEmpty()) {
                 messages.add(new String[]{"error","X12: unable to locate compiled map (" + map + ") for parent/gs02/gs03/doc: " + parentPartner + "/" + gs02 + "/" + gs03 + " / " + c[1]});
            } else {
+             
                
             if (GlobalDebug)   
             System.out.println("Entering Map " + map + " with: " +  c[1] + "/" + gs02 + "/" + gs03);    
@@ -1993,8 +2000,8 @@ public class EDI {
                            }
                         }
                 }
-
-           }
+           
+           } // else
            
            EDData.writeEDILogMulti(c, messages);
            messages.clear();
