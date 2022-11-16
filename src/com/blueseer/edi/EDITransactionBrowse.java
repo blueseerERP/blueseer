@@ -1180,6 +1180,8 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
     }//GEN-LAST:event_tbsegdelimFocusLost
 
     private void rbDocLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbDocLogActionPerformed
+        detailpanel.setVisible(false);
+        btdetail.setEnabled(false);
         if (rbDocLog.isSelected()) {
             tbref.setEnabled(true);
             btreprocess.setEnabled(false);
@@ -1194,7 +1196,9 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
     }//GEN-LAST:event_rbDocLogActionPerformed
 
     private void rbFileLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbFileLogActionPerformed
-          if (rbDocLog.isSelected()) {
+        detailpanel.setVisible(false);
+        btdetail.setEnabled(false);
+        if (rbDocLog.isSelected()) {
             tbref.setEnabled(true);
             btreprocess.setEnabled(false);
             btclearstatus.setEnabled(false);
