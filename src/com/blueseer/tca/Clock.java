@@ -593,7 +593,11 @@ public class Clock extends javax.swing.JPanel {
 
                     }
 
-                    lbimage.setIcon(new ImageIcon(getClass().getResource("/images/statusgo.png")));
+                    if (dddir.getSelectedItem().toString().equals(getGlobalProgTag("clockin"))) {
+                    lbimage.setIcon(new ImageIcon(getClass().getResource("/images/bugs.png")));
+                    } else {
+                    lbimage.setIcon(new ImageIcon(getClass().getResource("/images/coyote.png")));    
+                    }
                     jTextArea1.append(lbname.getText() + "..." + lbstatus.getText() + "..." + lbclockdatetime.getText() + "...clocktime-> "  + timeclock_adj + "\n");
 
                         // int i = res.getInt("MakeID");
