@@ -769,7 +769,7 @@
                               </Group>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="tbattributekey" max="32767" attributes="0"/>
+                          <Component id="ddattributekey" pref="168" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -779,7 +779,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="tbattributekey" min="-2" max="-2" attributes="0"/>
+                      <Component id="ddattributekey" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="tbattributevalue" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -836,7 +836,37 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Component class="javax.swing.JTextField" name="tbattributekey">
+            <Component class="javax.swing.JComboBox" name="ddattributekey">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="21">
+                    <StringItem index="0" value="ISA01"/>
+                    <StringItem index="1" value="ISA02"/>
+                    <StringItem index="2" value="ISA03"/>
+                    <StringItem index="3" value="ISA04"/>
+                    <StringItem index="4" value="ISA05"/>
+                    <StringItem index="5" value="ISA06"/>
+                    <StringItem index="6" value="ISA07"/>
+                    <StringItem index="7" value="ISA08"/>
+                    <StringItem index="8" value="ISA11"/>
+                    <StringItem index="9" value="ISA12"/>
+                    <StringItem index="10" value="ISA14"/>
+                    <StringItem index="11" value="ISA15"/>
+                    <StringItem index="12" value="GS01"/>
+                    <StringItem index="13" value="GS02"/>
+                    <StringItem index="14" value="GS03"/>
+                    <StringItem index="15" value="GS07"/>
+                    <StringItem index="16" value="GS08"/>
+                    <StringItem index="17" value="UNB01"/>
+                    <StringItem index="18" value="UNB02"/>
+                    <StringItem index="19" value="UNB03"/>
+                    <StringItem index="20" value="UNH02"/>
+                  </StringArray>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
             </Component>
           </SubComponents>
         </Container>

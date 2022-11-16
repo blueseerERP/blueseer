@@ -220,7 +220,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         tbOFS.setText("");
         tbfileprefix.setText("");
         tbfilesuffix.setText("");
-        tbattributekey.setText("");
+        ddattributekey.setSelectedIndex(0);
         tbattributevalue.setText("");
         cbenvelopeall.setSelected(false);
         cbuna.setSelected(false);
@@ -262,7 +262,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         cbung.setEnabled(true);
         cbfa.setEnabled(true);
      
-        tbattributekey.setEnabled(true);
+        ddattributekey.setEnabled(true);
         tbattributevalue.setEnabled(true);
     }
     
@@ -299,7 +299,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         cbuna.setEnabled(false);
         cbung.setEnabled(false);
         cbfa.setEnabled(false);
-        tbattributekey.setEnabled(false);
+        ddattributekey.setEnabled(false);
         tbattributevalue.setEnabled(false);
     }
     
@@ -480,7 +480,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         tbattributevalue = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         listAttributes = new javax.swing.JList<>();
-        tbattributekey = new javax.swing.JTextField();
+        ddattributekey = new javax.swing.JComboBox<>();
 
         setBackground(new java.awt.Color(0, 102, 204));
         add(jTabbedPane1);
@@ -922,6 +922,8 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
 
         jScrollPane1.setViewportView(listAttributes);
 
+        ddattributekey.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ISA01", "ISA02", "ISA03", "ISA04", "ISA05", "ISA06", "ISA07", "ISA08", "ISA11", "ISA12", "ISA14", "ISA15", "GS01", "GS02", "GS03", "GS07", "GS08", "UNB01", "UNB02", "UNB03", "UNH02" }));
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -939,14 +941,14 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btaddattribute, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(tbattributekey))
+                    .addComponent(ddattributekey, 0, 168, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(tbattributekey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(ddattributekey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tbattributevalue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1282,18 +1284,14 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
 
     private void btaddattributeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddattributeActionPerformed
        
-        EDData.addEDIAttributeRecord(tbsndgs.getText(), tbrcvgs.getText(), dddoc.getSelectedItem().toString(), tbattributekey.getText(), tbattributevalue.getText());
+        EDData.addEDIAttributeRecord(tbsndgs.getText(), tbrcvgs.getText(), dddoc.getSelectedItem().toString(), ddattributekey.getSelectedItem().toString(), tbattributevalue.getText());
         getAttributes(tbsndgs.getText(), tbrcvgs.getText(), dddoc.getSelectedItem().toString());
-        tbattributekey.setText("");
+        ddattributekey.setSelectedIndex(0);
         tbattributevalue.setText("");
     }//GEN-LAST:event_btaddattributeActionPerformed
 
     private void btdeleteattributeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteattributeActionPerformed
         boolean proceed = true; 
-        
-      
-       
-        
         
         if (listAttributes.isSelectionEmpty()) {
             proceed = false;
@@ -1372,6 +1370,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
     private javax.swing.JCheckBox cbfa;
     private javax.swing.JCheckBox cbuna;
     private javax.swing.JCheckBox cbung;
+    private javax.swing.JComboBox<String> ddattributekey;
     private javax.swing.JComboBox<String> dddoc;
     private javax.swing.JComboBox<String> ddkey;
     private javax.swing.JComboBox<String> ddmap;
@@ -1409,7 +1408,6 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
     private javax.swing.JPanel panelOutbound;
     private javax.swing.JTextField tbIFS;
     private javax.swing.JTextField tbOFS;
-    private javax.swing.JTextField tbattributekey;
     private javax.swing.JTextField tbattributevalue;
     private javax.swing.JTextField tbelement;
     private javax.swing.JTextField tbfilepath;
