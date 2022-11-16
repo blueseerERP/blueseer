@@ -3551,7 +3551,7 @@ public class DTData {
           
     public static DefaultTableModel getEDICustBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("doc"), "SndISA", "SndGS", "RcvISA", "RcvGS", getGlobalColumnTag("map")})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("doctype"), "SndISA/UNB", "SndGS/UNG", "RcvISA/UNB", "RcvGS/UNG", getGlobalColumnTag("map")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
