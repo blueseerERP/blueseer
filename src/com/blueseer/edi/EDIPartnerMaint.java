@@ -345,6 +345,12 @@ public class EDIPartnerMaint extends javax.swing.JPanel implements IBlueSeer {
                     return b;
                 }
                 
+                if (! hasDefault()) {
+                    b = false;
+                    bsmf.MainFrame.show("Must contain 1 default alias");
+                    tbaliasid.requestFocus();
+                    return b;
+                }
                 
                
         return b;
@@ -397,12 +403,18 @@ public class EDIPartnerMaint extends javax.swing.JPanel implements IBlueSeer {
                             "'" + tbdesc.getText() + "'"  + 
                             ")" + ";");     
                 
-              
+                 String defaultvalue = "";
                  for (int j = 0; j < tablealias.getRowCount(); j++) {
+                     
+                    if (tablealias.getValueAt(j, 1).toString().toLowerCase().equals("yes")) {
+                        defaultvalue = "1";
+                    } else {
+                        defaultvalue = "0";
+                    }   
                 st.executeUpdate("insert into edpd_partner (edpd_parent, edpd_alias, edpd_default ) values ( " 
                         + "'" + tbkey.getText() + "'" + ","
                         + "'" + tablealias.getValueAt(j, 0).toString() + "'" + ","
-                        + "'" + BlueSeerUtils.boolToInt(Boolean.valueOf(tablealias.getValueAt(j, 1).toString())) + "'" 
+                        + "'" + defaultvalue + "'" 
                         + " );" );
                  }
                         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
@@ -457,12 +469,17 @@ public class EDIPartnerMaint extends javax.swing.JPanel implements IBlueSeer {
                 
                        //  now lets delete all stored actions of this master task...then add back from table
                         st.executeUpdate("delete from edpd_partner where edpd_parent = " + "'" + tbkey.getText() + "'" + ";");
-
+                        String defaultvalue = "";
                         for (int j = 0; j < tablealias.getRowCount(); j++) {
+                          if (tablealias.getValueAt(j, 1).toString().toLowerCase().equals("yes")) {
+                              defaultvalue = "1";
+                          } else {
+                              defaultvalue = "0";
+                          }
                         st.executeUpdate("insert into edpd_partner (edpd_parent, edpd_alias, edpd_default ) values ( " 
                         + "'" + tbkey.getText() + "'" + ","
                         + "'" + tablealias.getValueAt(j, 0).toString() + "'" + ","
-                        + "'" + tablealias.getValueAt(j, 1).toString() + "'" 
+                        + "'" + defaultvalue + "'" 
                         + " );" );
                          }
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
@@ -550,7 +567,7 @@ public class EDIPartnerMaint extends javax.swing.JPanel implements IBlueSeer {
                     res = st.executeQuery("SELECT * FROM  edpd_partner where " +
                             " edpd_parent = " + "'" + x[0] + "'" + ";");
                     while (res.next()) {
-                     aliasmodel.addRow(new Object[]{res.getString("edpd_alias"), res.getString("edpd_default")});   
+                     aliasmodel.addRow(new Object[]{res.getString("edpd_alias"), BlueSeerUtils.ConvertIntToYesNo(res.getInt("edpd_default"))});   
                     }
                
                 // set Action if Record found (i > 0)
@@ -616,7 +633,16 @@ public class EDIPartnerMaint extends javax.swing.JPanel implements IBlueSeer {
         
     }
 
-   
+    public boolean hasDefault() {
+        boolean x = false;
+        for (int j = 0; j < tablealias.getRowCount(); j++) {
+           if (tablealias.getValueAt(j, 1).toString().toLowerCase().equals("yes")) {
+               x = true;
+               break;
+           }           
+        }
+        return x;
+    }
    
     /**
      * This method is called from within the constructor to initialize the form.
@@ -886,7 +912,19 @@ public class EDIPartnerMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btnewActionPerformed
 
     private void btaddaliasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddaliasActionPerformed
-        aliasmodel.addRow(new Object[]{ tbaliasid.getText(), String.valueOf(BlueSeerUtils.boolToInt(cbdefault.isSelected())) });
+        String defaultvalue = BlueSeerUtils.ConvertIntToYesNo(BlueSeerUtils.boolToInt(cbdefault.isSelected()));
+            
+        if (cbdefault.isSelected()) {
+            if (! hasDefault()) {
+            aliasmodel.addRow(new Object[]{ tbaliasid.getText(), defaultvalue });
+            } else {
+            bsmf.MainFrame.show("Default setting already assigned");
+            }
+        } else {
+            aliasmodel.addRow(new Object[]{ tbaliasid.getText(), defaultvalue }); 
+        }
+       tbaliasid.setText("");
+       cbdefault.setSelected(false);
     }//GEN-LAST:event_btaddaliasActionPerformed
 
     private void btdeletealiasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeletealiasActionPerformed
