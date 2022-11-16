@@ -5385,14 +5385,12 @@ public class DTData {
                       new String[]{getGlobalColumnTag("select"), 
                           getGlobalColumnTag("id"), 
                           "Doc", 
-                          "SndISA", 
-                          "RcvISA",
+                          "Sender ISA/UNB", 
+                          "Receiver ISA/UNB",
                           getGlobalColumnTag("name"),
                           "Map", 
-                          "SndGS", 
-                          "RcvGS", 
-                          "Prefix", 
-                          "Version", 
+                          "Sender GS/UNG", 
+                          "Receiver GS/UNG",
                           "OutDocType", 
                           "OutFileType", 
                           "IFS", 
@@ -5418,7 +5416,7 @@ public class DTData {
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
-                  res = st.executeQuery("select * from edi_mstr inner join edpd_partner on edpd_parent = edi_id inner join edp_partner on edp_id = edpd_parent order by edi_id;" );
+                  res = st.executeQuery("select * from edi_mstr inner join edp_partner on edp_id = edi_id order by edi_id;" );
                     while (res.next()) {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("edi_id"),
                                    res.getString("edi_doc"),
@@ -5428,8 +5426,6 @@ public class DTData {
                                    res.getString("edi_map"),
                                    res.getString("edi_sndgs"),
                                    res.getString("edi_rcvgs"),
-                                   res.getString("edi_fileprefix"),
-                                   res.getString("edi_version"),
                                    res.getString("edi_doctypeout"),
                                    res.getString("edi_filetypeout"),
                                    res.getString("edi_ifs"),

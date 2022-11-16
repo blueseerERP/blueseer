@@ -29,6 +29,11 @@ package com.blueseer.edi;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.defaultDecimalSeparator;
 import com.blueseer.ctr.cusData;
+import static com.blueseer.edi.EDIMap.HASH;
+import static com.blueseer.edi.EDIMap.ISF;
+import static com.blueseer.edi.EDIMap.OMD;
+import static com.blueseer.edi.EDIMap.OSF;
+import static com.blueseer.edi.EDIMap.clearStaticVariables;
 import static com.blueseer.edi.EDIMap.delimConvertIntToStr;
 import com.blueseer.ord.ordData;
 import static com.blueseer.ord.ordData.addOrderTransaction;
@@ -1470,6 +1475,7 @@ public class EDI {
                     } catch (InvocationTargetException ex) {
                         if (c[12].isEmpty()) {
                         EDData.writeEDILog(c, "error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1]);
+                        clearStaticVariables();
                         } 
                         edilog(ex);
                     } catch (ClassNotFoundException ex) {
@@ -1724,8 +1730,8 @@ public class EDI {
 
                 } catch (InvocationTargetException ex) {
                     if (c[12].isEmpty()) {
-                        
                     messages.add(new String[]{"error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1] + " : " + ex.getCause().getMessage()});    
+                    clearStaticVariables();
                     }
                     edilog(ex);  
                 } catch (ClassNotFoundException ex) {
@@ -1962,8 +1968,8 @@ public class EDI {
 
                 } catch (InvocationTargetException ex) {
                     if (c[12].isEmpty()) {
-                        
                     messages.add(new String[]{"error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1] + " : " + ex.getCause().getMessage()});    
+                    clearStaticVariables();
                     }
                     edilog(ex);  
                 } catch (ClassNotFoundException ex) {
@@ -2120,8 +2126,8 @@ public class EDI {
 
                 } catch (InvocationTargetException ex) {
                     if (c[12].isEmpty()) {
-                        
                     messages.add(new String[]{"error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1] + " : " + ex.getCause().getMessage()});    
+                    clearStaticVariables();
                     }
                     edilog(ex);  
                 } catch (ClassNotFoundException ex) {
@@ -2725,6 +2731,7 @@ public class EDI {
         errorcode = 2;    
         if (c[12].isEmpty()) {
         messages.add(new String[]{"error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1]});    
+        clearStaticVariables();
         }
         edilog(ex); 
         } catch (ClassNotFoundException ex) {
@@ -2850,6 +2857,7 @@ public class EDI {
         errorcode = 2;    
         if (c[12].isEmpty()) {
         messages.add(new String[]{"error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1]});    
+        clearStaticVariables();
         }
         edilog(ex); 
         } catch (ClassNotFoundException ex) {
@@ -2975,6 +2983,7 @@ public class EDI {
         errorcode = 2;    
         if (c[12].isEmpty()) {
         messages.add(new String[]{"error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1]});    
+        clearStaticVariables();
         }
         edilog(ex); 
         } catch (ClassNotFoundException ex) {
@@ -3100,6 +3109,7 @@ public class EDI {
         errorcode = 2;    
         if (c[12].isEmpty()) {
         messages.add(new String[]{"error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1]});    
+        clearStaticVariables();
         }
         edilog(ex); 
         } catch (ClassNotFoundException ex) {
@@ -3199,6 +3209,7 @@ public class EDI {
                              InstantiationException | NoSuchMethodException |
                             InvocationTargetException ex) {
                         EDData.writeEDILog(c_in, "error", "unable to find map class or invocation error for " + w + " / " + doctype);
+                        clearStaticVariables();
                         errorcode = 3;
                         edilog(ex);
                     }
@@ -3286,6 +3297,7 @@ public class EDI {
                              InstantiationException | NoSuchMethodException |
                             InvocationTargetException ex) {
                         EDData.writeEDILog(c_in, "error", "unable to find map class or invocation error for " + ca + " / " + doctype);
+                        clearStaticVariables();
                         errorcode = 3;
                         edilog(ex);
                     }
@@ -3378,6 +3390,7 @@ public class EDI {
                              InstantiationException | NoSuchMethodException |
                             InvocationTargetException ex) {
                         EDData.writeEDILog(c_in, "error", "unable to find map class or invocation error for " + tp + " / " + doctype);
+                        clearStaticVariables();
                         errorcode = 3;
                         edilog(ex);
                     }
@@ -3461,6 +3474,7 @@ public class EDI {
                              InstantiationException | NoSuchMethodException |
                             InvocationTargetException ex) {
                         EDData.writeEDILog(c_in, "error", "unable to find map class or invocation error for " + c_in + " / " + doctype);
+                        clearStaticVariables();
                         errorcode = 3;
                         edilog(ex);
                     }

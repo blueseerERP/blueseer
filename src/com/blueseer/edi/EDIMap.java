@@ -168,6 +168,13 @@ public abstract class EDIMap implements EDIMapi {
      return index != null && index >=0 && index < list.length && list[index] != null;
      }
 
+    public static void clearStaticVariables() {
+        OMD.clear();
+        HASH.clear();
+        ISF.clear();
+        OSF.clear();
+    }
+    
     public static void resetVariables() {
     commit = 0;    
     segcount = 0;
@@ -1318,10 +1325,10 @@ public abstract class EDIMap implements EDIMapi {
                     SegmentCounter.add(parenthead + x[0] + "+" + groupcount.get(groupparent));
                    
                 }  // if foundit
-              
-                if (IFSseg == null)
+             
+                if (GlobalDebug && IFSseg == null) {
                 System.out.println("ifSeg is null: " + x[0] + " with parenthead: " + parenthead);
-            
+                }
                
                 
                 stackGHP postGH = postGroupHead(x[0], stack, ISF, GHP);
@@ -1621,10 +1628,7 @@ public abstract class EDIMap implements EDIMapi {
          } // if CSV
        
         // bsmf.MainFrame.show("here..." + outputfiletype + ": " + content);
-    	OMD.clear();
-        HASH.clear();
-        ISF.clear();
-        OSF.clear();
+    	clearStaticVariables();
     	 
     	 return r;
      }
