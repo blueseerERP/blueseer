@@ -606,11 +606,10 @@ public class EDILoadMaint extends javax.swing.JPanel {
                     // show error if exists...usually malformed envelopes
                     if (m[0].equals("1")) {
                        tafile.append(m[1]  + "\n");
-                        // now move to error folder
                         if (! cbno.isSelected()) {
                         Path movefrom = FileSystems.getDefault().getPath(inDir + "/" + mymodel.getValueAt(i,0).toString());
-                        Path errortarget = FileSystems.getDefault().getPath(ErrorDir + "/" + mymodel.getValueAt(i,0).toString());
-                        Files.move(movefrom, errortarget, StandardCopyOption.REPLACE_EXISTING);
+                        Path target = FileSystems.getDefault().getPath(inArch + "/" + mymodel.getValueAt(i,0).toString());
+                        Files.move(movefrom, target, StandardCopyOption.REPLACE_EXISTING);
                         }
                         continue;  // bale from here
                     }
