@@ -1089,6 +1089,8 @@ public class EDI {
         }
     }   
     // now run doc array through rules engine to determine doctype
+    // match with the higher selection rules count wins
+    HashMap<String, Integer> matches = new HashMap<String, Integer>();
     int k = 0; 
     boolean match = false;
     HashMap<String, ArrayList<String[]>> rules = EDData.getEDIFFSelectionRules();
@@ -1127,59 +1129,39 @@ public class EDI {
                     }
                 }  
               }
-            }
+            } // for inner loop r of v
             if ( (matchcount != 0) && (matchcount == rulecount)) {
-                match = true;
-                
-                type[1] = key;
-                if (key.contains("xml")) {
-                 type[0] = "XML";   
-                } else if (key.contains("csv")) {
-                 type[0] = "CSV";   
-                } else {
-                 type[0] = "FF";   
-                }
-                break;
+                matches.put(key, matchcount);
+            }
+        } // for all selection rules
+        
+        // now get highest match count entry...if tie...first record in order wins
+        int t = 0;
+        String v = "";
+        for (Map.Entry<String, Integer> z : matches.entrySet()) {
+            match = true;
+            if (z.getValue() > t) {
+                t = z.getValue();
+                v = z.getKey();
             }
         }
+        
+        // assign type with highest match
+        type[1] = v;
+        if (v.contains("xml")) {
+         type[0] = "XML";   
+        } else if (v.contains("csv")) {
+         type[0] = "CSV";   
+        } else {
+         type[0] = "FF";   
+        }
+        
         if (match) {
-            return type;
+            return type; // break out
         }
         
     }  //for each Segment in Doc  FF check
     
-    
-    
-    
-    
-    /*
-    // filename convention must be tpid.uniquewhatever.csv or tpid.uniquewhatever.xml
-    if (filename.toString().toUpperCase().endsWith(".CSV")) {
-        filenamesplit = filename.split("\\.", -1);
-        if (filenamesplit.length >= 3 ) {
-            type[0] = filenamesplit[filenamesplit.length - 1].toString().toUpperCase();
-        } 
-        return type;
-    }
-    
-    if (GlobalDebug) {
-     System.out.println("Fell through...Not CSV " + filename );    
-     System.out.println("getEDIType: checking for XML type... " + filename );
-    }
-    
-    if (filename.toString().toUpperCase().endsWith(".XML")) {
-        filenamesplit = filename.split("\\.", -1);
-        if (filenamesplit.length >= 3 ) {
-            type[0] = filenamesplit[filenamesplit.length - 1].toString().toUpperCase();
-        } 
-        return type;
-    }
-    
-    if (GlobalDebug) {
-     System.out.println("Fell through...Not XML " + filename );    
-     System.out.println("getEDIType: checking for X12 type... " + filename );
-    } 
-    */
     
     if (GlobalDebug && type[0].isBlank()) {
      System.out.println("Fell through...Unknown File type!! " + filename );  
