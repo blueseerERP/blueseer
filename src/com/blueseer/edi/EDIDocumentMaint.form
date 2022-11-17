@@ -258,10 +258,12 @@
             <Component class="javax.swing.JComboBox" name="ddrectype">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="3">
+                  <StringArray count="5">
                     <StringItem index="0" value="fixed"/>
                     <StringItem index="1" value="delimited"/>
                     <StringItem index="2" value="regex"/>
+                    <StringItem index="3" value="json"/>
+                    <StringItem index="4" value="xml"/>
                   </StringArray>
                 </Property>
               </Properties>

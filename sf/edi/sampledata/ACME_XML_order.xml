@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<salesorder>
+  <header>
+    <purchaseordernumber>mypo</purchaseordernumber>
+    <orderdate>2020-09-17</orderdate>
+    <duedate>2020-09-17</duedate>
+    <custnumber>acme</custnumber>
+    <doctype>xml-bs</doctype>
+    <shipmentmethod/>
+  </header>
+  <address type="shipto">
+    <addressname>Acme warehouse</addressname>
+    <addressline1>BR549 Highway SE</addressline1>
+    <addressline2/>
+    <address/>
+    <addresscity>Dillon</addresscity>
+    <addressstate>SC</addressstate>
+    <addresszip>29536</addresszip>
+    <addresscountry>USA</addresscountry>
+  </address>
+  <address type="billto">
+    <addressname>Acme LLC</addressname>
+    <addressline1/>
+    <addressline2/>
+    <address/>
+    <addresscity>Dillon</addresscity>
+    <addressstate>SC</addressstate>
+    <addresszip>29536</addresszip>
+    <addresscountry>USA</addresscountry>
+  </address>
+  <detail>
+    <item>
+      <line>1</line>
+      <itemnumber>50000001</itemnumber>
+      <description>Huffy Bicycle</description>
+      <quantity>4</quantity>
+      <listprice>145.00</listprice>
+      <netprice>145.00</netprice>
+      <custnumber>cust1111</custnumber>
+      <skunumber>sku1111</skunumber>
+    </item>
+    <item>
+      <line>2</line>
+      <itemnumber>50000002</itemnumber>
+      <description>Schwinn Bicycle</description>
+      <quantity>12</quantity>
+      <listprice>157.86</listprice>
+      <netprice>157.86</netprice>
+      <custnumber>cust2222</custnumber>
+      <skunumber>sku2222</skunumber>
+    </item>
+  </detail>
+</salesorder>

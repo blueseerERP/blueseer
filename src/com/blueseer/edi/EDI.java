@@ -46,9 +46,12 @@ import static com.blueseer.utl.EDData.getBSDocTypeFromStds;
 import static com.blueseer.utl.EDData.getEDIFFDocType;
 import com.blueseer.utl.OVData;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -56,6 +59,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
 import static java.lang.annotation.ElementType.METHOD;
@@ -68,6 +72,7 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import static java.nio.file.Files.copy;
@@ -82,6 +87,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -89,10 +95,21 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import jcifs.smb.NtlmPasswordAuthentication;
 import jcifs.smb.SmbException;
 import jcifs.smb.SmbFile;
 import jcifs.smb.SmbFileOutputStream;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 
 /*
@@ -762,16 +779,13 @@ public class EDI {
                             break;
                         }
                     }
-                  //  System.out.println("HERE: " + s + "/" + i + "/" +  (unb_end - 1) + "/" + String.valueOf(cbufx[unb_end - 1]));
                     StringBuilder sb_obj = new StringBuilder();
                     for(int v = i; v <= (unb_end - 1); v++) {
                         sb_obj.append(cbufx[v]);
                     }
                     
-                 //   System.out.println("HERE: " + sb_obj.toString());
                     String[] unb = sb_obj.toString().split(ed_escape);
-                  //  System.out.println("HERE: " + String.join(",", unb));
-                     // set control
+                  
                    
                     c[0] = unb[2].split(":")[0].trim(); // senderid
                     c[21] = unb[3].split(":")[0].trim(); // receiverid
@@ -1068,10 +1082,36 @@ public class EDI {
         return type;
     }
     
+    if (GlobalDebug) {
+     System.out.println("Fell through...Not JSON " + filename );    
+     System.out.println("getEDIType: checking for XML... " + filename );
+    }
+    
+    // lets check for JSON...using firstchar and lastchar test in json above
+    StringBuilder xmlcheck = new StringBuilder();
+    for (int i = 0; i < cbuf.length; i++) {
+        if(! Character.isWhitespace(cbuf[i])){
+            xmlcheck.append(cbuf[i]);
+            xmlcheck.append(cbuf[i+1]);
+            xmlcheck.append(cbuf[i+2]);
+            xmlcheck.append(cbuf[i+3]);
+            xmlcheck.append(cbuf[i+4]);
+            break;
+        }
+    }
+    if (xmlcheck.toString().equals("<?xml")) {
+        StringBuilder xmlstring = new StringBuilder();
+        for (int i = 0; i < cbuf.length; i++) {
+            xmlstring.append(cbuf[i]);
+        }
+        type[0] = "XML";
+        type[1] = getDocTypeXML(xmlstring.toString());
+        return type;
+    }
     
     
     if (GlobalDebug) {
-     System.out.println("Fell through...Not JSON " + filename );    
+     System.out.println("Fell through...Not XML " + filename );    
      System.out.println("getEDIType: checking for FF,CSV type via Doc Recognition Rules... " + filename );
     }  
     // let's try flatfile....let's create arraylist of segments based on assumed newline delimiter     
@@ -1171,20 +1211,18 @@ public class EDI {
     
     public static String getDocTypeJson(String x) {
         String doctype = "";
+        JsonNode jsonNode = null;
         ObjectMapper mapper = new ObjectMapper();
-        Map<?, ?> map = null;
         try {
-            map = mapper.readValue(x, Map.class);
+            jsonNode = mapper.readTree(x);
         } catch (JsonProcessingException ex) {
             edilog(ex);
         }
-        
+      
         int k = 0; 
         boolean match = false;
         HashMap<String, ArrayList<String[]>> rules = EDData.getEDIFFSelectionRules();
-        
-        outerloop:
-        for (Map.Entry<?, ?> entry : map.entrySet()) {
+                
         k++;
         int rulecount = 0;
         int matchcount = 0;
@@ -1192,26 +1230,94 @@ public class EDI {
         for (Map.Entry<String, ArrayList<String[]>> z : rules.entrySet()) {
             String key = z.getKey();
             ArrayList<String[]> v = z.getValue();
-            // row, column, length, value, rectype
+            // row, column, length, value, rectype, tag
             rulecount = 0;
             matchcount = 0;
+            
             for (String[] r : v) {
+            //bail (next loop) if r[5] tag does not begin with /  ...otherwise jsonNode.at will throw jackson illegalArgument
+            if (! r[5].startsWith("/")) {
+                continue;
+            }  
               if (r[4].equals("json")) {
                 rulecount++;
-                if (r[5].equals(entry.getKey()) && r[3].equals(entry.getValue())) {
+                JsonNode nameNode = jsonNode.at(r[5]);
+                if (r[3].equals(nameNode.asText())) {
                   matchcount++;
                 }
               } 
             }
             if ( (matchcount != 0) && (matchcount == rulecount)) {
-                match = true;
                 doctype = key;
-                break outerloop;
+                break;
             }
         } // for each rule
         
-        } // for each Json root node
-         
+        return doctype;
+    }
+    
+    public static String getDocTypeXML(String x) {
+        // InputStream inputStream = new ByteArrayInputStream(String.join(System.lineSeparator(), Arrays.asList(strings)).getBytes(StandardCharsets.UTF_8));
+        String doctype = "";
+        HashMap<String, ArrayList<String[]>> rules = EDData.getEDIFFSelectionRules();
+        int rulecount = 0;
+        int matchcount = 0;
+        InputStream is = new ByteArrayInputStream(x.getBytes(StandardCharsets.UTF_8));
+        DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder;
+        try {
+            docBuilder = docBuilderFactory.newDocumentBuilder();
+            Document document = docBuilder.parse(is);
+            
+            // gets all nodes
+            /*
+            NodeList nodeList = document.getElementsByTagName("*");
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                Node node = nodeList.item(i);
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    // do something with the current element
+                    System.out.println("NODE: " + node.getNodeName());
+                }
+            }
+            */
+             for (Map.Entry<String, ArrayList<String[]>> z : rules.entrySet()) {
+            String key = z.getKey();
+            ArrayList<String[]> v = z.getValue();
+            // row, column, length, value, rectype, tag
+            rulecount = 0;
+            matchcount = 0;
+            
+            for (String[] r : v) {
+            //bail (next loop) if r[5] tag does not begin with /  ...otherwise jsonNode.at will throw jackson illegalArgument
+            if (! r[5].startsWith("/")) {
+                continue;
+            }  
+              if (r[4].equals("xml")) {
+                rulecount++;
+                XPath xPath = XPathFactory.newInstance().newXPath();
+                String expression = r[5];
+                
+                Node node = (Node) xPath.compile(expression).evaluate(document, XPathConstants.NODE);
+                if (r[3].equals(node.getTextContent())) {  // only works for node content...not not attributes
+                  matchcount++;
+                }
+              } 
+            }
+            if ( (matchcount != 0) && (matchcount == rulecount)) {
+                doctype = key;
+                break;
+            }
+        } // for each rule
+            
+        } catch (ParserConfigurationException ex) {
+            edilog(ex);
+        } catch (SAXException ex) {
+            edilog(ex);
+        } catch (IOException ex) {
+            edilog(ex);
+        } catch (XPathExpressionException ex) {
+            edilog(ex);
+        }
         
         return doctype;
     }
