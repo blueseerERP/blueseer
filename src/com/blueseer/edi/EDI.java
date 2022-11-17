@@ -43,6 +43,7 @@ import com.blueseer.utl.EDData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.EDData.getBSDocTypeFromStds;
+import static com.blueseer.utl.EDData.getEDIFFDocType;
 import com.blueseer.utl.OVData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -1233,16 +1234,18 @@ public class EDI {
         return doctype;
     }
     
-    public static String[] getFileInfo(ArrayList<String> docs, ArrayList<String[]> tags) {
+    public static String[] getFileInfo(ArrayList<String> docs, String[] c, ArrayList<String[]> tags) {
         // hm is list of variables and coordinates to find variables (f,m) r,c,l
         // f = fixed, m = regex, r = row, c = column, l = length
         String[] x = new String[]{"","","",""}; // doctype, rcvid, parentpartner, sndid
         int i = 0;
         /*
         for (String[] t : tags ) {
+        edid_tag,edid_rectype,edid_valuetype,edid_row,edid_col,edid_length,edid_regex,edid_value
             System.out.println("here:" + t[0] + "/" + t[1] + "/" + t[2] + "/" + t[3] + "/" + t[4] + "/" + t[5] + "/" + t[6]);
         }
         */
+        x[0] = getEDIFFDocType(c[1]); //overriding original recognition record edd_id with type; further overriden with tag below as necessary
         for (String s : docs) {
             i++;
             for (String[] t : tags ) {
@@ -1392,7 +1395,7 @@ public class EDI {
             if (GlobalDebug)
             System.out.println("processCSV: " + z.getKey());
             
-            String[] x = getFileInfo(doc, tags);  // doctype, rcvid, parentpartner, sndid
+            String[] x = getFileInfo(doc, c, tags);  // doctype, rcvid, parentpartner, sndid
             
              if (x[2].isEmpty()) {
                   EDData.writeEDILog(c, "error", "unable to determine parent partner with alias: " + x[1] ); 
@@ -2041,7 +2044,7 @@ public class EDI {
             if (GlobalDebug)
             System.out.println("processFF: " + z.getKey());
             
-            String[] x = getFileInfo(doc, tags);  // doctype, rcvid, parentpartner, sndid
+            String[] x = getFileInfo(doc, c, tags);  // doctype, rcvid, parentpartner, sndid
             
             
             
