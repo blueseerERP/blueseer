@@ -5,7 +5,7 @@
    "orderdate":"2021-01-06",
    "duedate":"2021-01-06",
    "remarks":"test of remarks",
-   "type":"DISCRETE",
+   "doctype":"bs-json",
    "currency":"USD",
    "shipvia":"",
    "status":"open",

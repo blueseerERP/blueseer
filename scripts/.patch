@@ -44,3 +44,5 @@ patch=18
 # langpack column name adjustments for edi menus and EDI Partner Maintenance mods for default alias assignment
 patch=19
 # static variables cleared after invocation exception (OMD, etc).   Column label additions; EDI attribute dropdown replacing textbox
+patch=20
+# mods to doc recognition ; prelim work on xml, json recognition
