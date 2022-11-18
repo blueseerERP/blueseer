@@ -1031,6 +1031,16 @@ public class BlueSeerUtils {
         return b;
     }
     
+    public static boolean ConvertTrueFalseToBoolean(String x) {
+        boolean s;
+        if (x.toLowerCase().equals("true")) {
+            s = true;
+        } else {
+            s = false;
+        }
+        return s;
+    }
+    
     public static String ConvertIntToYesNo(int i) {
         String s;
         if (i == 1) {

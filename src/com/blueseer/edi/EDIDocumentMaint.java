@@ -33,8 +33,12 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.ConvertIntegerToBool;
+import static com.blueseer.utl.BlueSeerUtils.ConvertTrueFalseToBoolean;
+import static com.blueseer.utl.BlueSeerUtils.boolToString;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
@@ -84,7 +88,16 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
     // global datatablemodel declarations       
      javax.swing.table.DefaultTableModel rulemodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "Role", "RecordType", "ValueType", "Row", "Column", "Length", "Regex", "Value", "Tag", "Enabled"
+                "Role", 
+                "RecordType", 
+                "ValueType", 
+                "Row", 
+                "Column", 
+                "Length", 
+                "Regex", 
+                "Value", 
+                "Tag", 
+                "Enabled"
             });
     
     
@@ -276,6 +289,12 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
            tablerole.setModel(rulemodel);
            tbkey.setText("");
            tbdesc.setText("");
+           tbrow.setText("");
+           tbcolumn.setText("");
+           tblength.setText("");
+           tbvalue.setText("");
+           tbtag.setText("");
+           tbregex.setText("");
            cbenableddet.setSelected(false);
        dddoc.removeAllItems();
         ArrayList<String> mylist = OVData.getCodeMstrKeyList("edidoctype");
@@ -696,6 +715,7 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
         tbtag = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
+        btupdateelement = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         btnew = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
@@ -745,12 +765,17 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tablerole.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableroleMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tablerole);
 
         cbenableddet.setText("Enabled?");
         cbenableddet.setName("cbenabled"); // NOI18N
 
-        btdeleteelement.setText("DeleteElement");
+        btdeleteelement.setText("Delete Element");
         btdeleteelement.setName("btdeleteitem"); // NOI18N
         btdeleteelement.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -758,7 +783,7 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
             }
         });
 
-        btaddelement.setText("AddElement");
+        btaddelement.setText("Add Element");
         btaddelement.setName("btadditem"); // NOI18N
         btaddelement.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -798,6 +823,13 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
 
         jLabel16.setText("Tag");
         jLabel16.setName("lbltag"); // NOI18N
+
+        btupdateelement.setText("Update Element");
+        btupdateelement.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btupdateelementActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -843,11 +875,12 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
                     .addComponent(tbtag, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tbvalue, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tbregex, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btdeleteelement, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(cbenableddet)
-                    .addComponent(btaddelement, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btaddelement, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btupdateelement, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(21, 21, 21))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(jScrollPane1)
@@ -856,7 +889,7 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(30, 30, 30)
+                .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(btdeleteelement)
                     .addGroup(jPanel2Layout.createSequentialGroup()
@@ -882,10 +915,12 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
                             .addComponent(jLabel11)
                             .addComponent(tblength, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel13)
-                            .addComponent(cbenableddet)
                             .addComponent(tbtag, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel16))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+                            .addComponent(jLabel16)
+                            .addComponent(btupdateelement))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cbenableddet)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -1092,14 +1127,17 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
         
        if (! BlueSeerUtils.isParsableToInt(tbrow.getText())) {
           bsmf.MainFrame.show(getMessageTag(1028)); 
+          tbrow.requestFocus();
           return;
        }
        if (! BlueSeerUtils.isParsableToInt(tbcolumn.getText())) {
           bsmf.MainFrame.show(getMessageTag(1028)); 
+          tbcolumn.requestFocus();
           return;
        }
        if (! BlueSeerUtils.isParsableToInt(tblength.getText())) {
           bsmf.MainFrame.show(getMessageTag(1028)); 
+          tblength.requestFocus();
           return;
        }
         //"Role", "RecordType", "ValueType", "Row", "Column", "Length", "Regex", "Value", "Tag", "Enabled"
@@ -1150,6 +1188,64 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
         lookUpFrame();
     }//GEN-LAST:event_btlookupActionPerformed
 
+    private void btupdateelementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateelementActionPerformed
+       
+        if (! BlueSeerUtils.isParsableToInt(tbrow.getText())) {
+          bsmf.MainFrame.show(getMessageTag(1028)); 
+          tbrow.requestFocus();
+          return;
+       }
+       if (! BlueSeerUtils.isParsableToInt(tbcolumn.getText())) {
+          bsmf.MainFrame.show(getMessageTag(1028)); 
+          tbcolumn.requestFocus();
+          return;
+       }
+       if (! BlueSeerUtils.isParsableToInt(tblength.getText())) {
+          bsmf.MainFrame.show(getMessageTag(1028)); 
+          tblength.requestFocus();
+          return;
+       }
+       
+        int[] rows = tablerole.getSelectedRows();
+        if (rows.length != 1) {
+            bsmf.MainFrame.show(getMessageTag(1095));
+                return;
+        }
+        for (int i : rows) {
+                tablerole.setValueAt(ddrole.getSelectedItem().toString(), i, 0);
+                tablerole.setValueAt(ddrectype.getSelectedItem().toString(), i, 1);
+                tablerole.setValueAt(ddvaluetype.getSelectedItem().toString(), i, 2);
+                tablerole.setValueAt(tbrow.getText(), i, 3);
+                tablerole.setValueAt(tbcolumn.getText(), i, 4);
+                tablerole.setValueAt(tblength.getText(), i, 5);
+                tablerole.setValueAt(tbregex.getText(), i, 6);
+                tablerole.setValueAt(tbvalue.getText(), i, 7);
+                tablerole.setValueAt(tbtag.getText(), i, 8);
+                tablerole.setValueAt(String.valueOf(cbenableddet.isSelected()), i, 9);
+                ddrole.requestFocus();
+        }
+        
+        
+    }//GEN-LAST:event_btupdateelementActionPerformed
+
+    private void tableroleMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableroleMouseClicked
+        int row = tablerole.rowAtPoint(evt.getPoint());
+        int col = tablerole.columnAtPoint(evt.getPoint());
+        //   "Line", "Part", "CustPart", "SO", "PO", "Qty", "UOM", "ListPrice", "Discount", "NetPrice", "QtyShip", "Status", "WH", "LOC", "Desc", "Tax"
+          
+        ddrole.setSelectedItem(tablerole.getValueAt(row, 0).toString());
+        ddrectype.setSelectedItem(tablerole.getValueAt(row, 1).toString());
+        ddvaluetype.setSelectedItem(tablerole.getValueAt(row, 2).toString());
+        tbrow.setText(tablerole.getValueAt(row, 3).toString());
+        tbcolumn.setText(tablerole.getValueAt(row, 4).toString());
+        tblength.setText(tablerole.getValueAt(row, 5).toString());
+        tbregex.setText(tablerole.getValueAt(row, 6).toString());
+        tbvalue.setText(tablerole.getValueAt(row, 7).toString());
+        tbtag.setText(tablerole.getValueAt(row, 8).toString());
+        cbenableddet.setSelected(ConvertTrueFalseToBoolean(tablerole.getValueAt(row, 9).toString()));
+       
+    }//GEN-LAST:event_tableroleMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
@@ -1160,6 +1256,7 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
+    private javax.swing.JButton btupdateelement;
     private javax.swing.JCheckBox cbenableddet;
     private javax.swing.JCheckBox cbenabledhdr;
     private javax.swing.JComboBox<String> dddoc;
