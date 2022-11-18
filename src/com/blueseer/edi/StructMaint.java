@@ -56,6 +56,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -268,7 +269,14 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         tbkey.setText("");
         tbdesc.setText("");
         tbversion.setText("");
-        
+        ddfiletype.setSelectedIndex(0);
+        dddoctype.removeAllItems();
+        ArrayList<String> mylist = OVData.getCodeMstrKeyList("edidoctype");
+        for (int i = 0; i < mylist.size(); i++) {
+            dddoctype.addItem(mylist.get(i));
+        } 
+        dddoctype.insertItemAt("", 0);
+        dddoctype.setSelectedIndex(0);
        isLoad = false;
     }
     
@@ -359,7 +367,9 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
     public map_struct createRecord() { 
         map_struct x = new map_struct(null, tbkey.getText(),
                 tbdesc.getText(),
-                tbversion.getText()
+                tbversion.getText(),
+                dddoctype.getSelectedItem().toString(),
+                ddfiletype.getSelectedItem().toString()
                 );
         /* potential validation mechanism...would need association between record field and input field
         for(Field f : x.getClass().getDeclaredFields()){
@@ -436,6 +446,8 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         tbdesc.setText(x.mps_desc());
         tbkey.setText(x.mps_id());
         tbversion.setText(x.mps_version());
+        dddoctype.setSelectedItem(x.mps_doctype()); 
+        ddfiletype.setSelectedItem(x.mps_filetype()); 
         setAction(x.m()); 
     }
     
@@ -461,6 +473,10 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         btlookup = new javax.swing.JButton();
         tbversion = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
+        dddoctype = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
+        ddfiletype = new javax.swing.JComboBox<>();
+        jLabel3 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -530,6 +546,12 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         jLabel1.setText("Version");
         jLabel1.setName("lblversion"); // NOI18N
 
+        jLabel2.setText("Doc Type");
+
+        ddfiletype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "", "CSV", "FF", "JSON", "X12", "UNE", "XML" }));
+
+        jLabel3.setText("File Type");
+
         javax.swing.GroupLayout panelmaintLayout = new javax.swing.GroupLayout(panelmaint);
         panelmaint.setLayout(panelmaintLayout);
         panelmaintLayout.setHorizontalGroup(
@@ -539,7 +561,9 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lblid)
                     .addComponent(lbldesc)
-                    .addComponent(jLabel1))
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelmaintLayout.createSequentialGroup()
@@ -559,7 +583,9 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(btadd))
                         .addComponent(tbversion, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dddoctype, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ddfiletype, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelmaintLayout.setVerticalGroup(
@@ -578,6 +604,14 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lbldesc))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(dddoctype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ddfiletype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbversion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -643,7 +677,11 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
+    private javax.swing.JComboBox<String> dddoctype;
+    private javax.swing.JComboBox<String> ddfiletype;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel lbldesc;
     private javax.swing.JLabel lblid;
     private javax.swing.JPanel panelmaint;

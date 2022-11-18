@@ -337,9 +337,9 @@ public class ediData {
     public static String[] addMapStruct(map_struct x) {
         String[] m = new String[2];
         String sqlSelect = "select * from map_struct where mps_id = ?";
-        String sqlInsert = "insert into map_struct (mps_id, mps_desc, mps_version "
+        String sqlInsert = "insert into map_struct (mps_id, mps_desc, mps_version, mps_doctype, mps_filetype "
                 + "  )  " +
-                " values (?,?,?); "; 
+                " values (?,?,?,?,?); "; 
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.mps_id);
@@ -349,6 +349,8 @@ public class ediData {
             psi.setString(1, x.mps_id);
             psi.setString(2, x.mps_desc);
             psi.setString(3, x.mps_version);
+            psi.setString(4, x.mps_doctype);
+            psi.setString(5, x.mps_filetype);
             
             int rows = psi.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
@@ -365,13 +367,15 @@ public class ediData {
         
     public static String[] updateMapStruct(map_struct x) {
         String[] m = new String[2];
-        String sql = "update map_struct set mps_desc = ?, mps_version = ? " +
+        String sql = "update map_struct set mps_desc = ?, mps_version = ?, mps_doctype = ?, mps_filetype = ? " +
                 "  where mps_id = ? ";
        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, x.mps_desc);
         ps.setString(2, x.mps_version);
-        ps.setString(3, x.mps_id);
+        ps.setString(3, x.mps_doctype);
+        ps.setString(4, x.mps_filetype);
+        ps.setString(5, x.mps_id);
         int rows = ps.executeUpdate();
         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
         } catch (SQLException s) {
@@ -412,7 +416,9 @@ public class ediData {
                         m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
                         r = new map_struct(m, res.getString("mps_id"), 
                             res.getString("mps_desc"),
-                            res.getString("mps_version")
+                            res.getString("mps_version"),
+                            res.getString("mps_doctype"),
+                            res.getString("mps_filetype")
                         );
                     }
                 }
@@ -1558,9 +1564,9 @@ public class ediData {
         }
     }
     
-    public record map_struct(String[] m, String mps_id, String mps_desc, String mps_version) {
+    public record map_struct(String[] m, String mps_id, String mps_desc, String mps_version, String mps_doctype, String mps_filetype) {
         public map_struct(String[] m) {
-            this(m, "", "", "");
+            this(m, "", "", "", "", "");
         }
     }
     

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <salesorder>
-  <header>
+  <header type="edi">
     <purchaseordernumber>mypo</purchaseordernumber>
     <orderdate>2020-09-17</orderdate>
     <duedate>2020-09-17</duedate>
     <custnumber>acme</custnumber>
-    <doctype>xml-bs</doctype>
+    <doctype>bs-xml</doctype>
+    <senderid>999999999</senderid>
+    <receiverid>BLUESEER</receiverid>
     <shipmentmethod/>
   </header>
   <address type="shipto">

@@ -6,6 +6,8 @@
    "duedate":"2021-01-06",
    "remarks":"test of remarks",
    "doctype":"bs-json",
+   "senderid":"999999999",
+   "receiverid":"BLUESEER",
    "currency":"USD",
    "shipvia":"",
    "status":"open",

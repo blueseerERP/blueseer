@@ -703,6 +703,22 @@ public class EDI {
          // if type is JSON
         if (editype[0].equals("JSON")) {
             
+            StringBuilder jsonstring = new StringBuilder();
+            for (int i = 0; i < cbuf.length; i++) {
+                jsonstring.append(cbuf[i]);
+            }
+            
+            if (isOverride.isEmpty()) {
+             processJSON(jsonstring.toString(), c, batchfile, idxnbr);
+             } else {
+              processJSON(jsonstring.toString(), c, infile, idxnbr);   
+             }
+        }
+        
+        
+         // if type is XML
+        if (editype[0].equals("XML")) {
+            
         }
         
        EDData.updateEDIFileLogStatus(c[22], c[0], editype[0], editype[1]);   
@@ -1236,12 +1252,12 @@ public class EDI {
             
             for (String[] r : v) {
             //bail (next loop) if r[5] tag does not begin with /  ...otherwise jsonNode.at will throw jackson illegalArgument
-            if (! r[5].startsWith("/")) {
+            if (! r[6].startsWith("/")) {
                 continue;
             }  
               if (r[4].equals("json")) {
                 rulecount++;
-                JsonNode nameNode = jsonNode.at(r[5]);
+                JsonNode nameNode = jsonNode.at(r[6]);
                 if (r[3].equals(nameNode.asText())) {
                   matchcount++;
                 }
@@ -1289,13 +1305,13 @@ public class EDI {
             
             for (String[] r : v) {
             //bail (next loop) if r[5] tag does not begin with /  ...otherwise jsonNode.at will throw jackson illegalArgument
-            if (! r[5].startsWith("/")) {
+            if (! r[6].startsWith("/")) {
                 continue;
             }  
               if (r[4].equals("xml")) {
                 rulecount++;
                 XPath xPath = XPathFactory.newInstance().newXPath();
-                String expression = r[5];
+                String expression = r[6];
                 
                 Node node = (Node) xPath.compile(expression).evaluate(document, XPathConstants.NODE);
                 if (r[3].equals(node.getTextContent())) {  // only works for node content...not not attributes
@@ -1411,6 +1427,72 @@ public class EDI {
         return x;
     }
     
+    public static String[] getTagInfo(String content, String[] c) {
+        // hm is list of variables and coordinates to find variables (f,m) r,c,l
+        // f = fixed, m = regex, r = row, c = column, l = length
+        String[] x = new String[]{"","","",""}; // doctype, rcvid, parentpartner, sndid
+        int i = 0;
+      
+        x[0] = getEDIFFDocType(c[1]); //overriding original recognition record edd_id with type; further overriden with tag below as necessary
+      
+        JsonNode jsonNode = null;
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            jsonNode = mapper.readTree(content);
+        } catch (JsonProcessingException ex) {
+            edilog(ex);
+        }
+        
+        ArrayList<String[]> tags = EDData.getEDIFFDataRules(c[1]);
+       
+            for (String[] t : tags ) {
+                
+                if (! t[0].startsWith("/")) {
+                continue;
+                }
+                
+                if (t[0].toLowerCase().equals("doctype")) {
+                    if (t[2].toLowerCase().equals("constant")) {
+                        x[0] = t[7];
+                    } else {                        
+                        if (t[1].toLowerCase().equals("json")) {
+                            JsonNode nameNode = jsonNode.at(t[8]);
+                            x[0]= nameNode.asText();
+                        }
+                    }
+                }
+                if (t[0].toLowerCase().equals("rcvid")) {
+                    if (t[2].toLowerCase().equals("constant")) {
+                        x[1] = t[7];
+                    } else {                        
+                        if (t[1].toLowerCase().equals("json")) {
+                            JsonNode nameNode = jsonNode.at(t[8]);
+                            x[1] = nameNode.asText();
+                        }
+                    }
+                }
+                 if (t[0].toLowerCase().equals("sndid")) {
+                    if (t[2].toLowerCase().equals("constant")) {
+                        x[3] = t[7];
+                    } else {
+                        if (t[1].toLowerCase().equals("json")) {
+                            JsonNode nameNode = jsonNode.at(t[8]);
+                            x[3] = nameNode.asText();
+                        }
+                    }
+                    if (! x[3].isEmpty()) {
+                        // look up parent partner
+                        x[2] = EDData.getEDIPartnerFromAlias(x[3]);
+                    }
+                }
+            }
+        
+        if (GlobalDebug) {
+            System.out.println("getFileInfo: doc/rcv/partner/snd " + x[0] + "/" + x[1] + "/" + x[2] + "/" + x[3]);
+        }
+        return x;
+    }
+    
     
     public static void processXML(File file, String filename)   {
     ArrayList<String> doc = new ArrayList<String>();
@@ -1472,6 +1554,141 @@ public class EDI {
     
     
     }
+    
+    public static void processJSON(String content, String[] c, String filename, int idxnbr)   {
+    
+        int callingidxnbr = idxnbr;      
+        ArrayList<String[]> messages = new ArrayList<String[]>();
+            
+            if (GlobalDebug)
+            System.out.println("processing JSON: " + c[1]);
+            
+            String[] x = getTagInfo(content, c);  // doctype, rcvid, parentpartner, sndid
+            
+            
+            
+             if (x[2].isEmpty()) {
+                messages.add(new String[]{"error", "unable to determine parent partner with alias: " + x[1]} ); 
+                return;  
+             }
+            
+            messages.add(new String[]{"info","JSON: (doctype,rcvid,parent,sndid) (" + x[0] + "," + x[1] + "," + x[2] + "," + x[3] + ")"});
+            
+            c[1] = x[0];  // doctype
+            c[0] = x[3];  // senderid
+            c[21] = x[1]; // receiverID
+      
+            String[] defaults = EDData.getEDITPDefaults(x[0], x[3], x[1]);
+            
+            c[29] = defaults[15]; // defines outputfiletype
+            
+            // governs inbound only ...for outbound file...let postmap delimiters kick in
+            c[9] = defaults[7].isBlank() ? "10" : defaults[7];
+            c[10] = defaults[6].isBlank() ? "" : defaults[6];
+            c[11] = defaults[8].isBlank() ? "" : defaults[8];
+            
+                 
+             
+        // insert isa and st start and stop integer points within the file
+        
+          c[17] = "0";
+          c[18] = String.valueOf(content.length());
+          c[19] = "0";
+          c[20] = String.valueOf(content.length());
+          
+          
+          
+          // at this point...we need to log this doc in edi_idx table and use return ID for further logs against this doc idx.
+         
+          if (c[12].isEmpty() && callingidxnbr == 0) {   // if not override
+          idxnbr = EDData.writeEDIIDX(c);
+          }
+          //EDData.writeEDILogMulti(c, messages);
+         // messages.clear();  // clear message here...and at end
+          c[16] = String.valueOf(idxnbr);
+          String map = c[2];
+             
+               if (map.isEmpty() && c[12].isEmpty()) {
+                   
+                   if (GlobalDebug)  { 
+                   System.out.println("Searching for Map (JSON in) with values type/x[3]/x[1]: " + c[1] + "/" + x[3] + "/" + x[1]);    
+                   }
+                   
+                   map = EDData.getEDIMap(c[1], c[0], c[21]); // doctype, senderid, receiverid 
+               } 
+            
+               // if no map then bail
+               if (map.isEmpty()) {
+                  messages.add(new String[]{"error", "JSON: map variable is empty for: " + c[1] + " / " + c[0] + " / " + x[1]}); 
+               } else if (! BlueSeerUtils.isEDIClassFile(map) && c[12].isEmpty()) { 
+                  messages.add(new String[]{"error", "JSON: unable to locate compiled map (" + map + ") for: " + c[1] + " / " + c[0] + " / " + x[1]}); 
+               } else {
+                
+                messages.add(new String[]{"info","JSON: Found map: " + map});
+               
+                   
+                   // at this point I should have a doc set and a map ...now call map to operate on doc 
+                URLClassLoader cl = null;
+                try {
+                      List<File> jars = Arrays.asList(new File("edi/maps").listFiles(new FilenameFilter() {
+                    public boolean accept(File dir, String name) {
+                    return name.toLowerCase().endsWith(".jar");
+                }
+                }));
+                URL[] urls = new URL[jars.size()];
+                for (int i = 0; i < jars.size(); i++) {
+                try {
+                  urls[i] = jars.get(i).toURI().toURL();
+                } catch (Exception e) {
+                    edilog(e);
+                }
+                }
+                cl = new URLClassLoader(urls);
+                
+                Class cls = Class.forName(map,true,cl);  
+                Object obj = cls.newInstance();
+                Method method = cls.getDeclaredMethod("Mapdata", String.class, String[].class);
+                Object oc = method.invoke(obj, content, c);
+                String[] oString = (String[]) oc;
+                messages.add(new String[]{oString[0], oString[1]});
+                EDData.updateEDIIDX(idxnbr, c); 
+
+                } catch (InvocationTargetException ex) {
+                    if (c[12].isEmpty()) {
+                    messages.add(new String[]{"error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1] + " : " + ex.getCause().getMessage()});    
+                    clearStaticVariables();
+                    }
+                    edilog(ex);  
+                } catch (ClassNotFoundException ex) {
+                    if (c[12].isEmpty()) {
+                    messages.add(new String[]{"error", "Map Class not found " + map + "/" + c[0] + " / " + c[1]});        
+                    }
+                    edilog(ex); 
+                } catch (IllegalAccessException |
+                         InstantiationException | NoSuchMethodException ex
+                        ) {
+                    if (c[12].isEmpty()) {
+                    messages.add(new String[]{"error", "IllegalAccess|Instantiation|NoSuchMethod " + map + "/" + c[0] + " / " + c[1]});        
+                   }
+                    edilog(ex);
+                } finally {
+                        if (cl != null) {
+                           try {
+                               cl.close();
+                           } catch (IOException ex) {
+                               edilog(ex);
+                           }
+                        }
+                }
+                   
+               }
+         EDData.writeEDILogMulti(c, messages);
+           messages.clear();     
+     
+   
+  
+}
+   
     
     public static void processCSV(Map<Integer, ArrayList<String>> CSVDocs, Map<Integer, Integer[]> CSVPositions, String[] c, ArrayList<String[]> tags, int idxnbr)   {
     

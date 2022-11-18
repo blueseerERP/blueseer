@@ -46,3 +46,6 @@ patch=19
 # static variables cleared after invocation exception (OMD, etc).   Column label additions; EDI attribute dropdown replacing textbox
 patch=20
 # mods to doc recognition ; prelim work on xml, json recognition
+patch=21
+# database table schema change for edi_docdet and map_struct...along with form redesign for these two menus
+#

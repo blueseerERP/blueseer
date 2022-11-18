@@ -507,6 +507,7 @@ CREATE TABLE "edi_docdet" (
   "edid_regex" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
   "edid_value" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
   "edid_tag" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edid_xpath" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
   "edid_enabled" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0'
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -708,7 +709,9 @@ CREATE TABLE "map_mstr" (
 CREATE TABLE "map_struct" (
   "mps_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "mps_desc" varchar(130) NOT NULL COLLATE NOCASE DEFAULT '',
-  "mps_version" varchar(15) NOT NULL COLLATE NOCASE DEFAULT ''
+  "mps_version" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "mps_doctype" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "mps_filetype" varchar(15) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

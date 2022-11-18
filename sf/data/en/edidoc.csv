@@ -6,3 +6,5 @@
 855csv,CSV Acknowledgment,855csv,,10,1,,1
 856csv,CSV ASN,856csv,,10,1,,1
 810csv,CSV Invoice,810csv,,10,1,,1
+850json,JSON Generic Order,850json,,10,1,,1
+850xml,XML Generic Order,850xml,,10,1,,1

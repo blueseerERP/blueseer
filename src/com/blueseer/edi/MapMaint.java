@@ -1873,7 +1873,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
          }
     }
     
-    public JavaFileObject compileFile() {
+    public JavaFileObject compileFile(String FileType) {
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<JavaFileObject>();
 
@@ -1893,7 +1893,11 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         }
         
         out.println("public class " + tbkey.getText() + " extends com.blueseer.edi.EDIMap " +  " {");
-        out.println("  public String[] Mapdata(ArrayList doc, String[] c) throws IOException, UserDefinedException  {");
+        if (FileType.equals("JSON") || FileType.equals("XML")) {
+          out.println("  public String[] Mapdata(String doc, String[] c) throws IOException, UserDefinedException  {");
+        } else {
+          out.println("  public String[] Mapdata(ArrayList doc, String[] c) throws IOException, UserDefinedException  {");  
+        }
         out.println("setControl(c);  ");
         out.println("if (isError) { return error;} ");
         out.println("mappedInput = mapInput(c, doc, ISF);");
@@ -2817,7 +2821,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
     private void btcompileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcompileActionPerformed
     taoutput.setText("");
-    JavaFileObject file = compileFile();
+    JavaFileObject file = compileFile(ddinfiletype.getSelectedItem().toString());
     if (file != null) {
         jarFile(file);
     }

@@ -446,7 +446,8 @@ public class EDData {
                                                      res.getString("edid_length"),
                                                      res.getString("edid_value"),
                                                      res.getString("edid_rectype"),
-                                                     res.getString("edid_tag")
+                                                     res.getString("edid_tag"),
+                                                     res.getString("edid_xpath")
                            };
                            x.add(s);
                         }
@@ -497,7 +498,8 @@ public class EDData {
                                res.getString("edid_col"),
                                res.getString("edid_length"),
                                res.getString("edid_regex"),
-                               res.getString("edid_value")
+                               res.getString("edid_value"),
+                               res.getString("edid_xpath")
                            };
                            x.add(s);
                         }

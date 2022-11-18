@@ -107,7 +107,9 @@ CREATE TABLE IF NOT EXISTS `map_mstr` (
 CREATE TABLE IF NOT EXISTS `map_struct` (
   `mps_id` varchar(30)  NOT NULL DEFAULT '',
   `mps_desc` varchar(130)  NOT NULL DEFAULT '',
-  `mps_version` varchar(15)  NOT NULL DEFAULT ''
+  `mps_version` varchar(15)  NOT NULL DEFAULT '',
+  `mps_doctype` varchar(15)  NOT NULL DEFAULT '',
+  `mps_filetype` varchar(15)  NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `ap_ctrl` (
   `apc_bank` varchar(10)  NOT NULL DEFAULT '',
@@ -511,6 +513,7 @@ CREATE TABLE IF NOT EXISTS `edi_docdet` (
   `edid_regex` varchar(100) NOT NULL  DEFAULT '',
   `edid_value` varchar(100) NOT NULL  DEFAULT '',
   `edid_tag` varchar(100) NOT NULL  DEFAULT '',
+  `edid_xpath` varchar(200) NOT NULL  DEFAULT '',
   `edid_enabled` tinyint(1) NOT NULL  DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `export_mstr` (

@@ -68,7 +68,7 @@ import jcifs.smb.SmbException;
  *
  * @author terryva
  */
-public abstract class EDIMap implements EDIMapi {
+public abstract class EDIMap {  // took out the implements EDIMapi
     
     String[] envelope = null;
          
