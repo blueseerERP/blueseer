@@ -129,7 +129,7 @@ public static void main(String args[]) throws IOException {
 
 
  public static String[] checkargs(String[] args) {
-        List<String> legitargs = Arrays.asList("-if", "-of", "-id", "-od", "-m", "-x", "-ff", "-fd", "-ad", "-td", "-tf", "-e", "-debug", "-ftp", "-pd" );
+        List<String> legitargs = Arrays.asList("-if", "-of", "-id", "-od", "-m", "-x", "-ff", "-fd", "-ad", "-td", "-tf", "-e", "-debug", "-ftp", "-pd", "-pdr" );
      
         String[] vals = new String[9]; // last element is the program type (single or mulitiple)
         Arrays.fill(vals, "");
@@ -645,11 +645,26 @@ public static void main(String args[]) throws IOException {
          System.out.println("parameter 1 is not a valid directory");
          System.exit(1);   
         }
-        
+        long count = 0;
         long z = System.currentTimeMillis() - ((long)daysBack * 24L * 60L * 60L * 1000L);
         
         Path targetdir = FileSystems.getDefault().getPath(dir);
-	
+	File[] listOfFiles = folder.listFiles();
+        for (int i = 0; i < listOfFiles.length; i++) {
+            if (listOfFiles[i].lastModified() < z) {
+                count++;
+                if (isDelete) {
+                Path filepath = FileSystems.getDefault().getPath(dir + "/" + listOfFiles[i].getName());
+                    if (listOfFiles[i].isFile()) {
+                    Files.delete(filepath);
+                    } else {
+                      deleteDirectory(listOfFiles[i]);  
+                    }
+                }
+            }
+        }
+        
+        /*
         long count = Files.walk(targetdir)
 	      .sorted(Comparator.reverseOrder())
 	      .map(Path::toFile)
@@ -664,12 +679,22 @@ public static void main(String args[]) throws IOException {
 	     // .forEach(e -> System.out.println(e.getAbsolutePath().toString() + " " + new Date(e.lastModified())));
 	      .forEach(File::delete);
         }	
-        
+        */
         System.out.println("For Files/Dirs older than this number of days: " + days);
         System.out.println("delete is set to: " + isDelete);
         System.out.println("delete count is: " + count);
  }
 
+    public static void deleteDirectory(File file)
+    {
+        for (File subfile : file.listFiles()) {
+            if (subfile.isDirectory()) {
+                deleteDirectory(subfile);
+            }
+            subfile.delete();
+        }
+        file.delete();
+    }
  
 } // class
 
