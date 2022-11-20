@@ -575,7 +575,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
        
         buttonGroup1.add(rbDocLog);
         buttonGroup1.add(rbFileLog);
-        rbDocLog.setSelected(true);
+        rbFileLog.setSelected(true);
         
         
         tbtoterrors.setText("0");
