@@ -34,6 +34,7 @@
     <item>
       <line>1</line>
       <itemnumber>50000001</itemnumber>
+      <uom>EA</uom>
       <description>Huffy Bicycle</description>
       <quantity>4</quantity>
       <listprice>145.00</listprice>
