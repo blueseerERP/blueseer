@@ -38,8 +38,10 @@ import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.EDData.updateEDIFileLogStatusManual;
+import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.io.IOException;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -229,35 +231,35 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                 
                  
               
-                    if (! tbtradeid.getText().isEmpty() && tbdoc.getText().isEmpty() ) {
+                    if (! ddtradeid.getSelectedItem().toString().isEmpty() && dddoc.getSelectedItem().toString().isEmpty() ) {
                     res = st.executeQuery("SELECT * FROM edi_idx  " +
-                    " where edx_sender >= " + "'" + tbtradeid.getText() + "'" +
-                    " AND edx_sender <= " + "'" + tbtradeid.getText() + "'" +
+                    " where edx_sender >= " + "'" + ddtradeid.getSelectedItem().toString() + "'" +
+                    " AND edx_sender <= " + "'" + ddtradeid.getSelectedItem().toString() + "'" +
                     " AND edx_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
                     " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + " order by edx_id desc ;" ) ;
                     }
                     
-                    if (! tbdoc.getText().isEmpty() && tbtradeid.getText().isEmpty()) {
+                    if (! dddoc.getSelectedItem().toString().isEmpty() && ddtradeid.getSelectedItem().toString().isEmpty()) {
                     res = st.executeQuery("SELECT * FROM edi_idx  " +
                     " where " +
-                    " edx_indoctype >= " + "'" + tbdoc.getText() + "'" +
-                    " AND edx_indoctype <= " + "'" + tbdoc.getText() + "'" +        
+                    " edx_indoctype >= " + "'" + dddoc.getSelectedItem().toString() + "'" +
+                    " AND edx_indoctype <= " + "'" + dddoc.getSelectedItem().toString() + "'" +        
                     " AND edx_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
                     " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + " order by edx_id desc ;" ) ;
                     }
                     
-                    if (! tbdoc.getText().isEmpty() && ! tbtradeid.getText().isEmpty()) {
+                    if (! dddoc.getSelectedItem().toString().isEmpty() && ! ddtradeid.getSelectedItem().toString().isEmpty()) {
                     res = st.executeQuery("SELECT * FROM edi_idx  " +
-                     " where edx_sender >= " + "'" + tbtradeid.getText() + "'" +
-                    " AND edx_sender <= " + "'" + tbtradeid.getText() + "'" +
-                    " AND edx_indoctype >= " + "'" + tbdoc.getText() + "'" +
-                    " AND edx_indoctype <= " + "'" + tbdoc.getText() + "'" +        
+                     " where edx_sender >= " + "'" + ddtradeid.getSelectedItem().toString() + "'" +
+                    " AND edx_sender <= " + "'" + ddtradeid.getSelectedItem().toString() + "'" +
+                    " AND edx_indoctype >= " + "'" + dddoc.getSelectedItem().toString() + "'" +
+                    " AND edx_indoctype <= " + "'" + dddoc.getSelectedItem().toString() + "'" +        
                     " AND edx_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
                     " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + " order by edx_id desc ;" ) ;
                     }
                     
                     
-                    if (tbtradeid.getText().isEmpty() && tbdoc.getText().isEmpty()) {
+                    if (ddtradeid.getSelectedItem().toString().isEmpty() && dddoc.getSelectedItem().toString().isEmpty()) {
                     res = st.executeQuery("SELECT * FROM edi_idx  " +
                     " where edx_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
                     " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + " order by edx_id desc ;" ) ;
@@ -373,37 +375,37 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                  tablereport.getColumnModel().getColumn(10).setMaxWidth(50);
                  
               
-                    if (! tbtradeid.getText().isEmpty() && tbdoc.getText().isEmpty() ) {
+                    if (! ddtradeid.getSelectedItem().toString().isEmpty() && dddoc.getSelectedItem().toString().isEmpty() ) {
                     res = st.executeQuery("SELECT * FROM edi_file  " +
-                    " where edf_partner >= " + "'" + tbtradeid.getText() + "'" +
-                    " AND edf_partner <= " + "'" + tbtradeid.getText() + "'" +        
+                    " where edf_partner >= " + "'" + ddtradeid.getSelectedItem().toString() + "'" +
+                    " AND edf_partner <= " + "'" + ddtradeid.getSelectedItem().toString() + "'" +        
                     " AND edf_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
                     " AND edf_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + 
                     " order by edf_id desc ;" ) ;
                     }
                     
-                    if (! tbdoc.getText().isEmpty() && tbtradeid.getText().isEmpty()) {
+                    if (! dddoc.getSelectedItem().toString().isEmpty() && ddtradeid.getSelectedItem().toString().isEmpty()) {
                     res = st.executeQuery("SELECT * FROM edi_file  " +
                     " where " +
-                    " edf_doctype >= " + "'" + tbdoc.getText() + "'" +
-                    " AND edf_doctype <= " + "'" + tbdoc.getText() + "'" +        
+                    " edf_doctype >= " + "'" + dddoc.getSelectedItem().toString() + "'" +
+                    " AND edf_doctype <= " + "'" + dddoc.getSelectedItem().toString() + "'" +        
                     " AND edf_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
                     " AND edf_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + 
                     " order by edf_id desc ;" ) ;
                     }
                     
-                    if (! tbdoc.getText().isEmpty() && ! tbtradeid.getText().isEmpty()) {
+                    if (! dddoc.getSelectedItem().toString().isEmpty() && ! ddtradeid.getSelectedItem().toString().isEmpty()) {
                     res = st.executeQuery("SELECT * FROM edi_file  " +
-                     " where edf_partner >= " + "'" + tbtradeid.getText() + "'" +
-                    " AND edf_partner <= " + "'" + tbtradeid.getText() + "'" +
-                    " AND edf_doctype >= " + "'" + tbdoc.getText() + "'" +
-                    " AND edf_doctype <= " + "'" + tbdoc.getText() + "'" +        
+                     " where edf_partner >= " + "'" + ddtradeid.getSelectedItem().toString() + "'" +
+                    " AND edf_partner <= " + "'" + ddtradeid.getSelectedItem().toString() + "'" +
+                    " AND edf_doctype >= " + "'" + dddoc.getSelectedItem().toString() + "'" +
+                    " AND edf_doctype <= " + "'" + dddoc.getSelectedItem().toString() + "'" +        
                     " AND edf_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
                     " AND edf_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + 
                     " order by edf_id desc ;" ) ;
                     }
                     
-                    if (tbtradeid.getText().isEmpty() && tbdoc.getText().isEmpty()) {
+                    if (ddtradeid.getSelectedItem().toString().isEmpty() && dddoc.getSelectedItem().toString().isEmpty()) {
                     res = st.executeQuery("SELECT * FROM edi_file  " +
                     " where edf_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
                     " AND edf_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + 
@@ -577,6 +579,21 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
         buttonGroup1.add(rbFileLog);
         rbFileLog.setSelected(true);
         
+        dddoc.removeAllItems();
+        ArrayList<String> mylist = OVData.getCodeMstrKeyList("edidoctype");
+        for (int i = 0; i < mylist.size(); i++) {
+            dddoc.addItem(mylist.get(i));
+        }
+        dddoc.insertItemAt("", 0);
+        dddoc.setSelectedIndex(0);
+        
+        ddtradeid.removeAllItems();
+        ArrayList<String> tradeids = EDData.getEDITradeIDs();
+        for (int i = 0; i < tradeids.size(); i++) {
+            ddtradeid.addItem(tradeids.get(i));
+        }
+        ddtradeid.insertItemAt("", 0);
+        ddtradeid.setSelectedIndex(0);
         
         tbtoterrors.setText("0");
         tbtot.setText("0");
@@ -611,12 +628,12 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
         
         btdetail.setEnabled(false);
         bthidetext.setEnabled(false);
-        cbshowall.setEnabled(false);
         detailpanel.setVisible(false);
         textpanel.setVisible(false);
         btreprocess.setEnabled(false);
         btclearstatus.setEnabled(false);
-          
+        tafile.setText("");
+        tafile.setFont(new Font("monospaced", Font.PLAIN, 12));
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -647,12 +664,9 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
         jLabel6 = new javax.swing.JLabel();
         dcfrom = new com.toedter.calendar.JDateChooser();
         dcto = new com.toedter.calendar.JDateChooser();
-        tbtradeid = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        tbdoc = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         bthidetext = new javax.swing.JButton();
-        cbshowall = new javax.swing.JCheckBox();
         rbFileLog = new javax.swing.JRadioButton();
         rbDocLog = new javax.swing.JRadioButton();
         tbsegdelim = new javax.swing.JTextField();
@@ -662,6 +676,8 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
         jLabel7 = new javax.swing.JLabel();
         btreprocess = new javax.swing.JButton();
         btclearstatus = new javax.swing.JButton();
+        ddtradeid = new javax.swing.JComboBox<>();
+        dddoc = new javax.swing.JComboBox<>();
         jPanel3 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         tbtoterrors = new javax.swing.JLabel();
@@ -760,7 +776,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
 
         dcto.setDateFormatString("yyyy-MM-dd");
 
-        jLabel3.setText("TradeID");
+        jLabel3.setText("SenderID");
         jLabel3.setName("lbltpid"); // NOI18N
 
         jLabel4.setText("DocType");
@@ -773,9 +789,6 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                 bthidetextActionPerformed(evt);
             }
         });
-
-        cbshowall.setText("Show Entire File");
-        cbshowall.setName("cbshowentire"); // NOI18N
 
         rbFileLog.setText("FileLogView");
         rbFileLog.setName("cbfilelog"); // NOI18N
@@ -825,33 +838,36 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(tbtradeid, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tbdoc, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(44, 44, 44)
-                        .addComponent(jLabel7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(22, 22, 22)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel3)))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel5)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(dcfrom, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
+                    .addComponent(dcto, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
+                    .addComponent(ddtradeid, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(31, 31, 31)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(rbFileLog)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(rbDocLog))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(31, 31, 31)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(rbFileLog)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(rbDocLog))
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(dddoc, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(27, 27, 27)
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(btRun)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -861,34 +877,32 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btreprocess)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btclearstatus)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(cbshowall)
-                                        .addGap(60, 60, 60)
-                                        .addComponent(jLabel1)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(tbsegdelim, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(lbsegdelim, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
-                .addContainerGap(12, Short.MAX_VALUE))
+                                .addComponent(btclearstatus)))
+                        .addGap(69, 69, 69)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tbsegdelim, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbsegdelim, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5)
-                    .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btRun)
                         .addComponent(btdetail)
                         .addComponent(bthidetext)
-                        .addComponent(cbshowall)
                         .addComponent(tbsegdelim, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel1)
                         .addComponent(lbsegdelim, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btreprocess)))
+                        .addComponent(btreprocess)
+                        .addComponent(btclearstatus))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jLabel5)
+                        .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -897,15 +911,14 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(rbFileLog)
                         .addComponent(rbDocLog)))
-                .addGap(5, 5, 5)
+                .addGap(6, 6, 6)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(tbtradeid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tbdoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
                     .addComponent(jLabel4)
                     .addComponent(jLabel7)
                     .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btclearstatus))
+                    .addComponent(ddtradeid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dddoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -1021,7 +1034,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                          if (! tablereport.getValueAt(row, 7).toString().isEmpty()) {
                          ArrayList<String> segments = EDData.readEDIRawFileByDoc(ackfile, 
                                  EDData.getEDIBatchDir(),
-                                 cbshowall.isSelected(),
+                                 true,
                                  "0",
                                  "0",
                                  String.valueOf(k)
@@ -1042,7 +1055,6 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                      tafile.setCaretPosition(0);
                      textpanel.setVisible(true);
                      bthidetext.setEnabled(true);
-                     cbshowall.setEnabled(true);
                 }
         }
         
@@ -1063,7 +1075,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                  if (! tablereport.getValueAt(row, 7).toString().isEmpty()) {
                  ArrayList<String> segments = EDData.readEDIRawFileByDoc(tablereport.getValueAt(row, 7).toString(), 
                          EDData.getEDIInArch(),
-                         cbshowall.isSelected(),
+                         true,
                          "0",
                          "0",
                          String.valueOf(k)
@@ -1083,25 +1095,18 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
              tafile.setCaretPosition(0);
              textpanel.setVisible(true);
              bthidetext.setEnabled(true);
-             cbshowall.setEnabled(true);
              
         }
           if ( (col == 13) && rbDocLog.isSelected()) {
               int k = 10;
               String[] p = EDData.getEDIDocPositionEDIIDX(tablereport.getValueAt(row, 1).toString());
-              String end = p[3];  // doc end
-              if (tablereport.getValueAt(row, 6).toString().equals("FF")) {
-                  end = p[1];   // file end
-              }
-             // if (BlueSeerUtils.isParsableToInt(tbsegdelim.getText())) {
-            //  k = Integer.valueOf(tbsegdelim.getText());
-            //  }
+              String end = "0";  // doc end ...revisit...just show everything for now
              try {
                  tafile.setText("");
                  if (! tablereport.getValueAt(row, 8).toString().isEmpty()) {
                  ArrayList<String> segments = EDData.readEDIRawFileByDoc(tablereport.getValueAt(row, 8).toString(), 
                          EDData.getEDIBatchDir(),
-                         cbshowall.isSelected(),
+                         true,
                          p[2],
                          end,
                          p[4]
@@ -1121,13 +1126,12 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
              tafile.setCaretPosition(0);
              textpanel.setVisible(true);
              bthidetext.setEnabled(true);
-             cbshowall.setEnabled(true);
              
         }
           
          if ( (col == 14) && rbDocLog.isSelected()) {
               int k = 10;
-               String[] p = EDData.getEDIDocPositionEDIIDX(tablereport.getValueAt(row, 1).toString());
+              String[] p = EDData.getEDIDocPositionEDIIDX(tablereport.getValueAt(row, 1).toString());
              
             //  if (BlueSeerUtils.isParsableToInt(tbsegdelim.getText())) {
             //  k = Integer.valueOf(tbsegdelim.getText());
@@ -1137,7 +1141,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                  if (! tablereport.getValueAt(row, 12).toString().isEmpty()) {
                  ArrayList<String> segments = EDData.readEDIRawFileByDoc(tablereport.getValueAt(row, 12).toString(), 
                          EDData.getEDIBatchDir(),
-                         cbshowall.isSelected(),
+                         true,
                          p[0],
                          p[1],
                          p[4]
@@ -1157,7 +1161,6 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
              tafile.setCaretPosition(0);
              textpanel.setVisible(true);
              bthidetext.setEnabled(true);
-             cbshowall.setEnabled(true);
              
         }  
       
@@ -1166,8 +1169,6 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
     private void bthidetextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bthidetextActionPerformed
         textpanel.setVisible(false);
        bthidetext.setEnabled(false);
-       cbshowall.setSelected(false);
-       cbshowall.setEnabled(false);
     }//GEN-LAST:event_bthidetextActionPerformed
 
     private void tbsegdelimFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbsegdelimFocusLost
@@ -1257,9 +1258,10 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
     private javax.swing.JButton bthidetext;
     private javax.swing.JButton btreprocess;
     private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JCheckBox cbshowall;
     private com.toedter.calendar.JDateChooser dcfrom;
     private com.toedter.calendar.JDateChooser dcto;
+    private javax.swing.JComboBox<String> dddoc;
+    private javax.swing.JComboBox<String> ddtradeid;
     private javax.swing.JPanel detailpanel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
@@ -1284,12 +1286,10 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
     private javax.swing.JPanel tablepanel;
     private javax.swing.JTable tablereport;
     private javax.swing.JTextArea tafile;
-    private javax.swing.JTextField tbdoc;
     private javax.swing.JTextField tbref;
     private javax.swing.JTextField tbsegdelim;
     private javax.swing.JLabel tbtot;
     private javax.swing.JLabel tbtoterrors;
-    private javax.swing.JTextField tbtradeid;
     private javax.swing.JPanel textpanel;
     // End of variables declaration//GEN-END:variables
 }

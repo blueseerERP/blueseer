@@ -1583,6 +1583,43 @@ public class EDData {
         
     }
        
+    public static ArrayList getEDITradeIDs() {
+       ArrayList mylist = new ArrayList();
+        try{
+            Class.forName(driver);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                
+
+                res = st.executeQuery("select edpd_alias from edpd_partner order by edpd_alias; ");
+               while (res.next()) {
+                   mylist.add(res.getString("edpd_alias"));
+                }
+               
+           }
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return mylist;
+        
+    }
+    
+    
     public static String getEDIPartnerFromAlias(String alias) {
        String x = "";
         try{
@@ -1983,7 +2020,7 @@ public class EDData {
                  bsmf.MainFrame.show("File is unavailable: " + path);
                  return segments;
                }
-             
+           
            int diff = (Integer.valueOf(end) - Integer.valueOf(beg));
            if (wholefile || end.equals("0")) {
                beg = "0";

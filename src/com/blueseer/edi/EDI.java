@@ -845,6 +845,7 @@ public class EDI {
                     docid = st[1]; //docID  
                     // covert actual doctype to blueseer doctype
                     doctype = getBSDocTypeFromStds(doctype);
+                    c[1] = doctype; // override standard doc type for bs type
                    // System.out.println(c[0] + "/" + c[1] + "/" + c[4] + "/" + c[5]);
                 } 
                 if (i > 1 && cbufx[i-1] == s && cbufx[i] == 'U' && cbufx[i+1] == 'N' && cbufx[i+2] == 'T') {
