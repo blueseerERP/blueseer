@@ -1893,14 +1893,11 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         }
         
         out.println("public class " + tbkey.getText() + " extends com.blueseer.edi.EDIMap " +  " {");
-        if (FileType.equals("JSON") || FileType.equals("XML")) {
-          out.println("  public String[] Mapdata(String doc, String[] c) throws IOException, UserDefinedException  {");
-        } else {
-          out.println("  public String[] Mapdata(ArrayList doc, String[] c) throws IOException, UserDefinedException  {");  
-        }
+        out.println("  public String[] Mapdata(ArrayList doc, String[] c) throws IOException, UserDefinedException  {");  
         out.println("setControl(c);  ");
         out.println("if (isError) { return error;} ");
-        out.println("mappedInput = mapInput(c, doc, ISF);");
+        out.println("mappedInput = mapInput(c, doc, ISF);");    
+       
         for (String s : text) {
           out.println(s);  
         }
@@ -2634,7 +2631,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         }
          
         
-         if (editype[0].equals("UNE")) {
+        if (editype[0].equals("UNE")) {
         Map<Integer, Object[]> UNBmap = createMAPUNE(cbuf, c, "", "", "", "");
         Map<Integer, ArrayList> d = null;
         
@@ -2708,6 +2705,13 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             }
         }
         
+         if (editype[0].equals("JSON")) {
+             StringBuilder jsonstring = new StringBuilder();
+            for (int i = 0; i < cbuf.length; i++) {
+                jsonstring.append(cbuf[i]);
+            }
+            doc.add(jsonstring.toString());
+         }
                        
          if (editype[0].isEmpty()) {
              taoutput.setText("unknown file type");

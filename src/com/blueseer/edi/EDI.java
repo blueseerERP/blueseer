@@ -1448,7 +1448,7 @@ public class EDI {
        
             for (String[] t : tags ) {
                 
-                if (! t[0].startsWith("/")) {
+                if (t[1].toLowerCase().equals("json") && ! t[8].startsWith("/")) {
                 continue;
                 }
                 
@@ -1489,7 +1489,7 @@ public class EDI {
             }
         
         if (GlobalDebug) {
-            System.out.println("getFileInfo: doc/rcv/partner/snd " + x[0] + "/" + x[1] + "/" + x[2] + "/" + x[3]);
+            System.out.println("getTagInfo: doc/rcv/partner/snd " + x[0] + "/" + x[1] + "/" + x[2] + "/" + x[3]);
         }
         return x;
     }
@@ -1560,7 +1560,9 @@ public class EDI {
     
         int callingidxnbr = idxnbr;      
         ArrayList<String[]> messages = new ArrayList<String[]>();
-            
+        ArrayList<String> doc = new ArrayList<String>();
+        doc.add(content);
+        
             if (GlobalDebug)
             System.out.println("processing JSON: " + c[1]);
             
@@ -1570,6 +1572,8 @@ public class EDI {
             
              if (x[2].isEmpty()) {
                 messages.add(new String[]{"error", "unable to determine parent partner with alias: " + x[1]} ); 
+                EDData.writeEDILogMulti(c, messages);
+                messages.clear(); 
                 return;  
              }
             
@@ -1648,8 +1652,8 @@ public class EDI {
                 
                 Class cls = Class.forName(map,true,cl);  
                 Object obj = cls.newInstance();
-                Method method = cls.getDeclaredMethod("Mapdata", String.class, String[].class);
-                Object oc = method.invoke(obj, content, c);
+                Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
+                Object oc = method.invoke(obj, doc, c);
                 String[] oString = (String[]) oc;
                 messages.add(new String[]{oString[0], oString[1]});
                 EDData.updateEDIIDX(idxnbr, c); 

@@ -33,6 +33,11 @@ import static com.blueseer.edi.ediData.getMapMstr;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.EDData;
 import com.blueseer.utl.OVData;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -1217,8 +1222,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         }
         return new stackGHP(stack, GHP);
     }
-    
-    
+        
     public static LinkedHashMap<String, String[]> mapInput(String[] c, ArrayList<String> data, ArrayList<String[]> ISF)  {
         LinkedHashMap<String,String[]> mappedData = new LinkedHashMap<String,String[]>();
         HashMap<String,Integer> groupcount = new HashMap<String,Integer>();
@@ -1240,21 +1244,44 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         int currentPosition = 0;
         int GHP = 0;
         Stack<Integer> positionStack = new Stack<Integer>();
-        for (String s : data) {
-                String[] x = null;
-                if (c[28].equals("FF")) {
-                    x = splitFFSegment(s, ISF);
-                } else if (c[28].equals("CSV")) {
-                    s = "ROW," + s;
-                    x = s.split(",",-1);
-                } else {
-                    x = s.split(eledelim,-1); // delims = seg, ele, sub
-                }
+        
+        List<String[]> dataAsArrays = null;
+        if (c[28].equals("JSON")) {
+            try {
+                dataAsArrays = jsonToSegments(data.get(0));
+            } catch (IOException ex) {
+                edilog(ex);
+            }
+        } else if (c[28].equals("XML")) {   
+            try {
+                dataAsArrays = xmlToSegments(data.get(0));
+            } catch (IOException ex) {
+                edilog(ex);
+            }
+        } else {
+          dataAsArrays  = new ArrayList<String[]>();
+            for (String s : data) {
+                    String[] x = null;
+                    if (c[28].equals("FF")) {
+                        x = splitFFSegment(s, ISF);
+                    } else if (c[28].equals("CSV")) {
+                        s = "ROW," + s;
+                        x = s.split(",",-1);
+                    } else {
+                        x = s.split(eledelim,-1); // delims = seg, ele, sub
+                    }
+                    dataAsArrays.add(x);
+            }
+        }
+        
+        System.out.println("HERE: " + c[28]);
+        
+        
+        for (String[] x : dataAsArrays) {
                 
                 if (x == null || x.length == 0) {
                     continue;
                 }
-                
                 
                 String[] IFSseg = null;
                 if (c[28].equals("CSV")) {
@@ -1341,6 +1368,262 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         return mappedData;
     }
   
+    public static LinkedHashMap<String, String[]> mapInputX(String[] c, String data, ArrayList<String[]> ISF) throws IOException  {
+        LinkedHashMap<String,String[]> mappedData = new LinkedHashMap<String,String[]>();
+        HashMap<String,Integer> groupcount = new HashMap<String,Integer>();
+        HashMap<String,Integer> set = new HashMap<String,Integer>();
+        String parenthead = "";
+        String groupkey = "";
+        String previouskey = "";
+        String mappedinput = "";
+        String eledelim = "";
+        Stack<String> stack = new Stack<String>();
+        String[] delims = new String[]{c[9], c[10], c[11]}; 
+        if (BlueSeerUtils.isParsableToInt(delims[1])) {
+            eledelim = EDI.escapeDelimiter(delimConvertIntToStr(delims[1]));
+        } else {
+            eledelim = EDI.escapeDelimiter(delims[1]);
+        }
+        
+       // bsmf.MainFrame.show(delims[0] + "/" + delims[1] + "/" + delims[2]);
+        int currentPosition = 0;
+        int GHP = 0;
+        Stack<Integer> positionStack = new Stack<Integer>();
+        ObjectMapper mapper = new ObjectMapper();
+        
+        JsonNode jsonNode = null;
+        try {
+            jsonNode = mapper.readTree(data);
+        } catch (JsonProcessingException ex) {
+            edilog(ex);
+        }
+	    
+        List<String[]> zz = jsonToSegments(data);
+	    for (String[] x : zz) {
+                
+                String[] IFSseg = null;
+                
+                // identify immediate parent/group head
+                stackGHP sp = preGroupHead(x[0], stack, ISF, GHP);
+                stack = sp.s();
+                GHP = sp.i();
+                parenthead = String.join(":",stack.toArray(new String[stack.size()]));
+                // now lets find segments place in ISF
+              //   System.out.println("incoming segment:" + x[0] + " with parenthead: " + parenthead);
+                segRecord sr = getSegmentInISF(x[0], parenthead, ISF);
+                IFSseg = sr.m();
+                currentPosition = sr.p();
+               
+                
+                if (IFSseg != null) {
+                   if (GlobalDebug) {
+                   System.out.println("WRITE:" + " IncomingSegment: " + x[0] +  "  x[1]: " + IFSseg[1] + "  ParentHead:" + parenthead + " GHP=" + GHP);
+                   }
+                    
+                    if (! parenthead.isBlank()) {
+                        parenthead = parenthead + ":";
+                    }
+                    
+                    int loop = 1;
+                    boolean hasloop = false;
+                    String groupparent = parenthead + x[0];
+                    if (groupcount.containsKey(groupparent)) {
+                            int g = groupcount.get(groupparent);
+
+                            if (previouskey.equals(parenthead + x[0] + "+" + g) && ! IFSseg[3].equals("yes")) {
+                                    loop = set.get(parenthead + x[0] + "+" + groupcount.get(groupparent));	
+                                    hasloop = true;
+                                    loop++;
+                                    set.put(parenthead + x[0] + "+" + groupcount.get(groupparent), loop);
+                            } else {
+                                    g++;	
+                                    groupcount.put(groupparent, g);
+                            }
+                    } else {
+                           // groupcount.put(groupparent, 1);
+                           if (groupcount.get(parenthead) != null) {
+                              groupcount.put(groupparent, groupcount.get(parenthead)); 
+                           } else {
+                              groupcount.put(groupparent, 1); 
+                           }
+
+                    }
+
+                    previouskey = parenthead + x[0] + "+" + groupcount.get(groupparent);	
+                    if (hasloop) {
+                        groupkey = parenthead + x[0] + "+" + groupcount.get(groupparent) + "+" + loop;
+                    } else {
+                        groupkey = parenthead + x[0] + "+" + groupcount.get(groupparent);
+                    }
+
+                    mappedinput = parenthead + x[0] + "+" + groupcount.get(groupparent) + "+" + loop + "=" + String.join(",",x);
+                    set.put(groupkey, loop);
+                    mappedData.put(parenthead + x[0] + "+" + groupcount.get(groupparent) + "+" + loop , x);
+                    SegmentCounter.add(parenthead + x[0] + "+" + groupcount.get(groupparent));
+                   
+                }  // if foundit
+             
+                if (GlobalDebug && IFSseg == null) {
+                System.out.println("ifSeg is null: " + x[0] + " with parenthead: " + parenthead);
+                }
+               
+                
+                stackGHP postGH = postGroupHead(x[0], stack, ISF, GHP);
+                stack = postGH.s();
+                GHP = postGH.i(); 
+                
+                parenthead = String.join(":",stack.toArray(new String[stack.size()])); 
+                   
+        }
+        return mappedData;
+    }
+  
+    public static List<String[]> jsonToSegments(String json) throws IOException {
+	    ObjectMapper mapper = new ObjectMapper();
+            JsonNode jsonNode = mapper.readTree(json);
+	    JsonParser jsonParser = jsonNode.traverse();
+	    String parent = "";
+	    String lhmkey = "";
+	    Stack<String> segments = new Stack<String>();
+	    LinkedHashMap<String,ArrayList<String>> lhm = new LinkedHashMap<String,ArrayList<String>>();
+	   JsonToken z = null;
+	   int arraycount = 0;
+	   boolean startcount = false;
+	    while (!jsonParser.isClosed()) {
+	    	
+	    	JsonToken x = jsonParser.nextToken();
+	    	if (x == JsonToken.FIELD_NAME) {
+	    		z = jsonParser.nextToken();
+	    		if (z.name().startsWith("VALUE")) {
+	    		  ArrayList<String> temp = lhm.get(lhmkey);
+	    		  if (temp != null) {
+	    			  temp.add(jsonParser.getText());
+	    			  lhm.put(lhmkey, temp);
+	    		  } else {
+	    			  ArrayList<String> al = new ArrayList<String>();
+	    			  al.add(jsonParser.getText());
+	    			  lhm.put(lhmkey, al);
+	    		  }
+	    		} else if(z == JsonToken.START_OBJECT) {
+	    			parent = jsonParser.getCurrentName();
+	    			lhmkey = parent + ":" + String.valueOf("1");
+	    			if (! parent.isBlank()) {
+	  	    		  lhm.put(lhmkey, null);
+	    			}
+	    			segments.push(parent);
+	    		} else if(z == JsonToken.START_ARRAY) {
+	    			parent = jsonParser.getCurrentName();
+	    			segments.push(parent+"array");
+	    			startcount = true;
+	    		} 
+	    	}
+	    	if (x == JsonToken.START_OBJECT) {
+	    		if (startcount) {
+	    		arraycount++;
+	    		}
+	    		lhmkey = parent + ":" + String.valueOf(arraycount);
+	    		 if (! parent.isBlank()) {
+		    		  lhm.put(lhmkey, null);
+		    		  }
+	    		segments.push(parent);
+	    	}
+	    	if (x == JsonToken.END_OBJECT) {
+	    		segments.pop();
+	    	}
+	    	if (x == JsonToken.END_ARRAY) {
+	    		segments.pop();
+	    		arraycount = 0;
+	    		startcount = false;
+	    	}
+	       
+	    }
+	    ArrayList<String[]> result = new ArrayList<String[]>();
+	    for (Map.Entry<String, ArrayList<String>> val : lhm.entrySet()) {
+	    	String[] j = new String[val.getValue().size() + 1];
+	    	j[0] = val.getKey().split(":")[0];
+	    	for (int k = 1; k < val.getValue().size() + 1; k++) {
+	    		j[k] = val.getValue().get(k - 1);
+	    	}
+	    	result.add(j);
+	    }
+	   // lhm.forEach((k,v) -> System.out.println(k + ":" + v));
+	 //   result.forEach((k) -> System.out.println(k[0]));
+	    return result;
+	}
+
+    public static List<String[]> xmlToSegments(String xml) throws IOException {
+	    ObjectMapper mapper = new ObjectMapper();
+            JsonNode jsonNode = mapper.readTree(xml);
+	    JsonParser jsonParser = jsonNode.traverse();
+	    String parent = "";
+	    String lhmkey = "";
+	    Stack<String> segments = new Stack<String>();
+	    LinkedHashMap<String,ArrayList<String>> lhm = new LinkedHashMap<String,ArrayList<String>>();
+	   JsonToken z = null;
+	   int arraycount = 0;
+	   boolean startcount = false;
+	    while (!jsonParser.isClosed()) {
+	    	
+	    	JsonToken x = jsonParser.nextToken();
+	    	if (x == JsonToken.FIELD_NAME) {
+	    		z = jsonParser.nextToken();
+	    		if (z.name().startsWith("VALUE")) {
+	    		  ArrayList<String> temp = lhm.get(lhmkey);
+	    		  if (temp != null) {
+	    			  temp.add(jsonParser.getText());
+	    			  lhm.put(lhmkey, temp);
+	    		  } else {
+	    			  ArrayList<String> al = new ArrayList<String>();
+	    			  al.add(jsonParser.getText());
+	    			  lhm.put(lhmkey, al);
+	    		  }
+	    		} else if(z == JsonToken.START_OBJECT) {
+	    			parent = jsonParser.getCurrentName();
+	    			lhmkey = parent + ":" + String.valueOf("1");
+	    			if (! parent.isBlank()) {
+	  	    		  lhm.put(lhmkey, null);
+	    			}
+	    			segments.push(parent);
+	    		} else if(z == JsonToken.START_ARRAY) {
+	    			parent = jsonParser.getCurrentName();
+	    			segments.push(parent+"array");
+	    			startcount = true;
+	    		} 
+	    	}
+	    	if (x == JsonToken.START_OBJECT) {
+	    		if (startcount) {
+	    		arraycount++;
+	    		}
+	    		lhmkey = parent + ":" + String.valueOf(arraycount);
+	    		 if (! parent.isBlank()) {
+		    		  lhm.put(lhmkey, null);
+		    		  }
+	    		segments.push(parent);
+	    	}
+	    	if (x == JsonToken.END_OBJECT) {
+	    		segments.pop();
+	    	}
+	    	if (x == JsonToken.END_ARRAY) {
+	    		segments.pop();
+	    		arraycount = 0;
+	    		startcount = false;
+	    	}
+	       
+	    }
+	    ArrayList<String[]> result = new ArrayList<String[]>();
+	    for (Map.Entry<String, ArrayList<String>> val : lhm.entrySet()) {
+	    	String[] j = new String[val.getValue().size() + 1];
+	    	j[0] = val.getKey().split(":")[0];
+	    	for (int k = 1; k < val.getValue().size() + 1; k++) {
+	    		j[k] = val.getValue().get(k - 1);
+	    	}
+	    	result.add(j);
+	    }
+	   // lhm.forEach((k,v) -> System.out.println(k + ":" + v));
+	 //   result.forEach((k) -> System.out.println(k[0]));
+	    return result;
+	}
+
     
     public static void debuginput(Map<String, String[]> mappedData) {
         if (GlobalDebug) {
