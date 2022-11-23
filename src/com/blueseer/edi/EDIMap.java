@@ -39,11 +39,14 @@ import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -67,7 +70,14 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import jcifs.smb.SmbException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -1274,8 +1284,6 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             }
         }
         
-        System.out.println("HERE: " + c[28]);
-        
         
         for (String[] x : dataAsArrays) {
                 
@@ -1552,65 +1560,52 @@ public abstract class EDIMap {  // took out the implements EDIMapi
 	}
 
     public static List<String[]> xmlToSegments(String xml) throws IOException {
-	    ObjectMapper mapper = new ObjectMapper();
-            JsonNode jsonNode = mapper.readTree(xml);
-	    JsonParser jsonParser = jsonNode.traverse();
-	    String parent = "";
-	    String lhmkey = "";
-	    Stack<String> segments = new Stack<String>();
-	    LinkedHashMap<String,ArrayList<String>> lhm = new LinkedHashMap<String,ArrayList<String>>();
-	   JsonToken z = null;
-	   int arraycount = 0;
-	   boolean startcount = false;
-	    while (!jsonParser.isClosed()) {
-	    	
-	    	JsonToken x = jsonParser.nextToken();
-	    	if (x == JsonToken.FIELD_NAME) {
-	    		z = jsonParser.nextToken();
-	    		if (z.name().startsWith("VALUE")) {
-	    		  ArrayList<String> temp = lhm.get(lhmkey);
-	    		  if (temp != null) {
-	    			  temp.add(jsonParser.getText());
-	    			  lhm.put(lhmkey, temp);
-	    		  } else {
-	    			  ArrayList<String> al = new ArrayList<String>();
-	    			  al.add(jsonParser.getText());
-	    			  lhm.put(lhmkey, al);
-	    		  }
-	    		} else if(z == JsonToken.START_OBJECT) {
-	    			parent = jsonParser.getCurrentName();
-	    			lhmkey = parent + ":" + String.valueOf("1");
-	    			if (! parent.isBlank()) {
-	  	    		  lhm.put(lhmkey, null);
-	    			}
-	    			segments.push(parent);
-	    		} else if(z == JsonToken.START_ARRAY) {
-	    			parent = jsonParser.getCurrentName();
-	    			segments.push(parent+"array");
-	    			startcount = true;
-	    		} 
-	    	}
-	    	if (x == JsonToken.START_OBJECT) {
-	    		if (startcount) {
-	    		arraycount++;
-	    		}
-	    		lhmkey = parent + ":" + String.valueOf(arraycount);
-	    		 if (! parent.isBlank()) {
-		    		  lhm.put(lhmkey, null);
-		    		  }
-	    		segments.push(parent);
-	    	}
-	    	if (x == JsonToken.END_OBJECT) {
-	    		segments.pop();
-	    	}
-	    	if (x == JsonToken.END_ARRAY) {
-	    		segments.pop();
-	    		arraycount = 0;
-	    		startcount = false;
-	    	}
-	       
-	    }
-	    ArrayList<String[]> result = new ArrayList<String[]>();
+        ArrayList<String[]> result = new ArrayList<String[]>();
+        LinkedHashMap<String,ArrayList<String>> lhm = new LinkedHashMap<String,ArrayList<String>>();
+        String lhmkey = "";
+        DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder;
+        Document document = null;
+        InputStream is = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));
+        try {
+            docBuilder = docBuilderFactory.newDocumentBuilder();
+            document = docBuilder.parse(is);
+        } catch (ParserConfigurationException ex) {
+            edilog(ex);
+        } catch (SAXException ex) {
+            edilog(ex);
+        }
+        
+        int counter = 0;
+        NodeList nodeList = document.getElementsByTagName("*");
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            Node nextnode = null;
+            counter = 0;
+            if (node.getNodeType() == Node.ELEMENT_NODE) {            	
+            	NodeList childnodes = node.getChildNodes();
+            	for (int j = 0; j < childnodes.getLength(); j++) {
+            		Node child = childnodes.item(j);
+            		if (child.getNodeType() == Node.ELEMENT_NODE && child.getChildNodes().getLength() == 1) {
+            			lhmkey = node.getNodeName() + ":" + node.hashCode();
+            			if (! lhm.containsKey(lhmkey)) {
+            				lhm.put(lhmkey, null);
+            			}
+            			ArrayList<String> temp = lhm.get(lhmkey);
+      	    		    if (temp != null) {
+      	    			  temp.add(child.getTextContent());
+      	    			  lhm.put(lhmkey, temp);
+      	    		    } else {
+      	    			  ArrayList<String> al = new ArrayList<String>();
+      	    			  al.add(child.getTextContent());
+      	    			  lhm.put(lhmkey, al);
+      	    		    }	
+            	     }
+            	}
+            	
+            }
+        }
+        
 	    for (Map.Entry<String, ArrayList<String>> val : lhm.entrySet()) {
 	    	String[] j = new String[val.getValue().size() + 1];
 	    	j[0] = val.getKey().split(":")[0];
@@ -1619,9 +1614,8 @@ public abstract class EDIMap {  // took out the implements EDIMapi
 	    	}
 	    	result.add(j);
 	    }
-	   // lhm.forEach((k,v) -> System.out.println(k + ":" + v));
-	 //   result.forEach((k) -> System.out.println(k[0]));
-	    return result;
+        
+		return result;
 	}
 
     
