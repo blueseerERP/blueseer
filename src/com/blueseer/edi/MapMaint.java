@@ -1361,13 +1361,13 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                   tainput.setText("unable to determine delimiters (null array returned) ");
                     return;  
                 }
-                if (ddinfiletype.getSelectedItem().toString().equals("JSON") || ddinfiletype.getSelectedItem().toString().equals("JSON")) {
-                    StringBuilder jsonstring = new StringBuilder();
+                if (ddinfiletype.getSelectedItem().toString().equals("JSON") || ddinfiletype.getSelectedItem().toString().equals("XML")) {
+                    StringBuilder xstring = new StringBuilder();
                     for (int i = 0; i < cbuf.length; i++) {
-                        jsonstring.append(cbuf[i]);
+                        xstring.append(cbuf[i]);
                     }
                     input = new ArrayList<String>();
-                    input.add(jsonstring.toString());
+                    input.add(xstring.toString());
                 } else {
                 input = cbufToList(cbuf, delims);
                 }
@@ -2721,6 +2721,15 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             }
             doc.add(jsonstring.toString());
          }
+         
+         if (editype[0].equals("XML")) {
+             StringBuilder xmlstring = new StringBuilder();
+            for (int i = 0; i < cbuf.length; i++) {
+                xmlstring.append(cbuf[i]);
+            }
+            doc.add(xmlstring.toString());
+         }
+         
                        
          if (editype[0].isEmpty()) {
              taoutput.setText("unknown file type");
