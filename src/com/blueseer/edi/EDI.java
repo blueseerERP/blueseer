@@ -719,6 +719,16 @@ public class EDI {
          // if type is XML
         if (editype[0].equals("XML")) {
             
+            StringBuilder xmlstring = new StringBuilder();
+            for (int i = 0; i < cbuf.length; i++) {
+                xmlstring.append(cbuf[i]);
+            }
+            
+            if (isOverride.isEmpty()) {
+                processXML(xmlstring.toString(), c, batchfile, idxnbr);
+            } else {
+                processXML(xmlstring.toString(), c, infile, idxnbr);   
+            } 
         }
         
        EDData.updateEDIFileLogStatus(c[22], c[0], editype[0], editype[1]);   
@@ -1494,67 +1504,144 @@ public class EDI {
         return x;
     }
     
+    public static void processXML(String content, String[] c, String filename, int idxnbr)   {
     
-    public static void processXML(File file, String filename)   {
-    ArrayList<String> doc = new ArrayList<String>();
-    String[] filenamesplit = null;
-        String doctype = "XML";
-        String controlnum = "-1";
-        String docid = "-1";
-        String map = "";
-        String senderid = "";
-        String[] control= initEDIControl();
-        boolean proceed = true;
-    //lets first get the tpid from the filename convention.....
-    // filename convention must be tpid.uniquewhatever.csv or tpid.uniquewhatever.xml
-    if (filename.toString().toUpperCase().endsWith(".XML") ) {
-        filenamesplit = filename.split("\\.", -1);
-        if (filenamesplit.length >= 3 ) {
-               senderid = filenamesplit[0].toString().toUpperCase();  // tpid will be first element in filename
-        } 
-    }
-   
-            control[0] = senderid;
-            control[1] = "XML";
-            control[2] = "";
-            control[3] = filename;
-            control[4] = "-1";
-            control[5] = "-1";
-            control[6] = "-1";
-            control[7] = "";
-    if (senderid.isEmpty()) {
-        EDData.writeEDILog(control, "error", "XML file with no senderid " + filename);
-        proceed = false;
-    }
-    
-    if (proceed) {
+        int callingidxnbr = idxnbr;      
+        ArrayList<String[]> messages = new ArrayList<String[]>();
+        ArrayList<String> doc = new ArrayList<String>();
+        doc.add(content);
         
-        
-        // now lets get map
-          //   map = EDData.getEDIMap(senderid, doctype);
-               if (! map.isEmpty()) {
-                   control[2] = map;
-                    try {
-                    Class cls = Class.forName("EDIMaps." + map);
-                    Object obj = cls.newInstance();
-                    Method method = cls.getDeclaredMethod("MapXMLdata", File.class, String.class, String.class);
-                    method.invoke(obj, file, control, senderid);
-                    
-                    } catch (IllegalAccessException | ClassNotFoundException |
-                             InstantiationException | NoSuchMethodException |
-                            InvocationTargetException ex) {
-                        EDData.writeEDILog(control, "error", "XML: unable to find map class for " + senderid + " / " + doctype);
-                        edilog(ex);
-                    }
-               }   else {
-                   EDData.writeEDILog(control, "error", "no edi_mstr map for " + senderid + " / " + doctype);
-                   return;
-               }
+            if (GlobalDebug)
+            System.out.println("processing XML: " + c[1]);
+            
+            String[] x = getTagInfo(content, c);  // doctype, rcvid, parentpartner, sndid
+            
+            
+            
+             if (x[2].isEmpty()) {
+                messages.add(new String[]{"error", "unable to determine parent partner with alias: " + x[1]} ); 
+                EDData.writeEDILogMulti(c, messages);
+                messages.clear(); 
+                return;  
              }
-    
-    
-    
-    }
+            
+            messages.add(new String[]{"info","XML: (doctype,rcvid,parent,sndid) (" + x[0] + "," + x[1] + "," + x[2] + "," + x[3] + ")"});
+            
+            c[1] = x[0];  // doctype
+            c[0] = x[3];  // senderid
+            c[21] = x[1]; // receiverID
+      
+            String[] defaults = EDData.getEDITPDefaults(x[0], x[3], x[1]);
+            
+            c[29] = defaults[15]; // defines outputfiletype
+            
+            // governs inbound only ...for outbound file...let postmap delimiters kick in
+            c[9] = defaults[7].isBlank() ? "10" : defaults[7];
+            c[10] = defaults[6].isBlank() ? "" : defaults[6];
+            c[11] = defaults[8].isBlank() ? "" : defaults[8];
+            
+                 
+             
+        // insert isa and st start and stop integer points within the file
+        
+          c[17] = "0";
+          c[18] = String.valueOf(content.length());
+          c[19] = "0";
+          c[20] = String.valueOf(content.length());
+          
+          
+          
+          // at this point...we need to log this doc in edi_idx table and use return ID for further logs against this doc idx.
+         
+          if (c[12].isEmpty() && callingidxnbr == 0) {   // if not override
+          idxnbr = EDData.writeEDIIDX(c);
+          }
+          //EDData.writeEDILogMulti(c, messages);
+         // messages.clear();  // clear message here...and at end
+          c[16] = String.valueOf(idxnbr);
+          String map = c[2];
+             
+               if (map.isEmpty() && c[12].isEmpty()) {
+                   
+                   if (GlobalDebug)  { 
+                   System.out.println("Searching for Map (XML in) with values type/x[3]/x[1]: " + c[1] + "/" + x[3] + "/" + x[1]);    
+                   }
+                   
+                   map = EDData.getEDIMap(c[1], c[0], c[21]); // doctype, senderid, receiverid 
+               } 
+            
+               // if no map then bail
+               if (map.isEmpty()) {
+                  messages.add(new String[]{"error", "XML: map variable is empty for: " + c[1] + " / " + c[0] + " / " + x[1]}); 
+               } else if (! BlueSeerUtils.isEDIClassFile(map) && c[12].isEmpty()) { 
+                  messages.add(new String[]{"error", "XML: unable to locate compiled map (" + map + ") for: " + c[1] + " / " + c[0] + " / " + x[1]}); 
+               } else {
+                
+                messages.add(new String[]{"info","XML: Found map: " + map});
+               
+                   
+                   // at this point I should have a doc set and a map ...now call map to operate on doc 
+                URLClassLoader cl = null;
+                try {
+                      List<File> jars = Arrays.asList(new File("edi/maps").listFiles(new FilenameFilter() {
+                    public boolean accept(File dir, String name) {
+                    return name.toLowerCase().endsWith(".jar");
+                }
+                }));
+                URL[] urls = new URL[jars.size()];
+                for (int i = 0; i < jars.size(); i++) {
+                try {
+                  urls[i] = jars.get(i).toURI().toURL();
+                } catch (Exception e) {
+                    edilog(e);
+                }
+                }
+                cl = new URLClassLoader(urls);
+                
+                Class cls = Class.forName(map,true,cl);  
+                Object obj = cls.newInstance();
+                Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
+                Object oc = method.invoke(obj, doc, c);
+                String[] oString = (String[]) oc;
+                messages.add(new String[]{oString[0], oString[1]});
+                EDData.updateEDIIDX(idxnbr, c); 
+
+                } catch (InvocationTargetException ex) {
+                    if (c[12].isEmpty()) {
+                    messages.add(new String[]{"error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1] + " : " + ex.getCause().getMessage()});    
+                    clearStaticVariables();
+                    }
+                    edilog(ex);  
+                } catch (ClassNotFoundException ex) {
+                    if (c[12].isEmpty()) {
+                    messages.add(new String[]{"error", "Map Class not found " + map + "/" + c[0] + " / " + c[1]});        
+                    }
+                    edilog(ex); 
+                } catch (IllegalAccessException |
+                         InstantiationException | NoSuchMethodException ex
+                        ) {
+                    if (c[12].isEmpty()) {
+                    messages.add(new String[]{"error", "IllegalAccess|Instantiation|NoSuchMethod " + map + "/" + c[0] + " / " + c[1]});        
+                   }
+                    edilog(ex);
+                } finally {
+                        if (cl != null) {
+                           try {
+                               cl.close();
+                           } catch (IOException ex) {
+                               edilog(ex);
+                           }
+                        }
+                }
+                   
+               }
+         EDData.writeEDILogMulti(c, messages);
+           messages.clear();     
+     
+   
+  
+}
+   
     
     public static void processJSON(String content, String[] c, String filename, int idxnbr)   {
     
