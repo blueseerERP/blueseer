@@ -1350,18 +1350,27 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
               return;
             }            
             if (file != null) {
-            char[] cbuf = readEDIRawFileIntoCbuf(file.toPath());
-            if (cbuf == null) {
-              tainput.setText("file cbuf content is null");
-                return;  
-            }
-            delims = getDelimiters(cbuf, file.getName()); // seg, ele, sub
-           // bsmf.MainFrame.show(delims[0] + "/" + delims[1] + "/" + delims[2]);
-            if (delims == null) {
-              tainput.setText("unable to determine delimiters (null array returned) ");
-                return;  
-            }
-            input = cbufToList(cbuf, delims);
+                char[] cbuf = readEDIRawFileIntoCbuf(file.toPath());
+                if (cbuf == null) {
+                  tainput.setText("file cbuf content is null");
+                    return;  
+                }
+                delims = getDelimiters(cbuf, file.getName()); // seg, ele, sub
+               // bsmf.MainFrame.show(delims[0] + "/" + delims[1] + "/" + delims[2]);
+                if (delims == null) {
+                  tainput.setText("unable to determine delimiters (null array returned) ");
+                    return;  
+                }
+                if (ddinfiletype.getSelectedItem().toString().equals("JSON") || ddinfiletype.getSelectedItem().toString().equals("JSON")) {
+                    StringBuilder jsonstring = new StringBuilder();
+                    for (int i = 0; i < cbuf.length; i++) {
+                        jsonstring.append(cbuf[i]);
+                    }
+                    input = new ArrayList<String>();
+                    input.add(jsonstring.toString());
+                } else {
+                input = cbufToList(cbuf, delims);
+                }
             } else {
                 tainput.setText("unable to read file");
                 return;
