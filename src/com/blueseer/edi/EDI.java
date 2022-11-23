@@ -1325,7 +1325,7 @@ public class EDI {
                 String expression = r[6];
                 
                 Node node = (Node) xPath.compile(expression).evaluate(document, XPathConstants.NODE);
-                if (r[3].equals(node.getTextContent())) {  // only works for node content...not not attributes
+                if (node != null && r[3].equals(node.getTextContent())) {  // only works for node content...not not attributes
                   matchcount++;
                 }
               } 

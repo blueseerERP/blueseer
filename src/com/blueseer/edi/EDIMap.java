@@ -2456,15 +2456,22 @@ public abstract class EDIMap {  // took out the implements EDIMapi
          boolean inside = false;
          int x = 0;
          int r = 0;
+         String parent = "";
+         String seg = "";
          if (BlueSeerUtils.isParsableToInt(element)) {
              return Integer.valueOf(element);
+         }
+         
+         if (segment.contains(":")) {
+             parent = segment.substring(0, segment.lastIndexOf(":"));
+             seg = segment.substring(segment.lastIndexOf(":") + 1);
          }
          
          for (String[] z : ISF) {  
             if (z[5].equals("groupend")) {
                   continue;
             } 
-            if (segment.startsWith(z[0])) {
+            if (seg.startsWith(z[0]) && (parent.isBlank() || parent.equals(z[1]))) {
                 if (! z[5].equals("landmark")) {
                   x++;
                 }

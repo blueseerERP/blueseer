@@ -20,7 +20,7 @@
 850json,selection,json,constant,0,0,0,,bs-json,,/order/doctype,1
 850json,data,json,variable,0,0,0,,,sndid,/order/senderid,1
 850json,data,json,variable,0,0,0,,,rcvid,/order/receiverid,1
-850xml,selection,xml,constant,0,0,0,,bs-xml,,/salesorder/header/doctype,1
-850xml,selection,xml,constant,0,0,0,,edi,,/salesorder/header/@type,1
-850xml,data,xml,variable,0,0,0,,,sndid,/salesorder/header/senderid,1
-850xml,data,xml,variable,0,0,0,,,rcvid,/salesorder/header/receiverid,1
+850xml,selection,xml,constant,0,0,0,,bs-xml,,/order/header/doctype,1
+850xml,selection,xml,constant,0,0,0,,edi,,/order/header/@type,1
+850xml,data,xml,variable,0,0,0,,,sndid,/order/header/senderid,1
+850xml,data,xml,variable,0,0,0,,,rcvid,/order/header/receiverid,1
