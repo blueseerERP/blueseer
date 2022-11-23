@@ -82,6 +82,7 @@ import static com.blueseer.edi.EDIMap.splitFFSegment;
 import static com.blueseer.edi.ediData.addMapMstr;
 import static com.blueseer.edi.ediData.deleteMapMstr;
 import static com.blueseer.edi.ediData.getMapMstr;
+import static com.blueseer.edi.ediData.getMapStruct;
 import com.blueseer.edi.ediData.map_mstr;
 import static com.blueseer.edi.ediData.updateMapMstr;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
@@ -907,6 +908,10 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             ddindoctype.addItem(mylist.get(i));
         }
         
+        ddinfiletype.setEnabled(false);
+        ddoutfiletype.setEnabled(false);
+        ddindoctype.setEnabled(false);
+        ddoutdoctype.setEnabled(false);
         
        isLoad = false;
     }
@@ -937,6 +942,12 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                    cbinternal.setEnabled(false);
                    btfind.setEnabled(false);
                    tbpath.setEnabled(false);
+                   
+                    ddinfiletype.setEnabled(false);
+                    ddoutfiletype.setEnabled(false);
+                    ddindoctype.setEnabled(false);
+                    ddoutdoctype.setEnabled(false);
+                   
         } else {
                    tbkey.setForeground(Color.red); 
                    cbinternal.setEnabled(false);
@@ -2382,6 +2393,18 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
         jLabel1.setText("Source");
 
+        ddifs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddifsActionPerformed(evt);
+            }
+        });
+
+        ddofs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddofsActionPerformed(evt);
+            }
+        });
+
         ddinfiletype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "FF", "X12", "DB", "CSV", "UNE", "XML", "JSON" }));
 
         ddoutfiletype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "FF", "X12", "DB", "CSV", "UNE", "XML", "JSON" }));
@@ -3079,6 +3102,22 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             tbpath.setText(EDData.getEDIMapDir() + "/" + tbkey.getText() + ".java");
         }
     }//GEN-LAST:event_tbkeyFocusLost
+
+    private void ddifsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddifsActionPerformed
+        if (! isLoad && ddifs.getSelectedItem() != null) {  
+          ediData.map_struct x = getMapStruct(new String[]{ddifs.getSelectedItem().toString()});
+          ddindoctype.setSelectedItem(x.mps_doctype());
+          ddinfiletype.setSelectedItem(x.mps_filetype());
+        }
+    }//GEN-LAST:event_ddifsActionPerformed
+
+    private void ddofsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddofsActionPerformed
+        if (! isLoad && ddofs.getSelectedItem() != null) {
+        ediData.map_struct x = getMapStruct(new String[]{ddofs.getSelectedItem().toString()});
+          ddoutdoctype.setSelectedItem(x.mps_doctype());
+          ddoutfiletype.setSelectedItem(x.mps_filetype());
+        }
+    }//GEN-LAST:event_ddofsActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
