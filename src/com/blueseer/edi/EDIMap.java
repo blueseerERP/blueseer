@@ -75,6 +75,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import jcifs.smb.SmbException;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -1904,11 +1905,89 @@ public abstract class EDIMap {  // took out the implements EDIMapi
  		}
          } // if CSV
        
+        if (outputfiletype.equals("XML")) {
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = null;
+             try {
+                 docBuilder = docFactory.newDocumentBuilder();
+             } catch (ParserConfigurationException ex) {
+                 edilog(ex);
+             }
+        Document doc = docBuilder.newDocument();
+        int nodecount = 0;
+        int fieldcount = 0;
+        Element rootElement = null;
+        for (Map.Entry<String, ArrayList<String[]>> osf : OSF.entrySet()) {
+            nodecount++;
+            ArrayList<String[]> osflist = OSF.get(osf.getKey());
+            Element lm = null;
+            fieldcount = 0;
+            for (String[] osfelement : osflist) {
+                fieldcount++;
+                if (nodecount == 1 && fieldcount == 1 && osfelement[5].equals("landmark")) {
+                    rootElement = doc.createElement(osfelement[0]);
+                    continue;
+                }
+                if (fieldcount == 1) {
+                    lm = doc.createElement(osfelement[0]);
+                } else {
+                    Element x = doc.createElement(osfelement[5]);
+                    lm.appendChild(x);
+                }
+            } 
+            rootElement.appendChild(lm);
+         }
+        doc.appendChild(rootElement);
+             
+         for (Map.Entry<String, HashMap<String,String>> z : MD.entrySet()) {
+ 		//	ArrayList<String[]> fields = z.getValue();
+ 			
+                // write out all fields of this segment
+                HashMap<String,String> mapValues = MD.get(z.getKey());
+        //	System.out.println("loopentrycount:" + mapValuesLoops.keySet());
+                // loop through integers
+         }
+
+       
+           
+        } // end if XML
+          
         // bsmf.MainFrame.show("here..." + outputfiletype + ": " + content);
     	clearStaticVariables();
     	 
     	 return r;
      }
+    
+    public static void createXML(Element ele, int level, Document doc, ArrayList<String> exclude, LinkedHashMap<String, String> y) {
+	    System.out.println(level + " " + "Name: "+ele.getNodeName() + "     Value: "+ele.getNodeValue());
+	    ArrayList<String> list = getChildren(ele.getNodeName(), y);
+	    exclude.add(ele.getNodeName());
+	    for (int i = 0; i < list.size(); i++) {
+	      Element childNode = doc.createElement(list.get(i));
+	      overlayData(ele, doc);
+	      ele.appendChild(childNode);
+	      
+	      if (! exclude.contains(childNode.getNodeName()))
+	      createXML(childNode, level + 1, doc, exclude, y);
+	    }
+	    
+	  }	
+    
+    public static ArrayList<String> getChildren(String x, LinkedHashMap<String, String> y) {
+		ArrayList<String> list = new ArrayList<String>();
+		for (Map.Entry<String, String> s : y.entrySet()) {
+			if (s.getValue().equals(x) && ! s.getKey().equals(x)) {
+				list.add(s.getKey());
+			}
+		}
+		return list;
+	}
+    
+    public static void overlayData(Element ele, Document doc) {
+        if (ele.getNodeName().startsWith("item")) {
+                ele.appendChild(doc.createTextNode("foo"));
+        }
+    }
     
     @EDI.AnnoDoc(desc = {"method assigns output value for element of specific segment.",
                      "NOTE: 2nd parameter...element...must be named element...not position",
