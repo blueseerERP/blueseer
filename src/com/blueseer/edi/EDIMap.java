@@ -45,6 +45,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -73,6 +74,12 @@ import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import jcifs.smb.SmbException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -167,13 +174,13 @@ public abstract class EDIMap {  // took out the implements EDIMapi
     }
      
      
-    public static Map<String, HashMap<Integer,String[]>> mISF = new LinkedHashMap<String, HashMap<Integer,String[]>>();
+    public static LinkedHashMap<String, HashMap<Integer,String[]>> mISF = new LinkedHashMap<String, HashMap<Integer,String[]>>();
 		 
-    public static Map<String, ArrayList<String[]>> HASH = new  LinkedHashMap<String, ArrayList<String[]>>();
-    public static Map<String, String[]> mappedInput = new  LinkedHashMap<String, String[]>();
-    public static Map<String, ArrayList<String[]>> OSF = new  LinkedHashMap<String, ArrayList<String[]>>();
+    public static LinkedHashMap<String, ArrayList<String[]>> HASH = new  LinkedHashMap<String, ArrayList<String[]>>();
+    public static LinkedHashMap<String, String[]> mappedInput = new  LinkedHashMap<String, String[]>();
+    public static LinkedHashMap<String, ArrayList<String[]>> OSF = new  LinkedHashMap<String, ArrayList<String[]>>();
     public static ArrayList<String[]> ISF = new  ArrayList<String[]>();
-    public static Map<String, HashMap<String,String>> OMD = new LinkedHashMap<String, HashMap<String,String>>();
+    public static LinkedHashMap<String, HashMap<String,String>> OMD = new LinkedHashMap<String, HashMap<String,String>>();
     public static ArrayList<String> SegmentCounter = new ArrayList<String>();
 
     public static boolean isSet(ArrayList list, Integer index) {
@@ -900,7 +907,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
        
     public void readOSF(String osf)  {
         
-	        Map<String, ArrayList<String[]>> hm = new LinkedHashMap<String, ArrayList<String[]>>();
+	        LinkedHashMap<String, ArrayList<String[]>> hm = new LinkedHashMap<String, ArrayList<String[]>>();
 	        List<String[]> list = new ArrayList<String[]>();
 	        Set<String> set = new LinkedHashSet<String>();
 	        File cf = new File(EDData.getEDIStructureDir() + "/" + osf);
@@ -1908,35 +1915,18 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         if (outputfiletype.equals("XML")) {
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = null;
+            ArrayList<String> exclude = new ArrayList<String>();
              try {
                  docBuilder = docFactory.newDocumentBuilder();
              } catch (ParserConfigurationException ex) {
                  edilog(ex);
              }
         Document doc = docBuilder.newDocument();
-        int nodecount = 0;
-        int fieldcount = 0;
-        Element rootElement = null;
-        for (Map.Entry<String, ArrayList<String[]>> osf : OSF.entrySet()) {
-            nodecount++;
-            ArrayList<String[]> osflist = OSF.get(osf.getKey());
-            Element lm = null;
-            fieldcount = 0;
-            for (String[] osfelement : osflist) {
-                fieldcount++;
-                if (nodecount == 1 && fieldcount == 1 && osfelement[5].equals("landmark")) {
-                    rootElement = doc.createElement(osfelement[0]);
-                    continue;
-                }
-                if (fieldcount == 1) {
-                    lm = doc.createElement(osfelement[0]);
-                } else {
-                    Element x = doc.createElement(osfelement[5]);
-                    lm.appendChild(x);
-                }
-            } 
-            rootElement.appendChild(lm);
-         }
+        
+        Element rootElement = doc.createElement(OSF.values().toArray()[0].toString());
+        
+        createXML(rootElement, 0, doc, exclude, OSF);
+        
         doc.appendChild(rootElement);
              
          for (Map.Entry<String, HashMap<String,String>> z : MD.entrySet()) {
@@ -1948,7 +1938,23 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                 // loop through integers
          }
 
-       
+        
+        TransformerFactory tf = TransformerFactory.newInstance();
+        Transformer trans;
+             try {
+                trans = tf.newTransformer();
+                StringWriter sw = new StringWriter();
+                trans.transform(new DOMSource(doc), new StreamResult(sw)); 
+                content = sw.toString();
+                
+                // System.out.println(content);
+             
+             } catch (TransformerConfigurationException ex) {
+                 edilog(ex);
+             } catch (TransformerException ex) {
+                 edilog(ex);
+             }
+        
            
         } // end if XML
           
@@ -1958,34 +1964,63 @@ public abstract class EDIMap {  // took out the implements EDIMapi
     	 return r;
      }
     
-    public static void createXML(Element ele, int level, Document doc, ArrayList<String> exclude, LinkedHashMap<String, String> y) {
-	    System.out.println(level + " " + "Name: "+ele.getNodeName() + "     Value: "+ele.getNodeValue());
-	    ArrayList<String> list = getChildren(ele.getNodeName(), y);
+    public static void createXML(Element ele, int level, Document doc, ArrayList<String> exclude, LinkedHashMap<String, ArrayList<String[]>> y) {
+	  //  System.out.println(level + " " + "Name: "+ele.getNodeName() + "     Value: "+ele.getNodeValue());
+	    ArrayList<String> list = getChildren(ele.getNodeName(),y);
 	    exclude.add(ele.getNodeName());
 	    for (int i = 0; i < list.size(); i++) {
-	      Element childNode = doc.createElement(list.get(i));
-	      overlayData(ele, doc);
-	      ele.appendChild(childNode);
-	      
-	      if (! exclude.contains(childNode.getNodeName()))
-	      createXML(childNode, level + 1, doc, exclude, y);
+		Element childNode = null;
+		      
+		      
+		int limit = 1;
+		// get actual loopcount      
+				
+                for (int k = 0; k < limit; k++) {
+                  childNode = doc.createElement(list.get(i));
+                  overlayData(childNode, doc, y, k);
+                  ele.appendChild(childNode);
+                }
+		      
+                if (! exclude.contains(childNode.getNodeName())) {
+                createXML(childNode, level + 1, doc, exclude,y);
+                }
 	    }
 	    
-	  }	
+    }	
     
-    public static ArrayList<String> getChildren(String x, LinkedHashMap<String, String> y) {
+    public static ArrayList<String> getChildren(String x, LinkedHashMap<String, ArrayList<String[]>> y) {
 		ArrayList<String> list = new ArrayList<String>();
-		for (Map.Entry<String, String> s : y.entrySet()) {
-			if (s.getValue().equals(x) && ! s.getKey().equals(x)) {
+		String parent = "";
+		for (Map.Entry<String, ArrayList<String[]>> s : y.entrySet()) {
+			String[] recArray = s.getValue().get(0);
+			if (! recArray[5].equals("landmark")) {
+				continue;
+			}
+			if (recArray[1].contains(":")) {
+            	parent = recArray[1].substring(recArray[1].lastIndexOf(":") + 1);
+            } else {
+            	parent = recArray[1];
+            }
+			if (parent.equals(x) && ! recArray[0].equals(x)) {
 				list.add(s.getKey());
 			}
 		}
 		return list;
 	}
     
-    public static void overlayData(Element ele, Document doc) {
-        if (ele.getNodeName().startsWith("item")) {
-                ele.appendChild(doc.createTextNode("foo"));
+    public static void overlayData(Element ele, Document doc, LinkedHashMap<String, ArrayList<String[]>> y, int k) {
+        for (Map.Entry<String, ArrayList<String[]>> s : y.entrySet()) {
+            if (s.getKey().equals(ele.getNodeName())) {
+                for (String[] x : s.getValue()) {
+                        if (x[5].equals("landmark")) {
+                                continue;
+                        }
+                        Element e = doc.createElement(x[5]);
+                        e.appendChild(doc.createTextNode(String.valueOf(k)));	// get data here and append as text	
+                        ele.appendChild(e);
+                }
+                break;
+            }
         }
     }
     
