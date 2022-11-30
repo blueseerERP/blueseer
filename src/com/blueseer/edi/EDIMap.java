@@ -1665,6 +1665,27 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         }
     }
     
+    public static int CountOMD(String tag) {
+        Map<String, HashMap<String,String>> MD = new LinkedHashMap<String, HashMap<String,String>>(OMD);
+        int i = 0;
+        for (Map.Entry<String, HashMap<String,String>> z : MD.entrySet()) {
+                if (z.getKey().split(":")[0].equals(tag)) {
+                    i++;
+                }
+        }
+        return i;
+    }
+    
+    public static int CountLMLoopsOFS(String landmark) {
+        String[] LMFields = OSF.get(landmark).get(0);
+        int i = 0;
+        if (LMFields != null && LMFields.length > 5) {
+            i = Integer.valueOf(LMFields[2]);
+        }
+        return i;
+    }
+    
+    
     public static String[] writeOMD(String[] c, String[] tp) {
          String[] r = new String[2];
     	 String segment = "";
@@ -1925,18 +1946,11 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         
         Element rootElement = doc.createElement(OSF.values().toArray()[0].toString());
         
-        createXML(rootElement, 0, doc, exclude, OSF);
+        createXML(rootElement, 0, doc, exclude, OSF, MD);
         
         doc.appendChild(rootElement);
              
-         for (Map.Entry<String, HashMap<String,String>> z : MD.entrySet()) {
- 		//	ArrayList<String[]> fields = z.getValue();
- 			
-                // write out all fields of this segment
-                HashMap<String,String> mapValues = MD.get(z.getKey());
-        //	System.out.println("loopentrycount:" + mapValuesLoops.keySet());
-                // loop through integers
-         }
+         
 
         
         TransformerFactory tf = TransformerFactory.newInstance();
@@ -1964,25 +1978,43 @@ public abstract class EDIMap {  // took out the implements EDIMapi
     	 return r;
      }
     
-    public static void createXML(Element ele, int level, Document doc, ArrayList<String> exclude, LinkedHashMap<String, ArrayList<String[]>> y) {
+    public static void createXML(Element ele, int level, Document doc, ArrayList<String> exclude, LinkedHashMap<String, ArrayList<String[]>> y, Map<String, HashMap<String,String>> MD) {
 	  //  System.out.println(level + " " + "Name: "+ele.getNodeName() + "     Value: "+ele.getNodeValue());
-	    ArrayList<String> list = getChildren(ele.getNodeName(),y);
+	    
+            ArrayList<String> list = getChildren(ele.getNodeName(),y);
 	    exclude.add(ele.getNodeName());
 	    for (int i = 0; i < list.size(); i++) {
 		Element childNode = null;
 		      
 		      
-		int limit = 1;
-		// get actual loopcount      
-				
-                for (int k = 0; k < limit; k++) {
-                  childNode = doc.createElement(list.get(i));
-                  overlayData(childNode, doc, y, k);
-                  ele.appendChild(childNode);
+		int actual = CountOMD(list.get(i));  // get actual loopcount  
+		int maxallowed = CountLMLoopsOFS(list.get(i)); 
+                int limit = 0;
+                if (actual >= maxallowed) {
+                    limit = maxallowed;
+                } else {
+                    limit = actual;
                 }
+                if (limit <= 0) {
+                    limit = 1;
+                }
+		
+                for (Map.Entry<String, HashMap<String,String>> z : MD.entrySet()) {
+                    HashMap<String,String> mapValues = MD.get(z.getKey());
+                    if (mapValues.containsKey(list.get(i))) {
+                        
+                        for (int k = 0; k < limit; k++) {
+                          childNode = doc.createElement(list.get(i));
+                          overlayData(childNode, doc, y, k);
+                          ele.appendChild(childNode);
+                        }
+                        
+                    }
+                }
+                
 		      
                 if (! exclude.contains(childNode.getNodeName())) {
-                createXML(childNode, level + 1, doc, exclude,y);
+                createXML(childNode, level + 1, doc, exclude,y, MD);
                 }
 	    }
 	    
