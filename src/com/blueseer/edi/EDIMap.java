@@ -2088,8 +2088,14 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                           } else {
                               v = "";
                           }
-                        e.appendChild(doc.createTextNode(v));	// get data here and append as text	
-                        ele.appendChild(e);
+                        if (x.length > 10 && x[11].toUpperCase().equals("A")) {
+                          ele.setAttribute(x[5],v);	// get data here and append as text    
+                        }  else {
+                          e.appendChild(doc.createTextNode(v));	// get data here and append as text  
+                          ele.appendChild(e);
+                        }
+                        	
+                        
                 }
                 break;
             }
