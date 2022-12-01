@@ -169,7 +169,6 @@
                   <Table columnCount="0" rowCount="4"/>
                 </Property>
                 <Property name="enabled" type="boolean" value="false"/>
-                <Property name="rowSelectionAllowed" type="boolean" value="true"/>
                 <Property name="showGrid" type="boolean" value="true"/>
               </Properties>
               <Events>

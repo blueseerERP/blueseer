@@ -144,9 +144,21 @@ public class ExchangeMaint extends javax.swing.JPanel {
     }
     
     public void clearAll() {
-      tbbasecode.setText("");
-        tbrate.setText("");
-      
+       isLoad = true;
+       tbbasecode.setText("");
+       tbrate.setText("");
+       ddforeign.removeAllItems();
+       ArrayList<String> foreign_curr = fglData.getCurrlist();
+       for (String fc : foreign_curr) {
+           if (! tbbasecode.getText().toUpperCase().equals(fc.toUpperCase())) {  // do not add base currency
+           ddforeign.addItem(fc);
+           }
+       }
+       
+        exchangemodel.setRowCount(0);
+        ratetable.setModel(exchangemodel);
+        tbbasecode.setText(OVData.getDefaultCurrency());
+        isLoad = false;
     }
     
     public void setLanguageTags(Object myobj) {
@@ -199,17 +211,10 @@ public class ExchangeMaint extends javax.swing.JPanel {
     
     public void initvars(String[] arg) {
           clearAll();
+          
           disableAll();
-          exchangemodel.setRowCount(0);
-          ratetable.setModel(exchangemodel);
-          tbbasecode.setText(OVData.getDefaultCurrency());
-          ddforeign.removeAllItems();
-           ArrayList<String> foreign_curr = fglData.getCurrlist();
-           for (String fc : foreign_curr) {
-               if (! tbbasecode.getText().toUpperCase().equals(fc.toUpperCase())) {  // do not add base currency
-               ddforeign.addItem(fc);
-               }
-           }
+          
+          
           enableAll();
           getRates();
           
@@ -384,6 +389,7 @@ public class ExchangeMaint extends javax.swing.JPanel {
                   proceed = false;
                   return;
                 }
+                
                 
                 if (proceed) {
 
