@@ -331,6 +331,20 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
             tbversion.requestFocus();
             return false;
         }
+        
+        fc = checkLength(f,"mps_doctype");
+        if (dddoctype.getSelectedItem().toString().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            dddoctype.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"mps_filetype");
+        if (ddfiletype.getSelectedItem().toString().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            ddfiletype.requestFocus();
+            return false;
+        }
        
          if (! BlueSeerUtils.isFile(EDData.getEDIStructureDir(), tbkey.getText())) {
                     bsmf.MainFrame.show(getMessageTag(1145,tbkey.getText()));
