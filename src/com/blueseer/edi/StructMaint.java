@@ -333,15 +333,15 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         }
         
         fc = checkLength(f,"mps_doctype");
-        if (dddoctype.getSelectedItem().toString().length() > fc) {
-            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+        if (dddoctype.getSelectedItem().toString().length() > fc || dddoctype.getSelectedItem().toString().isBlank()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
             dddoctype.requestFocus();
             return false;
         }
         
         fc = checkLength(f,"mps_filetype");
-        if (ddfiletype.getSelectedItem().toString().length() > fc) {
-            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+        if (ddfiletype.getSelectedItem().toString().length() > fc || ddfiletype.getSelectedItem().toString().isBlank() ) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
             ddfiletype.requestFocus();
             return false;
         }
