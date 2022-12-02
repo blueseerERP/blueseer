@@ -48,6 +48,7 @@ import static com.blueseer.shp.shpData.confirmShipperTransaction;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
@@ -76,6 +77,7 @@ import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -469,6 +471,25 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public boolean validateInput(String key) {
+        
+        Map<String,Integer> f = OVData.getTableInfo("sv_mstr");
+        int fc;
+
+        fc = checkLength(f,"sv_po");
+        if (tbpo.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbpo.requestFocus();
+            return false;
+        }  
+        
+        fc = checkLength(f,"sv_rmks");
+        if (remarks.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            remarks.requestFocus();
+            return false;
+        }  
+        
+        
         boolean b = true;
             if (ddcust.getSelectedItem() == null || ddcust.getSelectedItem().toString().isEmpty()) {
                 b = false;
