@@ -64,6 +64,7 @@ import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsNumber;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDoubleWithSymbol;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
@@ -852,79 +853,86 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public boolean validateInput(dbaction x) {
-        boolean b = true;
-                
-                if (tbkey.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbkey.requestFocus();
-                    return b;
-                }
-                
-                if (orddet.getRowCount() == 0) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1089));
-                    ddship.requestFocus();
-                    return b;
-                }
-                
         
-                if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    ddsite.requestFocus();
-                    return b;
-                }
+        Map<String,Integer> f = OVData.getTableInfo("so_mstr");
+        int fc;
+
+        fc = checkLength(f,"so_nbr");
+        if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbkey.requestFocus();
+            return false;
+        }  
+        
+        fc = checkLength(f,"so_po");
+        if (ponbr.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            ponbr.requestFocus();
+            return false;
+        } 
+        
+        fc = checkLength(f,"so_rmks");
+        if (remarks.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            remarks.requestFocus();
+            return false;
+        }
+        
+        if (orddet.getRowCount() == 0) {
+            bsmf.MainFrame.show(getMessageTag(1089));
+            ddship.requestFocus();
+            return false;
+        }
+
+
+        if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1024));
+            ddsite.requestFocus();
+            return false;
+        }
+
+        if ( ddcust.getSelectedItem() == null || ddcust.getSelectedItem().toString().isEmpty() ) {
+            bsmf.MainFrame.show(getMessageTag(1024));
+            ddcust.requestFocus();
+            return false;
+        }
+        if ( ddship.getSelectedItem() == null || ddship.getSelectedItem().toString().isEmpty() || ddship.getSelectedItem().toString().equals("<new>")) {
+            bsmf.MainFrame.show(getMessageTag(1024));
+            ddship.requestFocus();
+            return false;
+        }
+
+
+        if (ddcurr.getSelectedItem() == null || ddcurr.getSelectedItem().toString().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1024));
+            return false;
+        }
+
+
+
+        terms = cusData.getCustTerms(ddcust.getSelectedItem().toString());
+        arcc = cusData.getCustSalesCC(ddcust.getSelectedItem().toString());
+        aracct = cusData.getCustSalesAcct(ddcust.getSelectedItem().toString());
+        curr = ddcurr.getSelectedItem().toString();
+        if (terms == null   || aracct == null   || arcc == null || curr == null ||
+                terms.isEmpty() || aracct.isEmpty() || arcc.isEmpty() || curr.isEmpty()
+                 ) {
+                bsmf.MainFrame.show(getMessageTag(1090));
+                return false;
+            }   
                 
-                if ( ddcust.getSelectedItem() == null || ddcust.getSelectedItem().toString().isEmpty() ) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    ddcust.requestFocus();
-                    return b;
-                }
-                if ( ddship.getSelectedItem() == null || ddship.getSelectedItem().toString().isEmpty() || ddship.getSelectedItem().toString().equals("<new>")) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    ddship.requestFocus();
-                    return b;
-                }
-                
-               
-                if (ddcurr.getSelectedItem() == null || ddcurr.getSelectedItem().toString().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    return b;
-                }
-                                
-                
-                
-                terms = cusData.getCustTerms(ddcust.getSelectedItem().toString());
-                arcc = cusData.getCustSalesCC(ddcust.getSelectedItem().toString());
-                aracct = cusData.getCustSalesAcct(ddcust.getSelectedItem().toString());
-                curr = ddcurr.getSelectedItem().toString();
-                if (terms == null   || aracct == null   || arcc == null || curr == null ||
-                        terms.isEmpty() || aracct.isEmpty() || arcc.isEmpty() || curr.isEmpty()
-                         ) {
-                        b = false;
-                        bsmf.MainFrame.show(getMessageTag(1090));
-                        return b;
-                    }   
                 
                 
                 
-                
-                 // lets check for foreign currency with no exchange rate
-            if (! curr.toUpperCase().equals(basecurr.toUpperCase())) {
+             // lets check for foreign currency with no exchange rate
+        if (! curr.toUpperCase().equals(basecurr.toUpperCase())) {
             if (OVData.getExchangeRate(basecurr, curr).isEmpty()) {
                 bsmf.MainFrame.show(getMessageTag(1091, curr + "/" + basecurr));
-                b = false;
+                return false;
             }
-            }
-                
-                
-                
-               
-        return b;
+        }
+              
+        return true;
     }
     
     public void initvars(String[] arg) {
