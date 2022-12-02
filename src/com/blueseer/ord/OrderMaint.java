@@ -1804,12 +1804,10 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         discount.setText("0");
         String[] TypeAndPrice = new String[]{"","0"};
         if (dduom.getItemCount() > 0 && ddpart.getItemCount() > 0 && ddcust.getItemCount() > 0) {
-                
                 TypeAndPrice = invData.getItemPrice("c", ddcust.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), 
                         dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString());
                 String pricetype = TypeAndPrice[0].toString();
                 double price = bsParseDouble(TypeAndPrice[1]);
-              //  
                 listprice.setText(bsFormatDouble(price));
                 if (pricetype.equals("cust")) {
                     listprice.setBackground(Color.green);
@@ -1818,7 +1816,6 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                     listprice.setBackground(Color.white);
                 }
                 discount.setText(bsFormatDouble(invData.getItemDiscFromCust(ddcust.getSelectedItem().toString())));
-                // custnumber.setText(OVData.getCustPartFromPart(ddcust.getSelectedItem().toString(), ddpart.getSelectedItem().toString()));  
                 setNetPrice();
         }
     }
