@@ -489,19 +489,15 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
             return false;
         }  
         
-        
-        boolean b = true;
-            if (ddcust.getSelectedItem() == null || ddcust.getSelectedItem().toString().isEmpty()) {
-                b = false;
-                bsmf.MainFrame.show(getMessageTag(1024,""));
-                return b;
-            } 
-            if (ddship.getSelectedItem() == null || ddship.getSelectedItem().toString().isEmpty()) {
-                b = false;
-                bsmf.MainFrame.show(getMessageTag(1024,""));
-                return b;
-            } 
-            return b;
+        if (ddcust.getSelectedItem() == null || ddcust.getSelectedItem().toString().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1024,""));
+            return false;
+        } 
+        if (ddship.getSelectedItem() == null || ddship.getSelectedItem().toString().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1024,""));
+            return false;
+        } 
+        return true;
     }
     
     public void initvars(String[] arg) {
