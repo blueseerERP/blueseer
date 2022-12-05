@@ -2126,22 +2126,29 @@ public abstract class EDIMap {  // took out the implements EDIMapi
 	String v = "";
 	ObjectNode n = null;
 	ArrayNode an = null;
-	int loopcount = 0;
 	LinkedHashMap<String, ObjectNode> lhm = new LinkedHashMap<String, ObjectNode>();
 	for (Map.Entry<String, ArrayList<String[]>> s : y.entrySet()) {
 		count++;
 		tag = s.getKey();
 		parent = s.getValue().get(0)[1];
-		loopcount = Integer.valueOf(s.getValue().get(0)[2]);
-		if (tag.equals("items") || tag.equals("addresses")) {
-			loopcount = 2;
-		} else {
-			loopcount = 1;
-		}
+                
+                int actual = CountOMD(tag);  // get actual loopcount  
+		int maxallowed = CountLMLoopsOFS(tag); 
+                int limit = 0;
+                if (actual >= maxallowed) {
+                    limit = maxallowed;
+                } else {
+                    limit = actual;
+                }
+                if (limit <= 0) {
+                    limit = 1;
+                }
+                
+               
 		ArrayList<String[]> fields = y.get(s.getKey());
-		if (loopcount > 1) {
+		if (limit > 1) {
 			an = mapper.createArrayNode();
-			for (int k = 1; k <= loopcount; k++) {
+			for (int k = 1; k <= limit; k++) {
 				n = mapper.createObjectNode();
 				for (int i = 0; i < fields.size(); i++) {
 					String[] x = fields.get(i);
