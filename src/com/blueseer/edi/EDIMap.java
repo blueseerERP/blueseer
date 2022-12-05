@@ -2127,6 +2127,17 @@ public abstract class EDIMap {  // took out the implements EDIMapi
 	ObjectNode n = null;
 	ArrayNode an = null;
 	LinkedHashMap<String, ObjectNode> lhm = new LinkedHashMap<String, ObjectNode>();
+        
+        if (GlobalDebug) {
+            for (Map.Entry<String, HashMap<String,String>> z : MD.entrySet()) {
+                    HashMap<String,String> mapValues = MD.get(z.getKey());
+                    for (Map.Entry<String,String> k : mapValues.entrySet()) {
+                    System.out.println(z.getKey() + " / " + k.getKey() + " / " + k.getValue());
+                    }
+            }
+        }
+        
+        
 	for (Map.Entry<String, ArrayList<String[]>> s : y.entrySet()) {
 		count++;
 		tag = s.getKey();
@@ -2146,6 +2157,9 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                 
                
 		ArrayList<String[]> fields = y.get(s.getKey());
+                
+                System.out.println("HERE: " + s.getKey() + "/" + limit);
+                
 		if (limit > 1) {
 			an = mapper.createArrayNode();
 			for (int k = 1; k <= limit; k++) {
@@ -2156,11 +2170,11 @@ public abstract class EDIMap {  // took out the implements EDIMapi
 						continue;
 					}
 					HashMap<String,String> mapValues = MD.get(s.getKey() + ":" + k);
-                    if (mapValues != null && mapValues.containsKey(x[5])) {
-                      v = mapValues.get(x[5]);
-                    } else {
-                        v = "";
-                    }
+                                        if (mapValues != null && mapValues.containsKey(x[5])) {
+                                          v = mapValues.get(x[5]);
+                                        } else {
+                                            v = "";
+                                        }
 					n.put(x[5], v);
 				}
 				an.add(n);
@@ -2176,11 +2190,17 @@ public abstract class EDIMap {  // took out the implements EDIMapi
 		} else {
 			n = mapper.createObjectNode();
 			for (int i = 0; i < fields.size(); i++) {
-				String[] recArray = fields.get(i);
-				if (recArray[5].equals("landmark")) {
+				String[] x = fields.get(i);
+				if (x[5].equals("landmark")) {
 					continue;
 				}
-				n.put(recArray[5], "foo");
+                                HashMap<String,String> mapValues = MD.get(s.getKey() + ":" + "1");
+                                if (mapValues != null && mapValues.containsKey(x[5])) {
+                                  v = mapValues.get(x[5]);
+                                } else {
+                                    v = "";
+                                }
+				n.put(x[5], v);
 			}
 			
 			if (lhm.containsKey(parent)) {
