@@ -38,6 +38,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -2101,6 +2103,83 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             }
         }
     }
+    
+    public static ObjectNode buildJSON(ObjectMapper mapper, LinkedHashMap<String, ArrayList<String[]>> y, Map<String, HashMap<String,String>> MD) {
+	
+	int count = 0;
+	String tag = "";
+	String parent = "";
+	String v = "";
+	ObjectNode n = null;
+	ArrayNode an = null;
+	int loopcount = 0;
+	LinkedHashMap<String, ObjectNode> lhm = new LinkedHashMap<String, ObjectNode>();
+	for (Map.Entry<String, ArrayList<String[]>> s : y.entrySet()) {
+		count++;
+		tag = s.getKey();
+		parent = s.getValue().get(0)[1];
+		loopcount = Integer.valueOf(s.getValue().get(0)[2]);
+		if (tag.equals("items") || tag.equals("addresses")) {
+			loopcount = 2;
+		} else {
+			loopcount = 1;
+		}
+		ArrayList<String[]> fields = y.get(s.getKey());
+		if (loopcount > 1) {
+			an = mapper.createArrayNode();
+			for (int k = 1; k <= loopcount; k++) {
+				n = mapper.createObjectNode();
+				for (int i = 0; i < fields.size(); i++) {
+					String[] x = fields.get(i);
+					if (x[5].equals("landmark")) {
+						continue;
+					}
+					HashMap<String,String> mapValues = MD.get(s.getKey() + ":" + k);
+                    if (mapValues != null && mapValues.containsKey(x[5])) {
+                      v = mapValues.get(x[5]);
+                    } else {
+                        v = "";
+                    }
+					n.put(x[5], v);
+				}
+				an.add(n);
+			}
+			
+			if (lhm.containsKey(parent)) {
+				ObjectNode m = lhm.get(parent);
+			    m.set(tag, an);
+				lhm.put(parent, m);
+			} 
+			
+			
+		} else {
+			n = mapper.createObjectNode();
+			for (int i = 0; i < fields.size(); i++) {
+				String[] recArray = fields.get(i);
+				if (recArray[5].equals("landmark")) {
+					continue;
+				}
+				n.put(recArray[5], "foo");
+			}
+			
+			if (lhm.containsKey(parent)) {
+				ObjectNode m = lhm.get(parent);
+			    m.set(tag, n);
+				lhm.put(parent, m);
+			} else {
+				lhm.put(tag, n);
+			}
+			
+		}
+		
+		
+		
+	}
+	
+	return lhm.get(parent);
+}
+
+
     
     @EDI.AnnoDoc(desc = {"method assigns output value for element of specific segment.",
                      "NOTE: 2nd parameter...element...must be named element...not position",

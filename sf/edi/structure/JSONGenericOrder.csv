@@ -1,5 +1,5 @@
 #segment,parent,loopcount,isgroup,islandmark,field,desc,min,max,align,status
-order,,100,no,yes,landmark,landmark,5,5,-,M
+order,,1,no,yes,landmark,landmark,5,5,-,M
 order,,1,no,no,ordernumber,Order Number,1,40,-,O
 order,,1,no,no,site,Site Code,1,40,-,O
 order,,1,no,no,ponumber,Purchase Order Number,1,40,-,M
