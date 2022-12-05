@@ -2009,7 +2009,21 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         
            
         } // end if XML
-          
+        
+        if (outputfiletype.equals("JSON")) {
+            ObjectMapper mapper = new ObjectMapper();
+            ObjectNode root = mapper.createObjectNode();
+            String rootname = getRootOFS();
+            root.putObject(rootname);
+            ObjectNode x = buildJSON(mapper, OSF, MD); 
+            root.set(rootname, x);
+             try {
+                 content = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(root);
+             } catch (JsonProcessingException ex) {
+                 edilog(ex);
+             }
+        } // if JSON
+        
         // bsmf.MainFrame.show("here..." + outputfiletype + ": " + content);
     	clearStaticVariables();
     	 
