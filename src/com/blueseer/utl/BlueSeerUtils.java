@@ -1285,11 +1285,11 @@ public class BlueSeerUtils {
 	}
 }
   
-    public class Tree<T> {
+    public class bsTree<T> {
 	 
-    private Node<T> rootElement;
+    private bsNode<T> rootElement;
     
-    public Tree() {
+    public bsTree() {
         super();
     }
  
@@ -1297,7 +1297,7 @@ public class BlueSeerUtils {
      * Return the root Node of the tree.
      * @return the root element.
      */
-    public Node<T> getRootElement() {
+    public bsNode<T> getRootElement() {
         return this.rootElement;
     }
  
@@ -1305,7 +1305,7 @@ public class BlueSeerUtils {
      * Set the root Element for the tree.
      * @param rootElement the root element to set.
      */
-    public void setRootElement(Node<T> rootElement) {
+    public void setRootElement(bsNode<T> rootElement) {
         this.rootElement = rootElement;
     }
      
@@ -1314,8 +1314,8 @@ public class BlueSeerUtils {
      * List are generated from a pre-order traversal of the tree.
      * @return a List<Node<T>>.
      */
-    public List<Node<T>> toList() {
-        List<Node<T>> list = new ArrayList<Node<T>>();
+    public List<bsNode<T>> toList() {
+        List<bsNode<T>> list = new ArrayList<bsNode<T>>();
         walk(rootElement, list);
         return list;
     }
@@ -1336,23 +1336,23 @@ public class BlueSeerUtils {
      * @param element the starting element.
      * @param list the output of the walk.
      */
-    private void walk(Node<T> element, List<Node<T>> list) {
+    private void walk(bsNode<T> element, List<bsNode<T>> list) {
         list.add(element);
-        for (Node<T> data : element.getChildren()) {
+        for (bsNode<T> data : element.getChildren()) {
             walk(data, list);
         }
     }
 }
     
-    public class Node<T> {
+    public class bsNode<T> {
  
     public T data;
-    public List<Node<T>> children;
+    public List<bsNode<T>> children;
  
     /**
      * Default ctor.
      */
-    public Node() {
+    public bsNode() {
         super();
     }
  
@@ -1360,7 +1360,7 @@ public class BlueSeerUtils {
      * Convenience ctor to create a Node<T> with an instance of T.
      * @param data an instance of T.
      */
-    public Node(T data) {
+    public bsNode(T data) {
         this();
         setData(data);
     }
@@ -1372,9 +1372,9 @@ public class BlueSeerUtils {
      * method will return the children of a Node<T>.
      * @return the children of Node<T>
      */
-    public List<Node<T>> getChildren() {
+    public List<bsNode<T>> getChildren() {
         if (this.children == null) {
-            return new ArrayList<Node<T>>();
+            return new ArrayList<bsNode<T>>();
         }
         return this.children;
     }
@@ -1384,7 +1384,7 @@ public class BlueSeerUtils {
      * more information.
      * @param children the List<Node<T>> to set.
      */
-    public void setChildren(List<Node<T>> children) {
+    public void setChildren(List<bsNode<T>> children) {
         this.children = children;
     }
  
@@ -1404,9 +1404,9 @@ public class BlueSeerUtils {
      * the first child will create a new List<Node<T>>.
      * @param child a Node<T> object to set.
      */
-    public void addChild(Node<T> child) {
+    public void addChild(bsNode<T> child) {
         if (children == null) {
-            children = new ArrayList<Node<T>>();
+            children = new ArrayList<bsNode<T>>();
         }
         children.add(child);
     }
@@ -1417,7 +1417,7 @@ public class BlueSeerUtils {
      * @param child the Node<T> object to insert.
      * @throws IndexOutOfBoundsException if thrown.
      */
-    public void insertChildAt(int index, Node<T> child) throws IndexOutOfBoundsException {
+    public void insertChildAt(int index, bsNode<T> child) throws IndexOutOfBoundsException {
         if (index == getNumberOfChildren()) {
             // this is really an append
             addChild(child);
@@ -1449,7 +1449,7 @@ public class BlueSeerUtils {
         StringBuilder sb = new StringBuilder();
         sb.append("{").append(getData().toString()).append(",[");
         int i = 0;
-        for (Node<T> e : getChildren()) {
+        for (bsNode<T> e : getChildren()) {
             if (i > 0) {
                 sb.append(",");
             }

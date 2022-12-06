@@ -31,6 +31,7 @@ import static com.blueseer.edi.EDI.hanoi;
 import static com.blueseer.edi.EDI.trimSegment;
 import static com.blueseer.edi.ediData.getMapMstr;
 import com.blueseer.utl.BlueSeerUtils;
+import com.blueseer.utl.BlueSeerUtils.bsTree;
 import com.blueseer.utl.EDData;
 import com.blueseer.utl.OVData;
 import com.fasterxml.jackson.core.JsonParser;
@@ -1712,7 +1713,6 @@ public abstract class EDIMap {  // took out the implements EDIMapi
        
         return root;
     }
-    
     
     public static String[] writeOMD(String[] c, String[] tp) {
          String[] r = new String[2];
