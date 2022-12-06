@@ -2,7 +2,7 @@
 order,,1,no,yes,landmark,landmark,5,5,-,M
 order,,1,no,no,ordernumber,Order Number,1,40,-,O
 order,,1,no,no,site,Site Code,1,40,-,O
-order,,1,no,no,ponumber,Purchase Order Number,1,40,-,M
+order,,1,no,no,refnumber,Reference Number,1,40,-,M
 order,,1,no,no,orderdate,Order Date,1,40,-,O
 order,,1,no,no,duedate,Due Date,1,40,-,O
 order,,1,no,no,remarks,Remarks,1,40,-,O

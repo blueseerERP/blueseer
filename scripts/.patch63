@@ -48,4 +48,7 @@ patch=20
 # mods to doc recognition ; prelim work on xml, json recognition
 patch=21
 # database table schema change for edi_docdet and map_struct...along with form redesign for these two menus
-#
+patch=22
+# structural completion of EDI JSON and XML in and out
+
+
