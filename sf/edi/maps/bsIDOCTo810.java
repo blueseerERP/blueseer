@@ -95,11 +95,11 @@ totalqty += Double.valueOf(getInput(i,"E2EDP01",11).trim());
 mapSegment("IT1","e01", snum(i));
 mapSegment("IT1","e02", formatNumber(getInput(i,"E2EDP01",11),"4"));  // menge
 mapSegment("IT1","e03", getInput(i,"E2EDP01",12));  // menee
-mapSegment("IT1","e04", formatNumber(getInput(i,"E2EDP26","qualf:001", 8),"4"));  // price
+mapSegment("IT1","e04", formatNumber(getInput(i,"E2EDP01:E2EDP26","qualf:001", 8),"4"));  // price
 mapSegment("IT1","e06","IN");
-mapSegment("IT1","e07",getInput(i,"E2EDP19","qualf:002", 8));  // mfg item
+mapSegment("IT1","e07",getInput(i,"E2EDP01:E2EDP19","qualf:002", 8));  // mfg item
 mapSegment("IT1","e08","UP");
-mapSegment("IT1","e09",getInput(i,"E2EDP19","qualf:003", 8));  // upc item
+mapSegment("IT1","e09",getInput(i,"E2EDP01:E2EDP19","qualf:003", 8));  // upc item
 commitSegment("IT1");
 
 
@@ -111,7 +111,7 @@ commitSegment("PID");
 
 /* end of item loop */
 
-var tds_sum = Double.valueOf(getInput("E2EDS01","sumid:010", "summe").trim()) * 100;
+var tds_sum = Double.valueOf(getInput("E2EDS01","7:010", 8).trim()) * 100;
 mapSegment("TDS","e01",formatNumber(snum(tds_sum),"4"));
 commitSegment("TDS");
 
