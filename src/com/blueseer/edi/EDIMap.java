@@ -1368,7 +1368,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                     }
 
                     mappedinput = parenthead + x[0] + "+" + groupcount.get(groupparent) + "+" + loop + "=" + String.join(",",x);
-                    System.out.println("HERE: " + mappedinput);
+              //      System.out.println("HERE: " + mappedinput);
                     set.put(groupkey, loop);
                     mappedData.put(parenthead + x[0] + "+" + groupcount.get(groupparent) + "+" + loop , x);
                     SegmentCounter.add(parenthead + x[0] + "+" + groupcount.get(groupparent));
@@ -2158,7 +2158,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                
 		ArrayList<String[]> fields = y.get(s.getKey());
                 
-                System.out.println("HERE: " + s.getKey() + "/" + limit);
+              //  System.out.println("HERE: " + s.getKey() + "/" + limit);
                 
 		if (limit > 1) {
 			an = mapper.createArrayNode();
