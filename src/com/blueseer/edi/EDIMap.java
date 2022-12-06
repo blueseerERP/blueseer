@@ -2158,7 +2158,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                
 		ArrayList<String[]> fields = y.get(s.getKey());
                 
-              //  System.out.println("HERE: " + s.getKey() + "/" + limit);
+                System.out.println("HERE: " + s.getKey() + "/" + limit + "/" + fields.size());
                 
 		if (limit > 1) {
 			an = mapper.createArrayNode();
@@ -2176,6 +2176,8 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                                             v = "";
                                         }
 					n.put(x[5], v);
+                                        
+                                        
 				}
 				an.add(n);
 			}
