@@ -1285,7 +1285,7 @@ public class BlueSeerUtils {
 	}
 }
   
-    public class bsTree<T> {
+    public static class bsTree<T> {
 	 
     private bsNode<T> rootElement;
     
@@ -1344,7 +1344,7 @@ public class BlueSeerUtils {
     }
 }
     
-    public class bsNode<T> {
+    public static class bsNode<T> {
  
     public T data;
     public List<bsNode<T>> children;

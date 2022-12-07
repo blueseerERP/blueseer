@@ -2016,9 +2016,15 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode root = mapper.createObjectNode();
             String rootname = getRootOFS();
-            root.putObject(rootname);
-            ObjectNode x = buildJSON(mapper, OSF, MD); 
-            root.set(rootname, x);
+           // root.putObject(rootname);
+           // ObjectNode x = buildJSON(mapper, OSF, MD); bsNode<String> node, ObjectNode obN
+            
+            bsTree<String> tree = new bsTree<String>();
+            bsNode<String> rootNode = new bsNode<String>("");
+	    bsNode<String> phantomroot = new bsNode<String>("");
+            phantomroot.addChild(treeFromFile(rootNode, rootname));
+            tree.setRootElement(rootNode);
+            root.set(rootname, generateJSON(tree.getRootElement(), mapper.createObjectNode(), OSF, MD));
              try {
                  content = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(root);
              } catch (JsonProcessingException ex) {
@@ -2224,23 +2230,87 @@ public abstract class EDIMap {  // took out the implements EDIMapi
 	return lhm.get(parent);
 }
 
-    public static ObjectNode generateJSON(bsNode<String> node, ObjectNode obN) {
+    public static ObjectNode generateJSON(bsNode<String> node, ObjectNode obN, LinkedHashMap<String, ArrayList<String[]>> y, Map<String, HashMap<String,String>> MD) {
     if (node == null) {
         return obN;
     }
 
     // collect fields here
-    obN.put("test", "test");
+    String v = "";
+    for (Map.Entry<String, ArrayList<String[]>> s : y.entrySet()) {
+    if (! s.getKey().equals(node.getData())) {
+        continue;
+    }
+    ArrayList<String[]> fields = y.get(s.getKey());
+    for (int i = 0; i < fields.size(); i++) {
+				String[] x = fields.get(i);
+				if (x[5].equals("landmark")) {
+					continue;
+				}
+                                HashMap<String,String> mapValues = MD.get(s.getKey() + ":" + "1");
+                                if (mapValues != null && mapValues.containsKey(x[5])) {
+                                  v = mapValues.get(x[5]);
+                                } else {
+                                    v = "";
+                                }
+				obN.put(x[5], v);
+			}
+    }
     
     // now do children
     Iterator<bsNode<String>> it = node.getChildren().iterator();
     while (it.hasNext()) {  
     	bsNode<String> nextNode = it.next();
-        obN.set(nextNode.getData(), generateJSON(nextNode, new ObjectMapper().createObjectNode()));
+        obN.set(nextNode.getData(), generateJSON(nextNode, new ObjectMapper().createObjectNode(), OSF, MD));
     }
     return obN;
 }
 
+    public static bsNode<String> treeFromFile(bsNode<String> node, String tag) {
+	if (tag.isBlank()) {
+        return node;
+        }
+	ArrayList<String> list = getChildrenFromFile(tag, OSF);
+	
+	for (int i = 0; i < list.size(); i++) {
+		bsNode<String> newnode = new bsNode<String>(list.get(i));
+		node.addChild(newnode);
+		if (hasChildren(list.get(i), OSF)) {
+			treeFromFile(newnode, list.get(i));
+		} 
+	}
+	return node;
+    }
+
+    public static boolean hasChildren(String x, LinkedHashMap<String, ArrayList<String[]>> y) {
+	for (Map.Entry<String, ArrayList<String[]>> s : y.entrySet()) {
+		String[] recArray = s.getValue().get(0);
+		if (! recArray[5].equals("landmark")) {
+			continue;
+		}
+		if (recArray[1].equals(x)) {
+			return true;
+		}
+	}
+	return false;
+}
+
+    public static ArrayList<String> getChildrenFromFile(String x, LinkedHashMap<String, ArrayList<String[]>> y) {
+	ArrayList<String> list = new ArrayList<String>();
+	String parent = "";
+	for (Map.Entry<String, ArrayList<String[]>> s : y.entrySet()) {
+		
+		String[] recArray = s.getValue().get(0);
+		if (! recArray[5].equals("landmark")) {
+			continue;
+		}
+		if (recArray[1].equals(x)) {
+		//	System.out.println("children: " + s.getKey());
+			list.add(s.getKey());
+		}
+	}
+	return list;
+}
 
     
     @EDI.AnnoDoc(desc = {"method assigns output value for element of specific segment.",
