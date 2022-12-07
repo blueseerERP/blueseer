@@ -2236,13 +2236,46 @@ public abstract class EDIMap {  // took out the implements EDIMapi
     }
 
     // collect fields here
-    String v = "";
+    ArrayNode an = obN.arrayNode();
     for (Map.Entry<String, ArrayList<String[]>> s : y.entrySet()) {
     if (! s.getKey().equals(node.getData())) {
         continue;
     }
+    int actual = CountOMD(s.getKey());  // get actual loopcount  
+    int maxallowed = CountLMLoopsOFS(s.getKey()); 
+    int limit = 0;
+    if (actual >= maxallowed) {
+        limit = maxallowed;
+    } else {
+        limit = actual;
+    }
+    if (limit <= 0) {
+        limit = 1;
+    }
+    String v = "";
     ArrayList<String[]> fields = y.get(s.getKey());
+    
+    if (limit > 1) {
+    for (int k = 1; k <= limit; k++) {
+        ObjectNode elementNode = new ObjectMapper().createObjectNode(); 
     for (int i = 0; i < fields.size(); i++) {
+				String[] x = fields.get(i);
+				if (x[5].equals("landmark")) {
+					continue;
+				}
+                                HashMap<String,String> mapValues = MD.get(s.getKey() + ":" + k);
+                                if (mapValues != null && mapValues.containsKey(x[5])) {
+                                  v = mapValues.get(x[5]);
+                                } else {
+                                    v = "";
+                                }
+				elementNode.put(x[5], v);
+			}
+        an.add(elementNode);
+    } // for each k of limit (array counter)
+        obN.set(node.getData(), an);
+    } else {
+        for (int i = 0; i < fields.size(); i++) {
 				String[] x = fields.get(i);
 				if (x[5].equals("landmark")) {
 					continue;
@@ -2255,7 +2288,10 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                                 }
 				obN.put(x[5], v);
 			}
-    }
+    }  
+      
+    } // for each s.getKey
+    
     
     // now do children
     Iterator<bsNode<String>> it = node.getChildren().iterator();
