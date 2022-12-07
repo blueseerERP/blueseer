@@ -31,6 +31,7 @@ import static com.blueseer.edi.EDI.hanoi;
 import static com.blueseer.edi.EDI.trimSegment;
 import static com.blueseer.edi.ediData.getMapMstr;
 import com.blueseer.utl.BlueSeerUtils;
+import com.blueseer.utl.BlueSeerUtils.bsNode;
 import com.blueseer.utl.BlueSeerUtils.bsTree;
 import com.blueseer.utl.EDData;
 import com.blueseer.utl.OVData;
@@ -65,6 +66,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -2220,6 +2222,23 @@ public abstract class EDIMap {  // took out the implements EDIMapi
 	}
 	
 	return lhm.get(parent);
+}
+
+    public static ObjectNode generateJSON(bsNode<String> node, ObjectNode obN) {
+    if (node == null) {
+        return obN;
+    }
+
+    // collect fields here
+    obN.put("test", "test");
+    
+    // now do children
+    Iterator<bsNode<String>> it = node.getChildren().iterator();
+    while (it.hasNext()) {  
+    	bsNode<String> nextNode = it.next();
+        obN.set(nextNode.getData(), generateJSON(nextNode, new ObjectMapper().createObjectNode()));
+    }
+    return obN;
 }
 
 
