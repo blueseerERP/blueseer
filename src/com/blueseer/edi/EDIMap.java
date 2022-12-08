@@ -916,8 +916,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         c[23] = m[0];  // set return status
         c[38] = m[1];
     }
-    
-       
+           
     public void readOSF(String osf)  {
         
 	        LinkedHashMap<String, ArrayList<String[]>> hm = new LinkedHashMap<String, ArrayList<String[]>>();
@@ -1016,8 +1015,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         }
 }
 
-    
-    public static void readISF(String isf) {
+        public static void readISF(String isf) {
         ArrayList<String[]> list = new ArrayList<String[]>();
         File cf = new File(EDData.getEDIStructureDir() + "/" + isf);
     	BufferedReader reader; 
@@ -2259,111 +2257,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             }
         }
     }
-    
-    public static ObjectNode buildJSON(ObjectMapper mapper, LinkedHashMap<String, ArrayList<String[]>> y, Map<String, HashMap<String,String>> MD) {
-	
-	int count = 0;
-	String tag = "";
-	String parent = "";
-	String v = "";
-	ObjectNode n = null;
-	ArrayNode an = null;
-	LinkedHashMap<String, ObjectNode> lhm = new LinkedHashMap<String, ObjectNode>();
         
-        if (GlobalDebug) {
-            for (Map.Entry<String, HashMap<String,String>> z : MD.entrySet()) {
-                    HashMap<String,String> mapValues = MD.get(z.getKey());
-                    for (Map.Entry<String,String> k : mapValues.entrySet()) {
-                    System.out.println(z.getKey() + " / " + k.getKey() + " / " + k.getValue());
-                    }
-            }
-        }
-        
-        
-	for (Map.Entry<String, ArrayList<String[]>> s : y.entrySet()) {
-		count++;
-		tag = s.getKey();
-		parent = s.getValue().get(0)[1];
-                
-                int actual = CountOMD(tag);  // get actual loopcount  
-		int maxallowed = CountLMLoopsOFS(tag); 
-                int limit = 0;
-                if (actual >= maxallowed) {
-                    limit = maxallowed;
-                } else {
-                    limit = actual;
-                }
-                if (limit <= 0) {
-                    limit = 1;
-                }
-                
-               
-		ArrayList<String[]> fields = y.get(s.getKey());
-                
-               // System.out.println("HERE: " + s.getKey() + "/" + limit + "/" + fields.size());
-                
-		if (limit > 1) {
-			an = mapper.createArrayNode();
-			for (int k = 1; k <= limit; k++) {
-				n = mapper.createObjectNode();
-				for (int i = 0; i < fields.size(); i++) {
-					String[] x = fields.get(i);
-					if (x[5].equals("landmark")) {
-						continue;
-					}
-					HashMap<String,String> mapValues = MD.get(s.getKey() + ":" + k);
-                                        if (mapValues != null && mapValues.containsKey(x[5])) {
-                                          v = mapValues.get(x[5]);
-                                        } else {
-                                            v = "";
-                                        }
-					n.put(x[5], v);
-                                        
-                                        
-				}
-				an.add(n);
-			}
-			
-			if (lhm.containsKey(parent)) {
-				ObjectNode m = lhm.get(parent);
-			    m.set(tag, an);
-				lhm.put(parent, m);
-			} 
-			
-			
-		} else {
-			n = mapper.createObjectNode();
-			for (int i = 0; i < fields.size(); i++) {
-				String[] x = fields.get(i);
-				if (x[5].equals("landmark")) {
-					continue;
-				}
-                                HashMap<String,String> mapValues = MD.get(s.getKey() + ":" + "1");
-                                if (mapValues != null && mapValues.containsKey(x[5])) {
-                                  v = mapValues.get(x[5]);
-                                } else {
-                                    v = "";
-                                }
-				n.put(x[5], v);
-			}
-			
-			if (lhm.containsKey(parent)) {
-				ObjectNode m = lhm.get(parent);
-			    m.set(tag, n);
-				lhm.put(parent, m);
-			} else {
-				lhm.put(tag, n);
-			}
-			
-		}
-		
-		
-		
-	}
-	
-	return lhm.get(parent);
-}
-
     public static ObjectNode generateJSON(bsNode<String> node, ObjectNode obN, LinkedHashMap<String, ArrayList<String[]>> y, Map<String, HashMap<String,String>> MD) {
     if (node == null) {
         return obN;
