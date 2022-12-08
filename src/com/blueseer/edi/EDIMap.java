@@ -2098,15 +2098,23 @@ public abstract class EDIMap {  // took out the implements EDIMapi
     
     public static void overlayData(Element ele, Document doc, LinkedHashMap<String, ArrayList<String[]>> y, int k, Map<String, HashMap<String,String>> MD) {
         String v = "";
+        String parent = "";
+        String parentChildKey = "";
         for (Map.Entry<String, ArrayList<String[]>> s : y.entrySet()) {
             if (s.getKey().equals(ele.getNodeName())) {
                 for (String[] x : s.getValue()) {
                         if (x[5].equals("landmark")) {
+                                parent = x[1];
                                 continue;
                         }
+                        if (! parent.isEmpty()) {
+                            parentChildKey = parent + ":";
+                        } else {
+                            parentChildKey = "";
+                        }
                         Element e = doc.createElement(x[5]);
-                         // System.out.println("HERE skey: " + s.getKey() + "/" + k + "/" + x[5]);
-                          HashMap<String,String> mapValues = MD.get(s.getKey() + ":" + k);
+                          System.out.println("HERE skey: " + parentChildKey + s.getKey() + "/" + k + "/" + x[5]);
+                          HashMap<String,String> mapValues = MD.get(parentChildKey + s.getKey() + ":" + k);
                           if (mapValues != null && mapValues.containsKey(x[5])) {
                             v = mapValues.get(x[5]);
                           } else {
@@ -2166,7 +2174,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                
 		ArrayList<String[]> fields = y.get(s.getKey());
                 
-                System.out.println("HERE: " + s.getKey() + "/" + limit + "/" + fields.size());
+               // System.out.println("HERE: " + s.getKey() + "/" + limit + "/" + fields.size());
                 
 		if (limit > 1) {
 			an = mapper.createArrayNode();
@@ -2253,6 +2261,9 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         limit = 1;
     }
     String v = "";
+    String parent = "";
+    String parentChildKey = "";
+    
     ArrayList<String[]> fields = y.get(s.getKey());
     
     if (limit > 1) {
@@ -2261,9 +2272,15 @@ public abstract class EDIMap {  // took out the implements EDIMapi
     for (int i = 0; i < fields.size(); i++) {
 				String[] x = fields.get(i);
 				if (x[5].equals("landmark")) {
-					continue;
+                                    parent = x[1];
+					continue;                                        
 				}
-                                HashMap<String,String> mapValues = MD.get(s.getKey() + ":" + k);
+                                if (! parent.isEmpty()) {
+                                    parentChildKey = parent + ":";
+                                } else {
+                                    parentChildKey = "";
+                                }
+                                HashMap<String,String> mapValues = MD.get(parentChildKey + s.getKey() + ":" + k);
                                 if (mapValues != null && mapValues.containsKey(x[5])) {
                                   v = mapValues.get(x[5]);
                                 } else {
@@ -2278,9 +2295,15 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         for (int i = 0; i < fields.size(); i++) {
 				String[] x = fields.get(i);
 				if (x[5].equals("landmark")) {
+                                        parent = x[1];
 					continue;
 				}
-                                HashMap<String,String> mapValues = MD.get(s.getKey() + ":" + "1");
+                                if (! parent.isEmpty()) {
+                                    parentChildKey = parent + ":";
+                                } else {
+                                    parentChildKey = "";
+                                }
+                                HashMap<String,String> mapValues = MD.get(parentChildKey + s.getKey() + ":" + "1");
                                 if (mapValues != null && mapValues.containsKey(x[5])) {
                                   v = mapValues.get(x[5]);
                                 } else {
