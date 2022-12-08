@@ -1,0 +1,40 @@
+#segment,parent,loopcount,isgroup,islandmark,field,desc,min,max,align,status,type
+cXML,,1,no,yes,landmark,landmark,10,10,-,M,N
+Header,cXML,1,no,yes,landmark,landmark,6,6,-,M,N
+From,cXML:Header,1,no,yes,landmark,landmark,6,6,-,M,N
+Credential,cXML:Header:From,1,no,yes,landmark,landmark,6,6,-,M,N
+Identity,cXML:Header:From:Credential,1,no,no,type,type,1,40,-,O,A
+To,cXML:Header,1,no,yes,landmark,landmark,6,6,-,M,N
+Credential,cXML:Header:To,1,no,yes,landmark,landmark,6,6,-,M,N
+Identity,cXML:Header:To:Credential,1,no,no,type,type,1,40,-,O,A
+Sender,cXML:Header,1,no,yes,landmark,landmark,6,6,-,M,N
+Credential,cXML:Header:Sender,1,no,yes,landmark,landmark,6,6,-,M,N
+Identity,cXML:Header:Sender:Credential,1,no,no,type,type,1,40,-,O,A
+Request,cXML,5,yes,yes,landmark,landmark,9,9,-,M,N
+OrderRequest,cXML:Request,5,yes,yes,landmark,landmark,9,9,-,M,N
+OrderRequestHeader,cXML:Request:OrderRequest,5,yes,yes,landmark,landmark,9,9,-,M,N
+ShipTo,cXML:Request:OrderRequest:OrderRequestHeader,5,yes,yes,landmark,landmark,9,9,-,M,N
+Address,cXML:Request:OrderRequest:OrderRequestHeader:ShipTo,1,no,no,addressname,Name,1,40,-,O,F
+Address,cXML:Request:OrderRequest:OrderRequestHeader:ShipTo,1,no,no,addressline1,Line 1 Addr,1,70,-,O,F
+Address,cXML:Request:OrderRequest:OrderRequestHeader:ShipTo,1,no,no,addresscity,City,1,40,-,O,F
+Address,cXML:Request:OrderRequest:OrderRequestHeader:ShipTo,1,no,no,addressstate,State,1,40,-,O,F
+Address,cXML:Request:OrderRequest:OrderRequestHeader:ShipTo,1,no,no,addresszip,Postal / Zip Code,1,40,-,O,F
+Address,cXML:Request:OrderRequest:OrderRequestHeader:ShipTo,1,no,no,addresscountry,Country,1,3,-,O,F
+BillTo,cXML:Request:OrderRequest:OrderRequestHeader,5,yes,yes,landmark,landmark,9,9,-,M,N
+Address,cXML:Request:OrderRequest:OrderRequestHeader:BillTo,1,no,no,addressname,Name,1,40,-,O,F
+Address,cXML:Request:OrderRequest:OrderRequestHeader:BillTo,1,no,no,addressline1,Line 1 Addr,1,70,-,O,F
+Address,cXML:Request:OrderRequest:OrderRequestHeader:BillTo,1,no,no,addresscity,City,1,40,-,O,F
+Address,cXML:Request:OrderRequest:OrderRequestHeader:BillTo,1,no,no,addressstate,State,1,40,-,O,F
+Address,cXML:Request:OrderRequest:OrderRequestHeader:BillTo,1,no,no,addresszip,Postal / Zip Code,1,40,-,O,F
+Address,cXML:Request:OrderRequest:OrderRequestHeader:BillTo,1,no,no,addresscountry,Country,1,3,-,O,F
+ItemOut,cXML:Request:OrderRequest,1,yes,yes,landmark,landmark,9,9,-,M,N
+ItemOut,cXML:Request:OrderRequest,100,yes,yes,landmark,landmark,9,9,-,M,N
+ItemOut,cXML:Request:OrderRequest,1,no,no,line,Line Number,1,40,-,O,F
+ItemOut,cXML:Request:OrderRequest,1,no,no,ItemOutnumber,Item Number,1,40,-,O,F
+ItemOut,cXML:Request:OrderRequest,1,no,no,uom,Unit of Measure,1,40,-,O,F
+ItemOut,cXML:Request:OrderRequest,1,no,no,description,Description,1,40,-,O,F
+ItemOut,cXML:Request:OrderRequest,1,no,no,quantity,Quantity Ordered,1,40,-,O,F
+ItemOut,cXML:Request:OrderRequest,1,no,no,listprice,List Price,1,40,-,O,F
+ItemOut,cXML:Request:OrderRequest,1,no,no,netprice,Net Price,1,40,-,O,F
+ItemOut,cXML:Request:OrderRequest,1,no,no,custnumber,Customer Item Number,1,40,-,O,F
+ItemOut,cXML:Request:OrderRequest,1,no,no,skunumber,Sku Number,1,40,-,O,F

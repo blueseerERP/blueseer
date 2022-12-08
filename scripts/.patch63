@@ -50,5 +50,6 @@ patch=21
 # database table schema change for edi_docdet and map_struct...along with form redesign for these two menus
 patch=22
 # structural completion of EDI JSON and XML in and out
-
+patch=23
+# new method for creating JSON output...using an itermediate Tree structure
 
