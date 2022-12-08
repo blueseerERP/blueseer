@@ -249,9 +249,13 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         readISF(ifsfile);
     }
     
-    public void setOutputStructureFile(String ofs) {
+    public void setOutputStructureFile(String ofs, String ofstype) {
         ofsfile = ofs;
-        readOSF(ofsfile);
+        if (ofstype.toUpperCase().equals("XML") || ofstype.toUpperCase().equals("JSON")) {
+            readOSFTreeType(ofsfile); // revert back to readOSF
+        } else {
+            readOSF(ofsfile);
+        }
     }
     
     public void setOutPutFileType(String filetype) {
@@ -340,7 +344,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
            }
            
            setInputStructureFile(x.map_ifs());
-           setOutputStructureFile(x.map_ofs());
+           setOutputStructureFile(x.map_ofs(), x.map_outfiletype());
        //   bsmf.MainFrame.show(outsender + "/" + outreceiver + "/" + outputdoctype + "/" + outputfiletype + "/" + ifsfile + "/" + ofsfile);
            return;
            
@@ -368,7 +372,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         setInputStructureFile(tp[16]);
         }
         if (! tp[15].equals("DB")) {
-        setOutputStructureFile(tp[17]);
+        setOutputStructureFile(tp[17], tp[15]);
         }
      }
 
@@ -962,6 +966,57 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         }
 }
 
+    public void readOSFTreeType(String osf)  {
+        
+	        LinkedHashMap<String, ArrayList<String[]>> hm = new LinkedHashMap<String, ArrayList<String[]>>();
+	        ArrayList<String[]> list = new ArrayList<String[]>();
+	        Set<String> set = new LinkedHashSet<String>();
+                String tag = "";
+                String ptag = "";
+                String ckey = "";
+                
+	        File cf = new File(EDData.getEDIStructureDir() + "/" + osf);
+	    	BufferedReader reader; 
+        try {
+            reader = new BufferedReader(new FileReader(cf));
+        
+			String line;
+			while ((line = reader.readLine()) != null) {
+                                if (line.startsWith("#")) {
+				continue;
+			        }
+				if (! line.isEmpty()) {
+                                    String[] t = line.split(",",-1);
+                                    tag = t[0];
+                                    ptag = t[1];
+                                    if (ptag.isBlank()) {
+                                        ckey = tag;
+                                    } else {
+                                        ckey = ptag + ":" + tag;
+                                    }
+                                    if (hm.containsKey(ckey)) {
+                                      ArrayList<String[]> xlist = hm.get(ckey);
+                                      xlist.add(t);
+                                      hm.put(ckey, xlist);
+                                    }  else {
+                                      ArrayList<String[]> x = new ArrayList<String[]>();
+                                      x.add(t);
+                                      hm.put(ckey, x);
+                                    }  
+				}
+			}
+			reader.close();
+		OSF = hm;
+                } catch (FileNotFoundException ex) {
+             edilog(ex);
+            setError("outbound structure file not found: " + EDData.getEDIStructureDir() + "/" + osf);
+        } catch (IOException ex) {
+             edilog(ex);
+            setError("outbound structure file IOException");
+        }
+}
+
+    
     public static void readISF(String isf) {
         ArrayList<String[]> list = new ArrayList<String[]>();
         File cf = new File(EDData.getEDIStructureDir() + "/" + isf);
@@ -1686,10 +1741,13 @@ public abstract class EDIMap {  // took out the implements EDIMapi
     }
     
     public static int CountLMLoopsOFS(String landmark) {
-        String[] LMFields = OSF.get(landmark).get(0);
+        
         int i = 0;
-        if (LMFields != null && LMFields.length > 5) {
-            i = Integer.valueOf(LMFields[2]);
+        if (OSF.get(landmark) != null && OSF.get(landmark).size() > 0) {
+            String[] LMFields = OSF.get(landmark).get(0);
+            if (LMFields != null && LMFields.length > 5) {
+                i = Integer.valueOf(LMFields[2]);
+            }
         }
         return i;
     }
@@ -1975,19 +2033,27 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         Document doc = docBuilder.newDocument();
         
         Element rootElement = doc.createElement(getRootOFS());
-        
+     //   System.out.println("HERE root is: " + rootElement.getNodeName());
         if (GlobalDebug) {
+            System.out.println("OMD output:");
             for (Map.Entry<String, HashMap<String,String>> z : MD.entrySet()) {
                     HashMap<String,String> mapValues = MD.get(z.getKey());
                     for (Map.Entry<String,String> k : mapValues.entrySet()) {
                     System.out.println(z.getKey() + " / " + k.getKey() + " / " + k.getValue());
                     }
             }
+            System.out.println("OSF output:");
+            for (Map.Entry<String, ArrayList<String[]>> osf : OSF.entrySet()) {
+                ArrayList<String[]> osfarray = osf.getValue();
+                for (String[] osfx : osfarray) {
+                    System.out.println("osf key: " + osf.getKey() + "   osf value: " + String.join(",", osfx)); 
+                }
+            }
         }
         // set Attributes if exist of root Element
-        overlayData(rootElement, doc, OSF, 1, MD);
+        overlayData(rootElement, "", doc, OSF, 1, MD);
         
-        createXML(rootElement, 0, doc, exclude, OSF, MD);
+        createXML(rootElement, "", 0, doc, exclude, OSF, MD);
         
         doc.appendChild(rootElement);
              
@@ -2030,7 +2096,6 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             root.set(rootname, generateJSON(tree.getRootElement(), mapper.createObjectNode(), OSF, MD));
              try {
                  content = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(root);
-                 
              } catch (JsonProcessingException ex) {
                  edilog(ex);
              }
@@ -2042,17 +2107,22 @@ public abstract class EDIMap {  // took out the implements EDIMapi
     	 return r;
      }
     
-    public static void createXML(Element ele, int level, Document doc, ArrayList<String> exclude, LinkedHashMap<String, ArrayList<String[]>> y, Map<String, HashMap<String,String>> MD) {
+    public static void createXML(Element ele, String parentx, int level, Document doc, ArrayList<String> exclude, LinkedHashMap<String, ArrayList<String[]>> osf, Map<String, HashMap<String,String>> MD) {
 	  //  System.out.println(level + " " + "Name: "+ele.getNodeName() + "     Value: "+ele.getNodeValue());
 	    
-            ArrayList<String> list = getChildren(ele.getNodeName(),y);
+            ArrayList<String> list = getChildren(ele.getNodeName(), parentx ,osf);
 	    exclude.add(ele.getNodeName());
+            String tag = "";
+            String ptag = "";
 	    for (int i = 0; i < list.size(); i++) {
 		Element childNode = null;
 		      
-		      
-		int actual = CountOMD(list.get(i));  // get actual loopcount  
-		int maxallowed = CountLMLoopsOFS(list.get(i)); 
+		String[] sp = list.get(i).split("=");
+                tag = sp[0];
+                ptag = sp[1];
+                
+		int actual = CountOMD(tag);  // get actual loopcount  
+		int maxallowed = CountLMLoopsOFS(tag); 
                 int limit = 0;
                 if (actual >= maxallowed) {
                     limit = maxallowed;
@@ -2066,62 +2136,103 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                
                         
                 for (int k = 1; k <= limit; k++) {
-                  childNode = doc.createElement(list.get(i));
-                  overlayData(childNode, doc, y, k, MD);
+                  childNode = doc.createElement(tag);
+                  overlayData(childNode, ptag, doc, osf, k, MD);
                   ele.appendChild(childNode);
                 }
                   
                 
 		      
                 if (childNode != null && ! exclude.contains(childNode.getNodeName())) {
-                createXML(childNode, level + 1, doc, exclude,y, MD);
+                createXML(childNode, ptag, level + 1, doc, exclude,osf, MD);
                 }
 	    }
 	    
     }	
     
-    public static ArrayList<String> getChildren(String x, LinkedHashMap<String, ArrayList<String[]>> y) {
+    public static ArrayList<String> getChildren(String x, String parentx, LinkedHashMap<String, ArrayList<String[]>> osf) {
 		ArrayList<String> list = new ArrayList<String>();
 		String parent = "";
-		for (Map.Entry<String, ArrayList<String[]>> s : y.entrySet()) {
+                String thiskey = "";
+                String tag = "";
+                
+		for (Map.Entry<String, ArrayList<String[]>> s : osf.entrySet()) {
+                    thiskey = s.getKey();
 			String[] recArray = s.getValue().get(0);
 			if (! recArray[5].equals("landmark")) {
 				continue;
 			}
+                        
+                        if (thiskey.contains(":")) {
+                            tag = thiskey.substring(thiskey.lastIndexOf(":") + 1);
+                        } else {
+                            tag = thiskey;
+                        }
+                        
+                        /*
+                        System.out.println("PREHERE: " + s.getKey() + "/" + recArray[1] + "/" +  x + "/" + parentx);
+                        if (! recArray[1].equals(parentx) && ! recArray[1].isBlank()) {
+				continue;
+			}
+                        */
+                   //     System.out.println("HEREgetC: " + s.getKey() + "/" + x + "/" + parentx);
 			if (recArray[1].contains(":")) {
-            	parent = recArray[1].substring(recArray[1].lastIndexOf(":") + 1);
-            } else {
-            	parent = recArray[1];
-            }
+                            parent = recArray[1].substring(recArray[1].lastIndexOf(":") + 1);
+                        } else {
+                            parent = recArray[1];
+                        }
 			if (parent.equals(x) && ! recArray[0].equals(x)) {
-				list.add(s.getKey());
+				list.add(tag + "=" + recArray[1]);
 			}
 		}
+               // for (String s : list) {
+              //     System.out.println("HERE LIST: " + s); 
+              //  }
 		return list;
 	}
     
-    public static void overlayData(Element ele, Document doc, LinkedHashMap<String, ArrayList<String[]>> y, int k, Map<String, HashMap<String,String>> MD) {
+    public static void overlayData(Element ele, String parentx, Document doc, LinkedHashMap<String, ArrayList<String[]>> osf, int k, Map<String, HashMap<String,String>> MD) {
         String v = "";
         String parent = "";
         String parentChildKey = "";
         int prefixI = 65;
         String prefixtag = "bLuEsEeR";
         String prefix = "";
-        for (Map.Entry<String, ArrayList<String[]>> s : y.entrySet()) {
-            if (s.getKey().equals(ele.getNodeName())) {
+        String thiskey = "";
+        String tag = "";
+        OSFLoop:
+        for (Map.Entry<String, ArrayList<String[]>> s : osf.entrySet()) {
+            thiskey = s.getKey();
+            
+            if (thiskey.contains(":")) {
+                tag = thiskey.substring(thiskey.lastIndexOf(":") + 1);
+            } else {
+                tag = thiskey;
+            }
+            
+         //   System.out.println("HERE skey: " + s.getKey() + " -> " + tag + "/" + ele.getNodeName() );
+                        
+            
+            if (tag.equals(ele.getNodeName())) {
                 for (String[] x : s.getValue()) {
+                        
+                        if (! x[1].equals(parentx)) {
+                            continue OSFLoop;
+                        }
                         if (x[5].equals("landmark")) {
                                 parent = x[1];
                                 continue;
                         }
+                      //  System.out.println("HERE: " + s.getKey() + "/" + x[5] + "/" + x[1] + "/" + parent + "/" + parentx);
+                        
+                        
                         if (! parent.isEmpty()) {
                             parentChildKey = parent + ":";
                         } else {
                             parentChildKey = "";
                         }
                         Element e = doc.createElement(x[5]);
-                        //  System.out.println("HERE skey: " + parentChildKey + s.getKey() + "/" + k + "/" + x[5]);
-                          HashMap<String,String> mapValues = MD.get(parentChildKey + s.getKey() + ":" + k);
+                          HashMap<String,String> mapValues = MD.get(parentChildKey + tag + ":" + k);
                           if (mapValues != null && mapValues.containsKey(x[5])) {
                             v = mapValues.get(x[5]);
                           } else {
