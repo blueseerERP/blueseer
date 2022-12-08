@@ -1984,6 +1984,8 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                     }
             }
         }
+        // set Attributes if exist of root Element
+        overlayData(rootElement, doc, OSF, 1, MD);
         
         createXML(rootElement, 0, doc, exclude, OSF, MD);
         
@@ -1999,7 +2001,8 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                 trans.setOutputProperty(OutputKeys.INDENT, "yes");
                 StringWriter sw = new StringWriter();
                 trans.transform(new DOMSource(doc), new StreamResult(sw)); 
-                content = sw.toString();
+                String precontent = sw.toString();
+                content = precontent.replaceAll(".bLuEsEeR", "");  // crappy way to preserver order in attributes
                 
                 // System.out.println(content);
              
@@ -2027,6 +2030,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             root.set(rootname, generateJSON(tree.getRootElement(), mapper.createObjectNode(), OSF, MD));
              try {
                  content = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(root);
+                 
              } catch (JsonProcessingException ex) {
                  edilog(ex);
              }
@@ -2100,6 +2104,9 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         String v = "";
         String parent = "";
         String parentChildKey = "";
+        int prefixI = 65;
+        String prefixtag = "bLuEsEeR";
+        String prefix = "";
         for (Map.Entry<String, ArrayList<String[]>> s : y.entrySet()) {
             if (s.getKey().equals(ele.getNodeName())) {
                 for (String[] x : s.getValue()) {
@@ -2113,17 +2120,25 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                             parentChildKey = "";
                         }
                         Element e = doc.createElement(x[5]);
-                          System.out.println("HERE skey: " + parentChildKey + s.getKey() + "/" + k + "/" + x[5]);
+                        //  System.out.println("HERE skey: " + parentChildKey + s.getKey() + "/" + k + "/" + x[5]);
                           HashMap<String,String> mapValues = MD.get(parentChildKey + s.getKey() + ":" + k);
                           if (mapValues != null && mapValues.containsKey(x[5])) {
                             v = mapValues.get(x[5]);
                           } else {
                               v = "";
                           }
+                        
                         if (x.length > 10 && x[11].toUpperCase().equals("A")) {
-                          ele.setAttribute(x[5],v);	// get data here and append as text    
-                        }  else {
-                          e.appendChild(doc.createTextNode(v));	// get data here and append as text  
+                            prefix = Character.toString(prefixI++) + prefixtag; // crappy way to preserver order in attributes...prefix removed with regex
+                          ele.setAttribute(prefix + x[5].toString(),v);	// set attribute of parent node  
+                        } else if (x.length > 10 && x[11].toUpperCase().equals("X")) { // set attribute of previous TextNode
+                           prefix = Character.toString(prefixI++) + prefixtag; // crappy way to preserver order in attributes...prefix removed with regex
+                           Node nd = ele.getLastChild();
+                           if (nd != null) {
+                           ((Element) nd).setAttribute(prefix + x[5], v);
+                           }                           
+                        } else {
+                          e.appendChild(doc.createTextNode(v));	// create data TextNode  
                           ele.appendChild(e);
                         }
                         	
