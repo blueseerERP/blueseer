@@ -30,6 +30,7 @@ import static com.blueseer.edi.EDI.edilog;
 import static com.blueseer.edi.EDI.hanoi;
 import static com.blueseer.edi.EDI.trimSegment;
 import static com.blueseer.edi.ediData.getMapMstr;
+import com.blueseer.edi.ediData.jsonRecord;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.BlueSeerUtils.bsNode;
 import com.blueseer.utl.BlueSeerUtils.bsTree;
@@ -2405,8 +2406,6 @@ public abstract class EDIMap {  // took out the implements EDIMapi
     return jr;
 }
 
-    public record jsonRecord(ObjectNode on, boolean isArray) {}
-    
     public static bsNode<String> treeFromFile(bsNode<String> node, String tag) {
 	if (tag.isBlank()) {
         return node;

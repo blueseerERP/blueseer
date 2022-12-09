@@ -34,6 +34,7 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -1600,4 +1601,8 @@ public class ediData {
             this(m, "", "", "", "", "", "", "", "", "", "", "");
         }
     }
+    
+    public record jsonRecord(ObjectNode on, boolean isArray) {}
+    
+    
 }
