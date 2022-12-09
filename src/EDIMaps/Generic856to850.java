@@ -51,7 +51,7 @@ public class Generic856to850 extends com.blueseer.edi.EDIMap {
     setOutPutFileType("X12");  // X12 of FF
     setOutPutDocType("850");  // 850, 856, ORDERS05, SHPMNT05, etc
     setInputStructureFile("c:\\bs\\wip\\test\\edi\\structures\\X12856.csv");
-    setOutputStructureFile("c:\\bs\\wip\\test\\edi\\structures\\X12850.csv");
+    setOutputStructureFile("c:\\bs\\wip\\test\\edi\\structures\\X12850.csv", "X12");
     if (isError) { return error;}  // check errors for master variables
     
     mappedInput = mapInput(c, doc, ISF);
