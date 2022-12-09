@@ -51,6 +51,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -2110,7 +2111,8 @@ public abstract class EDIMap {  // took out the implements EDIMapi
 	    bsNode<String> phantomroot = new bsNode<String>("");
             phantomroot.addChild(treeFromFile(rootNode, rootname));
             tree.setRootElement(rootNode);
-            root.set(rootname, generateJSON(tree.getRootElement(), mapper.createObjectNode(), OSF, MD));
+            root.set(rootname, generateJSONx(tree.getRootElement(), mapper.createArrayNode(), mapper.createObjectNode(), OSF, MD).on());
+                      
             System.out.println(tree.toString());
              try {
                  content = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(root);
@@ -2348,10 +2350,9 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             an.add(elementNode);
         } // for each k of limit (array counter)
            // obN.putIfAbsent(node.getData(), an);
-            //obN.set(node.getData(), an);
-            
-        obN.set(node.getData(),an);
-        
+        ObjectNode newObj = new ObjectMapper().createObjectNode();
+        newObj.putArray(node.getData()).addAll(an);
+        obN = newObj;
         
             System.out.println("HERE IF: " + node.getData());
         } else {
@@ -2385,11 +2386,154 @@ public abstract class EDIMap {  // took out the implements EDIMapi
     while (it.hasNext()) {  
     	bsNode<String> nextNode = it.next();
         System.out.println("NextChild: " + node.getData() + "/" + nextNode.getData());
-        obN.set(nextNode.getData(), generateJSON(nextNode, new ObjectMapper().createObjectNode(), OSF, MD));
+        ObjectNode newNode = generateJSON(nextNode, new ObjectMapper().createObjectNode(), OSF, MD);
+        if (! nextNode.getData().equals("items")) {
+        obN.set(nextNode.getData(), newNode );
+        } else {
+            ArrayNode an = new ObjectMapper().createArrayNode();
+            ObjectNode x = new ObjectMapper().createObjectNode();
+            x.put("test", "boo");
+            an.add(x);
+            obN.set(nextNode.getData(), an );
+        }
     }
+      
     return obN;
 }
 
+    public static jsonRecord generateJSONx(bsNode<String> node, ArrayNode arN, ObjectNode obN, LinkedHashMap<String, ArrayList<String[]>> osf, Map<String, HashMap<String,String>> MD) {
+    
+      
+    jsonRecord jr = null;
+    if (node == null) {
+        return jr;
+    }
+
+    String thiskey = "";
+    String tag = "";
+    
+    // collect fields here
+    
+    for (Map.Entry<String, ArrayList<String[]>> s : osf.entrySet()) {
+    thiskey = s.getKey();    
+    if (thiskey.contains(":")) {
+        tag = thiskey.substring(thiskey.lastIndexOf(":") + 1);
+    } else {
+        tag = thiskey;
+    }    
+        
+    if (! tag.equals(node.getData())) {
+        continue;
+    }
+    int actual = CountOMD(s.getKey());  // get actual loopcount  
+    int maxallowed = CountLMLoopsOFS(s.getKey()); 
+    int limit = 0;
+    if (actual >= maxallowed) {
+        limit = maxallowed;
+    } else {
+        limit = actual;
+    }
+  //  System.out.println("HERElimit: " + tag + "/" + s.getKey() + "/" + limit + "/" + actual + "/" + maxallowed);
+    if (limit <= 0) {
+        limit = 1;
+    }
+    String v = "";
+    String parent = "";
+    String parentChildKey = "";
+    
+    ArrayList<String[]> fields = osf.get(s.getKey());
+    
+    
+    
+    if (fields != null) {
+        if (limit > 1) {
+        for (int k = 1; k <= limit; k++) {
+            ObjectNode elementNode = new ObjectMapper().createObjectNode(); 
+        for (int i = 0; i < fields.size(); i++) {
+                                    String[] x = fields.get(i);
+                                    if (x[5].equals("landmark")) {
+                                        parent = x[1];
+                                            continue;                                        
+                                    }
+                                    if (! parent.isEmpty()) {
+                                        parentChildKey = parent + ":";
+                                    } else {
+                                        parentChildKey = "";
+                                    }
+                                    HashMap<String,String> mapValues = MD.get(parentChildKey + tag + ":" + k);
+                                    if (mapValues != null && mapValues.containsKey(x[5])) {
+                                      v = mapValues.get(x[5]);
+                                    } else {
+                                        v = "";
+                                    }
+                                    elementNode.put(x[5], v);
+                            }
+            arN.add(elementNode);
+        } // for each k of limit (array counter)
+           // obN.putIfAbsent(node.getData(), an);
+       // ObjectNode newObj = new ObjectMapper().createObjectNode();
+      //  newObj.putArray(node.getData()).addAll(an);
+      //  obN = newObj;
+        
+          //  System.out.println("HERE IF: " + node.getData());
+        } else {
+            ObjectNode elementNode = new ObjectMapper().createObjectNode();
+            for (int i = 0; i < fields.size(); i++) {
+                        
+                                    String[] x = fields.get(i);
+                                    if (x[5].equals("landmark")) {
+                                            parent = x[1];
+                                            continue;
+                                    }
+                                    
+                                    
+                                    if (! parent.isEmpty()) {
+                                        parentChildKey = parent + ":";
+                                    } else {
+                                        parentChildKey = "";
+                                    }
+                                    HashMap<String,String> mapValues = MD.get(parentChildKey + tag + ":" + "1");
+                                    if (mapValues != null && mapValues.containsKey(x[5])) {
+                                      v = mapValues.get(x[5]);
+                                    } else {
+                                        v = "";
+                                    }
+                                    elementNode.put(x[5], v);
+                                     
+                            }
+            if (elementNode.size() > 0) {
+            arN.add(elementNode);
+            }
+         //   System.out.println("HERE ELSE: " + node.getData());
+        }  
+    }  // if fields != null
+    } // for each s.getKey
+    if (arN.size() > 1) {
+        obN.set(node.getData(), arN);
+        jr = new jsonRecord(obN, true);
+    } else if (arN.size() == 1) {
+        obN = (ObjectNode) arN.get(0);
+        jr = new jsonRecord(obN, false);
+    } else {
+        jr = new jsonRecord(obN, false);
+    }
+    // now do children
+    Iterator<bsNode<String>> it = node.getChildren().iterator();
+    while (it.hasNext()) {  
+    	bsNode<String> nextNode = it.next();
+        jsonRecord jrNode = generateJSONx(nextNode, new ObjectMapper().createArrayNode(), new ObjectMapper().createObjectNode(), OSF, MD);
+        if (jrNode.isArray()) {           
+            jr = new jsonRecord(jrNode.on(), false);
+        } else {
+            obN.set(nextNode.getData(), jrNode.on());
+        }
+    }
+      
+    return jr;
+}
+
+    public record jsonRecord(ObjectNode on, boolean isArray) {}
+    
     public static bsNode<String> treeFromFile(bsNode<String> node, String tag) {
 	if (tag.isBlank()) {
         return node;
@@ -2412,7 +2556,6 @@ public abstract class EDIMap {  // took out the implements EDIMapi
 		if (! recArray[5].equals("landmark")) {
 			continue;
 		}
-                System.out.println("HEREhaschild: " + x + "/" + recArray[1]);
 		if (recArray[1].equals(x)) {
 			return true;
 		}
