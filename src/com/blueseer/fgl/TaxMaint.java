@@ -27,16 +27,14 @@ package com.blueseer.fgl;
 
 import bsmf.MainFrame;
 import com.blueseer.utl.BlueSeerUtils;
-import static bsmf.MainFrame.backgroundcolor;
-import static bsmf.MainFrame.backgroundpanel;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
-import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.ConvertStringToBool;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
@@ -53,7 +51,6 @@ import com.blueseer.utl.IBlueSeer;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.GradientPaint;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -63,11 +60,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -706,6 +701,11 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeer {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tabletax.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabletaxMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tabletax);
 
         cbenabled.setText("Enabled?");
@@ -996,6 +996,17 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeer {
     private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
         lookUpFrame();
     }//GEN-LAST:event_btlookupActionPerformed
+
+    private void tabletaxMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabletaxMouseClicked
+        int row = tabletax.rowAtPoint(evt.getPoint());
+        int col = tabletax.columnAtPoint(evt.getPoint());
+        // element, percent, type, enabled
+        tbtaxelement.setText(tabletax.getValueAt(row, 0).toString());
+        tbtaxpercent.setText(tabletax.getValueAt(row, 1).toString());
+        ddtype.setSelectedItem(tabletax.getValueAt(row, 2).toString());
+        cbenabled.setSelected(ConvertStringToBool(tabletax.getValueAt(row, 3).toString()));
+        
+    }//GEN-LAST:event_tabletaxMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
