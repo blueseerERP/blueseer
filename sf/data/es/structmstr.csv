@@ -22,6 +22,7 @@ X12997.csv,X12 Functional Acknowledgment,generic,997,X12
 DB,System Database I/O,generic,DB,DB
 CSVGenericOrder.csv,Comma Delimited Order,generic,850csv,CSV
 XMLGenericOrder.csv,XML Generic Order,generic,850xml,XML
+cXMLOrder.csv,cXML Business Order,generic,850xml,XML
 JSONGenericOrder.csv,JSON Generic Order,generic,850json,JSON
 UNEorders.csv,EDIFACT Purchase Order,generic,850une,UNE
 UNEdesadv.csv,EDIFACT Shipping Advice,generic,856une,UNE

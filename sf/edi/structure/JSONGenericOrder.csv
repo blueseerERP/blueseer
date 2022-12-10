@@ -10,27 +10,30 @@ order,,1,no,no,type,Type,1,40,-,O
 order,,1,no,no,currency,Currency,1,40,-,O
 order,,1,no,no,shipvia,Ship Via,1,40,-,O
 order,,1,no,no,status,Status,1,40,-,O
-addresses,order,5,yes,yes,landmark,landmark,9,9,-,M
-addresses,order,1,no,no,type,Type,1,40,-,O
-addresses,order,1,no,no,name,Name,1,40,-,O
-addresses,order,1,no,no,line1,Line 1 Addr,1,70,-,O
-addresses,order,1,no,no,line2,Line 2 Addr,1,70,-,O
-addresses,order,1,no,no,line3,Line 3 Addr,1,70,-,O
-addresses,order,1,no,no,city,City,1,40,-,O
-addresses,order,1,no,no,state,State,1,40,-,O
-addresses,order,1,no,no,zip,Postal / Zip Code,1,40,-,O
-addresses,order,1,no,no,country,Country,1,3,-,O
-items,order,100,yes,yes,landmark,landmark,9,9,-,M
-items,order,1,no,no,itemnumber,Item Number,1,40,-,O
-items,order,1,no,no,line,Line Number,1,40,-,O
-items,order,1,no,no,uom,Unit of Measure,1,40,-,O
-items,order,1,no,no,description,Description,1,40,-,O
-items,order,1,no,no,skunumber,Sku Number,1,40,-,O
-items,order,1,no,no,orderquantity,Quantity Ordered,1,40,-,O
-items,order,1,no,no,shippedquantity,Quantity Shipped,1,40,-,O
-items,order,1,no,no,status,Status,1,40,-,O
-items,order,1,no,no,listprice,List Price,1,40,-,O
-items,order,1,no,no,netprice,Net Price,1,40,-,O
-items,order,1,no,no,discount,Discount Percent,1,40,-,O
-items,order,1,no,no,location,Location,1,40,-,O
-items,order,1,no,no,warehouse,Warehouse,1,40,-,O
+addressesp,order,5,yes,yes,landmark,landmark,9,9,-,M
+addressesx,addressesp,5,yes,yes,landmark,landmark,9,9,-,M
+addresses,addressesx,5,yes,yes,landmark,landmark,9,9,-,M
+addresses,addressesx,1,no,no,type,Type,1,40,-,O
+addresses,addressesx,1,no,no,name,Name,1,40,-,O
+addresses,addressesx,1,no,no,line1,Line 1 Addr,1,70,-,O
+addresses,addressesx,1,no,no,line2,Line 2 Addr,1,70,-,O
+addresses,addressesx,1,no,no,line3,Line 3 Addr,1,70,-,O
+addresses,addressesx,1,no,no,city,City,1,40,-,O
+addresses,addressesx,1,no,no,state,State,1,40,-,O
+addresses,addressesx,1,no,no,zip,Postal / Zip Code,1,40,-,O
+addresses,addressesx,1,no,no,country,Country,1,3,-,O
+itemsx,order,100,yes,yes,landmark,landmark,9,9,-,M
+items,itemsx,100,yes,yes,landmark,landmark,9,9,-,M
+items,itemsx,1,no,no,itemnumber,Item Number,1,40,-,O
+items,itemsx,1,no,no,line,Line Number,1,40,-,O
+items,itemsx,1,no,no,uom,Unit of Measure,1,40,-,O
+items,itemsx,1,no,no,description,Description,1,40,-,O
+items,itemsx,1,no,no,skunumber,Sku Number,1,40,-,O
+items,itemsx,1,no,no,orderquantity,Quantity Ordered,1,40,-,O
+items,itemsx,1,no,no,shippedquantity,Quantity Shipped,1,40,-,O
+items,itemsx,1,no,no,status,Status,1,40,-,O
+items,itemsx,1,no,no,listprice,List Price,1,40,-,O
+items,itemsx,1,no,no,netprice,Net Price,1,40,-,O
+items,itemsx,1,no,no,discount,Discount Percent,1,40,-,O
+items,itemsx,1,no,no,location,Location,1,40,-,O
+items,itemsx,1,no,no,warehouse,Warehouse,1,40,-,O

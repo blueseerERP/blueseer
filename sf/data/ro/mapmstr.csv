@@ -17,3 +17,8 @@ bsCSVTo850,CSV to Purchase Order,generic,CSVGenericOrder.csv,X12850.csv,850csv,C
 bsUNEordersToIDOC,UNE EDIFACT ORDERS to IDOC,generic,UNEorders.csv,IDOCorders05.csv,850une,UNE,850idoc,FF,edi/maps/bsUNEordersToiDOC.java,,0
 bsIDOCToUNEorders,SAP IDOC ORDERS05 To EDIFACT orders,,IDOCorders05.csv,UNEorders.csv,850idoc,FF,850une,UNE,edi/maps/bsIDOCToUNEorders.java,,0
 bs850ToCSV,X12 850 to CSV,,X12850.csv,CSVGenericOrder.csv,850,X12,850csv,CSV,edi/maps/bs850ToCSV.java,,0
+bs850ToJSON,X12 850 to JSON,,X12850.csv,JSONGenericOrder.csv,850,X12,850json,JSON,edi/maps/bs850ToJSON.java,,0
+bs850ToXML,X12 850 to XML,,X12850.csv,XMLGenericOrder.csv,850,X12,850xml,XML,edi/maps/bs850ToXML.java,,0
+bs850TocXML,X12 850 to cXML,,X12850.csv,cXMLOrder.csv,850,X12,850xml,XML,edi/maps/bs850TocXML.java,,0
+bsJSONTo850,JSON Order to X12 850,,JSONGenericOrder.csv,X12850.csv,850json,JSON,850,X12,edi/maps/bsJSONTo850.java,,0
+bsXMLTo850,XML Order to X12 850,,XMLGenericOrder.csv,X12850.csv,850xml,XML,850,X12,edi/maps/bsXMLTo850.java,,0
