@@ -948,6 +948,15 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeer {
         }
         
         taxmodel.addRow(new Object[]{ tbtaxelement.getText(), tbtaxpercent.getText(), ddtype.getSelectedItem().toString(), String.valueOf(BlueSeerUtils.boolToInt(cbenabled.isSelected())) });
+        
+        // reset element values to default
+        tbtaxelement.setText("");
+        tbtaxpercent.setText("");
+        ddtype.setSelectedIndex(0);
+        cbenabled.setSelected(true);
+        // send cursor back to tax element for next entry
+        tbtaxelement.requestFocus();
+        
     }//GEN-LAST:event_btaddelementActionPerformed
 
     private void btdeleteelementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteelementActionPerformed
