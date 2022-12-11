@@ -52,6 +52,8 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import com.blueseer.utl.DTData;
@@ -1152,6 +1154,163 @@ public class OrdRptPicker extends javax.swing.JPanel {
                
     }
     /* CUSTOM FUNCTIONS END */
+    
+    /* Tax Amount of Order by Cust range */
+    public void ordersTaxByCustDate (boolean input) {
+        
+        if (input) { // input...draw variable input panel
+           resetVariables();
+           hidePanels();
+           showPanels(new String[]{"tb1"});
+           lbkey1.setText(getClassLabelTag("lblfromcust", this.getClass().getSimpleName()));
+           lbkey2.setText(getClassLabelTag("lbltocust", this.getClass().getSimpleName()));
+           java.util.Date now = new java.util.Date();
+           dcdate1.setDate(now);
+           dcdate2.setDate(now);
+         } else { // output...fill report
+            // colect variables from input
+            String fromcust = tbkey1.getText();
+            String tocust = tbkey2.getText();
+            String fromdate = BlueSeerUtils.setDateFormat(dcdate1.getDate());
+            String todate = BlueSeerUtils.setDateFormat(dcdate2.getDate());
+            // cleanup variables
+          
+            if (fromcust.isEmpty()) {
+                  fromcust = bsmf.MainFrame.lowchar;
+            }
+            if (tocust.isEmpty()) {
+                  tocust = bsmf.MainFrame.hichar;
+            }
+            if (fromdate.isEmpty()) {
+                  fromdate = bsmf.MainFrame.lowdate;
+            }
+            if (todate.isEmpty()) {
+                  todate = bsmf.MainFrame.hidate;
+            }
+          
+            
+            
+            // create and fill tablemodel
+            // column 1 is always 'select' and always type ImageIcon
+            // the remaining columns are whatever you require
+             javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+              new String[]{getGlobalColumnTag("select"), 
+                  getGlobalColumnTag("order"), 
+                  getGlobalColumnTag("po"), 
+                  getGlobalColumnTag("code"), 
+                  getGlobalColumnTag("name"), 
+                  getGlobalColumnTag("orderdate"), 
+                  getGlobalColumnTag("status"), 
+                  getGlobalColumnTag("amount"),
+                  getGlobalColumnTag("tax")})
+              {
+              @Override  
+              public Class getColumnClass(int col) {  
+                if (col == 0)       
+                    return ImageIcon.class;  
+                else if (col == 7 || col == 8) 
+                    return Double.class;
+                else return String.class;  //other columns accept String values  
+              }  
+                }; 
+            
+      try{
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+           
+            double total = 0;
+            double tax = 0;
+            double disc = 0;
+            double charge = 0;
+            try{   
+                res = st.executeQuery("SELECT so_nbr, so_cust, so_po, so_ord_date, so_status, " +
+                        " sum(sod_ord_qty) as totqty, sum(sod_ord_qty * sod_netprice) as totdol, " +
+                        " (select sum(case when sos_type = 'discount' and sos_amttype = 'percent' then sos_amt else '0' end) from sos_det where sos_nbr = so_nbr) as 'discountpercent', " +
+                        " (select sum(case when sos_type <> 'tax' and sos_type <> 'passive' then sos_amt else '0' end) from sos_det where sos_nbr = so_nbr) as 'charge'," + 
+                        " (select sum(case when sos_type = 'tax' and sos_amttype = 'percent' then sos_amt end) from sos_det where sos_nbr = so_nbr)as 'taxpercent', " +
+                        " (select sum(case when sos_type = 'tax' and sos_amttype = 'amount' then sos_amt end) from sos_det where sos_nbr = so_nbr) as 'taxcharge' " +
+                        " FROM  so_mstr left outer join sod_det on sod_nbr = so_nbr " +
+                        " where so_ord_date >= " + "'" + fromdate  + "'" + 
+                        " AND so_ord_date <= " + "'" + todate + "'" + 
+                        " AND so_cust >= " + "'" + fromcust + "'" + 
+                        " AND so_cust <= " + "'" + tocust + "'" + 
+                        " AND so_type = 'DISCRETE' " +
+                         " group by so_nbr, so_cust, so_po, so_ord_date, so_status order by so_nbr desc ;");    
+                 
+                while (res.next()) {
+                    
+                    total = 0;
+                    tax = 0;
+                    disc = 0;
+                    charge = 0;
+                    
+                    if (res.getDouble("discountpercent") != 0) {
+                      disc = res.getDouble("totdol") * (res.getDouble("discountpercent") / 100.0);
+                    } else {
+                      disc = 0;  
+                    }
+                    charge = res.getDouble("charge");
+                    total = res.getDouble("totdol") + charge;  // charges added to total before taxing
+                    
+                    // now do tax
+                    if (res.getDouble("taxpercent") != 0) {
+                      tax = total * (res.getDouble("taxpercent") / 100.0);
+                    } else {
+                      tax = 0;  
+                    }
+                    tax += res.getDouble("taxcharge");
+                                        
+                    total = total + tax;
+                    
+                   
+                    
+                    mymodel.addRow(new Object[]{ 
+                        BlueSeerUtils.clickflag,  // imageicon always column 1
+                        res.getString("so_nbr"),
+                        res.getString("so_po"),
+                        res.getString("cm_code"),
+                        res.getString("cm_name"),
+                        res.getString("so_ord_date"),
+                        res.getString("so_status"),
+                        bsParseDouble(currformatDouble(total)),
+                        bsParseDouble(currformatDouble(tax))
+                            });
+                }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+              } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+      
+      // now assign tablemodel to table
+            tablereport.setModel(mymodel);
+            tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+            Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+              while (en.hasMoreElements()) {
+                 TableColumn tc = en.nextElement();
+                 if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) {
+                     continue;
+                 }
+                 tc.setCellRenderer(new OrdRptPicker.renderer1());
+             }
+        } // else run report
+               
+    }
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
