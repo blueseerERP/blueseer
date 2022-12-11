@@ -1012,23 +1012,11 @@ public class BlueSeerUtils {
      }
      
     public static boolean ConvertStringToBool(String i) {
-        boolean b;
-        if (i != null && i.equals("1") ) {
-            b = true;
-        } else {
-            b = false;
-        }
-        return b;
+        return (i != null && i.equals("1")) ? true : false;
     }
      
     public static boolean ConvertIntegerToBool(int i) {
-        boolean b;
-        if (i == 1) {
-            b = true;
-        } else {
-            b = false;
-        }
-        return b;
+        return(i == 1) ? true : false;
     }
     
     public static boolean ConvertTrueFalseToBoolean(String x) {
@@ -1036,13 +1024,7 @@ public class BlueSeerUtils {
     }
     
     public static String ConvertIntToYesNo(int i) {
-        String s;
-        if (i == 1) {
-            s = "YES";
-        } else {
-            s = "NO";
-        }
-        return s;
+        return (i == 1) ? "YES" : "NO";
     }
       
     public static int boolToInt(boolean b) {
