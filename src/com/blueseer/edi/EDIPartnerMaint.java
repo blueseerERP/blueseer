@@ -37,6 +37,8 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.ConvertStringToBool;
+import static com.blueseer.utl.BlueSeerUtils.ConvertTrueFalseToBoolean;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -704,6 +706,11 @@ public class EDIPartnerMaint extends javax.swing.JPanel implements IBlueSeer {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tablealias.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablealiasMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tablealias);
 
         cbdefault.setText("Default?");
@@ -964,6 +971,14 @@ public class EDIPartnerMaint extends javax.swing.JPanel implements IBlueSeer {
     private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
         lookUpFrame();
     }//GEN-LAST:event_btlookupActionPerformed
+
+    private void tablealiasMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablealiasMouseClicked
+        int row = tablealias.rowAtPoint(evt.getPoint());
+        int col = tablealias.columnAtPoint(evt.getPoint());
+        // element, percent, type, enabled
+        tbaliasid.setText(tablealias.getValueAt(row, 0).toString());
+        cbdefault.setSelected(ConvertTrueFalseToBoolean(tablealias.getValueAt(row, 1).toString()));
+    }//GEN-LAST:event_tablealiasMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

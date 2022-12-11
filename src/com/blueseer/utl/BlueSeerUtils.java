@@ -1033,7 +1033,7 @@ public class BlueSeerUtils {
     
     public static boolean ConvertTrueFalseToBoolean(String x) {
         boolean s;
-        if (x.toLowerCase().equals("true")) {
+        if (x.toLowerCase().equals("true") || x.toLowerCase().equals("yes")) {
             s = true;
         } else {
             s = false;
