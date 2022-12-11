@@ -11,6 +11,7 @@ OrdRptGroup,Commandes ouvertes par client,ordersOpenByCust,3,L8C
 OrdRptGroup,Détail des commandes ouvertes par client,ordersOpenDetailByCust,4,L8
 OrdRptGroup,Commandes en attente par client,ordersOnHoldByCust,5,L8C
 OrdRptGroup,Commander des envois par achat ordre,ordersShippedDetailByPO,6,L8
+OrdRptGroup,Montant de la taxe par commande par client/date,ordersTaxByCustDate,7,L8C
 InvRptGroup,Informations sur l'article par plage d'articles,iteminfoByItemRange,0,L2
 InvRptGroup,Informations sur l'article par gamme ProdLine,itemByProdLineRange,1,L2
 InvRptGroup,Coûts des articles par plage d'articles,itemCostsRange,2,L8

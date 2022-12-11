@@ -6,11 +6,12 @@ CusRptGroup,Aralığa Göre Müşteri Toplam Satışları,custTotalSalesByRange,
 CusRptGroup,Müşteri Öğesi Xref Müşteriye göre,custXrefByRange,5,L8
 OrdRptGroup,Son Tarih Aralığına Göre Siparişler,ordersDueDateByRange,0,L8C
 OrdRptGroup,Sipariş Tarih Aralığına Göre Siparişler,ordersOrdDateByRange,1,L8C
-OrdRptGroup,Müşteri/Tarih Aralığına Göre Siparişler,ordersCustDateByRange,2,L8C
+OrdRptGroup,Müşteriye/Tarih Aralığına Göre Siparişler,ordersCustDateByRange,2,L8C
 OrdRptGroup,Müşteriye Göre Açık Siparişler,ordersOpenByCust,3,L8C
 OrdRptGroup,Müşteriye Göre Açık Sipariş Detayı,ordersOpenDetailByCust,4,L8
 OrdRptGroup,Müşteri Tarafından Bekletilen Siparişler,ordersOnHoldByCust,5,L8C
 OrdRptGroup,Gönderileri PO Tarafından Sipariş Edin,ordersShippedDetailByPO,6,L8
+OrdRptGroup,Müşteriye/Tarihe Göre Sipariş Başına Vergi Tutarı,ordersTaxByCustDate,7,L8C
 InvRptGroup,Ürün Aralığına Göre Ürün Bilgisi,iteminfoByItemRange,0,L2
 InvRptGroup,Ürün Bilgisi ProdLine Aralığına Göre,itemByProdLineRange,1,L2
 InvRptGroup,Ürün Aralığına Göre Ürün Maliyetleri,itemCostsRange,2,L8

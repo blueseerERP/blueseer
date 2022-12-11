@@ -11,6 +11,7 @@ OrdRptGroup,Offene Bestellungen nach Kunden,ordersOpenByCust,3,L8C
 OrdRptGroup,Details zu offenen Bestellungen nach Kunde,ordersOpenDetailByCust,4,L8
 OrdRptGroup,Bestellungen in Wartestellung von Kunde,ordersOnHoldByCust,5,L8C
 OrdRptGroup,Bestellungen per PO,ordersShippedDetailByPO,6,L8
+OrdRptGroup,Steuerbetrag pro Bestellung nach Kunde/Datum,ordersTaxByCustDate,7,L8C
 InvRptGroup,Artikelinfo nach Artikelbereich,iteminfoByItemRange,0,L2
 InvRptGroup,Artikelinfo nach ProdLine-Bereich,itemByProdLineRange,1,L2
 InvRptGroup,Artikelkosten nach Artikelbereich,itemCostsRange,2,L8

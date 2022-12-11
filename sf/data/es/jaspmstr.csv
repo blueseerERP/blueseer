@@ -11,6 +11,7 @@ OrdRptGroup,Órdenes abiertas por Cust,ordersOpenByCust,3,L8C
 OrdRptGroup,Detalle de órdenes abiertas por cliente,ordersOpenDetailByCust,4,L8
 OrdRptGroup,Pedidos en espera por cliente,ordersOnHoldByCust,5,L8C
 OrdRptGroup,Solicitar envíos por orden de compra,ordersShippedDetailByPO,6,L8
+OrdRptGroup,Importe de impuestos por pedido por cliente/fecha,ordersTaxByCustDate,7,L8C
 InvRptGroup,Información del artículo por rango de artículo,iteminfoByItemRange,0,L2
 InvRptGroup,Información del artículo por rango de ProdLine,itemByProdLineRange,1,L2
 InvRptGroup,Costos de artículo por rango de artículo,itemCostsRange,2,L8
