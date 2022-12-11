@@ -1161,7 +1161,7 @@ public class OrdRptPicker extends javax.swing.JPanel {
         if (input) { // input...draw variable input panel
            resetVariables();
            hidePanels();
-           showPanels(new String[]{"tb1"});
+           showPanels(new String[]{"tb1", "dc"});
            lbkey1.setText(getClassLabelTag("lblfromcust", this.getClass().getSimpleName()));
            lbkey2.setText(getClassLabelTag("lbltocust", this.getClass().getSimpleName()));
            java.util.Date now = new java.util.Date();
