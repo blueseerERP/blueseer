@@ -1,8 +1,4 @@
-// Example methods
-// mapSegment("SEGMENT","FIELD",getInput("BEG",3));
-// commitSegment("SEGMENT");
-
-mapSegment("order","ordernumber",getInput("BEG",3));
+mapSegment("order","orderid",getInput("BEG",3));
 mapSegment("order","site","MYSITE");
 mapSegment("order","orderdate",getInput("BEG",5));
 mapSegment("order","type","EDI");
@@ -15,6 +11,7 @@ for (int i = 1; i <= addrcount; i++) {
   if (getInput(i,"N1",1).equals("ST")) {
   mapSegment("addresses:address","type","ship-to");
   mapSegment("addresses:address","name",getInput(i,"N1",2));
+  mapSegment("addresses:address","addrid",getInput(i,"N1",4));
   mapSegment("addresses:address","line1",getInput(i,"N1:N3",1));
   mapSegment("addresses:address","city",getInput(i,"N1:N4",1));
   mapSegment("addresses:address","state",getInput(i,"N1:N4",2));
@@ -24,6 +21,7 @@ for (int i = 1; i <= addrcount; i++) {
 if (getInput(i,"N1",1).equals("BT")) {
   mapSegment("addresses:address","type","bill-to");
   mapSegment("addresses:address","name",getInput(i,"N1",2));
+  mapSegment("addresses:address","addrid",getInput(i,"N1",4));
   mapSegment("addresses:address","line1",getInput(i,"N1:N3",1));
   mapSegment("addresses:address","city",getInput(i,"N1:N4",1));
   mapSegment("addresses:address","state",getInput(i,"N1:N4",2));
