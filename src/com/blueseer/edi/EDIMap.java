@@ -1356,7 +1356,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             }
         }
         
-        
+        if (dataAsArrays != null) {
         for (String[] x : dataAsArrays) {
                 
                 if (x == null || x.length == 0) {
@@ -1444,6 +1444,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                 
                 parenthead = String.join(":",stack.toArray(new String[stack.size()])); 
                 
+        }
         }
         return mappedData;
     }
