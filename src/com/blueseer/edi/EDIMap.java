@@ -2103,8 +2103,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             ObjectMapper mapper = new ObjectMapper();
             ObjectNode root = mapper.createObjectNode();
             String rootname = getRootOFS();
-            System.out.println("HEREroot: " + rootname);
-           // root.putObject(rootname);
+            // root.putObject(rootname);
            // ObjectNode x = buildJSON(mapper, OSF, MD); bsNode<String> node, ObjectNode obN
             
             bsTree<String> tree = new bsTree<String>();
@@ -2153,8 +2152,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                 if (limit <= 0) {
                     limit = 1;
                 }
-		//System.out.println("HERE: " + list.get(i) + "/" + limit);
-               
+		
                         
                 for (int k = 1; k <= limit; k++) {
                   childNode = doc.createElement(tag);
@@ -2206,9 +2204,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
 				list.add(tag + "=" + recArray[1]);
 			}
 		}
-               // for (String s : list) {
-              //     System.out.println("HERE LIST: " + s); 
-              //  }
+            
 		return list;
 	}
     
@@ -2230,9 +2226,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             } else {
                 tag = thiskey;
             }
-            
-         //   System.out.println("HERE skey: " + s.getKey() + " -> " + tag + "/" + ele.getNodeName() );
-                        
+                       
             
             if (tag.equals(ele.getNodeName())) {
                 for (String[] x : s.getValue()) {
@@ -2244,7 +2238,6 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                                 parent = x[1];
                                 continue;
                         }
-                      //  System.out.println("HERE: " + s.getKey() + "/" + x[5] + "/" + x[1] + "/" + parent + "/" + parentx);
                         
                         
                         if (! parent.isEmpty()) {
@@ -2314,8 +2307,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
     } else {
         limit = actual;
     }
-  //  System.out.println("HERElimit: " + tag + "/" + s.getKey() + "/" + limit + "/" + actual + "/" + maxallowed);
-    if (limit <= 0) {
+   if (limit <= 0) {
         limit = 1;
     }
     String v = "";
