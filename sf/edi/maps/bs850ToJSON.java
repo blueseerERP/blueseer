@@ -13,28 +13,37 @@ commitSegment("order");
 int addrcount = getGroupCount("N1");
 for (int i = 1; i <= addrcount; i++) {
   if (getInput(i,"N1",1).equals("ST")) {
-  mapSegment("addresses","type","ship-to");
-  mapSegment("addresses","name",getInput(i,"N1",2));
-  mapSegment("addresses","line1",getInput(i,"N1:N3",1));
-  mapSegment("addresses","city",getInput(i,"N1:N4",1));
-  mapSegment("addresses","state",getInput(i,"N1:N4",2));
-  mapSegment("addresses","zip",getInput(i,"N1:N4",3));
-  commitSegment("addresses");
+  mapSegment("addresses:address","type","ship-to");
+  mapSegment("addresses:address","name",getInput(i,"N1",2));
+  mapSegment("addresses:address","line1",getInput(i,"N1:N3",1));
+  mapSegment("addresses:address","city",getInput(i,"N1:N4",1));
+  mapSegment("addresses:address","state",getInput(i,"N1:N4",2));
+  mapSegment("addresses:address","zip",getInput(i,"N1:N4",3));
+  commitSegment("addresses:address");
+  }
+if (getInput(i,"N1",1).equals("BT")) {
+  mapSegment("addresses:address","type","bill-to");
+  mapSegment("addresses:address","name",getInput(i,"N1",2));
+  mapSegment("addresses:address","line1",getInput(i,"N1:N3",1));
+  mapSegment("addresses:address","city",getInput(i,"N1:N4",1));
+  mapSegment("addresses:address","state",getInput(i,"N1:N4",2));
+  mapSegment("addresses:address","zip",getInput(i,"N1:N4",3));
+  commitSegment("addresses:address");
   }
 }
 
 int count = getGroupCount("PO1");
 for (int i = 1; i <= count; i++) {
-mapSegment("items","line",getInput(i,"PO1",1));
-mapSegment("items","itemnumber",getInput(i,"PO1",7));
-mapSegment("items","uom",getInput(i,"PO1",3));
-mapSegment("items","description",getInput(i,"PO1:PID",5));
-mapSegment("items","skunumber",getInput(i,"PO1",9));
-mapSegment("items","orderquantity",getInput(i,"PO1",2));
-mapSegment("items","listprice",getInput(i,"PO1",4));
-mapSegment("items","netprice",getInput(i,"PO1",4));
-mapSegment("items","discount","0");
-commitSegment("items");
+mapSegment("items:item","line",getInput(i,"PO1",1));
+mapSegment("items:item","itemnumber",getInput(i,"PO1",7));
+mapSegment("items:item","uom",getInput(i,"PO1",3));
+mapSegment("items:item","description",getInput(i,"PO1:PID",5));
+mapSegment("items:item","skunumber",getInput(i,"PO1",9));
+mapSegment("items:item","orderquantity",getInput(i,"PO1",2));
+mapSegment("items:item","listprice",getInput(i,"PO1",4));
+mapSegment("items:item","netprice",getInput(i,"PO1",4));
+mapSegment("items:item","discount","0");
+commitSegment("items:item");
 }
 
 
