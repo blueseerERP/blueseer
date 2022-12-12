@@ -11,7 +11,8 @@
    "currency":"USD",
    "shipvia":"",
    "status":"open",
-   "addresses" : [ {"type":"billto",
+   "addresses" :
+   {"address" : [ {"type":"billto",
    	 "name":"ACME Co.",
    	 "line1":"Route 1 Frontage Rd",
    	 "line2":"",
@@ -29,8 +30,9 @@
 	 "city":"Dillon",
 	 "state":"SC",
 	 "zip":"29536",
-	 "country":"USA" }],
-   "items" : [ {"itemnumber":"50000001",
+	 "country":"USA" }]},
+   "items" : 
+   { "item" : [ {"itemnumber":"50000001",
 	 "line":1,
 	 "uom":"EA",
 	 "description":"Bicycle Huffy",
@@ -55,5 +57,5 @@
 	 "netprice":142.50,
 	 "discount":0,
 	 "location":"",
-	 "warehouse":""}]
+	 "warehouse":""}]}
 }}

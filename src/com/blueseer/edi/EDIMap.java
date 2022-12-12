@@ -1619,12 +1619,14 @@ public abstract class EDIMap {  // took out the implements EDIMapi
 	    }
 	    ArrayList<String[]> result = new ArrayList<String[]>();
 	    for (Map.Entry<String, ArrayList<String>> val : lhm.entrySet()) {
-	    	String[] j = new String[val.getValue().size() + 1];
-	    	j[0] = val.getKey().split(":")[0];
-	    	for (int k = 1; k < val.getValue().size() + 1; k++) {
-	    		j[k] = val.getValue().get(k - 1);
-	    	}
-	    	result.add(j);
+	    	if (val.getValue() != null) {
+                    String[] j = new String[val.getValue().size() + 1];
+                    j[0] = val.getKey().split(":")[0];
+                    for (int k = 1; k < val.getValue().size() + 1; k++) {
+                            j[k] = val.getValue().get(k - 1);
+                    }
+                    result.add(j);
+                }
 	    }
 	   // lhm.forEach((k,v) -> System.out.println(k + ":" + v));
 	 //   result.forEach((k) -> System.out.println(k[0]));
