@@ -218,6 +218,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
      File infile = null;
      // global variable declarations
                 boolean isLoad = false;
+                boolean isOverlay = false;
                 public static map_mstr x = null;
                 JPopupMenu mymenu = new JPopupMenu();
                 JMenuItem menuraw = new JMenuItem("Raw Format");
@@ -1345,6 +1346,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
   }
     
     public void showOverlay(String taname) {
+        isOverlay = true;
         List<String> structure = null;
         ArrayList<String> input = null;
         String[] delims = new String[]{"","",""};
@@ -1983,6 +1985,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }
         
     public void getInput() {
+        isOverlay = false;
         infile = getfile("Open Test File");
         tainput.setText("");
         if (infile != null) {
@@ -2586,6 +2589,10 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btrunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrunActionPerformed
+        if (isOverlay) {
+            bsmf.MainFrame.show("Input file not recognized...possible overlay");
+        }
+        
         String[] c = EDI.initEDIControl();
         
         if (tbkey.getText().isBlank()) {
