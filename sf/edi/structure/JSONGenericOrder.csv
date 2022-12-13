@@ -2,13 +2,14 @@
 order,,1,no,yes,landmark,landmark,5,5,-,M
 order,,1,no,no,orderid,Order Number,1,40,-,O
 order,,1,no,no,site,Site Code,1,40,-,O
-order,,1,no,no,refnumber,Reference Number,1,40,-,M
 order,,1,no,no,orderdate,Order Date,1,40,-,O
 order,,1,no,no,duedate,Due Date,1,40,-,O
 order,,1,no,no,remarks,Remarks,1,40,-,O
 order,,1,no,no,reference,Reference,1,40,-,O
 order,,1,no,no,doctype,Document Type,1,40,-,O
 order,,1,no,no,ordertype,Order Type,1,40,-,O
+order,,1,no,no,senderid,Sender ID,1,40,-,O
+order,,1,no,no,receiverid,Receiver ID,1,40,-,O
 order,,1,no,no,currency,Currency,1,40,-,O
 order,,1,no,no,shipvia,Ship Via,1,40,-,O
 order,,1,no,no,transportmethod,Method Of Transport,1,40,-,O

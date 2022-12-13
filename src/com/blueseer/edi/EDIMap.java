@@ -2649,21 +2649,19 @@ public abstract class EDIMap {  // took out the implements EDIMapi
          } else { // else as actual segment entry
             // segment = ":" + segment; // preprend blank
              for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
-                 if (z.getKey().split("\\+")[0].equals(segment)) {
-                     k = z.getValue();
-                 }
+                String[] v = z.getKey().split("\\+");
+                if (v[0].equals(segment)) {
+                    k = z.getValue();
+                }
              }
          }
-        // for (String g : k) {
-        //     System.out.println("getInput:" + segment + "/" + g);
-        // }
          if (k != null && k.length > elementNbr) {
           x =  k[elementNbr].trim();
          }
          if (GlobalDebug)
          System.out.println("getInput:" + segment + "/" + x);
-         
          return x;
+         
      }
     
     @EDI.AnnoDoc(desc = {"method returns numeric (double) value from source at segment and element.",
@@ -3004,7 +3002,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
          int x = 0;
          int r = 0;
          String parent = "";
-         String seg = "";
+         String seg = segment;
          if (BlueSeerUtils.isParsableToInt(element)) {
              return Integer.valueOf(element);
          }
