@@ -2051,8 +2051,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                 if (limit <= 0) {
                     limit = 1;
                 }
-		System.out.println("HERE: " + tag + "/" + limit);  
-                                      
+		                        
                 for (int k = 1; k <= limit; k++) {
                   childNode = doc.createElement(tag);
                   overlayData(childNode, ptag, doc, osf, k, MD);
