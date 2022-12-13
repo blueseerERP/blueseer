@@ -1449,116 +1449,6 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         return mappedData;
     }
   
-    public static LinkedHashMap<String, String[]> mapInputX(String[] c, String data, ArrayList<String[]> ISF) throws IOException  {
-        LinkedHashMap<String,String[]> mappedData = new LinkedHashMap<String,String[]>();
-        HashMap<String,Integer> groupcount = new HashMap<String,Integer>();
-        HashMap<String,Integer> set = new HashMap<String,Integer>();
-        String parenthead = "";
-        String groupkey = "";
-        String previouskey = "";
-        String mappedinput = "";
-        String eledelim = "";
-        Stack<String> stack = new Stack<String>();
-        String[] delims = new String[]{c[9], c[10], c[11]}; 
-        if (BlueSeerUtils.isParsableToInt(delims[1])) {
-            eledelim = EDI.escapeDelimiter(delimConvertIntToStr(delims[1]));
-        } else {
-            eledelim = EDI.escapeDelimiter(delims[1]);
-        }
-        
-       // bsmf.MainFrame.show(delims[0] + "/" + delims[1] + "/" + delims[2]);
-        int currentPosition = 0;
-        int GHP = 0;
-        Stack<Integer> positionStack = new Stack<Integer>();
-        ObjectMapper mapper = new ObjectMapper();
-        
-        JsonNode jsonNode = null;
-        try {
-            jsonNode = mapper.readTree(data);
-        } catch (JsonProcessingException ex) {
-            edilog(ex);
-        }
-	    
-        List<String[]> zz = jsonToSegments(data);
-	    for (String[] x : zz) {
-                
-                String[] IFSseg = null;
-                
-                // identify immediate parent/group head
-                stackGHP sp = preGroupHead(x[0], stack, ISF, GHP);
-                stack = sp.s();
-                GHP = sp.i();
-                parenthead = String.join(":",stack.toArray(new String[stack.size()]));
-                // now lets find segments place in ISF
-              //   System.out.println("incoming segment:" + x[0] + " with parenthead: " + parenthead);
-                segRecord sr = getSegmentInISF(x[0], parenthead, ISF);
-                IFSseg = sr.m();
-                currentPosition = sr.p();
-               
-                
-                if (IFSseg != null) {
-                   if (GlobalDebug) {
-                   System.out.println("WRITE:" + " IncomingSegment: " + x[0] +  "  x[1]: " + IFSseg[1] + "  ParentHead:" + parenthead + " GHP=" + GHP);
-                   }
-                    
-                    if (! parenthead.isBlank()) {
-                        parenthead = parenthead + ":";
-                    }
-                    
-                    int loop = 1;
-                    boolean hasloop = false;
-                    String groupparent = parenthead + x[0];
-                    if (groupcount.containsKey(groupparent)) {
-                            int g = groupcount.get(groupparent);
-
-                            if (previouskey.equals(parenthead + x[0] + "+" + g) && ! IFSseg[3].equals("yes")) {
-                                    loop = set.get(parenthead + x[0] + "+" + groupcount.get(groupparent));	
-                                    hasloop = true;
-                                    loop++;
-                                    set.put(parenthead + x[0] + "+" + groupcount.get(groupparent), loop);
-                            } else {
-                                    g++;	
-                                    groupcount.put(groupparent, g);
-                            }
-                    } else {
-                           // groupcount.put(groupparent, 1);
-                           if (groupcount.get(parenthead) != null) {
-                              groupcount.put(groupparent, groupcount.get(parenthead)); 
-                           } else {
-                              groupcount.put(groupparent, 1); 
-                           }
-
-                    }
-
-                    previouskey = parenthead + x[0] + "+" + groupcount.get(groupparent);	
-                    if (hasloop) {
-                        groupkey = parenthead + x[0] + "+" + groupcount.get(groupparent) + "+" + loop;
-                    } else {
-                        groupkey = parenthead + x[0] + "+" + groupcount.get(groupparent);
-                    }
-
-                    mappedinput = parenthead + x[0] + "+" + groupcount.get(groupparent) + "+" + loop + "=" + String.join(",",x);
-                    set.put(groupkey, loop);
-                    mappedData.put(parenthead + x[0] + "+" + groupcount.get(groupparent) + "+" + loop , x);
-                    SegmentCounter.add(parenthead + x[0] + "+" + groupcount.get(groupparent));
-                   
-                }  // if foundit
-             
-                if (GlobalDebug && IFSseg == null) {
-                System.out.println("ifSeg is null: " + x[0] + " with parenthead: " + parenthead);
-                }
-               
-                
-                stackGHP postGH = postGroupHead(x[0], stack, ISF, GHP);
-                stack = postGH.s();
-                GHP = postGH.i(); 
-                
-                parenthead = String.join(":",stack.toArray(new String[stack.size()])); 
-                   
-        }
-        return mappedData;
-    }
-  
     public static List<String[]> jsonToSegments(String json) throws IOException {
 	    ObjectMapper mapper = new ObjectMapper();
             JsonNode jsonNode = mapper.readTree(json);
@@ -2137,6 +2027,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
 	    exclude.add(ele.getNodeName());
             String tag = "";
             String ptag = "";
+            String mykey = "";
 	    for (int i = 0; i < list.size(); i++) {
 		Element childNode = null;
 		      
@@ -2144,8 +2035,13 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                 tag = sp[0];
                 ptag = sp[1];
                 
-		int actual = CountOMD(tag);  // get actual loopcount  
-		int maxallowed = CountLMLoopsOFS(tag); 
+                if (ptag.isBlank()) {
+                    mykey = tag;
+                } else {
+                    mykey = ptag + ":" + tag;
+                }
+		int actual = CountOMD(mykey);  // get actual loopcount  
+		int maxallowed = CountLMLoopsOFS(mykey); 
                 int limit = 0;
                 if (actual >= maxallowed) {
                     limit = maxallowed;
@@ -2155,8 +2051,8 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                 if (limit <= 0) {
                     limit = 1;
                 }
-		
-                        
+		System.out.println("HERE: " + tag + "/" + limit);  
+                                      
                 for (int k = 1; k <= limit; k++) {
                   childNode = doc.createElement(tag);
                   overlayData(childNode, ptag, doc, osf, k, MD);
