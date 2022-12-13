@@ -1,4 +1,4 @@
-GlobalDebug = true;
+//GlobalDebug = true;
 mapSegment("BEG","e01","00");
 mapSegment("BEG","e02","NE");
 mapSegment("BEG","e03",getInput("order","orderid"));

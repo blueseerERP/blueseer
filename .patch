@@ -54,3 +54,5 @@ patch=23
 # new method for creating JSON output...using an itermediate Tree structure
 patch=24
 # remod JSON EDI output method...works with unique node names only
+patch=25
+# JSON in/out stability and getInput method update
