@@ -463,6 +463,104 @@ public class fglData {
         return r;
     }
    
+    public static String[] addTaxMstr(tax_mstr x) {
+        String[] m = new String[2];
+        String sqlSelect = "select * from tax_mstr where tax_code = ?";
+        String sqlInsert = "insert into tax_mstr (tax_code, tax_desc, tax_crtdate, tax_moddate, "
+                + " tax_userid)  " +
+                " values (?,?,?,?,?); "; 
+      
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+             ps.setString(1, x.tax_code);
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.tax_code);
+            psi.setString(2, x.tax_desc);
+            psi.setString(3, x.tax_crtdate);
+            psi.setString(4, x.tax_moddate);
+            psi.setString(5, x.tax_userid);
+            int rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
+            }
+          } 
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static String[] updateTaxMstr(tax_mstr x) {
+        String[] m = new String[2];
+        String sql = "update tax_mstr set tax_desc = ?, tax_crtdate = ?, tax_moddate = ?, "
+                + " tax_userid = ? " + " where tax_code = ? ";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.tax_desc);
+        ps.setString(2, x.tax_crtdate);
+        ps.setString(3, x.tax_moddate);
+        ps.setString(4, x.tax_userid);
+        ps.setString(5, x.tax_code);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static String[] deleteTaxMstr(tax_mstr x) { 
+       String[] m = new String[2];
+        String sql = "delete from tax_mstr where tax_code = ?; ";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.tax_code);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+        
+    public static tax_mstr getTaxMstr(String[] x) {
+        tax_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from tax_mstr where tax_code = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new tax_mstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new tax_mstr(m, res.getString("tax_code"), 
+                            res.getString("tax_desc"),    
+                            res.getString("tax_crtdate"),
+                            res.getString("tax_moddate"),
+                            res.getString("tax_userid")
+                        );
+                    }
+                }
+            } 
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new tax_mstr(m);
+        }
+        return r;
+    }
+   
+    
     
     
     public static String[] addUpdateGLCtrl(gl_ctrl x) {
