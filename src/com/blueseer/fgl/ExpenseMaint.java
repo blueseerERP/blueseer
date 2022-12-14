@@ -114,10 +114,10 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
                 getGlobalColumnTag("item"), 
                 getGlobalColumnTag("qty"),
                 getGlobalColumnTag("price"),
-                getGlobalColumnTag("recvid"), 
-                getGlobalColumnTag("recvline"),
-                getGlobalColumnTag("acct"),
-                getGlobalColumnTag("cc")
+                getGlobalColumnTag("receiver"), 
+                getGlobalColumnTag("line"),
+                getGlobalColumnTag("account"),
+                getGlobalColumnTag("costcenter")
             });
                 
     /**
