@@ -4924,6 +4924,21 @@ return myarray;
         }
     }
     
+    public record tax_mstr(String[] m, String tax_code, String tax_desc, String tax_crtdate, 
+        String tax_moddate, String tax_userid) {
+        public tax_mstr(String[] m) {
+            this(m, "", "", "", "", "");
+        }
+    }
+    
+    public record taxd_mstr(String[] m, String taxd_id, String taxd_parentcode, String taxd_desc, 
+        String taxd_type, String taxd_percent, String taxd_crtdate, String taxd_moddate, String taxd_enabled, 
+        String taxd_userid) {
+        public taxd_mstr(String[] m) {
+            this(m, "", "", "", "", "", "", "", "", "");
+        }
+    }
+    
     
     public record CurrMstr(String[] m, String id, String desc) {
         public CurrMstr(String[] m) {
