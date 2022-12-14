@@ -560,6 +560,77 @@ public class fglData {
         return r;
     }
    
+    private static int _addTaxDet(taxd_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from taxd_mstr where taxd_parentcode = ? and taxd_id = ?";
+        String sqlInsert = "insert into taxd_mstr (taxd_parentcode, taxd_id, taxd_desc, taxd_type, " 
+                        + "taxd_percent, taxd_crtdate, taxd_moddate, taxd_enabled, " 
+                        + "taxd_userid ) "
+                        + " values (?,?,?,?,?,?,?,?,?); "; 
+       
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x.taxd_parentcode);
+          ps.setString(2, x.taxd_id);
+          res = ps.executeQuery();
+          ps = con.prepareStatement(sqlInsert);  
+            if (! res.isBeforeFirst()) {
+            ps.setString(1, x.taxd_parentcode);
+            ps.setString(2, x.taxd_id);
+            ps.setString(3, x.taxd_desc);
+            ps.setString(4, x.taxd_type);
+            ps.setString(5, x.taxd_percent);
+            ps.setString(6, x.taxd_crtdate);
+            ps.setString(7, x.taxd_moddate);
+            ps.setString(8, x.taxd_enabled);
+            ps.setString(9, x.taxd_userid);
+            rows = ps.executeUpdate();
+            } 
+            return rows;
+    }
+    
+    private static int _updateTaxDet(taxd_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from taxd_mstr where taxd_parentcode = ? and taxd_id = ?";
+        String sqlUpdate = "update taxd_mstr set taxd_desc = ?, taxd_type = ?, " +
+                "taxd_percent = ?, taxd_crtdate = ?, taxd_moddate = ?, taxd_enabled = ?, " +
+                " taxd_userid = ? " +
+                 " where taxd_parentcode = ? and taxd_id = ? ; ";
+        String sqlInsert = "insert into taxd_mstr (taxd_parentcode, taxd_id, taxd_desc, taxd_type, " 
+                        + "taxd_percent, taxd_crtdate, taxd_moddate, taxd_enabled, " 
+                        + "taxd_userid ) "
+                        + " values (?,?,?,?,?,?,?,?,?); ";  
+        ps = con.prepareStatement(sqlSelect); 
+        ps.setString(1, x.taxd_parentcode);
+        ps.setString(2, x.taxd_id);
+        res = ps.executeQuery();
+        if (! res.isBeforeFirst()) {  // insert
+	 ps = con.prepareStatement(sqlInsert) ;
+            ps.setString(1, x.taxd_parentcode);
+            ps.setString(2, x.taxd_id);
+            ps.setString(3, x.taxd_desc);
+            ps.setString(4, x.taxd_type);
+            ps.setString(5, x.taxd_percent);
+            ps.setString(6, x.taxd_crtdate);
+            ps.setString(7, x.taxd_moddate);
+            ps.setString(8, x.taxd_enabled);
+            ps.setString(9, x.taxd_userid);
+            rows = ps.executeUpdate();
+        } else {    // update
+         ps = con.prepareStatement(sqlUpdate) ;
+            ps.setString(8, x.taxd_parentcode);
+            ps.setString(9, x.taxd_id);
+            ps.setString(1, x.taxd_desc);
+            ps.setString(2, x.taxd_type);
+            ps.setString(3, x.taxd_percent);
+            ps.setString(4, x.taxd_crtdate);
+            ps.setString(5, x.taxd_moddate);
+            ps.setString(6, x.taxd_enabled);
+            ps.setString(7, x.taxd_userid);
+            rows = ps.executeUpdate();
+        }
+            
+        return rows;
+    }
     
     
     
