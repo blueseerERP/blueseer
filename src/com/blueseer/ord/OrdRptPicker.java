@@ -1229,13 +1229,14 @@ public class OrdRptPicker extends javax.swing.JPanel {
             double disc = 0;
             double charge = 0;
             try{   
-                res = st.executeQuery("SELECT so_nbr, so_cust, so_po, so_ord_date, so_status, " +
+                res = st.executeQuery("SELECT so_nbr, so_cust, so_po, so_ord_date, so_status, cm_code, cm_name,  " +
                         " sum(sod_ord_qty) as totqty, sum(sod_ord_qty * sod_netprice) as totdol, " +
                         " (select sum(case when sos_type = 'discount' and sos_amttype = 'percent' then sos_amt else '0' end) from sos_det where sos_nbr = so_nbr) as 'discountpercent', " +
                         " (select sum(case when sos_type <> 'tax' and sos_type <> 'passive' then sos_amt else '0' end) from sos_det where sos_nbr = so_nbr) as 'charge'," + 
                         " (select sum(case when sos_type = 'tax' and sos_amttype = 'percent' then sos_amt end) from sos_det where sos_nbr = so_nbr)as 'taxpercent', " +
                         " (select sum(case when sos_type = 'tax' and sos_amttype = 'amount' then sos_amt end) from sos_det where sos_nbr = so_nbr) as 'taxcharge' " +
                         " FROM  so_mstr left outer join sod_det on sod_nbr = so_nbr " +
+                        " inner join cm_mstr on cm_code = so_cust " +
                         " where so_ord_date >= " + "'" + fromdate  + "'" + 
                         " AND so_ord_date <= " + "'" + todate + "'" + 
                         " AND so_cust >= " + "'" + fromcust + "'" + 
