@@ -1,6 +1,5 @@
 // Example methods
 
-GlobalDebug = true;
 
 mapSegment("cXML","timestamp","2012-12-12T12:12:12");
 mapSegment("cXML","version","1.25");
