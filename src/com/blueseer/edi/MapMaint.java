@@ -1264,6 +1264,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
        
     public void showStructure(String taname) {
         if (taname.equals("tainput")) {
+            isOverlay = false;
             List<String> lines = getStructure("ifs");
             tainput.setText("");
             for (String segment : lines ) {
@@ -1328,7 +1329,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }
     };
 
-     private void documentChanged() {
+    private void documentChanged() {
 	      SwingUtilities.invokeLater(() -> {
 	        repaint();
 	      });
