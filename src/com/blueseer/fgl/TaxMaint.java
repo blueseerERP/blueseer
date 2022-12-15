@@ -569,6 +569,7 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbtaxpercent = new javax.swing.JTextField();
         ddtype = new javax.swing.JComboBox<>();
         jLabel7 = new javax.swing.JLabel();
+        btupdateelement = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         btnew = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
@@ -645,6 +646,13 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel7.setText("Type");
         jLabel7.setName("lbltype"); // NOI18N
 
+        btupdateelement.setText("Update Element");
+        btupdateelement.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btupdateelementActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -672,6 +680,8 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btaddelement)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btupdateelement)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btdeleteelement)
                         .addGap(21, 21, 21))))
         );
@@ -691,7 +701,8 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btaddelement)
-                        .addComponent(btdeleteelement))
+                        .addComponent(btdeleteelement)
+                        .addComponent(btupdateelement))
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel7)))
@@ -936,6 +947,21 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeerT {
         callChangeDialog(tbkey.getText(), this.getClass().getSimpleName());
     }//GEN-LAST:event_btchangelogActionPerformed
 
+    private void btupdateelementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateelementActionPerformed
+        int[] rows = tabletax.getSelectedRows();
+        if (rows.length != 1) {
+            bsmf.MainFrame.show(getMessageTag(1095));
+                return;
+        }
+        for (int i : rows) {
+                tabletax.setValueAt(tbtaxelement.getText(), i, 1);
+                tabletax.setValueAt(tbtaxpercent.getText(), i, 2);
+                tabletax.setValueAt(ddtype.getSelectedItem().toString(), i, 3);
+                tabletax.setValueAt(ConvertBoolToYesNo(cbenabled.isSelected()), i, 4);
+               
+        }
+    }//GEN-LAST:event_btupdateelementActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
@@ -947,6 +973,7 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
+    private javax.swing.JButton btupdateelement;
     private javax.swing.JCheckBox cbenabled;
     private javax.swing.JComboBox<String> ddtype;
     private javax.swing.JLabel jLabel3;

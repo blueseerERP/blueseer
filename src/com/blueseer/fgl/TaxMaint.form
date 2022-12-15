@@ -121,6 +121,8 @@
                               <EmptySpace max="32767" attributes="0"/>
                               <Component id="btaddelement" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
+                              <Component id="btupdateelement" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="btdeleteelement" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
                           </Group>
@@ -147,6 +149,7 @@
                           <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                               <Component id="btaddelement" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="btdeleteelement" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="btupdateelement" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="ddtype" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -246,6 +249,14 @@
                 <Property name="text" type="java.lang.String" value="Type"/>
                 <Property name="name" type="java.lang.String" value="lbltype" noResource="true"/>
               </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="btupdateelement">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Update Element"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btupdateelementActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
