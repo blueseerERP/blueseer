@@ -1950,7 +1950,8 @@ CREATE TABLE IF NOT EXISTS `taxd_mstr` (
   `taxd_crtdate` date  DEFAULT NULL,
   `taxd_moddate` date  DEFAULT NULL,
   `taxd_enabled` tinyint(1) NOT NULL DEFAULT '0',
-  `taxd_userid` varchar(30) NOT NULL  DEFAULT ''
+  `taxd_userid` varchar(30) NOT NULL  DEFAULT '',
+  `taxd_line` varchar(8) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `task_mstr` (
   `task_id` int(8) NOT NULL,

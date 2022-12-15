@@ -436,7 +436,7 @@ public class TaskMaint extends javax.swing.JPanel implements IBlueSeerT {
        
     }
     
-     public task_mstr createRecord() { 
+    public task_mstr createRecord() { 
         task_mstr x = new task_mstr(null, 
                 tbkey.getText(),
                 tbdesc.getText()

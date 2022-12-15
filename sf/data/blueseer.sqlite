@@ -2317,7 +2317,8 @@ CREATE TABLE "taxd_mstr" (
   "taxd_crtdate" date COLLATE NOCASE DEFAULT '',
   "taxd_moddate" date COLLATE NOCASE DEFAULT '',
   "taxd_enabled" tinyint(1) NOT NULL DEFAULT '0',
-  "taxd_userid" varchar(30) NOT NULL COLLATE NOCASE DEFAULT ''
+  "taxd_userid" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "taxd_line" varchar(8) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
