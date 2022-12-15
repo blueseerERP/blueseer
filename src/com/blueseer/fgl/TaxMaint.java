@@ -27,13 +27,7 @@ package com.blueseer.fgl;
 
 import bsmf.MainFrame;
 import com.blueseer.utl.BlueSeerUtils;
-import static bsmf.MainFrame.db;
-import static bsmf.MainFrame.defaultDecimalSeparator;
-import static bsmf.MainFrame.ds;
-import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
-import static bsmf.MainFrame.url;
-import static bsmf.MainFrame.user;
 import static com.blueseer.fgl.fglData.addTaxTransaction;
 import static com.blueseer.fgl.fglData.deleteTaxMstr;
 import static com.blueseer.fgl.fglData.getTaxDet;
@@ -60,7 +54,6 @@ import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
-import com.blueseer.utl.IBlueSeer;
 import com.blueseer.utl.IBlueSeerT;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
@@ -69,11 +62,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -88,6 +76,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.SwingWorker;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -102,7 +91,7 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeerT {
             public static tax_mstr x = null;
             public static ArrayList<taxd_mstr> taxdlist = null;
     // global datatablemodel declarations       
-     javax.swing.table.DefaultTableModel taxmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+     TaxMaint.MyTableModel taxmodel = new TaxMaint.MyTableModel(new Object[][]{},
             new String[]{
                 getGlobalColumnTag("line"),
                 getGlobalColumnTag("element"), 
@@ -110,6 +99,32 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeerT {
                 getGlobalColumnTag("type"), 
                 getGlobalColumnTag("enabled")
             });
+    
+     class MyTableModel extends DefaultTableModel {  
+      
+        public MyTableModel(Object rowData[][], Object columnNames[]) {  
+             super(rowData, columnNames);  
+          }  
+         
+       boolean[] canEdit = new boolean[]{
+                false, false, false, false, false
+        };
+
+        public boolean isCellEditable(int rowIndex, int columnIndex) {
+               canEdit = new boolean[]{false, false, false, false, false}; 
+            return canEdit[columnIndex];
+        }
+   
+        /*
+        public Class getColumnClass(int column) {
+               if (column == 6 || column == 7)       
+                return Double.class; 
+            else return String.class;  //other columns accept String values 
+        }
+       
+        */
+        
+   }    
     
     
     public TaxMaint() {
@@ -251,14 +266,13 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public void setComponentDefaultValues() {
        isLoad = true;
-        taxmodel.setRowCount(0);
-           tabletax.setModel(taxmodel);
-           tbkey.setText("");
-           tbdesc.setText("");
-           tbtaxelement.setText("");
-           tbtaxpercent.setText("");
-           cbenabled.setSelected(true);
-        
+       taxmodel.setRowCount(0);
+       tabletax.setModel(taxmodel);
+       tbkey.setText("");
+       tbdesc.setText("");
+       tbtaxelement.setText("");
+       tbtaxpercent.setText("");
+       cbenabled.setSelected(true);
        isLoad = false;
     }
     
