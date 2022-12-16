@@ -56,3 +56,5 @@ patch=24
 # remod JSON EDI output method...works with unique node names only
 patch=25
 # JSON in/out stability and getInput method update
+patch=26
+# modified XML recursive method for nested inserts based on structure file
