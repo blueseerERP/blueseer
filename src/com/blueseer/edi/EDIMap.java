@@ -185,6 +185,8 @@ public abstract class EDIMap {  // took out the implements EDIMapi
     public static LinkedHashMap<String, HashMap<Integer,String[]>> mISF = new LinkedHashMap<String, HashMap<Integer,String[]>>();
 
     public static LinkedHashMap<String, Integer> commitCounter = new LinkedHashMap<String, Integer>();
+    public static LinkedHashMap<String, Integer> commitLoopCounter = new LinkedHashMap<String, Integer>();
+    
     
     public static LinkedHashMap<String, ArrayList<String[]>> HASH = new  LinkedHashMap<String, ArrayList<String[]>>();
     public static LinkedHashMap<String, String[]> mappedInput = new  LinkedHashMap<String, String[]>();
@@ -207,6 +209,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         ISF.clear();
         OSF.clear();
         commitCounter.clear();
+        commitLoopCounter.clear();
     }
     
     public static void resetVariables() {
@@ -1633,6 +1636,21 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         return i;
     }
     
+    public static int CountOMDTrial(String tag) {
+        int i = 0;
+        for (Map.Entry<String, Integer> z : commitLoopCounter.entrySet()) {
+                if (z.getKey().equals(tag)) {
+                    i = z.getValue();
+                }
+        }
+        return i;
+    }
+    
+    public static boolean isLooper(String tag) {
+        return (commitLoopCounter.containsKey(tag));
+    }
+    
+    
     public static int CountLMLoopsOFS(String landmark) {
         
         int i = 0;
@@ -1655,6 +1673,19 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         }
         return r;
     }
+    
+     public static int commitLoopCount(String segment) {
+        
+        int r = 0;
+        if (commitLoopCounter.containsKey(segment)) {
+            r = commitLoopCounter.get(segment) + 1;
+            commitLoopCounter.put(segment, r);
+        } else {
+            commitLoopCounter.put(segment, 1);
+        }
+        return r;
+    }
+    
     
     public static String getRootOFS() {
         String root = "";
@@ -1946,7 +1977,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         // set Attributes if exist of root Element
         overlayData(rootElement, "", doc, OSF, 1, MD);
         
-        createXML(rootElement, "", 0, doc, exclude, OSF, MD);
+        createXML(rootElement, "", 0, doc, exclude, OSF, MD, 0);
         
         doc.appendChild(rootElement);
              
@@ -2020,7 +2051,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
     	 return r;
      }
     
-    public static void createXML(Element ele, String parentx, int level, Document doc, ArrayList<String> exclude, LinkedHashMap<String, ArrayList<String[]>> osf, Map<String, HashMap<String,String>> MD) {
+    public static void createXML(Element ele, String parentx, int level, Document doc, ArrayList<String> exclude, LinkedHashMap<String, ArrayList<String[]>> osf, Map<String, HashMap<String,String>> MD, int j) {
 	  //  System.out.println(level + " " + "Name: "+ele.getNodeName() + "     Value: "+ele.getNodeValue());
 	    
             ArrayList<String> list = getChildren(ele.getNodeName(), parentx ,osf);
@@ -2040,7 +2071,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                 } else {
                     mykey = ptag + ":" + tag;
                 }
-		int actual = CountOMD(mykey);  // get actual loopcount  
+		int actual = CountOMDTrial(mykey);  // get actual loopcount  
 		int maxallowed = CountLMLoopsOFS(mykey); 
                 int limit = 0;
                 if (actual >= maxallowed) {
@@ -2051,18 +2082,26 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                 if (limit <= 0) {
                     limit = 1;
                 }
-		                        
-                for (int k = 1; k <= limit; k++) {
-                  childNode = doc.createElement(tag);
-                  overlayData(childNode, ptag, doc, osf, k, MD);
-                  ele.appendChild(childNode);
+		
+                if (j < 1) {
+                    j = 1;
                 }
-                  
                 
-		      
-                if (childNode != null && ! exclude.contains(childNode.getNodeName())) {
-                createXML(childNode, ptag, level + 1, doc, exclude,osf, MD);
+                for (int k = 1; k <= limit; k++) {
+                  if (isLooper(mykey)) {
+                      j = k;
+                  }
+                  childNode = doc.createElement(tag);
+                  overlayData(childNode, ptag, doc, osf, j, MD);
+                  ele.appendChild(childNode);
+                  
+              //  if (childNode != null && ! exclude.contains(childNode.getNodeName())) {
+                if (childNode != null) {
+               // System.out.println("HERE: " + tag + "/" + limit + "/" + k + "/" + j + "/" + mykey + "/" + level);
+                createXML(childNode, ptag, level + 1, doc, exclude,osf, MD, k);
                 }
+                
+                } // for limit
 	    }
 	    
     }	
@@ -2072,6 +2111,12 @@ public abstract class EDIMap {  // took out the implements EDIMapi
 		String parent = "";
                 String thiskey = "";
                 String tag = "";
+                String param = "";
+                if (parentx.isBlank()) {
+                    param = x;
+                } else {
+                    param = parentx + ":" + x;
+                }
                 
 		for (Map.Entry<String, ArrayList<String[]>> s : osf.entrySet()) {
                     thiskey = s.getKey();
@@ -2098,7 +2143,13 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                         } else {
                             parent = recArray[1];
                         }
+                        /*
 			if (parent.equals(x) && ! recArray[0].equals(x)) {
+				list.add(tag + "=" + recArray[1]);
+			}
+                        */
+                        
+                        if (recArray[1].equals(param)) {
 				list.add(tag + "=" + recArray[1]);
 			}
 		}
@@ -2125,7 +2176,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                 tag = thiskey;
             }
                        
-            
+          //  System.out.println("HERE 1: " + tag + "/" + thiskey + "/" + ele.getNodeName() + "/" + parentx);
             if (tag.equals(ele.getNodeName())) {
                 for (String[] x : s.getValue()) {
                         
@@ -2150,7 +2201,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                           } else {
                               v = "";
                           }
-                        
+                     //   System.out.println("HERE 2: " + tag + "/" + thiskey + "/" + ele.getNodeName() + "/" +  parentChildKey + "/" + x[5] + "/" + v);
                         if (x.length > 10 && x[11].toUpperCase().equals("A")) {
                             prefix = Character.toString(prefixI++) + prefixtag; // crappy way to preserver order in attributes...prefix removed with regex
                           ele.setAttribute(prefix + x[5].toString(),v);	// set attribute of parent node  
@@ -2159,6 +2210,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                            Node nd = ele.getLastChild();
                            if (nd != null) {
                            ((Element) nd).setAttribute(prefix + x[5], v);
+                         //  System.out.println("HERE: lastchild" + nd.getNodeName());
                            }                           
                         } else {
                           e.appendChild(doc.createTextNode(v));	// create data TextNode  
@@ -2409,7 +2461,40 @@ public abstract class EDIMap {  // took out the implements EDIMapi
          
          HASH.clear();
      }
-        
+    
+    @EDI.AnnoDoc(desc = {"method commits all assigned elements/fields of segment to output array with Group Loop Anchoring boolean.",
+                     "NOTE: after all elements/fields have been assigned, the commitSegment method must be called",
+                     "Example:  commitSegment(\"PO1\", true) writes PO1 segment (and all assigned fields) to output"},
+                 params = {"String segment"}) 
+    public static void commitSegment(String segment, boolean x) {
+    	 // loop through HASH and create t for this segment
+         
+         if (x) {
+            commitLoopCount(segment); 
+         }
+         
+         int count = commitCount(segment);
+         
+    	 HashMap<String, String> t = new LinkedHashMap<String,String>();
+    	 Map<String, ArrayList<String[]>> X = new  LinkedHashMap<String, ArrayList<String[]>>(HASH);
+    	 for (Map.Entry<String, ArrayList<String[]>> z : X.entrySet()) {
+    		 if (z.getKey().equals(segment)) {
+    			 ArrayList<String[]> k = z.getValue();
+    			 for (String[] g : k) {
+    				 t.put(g[0], g[1]);
+    			 }
+    			 
+    		 }
+    	 }
+    	// HashMap<String, String> t = new HashMap<String,String>(j);
+    	 if (! OMD.containsKey(segment)) {
+    		OMD.put(segment + ":" + count, t);
+    	 }	
+         
+         HASH.clear();
+     }
+    
+    
     public static boolean segmentExists(String segment, String qual, String elementName) {
         boolean segexists = false;
          int elementNbr = getElementNumber(segment, elementName); 
