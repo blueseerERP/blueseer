@@ -17,7 +17,7 @@ for (int i = 1; i <= addrcount; i++) {
   mapSegment("order:address","addresscity",getInput(i,"N1:N4",1));
   mapSegment("order:address","addressstate",getInput(i,"N1:N4",2));
   mapSegment("order:address","addresszip",getInput(i,"N1:N4",3));
-  commitSegment("order:address");
+  commitSegment("order:address", true);
   }
  if (getInput(i,"N1",1).equals("BT")) {
   mapSegment("order:address","type","bill-to");
@@ -26,7 +26,7 @@ for (int i = 1; i <= addrcount; i++) {
   mapSegment("order:address","addresscity",getInput(i,"N1:N4",1));
   mapSegment("order:address","addressstate",getInput(i,"N1:N4",2));
   mapSegment("order:address","addresszip",getInput(i,"N1:N4",3));
-  commitSegment("order:address");
+  commitSegment("order:address", true);
   }
 }
 
@@ -41,7 +41,7 @@ mapSegment("order:detail:item","orderquantity",getInput(i,"PO1",2));
 mapSegment("order:detail:item","listprice",getInput(i,"PO1",4));
 mapSegment("order:detail:item","netprice",getInput(i,"PO1",4));
 mapSegment("order:detail:item","discount","0");
-commitSegment("order:detail:item");
+commitSegment("order:detail:item", true);
 }
 
 
