@@ -1203,6 +1203,23 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         return new segRecord(i,segment);
     }
     
+    public static String[] getFieldsFromStructure(String tag, String parent, ArrayList<String[]> isf) {
+        ArrayList<String> temp = new ArrayList<String>();
+        int i = 0;
+        for (String[] x : isf) {
+            i++;
+            if (x[5].equals("landmark") || x[5].equals("groupend")) {
+                  continue;
+            }
+          //  System.out.println("HERE: " + rawSegmentLM + "/" + rawGroupHeadLM + "/" + x[0] + "/" + x[1]);
+            if (tag.equals(x[0]) && parent.equals(x[1])) {
+                temp.add(x[5]); // should be only fields, attributes
+            }
+        }
+        return temp.toArray(new String[0]);
+    }
+    
+    
     public static stackGHP preGroupHead(String rawSegmentLM, Stack<String> instack, ArrayList<String[]> isf, int GHP) {
         String currentGroupHeadLM = String.join(":",instack.toArray(new String[instack.size()])); 
         Stack<String> stack = new Stack<String>();
@@ -1339,7 +1356,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             }
         } else if (c[28].equals("XML")) {   
             try {
-                dataAsArrays = xmlToSegments(data.get(0));
+                dataAsArrays = xmlToSegments(data.get(0), ISF);
             } catch (IOException ex) {
                 edilog(ex);
             }
@@ -1527,7 +1544,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
 	    return result;
 	}
 
-    public static List<String[]> xmlToSegments(String xml) throws IOException {
+    public static List<String[]> xmlToSegments(String xml, ArrayList<String[]> isf) throws IOException {
         ArrayList<String[]> result = new ArrayList<String[]>();
         LinkedHashMap<String,ArrayList<String>> lhm = new LinkedHashMap<String,ArrayList<String>>();
         String lhmkey = "";
@@ -1554,20 +1571,21 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             	NodeList childnodes = node.getChildNodes();
             	for (int j = 0; j < childnodes.getLength(); j++) {
             		Node child = childnodes.item(j);
+                        System.out.println("HERE: " + node.getNodeName() + "/" + node.getNodeType() + "/" +  child.getNodeName() + "/" + child.getNodeType());
             		if (child.getNodeType() == Node.ELEMENT_NODE && child.getChildNodes().getLength() == 1) {
-            			lhmkey = node.getNodeName() + ":" + node.hashCode();
+            			lhmkey = node.getNodeName() + "," + node.getParentNode().getNodeName() + "," + node.hashCode();
             			if (! lhm.containsKey(lhmkey)) {
             				lhm.put(lhmkey, null);
             			}
             			ArrayList<String> temp = lhm.get(lhmkey);
-      	    		    if (temp != null) {
-      	    			  temp.add(child.getTextContent());
-      	    			  lhm.put(lhmkey, temp);
-      	    		    } else {
-      	    			  ArrayList<String> al = new ArrayList<String>();
-      	    			  al.add(child.getTextContent());
-      	    			  lhm.put(lhmkey, al);
-      	    		    }	
+                                if (temp != null) {
+                                      temp.add(child.getNodeName() + "=" + child.getTextContent());
+                                      lhm.put(lhmkey, temp);
+                                } else {
+                                      ArrayList<String> al = new ArrayList<String>();
+                                      al.add(child.getNodeName() + "=" + child.getTextContent());
+                                      lhm.put(lhmkey, al);
+                                }	
             	     }
             	}
             	
@@ -1575,12 +1593,34 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         }
         
 	    for (Map.Entry<String, ArrayList<String>> val : lhm.entrySet()) {
-	    	String[] j = new String[val.getValue().size() + 1];
-	    	j[0] = val.getKey().split(":")[0];
+	    	/*
+                String[] j = new String[val.getValue().size() + 1];
+	    	j[0] = val.getKey().split(",")[0];
+                */
+                String[] t = getFieldsFromStructure(val.getKey().split(",")[0], val.getKey().split(",")[1], isf);
+                String[] td = new String[t.length + 1];
+                td[0] = val.getKey().split(",")[0];
+                for (int k = 0; k < t.length; k++) {
+                    System.out.println("HERE size: " + t.length + "/" + val.getValue().size());
+                    for (int m = 0; m < val.getValue().size(); m++) {
+                        System.out.println("HERE Loop: " + t[0] + "/" +  val.getKey() + "/" + k + "/" +  t[k] + "/" + val.getValue().get(m));
+                        if (t[k].equals(val.getValue().get(m).split("=")[0])) {
+                            td[k + 1] = val.getValue().get(m).split("=")[1];
+                            break;
+                        }
+                        
+                    }
+                }
+                
+                /*
 	    	for (int k = 1; k < val.getValue().size() + 1; k++) {
 	    		j[k] = val.getValue().get(k - 1);
 	    	}
 	    	result.add(j);
+                System.out.println("HERE: " + String.join(",", j) + "/" + val.getKey());
+                */
+                result.add(td);
+                System.out.println("HEREprint: " + String.join(",", td) + "/" + val.getKey());
 	    }
         
 		return result;
@@ -2604,7 +2644,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
              }
          }
        
-         if (k != null && k.length > elementNbr) {
+         if (k != null && k.length > elementNbr && k[elementNbr] != null) {
           x =  k[elementNbr].trim();
          }
         
