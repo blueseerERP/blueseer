@@ -2798,7 +2798,8 @@ public class EDI {
                 "",  // desc
                 "", // tax 
                 site,  
-                "" // bom        
+                "", // bom
+                shipto
                 );  
                 detail.add(sod);
         }

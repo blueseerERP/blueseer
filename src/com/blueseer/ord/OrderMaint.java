@@ -157,7 +157,8 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                 getGlobalColumnTag("location"), 
                 getGlobalColumnTag("description"), 
                 getGlobalColumnTag("tax"),
-                getGlobalColumnTag("bom")
+                getGlobalColumnTag("bom"),
+                getGlobalColumnTag("shipcode")
             }
     );
     
@@ -1114,7 +1115,8 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                 orddet.getValueAt(j, 14).toString(),  
                 orddet.getValueAt(j, 15).toString().replace(defaultDecimalSeparator, '.'), 
                 ddsite.getSelectedItem().toString(),  
-                orddet.getValueAt(j, 16).toString()        
+                orddet.getValueAt(j, 16).toString(),
+                orddet.getValueAt(j, 17).toString()
                 );  
                 list.add(x);
             }    
@@ -1401,7 +1403,8 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                       sod.sod_loc(), 
                       sod.sod_desc(), 
                       bsNumber(sod.sod_taxamt()),
-                      sod.sod_bom()
+                      sod.sod_bom(),
+                      sod.sod_ship()
                   });
                 }
         
@@ -3365,7 +3368,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                 "0", getGlobalProgTag("open"),
                 ddwh.getSelectedItem().toString(), ddloc.getSelectedItem().toString(), tbdesc.getText(), 
                 String.valueOf(bsFormatDouble(OVData.getTaxAmtApplicableByItem(ddpart.getSelectedItem().toString(), (np * qty) ))),
-                bom
+                bom, dditemship.getSelectedItem().toString()
             });
             
             // lets collect tax elements for each item
