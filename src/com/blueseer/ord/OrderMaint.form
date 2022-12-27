@@ -1168,7 +1168,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="custnumber" alignment="0" pref="259" max="32767" attributes="0"/>
+                                      <Component id="custnumber" alignment="0" pref="266" max="32767" attributes="0"/>
                                       <Component id="tbdesc" alignment="0" max="32767" attributes="0"/>
                                       <Component id="ddpart" alignment="0" min="-2" pref="193" max="-2" attributes="0"/>
                                   </Group>
@@ -1438,7 +1438,7 @@
                                   <Component id="tbmisc" alignment="0" pref="94" max="32767" attributes="0"/>
                                   <Component id="ddloc" alignment="0" pref="94" max="32767" attributes="0"/>
                               </Group>
-                              <Component id="dditemshipto" alignment="1" min="-2" pref="94" max="-2" attributes="0"/>
+                              <Component id="dditemship" alignment="1" min="-2" pref="94" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -1469,7 +1469,7 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="dditemshipto" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="dditemship" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel10" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace pref="16" max="32767" attributes="0"/>
@@ -1546,14 +1546,15 @@
                     <Property name="name" type="java.lang.String" value="lblbom" noResource="true"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="dditemshipto">
+                <Component class="javax.swing.JComboBox" name="dditemship">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="0"/>
                     </Property>
                   </Properties>
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+                    <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value=""/>
+                    <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
                   </AuxValues>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel10">
