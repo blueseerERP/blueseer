@@ -1797,6 +1797,7 @@ CREATE TABLE IF NOT EXISTS `ord_det` (
   `ord_shipmethod` varchar(30) NOT NULL,
   `ord_shipservice` varchar(30) NOT NULL,
   `ord_sourced` tinyint(1) NOT NULL DEFAULT '0',
+  `ord_ship` varchar(8) NOT NULL,
   `ord_export_850` tinyint(1) NOT NULL DEFAULT '0',
   `ord_import_855` tinyint(1) NOT NULL DEFAULT '0',
   `ord_import_856` tinyint(1) NOT NULL DEFAULT '0',
