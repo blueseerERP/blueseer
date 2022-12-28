@@ -3787,7 +3787,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
             shiptos.add(orddet.getValueAt(j, 17).toString());
         } 
         if (shiptos.size() > 1) {
-           bsmf.MainFrame.show("cannot auto-invoice order with multiple ship-to destinations"); 
+           bsmf.MainFrame.show(getMessageTag(1177));
            return;
         }
         
