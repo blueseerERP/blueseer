@@ -63,41 +63,55 @@
                               <Component id="jLabel92" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel85" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel86" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel13" alignment="1" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="remarks" alignment="0" min="-2" pref="199" max="-2" attributes="0"/>
-                              <Component id="tbbuyer" alignment="0" min="-2" pref="136" max="-2" attributes="0"/>
-                              <Component id="ddshipvia" alignment="0" min="-2" pref="133" max="-2" attributes="0"/>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="ddvend" min="-2" pref="133" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="btLookUpVendor" min="-2" pref="30" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="lbvend" min="-2" pref="146" max="-2" attributes="0"/>
+                              <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="remarks" alignment="0" min="-2" pref="199" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="tbkey" min="-2" pref="72" max="-2" attributes="0"/>
+                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Component id="btlookup" min="-2" pref="25" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="btnew" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="btclear" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Component id="cbblanket" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="ddstatus" alignment="0" min="-2" pref="136" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="ddship" pref="133" max="32767" attributes="0"/>
+                                      <EmptySpace min="-2" pref="186" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                          <Component id="ddsite" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="ddvend" alignment="0" pref="133" max="32767" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="btLookUpVendor" min="-2" pref="30" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="lbvend" min="-2" pref="146" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
-                              <Component id="ddsite" alignment="0" min="-2" pref="133" max="-2" attributes="0"/>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="tbkey" min="-2" pref="72" max="-2" attributes="0"/>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Component id="btlookup" min="-2" pref="25" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="btnew" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="btclear" min="-2" max="-2" attributes="0"/>
+                              <Group type="102" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="tbbuyer" min="-2" pref="136" max="-2" attributes="0"/>
+                                      <Component id="ddshipvia" min="-2" pref="133" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace pref="183" max="32767" attributes="0"/>
                               </Group>
-                              <Component id="cbblanket" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="ddstatus" alignment="0" min="-2" pref="136" max="-2" attributes="0"/>
                           </Group>
-                          <Group type="103" groupAlignment="1" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="jLabel81" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel77" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel78" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel83" alignment="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel10" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel11" alignment="1" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="userid" alignment="0" min="-2" pref="155" max="-2" attributes="0"/>
                               <Component id="orddate" alignment="0" min="-2" pref="158" max="-2" attributes="0"/>
@@ -170,13 +184,15 @@
                                       <Component id="ddvend" min="-2" max="-2" attributes="0"/>
                                       <Component id="lbvend" min="-2" pref="20" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" attributes="0">
-                                          <EmptySpace min="3" pref="3" max="-2" attributes="0"/>
-                                          <Component id="jLabel90" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Component id="ddshipvia" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="ddship" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel13" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="jLabel90" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="ddshipvia" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                               <Component id="btLookUpVendor" min="-2" max="-2" attributes="0"/>
@@ -211,11 +227,16 @@
                               <Component id="ddcurr" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel83" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="ddtype" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel10" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
                                   <EmptySpace min="3" pref="3" max="-2" attributes="0"/>
@@ -231,21 +252,6 @@
                               </Group>
                               <Component id="ddstatus" min="-2" max="-2" attributes="0"/>
                           </Group>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="ddtype" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel10" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="ddedistatus" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                  </Group>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                           <Component id="cbblanket" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="2" pref="2" max="-2" attributes="0"/>
@@ -255,6 +261,10 @@
                           </Group>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="ddedistatus" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="cbconfirm" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -544,6 +554,22 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lbltotdollars">
+        </Component>
+        <Component class="javax.swing.JComboBox" name="ddship">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="0"/>
+            </Property>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel13">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="ShipTo"/>
+            <Property name="name" type="java.lang.String" value="lblshipto" noResource="true"/>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>
