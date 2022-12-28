@@ -3773,7 +3773,7 @@ public class DTData {
                         " where " + 
                         " so_cust = " + "'" + cust + "'" +
                         " AND sod_ship = " + "'" + ship + "'" +
-                        " AND so_status <> " + "'" + getGlobalProgTag("closed") + "'" +
+                        " AND sod_status <> " + "'" + getGlobalProgTag("closed") + "'" +
                         " AND " + myfield + " like " + "'%" + str + "%'" +
                         " order by sod_line asc ;");
                 
