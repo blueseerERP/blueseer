@@ -1345,7 +1345,7 @@ public class ShipperMaint extends javax.swing.JPanel {
                 tabledetail.getValueAt(j, 1).toString(), // item
                 tabledetail.getValueAt(j, 1).toString(), // custimtem
                 tabledetail.getValueAt(j, 2).toString(),  // order
-                tabledetail.getValueAt(j, 0).toString(), //soline    
+                tabledetail.getValueAt(j, 3).toString(), //soline    
                 dfdate.format(dcshipdate.getDate()),
                 tabledetail.getValueAt(j, 4).toString(),
                 tabledetail.getValueAt(j, 5).toString().replace(defaultDecimalSeparator, '.'), // qty
