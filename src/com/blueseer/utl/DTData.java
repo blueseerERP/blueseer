@@ -3772,7 +3772,7 @@ public class DTData {
                         " inner join sod_Det on sod_nbr = so_nbr " +
                         " where " + 
                         " so_cust = " + "'" + cust + "'" +
-                        " AND so_ship = " + "'" + ship + "'" +
+                        " AND sod_ship = " + "'" + ship + "'" +
                         " AND so_status <> " + "'" + getGlobalProgTag("closed") + "'" +
                         " AND " + myfield + " like " + "'%" + str + "%'" +
                         " order by sod_line asc ;");
