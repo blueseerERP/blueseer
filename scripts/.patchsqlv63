@@ -6,3 +6,4 @@ alter table edi_mstr add column edi_ung tinyint(1) DEFAULT '0';
 alter table map_struct add column mps_doctype varchar(15) DEFAULT '';
 alter table map_struct add column mps_filetype varchar(15) DEFAULT '';
 alter table edi_docdet add column edid_xpath varchar(200) DEFAULT '';
+alter table sod_det add column sod_ship varchar(8) DEFAULT '';

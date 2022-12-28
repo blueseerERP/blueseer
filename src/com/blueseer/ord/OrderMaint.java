@@ -93,7 +93,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
@@ -3778,7 +3780,18 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_jTabbedPane1StateChanged
 
     private void btinvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btinvoiceActionPerformed
-        String[] message = autoInvoiceOrder();
+        
+        // check for multiple ship destinations...autoinvoicing requires single destination orders
+        Set<String> shiptos = new LinkedHashSet<String>();
+        for (int j = 0; j < orddet.getRowCount(); j++) {
+            shiptos.add(orddet.getValueAt(j, 17).toString());
+        } 
+        if (shiptos.size() > 1) {
+           bsmf.MainFrame.show("cannot auto-invoice order with multiple ship-to destinations"); 
+           return;
+        }
+        
+         String[] message = autoInvoiceOrder();
          if (message[0].equals("1")) { // if error
            bsmf.MainFrame.show(message[1]);
          } else {
