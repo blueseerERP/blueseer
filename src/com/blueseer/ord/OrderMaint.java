@@ -1568,15 +1568,19 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     public void reinitCustandShip(String mykey, String shipto) {
             clearShipAddress();
             ddship.removeAllItems();
+            dditemship.removeAllItems();
             
             ArrayList mycusts = cusData.getcustshipmstrlist(mykey);
             for (int i = 0; i < mycusts.size(); i++) {
                 ddship.addItem(mycusts.get(i));
+                dditemship.addItem(mycusts.get(i));
             }
             ddship.insertItemAt("",0);
+            dditemship.insertItemAt("",0);
             ddship.insertItemAt("<new>",1);
             
             ddship.setSelectedItem(shipto);
+            dditemship.setSelectedItem(shipto);
                     
      
             
