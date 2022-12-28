@@ -1450,6 +1450,18 @@ CREATE TABLE "po_mstr" (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "po_meta" (
+  "pom_nbr" varchar(8) COLLATE NOCASE DEFAULT '',
+  "pom_desc" varchar(80) COLLATE NOCASE DEFAULT '',
+  "pom_type" varchar(20) COLLATE NOCASE DEFAULT '',
+  "pom_amttype" varchar(20) COLLATE NOCASE DEFAULT '',
+  "pom_amt" decimal(13,5) COLLATE NOCASE DEFAULT '',
+  "pom_key" varchar(50) COLLATE NOCASE DEFAULT '',
+  "pom_value" varchar(50) COLLATE NOCASE DEFAULT ''
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "pod_mstr" (
   "pod_nbr" varchar(8) COLLATE NOCASE DEFAULT '',
   "pod_line" int(11) COLLATE NOCASE DEFAULT '',
@@ -2255,10 +2267,12 @@ CREATE TABLE "shs_det" (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "sos_det" (
   "sos_nbr" varchar(8) NOT NULL,
-  "sos_desc" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
+  "sos_desc" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
   "sos_type" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
   "sos_amttype" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
-  "sos_amt" decimal(14,2) NOT NULL COLLATE NOCASE DEFAULT '0'
+  "sos_amt" decimal(14,2) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "sos_key" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "sos_value" varchar(50) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
