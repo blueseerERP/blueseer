@@ -561,6 +561,9 @@
               <StringArray count="0"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ddshipActionPerformed"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
@@ -813,10 +816,11 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="103" groupAlignment="1" attributes="0">
                           <Component id="jLabel80" alignment="1" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel88" alignment="1" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel89" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
@@ -827,7 +831,8 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="btdelitem" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                          <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                              <Component id="dditemship" alignment="0" max="32767" attributes="0"/>
                               <Component id="discount" alignment="0" pref="94" max="32767" attributes="0"/>
                               <Component id="listprice" alignment="0" max="32767" attributes="0"/>
                               <Component id="netprice" max="32767" attributes="0"/>
@@ -855,7 +860,12 @@
                           <Component id="netprice" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel89" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="dditemship" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel14" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="btdelitem" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btadditem" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -930,6 +940,22 @@
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btupdateitemActionPerformed"/>
               </Events>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="dditemship">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="0"/>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel14">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="shipto"/>
+                <Property name="name" type="java.lang.String" value="lblshipto" noResource="true"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>
