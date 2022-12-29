@@ -374,7 +374,9 @@ CREATE TABLE IF NOT EXISTS `cms_det` (
   `cms_phone` varchar(15)  DEFAULT '',
   `cms_email` varchar(100)  DEFAULT '',
   `cms_misc` varchar(50)  DEFAULT '',
-  `cms_plantcode` varchar(30) NOT NULL  DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `cms_plantcode` varchar(30) NOT NULL  DEFAULT '',
+  `cms_type` varchar(30) NOT NULL  DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `cpr_mstr` (
   `cpr_cust` varchar(10)  NOT NULL DEFAULT '',
   `cpr_desc` varchar(50) NOT NULL  DEFAULT '',
@@ -2126,7 +2128,8 @@ CREATE TABLE IF NOT EXISTS `vds_det` (
   `vds_phone` varchar(15)  DEFAULT '',
   `vds_email` varchar(100)  DEFAULT '',
   `vds_misc` varchar(50)  DEFAULT '',
-  `vds_plantcode` varchar(30) NOT NULL  DEFAULT ''
+  `vds_plantcode` varchar(30) NOT NULL  DEFAULT '',
+  `vds_type` varchar(30) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `vdc_det` (
   `vdc_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,

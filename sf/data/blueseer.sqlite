@@ -330,7 +330,8 @@ CREATE TABLE "cms_det" (
   "cms_phone" varchar(15) COLLATE NOCASE DEFAULT '',
   "cms_email" varchar(100) COLLATE NOCASE DEFAULT '',
   "cms_misc" varchar(50) COLLATE NOCASE DEFAULT '',
-  "cms_plantcode" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '');
+  "cms_plantcode" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cms_type" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '');
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -2591,7 +2592,8 @@ CREATE TABLE "vds_det" (
   "vds_phone" varchar(15) COLLATE NOCASE DEFAULT '',
   "vds_email" varchar(100) COLLATE NOCASE DEFAULT '',
   "vds_misc" varchar(50) COLLATE NOCASE DEFAULT '',
-  "vds_plantcode" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '');
+  "vds_plantcode" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "vds_type" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '');
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
