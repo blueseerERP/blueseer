@@ -1124,13 +1124,15 @@
                           <Component id="jPanel8" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="btdelitem" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btadditem" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btupdateitem" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="itemshipaddrlbl" max="32767" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="btdelitem" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="btadditem" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="btupdateitem" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>

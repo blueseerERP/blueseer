@@ -410,6 +410,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         dduom.removeAllItems();
         ddvend.removeAllItems();
         ddstatus.removeAllItems();
+        ddship.removeAllItems();
         
         String defaultsite = null;
         
@@ -437,6 +438,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
             if (s[0].equals("vendors")) {
               ddvend.addItem(s[1]); 
             }
+           
             if (s[0].equals("carriers")) {
               ddshipvia.addItem(s[1]); 
             }
@@ -1391,8 +1393,15 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         lbvend.setText("");
         ddshipvia.setSelectedIndex(0);
         ddcurr.setSelectedIndex(0);
+        clearShipTo();
+        ddship.removeAllItems();
+        
+         ArrayList<String> mylist = venData.getVendShipList(ddvend.getSelectedItem().toString(), "ShipTo");
+            for (int i = 0; i < mylist.size(); i++) {
+                ddship.addItem(mylist.get(i));
+            }
+            ddship.insertItemAt("",0);
       try {
-
            Connection con = null;
         if (ds != null) {
           con = ds.getConnection();

@@ -995,6 +995,46 @@ public class venData {
 
     }
 
+    public static ArrayList getVendShipList(String code, String type) {
+        ArrayList myarray = new ArrayList();
+        try {
+            Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                res = st.executeQuery("select vds_shipto from vds_det where vds_code = " + "'" + code + "'" +
+                        " and vds_type = " + "'" + type + "'" +
+                        " order by vds_shipto;");
+                while (res.next()) {
+                    myarray.add(res.getString("vds_shipto"));
+
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                    con.close();
+            }
+        } catch (SQLException e) {
+            MainFrame.bslog(e);
+        }
+        return myarray;
+
+    }
+
+    
     public static ArrayList getVendMstrListBetween(String from, String to) {
         ArrayList myarray = new ArrayList();
         try {
