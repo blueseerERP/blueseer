@@ -1533,7 +1533,75 @@ public class DTData {
         return mymodel;
         
          } 
+    
+    public static DefaultTableModel getVendShipToBrowseUtil( String str, int state, String myfield, String code) {
+        javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("shipcode"), getGlobalColumnTag("vendor"), getGlobalColumnTag("name"), getGlobalColumnTag("addr1"), getGlobalColumnTag("city"), getGlobalColumnTag("state"), getGlobalColumnTag("zip"), getGlobalColumnTag("country")})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        }; 
+              
+        try{
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                if (state == 1) { // begins
+                    res = st.executeQuery("SELECT vds_shipto, vds_code, vds_name, vds_line1, vds_city, vds_state, vds_zip, vds_country  " +
+                        " FROM  vds_det where vds_code = " + "'" + code + "'" + " AND " + myfield + " like " + "'" + str + "%'" +
+                        " order by vds_shipto ;");
+                }
+                if (state == 2) { // ends
+                    res = st.executeQuery("SELECT vds_shipto, vds_code, vds_name, vds_line1, vds_city, vds_state, vds_zip, vds_country  " +
+                        " FROM  vds_det where vds_code = " + "'" + code + "'" + " AND " + myfield + " like " + "'%" + str + "'" +
+                        " order by vds_shipto ;");
+                }
+                 if (state == 0) { // match
+                 res = st.executeQuery("SELECT vds_shipto, vds_code, vds_name, vds_line1, vds_city, vds_state, vds_zip, vds_country  " +
+                        " FROM  vds_det where vds_code = " + "'" + code + "'" + " AND "+ myfield + " like " + "'%" + str + "%'" +
+                        " order by vds_shipto ;");
+                 }
+                
+                    while (res.next()) {
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("vds_shipto"),
+                                   res.getString("vds_code"),
+                                   res.getString("vds_name"),
+                                   res.getString("vds_line1"),
+                                   res.getString("vds_city"),
+                                   res.getString("vds_state"),
+                                   res.getString("vds_zip"),
+                                   res.getString("vds_country")
+                        });
+                    }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+        return mymodel;
         
+         } 
+    
+    
     public static DefaultTableModel getShipToBrowseUtil( String str, int state, String myfield, String cust) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("shipcode"), getGlobalColumnTag("customer"), getGlobalColumnTag("name"), getGlobalColumnTag("addr1"), getGlobalColumnTag("city"), getGlobalColumnTag("state"), getGlobalColumnTag("zip"), getGlobalColumnTag("country")})

@@ -448,6 +448,289 @@ public class venData {
     }
     
     
+     // vds_det Vendor Shipto Table
+    public static String[] addVDSDet(vds_det x) {
+        String[] m = new String[2];
+        if (x == null) {
+            return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+        }
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            _addVDSDet(x, con, ps, res, false);  // add vds_det
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    private static void _addVDSDet(vds_det x, Connection con, PreparedStatement ps, ResultSet res, boolean addupdate) throws SQLException {
+        if (x == null) return;
+        String sqlSelect = "select * from vds_det where vds_code = ? and vds_shipto = ?";
+        String sqlInsert = "insert into vds_det (vds_code, vds_shipto, vds_name, vds_line1, vds_line2, " 
+                        + "vds_line3, vds_city, vds_state, vds_zip, vds_country, vds_type ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?); "; 
+        String sqlUpdate = "update vds_det set " 
+                + " vds_name = ?, vds_line1 = ?, vds_line2 = ?, "
+                + "vds_line3 = ?, vds_city = ?, vds_state = ?, vds_zip = ?, "
+                + "vds_country = ?, vds_type = ? "
+                + " where vds_code = ? and vds_shipto = ? ; ";
+            ps = con.prepareStatement(sqlSelect);
+            ps.setString(1, x.vds_code);
+            ps.setString(2, x.vds_shipto);
+            res = ps.executeQuery();
+             if (! res.isBeforeFirst()) {
+            ps = con.prepareStatement(sqlInsert);
+            ps.setString(1, x.vds_code);
+            ps.setString(2, x.vds_shipto);
+            ps.setString(3, x.vds_name);
+            ps.setString(4, x.vds_line1);
+            ps.setString(5, x.vds_line2);
+            ps.setString(6, x.vds_line3);
+            ps.setString(7, x.vds_city);
+            ps.setString(8, x.vds_state);
+            ps.setString(9, x.vds_zip);
+            ps.setString(10, x.vds_country);
+            ps.setString(11, x.vds_type);
+            int rows = ps.executeUpdate();
+            } else {
+                 if (addupdate) {
+                    ps = con.prepareStatement(sqlUpdate); 
+                    ps.setString(10, x.vds_code);
+                    ps.setString(11, x.vds_shipto);
+                    ps.setString(1, x.vds_name);
+                    ps.setString(2, x.vds_line1);
+                    ps.setString(3, x.vds_line2);
+                    ps.setString(4, x.vds_line3);
+                    ps.setString(5, x.vds_city);
+                    ps.setString(6, x.vds_state);
+                    ps.setString(7, x.vds_zip);
+                    ps.setString(8, x.vds_country);
+                    ps.setString(9, x.vds_type);
+                    ps.executeUpdate();    
+                 }
+             }
+    }
+        
+    public static String[] updateVDSDet(vds_det x) {
+        String[] m = new String[2];
+        if (x == null) {
+            return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};
+        }
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            _updateVDSDet(x, con, ps, res);  // add vds_det
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    private static int _updateVDSDet(vds_det x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sql = "update vds_det set " 
+                + " vds_name = ?, vds_line1 = ?, vds_line2 = ?, "
+                + "vds_line3 = ?, vds_city = ?, vds_state = ?, vds_zip = ?, "
+                + "vds_country = ?, vds_type = ? "
+                + " where vds_code = ? and vds_shipto = ? ; ";
+       ps = con.prepareStatement(sql);
+        ps.setString(10, x.vds_code);
+        ps.setString(11, x.vds_shipto);
+            ps.setString(1, x.vds_name);
+            ps.setString(2, x.vds_line1);
+            ps.setString(3, x.vds_line2);
+            ps.setString(4, x.vds_line3);
+            ps.setString(5, x.vds_city);
+            ps.setString(6, x.vds_state);
+            ps.setString(7, x.vds_zip);
+            ps.setString(8, x.vds_country);
+            ps.setString(9, x.vds_type);
+            rows = ps.executeUpdate();
+        
+       
+        return rows;
+    }
+         
+    public static String[] deleteVDSDet(vds_det x) {
+        String[] m = new String[2];
+        if (x == null) {
+            return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
+        }
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            _deleteVDSDet(x.vds_code, x.vds_shipto, con, ps, res);  // add vds_det
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    private static void _deleteVDSDet(String x, String y, Connection con, PreparedStatement ps, ResultSet res) throws SQLException { 
+       
+        String sql = "delete from vds_det where vds_code = ? and vds_shipto = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x);
+        ps.setString(2, y);
+        ps.executeUpdate();
+    }
+    
+    public static vds_det getVDSDet(String shipto, String code) {
+        vds_det r = null;
+        String[] m = new String[2];
+        String sql = "select * from vds_det where vds_shipto = ? and vds_code = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, shipto);
+        ps.setString(2, code);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new vds_det(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new vds_det(m, res.getString("vds_code"), res.getString("vds_shipto"), res.getString("vds_name"), res.getString("vds_line1"), res.getString("vds_line2"),
+                    res.getString("vds_line3"), res.getString("vds_city"), res.getString("vds_state"), res.getString("vds_zip"),
+                    res.getString("vds_country"), res.getString("vds_type") 
+                    );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new vds_det(m);
+        }
+        return r;
+    }
+    
+    public static ArrayList<vds_det> getVDSDet(String code) {
+        vds_det r = null;
+        String[] m = new String[2];
+        ArrayList<vds_det> list = new ArrayList<vds_det>();
+        String sql = "select * from vds_det where vds_code = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, code);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new vds_det(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new vds_det(m, res.getString("vds_code"), res.getString("vds_shipto"), res.getString("vds_name"), res.getString("vds_line1"), res.getString("vds_line2"),
+                    res.getString("vds_line3"), res.getString("vds_city"), res.getString("vds_state"), res.getString("vds_zip"),
+                    res.getString("vds_country"), res.getString("vds_type") 
+                    );
+                        list.add(r);
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new vds_det(m);
+               list.add(r);
+        }
+        return list;
+    }
+    
+   
+    
+    
     public static String[] addUpdateVDCtrl(vd_ctrl x) {
         int rows = 0;
         String[] m = new String[2];
@@ -1155,5 +1438,12 @@ return myitem;
         }
     }
   
-     
+    public record vds_det(String[] m, String vds_code, String vds_shipto, 
+        String vds_name, String vds_line1, String vds_line2,
+        String vds_line3, String vds_city, String vds_state, 
+        String vds_zip, String vds_country, String vds_type) {
+        public vds_det(String[] m) {
+            this(m,"","","","","","","","","","","");
+        }
+    } 
 }

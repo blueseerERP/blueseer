@@ -53,11 +53,15 @@ import static com.blueseer.utl.BlueSeerUtils.lurb2;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
 import com.blueseer.utl.IBlueSeerT;
+import static com.blueseer.vdr.venData.addVDSDet;
 import static com.blueseer.vdr.venData.addVendMstr;
 import static com.blueseer.vdr.venData.deleteVendMstr;
+import static com.blueseer.vdr.venData.getVDSDet;
 import static com.blueseer.vdr.venData.getVendMstr;
+import static com.blueseer.vdr.venData.updateVDSDet;
 import static com.blueseer.vdr.venData.updateVendMstr;
 import com.blueseer.vdr.venData.vd_mstr;
+import com.blueseer.vdr.venData.vds_det;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -301,6 +305,7 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
        
        jTabbedPane1.removeAll();
         jTabbedPane1.add("Main", mainPanel);
+        jTabbedPane1.add("ShipTo", shiptoPanel);
         jTabbedPane1.add("Contact", contactPanel);
        
        java.util.Date now = new java.util.Date();
@@ -341,15 +346,20 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
         ArrayList states = OVData.getCodeMstrKeyList("state");
         for (int i = 0; i < states.size(); i++) {
             ddstate.addItem(states.get(i).toString());
+            ddshipstate.addItem(states.get(i).toString());
         }
         if (ddstate.getItemCount() > 0) {
            ddstate.setSelectedIndex(0); 
+        }
+        if (ddshipstate.getItemCount() > 0) {
+           ddshipstate.setSelectedIndex(0); 
         }
         
     
        if (ddcountry.getItemCount() == 0)
        for (int i = 0; i < OVData.countries.length; i++) {
             ddcountry.addItem(OVData.countries[i]);
+            ddshipcountry.addItem(OVData.countries[i]);
         }
        
        ddcarrier.removeAllItems();
@@ -553,6 +563,9 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public void initvars(String[] arg) {
        
+       setPanelComponentState(mainPanel, false); 
+       setPanelComponentState(shiptoPanel, false); 
+       setPanelComponentState(contactPanel, false);  
        setPanelComponentState(this, false); 
        setComponentDefaultValues();
         btnew.setEnabled(true);
@@ -634,18 +647,65 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
         return x;
     }
    
-    public void lookUpFrame() {
+    public vds_det createVDSDet(boolean sameAs) { 
+        // added sameAs boolean to distinguish intial customer creation from post customer creation
+        venData.vds_det x = null;
+        if (sameAs) {
+        x = new venData.vds_det(null, 
+                tbkey.getText(),
+                tbkey.getText(),
+                tbname.getText(),
+                tbline1.getText(),
+                tbline2.getText(),
+                tbline3.getText(),
+                tbcity.getText(),
+                ddstate.getSelectedItem().toString(),
+                tbzip.getText(),
+                ddcountry.getSelectedItem().toString(),
+                "" // type
+                );
+        } else {
+        x = new venData.vds_det(null, 
+                tbkey.getText(),
+                tbshipcode.getText(),
+                tbshipname.getText(),
+                tbshipline1.getText(),
+                tbshipline2.getText(),
+                tbshipline3.getText(),
+                tbshipcity.getText(),
+                ddshipstate.getSelectedItem().toString(),
+                tbshipzip.getText(),
+                ddshipcountry.getSelectedItem().toString(),
+                "" // type
+                );
+        }
+        return x;
+    }
+    
+    
+    public void lookUpFrame(String option) {
         
         luinput.removeActionListener(lual);
         lual = new ActionListener() {
         public void actionPerformed(ActionEvent event) {
-        if (lurb1.isSelected()) {  
-         luModel = DTData.getVendBrowseUtil(luinput.getText(),0, "vd_addr");
-        } else if (lurb2.isSelected()) {
-         luModel = DTData.getVendBrowseUtil(luinput.getText(),0, "vd_name");   
+        if (option.equals("shipto")) {
+             if (lurb1.isSelected()) {  
+             luModel = DTData.getVendShipToBrowseUtil(luinput.getText(),0, "vds_shipto", tbkey.getText());
+            } else if (lurb2.isSelected()) {
+             luModel = DTData.getVendShipToBrowseUtil(luinput.getText(),0, "vds_name", tbkey.getText()); 
+            } else {
+             luModel = DTData.getVendShipToBrowseUtil(luinput.getText(),0, "vds_zip", tbkey.getText());   
+            }
         } else {
-         luModel = DTData.getVendBrowseUtil(luinput.getText(),0, "vd_zip");   
+            if (lurb1.isSelected()) {  
+             luModel = DTData.getVendBrowseUtil(luinput.getText(),0, "vd_addr");
+            } else if (lurb2.isSelected()) {
+             luModel = DTData.getVendBrowseUtil(luinput.getText(),0, "vd_name");   
+            } else {
+             luModel = DTData.getVendBrowseUtil(luinput.getText(),0, "vd_zip");   
+            }
         }
+        
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
@@ -665,7 +725,11 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
                 int column = target.getSelectedColumn();
                 if ( column == 0) {
                 ludialog.dispose();
-                initvars(new String[]{target.getValueAt(row,1).toString(), target.getValueAt(row,2).toString()});
+                    if (option.equals("shipto")) {
+                      getShipTo(new String[]{target.getValueAt(row,1).toString(), target.getValueAt(row,2).toString()});
+                    } else {
+                      initvars(new String[]{target.getValueAt(row,1).toString(), target.getValueAt(row,2).toString()});  
+                    }
                 }
             }
         };
@@ -725,6 +789,121 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     
     // custom functions
+    public boolean validateInputShipTo(dbaction action) {
+        
+        Map<String,Integer> f = OVData.getTableInfo("vds_det");
+        int fc;
+
+        fc = checkLength(f,"vds_shipto");
+        if (tbshipcode.getText().length() > fc || tbshipcode.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbshipcode.requestFocus();
+            return false;
+        }  
+        
+        fc = checkLength(f,"vds_name");
+        if (tbshipname.getText().length() > fc || tbshipname.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbshipname.requestFocus();
+            return false;
+        } 
+        
+        fc = checkLength(f,"vds_line1");
+        if (tbshipline1.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbshipline1.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"vds_line2");
+        if (tbshipline2.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbshipline2.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"vds_line3");
+        if (tbshipline3.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbshipline3.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"vds_city");
+        if (tbshipcity.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbshipcity.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"vds_zip");
+        if (tbshipzip.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbshipzip.requestFocus();
+            return false;
+        }
+
+      return true;
+     }
+    
+    public void addShipTo() {
+        String[] m = addVDSDet(createVDSDet(false));
+        bsmf.MainFrame.show(m[1]);
+    }
+    
+    public void updateShipTo() {
+        String[] m = updateVDSDet(createVDSDet(false));
+        bsmf.MainFrame.show(m[1]);
+    }
+    
+    public void clearShipTo() {
+       tbshipname.setText("");
+       tbshipline1.setText("");
+       tbshipline2.setText("");
+       tbshipline3.setText("");
+       tbshipcity.setText("");
+       tbshipzip.setText("");
+       tbshipcode.setText("");
+       
+      
+        if (ddshipstate.getItemCount() > 0) {
+           ddshipstate.setSelectedIndex(0); 
+        }
+       
+       if (ddshipcountry.getItemCount() > 0) {
+       ddshipcountry.setSelectedItem("USA");
+       }
+       
+     }
+    
+    public String[] getShipTo(String[] x) {
+        String[] m = new String[2];
+        vds_det k = getVDSDet(x[0], x[1]);
+        tbshipcode.setText(k.vds_shipto());
+        tbshipname.setText(k.vds_name());
+        tbshipline1.setText(k.vds_line1());
+        tbshipline2.setText(k.vds_line2());
+        tbshipline3.setText(k.vds_line3());
+        tbshipcity.setText(k.vds_city());
+        tbshipzip.setText(k.vds_zip());
+        ddshipstate.setSelectedItem(k.vds_state());
+        ddshipcountry.setSelectedItem(k.vds_country());
+        if (k.m()[0].equals("0")) {
+            btshipedit.setEnabled(true);
+            btshipnew.setEnabled(true);
+            btshipadd.setEnabled(false);
+            tbshipcode.setEditable(false);
+            m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};;
+           } else {
+            btshipedit.setEnabled(false);
+            btshipnew.setEnabled(true);
+            btshipadd.setEnabled(false);   
+            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
+           }
+     return m;
+        
+    }
+     
     public void overrideComponentState() {
          tbdateadded.setEditable(false);
          tbdatemod.setEditable(false);
@@ -874,7 +1053,7 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbfax.setText("");
         tbemail.setText("");
     }
-    
+            
     public void refreshContactTable(String vend) {
       contactmodel.setRowCount(0);
        try {
@@ -1009,6 +1188,29 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel25 = new javax.swing.JLabel();
         tbfax = new javax.swing.JTextField();
         btEditContact = new javax.swing.JButton();
+        shiptoPanel = new javax.swing.JPanel();
+        jLabel34 = new javax.swing.JLabel();
+        jLabel35 = new javax.swing.JLabel();
+        jLabel36 = new javax.swing.JLabel();
+        jLabel37 = new javax.swing.JLabel();
+        tbshipcity = new javax.swing.JTextField();
+        tbshipzip = new javax.swing.JTextField();
+        jLabel38 = new javax.swing.JLabel();
+        jLabel39 = new javax.swing.JLabel();
+        ddshipcountry = new javax.swing.JComboBox();
+        ddshipstate = new javax.swing.JComboBox();
+        tbshipline2 = new javax.swing.JTextField();
+        tbshipline3 = new javax.swing.JTextField();
+        tbshipname = new javax.swing.JTextField();
+        tbshipline1 = new javax.swing.JTextField();
+        jLabel40 = new javax.swing.JLabel();
+        jLabel41 = new javax.swing.JLabel();
+        jLabel42 = new javax.swing.JLabel();
+        btshipadd = new javax.swing.JButton();
+        btshipedit = new javax.swing.JButton();
+        btshipnew = new javax.swing.JButton();
+        tbshipcode = new javax.swing.JTextField();
+        btlookupShipTo = new javax.swing.JButton();
 
         jTextField1.setText("jTextField1");
 
@@ -1560,6 +1762,161 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
         );
 
         add(contactPanel);
+
+        shiptoPanel.setBackground(new java.awt.Color(220, 220, 220));
+
+        jLabel34.setText("State");
+        jLabel34.setName("lblstate"); // NOI18N
+
+        jLabel35.setText("Line3");
+        jLabel35.setName("lbladdr3"); // NOI18N
+
+        jLabel36.setText("Zip");
+        jLabel36.setName("lblzip"); // NOI18N
+
+        jLabel37.setText("Line1");
+        jLabel37.setName("lbladdr1"); // NOI18N
+
+        jLabel38.setText("Country");
+        jLabel38.setName("lblcountry"); // NOI18N
+
+        jLabel39.setText("Line2");
+        jLabel39.setName("lbladdr2"); // NOI18N
+
+        jLabel40.setText("ShipCode");
+        jLabel40.setName("lblshipto"); // NOI18N
+
+        jLabel41.setText("Name");
+        jLabel41.setName("lblname"); // NOI18N
+
+        jLabel42.setText("City");
+        jLabel42.setName("lblcity"); // NOI18N
+
+        btshipadd.setText("Add");
+        btshipadd.setName("btadd"); // NOI18N
+        btshipadd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btshipaddActionPerformed(evt);
+            }
+        });
+
+        btshipedit.setText("Update");
+        btshipedit.setName("btupdate"); // NOI18N
+        btshipedit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btshipeditActionPerformed(evt);
+            }
+        });
+
+        btshipnew.setText("New");
+        btshipnew.setName("btnew"); // NOI18N
+        btshipnew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btshipnewActionPerformed(evt);
+            }
+        });
+
+        btlookupShipTo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
+        btlookupShipTo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btlookupShipToActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout shiptoPanelLayout = new javax.swing.GroupLayout(shiptoPanel);
+        shiptoPanel.setLayout(shiptoPanelLayout);
+        shiptoPanelLayout.setHorizontalGroup(
+            shiptoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(shiptoPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(shiptoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(shiptoPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel40)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tbshipcode, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btlookupShipTo, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(13, 13, 13)
+                        .addComponent(btshipnew))
+                    .addGroup(shiptoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(shiptoPanelLayout.createSequentialGroup()
+                            .addComponent(btshipedit)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btshipadd))
+                        .addGroup(shiptoPanelLayout.createSequentialGroup()
+                            .addGroup(shiptoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(shiptoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(shiptoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jLabel41)
+                                        .addComponent(jLabel37)
+                                        .addComponent(jLabel39)
+                                        .addComponent(jLabel35)
+                                        .addComponent(jLabel42)
+                                        .addComponent(jLabel34))
+                                    .addComponent(jLabel36, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addComponent(jLabel38, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(shiptoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(tbshipline3, javax.swing.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE)
+                                .addComponent(tbshipline2, javax.swing.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE)
+                                .addComponent(tbshipline1, javax.swing.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE)
+                                .addComponent(tbshipcity, javax.swing.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE)
+                                .addComponent(tbshipname)
+                                .addComponent(ddshipstate, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(shiptoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(ddshipcountry, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tbshipzip, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                .addContainerGap(565, Short.MAX_VALUE))
+        );
+        shiptoPanelLayout.setVerticalGroup(
+            shiptoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(shiptoPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(shiptoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel40)
+                    .addComponent(btshipnew)
+                    .addComponent(tbshipcode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btlookupShipTo))
+                .addGap(15, 15, 15)
+                .addGroup(shiptoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbshipname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel41))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(shiptoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbshipline1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel37))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(shiptoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbshipline2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel39))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(shiptoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbshipline3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel35))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(shiptoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbshipcity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel42))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(shiptoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ddshipstate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel34))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(shiptoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbshipzip, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel36))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(shiptoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ddshipcountry, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel38))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(shiptoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btshipadd)
+                    .addComponent(btshipedit))
+                .addContainerGap(231, Short.MAX_VALUE))
+        );
+
+        add(shiptoPanel);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
@@ -1640,8 +1997,49 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_btclearActionPerformed
 
     private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
-        lookUpFrame();
+        lookUpFrame("");
     }//GEN-LAST:event_btlookupActionPerformed
+
+    private void btshipaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btshipaddActionPerformed
+        if (! validateInputShipTo(dbaction.add)) {
+            return;
+        }
+        if (OVData.isValidCustShipTo(tbkey.getText(),tbshipcode.getText())) {
+            bsmf.MainFrame.show(getMessageTag(1014));
+            return;
+        }
+        addShipTo();
+    }//GEN-LAST:event_btshipaddActionPerformed
+
+    private void btshipeditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btshipeditActionPerformed
+        if (! validateInputShipTo(dbaction.update)) {
+            return;
+        }
+        if (OVData.isValidCustShipTo(tbkey.getText(),tbshipcode.getText())) {
+            updateShipTo();
+        }
+    }//GEN-LAST:event_btshipeditActionPerformed
+
+    private void btshipnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btshipnewActionPerformed
+        clearShipTo();
+        if (OVData.isAutoCust()) {
+            tbshipcode.setText(String.valueOf(OVData.getNextNbr("shipto")));
+            tbshipcode.setEditable(false);
+            btshipadd.setEnabled(true);
+            btshipedit.setEnabled(false);
+        } else {
+            tbshipcode.setEditable(true);
+            tbshipcode.requestFocus();
+            btshipadd.setEnabled(true);
+            btshipedit.setEnabled(false);
+
+        }
+
+    }//GEN-LAST:event_btshipnewActionPerformed
+
+    private void btlookupShipToActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupShipToActionPerformed
+        lookUpFrame("shipto");
+    }//GEN-LAST:event_btlookupShipToActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btAddContact;
@@ -1651,7 +2049,11 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btlookup;
+    private javax.swing.JButton btlookupShipTo;
     private javax.swing.JButton btnew;
+    private javax.swing.JButton btshipadd;
+    private javax.swing.JButton btshipedit;
+    private javax.swing.JButton btshipnew;
     private javax.swing.JButton btupdate;
     private javax.swing.JCheckBox cb850;
     private javax.swing.JPanel contactPanel;
@@ -1663,6 +2065,8 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JComboBox ddcontacttype;
     private javax.swing.JComboBox ddcountry;
     private javax.swing.JComboBox<String> ddcurr;
+    private javax.swing.JComboBox ddshipcountry;
+    private javax.swing.JComboBox ddshipstate;
     private javax.swing.JComboBox ddstate;
     private javax.swing.JComboBox ddterms;
     private javax.swing.JLabel jLabel1;
@@ -1692,7 +2096,16 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JLabel jLabel31;
     private javax.swing.JLabel jLabel32;
     private javax.swing.JLabel jLabel33;
+    private javax.swing.JLabel jLabel34;
+    private javax.swing.JLabel jLabel35;
+    private javax.swing.JLabel jLabel36;
+    private javax.swing.JLabel jLabel37;
+    private javax.swing.JLabel jLabel38;
+    private javax.swing.JLabel jLabel39;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel40;
+    private javax.swing.JLabel jLabel41;
+    private javax.swing.JLabel jLabel42;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -1705,6 +2118,7 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JPanel mainPanel;
+    private javax.swing.JPanel shiptoPanel;
     private javax.swing.JTextField tbbuyer;
     private javax.swing.JTextField tbcity;
     private javax.swing.JTextField tbcontactname;
@@ -1727,6 +2141,13 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JTextField tbpricecode;
     private javax.swing.JTextArea tbremarks;
     private javax.swing.JTextField tbsalesrep;
+    private javax.swing.JTextField tbshipcity;
+    private javax.swing.JTextField tbshipcode;
+    private javax.swing.JTextField tbshipline1;
+    private javax.swing.JTextField tbshipline2;
+    private javax.swing.JTextField tbshipline3;
+    private javax.swing.JTextField tbshipname;
+    private javax.swing.JTextField tbshipzip;
     private javax.swing.JTextField tbtaxcode;
     private javax.swing.JTextField tbzip;
     // End of variables declaration//GEN-END:variables
