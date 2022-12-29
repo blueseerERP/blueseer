@@ -331,6 +331,7 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbmainemail.setText("");
         tbremarks.setText("");
        
+        ddshiptype.setSelectedIndex(0);
         cb850.setSelected(false);
         
         tbsalesrep.setText("");
@@ -399,6 +400,7 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
         for (int i = 0; i < ccs.size(); i++) {
             ddcc.addItem(ccs.get(i).toString());
         }
+        
         
        
         if (ddbank.getItemCount() > 0)
@@ -784,6 +786,7 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
         cb850.setSelected(BlueSeerUtils.ConvertStringToBool(k.vd_is850export()));
         refreshContactTable(k.vd_addr());
         setAction(k.m());
+        clearShipTo();
         return k.m();  
     }
     
@@ -864,7 +867,7 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
        tbshipcity.setText("");
        tbshipzip.setText("");
        tbshipcode.setText("");
-       
+       ddshiptype.setSelectedIndex(0);
       
         if (ddshipstate.getItemCount() > 0) {
            ddshipstate.setSelectedIndex(0); 
@@ -888,6 +891,7 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbshipzip.setText(k.vds_zip());
         ddshipstate.setSelectedItem(k.vds_state());
         ddshipcountry.setSelectedItem(k.vds_country());
+        ddshiptype.setSelectedItem(k.vds_type());
         if (k.m()[0].equals("0")) {
             btshipedit.setEnabled(true);
             btshipnew.setEnabled(true);
@@ -2026,7 +2030,7 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
         if (! validateInputShipTo(dbaction.update)) {
             return;
         }
-        if (OVData.isValidCustShipTo(tbkey.getText(),tbshipcode.getText())) {
+        if (OVData.isValidVendAddr(tbkey.getText(),tbshipcode.getText())) {
             updateShipTo();
         }
     }//GEN-LAST:event_btshipeditActionPerformed

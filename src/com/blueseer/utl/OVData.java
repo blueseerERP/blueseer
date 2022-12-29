@@ -11202,6 +11202,45 @@ return autosource;
 
 }
 
+    public static boolean isValidVendAddr(String code, String addr) {
+
+   boolean isgood = false;
+    try{
+
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+
+            res = st.executeQuery("select vds_shipto from vds_det where vds_code = " + "'" + code + "'" 
+                    + " and vds_shipto = " + "'" + addr + "'" 
+                    + ";");
+           while (res.next()) {
+                isgood = true;
+            }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return isgood;
+
+}
+
+    
     public static boolean isValidLocation(String key) {
 
    boolean isgood = false;
