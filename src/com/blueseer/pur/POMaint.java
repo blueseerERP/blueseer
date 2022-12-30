@@ -162,6 +162,13 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
     };
     
+     javax.swing.table.DefaultTableModel sacmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+            new String[]{
+                getGlobalColumnTag("type"), 
+                getGlobalColumnTag("description"), 
+                getGlobalColumnTag("value"), 
+                getGlobalColumnTag("amount")
+            });
     
      javax.swing.event.TableModelListener ml = new javax.swing.event.TableModelListener() {
                     @Override
@@ -1590,6 +1597,17 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel3 = new javax.swing.JLabel();
         tbtotdollars = new javax.swing.JTextField();
         lblcurr = new javax.swing.JLabel();
+        jPanel5 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        sactable = new javax.swing.JTable();
+        tbsacamt = new javax.swing.JTextField();
+        tbsacdesc = new javax.swing.JTextField();
+        percentlabel = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        btsacadd = new javax.swing.JButton();
+        btsacdelete = new javax.swing.JButton();
+        ddsactype = new javax.swing.JComboBox<>();
+        ddsacamttype = new javax.swing.JComboBox<>();
         panelShipto = new javax.swing.JPanel();
         jLabel30 = new javax.swing.JLabel();
         jLabel31 = new javax.swing.JLabel();
@@ -2206,6 +2224,99 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel3.setText("Total $");
         jLabel3.setName("lbltotalamt"); // NOI18N
 
+        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Summary Discounts, Charges, and Taxes"));
+        jPanel5.setName("panelsummary"); // NOI18N
+
+        sactable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane2.setViewportView(sactable);
+
+        percentlabel.setText("Percent/Amount");
+        percentlabel.setName("lblpercent"); // NOI18N
+
+        jLabel15.setText("Desc");
+        jLabel15.setName("lbldesc"); // NOI18N
+
+        btsacadd.setText("add");
+        btsacadd.setName("btadd"); // NOI18N
+        btsacadd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btsacaddActionPerformed(evt);
+            }
+        });
+
+        btsacdelete.setText("delete");
+        btsacdelete.setName("btdelete"); // NOI18N
+        btsacdelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btsacdeleteActionPerformed(evt);
+            }
+        });
+
+        ddsactype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "discount", "charge", "passive" }));
+
+        ddsacamttype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "amount", "percent" }));
+        ddsacamttype.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddsacamttypeActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(percentlabel)
+                    .addComponent(jLabel15))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(tbsacdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(tbsacamt, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(29, 29, 29)
+                        .addComponent(btsacadd)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btsacdelete))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(ddsactype, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ddsacamttype, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 129, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 362, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ddsactype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ddsacamttype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbsacdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel15))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btsacadd)
+                    .addComponent(btsacdelete)
+                    .addComponent(tbsacamt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(percentlabel))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout panelDetailLayout = new javax.swing.GroupLayout(panelDetail);
         panelDetail.setLayout(panelDetailLayout);
         panelDetailLayout.setHorizontalGroup(
@@ -2232,7 +2343,8 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addGroup(panelDetailLayout.createSequentialGroup()
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         panelDetailLayout.setVerticalGroup(
@@ -2243,8 +2355,10 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26)
                 .addGroup(panelDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(totlines, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2720,6 +2834,57 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
     }//GEN-LAST:event_ddshipActionPerformed
 
+    private void btsacaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btsacaddActionPerformed
+        boolean proceed = true;
+        double amount = 0;
+        Pattern p = Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
+        Matcher m = p.matcher(tbsacamt.getText());
+        if (!m.find() || tbsacamt.getText() == null) {
+            bsmf.MainFrame.show(getMessageTag(1033));
+            proceed = false;
+            tbsacamt.requestFocus();
+            return;
+        }
+
+        if (tbsacdesc.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1024));
+            proceed = false;
+            tbsacdesc.requestFocus();
+            return;
+        }
+
+        if (ddsactype.getSelectedItem().toString().equals("discount") &&
+            ddsacamttype.getSelectedItem().toString().equals("amount")) {
+            amount = -1 * bsParseDouble(tbsacamt.getText());
+        } else {
+            amount = bsParseDouble(tbsacamt.getText());
+        }
+
+        if (proceed)
+        sacmodel.addRow(new Object[]{ ddsactype.getSelectedItem().toString(), tbsacdesc.getText(), ddsacamttype.getSelectedItem().toString(), String.valueOf(amount)});
+        retotal();
+        refreshDisplayTotals();
+    }//GEN-LAST:event_btsacaddActionPerformed
+
+    private void btsacdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btsacdeleteActionPerformed
+        int[] rows = sactable.getSelectedRows();
+        for (int i : rows) {
+            bsmf.MainFrame.show(getMessageTag(1031,String.valueOf(i)));
+            ((javax.swing.table.DefaultTableModel) sactable.getModel()).removeRow(i);
+        }
+        retotal();
+        refreshDisplayTotals();
+
+    }//GEN-LAST:event_btsacdeleteActionPerformed
+
+    private void ddsacamttypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddsacamttypeActionPerformed
+        if (ddsacamttype.getSelectedItem().toString().equals("percent")) {
+            percentlabel.setText("percent");
+        } else {
+            percentlabel.setText("amount");
+        }
+    }//GEN-LAST:event_ddsacamttypeActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btLookUpCustItem;
     private javax.swing.JButton btLookUpItemDesc;
@@ -2732,6 +2897,8 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btpoprint;
+    private javax.swing.JButton btsacadd;
+    private javax.swing.JButton btsacdelete;
     private javax.swing.JButton btupdate;
     private javax.swing.JButton btupdateitem;
     private javax.swing.JCheckBox cbblanket;
@@ -2740,6 +2907,8 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JComboBox<String> ddedistatus;
     private javax.swing.JComboBox<String> dditemship;
     private static javax.swing.JComboBox ddpart;
+    private javax.swing.JComboBox<String> ddsacamttype;
+    private javax.swing.JComboBox<String> ddsactype;
     private javax.swing.JComboBox<String> ddship;
     private javax.swing.JComboBox ddshipcountry;
     private javax.swing.JComboBox ddshipstate;
@@ -2757,6 +2926,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel30;
@@ -2793,6 +2963,8 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JLabel jLabel92;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel lblcurr;
@@ -2805,11 +2977,15 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JPanel panelDetail;
     private javax.swing.JPanel panelMain;
     private javax.swing.JPanel panelShipto;
+    private javax.swing.JLabel percentlabel;
     private javax.swing.JTextField qtyshipped;
     private javax.swing.JTextField remarks;
+    private javax.swing.JTable sactable;
     private javax.swing.JTextField tbbuyer;
     private javax.swing.JTextField tbdesc;
     private javax.swing.JTextField tbkey;
+    private javax.swing.JTextField tbsacamt;
+    private javax.swing.JTextField tbsacdesc;
     private javax.swing.JTextField tbshipcity;
     private javax.swing.JTextField tbshipcode;
     private javax.swing.JTextField tbshipcontact;

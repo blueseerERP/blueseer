@@ -1573,7 +1573,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             		Node child = childnodes.item(j);
                         
                         if (child.getNodeType() != 3)
-                        System.out.println("HERE: " + node.getNodeName() + "/" + node.getNodeValue() + "/" + node.getParentNode().getNodeName() + "/" +  child.getNodeName() + "/" + child.getNodeType());
+                        System.out.println("HERE: " + node.getNodeName() + "/" + node.getNodeType() + "/" + node.getParentNode().getNodeName() + "/" +  child.getNodeName() + "/" + child.getNodeType());
             		
                         if (child.getNodeType() == Node.ELEMENT_NODE && child.getChildNodes().getLength() == 1) {
             			
