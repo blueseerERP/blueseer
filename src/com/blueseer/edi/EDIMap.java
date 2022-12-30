@@ -1580,7 +1580,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                         
                         if (child.getNodeType() != 3) {
                          parent = xmlgetPathToRoot(node.getNodeName(), node.getParentNode().getNodeName(), root, plhm);
-                         System.out.println("HERE: " + node.getNodeName() + "/" + node.getNodeType() + "/" + parent + "/" +  child.getNodeName() + "/" + child.getNodeType());
+                      //   System.out.println("HERE: " + node.getNodeName() + "/" + node.getNodeType() + "/" + parent + "/" +  child.getNodeName() + "/" + child.getNodeType());
                         }
                         if (child.getNodeType() == Node.ELEMENT_NODE && child.getChildNodes().getLength() == 1) {
             			//  lhmkey = node.getNodeName() + "," + node.getParentNode().getNodeName() + "," + node.hashCode();
@@ -1612,9 +1612,9 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                 String[] td = new String[t.length + 1];
                 td[0] = val.getKey().split(",")[0];
                 for (int k = 0; k < t.length; k++) {
-                    System.out.println("HERE size: " + t.length + "/" + val.getValue().size());
+                  //  System.out.println("HERE size: " + t.length + "/" + val.getValue().size());
                     for (int m = 0; m < val.getValue().size(); m++) {
-                        System.out.println("HERE Loop: " + t[0] + "/" +  val.getKey() + "/" + k + "/" +  t[k] + "/" + val.getValue().get(m));
+                     //   System.out.println("HERE Loop: " + t[0] + "/" +  val.getKey() + "/" + k + "/" +  t[k] + "/" + val.getValue().get(m));
                         if (t[k].equals(val.getValue().get(m).split("=")[0])) {
                             td[k + 1] = val.getValue().get(m).split("=")[1];
                             break;
