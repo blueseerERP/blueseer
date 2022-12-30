@@ -1020,7 +1020,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         }
 }
 
-        public static void readISF(String isf) {
+    public static void readISF(String isf) {
         ArrayList<String[]> list = new ArrayList<String[]>();
         File cf = new File(EDData.getEDIStructureDir() + "/" + isf);
     	BufferedReader reader; 
@@ -1571,9 +1571,13 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             	NodeList childnodes = node.getChildNodes();
             	for (int j = 0; j < childnodes.getLength(); j++) {
             		Node child = childnodes.item(j);
-                        System.out.println("HERE: " + node.getNodeName() + "/" + node.getNodeType() + "/" +  child.getNodeName() + "/" + child.getNodeType());
-            		if (child.getNodeType() == Node.ELEMENT_NODE && child.getChildNodes().getLength() == 1) {
-            			lhmkey = node.getNodeName() + "," + node.getParentNode().getNodeName() + "," + node.hashCode();
+                        
+                        if (child.getNodeType() != 3)
+                        System.out.println("HERE: " + node.getNodeName() + "/" + node.getNodeValue() + "/" + node.getParentNode().getNodeName() + "/" +  child.getNodeName() + "/" + child.getNodeType());
+            		
+                        if (child.getNodeType() == Node.ELEMENT_NODE && child.getChildNodes().getLength() == 1) {
+            			
+                                lhmkey = node.getNodeName() + "," + node.getParentNode().getNodeName() + "," + node.hashCode();
             			if (! lhm.containsKey(lhmkey)) {
             				lhm.put(lhmkey, null);
             			}
