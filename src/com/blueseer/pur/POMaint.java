@@ -50,6 +50,7 @@ import static com.blueseer.pur.purData.getPOLines;
 import static com.blueseer.pur.purData.getPOMstr;
 import static com.blueseer.pur.purData.getPOMstrSet;
 import com.blueseer.pur.purData.po_addr;
+import com.blueseer.pur.purData.po_meta;
 import com.blueseer.pur.purData.po_mstr;
 import com.blueseer.pur.purData.pod_mstr;
 import com.blueseer.pur.purData.purchaseOrder;
@@ -727,7 +728,10 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
                 sactable.getValueAt(j, 1).toString(),
                 sactable.getValueAt(j, 0).toString(),
                 sactable.getValueAt(j, 2).toString(),
-                sactable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.'));     
+                sactable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.'),
+                "", // pom key 
+                ""  // pom value
+             );     
                 list.add(x);
          }
        

@@ -1547,6 +1547,13 @@ public class purData {
         }
     }
     
+    public record po_meta(String[] m, String pom_nbr, String pom_desc, String pom_type, 
+        String pom_amttype, String pom_amt, String pom_key, String pom_value) {
+        public po_meta(String[] m) {
+            this (m, "", "", "", "", "", "", "");
+        }
+    } 
+     
     public record po_ctrl (String[] m, String poc_rcpt_acct, String poc_rcpt_cc, String poc_venditem ) {
         public po_ctrl(String[] m) {
             this(m,"", "", "");
