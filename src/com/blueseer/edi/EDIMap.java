@@ -1630,6 +1630,34 @@ public abstract class EDIMap {  // took out the implements EDIMapi
 		return result;
 	}
 
+    public static String xmlgetPathToRoot(String tagc, String tagp, String root, LinkedHashMap<String, String> lhm) {
+		String r = tagp;
+		if (lhm.containsKey(tagc)) {
+			
+		} else {
+			lhm.put(tagc, tagp);
+		}
+		
+		if (tagp.equals(root)) {
+			return r;
+		} else {
+			r = seekParent(tagp, root, lhm, "");
+		}
+		
+		return r;
+	}
+	
+    public static String seekParent(String p, String root, LinkedHashMap<String, String> lhm, String r) {
+		if (lhm.containsKey(p)) {
+			String x = lhm.get(p);
+			if (! x.equals(root)) {
+				r = seekParent(x, root, lhm, r) + ":" + p;
+			} else {
+				r = x + ":" + p;
+			}
+		} 
+		return r;
+	}
     
     public static void debuginput(Map<String, String[]> mappedData) {
         if (GlobalDebug) {
