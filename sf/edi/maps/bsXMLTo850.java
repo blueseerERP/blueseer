@@ -10,9 +10,20 @@ mapSegment("REF","e01","VN");
 mapSegment("REF","e02",getInput("order:header",6));
 commitSegment("REF");
 
+mapSegment("REF","e01","XX");
+mapSegment("REF","e02",getInput("order:header",1));
+commitSegment("REF");
+
+int addrcount = getGroupCount("order:address");
+for (int i = 1; i <= addrcount; i++) {
+mapSegment("N1","e01",getInput(i, "order:address","type"));
+mapSegment("N1","e02",getInput(i, "order:address","addressname"));
+commitSegment("N1");
+}
+
 int itemcount = getGroupCount("order:detail:item");
 for (int i = 1; i <= itemcount; i++) {
-mapSegment("PO1","e01",getInput(i, "order:detail:item","linenumber"));
+mapSegment("PO1","e01",getInput(i, "order:detail:item","line"));
 mapSegment("PO1","e02",getInput(i, "order:detail:item","quantity"));
 mapSegment("PO1","e03","EA");
 mapSegment("PO1","e04",getInput(i, "order:detail:item","listprice"));
