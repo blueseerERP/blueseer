@@ -989,7 +989,10 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
             Statement st = con.createStatement();
             try {
-                        st.executeUpdate("delete from sod_det where sod_nbr = " + "'" + tbkey.getText() + "'" + ";");   
+                        st.executeUpdate("delete from sod_det where sod_nbr = " + "'" + tbkey.getText() + "'" + ";");  
+                        st.executeUpdate("delete from so_tax where sot_nbr = " + "'" + tbkey.getText() + "'" + ";");
+                        st.executeUpdate("delete from sod_tax where sodt_nbr = " + "'" + tbkey.getText() + "'" + ";");
+                        st.executeUpdate("delete from sos_det where sos_nbr = " + "'" + tbkey.getText() + "'" + ";");
                 int i = st.executeUpdate("delete from so_mstr where so_nbr = " + "'" + tbkey.getText() + "'" + ";");
                     if (i > 0) {
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
