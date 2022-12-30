@@ -395,6 +395,8 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         orddet.setModel(myorddetmodel);
         myorddetmodel.addTableModelListener(ml);
         
+        sacmodel.setRowCount(0);
+        sactable.setModel(sacmodel);
         
         lblcurr.setText("");
         remarks.setText("");
@@ -718,6 +720,19 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         return x;
     }
     
+    public ArrayList<po_meta> createPOMRecord() {
+         ArrayList<po_meta> list = new ArrayList<po_meta>();
+         for (int j = 0; j < sactable.getRowCount(); j++) {
+             po_meta x = new po_meta(null, tbkey.getText().toString(),
+                sactable.getValueAt(j, 1).toString(),
+                sactable.getValueAt(j, 0).toString(),
+                sactable.getValueAt(j, 2).toString(),
+                sactable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.'));     
+                list.add(x);
+         }
+       
+        return list;
+    }
     
     public boolean validateInput(dbaction x) {
        
@@ -2083,7 +2098,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(qtyshipped, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel84))
-                .addContainerGap(71, Short.MAX_VALUE))
+                .addContainerGap(77, Short.MAX_VALUE))
         );
 
         netprice.setEditable(false);
@@ -2355,10 +2370,10 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(totlines, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2370,7 +2385,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addComponent(tbtotdollars, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel3))
                     .addComponent(lblcurr, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(2, 2, 2))
+                .addGap(26, 26, 26))
         );
 
         add(panelDetail);
