@@ -1562,9 +1562,15 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         }
         
         int counter = 0;
+        String root = "";
+        String parent = "";
+        LinkedHashMap<String, String> plhm = new LinkedHashMap<String, String>();
         NodeList nodeList = document.getElementsByTagName("*");
         for (int i = 0; i < nodeList.getLength(); i++) {
             Node node = nodeList.item(i);
+            if (node.getParentNode().getNodeName().equals("#document")) {
+                root = node.getNodeName();
+            }
             Node nextnode = null;
             counter = 0;
             if (node.getNodeType() == Node.ELEMENT_NODE) {            	
@@ -1572,13 +1578,14 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             	for (int j = 0; j < childnodes.getLength(); j++) {
             		Node child = childnodes.item(j);
                         
-                        if (child.getNodeType() != 3)
-                        System.out.println("HERE: " + node.getNodeName() + "/" + node.getNodeType() + "/" + node.getParentNode().getNodeName() + "/" +  child.getNodeName() + "/" + child.getNodeType());
-            		
+                        if (child.getNodeType() != 3) {
+                         parent = xmlgetPathToRoot(node.getNodeName(), node.getParentNode().getNodeName(), root, plhm);
+                         System.out.println("HERE: " + node.getNodeName() + "/" + node.getNodeType() + "/" + parent + "/" +  child.getNodeName() + "/" + child.getNodeType());
+                        }
                         if (child.getNodeType() == Node.ELEMENT_NODE && child.getChildNodes().getLength() == 1) {
-            			
-                                lhmkey = node.getNodeName() + "," + node.getParentNode().getNodeName() + "," + node.hashCode();
-            			if (! lhm.containsKey(lhmkey)) {
+            			//  lhmkey = node.getNodeName() + "," + node.getParentNode().getNodeName() + "," + node.hashCode();
+            			lhmkey = node.getNodeName() + "," + parent + "," + node.hashCode();
+                                if (! lhm.containsKey(lhmkey)) {
             				lhm.put(lhmkey, null);
             			}
             			ArrayList<String> temp = lhm.get(lhmkey);
