@@ -133,6 +133,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
      public static po_mstr po = null;
      public static po_addr poaddr = null;
      public static ArrayList<pod_mstr> podlist = null;
+     public static ArrayList<po_meta> pomlist = null;
    
      
      // global datatablemodel declarations  
@@ -553,7 +554,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
         
     public String[] addRecord(String[] x) {
-     String[] m = addPOTransaction(createDetRecord(), createPOAddr(), createRecord());
+     String[] m = addPOTransaction(createDetRecord(), createPOAddr(), createRecord(), createPOMRecord());
      return m;
      } 
       
@@ -587,6 +588,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
                         
                         
                         st.executeUpdate("delete from pod_mstr where pod_nbr = " + "'" + tbkey.getText() + "'" + ";");   
+                        st.executeUpdate("delete from po_meta where pom_nbr = " + "'" + tbkey.getText() + "'" + ";");   
                         int i = st.executeUpdate("delete from po_mstr where po_nbr = " + "'" + tbkey.getText() + "'" + ";");
                             if (i > 0) {
                                 m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
@@ -631,7 +633,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
               badlines.add(line);
           }
         }
-        m = updatePOTransaction(tbkey.getText(), badlines, createDetRecord(), createPOAddr(), createRecord());
+        m = updatePOTransaction(tbkey.getText(), badlines, createDetRecord(), createPOAddr(), createRecord(), createPOMRecord());
      return m;
     }
          
@@ -640,6 +642,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
       po = z.po();
       podlist = z.pod();
       poaddr = z.poa();
+      pomlist = z.pom();
       return z.m();
     }
     
@@ -1053,6 +1056,19 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
                       pod.pod_ship()});
         }
         
+        // summary charges and discounts
+        if (pomlist != null) {
+        for (po_meta pom : pomlist) {
+            if (! pom.pom_type().equals("tax")) {  // don't show header tax again...
+            sacmodel.addRow(new Object[]{
+                      pom.pom_type(), 
+                      pom.pom_desc(),
+                      pom.pom_amttype(),
+                      pom.pom_amt()});
+            }
+        }
+        }
+        
         // po_addr info
         /*
         tbshipcode.setText(poaddr.poa_shipto());
@@ -1073,6 +1089,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         po = null;
         podlist = null;
         poaddr = null;
+        pomlist = null;
         
     }
        
@@ -1421,10 +1438,48 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public void sumdollars() {
-       double dol = 0;
+       
+        double dol = 0;
+        double summaryTaxPercent = 0;
+        double summaryTaxAmount = 0;
+        double headertaxamt = 0;
+        double matltax = 0;
+        double totaltax = 0;
+        
          for (int j = 0; j < orddet.getRowCount(); j++) {
              dol = dol + ( bsParseDouble(orddet.getValueAt(j, 5).toString()) * bsParseDouble(orddet.getValueAt(j, 9).toString()) ); 
          }
+         
+          // now lets get summary tax
+         // now add trailer/summary charges if any
+         for (int j = 0; j < sactable.getRowCount(); j++) {
+            if (sactable.getValueAt(j,0).toString().equals("passive")) { // skip passive (info only)
+            continue;
+            } 
+            if (! sactable.getValueAt(j,0).toString().equals("tax") && ! sactable.getValueAt(j,2).toString().equals("percent") ) {
+            dol += bsParseDouble(sactable.getValueAt(j,3).toString());  // add charges to total net charge
+            }
+            if (sactable.getValueAt(j,0).toString().equals("tax") && sactable.getValueAt(j,2).toString().equals("percent")) {
+            summaryTaxPercent += bsParseDouble(sactable.getValueAt(j,3).toString());
+            }
+            if (sactable.getValueAt(j,0).toString().equals("tax") && sactable.getValueAt(j,2).toString().equals("amount")) {
+            summaryTaxAmount += bsParseDouble(sactable.getValueAt(j,3).toString());
+            }
+        }
+         
+         if (summaryTaxPercent > 0) {
+              headertaxamt = (dol * (summaryTaxPercent / 100) );
+         }
+         headertaxamt += summaryTaxAmount; // header tax amount is percent tax plus non-percent fixed amount
+         
+         totaltax = headertaxamt + matltax;  // combine header tax and matl tax
+         
+         
+         // add tax to total
+         dol += totaltax;
+         
+         
+         
          tbtotdollars.setText(currformatDouble(dol));
          lbltotdollars.setText(currformatDoubleWithSymbol(dol, ddcurr.getSelectedItem().toString()));
          lblcurr.setText(ddcurr.getSelectedItem().toString());
@@ -1508,6 +1563,14 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         double newprice = 0;
         double newtax = 0;
         double listprice = 0;
+         //"Line", "Part", "CustPart", "SO", "PO", "Qty", "ListPrice", "Discount", "NetPrice", "QtyShip", "Status", "WH", "LOC", "Desc"
+        
+         for (int j = 0; j < sactable.getRowCount(); j++) {
+            if (sactable.getValueAt(j,0).toString().equals("discount") &&
+                sactable.getValueAt(j,2).toString().equals("percent")) {
+            newdisc += bsParseDouble(sactable.getValueAt(j,3).toString());
+            }
+         }
         
          for (int j = 0; j < orddet.getRowCount(); j++) {
              listprice = bsParseDouble(orddet.getValueAt(j, 7).toString());
@@ -1518,9 +1581,8 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
              newprice = listprice;    
              }
              orddet.setValueAt(currformatDouble(newprice), j, 9);
-              
-             
          }
+               
                 
          
     }

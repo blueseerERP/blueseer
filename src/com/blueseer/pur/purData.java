@@ -148,7 +148,7 @@ public class purData {
             return rows;
     }
             
-    public static String[] addPOTransaction(ArrayList<pod_mstr> pod, po_addr poa, po_mstr po) {
+    public static String[] addPOTransaction(ArrayList<pod_mstr> pod, po_addr poa, po_mstr po, ArrayList<po_meta> pom) {
         String[] m = new String[2];
         Connection bscon = null;
         PreparedStatement ps = null;
@@ -164,6 +164,11 @@ public class purData {
             _addPOAddr(poa, bscon, ps, res, true);
             for (pod_mstr z : pod) {
                 _addPODet(z, bscon, ps, res);
+            }
+            if (pom != null) {
+                for (po_meta z : pom) { 
+                    _addPOMeta(z, bscon, ps, res);
+                }
             }
             bscon.commit();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
@@ -201,7 +206,31 @@ public class purData {
         }
     return m;
     }
-     
+    
+    private static int _addPOMeta(po_meta x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from po_meta where pom_nbr = ? and pom_desc = ?";
+        String sqlInsert = "insert into po_meta (pom_nbr, pom_desc, pom_type, " 
+                        + "pom_amttype, pom_amt ) "
+                        + " values (?,?,?,?,?); "; 
+       
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x.pom_nbr);
+          ps.setString(2, x.pom_desc);
+          res = ps.executeQuery();
+          ps = con.prepareStatement(sqlInsert); 
+            if (! res.isBeforeFirst()) {
+            ps.setString(1, x.pom_nbr);
+            ps.setString(2, x.pom_desc);
+            ps.setString(3, x.pom_type);
+            ps.setString(4, x.pom_amttype);
+            ps.setString(5, x.pom_amt);
+            rows = ps.executeUpdate();
+            } 
+            return rows;
+    }
+    
+    
     public static String[] updatePOMstr(po_mstr x) {
         String[] m = new String[2];
         if (x == null) {
@@ -331,7 +360,7 @@ public class purData {
         return rows;
     }
         
-    public static String[] updatePOTransaction(String x, ArrayList<String> lines, ArrayList<pod_mstr> pod, po_addr poa, po_mstr po) {
+    public static String[] updatePOTransaction(String x, ArrayList<String> lines, ArrayList<pod_mstr> pod, po_addr poa, po_mstr po, ArrayList<po_meta> pom) {
         String[] m = new String[2];
         Connection bscon = null;
         PreparedStatement ps = null;
@@ -352,7 +381,10 @@ public class purData {
                 }
                 _updatePODet(z, bscon, ps, res);
             }
-          
+             _deletePOMeta(po.po_nbr, bscon);
+            for (po_meta z : pom) {
+                _addPOMeta(z, bscon, ps, res);
+            }
              _updatePOMstr(po, bscon, ps);  // update po_mstr
              _updatePOAddr(poa, bscon, ps);  // update po_addr
             bscon.commit();
@@ -390,6 +422,15 @@ public class purData {
             }
         }
     return m;
+    }
+    
+    private static void _deletePOMeta(String x, Connection con) throws SQLException { 
+        PreparedStatement ps = null; 
+        String sql = "delete from po_meta where pom_nbr = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x);
+        ps.executeUpdate();
+        ps.close();
     }
     
     
@@ -494,10 +535,11 @@ public class purData {
             po_mstr po = _getPOMstr(x, bscon, ps, res);
             po_addr poa = _getPOAddr(new String[]{po.po_nbr, po.po_ship}, bscon, ps, res);
             ArrayList<pod_mstr> pod = _getPODet(x, bscon, ps, res);
+            ArrayList<po_meta> pom = _getPOM(x, bscon, ps, res);
            
             
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-            r = new purchaseOrder(m, po, poa, pod);
+            r = new purchaseOrder(m, po, poa, pod, pom);
             
         } catch (SQLException s) {
              MainFrame.bslog(s);
@@ -1053,6 +1095,27 @@ public class purData {
         return list;
     }
     
+    private static ArrayList<po_meta> _getPOM(String[] x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        ArrayList<po_meta> list = new ArrayList<po_meta>();
+        po_meta r = null;
+        String[] m = new String[2];
+        String sqlSelect = "select * from po_meta where pom_nbr = ?";
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x[0]);
+          res = ps.executeQuery();
+            if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
+                r = new po_meta(m);
+            } else {
+                while(res.next()) {
+                    m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                    r = new po_meta(m, res.getString("pom_nbr"), res.getString("pom_desc"), res.getString("pom_type"),
+                    res.getString("pom_amttype"), res.getString("pom_amt"), res.getString("pom_key"), res.getString("pom_value") );
+                    list.add(r);
+                }
+            }
+            return list;
+    }
     
     
     
@@ -1508,9 +1571,9 @@ public class purData {
     }
 
     
-    public record purchaseOrder(String[] m, po_mstr po, po_addr poa, ArrayList<pod_mstr> pod) {
+    public record purchaseOrder(String[] m, po_mstr po, po_addr poa, ArrayList<pod_mstr> pod, ArrayList<po_meta> pom) {
         public purchaseOrder(String[] m) {
-            this (m, null, null, null);
+            this (m, null, null, null, null);
         }
     }
     
