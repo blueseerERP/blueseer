@@ -89,6 +89,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import jcifs.smb.SmbException;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -1577,24 +1578,62 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             	NodeList childnodes = node.getChildNodes();
             	for (int j = 0; j < childnodes.getLength(); j++) {
             		Node child = childnodes.item(j);
-                        
+                       /*
                         if (child.getNodeType() != 3) {
-                         parent = xmlgetPathToRoot(node.getNodeName(), node.getParentNode().getNodeName(), root, plhm);
-                      //   System.out.println("HERE: " + node.getNodeName() + "/" + node.getNodeType() + "/" + parent + "/" +  child.getNodeName() + "/" + child.getNodeType());
+                         //parent = xmlgetPathToRoot(node.getNodeName(), node.getParentNode().getNodeName(), root, plhm);
+                         System.out.println("HERE: " + node.getNodeName() + "/" + node.getNodeType() + "/" + parent + "/" +  child.getNodeName() + "/" + child.getNodeType() + "/" + node.hasAttributes() + "/" + child.hasAttributes());
                         }
-                        if (child.getNodeType() == Node.ELEMENT_NODE && child.getChildNodes().getLength() == 1) {
-            			//  lhmkey = node.getNodeName() + "," + node.getParentNode().getNodeName() + "," + node.hashCode();
-            			lhmkey = node.getNodeName() + "," + parent + "," + node.hashCode();
-                                if (! lhm.containsKey(lhmkey)) {
+                        */
+                        parent = xmlgetPathToRoot(node.getNodeName(), node.getParentNode().getNodeName(), root, plhm);
+                        
+                        lhmkey = node.getNodeName() + "," + parent + "," + node.hashCode();
+                        if (! lhm.containsKey(lhmkey)) {
             				lhm.put(lhmkey, null);
-            			}
+                        }
+                        // get attributes of parent node on first iteration of child nodes
+                        if (j == 0 && node.hasAttributes()) {
+                            ArrayList<String> xx = lhm.get(lhmkey);
+                                if (xx != null) {
+                                    for (int a = 0; a < node.getAttributes().getLength(); a++){
+                                      Attr attr = (Attr) node.getAttributes().item(a);
+                                      xx.add(attr.getNodeName() + "=" + attr.getNodeValue());
+                                    }
+                                    lhm.put(lhmkey, xx);
+                                } else {
+                                    ArrayList<String> al = new ArrayList<String>();
+                                    for (int a = 0; a < node.getAttributes().getLength(); a++){
+                                      Attr attr = (Attr) node.getAttributes().item(a);
+                                      al.add(attr.getNodeName() + "=" + attr.getNodeValue());
+                                    }
+                                    lhm.put(lhmkey, al);
+                                }
+                            
+                        }
+                        
+                        // now process child tag if leaf (no children)
+                        if (child.getNodeType() == Node.ELEMENT_NODE && child.getChildNodes().getLength() == 1) {
+            			
             			ArrayList<String> temp = lhm.get(lhmkey);
                                 if (temp != null) {
-                                      temp.add(child.getNodeName() + "=" + child.getTextContent());
+                                      temp.add(child.getNodeName() + "=" + child.getTextContent()); // add child node value
+                                      // get attributes of child node
+                                      if (child.hasAttributes()) {
+                                            for (int a = 0; a < child.getAttributes().getLength(); a++){
+                                               Attr attr = (Attr) child.getAttributes().item(a);
+                                               temp.add(attr.getNodeName() + "=" + attr.getNodeValue());
+                                            }
+                                      }
                                       lhm.put(lhmkey, temp);
                                 } else {
                                       ArrayList<String> al = new ArrayList<String>();
                                       al.add(child.getNodeName() + "=" + child.getTextContent());
+                                      // get attributes of child node
+                                      if (child.hasAttributes()) {
+                                            for (int a = 0; a < child.getAttributes().getLength(); a++){
+                                               Attr attr = (Attr) child.getAttributes().item(a);
+                                               temp.add(attr.getNodeName() + "=" + attr.getNodeValue());
+                                            }
+                                      }
                                       lhm.put(lhmkey, al);
                                 }	
             	     }
@@ -1605,6 +1644,15 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         
 	    for (Map.Entry<String, ArrayList<String>> val : lhm.entrySet()) {
 	    	/*
+                if (val.getValue() != null) {
+                for (String g : val.getValue()) {
+                    System.out.println("HERE XXX: " + " key: " + val.getKey() + " value: " + g);
+                }
+                } else {
+                   System.out.println("HERE XXX: " + " key: " + val.getKey() + " value: is fing NULL"); 
+                }
+                */
+                /*
                 String[] j = new String[val.getValue().size() + 1];
 	    	j[0] = val.getKey().split(",")[0];
                 */
@@ -1614,7 +1662,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                 for (int k = 0; k < t.length; k++) {
                   //  System.out.println("HERE size: " + t.length + "/" + val.getValue().size());
                     for (int m = 0; m < val.getValue().size(); m++) {
-                     //   System.out.println("HERE Loop: " + t[0] + "/" +  val.getKey() + "/" + k + "/" +  t[k] + "/" + val.getValue().get(m));
+                      //  System.out.println("HERE Loop: " + t[0] + "/" +  val.getKey() + "/" + k + "/" +  t[k] + "/" + val.getValue().get(m));
                         if (t[k].equals(val.getValue().get(m).split("=")[0])) {
                             td[k + 1] = val.getValue().get(m).split("=")[1];
                             break;
@@ -1631,7 +1679,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                 System.out.println("HERE: " + String.join(",", j) + "/" + val.getKey());
                 */
                 result.add(td);
-                System.out.println("HEREprint: " + String.join(",", td) + "/" + val.getKey());
+              //  System.out.println("HEREprint: " + String.join(",", td) + "/" + val.getKey());
 	    }
         
 		return result;
@@ -2624,7 +2672,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                  }
              }
          }
-         if (k != null && k.length > elementNbr) {
+         if (k != null && k.length > elementNbr && k[elementNbr] != null) {
           x =  k[elementNbr].trim();
          }
          
@@ -2658,7 +2706,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                  }
              }
          }
-         if (k != null && k.length > elementNbr) {
+         if (k != null && k.length > elementNbr && k[elementNbr] != null) {
           x =  k[elementNbr].trim();
          }
          return x;
@@ -2714,7 +2762,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                 }
              }
          }
-         if (k != null && k.length > elementNbr) {
+         if (k != null && k.length > elementNbr && k[elementNbr] != null) {
           x =  k[elementNbr].trim();
          }
          if (GlobalDebug)
@@ -2786,7 +2834,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
              }
          }
        
-         if (k != null && k.length > elementNbr) {
+         if (k != null && k.length > elementNbr && k[elementNbr] != null) {
           x =  k[elementNbr].trim();
          }
         
@@ -2823,7 +2871,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                  k = z.getValue();
              }
          }
-         if (k != null && k.length > elementNbr) {
+         if (k != null && k.length > elementNbr && k[elementNbr] != null) {
           x =  k[elementNbr].trim();
          }
          if (x.contains(ud)) {
@@ -2878,7 +2926,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                  k = z.getValue();
              }
          }
-         if (k != null && k.length > elementNbr) {
+         if (k != null && k.length > elementNbr && k[elementNbr] != null) {
           x =  k[elementNbr].trim();
          }
          return x;
@@ -2933,7 +2981,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                  k = z.getValue();
              }
          }
-         if (k != null && k.length > elementNbr) {
+         if (k != null && k.length > elementNbr && k[elementNbr] != null) {
           x =  k[elementNbr].trim();
          }
          return x;
@@ -2962,7 +3010,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                  } 
              }
          }
-         if (k != null && k.length > elementNbr) {
+         if (k != null && k.length > elementNbr && k[elementNbr] != null) {
           x =  k[elementNbr].trim();
          }
          return x;
@@ -2995,7 +3043,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                  } 
              }
          }
-         if (k != null && k.length > elementNbr) {
+         if (k != null && k.length > elementNbr && k[elementNbr] != null) {
           x =  k[elementNbr].trim();
          }
          return x;
