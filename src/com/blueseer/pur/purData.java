@@ -340,8 +340,8 @@ public class purData {
             rows = ps.executeUpdate();
         } else {    // update
          ps = con.prepareStatement(sqlUpdate) ;
-            ps.setString(12, x.pod_nbr);
-            ps.setString(13, x.pod_line);
+            ps.setString(13, x.pod_nbr);
+            ps.setString(14, x.pod_line);
             ps.setString(1, x.pod_item);
             ps.setString(2, x.pod_venditem);
             ps.setString(3, x.pod_ord_qty);
