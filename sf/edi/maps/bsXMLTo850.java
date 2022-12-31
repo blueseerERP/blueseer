@@ -16,9 +16,32 @@ commitSegment("REF");
 
 int addrcount = getGroupCount("order:address");
 for (int i = 1; i <= addrcount; i++) {
-mapSegment("N1","e01",getInput(i, "order:address","type"));
+if (getInput(i,"order:address","type").equals("shipto")) {
+mapSegment("N1","e01","ST");
 mapSegment("N1","e02",getInput(i, "order:address","addressname"));
+mapSegment("N1","e03","92");
+mapSegment("N1","e04","99999");
 commitSegment("N1");
+mapSegment("N3","e01",getInput(i, "order:address","addressline1"));
+commitSegment("N3");
+mapSegment("N4","e01",getInput(i, "order:address","addresscity"));
+mapSegment("N4","e02",getInput(i, "order:address","addressstate"));
+mapSegment("N4","e03",getInput(i, "order:address","addresszip"));
+commitSegment("N4");
+}
+if (getInput(i,"order:address","type").equals("billto")) {
+mapSegment("N1","e01","BT");
+mapSegment("N1","e02",getInput(i, "order:address","addressname"));
+mapSegment("N1","e03","92");
+mapSegment("N1","e04","11111");
+commitSegment("N1");
+mapSegment("N3","e01",getInput(i, "order:address","addressline1"));
+commitSegment("N3");
+mapSegment("N4","e01",getInput(i, "order:address","addresscity"));
+mapSegment("N4","e02",getInput(i, "order:address","addressstate"));
+mapSegment("N4","e03",getInput(i, "order:address","addresszip"));
+commitSegment("N4");
+}
 }
 
 int itemcount = getGroupCount("order:detail:item");
@@ -32,5 +55,8 @@ mapSegment("PO1","e07",getInput(i, "order:detail:item","itemnumber"));
 mapSegment("PO1","e08","SK");
 mapSegment("PO1","e09",getInput(i, "order:detail:item","skunumber"));
 commitSegment("PO1");
+mapSegment("PID","e01","F");
+mapSegment("PID","e05",getInput(i, "order:detail:item","description"));
+commitSegment("PID");
 }
 
