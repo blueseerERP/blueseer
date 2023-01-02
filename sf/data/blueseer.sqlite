@@ -25,7 +25,8 @@ CREATE TABLE "ap_ctrl" (
   "apc_bank" varchar(10) COLLATE NOCASE DEFAULT '',
   "apc_assetacct" varchar(12) COLLATE NOCASE DEFAULT '',
   "apc_autovoucher" tinyint(1) COLLATE NOCASE DEFAULT '0',
-  "apc_apacct" varchar(12) COLLATE NOCASE DEFAULT ''
+  "apc_apacct" varchar(12) COLLATE NOCASE DEFAULT '',
+  "apc_varchar" varchar(50) COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -82,7 +83,8 @@ CREATE TABLE "ar_ctrl" (
   "arc_localtax_acct" varchar(12) NOT NULL COLLATE NOCASE DEFAULT '',
   "arc_localtax_cc" varchar(4) NOT NULL COLLATE NOCASE DEFAULT '',
   "arc_othertax_acct" varchar(12) NOT NULL COLLATE NOCASE DEFAULT '',
-  "arc_othertax_cc" varchar(4) NOT NULL COLLATE NOCASE DEFAULT ''
+  "arc_othertax_cc" varchar(4) NOT NULL COLLATE NOCASE DEFAULT '',
+  "arc_varchar" varchar(50) COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -95,7 +97,8 @@ CREATE TABLE "pay_ctrl" (
   "payc_salaried_cc" varchar(4) NOT NULL COLLATE NOCASE DEFAULT '',
   "payc_payrolltax_acct" varchar(12) NOT NULL COLLATE NOCASE DEFAULT '',
   "payc_payrolltax_cc" varchar(4) NOT NULL COLLATE NOCASE DEFAULT '',
-  "payc_withhold_acct" varchar(12) NOT NULL COLLATE NOCASE DEFAULT ''
+  "payc_withhold_acct" varchar(12) NOT NULL COLLATE NOCASE DEFAULT '',
+  "payc_varchar" varchar(50) COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -409,7 +412,8 @@ CREATE TABLE "dept_mstr" (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "ecn_ctrl" (
-  "ecnc_email" tinyint(1) NOT NULL DEFAULT '0'
+  "ecnc_email" tinyint(1) NOT NULL DEFAULT '0',
+  "ecnc_varchar" varchar(50) COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -479,7 +483,8 @@ CREATE TABLE "edi_ctrl" (
   "edic_as2id" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
   "edic_as2url" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
   "edic_signkey" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
-  "edic_enckey" varchar(100) NOT NULL COLLATE NOCASE DEFAULT ''
+  "edic_enckey" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edic_varchar" varchar(50) COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -1010,7 +1015,8 @@ CREATE TABLE "gl_ctrl" (
   "gl_is_to" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
   "gl_earnings" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
   "gl_foreignreal" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
-  "gl_autopost" tinyint(1) NOT NULL DEFAULT '0'
+  "gl_autopost" tinyint(1) NOT NULL DEFAULT '0',
+  "gl_varchar" varchar(50) COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -1098,7 +1104,8 @@ CREATE TABLE "inv_ctrl" (
   "demdtoplan" tinyint(1) NOT NULL DEFAULT '0',
   "printsubticket" tinyint(1) NOT NULL DEFAULT '0',
   "autoitem" tinyint(1) NOT NULL DEFAULT '0',
-  "serialize" tinyint(1) NOT NULL DEFAULT '0'
+  "serialize" tinyint(1) NOT NULL DEFAULT '0',
+  "inv_varchar" varchar(50) COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -1420,7 +1427,8 @@ CREATE TABLE "pland_mstr" (
 CREATE TABLE "po_ctrl" (
   "poc_rcpt_acct" varchar(12) COLLATE NOCASE DEFAULT '',
   "poc_rcpt_cc" varchar(30) COLLATE NOCASE DEFAULT '',
-  "poc_venditem" tinyint(1) NOT NULL DEFAULT '0'
+  "poc_venditem" tinyint(1) NOT NULL DEFAULT '0',
+  "poc_varchar" varchar(50) COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -1446,7 +1454,10 @@ CREATE TABLE "po_mstr" (
   "po_import_856" tinyint(1) NOT NULL DEFAULT '0',
   "po_ship" varchar(10) COLLATE NOCASE DEFAULT '',
   "po_edistatus" varchar(10) COLLATE NOCASE DEFAULT '',
-  "po_confirm" tinyint(1) NOT NULL DEFAULT '0'
+  "po_confirm" tinyint(1) NOT NULL DEFAULT '0',
+  "po_char1" varchar(30) COLLATE NOCASE DEFAULT '',
+  "po_char2" varchar(30) COLLATE NOCASE DEFAULT '',
+  "po_char3" varchar(30) COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -1479,7 +1490,10 @@ CREATE TABLE "pod_mstr" (
   "pod_ord_date" date COLLATE NOCASE DEFAULT '',
   "pod_uom" varchar(3) COLLATE NOCASE DEFAULT '',
   "pod_desc" varchar(50) COLLATE NOCASE DEFAULT '',
-  "pod_ship" varchar(8) COLLATE NOCASE DEFAULT ''
+  "pod_ship" varchar(8) COLLATE NOCASE DEFAULT '',
+  "pod_char1" varchar(30) COLLATE NOCASE DEFAULT '',
+  "pod_char2" varchar(30) COLLATE NOCASE DEFAULT '',
+  "pod_char3" varchar(30) COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -1506,7 +1520,8 @@ CREATE TABLE "po_addr" (
 CREATE TABLE "pos_ctrl" (
   "posc_taxpercent" decimal(14,4) NOT NULL DEFAULT '0.0000',
   "posc_taxacct" varchar(12) NOT NULL COLLATE NOCASE DEFAULT '',
-  "posc_bank" varchar(30) NOT NULL COLLATE NOCASE DEFAULT ''
+  "posc_bank" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "posc_varchar" varchar(50) COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -1660,7 +1675,8 @@ CREATE TABLE "req_ctrl" (
   "req_admins" varchar(1000) COLLATE NOCASE DEFAULT '',
   "req_amt_threshold" int(8) COLLATE NOCASE DEFAULT '',
   "req_threshold_user" varchar(10) COLLATE NOCASE DEFAULT '',
-  "req_requestor_email" tinyint(1) NOT NULL DEFAULT '0'
+  "req_requestor_email" tinyint(1) NOT NULL DEFAULT '0',
+  "req_varchar" varchar(50) COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -1733,20 +1749,24 @@ CREATE TABLE "order_ctrl" (
   "orc_custitem" tinyint(1) NOT NULL DEFAULT '0',
   "orc_srvm_type" tinyint(1) NOT NULL DEFAULT '0',
   "orc_srvm_item_default" tinyint(1) NOT NULL DEFAULT '0',
-  "orc_exceedqohu" tinyint(1) NOT NULL DEFAULT '0'
+  "orc_exceedqohu" tinyint(1) NOT NULL DEFAULT '0',
+  "orc_varchar" varchar(50) COLLATE NOCASE DEFAULT ''
 );
 CREATE TABLE "cm_ctrl" (
-  "cmc_autocust" tinyint(1) NOT NULL DEFAULT '0'
+  "cmc_autocust" tinyint(1) NOT NULL DEFAULT '0',
+  "cmc_varchar" varchar(50) COLLATE NOCASE DEFAULT ''
 );
 CREATE TABLE "vd_ctrl" (
-  "vdc_autovend" tinyint(1) NOT NULL DEFAULT '0'
+  "vdc_autovend" tinyint(1) NOT NULL DEFAULT '0',
+  "vdc_varchar" varchar(50) COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "ship_ctrl" (
   "shc_confirm" tinyint(1) NOT NULL DEFAULT '0',
-  "shc_custitemonly" tinyint(1) NOT NULL DEFAULT '0'
+  "shc_custitemonly" tinyint(1) NOT NULL DEFAULT '0',
+  "shc_varchar" varchar(50) COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -2751,7 +2771,8 @@ CREATE TABLE "ov_ctrl" (
   "ov_email_server" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
   "ov_email_from" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
   "ov_smtpauthuser" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
-  "ov_smtpauthpass" varchar(50) NOT NULL COLLATE NOCASE DEFAULT ''
+  "ov_smtpauthpass" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "ov_varchar" varchar(50) COLLATE NOCASE DEFAULT ''
 );
 CREATE TABLE "counter" (
   "counter_name" varchar(30) NOT NULL COLLATE NOCASE,

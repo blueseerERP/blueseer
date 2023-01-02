@@ -115,7 +115,8 @@ CREATE TABLE IF NOT EXISTS `ap_ctrl` (
   `apc_bank` varchar(10)  NOT NULL DEFAULT '',
   `apc_assetacct` varchar(12)  NOT NULL DEFAULT '',
   `apc_autovoucher` tinyint(1)  NOT NULL DEFAULT '0',
-  `apc_apacct` varchar(12)  NOT NULL DEFAULT ''
+  `apc_apacct` varchar(12)  NOT NULL DEFAULT '',
+  `apc_varchar` varchar(50)  NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `ap_mstr` (
   `ap_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -163,7 +164,8 @@ CREATE TABLE IF NOT EXISTS `ar_ctrl` (
   `arc_localtax_acct` varchar(12) NOT NULL  DEFAULT '',
   `arc_localtax_cc` varchar(4) NOT NULL  DEFAULT '',
   `arc_othertax_acct` varchar(12) NOT NULL  DEFAULT '',
-  `arc_othertax_cc` varchar(4) NOT NULL  DEFAULT ''
+  `arc_othertax_cc` varchar(4) NOT NULL  DEFAULT '',
+  `arc_varchar` varchar(50) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `pay_ctrl` (
   `payc_bank` varchar(10) NOT NULL  DEFAULT '',
@@ -173,7 +175,8 @@ CREATE TABLE IF NOT EXISTS `pay_ctrl` (
   `payc_salaried_cc` varchar(4) NOT NULL  DEFAULT '',
   `payc_payrolltax_acct` varchar(12) NOT NULL  DEFAULT '',
   `payc_payrolltax_cc` varchar(4) NOT NULL  DEFAULT '',
-  `payc_withhold_acct` varchar(12) NOT NULL  DEFAULT ''
+  `payc_withhold_acct` varchar(12) NOT NULL  DEFAULT '',
+  `payc_varchar` varchar(50) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `ar_mstr` (
   `ar_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -434,7 +437,8 @@ CREATE TABLE IF NOT EXISTS `dept_mstr` (
   `dept_bdn_rate_acct` varchar(12)  NOT NULL DEFAULT '',
   `dept_bdn_usg_acct` varchar(12)  NOT NULL DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `ecn_ctrl` (
-  `ecnc_email` tinyint(1) NOT NULL DEFAULT '0'
+  `ecnc_email` tinyint(1) NOT NULL DEFAULT '0',
+  `ecnc_varchar` varchar(50) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `ecn_mstr` (
   `ecn_nbr` int(11) NOT NULL DEFAULT '0',
@@ -492,7 +496,8 @@ CREATE TABLE IF NOT EXISTS `edi_ctrl` (
   `edic_as2id` varchar(50) NOT NULL  DEFAULT '',
   `edic_as2url` varchar(100) NOT NULL  DEFAULT '',
   `edic_signkey` varchar(50) NOT NULL  DEFAULT '',
-  `edic_enckey` varchar(50) NOT NULL  DEFAULT ''
+  `edic_enckey` varchar(50) NOT NULL  DEFAULT '',
+  `edic_varchar` varchar(50) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `edi_doc` (
   `edd_id` varchar(30) NOT NULL  DEFAULT '',
@@ -846,7 +851,8 @@ CREATE TABLE IF NOT EXISTS `gl_ctrl` (
   `gl_is_to` varchar(10) NOT NULL  DEFAULT '',
   `gl_earnings` varchar(10) NOT NULL  DEFAULT '',
   `gl_foreignreal` varchar(10) NOT NULL  DEFAULT '',
-  `gl_autopost` tinyint(1) NOT NULL DEFAULT '0'
+  `gl_autopost` tinyint(1) NOT NULL DEFAULT '0',
+  `gl_varchar` varchar(50) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `gl_hist` (
   `glh_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -918,7 +924,8 @@ CREATE TABLE IF NOT EXISTS `inv_ctrl` (
   `demdtoplan` tinyint(1) NOT NULL DEFAULT '0',
   `printsubticket` tinyint(1) NOT NULL DEFAULT '0',
   `autoitem` tinyint(1) NOT NULL DEFAULT '0',
-  `serialize` tinyint(1) NOT NULL DEFAULT '0'
+  `serialize` tinyint(1) NOT NULL DEFAULT '0',
+  `inv_varchar` varchar(50) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `item_cost` (
   `itc_item` varchar(36) NOT NULL  DEFAULT '',
@@ -1182,7 +1189,8 @@ CREATE TABLE IF NOT EXISTS `pland_mstr` (
 CREATE TABLE IF NOT EXISTS `po_ctrl` (
   `poc_rcpt_acct` varchar(12)  NOT NULL DEFAULT '',
   `poc_rcpt_cc` varchar(30)  DEFAULT '',
-  `poc_venditem` tinyint(1) NOT NULL DEFAULT '0'
+  `poc_venditem` tinyint(1) NOT NULL DEFAULT '0',
+  `poc_varchar` varchar(50)  DEFAULT '',
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `po_mstr` (
   `po_nbr` varchar(8)  NOT NULL DEFAULT '',
@@ -1206,6 +1214,9 @@ CREATE TABLE IF NOT EXISTS `po_mstr` (
   `po_ship` varchar(10)  NOT NULL DEFAULT '',
   `po_edistatus` varchar(10)  NOT NULL DEFAULT '',
   `po_confirm` tinyint(1) NOT NULL DEFAULT '0',
+  `po_char1` varchar(30)  NOT NULL DEFAULT '',
+  `po_char2` varchar(30)  NOT NULL DEFAULT '',
+  `po_char3` varchar(30)  NOT NULL DEFAULT '',
   index cust (`po_vend`),
   index sitestatus (`po_site`, `po_status`),
   index custstatus(`po_vend`, `po_status`),
@@ -1237,6 +1248,9 @@ CREATE TABLE IF NOT EXISTS `pod_mstr` (
   `pod_uom` varchar(3)  NOT NULL DEFAULT '',
   `pod_desc` varchar(50)  NOT NULL DEFAULT '',
   `pod_ship` varchar(8)  NOT NULL DEFAULT '',
+  `pod_char1` varchar(30)  NOT NULL DEFAULT '',
+  `pod_char2` varchar(30)  NOT NULL DEFAULT '',
+  `pod_char3` varchar(30)  NOT NULL DEFAULT '',
   index nbrlineitem (`pod_nbr`, `pod_line`, `pod_item`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `po_addr` (
@@ -1259,7 +1273,8 @@ CREATE TABLE IF NOT EXISTS `po_addr` (
 CREATE TABLE IF NOT EXISTS `pos_ctrl` (
   `posc_taxpercent` decimal(14,4) NOT NULL DEFAULT '0.0000',
   `posc_taxacct` varchar(12) NOT NULL  DEFAULT '',
-  `posc_bank` varchar(30) NOT NULL  DEFAULT ''
+  `posc_bank` varchar(30) NOT NULL  DEFAULT '',
+  `posc_varchar` varchar(50) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `pos_det` (
   `posd_nbr` int(11) NOT NULL DEFAULT '0',
@@ -1389,7 +1404,8 @@ CREATE TABLE IF NOT EXISTS `req_ctrl` (
   `req_admins` varchar(1000)  NOT NULL DEFAULT '',
   `req_amt_threshold` int(8)  NOT NULL DEFAULT '0',
   `req_threshold_user` varchar(10)  NOT NULL DEFAULT '',
-  `req_requestor_email` tinyint(1) NOT NULL DEFAULT '0'
+  `req_requestor_email` tinyint(1) NOT NULL DEFAULT '0',
+  `req_varchar` varchar(50)  NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `req_det` (
   `reqd_id` int(5) NOT NULL,
@@ -1447,17 +1463,21 @@ CREATE TABLE IF NOT EXISTS `order_ctrl` (
   `orc_custitem` tinyint(1) NOT NULL DEFAULT '0',
   `orc_srvm_type` tinyint(1) NOT NULL DEFAULT '0',
   `orc_srvm_item_default` tinyint(1) NOT NULL DEFAULT '0',
-  `orc_exceedqohu` tinyint(1) NOT NULL DEFAULT '0'
+  `orc_exceedqohu` tinyint(1) NOT NULL DEFAULT '0',
+  `orc_varchar` varchar(50) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `cm_ctrl` (
-  `cmc_autocust` tinyint(1) NOT NULL DEFAULT '0'
+  `cmc_autocust` tinyint(1) NOT NULL DEFAULT '0',
+  `cmc_varchar` varchar(50) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `vd_ctrl` (
-  `vdc_autovend` tinyint(1) NOT NULL DEFAULT '0'
+  `vdc_autovend` tinyint(1) NOT NULL DEFAULT '0',
+  `vdc_varchar` varchar(50) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `ship_ctrl` (
   `shc_confirm` tinyint(1) NOT NULL DEFAULT '0',
-  `shc_custitemonly` tinyint(1) NOT NULL DEFAULT '0'
+  `shc_custitemonly` tinyint(1) NOT NULL DEFAULT '0',
+  `shc_varchar` varchar(50) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `ship_det` (
   `shd_id` varchar(8) NOT NULL  DEFAULT '',
@@ -2291,7 +2311,8 @@ CREATE TABLE `ov_ctrl` (
   `ov_email_server` varchar(20) NOT NULL DEFAULT '',
   `ov_email_from` varchar(80) NOT NULL DEFAULT '',
   `ov_smtpauthuser` varchar(50) NOT NULL DEFAULT '',
-  `ov_smtpauthpass` varchar(50) NOT NULL DEFAULT ''
+  `ov_smtpauthpass` varchar(50) NOT NULL DEFAULT '',
+  `ov_varchar` varchar(50) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE `pay_mstr` (
   `py_id` int(8) NOT NULL,
