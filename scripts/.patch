@@ -1,60 +1,8 @@
-# Version 6.3 Patch file
+# Version 6.4 Patch file
 #
 # bszip.ps1 maintains a running account of patches.   All lines in the patch file will be commented out except the
 # current patch.   There can only be one line starting with 'patch=' in the .patch file rolling forward.
 # Once a new patch is added with comments...the previous patch= is commented out
 #
-#patch=0
-# First release of 6.3
-patch=1
-# EDI Mapping method overloading for getInput and bug fix for #70
-patch=2
-# AS2 related bug fixes #71, #72, #74 and cron update #73  
-patch=3
-# bug fix for #77...and intro mechanics for change log
-patch=4
-# bug fix for #78
-patch=5
-# mass import notes adjustment and additional change log menus
-patch=6
-# bug fix #79, #80 and misc init changes for performance
-patch=7
-# initial launch of merged map tester into map maint and reclass; three new map_mstr db fields added
-patch=8
-# major mods to new EDI mapper class
-patch=9
-# mods to mapper class and visibility toggle option on internal EDI maps
-patch=10
-# removed old mapper line number scheme and replaced with new class; issue #82 resolved
-patch=11
-# modification to mapper class and EDI Structure files
-patch=12
-# added sample EDI files; restructured delimiter methods
-patch=13
-# modifications to EDI classes to support EDIFACT
-patch=14
-# sql mods to edi_ctrl and edi_mstr and patches to EDI engine processing
-patch=15
-# redesign of partner trans maint form and addition of download option for input/output mapper panel
-patch=16
-# added jdk.compiler to jre17
-patch=17
-# cleaup method to remove jar and java source file for delete method in mapper class
-patch=18
-# langpack column name adjustments for edi menus and EDI Partner Maintenance mods for default alias assignment
-patch=19
-# static variables cleared after invocation exception (OMD, etc).   Column label additions; EDI attribute dropdown replacing textbox
-patch=20
-# mods to doc recognition ; prelim work on xml, json recognition
-patch=21
-# database table schema change for edi_docdet and map_struct...along with form redesign for these two menus
-patch=22
-# structural completion of EDI JSON and XML in and out
-patch=23
-# new method for creating JSON output...using an itermediate Tree structure
-patch=24
-# remod JSON EDI output method...works with unique node names only
-patch=25
-# JSON in/out stability and getInput method update
-patch=26
-# modified XML recursive method for nested inserts based on structure file
+patch=0
+# First release of 6.4
