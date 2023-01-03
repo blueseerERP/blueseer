@@ -1,0 +1,57 @@
+CREATE TABLE IF NOT EXISTS `po_meta` (
+  `pom_nbr` varchar(8) NOT NULL,
+  `pom_desc` varchar(80)  NOT NULL DEFAULT '',
+  `pom_type` varchar(20) NOT NULL DEFAULT '',
+  `pom_amttype` varchar(20) NOT NULL DEFAULT '',
+  `pom_amt` decimal(14,2) NOT NULL DEFAULT '0',
+  `pom_key` varchar(50) NOT NULL DEFAULT '',
+  `pom_value` varchar(50) NOT NULL DEFAULT ''
+);
+/* */
+/* */
+/* */
+alter table ap_ctrl add column apc_varchar varchar(50) NOT NULL DEFAULT '';
+alter table ar_ctrl add column arc_varchar varchar(50) NOT NULL DEFAULT '';
+alter table pay_ctrl add column payc_varchar varchar(50) NOT NULL DEFAULT '';
+alter table ecn_ctrl add column ecnc_varchar varchar(50) NOT NULL DEFAULT '';
+alter table edi_ctrl add column edic_varchar varchar(50) NOT NULL DEFAULT '';
+alter table gl_ctrl add column gl_varchar varchar(50) NOT NULL DEFAULT '';
+alter table inv_ctrl add column inv_varchar varchar(50) NOT NULL DEFAULT '';
+alter table po_ctrl add column poc_varchar varchar(50) NOT NULL DEFAULT '';
+alter table pos_ctrl add column posc_varchar varchar(50) NOT NULL DEFAULT '';
+alter table req_ctrl add column req_varchar varchar(50) NOT NULL DEFAULT '';
+alter table order_ctrl add column orc_varchar varchar(50) NOT NULL DEFAULT '';
+alter table cm_ctrl add column cmc_varchar varchar(50) NOT NULL DEFAULT '';
+alter table vd_ctrl add column vdc_varchar varchar(50) NOT NULL DEFAULT '';
+alter table ship_ctrl add column shc_varchar varchar(50) NOT NULL DEFAULT '';
+alter table ov_ctrl add column ov_varchar varchar(50) NOT NULL DEFAULT '';
+
+alter table taxd_mstr add column taxd_line varchar(8) NOT NULL DEFAULT '';
+alter table ord_det add column ord_ship varchar(8) NOT NULL DEFAULT '';
+alter table sos_det add column sos_key varchar(50) NOT NULL DEFAULT '';
+alter table sos_det add column sos_value varchar(50) NOT NULL DEFAULT '';
+alter table cms_det add column cms_type varchar(30) NOT NULL DEFAULT '';
+alter table vds_det add column vds_type varchar(30) NOT NULL DEFAULT '';
+alter table edi_docdet add column edid_xpath varchar(200) NOT NULL DEFAULT '';
+alter table po_mstr add column po_char1 varchar(30) NOT NULL DEFAULT '';
+alter table po_mstr add column po_char2 varchar(30) NOT NULL DEFAULT '';
+alter table po_mstr add column po_char3 varchar(30) NOT NULL DEFAULT '';
+alter table pod_mstr add column pod_ship varchar(8) NOT NULL DEFAULT '';
+alter table pod_mstr add column pod_char1 varchar(30) NOT NULL DEFAULT '';
+alter table pod_mstr add column pod_char2 varchar(30) NOT NULL DEFAULT '';
+alter table pod_mstr add column pod_char3 varchar(30) NOT NULL DEFAULT '';
+
+
+/* */
+/* */
+delete from menu_mstr;
+delete from menu_tree;
+delete from panel_mstr;
+/* */
+/* */
+.mode csv
+.import menumstr.csv menu_mstr
+.import menutree.csv menu_tree
+.import panelmstr.csv panel_mstr
+.import permmstr.csv perm_mstr
+
