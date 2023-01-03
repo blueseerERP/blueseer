@@ -44,7 +44,7 @@ then
 	echo "loading sqlite relevant schema changes ..."
 	sleep 2
 	cd $datadir
-	./sqlite3 bsdb.db <.patchsqlv64
+	./sqlite3 bsdb.db <.patchsqlv6.4
 	cd $currdir
 else
 	echo "loading mysql relevant schema changes ..."
