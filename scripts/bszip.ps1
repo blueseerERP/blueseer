@@ -2,7 +2,7 @@ param(
 [string] $version
 )
 
-if (-not($version)) { throw "You must supply a version:  51, 52, etc" }
+if (-not($version)) { throw "You must supply a version:  6.3, 6.4, etc" }
 
 
 $wip = "c:\bs\wip"

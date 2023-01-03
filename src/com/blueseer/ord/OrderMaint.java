@@ -3937,7 +3937,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_ddsacamttypeActionPerformed
 
     private void dditemshipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dditemshipActionPerformed
-       if (! isLoad) {
+       if (! isLoad && dditemship.getSelectedItem() != null) {
            String[] addr = getShipAddressInfo(ddcust.getSelectedItem().toString(), dditemship.getSelectedItem().toString());
            itemshipaddrlbl.setText(addr[1] + "..." + addr[2] + "..." + addr[5] + ", " + addr[6] + " " + addr[7]);
        }

@@ -1265,8 +1265,8 @@ public class fglData {
                     cc_dr.add(res.getString("poc_rcpt_cc"));
                     cost.add(res.getDouble("ap_amt"));
                     basecost.add(res.getDouble("ap_base_amt"));
-                    curr.add(res.getDouble("ap_curr"));
-                    basecurr.add(res.getDouble("ap_base_curr"));
+                    curr.add(res.getString("ap_curr"));
+                    basecurr.add(res.getString("ap_base_curr"));
                     site.add(res.getString("ap_site"));
                     ref.add(res.getString("ap_ref"));
                     type.add(thistype);
@@ -1335,8 +1335,8 @@ public class fglData {
                     cc_dr.add(res.getString("poc_rcpt_cc"));
                     cost.add(res.getDouble("ap_amt"));
                     basecost.add(res.getDouble("ap_base_amt"));
-                    curr.add(res.getDouble("ap_curr"));
-                    basecurr.add(res.getDouble("ap_base_curr"));
+                    curr.add(res.getString("ap_curr"));
+                    basecurr.add(res.getString("ap_base_curr"));
                     site.add(res.getString("ap_site"));
                     ref.add(res.getString("ap_ref"));
                     type.add(thistype);
