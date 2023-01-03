@@ -527,9 +527,8 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
         String[] m = new String[]{"",""};
         Path patch = null;
         String version = OVData.getVersion();
-        String v = version.replace(".", "");
         String url = "https://github.com/blueseerERP/blueseer/releases/download/" +
-                "v" + version + "/blueseer.patch.ver." + v + ".zip";
+                "v" + version + "/blueseer.patch.ver." + version + ".zip";
 			
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();

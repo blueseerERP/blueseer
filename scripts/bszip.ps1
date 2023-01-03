@@ -31,7 +31,7 @@ compress-archive -update -path instructions.txt -destinationpath $wip\$jaronly
 
 rm blueseer.patch.*.zip
 $patchdir = "patchV" + $version + "P" + $pc
-$patchzip = "blueseer.patch.ver." + $version + "." + ".zip"
+$patchzip = "blueseer.patch.ver." + $version + "." + "zip"
 mkdir $patchdir
 mkdir $patchdir\dist
 cp $patchvar $patchdir\.patch
