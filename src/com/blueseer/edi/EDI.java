@@ -1444,19 +1444,49 @@ public class EDI {
         String[] x = new String[]{"","","",""}; // doctype, rcvid, parentpartner, sndid
         int i = 0;
       
+        
+        
         x[0] = getEDIFFDocType(c[1]); //overriding original recognition record edd_id with type; further overriden with tag below as necessary
       
         JsonNode jsonNode = null;
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            jsonNode = mapper.readTree(content);
-        } catch (JsonProcessingException ex) {
-            edilog(ex);
+        if (c[28].toUpperCase().equals("JSON")) {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                jsonNode = mapper.readTree(content);
+            } catch (JsonProcessingException ex) {
+                edilog(ex);
+            }
+        }
+        
+        Document document = null;
+        if (c[28].toUpperCase().equals("XML")) {
+            DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder;
+            InputStream is = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
+            try {
+                docBuilder = docBuilderFactory.newDocumentBuilder();
+                document = docBuilder.parse(is);
+            } catch (ParserConfigurationException ex) {
+                edilog(ex);
+            } catch (SAXException ex) {
+                edilog(ex);
+            } catch (IOException ex) {
+                edilog(ex);
+            }
         }
         
         ArrayList<String[]> tags = EDData.getEDIFFDataRules(c[1]);
+        
+        if (GlobalDebug) {
+            System.out.println("getTagInfo: c[1]/tags count: " + c[1] + "/" + tags.size());
+        }
+        
        
             for (String[] t : tags ) {
+                
+                if (GlobalDebug) {
+                System.out.println("getTagInfo: tag array merge: " + String.join(",", t));
+                }
                 
                 if (t[1].toLowerCase().equals("json") && ! t[8].startsWith("/")) {
                 continue;
@@ -1470,6 +1500,18 @@ public class EDI {
                             JsonNode nameNode = jsonNode.at(t[8]);
                             x[0]= nameNode.asText();
                         }
+                        if (t[1].toLowerCase().equals("xml")) {
+                            XPath xPath = XPathFactory.newInstance().newXPath();
+                            Node node = null;
+                            try {
+                                node = (Node) xPath.compile(t[8]).evaluate(document, XPathConstants.NODE);
+                            } catch (XPathExpressionException ex) {
+                                edilog(ex);
+                            }
+                            if (node != null) {
+                                x[0] = node.getTextContent();
+                            }
+                        }
                     }
                 }
                 if (t[0].toLowerCase().equals("rcvid")) {
@@ -1480,6 +1522,18 @@ public class EDI {
                             JsonNode nameNode = jsonNode.at(t[8]);
                             x[1] = nameNode.asText();
                         }
+                        if (t[1].toLowerCase().equals("xml")) {
+                            XPath xPath = XPathFactory.newInstance().newXPath();
+                            Node node = null;
+                            try {
+                                node = (Node) xPath.compile(t[8]).evaluate(document, XPathConstants.NODE);
+                            } catch (XPathExpressionException ex) {
+                                edilog(ex);
+                            }
+                            if (node != null) {
+                                x[1] = node.getTextContent();
+                            }
+                        }
                     }
                 }
                  if (t[0].toLowerCase().equals("sndid")) {
@@ -1489,6 +1543,18 @@ public class EDI {
                         if (t[1].toLowerCase().equals("json")) {
                             JsonNode nameNode = jsonNode.at(t[8]);
                             x[3] = nameNode.asText();
+                        }
+                        if (t[1].toLowerCase().equals("xml")) {
+                            XPath xPath = XPathFactory.newInstance().newXPath();
+                            Node node = null;
+                            try {
+                                node = (Node) xPath.compile(t[8]).evaluate(document, XPathConstants.NODE);
+                            } catch (XPathExpressionException ex) {
+                                edilog(ex);
+                            }
+                            if (node != null) {
+                                x[3] = node.getTextContent();
+                            }
                         }
                     }
                     if (! x[3].isEmpty()) {
