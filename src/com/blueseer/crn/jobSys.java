@@ -28,6 +28,7 @@ package com.blueseer.crn;
 
 import com.blueseer.edi.EDI;
 import static com.blueseer.edi.EDI.packageEnvelopes;
+import com.blueseer.edi.EDILoad;
 import com.blueseer.fgl.fglData;
 import com.blueseer.utl.EDData;
 import java.time.LocalDateTime;
@@ -60,6 +61,11 @@ public class jobSys implements Job {
         switch (param) {
             case "postgl":  {
                 fglData.PostGL();
+                break;
+            }
+            
+            case "edi":  {
+                EDILoad.runTranslation(null);
                 break;
             }
                 

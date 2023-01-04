@@ -88,6 +88,12 @@ public class jobWD implements Job {
                     System.out.println("deleting old cron job: " + jk.getName() + " time: " + now);
                 }
                 
+                // if not enabled...then skip it
+                if (cm.cron_enabled().equals("0")) {
+                    System.out.println("cron job has been disabled: " + jk.getName() + " time: " + now);
+                    admData.updateCronJobID(cm.cron_jobid(), "0");
+                    continue;
+                }
                     Class cls = Class.forName(cm.cron_prog());
                     JobDetail job = JobBuilder.newJob(cls)
                             .withIdentity(jk)
