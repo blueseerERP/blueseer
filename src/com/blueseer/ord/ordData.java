@@ -312,14 +312,14 @@ public class ordData {
                 "sod_po = ?, sod_ord_qty = ?, sod_uom = ?, sod_all_qty = ?, " +
                 " sod_listprice = ?, sod_disc = ?, sod_netprice = ?, sod_ord_date = ?, " +
                 "sod_due_date = ?, sod_shipped_qty = ?, sod_status = ?, sod_wh = ?, sod_loc = ?, " +
-                " sod_desc = ?, sod_taxamt = ?, sod_site = ?, sod_bom = ? " +
+                " sod_desc = ?, sod_taxamt = ?, sod_site = ?, sod_bom = ?, sod_ship = ? " +
                  " where sod_nbr = ? and sod_line = ? ; ";
         String sqlInsert = "insert into sod_det (sod_nbr, sod_line, sod_item, sod_custitem, " 
                         + "sod_po, sod_ord_qty, sod_uom, sod_all_qty, " 
                         + "sod_listprice, sod_disc, sod_netprice, sod_ord_date, sod_due_date, " 
                         + "sod_shipped_qty, sod_status, sod_wh, sod_loc, "
-                        + "sod_desc, sod_taxamt, sod_site, sod_bom ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+                        + "sod_desc, sod_taxamt, sod_site, sod_bom, sod_ship ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
         ps = con.prepareStatement(sqlSelect); 
         ps.setString(1, x.sod_nbr);
         ps.setString(2, x.sod_line);
@@ -347,11 +347,12 @@ public class ordData {
             ps.setString(19, x.sod_taxamt);
             ps.setString(20, x.sod_site);
             ps.setString(21, x.sod_bom);
+            ps.setString(22, x.sod_ship);
             rows = ps.executeUpdate();
         } else {    // update
          ps = con.prepareStatement(sqlUpdate) ;
-            ps.setString(20, x.sod_nbr);
-            ps.setString(21, x.sod_line);
+            ps.setString(21, x.sod_nbr);
+            ps.setString(22, x.sod_line);
             ps.setString(1, x.sod_item);
             ps.setString(2, x.sod_custitem);
             ps.setString(3, x.sod_po);
@@ -371,6 +372,7 @@ public class ordData {
             ps.setString(17, x.sod_taxamt);
             ps.setString(18, x.sod_site);
             ps.setString(19, x.sod_bom);
+            ps.setString(20, x.sod_ship);
             rows = ps.executeUpdate();
         }
             

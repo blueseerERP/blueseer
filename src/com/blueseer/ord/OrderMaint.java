@@ -100,6 +100,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -3756,6 +3757,26 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         listprice.setText(orddet.getValueAt(row, 7).toString());
         netprice.setText(orddet.getValueAt(row, 9).toString());
         discount.setText(orddet.getValueAt(row, 8).toString());
+        
+        
+        // ddbom.setSelectedIndex(0);
+        
+        ddbom.removeAllItems();
+        ddbom.insertItemAt("", 0);
+        ArrayList<String[]> boms = invData.getBOMsByItemSite(ddpart.getSelectedItem().toString());
+        for (String[] wh : boms) {
+            ddbom.addItem(wh[0]);
+        }
+        ddbom.setSelectedItem(OVData.getDefaultBomID(ddpart.getSelectedItem().toString()));
+        
+        
+        if(orddet.getValueAt(row, 17).toString().isBlank() || ((DefaultComboBoxModel)dditemship.getModel()).getIndexOf(orddet.getValueAt(row, 17).toString()) == -1) {
+          dditemship.setSelectedItem(ddship.getSelectedItem().toString());
+        } else {
+          dditemship.setSelectedItem(orddet.getValueAt(row, 17).toString());  
+        }
+        
+        
        
         isLoad = false;
         //tbmisc.setText(orddet.getValueAt(row, 5).toString());
@@ -3865,6 +3886,11 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
             bom = ddbom.getSelectedItem().toString();
         }
         
+        String shipto = "";
+        if (dditemship.getSelectedItem() != null) {
+            shipto = dditemship.getSelectedItem().toString();
+        }
+        
         line = getmaxline();
         line++;
         
@@ -3893,6 +3919,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                 orddet.setValueAt(ddwh.getSelectedItem().toString(), i, 12);
                 orddet.setValueAt(ddloc.getSelectedItem().toString(), i, 13);
                 orddet.setValueAt(bom, i, 16);
+                orddet.setValueAt(shipto, i, 17);
                 
                 refreshDisplayTotals();         
                 listprice.setText("");
