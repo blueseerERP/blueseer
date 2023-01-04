@@ -1950,7 +1950,7 @@ public class admData {
         cron_mstr r = null;
         ArrayList<cron_mstr> list = new ArrayList<cron_mstr>();
         String[] m = new String[2];
-        String sql = "select * from cron_mstr where cron_enabled = '1' and cron_modflag = '1' ;";
+        String sql = "select * from cron_mstr where cron_modflag = '1' ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
              try (ResultSet res = ps.executeQuery();) {
