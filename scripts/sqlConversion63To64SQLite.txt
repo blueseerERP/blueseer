@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS `po_meta` (
 /* */
 /* */
 /* */
+
 alter table ap_ctrl add column apc_varchar varchar(50) NOT NULL DEFAULT '';
 alter table ar_ctrl add column arc_varchar varchar(50) NOT NULL DEFAULT '';
 alter table pay_ctrl add column payc_varchar varchar(50) NOT NULL DEFAULT '';
@@ -40,6 +41,7 @@ alter table pod_mstr add column pod_ship varchar(8) NOT NULL DEFAULT '';
 alter table pod_mstr add column pod_char1 varchar(30) NOT NULL DEFAULT '';
 alter table pod_mstr add column pod_char2 varchar(30) NOT NULL DEFAULT '';
 alter table pod_mstr add column pod_char3 varchar(30) NOT NULL DEFAULT '';
+alter table po_ctrl add column poc_rawonly tinyint(1) NOT NULL DEFAULT '0';
 
 
 /* */
