@@ -62,19 +62,20 @@ public class jobBch implements Job {
     
     Runtime r = Runtime.getRuntime();
     Process pr;
+    if (param != null && ! param.isBlank()) {
         try {
             pr = r.exec(param);
             BufferedReader stdInput = new BufferedReader(
             new InputStreamReader( pr.getInputStream() ));
-
             String s ;
             while ((s = stdInput.readLine()) != null) {
-                System.out.println(s);
+                System.out.println("jobBch output: " + s);
             }
         } catch (IOException ex) {
             System.out.println("IOException occurred...see bslog output " + now);
             bslog(ex);
-        }	
+        }
+    }
     }
     
 }
