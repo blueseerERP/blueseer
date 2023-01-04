@@ -145,11 +145,11 @@ public static void runTranslation(String[] args) {
                File folder = new File(inDir);
                File[] listOfFiles = folder.listFiles();
                if (listOfFiles.length == 0) {
-                   System.out.println("No files to process");
+                   System.out.println("EDILoad:  No files to process");
                }
               for (int i = 0; i < listOfFiles.length; i++) {
                 if (listOfFiles[i].isFile()) {
-                System.out.println("processing file " + listOfFiles[i].getName());
+                System.out.println("EDILoad:  processing file " + listOfFiles[i].getName());
                   if(listOfFiles[i].length() == 0) { 
                   listOfFiles[i].delete();
                   } else { 
