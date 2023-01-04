@@ -1,1 +1,2 @@
-cash,cash,cash placeholder,BR549 Highway SE,,,Dillon,SC,29536,USA,cash,,,,, 
+cash,99999,Sample ShipTo Location,555 Ridgeway Lane,,,Fayetteville,NC,28301,USA,cash,,,,,ShipTo
+cash,12345,Sample ShipFrom Location,BR549 Highway SE,,,Dillon,SC,29536,USA,cash,,,,,ShipFrom

@@ -450,8 +450,7 @@ public class ordData {
         }
     return m;
     }
-    
-    
+        
     public static String[] deleteOrderMstr(so_mstr x) {
         String[] m = new String[2];
         if (x == null) {

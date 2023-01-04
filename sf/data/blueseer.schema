@@ -1190,6 +1190,7 @@ CREATE TABLE IF NOT EXISTS `po_ctrl` (
   `poc_rcpt_acct` varchar(12)  NOT NULL DEFAULT '',
   `poc_rcpt_cc` varchar(30)  DEFAULT '',
   `poc_venditem` tinyint(1) NOT NULL DEFAULT '0',
+  `poc_rawonly` tinyint(1) NOT NULL DEFAULT '0',
   `poc_varchar` varchar(50)  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `po_mstr` (

@@ -222,12 +222,14 @@ public class POControl extends javax.swing.JPanel implements IBlueSeerc {
         po_ctrl x = new po_ctrl(null,
            tbacct.getText(),
            tbcc.getText(),
-           String.valueOf(BlueSeerUtils.boolToInt(cbvenditem.isSelected())));
+           String.valueOf(BlueSeerUtils.boolToInt(cbvenditem.isSelected())),
+           String.valueOf(BlueSeerUtils.boolToInt(cbrawitem.isSelected())));
         return x;
     }
         
     public void updateForm() {
     cbvenditem.setSelected(BlueSeerUtils.ConvertStringToBool(x.poc_venditem()));
+    cbrawitem.setSelected(BlueSeerUtils.ConvertStringToBool(x.poc_rawonly()));
     tbacct.setText(x.poc_rcpt_acct());
     tbcc.setText(x.poc_rcpt_cc());
     }
@@ -249,6 +251,7 @@ public class POControl extends javax.swing.JPanel implements IBlueSeerc {
         tbcc = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
+        cbrawitem = new javax.swing.JCheckBox();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -272,6 +275,8 @@ public class POControl extends javax.swing.JPanel implements IBlueSeerc {
         jLabel2.setText("Default PO Rct CC");
         jLabel2.setName("lbldefaultporctcc"); // NOI18N
 
+        cbrawitem.setText("Item Class P Only?");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -287,6 +292,7 @@ public class POControl extends javax.swing.JPanel implements IBlueSeerc {
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cbrawitem)
                     .addComponent(cbvenditem)
                     .addComponent(tbacct, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tbcc, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -297,6 +303,8 @@ public class POControl extends javax.swing.JPanel implements IBlueSeerc {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(22, 22, 22)
                 .addComponent(cbvenditem)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbrawitem)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbacct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -323,6 +331,7 @@ public class POControl extends javax.swing.JPanel implements IBlueSeerc {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btupdate;
+    private javax.swing.JCheckBox cbrawitem;
     private javax.swing.JCheckBox cbvenditem;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

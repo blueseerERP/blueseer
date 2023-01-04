@@ -47,6 +47,7 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="cbrawitem" min="-2" max="-2" attributes="0"/>
                       <Component id="cbvenditem" min="-2" max="-2" attributes="0"/>
                       <Component id="tbacct" min="-2" pref="193" max="-2" attributes="0"/>
                       <Component id="tbcc" alignment="0" min="-2" pref="92" max="-2" attributes="0"/>
@@ -60,6 +61,8 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
                   <Component id="cbvenditem" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="cbrawitem" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="tbacct" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -107,6 +110,11 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Default PO Rct CC"/>
             <Property name="name" type="java.lang.String" value="lbldefaultporctcc" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="cbrawitem">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Item Class P Only?"/>
           </Properties>
         </Component>
       </SubComponents>

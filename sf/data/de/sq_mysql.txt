@@ -29,6 +29,7 @@ load data local infile 'bankmstr.csv' replace into table bk_mstr fields terminat
 load data local infile 'cmmstr.csv' replace into table cm_mstr fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'cmsdet.csv' replace into table cms_det fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'vdmstr.csv' replace into table vd_mstr fields terminated by ',' ignore 0 Lines; show errors; 
+load data local infile 'vdsdet.csv' replace into table vds_det fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'ovmstr.csv' replace into table ov_mstr fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'uommstr.csv' replace into table uom_mstr fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'curmstr.csv' replace into table cur_mstr fields terminated by ',' ignore 0 Lines; show errors; 

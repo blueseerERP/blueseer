@@ -5829,7 +5829,7 @@ public class OVData {
                 st.executeUpdate("insert into sod_det "
                             + "(sod_nbr, sod_item, sod_site, sod_po, sod_ord_qty, sod_netprice, "
                             + " sod_listprice, sod_disc, sod_due_date, sod_ord_date, sod_uom, sod_desc, "
-                            + "sod_shipped_qty, sod_custitem, sod_status, sod_line) "
+                            + "sod_shipped_qty, sod_custitem, sod_status, sod_line, sod_ship) "
                     + " values ( " + 
                     "'" +  String.valueOf(indexnbr) + "'" + "," + 
                     "'" +  items.get(itempos)[0] + "'" + "," +
@@ -5846,7 +5846,8 @@ public class OVData {
                     "'" +  "0" + "'" + "," + 
                     "'" +  "" + "'" + "," + 
                     "'" +  "open" + "'" + "," +    
-                    "'" +  String.valueOf(z + 1) + "'" +  ");"
+                    "'" +  String.valueOf(z + 1) + "'" + "," +
+                    "'" +  custs.get(custpos) + "'" + ");"
                    );    
                 } // for each sales order det random z
                 } // if j == 0
@@ -5932,7 +5933,7 @@ public class OVData {
                     "'" +  "cash" + "'" + "," +
                     "'" +  "1000" + "'" + "," +  
                     "'" +  "site" + "'" + "," + 
-                    "'" +  "1000" + "'" + "," +        
+                    "'" +  "99999" + "'" + "," +        
                     "'" +  curr + "'" + "," +   
                     "'" +  "admin" + "'" + "," +  
                     "'" +  sduedate + "'" + "," +  
@@ -16877,9 +16878,11 @@ return mystring;
                 String vend_csz = "";
                 String ship_csz = "";
                 res = st.executeQuery("select po_vend, po_site, " +
-                        " vd_city, vd_state, vd_zip, site_city, site_state, site_zip " +
+                        " vd_city, vd_state, vd_zip, site_city, site_state, site_zip, " +
+                        " vds_city, vds_state, vds_zip " + 
                         " from po_mstr " +
                         " inner join vd_mstr on vd_addr = po_vend " +
+                        " inner join vds_det on vds_code = po_vend and vds_shipto = po_ship " +
                         " inner join site_mstr on site_site = po_site " +
                         " where po_nbr = " + "'" + po + "'" + ";");
                        while (res.next()) {
@@ -16887,7 +16890,7 @@ return mystring;
                           site = res.getString(("po_site"));
                           site_csz = res.getString(("site_city")) + " " + res.getString(("site_state")) + " " + res.getString(("site_zip"));
                           vend_csz = res.getString(("vd_city")) + " " + res.getString(("vd_state")) + " " + res.getString(("vd_zip"));
-                          ship_csz = site_csz;
+                          ship_csz = res.getString(("vds_city")) + " " + res.getString(("vds_state")) + " " + res.getString(("vds_zip"));
                        }
                 String imagepath = "";
                 String logo = OVData.getSiteLogo(site);

@@ -723,9 +723,9 @@ public class purData {
         int rows = 0;
         String[] m = new String[2];
         String sqlSelect = "SELECT * FROM  po_ctrl"; // there should always be only 1 or 0 records 
-        String sqlInsert = "insert into po_ctrl (poc_rcpt_acct, poc_rcpt_cc, poc_venditem) "
-                        + " values (?,?,?); "; 
-        String sqlUpdate = "update po_ctrl set poc_rcpt_acct = ?, poc_rcpt_cc = ?, poc_venditem = ? ; ";
+        String sqlInsert = "insert into po_ctrl (poc_rcpt_acct, poc_rcpt_cc, poc_venditem, poc_rawonly) "
+                        + " values (?,?,?,?); "; 
+        String sqlUpdate = "update po_ctrl set poc_rcpt_acct = ?, poc_rcpt_cc = ?, poc_venditem = ?, poc_rawonly = ? ; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
           try (ResultSet res = ps.executeQuery();
@@ -735,12 +735,14 @@ public class purData {
             psi.setString(1, x.poc_rcpt_acct);
             psi.setString(2, x.poc_rcpt_cc);
             psi.setString(3, x.poc_venditem);
+            psi.setString(4, x.poc_rawonly);
              rows = psi.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
             } else {
             psu.setString(1, x.poc_rcpt_acct);
             psu.setString(2, x.poc_rcpt_cc);
             psu.setString(3, x.poc_venditem);
+            psu.setString(4, x.poc_rawonly);
             rows = psu.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};    
             }
@@ -771,7 +773,8 @@ public class purData {
                         r = new po_ctrl(m, 
                                 res.getString("poc_rcpt_acct"),
                                 res.getString("poc_rcpt_cc"),
-                                res.getString("poc_venditem")
+                                res.getString("poc_venditem"),
+                                res.getString("poc_rawonly")
                         );
                     }
                 }
@@ -1206,8 +1209,29 @@ public class purData {
                s[1] = res.getString("code_key");
                lines.add(s);
             }
+           
+            String itemclass = "";
+            res = st.executeQuery("select poc_venditem, poc_rawonly from po_ctrl;");
+            while (res.next()) {
+               String[] s = new String[2];
+               s[0] = "venditemonly";
+               s[1] = res.getString("poc_venditem");
+               lines.add(s);
+               s = new String[2];
+               s[0] = "rawitemonly";
+               s[1] = res.getString("poc_rawonly");
+               lines.add(s);
+               if (res.getString("poc_rawonly").equals("1")) {
+                   itemclass = "P";
+               }
+            }
             
-            res = st.executeQuery("select it_item from item_mstr where it_site = " + "'" + defaultsite + "'" + " order by it_item ;");
+            
+            if (itemclass.isBlank()) {
+               res = st.executeQuery("select it_item from item_mstr where it_site = " + "'" + defaultsite + "'" + " order by it_item ;");
+            } else {
+               res = st.executeQuery("select it_item from item_mstr where it_site = " + "'" + defaultsite + "'" + " and it_code = 'P' " + " order by it_item ;"); 
+            }
             while (res.next()) {
                 String[] s = new String[2];
                s[0] = "items";
@@ -1217,13 +1241,7 @@ public class purData {
             
             
             
-            res = st.executeQuery("select poc_venditem from po_ctrl;");
-            while (res.next()) {
-                String[] s = new String[2];
-               s[0] = "venditemonly";
-               s[1] = res.getString("poc_venditem");
-               lines.add(s);
-            }
+            
             
         }
         catch (SQLException s){
@@ -1617,9 +1635,9 @@ public class purData {
         }
     } 
      
-    public record po_ctrl (String[] m, String poc_rcpt_acct, String poc_rcpt_cc, String poc_venditem ) {
+    public record po_ctrl (String[] m, String poc_rcpt_acct, String poc_rcpt_cc, String poc_venditem, String poc_rawonly ) {
         public po_ctrl(String[] m) {
-            this(m,"", "", "");
+            this(m,"", "", "", "");
         }
     } 
 }

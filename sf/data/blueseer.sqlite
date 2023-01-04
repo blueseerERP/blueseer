@@ -1428,6 +1428,7 @@ CREATE TABLE "po_ctrl" (
   "poc_rcpt_acct" varchar(12) COLLATE NOCASE DEFAULT '',
   "poc_rcpt_cc" varchar(30) COLLATE NOCASE DEFAULT '',
   "poc_venditem" tinyint(1) NOT NULL DEFAULT '0',
+  "poc_rawonly" tinyint(1) NOT NULL DEFAULT '0',
   "poc_varchar" varchar(50) COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
