@@ -1587,7 +1587,7 @@ public class EDI {
             
             
              if (x[2].isEmpty()) {
-                messages.add(new String[]{"error", "unable to determine parent partner with alias: " + x[1]} ); 
+                messages.add(new String[]{"error", "unable to determine parent partner from content " + c[1]} ); 
                 EDData.writeEDILogMulti(c, messages);
                 messages.clear(); 
                 return;  
@@ -1726,7 +1726,7 @@ public class EDI {
             
             
              if (x[2].isEmpty()) {
-                messages.add(new String[]{"error", "unable to determine parent partner with alias: " + x[1]} ); 
+                messages.add(new String[]{"error", "unable to determine parent partner from content " + c[1]} ); 
                 EDData.writeEDILogMulti(c, messages);
                 messages.clear(); 
                 return;  
@@ -2117,8 +2117,13 @@ public class EDI {
           
           
           String parentPartner = EDData.getEDIPartnerFromAlias(c[0]);
-                   
-          messages.add(new String[]{"info","Found parent partner: " + parentPartner});
+          
+          if (parentPartner == null || parentPartner.isBlank()) {
+            messages.add(new String[]{"error","Unknown parent partner using: " + c[0]});  
+          } else {
+            messages.add(new String[]{"info","Found parent partner: " + parentPartner});  
+          }
+          
           
           // at this point...we need to log this doc in edi_idx table and use return ID for further logs against this doc idx.
           if (c[12].isEmpty() && callingidxnbr == 0) {   // if not override
