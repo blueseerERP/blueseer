@@ -37,9 +37,9 @@ BlueSeer provides modules for the following generic set of business concepts :
 * Order Management
 * Service Order and Quoting Management
 * Electronic Data Interchange (EDI)
-* EDI Mapping tool (format to format translation)
+* EDI Mapping tool (supports: X12, EDIFACT, CSV, FlatFile [IDOC, etc], XML, JSON )
 * EDI Communications (FTP, AS2 server/client)
-* Task Scheduler
+* Automated Task/Cron Scheduler
 * UCC Label Generation
 * Materials Resource Planning (MRP)
 * Human Resources (HR)
