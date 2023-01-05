@@ -962,6 +962,8 @@ public class EDI {
                     String[] gs = new String(cbuf, gsstart, 90).split(ed_escape);
                     c[5] = gs[6]; // gsctrlnbr
                     gs[8] = gs[8].split(sd_escape)[0];
+                    c[0] = gs[2]; // override ISA receiverid with GS senderid  TEV 20230105
+                    c[21] = gs[3]; // override ISA receiverid with GS receiverid  TEV 20230105
                     c[14] = String.join(String.valueOf(e), Arrays.copyOfRange(gs, 0, 9));
                     
                 }
@@ -2353,7 +2355,7 @@ public class EDI {
           }
           
           if (parentPartner == null || parentPartner.isBlank()) {
-            messages.add(new String[]{"info","Unknown parent partner"});  
+            messages.add(new String[]{"error","Unknown parent partner using: " + gs02});  
           } else {
             messages.add(new String[]{"info","Found parent partner: " + parentPartner});  
           }
