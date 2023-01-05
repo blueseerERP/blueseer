@@ -5966,7 +5966,7 @@ public class OVData {
                             + "(pod_nbr, pod_line, pod_item, pod_venditem, "
                             + " pod_ord_qty, pod_uom, pod_listprice, pod_disc, "
                             + " pod_netprice, pod_ord_date, pod_due_date, "
-                            + "pod_rcvd_qty, pod_status, pod_site, pod_desc) "
+                            + "pod_rcvd_qty, pod_status, pod_site, pod_desc, pod_ship) "
                     + " values ( " + 
                     "'" +  String.valueOf(indexnbr) + "'" + "," + 
                     "'" +  String.valueOf(z + 1) + "'" + "," + 
@@ -5982,7 +5982,8 @@ public class OVData {
                     "'" +  "0" + "'" + "," + 
                     "'" +  "open" + "'" + "," +   
                     "'" +  "1000" + "'" + "," +        
-                    "'" +  items.get(itempos)[3] + "'" +  ");"
+                    "'" +  items.get(itempos)[3] + "'" + "," +
+                    "'" +  "99999" + "'" + ");"
                    );    
                 } // for each purchase order det random z
                 } // j == 0
@@ -16859,7 +16860,7 @@ return mystring;
         }
     }    
       
-    public static void printPurchaseOrder(String po) {
+    public static void printPurchaseOrder(String po, boolean isMultiShip) {
         try{
             
             Connection con = null;
@@ -16897,8 +16898,10 @@ return mystring;
                 
                 
               
-                  String jasperfile = OVData.getDefaultPOPrintJasper(site);
-               
+                String jasperfile = OVData.getDefaultPOPrintJasper(site);
+                if (isMultiShip) {
+                   jasperfile = "po_generic_multidest.jasper";
+                }
                 
                imagepath = "images/" + logo;
                 HashMap hm = new HashMap();
@@ -16936,7 +16939,7 @@ return mystring;
         }
     } 
      
-    public static void printCustomerOrder(String order) {
+    public static void printCustomerOrder(String order, boolean isMultiShip) {
         try{
              
             Connection con = null;
@@ -16981,6 +16984,9 @@ return mystring;
                 
                 String jasperfile = "";
                jasperfile = OVData.getDefaultOrderJasper(site);
+               if (isMultiShip) {
+                   jasperfile = "ord_generic_multidest.jasper";
+               }
                
                imagepath = "images/" + logo;
                 HashMap hm = new HashMap();

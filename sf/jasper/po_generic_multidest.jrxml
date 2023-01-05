@@ -21,12 +21,12 @@
 po_terms, po_shipvia, pod_item, pod_venditem, 
 pod_ord_qty, pod_netprice, 
 vd_addr, vd_name, vd_line1, vd_line2, 
-vds_name, vds_line1,
+vds_name, vds_line1,vds_line2, vds_city, vds_state, vds_zip, vds_country,
 site_desc, site_line1  from pod_mstr 
 left outer join item_mstr on it_item = pod_item 
 inner join po_mstr on po_nbr = pod_nbr 
 inner join vd_mstr on vd_addr = po_vend 
-inner join vds_det on vds_code = po_vend and vds_shipto = po_ship 
+inner join vds_det on vds_code = po_vend and vds_shipto = pod_ship 
 inner join site_mstr on site_site = po_site where pod_nbr =  $P{myid};]]>
 	</queryString>
 	<field name="po_nbr" class="java.lang.String">
@@ -76,6 +76,11 @@ inner join site_mstr on site_site = po_site where pod_nbr =  $P{myid};]]>
 	</field>
 	<field name="vds_name" class="java.lang.String"/>
 	<field name="vds_line1" class="java.lang.String"/>
+	<field name="vds_line2" class="java.lang.String"/>
+	<field name="vds_city" class="java.lang.String"/>
+	<field name="vds_state" class="java.lang.String"/>
+	<field name="vds_zip" class="java.lang.String"/>
+	<field name="vds_country" class="java.lang.String"/>
 	<variable name="mysum" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[new Double($F{pod_ord_qty}.doubleValue() * $F{pod_netprice}.doubleValue())]]></variableExpression>
 	</variable>
@@ -162,27 +167,20 @@ inner join site_mstr on site_site = po_site where pod_nbr =  $P{myid};]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{jasper.po.lblshipto}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="226" y="18" width="154" height="11" uuid="8337b8f0-509d-4326-9311-206093ec714c"/>
+			<staticText>
+				<reportElement x="226" y="18" width="154" height="11" uuid="52617cd8-a36f-416e-a03c-3b593397f5da"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{vds_name}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="226" y="29" width="154" height="12" uuid="92f0edcc-29a8-4a03-9eb5-df01dc9d576b"/>
+				<text><![CDATA[Multiple Ship Destinations]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="226" y="29" width="154" height="12" uuid="f0cd63c1-d9e5-44e4-bdd3-dd368725ff03"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{vds_line1}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="225" y="41" width="155" height="17" uuid="271ba4d0-b5fb-418b-8e7a-f9b2fc19c7e8"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{ship_csz}]]></textFieldExpression>
-			</textField>
+				<text><![CDATA[See Item Detail for Shipping Info]]></text>
+			</staticText>
 			<rectangle>
 				<reportElement x="0" y="79" width="109" height="30" uuid="a8bfe80a-7d14-452a-afe5-2cb9bca9b4de"/>
 			</rectangle>
@@ -321,7 +319,7 @@ inner join site_mstr on site_site = po_site where pod_nbr =  $P{myid};]]>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="32" splitType="Stretch">
+		<band height="51" splitType="Stretch">
 			<textField>
 				<reportElement x="19" y="0" width="141" height="16" uuid="978682a3-4259-41c3-adae-54872ecfe90a"/>
 				<textFieldExpression><![CDATA[$F{pod_item}]]></textFieldExpression>
@@ -345,6 +343,14 @@ inner join site_mstr on site_site = po_site where pod_nbr =  $P{myid};]]>
 			<textField pattern="¤ #,##0.00">
 				<reportElement x="489" y="0" width="78" height="16" uuid="4d12e3fa-309d-4b3b-bef2-866f79abdd66"/>
 				<textFieldExpression><![CDATA[new Double($F{pod_ord_qty}.doubleValue() * $F{pod_netprice}.doubleValue())]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="71" y="33" width="496" height="16" uuid="117cd4aa-9627-4b29-bcf8-2632050bbf38"/>
+				<textFieldExpression><![CDATA[$F{vds_name} + "   " + $F{vds_line1}  + "  " +$F{vds_line2}  + "   " + $F{vds_city} + ", " + $F{vds_state} + "   " + $F{vds_zip} + "  " + $F{vds_country}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="19" y="32" width="52" height="14" uuid="a43948c2-6a24-4398-9aa8-f5cb90bc4453"/>
+				<textFieldExpression><![CDATA["Ship To:"]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

@@ -3842,7 +3842,18 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_btinvoiceActionPerformed
 
     private void btprintorderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintorderActionPerformed
-        OVData.printCustomerOrder(tbkey.getText());
+        Set<String> shiptos = new LinkedHashSet<String>();
+        boolean isMultiShip = false;
+        for (int j = 0; j < orddet.getRowCount(); j++) {
+            if (orddet.getValueAt(j, 17).toString().isBlank()) {
+                continue;
+            }
+            shiptos.add(orddet.getValueAt(j, 17).toString());
+        } 
+        if (shiptos.size() > 1) {
+           isMultiShip = true;
+        }
+        OVData.printCustomerOrder(tbkey.getText(), isMultiShip); 
     }//GEN-LAST:event_btprintorderActionPerformed
 
     private void tbkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbkeyActionPerformed

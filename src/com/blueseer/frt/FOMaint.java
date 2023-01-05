@@ -2305,7 +2305,7 @@ public class FOMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_bteditActionPerformed
 
     private void btpoprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btpoprintActionPerformed
-       OVData.printPurchaseOrder(freightorder.getText());
+       OVData.printPurchaseOrder(freightorder.getText(), false);
     }//GEN-LAST:event_btpoprintActionPerformed
 
     private void ddshipperActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddshipperActionPerformed

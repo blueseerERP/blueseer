@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="567" leftMargin="14" rightMargin="14" topMargin="72" bottomMargin="72" uuid="5c23a538-9f5b-41f2-97dc-c7635f83e5fc">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="48"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.xml"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="107"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="882"/>
+	<parameter name="REPORT_TITLE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="myid" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="imagepath" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="site_csz" class="java.lang.String"/>
+	<parameter name="bill_csz" class="java.lang.String"/>
+	<parameter name="ship_csz" class="java.lang.String"/>
+	<parameter name="taxes" class="java.lang.Double"/>
+	<queryString>
+		<![CDATA[select so_nbr, sod_nbr, so_curr, sod_desc, 
+(select case when sum(sos_amt) is null then 0 else sum(sos_amt) end from sos_det 
+	where sos_nbr = $P{myid} and sos_amttype = 'amount' and sos_type <> 'tax' and sos_type <> 'passive'
+) as charges, 
+so_cust, so_create_date,  so_rmks, sod_po, sod_item, sod_custitem, sod_ord_qty, 
+sod_netprice, sod_listprice, sod_taxamt, sod_ship,  cm_code, cm_name, cm_line1, cm_line2,  
+cms_name, cms_line1, cms_line2, cms_city, cms_state, cms_zip, cms_country,  site_desc, site_line1 
+from sod_det  
+inner join so_mstr on so_nbr = sod_nbr 
+inner join cm_mstr on cm_code = so_cust 
+left outer join cms_det on cms_code = so_cust and cms_shipto = sod_ship 
+inner join site_mstr on site_site = so_site where sod_nbr =  $P{myid} ]]>
+	</queryString>
+	<field name="so_nbr" class="java.lang.String"/>
+	<field name="sod_nbr" class="java.lang.String"/>
+	<field name="so_curr" class="java.lang.String"/>
+	<field name="sod_desc" class="java.lang.String"/>
+	<field name="charges" class="java.lang.Double"/>
+	<field name="so_cust" class="java.lang.String"/>
+	<field name="so_create_date" class="java.lang.String"/>
+	<field name="so_rmks" class="java.lang.String"/>
+	<field name="sod_po" class="java.lang.String"/>
+	<field name="sod_item" class="java.lang.String"/>
+	<field name="sod_custitem" class="java.lang.String"/>
+	<field name="sod_ord_qty" class="java.lang.Double"/>
+	<field name="sod_netprice" class="java.lang.Double"/>
+	<field name="sod_listprice" class="java.lang.Double"/>
+	<field name="sod_taxamt" class="java.lang.Double"/>
+	<field name="cm_code" class="java.lang.String"/>
+	<field name="cm_name" class="java.lang.String"/>
+	<field name="cm_line1" class="java.lang.String"/>
+	<field name="cm_line2" class="java.lang.String"/>
+	<field name="cms_name" class="java.lang.String"/>
+	<field name="cms_line1" class="java.lang.String"/>
+	<field name="cms_line2" class="java.lang.String"/>
+	<field name="site_desc" class="java.lang.String"/>
+	<field name="site_line1" class="java.lang.String"/>
+	<field name="sod_ship" class="java.lang.String"/>
+	<field name="cms_city" class="java.lang.String"/>
+	<field name="cms_state" class="java.lang.String"/>
+	<field name="cms_zip" class="java.lang.String"/>
+	<field name="cms_country" class="java.lang.String"/>
+	<variable name="mysum" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{sod_ord_qty}]]></variableExpression>
+	</variable>
+	<variable name="tax" class="java.lang.Double">
+		<variableExpression><![CDATA[new Double($P{taxes}.doubleValue())]]></variableExpression>
+	</variable>
+	<variable name="charges" class="java.lang.Double">
+		<variableExpression><![CDATA[new Double($F{charges}.doubleValue())]]></variableExpression>
+	</variable>
+	<variable name="mysumprice" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[new Double($F{sod_ord_qty}.doubleValue() * $F{sod_netprice}.doubleValue())]]></variableExpression>
+	</variable>
+	<variable name="totalamount" class="java.lang.Double">
+		<variableExpression><![CDATA[new Double($V{mysumprice}.doubleValue() + 
+	$V{tax}.doubleValue() + 
+	$V{charges}.doubleValue()
+)]]></variableExpression>
+	</variable>
+	<variable name="gross" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[new Double($F{sod_ord_qty}.doubleValue() * $F{sod_listprice}.doubleValue())]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="44" splitType="Stretch">
+			<image>
+				<reportElement x="20" y="-50" width="119" height="82" uuid="7d194944-b350-420d-ab9b-682f45a43dc9">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<imageExpression><![CDATA[$P{imagepath}]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="389" y="2" width="100" height="42" uuid="3182d172-4323-47ed-b8bb-b2f9b3f2b8cd"/>
+				<imageExpression><![CDATA[new net.sf.jasperreports.components.barbecue.BarbecueRenderer(net.sourceforge.barbecue.BarcodeFactory.createCode39($F{sod_nbr}, false))]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="290" y="-60" width="277" height="36" uuid="a7cde1bb-1086-48a2-9028-a66a015392fc"/>
+				<textElement>
+					<font size="24"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.order.lbltitle}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="192" y="0" width="152" height="15" uuid="9f662613-b949-47dc-bcb7-81404d37bb2f"/>
+				<textFieldExpression><![CDATA[$F{site_desc}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="192" y="15" width="152" height="15" uuid="0ff12bec-f2d6-4f48-9096-2cab307f21df"/>
+				<textFieldExpression><![CDATA[$F{site_line1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="192" y="29" width="152" height="15" uuid="41a902b3-2046-4b7e-9ffd-cd9d1e35d1b8"/>
+				<textFieldExpression><![CDATA[$P{site_csz}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="115" splitType="Stretch">
+			<textField>
+				<reportElement x="398" y="0" width="80" height="20" uuid="c838f78f-8f27-4e07-b216-d42e6f860995"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$R{jasper.order.lblpage} + " " + $V{PAGE_NUMBER} + " " + $R{jasper.order.lblof} + " "]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="489" y="0" width="40" height="20" uuid="7bb51d99-d65a-48b5-86af-507492912f2e"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="21" y="16" width="149" height="11" uuid="780e4fa8-14ac-4057-92af-f71e667a90dc"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cm_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="21" y="27" width="149" height="12" uuid="b9597315-e96a-483c-8c9a-753ff7bc0ac3"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cm_line1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="21" y="39" width="149" height="17" uuid="86590877-3129-4043-a34e-8fca5e40d2ad"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{bill_csz}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="186" y="2" width="114" height="14" uuid="7f2e5f07-875b-4e3f-a987-31c29fa78c80"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.order.lblshipto}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="199" y="16" width="188" height="11" uuid="9705e09c-d2e3-4072-b2e9-1acda782daa8"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Multiple Destinations]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="0" y="79" width="109" height="30" uuid="a8bfe80a-7d14-452a-afe5-2cb9bca9b4de"/>
+			</rectangle>
+			<textField>
+				<reportElement x="416" y="39" width="62" height="19" uuid="e79d2164-c119-485e-9a40-478f07bd214a"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$R{jasper.order.lblcreatedate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="416" y="20" width="62" height="19" uuid="c810a01f-b5f2-44fa-8e7d-e16905cbc8f8"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$R{jasper.order.lblorder}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="489" y="20" width="76" height="19" uuid="b3942233-34d2-4d95-9aa0-5a057f00fcbe"/>
+				<textFieldExpression><![CDATA[$F{so_nbr}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="79" width="42" height="11" uuid="16d7d1d5-83f1-44dc-9731-1e0b064cb1c9"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.order.lblcarrier}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="109" y="79" width="109" height="30" uuid="583ab691-ae2e-4d6f-a2f9-67fdda8d408d"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="218" y="79" width="109" height="30" uuid="32f41927-cfcd-4724-9eb1-b985fe5fce23"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="327" y="79" width="109" height="30" uuid="d577085f-2bdf-4c2f-a130-29132ba1e927"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="436" y="79" width="119" height="30" uuid="7f25945d-ab08-4b5f-a20d-63a887879f9d"/>
+			</rectangle>
+			<textField>
+				<reportElement x="109" y="79" width="40" height="11" uuid="955941f2-6e81-49f7-abad-6c70ae9c736f"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.order.lblreference}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="218" y="79" width="63" height="11" uuid="25f7971b-ff7a-48f8-85e9-80813dbc243f"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.order.lblfreight}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="327" y="79" width="40" height="11" uuid="54cb06ad-707f-4435-959c-a7d2062efca5"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.order.lblbol}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="438" y="79" width="40" height="11" uuid="ced11d37-8b9f-4628-97ca-ac956e5d8cb9"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.order.lblmisc}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="6" y="3" width="124" height="17" uuid="7f96ddbc-e93b-48d6-bf59-0c83dd6c298a"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.order.lblbillto}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="58" width="54" height="20" uuid="fe9b7d61-e8a7-49fb-896c-eeedd1bf1cc2"/>
+				<textFieldExpression><![CDATA[$R{jasper.order.lblremarks}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="54" y="59" width="511" height="20" uuid="5c1f22ce-4e0b-41ff-83f6-433702e5c736"/>
+				<textFieldExpression><![CDATA[$F{so_rmks}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="198" y="27" width="189" height="12" uuid="6febf1c2-881e-45a5-8f0c-9fb6597ba48d"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[See Item Detail for shipping address]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="489" y="37" width="76" height="19" uuid="401309e3-7352-4427-8461-a60a49ce6eaa"/>
+				<textFieldExpression><![CDATA[$F{so_create_date}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="26" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="20" uuid="525fc8e7-9c4e-437a-baf3-4878b9decf1d"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.order.lblitem}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="19" width="555" height="1" uuid="c9e36006-c5df-41ef-96b1-529b4e6ddb52"/>
+			</line>
+			<textField>
+				<reportElement x="109" y="0" width="141" height="20" uuid="81998038-e104-4d3b-92a6-33b4974ea7da"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.order.lbldesc}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="268" y="0" width="90" height="20" uuid="108ad9fb-9907-4bd3-baba-c3b8ae77260f"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.order.lblponbr}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="360" y="0" width="46" height="20" uuid="8d4c65b7-0b44-42d7-9bbd-219bc6092d5c"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.order.lblqty}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="406" y="1" width="45" height="20" uuid="03a1ccb5-d6a9-456d-ad8a-9a599894500b"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.order.lblnetprice}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="501" y="0" width="64" height="20" uuid="8ce50111-5517-4d8a-b3bb-70e319b81f7f"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.order.lblextprice}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="456" y="1" width="33" height="20" uuid="0f4a3ad1-1caa-4b72-aad6-fae793d005a3"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.order.lbltax}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="36" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="16" uuid="978682a3-4259-41c3-adae-54872ecfe90a"/>
+				<textFieldExpression><![CDATA[$F{sod_item}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement x="360" y="0" width="46" height="16" uuid="32390b0a-6d5c-4fae-8870-72c4e68a5f90"/>
+				<textFieldExpression><![CDATA[$F{sod_ord_qty}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="109" y="0" width="141" height="16" uuid="a33e94ca-e3f8-4f4f-9bd9-5152ed973656"/>
+				<textFieldExpression><![CDATA[$F{sod_desc}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="264" y="0" width="72" height="16" uuid="edbe7124-d60b-42b0-a896-8522f841a299"/>
+				<textFieldExpression><![CDATA[$F{sod_po}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="406" y="0" width="46" height="16" uuid="592ac78d-fe13-4933-a359-766c6b58c1e7"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{sod_netprice}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="501" y="0" width="64" height="16" uuid="be6c6e00-ced3-4654-a526-512503b386e0"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[new Double(($F{sod_ord_qty}.doubleValue() * $F{sod_netprice}.doubleValue()) + $F{sod_taxamt}.doubleValue())]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="456" y="0" width="41" height="16" uuid="22086fe6-4cb1-40cc-a0bd-389ae084f7f1"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{sod_taxamt}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="71" y="16" width="49" height="15" uuid="2070fa75-6bc5-46f9-9aa7-467626198c9d"/>
+				<textFieldExpression><![CDATA[$F{sod_ship}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="16" width="61" height="15" uuid="6ed8cfd6-e416-4091-a702-47449361bcd5"/>
+				<text><![CDATA[Ship To:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="120" y="16" width="445" height="15" uuid="76555fc3-1522-4da8-bcb8-4df518d7f68b"/>
+				<textFieldExpression><![CDATA[$F{cms_name} + "   " + $F{cms_line1}  + "  " +$F{cms_line2}  + "   " + $F{cms_city} + ", " + $F{cms_state} + "   " + $F{cms_zip} + "  " + $F{cms_country}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="28" splitType="Stretch"/>
+	</pageFooter>
+	<lastPageFooter>
+		<band height="98" splitType="Stretch">
+			<textField>
+				<reportElement x="19" y="0" width="151" height="20" uuid="5f94c566-99bc-4527-8721-c34a6ae85156"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.order.lblsummary}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="444" y="78" width="123" height="20" uuid="378a8a9d-5625-4e24-8803-f36c873089fe"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{totalamount}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement x="344" y="20" width="221" height="40" uuid="be4e81b6-fece-4304-86cb-d0c966c9c89e"/>
+				<subreportParameter name="myid">
+					<subreportParameterExpression><![CDATA[$F{sod_nbr}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "sacord.jasper"]]></subreportExpression>
+			</subreport>
+			<textField>
+				<reportElement x="344" y="0" width="100" height="20" uuid="64bcf36d-e9cb-4985-90e6-c115c9f9b2b6"/>
+				<textFieldExpression><![CDATA[$R{jasper.order.lblgrosstotal}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="444" y="0" width="123" height="20" uuid="48370df4-1abb-4aca-833e-b2cfd15c3273"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{gross}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="344" y="78" width="100" height="20" uuid="811834f6-d14f-48bb-bf9f-6ec299e0d5b0"/>
+				<textFieldExpression><![CDATA[$R{jasper.order.lblnettotal} + " (" + $F{so_curr} + "):"]]></textFieldExpression>
+			</textField>
+		</band>
+	</lastPageFooter>
+	<summary>
+		<band height="28" splitType="Stretch"/>
+	</summary>
+</jasperReport>

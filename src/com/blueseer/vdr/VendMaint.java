@@ -692,7 +692,7 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
         public void actionPerformed(ActionEvent event) {
         if (option.equals("shipto")) {
              if (lurb1.isSelected()) {  
-             luModel = DTData.getVendShipToBrowseUtil(luinput.getText(),0, "vds_shipto", tbkey.getText());
+             luModel = DTData.getVendShipToBrowseUtil(luinput.getText(),0, "vds_type", tbkey.getText());
             } else if (lurb2.isSelected()) {
              luModel = DTData.getVendShipToBrowseUtil(luinput.getText(),0, "vds_name", tbkey.getText()); 
             } else {
@@ -737,10 +737,15 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
         };
         luTable.addMouseListener(luml);
       
-       
-        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), 
+        if (option.equals("shipto")) {
+            callDialog(getClassLabelTag("lbltype", this.getClass().getSimpleName()), 
                 getClassLabelTag("lblname", this.getClass().getSimpleName()),
                 getClassLabelTag("lblzip", this.getClass().getSimpleName())); 
+        } else {
+           callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), 
+                getClassLabelTag("lblname", this.getClass().getSimpleName()),
+                getClassLabelTag("lblzip", this.getClass().getSimpleName()));  
+        }
         
         
     }

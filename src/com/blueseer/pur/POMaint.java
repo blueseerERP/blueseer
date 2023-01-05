@@ -105,7 +105,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.text.ParseException;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -2764,6 +2766,12 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
             bsmf.MainFrame.show(getMessageTag(1095));
                 return;
         }
+        
+        String shipto = "";
+        if (dditemship.getSelectedItem() != null) {
+            shipto = dditemship.getSelectedItem().toString();
+        }
+        
         for (int i : rows) {
             if (orddet.getValueAt(i, 11).toString().equals(getGlobalProgTag("closed")) || orddet.getValueAt(i, 11).toString().equals(getGlobalProgTag("partial"))) {
                 bsmf.MainFrame.show(getMessageTag(1088));
@@ -2781,6 +2789,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
                 orddet.setValueAt(discount.getText(), i, 8);
                 orddet.setValueAt(netprice.getText(), i, 9);
                 orddet.setValueAt(tbdesc.getText(), i, 2);
+                orddet.setValueAt(shipto, i, 12);
                 
                 refreshDisplayTotals();         
                 listprice.setText("");
@@ -2836,7 +2845,18 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btpoprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btpoprintActionPerformed
-        OVData.printPurchaseOrder(tbkey.getText());
+        Set<String> shiptos = new LinkedHashSet<String>();
+        boolean isMultiShip = false;
+        for (int j = 0; j < orddet.getRowCount(); j++) {
+            if (orddet.getValueAt(j, 12).toString().isBlank()) {
+                continue;
+            }
+            shiptos.add(orddet.getValueAt(j, 12).toString());
+        } 
+        if (shiptos.size() > 1) {
+           isMultiShip = true;
+        }
+        OVData.printPurchaseOrder(tbkey.getText(), isMultiShip);
     }//GEN-LAST:event_btpoprintActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
