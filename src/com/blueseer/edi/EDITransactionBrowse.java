@@ -731,6 +731,11 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tabledetail.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabledetailMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tabledetail);
 
         detailpanel.add(jScrollPane2, java.awt.BorderLayout.CENTER);
@@ -1249,6 +1254,17 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
         getFileLogView();
         }
     }//GEN-LAST:event_btclearstatusActionPerformed
+
+    private void tabledetailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabledetailMouseClicked
+        int row = tabledetail.rowAtPoint(evt.getPoint());
+        int col = tabledetail.columnAtPoint(evt.getPoint());
+        if (col == 3) {
+            tafile.setText(tabledetail.getValueAt(row, 3).toString());
+            tafile.setCaretPosition(0);
+            textpanel.setVisible(true);
+            bthidetext.setEnabled(true);
+        }
+    }//GEN-LAST:event_tabledetailMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
