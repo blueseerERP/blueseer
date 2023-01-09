@@ -1,24 +1,24 @@
 IDOCorders05.csv,SAP ORDERS IDOC,generic,850idoc,FF
 IDOCshpmnt02.csv,SAP SHIPMENT IDOC,generic,856idoc,FF
 IDOCinvoic02.csv,SAP INVOICE IDOC,generic,810idoc,FF
-X12856.csv,X12 Advance Shipping Notice,generic,856,X12
-X12850.csv,X12 Purchase Order,generic,850,X12
-X12855.csv,X12 Order Acknowledgment,generic,855,X12
-X12810.csv,X12 Invoice,generic,810,X12
-X12820.csv,X12 Payment Order/Remittance Advice,generic,820,X12
-X12824.csv,X12 Application Advice,generic,824,X12
-X12864.csv,X12 Text Message,generic,864,X12
-X12830.csv,X12 Planning Schedule,generic,830,X12
-X12862.csv,X12 Shipping Schedule,generic,862,X12
-X12204.csv,X12 Motor Carrier Load Tender,generic,204,X12
-X12214.csv,X12 Carrier Shipment Status,generic,214,X12
-X12990.csv,X12 Response to Load Tender,generic,990,X12
-X12812.csv,X12 Credit / Debit Adjustment,generic,812,X12
-X12940.csv,X12 Warehouse Shipping Order,generic,940,X12
-X12943.csv,X12 Warehouse Stock Transfer Shipment Advice,generic,943,X12
-X12944.csv,X12 Warehouse Stock Transfer Receipt Advice,generic,944,X12
-X12945.csv,X12 Warehouse Shipping Advice,generic,945,X12
-X12997.csv,X12 Functional Acknowledgment,generic,997,X12
+X12856.csv,X12 Advance Shipping Notice,generic,856x12,X12
+X12850.csv,X12 Purchase Order,generic,850x12,X12
+X12855.csv,X12 Order Acknowledgment,generic,855x12,X12
+X12810.csv,X12 Invoice,generic,810x12,X12
+X12820.csv,X12 Payment Order/Remittance Advice,generic,820x12,X12
+X12824.csv,X12 Application Advice,generic,824x12,X12
+X12864.csv,X12 Text Message,generic,864x12,X12
+X12830.csv,X12 Planning Schedule,generic,830x12,X12
+X12862.csv,X12 Shipping Schedule,generic,862x12,X12
+X12204.csv,X12 Motor Carrier Load Tender,generic,204x12,X12
+X12214.csv,X12 Carrier Shipment Status,generic,214x12,X12
+X12990.csv,X12 Response to Load Tender,generic,990x12,X12
+X12812.csv,X12 Credit / Debit Adjustment,generic,812x12,X12
+X12940.csv,X12 Warehouse Shipping Order,generic,940x12,X12
+X12943.csv,X12 Warehouse Stock Transfer Shipment Advice,generic,943x12,X12
+X12944.csv,X12 Warehouse Stock Transfer Receipt Advice,generic,944x12,X12
+X12945.csv,X12 Warehouse Shipping Advice,generic,945x12,X12
+X12997.csv,X12 Functional Acknowledgment,generic,997x12,X12
 DB,System Database I/O,generic,DB,DB
 CSVGenericOrder.csv,Comma Delimited Order,generic,850csv,CSV
 XMLGenericOrder.csv,XML Generic Order,generic,850xml,XML

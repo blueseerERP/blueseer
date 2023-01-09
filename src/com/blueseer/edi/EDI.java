@@ -853,7 +853,7 @@ public class EDI {
                     String[] st = new String(cbufx, i, unh_end - 1).split(ed_escape);
                     doctype = st[2].split(ud_escape)[0]; // doctype
                     docid = st[1]; //docID  
-                    // covert actual doctype to blueseer doctype
+                    // convert actual doctype to blueseer doctype
                     doctype = getBSDocTypeFromStds(doctype);
                     c[1] = doctype; // override standard doc type for bs type
                    // System.out.println(c[0] + "/" + c[1] + "/" + c[4] + "/" + c[5]);
@@ -974,7 +974,11 @@ public class EDI {
                     ststart = i;
                     
                     String[] st = new String(cbuf, i, 16).split(ed_escape);
+                     
                     doctype = st[1]; // doctype
+                    // convert actual doctype to blueseer doctype
+                    doctype = getBSDocTypeFromStds(doctype);
+                    
                     docid = st[2].split(sd_escape)[0]; //docID  // to separate 2nd element of ST because grabbing 16 characters in buffer
                    
                    // System.out.println(c[0] + "/" + c[1] + "/" + c[4] + "/" + c[5]);
@@ -1030,7 +1034,7 @@ public class EDI {
          }
          gs01.append(cbuf,gs01Start,2);
          type[0] = "X12";
-         type[1] = EDData.getEDIDocTypeFromStds(gs01.toString()); 
+         type[1] = EDData.getBSDocTypeFromStds(EDData.getEDIDocTypeFromStds(gs01.toString())); // get from GS value...then convert to bsdoc
          if (GlobalDebug)
                System.out.println("getEDIType X12 type in/out: " + gs01 + "/" + type[1] );
 
@@ -1072,6 +1076,7 @@ public class EDI {
                 String[] x = s.split("\\+",-1);
                 if (x.length > 2) {
                 type[1] = x[2].substring(0,6);   // UNH+72+ORDERS:D:97A:UN'
+                type[1] = EDData.getBSDocTypeFromStds(type[1]);
                 break docloop;
                 }
             }
@@ -2315,7 +2320,7 @@ public class EDI {
            
             
          //   System.out.println("doc start/end : " + k[0] + "/" + k[1]);
-         if (! doctype.equals("997"))
+         if (! doctype.equals("997x12"))
          falist.add(docid); // add ST doc id to falist for functional acknowledgement
       //        System.out.println("control values: " + docid + "/" + k[0] + "/" + k[1] );
        
@@ -2380,7 +2385,7 @@ public class EDI {
           
           String map = c[2];
              
-          if (doctype.equals("997")) {
+          if (doctype.equals("997x12")) {
             if (GlobalDebug)   {
             System.out.println("Encountered 997...processing and return" + c[1] + "/" + gs02 + "/" + gs03);    
             }
