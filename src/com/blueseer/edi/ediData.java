@@ -1281,7 +1281,7 @@ public class ediData {
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
-                res = st.executeQuery("select map_id from map_mstr; ");
+                res = st.executeQuery("select map_id from map_mstr order by map_id ; ");
                while (res.next()) {
                    mylist.add(res.getString("map_id"));
                 }
@@ -1300,6 +1300,45 @@ public class ediData {
         return mylist;
         
     }
+    
+    public static ArrayList getMapMstrList(String indoctype) {
+       ArrayList mylist = new ArrayList();
+        try{
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                if (indoctype.isBlank()) {
+                  res = st.executeQuery("select map_id from map_mstr order by map_id; ");  
+                } else {
+                  res = st.executeQuery("select map_id from map_mstr where map_indoctype = " + "'" + indoctype + "'" + 
+                          " order by map_id; ");  
+                }
+                
+               while (res.next()) {
+                   mylist.add(res.getString("map_id"));
+                }
+           }
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return mylist;
+        
+    }
+    
     
     public static ArrayList getMapStructList() {
        ArrayList mylist = new ArrayList();

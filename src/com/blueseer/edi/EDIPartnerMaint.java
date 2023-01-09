@@ -282,12 +282,14 @@ public class EDIPartnerMaint extends javax.swing.JPanel implements IBlueSeer {
     
     public void setComponentDefaultValues() {
        isLoad = true;
-        aliasmodel.setRowCount(0);
-           tablealias.setModel(aliasmodel);
-           tbkey.setText("");
-           tbdesc.setText("");
-           tbaliasid.setText("");
-           cbdefault.setSelected(false);
+       aliasmodel.setRowCount(0);
+       tablealias.setModel(aliasmodel);
+       tablealias.getTableHeader().setReorderingAllowed(false);
+       
+       tbkey.setText("");
+       tbdesc.setText("");
+       tbaliasid.setText("");
+       cbdefault.setSelected(false);
         
        isLoad = false;
     }
