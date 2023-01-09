@@ -440,6 +440,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         myorddetmodel.setRowCount(0);
         myorddetmodel.addTableModelListener(ml);
         orddet.setModel(myorddetmodel);
+        orddet.getTableHeader().setReorderingAllowed(false);
         
         //hide columns
         orddet.getColumnModel().getColumn(2).setMaxWidth(0);
@@ -452,6 +453,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         sacmodel.setRowCount(0);
         sactable.setModel(sacmodel);
+        sactable.getTableHeader().setReorderingAllowed(false);
         modelsched.setRowCount(0);
         tablesched.setModel(modelsched);
         

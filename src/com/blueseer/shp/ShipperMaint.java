@@ -371,6 +371,7 @@ public class ShipperMaint extends javax.swing.JPanel {
          lblstatus.setText("");
         
         tabledetail.setModel(myshipdetmodel);
+        tabledetail.getTableHeader().setReorderingAllowed(false);
         myshipdetmodel.setRowCount(0);
         tabledetail.getColumnModel().getColumn(10).setMaxWidth(0);
         tabledetail.getColumnModel().getColumn(10).setMinWidth(0);

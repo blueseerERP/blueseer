@@ -12,3 +12,5 @@
 # Changed EDI reporting to reflect GS02 instead of ISA06 as SenderID; mods to EDITransactionLog; bugfix #88
 patch=3
 # Added two Jasper prints for both PO print and Order print in event of multiple destination type order
+patch=4
+# bug fix for #90; length/delim label for EDI Document Recognition Maint table

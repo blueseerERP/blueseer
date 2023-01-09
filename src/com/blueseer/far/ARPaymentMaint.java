@@ -343,7 +343,8 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
         armodel.addTableModelListener(ml);
         referencedet.setModel(referencemodel);
         ardet.setModel(armodel);
-        
+        referencedet.getTableHeader().setReorderingAllowed(false);
+        ardet.getTableHeader().setReorderingAllowed(false);
        
         
         java.util.Date now = new java.util.Date();

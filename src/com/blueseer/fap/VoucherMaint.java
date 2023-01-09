@@ -178,6 +178,10 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
         vouchermodel.setRowCount(0);
         receiverdet.setModel(receivermodel);
         voucherdet.setModel(vouchermodel);
+        receiverdet.getTableHeader().setReorderingAllowed(false);
+        voucherdet.getTableHeader().setReorderingAllowed(false);
+        
+        
         ddvend.removeAllItems();
         ArrayList myvend = venData.getVendMstrList();
         for (int i = 0; i < myvend.size(); i++) {

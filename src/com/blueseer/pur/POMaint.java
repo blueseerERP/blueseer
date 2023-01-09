@@ -400,9 +400,11 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         myorddetmodel.setRowCount(0);
         orddet.setModel(myorddetmodel);
         myorddetmodel.addTableModelListener(ml);
+        orddet.getTableHeader().setReorderingAllowed(false);
         
         sacmodel.setRowCount(0);
         sactable.setModel(sacmodel);
+        sactable.getTableHeader().setReorderingAllowed(false);
         
         lblcurr.setText("");
         remarks.setText("");

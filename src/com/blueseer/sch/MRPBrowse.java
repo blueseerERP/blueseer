@@ -468,8 +468,10 @@ public class MRPBrowse extends javax.swing.JPanel {
         buttonGroup1.add(rbclassp);
         buttonGroup1.add(rbclassa);
         
-         tabletrans.setModel(modeltrans);
-         tabledetail.setModel(modelorder);
+        tabletrans.setModel(modeltrans);
+        tabledetail.setModel(modelorder);
+        tabledetail.getTableHeader().setReorderingAllowed(false);
+        tabletrans.getTableHeader().setReorderingAllowed(false);
          
         modeltrans.setRowCount(0);
         modelorder.setRowCount(0);

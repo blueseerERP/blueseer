@@ -328,7 +328,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         isLoad = true;
         rvdet.setModel(myrecvdetmodel);
-        
+        rvdet.getTableHeader().setReorderingAllowed(false);
         ArrayList<String[]> initDataSets = rcvData.getReceiverInit();
         
         java.util.Date now = new java.util.Date();

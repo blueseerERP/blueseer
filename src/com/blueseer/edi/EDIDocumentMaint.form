@@ -346,7 +346,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel13">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Length"/>
+                <Property name="text" type="java.lang.String" value="Length/Delim"/>
                 <Property name="name" type="java.lang.String" value="lbllength" noResource="true"/>
               </Properties>
             </Component>
@@ -451,7 +451,7 @@
                               <Component id="tblandmark" min="-2" pref="117" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace pref="44" max="32767" attributes="0"/>
+                      <EmptySpace pref="71" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>

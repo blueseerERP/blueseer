@@ -288,6 +288,7 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
        isLoad = true;
         rulemodel.setRowCount(0);
            tablerole.setModel(rulemodel);
+           tablerole.getTableHeader().setReorderingAllowed(false);
            tbkey.setText("");
            tbdesc.setText("");
            tbrow.setText("");
@@ -821,7 +822,7 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
         jLabel12.setText("Column");
         jLabel12.setName("lblcolumn"); // NOI18N
 
-        jLabel13.setText("Length");
+        jLabel13.setText("Length/Delim");
         jLabel13.setName("lbllength"); // NOI18N
 
         jLabel14.setText("Regex");
@@ -1041,7 +1042,7 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
                         .addComponent(jLabel10)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(tblandmark, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(44, Short.MAX_VALUE))
+                .addContainerGap(71, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

@@ -1170,7 +1170,7 @@ public class EDI {
         for (Map.Entry<String, ArrayList<String[]>> z : rules.entrySet()) {
             String key = z.getKey();
             ArrayList<String[]> v = z.getValue();
-            // row, column, length, value, rectype
+            // row, column, length, value, rectype, tag, xpath
             rulecount = 0;
             matchcount = 0;
             for (String[] r : v) {
