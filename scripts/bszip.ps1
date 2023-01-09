@@ -1,8 +1,10 @@
 param(
-[string] $version
+[string] $version,
+[string] $patch
 )
 
 if (-not($version)) { throw "You must supply a version:  6.3, 6.4, etc" }
+if (-not($patch)) { throw "You must supply a 2nd parameter patch nbr:  1, 2, etc" }
 
 
 $wip = "c:\bs\wip"
@@ -31,7 +33,8 @@ compress-archive -update -path instructions.txt -destinationpath $wip\$jaronly
 
 rm blueseer.patch.*.zip
 $patchdir = "patchV" + $version + "P" + $pc
-$patchzip = "blueseer.patch.ver." + $version + "." + "zip"
+$patchzip = "blueseer.patch.ver." + $version + "." + $patch + "." + "zip"
+$patchmain = "blueseer.patch.ver." + $version + "." + "zip"
 mkdir $patchdir
 mkdir $patchdir\dist
 cp $patchvar $patchdir\.patch
@@ -46,6 +49,8 @@ cp ..\sf\zebra $patchdir\ -recurse
 cp ..\dist\bsmf.jar $patchdir\dist\bsmf.jar
 cp ..\dist\blueseer.jar $patchdir\dist\blueseer.jar
 compress-archive -force -path $patchdir -destinationpath $wip\$patchzip
+## patchmain will always be latest patch number (for app auto patch purposes)
+cp $wip\$patchzip $wip\$patchmain
 rmdir $patchdir -force -recurse
 
 $myzip = "blueseer.mysql.win.v" + $version + ".zip"
