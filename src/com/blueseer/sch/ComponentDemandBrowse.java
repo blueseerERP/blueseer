@@ -313,6 +313,8 @@ public class ComponentDemandBrowse extends javax.swing.JPanel {
         modeldetail.setNumRows(0);
         tablereport.setModel(mymodel);
         tabledetail.setModel(modeldetail);
+        tablereport.getTableHeader().setReorderingAllowed(false);
+        tabledetail.getTableHeader().setReorderingAllowed(false);
         
         dditem.removeAllItems();
         ArrayList<String> items = invData.getItemMasterAlllist();

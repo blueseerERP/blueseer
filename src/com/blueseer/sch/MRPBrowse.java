@@ -470,9 +470,12 @@ public class MRPBrowse extends javax.swing.JPanel {
         
         tabletrans.setModel(modeltrans);
         tabledetail.setModel(modelorder);
+        tablereport.setModel(mymodel);
         tabledetail.getTableHeader().setReorderingAllowed(false);
         tabletrans.getTableHeader().setReorderingAllowed(false);
-         
+        tablereport.getTableHeader().setReorderingAllowed(false);
+        
+        
         modeltrans.setRowCount(0);
         modelorder.setRowCount(0);
         mymodel.setRowCount(0);
@@ -1029,7 +1032,7 @@ public class MRPBrowse extends javax.swing.JPanel {
                 int i = 0;
                 int z = 0;
                 
-                tablereport.setModel(mymodel);
+                
                 Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
                  while (en.hasMoreElements()) {
                      TableColumn tc = en.nextElement();

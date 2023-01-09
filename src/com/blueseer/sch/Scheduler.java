@@ -672,17 +672,20 @@ public class Scheduler extends javax.swing.JPanel {
         lblThisDateQtySched.setText("0");
         lblThisDateQtyCapacity.setText("0");
          
-         frompart.setText("");
-         topart.setText("");
+        frompart.setText("");
+        topart.setText("");
          
-         mymodel.setRowCount(0);
-         mytable.setModel(mymodel);
-         
-         modeldetail.setRowCount(0);
-         tabledetail.setModel(modeldetail);
-         
-          modelavailable.setRowCount(0);
-         tableavailable.setModel(modelavailable);
+        mymodel.setRowCount(0);
+        mytable.setModel(mymodel);
+        mytable.getTableHeader().setReorderingAllowed(false);
+        
+        modeldetail.setRowCount(0);
+        tabledetail.setModel(modeldetail);
+        tabledetail.getTableHeader().setReorderingAllowed(false);
+        
+        modelavailable.setRowCount(0);
+        tableavailable.setModel(modelavailable);
+        tableavailable.getTableHeader().setReorderingAllowed(false);
         
          Enumeration<TableColumn> en = tableavailable.getColumnModel().getColumns();
                 while (en.hasMoreElements()) {
