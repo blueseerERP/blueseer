@@ -14,3 +14,5 @@ patch=3
 # Added two Jasper prints for both PO print and Order print in event of multiple destination type order
 patch=4
 # bug fix for #90; length/delim label for EDI Document Recognition Maint table
+patch=5
+# changed bsdoc type for x12 to include suffix after 3 char code...i.e. 850 to 850x12; updated code_mstr order status for lang packs
