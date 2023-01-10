@@ -8426,7 +8426,29 @@ return mymodel;
 
      }
 
-
+    public static DefaultTableModel getASCIIChart(String x) {
+        javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                      new String[]{getGlobalColumnTag("integer"), getGlobalColumnTag("ascii")})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        return String.class;  //other columns accept String values  
+                      }  
+                        }; 
+                    String s = "";
+                    for (int i = 10; i < 128; i++) {
+                        s = String.valueOf(Character.toString((char) i));
+                        if (i == 10) {s = "NL";};
+                        if (i == 11) {s = "VT";};
+                        if (i == 12) {s = "FF";};
+                        if (i == 13) {s = "CR";};
+                        if (i == 32) {s = "SPACE";};
+                        mymodel.addRow(new Object[] {String.valueOf(i),s});
+                    }
+        return mymodel;
+    }
+    
+    
     
     
 }

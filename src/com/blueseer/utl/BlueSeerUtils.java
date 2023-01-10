@@ -274,7 +274,42 @@ public class BlueSeerUtils {
         changedialog.setVisible(true);
     } 
     
-    
+    public static void callDialog() {
+        
+         if (ludialog != null) {
+            ludialog.dispose();
+        }
+        /* 
+        if (luModel != null && luModel.getRowCount() > 0) {
+        luModel.setRowCount(0);
+        luModel.setColumnCount(0);
+        }
+        */
+        luTable.setPreferredScrollableViewportSize(new Dimension(300,200));
+        JScrollPane scrollPane = new JScrollPane(luTable);
+       
+        ludialog = new JDialog();
+        ludialog.setTitle("ASCII Chart:");
+        ludialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
+      
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(2,2,2,2);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        panel.add( scrollPane, gbc );
+        
+        ludialog.add(panel);
+        
+        ludialog.pack();
+        ludialog.setLocationRelativeTo( null );
+        ludialog.setResizable(false);
+        ludialog.setVisible(true);
+    } 
+        
     public static void callDialog(String rb1) {
         
          if (ludialog != null) {

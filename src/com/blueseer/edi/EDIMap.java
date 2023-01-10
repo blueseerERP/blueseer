@@ -453,7 +453,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
            
            
            if (c[29].equals("X12")) { 
-           ST = "ST" + ed + outputdoctype + ed + stctrl ;
+           ST = "ST" + ed + EDData.getEDIDocTypeFromBSDoc(outputdoctype) + ed + stctrl ;
            SE = "SE" + ed + String.valueOf(segcount) + ed + stctrl;  
            }  else {
            ST = "UNH" + ed + stctrl + ed + unhe02;
@@ -475,7 +475,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
              GS = c[14];
              GE = "GE" + ed + "1" + ed + c[5];
              IEA = "IEA" + ed + "1" + ed + c[4];
-             ST = "ST" + ed + outputdoctype + ed + c[6]; 
+             ST = "ST" + ed + EDData.getEDIDocTypeFromBSDoc(outputdoctype) + ed + c[6]; 
              SE = "SE" + ed + "1" + ed + c[6];
 
              xsetISA(9,""); // set date to now
