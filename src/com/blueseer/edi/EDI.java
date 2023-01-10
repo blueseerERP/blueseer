@@ -4082,8 +4082,7 @@ public class EDI {
          if (attrkeys.containsKey("ISA15")) {isa15 = String.format("%1s",attrkeys.get("ISA15"));}
          
          String isa16 = ud;
-         
-         String gs1 = EDData.getEDIGSTypeFromStds(defaults[14]);   // defaults[14] = outdoctype 
+         String gs1 = EDData.getEDIGSTypeFromBSDoc(defaults[14]);   // defaults[14] = outdoctype 
          
          String gs2 = defaults[2];
          if (attrkeys.containsKey("GS02")) {gs2 = attrkeys.get("GS02");}
