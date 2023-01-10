@@ -1212,19 +1212,21 @@ public class EDI {
         // now get highest match count entry...if tie...first record in order wins
         int t = 0;
         String v = "";
+        String vdoctype = "";
         for (Map.Entry<String, Integer> z : matches.entrySet()) {
             match = true;
             if (z.getValue() > t) {
                 t = z.getValue();
-                v = getEDIFFDocType(z.getKey());
+                v = z.getKey();
+                vdoctype = getEDIFFDocType(z.getKey());
             }
         }
         
         // assign type with highest match
         type[1] = v;
-        if (v.contains("xml")) {
+        if (vdoctype.contains("xml")) {
          type[0] = "XML";   
-        } else if (v.contains("csv")) {
+        } else if (vdoctype.contains("csv")) {
          type[0] = "CSV";   
         } else {
          type[0] = "FF";   
