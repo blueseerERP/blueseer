@@ -1182,7 +1182,7 @@ public class EDI {
                 rulecount++;
 
              if (GlobalDebug)   
-             System.out.println("getEDIType: FF rules: " + key + "/" + r[0] + "/" + r[1] + "/" + r[2] + "/" + r[3] + "/" + r[4]);
+             System.out.println("getEDIType: FF/CSV rules: " + key + "/" + r[0] + "/" + r[1] + "/" + r[2] + "/" + r[3] + "/" + r[4]);
 
               if (r[4].equals("fixed")) {             
                 if (Integer.valueOf(r[0]) == k) { // row check
@@ -1216,7 +1216,7 @@ public class EDI {
             match = true;
             if (z.getValue() > t) {
                 t = z.getValue();
-                v = z.getKey();
+                v = getEDIFFDocType(z.getKey());
             }
         }
         
@@ -1879,8 +1879,8 @@ public class EDI {
             String[] defaults = EDData.getEDITPDefaults(x[0], x[3], x[1]);
             
             c[9]  = defaults[7].isBlank() ? "10" : defaults[7];
-            c[10] = defaults[6].isBlank() ? "" : defaults[6];
-            c[11] = defaults[8].isBlank() ? "" : defaults[8];
+            c[10] = defaults[6].isBlank() ? "0" : defaults[6];
+            c[11] = defaults[8].isBlank() ? "0" : defaults[8];
             
             c[29] = defaults[15]; // defines outputfiletype
             
