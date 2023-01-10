@@ -1586,6 +1586,8 @@ public class EDI {
         ArrayList<String> doc = new ArrayList<String>();
         doc.add(content);
         
+        messages.add(new String[]{"info","processXML: " + c[1]});
+        
             if (GlobalDebug)
             System.out.println("processing XML: " + c[1]);
             
@@ -1594,7 +1596,7 @@ public class EDI {
             
             
              if (x[2].isEmpty()) {
-                messages.add(new String[]{"error", "unable to determine parent partner from content " + c[1]} ); 
+                messages.add(new String[]{"error", "unable to determine parent partner from content: (doctype,rcvid,parent,sndid) (" + x[0] + "," + x[1] + "," + x[2] + "," + x[3] + ")"});
                 EDData.writeEDILogMulti(c, messages);
                 messages.clear(); 
                 return;  
@@ -1631,9 +1633,10 @@ public class EDI {
           if (c[12].isEmpty() && callingidxnbr == 0) {   // if not override
           idxnbr = EDData.writeEDIIDX(c);
           }
-          //EDData.writeEDILogMulti(c, messages);
-         // messages.clear();  // clear message here...and at end
+          
           c[16] = String.valueOf(idxnbr);
+          EDData.writeEDILogMulti(c, messages);
+          messages.clear();  // clear message here...and at end
           String map = c[2];
              
                if (map.isEmpty() && c[12].isEmpty()) {
@@ -1725,6 +1728,8 @@ public class EDI {
         ArrayList<String> doc = new ArrayList<String>();
         doc.add(content);
         
+        messages.add(new String[]{"info","processJSON: " + c[1]});
+        
             if (GlobalDebug)
             System.out.println("processing JSON: " + c[1]);
             
@@ -1733,7 +1738,7 @@ public class EDI {
             
             
              if (x[2].isEmpty()) {
-                messages.add(new String[]{"error", "unable to determine parent partner from content " + c[1]} ); 
+                messages.add(new String[]{"error", "unable to determine parent partner from content:(doctype,rcvid,parent,sndid) (" + x[0] + "," + x[1] + "," + x[2] + "," + x[3] + ")"});
                 EDData.writeEDILogMulti(c, messages);
                 messages.clear(); 
                 return;  
@@ -1770,9 +1775,10 @@ public class EDI {
           if (c[12].isEmpty() && callingidxnbr == 0) {   // if not override
           idxnbr = EDData.writeEDIIDX(c);
           }
-          //EDData.writeEDILogMulti(c, messages);
-         // messages.clear();  // clear message here...and at end
+          
           c[16] = String.valueOf(idxnbr);
+          EDData.writeEDILogMulti(c, messages);
+          messages.clear();  // clear message here...and at end
           String map = c[2];
              
                if (map.isEmpty() && c[12].isEmpty()) {
@@ -1855,28 +1861,37 @@ public class EDI {
    
   
 }
-   
-    
+       
     public static void processCSV(Map<Integer, ArrayList<String>> CSVDocs, Map<Integer, Integer[]> CSVPositions, String[] c, ArrayList<String[]> tags, int idxnbr)   {
     
-    int callingidxnbr = idxnbr;      
+    int callingidxnbr = idxnbr;     
+    
     for (Map.Entry<Integer, ArrayList<String>> z : CSVDocs.entrySet()) {
+            ArrayList<String[]> messages = new ArrayList<String[]>();
             ArrayList<String> doc = z.getValue();
             Integer[] positions = CSVPositions.get(z.getKey());
+            
+            messages.add(new String[]{"info","processCSV: " + z.getKey()});
             
             if (GlobalDebug)
             System.out.println("processCSV: " + z.getKey());
             
+            
             String[] x = getFileInfo(doc, c, tags);  // doctype, rcvid, parentpartner, sndid
             
-             if (x[2].isEmpty()) {
-                  EDData.writeEDILog(c, "error", "unable to determine parent partner with alias: " + x[1] ); 
-             return;  
-             }
+            
+             
+            if (x[2] == null || x[2].isEmpty()) {
+             messages.add(new String[]{"error","unable to determine parent partner with alias:  " + x[3]});  
+            } else {
+             messages.add(new String[]{"info","Found parent partner: " + x[2]});  
+            }
            
             c[1] = x[0];  // doctype
             c[0] = x[3];  // senderid
             c[21] = x[1]; // receiverID
+            
+            messages.add(new String[]{"info","getFileInfo: " + x[0] + "/" + x[3] + "/" + x[1]});
       
             String[] defaults = EDData.getEDITPDefaults(x[0], x[3], x[1]);
             
@@ -1902,30 +1917,35 @@ public class EDI {
           }
           
           c[16] = String.valueOf(idxnbr);
+          EDData.writeEDILogMulti(c, messages);
+          messages.clear();  // clear message here....and at end
+         
              String map = c[2];
              
                if (map.isEmpty() && c[12].isEmpty()) {
                    if (GlobalDebug)   
                    System.out.println("Searching for Map (CSV in) with values type/x[3]/x[1]: " + c[1] + "/" + x[3] + "/" + x[1]);    
-                
                    map = EDData.getEDIMap(c[1], c[0], c[21]); // doctype, senderid, receiverid 
                } 
             
                // if no map then bail
                if (map.isEmpty()) {
-                  EDData.writeEDILog(c, "error", "CSV: map variable is empty for: " + c[1] + " / " + c[0] + " / " + x[1]); 
-               } else if (! BlueSeerUtils.isEDIClassFile(map) && c[12].isEmpty()) { 
-                  EDData.writeEDILog(c, "error", "CSV: unable to locate compiled map (" + map + ") for: " + c[1] + " / " + c[0] + " / " + x[1]); 
+                    messages.add(new String[]{"error","CSV:  CSV: map variable is empty for doc/sender/receiver: " + c[1] + " / " + c[0] + " / " + x[1]});
+                } else if (! BlueSeerUtils.isEDIClassFile(map) && c[12].isEmpty()) { 
+                    messages.add(new String[]{"error","CSV: unable to locate compiled map (" + map + ") for: " + c[1] + " / " + c[0] + " / " + x[1]});
                } else {
                    
                    // at this point I should have a doc set (ST to SE) and a map ...now call map to operate on doc 
                 if (GlobalDebug)   
                    System.out.println("Found map: " + map);    
                 
+                messages.add(new String[]{"info","Found Map: " + map + " with " + c[1] + "/" + c[0] + "/" + c[21]});
+                messages.add(new String[]{"info","Using Map: " + map + " for docID: " + c[6]});
+            
                    
                 URLClassLoader cl = null;
-                try {
-                      List<File> jars = Arrays.asList(new File("edi/maps").listFiles(new FilenameFilter() {
+                 try {
+                    List<File> jars = Arrays.asList(new File("edi/maps").listFiles(new FilenameFilter() {
                     public boolean accept(File dir, String name) {
                     return name.toLowerCase().endsWith(".jar");
                 }
@@ -1940,32 +1960,33 @@ public class EDI {
                 }
                 cl = new URLClassLoader(urls);
                 
-                    Class cls = Class.forName(map,true,cl);  
-                    Object obj = cls.newInstance();
-                    Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
-                    Object oc = method.invoke(obj, doc, c);
-                    String[] oString = (String[]) oc;
-                        EDData.writeEDILog(c, oString[0], oString[1]);
-                        EDData.updateEDIIDX(idxnbr, c); 
-                    } catch (InvocationTargetException ex) {
-                        if (c[12].isEmpty()) {
-                        EDData.writeEDILog(c, "error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1]);
-                        clearStaticVariables();
-                        } 
-                        edilog(ex);
-                    } catch (ClassNotFoundException ex) {
-                        if (c[12].isEmpty()) {
-                        EDData.writeEDILog(c, "error", "Map Class not found " + map + "/" + c[0] + " / " + c[1]);
-                        }
-                        edilog(ex); 
-                    } catch (IllegalAccessException |
-                             InstantiationException | NoSuchMethodException ex
-                            ) {
-                        if (c[12].isEmpty()) {
-                        EDData.writeEDILog(c, "error", "IllegalAccess|Instantiation|NoSuchMethod " + map + "/" + c[0] + " / " + c[1]);
-                        }
-                        edilog(ex);
-                    } finally {
+                Class cls = Class.forName(map,true,cl);  
+                Object obj = cls.newInstance();
+                Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
+                Object oc = method.invoke(obj, doc, c);
+                String[] oString = (String[]) oc;
+                messages.add(new String[]{oString[0], oString[1]});
+                EDData.updateEDIIDX(idxnbr, c); 
+
+                } catch (InvocationTargetException ex) {
+                    if (c[12].isEmpty()) {
+                    messages.add(new String[]{"error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1] + " : " + ex.getCause().getMessage()});    
+                    clearStaticVariables();
+                    }
+                    edilog(ex);  
+                } catch (ClassNotFoundException ex) {
+                    if (c[12].isEmpty()) {
+                    messages.add(new String[]{"error", "Map Class not found " + map + "/" + c[0] + " / " + c[1]});        
+                    }
+                    edilog(ex); 
+                } catch (IllegalAccessException |
+                         InstantiationException | NoSuchMethodException ex
+                        ) {
+                    if (c[12].isEmpty()) {
+                    messages.add(new String[]{"error", "IllegalAccess|Instantiation|NoSuchMethod " + map + "/" + c[0] + " / " + c[1]});        
+                   }
+                    edilog(ex);
+                } finally {
                         if (cl != null) {
                            try {
                                cl.close();
@@ -1973,10 +1994,11 @@ public class EDI {
                                edilog(ex);
                            }
                         }
-                    }
+                }
                    
                }
-              
+             EDData.writeEDILogMulti(c, messages);
+           messages.clear(); 
      
     } // FFDocs entries
    
