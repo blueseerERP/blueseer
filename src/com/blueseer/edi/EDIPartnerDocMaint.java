@@ -415,7 +415,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
 
     public void lookUpFrameASCII() {
         
-        luModel = DTData.getASCIIChart("");
+        luModel = DTData.getASCIIChartDT(0, 128);
         luTable.setModel(luModel);
         callDialog();
         

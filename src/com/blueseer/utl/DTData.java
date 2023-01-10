@@ -8426,7 +8426,7 @@ return mymodel;
 
      }
 
-    public static DefaultTableModel getASCIIChart(String x) {
+    public static DefaultTableModel getASCIIChartDT(int fromint, int toint) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("integer"), getGlobalColumnTag("ascii")})
                 {
@@ -8436,12 +8436,40 @@ return mymodel;
                       }  
                         }; 
                     String s = "";
-                    for (int i = 10; i < 128; i++) {
+                    for (int i = fromint; i < toint; i++) {
                         s = String.valueOf(Character.toString((char) i));
+                        if (i == 0) {s = "Null";};
+                        if (i == 1) {s = "SOH";};
+                        if (i == 2) {s = "STX";};
+                        if (i == 3) {s = "ETX";};
+                        if (i == 4) {s = "EOT";};
+                        if (i == 5) {s = "ENQ";};
+                        if (i == 6) {s = "ACK";};
+                        if (i == 7) {s = "BEL";};
+                        if (i == 8) {s = "BS";};
+                        if (i == 9) {s = "TAB";};
                         if (i == 10) {s = "NL";};
                         if (i == 11) {s = "VT";};
                         if (i == 12) {s = "FF";};
                         if (i == 13) {s = "CR";};
+                        if (i == 14) {s = "SO";};
+                        if (i == 15) {s = "SI";};
+                        if (i == 16) {s = "DLE";};
+                        if (i == 17) {s = "DC1";};
+                        if (i == 18) {s = "DC2";};
+                        if (i == 19) {s = "DC3";};
+                        if (i == 20) {s = "DC4";};
+                        if (i == 21) {s = "NAK";};
+                        if (i == 22) {s = "SYN";};
+                        if (i == 23) {s = "ETB";};
+                        if (i == 24) {s = "CAN";};
+                        if (i == 25) {s = "EM";};
+                        if (i == 26) {s = "SUB";};
+                        if (i == 27) {s = "ESC";};
+                        if (i == 28) {s = "FS";};
+                        if (i == 29) {s = "GS";};
+                        if (i == 30) {s = "RS";};
+                        if (i == 31) {s = "US";};
                         if (i == 32) {s = "SPACE";};
                         mymodel.addRow(new Object[] {String.valueOf(i),s});
                     }
