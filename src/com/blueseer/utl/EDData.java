@@ -3586,7 +3586,11 @@ public class EDData {
     public static ArrayList parseFile(char[] cbuf, String filename)   {
     ArrayList<String> doc = new ArrayList<String>();
     
-     char flddelim = 0;
+    if (cbuf == null || cbuf.length <= 3) {
+        return doc;
+    }
+    
+    char flddelim = 0;
     char subdelim = 0;
     char segdelim = 0;
     
