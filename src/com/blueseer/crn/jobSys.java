@@ -52,7 +52,7 @@ public class jobSys implements Job {
                 
         JobDataMap dataMap = context.getJobDetail().getJobDataMap();
         String param = dataMap.getString("param");
-        System.out.println("jobSys parameter used: " + param + " time: " + now);
+        System.out.println("jobSys firing system method: " + param + " run time: " + now);
                 
         switch (param) {
             case "postgl":  {
