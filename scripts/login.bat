@@ -11,7 +11,7 @@ call :patchInstall
 )
 
 cd %~dp0
-start jre17\bin\javaw -D"java.util.logging.config.file=bslogging.properties" -cp ".;custom\*;dist\*;edi\maps\*" bsmf.MainFrame
+start jre17\bin\javaw -D"java.util.logging.config.file=bslogging.properties" -cp "custom\*;dist\*" bsmf.MainFrame
 
 goto :eof
 

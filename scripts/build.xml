@@ -109,7 +109,7 @@
     <path id="runtime.path">
 	    <fileset dir="../dist" includes="*.jar"/>
     </path>
-    <echo>running in ....${test.dir}</echo>
+    <echo>running target run ....${test.dir}</echo>
     <java classname="bsmf.MainFrame" jvm="${java17}" fork="true" classpathref="run.classpath" dir="${test.dir}">
 	    <arg value="-debug"/> 
 	    <jvmarg value="-Djava.util.logging.config.file=bslogging.properties"/>
