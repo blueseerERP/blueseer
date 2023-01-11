@@ -127,7 +127,7 @@ public class jobWD implements Job {
                     List<Trigger> triggers = (List<Trigger>) myscheduler.getTriggersOfJob(jobKey);
                     Date nextFireTime = triggers.get(0).getNextFireTime();
                     System.out.println("[jobName] : " + jobName + " [groupName] : "
-                            + jobGroup + " - " + nextFireTime);
+                            + jobGroup + " Next Run: " + nextFireTime);
                 }
             }
         } catch (SchedulerException ex) {
