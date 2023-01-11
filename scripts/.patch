@@ -10,9 +10,11 @@
 # updated cron scheduler for edi loader and added standard job to initial download package
 #patch=2
 # Changed EDI reporting to reflect GS02 instead of ISA06 as SenderID; mods to EDITransactionLog; bugfix #88
-patch=3
+#patch=3
 # Added two Jasper prints for both PO print and Order print in event of multiple destination type order
-patch=4
+#patch=4
 # bug fix for #90; length/delim label for EDI Document Recognition Maint table
-patch=5
+#patch=5
 # changed bsdoc type for x12 to include suffix after 3 char code...i.e. 850 to 850x12; updated code_mstr order status for lang packs
+patch=6
+# hot fix for issue #91...unable to hot reload jar file during map editor run event

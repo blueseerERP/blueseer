@@ -2821,7 +2821,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 }
                 cl = new URLClassLoader(urls);
                 Class<?> cls = Class.forName(x.map_id(),true,cl);
-                Object obj = cls.newInstance();
+                Object obj = cls.getDeclaredConstructor().newInstance();
                 Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
                 Object oc = method.invoke(obj, doc, c);
                 String[] oString = (String[]) oc;

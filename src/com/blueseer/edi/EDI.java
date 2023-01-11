@@ -1677,7 +1677,7 @@ public class EDI {
                 cl = new URLClassLoader(urls);
                 
                 Class cls = Class.forName(map,true,cl);  
-                Object obj = cls.newInstance();
+                Object obj = cls.getDeclaredConstructor().newInstance();
                 Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
                 Object oc = method.invoke(obj, doc, c);
                 String[] oString = (String[]) oc;
@@ -1819,7 +1819,7 @@ public class EDI {
                 cl = new URLClassLoader(urls);
                 
                 Class cls = Class.forName(map,true,cl);  
-                Object obj = cls.newInstance();
+                Object obj = cls.getDeclaredConstructor().newInstance();
                 Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
                 Object oc = method.invoke(obj, doc, c);
                 String[] oString = (String[]) oc;
@@ -1961,7 +1961,7 @@ public class EDI {
                 cl = new URLClassLoader(urls);
                 
                 Class cls = Class.forName(map,true,cl);  
-                Object obj = cls.newInstance();
+                Object obj = cls.getDeclaredConstructor().newInstance();
                 Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
                 Object oc = method.invoke(obj, doc, c);
                 String[] oString = (String[]) oc;
@@ -2223,7 +2223,7 @@ public class EDI {
                 cl = new URLClassLoader(urls);
                 
                     Class cls = Class.forName(map,true,cl);  
-                Object obj = cls.newInstance();
+                Object obj = cls.getDeclaredConstructor().newInstance();
                 Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
                 Object oc = method.invoke(obj, doc, c);
                 String[] oString = (String[]) oc;
@@ -2468,7 +2468,7 @@ public class EDI {
                 cl = new URLClassLoader(urls);
                 
                 Class cls = Class.forName(map,true,cl);  
-                Object obj = cls.newInstance();
+                Object obj = cls.getDeclaredConstructor().newInstance();
                 Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
                 Object oc = method.invoke(obj, doc, c);
                 String[] oString = (String[]) oc;
@@ -2626,7 +2626,7 @@ public class EDI {
                 cl = new URLClassLoader(urls);
                 
                 Class cls = Class.forName(map,true,cl);  
-                Object obj = cls.newInstance();
+                Object obj = cls.getDeclaredConstructor().newInstance();
                 Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
                 Object oc = method.invoke(obj, doc, c);
                 String[] oString = (String[]) oc;
@@ -3228,7 +3228,7 @@ public class EDI {
          // call map 
         try {
         Class cls = Class.forName(map);
-        Object obj = cls.newInstance();
+        Object obj = cls.getDeclaredConstructor().newInstance();
         Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
         Object oc = method.invoke(obj, doc, c);
         String[] oString = (String[]) oc;
@@ -3354,7 +3354,7 @@ public class EDI {
          // call map 
         try {
         Class cls = Class.forName(map);
-        Object obj = cls.newInstance();
+        Object obj = cls.getDeclaredConstructor().newInstance();
         Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
         Object oc = method.invoke(obj, doc, c);
         String[] oString = (String[]) oc;
@@ -3480,7 +3480,7 @@ public class EDI {
          // call map 
         try {
         Class cls = Class.forName(map);
-        Object obj = cls.newInstance();
+        Object obj = cls.getDeclaredConstructor().newInstance();
         Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
         Object oc = method.invoke(obj, doc, c);
         String[] oString = (String[]) oc;
@@ -3606,7 +3606,7 @@ public class EDI {
          // call map 
         try {
         Class cls = Class.forName(map);
-        Object obj = cls.newInstance();
+        Object obj = cls.getDeclaredConstructor().newInstance();
         Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
         Object oc = method.invoke(obj, doc, c);
         String[] oString = (String[]) oc;
@@ -3704,7 +3704,7 @@ public class EDI {
                    
                       try {
                     Class cls = Class.forName(map);
-                    Object obj = cls.newInstance();
+                    Object obj = cls.getDeclaredConstructor().newInstance();
                     Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
                
                     
@@ -3793,7 +3793,7 @@ public class EDI {
         
                     try {
                      Class cls = Class.forName(map);
-                    Object obj = cls.newInstance();
+                    Object obj = cls.getDeclaredConstructor().newInstance();
                     Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
                
                     
@@ -3886,7 +3886,7 @@ public class EDI {
         
                     try {
                    Class cls = Class.forName(map);
-                    Object obj = cls.newInstance();
+                    Object obj = cls.getDeclaredConstructor().newInstance();
                     Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
                
                     
@@ -3970,7 +3970,7 @@ public class EDI {
         
                     try {
                     Class cls = Class.forName(map);
-                    Object obj = cls.newInstance();
+                    Object obj = cls.getDeclaredConstructor().newInstance();
                     Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
                
                     
