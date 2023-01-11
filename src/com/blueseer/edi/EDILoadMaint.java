@@ -34,6 +34,7 @@ import com.blueseer.utl.EDData;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -48,6 +49,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
@@ -703,6 +705,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
     inDir = EDData.getEDIInDir();
     inArch = EDData.getEDIInArch(); 
     ErrorDir = EDData.getEDIErrorDir(); 
+    tafile.setFont(new Font("monospaced", Font.PLAIN, 12));
     getFiles();        
     }
     
@@ -911,11 +914,18 @@ public class EDILoadMaint extends javax.swing.JPanel {
              try {
                  tafile.setText("");
                  if (! tablereport.getValueAt(row, col).toString().isEmpty()) {
-                 ArrayList<String> segments = EDData.readEDIRawFileLiveDirIntoArrayList(tablereport.getValueAt(row, col).toString(), "In");  
+               //  ArrayList<String> segments = EDData.readEDIRawFileLiveDirIntoArrayList(tablereport.getValueAt(row, col).toString(), "In");  
+                  File infile = new File(EDData.getEDIInDir() + "/" + tablereport.getValueAt(row, col).toString());
+                  Path path = FileSystems.getDefault().getPath(infile.getAbsolutePath());
+                  List<String> segments = Files.readAllLines(infile.toPath());
+                  
                     for (String segment : segments ) {
                         tafile.append(segment);
                         tafile.append("\n");
                     }
+                    
+                    tafile.setCaretPosition(0);
+                    
                  }
              } catch (MalformedURLException ex) {
                  Logger.getLogger(EDILogBrowse.class.getName()).log(Level.SEVERE, null, ex);
