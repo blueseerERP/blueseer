@@ -1916,7 +1916,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         }
         
         out.println("public class " + tbkey.getText() + " extends com.blueseer.edi.EDIMap " +  " {");
-        out.println("  public String[] Mapdata(ArrayList doc, String[] c) throws IOException, UserDefinedException  {");  
+        out.println("  public String[] Mapdata(ArrayList doc, String[] c, ArrayList mx) throws IOException, UserDefinedException  {");  
         out.println("setControl(c);  ");
         out.println("if (isError) { return error;} ");
         out.println("mappedInput = mapInput(c, doc, ISF);");    
@@ -1924,6 +1924,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         for (String s : text) {
           out.println(s);  
         }
+        out.println("mx.addAll(mxs);");
         out.println("return packagePayLoad(c);  }");
         out.println("}");
         out.close();
@@ -2623,6 +2624,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         // beginning of needs revamping 
         String[] editype = getEDIType(cbuf, "testdata");
         ArrayList<String> doc = new ArrayList<String>();
+        ArrayList<String[]> messages = new ArrayList<String[]>();
         char segdelim = 0;
         char eledelim = 0;
         
@@ -2822,8 +2824,8 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 cl = new URLClassLoader(urls);
                 Class<?> cls = Class.forName(x.map_id(),true,cl);
                 Object obj = cls.getDeclaredConstructor().newInstance();
-                Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
-                Object oc = method.invoke(obj, doc, c);
+                Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class, ArrayList.class);
+                Object oc = method.invoke(obj, doc, c, messages);
                 String[] oString = (String[]) oc;
                 taoutput.setText(oString[0]);
                 

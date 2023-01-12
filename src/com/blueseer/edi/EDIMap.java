@@ -188,6 +188,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
     public static LinkedHashMap<String, Integer> commitCounter = new LinkedHashMap<String, Integer>();
     public static LinkedHashMap<String, Integer> commitLoopCounter = new LinkedHashMap<String, Integer>();
     
+    public static ArrayList<String[]> mxs = new ArrayList<String[]>();
     
     public static LinkedHashMap<String, ArrayList<String[]>> HASH = new  LinkedHashMap<String, ArrayList<String[]>>();
     public static LinkedHashMap<String, String[]> mappedInput = new  LinkedHashMap<String, String[]>();
@@ -211,6 +212,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         OSF.clear();
         commitCounter.clear();
         commitLoopCounter.clear();
+        mxs.clear();
     }
     
     public static void resetVariables() {
@@ -280,9 +282,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         outreceiver = receiver;
     }
 
-    public void kill(String messg) throws UserDefinedException {
-        throw new UserDefinedException(messg);
-    }
+    
     
     public void setControl(String[] c) throws UserDefinedException {
         
@@ -3194,7 +3194,24 @@ public abstract class EDIMap {  // took out the implements EDIMapi
          }
          return k;
      }
-     
+    
+    @EDI.AnnoDoc(desc = {"method kills or stops the execution of the map at point of call",
+                     "NOTE:  the first variable...mx...is not a String...and should not be put in quotes",
+                     "NOTE:  the log file will display UserDefinedException along with the passed message parameter",
+                     "Example:  kill(mx, \"some message\");"},
+                 params = {"ArrayList<String[]> mx", "String messg"}) 
+    public void kill(ArrayList<String[]> mx, String messg) throws UserDefinedException {
+        mx.addAll(mxs);
+        throw new UserDefinedException(messg);
+    }
+    
+@EDI.AnnoDoc(desc = {"method writes out a message to the log table for this transaction event",
+                     "Example:  write(\"some message\");"},
+                 params = {"String messg"})     
+    public void write(String messg)  {
+        mxs.add(new String[]{"map",messg});
+    }
+    
     
     
     public class UserDefinedException extends Exception  

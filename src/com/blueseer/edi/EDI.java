@@ -1820,8 +1820,8 @@ public class EDI {
                 
                 Class cls = Class.forName(map,true,cl);  
                 Object obj = cls.getDeclaredConstructor().newInstance();
-                Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class);
-                Object oc = method.invoke(obj, doc, c);
+                Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class, ArrayList.class);
+                Object oc = method.invoke(obj, doc, c, messages);
                 String[] oString = (String[]) oc;
                 messages.add(new String[]{oString[0], oString[1]});
                 EDData.updateEDIIDX(idxnbr, c); 
