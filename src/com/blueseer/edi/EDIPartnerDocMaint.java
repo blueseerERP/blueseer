@@ -986,7 +986,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
 
         jScrollPane1.setViewportView(listAttributes);
 
-        ddattributekey.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ISA01", "ISA02", "ISA03", "ISA04", "ISA05", "ISA06", "ISA07", "ISA08", "ISA11", "ISA12", "ISA14", "ISA15", "GS01", "GS02", "GS03", "GS07", "GS08", "UNB01", "UNB02", "UNB03", "UNH02" }));
+        ddattributekey.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ISA01", "ISA02", "ISA03", "ISA04", "ISA05", "ISA06", "ISA07", "ISA08", "ISA11", "ISA12", "ISA14", "ISA15", "GS01", "GS02", "GS03", "GS07", "GS08", "UNB01", "UNB02", "UNB03", "UNH02", "envctrlnbr", "grpctrlnbr" }));
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);

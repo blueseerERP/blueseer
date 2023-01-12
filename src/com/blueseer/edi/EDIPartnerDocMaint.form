@@ -901,7 +901,7 @@
             <Component class="javax.swing.JComboBox" name="ddattributekey">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="21">
+                  <StringArray count="23">
                     <StringItem index="0" value="ISA01"/>
                     <StringItem index="1" value="ISA02"/>
                     <StringItem index="2" value="ISA03"/>
@@ -923,6 +923,8 @@
                     <StringItem index="18" value="UNB02"/>
                     <StringItem index="19" value="UNB03"/>
                     <StringItem index="20" value="UNH02"/>
+                    <StringItem index="21" value="envctrlnbr"/>
+                    <StringItem index="22" value="grpctrlnbr"/>
                   </StringArray>
                 </Property>
               </Properties>

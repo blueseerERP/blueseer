@@ -4020,7 +4020,24 @@ public class EDI {
         }
         
         // get counter for ediout
-       int filenumber = OVData.getNextNbr("ediout");
+        
+       int envctrlnbr = 0;
+       int grpctrlnbr = 0;
+       if (attrkeys.containsKey("envctrlnbr")) {
+          envctrlnbr = EDData.getEDIControlNbr(doctype, sndid, rcvid, "envctrlnbr");
+       } 
+       if (attrkeys.containsKey("grpctrlnbr")) {
+          grpctrlnbr = EDData.getEDIControlNbr(doctype, sndid, rcvid, "grpctrlnbr");
+       }
+       
+       if (envctrlnbr == 0) {
+          envctrlnbr = OVData.getNextNbr("ediout"); 
+       }
+       if (grpctrlnbr == 0) {
+          grpctrlnbr = envctrlnbr; 
+       }
+       
+              
        defaults[7] = (defaults[7].isBlank() || defaults[7].equals("0")) ? "10" : defaults[7];
        defaults[6] = (defaults[6].isBlank() || defaults[6].equals("0")) ? "42" : defaults[6];
        defaults[8] = (defaults[8].isBlank() || defaults[8].equals("0")) ? "126" : defaults[8];
@@ -4036,7 +4053,7 @@ public class EDI {
              defaults[10] = "generic";
          }
          
-         String filename = defaults[10] + "." + String.valueOf(filenumber) + "." + defaults[11];
+         String filename = defaults[10] + "." + String.valueOf(envctrlnbr) + "." + defaults[11];
         
          //  if filepath is defined...use this for explicit file path relative to root
         /*  don't do this...TEV 20220505...done downstream
@@ -4096,7 +4113,7 @@ public class EDI {
          }
          if (attrkeys.containsKey("ISA12")) {isa12 = String.format("%1s",attrkeys.get("ISA12"));}
          
-         String isa13 = String.format("%09d", filenumber);
+         String isa13 = String.format("%09d", envctrlnbr);
          String isa14 = "0";
          if (attrkeys.containsKey("ISA14")) {isa14 = String.format("%1s",attrkeys.get("ISA14"));}
          
@@ -4114,7 +4131,7 @@ public class EDI {
          
          String gs4 = gsdfdate.format(now);
          String gs5 = gsdftime.format(now);
-         String gs6 = String.valueOf(filenumber);
+         String gs6 = String.valueOf(grpctrlnbr);
          String gs7 = "X";
          if (attrkeys.containsKey("GS07")) {gs7 = attrkeys.get("GS07");}
          
@@ -4131,14 +4148,14 @@ public class EDI {
            envelope[0] = envelope[0].toUpperCase();
            envelope[1] = "GS" + ed + gs1 + ed + gs2 + ed + gs3 + ed + gs4 + ed + gs5 + ed + gs6 + ed + gs7 + ed + gs8;
             envelope[1] = envelope[1].toUpperCase();
-           envelope[2] = "GE" + ed + "1" + ed + String.valueOf(filenumber);
+           envelope[2] = "GE" + ed + "1" + ed + String.valueOf(grpctrlnbr);
             envelope[2] = envelope[2].toUpperCase();
-           envelope[3] = "IEA" + ed + "1" + ed + String.format("%09d", filenumber);
+           envelope[3] = "IEA" + ed + "1" + ed + String.format("%09d", envctrlnbr);
             envelope[3] = envelope[3].toUpperCase();
             
            envelope[4] = filename;
-           envelope[5] = String.format("%09d", filenumber);
-           envelope[6] = String.valueOf(filenumber);
+           envelope[5] = String.format("%09d", envctrlnbr);
+           envelope[6] = String.valueOf(grpctrlnbr);
            envelope[7] = sd;
            envelope[8] = ed;
            envelope[9] = ud;
@@ -4159,8 +4176,23 @@ public class EDI {
             }
         }
         
-        // get counter for ediout
-       int filenumber = OVData.getNextNbr("ediout");
+       int envctrlnbr = 0;
+       int grpctrlnbr = 0;
+       if (attrkeys.containsKey("envctrlnbr")) {
+          envctrlnbr = EDData.getEDIControlNbr(doctype, sndid, rcvid, "envctrlnbr");
+       } 
+       if (attrkeys.containsKey("grpctrlnbr")) {
+          grpctrlnbr = EDData.getEDIControlNbr(doctype, sndid, rcvid, "grpctrlnbr");
+       }
+       
+       if (envctrlnbr == 0) {
+          envctrlnbr = OVData.getNextNbr("ediout"); 
+       }
+       if (grpctrlnbr == 0) {
+          grpctrlnbr = envctrlnbr; 
+       }
+       
+       
        defaults[7] = (defaults[7].isBlank() || defaults[7].equals("0")) ? "39" : defaults[7];
        defaults[6] = (defaults[6].isBlank() || defaults[6].equals("0")) ? "43" : defaults[6];
        defaults[8] = (defaults[8].isBlank() || defaults[8].equals("0")) ? "58" : defaults[8];
@@ -4176,7 +4208,7 @@ public class EDI {
              defaults[10] = "generic";
          }
          
-         String filename = defaults[10] + "." + String.valueOf(filenumber) + "." + defaults[11];
+         String filename = defaults[10] + "." + String.valueOf(envctrlnbr) + "." + defaults[11];
         
          //  if filepath is defined...use this for explicit file path relative to root
         /*  don't do this...TEV 20220505...done downstream
@@ -4209,7 +4241,7 @@ public class EDI {
          
          String unb4 = isadfdate.format(now) + ud + isadftime.format(now);
          
-         String unb5 = String.valueOf(filenumber);
+         String unb5 = String.valueOf(envctrlnbr);
          
          
          String ung1 = EDData.getEDIGSTypeFromBSDoc(defaults[14]);   // defaults[14] = outdoctype 
@@ -4222,7 +4254,7 @@ public class EDI {
          
          String ung4 = gsdfdate.format(now) + ud + gsdftime.format(now);
          
-         String ung5 = String.valueOf(filenumber);
+         String ung5 = String.valueOf(grpctrlnbr);
          
          String ung6 = "UN";
          
@@ -4238,15 +4270,15 @@ public class EDI {
            if (defaults[23].equals("1")) {  // if ung checkbox is checked write UNG
            envelope[1] = "UNG" + ed + ung1 + ed + ung2 + ed + ung3 + ed + ung4 + ed + ung5 + ed + ung6 + ed + ung7;
             envelope[1] = envelope[1].toUpperCase();
-           envelope[2] = "UNE" + ed + "1" + ed + String.valueOf(filenumber);
+           envelope[2] = "UNE" + ed + "1" + ed + String.valueOf(grpctrlnbr);
            envelope[2] = envelope[2].toUpperCase();
            }
-           envelope[3] = "UNZ" + ed + "1" + ed + String.valueOf(filenumber);
+           envelope[3] = "UNZ" + ed + "1" + ed + String.valueOf(envctrlnbr);
             envelope[3] = envelope[3].toUpperCase();
             
            envelope[4] = filename;
-           envelope[5] = String.valueOf(filenumber);
-           envelope[6] = String.valueOf(filenumber);
+           envelope[5] = String.valueOf(envctrlnbr);
+           envelope[6] = String.valueOf(grpctrlnbr);
            envelope[7] = sd;
            envelope[8] = ed;
            envelope[9] = ud;

@@ -706,7 +706,73 @@ public class EDData {
         return x;
         
          }
+    
+    public static int getEDIControlNbr(String doctype, String sndid, String rcvid, String key) {
+       int nbr = 0;
+        try{
+           
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                
+              //  if (! dbtype.equals("sqlite")) {
+                con.setAutoCommit(false);
+               // }
+                
+                if (dbtype.equals("sqlite")) {
+               res = st.executeQuery("select exa_value as 'num' from edi_attr " +
+                        " where exa_sndid = " + "'" + sndid + "'" + 
+                        " AND exa_rcvid = " + "'" + rcvid + "'" + 
+                        " AND exa_doc = " + "'" + doctype + "'" +
+                        " AND exa_key = " + "'" + key + "'" +        
+                              ";");
+                } else {
+                res = st.executeQuery("select exa_value as 'num' from edi_attr " +
+                        " where exa_sndid = " + "'" + sndid + "'" + 
+                        " AND exa_rcvid = " + "'" + rcvid + "'" + 
+                        " AND exa_doc = " + "'" + doctype + "'" +
+                        " AND exa_key = " + "'" + key + "'" +     
+                              " for update;");
+                }
+                while (res.next()) {
+                   nbr = res.getInt("num") + 1;
+                }
+                st.executeUpdate(
+                       " update edi_attr set exa_value = " + "'" + nbr + "'" +
+                       " where exa_sndid = " + "'" + sndid + "'" + 
+                        " AND exa_rcvid = " + "'" + rcvid + "'" + 
+                        " AND exa_doc = " + "'" + doctype + "'" +
+                        " AND exa_key = " + "'" + key + "'" +         
+                              ";");
+                
+              //  if (! dbtype.equals("sqlite")) {
+                con.setAutoCommit(true);
+              //  }
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            }
+            finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return nbr;
         
+    }
+    
+    
     public static String[] getEDI997SystemDefaults() {
            
                     
