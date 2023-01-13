@@ -219,6 +219,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
      // global variable declarations
                 boolean isLoad = false;
                 boolean isOverlay = false;
+                boolean isStructure = false;
                 public static map_mstr x = null;
                 JPopupMenu mymenu = new JPopupMenu();
                 JMenuItem menuraw = new JMenuItem("Raw Format");
@@ -1176,6 +1177,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }
         
     public List<String> getStructure(String structureName) {
+        isStructure = true;
         List<String> lines = new ArrayList<>();
         String dirpath;
         if (structureName.equals("ifs")) {
@@ -1265,6 +1267,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     public void showStructure(String taname) {
         if (taname.equals("tainput")) {
             isOverlay = false;
+            isStructure = false;
             List<String> lines = getStructure("ifs");
             tainput.setText("");
             for (String segment : lines ) {
@@ -1990,6 +1993,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         
     public void getInput() {
         isOverlay = false;
+        isStructure = false;
         infile = getfile("Open Test File");
         tainput.setText("");
         if (infile != null) {
@@ -2593,8 +2597,8 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btrunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrunActionPerformed
-        if (isOverlay) {
-            bsmf.MainFrame.show("Input file not recognized...possible overlay");
+        if (isOverlay || isStructure) {
+            bsmf.MainFrame.show("Input file not recognized...possible overlay or structure");
         }
         
         String[] c = EDI.initEDIControl();
