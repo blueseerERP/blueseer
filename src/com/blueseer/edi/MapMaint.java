@@ -1389,8 +1389,10 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 tainput.setText("unable to read file");
                 return;
             }
-            // needs revisiting
-            if (ddifs.getSelectedItem().toString().startsWith("X12")) {
+           
+            fs = ddinfiletype.getSelectedItem().toString();
+            /*
+            if (ddinfiletype.getSelectedItem().toString().startsWith("X12")) {
                 fs = "X12";
             } else if (ddifs.getSelectedItem().toString().startsWith("CSV")) {
                 fs = "CSV";
@@ -1403,7 +1405,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             } else {
                 fs = "FF";
             }
-            
+            */
             isInput = true;
         }
         if (taname.equals("taoutput")) {

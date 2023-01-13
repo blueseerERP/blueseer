@@ -2767,6 +2767,8 @@ public abstract class EDIMap {  // took out the implements EDIMapi
          }
          if (GlobalDebug)
          System.out.println("getInput:" + segment + "/" + x);
+         
+         
          return x;
          
      }
@@ -2984,6 +2986,10 @@ public abstract class EDIMap {  // took out the implements EDIMapi
          if (k != null && k.length > elementNbr && k[elementNbr] != null) {
           x =  k[elementNbr].trim();
          }
+         
+         if (GlobalDebug)
+         System.out.println("getInput:" + segment + "/" + elementName + "/" + elementNbr + ": " + x);
+         
          return x;
      }
     
@@ -3123,10 +3129,11 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             if (z[5].equals("groupend")) {
                   continue;
             } 
-            if (seg.startsWith(z[0]) && (parent.isBlank() || parent.equals(z[1]))) {
+            if (seg.equals(z[0]) && (parent.isBlank() || parent.equals(z[1]))) {
                 if (! z[5].equals("landmark")) {
                   x++;
                 }
+                System.out.println("HERE: " + seg + "/" + z[0] + "/" + parent + "/" + z[1] + "/" + x);
                 if (element.toLowerCase().equals(z[5].toLowerCase())) {
                     r = x;
                     break;
