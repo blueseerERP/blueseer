@@ -218,8 +218,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
      File infile = null;
      // global variable declarations
                 boolean isLoad = false;
-                boolean isOverlay = false;
-                boolean isStructure = false;
+                
                 public static map_mstr x = null;
                 JPopupMenu mymenu = new JPopupMenu();
                 JMenuItem menuraw = new JMenuItem("Raw Format");
@@ -231,6 +230,8 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 private JScrollBar verticalScrollBar;
                 
                 private UndoManager undoManagerTAINPUT = new UndoManager();
+                private UndoManager undoManagerTAINSTRUCT = new UndoManager();
+                private UndoManager undoManagerTAOUTSTRUCT = new UndoManager();
                 private UndoManager undoManagerTAOUTPUT = new UndoManager();
                 private UndoManager undoManagerTAMAP = new UndoManager();
                 
@@ -238,7 +239,9 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 
                 boolean tamapLineToggle = false;
                 boolean tainputLineToggle = false;
+                boolean tainstructLineToggle = false;
                 boolean taoutputLineToggle = false;
+                boolean taoutstructLineToggle = false;
                 
                 JTextArea lines = new JTextArea();
                 
@@ -318,12 +321,17 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             popup.add(setMenuItem("Clear"));
             popup.add(setMenuItem("Hex Replace"));
             popup.add(setMenuItem("Input"));
-            popup.add(setMenuItem("Structure"));
-            popup.add(setMenuItem("Overlay"));
             popup.add(setMenuItem("Identify"));
             popup.add(setMenuItem("Download"));
             popup.add(setMenuItem("Clear Highlights"));
             popup.add(setMenuItem("Hide Panel"));
+        }
+        if (ta.getName().equals("tainstruct")) {
+            popup.add(setMenuItem("Search"));
+            popup.add(setMenuItem("Clear"));
+            popup.add(setMenuItem("Structure"));
+            popup.add(setMenuItem("Overlay"));
+            popup.add(setMenuItem("Clear Highlights"));
         }
         if (ta.getName().equals("taoutput")) {
             popup.add(setMenuItem("Search"));
@@ -334,6 +342,13 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             popup.add(setMenuItem("Download"));
             popup.add(setMenuItem("Clear Highlights"));
             popup.add(setMenuItem("Hide Panel"));
+        }
+        if (ta.getName().equals("taoutstruct")) {
+            popup.add(setMenuItem("Search"));
+            popup.add(setMenuItem("Clear"));
+            popup.add(setMenuItem("Structure"));
+            popup.add(setMenuItem("Overlay"));
+            popup.add(setMenuItem("Clear Highlights"));
         }
         
         ta.addMouseListener(ma);
@@ -639,6 +654,12 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         MapMaint.myPopupHandler handler3 = new MapMaint.myPopupHandler(taoutput);
         taoutput.add(handler3.getPopup());
         
+        MapMaint.myPopupHandler handler4 = new MapMaint.myPopupHandler(tainstruct);
+        tainstruct.add(handler4.getPopup());
+        
+        MapMaint.myPopupHandler handler5 = new MapMaint.myPopupHandler(taoutstruct);
+        taoutstruct.add(handler5.getPopup());
+        
         Document docmap = tamap.getDocument();
         docmap.addUndoableEditListener(new UndoableEditListener() {
         @Override
@@ -652,6 +673,22 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         @Override
         public void undoableEditHappened(UndoableEditEvent e) {
         undoManagerTAINPUT.addEdit(e.getEdit());
+        }
+        });
+        
+        Document docinstruct = tainstruct.getDocument();
+        docinstruct.addUndoableEditListener(new UndoableEditListener() {
+        @Override
+        public void undoableEditHappened(UndoableEditEvent e) {
+        undoManagerTAINSTRUCT.addEdit(e.getEdit());
+        }
+        });
+        
+        Document docoutstruct = taoutstruct.getDocument();
+        docoutstruct.addUndoableEditListener(new UndoableEditListener() {
+        @Override
+        public void undoableEditHappened(UndoableEditEvent e) {
+        undoManagerTAOUTSTRUCT.addEdit(e.getEdit());
         }
         });
         
@@ -876,17 +913,33 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         tbversion.setText("");
         tbpath.setText("");
         
+        InputTabbedPane.removeAll();
+        InputTabbedPane.add("Input", inScrollPaneInput);
+        InputTabbedPane.add("Structure", structScrollPane);
+        
+        OutputTabbedPane.removeAll();
+        OutputTabbedPane.add("Output", outScrollPaneOutput);
+        OutputTabbedPane.add("Structure", structScrollPaneout);
+        
+      //  InputTabbedPane.setEnabledAt(1, false);
+      //  InputTabbedPane.setEnabledAt(2, false);
         
         
         tamap.setText("");
         tainput.setText("");
+        tainstruct.setText("");
+        taoutstruct.setText("");
         taoutput.setText("");
                
         addKeyBind(tamap);
         addKeyBind(tainput);
+        addKeyBind(tainstruct);
+        addKeyBind(taoutstruct);
         addKeyBind(taoutput);
         
         tainput.setFont(new Font("monospaced", Font.PLAIN, 12));
+        tainstruct.setFont(new Font("monospaced", Font.PLAIN, 12));
+        taoutstruct.setFont(new Font("monospaced", Font.PLAIN, 12));
         tamap.setFont(new Font("monospaced", Font.PLAIN, 12));
         taoutput.setFont(new Font("monospaced", Font.PLAIN, 12));
         
@@ -1177,7 +1230,6 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }
         
     public List<String> getStructure(String structureName) {
-        isStructure = true;
         List<String> lines = new ArrayList<>();
         String dirpath;
         if (structureName.equals("ifs")) {
@@ -1265,25 +1317,24 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }
        
     public void showStructure(String taname) {
-        if (taname.equals("tainput")) {
-            isOverlay = false;
-            isStructure = false;
+        if (taname.equals("tainstruct")) {
+           
             List<String> lines = getStructure("ifs");
-            tainput.setText("");
+            tainstruct.setText("");
             for (String segment : lines ) {
-                            tainput.append(segment);
-                            tainput.append("\n");
+                            tainstruct.append(segment);
+                            tainstruct.append("\n");
             }
-            tainput.setCaretPosition(0);
+            tainstruct.setCaretPosition(0);
         }
-        if (taname.equals("taoutput")) {
+        if (taname.equals("taoutstruct")) {
             List<String> lines = getStructure("ofs");
-            taoutput.setText("");
+            taoutstruct.setText("");
             for (String segment : lines ) {
-                            taoutput.append(segment);
-                            taoutput.append("\n");
+                            taoutstruct.append(segment);
+                            taoutstruct.append("\n");
             }
-            taoutput.setCaretPosition(0);
+            taoutstruct.setCaretPosition(0);
         }
         
          
@@ -1321,6 +1372,16 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 undoManagerTAINPUT.undo();
             }
            }
+           if (s.getName().equals("tainstruct")) {
+            if (undoManagerTAINSTRUCT.canUndo()) {
+                undoManagerTAINSTRUCT.undo();
+            }
+           }
+           if (s.getName().equals("taoutstruct")) {
+            if (undoManagerTAOUTSTRUCT.canUndo()) {
+                undoManagerTAOUTSTRUCT.undo();
+            }
+           }
            if (s.getName().equals("taoutput")) {
             if (undoManagerTAOUTPUT.canUndo()) {
                 undoManagerTAOUTPUT.undo();
@@ -1350,7 +1411,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
   }
     
     public void showOverlay(String taname) {
-        isOverlay = true;
+       
         List<String> structure = null;
         ArrayList<String> input = null;
         String[] delims = new String[]{"","",""};
@@ -1358,24 +1419,24 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         String fs = "";
         boolean isInput = false;
         
-        if (taname.equals("tainput")) {
-            tainput.setText("");
+        if (taname.equals("tainstruct")) {
+            tainstruct.setText("");
             structure = getStructure("ifs"); 
             file = getfile("Open Structure File");
             if (structure.size() == 0) {
-              tainput.setText("unable to read structure file");
+              tainstruct.setText("unable to read structure file");
               return;
             }            
             if (file != null) {
                 char[] cbuf = readEDIRawFileIntoCbuf(file.toPath());
                 if (cbuf == null) {
-                  tainput.setText("file cbuf content is null");
+                  tainstruct.setText("file cbuf content is null");
                     return;  
                 }
                 delims = getDelimiters(cbuf, file.getName()); // seg, ele, sub
                // bsmf.MainFrame.show(delims[0] + "/" + delims[1] + "/" + delims[2]);
                 if (delims == null) {
-                  tainput.setText("unable to determine delimiters (null array returned) ");
+                  tainstruct.setText("unable to determine delimiters (null array returned) ");
                     return;  
                 }
                 if (ddinfiletype.getSelectedItem().toString().equals("JSON") || ddinfiletype.getSelectedItem().toString().equals("XML")) {
@@ -1389,7 +1450,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 input = cbufToList(cbuf, delims);
                 }
             } else {
-                tainput.setText("unable to read file");
+                tainstruct.setText("unable to read file");
                 return;
             }
            
@@ -1462,12 +1523,12 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                              desc = "unknown";
                          }
                      } 
-                     tainput.append(z.getKey() + "\t" + fieldname + "\t" + desc +  " --> FieldNumber: " + i + "   " + "ValueLength: " + s.length() + " value: " + s +  "\n");   
+                     tainstruct.append(z.getKey() + "\t" + fieldname + "\t" + desc +  " --> FieldNumber: " + i + "   " + "ValueLength: " + s.length() + " value: " + s +  "\n");   
                      i++;
                     }
                    
             }
-        tainput.setCaretPosition(0);
+        tainstruct.setCaretPosition(0);
         taoutput.setCaretPosition(0);
     }
     
@@ -1642,6 +1703,16 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             String text = bsmf.MainFrame.input("Text: ");
             highlightSearch(tainput, text);            
         }
+        if (taname.equals("tainstruct")) {
+            cleanHighlights(taname);
+            String text = bsmf.MainFrame.input("Text: ");
+            highlightSearch(tainstruct, text);            
+        }
+        if (taname.equals("taoutstruct")) {
+            cleanHighlights(taname);
+            String text = bsmf.MainFrame.input("Text: ");
+            highlightSearch(taoutstruct, text);            
+        }
         if (taname.equals("tamap")) {
             cleanHighlights(taname);
             String text = bsmf.MainFrame.input("Text: ");
@@ -1658,6 +1729,12 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         if (taname.equals("tainput")) {
             highlightNext(tainput);            
         }
+        if (taname.equals("tainstruct")) {
+            highlightNext(tainstruct);            
+        }
+        if (taname.equals("taoutstruct")) {
+            highlightNext(taoutstruct);            
+        }
         if (taname.equals("tamap")) {
             highlightNext(tamap);            
         }
@@ -1669,6 +1746,12 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     public void clear(String taname) {
         if (taname.equals("tainput")) {
             tainput.setText("");            
+        }
+        if (taname.equals("tainstruct")) {
+            tainstruct.setText("");            
+        }
+        if (taname.equals("taoutstruct")) {
+            taoutstruct.setText("");            
         }
         if (taname.equals("tamap")) {
             tamap.setText("");            
@@ -1697,6 +1780,16 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 }
             }
         }
+        if (taname.equals("tainstruct")) {
+            Highlighter h = tainstruct.getHighlighter();
+            Highlighter.Highlight[] hl = h.getHighlights();
+            for (int i = 0; i < hl.length; i++) {
+                if (hl[i].getPainter() instanceof MyHighlightPainter) {
+                    
+                    h.removeHighlight(hl[i]);
+                }
+            }
+        }
         if (taname.equals("tamap")) {
             Highlighter h = tamap.getHighlighter();
             Highlighter.Highlight[] hl = h.getHighlights();
@@ -1711,6 +1804,16 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             Highlighter.Highlight[] hl = h.getHighlights();
             for (int i = 0; i < hl.length; i++) {
                 if (hl[i].getPainter() instanceof MyHighlightPainter) {
+                    h.removeHighlight(hl[i]);
+                }
+            }
+        }
+        if (taname.equals("taoutstruct")) {
+            Highlighter h = taoutstruct.getHighlighter();
+            Highlighter.Highlight[] hl = h.getHighlights();
+            for (int i = 0; i < hl.length; i++) {
+                if (hl[i].getPainter() instanceof MyHighlightPainter) {
+                    
                     h.removeHighlight(hl[i]);
                 }
             }
@@ -1742,6 +1845,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     
     public void highlightNext(JTextComponent ta) {
        int current = tainput.getCaretPosition();
+       
        if (ta.getName().equals("tainput")) {
             Highlighter h = tainput.getHighlighter();
             Highlighter.Highlight[] hl = h.getHighlights();
@@ -1749,6 +1853,30 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 if (hl[i].getPainter() instanceof MyHighlightPainter) {
                     if (hl[i].getStartOffset() > current) {
                       tainput.setCaretPosition(hl[i].getStartOffset());
+                      break;
+                    }
+                }
+            }
+        }
+       if (ta.getName().equals("tainstruct")) {
+            Highlighter h = tainstruct.getHighlighter();
+            Highlighter.Highlight[] hl = h.getHighlights();
+            for (int i = 0; i < hl.length; i++) {
+                if (hl[i].getPainter() instanceof MyHighlightPainter) {
+                    if (hl[i].getStartOffset() > current) {
+                      tainstruct.setCaretPosition(hl[i].getStartOffset());
+                      break;
+                    }
+                }
+            }
+        }
+       if (ta.getName().equals("taoutstruct")) {
+            Highlighter h = taoutstruct.getHighlighter();
+            Highlighter.Highlight[] hl = h.getHighlights();
+            for (int i = 0; i < hl.length; i++) {
+                if (hl[i].getPainter() instanceof MyHighlightPainter) {
+                    if (hl[i].getStartOffset() > current) {
+                      taoutstruct.setCaretPosition(hl[i].getStartOffset());
                       break;
                     }
                 }
@@ -1992,8 +2120,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }
         
     public void getInput() {
-        isOverlay = false;
-        isStructure = false;
+       
         infile = getfile("Open Test File");
         tainput.setText("");
         if (infile != null) {
@@ -2136,14 +2263,20 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         jPanel1 = new javax.swing.JPanel();
         tablepanel = new javax.swing.JPanel();
         inputpanel = new javax.swing.JPanel();
-        jScrollPane7 = new javax.swing.JScrollPane();
+        InputTabbedPane = new javax.swing.JTabbedPane();
+        inScrollPaneInput = new javax.swing.JScrollPane();
         tainput = new javax.swing.JTextArea();
+        structScrollPane = new javax.swing.JScrollPane();
+        tainstruct = new javax.swing.JTextArea();
         mappanel = new javax.swing.JPanel();
         scrollMap = new javax.swing.JScrollPane();
         tamap = new javax.swing.JTextArea();
         outputpanel = new javax.swing.JPanel();
-        jScrollPane5 = new javax.swing.JScrollPane();
+        OutputTabbedPane = new javax.swing.JTabbedPane();
+        outScrollPaneOutput = new javax.swing.JScrollPane();
         taoutput = new javax.swing.JTextArea();
+        structScrollPaneout = new javax.swing.JScrollPane();
+        taoutstruct = new javax.swing.JTextArea();
         jPanel2 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         toolbar = new javax.swing.JToolBar();
@@ -2191,16 +2324,25 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
         tablepanel.setLayout(new javax.swing.BoxLayout(tablepanel, javax.swing.BoxLayout.LINE_AXIS));
 
-        inputpanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Input"));
+        inputpanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Source"));
         inputpanel.setPreferredSize(new java.awt.Dimension(260, 764));
         inputpanel.setLayout(new javax.swing.BoxLayout(inputpanel, javax.swing.BoxLayout.LINE_AXIS));
 
         tainput.setColumns(20);
         tainput.setRows(5);
         tainput.setName("tainput"); // NOI18N
-        jScrollPane7.setViewportView(tainput);
+        inScrollPaneInput.setViewportView(tainput);
 
-        inputpanel.add(jScrollPane7);
+        InputTabbedPane.addTab("tab2", inScrollPaneInput);
+
+        tainstruct.setColumns(20);
+        tainstruct.setRows(5);
+        tainstruct.setName("tainstruct"); // NOI18N
+        structScrollPane.setViewportView(tainstruct);
+
+        InputTabbedPane.addTab("tab3", structScrollPane);
+
+        inputpanel.add(InputTabbedPane);
 
         tablepanel.add(inputpanel);
 
@@ -2219,16 +2361,25 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
         tablepanel.add(mappanel);
 
-        outputpanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Output"));
+        outputpanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Destination"));
         outputpanel.setPreferredSize(new java.awt.Dimension(260, 764));
         outputpanel.setLayout(new javax.swing.BoxLayout(outputpanel, javax.swing.BoxLayout.LINE_AXIS));
 
         taoutput.setColumns(20);
         taoutput.setRows(5);
         taoutput.setName("taoutput"); // NOI18N
-        jScrollPane5.setViewportView(taoutput);
+        outScrollPaneOutput.setViewportView(taoutput);
 
-        outputpanel.add(jScrollPane5);
+        OutputTabbedPane.addTab("tab2", outScrollPaneOutput);
+
+        taoutstruct.setColumns(20);
+        taoutstruct.setRows(5);
+        taoutstruct.setName("taoutstruct"); // NOI18N
+        structScrollPaneout.setViewportView(taoutstruct);
+
+        OutputTabbedPane.addTab("tab3", structScrollPaneout);
+
+        outputpanel.add(OutputTabbedPane);
 
         tablepanel.add(outputpanel);
 
@@ -2597,9 +2748,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btrunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrunActionPerformed
-        if (isOverlay || isStructure) {
-            bsmf.MainFrame.show("Input file not recognized...possible overlay or structure");
-        }
+        
         
         String[] c = EDI.initEDIControl();
         
@@ -3137,6 +3286,8 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTabbedPane InputTabbedPane;
+    private javax.swing.JTabbedPane OutputTabbedPane;
     private javax.swing.JButton btadd;
     private javax.swing.JButton btclear;
     private javax.swing.JButton btcompile;
@@ -3159,6 +3310,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     private javax.swing.JComboBox<String> ddoutdoctype;
     private javax.swing.JComboBox<String> ddoutfiletype;
     private javax.swing.JFileChooser fc;
+    private javax.swing.JScrollPane inScrollPaneInput;
     private javax.swing.JPanel inputpanel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -3173,15 +3325,18 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JPanel mappanel;
+    private javax.swing.JScrollPane outScrollPaneOutput;
     private javax.swing.JPanel outputpanel;
     private javax.swing.JScrollPane scrollMap;
+    private javax.swing.JScrollPane structScrollPane;
+    private javax.swing.JScrollPane structScrollPaneout;
     private javax.swing.JPanel tablepanel;
     private javax.swing.JTextArea tainput;
+    private javax.swing.JTextArea tainstruct;
     private javax.swing.JTextArea tamap;
     private javax.swing.JTextArea taoutput;
+    private javax.swing.JTextArea taoutstruct;
     private javax.swing.JTextField tbdesc;
     private javax.swing.JTextField tbkey;
     private javax.swing.JTextField tbpackage;
