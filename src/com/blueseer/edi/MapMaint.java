@@ -337,8 +337,6 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             popup.add(setMenuItem("Search"));
             popup.add(setMenuItem("Clear"));
             popup.add(setMenuItem("Hex Replace"));
-            popup.add(setMenuItem("Structure"));
-            popup.add(setMenuItem("Overlay"));
             popup.add(setMenuItem("Download"));
             popup.add(setMenuItem("Clear Highlights"));
             popup.add(setMenuItem("Hide Panel"));
