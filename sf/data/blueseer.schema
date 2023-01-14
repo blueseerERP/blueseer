@@ -504,7 +504,8 @@ CREATE TABLE IF NOT EXISTS `edi_doc` (
   `edd_desc` varchar(200) NOT NULL  DEFAULT '',
   `edd_type` varchar(50) NOT NULL  DEFAULT '',
   `edd_subtype` varchar(50) NOT NULL  DEFAULT '',
-  `edd_segdelim` int(1) NOT NULL  DEFAULT '0',
+  `edd_segdelim` int(2) NOT NULL  DEFAULT '0',
+  `edd_eledelim` int(2) NOT NULL  DEFAULT '0',
   `edd_priority` varchar(3) NOT NULL  DEFAULT '',
   `edd_landmark` varchar(50) NOT NULL  DEFAULT '',
   `edd_enabled` tinyint(1) NOT NULL  DEFAULT '0'

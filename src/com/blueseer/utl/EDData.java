@@ -439,6 +439,7 @@ public class EDData {
                 
                 for (String z : keys) {
                     res = st.executeQuery("select * from edi_docdet " +
+                            " inner join edi_doc on edd_id = edid_id " +
                             " where edid_enabled = '1' and edid_role = 'selection' and edid_id = " + "'" + z + "'"); 
                     while (res.next()) {
                            String[] s = new String[]{res.getString("edid_row"),
@@ -447,7 +448,13 @@ public class EDData {
                                                      res.getString("edid_value"),
                                                      res.getString("edid_rectype"),
                                                      res.getString("edid_tag"),
-                                                     res.getString("edid_xpath")
+                                                     res.getString("edid_xpath"),
+                                                     res.getString("edid_tag"),
+                                                     res.getString("edid_valuetype"),
+                                                     res.getString("edd_segdelim"),
+                                                     res.getString("edd_eledelim"),
+                                                     res.getString("edid_regex")
+                                                     
                            };
                            x.add(s);
                         }
@@ -486,6 +493,7 @@ public class EDData {
             try{
                 
                     res = st.executeQuery("select * from edi_docdet " +
+                            " inner join edi_doc on edd_id = edid_id " +
                             " where edid_enabled = '1' " +
                             " and edid_role = 'data' " +
                             " and edid_id = " + "'" + id + "'"); 
@@ -499,7 +507,9 @@ public class EDData {
                                res.getString("edid_length"),
                                res.getString("edid_regex"),
                                res.getString("edid_value"),
-                               res.getString("edid_xpath")
+                               res.getString("edid_xpath"),
+                               res.getString("edd_segdelim"),
+                               res.getString("edd_eledelim")
                            };
                            x.add(s);
                         }

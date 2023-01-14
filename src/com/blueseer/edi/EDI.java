@@ -1378,7 +1378,7 @@ public class EDI {
                         x[0] = t[7];
                     } else {
                         if (t[1].toLowerCase().equals("delimited") && i == Integer.valueOf(t[3])) {
-                        String[] delarr = s.split(delimConvertIntToStr(t[5]), -1);
+                        String[] delarr = s.split(delimConvertIntToStr(t[10]), -1);
                             if (delarr.length >= Integer.valueOf(t[4])) {
                                 x[0] = delarr[Integer.valueOf(t[4]) - 1].trim();
                             }
@@ -1397,7 +1397,7 @@ public class EDI {
                         x[1] = t[7];
                     } else {
                         if (t[1].toLowerCase().equals("delimited") && i == Integer.valueOf(t[3])) {
-                        String[] delarr = s.split(delimConvertIntToStr(t[5]), -1);
+                        String[] delarr = s.split(delimConvertIntToStr(t[10]), -1);
                             if (delarr.length >= Integer.valueOf(t[4])) {
                                 x[1] = delarr[Integer.valueOf(t[4]) - 1].trim();
                             }
@@ -1416,7 +1416,7 @@ public class EDI {
                         x[3] = t[7];
                     } else {
                         if (t[1].toLowerCase().equals("delimited") && i == Integer.valueOf(t[3])) {
-                        String[] delarr = s.split(delimConvertIntToStr(t[5]), -1);
+                        String[] delarr = s.split(delimConvertIntToStr(t[10]), -1);
                             if (delarr.length >= Integer.valueOf(t[4])) {
                                 x[3] = delarr[Integer.valueOf(t[4]) - 1].trim();
                             }

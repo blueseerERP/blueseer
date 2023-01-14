@@ -412,12 +412,13 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
                         i++;
                     }
                     if (i == 0) {
-                        st.executeUpdate("insert into edi_doc (edd_id, edd_desc, edd_type, edd_subtype, edd_segdelim, edd_priority, edd_landmark, edd_enabled) values (" + 
+                        st.executeUpdate("insert into edi_doc (edd_id, edd_desc, edd_type, edd_subtype, edd_segdelim, edd_eledelim, edd_priority, edd_landmark, edd_enabled) values (" + 
                             "'" + tbkey.getText() + "'" + "," +
                             "'" + tbdesc.getText() + "'"  +  "," + 
                             "'" + dddoc.getSelectedItem().toString() + "'"  +  "," + 
                             "'" + tbsubtype.getText() + "'"  + "," + 
                             "'" + tbsegdelimiter.getText() + "'"  +  "," + 
+                            "'" + tbeledelimiter.getText() + "'"  +  "," +         
                             "'" + tbpriority.getText() + "'"  +  "," + 
                             "'" + tblandmark.getText() + "'"  + "," +
                             "'" + headerenabled + "'" +
@@ -495,6 +496,7 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
                            "edd_type = " + "'" + dddoc.getSelectedItem().toString() + "'" + "," +
                            "edd_subtype = " + "'" + tbsubtype.getText() + "'" + "," +
                            "edd_segdelim = " + "'" + tbsegdelimiter.getText() + "'" + "," +
+                           "edd_eledelim = " + "'" + tbeledelimiter.getText() + "'" + "," +        
                            "edd_priority = " + "'" + tbpriority.getText() + "'" + "," +
                            "edd_landmark = " + "'" + tblandmark.getText() + "'" + "," +
                            "edd_enabled = " + "'" + headerenabled + "'" +     
@@ -605,6 +607,7 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
                         dddoc.setSelectedItem(res.getString("edd_type"));
                         tbsubtype.setText(res.getString("edd_subtype"));
                         tbsegdelimiter.setText(res.getString("edd_segdelim"));
+                        tbeledelimiter.setText(res.getString("edd_eledelim"));
                         tblandmark.setText(res.getString("edd_landmark"));
                         cbenabledhdr.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("edd_enabled")));
                     }
@@ -745,6 +748,8 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
         jLabel10 = new javax.swing.JLabel();
         tblandmark = new javax.swing.JTextField();
         dddoc = new javax.swing.JComboBox<>();
+        tbeledelimiter = new javax.swing.JTextField();
+        jLabel18 = new javax.swing.JLabel();
         btadd = new javax.swing.JButton();
         btdelete = new javax.swing.JButton();
 
@@ -822,7 +827,7 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
         jLabel12.setText("Column");
         jLabel12.setName("lblcolumn"); // NOI18N
 
-        jLabel13.setText("Length/Delim");
+        jLabel13.setText("Length");
         jLabel13.setName("lbllength"); // NOI18N
 
         jLabel14.setText("Regex");
@@ -873,7 +878,7 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
                             .addComponent(tbrow, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tbcolumn, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tblength, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, 24, Short.MAX_VALUE)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel15, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -883,7 +888,7 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
                             .addComponent(tbregex, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tbvalue, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tbtag, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(tbxpath)
                         .addGap(18, 18, 18)))
@@ -995,6 +1000,9 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
         jLabel10.setText("LandMark");
         jLabel10.setName("lbllandmark"); // NOI18N
 
+        jLabel18.setText("EleDelimiter");
+        jLabel18.setName("lbleledelim"); // NOI18N
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -1028,15 +1036,19 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
                         .addGap(33, 33, 33)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel8)
-                            .addComponent(jLabel9))
+                            .addComponent(jLabel18))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(tbsegdelimiter)
-                            .addComponent(tbpriority, javax.swing.GroupLayout.DEFAULT_SIZE, 87, Short.MAX_VALUE))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(tbeledelimiter)
+                            .addComponent(tbsegdelimiter, javax.swing.GroupLayout.DEFAULT_SIZE, 87, Short.MAX_VALUE))
                         .addGap(27, 27, 27)
-                        .addComponent(jLabel10)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tblandmark, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tblandmark, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbpriority, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(71, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
@@ -1069,7 +1081,9 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
                     .addComponent(tbsubtype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
                     .addComponent(tbpriority, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9))
+                    .addComponent(jLabel9)
+                    .addComponent(tbeledelimiter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel18))
                 .addContainerGap(20, Short.MAX_VALUE))
         );
 
@@ -1288,6 +1302,7 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1303,6 +1318,7 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JTable tablerole;
     private javax.swing.JTextField tbcolumn;
     private javax.swing.JTextField tbdesc;
+    private javax.swing.JTextField tbeledelimiter;
     private javax.swing.JTextField tbkey;
     private javax.swing.JTextField tblandmark;
     private javax.swing.JTextField tblength;

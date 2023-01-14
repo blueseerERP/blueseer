@@ -3133,7 +3133,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                 if (! z[5].equals("landmark")) {
                   x++;
                 }
-                System.out.println("HERE: " + seg + "/" + z[0] + "/" + parent + "/" + z[1] + "/" + x);
+             ///   System.out.println("HERE: " + seg + "/" + z[0] + "/" + parent + "/" + z[1] + "/" + x);
                 if (element.toLowerCase().equals(z[5].toLowerCase())) {
                     r = x;
                     break;

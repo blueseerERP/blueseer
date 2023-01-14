@@ -494,7 +494,8 @@ CREATE TABLE "edi_doc" (
   "edd_desc" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
   "edd_type" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
   "edd_subtype" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
-  "edd_segdelim" int(1) NOT NULL DEFAULT '0',
+  "edd_segdelim" int(2) NOT NULL DEFAULT '0',
+  "edd_eledelim" int(2) NOT NULL DEFAULT '0',
   "edd_priority" varchar(3) NOT NULL COLLATE NOCASE DEFAULT '',
   "edd_landmark" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
   "edd_enabled" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0'
