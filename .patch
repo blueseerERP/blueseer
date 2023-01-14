@@ -16,7 +16,9 @@
 # bug fix for #90; length/delim label for EDI Document Recognition Maint table
 #patch=5
 # changed bsdoc type for x12 to include suffix after 3 char code...i.e. 850 to 850x12; updated code_mstr order status for lang packs
-patch=6
+#patch=6
 # hot fix for issue #91...unable to hot reload jar file during map editor run event
-patch=7
+#patch=7
 # update to mapper maint and addition of EDI mapper utilities methods kill and write
+patch=8
+# Add of field to edi_doc; recompile of db type EDI maps
