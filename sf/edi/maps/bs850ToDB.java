@@ -1,7 +1,5 @@
-
 import com.blueseer.ctr.cusData;
 import com.blueseer.utl.OVData;
-import com.blueseer.edi.EDI.*;
 import com.blueseer.inv.invData;
 import com.blueseer.utl.EDData;
 
