@@ -30,7 +30,7 @@ package com.blueseer.edi;
  * @author vaughnte
  */
 import static bsmf.MainFrame.tags;
-import static com.blueseer.adm.admData.runClient;
+import static com.blueseer.adm.admData.runFTPClient;
 import static com.blueseer.utl.BlueSeerUtils.isParsableToInt;
 import java.io.*;
 import java.nio.file.DirectoryStream;
@@ -327,7 +327,7 @@ public static void main(String args[]) throws IOException {
  
  public static void ftpClient(String key) {
      
-     runClient(key); 
+     runFTPClient(key); 
  }
  
  public static void filterFile(String infile, String outfile, String[] doctypes) {

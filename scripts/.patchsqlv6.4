@@ -1,1 +1,4 @@
 /* sql updates for  v6.4 */
+alter table edi_doc add column edd_eledelim int(2) NOT NULL DEFAULT '';
+alter table ftp_mstr add column ftp_enabled tinyint(1) NOT NULL DEFAULT '';
+alter table ftp_mstr add column ftp_sftp tinyint(1) NOT NULL DEFAULT '';

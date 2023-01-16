@@ -1740,7 +1740,7 @@ public class admData {
         
     }
     
-    public static void runClient(String c) {
+    public static void runFTPClient(String c) {
         ftp_mstr fm = admData.getFTPMstr(new String[]{c});
         
         if (fm.m[0].equals(BlueSeerUtils.ErrorBit)) {
