@@ -111,7 +111,7 @@ commitSegment("N4");
 
 
 // PO loop
-var loop = getLoopKeys("E2EDL41");
+var loop = getLoopKeys("E2EDL24:E2EDL41");
 j = 0;
 var po = "";
 for (var key : loop) {
