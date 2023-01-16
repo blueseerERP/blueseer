@@ -561,7 +561,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
                         
                     }
                     if (splitLine.length >= 1 && (splitLine[0].equals("dir") || splitLine[0].equals("ls"))) {
-                        String x = "";
+                        String x = ".";
                         if (splitLine.length == 2) {
                          x = splitLine[1];
                         }
@@ -569,6 +569,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
                         try{
                         talog.append("listing contents...\n");
                         java.util.List ftpFiles = csftp.ls(x); 
+                        talog.append("file count..." + ftpFiles.size() + "\n");
                         if (ftpFiles != null) {
                             for (Object f : ftpFiles) {
                                 LsEntry le = (LsEntry) f;
@@ -636,14 +637,20 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
                 talog.append("***   Unable to connect to FTP server. " + e.toString() + "   ***" + "\n");
             } finally {
                 try {
-                    if(session != null)
+                    if(session != null) {
                         session.disconnect();
+                        talog.append("disconnect session...\n");
+                    }
 
-                    if(channel != null)
+                    if(channel != null) {
                         channel.disconnect();
+                        talog.append("disconnect channel...\n");
+                    }
 
-                    if(csftp != null)
+                    if(csftp != null) {
                         csftp.quit();
+                        talog.append("quit...\n");
+                    }
             
                 } catch (Exception exc) {
                     talog.append("***   Unable to disconnect from sFTP server. " + exc.toString()+"   ***" + "\n");
