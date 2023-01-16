@@ -33,6 +33,7 @@ import static com.blueseer.adm.admData.deleteFTPMstr;
 import com.blueseer.adm.admData.ftp_mstr;
 import static com.blueseer.adm.admData.getFTPMstr;
 import static com.blueseer.adm.admData.updateFTPMstr;
+import static com.blueseer.edi.EDI.edilog;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
@@ -48,6 +49,12 @@ import com.blueseer.utl.DTData;
 import com.blueseer.utl.EDData;
 import com.blueseer.utl.IBlueSeerT;
 import com.blueseer.utl.OVData;
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.ChannelSftp.LsEntry;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.Session;
+import com.jcraft.jsch.SftpException;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -62,6 +69,7 @@ import java.io.InputStream;
 import java.net.SocketException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.util.Properties;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -502,27 +510,157 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
     // misc
     public String[] runClient(String[] c) {
         ftp_mstr fm = admData.getFTPMstr(new String[]{c[0]});
-        String[] m = new String[]{"",""};
+        String homeIn = EDData.getEDIInDir();
+        String homeOut = EDData.getEDIOutDir();
+        if (! fm.ftp_indir().isEmpty()) {
+         homeIn = fm.ftp_indir();
+        }
+        if (! fm.ftp_outdir().isEmpty()) {
+         homeOut = fm.ftp_outdir();
+        }
+        int timeout = 0;
+        if (! fm.ftp_timeout().isEmpty()) {
+           timeout = Integer.valueOf(fm.ftp_timeout());
+        }
+        timeout *= 1000;
+               
+               
+        // if sftp is set....run sftp logic then bail
+        if (fm.ftp_sftp().equals("1")) {
+        
+            JSch jsch = new JSch();
+            Session session = null;
+            Channel channel = null;
+            ChannelSftp csftp = null;  
+            FileOutputStream in = null;
+            
+             try {
+                session = jsch.getSession(fm.ftp_login(), fm.ftp_ip(), Integer.valueOf(tbport.getText()));
+                session.setPassword(fm.ftp_passwd());
+                Properties config = new Properties();
+                config.put("StrictHostKeyChecking", "no");
+                session.setConfig(config);
+                
+                talog.append("***   Attempting sftp connection to " + fm.ftp_ip() + "   ***" + "\n");
+                
+                session.connect();
+                channel = session.openChannel("sftp");
+                channel.connect();
+                csftp = (ChannelSftp) channel;
+                
+                
+                 for (String line : fm.ftp_commands().split("\\n"))   {
+                    String[] splitLine = line.trim().split("\\s+");
+                    if (splitLine.length > 1 && splitLine[0].equals("cd")) {
+                        try{
+                            talog.append("changing directory...\n");
+                        csftp.cd(splitLine[1]); 
+                        } catch(SftpException e){
+                            talog.append(e.toString() + "\n");
+                        }
+                        
+                    }
+                    if (splitLine.length >= 1 && (splitLine[0].equals("dir") || splitLine[0].equals("ls"))) {
+                        String x = "";
+                        if (splitLine.length == 2) {
+                         x = splitLine[1];
+                        }
+                        
+                        try{
+                        talog.append("listing contents...\n");
+                        java.util.List ftpFiles = csftp.ls(x); 
+                        if (ftpFiles != null) {
+                            for (Object f : ftpFiles) {
+                                LsEntry le = (LsEntry) f;
+                                talog.append(le.getLongname() + "\n");
+                            }
+		        }
+                        } catch(SftpException e){
+                            talog.append(e.toString() + "\n");
+                        }
+                    }
+                    if (splitLine.length > 1 && splitLine[0].equals("put")) {
+                        File localfolder = new File(homeOut);
+	                File[] localFiles = localfolder.listFiles();
+                        for (int i = 0; i < localFiles.length; i++) {
+                          if (localFiles[i].isFile()) {
+                              String x = ("\\Q" + splitLine[1] + "\\E").replace("*", "\\E.*\\Q");
+                                if (localFiles[i].getName().matches(x)) {
+                                    InputStream inputStream = new FileInputStream(localFiles[i]);
+                                    talog.append("storing file: " + localFiles[i].getName() + " size: " + localFiles[i].length() + "\n");
+                                    try {
+                                    csftp.put(inputStream, localFiles[i].getName());
+                                    talog.append("file stored: " + localFiles[i].getName() + "\n");
+                                    } catch(SftpException e){
+                                    talog.append("unable to store file: " + localFiles[i].getName() + "\n");
+                                    talog.append(e.toString() + "\n");
+                                    } finally {
+                                      if (inputStream != null) {
+                                          inputStream.close();
+                                      }  
+                                    }
+                                }
+                          } 
+                        }
+                    }
+                    if (splitLine.length > 1 && splitLine[0].equals("get")) {
+                        // first capture list of available files...
+                        java.util.List ftpFiles = csftp.ls("."); 
+                        if (ftpFiles != null) {
+                            for (Object f : ftpFiles) {
+                                LsEntry le = (LsEntry) f;
+                                String x = ("\\Q" + splitLine[1] + "\\E").replace("*", "\\E.*\\Q");
+                                if (le.getFilename().matches(x)) {
+                                Path inpath = FileSystems.getDefault().getPath(homeIn + "/" + le.getFilename());
+	              		in = new FileOutputStream(inpath.toFile());
+                                talog.append("retrieving file: " + le.getFilename() + " size:" + le.getAttrs() + "\n");
+                                csftp.get(le.getFilename(), in);
+                                in.close();
+                                talog.append("file retrieved: " + le.getFilename() + "\n");
+                                    if (BlueSeerUtils.ConvertStringToBool(String.valueOf(fm.ftp_delete()))) {
+                                        try {
+                                        csftp.rm(le.getFilename());
+                                        talog.append("deleted from server: " + le.getFilename() + "\n");
+                                        } catch(SftpException e){
+                                        talog.append("Could not delete the file: "+ le.getFilename() + "\n");
+                                        talog.append(e.toString() + "\n");
+                                        }
+                                    }
+                                }
+                            }
+		        }
+                    } // if get
+                } // for commands
+                
+             } catch (Exception e) {
+                talog.append("***   Unable to connect to FTP server. " + e.toString() + "   ***" + "\n");
+            } finally {
+                try {
+                    if(session != null)
+                        session.disconnect();
+
+                    if(channel != null)
+                        channel.disconnect();
+
+                    if(csftp != null)
+                        csftp.quit();
+            
+                } catch (Exception exc) {
+                    talog.append("***   Unable to disconnect from sFTP server. " + exc.toString()+"   ***" + "\n");
+                }  
+            }
+            
+            return new String[]{"0", "Connection complete"};
+        } 
+        
+        // run normal ftp client since sftp is not checked
          FTPClient client = new FTPClient();
          FileOutputStream in = null;
            try {
-               
-               String homeIn = EDData.getEDIInDir();
-               String homeOut = EDData.getEDIOutDir();
-               int timeout = 0;
-               if (! fm.ftp_timeout().isEmpty()) {
-                   timeout = Integer.valueOf(fm.ftp_timeout());
-               }
-               timeout *= 1000;
                client.setDefaultTimeout(timeout);
                client.setDataTimeout(timeout);
                
-                if (! fm.ftp_indir().isEmpty()) {
-                 homeIn = fm.ftp_indir();
-                }
-                if (! fm.ftp_outdir().isEmpty()) {
-                 homeOut = fm.ftp_outdir();
-                }
+                
              //  client.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out), true));
 		if (tbport.getText().isEmpty()) {
                     client.connect(fm.ftp_ip());
@@ -854,8 +992,15 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel11.setName("lblport"); // NOI18N
 
         cbenabled.setText("Enabled");
+        cbenabled.setName("cbenabled"); // NOI18N
 
         cbsftp.setText("sftp");
+        cbsftp.setName("cbsftp"); // NOI18N
+        cbsftp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbsftpActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -1081,6 +1226,16 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
         btdelete.setEnabled(false);
         executeTask(dbaction.run, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btrunActionPerformed
+
+    private void cbsftpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbsftpActionPerformed
+        if (cbsftp.isSelected()) {
+            tbport.setText("22");
+            tbport.setEnabled(false);
+        } else {
+            tbport.setText("");
+            tbport.setEnabled(true);
+        }
+    }//GEN-LAST:event_cbsftpActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

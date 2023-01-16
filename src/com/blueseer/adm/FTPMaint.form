@@ -453,12 +453,17 @@
             <Component class="javax.swing.JCheckBox" name="cbenabled">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Enabled"/>
+                <Property name="name" type="java.lang.String" value="cbenabled" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JCheckBox" name="cbsftp">
               <Properties>
                 <Property name="text" type="java.lang.String" value="sftp"/>
+                <Property name="name" type="java.lang.String" value="cbsftp" noResource="true"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbsftpActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
