@@ -417,8 +417,8 @@ public class admData {
         String sqlSelect = "SELECT * FROM  ftp_mstr where ftp_id = ?";
         String sqlInsert = "insert into ftp_mstr (ftp_id, ftp_desc, ftp_ip, ftp_login, " +
                           " ftp_passwd, ftp_commands, ftp_indir, ftp_outdir, ftp_delete, ftp_passive, " +
-                          " ftp_binary, ftp_timeout, ftp_port ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+                          " ftp_binary, ftp_timeout, ftp_port, ftp_enabled, ftp_sftp ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.ftp_id);
@@ -438,6 +438,8 @@ public class admData {
             psi.setString(11, x.ftp_binary);
             psi.setString(12, x.ftp_timeout);
             psi.setString(13, x.ftp_port);
+            psi.setString(14, x.ftp_enabled);
+            psi.setString(15, x.ftp_sftp);
             int rows = psi.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
             } else {
@@ -459,11 +461,12 @@ public class admData {
         String sql = "update ftp_mstr set ftp_desc = ?, ftp_ip = ?, ftp_login = ?, " +
                           " ftp_passwd = ?, ftp_commands = ?, ftp_indir = ?, ftp_outdir = ?, " +
                           " ftp_delete = ?, ftp_passive = ?, " +
-                          " ftp_binary = ?, ftp_timeout = ?, ftp_port = ?  " +               
+                          " ftp_binary = ?, ftp_timeout = ?, ftp_port = ?,  " +
+                          " ftp_enabled = ?, ftp_sftp = ? " +
                           " where ftp_id = ? ; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
-        ps.setString(13, x.ftp_id);
+        ps.setString(15, x.ftp_id);
             ps.setString(1, x.ftp_desc);
             ps.setString(2, x.ftp_ip);
             ps.setString(3, x.ftp_login);
@@ -476,6 +479,8 @@ public class admData {
             ps.setString(10, x.ftp_binary);
             ps.setString(11, x.ftp_timeout);
             ps.setString(12, x.ftp_port);
+            ps.setString(13, x.ftp_enabled);
+            ps.setString(14, x.ftp_sftp);
         int rows = ps.executeUpdate();
         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
         } catch (SQLException s) {
@@ -526,7 +531,9 @@ public class admData {
                             res.getString("ftp_delete"),
                             res.getString("ftp_passive"),
                             res.getString("ftp_binary"),
-                            res.getString("ftp_timeout")
+                            res.getString("ftp_timeout"),
+                            res.getString("ftp_enabled"),
+                            res.getString("ftp_sftp")
                         );
                     }
                 }
@@ -2184,10 +2191,10 @@ public class admData {
     public record ftp_mstr(String[] m, String ftp_id, String ftp_desc, String ftp_ip, String ftp_port, 
         String ftp_login, String ftp_passwd, String ftp_commands, String ftp_indir, 
         String ftp_outdir, String ftp_delete, String ftp_passive, String ftp_binary, 
-        String ftp_timeout) {
+        String ftp_timeout, String ftp_enabled, String ftp_sftp) {
         public ftp_mstr(String[] m) {
             this(m, "", "", "", "", "", "", "", "", "", "",
-                    "", "", "");
+                    "", "", "", "", "");
         }
         
     }
