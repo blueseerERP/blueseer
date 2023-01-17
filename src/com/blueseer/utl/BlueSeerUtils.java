@@ -1727,10 +1727,10 @@ public class BlueSeerUtils {
                
         Path edilogpath = FileSystems.getDefault().getPath(logpath);
         try {
-            output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(edilogpath.toFile())));
+            output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(edilogpath.toFile(), true)));
             output.write("TIMESTAMP: " + now + "" + "\n");
             for (String s : list) {
-                output.write(s);
+                output.write(s + "\n");
             }
             list.clear();
         } catch (FileNotFoundException ex) {
@@ -1766,9 +1766,9 @@ public class BlueSeerUtils {
                
         Path edilogpath = FileSystems.getDefault().getPath(logpath);
         try {
-            output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(edilogpath.toFile())));
+            output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(edilogpath.toFile(), true)));
             output.write("TIMESTAMP: " + now + "" + "\n");
-            output.write(s);
+            output.write(s + "\n");
             
         } catch (FileNotFoundException ex) {
             bslog(ex);
