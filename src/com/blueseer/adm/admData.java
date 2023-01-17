@@ -1781,7 +1781,11 @@ public class admData {
             ChannelSftp csftp = null;  
             FileOutputStream in = null;
             
+           // String privateKeyPath = ""; // to be used
+           // String knownHostsPath = ""; // to be used
              try {
+           //     jsch.addIdentity(privateKeyPath); // unimplemented
+           //     jsch.setKnownHosts(knownHostsPath); // unimplemented
                 session = jsch.getSession(fm.ftp_login(), fm.ftp_ip(), Integer.valueOf(fm.ftp_port()));
                 session.setPassword(fm.ftp_passwd());
                 Properties config = new Properties();
