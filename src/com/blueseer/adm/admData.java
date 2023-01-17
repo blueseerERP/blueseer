@@ -2003,6 +2003,7 @@ public class admData {
                 int replyCode = client.getReplyCode();
                 if (! FTPReply.isPositiveCompletion(replyCode)) {
                     logdata.add("connection failed..." + String.valueOf(replyCode));
+                    log("ftp", logdata);  
                 return;
                 }
                 
@@ -2104,8 +2105,10 @@ public class admData {
 		
 	} catch (SocketException e) {
 		logdata.add("socket error: " + e.getMessage());
+                log("ftp", logdata);  
 	} catch (IOException e) {
 		logdata.add("io error: " + e.getMessage());
+                log("ftp", logdata);  
 		
         } finally {
             if (in != null) {
@@ -2122,6 +2125,7 @@ public class admData {
                   ex.printStackTrace();
               }
           }
+          log("ftp", logdata);  
        }
    
     }
