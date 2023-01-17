@@ -29,8 +29,12 @@ import bsmf.MainFrame;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.tags;
 import static com.blueseer.adm.admData.addFTPMstr;
+import static com.blueseer.adm.admData.addUpdateFTPAttr;
+import static com.blueseer.adm.admData.deleteFTPAttrMstr;
 import static com.blueseer.adm.admData.deleteFTPMstr;
+import com.blueseer.adm.admData.ftp_attr;
 import com.blueseer.adm.admData.ftp_mstr;
+import static com.blueseer.adm.admData.getFTPAttr;
 import static com.blueseer.adm.admData.getFTPMstr;
 import static com.blueseer.adm.admData.updateFTPMstr;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
@@ -68,6 +72,7 @@ import java.io.InputStream;
 import java.net.SocketException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Properties;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -95,8 +100,13 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
     // global variable declarations
                 boolean isLoad = false;
                 public static ftp_mstr x = null;
+                public static ArrayList<ftp_attr> ftpa = null;
     
-    // global datatablemodel declarations       
+    // global datatablemodel declarations   
+            javax.swing.table.DefaultTableModel modelattributes = new javax.swing.table.DefaultTableModel(new Object[][]{},
+            new String[]{
+                "Key", "Value"
+            });
     
     public FTPMaint() {
         initComponents();
@@ -291,11 +301,24 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public void setComponentDefaultValues() {
        isLoad = true;
+       
+       jTabbedPane1.removeAll();
+       jTabbedPane1.add("Main", mainpanel);
+       jTabbedPane1.add("Attributes", attributepanel);
+       
+       modelattributes.setRowCount(0);
+       tableattribute.setModel(modelattributes);
+       tableattribute.getTableHeader().setReorderingAllowed(false);
+       
        tbkey.setText("");
        tbport.setText("");
        lblstatus.setText("");
        lblstatus.setForeground(Color.blue);
         tbdesc.setText("");
+        
+        tbattrkey.setText("");
+        tbattrvalue.setText("");
+        
          cbdelete.setSelected(false);
          cbpassive.setSelected(false);
          cbenabled.setSelected(false);
@@ -401,19 +424,31 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public String[] addRecord(String[] x) {
      String[] m = addFTPMstr(createRecord());
+     ArrayList<String[]> al = new ArrayList<String[]>();
+     for (int j = 0; j < tableattribute.getRowCount(); j++) {
+        al.add(new String[]{x[0], tableattribute.getValueAt(j, 0).toString(), tableattribute.getValueAt(j, 1).toString()});
+     }
+     addUpdateFTPAttr(x[0],al);
          return m;
      }
      
     public String[] updateRecord(String[] x) {
      String[] m = updateFTPMstr(createRecord());
-         return m;
+         ArrayList<String[]> al = new ArrayList<String[]>();
+         for (int j = 0; j < tableattribute.getRowCount(); j++) {
+            al.add(new String[]{x[0], tableattribute.getValueAt(j, 0).toString(), tableattribute.getValueAt(j, 1).toString()});
+         }
+         addUpdateFTPAttr(x[0],al);
+       return m;
      }
      
     public String[] deleteRecord(String[] x) {
      String[] m = new String[2];
         boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
+         deleteFTPAttrMstr(x[0]);
          m = deleteFTPMstr(createRecord()); 
+         
          initvars(null);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
@@ -423,6 +458,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
       
     public String[] getRecord(String[] key) {
        x = getFTPMstr(key);
+       ftpa = getFTPAttr(key);
        return x.m();
     }
     
@@ -504,6 +540,11 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbtimeout.setText(x.ftp_timeout());
         cbenabled.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.ftp_enabled())));
         cbsftp.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.ftp_sftp())));
+        
+        for (ftp_attr fa : ftpa) {
+            modelattributes.addRow(new Object[]{fa.ftpa_key(), fa.ftpa_value()});   
+        }
+        
         setAction(x.m());
     }
     // misc
@@ -848,10 +889,9 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
         btnew = new javax.swing.JButton();
         tbclear = new javax.swing.JButton();
         btlookup = new javax.swing.JButton();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        talog = new javax.swing.JTextArea();
-        btrun = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
+        bodypanel = new javax.swing.JPanel();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        mainpanel = new javax.swing.JPanel();
         tbindir = new javax.swing.JTextField();
         tbtimeout = new javax.swing.JTextField();
         tbip = new javax.swing.JTextField();
@@ -881,15 +921,28 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
         cbsftp = new javax.swing.JCheckBox();
         jLabel12 = new javax.swing.JLabel();
         lblstatus = new javax.swing.JLabel();
+        btrun = new javax.swing.JButton();
+        attributepanel = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tableattribute = new javax.swing.JTable();
+        btdeleteattr = new javax.swing.JButton();
+        btaddattr = new javax.swing.JButton();
+        tbattrkey = new javax.swing.JTextField();
+        tbattrvalue = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        textpanel = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        talog = new javax.swing.JTextArea();
 
         jLabel8.setText("jLabel8");
 
         setBackground(new java.awt.Color(0, 102, 204));
-        setPreferredSize(new java.awt.Dimension(884, 550));
+        setPreferredSize(new java.awt.Dimension(884, 630));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("FTP Maintenance"));
         jPanel1.setName("panelmain"); // NOI18N
-        jPanel1.setPreferredSize(new java.awt.Dimension(874, 560));
+        jPanel1.setPreferredSize(new java.awt.Dimension(984, 620));
 
         tbkey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -923,17 +976,11 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
-        talog.setColumns(20);
-        talog.setRows(5);
-        jScrollPane1.setViewportView(talog);
+        bodypanel.setLayout(new javax.swing.BoxLayout(bodypanel, javax.swing.BoxLayout.LINE_AXIS));
 
-        btrun.setText("Run");
-        btrun.setName("btrun"); // NOI18N
-        btrun.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btrunActionPerformed(evt);
-            }
-        });
+        jTabbedPane1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        mainpanel.setPreferredSize(new java.awt.Dimension(341, 466));
 
         jLabel4.setText("Login");
         jLabel4.setName("lbluser"); // NOI18N
@@ -1008,15 +1055,25 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
+        jLabel12.setText("Status:");
+
+        btrun.setText("Run");
+        btrun.setName("btrun"); // NOI18N
+        btrun.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btrunActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout mainpanelLayout = new javax.swing.GroupLayout(mainpanel);
+        mainpanel.setLayout(mainpanelLayout);
+        mainpanelLayout.setHorizontalGroup(
+            mainpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mainpanelLayout.createSequentialGroup()
+                .addGroup(mainpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(mainpanelLayout.createSequentialGroup()
                         .addGap(23, 23, 23)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(mainpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel2)
                             .addComponent(jLabel3)
                             .addComponent(jLabel4)
@@ -1026,12 +1083,12 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addComponent(jLabel7)
                             .addComponent(jLabel11))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(mainpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(mainpanelLayout.createSequentialGroup()
                                 .addComponent(cbenabled)
                                 .addGap(29, 29, 29)
                                 .addComponent(cbsftp))
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(mainpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(tbdesc, javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(tbip, javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(tblogin, javax.swing.GroupLayout.Alignment.LEADING)
@@ -1040,121 +1097,228 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
                                 .addComponent(tboutdir, javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(tbport, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
+                    .addGroup(mainpanelLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(jLabel9)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(cbdelete)
-                                    .addComponent(tbtimeout, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(cbpassive)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(cbbinary))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                .addComponent(btdelete)
+                        .addGroup(mainpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(mainpanelLayout.createSequentialGroup()
+                                .addComponent(jLabel12)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btupdate)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btadd)
-                                .addGap(36, 36, 36)))))
+                                .addComponent(lblstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(mainpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(mainpanelLayout.createSequentialGroup()
+                                    .addGroup(mainpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(cbdelete)
+                                        .addComponent(tbtimeout, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(cbpassive)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(cbbinary))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainpanelLayout.createSequentialGroup()
+                                    .addComponent(btdelete)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btupdate)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btadd)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btrun))))))
                 .addContainerGap())
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+        mainpanelLayout.setVerticalGroup(
+            mainpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mainpanelLayout.createSequentialGroup()
+                .addGroup(mainpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbenabled)
                     .addComponent(cbsftp))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(mainpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(mainpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(tbip, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(mainpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel11))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(mainpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(tblogin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(10, 10, 10)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(mainpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbpasswd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(mainpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbindir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(mainpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tboutdir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(mainpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel10)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(mainpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbdelete)
                     .addComponent(cbpassive)
                     .addComponent(cbbinary))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(mainpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbtimeout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9))
                 .addGap(19, 19, 19)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(mainpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btadd)
                     .addComponent(btupdate)
-                    .addComponent(btdelete))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btdelete)
+                    .addComponent(btrun))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(mainpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel12)
+                    .addComponent(lblstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(96, Short.MAX_VALUE))
         );
 
-        jLabel12.setText("Status:");
+        jTabbedPane1.addTab("tab1", mainpanel);
+
+        attributepanel.setPreferredSize(new java.awt.Dimension(341, 466));
+
+        tableattribute.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        tableattribute.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableattributeMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(tableattribute);
+
+        btdeleteattr.setText("Delete");
+        btdeleteattr.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btdeleteattrActionPerformed(evt);
+            }
+        });
+
+        btaddattr.setText("Add");
+        btaddattr.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btaddattrActionPerformed(evt);
+            }
+        });
+
+        jLabel13.setText("Key");
+        jLabel13.setName("lblattrkey"); // NOI18N
+
+        jLabel14.setText("Value");
+        jLabel14.setName("lblattrvalue"); // NOI18N
+
+        javax.swing.GroupLayout attributepanelLayout = new javax.swing.GroupLayout(attributepanel);
+        attributepanel.setLayout(attributepanelLayout);
+        attributepanelLayout.setHorizontalGroup(
+            attributepanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(attributepanelLayout.createSequentialGroup()
+                .addContainerGap(13, Short.MAX_VALUE)
+                .addGroup(attributepanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, attributepanelLayout.createSequentialGroup()
+                        .addComponent(btaddattr)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btdeleteattr))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 404, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+            .addGroup(attributepanelLayout.createSequentialGroup()
+                .addGap(38, 38, 38)
+                .addGroup(attributepanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel13)
+                    .addComponent(jLabel14))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(attributepanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(tbattrkey, javax.swing.GroupLayout.DEFAULT_SIZE, 219, Short.MAX_VALUE)
+                    .addComponent(tbattrvalue))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        attributepanelLayout.setVerticalGroup(
+            attributepanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(attributepanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(attributepanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbattrkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel13))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(attributepanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbattrvalue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel14))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(attributepanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btdeleteattr)
+                    .addComponent(btaddattr))
+                .addGap(0, 300, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab("tab2", attributepanel);
+
+        bodypanel.add(jTabbedPane1);
+
+        talog.setColumns(20);
+        talog.setRows(5);
+        jScrollPane1.setViewportView(talog);
+
+        javax.swing.GroupLayout textpanelLayout = new javax.swing.GroupLayout(textpanel);
+        textpanel.setLayout(textpanelLayout);
+        textpanelLayout.setHorizontalGroup(
+            textpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(textpanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 506, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        textpanelLayout.setVerticalGroup(
+            textpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 556, Short.MAX_VALUE)
+        );
+
+        bodypanel.add(textpanel);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(69, 69, 69)
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(13, 13, 13)
-                        .addComponent(btnew)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tbclear))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel12)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(lblstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(btrun))))
-                .addGap(40, 40, 40))
+                .addGap(69, 69, 69)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(13, 13, 13)
+                .addComponent(btnew)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tbclear)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(bodypanel, javax.swing.GroupLayout.DEFAULT_SIZE, 962, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(13, 13, 13)
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnew)
@@ -1165,17 +1329,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel1))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel12))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btrun))
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(0, 66, Short.MAX_VALUE))
+                .addComponent(bodypanel, javax.swing.GroupLayout.DEFAULT_SIZE, 556, Short.MAX_VALUE))
         );
 
         add(jPanel1);
@@ -1243,10 +1397,40 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
     }//GEN-LAST:event_cbsftpActionPerformed
 
+    private void btaddattrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddattrActionPerformed
+        if (! tbattrkey.getText().isEmpty()) {
+          modelattributes.addRow(new Object[]{ tbattrkey.getText(), tbattrvalue.getText() });
+        }
+        tbattrkey.setText("");
+        tbattrvalue.setText("");
+    }//GEN-LAST:event_btaddattrActionPerformed
+
+    private void btdeleteattrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteattrActionPerformed
+        int[] rows = tableattribute.getSelectedRows();
+        for (int i : rows) {
+            bsmf.MainFrame.show(getMessageTag(1031,String.valueOf(i)));
+            ((javax.swing.table.DefaultTableModel) tableattribute.getModel()).removeRow(i);
+        }
+        tbattrkey.setText("");
+        tbattrvalue.setText("");
+    }//GEN-LAST:event_btdeleteattrActionPerformed
+
+    private void tableattributeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableattributeMouseClicked
+        int row = tableattribute.rowAtPoint(evt.getPoint());
+        int col = tableattribute.columnAtPoint(evt.getPoint());
+        // element, percent, type, enabled
+        tbattrkey.setText(tableattribute.getValueAt(row, 0).toString());
+        tbattrvalue.setText(tableattribute.getValueAt(row, 1).toString());
+    }//GEN-LAST:event_tableattributeMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel attributepanel;
+    private javax.swing.JPanel bodypanel;
     private javax.swing.JButton btadd;
+    private javax.swing.JButton btaddattr;
     private javax.swing.JButton btdelete;
+    private javax.swing.JButton btdeleteattr;
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btrun;
@@ -1260,6 +1444,8 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1269,12 +1455,17 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel lblstatus;
+    private javax.swing.JPanel mainpanel;
+    private javax.swing.JTable tableattribute;
     private javax.swing.JTextArea tacommands;
     private javax.swing.JTextArea talog;
+    private javax.swing.JTextField tbattrkey;
+    private javax.swing.JTextField tbattrvalue;
     private javax.swing.JButton tbclear;
     private javax.swing.JTextField tbdesc;
     private javax.swing.JTextField tbindir;
@@ -1285,5 +1476,6 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JPasswordField tbpasswd;
     private javax.swing.JTextField tbport;
     private javax.swing.JTextField tbtimeout;
+    private javax.swing.JPanel textpanel;
     // End of variables declaration//GEN-END:variables
 }

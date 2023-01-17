@@ -1661,8 +1661,105 @@ public class admData {
         return rows;
     }
 
+    public static String[] addUpdateFTPAttr(String x, ArrayList<String[]> y) {
+        String[] m = new String[2];
+        String sqlDelete = "delete from ftp_attr where ftpa_id = ?";
+        String sqlInsert = "insert into ftp_attr (ftpa_id, ftpa_key, ftpa_value)  " +
+                " values (?,?,?); "; 
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
+             PreparedStatement ps = con.prepareStatement(sqlDelete);) {
+             ps.setString(1, x);
+             ps.executeUpdate();
+             PreparedStatement psi = con.prepareStatement(sqlInsert); 
+             for (String[] s : y) {
+                 psi.setString(1, x);
+                 psi.setString(2, s[1]);
+                 psi.setString(3, s[2]);
+                 psi.executeUpdate();
+             }
+             psi.close();
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static String[] deleteFTPAttrMstr(String x) { 
+       String[] m = new String[2];
+        String sql = "delete from ftp_attr where ftpa_id = ?; ";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
     
     // misc
+    public static ArrayList<ftp_attr> getFTPAttr(String[] x) {
+        ftp_attr r = null;
+        ArrayList<ftp_attr> list = new ArrayList<ftp_attr>();
+        String[] m = new String[2];
+        String sql = "select * from ftp_attr where ftpa_id = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+            ps.setString(1, x[0]); 
+            try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new ftp_attr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new ftp_attr(m, res.getString("ftpa_id"), 
+                            res.getString("ftpa_key"),
+                            res.getString("ftpa_value")
+                        );
+                        list.add(r);
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new ftp_attr(m);
+        }
+        return list;
+    }
+    
+    public static HashMap<String, String> getFTPAttrHash(String[] x) {
+        ftp_attr r = null;
+        HashMap<String, String> map = new HashMap<String, String>();
+        String[] m = new String[2];
+        String sql = "select * from ftp_attr where ftpa_id = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+            ps.setString(1, x[0]); 
+            try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new ftp_attr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        map.put(res.getString("ftpa_key"), res.getString("ftpa_value"));
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new ftp_attr(m);
+        }
+        return map;
+    }
+    
     
     public static boolean isValidPKSStore(String pksid) {
              
@@ -1823,6 +1920,8 @@ public class admData {
     
     public static void runFTPClient(String c) {
         ftp_mstr fm = admData.getFTPMstr(new String[]{c});
+        HashMap<String, String> ftpa = getFTPAttrHash(new String[]{c});
+        
         String homeIn = EDData.getEDIInDir();
                String homeOut = EDData.getEDIOutDir();
                int timeout = 0;
@@ -1846,16 +1945,49 @@ public class admData {
             Channel channel = null;
             ChannelSftp csftp = null;  
             FileOutputStream in = null;
+            Properties config = new Properties();
+            
+            boolean usePrivateKey = false;
+            if (ftpa.containsKey("usePrivateKey")) {
+                   if (ftpa.get("usePrivateKey").equals("yes")) {
+                       usePrivateKey = true;
+                   }
+            }
+            
+            String privateKeyPath = "";
+            if (ftpa.containsKey("privateKeyPath")) {
+                privateKeyPath = ftpa.get("usePrivateKey");
+            }
+            
+            String knownHostsPath = "";
+            if (ftpa.containsKey("knownHostsPath")) {
+                knownHostsPath = ftpa.get("knownHostsPath");
+            }
+            
+            if (ftpa.containsKey("StrictHostKeyChecking")) {
+                   config.put("StrictHostKeyChecking", ftpa.get("StrictHostKeyChecking"));
+            } else {
+                   config.put("StrictHostKeyChecking", "no"); 
+            }
             
            // String privateKeyPath = ""; // to be used
            // String knownHostsPath = ""; // to be used
              try {
-           //     jsch.addIdentity(privateKeyPath); // unimplemented
-           //     jsch.setKnownHosts(knownHostsPath); // unimplemented
+                 
+                 if (usePrivateKey && ! privateKeyPath.isEmpty()) {
+                    jsch.addIdentity(privateKeyPath); 
+                 }
+                 
+                 if (! knownHostsPath.isEmpty()) {
+                    jsch.setKnownHosts(knownHostsPath);
+                 }
+        
                 session = jsch.getSession(fm.ftp_login(), fm.ftp_ip(), Integer.valueOf(fm.ftp_port()));
                 session.setPassword(fm.ftp_passwd());
-                Properties config = new Properties();
-                config.put("StrictHostKeyChecking", "no");
+                
+                
+                
+                
                 session.setConfig(config);
                 
                 logdata.add("***   Attempting sftp connection to " + fm.ftp_ip() + "   ***" + "\n");
