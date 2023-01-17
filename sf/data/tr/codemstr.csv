@@ -1,3 +1,6 @@
+logpath,ftp,logs/ftp.log,1
+logpath,as2,logs/as2.log,1
+logpath,cron,logs/cron.log,1
 PCC,PCC,DEFAULT SEVERITY CODE,1
 Discounts,Freight,Freight,1
 Discounts,Volume,Volume,1

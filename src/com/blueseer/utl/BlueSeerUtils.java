@@ -31,6 +31,7 @@ import static bsmf.MainFrame.tags;
 import com.blueseer.adm.admData;
 import com.blueseer.adm.admData.change_log;
 import static com.blueseer.edi.EDI.edilog;
+import static com.blueseer.utl.OVData.getCodeValueByCodeKey;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -43,9 +44,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.net.URL;
@@ -1704,6 +1709,82 @@ public class BlueSeerUtils {
         return c;
     }
   
+     public static void log(String logtype, ArrayList<String> list) {
+                 
+        if (list == null || list.size() <= 0) {
+            return;
+        }
+         
+        BufferedWriter output = null;
+        String logpath = getCodeValueByCodeKey("logpath", logtype);
+        
+        if (logpath.isBlank()) {
+        logpath = "logs/generic.log";
+        }
+        
+        String  now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        
+               
+        Path edilogpath = FileSystems.getDefault().getPath(logpath);
+        try {
+            output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(edilogpath.toFile())));
+            output.write("TIMESTAMP: " + now + "" + "\n");
+            for (String s : list) {
+                output.write(s);
+            }
+            list.clear();
+        } catch (FileNotFoundException ex) {
+            bslog(ex);
+        } catch (IOException ex) {
+            bslog(ex);
+        } finally {
+            try { 
+                output.close();
+            } catch (IOException ex) {
+                bslog(ex);
+            }
+        }
+         
+              
+    }
+    
+     public static void log(String logtype, String s) {
+                 
+        if (s == null || s.isBlank()) {
+            return;
+        }
+         
+        BufferedWriter output = null;
+        String logpath = getCodeValueByCodeKey("logpath", logtype);
+        
+        if (logpath.isBlank()) {
+        logpath = "logs/generic.log";
+        }
+        
+        String  now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        
+               
+        Path edilogpath = FileSystems.getDefault().getPath(logpath);
+        try {
+            output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(edilogpath.toFile())));
+            output.write("TIMESTAMP: " + now + "" + "\n");
+            output.write(s);
+            
+        } catch (FileNotFoundException ex) {
+            bslog(ex);
+        } catch (IOException ex) {
+            bslog(ex);
+        } finally {
+            try { 
+                output.close();
+            } catch (IOException ex) {
+                bslog(ex);
+            }
+        }
+         
+              
+    }
+    
      
 }
 

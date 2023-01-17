@@ -33,7 +33,6 @@ import static com.blueseer.adm.admData.deleteFTPMstr;
 import com.blueseer.adm.admData.ftp_mstr;
 import static com.blueseer.adm.admData.getFTPMstr;
 import static com.blueseer.adm.admData.updateFTPMstr;
-import static com.blueseer.edi.EDI.edilog;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
