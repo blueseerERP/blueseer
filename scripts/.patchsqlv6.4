@@ -2,3 +2,9 @@
 alter table edi_doc add column edd_eledelim int(2) NOT NULL DEFAULT '';
 alter table ftp_mstr add column ftp_enabled tinyint(1) NOT NULL DEFAULT '';
 alter table ftp_mstr add column ftp_sftp tinyint(1) NOT NULL DEFAULT '';
+CREATE TABLE IF NOT EXISTS `ftp_attr` (
+  `ftpa_id` varchar(200) NOT NULL  DEFAULT '',
+  `ftpa_key` varchar(100) NOT NULL  DEFAULT '',
+  `ftpa_value` varchar(100) NOT NULL  DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
