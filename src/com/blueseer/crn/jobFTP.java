@@ -67,9 +67,12 @@ public class jobFTP implements Job {
         // The ftpID must be passed to this job in order to schedule push FTP comm of this id.
         // must be passed in 'param' key with 'value' = ftpid of ftp_mstr table
               
+            
                 
 		JobDataMap dataMap = context.getJobDetail().getJobDataMap();
 		String ftpid = dataMap.getString("param");
+                
+                System.out.println("jobFTP: calling param: " + ftpid);
                 
                 if (! ftpid.isBlank() && isValidFTPid(ftpid)) {
                     if (isFTPidEnabled(ftpid)) {
@@ -83,7 +86,7 @@ public class jobFTP implements Job {
                     }
                     
                 } else {
-                    System.out.println("Invalid or blank AS2 ID: " + ftpid + " length: " + ftpid.length());
+                    System.out.println("Invalid or blank FTP ID: " + ftpid + " length: " + ftpid.length());
                 }
                 
 			

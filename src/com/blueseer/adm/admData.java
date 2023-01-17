@@ -1595,6 +1595,72 @@ public class admData {
         return list;
     }
     
+    public static String[] addFTPAttr(ArrayList<ftp_attr> ftpa) {
+        String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            if (ds != null) {
+              bscon = ds.getConnection();
+            } else {
+              bscon = DriverManager.getConnection(url + db, user, pass);  
+            }
+            bscon.setAutoCommit(false); 
+            if (ftpa != null) {
+                for (ftp_attr z : ftpa) {
+                    _addFTPAttr(z, bscon, ps, res); 
+                }
+            }
+            bscon.commit();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    public static int _addFTPAttr(ftp_attr x, Connection con, PreparedStatement psi, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlInsert = "insert into ftp_attr (ftpa_id, ftpa_key, ftpa_value ) " 
+                        + " values (?,?,?); ";
+            psi = con.prepareStatement(sqlInsert); 
+            psi.setString(1, x.ftpa_id);
+            psi.setString(2, x.ftpa_key);
+            psi.setString(3, x.ftpa_value);
+            rows = psi.executeUpdate();
+        return rows;
+    }
+
     
     // misc
     
@@ -2354,6 +2420,13 @@ public class admData {
         }
         
     }
+    
+    public record ftp_attr(String[] m, String ftpa_id, String ftpa_key, String ftpa_value) {
+        public ftp_attr(String[] m) {
+            this(m, "", "", "");
+        }
+    }
+
     
     public record code_mstr(String[] m, String code_code, String code_key, String code_value,
         String code_internal ) {
