@@ -72,7 +72,7 @@ public class jobFTP implements Job {
 		JobDataMap dataMap = context.getJobDetail().getJobDataMap();
 		String ftpid = dataMap.getString("param");
                 
-                System.out.println("jobFTP: calling param: " + ftpid);
+                System.out.println("jobFTP firing system method: " + ftpid + " run time: " + now);
                 
                 if (! ftpid.isBlank() && isValidFTPid(ftpid)) {
                     if (isFTPidEnabled(ftpid)) {

@@ -71,7 +71,7 @@ public class jobAS2 implements Job {
                 
 		JobDataMap dataMap = context.getJobDetail().getJobDataMap();
 		String as2id = dataMap.getString("param");
-                
+                System.out.println("jobAS2 firing system method: " + as2id + " run time: " + now);
                 if (! as2id.isBlank() && isValidAS2id(as2id)) {
                     try {   
                         apiUtils.postAS2(as2id, false);
