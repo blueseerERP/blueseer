@@ -35,6 +35,7 @@ import static com.blueseer.adm.admData.deleteFTPMstr;
 import com.blueseer.adm.admData.ftp_attr;
 import com.blueseer.adm.admData.ftp_mstr;
 import static com.blueseer.adm.admData.getFTPAttr;
+import static com.blueseer.adm.admData.getFTPAttrHash;
 import static com.blueseer.adm.admData.getFTPMstr;
 import static com.blueseer.adm.admData.updateFTPMstr;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
@@ -73,6 +74,7 @@ import java.net.SocketException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Properties;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -550,6 +552,8 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
     // misc
     public String[] runClient(String[] c) {
         ftp_mstr fm = admData.getFTPMstr(new String[]{c[0]});
+        HashMap<String, String> ftpa = getFTPAttrHash(new String[]{c[0]});
+        
         String homeIn = EDData.getEDIInDir();
         String homeOut = EDData.getEDIOutDir();
         if (! fm.ftp_indir().isEmpty()) {
@@ -574,11 +578,51 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
             ChannelSftp csftp = null;  
             FileOutputStream in = null;
             
+            Properties config = new Properties();
+            
+            boolean usePrivateKey = false;
+            if (ftpa.containsKey("usePrivateKey")) {
+                   if (ftpa.get("usePrivateKey").equals("yes")) {
+                       usePrivateKey = true;
+                   }
+            }
+            
+            String privateKeyPath = "";
+            if (ftpa.containsKey("privateKeyPath")) {
+                privateKeyPath = ftpa.get("usePrivateKey");
+            }
+            
+            String knownHostsPath = "";
+            if (ftpa.containsKey("knownHostsPath")) {
+                knownHostsPath = ftpa.get("knownHostsPath");
+            }
+            
+            if (ftpa.containsKey("StrictHostKeyChecking")) {
+                   config.put("StrictHostKeyChecking", ftpa.get("StrictHostKeyChecking"));
+            } else {
+                   config.put("StrictHostKeyChecking", "no"); 
+            }
+            
+            if (ftpa.containsKey("PreferredAuthentications")) {
+                   config.put("PreferredAuthentications", ftpa.get("PreferredAuthentications"));
+            } else {
+                   config.put("PreferredAuthentications", "publickey,password"); 
+            }
+            
+            
              try {
+                 
+                 if (usePrivateKey && ! privateKeyPath.isEmpty()) {
+                    jsch.addIdentity(privateKeyPath); 
+                 }
+                 
+                 if (! knownHostsPath.isEmpty()) {
+                    jsch.setKnownHosts(knownHostsPath);
+                 } 
+                 
                 session = jsch.getSession(fm.ftp_login(), fm.ftp_ip(), Integer.valueOf(tbport.getText()));
                 session.setPassword(fm.ftp_passwd());
-                Properties config = new Properties();
-                config.put("StrictHostKeyChecking", "no");
+                
                 session.setConfig(config);
                 
                 talog.append("***   Attempting sftp connection to " + fm.ftp_ip() + "   ***" + "\n");

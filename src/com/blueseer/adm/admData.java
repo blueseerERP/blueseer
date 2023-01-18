@@ -1970,8 +1970,12 @@ public class admData {
                    config.put("StrictHostKeyChecking", "no"); 
             }
             
-           // String privateKeyPath = ""; // to be used
-           // String knownHostsPath = ""; // to be used
+            if (ftpa.containsKey("PreferredAuthentications")) {
+                   config.put("PreferredAuthentications", ftpa.get("PreferredAuthentications"));
+            } else {
+                   config.put("PreferredAuthentications", "publickey,password"); 
+            }
+            
              try {
                  
                  if (usePrivateKey && ! privateKeyPath.isEmpty()) {
