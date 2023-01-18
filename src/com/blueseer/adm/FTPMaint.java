@@ -465,13 +465,14 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public ftp_mstr createRecord() { 
+        String passwd = bsmf.MainFrame.PassWord("0", tbpasswd.getPassword());
         ftp_mstr x = new ftp_mstr(null, 
                 tbkey.getText().toString(),
                 tbdesc.getText().toUpperCase(),
                 tbip.getText(),
                 tbport.getText(),
                 tblogin.getText(),
-                String.valueOf(tbpasswd.getPassword()),
+                passwd,
                 tacommands.getText().replace("'", ""),      
                 tbindir.getText(),
                 tboutdir.getText(),
@@ -532,7 +533,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbip.setText(x.ftp_ip());
         tbport.setText(x.ftp_port());
         tblogin.setText(x.ftp_login());
-        tbpasswd.setText(x.ftp_passwd());
+        tbpasswd.setText(bsmf.MainFrame.PassWord("1", x.ftp_passwd().toCharArray()));
         tacommands.setText(x.ftp_commands());      
         tbindir.setText(x.ftp_indir());
         tboutdir.setText(x.ftp_outdir());
@@ -621,7 +622,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
                  } 
                  
                 session = jsch.getSession(fm.ftp_login(), fm.ftp_ip(), Integer.valueOf(tbport.getText()));
-                session.setPassword(fm.ftp_passwd());
+                session.setPassword(bsmf.MainFrame.PassWord("1", x.ftp_passwd().toCharArray()));
                 
                 session.setConfig(config);
                 
@@ -639,7 +640,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
                         try{
                             talog.append("changing directory...\n");
                         csftp.cd(splitLine[1]); 
-                        } catch(SftpException e){
+                        } catch(SftpException e){                            
                             talog.append(e.toString() + "\n");
                         }
                         
@@ -719,6 +720,8 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
                 
              } catch (Exception e) {
                 talog.append("***   Unable to connect to FTP server. " + e.toString() + "   ***" + "\n");
+                lblstatus.setText("Failed");
+                lblstatus.setForeground(Color.red);
             } finally {
                 try {
                     if(session != null) {
@@ -740,8 +743,10 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
                     talog.append("***   Unable to disconnect from sFTP server. " + exc.toString()+"   ***" + "\n");
                 }  
             }
-            
+            lblstatus.setText("success");
+            lblstatus.setForeground(Color.green);
             return new String[]{"0", "Connection complete"};
+            
         } 
         
         // run normal ftp client since sftp is not checked
@@ -769,7 +774,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
                 
                
 		// client.login(tblogin.getText(), String.valueOf(tbpasswd.getPassword()));
-                client.login(fm.ftp_login(), fm.ftp_passwd());
+                client.login(fm.ftp_login(), bsmf.MainFrame.PassWord("1", fm.ftp_passwd().toCharArray()));
 		showServerReply(client);
                 
                 
@@ -1223,9 +1228,9 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(btdelete)
                     .addComponent(btrun))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(mainpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel12)
-                    .addComponent(lblstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(mainpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel12))
                 .addContainerGap(96, Short.MAX_VALUE))
         );
 
@@ -1373,7 +1378,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel1))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(bodypanel, javax.swing.GroupLayout.DEFAULT_SIZE, 556, Short.MAX_VALUE))
+                .addComponent(bodypanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         add(jPanel1);
@@ -1434,10 +1439,8 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
     private void cbsftpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbsftpActionPerformed
         if (cbsftp.isSelected()) {
             tbport.setText("22");
-            tbport.setEnabled(false);
         } else {
             tbport.setText("");
-            tbport.setEnabled(true);
         }
     }//GEN-LAST:event_cbsftpActionPerformed
 

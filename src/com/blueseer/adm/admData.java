@@ -1987,7 +1987,7 @@ public class admData {
                  }
         
                 session = jsch.getSession(fm.ftp_login(), fm.ftp_ip(), Integer.valueOf(fm.ftp_port()));
-                session.setPassword(fm.ftp_passwd());
+                session.setPassword(bsmf.MainFrame.PassWord("1", fm.ftp_passwd().toCharArray()));
                 
                 
                 
@@ -2145,7 +2145,7 @@ public class admData {
                 
                
 		// client.login(tblogin.getText(), String.valueOf(tbpasswd.getPassword()));
-                client.login(fm.ftp_login(), fm.ftp_passwd());
+                client.login(fm.ftp_login(), bsmf.MainFrame.PassWord("1", fm.ftp_passwd().toCharArray()));
 		showServerReply(client, logdata);
                 
                 
