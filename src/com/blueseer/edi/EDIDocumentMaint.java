@@ -33,6 +33,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.edi.ediData.getMapStructList;
 import static com.blueseer.utl.BlueSeerUtils.ConvertIntegerToBool;
 import static com.blueseer.utl.BlueSeerUtils.ConvertTrueFalseToBoolean;
 import static com.blueseer.utl.BlueSeerUtils.boolToString;
@@ -304,6 +305,15 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
         for (int i = 0; i < mylist.size(); i++) {
             dddoc.addItem(mylist.get(i));
         } 
+        
+        ddstruct.removeAllItems();
+        ArrayList<String> mystructs = getMapStructList();
+        for (int i = 0; i < mystructs.size(); i++) {
+            ddstruct.addItem(mystructs.get(i));
+        } 
+        ddstruct.insertItemAt("", 0);
+        ddstruct.setSelectedIndex(0);
+        
        isLoad = false;
     }
     
@@ -416,7 +426,7 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
                             "'" + tbkey.getText() + "'" + "," +
                             "'" + tbdesc.getText() + "'"  +  "," + 
                             "'" + dddoc.getSelectedItem().toString() + "'"  +  "," + 
-                            "'" + tbsubtype.getText() + "'"  + "," + 
+                            "'" + ddstruct.getSelectedItem().toString() + "'"  + "," + 
                             "'" + tbsegdelimiter.getText() + "'"  +  "," + 
                             "'" + tbeledelimiter.getText() + "'"  +  "," +         
                             "'" + tbpriority.getText() + "'"  +  "," + 
@@ -494,7 +504,7 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
                        st.executeUpdate("update edi_doc set " + 
                            "edd_desc = " + "'" + tbdesc.getText() + "'" + "," +
                            "edd_type = " + "'" + dddoc.getSelectedItem().toString() + "'" + "," +
-                           "edd_subtype = " + "'" + tbsubtype.getText() + "'" + "," +
+                           "edd_subtype = " + "'" + ddstruct.getSelectedItem().toString() + "'" + "," +
                            "edd_segdelim = " + "'" + tbsegdelimiter.getText() + "'" + "," +
                            "edd_eledelim = " + "'" + tbeledelimiter.getText() + "'" + "," +        
                            "edd_priority = " + "'" + tbpriority.getText() + "'" + "," +
@@ -605,7 +615,7 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
                         tbdesc.setText(res.getString("edd_desc"));
                         tbkey.setText(res.getString("edd_id"));
                         dddoc.setSelectedItem(res.getString("edd_type"));
-                        tbsubtype.setText(res.getString("edd_subtype"));
+                        ddstruct.setSelectedItem(res.getString("edd_subtype"));
                         tbsegdelimiter.setText(res.getString("edd_segdelim"));
                         tbeledelimiter.setText(res.getString("edd_eledelim"));
                         tblandmark.setText(res.getString("edd_landmark"));
@@ -737,7 +747,6 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
         tbdesc = new javax.swing.JTextField();
         btclear = new javax.swing.JButton();
         btlookup = new javax.swing.JButton();
-        tbsubtype = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         tbsegdelimiter = new javax.swing.JTextField();
@@ -750,6 +759,7 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
         dddoc = new javax.swing.JComboBox<>();
         tbeledelimiter = new javax.swing.JTextField();
         jLabel18 = new javax.swing.JLabel();
+        ddstruct = new javax.swing.JComboBox<>();
         btadd = new javax.swing.JButton();
         btdelete = new javax.swing.JButton();
 
@@ -985,7 +995,7 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
         jLabel1.setText("Type");
         jLabel1.setName("lbltype"); // NOI18N
 
-        jLabel2.setText("SubType");
+        jLabel2.setText("Structure");
         jLabel2.setName("lblsubtype"); // NOI18N
 
         jLabel8.setText("SegDelimiter");
@@ -1031,8 +1041,8 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
                         .addComponent(cbenabledhdr))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(tbsubtype, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
-                            .addComponent(dddoc, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(dddoc, 0, 126, Short.MAX_VALUE)
+                            .addComponent(ddstruct, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(33, 33, 33)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel8)
@@ -1049,7 +1059,7 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tblandmark, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tbpriority, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(71, Short.MAX_VALUE))
+                .addContainerGap(68, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1078,13 +1088,13 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
                     .addComponent(dddoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbsubtype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
                     .addComponent(tbpriority, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9)
                     .addComponent(tbeledelimiter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel18))
-                .addContainerGap(20, Short.MAX_VALUE))
+                    .addComponent(jLabel18)
+                    .addComponent(ddstruct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         btadd.setText("Add");
@@ -1292,6 +1302,7 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JComboBox<String> dddoc;
     private javax.swing.JComboBox<String> ddrectype;
     private javax.swing.JComboBox<String> ddrole;
+    private javax.swing.JComboBox<String> ddstruct;
     private javax.swing.JComboBox<String> ddvaluetype;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -1326,7 +1337,6 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JTextField tbregex;
     private javax.swing.JTextField tbrow;
     private javax.swing.JTextField tbsegdelimiter;
-    private javax.swing.JTextField tbsubtype;
     private javax.swing.JTextField tbtag;
     private javax.swing.JTextField tbvalue;
     private javax.swing.JTextField tbxpath;

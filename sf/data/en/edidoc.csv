@@ -1,10 +1,10 @@
-855idoc,855 IDOC,855idoc,,10,,1,EDIDC_40,1
-810idoc,810 IDOC,810idoc,,10,,1,EDIDC_40,1
-856idoc,856 IDOC,856idoc,,10,,1,EDIDC_40,1
-850idoc,850 IDOC,850idoc,,10,,1,EDIDC_40,1
-850csv,CSV Order,850csv,,10,44,1,,1
-855csv,CSV Acknowledgment,855csv,,10,44,1,,1
-856csv,CSV ASN,856csv,,10,44,1,,1
-810csv,CSV Invoice,810csv,,10,44,1,,1
-850json,JSON Generic Order,850json,,10,,1,,1
-850xml,XML Generic Order,850xml,,10,,1,,1
+855idoc,855 IDOC,855idoc,IDOCorders05.csv,10,,1,EDIDC_40,1
+810idoc,810 IDOC,810idoc,IDOCinvoic02.csv,10,,1,EDIDC_40,1
+856idoc,856 IDOC,856idoc,IDOCshpmnt02.csv,10,,1,EDIDC_40,1
+850idoc,850 IDOC,850idoc,IDOCorders05.csv,10,,1,EDIDC_40,1
+850csv,CSV Order,850csv,CSVGenericOrder.csv,10,44,1,,1
+855csv,CSV Acknowledgment,855csv,CSVGenericAck.csv,10,44,1,,1
+856csv,CSV ASN,856csv,CSVGenericASN.csv,10,44,1,,1
+810csv,CSV Invoice,810csv,CSVGenericInvoice.csv,10,44,1,,1
+850json,JSON Generic Order,850json,JSONGenericOrder.csv,10,,1,,1
+850xml,XML Generic Order,850xml,XMLGenericOrder.csv,10,,1,,1

@@ -424,8 +424,8 @@
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="tbsubtype" pref="126" max="32767" attributes="0"/>
-                                  <Component id="dddoc" max="32767" attributes="0"/>
+                                  <Component id="dddoc" pref="126" max="32767" attributes="0"/>
+                                  <Component id="ddstruct" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="1" attributes="0">
@@ -449,7 +449,7 @@
                               </Group>
                           </Group>
                       </Group>
-                      <EmptySpace pref="71" max="32767" attributes="0"/>
+                      <EmptySpace pref="68" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -485,14 +485,14 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="tbsubtype" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="tbpriority" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="tbeledelimiter" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel18" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="ddstruct" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="20" max="32767" attributes="0"/>
+                      <EmptySpace pref="18" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -545,8 +545,6 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btlookupActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JTextField" name="tbsubtype">
-            </Component>
             <Component class="javax.swing.JLabel" name="jLabel1">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Type"/>
@@ -555,7 +553,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel2">
               <Properties>
-                <Property name="text" type="java.lang.String" value="SubType"/>
+                <Property name="text" type="java.lang.String" value="Structure"/>
                 <Property name="name" type="java.lang.String" value="lblsubtype" noResource="true"/>
               </Properties>
             </Component>
@@ -606,6 +604,16 @@
                 <Property name="text" type="java.lang.String" value="EleDelimiter"/>
                 <Property name="name" type="java.lang.String" value="lbleledelim" noResource="true"/>
               </Properties>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="ddstruct">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="0"/>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
             </Component>
           </SubComponents>
         </Container>
