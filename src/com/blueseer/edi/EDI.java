@@ -44,6 +44,7 @@ import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.EDData.getBSDocTypeFromStds;
 import static com.blueseer.utl.EDData.getEDIFFDocType;
+import static com.blueseer.utl.EDData.getEDIFFSubType;
 import com.blueseer.utl.OVData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -1582,6 +1583,8 @@ public class EDI {
     public static void processXML(String content, String[] c, String filename, int idxnbr)   {
     
         int callingidxnbr = idxnbr;      
+        String eddmid = c[1]; // c[1] initially contains the edi_doc record id during eddm lookup
+        String ifs = getEDIFFSubType(eddmid);
         ArrayList<String[]> messages = new ArrayList<String[]>();
         ArrayList<String> doc = new ArrayList<String>();
         doc.add(content);
@@ -1604,7 +1607,7 @@ public class EDI {
             
             messages.add(new String[]{"info","XML: (doctype,rcvid,parent,sndid) (" + x[0] + "," + x[1] + "," + x[2] + "," + x[3] + ")"});
             
-            c[1] = x[0];  // doctype
+            c[1] = x[0];  // doctype override original eddm id
             c[0] = x[3];  // senderid
             c[21] = x[1]; // receiverID
       
@@ -1642,17 +1645,18 @@ public class EDI {
                if (map.isEmpty() && c[12].isEmpty()) {
                    
                    if (GlobalDebug)  { 
-                   System.out.println("Searching for Map (XML in) with values type/x[3]/x[1]: " + c[1] + "/" + x[3] + "/" + x[1]);    
+                   System.out.println("Searching for Map (XML in) with values type/structure/x[3]/x[1]: " + c[1] + "/" + ifs + "/" + x[3] + "/" + x[1]);    
                    }
                    
-                   map = EDData.getEDIMap(c[1], c[0], c[21]); // doctype, senderid, receiverid 
+                   map = EDData.getEDIMap(c[1], ifs, c[0], c[21]); // doctype, structure, senderid, receiverid 
+                   
                } 
             
                // if no map then bail
                if (map.isEmpty()) {
-                  messages.add(new String[]{"error", "XML: map variable is empty for: " + c[1] + " / " + c[0] + " / " + x[1]}); 
+                  messages.add(new String[]{"error", "XML: map variable is empty for: " + c[1] + "/" + ifs + "/" + x[3] + "/" + x[1]}); 
                } else if (! BlueSeerUtils.isEDIClassFile(map) && c[12].isEmpty()) { 
-                  messages.add(new String[]{"error", "XML: unable to locate compiled map (" + map + ") for: " + c[1] + " / " + c[0] + " / " + x[1]}); 
+                  messages.add(new String[]{"error", "XML: unable to locate compiled map (" + map + ") for: " + c[1] + "/" + ifs + "/" + x[3] + "/" + x[1]}); 
                } else {
                 
                 messages.add(new String[]{"info","XML: Found map: " + map});
@@ -1723,15 +1727,17 @@ public class EDI {
     
     public static void processJSON(String content, String[] c, String filename, int idxnbr)   {
     
-        int callingidxnbr = idxnbr;      
+        int callingidxnbr = idxnbr;   
+        String eddmid = c[1]; // c[1] initially contains the edi_doc record id during eddm lookup
+        String ifs = getEDIFFSubType(eddmid);
         ArrayList<String[]> messages = new ArrayList<String[]>();
         ArrayList<String> doc = new ArrayList<String>();
         doc.add(content);
         
-        messages.add(new String[]{"info","processJSON: " + c[1]});
+        messages.add(new String[]{"info","processJSON: " + eddmid});
         
             if (GlobalDebug)
-            System.out.println("processing JSON: " + c[1]);
+            System.out.println("processing JSON: " + eddmid);
             
             String[] x = getTagInfo(content, c);  // doctype, rcvid, parentpartner, sndid
             
@@ -1746,7 +1752,7 @@ public class EDI {
             
             messages.add(new String[]{"info","JSON: (doctype,rcvid,parent,sndid) (" + x[0] + "," + x[1] + "," + x[2] + "," + x[3] + ")"});
             
-            c[1] = x[0];  // doctype
+            c[1] = x[0];  // doctype  //overfide eddm docid with bs doctype
             c[0] = x[3];  // senderid
             c[21] = x[1]; // receiverID
       
@@ -1784,17 +1790,17 @@ public class EDI {
                if (map.isEmpty() && c[12].isEmpty()) {
                    
                    if (GlobalDebug)  { 
-                   System.out.println("Searching for Map (JSON in) with values type/x[3]/x[1]: " + c[1] + "/" + x[3] + "/" + x[1]);    
+                   System.out.println("Searching for Map (JSON in) with values type/structure/x[3]/x[1]: " + c[1] + "/" + ifs + "/" + x[3] + "/" + x[1]);    
                    }
                    
-                   map = EDData.getEDIMap(c[1], c[0], c[21]); // doctype, senderid, receiverid 
+                   map = EDData.getEDIMap(c[1], ifs, c[0], c[21]); // doctype, structure, senderid, receiverid 
                } 
             
                // if no map then bail
                if (map.isEmpty()) {
-                  messages.add(new String[]{"error", "JSON: map variable is empty for: " + c[1] + " / " + c[0] + " / " + x[1]}); 
+                  messages.add(new String[]{"error", "JSON: map variable is empty for: " + c[1] + "/" + ifs + "/" + x[3] + "/" + x[1]}); 
                } else if (! BlueSeerUtils.isEDIClassFile(map) && c[12].isEmpty()) { 
-                  messages.add(new String[]{"error", "JSON: unable to locate compiled map (" + map + ") for: " + c[1] + " / " + c[0] + " / " + x[1]}); 
+                  messages.add(new String[]{"error", "JSON: unable to locate compiled map (" + map + ") for: " + c[1] + "/" + ifs + "/" + x[3] + "/" + x[1]}); 
                } else {
                 
                 messages.add(new String[]{"info","JSON: Found map: " + map});
@@ -1865,7 +1871,8 @@ public class EDI {
     public static void processCSV(Map<Integer, ArrayList<String>> CSVDocs, Map<Integer, Integer[]> CSVPositions, String[] c, ArrayList<String[]> tags, int idxnbr)   {
     
     int callingidxnbr = idxnbr;     
-    
+    String eddmid = c[1]; // c[1] initially contains the edi_doc record id during eddm lookup
+        String ifs = getEDIFFSubType(eddmid);
     for (Map.Entry<Integer, ArrayList<String>> z : CSVDocs.entrySet()) {
             ArrayList<String[]> messages = new ArrayList<String[]>();
             ArrayList<String> doc = z.getValue();
@@ -1924,15 +1931,15 @@ public class EDI {
              
                if (map.isEmpty() && c[12].isEmpty()) {
                    if (GlobalDebug)   
-                   System.out.println("Searching for Map (CSV in) with values type/x[3]/x[1]: " + c[1] + "/" + x[3] + "/" + x[1]);    
-                   map = EDData.getEDIMap(c[1], c[0], c[21]); // doctype, senderid, receiverid 
+                   System.out.println("Searching for Map (CSV in) with values type/structure/x[3]/x[1]: " + c[1] + "/" + ifs + "/" + x[3] + "/" + x[1]);    
+                   map = EDData.getEDIMap(c[1], ifs, c[0], c[21]); // doctype, structure, senderid, receiverid 
                } 
             
                // if no map then bail
                if (map.isEmpty()) {
-                    messages.add(new String[]{"error","CSV:  CSV: map variable is empty for doc/sender/receiver: " + c[1] + " / " + c[0] + " / " + x[1]});
+                    messages.add(new String[]{"error","CSV:  CSV: map variable is empty for doc/structure/sender/receiver: " + c[1] + "/" + ifs + "/" + x[3] + "/" + x[1]});
                 } else if (! BlueSeerUtils.isEDIClassFile(map) && c[12].isEmpty()) { 
-                    messages.add(new String[]{"error","CSV: unable to locate compiled map (" + map + ") for: " + c[1] + " / " + c[0] + " / " + x[1]});
+                    messages.add(new String[]{"error","CSV: unable to locate compiled map (" + map + ") for: " + c[1] + "/" + ifs + "/" + x[3] + "/" + x[1]});
                } else {
                    
                    // at this point I should have a doc set (ST to SE) and a map ...now call map to operate on doc 
@@ -2534,7 +2541,9 @@ public class EDI {
     
     public static void processFF(Map<Integer, ArrayList<String>> FFDocs, Map<Integer, Integer[]> FFPositions, String[] c, ArrayList<String[]> tags, int idxnbr)   {
     
-    int callingidxnbr = idxnbr;      
+    int callingidxnbr = idxnbr;    
+    String eddmid = c[1]; // c[1] initially contains the edi_doc record id during eddm lookup
+    String ifs = getEDIFFSubType(eddmid);
     for (Map.Entry<Integer, ArrayList<String>> z : FFDocs.entrySet()) {
             ArrayList<String[]> messages = new ArrayList<String[]>();
             ArrayList<String> doc = z.getValue();
@@ -2554,7 +2563,7 @@ public class EDI {
             
             messages.add(new String[]{"info","FF: (doctype,rcvid,parent,sndid) (" + x[0] + "," + x[1] + "," + x[2] + "," + x[3] + ")"});
             
-            c[1] = x[0];  // doctype
+            c[1] = x[0];  // doctype override c1 that had original eddm id
             c[0] = x[3];  // senderid
             c[21] = x[1]; // receiverID
       
@@ -2591,7 +2600,7 @@ public class EDI {
                if (map.isEmpty() && c[12].isEmpty()) {
                    
                    if (GlobalDebug)  { 
-                   System.out.println("Searching for Map (FF in) with values type/x[3]/x[1]: " + c[1] + "/" + x[3] + "/" + x[1]);    
+                   System.out.println("Searching for Map (FF in) with values type/structure/x[3]/x[1]: " + c[1] + "/" + ifs + "/" + x[3] + "/" + x[1]);    
                    }
                    
                    map = EDData.getEDIMap(c[1], c[0], c[21]); // doctype, senderid, receiverid 
@@ -2599,9 +2608,9 @@ public class EDI {
             
                // if no map then bail
                if (map.isEmpty()) {
-                  messages.add(new String[]{"error", "FF: map variable is empty for: " + c[1] + " / " + c[0] + " / " + x[1]}); 
+                  messages.add(new String[]{"error", "FF: map variable is empty for: " + c[1] + "/" + ifs + "/" + x[3] + "/" + x[1]}); 
                } else if (! BlueSeerUtils.isEDIClassFile(map) && c[12].isEmpty()) { 
-                  messages.add(new String[]{"error", "FF: unable to locate compiled map (" + map + ") for: " + c[1] + " / " + c[0] + " / " + x[1]}); 
+                  messages.add(new String[]{"error", "FF: unable to locate compiled map (" + map + ") for: " + c[1] + "/" + ifs + "/" + x[3] + "/" + x[1]}); 
                } else {
                 
                 messages.add(new String[]{"info","FF: Found map: " + map});

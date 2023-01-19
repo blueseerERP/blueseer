@@ -601,6 +601,42 @@ public class EDData {
           return x;
        }
     
+    public static String getEDIFFSubType(String id) {
+             String x = "";
+            try{
+            Class.forName(driver);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                
+                   
+                      res = st.executeQuery("select edd_subtype from edi_doc  " +
+                              " where edd_id = " + "'" + id + "'" + 
+                              ";");
+                    while (res.next()) {
+                       x = res.getString("edd_subtype");
+                    }
+           } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+          return x;
+       }
+    
     
         /** Returns 21 element Array with Customer (billto) specific EDI setup information
          * 
@@ -876,7 +912,50 @@ public class EDData {
         return mystring;
         
     }
-       
+     
+    public static String getEDIMap(String doctype, String structure, String sndid, String rcvid) {
+      
+           String mystring = "";
+        try{
+            Class.forName(driver);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                
+
+                res = st.executeQuery("select edi_map from edi_mstr where  " + 
+                        " edi_doc = " + "'" + doctype + "'" + 
+                        " AND edi_ifs = " + "'" + structure + "'" +        
+                        " AND edi_sndgs = " + "'" + sndid + "'" + 
+                        " AND edi_rcvgs = " + "'" + rcvid + "'" +         
+                                ";");
+               while (res.next()) {
+                   mystring = res.getString("edi_map");
+                }
+               
+           }
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return mystring;
+        
+    }
+    
+    
     public static String getEDICustDir(String doctype, String sndid, String rcvid) {
       
            String mystring = "";
