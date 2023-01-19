@@ -1606,6 +1606,8 @@ public class EDI {
              }
             
             messages.add(new String[]{"info","XML: (doctype,rcvid,parent,sndid) (" + x[0] + "," + x[1] + "," + x[2] + "," + x[3] + ")"});
+            messages.add(new String[]{"info","XML:  Doc Recog ID: " + eddmid});
+            messages.add(new String[]{"info","XML:  IFS Type: " + ifs});
             
             c[1] = x[0];  // doctype override original eddm id
             c[0] = x[3];  // senderid
@@ -1751,6 +1753,8 @@ public class EDI {
              }
             
             messages.add(new String[]{"info","JSON: (doctype,rcvid,parent,sndid) (" + x[0] + "," + x[1] + "," + x[2] + "," + x[3] + ")"});
+            messages.add(new String[]{"info","JSON:  Doc Recog ID: " + eddmid});
+            messages.add(new String[]{"info","JSON:  IFS Type: " + ifs});
             
             c[1] = x[0];  // doctype  //overfide eddm docid with bs doctype
             c[0] = x[3];  // senderid
@@ -1899,7 +1903,9 @@ public class EDI {
             c[21] = x[1]; // receiverID
             
             messages.add(new String[]{"info","getFileInfo: " + x[0] + "/" + x[3] + "/" + x[1]});
-      
+            messages.add(new String[]{"info","CSV:  Doc Recog ID: " + eddmid});
+            messages.add(new String[]{"info","CSV:  IFS Type: " + ifs});
+            
             String[] defaults = EDData.getEDITPDefaults(x[0], x[3], x[1]);
             
             c[9]  = defaults[7].isBlank() ? "10" : defaults[7];
@@ -2562,6 +2568,8 @@ public class EDI {
              }
             
             messages.add(new String[]{"info","FF: (doctype,rcvid,parent,sndid) (" + x[0] + "," + x[1] + "," + x[2] + "," + x[3] + ")"});
+            messages.add(new String[]{"info","FF:  Doc Recog ID: " + eddmid});
+            messages.add(new String[]{"info","FF:  IFS Type: " + ifs});
             
             c[1] = x[0];  // doctype override c1 that had original eddm id
             c[0] = x[3];  // senderid
