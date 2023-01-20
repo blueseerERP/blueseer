@@ -1287,16 +1287,16 @@ public class EDI {
             
             for (String[] r : v) {
             //bail (next loop) if r[5] tag does not begin with /  ...otherwise jsonNode.at will throw jackson illegalArgument
-            if (! r[6].startsWith("/")) {
-                continue;
-            }  
-              if (r[4].equals("json")) {
-                rulecount++;
-                JsonNode nameNode = jsonNode.at(r[6]);
-                if (r[3].equals(nameNode.asText())) {
-                  matchcount++;
-                }
-              } 
+                if (! r[6].startsWith("/")) {
+                    continue;
+                }  
+                if (r[4].equals("json")) {
+                    rulecount++;
+                    JsonNode nameNode = jsonNode.at(r[6]);
+                    if (r[3].equals(nameNode.asText()) || (r[3].equals("*") && ! nameNode.getNodeType().toString().equals("MISSING"))) {
+                      matchcount++;
+                    }
+                } 
             }
             if ( (matchcount != 0) && (matchcount == rulecount)) {
                 doctype = key;
