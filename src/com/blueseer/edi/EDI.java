@@ -1112,9 +1112,15 @@ public class EDI {
         for (int i = 0; i < cbuf.length; i++) {
             jsonstring.append(cbuf[i]);
         }
+        String jsontype = getDocTypeJson(jsonstring.toString());
+        if (jsontype == null) {
+            System.out.println("Possible malformed JSON " + filename );
+        }
+        if (jsontype != null && ! jsontype.isEmpty()) {
         type[0] = "JSON";
-        type[1] = getDocTypeJson(jsonstring.toString());
+        type[1] = jsontype;
         return type;
+        } 
     }
     
     if (GlobalDebug) {
@@ -1255,6 +1261,14 @@ public class EDI {
         } catch (JsonProcessingException ex) {
             edilog(ex);
         }
+        
+        if (jsonNode == null) {
+            return null;
+        }
+        if (jsonNode.isEmpty()) {
+            return "";
+        }
+        
       
         int k = 0; 
         boolean match = false;
