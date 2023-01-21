@@ -1420,7 +1420,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         if (taname.equals("tainstruct")) {
             tainstruct.setText("");
             structure = getStructure("ifs"); 
-            file = getfile("Open Structure File");
+            file = getfile("Open Input File to Overlay on Structure");
             if (structure.size() == 0) {
               tainstruct.setText("unable to read structure file");
               return;
@@ -2119,7 +2119,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         
     public void getInput() {
        
-        infile = getfile("Open Test File");
+        infile = getfile("Open Input (test) File");
         tainput.setText("");
         if (infile != null) {
             try {   
@@ -3167,7 +3167,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         }
         
         // make call to grab a test file
-        File testfile = getfile("Open Test Data File to be Zipped");
+        File testfile = getfile("open test data file if to be included in map zip");
         
         
         // now try to zip all 4, testfile, ifs, ofs, and map

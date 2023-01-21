@@ -2550,7 +2550,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                      "NOTE: 2nd parameter...element...must be named element...not position",
                      "NOTE: 3nd parameter...comp...must be sub-element position (integer) of element",
                      "Example:  mapSegment(\"QTY\",\"e01\",2,\"50\") assigns: 2nd comp of 1st element of QTY (EDIFACT) segment with value 50...QTY+21:50:EA"},
-                 params = {"String segment","String element","String value"}) 
+                 params = {"String segment","String element", "Integer comp", "String value"}) 
     public static void mapSegment(String segment, String element, Integer comp, String value) {
     	 String[] z = new String[] {element, value};
     	 // get old arraylist and add to it
