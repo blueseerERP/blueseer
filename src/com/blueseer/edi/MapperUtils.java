@@ -236,7 +236,7 @@ public class MapperUtils {
 @EDI.AnnoDoc(desc = {"method writes out a message to the log table for this transaction event",
                      "Example:  write(\"some message\");"},
                  params = {"String messg"})     
-    public void write(String messg)  {
+    public static void write(String messg)  {
         mxs.add(new String[]{"map",messg});
     }
     
@@ -320,6 +320,12 @@ public class MapperUtils {
         
     }
     
+    @EDI.AnnoDoc(desc = {"method checks to see if parameter is not empty and not null...returns boolean",
+                     "Example:  isOK(\"somestring\");  ...returns true if not empty and not null...otherwise false"},
+                 params = {"String messg"})     
+    public static boolean isOK(String var)  {
+        return (var != null && ! var.isEmpty());
+    }
     
     
 }
