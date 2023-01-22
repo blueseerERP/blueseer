@@ -24,9 +24,9 @@
 	<parameter name="bill_csz" class="java.lang.String"/>
 	<parameter name="ship_csz" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[select sv_nbr, svd_nbr, svd_due_date, svd_create_date,
-sv_cust,  sv_rmks, sv_curr, svd_item, svd_desc, svd_qty, svd_netprice, 
-cm_code, cm_terms, cm_code, cm_name, cm_line1, cm_line2, 
+		<![CDATA[select sv_nbr, svd_nbr,  
+sv_cust,  sv_rmks, sv_po, sv_curr, sv_due_date, sv_create_date, svd_item, svd_desc, svd_qty, svd_netprice, 
+cm_code, cm_phone, cm_terms, cm_code, cm_name, cm_line1, cm_line2, 
 cms_name, cms_line1, cms_line2, site_desc, site_line1 
 from svd_det  
 inner join sv_mstr on sv_nbr = svd_nbr 
@@ -98,11 +98,13 @@ inner join site_mstr on site_site = sv_site where svd_nbr =  $P{myid}]]>
 		<property name="com.jaspersoft.studio.field.label" value="site_line1"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="site_mstr"/>
 	</field>
-	<field name="svd_due_date" class="java.lang.String"/>
-	<field name="svd_create_date" class="java.lang.String"/>
 	<field name="cm_terms" class="java.lang.String"/>
 	<field name="svd_desc" class="java.lang.String"/>
 	<field name="sv_curr" class="java.lang.String"/>
+	<field name="sv_due_date" class="java.lang.String"/>
+	<field name="sv_po" class="java.lang.String"/>
+	<field name="cm_phone" class="java.lang.String"/>
+	<field name="sv_create_date" class="java.lang.String"/>
 	<variable name="totalamount" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[new Double($F{svd_netprice}.doubleValue()) * new Double($F{svd_qty}.doubleValue())]]></variableExpression>
 	</variable>
@@ -202,7 +204,7 @@ inner join site_mstr on site_site = sv_site where svd_nbr =  $P{myid}]]>
 				<reportElement x="0" y="98" width="109" height="30" uuid="a8bfe80a-7d14-452a-afe5-2cb9bca9b4de"/>
 			</rectangle>
 			<textField>
-				<reportElement x="416" y="39" width="62" height="19" uuid="7e8ba085-7019-49fe-abc1-97c38effdd60"/>
+				<reportElement x="416" y="40" width="62" height="19" uuid="7e8ba085-7019-49fe-abc1-97c38effdd60"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$R{jasper.srvorder.lblcreatedate}]]></textFieldExpression>
 			</textField>
@@ -220,7 +222,7 @@ inner join site_mstr on site_site = sv_site where svd_nbr =  $P{myid}]]>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{jasper.srvorder.lblcontact}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{jasper.srvorder.lblphone}]]></textFieldExpression>
 			</textField>
 			<rectangle>
 				<reportElement x="109" y="98" width="109" height="30" uuid="583ab691-ae2e-4d6f-a2f9-67fdda8d408d"/>
@@ -239,7 +241,7 @@ inner join site_mstr on site_site = sv_site where svd_nbr =  $P{myid}]]>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{jasper.srvorder.lblreference}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{jasper.srvorder.lblpo}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="218" y="98" width="63" height="11" uuid="422752cb-ed2f-43b1-9e11-0664e372cbc2"/>
@@ -260,7 +262,7 @@ inner join site_mstr on site_site = sv_site where svd_nbr =  $P{myid}]]>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{jasper.srvorder.lblmisc}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{jasper.srvorder.lblduedate}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="10" y="3" width="140" height="17" uuid="3db82a95-5b37-4616-b8ba-21e38847c9b0"/>
@@ -285,16 +287,28 @@ inner join site_mstr on site_site = sv_site where svd_nbr =  $P{myid}]]>
 				<textFieldExpression><![CDATA[$F{cms_line1}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="489" y="37" width="76" height="19" uuid="401309e3-7352-4427-8461-a60a49ce6eaa"/>
-				<textFieldExpression><![CDATA[$F{svd_create_date}]]></textFieldExpression>
+				<reportElement x="489" y="40" width="76" height="19" uuid="401309e3-7352-4427-8461-a60a49ce6eaa"/>
+				<textFieldExpression><![CDATA[$F{sv_create_date}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="247" y="104" width="51" height="19" uuid="86762df7-8462-4408-ac47-518f37839297"/>
+				<reportElement x="233" y="108" width="51" height="19" uuid="86762df7-8462-4408-ac47-518f37839297"/>
 				<textFieldExpression><![CDATA[$F{cm_terms}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="367" y="104" width="51" height="19" uuid="968f8249-3ef2-43b9-a361-8dc14fded7f0"/>
+				<reportElement x="344" y="108" width="51" height="19" uuid="968f8249-3ef2-43b9-a361-8dc14fded7f0"/>
 				<textFieldExpression><![CDATA[$F{cm_code}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="440" y="109" width="110" height="19" uuid="ea3718bc-fff7-4699-9acf-02e51f23acdb"/>
+				<textFieldExpression><![CDATA[$F{sv_due_date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="2" y="108" width="100" height="19" uuid="0e7f8826-0bed-46d8-b29c-74156fff0613"/>
+				<textFieldExpression><![CDATA[$F{cm_phone}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="111" y="108" width="97" height="19" uuid="4cf91775-032d-488b-9d95-989eabe22985"/>
+				<textFieldExpression><![CDATA[$F{sv_po}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
