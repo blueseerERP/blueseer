@@ -25,11 +25,24 @@ SOFTWARE.
  */
 package com.blueseer.edi;
 
+import bsmf.MainFrame;
+import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.ds;
+import static bsmf.MainFrame.pass;
+import static bsmf.MainFrame.url;
+import static bsmf.MainFrame.user;
+import static com.blueseer.edi.EDIMap.mxs;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.lang.annotation.Documented;
 import static java.lang.annotation.ElementType.METHOD;
 import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Target;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -37,6 +50,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.Locale;
 
 /**
@@ -216,6 +230,96 @@ public class MapperUtils {
               return date;
             }
     }
+    
+    
+    
+@EDI.AnnoDoc(desc = {"method writes out a message to the log table for this transaction event",
+                     "Example:  write(\"some message\");"},
+                 params = {"String messg"})     
+    public void write(String messg)  {
+        mxs.add(new String[]{"map",messg});
+    }
+    
+
+    @EDI.AnnoDoc(desc = {"method lookups a generic code_mstr (xref) data with field1 and returns string of field2",
+                        "Example:  getXREF(\"key1\") returns: 2nd field of code_mstr table",
+                        "generic codes can be imported with Mass Data Import utility"},
+            params = {"String key1"})  
+    public static String getXREF(String field1) {
+      String x = "";
+        try{
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                res = st.executeQuery("select code_key from code_mstr where code_code = " + "'" + field1 + "'" + ";");
+                           
+               while (res.next()) {
+                    x = res.getString("code_key");
+                }
+           }
+            catch (SQLException s){
+                MainFrame.bslog(s);
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return x;
+        
+    }
+    
+    @EDI.AnnoDoc(desc = {"method lookups a generic code_mstr (xref) data with field1 and field2 returning field3",
+                        "Example:  getXREF(\"key1\",\"key2\") returns: 3nd field of code_mstr table",
+                        "generic codes can be imported with Mass Data Import utility"},
+            params = {"String key1"})  
+    public static String getXREF(String field1, String field2) {
+      String x = "";
+        try{
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                res = st.executeQuery("select code_key from code_mstr where code_code = " + "'" + field1 + "'" +
+                        " and code_key = " + "'" + field2 + "'" + ";");
+                           
+               while (res.next()) {
+                    x = res.getString("code_value");
+                }
+           }
+            catch (SQLException s){
+                MainFrame.bslog(s);
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return x;
+        
+    }
+    
     
     
 }

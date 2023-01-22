@@ -3202,7 +3202,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
          return k;
      }
     
-    @EDI.AnnoDoc(desc = {"method kills or stops the execution of the map at point of call",
+       @EDI.AnnoDoc(desc = {"method kills or stops the execution of the map at point of call",
                      "NOTE:  the first variable...mx...is not a String...and should not be put in quotes",
                      "NOTE:  the log file will display UserDefinedException along with the passed message parameter",
                      "Example:  kill(mx, \"some message\");"},
@@ -3211,16 +3211,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         mx.addAll(mxs);
         throw new UserDefinedException(messg);
     }
-    
-@EDI.AnnoDoc(desc = {"method writes out a message to the log table for this transaction event",
-                     "Example:  write(\"some message\");"},
-                 params = {"String messg"})     
-    public void write(String messg)  {
-        mxs.add(new String[]{"map",messg});
-    }
-    
-    
-    
+ 
     public class UserDefinedException extends Exception  
     {  
         public UserDefinedException(String str)  
@@ -3228,5 +3219,8 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             // Calling constructor of parent Exception  
             super(str);  
         }  
-    }   
+    }       
+    
+    
+    
 }
