@@ -230,7 +230,7 @@ public class About extends javax.swing.JPanel {
         jTextArea2.setEditable(false);
         jTextArea2.setColumns(20);
         jTextArea2.setRows(5);
-        jTextArea2.setText("\nBlueSeer ERP was developed to provide the open source community with a free alternative to proprietary ERPs\nwith regards to both cost and customization capability.   For more information, you can visit the application project\nsite hosted on github or the primary website shown below.   There exists forums to submit issues, discussions, or feedback\nat these locations.\n\nWebsite:\t\twww.blueseer.com\nProject Site:\t\thttps://github.com/BlueSeerERP   \nEmail:\t\tsupport@blueseer.com\nCreator:\t\tTerry Evans Vaughn\nLanguage:\t\tJava\nSource:\t\thttps://github.com/BlueSeerERP/blueseer\n");
+        jTextArea2.setText("\nBlueSeer ERP was developed to provide the open source community with a free alternative to proprietary ERPs\nwith regards to both cost and customization capability.   For more information, you can visit the application project\nsite hosted on github or the primary website shown below.   There exists forums to submit issues, discussions, or feedback\nat these locations.\n\nWebsite:\t\twww.blueseer.com\nProject Site:\t\thttps://github.com/BlueSeerERP   \nEmail:\t\tsupport@blueseer.com\nCreator:\t\tTerry Evans Vaughn\nLanguage:\t\tJava\nDatabase:\t\tSQLite,MySQL\nSource:\t\thttps://github.com/BlueSeerERP/blueseer\n");
         jScrollPane2.setViewportView(jTextArea2);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
