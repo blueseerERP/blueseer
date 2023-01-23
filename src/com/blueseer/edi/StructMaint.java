@@ -27,6 +27,7 @@ SOFTWARE.
 package com.blueseer.edi;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.tags;
 import static com.blueseer.edi.ediData.addMapStruct;
 import static com.blueseer.edi.ediData.deleteMapStruct;
@@ -56,7 +57,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.MalformedInputException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -351,6 +359,19 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
                     tbkey.requestFocus();
                     return false;
         }
+         
+        if (! checkStructure(tbkey.getText())) {
+            int errornum = 0;
+            if (x.toString().equals("add")) {
+                errornum = 1011;
+            }
+            if (x.toString().equals("update")) {
+                errornum = 1012;
+            }
+            bsmf.MainFrame.show(getMessageTag(errornum,tbkey.getText()));
+            tbkey.requestFocus();
+            return false;
+        } 
         
       return true;
     }
@@ -464,6 +485,49 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         ddfiletype.setSelectedItem(x.mps_filetype()); 
         setAction(x.m()); 
     }
+    
+    // misc methods
+    public boolean checkStructure(String structureName) {
+        String dirpath;
+        boolean isgood = true;
+        List<String> lines = new ArrayList<>();
+        dirpath = EDData.getEDIStructureDir() + "/" + structureName;
+        Path path = FileSystems.getDefault().getPath(dirpath);
+        File file = path.toFile();
+        long count = 0;
+        long numoferrors = 0;
+        if (file != null && file.exists()) {
+                try {   
+                    lines = Files.readAllLines(file.toPath());
+                    int k = 0;
+                    for (String s : lines) {
+                        k++;
+                        if (s.startsWith("#")) {
+                            continue;
+                        }
+                        count = s.chars().filter(ch -> ch == ',').count();
+                        if (count != 10) {
+                            isgood = false;
+                            numoferrors++;
+                        }
+                        
+                    }
+                } catch (MalformedInputException m) {
+                    bsmf.MainFrame.show("Structure file may not be UTF-8 encoded");
+                    isgood = false;
+                } catch (IOException ex) {
+                    bslog(ex);
+                    bsmf.MainFrame.show("Error...check data/app.log");
+                    isgood = false;
+                }   
+        }
+        if (numoferrors > 0) {
+           bsmf.MainFrame.show("Number of lines with inaccurate comma delimiter count: " + numoferrors); 
+        }
+        
+        return isgood;
+    }
+    
     
     /**
      * This method is called from within the constructor to initialize the form.

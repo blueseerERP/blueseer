@@ -142,6 +142,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.MalformedInputException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -1240,8 +1241,12 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         if (file != null && file.exists()) {
                 try {   
                     lines = Files.readAllLines(file.toPath());
+                } catch (MalformedInputException m) {
+                    bslog(m);
+                    bsmf.MainFrame.show("Structure file may not be UTF-8 encoded");
                 } catch (IOException ex) {
                     bslog(ex);
+                    bsmf.MainFrame.show("Error...check data/app.log");
                 }   
         }
         return lines;
