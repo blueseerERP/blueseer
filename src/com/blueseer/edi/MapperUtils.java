@@ -277,7 +277,7 @@ public class MapperUtils {
     @EDI.AnnoDoc(desc = {"method lookups a generic code_mstr (xref) data with field1 and field2 returning field3",
                         "Example:  getXREF(\"key1\",\"key2\") returns: 3nd field of code_mstr table",
                         "generic codes can be imported with Mass Data Import utility"},
-            params = {"String key1"})  
+            params = {"String key1, String key2"})  
     public static String getXREF(String field1, String field2) {
       String x = "";
         try{
