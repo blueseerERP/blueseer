@@ -58,8 +58,7 @@ public class jobBch implements Job {
                 
     JobDataMap dataMap = context.getJobDetail().getJobDataMap();
     String param = dataMap.getString("param");
-    System.out.println("jobBch parameter used: " + param + " time: " + now);
-    
+    System.out.println("jobBch firing system method: " + param + " run time: " + now);
     Runtime r = Runtime.getRuntime();
     Process pr;
     if (param != null && ! param.isBlank()) {
