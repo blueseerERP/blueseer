@@ -332,7 +332,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
          tbip.setText("");
          talog.setText("");
          tacommands.setText("");
-         tbtimeout.setText("");
+         tbtimeout.setText("10");
         
        isLoad = false;
     }
