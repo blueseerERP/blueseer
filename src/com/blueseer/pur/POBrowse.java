@@ -633,6 +633,12 @@ try {
             ResultSet res = null;
             try {
              
+                double qty = 0;
+                double dol = 0;
+                double total = 0;
+                double tax = 0;
+                double disc = 0;
+                double charge = 0;
                 int i = 0;
                
                mymodel.setNumRows(0);
@@ -677,7 +683,11 @@ try {
                  tablereport.getColumnModel().getColumn(8).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
                  
              res = st.executeQuery("select po_nbr, po_vend, vd_name, po_ord_date, po_due_date, po_type, po_status, " +
-                      " sum(pod_ord_qty * pod_netprice) as 'total', sum(pod_ord_qty) as 'qty' " +
+                      " sum(pod_ord_qty * pod_netprice) as totdol, sum(pod_ord_qty) as totqty, " +
+                      " (select sum(case when pom_type = 'discount' and pom_amttype = 'percent' then pom_amt else '0' end) from po_meta where pom_nbr = po_nbr) as 'discountpercent', " +
+                        " (select sum(case when pom_type <> 'tax' and pom_type <> 'passive' then pom_amt else '0' end) from po_meta where pom_nbr = po_nbr) as 'charge'," + 
+                        " (select sum(case when pom_type = 'tax' and pom_amttype = 'percent' then pom_amt end) from po_meta where pom_nbr = po_nbr)as 'taxpercent', " +
+                        " (select sum(case when pom_type = 'tax' and pom_amttype = 'amount' then pom_amt end) from po_meta where pom_nbr = po_nbr) as 'taxcharge' " +
                          " from po_mstr inner join pod_mstr on pod_nbr = po_nbr inner join vd_mstr on vd_addr = po_vend where " +
                         " po_vend >= " + "'" + vendfrom + "'" + " AND " +
                         " po_vend <= " + "'" + vendto + "'" + " AND " +
@@ -688,6 +698,11 @@ try {
                   
                 
                        while (res.next()) {
+                        
+                        total = 0;
+                    tax = 0;
+                    disc = 0;
+                    charge = 0;   
                            
                              if (! cbopen.isSelected() && res.getString("po_status").equals("open"))
                              continue;
@@ -696,16 +711,38 @@ try {
                     
                            
                            
-                          totamt += res.getDouble(("total"));
-                          totqty += res.getDouble(("qty"));
+                       //   totamt += res.getDouble(("total"));
+                       //   totqty += res.getDouble(("qty"));
                
+                       if (res.getDouble("discountpercent") != 0) {
+                      disc = res.getDouble("totdol") * (res.getDouble("discountpercent") / 100.0);
+                    } else {
+                      disc = 0;  
+                    }
+                    charge = res.getDouble("charge");
+                    total = res.getDouble("totdol") + charge;  // charges added to total before taxing
+                    
+                    // now do tax
+                    if (res.getDouble("taxpercent") != 0) {
+                      tax = total * (res.getDouble("taxpercent") / 100.0);
+                    } else {
+                      tax = 0;  
+                    }
+                    tax += res.getDouble("taxcharge");
+                                        
+                    total = total + tax;
+                    
+                    dol = dol + total;
+                    qty = qty + res.getDouble("totqty");
+                    i++;      
+                          
                     mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, BlueSeerUtils.clickbasket, res.getString("po_nbr"),
                                 res.getString("po_vend"),
                                 res.getString("vd_name"),
                                 res.getString("po_ord_date"),
                                 res.getString("po_type"),
                                 res.getString("po_status"),
-                                bsParseDouble(currformatDouble(res.getDouble("total")))
+                                bsParseDouble(currformatDouble(total))
                             });
                
              
@@ -713,8 +750,8 @@ try {
                 } // while   
                     
                  
-                lblamttot.setText(currformatDouble(totamt));
-                lblqtytot.setText(currformatDouble(totqty));
+                lblamttot.setText(String.valueOf(currformatDouble(dol)));
+                lblqtytot.setText(String.valueOf(qty));
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));

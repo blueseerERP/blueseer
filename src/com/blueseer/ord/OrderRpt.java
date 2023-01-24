@@ -783,11 +783,6 @@ try {
                     if (! cberror.isSelected() && res.getString("so_status").equals("error"))
                         continue;                       
 
-                   // total = getOrderTotal(res.getString("so_nbr"));
-                  
-                    // include charges in net amount before taxing
-                    // add discount / charge
-                    // NOTE:  all disc are implied in netprice at item level
                     if (res.getDouble("discountpercent") != 0) {
                       disc = res.getDouble("totdol") * (res.getDouble("discountpercent") / 100.0);
                     } else {
