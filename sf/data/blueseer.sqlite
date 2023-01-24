@@ -223,6 +223,13 @@ CREATE TABLE "car_det" (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "car_meta" (
+  "carm_code" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "carm_key" varchar(80) COLLATE NOCASE DEFAULT '',
+  "carm_value" varchar(80) COLLATE NOCASE DEFAULT '');
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "clock_ctrl" (
   "clctrl_scan" tinyint(1) NOT NULL DEFAULT '0'
 );

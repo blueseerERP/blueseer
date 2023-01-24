@@ -279,6 +279,11 @@ CREATE TABLE IF NOT EXISTS `car_det` (
   `card_code` varchar(30) NOT NULL  DEFAULT '',
   `card_carrier` varchar(30)  NOT NULL DEFAULT '') 
 ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `car_meta` (
+  `carm_code` varchar(30) NOT NULL  DEFAULT '',
+  `carm_key` varchar(80) NOT NULL  DEFAULT '',
+  `carm_value` varchar(80) NOT NULL  DEFAULT '')
+ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `clock_ctrl` (
   `clctrl_scan` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
