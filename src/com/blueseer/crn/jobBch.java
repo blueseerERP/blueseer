@@ -27,20 +27,11 @@ package com.blueseer.crn;
 
 
 import static bsmf.MainFrame.bslog;
-import com.blueseer.edi.EDI;
-import static com.blueseer.edi.EDI.packageEnvelopes;
-import com.blueseer.edi.EDILoad;
-import com.blueseer.fgl.fglData;
-import com.blueseer.utl.EDData;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
