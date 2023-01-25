@@ -14,7 +14,7 @@ cd ../../data
 datadir=$(pwd)
 
 cd $currdir
-cp .patchsqlv51 /$datadir/
+cp .patchsqlv6.4 /$datadir/
 
 if [[ -d "../../jasper" ]];
 then
@@ -28,8 +28,8 @@ then
 	cp -r $currdir/zebra ../../zebra
 	echo "copying jar files..."
 	sleep 2
-	cp -r $currdir/blueseer.jar ../../dist/
-	cp -r $currdir/bsmf.jar ../../dist/
+	cp -r $currdir/dist/blueseer.jar ../../dist/
+	cp -r $currdir/dist/bsmf.jar ../../dist/
 	echo "copying patch number..."
 	sleep 2
 	cp -r $currdir/.patch ../../

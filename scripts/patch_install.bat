@@ -6,7 +6,7 @@ echo "patch log report" >patch.log
 cls
 @echo ""
 @echo ""
-@echo "BlueSeer V6.1 Patch/Upgrade Delivery Script" 
+@echo "BlueSeer Software Patch/Upgrade Delivery Script" 
 @echo ""
 @echo ""
 
@@ -67,8 +67,9 @@ set /a "errors=%errors%+1"
 )
 
 @echo "copying blueseer.jar to dist folder"
-if exist %~dp0\blueseer.jar (
-copy %~dp0\blueseer.jar ..\..\dist\ >>patch.log 2>&1
+if exist %~dp0\dist\blueseer.jar (
+copy %~dp0\dist\blueseer.jar ..\..\dist\ >>patch.log 2>&1
+@echo "copying blueseer.jar to dist folder" >>patch.log 2>&1
 ) else (
 @echo "ERROR: source file blueseer.jar does not exist" 
 @echo "ERROR: source file blueseer.jar does not exist" >>patch.log 2>&1
@@ -76,8 +77,9 @@ set /a "errors=%errors%+1"
 )
 
 @echo "copying bsmf.jar to dist folder "
-if exist %~dp0\bsmf.jar (
-copy %~dp0\bsmf.jar ..\..\dist\ >>patch.log 2>&1
+if exist %~dp0\dist\bsmf.jar (
+copy %~dp0\dist\bsmf.jar ..\..\dist\ >>patch.log 2>&1
+@echo "copying bsmf.jar to dist folder" >>patch.log 2>&1
 ) else (
 @echo "ERROR: source file bsmf.jar does not exist "
 @echo "ERROR: source file bsmf.jar does not exist " >>patch.log 2>&1
@@ -87,6 +89,7 @@ set /a "errors=%errors%+1"
 @echo "copying .patch file to root folder"
 if exist %~dp0\.patch (
 copy %~dp0\.patch ..\..\ >>patch.log 2>&1
+@echo "copying .patch to dist folder" >>patch.log 2>&1
 ) else (
 @echo "ERROR: source file .patch does not exist"
 @echo "ERROR: source file .patch does not exist" >>patch.log 2>&1
