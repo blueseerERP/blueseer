@@ -2861,4 +2861,20 @@ CREATE TABLE "pks_mstr" (
   "pks_expire" varchar(50) NOT NULL DEFAULT '',
   "pks_create" varchar(50) NOT NULL DEFAULT ''
 );
+CREATE TABLE "dfs_det" (
+  "dfs_id" varchar(80) NOT NULL DEFAULT '',
+  "dfs_segment" varchar(80) NOT NULL DEFAULT '',
+  "dfs_parent" varchar(200) NOT NULL DEFAULT '',
+  "dfs_loopcount" int(3) NOT NULL DEFAULT '0',
+  "dfs_isgroup" tinyint(1) NOT NULL DEFAULT '0',
+  "dfs_islandmark" tinyint(1) NOT NULL DEFAULT '0',
+  "dfs_field" varchar(80) NOT NULL DEFAULT '',
+  "dfs_desc" varchar(100) NOT NULL DEFAULT '',
+  "dfs_min" int(5) NOT NULL DEFAULT '0',
+  "dfs_max" int(5) NOT NULL DEFAULT '0',
+  "dfs_align" varchar(1) NOT NULL DEFAULT '',
+  "dfs_status" varchar(1) NOT NULL DEFAULT '',
+  "dfs_type" varchar(1) NOT NULL DEFAULT ''
+);
+
 End Transaction;

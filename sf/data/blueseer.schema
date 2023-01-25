@@ -2425,3 +2425,18 @@ CREATE TABLE `web_verb` (
   `wbv_path` varchar(100) NOT NULL DEFAULT '',
   `wbv_active` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE `dsf_det` (
+  `dfs_id` varchar(80) NOT NULL DEFAULT '',
+  `dfs_segment` varchar(80) NOT NULL DEFAULT '',
+  `dfs_parent` varchar(200) NOT NULL DEFAULT '',
+  `dfs_loopcount` int(3) NOT NULL DEFAULT '0',
+  `dfs_isgroup` tinyint(1) NOT NULL DEFAULT '0',
+  `dfs_islandmark` tinyint(1) NOT NULL DEFAULT '0',
+  `dfs_field` varchar(80) NOT NULL DEFAULT '',
+  `dfs_desc` varchar(100) NOT NULL DEFAULT '',
+  `dfs_min` int(5) NOT NULL DEFAULT '0',
+  `dfs_max` int(5) NOT NULL DEFAULT '0',
+  `dfs_align` varchar(1) NOT NULL DEFAULT '',
+  `dfs_status` varchar(1) NOT NULL DEFAULT '',
+  `dfs_type` varchar(1) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
