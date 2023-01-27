@@ -335,23 +335,23 @@ public class ediData {
         return r;
     }
     
-    public static String[] addMapStruct(map_struct x) {
+    public static String[] addMapStruct(dfs_mstr x) {
         String[] m = new String[2];
-        String sqlSelect = "select * from map_struct where mps_id = ?";
-        String sqlInsert = "insert into map_struct (mps_id, mps_desc, mps_version, mps_doctype, mps_filetype "
+        String sqlSelect = "select * from dfs_mstr where dfs_id = ?";
+        String sqlInsert = "insert into dfs_mstr (dfs_id, dfs_desc, dfs_version, dfs_doctype, dfs_filetype "
                 + "  )  " +
                 " values (?,?,?,?,?); "; 
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
-             ps.setString(1, x.mps_id);
+             ps.setString(1, x.dfs_id);
           try (ResultSet res = ps.executeQuery();
                PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
             if (! res.isBeforeFirst()) {
-            psi.setString(1, x.mps_id);
-            psi.setString(2, x.mps_desc);
-            psi.setString(3, x.mps_version);
-            psi.setString(4, x.mps_doctype);
-            psi.setString(5, x.mps_filetype);
+            psi.setString(1, x.dfs_id);
+            psi.setString(2, x.dfs_desc);
+            psi.setString(3, x.dfs_version);
+            psi.setString(4, x.dfs_doctype);
+            psi.setString(5, x.dfs_filetype);
             
             int rows = psi.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
@@ -366,17 +366,17 @@ public class ediData {
         return m;
     }
         
-    public static String[] updateMapStruct(map_struct x) {
+    public static String[] updateMapStruct(dfs_mstr x) {
         String[] m = new String[2];
-        String sql = "update map_struct set mps_desc = ?, mps_version = ?, mps_doctype = ?, mps_filetype = ? " +
-                "  where mps_id = ? ";
+        String sql = "update dfs_mstr set dfs_desc = ?, dfs_version = ?, dfs_doctype = ?, dfs_filetype = ? " +
+                "  where dfs_id = ? ";
        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
-        ps.setString(1, x.mps_desc);
-        ps.setString(2, x.mps_version);
-        ps.setString(3, x.mps_doctype);
-        ps.setString(4, x.mps_filetype);
-        ps.setString(5, x.mps_id);
+        ps.setString(1, x.dfs_desc);
+        ps.setString(2, x.dfs_version);
+        ps.setString(3, x.dfs_doctype);
+        ps.setString(4, x.dfs_filetype);
+        ps.setString(5, x.dfs_id);
         int rows = ps.executeUpdate();
         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
         } catch (SQLException s) {
@@ -386,12 +386,12 @@ public class ediData {
         return m;
     }
     
-    public static String[] deleteMapStruct(map_struct x) { 
+    public static String[] deleteMapStruct(dfs_mstr x) { 
        String[] m = new String[2];
-        String sql = "delete from map_struct where mps_id = ?; ";
+        String sql = "delete from dfs_mstr where dfs_id = ?; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
-        ps.setString(1, x.mps_id);
+        ps.setString(1, x.dfs_id);
         int rows = ps.executeUpdate();
         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
         } catch (SQLException s) {
@@ -401,25 +401,25 @@ public class ediData {
         return m;
     }
       
-    public static map_struct getMapStruct(String[] x) {
-        map_struct r = null;
+    public static dfs_mstr getMapStruct(String[] x) {
+        dfs_mstr r = null;
         String[] m = new String[2];
-        String sql = "select * from map_struct where mps_id = ? ;";
+        String sql = "select * from dfs_mstr where dfs_id = ? ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
              try (ResultSet res = ps.executeQuery();) {
                 if (! res.isBeforeFirst()) {
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
-                r = new map_struct(m);
+                r = new dfs_mstr(m);
                 } else {
                     while(res.next()) {
                         m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                        r = new map_struct(m, res.getString("mps_id"), 
-                            res.getString("mps_desc"),
-                            res.getString("mps_version"),
-                            res.getString("mps_doctype"),
-                            res.getString("mps_filetype")
+                        r = new dfs_mstr(m, res.getString("dfs_id"), 
+                            res.getString("dfs_desc"),
+                            res.getString("dfs_version"),
+                            res.getString("dfs_doctype"),
+                            res.getString("dfs_filetype")
                         );
                     }
                 }
@@ -427,7 +427,7 @@ public class ediData {
         } catch (SQLException s) {   
 	       MainFrame.bslog(s);  
                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
-               r = new map_struct(m);
+               r = new dfs_mstr(m);
         }
         return r;
     }
@@ -1387,9 +1387,9 @@ public class ediData {
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
-                res = st.executeQuery("select mps_id from map_struct order by mps_id ; ");
+                res = st.executeQuery("select dfs_id from dfs_mstr order by dfs_id ; ");
                while (res.next()) {
-                   mylist.add(res.getString("mps_id"));
+                   mylist.add(res.getString("dfs_id"));
                 }
            }
             catch (SQLException s) {
@@ -1639,8 +1639,8 @@ public class ediData {
         }
     }
     
-    public record map_struct(String[] m, String mps_id, String mps_desc, String mps_version, String mps_doctype, String mps_filetype) {
-        public map_struct(String[] m) {
+    public record dfs_mstr(String[] m, String dfs_id, String dfs_desc, String dfs_version, String dfs_doctype, String dfs_filetype) {
+        public dfs_mstr(String[] m) {
             this(m, "", "", "", "", "");
         }
     }

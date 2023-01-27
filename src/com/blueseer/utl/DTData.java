@@ -989,24 +989,24 @@ public class DTData {
             ResultSet res = null;
             try{
                 if (state == 1) { // begins
-                    res = st.executeQuery("SELECT mps_id, mps_desc, mps_doctype  " +
-                        " FROM  map_struct where " + myfield + " like " + "'" + str + "%'" +
-                        " order by mps_id ;");
+                    res = st.executeQuery("SELECT dfs_id, dfs_desc, dfs_doctype  " +
+                        " FROM  dfs_mstr where " + myfield + " like " + "'" + str + "%'" +
+                        " order by dfs_id ;");
                 }
                 if (state == 2) { // ends
-                    res = st.executeQuery("SELECT mps_id, mps_desc, mps_doctype " +
-                        " FROM  map_struct where " + myfield + " like " + "'%" + str + "'" +
-                        " order by mps_id ;");
+                    res = st.executeQuery("SELECT dfs_id, dfs_desc, dfs_doctype " +
+                        " FROM  dfs_mstr where " + myfield + " like " + "'%" + str + "'" +
+                        " order by dfs_id ;");
                 }
                  if (state == 0) { // match
-                 res = st.executeQuery("SELECT mps_id, mps_desc, mps_doctype  " +
-                        " FROM  map_struct where " + myfield + " like " + "'%" + str + "%'" +
-                        " order by mps_id ;");
+                 res = st.executeQuery("SELECT dfs_id, dfs_desc, dfs_doctype  " +
+                        " FROM  dfs_mstr where " + myfield + " like " + "'%" + str + "%'" +
+                        " order by dfs_id ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("mps_id"),
-                                   res.getString("mps_desc"),
-                                   res.getString("mps_doctype")
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("dfs_id"),
+                                   res.getString("dfs_desc"),
+                                   res.getString("dfs_doctype")
                         });
                     }
            }

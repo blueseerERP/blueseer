@@ -730,12 +730,12 @@ CREATE TABLE "map_mstr" (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE "map_struct" (
-  "mps_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "mps_desc" varchar(130) NOT NULL COLLATE NOCASE DEFAULT '',
-  "mps_version" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
-  "mps_doctype" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
-  "mps_filetype" varchar(15) NOT NULL COLLATE NOCASE DEFAULT ''
+CREATE TABLE "dfs_mstr" (
+  "dfs_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "dfs_desc" varchar(130) NOT NULL COLLATE NOCASE DEFAULT '',
+  "dfs_version" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "dfs_doctype" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "dfs_filetype" varchar(15) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -2862,19 +2862,19 @@ CREATE TABLE "pks_mstr" (
   "pks_create" varchar(50) NOT NULL DEFAULT ''
 );
 CREATE TABLE "dfs_det" (
-  "dfs_id" varchar(80) NOT NULL DEFAULT '',
-  "dfs_segment" varchar(80) NOT NULL DEFAULT '',
-  "dfs_parent" varchar(200) NOT NULL DEFAULT '',
-  "dfs_loopcount" int(3) NOT NULL DEFAULT '0',
-  "dfs_isgroup" tinyint(1) NOT NULL DEFAULT '0',
-  "dfs_islandmark" tinyint(1) NOT NULL DEFAULT '0',
-  "dfs_field" varchar(80) NOT NULL DEFAULT '',
-  "dfs_desc" varchar(100) NOT NULL DEFAULT '',
-  "dfs_min" int(5) NOT NULL DEFAULT '0',
-  "dfs_max" int(5) NOT NULL DEFAULT '0',
-  "dfs_align" varchar(1) NOT NULL DEFAULT '',
-  "dfs_status" varchar(1) NOT NULL DEFAULT '',
-  "dfs_type" varchar(1) NOT NULL DEFAULT ''
+  "dfsd_id" varchar(80) NOT NULL DEFAULT '',
+  "dfsd_segment" varchar(80) NOT NULL DEFAULT '',
+  "dfsd_parent" varchar(200) NOT NULL DEFAULT '',
+  "dfsd_loopcount" int(3) NOT NULL DEFAULT '0',
+  "dfsd_isgroup" tinyint(1) NOT NULL DEFAULT '0',
+  "dfsd_islandmark" tinyint(1) NOT NULL DEFAULT '0',
+  "dfsd_field" varchar(80) NOT NULL DEFAULT '',
+  "dfsd_desc" varchar(100) NOT NULL DEFAULT '',
+  "dfsd_min" int(5) NOT NULL DEFAULT '0',
+  "dfsd_max" int(5) NOT NULL DEFAULT '0',
+  "dfsd_align" varchar(1) NOT NULL DEFAULT '',
+  "dfsd_status" varchar(1) NOT NULL DEFAULT '',
+  "dfsd_type" varchar(1) NOT NULL DEFAULT ''
 );
 CREATE TABLE "wkf_mstr" (
   "wkf_id" varchar(30) NOT NULL DEFAULT '',

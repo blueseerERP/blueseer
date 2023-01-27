@@ -104,12 +104,12 @@ CREATE TABLE IF NOT EXISTS `map_mstr` (
   `map_package` varchar(30)  NOT NULL DEFAULT '',
   `map_internal` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-CREATE TABLE IF NOT EXISTS `map_struct` (
-  `mps_id` varchar(30)  NOT NULL DEFAULT '',
-  `mps_desc` varchar(130)  NOT NULL DEFAULT '',
-  `mps_version` varchar(15)  NOT NULL DEFAULT '',
-  `mps_doctype` varchar(15)  NOT NULL DEFAULT '',
-  `mps_filetype` varchar(15)  NOT NULL DEFAULT ''
+CREATE TABLE IF NOT EXISTS `dfs_mstr` (
+  `dfs_id` varchar(30)  NOT NULL DEFAULT '',
+  `dfs_desc` varchar(130)  NOT NULL DEFAULT '',
+  `dfs_version` varchar(15)  NOT NULL DEFAULT '',
+  `dfs_doctype` varchar(15)  NOT NULL DEFAULT '',
+  `dfs_filetype` varchar(15)  NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `ap_ctrl` (
   `apc_bank` varchar(10)  NOT NULL DEFAULT '',
@@ -2426,20 +2426,20 @@ CREATE TABLE `web_verb` (
   `wbv_path` varchar(100) NOT NULL DEFAULT '',
   `wbv_active` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-CREATE TABLE `dsf_det` (
-  `dfs_id` varchar(80) NOT NULL DEFAULT '',
-  `dfs_segment` varchar(80) NOT NULL DEFAULT '',
-  `dfs_parent` varchar(200) NOT NULL DEFAULT '',
-  `dfs_loopcount` int(3) NOT NULL DEFAULT '0',
-  `dfs_isgroup` tinyint(1) NOT NULL DEFAULT '0',
-  `dfs_islandmark` tinyint(1) NOT NULL DEFAULT '0',
-  `dfs_field` varchar(80) NOT NULL DEFAULT '',
-  `dfs_desc` varchar(100) NOT NULL DEFAULT '',
-  `dfs_min` int(5) NOT NULL DEFAULT '0',
-  `dfs_max` int(5) NOT NULL DEFAULT '0',
-  `dfs_align` varchar(1) NOT NULL DEFAULT '',
-  `dfs_status` varchar(1) NOT NULL DEFAULT '',
-  `dfs_type` varchar(1) NOT NULL DEFAULT ''
+CREATE TABLE `dfs_det` (
+  `dfsd_id` varchar(80) NOT NULL DEFAULT '',
+  `dfsd_segment` varchar(80) NOT NULL DEFAULT '',
+  `dfsd_parent` varchar(200) NOT NULL DEFAULT '',
+  `dfsd_loopcount` int(3) NOT NULL DEFAULT '0',
+  `dfsd_isgroup` tinyint(1) NOT NULL DEFAULT '0',
+  `dfsd_islandmark` tinyint(1) NOT NULL DEFAULT '0',
+  `dfsd_field` varchar(80) NOT NULL DEFAULT '',
+  `dfsd_desc` varchar(100) NOT NULL DEFAULT '',
+  `dfsd_min` int(5) NOT NULL DEFAULT '0',
+  `dfsd_max` int(5) NOT NULL DEFAULT '0',
+  `dfsd_align` varchar(1) NOT NULL DEFAULT '',
+  `dfsd_status` varchar(1) NOT NULL DEFAULT '',
+  `dfsd_type` varchar(1) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `wkf_mstr` (
   `wkf_id` varchar(30) NOT NULL,

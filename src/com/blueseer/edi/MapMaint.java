@@ -3273,17 +3273,17 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
     private void ddifsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddifsActionPerformed
         if (! isLoad && ddifs.getSelectedItem() != null) {  
-          ediData.map_struct x = getMapStruct(new String[]{ddifs.getSelectedItem().toString()});
-          ddindoctype.setSelectedItem(x.mps_doctype());
-          ddinfiletype.setSelectedItem(x.mps_filetype());
+          ediData.dfs_mstr x = getMapStruct(new String[]{ddifs.getSelectedItem().toString()});
+          ddindoctype.setSelectedItem(x.dfs_doctype());
+          ddinfiletype.setSelectedItem(x.dfs_filetype());
         }
     }//GEN-LAST:event_ddifsActionPerformed
 
     private void ddofsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddofsActionPerformed
         if (! isLoad && ddofs.getSelectedItem() != null) {
-        ediData.map_struct x = getMapStruct(new String[]{ddofs.getSelectedItem().toString()});
-          ddoutdoctype.setSelectedItem(x.mps_doctype());
-          ddoutfiletype.setSelectedItem(x.mps_filetype());
+        ediData.dfs_mstr x = getMapStruct(new String[]{ddofs.getSelectedItem().toString()});
+          ddoutdoctype.setSelectedItem(x.dfs_doctype());
+          ddoutfiletype.setSelectedItem(x.dfs_filetype());
         }
     }//GEN-LAST:event_ddofsActionPerformed
 

@@ -32,7 +32,7 @@ import static bsmf.MainFrame.tags;
 import static com.blueseer.edi.ediData.addMapStruct;
 import static com.blueseer.edi.ediData.deleteMapStruct;
 import static com.blueseer.edi.ediData.getMapStruct;
-import com.blueseer.edi.ediData.map_struct;
+import com.blueseer.edi.ediData.dfs_mstr;
 import static com.blueseer.edi.ediData.updateMapStruct;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
@@ -87,7 +87,7 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
     
     // global variable declarations
                 boolean isLoad = false;
-                public static map_struct x = null;
+                public static dfs_mstr x = null;
     
    // global datatablemodel declarations   
    
@@ -316,38 +316,38 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }
      
     public boolean validateInput(dbaction x) {
-        Map<String,Integer> f = OVData.getTableInfo("map_struct");
+        Map<String,Integer> f = OVData.getTableInfo("dfs_mstr");
         int fc;
 
-        fc = checkLength(f,"mps_id");
+        fc = checkLength(f,"dfs_id");
         if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {
             bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
             tbkey.requestFocus();
             return false;
         }
 
-         fc = checkLength(f,"mps_desc");
+         fc = checkLength(f,"dfs_desc");
         if (tbdesc.getText().length() > fc) {
             bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
             tbdesc.requestFocus();
             return false;
         }
         
-        fc = checkLength(f,"mps_version");
+        fc = checkLength(f,"dfs_version");
         if (tbversion.getText().length() > fc) {
             bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
             tbversion.requestFocus();
             return false;
         }
         
-        fc = checkLength(f,"mps_doctype");
+        fc = checkLength(f,"dfs_doctype");
         if (dddoctype.getSelectedItem().toString().length() > fc || dddoctype.getSelectedItem().toString().isBlank()) {
             bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
             dddoctype.requestFocus();
             return false;
         }
         
-        fc = checkLength(f,"mps_filetype");
+        fc = checkLength(f,"dfs_filetype");
         if (ddfiletype.getSelectedItem().toString().length() > fc || ddfiletype.getSelectedItem().toString().isBlank() ) {
             bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
             ddfiletype.requestFocus();
@@ -399,8 +399,8 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         return x.m();
     }
     
-    public map_struct createRecord() { 
-        map_struct x = new map_struct(null, tbkey.getText(),
+    public dfs_mstr createRecord() { 
+        dfs_mstr x = new dfs_mstr(null, tbkey.getText(),
                 tbdesc.getText(),
                 tbversion.getText(),
                 dddoctype.getSelectedItem().toString(),
@@ -442,9 +442,9 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         lual = new ActionListener() {
         public void actionPerformed(ActionEvent event) {
         if (lurb1.isSelected()) {  
-         luModel = DTData.getMapStructBrowseUtil(luinput.getText(),0, "mps_id");  
+         luModel = DTData.getMapStructBrowseUtil(luinput.getText(),0, "dfs_id");  
         } else {
-         luModel = DTData.getMapStructBrowseUtil(luinput.getText(),0, "mps_desc");   
+         luModel = DTData.getMapStructBrowseUtil(luinput.getText(),0, "dfs_desc");   
         }
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
@@ -478,11 +478,11 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }
 
     public void updateForm() {
-        tbdesc.setText(x.mps_desc());
-        tbkey.setText(x.mps_id());
-        tbversion.setText(x.mps_version());
-        dddoctype.setSelectedItem(x.mps_doctype()); 
-        ddfiletype.setSelectedItem(x.mps_filetype()); 
+        tbdesc.setText(x.dfs_desc());
+        tbkey.setText(x.dfs_id());
+        tbversion.setText(x.dfs_version());
+        dddoctype.setSelectedItem(x.dfs_doctype()); 
+        ddfiletype.setSelectedItem(x.dfs_filetype()); 
         setAction(x.m()); 
     }
     
