@@ -2876,5 +2876,21 @@ CREATE TABLE "dfs_det" (
   "dfs_status" varchar(1) NOT NULL DEFAULT '',
   "dfs_type" varchar(1) NOT NULL DEFAULT ''
 );
+CREATE TABLE "wkf_mstr" (
+  "wkf_id" varchar(30) NOT NULL DEFAULT '',
+  "wkf_desc" varchar(100) NOT NULL DEFAULT '',
+  "wkf_enabled" tinyint(1) NOT NULL DEFAULT '0'
+);
+CREATE TABLE "wkfd_det" (
+  "wkfd_id" varchar(30) NOT NULL DEFAULT '',
+  "wkfd_action" varchar(100) NOT NULL DEFAULT '',
+  "wkfd_line" int(3) NOT NULL DEFAULT '0'
+);
+CREATE TABLE "wkfd_meta" (
+  "wkfdm_id" varchar(30) NOT NULL DEFAULT '',
+  "wkfdm_key" varchar(100) NOT NULL DEFAULT '',
+  "wkfdm_value" varchar(100) NOT NULL DEFAULT ''
+);
+
 
 End Transaction;
