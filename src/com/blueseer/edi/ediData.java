@@ -335,6 +335,315 @@ public class ediData {
         return r;
     }
     
+    public static String[] addDFStructureTransaction(ArrayList<dfs_det> dfsd, dfs_mstr dfs) {
+        String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            bscon = DriverManager.getConnection(url + db, user, pass);
+            bscon.setAutoCommit(false);
+            _addDFSMstr(dfs, bscon, ps, res);  
+            for (dfs_det z : dfsd) {
+                _addDFSDet(z, bscon, ps, res);
+            }
+            bscon.commit();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    private static int _addDFSMstr(dfs_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from dfs_mstr where dfs_id = ?";
+        String sqlInsert = "insert into dfs_mstr (dfs_id, dfs_desc, dfs_version, dfs_doctype, dfs_filetype "
+                + "  )  " +
+                " values (?,?,?,?,?); "; 
+       
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x.dfs_id);
+          res = ps.executeQuery();
+          ps = con.prepareStatement(sqlInsert);
+            if (! res.isBeforeFirst()) {
+            ps.setString(1, x.dfs_id);
+            ps.setString(2, x.dfs_desc);
+            ps.setString(3, x.dfs_version);
+            ps.setString(4, x.dfs_doctype);
+            ps.setString(5, x.dfs_filetype);
+            rows = ps.executeUpdate();
+            } 
+            return rows;
+    }
+    
+    private static int _addDFSDet(dfs_det x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from dfs_det where dfsd_id = ? and dfs_segment = ? and dfs_parent = ? and dfs_field = ?";
+        String sqlInsert = "insert into api_det (dfsd_id, dfsd_segment, dfsd_parent, dfsd_loopcount,  " +
+                             " dfsd_isgroup, dfsd_islandmark, dfsd_field, dfsd_desc, " +
+                            " dfsd_min, dfsd_max, dfsd_align, dfsd_status, dfsd_type ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+       
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x.dfsd_id);
+          ps.setString(2, x.dfsd_segment);
+          ps.setString(3, x.dfsd_parent);
+          ps.setString(4, x.dfsd_field);
+          res = ps.executeQuery();
+          ps = con.prepareStatement(sqlInsert);  
+            if (! res.isBeforeFirst()) {
+            ps.setString(1, x.dfsd_id);
+            ps.setString(2, x.dfsd_segment);
+            ps.setString(3, x.dfsd_parent);
+            ps.setString(4, x.dfsd_loopcount); 
+            ps.setString(5, x.dfsd_isgroup);
+            ps.setString(6, x.dfsd_islandmark);
+            ps.setString(7, x.dfsd_field);
+            ps.setString(8, x.dfsd_desc);
+            ps.setString(9, x.dfsd_min);
+            ps.setString(10, x.dfsd_max);
+            ps.setString(11, x.dfsd_align);
+            ps.setString(12, x.dfsd_status);
+            ps.setString(13, x.dfsd_type);
+            rows = ps.executeUpdate();
+            } 
+            return rows;
+    }
+    
+    public static String[] updateDFStructureTransaction(String x, ArrayList<dfs_det> dfsd, dfs_mstr dfs) {
+        String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            bscon = DriverManager.getConnection(url + db, user, pass);
+            bscon.setAutoCommit(false);
+             _deleteDFSLines(x, bscon);  // discard all lines
+            for (dfs_det z : dfsd) {
+                _addDFSDet(z, bscon, ps, res); 
+            }
+             _updateDFSMstr(dfs, bscon, ps);  // update so_mstr
+            bscon.commit();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    private static int _updateDFSMstr(dfs_mstr x, Connection con, PreparedStatement ps) throws SQLException {
+        int rows = 0;
+        String sql = "update dfs_mstr set dfs_desc = ?, dfs_version = ?, dfs_doctype = ?, dfs_filetype = ? " +
+                "  where dfs_id = ? ";
+	ps = con.prepareStatement(sql) ;
+            ps.setString(1, x.dfs_desc);
+            ps.setString(2, x.dfs_version);
+            ps.setString(3, x.dfs_doctype);
+            ps.setString(4, x.dfs_filetype); 
+            ps.setString(5, x.dfs_id);
+            rows = ps.executeUpdate();
+        return rows;
+    }
+    
+    private static int _updateDFSdet(dfs_det x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from dfs_det where dfsd_id = ? and dfsd_segment = ? and dfsd_parent = ? and dfsd_field = ?";
+        String sqlUpdate = "update dfs_det set dfsd_loopcount = ?, " +
+                           " dfsd_isgroup = ?, dfsd_islandmark = ?, dfsd_field = ?,  " +
+                           " dfsd_desc = ?, dfsd_min = ?, dfsd_max = ?, dfsd_align = ?, dfsd_status = ?, dfsd_type = ? " +
+                 " where dfsd_id = ? and dfsd_segment = ? and dfsd_parent = ? and dfsd_field = ? ; ";
+        String sqlInsert = "insert into dfs_det (dfsd_id, dfsd_segment, dfsd_parent, dfsd_loopcount,  " +
+                             " dfsd_isgroup, dfsd_islandmark, dfsd_field, dfsd_desc, " +
+                            " dfsd_min, dfsd_max, dfsd_align, dfsd_status, dfsd_type ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+        ps = con.prepareStatement(sqlSelect);
+        ps.setString(1, x.dfsd_id);
+        ps.setString(2, x.dfsd_segment);
+        ps.setString(3, x.dfsd_parent);
+        ps.setString(4, x.dfsd_field);
+        res = ps.executeQuery();
+        if (! res.isBeforeFirst()) {  // insert
+	 ps = con.prepareStatement(sqlInsert) ;
+            ps.setString(1, x.dfsd_id);
+            ps.setString(2, x.dfsd_segment);
+            ps.setString(3, x.dfsd_parent);
+            ps.setString(4, x.dfsd_loopcount); 
+            ps.setString(5, x.dfsd_isgroup);
+            ps.setString(6, x.dfsd_islandmark);
+            ps.setString(7, x.dfsd_field);
+            ps.setString(8, x.dfsd_desc);
+            ps.setString(9, x.dfsd_min);
+            ps.setString(10, x.dfsd_max);
+            ps.setString(11, x.dfsd_align);
+            ps.setString(12, x.dfsd_status);
+            ps.setString(13, x.dfsd_type);
+            // ps.setString(9, x.ecnt_notes);  another mechanism updates the Notes field
+            rows = ps.executeUpdate();
+        } else {    // update
+         
+         ps = con.prepareStatement(sqlUpdate) ;
+            ps.setString(1, x.dfsd_loopcount); 
+            ps.setString(2, x.dfsd_isgroup);
+            ps.setString(3, x.dfsd_islandmark);
+            ps.setString(4, x.dfsd_desc);
+            ps.setString(5, x.dfsd_min);
+            ps.setString(6, x.dfsd_max);
+            ps.setString(7, x.dfsd_align);
+            ps.setString(8, x.dfsd_status);
+            ps.setString(9, x.dfsd_type);
+            ps.setString(10, x.dfsd_id);
+            ps.setString(12, x.dfsd_segment);
+            ps.setString(13, x.dfsd_parent);
+            ps.setString(14, x.dfsd_field);
+            // ps.setString(7, x.ecnt_notes);  another mechanism updates the Notes field
+            rows = ps.executeUpdate();
+        }
+            
+        return rows;
+    }
+    
+    private static void _deleteDFSLines(String x, Connection con) throws SQLException { 
+        PreparedStatement ps = null; 
+        String sql = "delete from dfs_det where dfsd_id = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x);
+        ps.executeUpdate();
+        ps.close();
+    }
+    
+    public static ArrayList<dfs_det> getDFSDet(String code) {
+        dfs_det r = null;
+        String[] m = new String[2];
+        ArrayList<dfs_det> list = new ArrayList<dfs_det>();
+        String sql = "select * from dfs_det where dfsd_id = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, code);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new dfs_det(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new dfs_det(m, res.getString("dfsd_id"), 
+                        res.getString("dfsd_segment"), 
+                        res.getString("dfsd_parent"), 
+                        res.getString("dfsd_loopcount"), 
+                        res.getString("dfsd_isgroup"),
+                        res.getString("dfsd_islandmark"),
+                        res.getString("dfsd_field"),
+                        res.getString("dfsd_desc"),
+                        res.getString("dfsd_min"),
+                        res.getString("dfsd_max"),        
+                        res.getString("dfsd_align"),
+                        res.getString("dfsd_status"),
+                        res.getString("dfsd_type"));
+                        list.add(r);
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new dfs_det(m);
+               list.add(r);
+        }
+        return list;
+    }
+    
+    public static dfs_mstr getDFSMstr(String[] x) {
+        dfs_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from dfs_mstr where dfs_id = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new dfs_mstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new dfs_mstr(m, res.getString("dfs_id"), 
+                            res.getString("dfs_desc"),
+                            res.getString("dfs_version"),
+                            res.getString("dfs_doctype"),
+                            res.getString("dfs_filetype")
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new dfs_mstr(m);
+        }
+        return r;
+    }
+    
+    
+    
     public static String[] addMapStruct(dfs_mstr x) {
         String[] m = new String[2];
         String sqlSelect = "select * from dfs_mstr where dfs_id = ?";
@@ -386,9 +695,19 @@ public class ediData {
         return m;
     }
     
-    public static String[] deleteMapStruct(dfs_mstr x) { 
+    public static String[] deleteDFStructure(dfs_mstr x) { 
        String[] m = new String[2];
-        String sql = "delete from dfs_mstr where dfs_id = ?; ";
+        String sql = "delete from dfs_det where dfsd_id = ?; ";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.dfs_id);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        sql = "delete from dfs_mstr where dfs_id = ?; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, x.dfs_id);
@@ -401,36 +720,6 @@ public class ediData {
         return m;
     }
       
-    public static dfs_mstr getMapStruct(String[] x) {
-        dfs_mstr r = null;
-        String[] m = new String[2];
-        String sql = "select * from dfs_mstr where dfs_id = ? ;";
-        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
-	PreparedStatement ps = con.prepareStatement(sql);) {
-        ps.setString(1, x[0]);
-             try (ResultSet res = ps.executeQuery();) {
-                if (! res.isBeforeFirst()) {
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
-                r = new dfs_mstr(m);
-                } else {
-                    while(res.next()) {
-                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                        r = new dfs_mstr(m, res.getString("dfs_id"), 
-                            res.getString("dfs_desc"),
-                            res.getString("dfs_version"),
-                            res.getString("dfs_doctype"),
-                            res.getString("dfs_filetype")
-                        );
-                    }
-                }
-            }
-        } catch (SQLException s) {   
-	       MainFrame.bslog(s);  
-               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
-               r = new dfs_mstr(m);
-        }
-        return r;
-    }
     
     
     public static String[] addAPIMaint(api_mstr x) {
@@ -1644,6 +1933,16 @@ public class ediData {
             this(m, "", "", "", "", "");
         }
     }
+    
+    public record dfs_det(String[] m, String dfsd_id, String dfsd_segment, String dfsd_parent, String dfsd_loopcount, 
+        String dfsd_isgroup, String dfsd_islandmark, String dfsd_field, String dfsd_desc, String dfsd_min,
+        String dfsd_max, String dfsd_align, String dfsd_status, String dfsd_type) {
+        public dfs_det(String[] m) {
+            this(m, "", "", "", "", "", "", "", "", "", "",
+                    "", "", "");
+        }
+    }
+    
     
     public record as2_mstr(String[] m, String as2_id, String as2_desc, String as2_version,
         String as2_url, String as2_port, String as2_path, String as2_user ,

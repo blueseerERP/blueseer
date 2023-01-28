@@ -29,13 +29,18 @@ package com.blueseer.edi;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.tags;
+import static com.blueseer.edi.ediData.addDFStructureTransaction;
 import static com.blueseer.edi.ediData.addMapStruct;
-import static com.blueseer.edi.ediData.deleteMapStruct;
-import static com.blueseer.edi.ediData.getMapStruct;
+import static com.blueseer.edi.ediData.deleteDFStructure;
+import com.blueseer.edi.ediData.dfs_det;
 import com.blueseer.edi.ediData.dfs_mstr;
+import static com.blueseer.edi.ediData.getDFSDet;
+import static com.blueseer.edi.ediData.getDFSMstr;
+import static com.blueseer.edi.ediData.updateDFStructureTransaction;
 import static com.blueseer.edi.ediData.updateMapStruct;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.ConvertIntToYesNo;
 import static com.blueseer.utl.BlueSeerUtils.ConvertTrueFalseToBoolean;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
@@ -90,6 +95,7 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
     // global variable declarations
                 boolean isLoad = false;
                 public static dfs_mstr x = null;
+                public static ArrayList<dfs_det> dfsdetlist = null;
     
                 // global datatablemodel declarations       
      javax.swing.table.DefaultTableModel detailmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -406,7 +412,8 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }
    
     public String[] getRecord(String[] key) {
-        x = getMapStruct(key);   
+        x = getDFSMstr(key);  
+        dfsdetlist = getDFSDet(key[0]); 
         return x.m();
     }
     
@@ -424,14 +431,39 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         */
         return x;
     }
+     
+    public ArrayList<dfs_det> createDetRecord() {
+        ArrayList<dfs_det> list = new ArrayList<dfs_det>();
+         for (int j = 0; j < tabledetail.getRowCount(); j++) {
+             dfs_det x = new dfs_det(null, 
+                tbkey.getText(),
+                tabledetail.getValueAt(j, 0).toString(),
+                tabledetail.getValueAt(j, 1).toString(),
+                tabledetail.getValueAt(j, 2).toString(),
+                String.valueOf(BlueSeerUtils.boolToInt(Boolean.valueOf(tabledetail.getValueAt(j, 3).toString()))),
+                String.valueOf(BlueSeerUtils.boolToInt(Boolean.valueOf(tabledetail.getValueAt(j, 4).toString()))),
+                tabledetail.getValueAt(j, 5).toString(),
+                tabledetail.getValueAt(j, 6).toString(),
+                tabledetail.getValueAt(j, 7).toString(),
+                tabledetail.getValueAt(j, 8).toString(),
+                tabledetail.getValueAt(j, 9).toString(),
+                tabledetail.getValueAt(j, 10).toString(),
+                tabledetail.getValueAt(j, 11).toString()
+                );
        
+        list.add(x);
+         }
+        return list;   
+    }
+    
+    
     public String[] addRecord(String[] key) {
-         String[] m = addMapStruct(createRecord());
+         String[] m = addDFStructureTransaction(createDetRecord(), createRecord());
          return m;
     }
         
     public String[] updateRecord(String[] key) {
-         String[] m = updateMapStruct(createRecord());
+         String[] m = updateDFStructureTransaction(key[0], createDetRecord(), createRecord());
          return m;
     }
     
@@ -439,7 +471,7 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         String[] m = new String[2];
         boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
-         m = deleteMapStruct(createRecord()); 
+         m = deleteDFStructure(createRecord()); 
          initvars(null);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
@@ -495,6 +527,27 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         dddoctype.setSelectedItem(x.dfs_doctype()); 
         ddfiletype.setSelectedItem(x.dfs_filetype()); 
         setAction(x.m()); 
+        
+        // now detail
+        detailmodel.setRowCount(0);
+        for (dfs_det dfsd : dfsdetlist) {
+                    detailmodel.addRow(new Object[]{
+                      dfsd.dfsd_segment(),   
+                      dfsd.dfsd_parent(),
+                      dfsd.dfsd_loopcount(),
+                      ConvertIntToYesNo(Integer.valueOf(dfsd.dfsd_isgroup())),
+                      ConvertIntToYesNo(Integer.valueOf(dfsd.dfsd_islandmark())),
+                      dfsd.dfsd_field(),
+                      dfsd.dfsd_desc(),
+                      dfsd.dfsd_min(),
+                      dfsd.dfsd_max(),
+                      dfsd.dfsd_align(),
+                      dfsd.dfsd_status(),
+                      dfsd.dfsd_type()
+                     
+                  });
+                }
+        
     }
     
     // misc methods
