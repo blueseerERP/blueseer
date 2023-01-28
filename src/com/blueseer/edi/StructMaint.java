@@ -41,6 +41,7 @@ import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
@@ -279,6 +280,11 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
     
     public void setComponentDefaultValues() {
         isLoad = true;
+        
+       detailmodel.setRowCount(0);
+       tabledetail.setModel(detailmodel);
+       tabledetail.getTableHeader().setReorderingAllowed(false);
+        
         tbkey.setText("");
         tbdesc.setText("");
         tbversion.setText("");
@@ -533,6 +539,17 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         return isgood;
     }
     
+    public Integer getmaxline() {
+        int max = 0;
+        int current = 0;
+        for (int j = 0; j < tabledetail.getRowCount(); j++) {
+            current = Integer.valueOf(tabledetail.getValueAt(j, 0).toString()); 
+            if (current > max) {
+                max = current;
+            }
+         }
+        return max;
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -703,6 +720,11 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         });
 
         btupdaterow.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/change.png"))); // NOI18N
+        btupdaterow.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btupdaterowActionPerformed(evt);
+            }
+        });
 
         btdeleterow.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/delete.png"))); // NOI18N
         btdeleterow.addActionListener(new java.awt.event.ActionListener() {
@@ -1033,6 +1055,38 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         ddstatus.setSelectedItem(tabledetail.getValueAt(row, 10).toString());
         ddtype.setSelectedItem(tabledetail.getValueAt(row, 11).toString());
     }//GEN-LAST:event_tabledetailMouseClicked
+
+    private void btupdaterowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdaterowActionPerformed
+        int line = 0;
+        line = getmaxline();
+        line++;
+        
+        int[] rows = tabledetail.getSelectedRows();
+        if (rows.length != 1) {
+            bsmf.MainFrame.show(getMessageTag(1095));
+                return;
+        }
+        
+        String group = BlueSeerUtils.ConvertIntToYesNo(BlueSeerUtils.boolToInt(cbisgroup.isSelected()));
+        String landmark = BlueSeerUtils.ConvertIntToYesNo(BlueSeerUtils.boolToInt(cbislandmark.isSelected()));
+          
+        
+        for (int i : rows) {
+                tabledetail.setValueAt(tbsegment.getText(), i, 0);
+                tabledetail.setValueAt(tbparent.getText(), i, 1);
+                tabledetail.setValueAt(tbloopcount.getText(), i, 2);
+                tabledetail.setValueAt(group, i, 3);
+                tabledetail.setValueAt(landmark, i, 4);
+                tabledetail.setValueAt(tbfield.getText(), i, 5);
+                tabledetail.setValueAt(tbfielddesc.getText(), i, 6);
+                tabledetail.setValueAt(tbmin.getText(), i, 7);
+                tabledetail.setValueAt(tbmax.getText(), i, 8);
+                tabledetail.setValueAt(ddalign.getSelectedItem().toString(), i, 9);
+                tabledetail.setValueAt(ddstatus.getSelectedItem().toString(), i, 10);
+                tabledetail.setValueAt(ddtype.getSelectedItem().toString(), i, 11);
+        }
+        
+    }//GEN-LAST:event_btupdaterowActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
