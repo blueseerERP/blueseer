@@ -36,6 +36,7 @@ import com.blueseer.edi.ediData.dfs_mstr;
 import static com.blueseer.edi.ediData.updateMapStruct;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.ConvertTrueFalseToBoolean;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
@@ -89,7 +90,11 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 boolean isLoad = false;
                 public static dfs_mstr x = null;
     
-   // global datatablemodel declarations   
+                // global datatablemodel declarations       
+     javax.swing.table.DefaultTableModel detailmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+            new String[]{
+                "Segment", "Parent", "LoopCount", "Group", "LandMark", "Field", "Desc", "Mix", "Max", "Align", "Status", "Type"
+            });
    
     public StructMaint() {
         initComponents();
@@ -578,11 +583,11 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
         jLabel13 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        btaddrow = new javax.swing.JButton();
+        btupdaterow = new javax.swing.JButton();
+        btdeleterow = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tabledetail = new javax.swing.JTable();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -690,11 +695,21 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
         jLabel13.setText("LoopCount");
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/add.png"))); // NOI18N
+        btaddrow.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/add.png"))); // NOI18N
+        btaddrow.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btaddrowActionPerformed(evt);
+            }
+        });
 
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/change.png"))); // NOI18N
+        btupdaterow.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/change.png"))); // NOI18N
 
-        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/delete.png"))); // NOI18N
+        btdeleterow.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/delete.png"))); // NOI18N
+        btdeleterow.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btdeleterowActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -741,11 +756,11 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
                             .addComponent(ddalign, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(469, 469, 469)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btupdaterow, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btaddrow, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btdeleterow, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(58, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -801,15 +816,15 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(1, 1, 1)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton2)
+                            .addComponent(btupdaterow)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(tbfielddesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jButton1))
-                            .addComponent(jButton3))))
+                                .addComponent(btaddrow))
+                            .addComponent(btdeleterow))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tabledetail.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -820,7 +835,12 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        tabledetail.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabledetailMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tabledetail);
 
         javax.swing.GroupLayout panelmaintLayout = new javax.swing.GroupLayout(panelmaint);
         panelmaint.setLayout(panelmaintLayout);
@@ -952,14 +972,79 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         lookUpFrame();
     }//GEN-LAST:event_btlookupActionPerformed
 
+    private void btaddrowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddrowActionPerformed
+         String group = BlueSeerUtils.ConvertIntToYesNo(BlueSeerUtils.boolToInt(cbisgroup.isSelected()));
+         String landmark = BlueSeerUtils.ConvertIntToYesNo(BlueSeerUtils.boolToInt(cbislandmark.isSelected()));
+            
+            detailmodel.addRow(new Object[]{ 
+                tbsegment.getText(),
+                tbparent.getText(),
+                tbloopcount.getText(),
+                group,
+                landmark,
+                tbfield.getText(),
+                tbfielddesc.getText(),
+                tbmin.getText(),
+                tbmax.getText(),
+                ddalign.getSelectedItem().toString(),
+                ddstatus.getSelectedItem().toString(),
+                ddtype.getSelectedItem().toString()
+            });
+            
+       
+       tbsegment.setText("");
+       tbparent.setText("");
+        tbloopcount.setText("");
+        cbisgroup.setSelected(false);
+        cbislandmark.setSelected(false);
+        tbfield.setText("");
+        tbfielddesc.setText("");
+        tbmin.setText("");
+        tbmax.setText("");
+        ddalign.setSelectedIndex(0);
+        ddstatus.setSelectedIndex(0);
+        ddtype.setSelectedIndex(0);
+       
+    }//GEN-LAST:event_btaddrowActionPerformed
+
+    private void btdeleterowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleterowActionPerformed
+        int[] rows = tabledetail.getSelectedRows();
+        for (int i : rows) {
+            bsmf.MainFrame.show(getMessageTag(1031,String.valueOf(i)));
+            ((javax.swing.table.DefaultTableModel) tabledetail.getModel()).removeRow(i);
+            
+        }
+    }//GEN-LAST:event_btdeleterowActionPerformed
+
+    private void tabledetailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabledetailMouseClicked
+        int row = tabledetail.rowAtPoint(evt.getPoint());
+        int col = tabledetail.columnAtPoint(evt.getPoint());
+        // element, percent, type, enabled
+        tbsegment.setText(tabledetail.getValueAt(row, 0).toString());
+        tbparent.setText(tabledetail.getValueAt(row, 1).toString());
+        tbloopcount.setText(tabledetail.getValueAt(row, 2).toString());
+        cbisgroup.setSelected(ConvertTrueFalseToBoolean(tabledetail.getValueAt(row, 3).toString()));
+        cbislandmark.setSelected(ConvertTrueFalseToBoolean(tabledetail.getValueAt(row, 4).toString()));
+        tbfield.setText(tabledetail.getValueAt(row, 5).toString());
+        tbfielddesc.setText(tabledetail.getValueAt(row, 6).toString());
+        tbmin.setText(tabledetail.getValueAt(row, 7).toString());
+        tbmax.setText(tabledetail.getValueAt(row, 8).toString());
+        ddalign.setSelectedItem(tabledetail.getValueAt(row, 9).toString());
+        ddstatus.setSelectedItem(tabledetail.getValueAt(row, 10).toString());
+        ddtype.setSelectedItem(tabledetail.getValueAt(row, 11).toString());
+    }//GEN-LAST:event_tabledetailMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
+    private javax.swing.JButton btaddrow;
     private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
+    private javax.swing.JButton btdeleterow;
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
+    private javax.swing.JButton btupdaterow;
     private javax.swing.JCheckBox cbisgroup;
     private javax.swing.JCheckBox cbislandmark;
     private javax.swing.JComboBox<String> ddalign;
@@ -967,9 +1052,6 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
     private javax.swing.JComboBox<String> ddfiletype;
     private javax.swing.JComboBox<String> ddstatus;
     private javax.swing.JComboBox<String> ddtype;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -985,10 +1067,10 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lbldesc;
     private javax.swing.JLabel lblid;
     private javax.swing.JPanel panelmaint;
+    private javax.swing.JTable tabledetail;
     private javax.swing.JTextField tbdesc;
     private javax.swing.JTextField tbfield;
     private javax.swing.JTextField tbfielddesc;
