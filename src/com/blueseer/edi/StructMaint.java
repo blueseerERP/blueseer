@@ -76,6 +76,7 @@ import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -604,6 +605,32 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         return max;
     }
     
+    public File getfile(String title) {
+        
+        File file = null;
+        JFileChooser jfc = new JFileChooser(FileSystems.getDefault().getPath("edi").toFile());
+        jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        jfc.setDialogTitle(title);
+        int returnVal = jfc.showOpenDialog(this);
+       
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            try {
+            file = jfc.getSelectedFile();
+            String SourceDir = file.getAbsolutePath();
+            file = new File(SourceDir);
+               if (! file.exists()) {
+                 return null;
+               }
+            }
+            catch (Exception ex) {
+            ex.printStackTrace();
+            }
+        } 
+        return file;
+    }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -656,6 +683,7 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         btaddrow = new javax.swing.JButton();
         btupdaterow = new javax.swing.JButton();
         btdeleterow = new javax.swing.JButton();
+        btimport = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabledetail = new javax.swing.JTable();
 
@@ -786,6 +814,13 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
             }
         });
 
+        btimport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/input.png"))); // NOI18N
+        btimport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btimportActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -836,7 +871,9 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
                         .addComponent(btaddrow, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btdeleterow, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(58, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btimport, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(24, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -895,7 +932,8 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(tbfielddesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(btaddrow))
-                            .addComponent(btdeleterow))))
+                            .addComponent(btdeleterow)
+                            .addComponent(btimport))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -1141,6 +1179,51 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         
     }//GEN-LAST:event_btupdaterowActionPerformed
 
+    private void btimportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btimportActionPerformed
+        List<String> lines = new ArrayList<>();
+        File file = getfile("Open Structure File");
+        if (file != null && file.exists()) {
+                try {   
+                    lines = Files.readAllLines(file.toPath());
+                } catch (MalformedInputException m) {
+                    bslog(m);
+                    bsmf.MainFrame.show("Structure file may not be UTF-8 encoded");
+                } catch (IOException ex) {
+                    bslog(ex);
+                    bsmf.MainFrame.show("Error...check data/app.log");
+                }   
+        }
+        String v11 = "";
+        detailmodel.setRowCount(0);
+        for (String s : lines) {
+            if (s.startsWith("#")) {
+                continue;
+            }
+            String[] arr = s.split(",", -1);
+            if (arr != null && arr.length > 10) {
+                if (arr.length < 12) {
+                    v11 = "";
+                } else {
+                    v11 = arr[11];
+                }
+                detailmodel.addRow(new Object[]{
+                    arr[0],
+                    arr[1],
+                    arr[2],
+                    arr[3],
+                    arr[4],
+                    arr[5],
+                    arr[6],
+                    arr[7],
+                    arr[8],
+                    arr[9],
+                    arr[10],
+                    v11
+                  });
+            }
+        }
+    }//GEN-LAST:event_btimportActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
@@ -1148,6 +1231,7 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
     private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btdeleterow;
+    private javax.swing.JButton btimport;
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;

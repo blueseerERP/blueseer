@@ -326,7 +326,9 @@
                               <Component id="btdeleterow" min="-2" pref="28" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace pref="58" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="btimport" min="-2" pref="28" max="-2" attributes="0"/>
+                      <EmptySpace pref="24" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -403,6 +405,7 @@
                                       <Component id="btaddrow" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Component id="btdeleterow" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btimport" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -555,6 +558,16 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdeleterowActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="btimport">
+              <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/images/input.png"/>
+                </Property>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btimportActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>

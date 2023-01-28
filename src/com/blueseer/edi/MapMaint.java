@@ -81,8 +81,9 @@ import com.blueseer.edi.EDIMap.UserDefinedException;
 import static com.blueseer.edi.EDIMap.splitFFSegment;
 import static com.blueseer.edi.ediData.addMapMstr;
 import static com.blueseer.edi.ediData.deleteMapMstr;
+import static com.blueseer.edi.ediData.getDFSMstr;
 import static com.blueseer.edi.ediData.getMapMstr;
-import static com.blueseer.edi.ediData.getMapStruct;
+
 import com.blueseer.edi.ediData.map_mstr;
 import static com.blueseer.edi.ediData.updateMapMstr;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
@@ -3273,7 +3274,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
     private void ddifsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddifsActionPerformed
         if (! isLoad && ddifs.getSelectedItem() != null) {  
-          ediData.dfs_mstr x = getMapStruct(new String[]{ddifs.getSelectedItem().toString()});
+          ediData.dfs_mstr x = getDFSMstr(new String[]{ddifs.getSelectedItem().toString()});
           ddindoctype.setSelectedItem(x.dfs_doctype());
           ddinfiletype.setSelectedItem(x.dfs_filetype());
         }
@@ -3281,7 +3282,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
     private void ddofsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddofsActionPerformed
         if (! isLoad && ddofs.getSelectedItem() != null) {
-        ediData.dfs_mstr x = getMapStruct(new String[]{ddofs.getSelectedItem().toString()});
+        ediData.dfs_mstr x = getDFSMstr(new String[]{ddofs.getSelectedItem().toString()});
           ddoutdoctype.setSelectedItem(x.dfs_doctype());
           ddoutfiletype.setSelectedItem(x.dfs_filetype());
         }

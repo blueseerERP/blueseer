@@ -408,8 +408,8 @@ public class ediData {
     
     private static int _addDFSDet(dfs_det x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
-        String sqlSelect = "select * from dfs_det where dfsd_id = ? and dfs_segment = ? and dfs_parent = ? and dfs_field = ?";
-        String sqlInsert = "insert into api_det (dfsd_id, dfsd_segment, dfsd_parent, dfsd_loopcount,  " +
+        String sqlSelect = "select * from dfs_det where dfsd_id = ? and dfsd_segment = ? and dfsd_parent = ? and dfsd_field = ?";
+        String sqlInsert = "insert into dfs_det (dfsd_id, dfsd_segment, dfsd_parent, dfsd_loopcount,  " +
                              " dfsd_isgroup, dfsd_islandmark, dfsd_field, dfsd_desc, " +
                             " dfsd_min, dfsd_max, dfsd_align, dfsd_status, dfsd_type ) "
                         + " values (?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
