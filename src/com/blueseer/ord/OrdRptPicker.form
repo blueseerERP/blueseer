@@ -40,6 +40,7 @@
             <TitledBorder title="Sales Order Report Picker"/>
           </Border>
         </Property>
+        <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
       </Properties>
 
       <Layout>
