@@ -1358,6 +1358,8 @@ public class OrdRptPicker extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         tablereport = new javax.swing.JTable();
 
+        setName(""); // NOI18N
+
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Sales Order Report Picker"));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
