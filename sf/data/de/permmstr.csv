@@ -42,6 +42,7 @@ admin,EDIDocumentMaint
 admin,EDIPartnerDocBrowse
 admin,EDILoad
 admin,EDIControl
+admin,EDIUtilities
 admin,LabelMenu
 admin,LabelsContGeneric
 admin,AddrLabel
