@@ -441,8 +441,8 @@ public class EDIUtilities extends javax.swing.JPanel {
            lbdate1.setText(getClassLabelTag("lblfromdate", this.getClass().getSimpleName()));
            lbdate2.setText(getClassLabelTag("lbltodate", this.getClass().getSimpleName()));
            java.util.Date now = new java.util.Date();
-           dcdate1.setDate(now);
-           dcdate2.setDate(now);
+          // dcdate1.setDate(now);
+          // dcdate2.setDate(now);
          } else { // output...fill report
             // colect variables from input
             String from = tbkey1.getText();
