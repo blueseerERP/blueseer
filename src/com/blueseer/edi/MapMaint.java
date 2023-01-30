@@ -1848,9 +1848,10 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }
     
     public void highlightNext(JTextComponent ta) {
-       int current = tainput.getCaretPosition();
+       int current = 0; 
        
        if (ta.getName().equals("tainput")) {
+            current = tainput.getCaretPosition();
             Highlighter h = tainput.getHighlighter();
             Highlighter.Highlight[] hl = h.getHighlights();
             for (int i = 0; i < hl.length; i++) {
@@ -1863,6 +1864,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             }
         }
        if (ta.getName().equals("tainstruct")) {
+           current = tainstruct.getCaretPosition();
             Highlighter h = tainstruct.getHighlighter();
             Highlighter.Highlight[] hl = h.getHighlights();
             for (int i = 0; i < hl.length; i++) {
@@ -1875,6 +1877,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             }
         }
        if (ta.getName().equals("taoutstruct")) {
+           current = taoutstruct.getCaretPosition();
             Highlighter h = taoutstruct.getHighlighter();
             Highlighter.Highlight[] hl = h.getHighlights();
             for (int i = 0; i < hl.length; i++) {
@@ -1887,6 +1890,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             }
         }
         if (ta.getName().equals("tamap")) {
+            current = tamap.getCaretPosition();
             Highlighter h = tamap.getHighlighter();
             Highlighter.Highlight[] hl = h.getHighlights();
             for (int i = 0; i < hl.length; i++) {
@@ -1899,6 +1903,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             }
         }
         if (ta.getName().equals("taoutput")) {
+            current = taoutput.getCaretPosition();
             Highlighter h = taoutput.getHighlighter();
             Highlighter.Highlight[] hl = h.getHighlights();
             for (int i = 0; i < hl.length; i++) {
