@@ -274,14 +274,32 @@ public class EDIUtilities extends javax.swing.JPanel {
       } 
       ddtable.setSelectedIndex(0);
       resetVariables();
-      hidePanels();
+      hideInputPanels();
       panelinput.setVisible(true);
+      paneloutput.setVisible(true);
       
       rbactive.setSelected(true);
       rbinactive.setSelected(false);
       buttonGroup1.add(rbactive);
       buttonGroup1.add(rbinactive);
       isLoad = false;
+    }
+   
+    public void processAction(boolean b) {
+        String x = ddtable.getSelectedItem().toString();
+            String[] xar = x.split("\\.",-1);
+            String util = xar[0];
+            if (xar != null && xar.length > 1) {
+                if (util.equals("1")) {
+                    determineX12Delimiters(b);
+                }
+                if (util.equals("2")) {
+                    replaceDelimiterWithNL(b);
+                }
+            } else { // no period to split...must be blank or malformed selection element
+               resetVariables();
+               hideInputPanels();
+            }
     }
     
     public File getfile(String title) {
@@ -309,23 +327,28 @@ public class EDIUtilities extends javax.swing.JPanel {
         return file;
     }
     
-    public void replacehex(String data) {
+    public void replacehex(String data, String fromhexparam, String tohexparam) {
        
         char toHex = 0;
-       
-        String text = bsmf.MainFrame.input("Hex Chars: ");
-        if (text == null || text.isBlank()) {
-            return;
-        }
-        String[] replacehex = text.split("\\|",-1);
-        if (replacehex == null || replacehex.length != 2 || replacehex[0].isBlank()) {
-            return;
-        }
-        char fromHex = (char) Integer.parseInt(replacehex[0], 16);
-        if (! replacehex[1].isBlank()) { 
-        toHex = (char) Integer.parseInt(replacehex[1], 16);
-        }
+        char fromHex = 0;
         
+        if (fromhexparam.isBlank() || tohexparam.isBlank()) {
+            String text = bsmf.MainFrame.input("Hex Chars: ");
+            if (text == null || text.isBlank()) {
+                return;
+            }
+            String[] replacehex = text.split("\\|",-1);
+            if (replacehex == null || replacehex.length != 2 || replacehex[0].isBlank()) {
+                return;
+            }
+            fromHex = (char) Integer.parseInt(replacehex[0], 16);
+            if (! replacehex[1].isBlank()) { 
+            toHex = (char) Integer.parseInt(replacehex[1], 16);
+            }
+        } else {
+            fromHex = (char) Integer.parseInt(fromhexparam, 16);
+            toHex = (char) Integer.parseInt(tohexparam, 16);
+        }
        
         int count = 0;
         char[] carray = data.toCharArray();
@@ -344,18 +367,17 @@ public class EDIUtilities extends javax.swing.JPanel {
         taoutput.setText(sb.toString());
         paneloutput.setVisible(true);
         taoutput.setCaretPosition(0);
-        bsmf.MainFrame.show("Occurences: " + count);
+       // bsmf.MainFrame.show("Occurences: " + count);
         
     }
     
-     public void hidePanels() {
+    public void hideInputPanels() {
         paneltb.setVisible(false);
         paneltb2.setVisible(false);
         paneldc.setVisible(false);
         paneldd.setVisible(false);
         panelrb.setVisible(false);
-        paneloutput.setVisible(false);
-        panelinput.setVisible(false);
+        panelboxes.setVisible(false);
     }   
     
     public void showPanels(String[] panels) {
@@ -426,15 +448,29 @@ public class EDIUtilities extends javax.swing.JPanel {
         lbdate2.setVisible(true);
     }
     
+    public String[] getHexDelimiters(String doc) {
+        String[] x = null;
+        
+        char[] cbuf = doc.toCharArray();
+       
+        if (cbuf[0] == 'I' && cbuf[1] == 'S' && cbuf[2] == 'A') {
+            x = new String[3];
+            x[0] = String.format("%04x", (int) cbuf[103]); // element
+            x[1] = String.format("%04x", (int) cbuf[104]); // sub
+            x[2] = String.format("%04x", (int) cbuf[105]); // segment
+        }
+          
+        return x;
+    }
     
-    public void replaceDelimiterWithNL (boolean input) {
+    public void replaceDelimiterWithNL(boolean input) {
          
          if (input) { // input...draw variable input panel
            resetVariables();
-           hidePanels();
+           hideInputPanels();
           // showPanels(new String[]{"tb","dc"});
            btrun.setVisible(true);
-           btfile.setVisible(true);
+           btfile.setVisible(false);
            btdir.setVisible(false);
            lbkey1.setText(getClassLabelTag("lblfromcode", this.getClass().getSimpleName()));
            lbkey2.setText(getClassLabelTag("lbltocode", this.getClass().getSimpleName()));
@@ -463,8 +499,149 @@ public class EDIUtilities extends javax.swing.JPanel {
                   todate = bsmf.MainFrame.hidate;
             }
        
+            
+        if (tainput.getText().isEmpty()) {    
+        File file = getfile("open target file");
+        taoutput.setText("");
+        tainput.setText("");
+        // executeTask(ddtable.getSelectedItem().toString(), null, "");
+        if (file != null && file.exists()) {
+                try {  
+                    BufferedReader f = new BufferedReader(new FileReader(file));
+                     char[] cbuf = new char[(int) file.length()];
+                     f.read(cbuf); 
+                     f.close();
+                    
+                     StringBuilder docstring = new StringBuilder();
+                    for (int i = 0; i < cbuf.length; i++) {
+                        docstring.append(cbuf[i]);
+                    }
+                    tainput.setText(docstring.toString());
+                  //  lines = Files.readAllLines(file.toPath());
+                    /*
+                    for (String segment : lines ) {
+                        tainput.append(segment);
+                        tainput.append("\n");
+                    }
+                    */
+                    tainput.setCaretPosition(0);
+                    panelinput.setVisible(true);
+                    
+                    
+                } catch (MalformedInputException m) {
+                    bslog(m);
+                    bsmf.MainFrame.show("Input file may not be UTF-8 encoded");
+                } catch (IOException ex) {
+                    bslog(ex);
+                    bsmf.MainFrame.show("Error...check data/app.log");
+                }   
+        }
+        } // if tainput is empty   
+            
             if (! tainput.getText().isEmpty()) {
-               replacehex(tainput.getText());
+                String[] delims = getHexDelimiters(tainput.getText());
+                 //   if (delims != null) {
+                  //      bsmf.MainFrame.show("hex delims: (seg, ele, sub) = ( " + delims[2] + "," + delims[0] + "," + delims[1] + ")");
+                  //  }
+               replacehex(tainput.getText(),delims[2],"0a");
+            }
+            
+            
+      
+        } // else run report
+    }
+    
+    public void determineX12Delimiters(boolean input) {
+         
+         if (input) { // input...draw variable input panel
+           resetVariables();
+           hideInputPanels();
+          // showPanels(new String[]{"tb","dc"});
+           btrun.setVisible(true);
+           btfile.setVisible(false);
+           btdir.setVisible(false);
+           lbkey1.setText(getClassLabelTag("lblfromcode", this.getClass().getSimpleName()));
+           lbkey2.setText(getClassLabelTag("lbltocode", this.getClass().getSimpleName()));
+           lbdate1.setText(getClassLabelTag("lblfromdate", this.getClass().getSimpleName()));
+           lbdate2.setText(getClassLabelTag("lbltodate", this.getClass().getSimpleName()));
+           java.util.Date now = new java.util.Date();
+          // dcdate1.setDate(now);
+          // dcdate2.setDate(now);
+         } else { // output...fill report
+            // colect variables from input
+            taoutput.setText("");
+            String from = tbkey1.getText();
+            String to = tbkey2.getText();
+            String fromdate = BlueSeerUtils.setDateFormat(dcdate1.getDate());
+            String todate = BlueSeerUtils.setDateFormat(dcdate2.getDate());
+            // cleanup variables
+            if (from.isEmpty()) {
+                  from = bsmf.MainFrame.lownbr;
+            }
+            if (to.isEmpty()) {
+                  to = bsmf.MainFrame.hinbr;
+            }
+            if (fromdate.isEmpty()) {
+                  fromdate = bsmf.MainFrame.lowdate;
+            }
+            if (todate.isEmpty()) {
+                  todate = bsmf.MainFrame.hidate;
+            }
+       
+            
+        if (tainput.getText().isEmpty()) {    
+        File file = getfile("open target file");
+        taoutput.setText("");
+        tainput.setText("");
+        // executeTask(ddtable.getSelectedItem().toString(), null, "");
+        if (file != null && file.exists()) {
+                try {  
+                    BufferedReader f = new BufferedReader(new FileReader(file));
+                     char[] cbuf = new char[(int) file.length()];
+                     f.read(cbuf); 
+                     f.close();
+                    
+                     StringBuilder docstring = new StringBuilder();
+                    for (int i = 0; i < cbuf.length; i++) {
+                        docstring.append(cbuf[i]);
+                    }
+                    tainput.setText(docstring.toString());
+                  //  lines = Files.readAllLines(file.toPath());
+                    /*
+                    for (String segment : lines ) {
+                        tainput.append(segment);
+                        tainput.append("\n");
+                    }
+                    */
+                    tainput.setCaretPosition(0);
+                    panelinput.setVisible(true);
+                    
+                    
+                } catch (MalformedInputException m) {
+                    bslog(m);
+                    bsmf.MainFrame.show("Input file may not be UTF-8 encoded");
+                } catch (IOException ex) {
+                    bslog(ex);
+                    bsmf.MainFrame.show("Error...check data/app.log");
+                }   
+        }
+        } // if tainput is empty   
+            
+            if (! tainput.getText().isEmpty()) {
+                String[] delims = getHexDelimiters(tainput.getText());
+                 //   if (delims != null) {
+                  //      bsmf.MainFrame.show("hex delims: (seg, ele, sub) = ( " + delims[2] + "," + delims[0] + "," + delims[1] + ")");
+                  //  }
+              // replacehex(tainput.getText(),delims[2],"0a");
+              taoutput.append("X12 Delimiter Values in Hex: " + "\n");
+              if (delims != null) {
+              taoutput.append("Segment (hex): " + delims[2] + "\n");
+              taoutput.append("Element (hex): " + delims[0] + "\n");
+              taoutput.append("SubElement (hex): " + delims[1] + "\n");
+              } else {
+                taoutput.append("Unable to determine delimiter values! " + "\n");  
+              }
+              
             }
             
             
@@ -486,6 +663,13 @@ public class EDIUtilities extends javax.swing.JPanel {
         buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
+        panelbt = new javax.swing.JPanel();
+        ddtable = new javax.swing.JComboBox();
+        btdir = new javax.swing.JButton();
+        btfile = new javax.swing.JButton();
+        btrun = new javax.swing.JButton();
+        btshowpanels = new javax.swing.JButton();
+        panelboxes = new javax.swing.JPanel();
         paneltb = new javax.swing.JPanel();
         lbkey2 = new javax.swing.JLabel();
         tbkey1 = new javax.swing.JTextField();
@@ -509,11 +693,6 @@ public class EDIUtilities extends javax.swing.JPanel {
         panelrb = new javax.swing.JPanel();
         rbinactive = new javax.swing.JRadioButton();
         rbactive = new javax.swing.JRadioButton();
-        panelbt = new javax.swing.JPanel();
-        ddtable = new javax.swing.JComboBox();
-        btdir = new javax.swing.JButton();
-        btfile = new javax.swing.JButton();
-        btrun = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         panelinput = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -527,6 +706,74 @@ public class EDIUtilities extends javax.swing.JPanel {
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Utilties"));
         jPanel1.setName("panelmain"); // NOI18N
         jPanel1.setPreferredSize(new java.awt.Dimension(1103, 625));
+
+        ddtable.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1.  determine hex value of delimiters in X12 file", "2.  convert delimiter from original to newline in X12 file", "3.  something else" }));
+        ddtable.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddtableActionPerformed(evt);
+            }
+        });
+
+        btdir.setText("Open Directory");
+        btdir.setName("btdir"); // NOI18N
+        btdir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btdirActionPerformed(evt);
+            }
+        });
+
+        btfile.setText("Open File");
+        btfile.setName("btfile"); // NOI18N
+        btfile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btfileActionPerformed(evt);
+            }
+        });
+
+        btrun.setText("Run");
+        btrun.setName("btrun"); // NOI18N
+        btrun.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btrunActionPerformed(evt);
+            }
+        });
+
+        btshowpanels.setText("Show Panels");
+        btshowpanels.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btshowpanelsActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panelbtLayout = new javax.swing.GroupLayout(panelbt);
+        panelbt.setLayout(panelbtLayout);
+        panelbtLayout.setHorizontalGroup(
+            panelbtLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelbtLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(ddtable, javax.swing.GroupLayout.PREFERRED_SIZE, 469, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btrun)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btfile)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btdir)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btshowpanels)
+                .addContainerGap())
+        );
+        panelbtLayout.setVerticalGroup(
+            panelbtLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelbtLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelbtLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ddtable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btrun)
+                    .addComponent(btfile)
+                    .addComponent(btdir)
+                    .addComponent(btshowpanels))
+                .addContainerGap())
+        );
 
         lbkey2.setText("Some Text:");
 
@@ -695,61 +942,35 @@ public class EDIUtilities extends javax.swing.JPanel {
                 .addContainerGap(15, Short.MAX_VALUE))
         );
 
-        ddtable.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1.  convert delimiter from original to newline", "2.  something else" }));
-        ddtable.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ddtableActionPerformed(evt);
-            }
-        });
-
-        btdir.setText("Open Directory");
-        btdir.setName("btdir"); // NOI18N
-        btdir.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btdirActionPerformed(evt);
-            }
-        });
-
-        btfile.setText("Open File");
-        btfile.setName("btfile"); // NOI18N
-        btfile.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btfileActionPerformed(evt);
-            }
-        });
-
-        btrun.setText("Run");
-        btrun.setName("btrun"); // NOI18N
-        btrun.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btrunActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout panelbtLayout = new javax.swing.GroupLayout(panelbt);
-        panelbt.setLayout(panelbtLayout);
-        panelbtLayout.setHorizontalGroup(
-            panelbtLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelbtLayout.createSequentialGroup()
+        javax.swing.GroupLayout panelboxesLayout = new javax.swing.GroupLayout(panelboxes);
+        panelboxes.setLayout(panelboxesLayout);
+        panelboxesLayout.setHorizontalGroup(
+            panelboxesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelboxesLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(ddtable, javax.swing.GroupLayout.PREFERRED_SIZE, 469, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(paneltb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btrun)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btfile)
+                .addComponent(paneltb2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btdir)
+                .addComponent(paneldc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(31, 31, 31)
+                .addComponent(paneldd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(panelrb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
-        panelbtLayout.setVerticalGroup(
-            panelbtLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelbtLayout.createSequentialGroup()
+        panelboxesLayout.setVerticalGroup(
+            panelboxesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelboxesLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelbtLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ddtable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btrun)
-                    .addComponent(btfile)
-                    .addComponent(btdir))
+                .addGroup(panelboxesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(panelboxesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(panelboxesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(paneldc, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(paneltb2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(paneltb, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(paneldd, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(panelrb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -760,17 +981,8 @@ public class EDIUtilities extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(38, 38, 38)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelbt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(paneltb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(paneltb2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(paneldc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(31, 31, 31)
-                        .addComponent(paneldd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(panelrb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(panelboxes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panelbt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(22, 22, 22))
         );
         jPanel2Layout.setVerticalGroup(
@@ -779,19 +991,14 @@ public class EDIUtilities extends javax.swing.JPanel {
                 .addGap(0, 0, 0)
                 .addComponent(panelbt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(paneldc, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(paneltb2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(paneltb, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(paneldd, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(panelrb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(panelboxes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel4.setLayout(new javax.swing.BoxLayout(jPanel4, javax.swing.BoxLayout.LINE_AXIS));
 
+        panelinput.setBorder(javax.swing.BorderFactory.createTitledBorder("Input"));
+        panelinput.setName("panelinput"); // NOI18N
         panelinput.setPreferredSize(new java.awt.Dimension(300, 475));
 
         tainput.setColumns(20);
@@ -804,16 +1011,18 @@ public class EDIUtilities extends javax.swing.JPanel {
             panelinputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelinputLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 521, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 519, Short.MAX_VALUE)
                 .addContainerGap())
         );
         panelinputLayout.setVerticalGroup(
             panelinputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE)
         );
 
         jPanel4.add(panelinput);
 
+        paneloutput.setBorder(javax.swing.BorderFactory.createTitledBorder("Output"));
+        paneloutput.setName("paneloutput"); // NOI18N
         paneloutput.setPreferredSize(new java.awt.Dimension(300, 475));
 
         taoutput.setColumns(20);
@@ -824,11 +1033,11 @@ public class EDIUtilities extends javax.swing.JPanel {
         paneloutput.setLayout(paneloutputLayout);
         paneloutputLayout.setHorizontalGroup(
             paneloutputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 541, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
         );
         paneloutputLayout.setVerticalGroup(
             paneloutputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 430, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE)
         );
 
         jPanel4.add(paneloutput);
@@ -844,7 +1053,7 @@ public class EDIUtilities extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel1Layout.createSequentialGroup()
                     .addContainerGap()
-                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 1083, Short.MAX_VALUE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 1103, Short.MAX_VALUE)
                     .addContainerGap()))
         );
         jPanel1Layout.setVerticalGroup(
@@ -852,11 +1061,11 @@ public class EDIUtilities extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(444, Short.MAX_VALUE))
+                .addContainerGap(440, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                    .addGap(0, 173, Short.MAX_VALUE)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 430, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGap(165, 165, 165)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 438, Short.MAX_VALUE)))
         );
 
         add(jPanel1);
@@ -864,17 +1073,7 @@ public class EDIUtilities extends javax.swing.JPanel {
 
     private void btrunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrunActionPerformed
         
-        String x = ddtable.getSelectedItem().toString();
-        String[] xar = x.split("\\.", -1);
-        String util = xar[0];
-        if (xar != null && xar.length > 1) {
-            if (util.equals("1")) {
-                replaceDelimiterWithNL(false);
-            }
-        } else { // no period to split...must be blank or malformed selection element
-           resetVariables();
-           hidePanels();
-        }
+        processAction(false);
         
         
         
@@ -882,55 +1081,29 @@ public class EDIUtilities extends javax.swing.JPanel {
 
     private void ddtableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddtableActionPerformed
         if (! isLoad) {
-            String x = ddtable.getSelectedItem().toString();
-            String[] xar = x.split("\\.",-1);
-            String util = xar[0];
-            if (xar != null && xar.length > 1) {
-                if (util.equals("1")) {
-                    replaceDelimiterWithNL(true);
-                }
-            } else { // no period to split...must be blank or malformed selection element
-               resetVariables();
-               hidePanels();
-            }
+            processAction(true);
         }
     }//GEN-LAST:event_ddtableActionPerformed
 
     private void btfileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btfileActionPerformed
              
-        File file = getfile("open target file");
-        taoutput.setText("");
-        tainput.setText("");
-        // executeTask(ddtable.getSelectedItem().toString(), null, "");
         
-        List<String> lines = new ArrayList<>();
-        if (file != null && file.exists()) {
-                try {   
-                    lines = Files.readAllLines(file.toPath());
-                    for (String segment : lines ) {
-                        tainput.append(segment);
-                        tainput.append("\n");
-                    }
-                    tainput.setCaretPosition(0);
-                    panelinput.setVisible(true);
-                } catch (MalformedInputException m) {
-                    bslog(m);
-                    bsmf.MainFrame.show("Input file may not be UTF-8 encoded");
-                } catch (IOException ex) {
-                    bslog(ex);
-                    bsmf.MainFrame.show("Error...check data/app.log");
-                }   
-        }
     }//GEN-LAST:event_btfileActionPerformed
 
     private void btdirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdirActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btdirActionPerformed
 
+    private void btshowpanelsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btshowpanelsActionPerformed
+       panelinput.setVisible(true);
+       paneloutput.setVisible(true);
+    }//GEN-LAST:event_btshowpanelsActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btdir;
     private javax.swing.JButton btfile;
     private javax.swing.JButton btrun;
+    private javax.swing.JButton btshowpanels;
     private javax.swing.ButtonGroup buttonGroup1;
     private com.toedter.calendar.JDateChooser dcdate1;
     private com.toedter.calendar.JDateChooser dcdate2;
@@ -951,6 +1124,7 @@ public class EDIUtilities extends javax.swing.JPanel {
     private javax.swing.JLabel lbkey2;
     private javax.swing.JLabel lbkey3;
     private javax.swing.JLabel lbkey4;
+    private javax.swing.JPanel panelboxes;
     private javax.swing.JPanel panelbt;
     private javax.swing.JPanel paneldc;
     private javax.swing.JPanel paneldd;
