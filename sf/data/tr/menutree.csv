@@ -29,21 +29,21 @@ VendorMenu,VendPriceMaint,5,JMenuItem,Satıcı Fiyatı Bakımı,,,,1,1
 VendorMenu,VendPriceRpt1,6,JMenuItem,Satıcı Fiyatına Göz Atın,,,,1,1
 VendorMenu,VenRptPicker,7,JMenuItem,Satıcı Raporu Seçici,,,,1,1
 VendorMenu,VendControl,8,JMenuItem,Satıcı Kontrolü,,,,1,1
-EDIMenu,EDILoad,1,JMenuItem,EDI Load,,,,1,1
-EDIMenu,EDILog,2,JMenuItem,EDI Log,,,,1,1
-EDIMenu,EDIPartnerMaint,3,JMenuItem,EDI Partner Maintenance,,,,1,1
-EDIMenu,EDIPartnerBrowse,4,JMenuItem,EDI Partner Browse,,1,,1,1
-EDIMenu,EDIPartnerDocMaint,5,JMenuItem,Partner Transaction Maintenance,,,,1,1
-EDIMenu,EDIPartnerDocBrowse,6,JMenuItem,EDI Partner Transaction Browse,,1,,1,1
-EDIMenu,EDIDocumentMaint,7,JMenuItem,Document Recognition Maintenance,,,,1,1
-EDIMenu,EDIXrefMaint,8,JMenuItem,EDI Xref Maintenance,,,,1,1
-EDIMenu,MapMaint,9,JMenuItem,Map Maintenance,,,,1,1
-EDIMenu,StructMaint,10,JMenuItem,Structure File Maintenance,,,,1,1
-EDIMenu,EDIExport,11,JMenuItem,EDI Export,,,,1,1
-EDIMenu,EDIControl,12,JMenuItem,EDI Control,,,,1,1
-EDIMenu,APIMenu,13,JMenu,API Menu,,,,1,1
-EDIMenu,AS2Menu,14,JMenu,AS2 Menu,,,,1,1
-EDIMenu,EDIUtilities,15,JMenuItem,EDI Utilities,,,,1,1
+EDI,EDILoad,1,JMenuItem,EDI Load,,,,1,1
+EDI,EDILog,2,JMenuItem,EDI Log,,,,1,1
+EDI,EDIPartnerMaint,3,JMenuItem,EDI Partner Maintenance,,,,1,1
+EDI,EDIPartnerBrowse,4,JMenuItem,EDI Partner Browse,,1,,1,1
+EDI,EDIPartnerDocMaint,5,JMenuItem,Partner Transaction Maintenance,,,,1,1
+EDI,EDIPartnerDocBrowse,6,JMenuItem,EDI Partner Transaction Browse,,1,,1,1
+EDI,EDIDocumentMaint,7,JMenuItem,Document Recognition Maintenance,,,,1,1
+EDI,EDIXrefMaint,8,JMenuItem,EDI Xref Maintenance,,,,1,1
+EDI,MapMaint,9,JMenuItem,Map Maintenance,,,,1,1
+EDI,StructMaint,10,JMenuItem,Structure File Maintenance,,,,1,1
+EDI,EDIExport,11,JMenuItem,EDI Export,,,,1,1
+EDI,EDIControl,12,JMenuItem,EDI Control,,,,1,1
+EDI,APIMenu,13,JMenu,API Menu,,,,1,1
+EDI,AS2Menu,14,JMenu,AS2 Menu,,,,1,1
+EDI,EDIUtilities,15,JMenuItem,EDI Utilities,,,,1,1
 APIMenu,APIMaint,1,JMenuItem,API Maintenance,,,,1,1
 APIMenu,APIBrowse,2,JMenuItem,API Browse,,,,1,1
 APIMenu,APILog,3,JMenuItem,API Log,,,,1,1
@@ -283,18 +283,19 @@ Yardım,NavCodeBrowse,6,JMenuItem,NAVCode Listesi,,1,,1,1
 Yardım,SchemaBrowse,7,JMenuItem,Şema,,1,,1,1
 Yardım,BrowseUtil,8,JMenuItem,,,1,,1,1
 Yardım,SysInfo,9,JMenuItem,Sistem Bilgisi,,1,,1,1
-root,Adres,1,JMenu,Adres,,,,1,1
-root,Satın alma,2,JMenu,Satın alma,,,,1,1
-root,Emir,3,JMenu,Emir,,,,1,1
-root,Nakliye,4,JMenu,Nakliye,,,,1,1
-root,finans,5,JMenu,finans,,,,1,1
-root,Envanter,6,JMenu,Envanter,,,,1,1
-root,Mühendislik,7,JMenu,Mühendislik,,,,1,1
-root,Kalite,8,JMenu,Kalite,,,,1,1
-root,Gelenek,9,JMenu,Gelenek,,,,1,0
-root,İK,10,JMenu,İK,,,,1,1
-root,yönetici,11,JMenu,yönetici,,,,1,1
-root,Yardım,12,JMenu,Yardım,,,,1,1
+root,EDI,1,JMenu,EDI,,,,1,1
+root,Adres,2,JMenu,Adres,,,,1,1
+root,Satın alma,3,JMenu,Satın alma,,,,1,1
+root,Emir,4,JMenu,Emir,,,,1,1
+root,Nakliye,5,JMenu,Nakliye,,,,1,1
+root,finans,6,JMenu,finans,,,,1,1
+root,Envanter,7,JMenu,Envanter,,,,1,1
+root,Mühendislik,8,JMenu,Mühendislik,,,,1,1
+root,Kalite,9,JMenu,Kalite,,,,1,1
+root,Gelenek,10,JMenu,Gelenek,,,,1,0
+root,İK,11,JMenu,İK,,,,1,1
+root,yönetici,12,JMenu,yönetici,,,,1,1
+root,Yardım,13,JMenu,Yardım,,,,1,1
 POSMenu,POSMaint,1,JMenuItem,POS Girişi,,,,1,1
 POSMenu,POSControlMaint,3,JMenuItem,POS Kontrolü,,,,1,1
 POSMenu,POSBrowse,2,JMenuItem,POS Gözat,,1,,1,1

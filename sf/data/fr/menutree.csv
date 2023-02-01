@@ -29,21 +29,21 @@ VendorMenu,VendPriceMaint,5,JMenuItem,Maintien des prix des Vendeur,,,,1,1
 VendorMenu,VendPriceRpt1,6,JMenuItem,Parcourir les prix du Vendeur,,,,1,1
 VendorMenu,VenRptPicker,7,JMenuItem,Sélecteur de rapport de Vendeur,,,,1,1
 VendorMenu,VendControl,8,JMenuItem,Contrôle des Vendeur,,,,1,1
-EDIMenu,EDILoad,1,JMenuItem,EDI Load,,,,1,1
-EDIMenu,EDILog,2,JMenuItem,EDI Log,,,,1,1
-EDIMenu,EDIPartnerMaint,3,JMenuItem,EDI Partner Maintenance,,,,1,1
-EDIMenu,EDIPartnerBrowse,4,JMenuItem,EDI Partner Browse,,1,,1,1
-EDIMenu,EDIPartnerDocMaint,5,JMenuItem,Partner Transaction Maintenance,,,,1,1
-EDIMenu,EDIPartnerDocBrowse,6,JMenuItem,EDI Partner Transaction Browse,,1,,1,1
-EDIMenu,EDIDocumentMaint,7,JMenuItem,Document Recognition Maintenance,,,,1,1
-EDIMenu,EDIXrefMaint,8,JMenuItem,EDI Xref Maintenance,,,,1,1
-EDIMenu,MapMaint,9,JMenuItem,Map Maintenance,,,,1,1
-EDIMenu,StructMaint,10,JMenuItem,Structure File Maintenance,,,,1,1
-EDIMenu,EDIExport,11,JMenuItem,EDI Export,,,,1,1
-EDIMenu,EDIControl,12,JMenuItem,EDI Control,,,,1,1
-EDIMenu,APIMenu,13,JMenu,API Menu,,,,1,1
-EDIMenu,AS2Menu,14,JMenu,AS2 Menu,,,,1,1
-EDIMenu,EDIUtilities,15,JMenuItem,EDI Utilities,,,,1,1
+EDI,EDILoad,1,JMenuItem,EDI Load,,,,1,1
+EDI,EDILog,2,JMenuItem,EDI Log,,,,1,1
+EDI,EDIPartnerMaint,3,JMenuItem,EDI Partner Maintenance,,,,1,1
+EDI,EDIPartnerBrowse,4,JMenuItem,EDI Partner Browse,,1,,1,1
+EDI,EDIPartnerDocMaint,5,JMenuItem,Partner Transaction Maintenance,,,,1,1
+EDI,EDIPartnerDocBrowse,6,JMenuItem,EDI Partner Transaction Browse,,1,,1,1
+EDI,EDIDocumentMaint,7,JMenuItem,Document Recognition Maintenance,,,,1,1
+EDI,EDIXrefMaint,8,JMenuItem,EDI Xref Maintenance,,,,1,1
+EDI,MapMaint,9,JMenuItem,Map Maintenance,,,,1,1
+EDI,StructMaint,10,JMenuItem,Structure File Maintenance,,,,1,1
+EDI,EDIExport,11,JMenuItem,EDI Export,,,,1,1
+EDI,EDIControl,12,JMenuItem,EDI Control,,,,1,1
+EDI,APIMenu,13,JMenu,API Menu,,,,1,1
+EDI,AS2Menu,14,JMenu,AS2 Menu,,,,1,1
+EDI,EDIUtilities,15,JMenuItem,EDI Utilities,,,,1,1
 APIMenu,APIMaint,1,JMenuItem,API Maintenance,,,,1,1
 APIMenu,APIBrowse,2,JMenuItem,API Browse,,,,1,1
 APIMenu,APILog,3,JMenuItem,API Log,,,,1,1
@@ -283,18 +283,19 @@ Aider,NavCodeBrowse,6,JMenuItem,Liste des codes NAV,,1,,1,1
 Aider,SchemaBrowse,7,JMenuItem,Schéma,,1,,1,1
 Aider,BrowseUtil,8,JMenuItem,,,1,,1,1
 Aider,SysInfo,9,JMenuItem,InfoSys,,1,,1,1
-root,Adresse,1,JMenu,Adresse,,,,1,1
-root,Achat,2,JMenu,Achat,,,,1,1
-root,Ordre,3,JMenu,Ordre,,,,1,1
-root,Expédition,4,JMenu,Expédition,,,,1,1
-root,Finance,5,JMenu,Finance,,,,1,1
-root,Inventaire,6,JMenu,Inventaire,,,,1,1
-root,Ingénierie,7,JMenu,Ingénierie,,,,1,1
-root,Qualité,8,JMenu,Qualité,,,,1,1
-root,Personnalisé,9,JMenu,Personnalisé,,,,1,0
-root,HR,10,JMenu,HR,,,,1,1
-root,Admin,11,JMenu,Admin,,,,1,1
-root,Aider,12,JMenu,Aider,,,,1,1
+root,EDI,1,JMenu,EDI,,,,1,1
+root,Adresse,2,JMenu,Adresse,,,,1,1
+root,Achat,3,JMenu,Achat,,,,1,1
+root,Ordre,4,JMenu,Ordre,,,,1,1
+root,Expédition,5,JMenu,Expédition,,,,1,1
+root,Finance,6,JMenu,Finance,,,,1,1
+root,Inventaire,7,JMenu,Inventaire,,,,1,1
+root,Ingénierie,8,JMenu,Ingénierie,,,,1,1
+root,Qualité,9,JMenu,Qualité,,,,1,1
+root,Personnalisé,10,JMenu,Personnalisé,,,,1,0
+root,HR,11,JMenu,HR,,,,1,1
+root,Admin,12,JMenu,Admin,,,,1,1
+root,Aider,13,JMenu,Aider,,,,1,1
 POSMenu,POSMaint,1,JMenuItem,Saisie au point de vente,,,,1,1
 POSMenu,POSControlMaint,3,JMenuItem,Contrôle de point de vente,,,,1,1
 POSMenu,POSBrowse,2,JMenuItem,Parcourir les points de vente,,1,,1,1
