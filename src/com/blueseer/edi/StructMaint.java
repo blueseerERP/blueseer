@@ -372,12 +372,13 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
             return false;
         }
        
+        /*
          if (! BlueSeerUtils.isFile(EDData.getEDIStructureDir(), tbkey.getText())) {
                     bsmf.MainFrame.show(getMessageTag(1145,tbkey.getText()));
                     tbkey.requestFocus();
                     return false;
         }
-         
+        */ 
         if (! checkStructure(tbkey.getText())) {
             int errornum = 0;
             if (x.toString().equals("add")) {
