@@ -1203,6 +1203,8 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }//GEN-LAST:event_btupdaterowActionPerformed
 
     private void btimportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btimportActionPerformed
+        boolean proceed = bsmf.MainFrame.warn(getMessageTag(1178));
+        if (proceed) {
         List<String> lines = new ArrayList<>();
         File file = getfile("Open Structure File");
         if (file != null && file.exists()) {
@@ -1245,14 +1247,39 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
                   });
             }
         }
+        } // if proceed
     }//GEN-LAST:event_btimportActionPerformed
 
     private void btdownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdownActionPerformed
-        // TODO add your handling code here:
+        int[] rows = tabledetail.getSelectedRows();
+        if (rows == null || rows.length == 0) {
+            bsmf.MainFrame.show(getMessageTag(1029));
+            return;
+        }
+        if (rows.length > 1) {
+            bsmf.MainFrame.show(getMessageTag(1095));
+            return;
+        }
+        for (int i : rows) {
+            ((javax.swing.table.DefaultTableModel) tabledetail.getModel()).moveRow(i, i, i + 1);
+        }
     }//GEN-LAST:event_btdownActionPerformed
 
     private void btupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupActionPerformed
-        // TODO add your handling code here:
+        int[] rows = tabledetail.getSelectedRows();
+        if (rows == null || rows.length == 0) {
+            bsmf.MainFrame.show(getMessageTag(1029));
+            return;
+        }
+        if (rows.length > 1) {
+            bsmf.MainFrame.show(getMessageTag(1095));
+            return;
+        }
+        for (int i : rows) {
+            if (i > 0 && rows.length == 1) {
+            ((javax.swing.table.DefaultTableModel) tabledetail.getModel()).moveRow(i, i, i - 1);
+            }
+        }
     }//GEN-LAST:event_btupActionPerformed
 
 
