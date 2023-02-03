@@ -296,6 +296,10 @@ public class EDIUtilities extends javax.swing.JPanel {
                 if (util.equals("2")) {
                     replaceDelimiterWithNL(b);
                 }
+                if (util.equals("3")) {
+                    countOccurrencesHex(b);
+                    
+                }
             } else { // no period to split...must be blank or malformed selection element
                resetVariables();
                hideInputPanels();
@@ -370,6 +374,43 @@ public class EDIUtilities extends javax.swing.JPanel {
        // bsmf.MainFrame.show("Occurences: " + count);
         
     }
+    
+    public void countHexOccurences(String data, String hexparam) {
+      
+        char Hex = 0;
+        try {
+        if (hexparam.isBlank()) {
+            String text = bsmf.MainFrame.input("Hex Char (ex: 0a): ");
+            if (text == null || text.isBlank()) {
+                return;
+            }
+            Hex = (char) Integer.parseInt(text, 16);
+        } else {
+            Hex = (char) Integer.parseInt(hexparam, 16);
+        }
+        } catch (NumberFormatException nfe) {
+            bsmf.MainFrame.show("number format exception");
+        }
+       
+        int count = 0;
+        char[] carray = data.toCharArray();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < carray.length; i++) {
+            sb.append(i);
+            sb.append("-->");
+            sb.append(Integer.toHexString((int) carray[i]));
+           // sb.append(String.format("%04x", (int) carray[i]));
+            sb.append("\n");
+            if (carray[i] == Hex) {
+                count++;
+            } 
+        }
+        
+        taoutput.setText(sb.toString());
+       bsmf.MainFrame.show("Occurences: " + count);
+        
+    }
+    
     
     public void hideInputPanels() {
         paneltb.setVisible(false);
@@ -551,6 +592,8 @@ public class EDIUtilities extends javax.swing.JPanel {
         } // else run report
     }
     
+    
+    
     public void determineX12Delimiters(boolean input) {
          
          if (input) { // input...draw variable input panel
@@ -649,6 +692,67 @@ public class EDIUtilities extends javax.swing.JPanel {
         } // else run report
     }
     
+    public void countOccurrencesHex(boolean input) {
+         
+         if (input) { // input...draw variable input panel
+           resetVariables();
+           hideInputPanels();
+          // showPanels(new String[]{"tb","dc"});
+           btrun.setVisible(true);
+           btfile.setVisible(false);
+           btdir.setVisible(false);
+           lbkey1.setText(getClassLabelTag("lblfromcode", this.getClass().getSimpleName()));
+           lbkey2.setText(getClassLabelTag("lbltocode", this.getClass().getSimpleName()));
+           lbdate1.setText(getClassLabelTag("lblfromdate", this.getClass().getSimpleName()));
+           lbdate2.setText(getClassLabelTag("lbltodate", this.getClass().getSimpleName()));
+           java.util.Date now = new java.util.Date();
+          // dcdate1.setDate(now);
+          // dcdate2.setDate(now);
+         } else { // output...fill report
+            // colect variables from input
+            taoutput.setText("");
+            String from = tbkey1.getText();
+            String to = tbkey2.getText();
+            String fromdate = BlueSeerUtils.setDateFormat(dcdate1.getDate());
+            String todate = BlueSeerUtils.setDateFormat(dcdate2.getDate());
+            // cleanup variables
+            if (from.isEmpty()) {
+                  from = bsmf.MainFrame.lownbr;
+            }
+            if (to.isEmpty()) {
+                  to = bsmf.MainFrame.hinbr;
+            }
+            if (fromdate.isEmpty()) {
+                  fromdate = bsmf.MainFrame.lowdate;
+            }
+            if (todate.isEmpty()) {
+                  todate = bsmf.MainFrame.hidate;
+            }
+       
+            
+        if (tainput.getText().isEmpty()) {    
+        File file = getfile("open target file");
+        taoutput.setText("");
+        tainput.setText("");
+        // executeTask(ddtable.getSelectedItem().toString(), null, "");
+            if (file != null && file.exists()) {
+                Path filepath = file.toPath();
+                byte[] filecontent;
+                try {
+                    filecontent = Files.readAllBytes(filepath);
+                    String s = new String(filecontent);
+                    countHexOccurences(s,"");
+                   // filecontent = Files.readString(as2filepath);
+                } catch (IOException ex) {
+                    bslog(ex);
+                }
+            }
+        } // if tainput is empty   
+            
+      
+        } // else run report
+    }
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -707,7 +811,7 @@ public class EDIUtilities extends javax.swing.JPanel {
         jPanel1.setName("panelmain"); // NOI18N
         jPanel1.setPreferredSize(new java.awt.Dimension(1103, 625));
 
-        ddtable.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1.  determine hex value of delimiters in X12 file", "2.  convert delimiter from original to newline in X12 file", "3.  something else" }));
+        ddtable.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1.  determine hex value of delimiters in X12 file", "2.  convert delimiter from original to newline in X12 file", "3.  count occurrences of hex character", "4.  something else" }));
         ddtable.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ddtableActionPerformed(evt);
