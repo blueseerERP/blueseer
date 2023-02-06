@@ -82,6 +82,7 @@ import static com.blueseer.edi.EDIMap.splitFFSegment;
 import static com.blueseer.edi.ediData.addMapMstr;
 import static com.blueseer.edi.ediData.deleteMapMstr;
 import static com.blueseer.edi.ediData.getDFSMstr;
+import static com.blueseer.edi.ediData.getDSFasString;
 import static com.blueseer.edi.ediData.getMapMstr;
 
 import com.blueseer.edi.ediData.map_mstr;
@@ -1228,30 +1229,6 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
       //  bsmf.MainFrame.show(String.valueOf(s.size()));
         return s;
     }
-        
-    public List<String> getStructure(String structureName) {
-        List<String> lines = new ArrayList<>();
-        String dirpath;
-        if (structureName.equals("ifs")) {
-            dirpath = EDData.getEDIStructureDir() + "/" + ddifs.getSelectedItem().toString();
-        } else {
-            dirpath = EDData.getEDIStructureDir() + "/" + ddofs.getSelectedItem().toString();
-        }
-        Path path = FileSystems.getDefault().getPath(dirpath);
-        File file = path.toFile();
-        if (file != null && file.exists()) {
-                try {   
-                    lines = Files.readAllLines(file.toPath());
-                } catch (MalformedInputException m) {
-                    bslog(m);
-                    bsmf.MainFrame.show("Structure file may not be UTF-8 encoded");
-                } catch (IOException ex) {
-                    bslog(ex);
-                    bsmf.MainFrame.show("Error...check data/app.log");
-                }   
-        }
-        return lines;
-    }
     
     public ArrayList<String[]> getStructureSplit(List<String> lines) {
         ArrayList<String[]> linessplit = new ArrayList<>();
@@ -1323,7 +1300,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     public void showStructure(String taname) {
         if (taname.equals("tainstruct")) {
            
-            List<String> lines = getStructure("ifs");
+            List<String> lines = getDSFasString(ddifs.getSelectedItem().toString());
             tainstruct.setText("");
             for (String segment : lines ) {
                             tainstruct.append(segment);
@@ -1332,7 +1309,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             tainstruct.setCaretPosition(0);
         }
         if (taname.equals("taoutstruct")) {
-            List<String> lines = getStructure("ofs");
+            List<String> lines = getDSFasString(ddofs.getSelectedItem().toString());
             taoutstruct.setText("");
             for (String segment : lines ) {
                             taoutstruct.append(segment);
@@ -1425,7 +1402,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         
         if (taname.equals("tainstruct")) {
             tainstruct.setText("");
-            structure = getStructure("ifs"); 
+            structure = getDSFasString(ddifs.getSelectedItem().toString());
             file = getfile("Open Input File to Overlay on Structure");
             if (structure.size() == 0) {
               tainstruct.setText("unable to read structure file");
@@ -1477,7 +1454,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             isInput = true;
         }
         if (taname.equals("taoutput")) {
-            structure = getStructure("ofs");
+            structure = getDSFasString(ddofs.getSelectedItem().toString());
             fs = ddoutfiletype.getSelectedItem().toString();
             if (! taoutput.getText().isBlank()) {
                 input = (ArrayList) Arrays.asList(taoutput.getText().split("\n"));

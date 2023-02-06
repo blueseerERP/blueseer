@@ -1696,6 +1696,87 @@ public class ediData {
         
     }
     
+    public static ArrayList<String[]> getDSFasArray(String code) {
+        
+        ArrayList<String[]> list = new ArrayList<String[]>();
+        String sql = "select * from dfs_det where dfsd_id = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, code);
+             try (ResultSet res = ps.executeQuery();) {
+               
+                    while(res.next()) {
+                        String[] x = new String[]{
+                        res.getString("dfsd_id"),
+                        res.getString("dfsd_segment"), 
+                        res.getString("dfsd_parent"), 
+                        res.getString("dfsd_loopcount"), 
+                        res.getString("dfsd_isgroup"),
+                        res.getString("dfsd_islandmark"),
+                        res.getString("dfsd_field"),
+                        res.getString("dfsd_desc"),
+                        res.getString("dfsd_min"),
+                        res.getString("dfsd_max"),        
+                        res.getString("dfsd_align"),
+                        res.getString("dfsd_status"),
+                        res.getString("dfsd_type")};
+                        list.add(x);
+                    }
+               
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s); 
+        }
+        return list;
+    }
+    
+    public static ArrayList<String> getDSFasString(String code) {
+        
+        ArrayList<String> list = new ArrayList<String>();
+        String sql = "select * from dfs_det where dfsd_id = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, code);
+             try (ResultSet res = ps.executeQuery();) {
+               
+                    while(res.next()) {
+                        StringBuilder sb = new StringBuilder();
+                        sb.append(res.getString("dfsd_id"));
+                        sb.append(",");
+                        sb.append(res.getString("dfsd_segment"));
+                        sb.append(",");
+                        sb.append(res.getString("dfsd_parent"));
+                        sb.append(",");
+                        sb.append(res.getString("dfsd_loopcount"));
+                        sb.append(",");
+                        sb.append(res.getString("dfsd_isgroup"));
+                        sb.append(",");
+                        sb.append(res.getString("dfsd_islandmark"));
+                        sb.append(",");
+                        sb.append(res.getString("dfsd_field"));
+                        sb.append(",");
+                        sb.append(res.getString("dfsd_desc"));
+                        sb.append(",");
+                        sb.append(res.getString("dfsd_min"));
+                        sb.append(",");
+                        sb.append(res.getString("dfsd_max"));      
+                        sb.append(",");
+                        sb.append(res.getString("dfsd_align"));
+                        sb.append(",");
+                        sb.append(res.getString("dfsd_status"));
+                        sb.append(",");
+                        sb.append(res.getString("dfsd_type"));
+                        list.add(sb.toString());
+                    }
+               
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s); 
+        }
+        return list;
+    }
+    
+    
     public static boolean isAPIMethodUnique(String api, String method) {
         boolean x = false;
          String sql = "select * from api_det where apid_id = ? and apid_method = ? ;";
