@@ -59,6 +59,7 @@ import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.EDData;
+import static com.blueseer.utl.EDData.getEDIStructureDir;
 import com.blueseer.utl.IBlueSeerT;
 import java.awt.Color;
 import java.awt.Component;
@@ -66,7 +67,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.MalformedInputException;
 import java.nio.file.FileSystems;
@@ -75,6 +78,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -87,6 +92,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.SwingWorker;
+import javax.swing.text.JTextComponent;
 
 /**
  *
@@ -444,8 +450,8 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 tabledetail.getValueAt(j, 0).toString(),
                 tabledetail.getValueAt(j, 1).toString(),
                 tabledetail.getValueAt(j, 2).toString(),
-                String.valueOf(BlueSeerUtils.boolToInt(Boolean.valueOf(tabledetail.getValueAt(j, 3).toString()))),
-                String.valueOf(BlueSeerUtils.boolToInt(Boolean.valueOf(tabledetail.getValueAt(j, 4).toString()))),
+                String.valueOf(BlueSeerUtils.boolToInt(ConvertTrueFalseToBoolean(tabledetail.getValueAt(j, 3).toString()))),
+                String.valueOf(BlueSeerUtils.boolToInt(ConvertTrueFalseToBoolean(tabledetail.getValueAt(j, 4).toString()))),
                 tabledetail.getValueAt(j, 5).toString(),
                 tabledetail.getValueAt(j, 6).toString(),
                 tabledetail.getValueAt(j, 7).toString(),
@@ -690,6 +696,7 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         btdown = new javax.swing.JButton();
         btup = new javax.swing.JButton();
         bttransform = new javax.swing.JButton();
+        btdownload = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabledetail = new javax.swing.JTable();
 
@@ -848,6 +855,13 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
             }
         });
 
+        btdownload.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/output.png"))); // NOI18N
+        btdownload.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btdownloadActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -910,7 +924,9 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
                         .addComponent(btdeleterow, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(6, 6, 6)
                         .addComponent(btimport, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(136, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btdownload, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(102, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -952,30 +968,27 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
                         .addComponent(tbfielddesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel11)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cbisgroup)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbisgroup)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(tbmax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel9))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(tbmin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel10))))
-                        .addGap(0, 8, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel10)))
                             .addComponent(bttransform)
                             .addComponent(btup)
                             .addComponent(btupdaterow)
                             .addComponent(btaddrow)
                             .addComponent(btdeleterow)
                             .addComponent(btimport)
-                            .addComponent(btdown))
-                        .addGap(0, 0, 0))))
+                            .addComponent(btdown)
+                            .addComponent(btdownload))))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         tabledetail.setModel(new javax.swing.table.DefaultTableModel(
@@ -1359,6 +1372,45 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         } // if proceed
     }//GEN-LAST:event_bttransformActionPerformed
 
+    private void btdownloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdownloadActionPerformed
+        
+        String filename = "file." + Long.toHexString(System.currentTimeMillis()) + ".csv";
+        Path path = FileSystems.getDefault().getPath(getEDIStructureDir() + "/" + filename);
+        BufferedWriter output = null;
+         try {
+             if (tabledetail.getRowCount() > 0) {
+             output = new BufferedWriter(new FileWriter(path.toFile()));
+             String line = "";
+             for (int j = 0; j < tabledetail.getRowCount(); j++) {
+               line = tabledetail.getValueAt(j, 0).toString() + "," +
+                       tabledetail.getValueAt(j, 1).toString() + "," +
+                       tabledetail.getValueAt(j, 2).toString() + "," +
+                       tabledetail.getValueAt(j, 3).toString() + "," +
+                       tabledetail.getValueAt(j, 4).toString() + "," +
+                       tabledetail.getValueAt(j, 5).toString() + "," +
+                       tabledetail.getValueAt(j, 6).toString() + "," +
+                       tabledetail.getValueAt(j, 7).toString() + "," +
+                       tabledetail.getValueAt(j, 8).toString() + "," +
+                       tabledetail.getValueAt(j, 9).toString() + "," +
+                       tabledetail.getValueAt(j, 10).toString() + "," +
+                       tabledetail.getValueAt(j, 11).toString();    
+               output.write(line + "\n");
+             }    
+             bsmf.MainFrame.show("File written to: " + path.toString());
+             } 
+         } catch (IOException ex) {
+             bsmf.MainFrame.show("unable to write to: " + path.toString());
+         } finally {
+             if (output != null) {
+                 try {
+                     output.close();
+                 } catch (IOException ex) {
+                     bslog(ex);
+                 }
+             }
+         }
+    }//GEN-LAST:event_btdownloadActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
@@ -1367,6 +1419,7 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btdeleterow;
     private javax.swing.JButton btdown;
+    private javax.swing.JButton btdownload;
     private javax.swing.JButton btimport;
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;

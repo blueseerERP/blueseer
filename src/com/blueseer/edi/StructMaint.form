@@ -336,7 +336,9 @@
                               <Component id="btimport" min="-2" pref="28" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace pref="136" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="btdownload" min="-2" pref="28" max="-2" attributes="0"/>
+                      <EmptySpace pref="102" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -395,11 +397,11 @@
                           </Group>
                       </Group>
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="cbisgroup" min="-2" max="-2" attributes="0"/>
                           <Group type="102" attributes="0">
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="cbisgroup" min="-2" max="-2" attributes="0"/>
                                   <Group type="102" attributes="0">
-                                      <EmptySpace max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="3" attributes="0">
                                           <Component id="tbmax" alignment="3" min="-2" max="-2" attributes="0"/>
                                           <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -410,12 +412,6 @@
                                           <Component id="jLabel10" alignment="3" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
-                              </Group>
-                              <EmptySpace min="0" pref="8" max="32767" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="bttransform" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="btup" min="-2" max="-2" attributes="0"/>
                                   <Component id="btupdaterow" min="-2" max="-2" attributes="0"/>
@@ -423,10 +419,11 @@
                                   <Component id="btdeleterow" min="-2" max="-2" attributes="0"/>
                                   <Component id="btimport" min="-2" max="-2" attributes="0"/>
                                   <Component id="btdown" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btdownload" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           </Group>
                       </Group>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -615,6 +612,16 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bttransformActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="btdownload">
+              <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/images/output.png"/>
+                </Property>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdownloadActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>
