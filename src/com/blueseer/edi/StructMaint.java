@@ -807,6 +807,7 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         jLabel13.setText("LoopCount");
 
         btaddrow.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/add.png"))); // NOI18N
+        btaddrow.setToolTipText("Add Row");
         btaddrow.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btaddrowActionPerformed(evt);
@@ -814,6 +815,7 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         });
 
         btupdaterow.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/change.png"))); // NOI18N
+        btupdaterow.setToolTipText("Update Row");
         btupdaterow.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupdaterowActionPerformed(evt);
@@ -821,6 +823,7 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         });
 
         btdeleterow.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/delete.png"))); // NOI18N
+        btdeleterow.setToolTipText("Delete Row");
         btdeleterow.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdeleterowActionPerformed(evt);
@@ -828,6 +831,7 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         });
 
         btimport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/input.png"))); // NOI18N
+        btimport.setToolTipText("Import");
         btimport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btimportActionPerformed(evt);
@@ -835,6 +839,7 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         });
 
         btdown.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/download.png"))); // NOI18N
+        btdown.setToolTipText("Move Down");
         btdown.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdownActionPerformed(evt);
@@ -842,6 +847,7 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         });
 
         btup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/upload.png"))); // NOI18N
+        btup.setToolTipText("Move Up");
         btup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btupActionPerformed(evt);
@@ -849,6 +855,7 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         });
 
         bttransform.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/gear.png"))); // NOI18N
+        bttransform.setToolTipText("Transform");
         bttransform.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 bttransformActionPerformed(evt);
@@ -856,6 +863,7 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         });
 
         btdownload.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/output.png"))); // NOI18N
+        btdownload.setToolTipText("Export");
         btdownload.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btdownloadActionPerformed(evt);
