@@ -29,6 +29,7 @@ import bsmf.MainFrame;
 import static com.blueseer.edi.EDI.edilog;
 import static com.blueseer.edi.EDI.hanoi;
 import static com.blueseer.edi.EDI.trimSegment;
+import static com.blueseer.edi.ediData.getDSFasString;
 import static com.blueseer.edi.ediData.getMapMstr;
 import com.blueseer.edi.ediData.jsonRecord;
 import com.blueseer.utl.BlueSeerUtils;
@@ -1022,6 +1023,51 @@ public abstract class EDIMap {  // took out the implements EDIMapi
 }
 
     public static void readISF(String isf) {
+        ArrayList<String[]> list = new ArrayList<String[]>();
+        ArrayList<String> lines = getDSFasString(isf);
+        int i = 0;
+        String lastkey = "";
+        LinkedHashMap<Integer, String[]> z = new LinkedHashMap<Integer, String[]>();
+        
+        if (lines == null || lines.size() == 0) {
+            setError("Structure File (dsf) not available: " + isf);
+            return;
+        }
+        
+        for (String line : lines) {
+            
+            if (line.startsWith("#")) {
+            continue;
+            }
+                        
+            if (! line.isEmpty()) {
+            String[] t = line.split(",",-1);
+                 if (i == 0) { lastkey = t[0];}
+            if (GlobalDebug && t.length < 11) {
+            System.out.println("readISF: line " + i + " delimited count is less than 11 " + t.length);
+            }
+
+            list.add(t);
+
+            i++;
+                if (! t[0].equals(lastkey)) {
+                    LinkedHashMap<Integer, String[]> w = z;
+                    mISF.put(t[0], w);
+                    z = new LinkedHashMap<Integer, String[]>();
+                    i = 0;
+                    z.put(i, t);
+
+                } else {
+                    z.put(i, t);
+                    mISF.put(t[0], z);
+                }
+            lastkey = t[0];
+            } 
+        }
+        ISF = list;
+    }
+    
+    public static void readISF_toberemoved(String isf) {
         ArrayList<String[]> list = new ArrayList<String[]>();
         File cf = new File(EDData.getEDIStructureDir() + "/" + isf);
     	BufferedReader reader; 
