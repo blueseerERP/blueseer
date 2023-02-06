@@ -926,100 +926,83 @@ public abstract class EDIMap {  // took out the implements EDIMapi
            
     public void readOSF(String osf)  {
         
-	        LinkedHashMap<String, ArrayList<String[]>> hm = new LinkedHashMap<String, ArrayList<String[]>>();
-	        List<String[]> list = new ArrayList<String[]>();
-	        Set<String> set = new LinkedHashSet<String>();
-	        File cf = new File(EDData.getEDIStructureDir() + "/" + osf);
-	    	BufferedReader reader; 
-        try {
-            reader = new BufferedReader(new FileReader(cf));
-        
-			String line;
-			while ((line = reader.readLine()) != null) {
-                                if (line.startsWith("#")) {
-				continue;
-			        }
-				if (! line.isEmpty()) {
-				String[] t = line.split(",",-1);
-                                       list.add(t);
-                                      set.add(t[0]);
-				}
-			}
-			reader.close();
-			
-			ArrayList<String> excludes = new ArrayList<String>();
-			for (String s : set) {
-				ArrayList<String[]> x = new ArrayList<String[]>();
-				for (String[] ss : list) {
-					if (ss[0].equals(s) && ! excludes.contains(s + ss[5])) {  //prevent duplicate fields
-						x.add(ss);
-                                                excludes.add(s + ss[5]);
-					}
-				}
-				hm.put(s, x);
-			}
-			
-		OSF = hm;
-                
-                
-                
-                } catch (FileNotFoundException ex) {
-             edilog(ex);
-            setError("outbound structure file not found: " + EDData.getEDIStructureDir() + "/" + osf);
-        } catch (IOException ex) {
-             edilog(ex);
-            setError("outbound structure file IOException");
+        LinkedHashMap<String, ArrayList<String[]>> hm = new LinkedHashMap<String, ArrayList<String[]>>();
+        List<String[]> list = new ArrayList<String[]>();
+        Set<String> set = new LinkedHashSet<String>();
+        ArrayList<String> lines = getDSFasString(osf);
+
+        if (lines == null || lines.size() == 0) {
+            setError("Structure File (dsf) not available: " + osf);
+            return;
         }
+        
+                for (String line : lines) {
+                        if (line.startsWith("#")) {
+                        continue;
+                        }
+                        if (! line.isEmpty()) {
+                        String[] t = line.split(",",-1);
+                               list.add(t);
+                              set.add(t[0]);
+                        }
+                }
+
+
+                ArrayList<String> excludes = new ArrayList<String>();
+                for (String s : set) {
+                        ArrayList<String[]> x = new ArrayList<String[]>();
+                        for (String[] ss : list) {
+                                if (ss[0].equals(s) && ! excludes.contains(s + ss[5])) {  //prevent duplicate fields
+                                        x.add(ss);
+                                        excludes.add(s + ss[5]);
+                                }
+                        }
+                        hm.put(s, x);
+                }
+        OSF = hm;
+           
 }
 
     public void readOSFTreeType(String osf)  {
         
-	        LinkedHashMap<String, ArrayList<String[]>> hm = new LinkedHashMap<String, ArrayList<String[]>>();
-	        ArrayList<String[]> list = new ArrayList<String[]>();
-	        Set<String> set = new LinkedHashSet<String>();
-                String tag = "";
-                String ptag = "";
-                String ckey = "";
-                
-	        File cf = new File(EDData.getEDIStructureDir() + "/" + osf);
-	    	BufferedReader reader; 
-        try {
-            reader = new BufferedReader(new FileReader(cf));
-        
-			String line;
-			while ((line = reader.readLine()) != null) {
-                                if (line.startsWith("#")) {
-				continue;
-			        }
-				if (! line.isEmpty()) {
-                                    String[] t = line.split(",",-1);
-                                    tag = t[0];
-                                    ptag = t[1];
-                                    if (ptag.isBlank()) {
-                                        ckey = tag;
-                                    } else {
-                                        ckey = ptag + ":" + tag;
-                                    }
-                                    if (hm.containsKey(ckey)) {
-                                      ArrayList<String[]> xlist = hm.get(ckey);
-                                      xlist.add(t);
-                                      hm.put(ckey, xlist);
-                                    }  else {
-                                      ArrayList<String[]> x = new ArrayList<String[]>();
-                                      x.add(t);
-                                      hm.put(ckey, x);
-                                    }  
-				}
-			}
-			reader.close();
-		OSF = hm;
-                } catch (FileNotFoundException ex) {
-             edilog(ex);
-            setError("outbound structure file not found: " + EDData.getEDIStructureDir() + "/" + osf);
-        } catch (IOException ex) {
-             edilog(ex);
-            setError("outbound structure file IOException");
+        LinkedHashMap<String, ArrayList<String[]>> hm = new LinkedHashMap<String, ArrayList<String[]>>();
+        ArrayList<String[]> list = new ArrayList<String[]>();
+        Set<String> set = new LinkedHashSet<String>();
+        String tag = "";
+        String ptag = "";
+        String ckey = "";
+        ArrayList<String> lines = getDSFasString(osf);
+
+        if (lines == null || lines.size() == 0) {
+            setError("Structure File (dsf) not available: " + osf);
+            return;
+        }	
+        for (String line : lines) {
+                if (line.startsWith("#")) {
+                continue;
+                }
+                if (! line.isEmpty()) {
+                    String[] t = line.split(",",-1);
+                    tag = t[0];
+                    ptag = t[1];
+                    if (ptag.isBlank()) {
+                        ckey = tag;
+                    } else {
+                        ckey = ptag + ":" + tag;
+                    }
+                    if (hm.containsKey(ckey)) {
+                      ArrayList<String[]> xlist = hm.get(ckey);
+                      xlist.add(t);
+                      hm.put(ckey, xlist);
+                    }  else {
+                      ArrayList<String[]> x = new ArrayList<String[]>();
+                      x.add(t);
+                      hm.put(ckey, x);
+                    }  
+                }
         }
+        OSF = hm;
+          
 }
 
     public static void readISF(String isf) {
@@ -1066,60 +1049,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         }
         ISF = list;
     }
-    
-    public static void readISF_toberemoved(String isf) {
-        ArrayList<String[]> list = new ArrayList<String[]>();
-        File cf = new File(EDData.getEDIStructureDir() + "/" + isf);
-    	BufferedReader reader; 
-        try {
-            reader = new BufferedReader(new FileReader(cf));
          
-		String line;
-                LinkedHashMap<Integer, String[]> z = new LinkedHashMap<Integer, String[]>();
-                int i = 0;
-                String lastkey = "";
-		while ((line = reader.readLine()) != null) {
-			if (line.startsWith("#")) {
-				continue;
-			}
-                        
-			if (! line.isEmpty()) {
-			String[] t = line.split(",",-1);
-                             if (i == 0) { lastkey = t[0];}
-                        if (GlobalDebug && t.length < 11) {
-                        System.out.println("readISF: line " + i + " delimited count is less than 11 " + t.length);
-                        }
-                        
-                        list.add(t);
-                        
-                        i++;
-                            if (! t[0].equals(lastkey)) {
-                                LinkedHashMap<Integer, String[]> w = z;
-                                mISF.put(t[0], w);
-                                z = new LinkedHashMap<Integer, String[]>();
-                                i = 0;
-                                z.put(i, t);
-                                
-                            } else {
-                                z.put(i, t);
-                                mISF.put(t[0], z);
-                            }
-                        lastkey = t[0];
-			}
-		}
-		reader.close();
-		ISF = list;
-                
-                
-        }   catch (FileNotFoundException ex) {
-            edilog(ex);
-            setError("inbound structure file not found");
-        } catch (IOException ex) {
-            edilog(ex);
-            setError("inbound structure file IOException");
-        }
-	}
-     
     public static Map<String, HashMap<String, String>> readIMD(String isf, ArrayList<String> doc) throws IOException {
 	        Map<String, HashMap<String, String>> hm = new LinkedHashMap<String, HashMap<String, String>>();
 	        HashMap<String, String> data = new LinkedHashMap<String, String>();
