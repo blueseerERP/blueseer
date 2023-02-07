@@ -112,7 +112,7 @@ DMG,N1,1,no,no,e08,Basis of Verification Code,1,2,-,O
 DMG,N1,1,no,no,e09,Quantity,1,15,-,O/Z
 DMG,N1,1,no,no,e10,Code List Qualifier Code,1,3,-,X
 DMG,N1,1,no,no,e11,Industry Code,1,30,-,X/Z
-N1,,,,,groupend,,,,,
+N1,,,0,0,groupend,,,,,
 ITD,,99999,no,yes,landmark,Terms of Sale/Deferred Terms of Sale,3,3,-,O
 ITD,,1,no,no,e01,Terms Type Code,2,2,-,O
 ITD,,1,no,no,e02,Terms Basis Date Code,1,2,-,O
@@ -177,7 +177,7 @@ PWK,,1,no,no,e05,Identification Code Qualifier,1,2,-,X
 PWK,,1,no,no,e06,Identification Code,2,80,-,X
 PWK,,1,no,no,e07,Description,1,80,-,O
 PWK,,1,no,no,e09,Request Category Code,1,2,-,O
-PKG,,25,no,yes,landmark,Marking, Packaging, Loading,3,3,-,O
+PKG,,25,no,yes,landmark,Marking Packaging Loading,3,3,-,O
 PKG,,1,no,no,e01,Item Description Type,1,1,-,X
 PKG,,1,no,no,e02,Packaging Characteristic Code,1,5,-,O
 PKG,,1,no,no,e03,Agency Qualifier Code,2,2,-,X
@@ -240,7 +240,7 @@ LM,,1,no,no,e02,Source Subqualifier,1,15,-,O
 LQ,LM,100,no,yes,landmark,Industry Code Identification,2,2,-,M
 LQ,LM,1,no,no,e01,Code List Qualifier Code,1,3,-,O
 LQ,LM,1,no,no,e02,Industry Code,1,30,-,X
-LM,,,,,groupend,,,,,
+LM,,,0,0,groupend,,,,,
 N9,,1,yes,yes,landmark,Extended Reference Information,2,2,-,O
 N9,,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
 N9,,1,no,no,e02,Reference Identification,1,50,-,X
@@ -252,7 +252,7 @@ MSG,N9,10,no,yes,landmark,Message Text,3,3,-,M
 MSG,N9,1,no,no,e01,Free-form Message Text,1,264,-,M
 MSG,N9,1,no,no,e02,Printer Carriage Control Code,2,2,-,X
 MSG,N9,1,no,no,e03,Number,1,9,-,O/Z
-N9,,,,,groupend,,,,,
+N9,,,0,0,groupend,,,,,
 V1,,99999,yes,yes,landmark,Vessel Identification,2,2,-,O
 V1,,1,no,no,e01,Vessel Code,1,8,-,X
 V1,,1,no,no,e02,Vessel Name,2,28,-,X
@@ -279,15 +279,15 @@ DTM,V1,1,no,no,e03,Time,4,8,-,X
 DTM,V1,1,no,no,e04,Time Code,2,2,-,O
 DTM,V1,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X
 DTM,V1,1,no,no,e06,Date Time Period,1,35,-,X
-V1,,,,,groupend,,,,,
+V1,,,0,0,groupend,,,,,
 FA1,,99999,yes,yes,landmark,Type of Financial Accounting Data,3,3,-,O
 FA1,,1,no,no,e01,Agency Qualifier Code,2,2,-,M/Z
-FA1,,1,no,no,e02,Service, Promotion, Allowance, or Charge Code,4,4,-,O/Z
+FA1,,1,no,no,e02,Service Promotion Allowance or Charge Code,4,4,-,O/Z
 FA1,,1,no,no,e03,Allowance or Charge Indicator,1,1,-,O
 FA2,FA1,99999,no,yes,landmark,Accounting Data,3,3,-,M
 FA2,FA1,1,no,no,e01,Breakdown Structure Detail Code,2,2,-,M
 FA2,FA1,1,no,no,e02,Financial Information Code,1,80,-,M
-FA1,,,,,groupend,,,,,
+FA1,,,0,0,groupend,,,,,
 IT1,,200000,yes,yes,landmark,Baseline Item Data (Invoice),3,3,-,O
 IT1,,1,no,no,e01,Assigned Identification,1,20,-,O/Z
 IT1,,1,no,no,e02,Quantity Invoiced,1,15,-,X
@@ -425,7 +425,7 @@ MEA,IT1:PID,1,no,no,e09,Surface/Layer/Position Code,2,2,-,O
 MEA,IT1:PID,1,no,no,e10,Measurement Method or Device,2,4,-,O
 MEA,IT1:PID,1,no,no,e11,Code List Qualifier Code,1,3,-,X/Z
 MEA,IT1:PID,1,no,no,e12,Industry Code,1,30,-,X/Z
-PID,,,,,groupend,,,,,
+PID,,,0,0,groupend,,,,,
 PWK,IT1,25,no,yes,landmark,Paperwork,3,3,-,O
 PWK,IT1,1,no,no,e01,Report Type Code,2,2,-,M
 PWK,IT1,1,no,no,e02,Report Transmission Code,1,2,-,O
@@ -435,7 +435,7 @@ PWK,IT1,1,no,no,e05,Identification Code Qualifier,1,2,-,X
 PWK,IT1,1,no,no,e06,Identification Code,2,80,-,X
 PWK,IT1,1,no,no,e07,Description,1,80,-,O
 PWK,IT1,1,no,no,e09,Request Category Code,1,2,-,O
-PKG,IT1,25,no,yes,landmark,Marking, Packaging, Loading,3,3,-,O
+PKG,IT1,25,no,yes,landmark,Marking Packaging Loading,3,3,-,O
 PKG,IT1,1,no,no,e01,Item Description Type,1,1,-,X
 PKG,IT1,1,no,no,e02,Packaging Characteristic Code,1,5,-,O
 PKG,IT1,1,no,no,e03,Agency Qualifier Code,2,2,-,X
@@ -572,14 +572,14 @@ SR,IT1,1,no,no,e08,Date,8,8,-,X
 SR,IT1,1,no,no,e09,Date,8,8,-,O
 SR,IT1,1,no,no,e10,Product/Service ID,1,48,-,O
 SR,IT1,1,no,no,e11,Product/Service ID,1,48,-,O
-SAC,IT1,99999,yes,yes,landmark,Service, Promotion, Allowance, or Charge Information,3,3,-,O
+SAC,IT1,99999,yes,yes,landmark,Service Promotion Allowance or Charge Information,3,3,-,O
 SAC,IT1,1,no,no,e01,Allowance or Charge Indicator,1,1,-,M/Z
-SAC,IT1,1,no,no,e02,Service, Promotion, Allowance, or Charge Code,4,4,-,X
+SAC,IT1,1,no,no,e02,Service Promotion Allowance or Charge Code,4,4,-,X
 SAC,IT1,1,no,no,e03,Agency Qualifier Code,2,2,-,X
-SAC,IT1,1,no,no,e04,Agency Service, Promotion, Allowance, or Charge Code,1,10,-,X
+SAC,IT1,1,no,no,e04,Agency Service Promotion Allowance or Charge Code,1,10,-,X
 SAC,IT1,1,no,no,e05,Amount,1,15,-,O/Z
 SAC,IT1,1,no,no,e06,Allowance/Charge Percent Qualifier,1,1,-,X
-SAC,IT1,1,no,no,e07,Percent, Decimal Format,1,6,-,X
+SAC,IT1,1,no,no,e07,Percent Decimal Format,1,6,-,X
 SAC,IT1,1,no,no,e08,Rate,1,9,-,O/Z
 SAC,IT1,1,no,no,e09,Unit or Basis for Measurement Code,2,2,-,X
 SAC,IT1,1,no,no,e10,Quantity,1,15,-,X/Z
@@ -607,8 +607,8 @@ DTM,IT1:SAC:TXI,1,no,no,e03,Time,4,8,-,X
 DTM,IT1:SAC:TXI,1,no,no,e04,Time Code,2,2,-,O
 DTM,IT1:SAC:TXI,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X
 DTM,IT1:SAC:TXI,1,no,no,e06,Date Time Period,1,35,-,X
-TXI,,,,,groupend,,,,,
-SAC,,,,,groupend,,,,,
+TXI,,,0,0,groupend,,,,,
+SAC,,,0,0,groupend,,,,,
 SLN,IT1,1000,yes,yes,landmark,Subline Item Detail,3,3,-,O
 SLN,IT1,1,no,no,e01,Assigned Identification,1,20,-,M/Z
 SLN,IT1,1,no,no,e02,Assigned Identification,1,20,-,O/Z
@@ -658,14 +658,14 @@ PID,IT1:SLN,1,no,no,e06,Surface/Layer/Position Code,2,2,-,O
 PID,IT1:SLN,1,no,no,e07,Source Subqualifier,1,15,-,O
 PID,IT1:SLN,1,no,no,e08,Yes/No Condition or Response Code,1,1,-,O/Z
 PID,IT1:SLN,1,no,no,e09,Language Code,2,3,-,O/Z
-SAC,IT1:SLN,99999,no,yes,landmark,Service, Promotion, Allowance, or Charge Information,3,3,-,O
+SAC,IT1:SLN,99999,no,yes,landmark,Service Promotion Allowance or Charge Information,3,3,-,O
 SAC,IT1:SLN,1,no,no,e01,Allowance or Charge Indicator,1,1,-,M/Z
-SAC,IT1:SLN,1,no,no,e02,Service, Promotion, Allowance, or Charge Code,4,4,-,X
+SAC,IT1:SLN,1,no,no,e02,Service Promotion Allowance or Charge Code,4,4,-,X
 SAC,IT1:SLN,1,no,no,e03,Agency Qualifier Code,2,2,-,X
-SAC,IT1:SLN,1,no,no,e04,Agency Service, Promotion, Allowance, or Charge Code,1,10,-,X
+SAC,IT1:SLN,1,no,no,e04,Agency Service Promotion Allowance or Charge Code,1,10,-,X
 SAC,IT1:SLN,1,no,no,e05,Amount,1,15,-,O/Z
 SAC,IT1:SLN,1,no,no,e06,Allowance/Charge Percent Qualifier,1,1,-,X
-SAC,IT1:SLN,1,no,no,e07,Percent, Decimal Format,1,6,-,X
+SAC,IT1:SLN,1,no,no,e07,Percent Decimal Format,1,6,-,X
 SAC,IT1:SLN,1,no,no,e08,Rate,1,9,-,O/Z
 SAC,IT1:SLN,1,no,no,e09,Unit or Basis for Measurement Code,2,2,-,X
 SAC,IT1:SLN,1,no,no,e10,Quantity,1,15,-,X/Z
@@ -689,7 +689,7 @@ TXI,IT1:SLN,1,no,no,e07,Relationship Code,1,1,-,O/Z
 TXI,IT1:SLN,1,no,no,e08,Dollar Basis For Percent,1,9,-,O
 TXI,IT1:SLN,1,no,no,e09,Tax Identification Number,1,20,-,O
 TXI,IT1:SLN,1,no,no,e10,Assigned Identification,1,20,-,O
-SLN,,,,,groupend,,,,,
+SLN,,,0,0,groupend,,,,,
 N1,IT1,200,yes,yes,landmark,Party Identification,2,2,-,O
 N1,IT1,1,no,no,e01,Entity Identifier Code,2,3,-,M
 N1,IT1,1,no,no,e02,Name,1,60,-,X
@@ -736,14 +736,14 @@ DMG,IT1:N1,1,no,no,e08,Basis of Verification Code,1,2,-,O
 DMG,IT1:N1,1,no,no,e09,Quantity,1,15,-,O/Z
 DMG,IT1:N1,1,no,no,e10,Code List Qualifier Code,1,3,-,X
 DMG,IT1:N1,1,no,no,e11,Industry Code,1,30,-,X/Z
-N1,,,,,groupend,,,,,
+N1,,,0,0,groupend,,,,,
 LM,IT1,10,yes,yes,landmark,Code Source Information,2,2,-,O
 LM,IT1,1,no,no,e01,Agency Qualifier Code,2,2,-,M
 LM,IT1,1,no,no,e02,Source Subqualifier,1,15,-,O
 LQ,IT1:LM,100,no,yes,landmark,Industry Code Identification,2,2,-,M
 LQ,IT1:LM,1,no,no,e01,Code List Qualifier Code,1,3,-,O
 LQ,IT1:LM,1,no,no,e02,Industry Code,1,30,-,X
-LM,,,,,groupend,,,,,
+LM,,,0,0,groupend,,,,,
 V1,IT1,99999,yes,yes,landmark,Vessel Identification,2,2,-,O
 V1,IT1,1,no,no,e01,Vessel Code,1,8,-,X
 V1,IT1,1,no,no,e02,Vessel Name,2,28,-,X
@@ -770,16 +770,16 @@ DTM,IT1:V1,1,no,no,e03,Time,4,8,-,X
 DTM,IT1:V1,1,no,no,e04,Time Code,2,2,-,O
 DTM,IT1:V1,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X
 DTM,IT1:V1,1,no,no,e06,Date Time Period,1,35,-,X
-V1,,,,,groupend,,,,,
+V1,,,0,0,groupend,,,,,
 FA1,IT1,99999,yes,yes,landmark,Type of Financial Accounting Data,3,3,-,O
 FA1,IT1,1,no,no,e01,Agency Qualifier Code,2,2,-,M/Z
-FA1,IT1,1,no,no,e02,Service, Promotion, Allowance, or Charge Code,4,4,-,O/Z
+FA1,IT1,1,no,no,e02,Service Promotion Allowance or Charge Code,4,4,-,O/Z
 FA1,IT1,1,no,no,e03,Allowance or Charge Indicator,1,1,-,O
 FA2,IT1:FA1,99999,no,yes,landmark,Accounting Data,3,3,-,M
 FA2,IT1:FA1,1,no,no,e01,Breakdown Structure Detail Code,2,2,-,M
 FA2,IT1:FA1,1,no,no,e02,Financial Information Code,1,80,-,M
-FA1,,,,,groupend,,,,,
-IT1,,,,,groupend,,,,,
+FA1,,,0,0,groupend,,,,,
+IT1,,,0,0,groupend,,,,,
 TDS,,1,no,yes,landmark,Total Monetary Value Summary,3,3,-,M
 TDS,,1,no,no,e01,Amount,1,15,-,M/Z
 TDS,,1,no,no,e02,Amount,1,15,-,O/Z
@@ -810,14 +810,14 @@ AMT,,99999,no,yes,landmark,Monetary Amount Information,3,3,-,O
 AMT,,1,no,no,e01,Amount Qualifier Code,1,3,-,M
 AMT,,1,no,no,e02,Monetary Amount,1,18,-,M
 AMT,,1,no,no,e03,Credit/Debit Flag Code,1,1,-,O
-SAC,,99999,yes,yes,landmark,Service, Promotion, Allowance, or Charge Information,3,3,-,O
+SAC,,99999,yes,yes,landmark,Service Promotion Allowance or Charge Information,3,3,-,O
 SAC,,1,no,no,e01,Allowance or Charge Indicator,1,1,-,M/Z
-SAC,,1,no,no,e02,Service, Promotion, Allowance, or Charge Code,4,4,-,X
+SAC,,1,no,no,e02,Service Promotion Allowance or Charge Code,4,4,-,X
 SAC,,1,no,no,e03,Agency Qualifier Code,2,2,-,X
-SAC,,1,no,no,e04,Agency Service, Promotion, Allowance, or Charge Code,1,10,-,X
+SAC,,1,no,no,e04,Agency Service Promotion Allowance or Charge Code,1,10,-,X
 SAC,,1,no,no,e05,Amount,1,15,-,O/Z
 SAC,,1,no,no,e06,Allowance/Charge Percent Qualifier,1,1,-,X
-SAC,,1,no,no,e07,Percent, Decimal Format,1,6,-,X
+SAC,,1,no,no,e07,Percent Decimal Format,1,6,-,X
 SAC,,1,no,no,e08,Rate,1,9,-,O/Z
 SAC,,1,no,no,e09,Unit or Basis for Measurement Code,2,2,-,X
 SAC,,1,no,no,e10,Quantity,1,15,-,X/Z
@@ -852,8 +852,8 @@ DTM,SAC:TXI,1,no,no,e03,Time,4,8,-,X
 DTM,SAC:TXI,1,no,no,e04,Time Code,2,2,-,O
 DTM,SAC:TXI,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X
 DTM,SAC:TXI,1,no,no,e06,Date Time Period,1,35,-,X
-TXI,,,,,groupend,,,,,
-SAC,,,,,groupend,,,,,
+TXI,,,0,0,groupend,,,,,
+SAC,,,0,0,groupend,,,,,
 ISS,,99999,yes,yes,landmark,Invoice Shipment Summary,3,3,-,O
 ISS,,1,no,no,e01,Number of Units Shipped,1,10,-,X
 ISS,,1,no,no,e02,Unit or Basis for Measurement Code,2,2,-,X
@@ -873,7 +873,7 @@ PID,ISS,1,no,no,e06,Surface/Layer/Position Code,2,2,-,O
 PID,ISS,1,no,no,e07,Source Subqualifier,1,15,-,O
 PID,ISS,1,no,no,e08,Yes/No Condition or Response Code,1,1,-,O/Z
 PID,ISS,1,no,no,e09,Language Code,2,3,-,O/Z
-ISS,,,,,groupend,,,,,
+ISS,,,0,0,groupend,,,,,
 CTT,,1,no,yes,landmark,Transaction Totals,3,3,-,O
 CTT,,1,no,no,e01,Number of Line Items,1,6,-,M
 CTT,,1,no,no,e02,Hash Total,1,10,-,O

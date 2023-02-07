@@ -1210,7 +1210,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             }
            
             
-            if (! x[4].equals("yes")) {
+            if (! x[4].toLowerCase().equals("yes")) {
                 continue;
             }
             
@@ -1273,7 +1273,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                 continue;
             }
             
-            if (! x[4].equals("yes")) {
+            if (! x[4].toLowerCase().equals("yes")) {
                 continue;
             }
             if (x[5].equals("groupend")) {
@@ -1285,7 +1285,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             }
             */
             
-            if (rawSegmentLM.equals(x[0]) && (currentGroupHeadLM.equals(x[1])) && x[3].equals("yes")) {
+            if (rawSegmentLM.equals(x[0]) && (currentGroupHeadLM.equals(x[1])) && x[3].toLowerCase().equals("yes")) {
                 stack.push(rawSegmentLM);
                 if (stack.get(0).equals(x[0]) && x[1].isBlank()) {
                     GHP = i;
@@ -1396,7 +1396,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                     if (groupcount.containsKey(groupparent)) {
                             int g = groupcount.get(groupparent);
 
-                            if (previouskey.equals(parenthead + x[0] + "+" + g) && ! IFSseg[3].equals("yes")) {
+                            if (previouskey.equals(parenthead + x[0] + "+" + g) && ! IFSseg[3].toLowerCase().equals("yes")) {
                                     loop = set.get(parenthead + x[0] + "+" + groupcount.get(groupparent));	
                                     hasloop = true;
                                     loop++;

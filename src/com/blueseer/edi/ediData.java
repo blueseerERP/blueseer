@@ -33,6 +33,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.ConvertIntToYesNo;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.sql.Connection;
@@ -1731,6 +1732,50 @@ public class ediData {
     }
     
     public static ArrayList<String> getDSFasString(String code) {
+        
+        ArrayList<String> list = new ArrayList<String>();
+        String sql = "select * from dfs_det where dfsd_id = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, code);
+             try (ResultSet res = ps.executeQuery();) {
+               
+                    while(res.next()) {
+                        StringBuilder sb = new StringBuilder();
+                        sb.append(res.getString("dfsd_segment"));
+                        sb.append(",");
+                        sb.append(res.getString("dfsd_parent"));
+                        sb.append(",");
+                        sb.append(res.getString("dfsd_loopcount"));
+                        sb.append(",");
+                        sb.append(ConvertIntToYesNo(Integer.valueOf(res.getString("dfsd_isgroup"))));
+                        sb.append(",");
+                        sb.append(ConvertIntToYesNo(Integer.valueOf(res.getString("dfsd_islandmark"))));
+                        sb.append(",");
+                        sb.append(res.getString("dfsd_field"));
+                        sb.append(",");
+                        sb.append(res.getString("dfsd_desc"));
+                        sb.append(",");
+                        sb.append(res.getString("dfsd_min"));
+                        sb.append(",");
+                        sb.append(res.getString("dfsd_max"));      
+                        sb.append(",");
+                        sb.append(res.getString("dfsd_align"));
+                        sb.append(",");
+                        sb.append(res.getString("dfsd_status"));
+                        sb.append(",");
+                        sb.append(res.getString("dfsd_type"));
+                        list.add(sb.toString());
+                    }
+               
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s); 
+        }
+        return list;
+    }
+    
+    public static ArrayList<String> getDSFasStringBase0(String code) {
         
         ArrayList<String> list = new ArrayList<String>();
         String sql = "select * from dfs_det where dfsd_id = ? ;";
