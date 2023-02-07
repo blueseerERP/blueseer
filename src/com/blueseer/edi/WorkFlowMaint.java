@@ -858,7 +858,7 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_btdeleterowActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
-        // TODO add your handling code here:
+        newAction("");
     }//GEN-LAST:event_btnewActionPerformed
 
 
