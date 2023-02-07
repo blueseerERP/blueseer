@@ -43,6 +43,8 @@ admin,EDIPartnerDocBrowse
 admin,EDILoad
 admin,EDIControl
 admin,EDIUtilities
+admin,WorkFlowMaint
+admin,WorkFlowBrowse
 admin,LabelMenu
 admin,LabelsContGeneric
 admin,AddrLabel
