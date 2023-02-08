@@ -64,6 +64,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Map;
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -89,6 +90,8 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
             new String[]{
                 "Key", "Value"
             });
+   
+   DefaultListModel actionlistmodel = new DefaultListModel();
                 
                 
     public WorkFlowMaint() {
@@ -278,6 +281,7 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
        tbkey.setText("");
         tbdesc.setText("");
         cbenabled.setSelected(false);
+        actionlist.setModel(actionlistmodel);
        isLoad = false;
     }
     
@@ -806,54 +810,71 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_btchangelogActionPerformed
 
     private void btupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupActionPerformed
-        int[] rows = keyvaluetable.getSelectedRows();
-        if (rows == null || rows.length == 0) {
+        int[] elements = actionlist.getSelectedIndices();
+        if (elements == null || elements.length == 0) {
             bsmf.MainFrame.show(getMessageTag(1029));
             return;
         }
-        if (rows.length > 1) {
+        if (elements.length > 1) {
             bsmf.MainFrame.show(getMessageTag(1095));
             return;
         }
-        for (int i : rows) {
-            if (i > 0 && rows.length == 1) {
-                ((javax.swing.table.DefaultTableModel) keyvaluetable.getModel()).moveRow(i, i, i - 1);
+        for (int i : elements) {
+            if (i > 0 && elements.length == 1) {
+                Object b = actionlistmodel.get(i - 1);
+                Object s = actionlistmodel.get(i);
+                actionlistmodel.setElementAt(s, i - 1);
+                actionlistmodel.setElementAt(b, i);
+                actionlist.setSelectedIndex(i - 1);
             }
         }
     }//GEN-LAST:event_btupActionPerformed
 
     private void btdownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdownActionPerformed
-        int[] rows = keyvaluetable.getSelectedRows();
-        if (rows == null || rows.length == 0) {
+        int[] elements = actionlist.getSelectedIndices();
+        if (elements == null || elements.length == 0) {
             bsmf.MainFrame.show(getMessageTag(1029));
             return;
         }
-        if (rows.length > 1) {
+        if (elements.length > 1) {
             bsmf.MainFrame.show(getMessageTag(1095));
             return;
         }
-        for (int i : rows) {
-            ((javax.swing.table.DefaultTableModel) keyvaluetable.getModel()).moveRow(i, i, i + 1);
+        for (int i : elements) {
+            Object a = null;
+            Object s = null;
+            if ((i + 1) < actionlistmodel.size()) {
+                a = actionlistmodel.get(i + 1);
+                s = actionlistmodel.get(i);
+                actionlistmodel.setElementAt(a, i);
+                actionlistmodel.setElementAt(s, i + 1);
+                actionlist.setSelectedIndex(i + 1);
+            }
         }
     }//GEN-LAST:event_btdownActionPerformed
 
     private void btaddrowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddrowActionPerformed
-       
+        
+        if (ddactions.getSelectedItem() != null) {
+            actionlistmodel.addElement(ddactions.getSelectedItem().toString());
+        }
+        
+        /*
         keyvaluemodel.addRow(new Object[]{
          //   tbsegment.getText(),
          //   tbparent.getText()
         });
-
+        */
         
 
     }//GEN-LAST:event_btaddrowActionPerformed
 
     private void btdeleterowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleterowActionPerformed
-        int[] rows = keyvaluetable.getSelectedRows();
+        int[] rows = actionlist.getSelectedIndices();
         for (int i : rows) {
-            bsmf.MainFrame.show(getMessageTag(1031,String.valueOf(i)));
-            ((javax.swing.table.DefaultTableModel) keyvaluetable.getModel()).removeRow(i);
-
+            actionlistmodel.removeElementAt(i);
+           // bsmf.MainFrame.show(getMessageTag(1031,String.valueOf(i)));
+          //  ((javax.swing.table.DefaultTableModel) keyvaluetable.getModel()).removeRow(i);
         }
     }//GEN-LAST:event_btdeleterowActionPerformed
 
