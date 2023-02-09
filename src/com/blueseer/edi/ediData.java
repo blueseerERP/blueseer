@@ -643,6 +643,47 @@ public class ediData {
         return r;
     }
     
+    private static int _addWkfMstr(wkf_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from wkf_mstr where wkf_id = ?";
+        String sqlInsert = "insert into wkf_mstr (wkf_id, wkf_desc, wkf_enabled "
+                + "  )  " +
+                " values (?,?,?); "; 
+       
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x.wkf_id);
+          res = ps.executeQuery();
+          ps = con.prepareStatement(sqlInsert);
+            if (! res.isBeforeFirst()) {
+            ps.setString(1, x.wkf_id);
+            ps.setString(2, x.wkf_desc);
+            ps.setString(3, x.wkf_enabled);
+            rows = ps.executeUpdate();
+            } 
+            return rows;
+    }
+    
+    private static int _addWkfDet(wkf_det x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from wkf_det where wkfd_id = ? and wkfd_action = ? and wkfd_line = ?;";
+        String sqlInsert = "insert into wkf_det (wkfd_id, wkfd_action, wkfd_line )  " 
+                        + " values (?,?,?); "; 
+       
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x.wkfd_id);
+          ps.setString(2, x.wkfd_action);
+          ps.setString(3, x.wkfd_line);
+          res = ps.executeQuery();
+          ps = con.prepareStatement(sqlInsert);  
+            if (! res.isBeforeFirst()) {
+            ps.setString(1, x.wkfd_id);
+            ps.setString(2, x.wkfd_action);
+            ps.setString(3, x.wkfd_line);
+            rows = ps.executeUpdate();
+            } 
+            return rows;
+    }
+    
     
     
     public static String[] addMapStruct(dfs_mstr x) {
@@ -2069,6 +2110,23 @@ public class ediData {
         }
     }
     
+    public record wkf_mstr(String[] m, String wkf_id, String wkf_desc, String wkf_enabled) {
+        public wkf_mstr(String[] m) {
+            this(m, "", "", "");
+        }
+    }
+    
+    public record wkf_det(String[] m, String wkfd_id, String wkfd_action, String wkfd_line) {
+        public wkf_det(String[] m) {
+            this(m, "", "", "");
+        }
+    }
+    
+    public record wkfd_meta(String[] m, String wkfdm_id, String wkfdm_key, String wkfdm_value) {
+        public wkfd_meta(String[] m) {
+            this(m, "", "", "");
+        }
+    }
     
     public record as2_mstr(String[] m, String as2_id, String as2_desc, String as2_version,
         String as2_url, String as2_port, String as2_path, String as2_user ,
