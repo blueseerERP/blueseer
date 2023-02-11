@@ -684,6 +684,27 @@ public class ediData {
             return rows;
     }
     
+    private static int _addWkfdMeta(wkfd_meta x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from wkfd_meta where wkfdm_id = ? and wkfdm_key = ? and wkfdm_value = ?;";
+        String sqlInsert = "insert into wkfd_meta (wkfdm_id, wkfdm_key, wkfdm_value )  " 
+                        + " values (?,?,?); "; 
+       
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x.wkfdm_id);
+          ps.setString(2, x.wkfdm_key);
+          ps.setString(3, x.wkfdm_value);
+          res = ps.executeQuery();
+          ps = con.prepareStatement(sqlInsert);  
+            if (! res.isBeforeFirst()) {
+            ps.setString(1, x.wkfdm_id);
+            ps.setString(2, x.wkfdm_key);
+            ps.setString(3, x.wkfdm_value);
+            rows = ps.executeUpdate();
+            } 
+            return rows;
+    }
+    
     
     
     public static String[] addMapStruct(dfs_mstr x) {
