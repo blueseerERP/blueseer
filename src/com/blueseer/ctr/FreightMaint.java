@@ -368,7 +368,6 @@ public class FreightMaint extends javax.swing.JPanel implements IBlueSeerT {
         boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
          m = deleteFreightMstr(createRecord()); 
-         OVData.deleteMenuToAllUsers(x[0]);
          initvars(null);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
