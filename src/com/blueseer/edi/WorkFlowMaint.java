@@ -441,8 +441,9 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
     			 for (String[] g : k) {
                                 wkfd_meta x = new wkfd_meta(null, 
                                 tbkey.getText(),
+                                String.valueOf(i),
                                 g[0],
-                                g[1]);
+                                g[1]); 
                             list.add(x);
     			 }
     		 }
