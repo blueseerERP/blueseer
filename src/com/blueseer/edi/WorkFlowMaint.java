@@ -36,6 +36,10 @@ import static com.blueseer.ctr.cusData.deleteFreightMstr;
 import com.blueseer.ctr.cusData.frt_mstr;
 import static com.blueseer.ctr.cusData.getFreightMstr;
 import static com.blueseer.ctr.cusData.updateFreightMstr;
+import static com.blueseer.edi.ediData.addWkfTransaction;
+import com.blueseer.edi.ediData.wkf_det;
+import com.blueseer.edi.ediData.wkf_mstr;
+import com.blueseer.edi.ediData.wkfd_meta;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callChangeDialog;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
@@ -62,6 +66,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -84,7 +89,9 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     // global variable declarations
                 boolean isLoad = false;
-                public static frt_mstr x = null;
+                public static wkf_mstr x = null;
+                
+                public static LinkedHashMap<String, ArrayList<String[]>> kvm = new  LinkedHashMap<String, ArrayList<String[]>>();
     // global datatablemodel declarations       
    javax.swing.table.DefaultTableModel keyvaluemodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
@@ -353,14 +360,14 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public String[] addRecord(String[] x) {
-     String[] m = addFreightMstr(createRecord());
+     String[] m = addWkfTransaction(createDetMetaRecord(), createDetRecord(), createRecord());
          return m;
      }
      
     public String[] updateRecord(String[] x) {
      
-     frt_mstr _x = this.x;
-     frt_mstr _y = createRecord();   
+     wkf_mstr _x = this.x;
+     wkf_mstr _y = createRecord();   
      String[] m = updateFreightMstr(_y);
      
       // change log check
@@ -404,14 +411,51 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
         return x.m();
     }
     
-     public frt_mstr createRecord() { 
-        frt_mstr x = new frt_mstr(null, 
+    public wkf_mstr createRecord() { 
+        wkf_mstr x = new wkf_mstr(null, 
                 tbkey.getText(),
                 tbdesc.getText(),
                 String.valueOf(BlueSeerUtils.boolToInt(cbenabled.isSelected()))
                 );
         return x;
     }
+    
+    public ArrayList<wkf_det> createDetRecord() {
+        ArrayList<wkf_det> list = new ArrayList<wkf_det>();
+        for (int i = 0 ; i < actionlistmodel.size(); i++) {
+            wkf_det x = new wkf_det(null, 
+                tbkey.getText(),
+                actionlistmodel.getElementAt(i).toString(),
+                String.valueOf(i));
+            list.add(x);
+        }
+        return list;   
+    }
+    
+    public ArrayList<wkfd_meta> createDetMetaRecord() {
+        ArrayList<wkfd_meta> list = new ArrayList<wkfd_meta>();
+        for (int i = 0 ; i < actionlistmodel.size(); i++) {
+            for (Map.Entry<String, ArrayList<String[]>> z : kvm.entrySet()) {
+    		 if (z.getKey().equals(String.valueOf(i))) {
+    			 ArrayList<String[]> k = z.getValue();
+    			 for (String[] g : k) {
+                                wkfd_meta x = new wkfd_meta(null, 
+                                tbkey.getText(),
+                                g[0],
+                                g[1]);
+                            list.add(x);
+    			 }
+    		 }
+    	    }
+        }
+        return list;   
+        
+        
+        
+        
+    }
+    
+    
      
     public void lookUpFrame() {
         
