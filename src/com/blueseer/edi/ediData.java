@@ -757,6 +757,41 @@ public class ediData {
             return rows;
     }
     
+    public static String[] deleteWkfMstr(wkf_mstr x) { 
+       String[] m = new String[2];
+        String sql = "delete from wkfd_meta where wkfdm_id = ?; ";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.wkf_id);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        sql = "delete from wkf_det where wkfd_id = ?; ";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.wkf_id);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        sql = "delete from wkf_mstr where wkf_id = ?; ";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.wkf_id);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+      
     
     
     public static String[] addMapStruct(dfs_mstr x) {
@@ -2195,9 +2230,9 @@ public class ediData {
         }
     }
     
-    public record wkfd_meta(String[] m, String wkfdm_id, String wkfdm_key, String wkfdm_value) {
+    public record wkfd_meta(String[] m, String wkfdm_id, String wkfdm_line, String wkfdm_key, String wkfdm_value) {
         public wkfd_meta(String[] m) {
-            this(m, "", "", "");
+            this(m, "", "", "", "");
         }
     }
     

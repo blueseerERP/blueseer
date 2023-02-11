@@ -37,6 +37,7 @@ import com.blueseer.ctr.cusData.frt_mstr;
 import static com.blueseer.ctr.cusData.getFreightMstr;
 import static com.blueseer.ctr.cusData.updateFreightMstr;
 import static com.blueseer.edi.ediData.addWkfTransaction;
+import static com.blueseer.edi.ediData.deleteWkfMstr;
 import com.blueseer.edi.ediData.wkf_det;
 import com.blueseer.edi.ediData.wkf_mstr;
 import com.blueseer.edi.ediData.wkfd_meta;
@@ -384,8 +385,7 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
      String[] m = new String[2];
         boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
-         m = deleteFreightMstr(createRecord()); 
-         OVData.deleteMenuToAllUsers(x[0]);
+         m = deleteWkfMstr(createRecord()); 
          initvars(null);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
@@ -393,7 +393,7 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
         // change log check
         if (m[0].equals("0")) {
             ArrayList<admData.change_log> c = new ArrayList<admData.change_log>();
-            c.add(clog(this.x.frt_code(), 
+            c.add(clog(this.x.wkf_id(), 
                      this.x.getClass().getName(), 
                      this.getClass().getSimpleName(), 
                      "deletion", 
