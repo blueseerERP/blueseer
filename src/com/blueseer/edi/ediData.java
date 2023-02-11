@@ -757,6 +757,84 @@ public class ediData {
             return rows;
     }
     
+    public static String[] updateWkfMstrTransaction(String x, ArrayList<wkfd_meta> wkfdm, ArrayList<wkf_det> wkfd, wkf_mstr wkf) {
+        String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            bscon = DriverManager.getConnection(url + db, user, pass);
+            bscon.setAutoCommit(false);
+             _deleteWkfDetLines(x, bscon);  // discard all lines
+             for (wkfd_meta z : wkfdm) {
+                _addWkfdMeta(z, bscon, ps, res); 
+            }
+            for (wkf_det z : wkfd) {
+                _addWkfDet(z, bscon, ps, res); 
+            }
+             _updateWkfMstr(wkf, bscon, ps);  // update so_mstr
+            bscon.commit();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    private static void _deleteWkfDetLines(String x, Connection con) throws SQLException { 
+        PreparedStatement ps = null; 
+        String sql = "delete from wkf_det where wkfd_id = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x);
+        ps.executeUpdate();
+        sql = "delete from wkfd_meta where wkfdm_id = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x);
+        ps.executeUpdate();
+        ps.close();
+    }
+        
+    private static int _updateWkfMstr(wkf_mstr x, Connection con, PreparedStatement ps) throws SQLException {
+        int rows = 0;
+        String sql = "update wkf_mstr set wkf_desc = ?, wkf_enabled = ? " +
+                "  where wkf_id = ? ";
+	ps = con.prepareStatement(sql) ;
+            ps.setString(1, x.wkf_desc);
+            ps.setString(2, x.wkf_enabled);
+            ps.setString(3, x.wkf_id);
+            rows = ps.executeUpdate();
+        return rows;
+    }
+        
     public static String[] deleteWkfMstr(wkf_mstr x) { 
        String[] m = new String[2];
         String sql = "delete from wkfd_meta where wkfdm_id = ?; ";
@@ -792,6 +870,97 @@ public class ediData {
         return m;
     }
       
+    public static ArrayList<wkf_det> getWkfDet(String code) {
+        wkf_det r = null;
+        String[] m = new String[2];
+        ArrayList<wkf_det> list = new ArrayList<wkf_det>();
+        String sql = "select * from wkf_det where wkfd_id = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, code);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new wkf_det(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new wkf_det(m, res.getString("wkfd_id"), 
+                        res.getString("wkfd_action"), 
+                        res.getString("wkfd_line"));
+                        list.add(r);
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new wkf_det(m);
+               list.add(r);
+        }
+        return list;
+    }
+    
+    public static ArrayList<wkfd_meta> getWkfdMeta(String code) {
+        wkfd_meta r = null;
+        String[] m = new String[2];
+        ArrayList<wkfd_meta> list = new ArrayList<wkfd_meta>();
+        String sql = "select * from wkf_det where wkfd_id = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, code);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new wkfd_meta(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new wkfd_meta(m, res.getString("wkfdm_id"), 
+                        res.getString("wkfdm_line"), 
+                        res.getString("wkfdm_key"),
+                        res.getString("wkfdm_value"));
+                        list.add(r);
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new wkfd_meta(m);
+               list.add(r);
+        }
+        return list;
+    }
+    
+    public static wkf_mstr getWkfMstr(String[] x) {
+        wkf_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from wkf_mstr where wkf_id = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new wkf_mstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new wkf_mstr(m, res.getString("wkf_id"), 
+                            res.getString("wkf_desc"),
+                            res.getString("wkf_enabled")
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new wkf_mstr(m);
+        }
+        return r;
+    }
     
     
     public static String[] addMapStruct(dfs_mstr x) {

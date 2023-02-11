@@ -38,6 +38,10 @@ import static com.blueseer.ctr.cusData.getFreightMstr;
 import static com.blueseer.ctr.cusData.updateFreightMstr;
 import static com.blueseer.edi.ediData.addWkfTransaction;
 import static com.blueseer.edi.ediData.deleteWkfMstr;
+import static com.blueseer.edi.ediData.getWkfDet;
+import static com.blueseer.edi.ediData.getWkfMstr;
+import static com.blueseer.edi.ediData.getWkfdMeta;
+import static com.blueseer.edi.ediData.updateWkfMstrTransaction;
 import com.blueseer.edi.ediData.wkf_det;
 import com.blueseer.edi.ediData.wkf_mstr;
 import com.blueseer.edi.ediData.wkfd_meta;
@@ -91,6 +95,8 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
     // global variable declarations
                 boolean isLoad = false;
                 public static wkf_mstr x = null;
+                public static ArrayList<wkf_det> wkfdetlist = null;
+                public static ArrayList<wkfd_meta> wkfdmetalist = null;
                 
                 public static LinkedHashMap<String, ArrayList<String[]>> kvm = new  LinkedHashMap<String, ArrayList<String[]>>();
     // global datatablemodel declarations       
@@ -369,7 +375,7 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
      
      wkf_mstr _x = this.x;
      wkf_mstr _y = createRecord();   
-     String[] m = updateFreightMstr(_y);
+     String[] m = updateWkfMstrTransaction(x[0], createDetMetaRecord(), createDetRecord(), _y);
      
       // change log check
      if (m[0].equals("0")) {
@@ -407,7 +413,9 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
      }
       
     public String[] getRecord(String[] key) {
-       x = getFreightMstr(key);
+       x = getWkfMstr(key);  
+        wkfdetlist = getWkfDet(key[0]); 
+        wkfdmetalist = getWkfdMeta(key[0]); 
         return x.m();
     }
     
@@ -464,9 +472,9 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
         lual = new ActionListener() {
         public void actionPerformed(ActionEvent event) {
         if (lurb1.isSelected()) {  
-         luModel = DTData.getFreightBrowseUtil(luinput.getText(),0, "frt_code");
+         luModel = DTData.getWkfMstrBrowseUtil(luinput.getText(),0, "wkf_id");
         } else {
-         luModel = DTData.getFreightBrowseUtil(luinput.getText(),0, "frt_desc");   
+         luModel = DTData.getWkfMstrBrowseUtil(luinput.getText(),0, "wkf_desc");   
         }
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
@@ -500,10 +508,17 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
 
     public void updateForm() {
-        tbkey.setText(x.frt_code());
-        tbdesc.setText(x.frt_desc());
-        cbenabled.setSelected(BlueSeerUtils.ConvertStringToBool(x.frt_apply()));
+        tbkey.setText(x.wkf_id());
+        tbdesc.setText(x.wkf_desc());
+        cbenabled.setSelected(BlueSeerUtils.ConvertStringToBool(x.wkf_enabled()));
         setAction(x.m());
+        
+        // now detail
+        actionlistmodel.removeAllElements();
+        for (wkf_det dfsd : wkfdetlist) {
+            actionlistmodel.addElement(dfsd.wkfd_action());
+        }
+        
     }
     
      
