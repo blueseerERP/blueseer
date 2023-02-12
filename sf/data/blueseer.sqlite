@@ -2881,7 +2881,7 @@ CREATE TABLE "wkf_mstr" (
   "wkf_desc" varchar(100) NOT NULL DEFAULT '',
   "wkf_enabled" tinyint(1) NOT NULL DEFAULT '0'
 );
-CREATE TABLE "wkfd_det" (
+CREATE TABLE "wkf_det" (
   "wkfd_id" varchar(30) NOT NULL DEFAULT '',
   "wkfd_action" varchar(100) NOT NULL DEFAULT '',
   "wkfd_line" int(3) NOT NULL DEFAULT '0'

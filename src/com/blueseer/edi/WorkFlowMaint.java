@@ -94,10 +94,11 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     // global variable declarations
                 boolean isLoad = false;
+                int currentkvm = 0;
                 public static wkf_mstr x = null;
                 public static ArrayList<wkf_det> wkfdetlist = null;
                 public static ArrayList<wkfd_meta> wkfdmetalist = null;
-                
+                public static LinkedHashMap<String, ArrayList<String[]>> kvs = new  LinkedHashMap<String, ArrayList<String[]>>();
                 public static LinkedHashMap<String, ArrayList<String[]>> kvm = new  LinkedHashMap<String, ArrayList<String[]>>();
     // global datatablemodel declarations       
    javax.swing.table.DefaultTableModel keyvaluemodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -295,7 +296,11 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
        tbkey.setText("");
         tbdesc.setText("");
         cbenabled.setSelected(false);
+        keyvaluemodel.setRowCount(0);
+        keyvaluetable.setModel(keyvaluemodel);
+        actionlistmodel.removeAllElements();
         actionlist.setModel(actionlistmodel);
+        setddactions();
        isLoad = false;
     }
     
@@ -463,9 +468,7 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         
     }
-    
-    
-     
+          
     public void lookUpFrame() {
         
         luinput.removeActionListener(lual);
@@ -519,9 +522,51 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
             actionlistmodel.addElement(dfsd.wkfd_action());
         }
         
+        // now meta
+        
+        for (int i = 0; i < actionlistmodel.getSize(); i++) {
+           ArrayList<String[]> list = new ArrayList<String[]>();
+           for (wkfd_meta dfsdm : wkfdmetalist) { 
+            if (dfsdm.wkfdm_line().equals(String.valueOf(i))) {
+                list.add(new String[]{dfsdm.wkfdm_key(), dfsdm.wkfdm_value()});
+            } 
+           }
+           kvm.put(String.valueOf(i), list);
+        }     
+        
     }
     
-     
+    public void setddactions() {
+        ddactions.removeAllItems();
+        ddactions.addItem("file copy");
+        ddactions.addItem("file move");
+        ddactions.addItem("file delete");
+        
+        for (int i = 0; i < ddactions.getItemCount(); i++) {
+            
+            if (i == 0) {
+                ArrayList<String[]> x = new ArrayList<String[]>();
+                x.add(new String[]{"source", ""});
+                x.add(new String[]{"destination", ""});
+                x.add(new String[]{"append", ""}); 
+                kvs.put("file copy", x);
+            }
+            if (i == 1) {
+                ArrayList<String[]> x = new ArrayList<String[]>();
+                x.add(new String[]{"source", ""});
+                x.add(new String[]{"destination", ""});
+                x.add(new String[]{"force", ""});
+                kvs.put("file move", x);
+            }
+            if (i == 2) {
+                ArrayList<String[]> x = new ArrayList<String[]>();
+                x.add(new String[]{"source", ""});
+                x.add(new String[]{"force", ""});
+                kvs.put("file delete", x);
+            }
+        }
+        
+    } 
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -557,6 +602,7 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         keyvaluetable = new javax.swing.JTable();
+        btcommit = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -589,9 +635,12 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Action Maintenance"));
 
+        actionlist.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                actionlistMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(actionlist);
-
-        ddactions.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         btup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/upload.png"))); // NOI18N
         btup.setToolTipText("Move Up");
@@ -771,13 +820,24 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
         ));
         jScrollPane1.setViewportView(keyvaluetable);
 
+        btcommit.setText("Commit Key/Value");
+        btcommit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btcommitActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 814, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btcommit)))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -785,7 +845,8 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btcommit))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -886,6 +947,12 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
                 actionlistmodel.setElementAt(s, i - 1);
                 actionlistmodel.setElementAt(b, i);
                 actionlist.setSelectedIndex(i - 1);
+                
+                ArrayList<String[]> blist = kvm.get(String.valueOf(i - 1));
+                ArrayList<String[]> slist = kvm.get(String.valueOf(i));
+                kvm.put(String.valueOf(i - 1), slist);
+                kvm.put(String.valueOf(1), blist);
+                
             }
         }
     }//GEN-LAST:event_btupActionPerformed
@@ -909,6 +976,12 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
                 actionlistmodel.setElementAt(a, i);
                 actionlistmodel.setElementAt(s, i + 1);
                 actionlist.setSelectedIndex(i + 1);
+                
+                ArrayList<String[]> alist = kvm.get(String.valueOf(i + 1));
+                ArrayList<String[]> slist = kvm.get(String.valueOf(i));
+                kvm.put(String.valueOf(i), alist);
+                kvm.put(String.valueOf(i + 1), slist);
+                
             }
         }
     }//GEN-LAST:event_btdownActionPerformed
@@ -917,22 +990,18 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         if (ddactions.getSelectedItem() != null) {
             actionlistmodel.addElement(ddactions.getSelectedItem().toString());
+            int index = actionlistmodel.getSize() - 1;
+            ArrayList<String[]> x = kvs.get(ddactions.getSelectedItem().toString());
+            kvm.put(String.valueOf(index), x);
         }
         
-        /*
-        keyvaluemodel.addRow(new Object[]{
-         //   tbsegment.getText(),
-         //   tbparent.getText()
-        });
-        */
-        
-
     }//GEN-LAST:event_btaddrowActionPerformed
 
     private void btdeleterowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleterowActionPerformed
         int[] rows = actionlist.getSelectedIndices();
         for (int i : rows) {
             actionlistmodel.removeElementAt(i);
+            kvm.remove(String.valueOf(i));
            // bsmf.MainFrame.show(getMessageTag(1031,String.valueOf(i)));
           //  ((javax.swing.table.DefaultTableModel) keyvaluetable.getModel()).removeRow(i);
         }
@@ -942,6 +1011,41 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
         newAction("");
     }//GEN-LAST:event_btnewActionPerformed
 
+    private void actionlistMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_actionlistMouseClicked
+        if (actionlist != null && ! actionlist.isSelectionEmpty()) {
+            int x = actionlist.getSelectedIndex();
+            currentkvm = x;
+            String label = actionlist.getSelectedValue();
+           
+            keyvaluemodel.setRowCount(0);
+            
+            jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Key/Value Action: " + label));
+            
+            /*
+            for (Map.Entry<String, ArrayList<String[]>> z : kvm.entrySet()) {
+    		System.out.println("HERE: " + z.getKey());
+    	    }
+            */
+            
+            ArrayList<String[]> list = kvm.get(String.valueOf(x));
+            for (String[] v : list) {
+                keyvaluemodel.addRow(new Object[]{
+                v[0],
+                v[1]
+                });
+            }
+        }
+    }//GEN-LAST:event_actionlistMouseClicked
+
+    private void btcommitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcommitActionPerformed
+        ArrayList<String[]> list = new ArrayList<String[]>();
+        for (int j = 0; j < keyvaluetable.getRowCount(); j++) {
+            String[] arr = new String[]{keyvaluetable.getValueAt(j, 0).toString(), keyvaluetable.getValueAt(j, 1).toString()};
+            list.add(arr);
+        }
+        kvm.put(String.valueOf(currentkvm), list);
+    }//GEN-LAST:event_btcommitActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList<String> actionlist;
@@ -949,6 +1053,7 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JButton btaddrow;
     private javax.swing.JButton btchangelog;
     private javax.swing.JButton btclear;
+    private javax.swing.JButton btcommit;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btdeleterow;
     private javax.swing.JButton btdown;

@@ -738,13 +738,14 @@ public class ediData {
     
     private static int _addWkfdMeta(wkfd_meta x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
-        String sqlSelect = "select * from wkfd_meta where wkfdm_id = ? and wkfdm_line = ?;";
+        String sqlSelect = "select * from wkfd_meta where wkfdm_id = ? and wkfdm_line = ? and wkfdm_key = ?;";
         String sqlInsert = "insert into wkfd_meta (wkfdm_id, wkfdm_line, wkfdm_key, wkfdm_value )  " 
                         + " values (?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.wkfdm_id);
           ps.setString(2, x.wkfdm_line);
+          ps.setString(3, x.wkfdm_key);
           res = ps.executeQuery();
           ps = con.prepareStatement(sqlInsert);  
             if (! res.isBeforeFirst()) {
@@ -905,7 +906,7 @@ public class ediData {
         wkfd_meta r = null;
         String[] m = new String[2];
         ArrayList<wkfd_meta> list = new ArrayList<wkfd_meta>();
-        String sql = "select * from wkf_det where wkfd_id = ? ;";
+        String sql = "select * from wkfd_meta where wkfdm_id = ? ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, code);
