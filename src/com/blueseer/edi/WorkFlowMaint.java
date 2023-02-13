@@ -947,6 +947,7 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
                 actionlistmodel.setElementAt(s, i - 1);
                 actionlistmodel.setElementAt(b, i);
                 actionlist.setSelectedIndex(i - 1);
+                currentkvm = i - 1;
                 
                 ArrayList<String[]> blist = kvm.get(String.valueOf(i - 1));
                 ArrayList<String[]> slist = kvm.get(String.valueOf(i));
@@ -976,6 +977,7 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
                 actionlistmodel.setElementAt(a, i);
                 actionlistmodel.setElementAt(s, i + 1);
                 actionlist.setSelectedIndex(i + 1);
+                currentkvm = i + 1;
                 
                 ArrayList<String[]> alist = kvm.get(String.valueOf(i + 1));
                 ArrayList<String[]> slist = kvm.get(String.valueOf(i));
@@ -991,7 +993,7 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
         if (ddactions.getSelectedItem() != null) {
             actionlistmodel.addElement(ddactions.getSelectedItem().toString());
             int index = actionlistmodel.getSize() - 1;
-            ArrayList<String[]> x = kvs.get(ddactions.getSelectedItem().toString());
+            ArrayList<String[]> x = kvm.get(ddactions.getSelectedItem().toString());
             kvm.put(String.valueOf(index), x);
         }
         
@@ -1044,6 +1046,7 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
             list.add(arr);
         }
         kvm.put(String.valueOf(currentkvm), list);
+        bsmf.MainFrame.show("key/values committed");
     }//GEN-LAST:event_btcommitActionPerformed
 
 
