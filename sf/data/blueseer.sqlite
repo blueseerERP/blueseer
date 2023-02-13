@@ -2892,6 +2892,24 @@ CREATE TABLE "wkfd_meta" (
   "wkfdm_key" varchar(100) NOT NULL DEFAULT '',
   "wkfdm_value" varchar(100) NOT NULL DEFAULT ''
 );
+CREATE TABLE "wkf_log" (
+  "wkf_id" INTEGER PRIMARY KEY,
+  "wkf_jobid" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "wkf_desc" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
+  "wkf_ts" timestamp NOT NULL DEFAULT (datetime('now','localtime')),
+  "wkf_ref" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "wkf_status" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "wkf_messg" varchar(200) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+CREATE TABLE "wkfd_log" (
+  "wkfdl_id" INTEGER PRIMARY KEY,
+  "wkfdl_parentid" int(12) NOT NULL COLLATE NOCASE DEFAULT '',
+  "wkfdl_action" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "wkfdl_ts" timestamp NOT NULL DEFAULT (datetime('now','localtime')),
+  "wkfdl_ref" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "wkfdl_status" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "wkfdl_messg" varchar(200) NOT NULL COLLATE NOCASE DEFAULT ''
+);
 
 
 End Transaction;
