@@ -951,8 +951,8 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
                 
                 ArrayList<String[]> blist = kvm.get(String.valueOf(i - 1));
                 ArrayList<String[]> slist = kvm.get(String.valueOf(i));
-                kvm.put(String.valueOf(i - 1), slist);
-                kvm.put(String.valueOf(1), blist);
+                kvm.replace(String.valueOf(i - 1), slist);
+                kvm.replace(String.valueOf(i), blist);
                 
             }
         }
@@ -981,8 +981,8 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
                 
                 ArrayList<String[]> alist = kvm.get(String.valueOf(i + 1));
                 ArrayList<String[]> slist = kvm.get(String.valueOf(i));
-                kvm.put(String.valueOf(i), alist);
-                kvm.put(String.valueOf(i + 1), slist);
+                kvm.replace(String.valueOf(i), alist);
+                kvm.replace(String.valueOf(i + 1), slist);
                 
             }
         }
@@ -993,7 +993,7 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
         if (ddactions.getSelectedItem() != null) {
             actionlistmodel.addElement(ddactions.getSelectedItem().toString());
             int index = actionlistmodel.getSize() - 1;
-            ArrayList<String[]> x = kvm.get(ddactions.getSelectedItem().toString());
+            ArrayList<String[]> x = kvs.get(ddactions.getSelectedItem().toString());
             kvm.put(String.valueOf(index), x);
         }
         
