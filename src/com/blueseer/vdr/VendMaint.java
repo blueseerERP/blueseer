@@ -322,7 +322,6 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbline3.setText("");
         tbcity.setText("");
         tbzip.setText("");
-        tbtaxcode.setText("");
         tbpricecode.setText("");
         tbmarket.setText("");
         tbdisccode.setText("");
@@ -340,7 +339,7 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbbuyer.setText("");
         tbpricecode.setText("");
         tbdisccode.setText("");
-        tbtaxcode.setText("");
+        
        
         
         ddstate.removeAllItems();
@@ -401,7 +400,13 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
             ddcc.addItem(ccs.get(i).toString());
         }
         
-        
+        ddtaxcode.removeAllItems();
+        ArrayList<String> taxcodes = OVData.gettaxcodelist();
+        for (int i = 0; i < taxcodes.size(); i++) {
+            ddtaxcode.addItem(taxcodes.get(i));
+        }
+        ddtaxcode.insertItemAt("", 0);
+        ddtaxcode.setSelectedIndex(0);
        
         if (ddbank.getItemCount() > 0)
         ddbank.setSelectedIndex(0);
@@ -413,6 +418,9 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddcountry.setSelectedItem("USA");
         if (ddstate.getItemCount() > 0)
         ddstate.setSelectedIndex(0);
+        
+        
+        
         
         // contacts
          tbcontactname.setText("");
@@ -634,7 +642,7 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
                 ddcarrier.getSelectedItem().toString(),
                 tbpricecode.getText(),
                 tbdisccode.getText(),
-                tbtaxcode.getText(),
+                ddtaxcode.getSelectedItem().toString(),
                 ddaccount.getSelectedItem().toString(),
                 ddcc.getSelectedItem().toString(),
                 tbremarks.getText(),
@@ -780,7 +788,7 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddterms.setSelectedItem(k.vd_terms());
         tbpricecode.setText(k.vd_price_code());
         tbdisccode.setText(k.vd_disc_code());
-        tbtaxcode.setText(k.vd_tax_code());
+        ddtaxcode.setSelectedItem(k.vd_tax_code());
         ddaccount.setSelectedItem(k.vd_ap_acct());
         ddcc.setSelectedItem(k.vd_ap_cc());
         tbremarks.setText(k.vd_remarks());
@@ -1159,7 +1167,6 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbdisccode = new javax.swing.JTextField();
         jLabel18 = new javax.swing.JLabel();
         tbpricecode = new javax.swing.JTextField();
-        tbtaxcode = new javax.swing.JTextField();
         jLabel20 = new javax.swing.JLabel();
         tbsalesrep = new javax.swing.JTextField();
         jLabel26 = new javax.swing.JLabel();
@@ -1181,6 +1188,7 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddcurr = new javax.swing.JComboBox<>();
         jLabel33 = new javax.swing.JLabel();
         cb850 = new javax.swing.JCheckBox();
+        ddtaxcode = new javax.swing.JComboBox<>();
         contactPanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         contacttable = new javax.swing.JTable();
@@ -1528,11 +1536,11 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
                                     .addComponent(tbdatemod)
                                     .addComponent(tbmarket)
                                     .addComponent(tbbuyer)
-                                    .addComponent(tbtaxcode)
                                     .addComponent(tbdisccode)
                                     .addComponent(ddterms, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(ddcc, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cb850))))))
+                                    .addComponent(ddcc, 0, 97, Short.MAX_VALUE)
+                                    .addComponent(cb850)
+                                    .addComponent(ddtaxcode, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
                 .addGap(62, 62, 62))
         );
         jPanel3Layout.setVerticalGroup(
@@ -1579,12 +1587,12 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(jLabel31)
                     .addComponent(tbdisccode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel18))
-                .addGap(6, 6, 6)
+                .addGap(3, 3, 3)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tbtaxcode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel20))
+                            .addComponent(jLabel20)
+                            .addComponent(ddtaxcode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel28)
@@ -2089,6 +2097,7 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JComboBox ddshipstate;
     private javax.swing.JComboBox<String> ddshiptype;
     private javax.swing.JComboBox ddstate;
+    private javax.swing.JComboBox<String> ddtaxcode;
     private javax.swing.JComboBox ddterms;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -2170,7 +2179,6 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JTextField tbshipline3;
     private javax.swing.JTextField tbshipname;
     private javax.swing.JTextField tbshipzip;
-    private javax.swing.JTextField tbtaxcode;
     private javax.swing.JTextField tbzip;
     // End of variables declaration//GEN-END:variables
 }

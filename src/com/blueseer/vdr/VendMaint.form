@@ -384,11 +384,11 @@
                                           <Component id="tbdatemod" alignment="0" max="32767" attributes="0"/>
                                           <Component id="tbmarket" alignment="0" max="32767" attributes="0"/>
                                           <Component id="tbbuyer" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="tbtaxcode" alignment="0" max="32767" attributes="0"/>
                                           <Component id="tbdisccode" alignment="0" max="32767" attributes="0"/>
                                           <Component id="ddterms" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="ddcc" alignment="0" min="-2" pref="97" max="-2" attributes="0"/>
+                                          <Component id="ddcc" alignment="0" pref="97" max="32767" attributes="0"/>
                                           <Component id="cb850" min="-2" max="-2" attributes="0"/>
+                                          <Component id="ddtaxcode" alignment="0" max="32767" attributes="0"/>
                                       </Group>
                                   </Group>
                               </Group>
@@ -452,12 +452,12 @@
                           <Component id="tbdisccode" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel18" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
+                      <EmptySpace min="3" pref="3" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="tbtaxcode" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel20" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="ddtaxcode" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
@@ -574,8 +574,6 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tbpricecode">
-            </Component>
-            <Component class="javax.swing.JTextField" name="tbtaxcode">
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel20">
               <Properties>
@@ -718,6 +716,16 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Export 850"/>
               </Properties>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="ddtaxcode">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="0"/>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
             </Component>
           </SubComponents>
         </Container>
