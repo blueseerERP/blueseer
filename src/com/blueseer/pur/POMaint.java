@@ -140,6 +140,8 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
      public static po_addr poaddr = null;
      public static ArrayList<pod_mstr> podlist = null;
      public static ArrayList<po_meta> pomlist = null;
+     public static ArrayList<pod_tax> podtaxlist = null;
+     public static ArrayList<po_tax> potaxlist = null;
    
       Map<Integer, ArrayList<String[]>> linetax = new HashMap<Integer, ArrayList<String[]>>();
       ArrayList<String[]> headertax = new ArrayList<String[]>();
@@ -571,7 +573,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
         
     public String[] addRecord(String[] x) {
-     String[] m = addPOTransaction(createDetRecord(), createPOAddr(), createRecord(), createPOMRecord());
+     String[] m = addPOTransaction(createDetRecord(), createPOAddr(), createRecord(), createTaxRecord(), createTaxDetRecord(), createPOMRecord());
      return m;
      } 
       
@@ -650,7 +652,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
               badlines.add(line);
           }
         }
-        m = updatePOTransaction(tbkey.getText(), badlines, createDetRecord(), createPOAddr(), createRecord(), createPOMRecord());
+        m = updatePOTransaction(tbkey.getText(), badlines, createDetRecord(), createPOAddr(), createRecord(), createTaxRecord(), createTaxDetRecord(), createPOMRecord());
      return m;
     }
          
@@ -660,6 +662,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
       podlist = z.pod();
       poaddr = z.poa();
       pomlist = z.pom();
+      podtaxlist = z.podtax();
       return z.m();
     }
     
@@ -1116,6 +1119,19 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
                       pom.pom_amttype(),
                       pom.pom_amt()});
             }
+        }
+        }
+        
+        // line tax
+        linetax.clear();
+        if (podtaxlist != null) {
+        for (pod_tax podt : podtaxlist) {
+           ArrayList<String[]> list = OVData.getTaxPercentElementsApplicableByItem(purData.getPOItem(podt.podt_nbr(), podt.podt_line()));
+           if (list != null) {
+               if (! linetax.containsKey(Integer.valueOf(podt.podt_line()))) {
+                   linetax.put(Integer.valueOf(podt.podt_line()), list); 
+               }
+           }
         }
         }
         

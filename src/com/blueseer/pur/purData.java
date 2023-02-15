@@ -148,7 +148,7 @@ public class purData {
             return rows;
     }
             
-    public static String[] addPOTransaction(ArrayList<pod_mstr> pod, po_addr poa, po_mstr po, ArrayList<po_meta> pom) {
+    public static String[] addPOTransaction(ArrayList<pod_mstr> pod, po_addr poa, po_mstr po, ArrayList<po_tax> pot, ArrayList<pod_tax> potd, ArrayList<po_meta> pom) {
         String[] m = new String[2];
         Connection bscon = null;
         PreparedStatement ps = null;
@@ -164,6 +164,16 @@ public class purData {
             _addPOAddr(poa, bscon, ps, res, true);
             for (pod_mstr z : pod) {
                 _addPODet(z, bscon, ps, res);
+            }
+            if (pot != null) {
+                for (po_tax z : pot) {
+                    _addPOTaxMstr(z, bscon, ps, res);
+                }
+            }
+            if (potd != null) {
+                for (pod_tax z : potd) {
+                    _addPOTaxDet(z, bscon, ps, res);
+                }
             }
             if (pom != null) {
                 for (po_meta z : pom) { 
@@ -360,7 +370,7 @@ public class purData {
         return rows;
     }
         
-    public static String[] updatePOTransaction(String x, ArrayList<String> lines, ArrayList<pod_mstr> pod, po_addr poa, po_mstr po, ArrayList<po_meta> pom) {
+    public static String[] updatePOTransaction(String x, ArrayList<String> lines, ArrayList<pod_mstr> pod, po_addr poa, po_mstr po, ArrayList<po_tax> pot, ArrayList<pod_tax> potd, ArrayList<po_meta> pom) {
         String[] m = new String[2];
         Connection bscon = null;
         PreparedStatement ps = null;
@@ -380,6 +390,14 @@ public class purData {
                     continue;
                 }
                 _updatePODet(z, bscon, ps, res);
+            }
+             _deletePOTaxMstr(po.po_nbr, bscon);
+            for (po_tax z : pot) {
+                _addPOTaxMstr(z, bscon, ps, res);
+            }
+            _deletePOTaxDet(po.po_nbr, bscon);
+            for (pod_tax z : potd) {
+                _addPOTaxDet(z, bscon, ps, res);
             }
              _deletePOMeta(po.po_nbr, bscon);
             for (po_meta z : pom) {
@@ -536,10 +554,11 @@ public class purData {
             po_addr poa = _getPOAddr(new String[]{po.po_nbr, po.po_ship}, bscon, ps, res);
             ArrayList<pod_mstr> pod = _getPODet(x, bscon, ps, res);
             ArrayList<po_meta> pom = _getPOM(x, bscon, ps, res);
-           
+            ArrayList<pod_tax> potd = _getPODetTax(x, bscon, ps, res);
+            ArrayList<po_tax> pot = _getPOTax(x, bscon, ps, res);
             
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-            r = new purchaseOrder(m, po, poa, pod, pom);
+            r = new purchaseOrder(m, po, poa, pod, pom, potd, pot);
             
         } catch (SQLException s) {
              MainFrame.bslog(s);
@@ -1121,6 +1140,161 @@ public class purData {
     }
     
     
+    public static po_tax getPOTax(String[] x) {
+        po_tax r = null;
+        String[] m = new String[2];
+        String sql = "select * from po_tax where pot_nbr = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
+                r = new po_tax(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new po_tax(m, res.getString("pot_nbr"), res.getString("pot_desc"), res.getString("pot_percent"),
+                    res.getString("pot_type"));
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new po_tax(m);
+        }
+        return r;
+    }
+    
+    private static ArrayList<po_tax> _getPOTax(String[] x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        ArrayList<po_tax> list = new ArrayList<po_tax>();
+        po_tax r = null;
+        String[] m = new String[2];
+        String sqlSelect = "select * from po_tax where pot_nbr = ?";
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x[0]);
+          res = ps.executeQuery();
+            if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
+                r = new po_tax(m);
+            } else {
+                while(res.next()) {
+                    m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                     r = new po_tax(m, res.getString("pot_nbr"), res.getString("pot_desc"), res.getString("pot_percent"),
+                    res.getString("pot_type"));
+                    list.add(r);
+                }
+            }
+            return list;
+    }
+        
+    public static ArrayList<pod_tax> getPODetTax(String[] x) {
+        ArrayList<pod_tax> list = new ArrayList<pod_tax>();
+        pod_tax r = null;
+        String[] m = new String[2];
+        String sql = "select * from pod_tax where podt_nbr = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                    while(res.next()) {
+                    m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                    r = new pod_tax(m, res.getString("podt_nbr"), res.getString("podt_line"), res.getString("podt_desc"),
+                    res.getString("podt_percent"), res.getString("podt_type") );
+                    list.add(r);
+                    }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s); 
+        }
+        return list;
+    }
+    
+    private static ArrayList<pod_tax> _getPODetTax(String[] x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        ArrayList<pod_tax> list = new ArrayList<pod_tax>();
+        pod_tax r = null;
+        String[] m = new String[2];
+        String sqlSelect = "select * from pod_tax where podt_nbr = ?";
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x[0]);
+          res = ps.executeQuery();
+            if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
+                r = new pod_tax(m);
+            } else {
+                while(res.next()) {
+                    m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                    r = new pod_tax(m, res.getString("podt_nbr"), res.getString("podt_line"), res.getString("podt_desc"),
+                    res.getString("podt_percent"), res.getString("podt_type") );
+                    list.add(r);
+                }
+            }
+            return list;
+    }
+    
+    private static int _addPOTaxDet(pod_tax x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from pod_tax where podt_nbr = ? and podt_line = ?";
+        String sqlInsert = "insert into pod_tax (podt_nbr, podt_line, podt_desc," 
+                        + "podt_percent, podt_type ) "
+                        + " values (?,?,?,?,?); "; 
+       
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x.podt_nbr);
+          res = ps.executeQuery();
+          ps = con.prepareStatement(sqlInsert);    
+            if (! res.isBeforeFirst()) { 
+            ps.setString(1, x.podt_nbr);
+            ps.setString(2, x.podt_line);
+            ps.setString(3, x.podt_desc);
+            ps.setString(4, x.podt_percent);
+            ps.setString(5, x.podt_type);
+            rows = ps.executeUpdate();
+            } 
+            return rows;
+    }
+    
+    private static int _addPOTaxMstr(po_tax x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from po_tax where pot_nbr = ? and pot_desc = ?";
+        String sqlInsert = "insert into po_tax (pot_nbr, pot_desc, pot_percent, pot_type ) " 
+                        + " values (?,?,?,?); "; 
+       
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x.pot_nbr);
+          ps.setString(2, x.pot_desc);
+          res = ps.executeQuery();
+          ps = con.prepareStatement(sqlInsert); 
+            if (! res.isBeforeFirst()) {
+            ps.setString(1, x.pot_nbr);
+            ps.setString(2, x.pot_desc);
+            ps.setString(3, x.pot_percent);
+            ps.setString(4, x.pot_type);
+            rows = ps.executeUpdate();
+            } 
+            return rows;
+    }
+
+     private static void _deletePOTaxMstr(String x, Connection con) throws SQLException { 
+        PreparedStatement ps = null; 
+        String sql = "delete from po_tax where pot_nbr = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x);
+        ps.executeUpdate();
+        ps.close();
+    }
+      
+    private static void _deletePOTaxDet(String x, Connection con) throws SQLException { 
+        PreparedStatement ps = null; 
+        String sql = "delete from pod_tax where podt_nbr = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x);
+        ps.executeUpdate();
+        ps.close();
+    }
+        
+
     
     
     
@@ -1415,6 +1589,38 @@ public class purData {
         return lines;
     }
     
+    public static String getPOItem(String po, String line) {
+        String item = "";
+        try{
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        ResultSet res = null;
+            try{
+                res = st.executeQuery("select pod_item from pod_mstr where pod_nbr = " + "'" + po + "'" + 
+                        " and pod_line = " + "'" + line + "'" + ";");
+                while (res.next()) {
+                    item = res.getString("pod_item");
+                }
+            }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+             return item;
+    }
+    
     
     public static void updatePOFromReceiver(String receiver) {
 
@@ -1589,9 +1795,9 @@ public class purData {
     }
 
     
-    public record purchaseOrder(String[] m, po_mstr po, po_addr poa, ArrayList<pod_mstr> pod, ArrayList<po_meta> pom) {
+    public record purchaseOrder(String[] m, po_mstr po, po_addr poa, ArrayList<pod_mstr> pod, ArrayList<po_meta> pom, ArrayList<pod_tax> podtax, ArrayList<po_tax> potax) {
         public purchaseOrder(String[] m) {
-            this (m, null, null, null, null);
+            this (m, null, null, null, null, null, null);
         }
     }
     
