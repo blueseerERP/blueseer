@@ -1476,7 +1476,8 @@ CREATE TABLE "po_mstr" (
   "po_confirm" tinyint(1) NOT NULL DEFAULT '0',
   "po_char1" varchar(30) COLLATE NOCASE DEFAULT '',
   "po_char2" varchar(30) COLLATE NOCASE DEFAULT '',
-  "po_char3" varchar(30) COLLATE NOCASE DEFAULT ''
+  "po_char3" varchar(30) COLLATE NOCASE DEFAULT '',
+  "po_taxcode" varchar(10) COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -1512,7 +1513,9 @@ CREATE TABLE "pod_mstr" (
   "pod_ship" varchar(8) COLLATE NOCASE DEFAULT '',
   "pod_char1" varchar(30) COLLATE NOCASE DEFAULT '',
   "pod_char2" varchar(30) COLLATE NOCASE DEFAULT '',
-  "pod_char3" varchar(30) COLLATE NOCASE DEFAULT ''
+  "pod_char3" varchar(30) COLLATE NOCASE DEFAULT '',
+  "pod_taxamt" decimal(12,4) NOT NULL DEFAULT '0.0000',
+  "pod_taxcode" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -2909,6 +2912,23 @@ CREATE TABLE "wkfd_log" (
   "wkfdl_ref" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "wkfdl_status" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
   "wkfdl_messg" varchar(200) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+CREATE TABLE "po_tax" (
+  "pot_nbr" varchar(8) NOT NULL,
+  "pot_desc" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
+  "pot_type" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
+  "pot_amttype" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
+  "pot_percent" decimal(14,4) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "pot_amt" decimal(14,2) NOT NULL COLLATE NOCASE DEFAULT '0'
+);
+CREATE TABLE "pod_tax" (
+  "podt_nbr" varchar(8) NOT NULL,
+  "podt_line" int(4) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "podt_desc" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
+  "podt_type" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
+  "podt_amttype" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
+  "podt_percent" decimal(14,4) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "podt_amt" decimal(14,2) NOT NULL COLLATE NOCASE DEFAULT '0'
 );
 
 

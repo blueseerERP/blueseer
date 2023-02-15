@@ -1640,4 +1640,20 @@ public class purData {
             this(m,"", "", "", "");
         }
     } 
+    
+     public record po_tax(String[] m, String pot_nbr, String pot_desc, String pot_percent, String pot_type ) {
+        public po_tax(String[] m) {
+            this (m, "", "", "", "");
+        }
+    }
+    
+   
+     public record pod_tax(String[] m, String podt_nbr, String podt_line, String podt_desc, 
+        String podt_percent, String podt_type ) {
+        public pod_tax(String[] m) {
+            this (m, "", "", "", "", "");
+        }
+    }
+    
+    
 }

@@ -52,7 +52,9 @@ import static com.blueseer.pur.purData.getPOMstrSet;
 import com.blueseer.pur.purData.po_addr;
 import com.blueseer.pur.purData.po_meta;
 import com.blueseer.pur.purData.po_mstr;
+import com.blueseer.pur.purData.po_tax;
 import com.blueseer.pur.purData.pod_mstr;
+import com.blueseer.pur.purData.pod_tax;
 import com.blueseer.pur.purData.purchaseOrder;
 import static com.blueseer.pur.purData.updatePOAddr;
 import static com.blueseer.pur.purData.updatePOTransaction;
@@ -105,6 +107,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -138,6 +141,8 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
      public static ArrayList<pod_mstr> podlist = null;
      public static ArrayList<po_meta> pomlist = null;
    
+      Map<Integer, ArrayList<String[]>> linetax = new HashMap<Integer, ArrayList<String[]>>();
+      ArrayList<String[]> headertax = new ArrayList<String[]>();
      
      // global datatablemodel declarations  
     javax.swing.table.DefaultTableModel myorddetmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -752,6 +757,39 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
        
         return list;
     }
+    
+     public ArrayList<po_tax> createTaxRecord() {
+         ArrayList<po_tax> list = new ArrayList<po_tax>();
+         if (! headertax.isEmpty()) {
+          for (String[] s : headertax) {
+              po_tax x = new po_tax(null, tbkey.getText().toString(),
+                s[0].toString(),
+                s[1].toString().replace(defaultDecimalSeparator, '.'),
+                s[2].toString()); 
+                list.add(x);
+          }
+         }
+        return list;
+    }
+    
+    public ArrayList<pod_tax> createTaxDetRecord() {
+         ArrayList<pod_tax> list = new ArrayList<pod_tax>();
+         for (int j = 0; j < orddet.getRowCount(); j++) {
+             if (linetax.containsKey(orddet.getValueAt(j,0))) {
+                  for (String[] s : (ArrayList<String[]>)linetax.get(orddet.getValueAt(j,0))) {
+                      pod_tax x = new pod_tax(null, tbkey.getText().toString(),
+                        orddet.getValueAt(j, 0).toString(),
+                        s[0].toString(),
+                        s[1].toString().replace(defaultDecimalSeparator, '.'),
+                        s[2].toString());     
+                        list.add(x);
+                  }
+            }
+        }
+       
+        return list;
+    }
+    
     
     public boolean validateInput(dbaction x) {
        
@@ -1656,6 +1694,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddship = new javax.swing.JComboBox<>();
         jLabel13 = new javax.swing.JLabel();
         lbshipto = new javax.swing.JLabel();
+        ddtax = new javax.swing.JComboBox<>();
         panelDetail = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         qtyshipped = new javax.swing.JTextField();
@@ -1889,6 +1928,12 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         lbshipto.setName("lblname"); // NOI18N
 
+        ddtax.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddtaxActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelMainLayout = new javax.swing.GroupLayout(panelMain);
         panelMain.setLayout(panelMainLayout);
         panelMainLayout.setHorizontalGroup(
@@ -1950,11 +1995,12 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addComponent(userid, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(orddate, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(duedate, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbconfirm)
                             .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(ddtax, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(ddedistatus, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(ddtype, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(ddcurr, javax.swing.GroupLayout.Alignment.LEADING, 0, 99, Short.MAX_VALUE))
-                            .addComponent(cbconfirm)))
+                                .addComponent(ddcurr, javax.swing.GroupLayout.Alignment.LEADING, 0, 99, Short.MAX_VALUE))))
                     .addGroup(panelMainLayout.createSequentialGroup()
                         .addComponent(btpoprint)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -2036,6 +2082,8 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(ddcurr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel83))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ddtax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -3005,6 +3053,21 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
     }//GEN-LAST:event_ddsacamttypeActionPerformed
 
+    private void ddtaxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddtaxActionPerformed
+        if (! isLoad) {
+            headertax = OVData.getTaxPercentElementsApplicableByTaxCode(ddtax.getSelectedItem().toString());
+            // remove all 'tax' records and refresh
+            for (int j = 0; j < sactable.getRowCount(); j++) {
+                if (sactable.getValueAt(j, 0).toString().equals("tax"))
+               ((javax.swing.table.DefaultTableModel) sactable.getModel()).removeRow(j); 
+            }
+            //refresh tax records
+            for (String[] t : headertax) {
+            sacmodel.addRow(new Object[]{ "tax", t[0], "percent", t[1]});
+            }
+        }
+    }//GEN-LAST:event_ddtaxActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btLookUpCustItem;
     private javax.swing.JButton btLookUpItemDesc;
@@ -3035,6 +3098,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JComboBox ddshipvia;
     private javax.swing.JComboBox ddsite;
     private javax.swing.JComboBox ddstatus;
+    private javax.swing.JComboBox<String> ddtax;
     private javax.swing.JComboBox<String> ddtype;
     private javax.swing.JComboBox<String> dduom;
     private static javax.swing.JComboBox ddvend;

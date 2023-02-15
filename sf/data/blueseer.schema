@@ -1231,6 +1231,7 @@ CREATE TABLE IF NOT EXISTS `po_mstr` (
   `po_char1` varchar(30)  NOT NULL DEFAULT '',
   `po_char2` varchar(30)  NOT NULL DEFAULT '',
   `po_char3` varchar(30)  NOT NULL DEFAULT '',
+  `po_taxcode` varchar(10)  NOT NULL DEFAULT '',
   index cust (`po_vend`),
   index sitestatus (`po_site`, `po_status`),
   index custstatus(`po_vend`, `po_status`),
@@ -1245,6 +1246,23 @@ CREATE TABLE IF NOT EXISTS `po_meta` (
   `pom_key` varchar(50) NOT NULL DEFAULT '',
   `pom_value` varchar(50) NOT NULL DEFAULT '')
 ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `po_tax` (
+  `pot_nbr` varchar(8) NOT NULL,
+  `pot_desc` varchar(20) NOT NULL DEFAULT '',
+  `pot_type` varchar(20) NOT NULL DEFAULT '',
+  `pot_amttype` varchar(20) NOT NULL DEFAULT '',
+  `pot_percent` decimal(14,4) NOT NULL DEFAULT '0',
+  `pot_amt` decimal(14,2) NOT NULL DEFAULT '0'
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `pod_tax` (
+  `podt_nbr` varchar(8) NOT NULL,
+  `podt_line` int(4) NOT NULL DEFAULT '0',
+  `podt_desc` varchar(20) NOT NULL DEFAULT '',
+  `podt_type` varchar(20) NOT NULL DEFAULT '',
+  `podt_amttype` varchar(20) NOT NULL DEFAULT '',
+  `podt_percent` decimal(14,4) NOT NULL DEFAULT '0',
+  `podt_amt` decimal(14,2) NOT NULL DEFAULT '0'
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `pod_mstr` (
   `pod_nbr` varchar(8)  NOT NULL DEFAULT '',
   `pod_line` int(11)  NOT NULL DEFAULT '0',
@@ -1265,6 +1283,8 @@ CREATE TABLE IF NOT EXISTS `pod_mstr` (
   `pod_char1` varchar(30)  NOT NULL DEFAULT '',
   `pod_char2` varchar(30)  NOT NULL DEFAULT '',
   `pod_char3` varchar(30)  NOT NULL DEFAULT '',
+  `pod_taxamt` decimal(12,4) NOT NULL DEFAULT '0.0000',
+  `pod_taxcode` varchar(10)  NOT NULL DEFAULT '',
   index nbrlineitem (`pod_nbr`, `pod_line`, `pod_item`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `po_addr` (
