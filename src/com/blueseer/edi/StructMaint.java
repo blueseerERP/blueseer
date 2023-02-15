@@ -31,6 +31,7 @@ import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.tags;
 import static com.blueseer.edi.EDIMap.jsonTagsToSegment;
 import static com.blueseer.edi.EDIMap.jsonToSegments;
+import static com.blueseer.edi.EDIMap.xmlTagsToSegments;
 import static com.blueseer.edi.ediData.addDFStructureTransaction;
 import static com.blueseer.edi.ediData.addMapStruct;
 import static com.blueseer.edi.ediData.deleteDFStructure;
@@ -1329,7 +1330,15 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 try {   
                     //lines = Files.readAllLines(file.toPath());
                     filecontent = new String(Files.readAllBytes(file.toPath()));
-                    lines = jsonTagsToSegment(filecontent);
+                    if (filecontent.startsWith("{")) {
+                     lines = jsonTagsToSegment(filecontent);
+                    } else if (filecontent.startsWith("<")) {
+                     lines = xmlTagsToSegments(filecontent);   
+                    } else {
+                        bsmf.MainFrame.show("sample file must be xml or json structure...unrecognized format");
+                        return;
+                    }
+                    
                 } catch (MalformedInputException m) {
                     bslog(m);
                     bsmf.MainFrame.show("Structure file may not be UTF-8 encoded");

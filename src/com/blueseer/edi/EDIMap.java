@@ -1778,6 +1778,178 @@ public abstract class EDIMap {  // took out the implements EDIMapi
 		return result;
 	}
 
+    public static List<String[]> xmlTagsToSegments(String xml) throws IOException {
+        ArrayList<String[]> result = new ArrayList<String[]>();
+        ArrayList<String[]> newresult = new ArrayList<String[]>();
+        Stack<String> uniques = new Stack<String>();
+        LinkedHashMap<String,ArrayList<String>> lhm = new LinkedHashMap<String,ArrayList<String>>();
+        String lhmkey = "";
+        DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder;
+        Document document = null;
+        InputStream is = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));
+        try {
+            docBuilder = docBuilderFactory.newDocumentBuilder();
+            document = docBuilder.parse(is);
+        } catch (ParserConfigurationException ex) {
+            edilog(ex);
+        } catch (SAXException ex) {
+            edilog(ex);
+        }
+        
+        int counter = 0;
+        String root = "";
+        String parent = "";
+        LinkedHashMap<String, String> plhm = new LinkedHashMap<String, String>();
+        NodeList nodeList = document.getElementsByTagName("*");
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (node.getParentNode().getNodeName().equals("#document")) {
+                root = node.getNodeName();
+            }
+            Node nextnode = null;
+            counter = 0;
+            if (node.getNodeType() == Node.ELEMENT_NODE) {            	
+            	NodeList childnodes = node.getChildNodes();
+                int ck = 0;
+            	for (int j = 0; j < childnodes.getLength(); j++) {
+            		Node child = childnodes.item(j);
+                       /*
+                        if (child.getNodeType() != 3) {
+                         //parent = xmlgetPathToRoot(node.getNodeName(), node.getParentNode().getNodeName(), root, plhm);
+                         System.out.println("HERE: " + node.getNodeName() + "/" + node.getNodeType() + "/" + parent + "/" +  child.getNodeName() + "/" + child.getNodeType() + "/" + node.hasAttributes() + "/" + child.hasAttributes());
+                        }
+                        */
+                        parent = xmlgetPathToRoot(node.getNodeName(), node.getParentNode().getNodeName(), root, plhm);
+                        
+                        lhmkey = node.getNodeName() + "," + parent + "," + node.hashCode();
+                        if (! lhm.containsKey(lhmkey)) {
+            				lhm.put(lhmkey, null);
+                                        
+                        }
+                        
+                           // String b[] = new String[]{node.getNodeName(),parent,"0","no","no",child.getNodeName(),child.getNodeName(),"0","100","-","O","N"};
+                          //  newresult.add(b);
+                       
+                        
+                   // System.out.println(node.getNodeName() + "," + parent + "," + child.getNodeName() + "," + node.getNodeType() + "," + child.getNodeType() + "," + node.getChildNodes().getLength())  ; 
+            //        System.out.println(node.getNodeName() + "," + parent + "," + node.getParentNode() + "," + node.hasChildNodes());    
+                      
+                            if (child.getNodeType() == Node.ELEMENT_NODE && child.getChildNodes().getLength() > 1 && ! uniques.contains(node.getNodeName()+parent+"landmark")) {
+                             String b[] = new String[]{node.getNodeName(),parent,"1","no","yes","landmark","landmark","0","100","-","M","N"};
+                             newresult.add(b); 
+                             uniques.add(node.getNodeName()+parent+"landmark");
+                            } 
+            
+                        // now process child tag if leaf (no children)
+                        if (child.getNodeType() == Node.ELEMENT_NODE && child.getChildNodes().getLength() == 1) {
+            		
+                            if (ck == 0 && ! uniques.contains(node.getNodeName()+parent+"landmark")) {
+                             String b[] = new String[]{node.getNodeName(),parent,"1","no","yes","landmark","landmark","0","100","-","M","N"};
+                             newresult.add(b); 
+                             uniques.add(node.getNodeName()+parent+"landmark");
+                            } 
+                            
+                            
+                            
+                                    // get attributes of parent node on first iteration of child nodes
+                               if (ck == 0 && node.hasAttributes()) {
+                                   ArrayList<String> xx = lhm.get(lhmkey);
+                                       if (xx != null) {
+                                           for (int a = 0; a < node.getAttributes().getLength(); a++){
+                                             Attr attr = (Attr) node.getAttributes().item(a);
+                                             xx.add(attr.getNodeName() + "=" + attr.getNodeValue());
+                                           }
+                                           lhm.put(lhmkey, xx);
+
+                                       } else {
+                                           ArrayList<String> al = new ArrayList<String>();
+                                           for (int a = 0; a < node.getAttributes().getLength(); a++){
+                                             Attr attr = (Attr) node.getAttributes().item(a);
+                                             al.add(attr.getNodeName() + "=" + attr.getNodeValue());
+                                             if (! uniques.contains(parent+node.getNodeName()+attr.getNodeName())) {
+                                             String k[] = new String[]{node.getNodeName(),parent,"0","no","no",attr.getNodeName(),attr.getNodeName(),"0","100","-","O","A"};
+                                             newresult.add(k);
+                                             uniques.add(parent+node.getNodeName()+attr.getNodeName());
+                                             }
+                                           }
+                                           lhm.put(lhmkey, al);
+                                       }
+
+                               }
+                            
+                            ck++;
+                            
+                            if (! uniques.contains(node.getNodeName()+parent+child.getNodeName())) {
+                            String b[] = new String[]{node.getNodeName(),parent,"0","no","no",child.getNodeName(),child.getNodeName(),"0","100","-","O","F"};
+                            newresult.add(b);
+                            uniques.add(node.getNodeName()+parent+child.getNodeName());
+                            }
+                            
+            			ArrayList<String> temp = lhm.get(lhmkey);
+                                if (temp != null) {
+                                      temp.add(child.getNodeName() + "=" + child.getTextContent()); // add child node value
+                                      // get attributes of child node
+                                      if (child.hasAttributes()) {
+                                            for (int a = 0; a < child.getAttributes().getLength(); a++){
+                                               Attr attr = (Attr) child.getAttributes().item(a);
+                                               temp.add(attr.getNodeName() + "=" + attr.getNodeValue());
+                                            }
+                                      }
+                                      lhm.put(lhmkey, temp);
+                                } else {
+                                      ArrayList<String> al = new ArrayList<String>();
+                                      al.add(child.getNodeName() + "=" + child.getTextContent());
+                                      // get attributes of child node
+                                      if (child.hasAttributes()) {
+                                            for (int a = 0; a < child.getAttributes().getLength(); a++){
+                                               Attr attr = (Attr) child.getAttributes().item(a);
+                                               temp.add(attr.getNodeName() + "=" + attr.getNodeValue());
+                                            //   String k[] = new String[]{child.getNodeName(),node.getNodeName(),"0","no","no",attr.getNodeName(),attr.getNodeName(),"0","100","-","O","A"};
+                                            //   newresult.add(k);
+                                            }
+                                      }
+                                      lhm.put(lhmkey, al);
+                                }	
+            	     }
+            	}
+            	
+            }
+        }
+        /*
+	    for (Map.Entry<String, ArrayList<String>> val : lhm.entrySet()) {
+                String[] t = getFieldsFromStructure(val.getKey().split(",")[0], val.getKey().split(",")[1], isf);
+                String[] td = new String[t.length + 1];
+                td[0] = val.getKey().split(",")[0];
+                for (int k = 0; k < t.length; k++) {
+                  //  System.out.println("HERE size: " + t.length + "/" + val.getValue().size());
+                    for (int m = 0; m < val.getValue().size(); m++) {
+                      //  System.out.println("HERE Loop: " + t[0] + "/" +  val.getKey() + "/" + k + "/" +  t[k] + "/" + val.getValue().get(m));
+                        if (t[k].equals(val.getValue().get(m).split("=")[0])) {
+                            td[k + 1] = val.getValue().get(m).split("=")[1];
+                            break;
+                        }
+                        
+                    }
+                }
+                
+                
+	    	for (int k = 1; k < val.getValue().size() + 1; k++) {
+	    		j[k] = val.getValue().get(k - 1);
+	    	}
+	    	result.add(j);
+                System.out.println("HERE: " + String.join(",", j) + "/" + val.getKey());
+                
+                result.add(td);
+              //  System.out.println("HEREprint: " + String.join(",", td) + "/" + val.getKey());
+	    }
+        */
+      //  newresult.forEach((k) -> System.out.println("HERExml: " + String.join(",",k)));
+        
+		return newresult;
+	}
+
+    
     public static String xmlgetPathToRoot(String tagc, String tagp, String root, LinkedHashMap<String, String> lhm) {
 		String r = tagp;
 		if (lhm.containsKey(tagc)) {
