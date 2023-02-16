@@ -438,7 +438,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddship.removeAllItems();
         ddpart.removeAllItems();
         dditemship.removeAllItems();
-        
+        ddtax.removeAllItems();
         String defaultsite = null;
         
         
@@ -464,6 +464,9 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
             if (s[0].equals("currencies")) {
               ddcurr.addItem(s[1]); 
             }
+            if (s[0].equals("taxcodes")) {
+              ddtax.addItem(s[1]); 
+            }
             if (s[0].equals("uoms")) {
               dduom.addItem(s[1]); 
             }
@@ -487,6 +490,8 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
         
         ddsite.setSelectedItem(defaultsite);
+        ddtax.insertItemAt("", 0);
+        ddtax.setSelectedIndex(0);
         ddcurr.insertItemAt("", 0);
         ddcurr.setSelectedIndex(0);
         dduom.insertItemAt("", 0);
@@ -688,7 +693,8 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
                 cc, 
                 shipto, 
                 ddedistatus.getSelectedItem().toString(),
-                String.valueOf(BlueSeerUtils.boolToInt(cbconfirm.isSelected()))
+                String.valueOf(BlueSeerUtils.boolToInt(cbconfirm.isSelected())),
+                ddtax.getSelectedItem().toString()
         );
         return x;  
     }
@@ -711,7 +717,9 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
                 bsdate.format(orddate.getDate()).toString(),
                 orddet.getValueAt(j, 6).toString(),
                 orddet.getValueAt(j, 2).toString(),
-                orddet.getValueAt(j, 12).toString()
+                orddet.getValueAt(j, 12).toString(),
+                "", //taxcode
+                ""  // taxamt
                 );
         list.add(x);
          }
@@ -1081,6 +1089,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddcurr.setSelectedItem(po.po_curr());
         ddshipvia.setSelectedItem(po.po_shipvia());
         ddtype.setSelectedItem(po.po_type());
+        ddtax.setSelectedItem(po.po_taxcode());
         remarks.setText(po.po_rmks());
         duedate.setDate(bsmf.MainFrame.dfdate.parse(po.po_due_date()));
         blanket = po.po_type();
