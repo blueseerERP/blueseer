@@ -383,9 +383,6 @@ public class Browse extends javax.swing.JPanel {
                 if (callingpanel.equals("qprmaint")) {
                 tablereport.setModel(DTData.getQPRBrowseUtil(tbtext.getText(), state, searchfield));
                 }
-                if (callingpanel.equals("carriermaint")) {
-                tablereport.setModel(DTData.getCarrierBrowseUtil(tbtext.getText(), state, searchfield));
-                }
                 if (callingpanel.equals("empmaint")) {
                 tablereport.setModel(DTData.getEmpBrowseUtil(tbtext.getText(), state, searchfield));
                 }

@@ -4360,71 +4360,7 @@ public class DTData {
         
          } 
            
-    public static DefaultTableModel getCarrierBrowseUtil( String str, int state, String myfield) {
-        javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("description"), getGlobalColumnTag("code"), getGlobalColumnTag("phone"), getGlobalColumnTag("email"), getGlobalColumnTag("name"), getGlobalColumnTag("account")})
-                {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
-                        }; 
-              
-       try{
-            
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                if (state == 1) { // begins
-                    res = st.executeQuery(" SELECT car_code, car_desc, car_scac, car_phone, car_email, car_contact, car_acct " +
-                        " FROM  car_mstr where " + myfield + " like " + "'" + str + "%'" +
-                        " order by car_code ;");
-                }
-                if (state == 2) { // ends
-                    res = st.executeQuery(" SELECT car_code, car_desc, car_scac, car_phone, car_email, car_contact, car_acct " +
-                        " FROM  car_mstr where " + myfield + " like " + "'%" + str + "'" +
-                        " order by car_code ;");
-                }
-                 if (state == 0) { // match
-                 res = st.executeQuery(" SELECT car_code, car_desc, car_scac, car_phone, car_email, car_contact, car_acct  " +
-                        " FROM  car_mstr where " + myfield + " like " + "'%" + str + "%'" +
-                        " order by car_code ;");
-                 }
-                    while (res.next()) {
-                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("car_code"),
-                                   res.getString("car_desc"),
-                                   res.getString("car_scac"),
-                                   res.getString("car_phone"),
-                                   res.getString("car_email"),
-                                   res.getString("car_contact"),
-                                   res.getString("car_acct")
-                        });
-                    }
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-               } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-        return mymodel;
-        
-         } 
-        
+       
     public static DefaultTableModel getProdCodeBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                       new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("description"), "InventoryAcct", "SalesAccount", "POReceiptAccount", "ScrapAccount"})

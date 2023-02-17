@@ -649,141 +649,9 @@ public class cusData {
         }
         return r;
     }
+   
     
-    
-    public static String[] addCarrierMstr(car_mstr x) {
-        String[] m = new String[2];
-        String sqlSelect = "select * from car_mstr where car_code = ?";
-        String sqlInsert = "insert into car_mstr (car_code, car_desc, car_scac, car_acct, car_phone, car_type, car_contact)  " +
-                " values (?,?,?,?,?,?,?); "; 
-        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
-             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
-             ps.setString(1, x.car_code);
-          try (ResultSet res = ps.executeQuery();
-               PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
-            if (! res.isBeforeFirst()) {
-            psi.setString(1, x.car_code);
-            psi.setString(2, x.car_desc);
-            psi.setString(3, x.car_scac);
-            psi.setString(4, x.car_acct);
-            psi.setString(5, x.car_phone);
-            psi.setString(6, x.car_type);
-            psi.setString(7, x.car_contact);
-            int rows = psi.executeUpdate();
-            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-            } else {
-            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
-            }
-          } 
-        } catch (SQLException s) {
-	       MainFrame.bslog(s);
-               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
-        }
-        return m;
-    }
-    
-    public static String[] updateCarrierMstr(car_mstr x) {
-        String[] m = new String[2];
-        String sqlUpdate = "update car_mstr set car_desc = ?, car_scac = ?, "
-                + " car_acct = ?, car_phone = ?, car_type = ?, car_contact = ?  " +
-                " where car_code = ? ; "; 
-        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
-             PreparedStatement psu = con.prepareStatement(sqlUpdate);) {
-            psu.setString(7, x.car_code);
-            psu.setString(1, x.car_desc);
-            psu.setString(2, x.car_scac);
-            psu.setString(3, x.car_acct);
-            psu.setString(4, x.car_phone);
-            psu.setString(5, x.car_type);
-            psu.setString(6, x.car_contact);
-            int rows = psu.executeUpdate();
-            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-        } catch (SQLException s) {
-	       MainFrame.bslog(s);
-               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
-        }
-        return m;
-    }
-    
-    public static String[] deleteCarrierMstr(car_mstr x) { 
-       String[] m = new String[2];
-        String sql = "delete from car_mstr where car_code = ?; ";
-        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
-	PreparedStatement ps = con.prepareStatement(sql)) {
-        ps.setString(1, x.car_code);
-        ps.executeUpdate();
-        sql = "delete from car_det where card_code = ?; ";
-        PreparedStatement ps2 = con.prepareStatement(sql);
-        ps2.setString(1, x.car_code);
-        ps2.executeUpdate();
-        ps2.close();
-        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-        } catch (SQLException s) {
-	       MainFrame.bslog(s);
-               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
-        }
-        return m;
-    }
-    
-    
-    public static String[] addUpdateCarrierDet(String x, ArrayList<String> y) {
-        String[] m = new String[2];
-        String sqlDelete = "delete from car_det where card_code = ?";
-        String sqlInsert = "insert into car_det (card_code, card_carrier)  " +
-                " values (?,?); "; 
-        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
-             PreparedStatement ps = con.prepareStatement(sqlDelete);) {
-             ps.setString(1, x);
-             ps.executeUpdate();
-             PreparedStatement psi = con.prepareStatement(sqlInsert); 
-             for (String s : y) {
-                 psi.setString(1, x);
-                 psi.setString(2, s);
-                 psi.executeUpdate();
-             }
-             psi.close();
-        } catch (SQLException s) {
-	       MainFrame.bslog(s);
-               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
-        }
-        return m;
-    }
-    
-    
-    public static car_mstr getCarrierMstr(String[] x) {
-        car_mstr r = null;
-        String[] m = new String[2];
-        String sql = "select * from car_mstr where car_code = ? ;";
-        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
-	PreparedStatement ps = con.prepareStatement(sql);) {
-        ps.setString(1, x[0]);
-             try (ResultSet res = ps.executeQuery();) {
-                if (! res.isBeforeFirst()) {
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
-                r = new car_mstr(m);
-                } else {
-                    while(res.next()) {
-                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                        r = new car_mstr(m, res.getString("car_code"), 
-                            res.getString("car_desc"),
-                            res.getString("car_scac"),
-                            res.getString("car_phone"),
-                            res.getString("car_email"),
-                            res.getString("car_contact"),
-                            res.getString("car_type"),
-                            res.getString("car_acct")
-                        );
-                    }
-                }
-            }
-        } catch (SQLException s) {   
-	       MainFrame.bslog(s);  
-               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
-               r = new car_mstr(m);
-        }
-        return r;
-    }
-    
+   
     
     public static String[] addUpdateCMCtrl(cm_ctrl x) {
         int rows = 0;
@@ -2799,19 +2667,7 @@ public class cusData {
             this(m,"","","","","","","","","");
         }
     } 
-    
-    public record car_mstr(String[] m, String car_code, String car_desc, String car_scac, 
-        String car_phone, String car_email, String car_contact, String car_type, String car_acct) {
-        public car_mstr(String[] m) {
-            this(m,"","","","","","","","");
-        }
-    } 
-     
-    public record car_det (String[] m, String card_code, String card_carrier) {
-        public car_det(String[] m) {
-            this(m,"","");
-        }
-    } 
+  
      
     public record cm_ctrl (String[] m, String cmc_autocust) {
         public cm_ctrl(String[] m) {

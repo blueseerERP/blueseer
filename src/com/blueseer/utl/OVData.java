@@ -4496,69 +4496,7 @@ public class OVData {
              } 
              
     
-    public static boolean addCarrier(ArrayList<String> list, String delim) {
-                 boolean myreturn = false;
-                  try {
-            
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                
-                int i = 0;
-                String[] ld = null;
-                             
-                               
-                // now loop through comma delimited list and insert into item master table
-                // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
-                for (String rec : list) {
-                    ld = rec.split(delim, -1);
-                    
-                   res =  st.executeQuery("select car_code from car_mstr where " +
-                                           " car_code = " + "'" + ld[0] + "'" + ";");
-                    int j = 0;
-                    while (res.next()) {
-                        j++;
-                    }
-                    
-                    
-                    if (j == 0) {
-                    st.executeUpdate(" insert into car_mstr " 
-                      + "(car_code, car_desc, car_scac, car_phone, car_email, car_contact, car_type, car_acct  ) "
-                   + " values ( " + 
-                    "'" +  ld[0] + "'" + "," + 
-                    "'" +  ld[1] + "'" + "," +
-                    "'" +  ld[2] + "'" + "," +  
-                    "'" +  ld[3] + "'" + "," + 
-                    "'" +  ld[4] + "'" + "," + 
-                    "'" +  ld[5] + "'" + "," + 
-                    "'" +  ld[6] + "'" + "," +         
-                    "'" +  ld[7] + "'"
-                             +  ");"
-                           );     
-                   }
-                }    
-            } // if proceed
-            catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-                myreturn = true;
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }  
-                  return myreturn;
-             } 
-   
+    
     public static boolean addBOMMstrRecord(ArrayList<String> list, String delim) {
         boolean myreturn = false;
         try {
@@ -4914,7 +4852,94 @@ public class OVData {
         }  
                   return myreturn;
              } 
-             
+    
+    public static boolean addFreight(ArrayList<String> list, String delim) {
+                  boolean myreturn = false;
+                  try {
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+               
+                int i = 0;
+                String[] ld = null;
+                             
+                               
+                // now loop through comma delimited list and insert into item master table
+                // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
+                for (String rec : list) {
+                    ld = rec.split(delim, -1);
+                    
+                   res =  st.executeQuery("select frt_id from frt_mstr where " +
+                                    " frt_id = " + "'" + ld[0] + "'" + ";");
+                    int j = 0;
+                    while (res.next()) {
+                        j++;
+                    }
+                    
+                    
+                    if (j == 0) {
+                    st.executeUpdate(" insert into frt_mstr " 
+                      + "(frt_id, frt_desc, frt_apply, frt_scac, frt_name, frt_line1, frt_line2, frt_city, frt_state, frt_zip, frt_phone, frt_email, frt_type, frt_acct ) "
+                   + " values ( " + 
+                    "'" +  ld[0] + "'" + "," + 
+                    "'" +  ld[1] + "'" + "," +
+                    "'" +  ld[2] + "'" + "," +  
+                            "'" +  ld[3] + "'" + "," +  
+                            "'" +  ld[4] + "'" + "," +  
+                            "'" +  ld[5] + "'" + "," +  
+                            "'" +  ld[6] + "'" + "," +  
+                            "'" +  ld[7] + "'" + "," +
+                            "'" +  ld[8] + "'" + "," +     
+                            "'" +  ld[9] + "'" + "," +  
+                            "'" +  ld[10] + "'" + "," +  
+                            "'" +  ld[11] + "'" + "," +  
+                            "'" +  ld[12] + "'" + "," +  
+                            "'" +  ld[13] + "'" + 
+                            " );"
+                           );     
+                   } else {
+                     st.executeUpdate(" update frt_mstr " 
+                      + "set " +
+                        " frt_desc = " + "'" + ld[1] + "'" + "," +        
+                        " frt_apply = " + "'" + ld[2] + "'" + "," +
+                        " frt_scac = " + "'" + ld[3] + "'" + "," +
+                        " frt_name = " + "'" + ld[4] + "'" + "," +   
+                        " frt_line1 = " + "'" + ld[5] + "'" + "," +
+                        " frt_line2 = " + "'" + ld[6] + "'" + "," +
+                        " frt_city = " + "'" + ld[7] + "'" + "," +
+                        " frt_state = " + "'" + ld[8] + "'" + "," +
+                        " frt_zip = " + "'" + ld[9] + "'" + "," +
+                        " frt_phone = " + "'" + ld[10] + "'" + "," +
+                        " frt_email = " + "'" + ld[11] + "'" + "," +
+                        " frt_type = " + "'" + ld[12] + "'" + "," + 
+                        " frt_acct = " + "'" + ld[13] + "'" +      
+                        " where frt_id = " + "'" + ld[0] + "'" + ";");
+                    }
+                }    
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+                myreturn = true;
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }  
+                  return myreturn;
+             } 
+     
+    
     public static boolean addCustPriceList(ArrayList<String> list, String delim) {
                   boolean myreturn = false;
                   try {
@@ -12252,55 +12277,6 @@ return myarray;
          return fo;
    }   
     
-    public static ArrayList getFreightOrderCarrierList(String order) {
-         ArrayList<String> carriers = new ArrayList<String>();
-          try{
-
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-            String cartype = "";
-            String carrier = "";
-                  // select statement will return all 'unique' warehouses assigned to source the order
-                  res = st.executeQuery("select fo_carrier, car_type from fo_mstr inner join car_mstr on car_code = fo_carrier where fo_nbr = " + "'" + order + "'" +";");
-                  while (res.next()) {
-                      cartype = res.getString("car_type");
-                      carrier = res.getString("fo_carrier"); 
-                  }
-
-                  if (cartype.equals("group")) {
-                      res = st.executeQuery("select card_carrier from car_det where card_code = " + "'" + carrier + "'" +";");
-                      while (res.next()) {
-                      carriers.add(res.getString("card_carrier"));
-                      }
-                  } else {
-                      carriers.add(carrier);
-                  }
-
-
-       }
-        catch (SQLException s){
-             MainFrame.bslog(s);
-
-        } finally {
-            if (res != null) res.close();
-            if (st != null) st.close();
-            con.close();
-        }
-    }
-    catch (Exception e){
-        MainFrame.bslog(e);
-
-    }
-         return carriers;
-     }
-
     
     public static String[] getFreightOrderHeaderArray(String order) {
           String header[] = new String[12];

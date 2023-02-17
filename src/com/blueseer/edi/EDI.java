@@ -3784,7 +3784,7 @@ public class EDI {
         
         // lets determine the list of carriers to quote for this freight order
         // first we need the proposed carrier or carrier list to send quote to
-        cars = OVData.getFreightOrderCarrierList(nbr);
+        cars = OVData.getfreightlist();
         if (cars.size() == 0) {
             return 2;
         }
