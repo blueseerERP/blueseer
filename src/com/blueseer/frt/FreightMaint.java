@@ -24,7 +24,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
 
-package com.blueseer.ctr;
+package com.blueseer.frt;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.tags;

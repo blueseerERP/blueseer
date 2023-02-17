@@ -336,7 +336,7 @@ public class DOMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddsite.setSelectedItem(OVData.getDefaultSite());
         
         ddshipvia.removeAllItems();
-        mylist = OVData.getScacCarrierOnly();   
+        mylist = OVData.getfreightlist();   
         for (int i = 0; i < mylist.size(); i++) {
             ddshipvia.addItem(mylist.get(i));
         }
@@ -360,7 +360,7 @@ public class DOMaint extends javax.swing.JPanel implements IBlueSeerT {
         }  
         
         ddshipvia.removeAllItems();
-        mylist = OVData.getScacCarrierOnly();  
+        mylist = OVData.getfreightlist();  
         for (int i = 0; i < mylist.size(); i++) {
             ddshipvia.addItem(mylist.get(i));
         }

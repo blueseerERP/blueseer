@@ -74,7 +74,6 @@ ReqBrowseAll,,com.blueseer.utl.ReportPanel,JMenuItem,reqb
 BOMMaint,,com.blueseer.inv.BOMMaint,JMenuItem,bomm
 BOMTree,,com.blueseer.inv.BOMTree,JMenuItem,bomt
 BOMBrowse,,com.blueseer.inv.BOMBrowse,JMenuItem,bomb
-CarrierMaint,,com.blueseer.ctr.CarrierMaint,JMenuItem,carm
 CostRoll,,com.blueseer.inv.CostRollMaint,JMenuItem,roll
 CostRollRange,,com.blueseer.inv.CostRollRange,JMenuItem,rolr
 CustMaint,,com.blueseer.ctr.CustMaint,JMenuItem,cusm
@@ -84,7 +83,7 @@ DeptBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,depb
 DeptMaint,,com.blueseer.fgl.DeptMaint,JMenuItem,depm
 EDILoad,,com.blueseer.edi.EDILoadMaint,JMenuItem,edip
 EDILog,,com.blueseer.edi.EDITransactionBrowse,JMenuItem,edil
-FreightMaint,,com.blueseer.ctr.FreightMaint,JMenuItem,frtm
+FreightMaint,,com.blueseer.frt.FreightMaint,JMenuItem,frtm
 GenCodeBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,genb
 InventoryAdjustment,,com.blueseer.inv.InventoryMaint,JMenuItem,inva
 ItemMaint,,com.blueseer.inv.ItemMaint,JMenuItem,item
@@ -181,7 +180,6 @@ NavCodeBrowse,menu for browsing navcodes,com.blueseer.utl.ReportPanel,JMenuItem,
 PanelBrowse,used for browsing java jpanels,com.blueseer.utl.ReportPanel,JMenuItem,panelb
 TermsBrowse,Terms Browse,com.blueseer.utl.ReportPanel,JMenuItem,termb
 FreightBrowse,Browse Freight Records,com.blueseer.utl.ReportPanel,JMenuItem,frtb
-CarrierBrowse,Carrier Browse,com.blueseer.utl.ReportPanel,JMenuItem,carb
 ARPaymentMaint,,com.blueseer.far.ARPaymentMaint,JMenuItem,arpm
 BankMaint,,com.blueseer.fgl.BankMaint,JMenuItem,bank
 ShipperBrowse,Shipper Browse,com.blueseer.shp.ShipperBrowse,JMenuItem,shpb

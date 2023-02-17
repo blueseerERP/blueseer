@@ -11,14 +11,12 @@ Adres,CustomerMenu,1,JMenu,Müşteri Menüsü,,,,1,1
 Adres,VendorMenu,2,JMenu,Satıcı Menüsü,,,,1,1
 Adres,EDIMenu,3,JMenu,EDI Menüsü,,,,1,1
 Adres,LabelMenu,4,JMenu,Etiket Menüsü,,,,1,1
-Adres,CarrierMaint,5,JMenuItem,Taşıyıcı Bakımı,,,,1,1
-Adres,CarrierBrowse,6,JMenuItem,Taşıyıcı Gözat,,1,,1,1
-Adres,FreightMaint,7,JMenuItem,Yük Bakımı,,,,1,1
-Adres,FreightBrowse,8,JMenuItem,Navlun Gözat,,1,,1,1
-Adres,TermsMaint,9,JMenuItem,Şartlar Bakım,,,,1,1
-Adres,TermsBrowse,10,JMenuItem,Şartlar Gözat,,1,,1,1
-Adres,TaxMaint,11,JMenuItem,Vergi Bakımı,,,,1,1
-Adres,TaxBrowse,12,JMenuItem,Vergi Gözat,,1,,1,1
+Adres,FreightMaint,5,JMenuItem,Yük Bakımı,,,,1,1
+Adres,FreightBrowse,6,JMenuItem,Navlun Gözat,,1,,1,1
+Adres,TermsMaint,7,JMenuItem,Şartlar Bakım,,,,1,1
+Adres,TermsBrowse,8,JMenuItem,Şartlar Gözat,,1,,1,1
+Adres,TaxMaint,9,JMenuItem,Vergi Bakımı,,,,1,1
+Adres,TaxBrowse,10,JMenuItem,Vergi Gözat,,1,,1,1
 CustomerReports,piechart_salesbycust,1,JMenuItem,Müşteriye Göre Satışlar (PieChart),,1,,1,1
 CustomerReports,piechart_custAR,2,JMenuItem,Müşteriye Göre Alacaklar (PieChart),,1,,1,1
 VendorMenu,VendMaint,1,JMenuItem,Satıcı Bakımı,,,,1,1

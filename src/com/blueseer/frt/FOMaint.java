@@ -851,7 +851,7 @@ public class FOMaint extends javax.swing.JPanel {
         ddcarrierproposed.setSelectedIndex(0);
         
         ddcarrierassigned.removeAllItems();
-          carriers = OVData.getScacCarrierOnly();  
+          carriers = OVData.getfreightlist();  
         for (String code : carriers) {
             ddcarrierassigned.addItem(code);
         }

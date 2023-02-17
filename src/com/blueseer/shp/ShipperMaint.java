@@ -342,7 +342,7 @@ public class ShipperMaint extends javax.swing.JPanel {
         lbladdr.setText("");
         
         ddshipvia.removeAllItems();
-        ArrayList<String> mylist = OVData.getScacCarrierOnly();   
+        ArrayList<String> mylist = OVData.getfreightlist();   
         for (int i = 0; i < mylist.size(); i++) {
             ddshipvia.addItem(mylist.get(i));
         }

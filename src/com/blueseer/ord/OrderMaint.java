@@ -738,7 +738,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
        
         
         ddshipvia.removeAllItems();
-        mylist = OVData.getScacCarrierOnly();  
+        mylist = OVData.getfreightlist();  
         for (int i = 0; i < mylist.size(); i++) {
             ddshipvia.addItem(mylist.get(i));
         }

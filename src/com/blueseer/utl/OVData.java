@@ -2186,9 +2186,9 @@ public class OVData {
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
-                res = st.executeQuery("select car_code from car_mstr order by car_code;");
+                res = st.executeQuery("select frt_scac from frt_mstr order by frt_id;");
                 while (res.next()) {
-                    myarray.add(res.getString("car_code"));
+                    myarray.add(res.getString("frt_scac"));
 
                 }
 
@@ -2211,125 +2211,8 @@ public class OVData {
         return myarray;
 
     }
-
-    public static ArrayList<String> getScacCarrierOnly() {
-        ArrayList<String> myarray = new ArrayList<String>();
-        try {
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-
-                res = st.executeQuery("select car_code from car_mstr where car_type = 'carrier' order by car_code;");
-                while (res.next()) {
-                    myarray.add(res.getString("car_code"));
-
-                }
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        return myarray;
-
-    }
-
-    public static ArrayList getScacGroupOnly() {
-        ArrayList myarray = new ArrayList();
-        try {
-            
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-
-                res = st.executeQuery("select car_code from car_mstr where car_type = 'group' order by car_code;");
-                while (res.next()) {
-                    myarray.add(res.getString("car_code"));
-
-                }
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        return myarray;
-
-    }
-
-    public static ArrayList getScacsOfGroup(String code) {
-        ArrayList myarray = new ArrayList();
-        try {
-            
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-
-                res = st.executeQuery("select card_carrier from car_det where card_code = " + "'" + code + "'" + " order by card_carrier;");
-                while (res.next()) {
-                    myarray.add(res.getString("card_carrier"));
-
-                }
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                if (con != null) {
-                    con.close();
-                }
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        return myarray;
-
-    }
-
-    public static ArrayList getfreighttermslist() {
+   
+    public static ArrayList getfreightlist() {
         ArrayList myarray = new ArrayList();
         try {
             

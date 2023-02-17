@@ -11,14 +11,12 @@ Die Anschrift,CustomerMenu,1,JMenu,Kundenmenü,,,,1,1
 Die Anschrift,VendorMenu,2,JMenu,Lieferantenmenü,,,,1,1
 Die Anschrift,EDIMenu,3,JMenu,EDI-Menü,,,,1,1
 Die Anschrift,LabelMenu,4,JMenu,Etikettenmenü,,,,1,1
-Die Anschrift,CarrierMaint,5,JMenuItem,Trägerwartung,,,,1,1
-Die Anschrift,CarrierBrowse,6,JMenuItem,Anbieter durchsuchen,,1,,1,1
-Die Anschrift,FreightMaint,7,JMenuItem,Frachtwartung,,,,1,1
-Die Anschrift,FreightBrowse,8,JMenuItem,Fracht durchsuchen,,1,,1,1
-Die Anschrift,TermsMaint,9,JMenuItem,Bedingungen Wartung,,,,1,1
-Die Anschrift,TermsBrowse,10,JMenuItem,Nutzungsbedingungen Durchsuchen,,1,,1,1
-Die Anschrift,TaxMaint,11,JMenuItem,Steuererhaltung,,,,1,1
-Die Anschrift,TaxBrowse,12,JMenuItem,Steuern Durchsuchen,,1,,1,1
+Die Anschrift,FreightMaint,5,JMenuItem,Frachtwartung,,,,1,1
+Die Anschrift,FreightBrowse,6,JMenuItem,Fracht durchsuchen,,1,,1,1
+Die Anschrift,TermsMaint,7,JMenuItem,Bedingungen Wartung,,,,1,1
+Die Anschrift,TermsBrowse,8,JMenuItem,Nutzungsbedingungen Durchsuchen,,1,,1,1
+Die Anschrift,TaxMaint,9,JMenuItem,Steuererhaltung,,,,1,1
+Die Anschrift,TaxBrowse,10,JMenuItem,Steuern Durchsuchen,,1,,1,1
 CustomerReports,piechart_salesbycust,1,JMenuItem,Verkäufe nach Kunden (PieChart),,1,,1,1
 CustomerReports,piechart_custAR,2,JMenuItem,Forderungen nach Kunden (PieChart),,1,,1,1
 VendorMenu,VendMaint,1,JMenuItem,Lieferantenpflege,,,,1,1

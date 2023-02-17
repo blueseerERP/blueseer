@@ -11,14 +11,12 @@ Adresse,CustomerMenu,1,JMenu,Menu client,,,,1,1
 Adresse,VendorMenu,2,JMenu,Menu du vendeur,,,,1,1
 Adresse,EDIMenu,3,JMenu,Menu EDI,,,,1,1
 Adresse,LabelMenu,4,JMenu,Menu Étiquette,,,,1,1
-Adresse,CarrierMaint,5,JMenuItem,Maintenance des transporteurs,,,,1,1
-Adresse,CarrierBrowse,6,JMenuItem,Parcourir le transporteur,,1,,1,1
-Adresse,FreightMaint,7,JMenuItem,Maintenance du fret,,,,1,1
-Adresse,FreightBrowse,8,JMenuItem,Parcourir le fret,,1,,1,1
-Adresse,TermsMaint,9,JMenuItem,Maintenance de Termes,,,,1,1
-Adresse,TermsBrowse,10,JMenuItem,Termes Parcourir,,1,,1,1
-Adresse,TaxMaint,11,JMenuItem,Maintenance des impôts,,,,1,1
-Adresse,TaxBrowse,12,JMenuItem,Parcourir les impôts,,1,,1,1
+Adresse,FreightMaint,5,JMenuItem,Maintenance du fret,,,,1,1
+Adresse,FreightBrowse,6,JMenuItem,Parcourir le fret,,1,,1,1
+Adresse,TermsMaint,7,JMenuItem,Maintenance de Termes,,,,1,1
+Adresse,TermsBrowse,8,JMenuItem,Termes Parcourir,,1,,1,1
+Adresse,TaxMaint,9,JMenuItem,Maintenance des impôts,,,,1,1
+Adresse,TaxBrowse,10,JMenuItem,Parcourir les impôts,,1,,1,1
 CustomerReports,piechart_salesbycust,1,JMenuItem,Ventes par client (camembert),,1,,1,1
 CustomerReports,piechart_custAR,2,JMenuItem,Créances par client (Pie Chart),,1,,1,1
 VendorMenu,VendMaint,1,JMenuItem,Maintenance du Vendeur,,,,1,1

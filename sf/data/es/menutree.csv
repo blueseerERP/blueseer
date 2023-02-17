@@ -11,14 +11,12 @@ Dirección,CustomerMenu,1,JMenu,Menú cliente,,,,1,1
 Dirección,VendorMenu,2,JMenu,Menú de proveedores,,,,1,1
 Dirección,EDIMenu,3,JMenu,Menú EDI,,,,1,1
 Dirección,LabelMenu,4,JMenu,Menú de etiquetas,,,,1,1
-Dirección,CarrierMaint,5,JMenuItem,Mantenimiento del transportista,,,,1,1
-Dirección,CarrierBrowse,6,JMenuItem,Navegación de operador,,1,,1,1
-Dirección,FreightMaint,7,JMenuItem,Mantenimiento de fletes,,,,1,1
-Dirección,FreightBrowse,8,JMenuItem,Navegación de carga,,1,,1,1
-Dirección,TermsMaint,9,JMenuItem,Mantenimiento de Términos,,,,1,1
-Dirección,TermsBrowse,10,JMenuItem,Términos Examinar,,1,,1,1
-Dirección,TaxMaint,11,JMenuItem,Mantenimiento de impuestos,,,,1,1
-Dirección,TaxBrowse,12,JMenuItem,Examinar impuestos,,1,,1,1
+Dirección,FreightMaint,5,JMenuItem,Mantenimiento de fletes,,,,1,1
+Dirección,FreightBrowse,6,JMenuItem,Navegación de carga,,1,,1,1
+Dirección,TermsMaint,7,JMenuItem,Mantenimiento de Términos,,,,1,1
+Dirección,TermsBrowse,8,JMenuItem,Términos Examinar,,1,,1,1
+Dirección,TaxMaint,9,JMenuItem,Mantenimiento de impuestos,,,,1,1
+Dirección,TaxBrowse,10,JMenuItem,Examinar impuestos,,1,,1,1
 CustomerReports,piechart_salesbycust,1,JMenuItem,Ventas por cliente (PieChart),,1,,1,1
 CustomerReports,piechart_custAR,2,JMenuItem,Cuentas por cobrar por cliente (PieChart),,1,,1,1
 VendorMenu,VendMaint,1,JMenuItem,Mantenimiento de proveedores,,,,1,1

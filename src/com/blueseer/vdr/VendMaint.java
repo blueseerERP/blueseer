@@ -363,7 +363,7 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
        
        ddcarrier.removeAllItems();
-        ArrayList myscac = OVData.getScacCarrierOnly();   
+        ArrayList myscac = OVData.getfreightlist();   
         for (int i = 0; i < myscac.size(); i++) {
             ddcarrier.addItem(myscac.get(i));
         }

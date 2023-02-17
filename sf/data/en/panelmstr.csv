@@ -17,14 +17,13 @@ com.blueseer.adm.SiteMaint,,1
 com.blueseer.adm.SystemControl,,1
 com.blueseer.adm.UserMaint,,1
 com.blueseer.adm.UserPermsMaint,,1
-com.blueseer.ctr.CarrierMaint,,1
 com.blueseer.ctr.CustControl,,1
 com.blueseer.ctr.CustMaint,,1
 com.blueseer.ctr.CustPriceMaint,,1
 com.blueseer.ctr.CustPriceRpt,,1
 com.blueseer.ctr.CustXrefMaint,,1
 com.blueseer.ctr.CustXrefRpt,,1
-com.blueseer.ctr.FreightMaint,,1
+com.blueseer.ftr.FreightMaint,,1
 com.blueseer.ctr.POSBrowse,,1
 com.blueseer.ctr.POSControl,,1
 com.blueseer.ctr.POSMaint,,1

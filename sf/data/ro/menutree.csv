@@ -11,14 +11,12 @@ Adresa,CustomerMenu,1,JMenu,Meniul Clientului,,,,1,1
 Adresa,VendorMenu,2,JMenu,Meniul furnizorului,,,,1,1
 Adresa,EDIMenu,3,JMenu,Meniul EDI,,,,1,1
 Adresa,LabelMenu,4,JMenu,Meniu Etichetă,,,,1,1
-Adresa,CarrierMaint,5,JMenuItem,Întreținerea transportatorului,,,,1,1
-Adresa,CarrierBrowse,6,JMenuItem,Căutați operatorul,,1,,1,1
-Adresa,FreightMaint,7,JMenuItem,Întreținere de marfă,,,,1,1
-Adresa,FreightBrowse,8,JMenuItem,Navigare de marfă,,1,,1,1
-Adresa,TermsMaint,9,JMenuItem,Condiții de întreținere,,,,1,1
-Adresa,TermsBrowse,10,JMenuItem,Răsfoiți termeni,,1,,1,1
-Adresa,TaxMaint,11,JMenuItem,Menținerea impozitelor,,,,1,1
-Adresa,TaxBrowse,12,JMenuItem,Tax Browse,,1,,1,1
+Adresa,FreightMaint,5,JMenuItem,Întreținere de marfă,,,,1,1
+Adresa,FreightBrowse,6,JMenuItem,Navigare de marfă,,1,,1,1
+Adresa,TermsMaint,7,JMenuItem,Condiții de întreținere,,,,1,1
+Adresa,TermsBrowse,8,JMenuItem,Răsfoiți termeni,,1,,1,1
+Adresa,TaxMaint,9,JMenuItem,Menținerea impozitelor,,,,1,1
+Adresa,TaxBrowse,10,JMenuItem,Tax Browse,,1,,1,1
 CustomerReports,piechart_salesbycust,1,JMenuItem,Vânzări după client (PieChart),,1,,1,1
 CustomerReports,piechart_custAR,2,JMenuItem,Creanțe după client (PieChart),,1,,1,1
 VendorMenu,VendMaint,1,JMenuItem,Întreținerea vânzătorului,,,,1,1
