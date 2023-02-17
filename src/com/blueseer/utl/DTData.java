@@ -2527,21 +2527,21 @@ public class DTData {
                     if (state == 1) { // begins
                     res = st.executeQuery(" select * " +
                         " FROM  frt_mstr where " + myfield + " like " + "'" + str + "%'" +
-                        " order by frt_code ;");
+                        " order by frt_id ;");
                 }
                 if (state == 2) { // ends
                     res = st.executeQuery(" select * " +
                         " FROM  frt_mstr where " + myfield + " like " + "'%" + str + "'" +
-                        " order by frt_code ;");
+                        " order by frt_id ;");
                 }
                  if (state == 0) { // match
                  res = st.executeQuery(" select *  " +
                         " FROM  frt_mstr where " + myfield + " like " + "'%" + str + "%'" +
-                        " order by frt_code ;");
+                        " order by frt_id ;");
                  }
                     while (res.next()) {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, 
-                            res.getString("frt_code"),
+                            res.getString("frt_id"),
                             res.getString("frt_desc"),
                             res.getString("frt_apply")
                         });
@@ -7789,7 +7789,7 @@ return mymodel;
 
                   res = st.executeQuery("select * from frt_mstr;");
                 while (res.next()) {
-                    mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("frt_code"),
+                    mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("frt_id"),
                                res.getString("frt_desc"),
                                res.getString("frt_apply")
                     });

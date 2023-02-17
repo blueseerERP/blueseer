@@ -309,7 +309,7 @@ public class FreightMaint extends javax.swing.JPanel implements IBlueSeerT {
         Map<String,Integer> f = OVData.getTableInfo("frt_mstr");
         int fc;
 
-        fc = checkLength(f,"frt_code");
+        fc = checkLength(f,"frt_id");
         if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {
             bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
             tbkey.requestFocus();
@@ -375,7 +375,7 @@ public class FreightMaint extends javax.swing.JPanel implements IBlueSeerT {
         // change log check
         if (m[0].equals("0")) {
             ArrayList<admData.change_log> c = new ArrayList<admData.change_log>();
-            c.add(clog(this.x.frt_code(), 
+            c.add(clog(this.x.frt_id(), 
                      this.x.getClass().getName(), 
                      this.getClass().getSimpleName(), 
                      "deletion", 
@@ -408,7 +408,7 @@ public class FreightMaint extends javax.swing.JPanel implements IBlueSeerT {
         lual = new ActionListener() {
         public void actionPerformed(ActionEvent event) {
         if (lurb1.isSelected()) {  
-         luModel = DTData.getFreightBrowseUtil(luinput.getText(),0, "frt_code");
+         luModel = DTData.getFreightBrowseUtil(luinput.getText(),0, "frt_id");
         } else {
          luModel = DTData.getFreightBrowseUtil(luinput.getText(),0, "frt_desc");   
         }
@@ -444,7 +444,7 @@ public class FreightMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
 
     public void updateForm() {
-        tbkey.setText(x.frt_code());
+        tbkey.setText(x.frt_id());
         tbdesc.setText(x.frt_desc());
         cbapply.setSelected(BlueSeerUtils.ConvertStringToBool(x.frt_apply()));
         setAction(x.m());

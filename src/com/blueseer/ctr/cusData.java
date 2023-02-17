@@ -1553,16 +1553,16 @@ public class cusData {
     
     public static String[] addFreightMstr(frt_mstr x) {
         String[] m = new String[2];
-        String sqlSelect = "SELECT * FROM  frt_mstr where frt_code = ?";
-        String sqlInsert = "insert into frt_mstr (frt_code, frt_desc, frt_apply ) "
+        String sqlSelect = "SELECT * FROM  frt_mstr where frt_id = ?";
+        String sqlInsert = "insert into frt_mstr (frt_id, frt_desc, frt_apply ) "
                         + " values (?,?,?); "; 
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
-             ps.setString(1, x.frt_code);
+             ps.setString(1, x.frt_id);
           try (ResultSet res = ps.executeQuery();
                PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
             if (! res.isBeforeFirst()) {
-            psi.setString(1, x.frt_code);
+            psi.setString(1, x.frt_id);
             psi.setString(2, x.frt_desc);
             psi.setString(3, x.frt_apply);
             int rows = psi.executeUpdate();
@@ -1584,12 +1584,12 @@ public class cusData {
     public static String[] updateFreightMstr(frt_mstr x) {
         String[] m = new String[2];
         String sql = "update frt_mstr set frt_desc = ?, frt_apply = ? " +   
-                          " where frt_code = ? ; ";
+                          " where frt_id = ? ; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, x.frt_desc);
         ps.setString(2, x.frt_apply);
-        ps.setString(3, x.frt_code);
+        ps.setString(3, x.frt_id);
         int rows = ps.executeUpdate();
         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
         } catch (SQLException s) {
@@ -1602,7 +1602,7 @@ public class cusData {
     public static frt_mstr getFreightMstr(String[] x) {
         frt_mstr r = null;
         String[] m = new String[2];
-        String sql = "select * from frt_mstr where frt_code = ? ;";
+        String sql = "select * from frt_mstr where frt_id = ? ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
@@ -1613,7 +1613,7 @@ public class cusData {
                 } else {
                     while(res.next()) {
                         m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                        r = new frt_mstr(m, res.getString("frt_code"), 
+                        r = new frt_mstr(m, res.getString("frt_id"), 
                             res.getString("frt_desc"),
                             res.getString("frt_apply")
                         );
@@ -1630,10 +1630,10 @@ public class cusData {
     
     public static String[] deleteFreightMstr(frt_mstr x) { 
        String[] m = new String[2];
-        String sql = "delete from frt_mstr where frt_code = ?; ";
+        String sql = "delete from frt_mstr where frt_id = ?; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql)) {
-        ps.setString(1, x.frt_code);
+        ps.setString(1, x.frt_id);
         int rows = ps.executeUpdate();
         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
         } catch (SQLException s) {
@@ -1763,11 +1763,11 @@ public class cusData {
                lines.add(s);
             }
             
-             res = st.executeQuery("select frt_code from frt_mstr order by frt_code;");
+             res = st.executeQuery("select frt_id from frt_mstr order by frt_id;");
             while (res.next()) {
                 String[] s = new String[2];
                s[0] = "freight";
-               s[1] = res.getString("frt_code");
+               s[1] = res.getString("frt_id");
                lines.add(s);
             }
             
@@ -2819,7 +2819,7 @@ public class cusData {
         }
     } 
     
-    public record frt_mstr (String[] m, String frt_code, String frt_desc, String frt_apply) {
+    public record frt_mstr (String[] m, String frt_id, String frt_desc, String frt_apply) {
         public frt_mstr(String[] m) {
             this(m,"","","");
         }

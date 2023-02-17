@@ -338,7 +338,7 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
         Map<String,Integer> f = OVData.getTableInfo("frt_mstr");
         int fc;
 
-        fc = checkLength(f,"frt_code");
+        fc = checkLength(f,"frt_id");
         if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {
             bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
             tbkey.requestFocus();

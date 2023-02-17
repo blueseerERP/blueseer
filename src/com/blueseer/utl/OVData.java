@@ -2343,9 +2343,9 @@ public class OVData {
             ResultSet res = null;
             try {
 
-                res = st.executeQuery("select frt_code from frt_mstr order by frt_code;");
+                res = st.executeQuery("select frt_id from frt_mstr order by frt_id;");
                 while (res.next()) {
-                    myarray.add(res.getString("frt_code"));
+                    myarray.add(res.getString("frt_id"));
                 }
 
             } catch (SQLException s) {
