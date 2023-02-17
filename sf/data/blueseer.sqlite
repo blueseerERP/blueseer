@@ -205,31 +205,6 @@ CREATE TABLE "call_mstr" (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE "car_mstr" (
-  "car_code" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "car_desc" varchar(50) COLLATE NOCASE DEFAULT '',
-  "car_scac" varchar(10) COLLATE NOCASE DEFAULT '',
-  "car_phone" varchar(15) COLLATE NOCASE DEFAULT '',
-  "car_email" varchar(100) COLLATE NOCASE DEFAULT '',
-  "car_contact" varchar(50) COLLATE NOCASE DEFAULT '',
-  "car_type" varchar(10) COLLATE NOCASE DEFAULT '',
-  "car_acct" varchar(12) COLLATE NOCASE DEFAULT '');
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE "car_det" (
-  "card_code" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "card_carrier" varchar(30) COLLATE NOCASE DEFAULT '');
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE "car_meta" (
-  "carm_code" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "carm_key" varchar(80) COLLATE NOCASE DEFAULT '',
-  "carm_value" varchar(80) COLLATE NOCASE DEFAULT '');
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "clock_ctrl" (
   "clctrl_scan" tinyint(1) NOT NULL DEFAULT '0'
 );
@@ -1010,9 +985,28 @@ CREATE TABLE "fct_mstr" (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "frt_mstr" (
-  "frt_code" varchar(20) COLLATE NOCASE DEFAULT '',
+  "frt_id" varchar(20) COLLATE NOCASE DEFAULT '',
   "frt_desc" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
-  "frt_apply" tinyint(1) NOT NULL DEFAULT '0'
+  "frt_apply" tinyint(1) NOT NULL DEFAULT '0',
+  "frt_scac" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "frt_name" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "frt_line1" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "frt_line2" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "frt_city" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "frt_state" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "frt_zip" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "frt_phone" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "frt_email" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "frt_type" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "frt_acct" varchar(12) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "frt_meta" (
+  "frtm_id" varchar(30) NOT NULL,
+  "frtm_key" varchar(80) NOT NULL,
+  "frtm_value" varchar(80) NOT NULL
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
