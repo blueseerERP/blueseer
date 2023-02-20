@@ -2406,6 +2406,8 @@ public class ShipperMaint extends javax.swing.JPanel {
                          d++;
                          uniqpo = tabledetail.getValueAt(j, 4).toString();
                        }
+                       
+                String uniqwh = getUniqueWH();       
                    
                 int pallets = 0;
                 if (! tbpallets.getText().isEmpty()) {
@@ -2421,6 +2423,7 @@ public class ShipperMaint extends javax.swing.JPanel {
                         + " sh_shipdate = " + "'" + dfdate.format(dcshipdate.getDate()) + "'" + ","
                         + " sh_ref = " + "'" + tbref.getText() + "'" + ","
                         + " sh_rmks = " + "'" + tbremarks.getText() + "'" + ","
+                        + " sh_wh = " + "'" + uniqwh + "'" + ","         
                         + " sh_shipvia = " + "'" + ddshipvia.getSelectedItem() + "'" + ","         
                         + " sh_pallets = " + "'" + pallets + "'" + ","
                         + " sh_boxes = " + "'" + boxes + "'" + ","        
