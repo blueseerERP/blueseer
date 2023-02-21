@@ -841,7 +841,14 @@ CREATE TABLE IF NOT EXISTS `frt_mstr` (
   `frt_phone` varchar(15)  NOT NULL DEFAULT '',
   `frt_email` varchar(100)  NOT NULL DEFAULT '',
   `frt_type` varchar(10)  NOT NULL DEFAULT '',
-  `frt_acct` varchar(12)  NOT NULL DEFAULT '' 
+  `frt_acct` varchar(12)  NOT NULL DEFAULT '', 
+  `frt_usdot` varchar(12)  NOT NULL DEFAULT '', 
+  `frt_mc` varchar(12)  NOT NULL DEFAULT '', 
+  `frt_ein` varchar(12)  NOT NULL DEFAULT '', 
+  `frt_minmiles` int(12)  NOT NULL DEFAULT '0', 
+  `frt_maxmiles` int(12)  NOT NULL DEFAULT '0', 
+  `frt_maxdh` int(12)  NOT NULL DEFAULT '0', 
+  `frt_milerate` decimal(12,5)  NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `frt_meta` (
   `frtm_id` varchar(30) NOT NULL,
