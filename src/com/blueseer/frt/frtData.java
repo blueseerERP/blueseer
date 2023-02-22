@@ -52,8 +52,8 @@ public class frtData {
         String sqlInsert = "insert into car_mstr (car_id, car_desc, car_apply, car_scac, car_name, car_line1, car_line2, car_city, " +
 "        car_state, car_zip, car_country, car_phone, car_email, " +
 "        car_type, car_acct, car_usdot, car_mc, car_ein, " +
-"        car_minmiles, car_maxmiles, car_maxdh, car_milerate ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+"        car_minmiles, car_maxmiles, car_maxdh, car_milerate, car_tractors, car_trailers ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.car_id);
@@ -82,6 +82,8 @@ public class frtData {
             psi.setString(20, x.car_maxmiles);
             psi.setString(21, x.car_maxdh);
             psi.setString(22, x.car_milerate);
+            psi.setString(23, x.car_tractors);
+            psi.setString(24, x.car_trailers);
         
             int rows = psi.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
@@ -104,7 +106,8 @@ public class frtData {
         String sql = "update car_mstr set car_desc = ?, car_apply = ?, car_scac = ?, car_name = ?, " +   
                      " car_line1 = ?, car_line2 = ?, car_city = ?, car_state = ?, car_zip = ? car_country = ?, " +
                      " car_phone = ?, car_email = ?, car_type = ?, car_acct = ?, car_usdot = ?, car_mc = ?, " +
-                     " car_ein = ?, car_minmiles = ?, car_maxmiles = ?, car_maxdh = ?, car_milerate = ? " +
+                     " car_ein = ?, car_minmiles = ?, car_maxmiles = ?, car_maxdh = ?, car_milerate = ?, " +
+                     " car_tractors = ?, car_trailers = ? " +
                      " where car_id = ? ; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql)) {
@@ -129,7 +132,9 @@ public class frtData {
         ps.setString(19, x.car_maxmiles);
         ps.setString(20, x.car_maxdh);
         ps.setString(21, x.car_milerate);
-        ps.setString(22, x.car_id);
+        ps.setString(22, x.car_tractors);
+        ps.setString(23, x.car_trailers);
+        ps.setString(24, x.car_id);
         int rows = ps.executeUpdate();
         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
         } catch (SQLException s) {
@@ -174,7 +179,9 @@ public class frtData {
                             res.getString("car_minmiles"),
                             res.getString("car_maxmiles"),
                             res.getString("car_maxdh"),
-                            res.getString("car_milerate")
+                            res.getString("car_milerate"),
+                            res.getString("car_tractors"),
+                            res.getString("car_trailers")
                         );
                     }
                 }
@@ -206,11 +213,12 @@ public class frtData {
         String car_scac, String car_name, String car_line1, String car_line2, String car_city,
         String car_state, String car_zip, String car_country, String car_phone, String car_email,
         String car_type, String car_acct, String car_usdot, String car_mc, String car_ein,
-        String car_minmiles, String car_maxmiles, String car_maxdh, String car_milerate) {
+        String car_minmiles, String car_maxmiles, String car_maxdh, String car_milerate,
+        String car_tractors, String car_trailers) {
         public car_mstr(String[] m) {
             this(m,"","","","","","","","","","",
                    "","","","","","","","","","",
-                   "","");
+                   "","","","");
         }
     } 
     

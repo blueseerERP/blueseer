@@ -397,7 +397,28 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
         car_mstr x = new car_mstr(null, 
                 tbkey.getText(),
                 tbdesc.getText(),
-                String.valueOf(BlueSeerUtils.boolToInt(cbapply.isSelected()))
+                String.valueOf(BlueSeerUtils.boolToInt(cbapply.isSelected())),
+                tbscac.getText(),
+                tbname.getText(),
+                tbline1.getText(),
+                "", // line2
+                tbcity.getText(),
+                ddstate.getSelectedItem().toString(),
+                tbzip.getText(),
+                ddcountry.getSelectedItem().toString(),
+                tbphone.getText(),
+                tbemail.getText(),
+                ddtype.getSelectedItem().toString(),
+                tbacct.getText(),
+                tbusdot.getText(),
+                tbmc.getText(),
+                tbein.getText(),
+                tbminmiles.getText(),
+                tbmaxmiles.getText(),
+                tbdhmiles.getText(),
+                tbrate.getText(),
+                tbtractors.getText(),
+                tbtrailers.getText()
                 );
         return x;
     }
@@ -447,6 +468,26 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbkey.setText(x.car_id());
         tbdesc.setText(x.car_desc());
         cbapply.setSelected(BlueSeerUtils.ConvertStringToBool(x.car_apply()));
+        tbscac.setText(x.car_scac());
+        tbname.setText(x.car_name());
+        tbline1.setText(x.car_line1());
+        tbcity.setText(x.car_city());
+        ddstate.setSelectedItem(x.car_state());
+        tbzip.setText(x.car_zip());
+        ddcountry.setSelectedItem(x.car_country());
+        tbphone.setText(x.car_phone());
+        tbemail.setText(x.car_email());
+        ddtype.setSelectedItem(x.car_type());
+        tbacct.setText(x.car_acct());
+        tbusdot.setText(x.car_usdot());
+        tbmc.setText(x.car_mc());
+        tbein.setText(x.car_ein());
+        tbminmiles.setText(x.car_minmiles());
+        tbmaxmiles.setText(x.car_maxmiles());
+        tbdhmiles.setText(x.car_maxdh());
+        tbrate.setText(x.car_milerate());
+        tbtractors.setText(x.car_tractors());
+        tbtrailers.setText(x.car_trailers());
         setAction(x.m());
     }
     
@@ -481,7 +522,7 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbphone = new javax.swing.JTextField();
         tbzip = new javax.swing.JTextField();
         tbline1 = new javax.swing.JTextField();
-        tbphone1 = new javax.swing.JTextField();
+        tbemail = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -500,6 +541,10 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel12 = new javax.swing.JLabel();
         tbscac = new javax.swing.JTextField();
         jLabel21 = new javax.swing.JLabel();
+        ddtype = new javax.swing.JComboBox<>();
+        tbacct = new javax.swing.JTextField();
+        jLabel22 = new javax.swing.JLabel();
+        jLabel23 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         tbdhmiles = new javax.swing.JTextField();
         tbmaxmiles = new javax.swing.JTextField();
@@ -644,7 +689,7 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(ddstate, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbphone1, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbemail, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(ddcountry, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(32, 32, 32))
         );
@@ -660,7 +705,7 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbline1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tbphone1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbemail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4)
                     .addComponent(jLabel9))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -690,6 +735,10 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         jLabel21.setText("SCAC");
 
+        jLabel22.setText("Type");
+
+        jLabel23.setText("AP Acct");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -708,9 +757,19 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(jLabel21))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tbein, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tbscac, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(206, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(tbein, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel22))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(tbscac, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
+                        .addComponent(jLabel23)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(ddtype, 0, 93, Short.MAX_VALUE)
+                    .addComponent(tbacct))
+                .addGap(19, 19, 19))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -720,13 +779,17 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(tbusdot, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tbein, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel10)
-                    .addComponent(jLabel12))
+                    .addComponent(jLabel12)
+                    .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel22))
                 .addGap(7, 7, 7)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbmc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel11)
                     .addComponent(tbscac, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel21))
+                    .addComponent(jLabel21)
+                    .addComponent(tbacct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel23))
                 .addContainerGap())
         );
 
@@ -947,6 +1010,7 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JCheckBox cbapply;
     private javax.swing.JComboBox<String> ddcountry;
     private javax.swing.JComboBox<String> ddstate;
+    private javax.swing.JComboBox<String> ddtype;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -961,6 +1025,8 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -974,10 +1040,12 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextField tbacct;
     private javax.swing.JTextField tbcity;
     private javax.swing.JTextField tbdesc;
     private javax.swing.JTextField tbdhmiles;
     private javax.swing.JTextField tbein;
+    private javax.swing.JTextField tbemail;
     private javax.swing.JTextField tbkey;
     private javax.swing.JTextField tbline1;
     private javax.swing.JTextField tbmaxmiles;
@@ -985,7 +1053,6 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JTextField tbminmiles;
     private javax.swing.JTextField tbname;
     private javax.swing.JTextField tbphone;
-    private javax.swing.JTextField tbphone1;
     private javax.swing.JTextField tbrate;
     private javax.swing.JTextField tbscac;
     private javax.swing.JTextField tbtractors;

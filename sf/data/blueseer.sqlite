@@ -1006,7 +1006,9 @@ CREATE TABLE "car_mstr" (
   "car_minmiles" int(12) NOT NULL COLLATE NOCASE DEFAULT '0',
   "car_maxmiles" int(12) NOT NULL COLLATE NOCASE DEFAULT '0',
   "car_maxdh" int(12) NOT NULL COLLATE NOCASE DEFAULT '0',
-  "car_milerate" decimal(12,5) NOT NULL COLLATE NOCASE DEFAULT '0'
+  "car_milerate" decimal(12,5) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "car_tractors" int(12) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "car_trailers" int(12) NOT NULL COLLATE NOCASE DEFAULT '0'
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
