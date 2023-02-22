@@ -805,20 +805,20 @@ public class MassLoad extends javax.swing.JPanel {
       // Freight stuff
     public ArrayList<String> defineFreight() {
         ArrayList<String> list = new ArrayList<String>();
-        list.add("frt_id,s,30,mandatory,validated");
-        list.add("frt_desc,s,50,optional,unvalidated");
-        list.add("frt_apply,i,1,optional,unvalidated");
-        list.add("frt_scac,s,10,optional,unvalidated");
-        list.add("frt_name,s,50,optional,unvalidated");
-        list.add("frt_line1,s,50,optional,unvalidated");
-        list.add("frt_line2,s,50,optional,unvalidated");
-        list.add("frt_city,s,50,optional,unvalidated");
-        list.add("frt_state,s,50,optional,unvalidated");
-        list.add("frt_zip,s,50,optional,unvalidated");
-        list.add("frt_phone,s,15,optional,unvalidated");
-        list.add("frt_email,s,100,optional,unvalidated");
-        list.add("frt_type,s,10,mandatory,validated");
-        list.add("frt_acct,s,20,optional,unvalidated");
+        list.add("car_id,s,30,mandatory,validated");
+        list.add("car_desc,s,50,optional,unvalidated");
+        list.add("car_apply,i,1,optional,unvalidated");
+        list.add("car_scac,s,10,optional,unvalidated");
+        list.add("car_name,s,50,optional,unvalidated");
+        list.add("car_line1,s,50,optional,unvalidated");
+        list.add("car_line2,s,50,optional,unvalidated");
+        list.add("car_city,s,50,optional,unvalidated");
+        list.add("car_state,s,50,optional,unvalidated");
+        list.add("car_zip,s,50,optional,unvalidated");
+        list.add("car_phone,s,15,optional,unvalidated");
+        list.add("car_email,s,100,optional,unvalidated");
+        list.add("car_type,s,10,mandatory,validated");
+        list.add("car_acct,s,20,optional,unvalidated");
         return list;
     }
     

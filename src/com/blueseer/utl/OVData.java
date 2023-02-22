@@ -2186,9 +2186,9 @@ public class OVData {
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
-                res = st.executeQuery("select frt_scac from frt_mstr order by frt_id;");
+                res = st.executeQuery("select car_scac from car_mstr order by car_id;");
                 while (res.next()) {
-                    myarray.add(res.getString("frt_scac"));
+                    myarray.add(res.getString("car_scac"));
 
                 }
 
@@ -2226,9 +2226,9 @@ public class OVData {
             ResultSet res = null;
             try {
 
-                res = st.executeQuery("select frt_id from frt_mstr order by frt_id;");
+                res = st.executeQuery("select car_id from car_mstr order by car_id;");
                 while (res.next()) {
-                    myarray.add(res.getString("frt_id"));
+                    myarray.add(res.getString("car_id"));
                 }
 
             } catch (SQLException s) {
@@ -4876,8 +4876,8 @@ public class OVData {
                 for (String rec : list) {
                     ld = rec.split(delim, -1);
                     
-                   res =  st.executeQuery("select frt_id from frt_mstr where " +
-                                    " frt_id = " + "'" + ld[0] + "'" + ";");
+                   res =  st.executeQuery("select car_id from car_mstr where " +
+                                    " car_id = " + "'" + ld[0] + "'" + ";");
                     int j = 0;
                     while (res.next()) {
                         j++;
@@ -4885,8 +4885,8 @@ public class OVData {
                     
                     
                     if (j == 0) {
-                    st.executeUpdate(" insert into frt_mstr " 
-                      + "(frt_id, frt_desc, frt_apply, frt_scac, frt_name, frt_line1, frt_line2, frt_city, frt_state, frt_zip, frt_phone, frt_email, frt_type, frt_acct ) "
+                    st.executeUpdate(" insert into car_mstr " 
+                      + "(car_id, car_desc, car_apply, car_scac, car_name, car_line1, car_line2, car_city, car_state, car_zip, car_phone, car_email, car_type, car_acct ) "
                    + " values ( " + 
                     "'" +  ld[0] + "'" + "," + 
                     "'" +  ld[1] + "'" + "," +
@@ -4905,22 +4905,22 @@ public class OVData {
                             " );"
                            );     
                    } else {
-                     st.executeUpdate(" update frt_mstr " 
+                     st.executeUpdate(" update car_mstr " 
                       + "set " +
-                        " frt_desc = " + "'" + ld[1] + "'" + "," +        
-                        " frt_apply = " + "'" + ld[2] + "'" + "," +
-                        " frt_scac = " + "'" + ld[3] + "'" + "," +
-                        " frt_name = " + "'" + ld[4] + "'" + "," +   
-                        " frt_line1 = " + "'" + ld[5] + "'" + "," +
-                        " frt_line2 = " + "'" + ld[6] + "'" + "," +
-                        " frt_city = " + "'" + ld[7] + "'" + "," +
-                        " frt_state = " + "'" + ld[8] + "'" + "," +
-                        " frt_zip = " + "'" + ld[9] + "'" + "," +
-                        " frt_phone = " + "'" + ld[10] + "'" + "," +
-                        " frt_email = " + "'" + ld[11] + "'" + "," +
-                        " frt_type = " + "'" + ld[12] + "'" + "," + 
-                        " frt_acct = " + "'" + ld[13] + "'" +      
-                        " where frt_id = " + "'" + ld[0] + "'" + ";");
+                        " car_desc = " + "'" + ld[1] + "'" + "," +        
+                        " car_apply = " + "'" + ld[2] + "'" + "," +
+                        " car_scac = " + "'" + ld[3] + "'" + "," +
+                        " car_name = " + "'" + ld[4] + "'" + "," +   
+                        " car_line1 = " + "'" + ld[5] + "'" + "," +
+                        " car_line2 = " + "'" + ld[6] + "'" + "," +
+                        " car_city = " + "'" + ld[7] + "'" + "," +
+                        " car_state = " + "'" + ld[8] + "'" + "," +
+                        " car_zip = " + "'" + ld[9] + "'" + "," +
+                        " car_phone = " + "'" + ld[10] + "'" + "," +
+                        " car_email = " + "'" + ld[11] + "'" + "," +
+                        " car_type = " + "'" + ld[12] + "'" + "," + 
+                        " car_acct = " + "'" + ld[13] + "'" +      
+                        " where car_id = " + "'" + ld[0] + "'" + ";");
                     }
                 }    
             } // if proceed

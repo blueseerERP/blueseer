@@ -498,7 +498,7 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeerT {
     public void updateForm() {
         tbkey.setText(x.tax_code());
         tbdesc.setText(x.tax_desc());
-      //  cbapply.setSelected(BlueSeerUtils.ConvertStringToBool(x.frt_apply()));
+      //  cbapply.setSelected(BlueSeerUtils.ConvertStringToBool(x.car_apply()));
         setAction(x.m());
         
         // now detail

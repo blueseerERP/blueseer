@@ -31,11 +31,6 @@ import bsmf.MainFrame;
 import static bsmf.MainFrame.tags;
 import com.blueseer.adm.admData;
 import static com.blueseer.adm.admData.addChangeLog;
-import static com.blueseer.ctr.cusData.addFreightMstr;
-import static com.blueseer.ctr.cusData.deleteFreightMstr;
-import com.blueseer.ctr.cusData.frt_mstr;
-import static com.blueseer.ctr.cusData.getFreightMstr;
-import static com.blueseer.ctr.cusData.updateFreightMstr;
 import static com.blueseer.edi.ediData.addWkfTransaction;
 import static com.blueseer.edi.ediData.deleteWkfMstr;
 import static com.blueseer.edi.ediData.getWkfDet;
@@ -335,17 +330,17 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
     public boolean validateInput(dbaction x) {
        
                
-        Map<String,Integer> f = OVData.getTableInfo("frt_mstr");
+        Map<String,Integer> f = OVData.getTableInfo("car_mstr");
         int fc;
 
-        fc = checkLength(f,"frt_id");
+        fc = checkLength(f,"car_id");
         if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {
             bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
             tbkey.requestFocus();
             return false;
         }     
          
-        fc = checkLength(f,"frt_desc");
+        fc = checkLength(f,"car_desc");
         if (tbdesc.getText().length() > fc ) {
             bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
             tbdesc.requestFocus();

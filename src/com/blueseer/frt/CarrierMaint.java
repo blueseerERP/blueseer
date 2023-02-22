@@ -30,11 +30,11 @@ import bsmf.MainFrame;
 import static bsmf.MainFrame.tags;
 import com.blueseer.adm.admData;
 import static com.blueseer.adm.admData.addChangeLog;
-import static com.blueseer.ctr.cusData.addFreightMstr;
-import static com.blueseer.ctr.cusData.deleteFreightMstr;
-import com.blueseer.ctr.cusData.frt_mstr;
-import static com.blueseer.ctr.cusData.getFreightMstr;
-import static com.blueseer.ctr.cusData.updateFreightMstr;
+import static com.blueseer.frt.frtData.addCarrierMstr;
+import com.blueseer.frt.frtData.car_mstr;
+import static com.blueseer.frt.frtData.deleteCarrierMstr;
+import static com.blueseer.frt.frtData.getCarrierMstr;
+import static com.blueseer.frt.frtData.updateCarrierMstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callChangeDialog;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
@@ -82,7 +82,7 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     // global variable declarations
                 boolean isLoad = false;
-                public static frt_mstr x = null;
+                public static car_mstr x = null;
     // global datatablemodel declarations       
    
     public CarrierMaint() {
@@ -306,17 +306,17 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
     public boolean validateInput(dbaction x) {
        
                
-        Map<String,Integer> f = OVData.getTableInfo("frt_mstr");
+        Map<String,Integer> f = OVData.getTableInfo("car_mstr");
         int fc;
 
-        fc = checkLength(f,"frt_id");
+        fc = checkLength(f,"car_id");
         if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {
             bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
             tbkey.requestFocus();
             return false;
         }     
          
-        fc = checkLength(f,"frt_desc");
+        fc = checkLength(f,"car_desc");
         if (tbdesc.getText().length() > fc ) {
             bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
             tbdesc.requestFocus();
@@ -343,15 +343,15 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public String[] addRecord(String[] x) {
-     String[] m = addFreightMstr(createRecord());
+     String[] m = addCarrierMstr(createRecord());
          return m;
      }
      
     public String[] updateRecord(String[] x) {
      
-     frt_mstr _x = this.x;
-     frt_mstr _y = createRecord();   
-     String[] m = updateFreightMstr(_y);
+     car_mstr _x = this.x;
+     car_mstr _y = createRecord();   
+     String[] m = updateCarrierMstr(_y);
      
       // change log check
      if (m[0].equals("0")) {
@@ -367,7 +367,7 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
      String[] m = new String[2];
         boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
-         m = deleteFreightMstr(createRecord()); 
+         m = deleteCarrierMstr(createRecord()); 
          initvars(null);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
@@ -375,7 +375,7 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
         // change log check
         if (m[0].equals("0")) {
             ArrayList<admData.change_log> c = new ArrayList<admData.change_log>();
-            c.add(clog(this.x.frt_id(), 
+            c.add(clog(this.x.car_id(), 
                      this.x.getClass().getName(), 
                      this.getClass().getSimpleName(), 
                      "deletion", 
@@ -389,12 +389,12 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
      }
       
     public String[] getRecord(String[] key) {
-       x = getFreightMstr(key);
+       x = getCarrierMstr(key);
         return x.m();
     }
     
-     public frt_mstr createRecord() { 
-        frt_mstr x = new frt_mstr(null, 
+     public car_mstr createRecord() { 
+        car_mstr x = new car_mstr(null, 
                 tbkey.getText(),
                 tbdesc.getText(),
                 String.valueOf(BlueSeerUtils.boolToInt(cbapply.isSelected()))
@@ -408,9 +408,9 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
         lual = new ActionListener() {
         public void actionPerformed(ActionEvent event) {
         if (lurb1.isSelected()) {  
-         luModel = DTData.getFreightBrowseUtil(luinput.getText(),0, "frt_id");
+         luModel = DTData.getFreightBrowseUtil(luinput.getText(),0, "car_id");
         } else {
-         luModel = DTData.getFreightBrowseUtil(luinput.getText(),0, "frt_desc");   
+         luModel = DTData.getFreightBrowseUtil(luinput.getText(),0, "car_desc");   
         }
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
@@ -444,9 +444,9 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
 
     public void updateForm() {
-        tbkey.setText(x.frt_id());
-        tbdesc.setText(x.frt_desc());
-        cbapply.setSelected(BlueSeerUtils.ConvertStringToBool(x.frt_apply()));
+        tbkey.setText(x.car_id());
+        tbdesc.setText(x.car_desc());
+        cbapply.setSelected(BlueSeerUtils.ConvertStringToBool(x.car_apply()));
         setAction(x.m());
     }
     

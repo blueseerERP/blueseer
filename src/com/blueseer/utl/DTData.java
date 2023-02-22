@@ -2526,24 +2526,24 @@ public class DTData {
             try{
                     if (state == 1) { // begins
                     res = st.executeQuery(" select * " +
-                        " FROM  frt_mstr where " + myfield + " like " + "'" + str + "%'" +
-                        " order by frt_id ;");
+                        " FROM  car_mstr where " + myfield + " like " + "'" + str + "%'" +
+                        " order by car_id ;");
                 }
                 if (state == 2) { // ends
                     res = st.executeQuery(" select * " +
-                        " FROM  frt_mstr where " + myfield + " like " + "'%" + str + "'" +
-                        " order by frt_id ;");
+                        " FROM  car_mstr where " + myfield + " like " + "'%" + str + "'" +
+                        " order by car_id ;");
                 }
                  if (state == 0) { // match
                  res = st.executeQuery(" select *  " +
-                        " FROM  frt_mstr where " + myfield + " like " + "'%" + str + "%'" +
-                        " order by frt_id ;");
+                        " FROM  car_mstr where " + myfield + " like " + "'%" + str + "%'" +
+                        " order by car_id ;");
                  }
                     while (res.next()) {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, 
-                            res.getString("frt_id"),
-                            res.getString("frt_desc"),
-                            res.getString("frt_apply")
+                            res.getString("car_id"),
+                            res.getString("car_desc"),
+                            res.getString("car_apply")
                         });
                     }
            }
@@ -7723,11 +7723,11 @@ return mymodel;
         ResultSet res = null;
         try{
 
-                  res = st.executeQuery("select * from frt_mstr;");
+                  res = st.executeQuery("select * from car_mstr;");
                 while (res.next()) {
-                    mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("frt_id"),
-                               res.getString("frt_desc"),
-                               res.getString("frt_apply")
+                    mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("car_id"),
+                               res.getString("car_desc"),
+                               res.getString("car_apply")
                     });
                 }
        }

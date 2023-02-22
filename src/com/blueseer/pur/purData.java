@@ -1382,11 +1382,11 @@ public class purData {
                lines.add(s);
             }
             
-            res = st.executeQuery("select frt_id from frt_mstr order by frt_id;");
+            res = st.executeQuery("select car_id from car_mstr order by car_id;");
             while (res.next()) {
                 String[] s = new String[2];
                s[0] = "carriers";
-               s[1] = res.getString("frt_id");
+               s[1] = res.getString("car_id");
                lines.add(s);
             }
             

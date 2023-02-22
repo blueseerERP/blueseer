@@ -1419,97 +1419,6 @@ public class cusData {
         return r;
     }
     
-    public static String[] addFreightMstr(frt_mstr x) {
-        String[] m = new String[2];
-        String sqlSelect = "SELECT * FROM  frt_mstr where frt_id = ?";
-        String sqlInsert = "insert into frt_mstr (frt_id, frt_desc, frt_apply ) "
-                        + " values (?,?,?); "; 
-        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
-             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
-             ps.setString(1, x.frt_id);
-          try (ResultSet res = ps.executeQuery();
-               PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
-            if (! res.isBeforeFirst()) {
-            psi.setString(1, x.frt_id);
-            psi.setString(2, x.frt_desc);
-            psi.setString(3, x.frt_apply);
-            int rows = psi.executeUpdate();
-            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-            } else {
-            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
-            }
-          } catch (SQLException s) {
-	       MainFrame.bslog(s);
-               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
-          }
-        } catch (SQLException s) {
-	       MainFrame.bslog(s);
-               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
-        }
-        return m;
-    }
-
-    public static String[] updateFreightMstr(frt_mstr x) {
-        String[] m = new String[2];
-        String sql = "update frt_mstr set frt_desc = ?, frt_apply = ? " +   
-                          " where frt_id = ? ; ";
-        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
-	PreparedStatement ps = con.prepareStatement(sql)) {
-        ps.setString(1, x.frt_desc);
-        ps.setString(2, x.frt_apply);
-        ps.setString(3, x.frt_id);
-        int rows = ps.executeUpdate();
-        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-        } catch (SQLException s) {
-	       MainFrame.bslog(s);
-               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
-        }
-        return m;
-    }
-        
-    public static frt_mstr getFreightMstr(String[] x) {
-        frt_mstr r = null;
-        String[] m = new String[2];
-        String sql = "select * from frt_mstr where frt_id = ? ;";
-        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
-	PreparedStatement ps = con.prepareStatement(sql);) {
-        ps.setString(1, x[0]);
-             try (ResultSet res = ps.executeQuery();) {
-                if (! res.isBeforeFirst()) {
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
-                r = new frt_mstr(m);
-                } else {
-                    while(res.next()) {
-                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                        r = new frt_mstr(m, res.getString("frt_id"), 
-                            res.getString("frt_desc"),
-                            res.getString("frt_apply")
-                        );
-                    }
-                }
-            }
-        } catch (SQLException s) {   
-	       MainFrame.bslog(s);  
-               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
-               r = new frt_mstr(m);
-        }
-        return r;
-    }
-    
-    public static String[] deleteFreightMstr(frt_mstr x) { 
-       String[] m = new String[2];
-        String sql = "delete from frt_mstr where frt_id = ?; ";
-        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
-	PreparedStatement ps = con.prepareStatement(sql)) {
-        ps.setString(1, x.frt_id);
-        int rows = ps.executeUpdate();
-        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-        } catch (SQLException s) {
-	       MainFrame.bslog(s);
-               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
-        }
-        return m;
-    }
     
          
     // miscellaneous functions
@@ -1631,11 +1540,11 @@ public class cusData {
                lines.add(s);
             }
             
-             res = st.executeQuery("select frt_id from frt_mstr order by frt_id;");
+             res = st.executeQuery("select car_id from car_mstr order by car_id;");
             while (res.next()) {
                 String[] s = new String[2];
                s[0] = "freight";
-               s[1] = res.getString("frt_id");
+               s[1] = res.getString("car_id");
                lines.add(s);
             }
             
@@ -2675,10 +2584,5 @@ public class cusData {
         }
     } 
     
-    public record frt_mstr (String[] m, String frt_id, String frt_desc, String frt_apply) {
-        public frt_mstr(String[] m) {
-            this(m,"","","");
-        }
-    } 
      
 }
