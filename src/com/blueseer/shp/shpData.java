@@ -1802,7 +1802,7 @@ public class shpData {
 
    }
         
-    public static void updateShipperWithFreightOrder(JTable mytable) {
+    public static void updateShipperWithFreightOrder(ArrayList<String[]> tablelist) {
         // table structure    "line", "FONbr", "Type", "Shipper", "Ref", "Name", "Addr1", "Addr2", "City", "State", "Zip", "Contact", "Phone", "Email", "Units", "Weight"
        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
        try{
@@ -1817,12 +1817,12 @@ public class shpData {
         
         try{
            
-            for (int j = 0; j < mytable.getRowCount(); j++ ) {
-                   if (mytable.getValueAt(j, 3).toString().isEmpty()) /// if shipper is empty (the LD)
+            for (String[] v : tablelist) {
+                   if (v[3].isEmpty()) /// if shipper is empty (the LD)
                        continue;
                        st.executeUpdate(
-                             " update ship_mstr set sh_freight = " + "'" + mytable.getValueAt(j, 1).toString() + "'" +
-                             " where sh_id = " + "'" + mytable.getValueAt(j, 3).toString() + "'" + ";" );
+                             " update ship_mstr set sh_freight = " + "'" + v[1] + "'" +
+                             " where sh_id = " + "'" + v[3] + "'" + ";" );
             }
         }
         catch (SQLException s){

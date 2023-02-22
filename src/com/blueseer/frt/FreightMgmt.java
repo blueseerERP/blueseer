@@ -2187,7 +2187,7 @@ public class FreightMgmt extends javax.swing.JPanel {
                     }
                     
                     // update every shipper with freight order number assignment...sh_freight = freightorder
-                    shpData.updateShipperWithFreightOrder(orddet);
+                    shpData.updateShipperWithFreightOrder(null);  // was table
                     
                     bsmf.MainFrame.show(getMessageTag(1007));
                    initvars(null);
@@ -2286,7 +2286,7 @@ public class FreightMgmt extends javax.swing.JPanel {
                     }
                     
                     // update every shipper with freight order number assignment...sh_freight = freightorder
-                    shpData.updateShipperWithFreightOrder(orddet);
+                    shpData.updateShipperWithFreightOrder(null); // was table
                     
                     bsmf.MainFrame.show(getMessageTag(1008));
                    initvars(null);

@@ -124,7 +124,8 @@ public class FOMaint extends javax.swing.JPanel {
     
     
     public String globalstatus = "Open";
-
+    public ArrayList<String[]> tablelist = new ArrayList<String[]>();
+    
    // OVData avmdata = new OVData();
     javax.swing.table.DefaultTableModel myorddetmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
@@ -132,22 +133,9 @@ public class FOMaint extends javax.swing.JPanel {
                 getGlobalColumnTag("order"), 
                 getGlobalColumnTag("type"), 
                 getGlobalColumnTag("shipper"), 
-                getGlobalColumnTag("reference"), 
-                getGlobalColumnTag("name"), 
-                getGlobalColumnTag("addr1"), 
-                getGlobalColumnTag("addr2"), 
                 getGlobalColumnTag("city"), 
                 getGlobalColumnTag("state"), 
-                getGlobalColumnTag("zip"), 
-                getGlobalColumnTag("contact"), 
-                getGlobalColumnTag("phone"), 
-                getGlobalColumnTag("email"), 
-                getGlobalColumnTag("units"), 
-                getGlobalColumnTag("weight"), 
-                getGlobalColumnTag("delvdate"), 
-                getGlobalColumnTag("delvtime"), 
-                getGlobalColumnTag("shipdate"), 
-                getGlobalColumnTag("shiptime")
+                getGlobalColumnTag("zip")
             });
       
    public boolean lock_ddshipper = false;
@@ -260,7 +248,18 @@ public class FOMaint extends javax.swing.JPanel {
           
                 res = st.executeQuery("select * from fod_det where fod_nbr = " + "'" + mykey + "'" + ";");
                 while (res.next()) {
-                  myorddetmodel.addRow(new Object[]{res.getString("fod_line"), res.getString("fod_nbr"),
+                  myorddetmodel.addRow(new Object[]{
+                      res.getString("fod_line"), 
+                      res.getString("fod_nbr"),
+                      res.getString("fod_type"), 
+                      res.getString("fod_shipper"),
+                      res.getString("fod_city"),
+                      res.getString("fod_state"),
+                      res.getString("fod_zip")
+                  });
+                  String[] k = new String[]{
+                      res.getString("fod_line"),
+                      res.getString("fod_nbr"),
                       res.getString("fod_type"), 
                       res.getString("fod_shipper"), 
                       res.getString("fod_ref"),
@@ -279,52 +278,13 @@ public class FOMaint extends javax.swing.JPanel {
                       res.getString("fod_delvtime"),
                       res.getString("fod_shipdate"),
                       res.getString("fod_shiptime")
+                  };
+                  tablelist.add(k);
                   
-                  });
                 }
                 
                
                 orddet.setModel(myorddetmodel);
-                
-                // don't need tos how all these...but need to keep columns for field updates on tableclick
-                // this is the only way I know of to 'hide' columns.
-                orddet.getColumnModel().getColumn(6).setMaxWidth(0);
-                orddet.getColumnModel().getColumn(6).setMinWidth(0);
-                orddet.getColumnModel().getColumn(6).setPreferredWidth(0);
-                orddet.getColumnModel().getColumn(7).setMaxWidth(0);
-                orddet.getColumnModel().getColumn(7).setMinWidth(0);
-                orddet.getColumnModel().getColumn(7).setPreferredWidth(0);
-                orddet.getColumnModel().getColumn(8).setMaxWidth(0);
-                orddet.getColumnModel().getColumn(8).setMinWidth(0);
-                orddet.getColumnModel().getColumn(8).setPreferredWidth(0);
-                orddet.getColumnModel().getColumn(9).setMaxWidth(0);
-                orddet.getColumnModel().getColumn(9).setMinWidth(0);
-                orddet.getColumnModel().getColumn(9).setPreferredWidth(0);
-                orddet.getColumnModel().getColumn(10).setMaxWidth(0);
-                orddet.getColumnModel().getColumn(10).setMinWidth(0);
-                orddet.getColumnModel().getColumn(10).setPreferredWidth(0);
-                orddet.getColumnModel().getColumn(11).setMaxWidth(0);
-                orddet.getColumnModel().getColumn(11).setMinWidth(0);
-                orddet.getColumnModel().getColumn(11).setPreferredWidth(0);
-                orddet.getColumnModel().getColumn(12).setMaxWidth(0);
-                orddet.getColumnModel().getColumn(12).setMinWidth(0);
-                orddet.getColumnModel().getColumn(12).setPreferredWidth(0);
-                orddet.getColumnModel().getColumn(13).setMaxWidth(0);
-                orddet.getColumnModel().getColumn(13).setMinWidth(0);
-                orddet.getColumnModel().getColumn(13).setPreferredWidth(0);
-                orddet.getColumnModel().getColumn(16).setMaxWidth(0);
-                orddet.getColumnModel().getColumn(16).setMinWidth(0);
-                orddet.getColumnModel().getColumn(16).setPreferredWidth(0);
-                orddet.getColumnModel().getColumn(17).setMaxWidth(0);
-                orddet.getColumnModel().getColumn(17).setMinWidth(0);
-                orddet.getColumnModel().getColumn(17).setPreferredWidth(0);
-                orddet.getColumnModel().getColumn(18).setMaxWidth(0);
-                orddet.getColumnModel().getColumn(18).setMinWidth(0);
-                orddet.getColumnModel().getColumn(18).setPreferredWidth(0);
-                orddet.getColumnModel().getColumn(19).setMaxWidth(0);
-                orddet.getColumnModel().getColumn(19).setMinWidth(0);
-                orddet.getColumnModel().getColumn(19).setPreferredWidth(0);
-                 
                
                 sumweight();
                 sumunits();
@@ -340,11 +300,6 @@ public class FOMaint extends javax.swing.JPanel {
                             if (status.compareTo("Open") == 0) {
                                 ddstatus.setBackground(null); 
                                 enableAll();
-                                btadd.setEnabled(false);
-                            } else if (status.compareTo("Quoted") == 0) {
-                                enableAll();
-                                ddstatus.setBackground(Color.yellow);
-                                btquote.setEnabled(false);
                                 btadd.setEnabled(false);
                             } else if (status.compareTo("Tendered") == 0) {
                                 enableAll();
@@ -375,17 +330,13 @@ public class FOMaint extends javax.swing.JPanel {
                                 ddstatus.setBackground(null); 
                                 enableAll();
                             }
-                            
-                           
-                    
-                    // now lets get any quotes to the quotes table
-                   getQuotes(mykey);
+                          
                    
                    // now get tenders
-                   getTenders(mykey);
+               //    getTenders(mykey);
                    
                    // now get status 214s
-                   getStatus(mykey);
+                 //  getStatus(mykey);
                             
                 }
 
@@ -491,17 +442,17 @@ public class FOMaint extends javax.swing.JPanel {
     
     public void sumweight() {
         double qty = 0;
-         for (int j = 0; j < orddet.getRowCount(); j++) {
-             qty = qty + Double.valueOf(orddet.getValueAt(j, 15).toString()); 
-         }
-         totweight.setText(String.valueOf(qty));
+        for (String[] x : tablelist) {
+            qty = qty + Double.valueOf(x[15]); 
+        }
+        totweight.setText(String.valueOf(qty));
     }
     
      public void sumunits() {
-        int qty = 0;
-         for (int j = 0; j < orddet.getRowCount(); j++) {
-             qty = qty + Integer.valueOf(orddet.getValueAt(j, 14).toString()); 
-         }
+        double qty = 0;
+         for (String[] x : tablelist) {
+            qty = qty + Double.valueOf(x[14]); 
+        }
          totunits.setText(String.valueOf(qty));
     }
     
@@ -779,11 +730,16 @@ public class FOMaint extends javax.swing.JPanel {
     public void initvars(String[] arg) {
         jTabbedPane1.removeAll();
         jTabbedPane1.add("Main", jPanelMain);
-        jTabbedPane1.add("Load", jPanelLoad);
-        jTabbedPane1.add("Quotes", jPanelQuotes);
-        jTabbedPane1.add("Tenders", jPanelTenders);
-        jTabbedPane1.add("Status", jPanelStatus);
+      //  jTabbedPane1.add("Load", jPanelLoad);
+      //  jTabbedPane1.add("Quotes", jPanelQuotes);
+    //    jTabbedPane1.add("Tenders", jPanelTenders);
+    //    jTabbedPane1.add("Status", jPanelStatus);
         
+    jPanelLoad.setVisible(false);
+    jPanelQuotes.setVisible(false);
+    jPanelTenders.setVisible(false);
+    jPanelStatus.setVisible(false);
+    
          RawFileQuotesPanel.setVisible(false);
          RawFileTenderPanel.setVisible(false);
          RawFileStatusPanel.setVisible(false);
@@ -800,6 +756,7 @@ public class FOMaint extends javax.swing.JPanel {
         shipdate.setDate(now);
         delvdate.setDate(now);
        
+        tablelist.clear();
        
         myorddetmodel.setRowCount(0);
         orddet.setModel(myorddetmodel);
@@ -1428,6 +1385,39 @@ public class FOMaint extends javax.swing.JPanel {
 
         jLabel9.setText("Service");
 
+        javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
+        jPanel12.setLayout(jPanel12Layout);
+        jPanel12Layout.setHorizontalGroup(
+            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel12Layout.createSequentialGroup()
+                .addGap(12, 12, 12)
+                .addComponent(jLabel101)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ddcarrierassigned, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(57, 57, 57)
+                .addComponent(jLabel85, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ddequiptype, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel9)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ddservice, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(66, 66, 66))
+        );
+        jPanel12Layout.setVerticalGroup(
+            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel12Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ddcarrierassigned, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel101)
+                    .addComponent(jLabel85)
+                    .addComponent(ddequiptype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ddservice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
         bttender.setText("Tender");
         bttender.setName("bttender"); // NOI18N
         bttender.addActionListener(new java.awt.event.ActionListener() {
@@ -1443,47 +1433,6 @@ public class FOMaint extends javax.swing.JPanel {
                 btquoteActionPerformed(evt);
             }
         });
-
-        javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
-        jPanel12.setLayout(jPanel12Layout);
-        jPanel12Layout.setHorizontalGroup(
-            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel12Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel9)
-                    .addComponent(jLabel101))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(ddcarrierassigned, 0, 133, Short.MAX_VALUE)
-                    .addComponent(ddservice, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(57, 57, 57)
-                .addComponent(jLabel85, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ddequiptype, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(115, 115, 115)
-                .addComponent(bttender)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btquote)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel12Layout.setVerticalGroup(
-            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel12Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ddcarrierassigned, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel101)
-                    .addComponent(jLabel85)
-                    .addComponent(ddequiptype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(bttender)
-                    .addComponent(btquote))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ddservice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9))
-                .addContainerGap())
-        );
 
         javax.swing.GroupLayout jPanelMainLayout = new javax.swing.GroupLayout(jPanelMain);
         jPanelMain.setLayout(jPanelMainLayout);
@@ -1515,7 +1464,12 @@ public class FOMaint extends javax.swing.JPanel {
                                 .addGap(26, 26, 26)
                                 .addComponent(jLabel87)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(ddstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(ddstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(99, 99, 99)
+                                .addComponent(bttender)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btquote)
+                                .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanelMainLayout.createSequentialGroup()
                         .addGap(185, 185, 185)
                         .addComponent(jLabel1)
@@ -1537,18 +1491,21 @@ public class FOMaint extends javax.swing.JPanel {
         jPanelMainLayout.setVerticalGroup(
             jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelMainLayout.createSequentialGroup()
-                .addGap(16, 16, 16)
-                .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelMainLayout.createSequentialGroup()
-                        .addGap(3, 3, 3)
+                .addGap(13, 13, 13)
+                .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanelMainLayout.createSequentialGroup()
+                            .addGap(3, 3, 3)
+                            .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel76)
+                                .addComponent(freightorder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel76)
-                            .addComponent(freightorder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(ddstatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel87))
-                    .addComponent(btnew)
-                    .addComponent(btlookup, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(ddstatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel87)
+                            .addComponent(bttender)
+                            .addComponent(btquote))
+                        .addComponent(btnew))
+                    .addComponent(btlookup))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -2107,17 +2064,26 @@ public class FOMaint extends javax.swing.JPanel {
             // let's first add the pickup...only if this is first time add
             if (myorddetmodel.getRowCount() == 0) {
                 String[] addr = OVData.getWareHouseAddressElements(ddshipfrom.getSelectedItem().toString());
-                 myorddetmodel.addRow(new Object[]{0, freightorder.getText(), "LD", "", "", addr[1],
-            addr[2], addr[3], addr[5], addr[6], addr[7], tbpucontact.getText(),
-            tbpuphone.getText(), "", "0", "0", "0000-00-00", "", dfdate.format(shipdate.getDate()), tbshiptime.getText()});
+                 myorddetmodel.addRow(new Object[]{0, freightorder.getText(), "LD", "", addr[5], addr[6], addr[7]});
+            
+                String[] k = new String[]{     
+                "0", freightorder.getText(), "LD", "", "", addr[1],
+                addr[2], addr[3], addr[5], addr[6], addr[7], tbpucontact.getText(),
+                tbpuphone.getText(), "", "0", "0", "0000-00-00", "", dfdate.format(shipdate.getDate()), tbshiptime.getText()
+                };
+                tablelist.add(k);
             }
-        //     + "(fod_line, fod_nbr, fod_shipper, fod_ref, fod_name, fod_addr1, fod_addr2, fod_city, fod_state, fod_zip, "
-        //                    + " fod_contact, fod_phone, fod_email, fod_units, fod_weight ) "
-            myorddetmodel.addRow(new Object[]{line, freightorder.getText(), "UL", ddshipper.getSelectedItem().toString(), tbref.getText(), tbname.getText(),
+            
+            String[] j = new String[]{String.valueOf(line), freightorder.getText(), "UL", ddshipper.getSelectedItem().toString(), tbref.getText(), tbname.getText(),
             tbaddr1.getText(), tbaddr2.getText(), tbcity.getText(), ddstate.getSelectedItem().toString(), tbzip.getText(), tbcontact.getText(),
-            tbphone.getText(), tbemail.getText(), tbunits.getText(), tbweight.getText(), dfdate.format(delvdate.getDate()), tbshiptime.getText(), "0000-00-00", ""});
-         sumweight();
-         sumunits();
+            tbphone.getText(), tbemail.getText(), tbunits.getText(), tbweight.getText(), dfdate.format(delvdate.getDate()), tbshiptime.getText(), "0000-00-00", ""};
+            tablelist.add(j);
+            
+                myorddetmodel.addRow(new Object[]{line, freightorder.getText(), "UL", ddshipper.getSelectedItem().toString(), 
+                tbcity.getText(), ddstate.getSelectedItem().toString(), tbzip.getText()});
+       
+                sumweight();
+                sumunits();
          
         }
     }//GEN-LAST:event_btadditemActionPerformed
@@ -2154,39 +2120,39 @@ public class FOMaint extends javax.swing.JPanel {
                         + ";");
 
                   
-                 
-                    for (int j = 0; j < orddet.getRowCount(); j++) {
+                        for (String[] v : tablelist) {
                         st.executeUpdate("insert into fod_det "
                             + "(fod_line, fod_nbr, fod_type, fod_shipper, fod_ref, fod_name, fod_addr1, fod_addr2, fod_city, fod_state, fod_zip, "
                             + " fod_contact, fod_phone, fod_email, fod_units, fod_weight, fod_delvdate, fod_delvtime, fod_shipdate, fod_shiptime ) "
                             + " values ( " 
-                            + "'" + orddet.getValueAt(j, 0).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 1).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 2).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 3).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 4).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 5).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 6).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 7).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 8).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 9).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 10).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 11).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 12).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 13).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 14).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 15).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 16).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 17).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 18).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 19).toString() + "'"         
+                            + "'" + v[0] + "'" + ","
+                            + "'" + v[1] + "'" + ","
+                            + "'" + v[2] + "'" + ","
+                            + "'" + v[3] + "'" + ","
+                            + "'" + v[4] + "'" + ","
+                            + "'" + v[5] + "'" + ","
+                            + "'" + v[6] + "'" + ","
+                            + "'" + v[7] + "'" + ","
+                            + "'" + v[8] + "'" + ","
+                            + "'" + v[9] + "'" + ","
+                            + "'" + v[10] + "'" + ","
+                            + "'" + v[11] + "'" + ","
+                            + "'" + v[12] + "'" + ","
+                            + "'" + v[13] + "'" + ","
+                            + "'" + v[14] + "'" + ","
+                            + "'" + v[15] + "'" + ","
+                            + "'" + v[16] + "'" + ","
+                            + "'" + v[17] + "'" + ","
+                            + "'" + v[18] + "'" + ","
+                            + "'" + v[19] + "'"         
                             + ")"
                             + ";");
-
-                    }
+                       
+                        }
+                   
                     
                     // update every shipper with freight order number assignment...sh_freight = freightorder
-                    shpData.updateShipperWithFreightOrder(orddet);
+                    shpData.updateShipperWithFreightOrder(tablelist);
                     
                     bsmf.MainFrame.show(getMessageTag(1007));
                    initvars(null);
@@ -2212,15 +2178,24 @@ public class FOMaint extends javax.swing.JPanel {
     private void btdelitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdelitemActionPerformed
         
         int[] rows = orddet.getSelectedRows();
+        ArrayList<String[]> newlist = new ArrayList<String[]>();
         for (int i : rows) {
             if (orddet.getValueAt(i, 2).toString().equals("LD")) {
                 bsmf.MainFrame.show(getMessageTag(1046));
                 return;
-                            } else {
+            } else {
             bsmf.MainFrame.show(getMessageTag(1031,String.valueOf(i)));
             ((javax.swing.table.DefaultTableModel) orddet.getModel()).removeRow(i);
+            
+            for (String[] x : tablelist) {
+                if (Integer.valueOf(x[0]) != i) {
+                    newlist.add(x);
+                }
+            }
+            
             }
         }
+        tablelist = newlist;
        
          
          
@@ -2254,38 +2229,39 @@ public class FOMaint extends javax.swing.JPanel {
 
                    st.executeUpdate(" delete from fod_det where fod_nbr = " + "'" + freightorder.getText() + "'" + ";");
                  
-                    for (int j = 0; j < orddet.getRowCount(); j++) {
+                    for (String[] v : tablelist) {
                         st.executeUpdate("insert into fod_det "
                             + "(fod_line, fod_nbr, fod_type, fod_shipper, fod_ref, fod_name, fod_addr1, fod_addr2, fod_city, fod_state, fod_zip, "
                             + " fod_contact, fod_phone, fod_email, fod_units, fod_weight, fod_delvdate, fod_delvtime, fod_shipdate, fod_shiptime ) "
                             + " values ( " 
-                            + "'" + orddet.getValueAt(j, 0).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 1).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 2).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 3).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 4).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 5).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 6).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 7).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 8).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 9).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 10).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 11).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 12).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 13).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 14).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 15).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 16).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 17).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 18).toString() + "'" + ","
-                            + "'" + orddet.getValueAt(j, 19).toString() + "'"         
+                            + "'" + v[0] + "'" + ","
+                            + "'" + v[1] + "'" + ","
+                            + "'" + v[2] + "'" + ","
+                            + "'" + v[3] + "'" + ","
+                            + "'" + v[4] + "'" + ","
+                            + "'" + v[5] + "'" + ","
+                            + "'" + v[6] + "'" + ","
+                            + "'" + v[7] + "'" + ","
+                            + "'" + v[8] + "'" + ","
+                            + "'" + v[9] + "'" + ","
+                            + "'" + v[10] + "'" + ","
+                            + "'" + v[11] + "'" + ","
+                            + "'" + v[12] + "'" + ","
+                            + "'" + v[13] + "'" + ","
+                            + "'" + v[14] + "'" + ","
+                            + "'" + v[15] + "'" + ","
+                            + "'" + v[16] + "'" + ","
+                            + "'" + v[17] + "'" + ","
+                            + "'" + v[18] + "'" + ","
+                            + "'" + v[19] + "'"         
                             + ")"
                             + ";");
-
-                    }
+                       
+                        }
+                   
                     
                     // update every shipper with freight order number assignment...sh_freight = freightorder
-                    shpData.updateShipperWithFreightOrder(orddet);
+                    shpData.updateShipperWithFreightOrder(tablelist);
                     
                     bsmf.MainFrame.show(getMessageTag(1008));
                    initvars(null);
@@ -2423,33 +2399,41 @@ public class FOMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_bthidemapActionPerformed
 
     private void orddetMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_orddetMouseClicked
-         int row = orddet.rowAtPoint(evt.getPoint());
+        int row = orddet.rowAtPoint(evt.getPoint());
         int col = orddet.columnAtPoint(evt.getPoint());
+        String[] v = null;
+        for (String[] x : tablelist) {
+          //  System.out.println("HERE: " + x[0] + "/" + orddet.getValueAt(row, 0).toString() );
+            if (x[0].equals(orddet.getValueAt(row, 0).toString())) {
+                v = x;
+            }
+        }
         
-        tbname.setText(orddet.getValueAt(row, 5).toString());
-        tbaddr1.setText(orddet.getValueAt(row, 6).toString());
-        tbaddr2.setText(orddet.getValueAt(row, 7).toString());
-        tbcity.setText(orddet.getValueAt(row, 8).toString());
-        ddstate.setSelectedItem(orddet.getValueAt(row, 9).toString());
-        tbzip.setText(orddet.getValueAt(row, 10).toString());
         
-        tbcontact.setText(orddet.getValueAt(row, 11).toString());
-        tbphone.setText(orddet.getValueAt(row, 12).toString());
-        tbemail.setText(orddet.getValueAt(row, 13).toString());
-        tbunits.setText(orddet.getValueAt(row, 14).toString());
+        tbname.setText(v[5]);
+        tbaddr1.setText(v[6]);
+        tbaddr2.setText(v[7]);
+        tbcity.setText(v[8]);
+        ddstate.setSelectedItem(v[9]);
+        tbzip.setText(v[10]);
+        
+        tbcontact.setText(v[11]);
+        tbphone.setText(v[12]);
+        tbemail.setText(v[13]);
+        tbunits.setText(v[14]);
        // tbweight.setText(orddet.getValueAt(row, 15).toString());
-        if (orddet.getValueAt(row, 16).toString().isEmpty() || orddet.getValueAt(row, 16).toString().equals("0000-00-00")) {
+        if (v[16].isEmpty() || v[16].equals("0000-00-00")) {
          delvdate.setDate(null);   
         } else {
-         delvdate.setDate(Date.valueOf(orddet.getValueAt(row, 16).toString()));   
+         delvdate.setDate(Date.valueOf(v[16]));   
         }
-        tbdelvtime.setText(orddet.getValueAt(row, 17).toString());
-        if (orddet.getValueAt(row, 18).toString().isEmpty() || orddet.getValueAt(row, 18).toString().equals("0000-00-00") ) {
+        tbdelvtime.setText(v[17]);
+        if (v[18].isEmpty() || v[18].equals("0000-00-00") ) {
          shipdate.setDate(null);   
         } else {
-         shipdate.setDate(Date.valueOf(orddet.getValueAt(row, 18).toString()));   
+         shipdate.setDate(Date.valueOf(v[18]));   
         }
-        tbshiptime.setText(orddet.getValueAt(row, 19).toString());
+        tbshiptime.setText(v[19]);
     }//GEN-LAST:event_orddetMouseClicked
 
     private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
