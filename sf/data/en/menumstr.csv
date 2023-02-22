@@ -82,7 +82,7 @@ CustXrefBrowse,,com.blueseer.ctr.CustXrefRpt,JMenuItem,cuxb
 DefaultMaint,,com.blueseer.adm.DefaultMaint,JMenuItem,defm
 DeptBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,depb
 DeptMaint,,com.blueseer.fgl.DeptMaint,JMenuItem,depm
-FreightMaint,,com.blueseer.frt.FreightMaint,JMenuItem,frtm
+CarrierMaint,,com.blueseer.frt.CarrierMaint,JMenuItem,carm
 GenCodeBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,genb
 InventoryAdjustment,,com.blueseer.inv.InventoryMaint,JMenuItem,inva
 ItemMaint,,com.blueseer.inv.ItemMaint,JMenuItem,item

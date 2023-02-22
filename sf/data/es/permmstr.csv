@@ -16,8 +16,8 @@ admin,CustXrefMaint
 admin,CustXrefBrowse
 admin,CustPriceMaint
 admin,CustPriceReport
-admin,FreightMaint
-admin,FreightBrowse
+admin,CarrierMaint
+admin,CarrierBrowse
 admin,TermsMaint
 admin,TermsBrowse
 admin,CustomerReports

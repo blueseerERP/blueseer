@@ -11,8 +11,8 @@ Address,CustomerMenu,1,JMenu,Customer Menu,,,,1,1
 Address,VendorMenu,2,JMenu,Vendor Menu,,,,1,1
 Address,EDIMenu,3,JMenu,EDI Menu,,,,1,1
 Address,LabelMenu,4,JMenu,Label Menu,,,,1,1
-Address,FreightMaint,5,JMenuItem,Freight Maintenance,,,,1,1
-Address,FreightBrowse,6,JMenuItem,Freight Browse,,1,,1,1
+Address,CarrierMaint,5,JMenuItem,Carrier Maintenance,,,,1,1
+Address,CarrierBrowse,6,JMenuItem,Carrier Browse,,1,,1,1
 Address,TermsMaint,7,JMenuItem,Terms Maintenance,,,,1,1
 Address,TermsBrowse,8,JMenuItem,Terms Browse,,1,,1,1
 Address,TaxMaint,9,JMenuItem,Tax Maintenance,,,,1,1

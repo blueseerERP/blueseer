@@ -23,7 +23,7 @@ com.blueseer.ctr.CustPriceMaint,,1
 com.blueseer.ctr.CustPriceRpt,,1
 com.blueseer.ctr.CustXrefMaint,,1
 com.blueseer.ctr.CustXrefRpt,,1
-com.blueseer.frt.FreightMaint,,1
+com.blueseer.frt.CarrierMaint,,1
 com.blueseer.ctr.POSBrowse,,1
 com.blueseer.ctr.POSControl,,1
 com.blueseer.ctr.POSMaint,,1

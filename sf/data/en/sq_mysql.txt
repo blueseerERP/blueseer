@@ -19,7 +19,7 @@ insert into cust_term (cut_code, cut_desc, cut_days) values ('N30','NET 30','30'
 insert into cust_term (cut_code, cut_desc, cut_days) values ('N00','Due Now','0') ; 
 insert into cust_term (cut_code, cut_desc, cut_days, cut_syscode) values ('CIA','Cash In Advance','0','1') ; 
 insert into cust_term (cut_code, cut_desc, cut_days, cut_syscode) values ('PIA','Payment In Advance','0', '1') ; 
-insert into frt_mstr (frt_id) values ('PICKUP') ; 
+insert into car_mstr (car_id) values ('PICKUP') ; 
 load data local infile 'cronmstr.csv' replace into table cron_mstr fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'sitemstr.csv' replace into table site_mstr fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'glcal.csv' replace into table gl_cal fields terminated by ',' ignore 0 Lines; show errors; 
