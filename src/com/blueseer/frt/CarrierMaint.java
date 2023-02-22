@@ -78,14 +78,14 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class FreightMaint extends javax.swing.JPanel implements IBlueSeerT {
+public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     // global variable declarations
                 boolean isLoad = false;
                 public static frt_mstr x = null;
     // global datatablemodel declarations       
    
-    public FreightMaint() {
+    public CarrierMaint() {
         initComponents();
         setLanguageTags(this);
     }
@@ -519,10 +519,10 @@ public class FreightMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Freight Maintenance"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Carrier Maintenance"));
         jPanel1.setName("panelmain"); // NOI18N
 
-        jLabel1.setText("Freight Code:");
+        jLabel1.setText("Code:");
         jLabel1.setName("lblid"); // NOI18N
 
         jLabel2.setText("Description:");
@@ -842,7 +842,7 @@ public class FreightMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(cbapply)))
-                .addContainerGap(238, Short.MAX_VALUE))
+                .addContainerGap(247, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
