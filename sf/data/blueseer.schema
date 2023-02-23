@@ -1578,14 +1578,19 @@ CREATE TABLE IF NOT EXISTS `fo_mstr` (
   `fo_carrier_assigned` varchar(30) NOT NULL  DEFAULT '',
   `fo_carrier_type` varchar(20) NOT NULL  DEFAULT '',
   `fo_equipment_type` varchar(30) NOT NULL  DEFAULT '',
+  `fo_service_type` varchar(30) NOT NULL  DEFAULT '',
+  `fo_trailer` varchar(30) NOT NULL  DEFAULT '',
   `fo_status` varchar(10) NOT NULL  DEFAULT '',
   `fo_rmks` varchar(100) NOT NULL  DEFAULT '',
   `fo_reasoncode` varchar(30) NOT NULL  DEFAULT '',
   `fo_isquoted` tinyint(1) NOT NULL  DEFAULT '0',
   `fo_istendered` tinyint(1) NOT NULL  DEFAULT '0',
   `fo_wh` varchar(10) NOT NULL  DEFAULT '',
-  `fo_site` varchar(10) NOT NULL DEFAULT '') 
-ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `fo_site` varchar(10) NOT NULL DEFAULT '',
+  `fo_milerate` decimal(12,4) NOT NULL DEFAULT '0',
+  `fo_totmiles` decimal(14,2) NOT NULL DEFAULT '0',
+  `fo_totcost` decimal(12,4) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `fot_det` (
   `fot_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `fot_nbr` varchar(8) NOT NULL  DEFAULT '',

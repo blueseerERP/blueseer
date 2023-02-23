@@ -38,6 +38,8 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.shp.shpData;
+import static com.blueseer.shp.shpData.confirmShipperTransaction;
+import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
@@ -51,6 +53,7 @@ import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.EDData;
+import static com.blueseer.utl.OVData.updateFreightOrderStatus;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -130,7 +133,7 @@ public class FOMaint extends javax.swing.JPanel {
     javax.swing.table.DefaultTableModel myorddetmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
                 getGlobalColumnTag("line"), 
-                getGlobalColumnTag("order"), 
+                getGlobalColumnTag("number"), 
                 getGlobalColumnTag("type"), 
                 getGlobalColumnTag("shipper"), 
                 getGlobalColumnTag("city"), 
@@ -208,7 +211,7 @@ public class FOMaint extends javax.swing.JPanel {
         
         btlookup.setEnabled(false);
         btnew.setEnabled(true);
-        btedit.setEnabled(true);
+        btupdate.setEnabled(true);
         btadd.setEnabled(false);
         btadditem.setEnabled(true);
         btdelitem.setEnabled(true);
@@ -241,6 +244,10 @@ public class FOMaint extends javax.swing.JPanel {
                     tbweight.setText(res.getString("fo_weight"));
                     tbref.setText(res.getString("fo_ref"));
                     tbtpid.setText(res.getString("fo_tpid"));
+                    tbtrailer.setText(res.getString("fo_trailer"));
+                    tbmilerate.setText(res.getString("fo_milerate"));
+                    totmiles.setText(res.getString("fo_totmiles"));
+                    totcost.setText(res.getString("fo_totcost"));
                     dir = res.getString("fo_dir");
                    
                 }
@@ -289,6 +296,7 @@ public class FOMaint extends javax.swing.JPanel {
                 sumweight();
                 sumunits();
                
+               
                 // set appropriate color status and enablement
                 String status = ddstatus.getSelectedItem().toString();
                 globalstatus = status;
@@ -309,8 +317,16 @@ public class FOMaint extends javax.swing.JPanel {
                                 btadd.setEnabled(false);
                             } else if (status.compareTo("Close") == 0) {
                                 ddstatus.setBackground(Color.gray);
-                                disableAll();
+                                // disableAll();
                                 btnew.setEnabled(true);
+                                btlookup.setEnabled(true);
+                                btprint.setEnabled(true);
+                                btadd.setEnabled(false);
+                                btcommit.setEnabled(false);
+                                btupdate.setEnabled(false);
+                                btadditem.setEnabled(false);
+                                btupdateitem.setEnabled(false);
+                                btdelitem.setEnabled(false);
                             } else if (status.compareTo("Declined") == 0) {
                                 ddstatus.setBackground(Color.red);
                                 enableAll();
@@ -429,7 +445,7 @@ public class FOMaint extends javax.swing.JPanel {
                 }
     }  
     
-     public void getStatus(String nbr) {
+    public void getStatus(String nbr) {
         
           tablestatus.setModel(DTData.getFreightOrderStatusTable(nbr));
           //tablereport.getColumnModel().getColumn(0).setCellRenderer(new ItemMastSearch.SomeRenderer());       
@@ -448,13 +464,22 @@ public class FOMaint extends javax.swing.JPanel {
         totweight.setText(String.valueOf(qty));
     }
     
-     public void sumunits() {
+    public void sumunits() {
         double qty = 0;
          for (String[] x : tablelist) {
             qty = qty + Double.valueOf(x[14]); 
         }
          totunits.setText(String.valueOf(qty));
     }
+    
+    public void sumTotal() {
+        double dol = 0;
+        if (! tbmilerate.getText().isBlank() && ! totmiles.getText().isBlank()) {
+        dol = Double.valueOf(tbmilerate.getText()) * Double.valueOf(totmiles.getText());
+        totcost.setText(String.valueOf(dol));
+        }
+    }
+    
     
     public Integer getmaxline() {
         int max = 0;
@@ -610,6 +635,7 @@ public class FOMaint extends javax.swing.JPanel {
         ddcarrierassigned.setEnabled(true);
         btquote.setEnabled(true);
         bttender.setEnabled(true);
+        btcommit.setEnabled(true);
        
           
         tbcustfrtnbr.setEnabled(true);
@@ -643,23 +669,26 @@ public class FOMaint extends javax.swing.JPanel {
         ddcarrierproposed.setEnabled(true);
         ddshipper.setEnabled(true);
         ddequiptype.setEnabled(true);
-         ddstate.setEnabled(true);
-             
+        ddstate.setEnabled(true);
+        ddservice.setEnabled(true);
         
         orddet.setEnabled(true);
         
         totunits.setEnabled(true);
         totweight.setEnabled(true);
-       
-        
+        totmiles.setEnabled(true);
+        totcost.setEnabled(true);
+        tbmilerate.setEnabled(true);
+        tbtrailer.setEnabled(true);
           btlookup.setEnabled(true);
         
-          btpoprint.setEnabled(true);
+          btprint.setEnabled(true);
         btnew.setEnabled(true);
-        btedit.setEnabled(true);
+        btupdate.setEnabled(true);
         btadd.setEnabled(true);
         btadditem.setEnabled(true);
         btdelitem.setEnabled(true);
+        btupdateitem.setEnabled(true);
         
     }
     
@@ -674,7 +703,7 @@ public class FOMaint extends javax.swing.JPanel {
         ddcarrierassigned.setEnabled(false);
         btquote.setEnabled(false);
         bttender.setEnabled(false);
-      
+        btcommit.setEnabled(false);
         
         tbcustfrtnbr.setEnabled(false);
         tbcust.setEnabled(false);
@@ -701,13 +730,17 @@ public class FOMaint extends javax.swing.JPanel {
         tbweight.setEnabled(false);
         tbunits.setEnabled(false);
         tbref.setEnabled(false);
+        tbtrailer.setEnabled(false);
        
         tbmisc.setEnabled(false);
         ddcarrierproposed.setEnabled(false);
         ddshipper.setEnabled(false);
         ddequiptype.setEnabled(false);
         ddstate.setEnabled(false);
-       
+        ddservice.setEnabled(false);
+        totmiles.setEnabled(false);
+        totcost.setEnabled(false);
+        tbmilerate.setEnabled(false);
       
       
         
@@ -719,12 +752,13 @@ public class FOMaint extends javax.swing.JPanel {
         
           btlookup.setEnabled(false);
          
-          btpoprint.setEnabled(false);
+          btprint.setEnabled(false);
         btnew.setEnabled(false);
-        btedit.setEnabled(false);
+        btupdate.setEnabled(false);
         btadd.setEnabled(false);
         btadditem.setEnabled(false);
         btdelitem.setEnabled(false);
+        btupdateitem.setEnabled(false);
     }
     
     public void initvars(String[] arg) {
@@ -764,9 +798,10 @@ public class FOMaint extends javax.swing.JPanel {
         
         btlookup.setEnabled(true);
         btnew.setEnabled(true);
-        btedit.setEnabled(true);
+        btupdate.setEnabled(true);
         btadd.setEnabled(true);
         btadditem.setEnabled(true);
+        btupdateitem.setEnabled(true);
         btdelitem.setEnabled(true);
       
         
@@ -791,8 +826,10 @@ public class FOMaint extends javax.swing.JPanel {
         tbref.setText("");
         totweight.setText("");
         totunits.setText("");
-        
-        
+        totmiles.setText("");
+        totcost.setText("");
+        tbmilerate.setText("");
+        tbtrailer.setText("");
         
         
         ddcarrierproposed.removeAllItems();
@@ -861,6 +898,7 @@ public class FOMaint extends javax.swing.JPanel {
               disableAll();
               btnew.setEnabled(true);
               btlookup.setEnabled(true);
+              btcommit.setEnabled(false);
         }
           
           
@@ -931,12 +969,12 @@ public class FOMaint extends javax.swing.JPanel {
         orddet = new javax.swing.JTable();
         btdelitem = new javax.swing.JButton();
         btadd = new javax.swing.JButton();
-        btedit = new javax.swing.JButton();
+        btupdate = new javax.swing.JButton();
         totunits = new javax.swing.JTextField();
         totweight = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        btpoprint = new javax.swing.JButton();
+        btprint = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         tbweight = new javax.swing.JTextField();
         jLabel83 = new javax.swing.JLabel();
@@ -984,8 +1022,18 @@ public class FOMaint extends javax.swing.JPanel {
         ddequiptype = new javax.swing.JComboBox();
         ddservice = new javax.swing.JComboBox<>();
         jLabel9 = new javax.swing.JLabel();
+        tbmilerate = new javax.swing.JTextField();
+        jLabel15 = new javax.swing.JLabel();
+        tbtrailer = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
         bttender = new javax.swing.JButton();
         btquote = new javax.swing.JButton();
+        totmiles = new javax.swing.JTextField();
+        totcost = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        btcommit = new javax.swing.JButton();
+        btupdateitem = new javax.swing.JButton();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanelLoad = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
@@ -1067,7 +1115,7 @@ public class FOMaint extends javax.swing.JPanel {
             }
         });
 
-        btadditem.setText("Add Item");
+        btadditem.setText("Add Line");
         btadditem.setName("btadditem"); // NOI18N
         btadditem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1093,7 +1141,7 @@ public class FOMaint extends javax.swing.JPanel {
         });
         jScrollPane8.setViewportView(orddet);
 
-        btdelitem.setText("Del Item");
+        btdelitem.setText("Delete Line");
         btdelitem.setName("btdeleteitem"); // NOI18N
         btdelitem.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1101,7 +1149,7 @@ public class FOMaint extends javax.swing.JPanel {
             }
         });
 
-        btadd.setText("Save");
+        btadd.setText("Add");
         btadd.setName("btadd"); // NOI18N
         btadd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1109,25 +1157,25 @@ public class FOMaint extends javax.swing.JPanel {
             }
         });
 
-        btedit.setText("Edit");
-        btedit.setName("btupdate"); // NOI18N
-        btedit.addActionListener(new java.awt.event.ActionListener() {
+        btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
+        btupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bteditActionPerformed(evt);
+                btupdateActionPerformed(evt);
             }
         });
 
-        jLabel1.setText("Total Units");
+        jLabel1.setText("Units");
         jLabel1.setName("lbltotunits"); // NOI18N
 
-        jLabel2.setText("Total Weight");
+        jLabel2.setText("Weight");
         jLabel2.setName("lbltotweight"); // NOI18N
 
-        btpoprint.setText("Print");
-        btpoprint.setName("btprint"); // NOI18N
-        btpoprint.addActionListener(new java.awt.event.ActionListener() {
+        btprint.setText("Print");
+        btprint.setName("btprint"); // NOI18N
+        btprint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btpoprintActionPerformed(evt);
+                btprintActionPerformed(evt);
             }
         });
 
@@ -1199,32 +1247,16 @@ public class FOMaint extends javax.swing.JPanel {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(24, 24, 24)
-                                .addComponent(jLabel82))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(23, 23, 23)
-                                .addComponent(jLabel91))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(23, 23, 23)
-                                .addComponent(jLabel90))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(36, 36, 36)
-                                .addComponent(jLabel93))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(27, 27, 27)
-                                .addComponent(jLabel94))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(13, 13, 13)
-                                .addComponent(jLabel77)))
-                        .addGap(5, 5, 5))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel97)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                    .addComponent(jLabel77, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel82, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel91, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel90, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel93, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel94, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel97, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGap(4, 4, 4)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tbremarks, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
@@ -1249,7 +1281,7 @@ public class FOMaint extends javax.swing.JPanel {
                             .addComponent(jLabel8)
                             .addComponent(jLabel81)
                             .addComponent(jLabel83))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tbemail, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel3Layout.createSequentialGroup()
@@ -1268,7 +1300,7 @@ public class FOMaint extends javax.swing.JPanel {
                                             .addComponent(jLabel98, javax.swing.GroupLayout.Alignment.TRAILING))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(tbweight, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
+                                            .addComponent(tbweight, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
                                             .addComponent(tbunits)))))
                             .addComponent(tbcontact, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel3Layout.createSequentialGroup()
@@ -1285,20 +1317,21 @@ public class FOMaint extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel77)
-                        .addGap(18, 18, 18)
+                        .addGap(32, 32, 32)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGap(3, 3, 3)
                                 .addComponent(jLabel82))
-                            .addComponent(tbname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel81)
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(tbname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel81))
                             .addComponent(shipdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tbshiptime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel83)
-                        .addComponent(ddshipper, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(ddshipper, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel77))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tbweight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1315,7 +1348,9 @@ public class FOMaint extends javax.swing.JPanel {
                                 .addComponent(jLabel91))
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGap(10, 10, 10)
-                                .addComponent(tbaddr1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(tbaddr1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel8))))
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGap(10, 10, 10)
@@ -1342,7 +1377,6 @@ public class FOMaint extends javax.swing.JPanel {
                         .addGap(7, 7, 7)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(delvdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel8)
                             .addComponent(tbdelvtime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -1385,19 +1419,39 @@ public class FOMaint extends javax.swing.JPanel {
 
         jLabel9.setText("Service");
 
+        tbmilerate.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbmilerateFocusLost(evt);
+            }
+        });
+
+        jLabel15.setText("Rate Per Mile");
+
+        jLabel16.setText("Trailer");
+
         javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
         jPanel12.setLayout(jPanel12Layout);
         jPanel12Layout.setHorizontalGroup(
             jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel12Layout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addComponent(jLabel101)
+                .addContainerGap()
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel101)
+                    .addComponent(jLabel15))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ddcarrierassigned, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(57, 57, 57)
-                .addComponent(jLabel85, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel12Layout.createSequentialGroup()
+                        .addComponent(ddcarrierassigned, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel85))
+                    .addGroup(jPanel12Layout.createSequentialGroup()
+                        .addComponent(tbmilerate, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(118, 118, 118)
+                        .addComponent(jLabel16)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ddequiptype, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(ddequiptype, 0, 164, Short.MAX_VALUE)
+                    .addComponent(tbtrailer))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1415,7 +1469,12 @@ public class FOMaint extends javax.swing.JPanel {
                     .addComponent(ddequiptype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ddservice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbmilerate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel15)
+                    .addComponent(tbtrailer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel16)))
         );
 
         bttender.setText("Tender");
@@ -1434,6 +1493,25 @@ public class FOMaint extends javax.swing.JPanel {
             }
         });
 
+        totmiles.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                totmilesFocusLost(evt);
+            }
+        });
+
+        jLabel13.setText("Est. Mileage");
+
+        jLabel14.setText("Est. Cost");
+
+        btcommit.setText("Commit");
+        btcommit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btcommitActionPerformed(evt);
+            }
+        });
+
+        btupdateitem.setText("Update Line");
+
         javax.swing.GroupLayout jPanelMainLayout = new javax.swing.GroupLayout(jPanelMain);
         jPanelMain.setLayout(jPanelMainLayout);
         jPanelMainLayout.setHorizontalGroup(
@@ -1449,7 +1527,9 @@ public class FOMaint extends javax.swing.JPanel {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelMainLayout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(btadditem)
-                                .addGap(7, 7, 7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btupdateitem)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btdelitem))
                             .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jScrollPane8)
@@ -1471,18 +1551,28 @@ public class FOMaint extends javax.swing.JPanel {
                                 .addComponent(btquote)
                                 .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanelMainLayout.createSequentialGroup()
-                        .addGap(185, 185, 185)
+                        .addGap(42, 42, 42)
                         .addComponent(jLabel1)
-                        .addGap(12, 12, 12)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(totunits, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(5, 5, 5)
                         .addComponent(jLabel2)
                         .addGap(5, 5, 5)
                         .addComponent(totweight, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(149, 149, 149)
-                        .addComponent(btpoprint)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel13)
+                        .addGap(3, 3, 3)
+                        .addComponent(totmiles, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(24, 24, 24)
+                        .addComponent(jLabel14)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(totcost, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btcommit)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btprint)
                         .addGap(7, 7, 7)
-                        .addComponent(btedit)
+                        .addComponent(btupdate)
                         .addGap(12, 12, 12)
                         .addComponent(btadd)
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -1510,29 +1600,33 @@ public class FOMaint extends javax.swing.JPanel {
                 .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btadditem)
-                    .addComponent(btdelitem))
+                    .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btdelitem)
+                        .addComponent(btupdateitem)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanelMainLayout.createSequentialGroup()
-                        .addGap(4, 4, 4)
+                    .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btprint)
+                        .addComponent(totcost, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel14)
+                        .addComponent(btcommit))
+                    .addComponent(btupdate)
+                    .addComponent(btadd)
+                    .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(totunits, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel1))
+                    .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(totweight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(totmiles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel13))
                     .addGroup(jPanelMainLayout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addComponent(totunits, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanelMainLayout.createSequentialGroup()
-                        .addGap(4, 4, 4)
-                        .addComponent(jLabel2))
-                    .addGroup(jPanelMainLayout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addComponent(totweight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btpoprint)
-                    .addComponent(btedit)
-                    .addComponent(btadd)))
+                        .addGap(3, 3, 3)
+                        .addComponent(jLabel2))))
         );
 
         add(jPanelMain);
@@ -1989,8 +2083,8 @@ public class FOMaint extends javax.swing.JPanel {
                 ddstatus.setEnabled(false);
                 btnew.setEnabled(false);
                 btlookup.setEnabled(false);
-                btedit.setEnabled(false);
-                btpoprint.setEnabled(false);
+                btupdate.setEnabled(false);
+                btprint.setEnabled(false);
                 ddshipfrom.setEnabled(false); 
                
                 
@@ -2107,15 +2201,20 @@ public class FOMaint extends javax.swing.JPanel {
                 String site = OVData.getDefaultSite();
                 if (proceed) {
                     st.executeUpdate("insert into fo_mstr "
-                        + "(fo_nbr, fo_date, fo_ref, fo_carrier, fo_carrier_assigned, fo_equipment_type, fo_status, fo_rmks ) "
+                        + "(fo_nbr, fo_date, fo_ref, fo_carrier, fo_carrier_assigned, fo_equipment_type, fo_service_type, fo_status, fo_trailer, fo_rmks, fo_milerate, fo_totmiles, fo_totcost ) "
                         + " values ( " + "'" + freightorder.getText().toString() + "'" + ","
                          + "'" + dfdate.format(now) + "'" + ","
                         + "'" + tbref.getText() + "'" + ","
                         + "'" + ddcarrierproposed.getSelectedItem() + "'" + ","
                         + "'" + ddcarrierassigned.getSelectedItem() + "'" + ","
                         + "'" + ddequiptype.getSelectedItem() + "'" + ","
+                        + "'" + ddservice.getSelectedItem() + "'" + ","        
                         + "'" + ddstatus.getSelectedItem() + "'" + ","  
-                        + "'" + tbremarks.getText() + "'"
+                        + "'" + tbtrailer.getText() + "'" + "," 
+                        + "'" + tbremarks.getText() + "'" + ","         
+                        + "'" + tbmilerate.getText() + "'" + "," 
+                        + "'" + totmiles.getText() + "'" + "," 
+                        + "'" + totcost.getText() + "'"     
                         + ")"
                         + ";");
 
@@ -2201,7 +2300,7 @@ public class FOMaint extends javax.swing.JPanel {
          
     }//GEN-LAST:event_btdelitemActionPerformed
 
-    private void bteditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bteditActionPerformed
+    private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
         try {
 
            Connection con = null;
@@ -2223,7 +2322,12 @@ public class FOMaint extends javax.swing.JPanel {
                             + " fo_carrier = " + "'" + ddcarrierproposed.getSelectedItem() + "'" + ","
                             + " fo_carrier_assigned = " + "'" + ddcarrierassigned.getSelectedItem() + "'" + ","   
                             + " fo_rmks = " + "'" + tbremarks.getText() + "'" + ","
-                            + " fo_equipment_type = " + "'" + ddequiptype.getSelectedItem() + "'" 
+                            + " fo_equipment_type = " + "'" + ddequiptype.getSelectedItem() + "'" + ","
+                            + " fo_service_type = " + "'" + ddservice.getSelectedItem() + "'" + ","
+                            + " fo_trailer = " + "'" + tbtrailer.getText() + "'" + ","        
+                            + " fo_milerate = " + "'" + tbmilerate.getText() + "'" + ","
+                            + " fo_totmiles = " + "'" + totmiles.getText() + "'" + ","
+                            + " fo_totcost = " + "'" + totcost.getText() + "'"         
                             + " where fo_nbr = " + "'" + freightorder.getText() + "'" 
                         + ";");
 
@@ -2282,11 +2386,11 @@ public class FOMaint extends javax.swing.JPanel {
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
-    }//GEN-LAST:event_bteditActionPerformed
+    }//GEN-LAST:event_btupdateActionPerformed
 
-    private void btpoprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btpoprintActionPerformed
+    private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
        OVData.printPurchaseOrder(freightorder.getText(), false);
-    }//GEN-LAST:event_btpoprintActionPerformed
+    }//GEN-LAST:event_btprintActionPerformed
 
     private void ddshipperActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddshipperActionPerformed
         if (ddshipper.getItemCount() > 0  && ! lock_ddshipper) {
@@ -2440,6 +2544,50 @@ public class FOMaint extends javax.swing.JPanel {
         lookUpFrame();
     }//GEN-LAST:event_btlookupActionPerformed
 
+    private void tbmilerateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbmilerateFocusLost
+        if (! tbmilerate.getText().isEmpty()) {
+        String x = BlueSeerUtils.bsformat("", tbmilerate.getText(), "2");
+        if (x.equals("error")) {
+            tbmilerate.setText("");
+            tbmilerate.setBackground(Color.yellow);
+            bsmf.MainFrame.show(getMessageTag(1000));
+            tbmilerate.requestFocus();
+        } else {
+            tbmilerate.setText(x);
+            tbmilerate.setBackground(Color.white);
+        }
+        sumTotal();
+        }
+    }//GEN-LAST:event_tbmilerateFocusLost
+
+    private void totmilesFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_totmilesFocusLost
+        if (! totmiles.getText().isEmpty()) {
+        String x = BlueSeerUtils.bsformat("", totmiles.getText(), "0");
+        if (x.equals("error")) {
+            totmiles.setText("");
+            totmiles.setBackground(Color.yellow);
+            bsmf.MainFrame.show(getMessageTag(1000));
+            totmiles.requestFocus();
+        } else {
+            totmiles.setText(x);
+            totmiles.setBackground(Color.white);
+        }
+        sumTotal();
+        }
+    }//GEN-LAST:event_totmilesFocusLost
+
+    private void btcommitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcommitActionPerformed
+        java.util.Date now = new java.util.Date();
+        for (int j = 0; j < orddet.getRowCount(); j++) {
+            if (! orddet.getValueAt(j, 3).toString().isBlank()) {
+            String[] message = confirmShipperTransaction("order", orddet.getValueAt(j, 3).toString(), now);
+            updateFreightOrderStatus(freightorder.getText(),"Close");
+            bsmf.MainFrame.show("committed shipper: " + orddet.getValueAt(j, 3).toString());
+            }
+         } 
+        
+    }//GEN-LAST:event_btcommitActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel RawFileQuotesPanel;
     private javax.swing.JPanel RawFileStatusPanel;
@@ -2447,17 +2595,19 @@ public class FOMaint extends javax.swing.JPanel {
     private javax.swing.JPanel StatusTablePanel;
     private javax.swing.JButton btadd;
     private javax.swing.JButton btadditem;
+    private javax.swing.JButton btcommit;
     private javax.swing.JButton btdelitem;
-    private javax.swing.JButton btedit;
     private javax.swing.JButton bthideEDIStatus;
     private javax.swing.JButton bthidemap;
     private javax.swing.JButton bthidequotefiles;
     private javax.swing.JButton bthidetendersfiles;
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
-    private javax.swing.JButton btpoprint;
+    private javax.swing.JButton btprint;
     private javax.swing.JButton btquote;
     private javax.swing.JButton bttender;
+    private javax.swing.JButton btupdate;
+    private javax.swing.JButton btupdateitem;
     private javax.swing.JComboBox ddcarrierassigned;
     private javax.swing.JComboBox ddcarrierproposed;
     private javax.swing.JComboBox ddequiptype;
@@ -2474,6 +2624,10 @@ public class FOMaint extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel101;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -2551,6 +2705,7 @@ public class FOMaint extends javax.swing.JPanel {
     private javax.swing.JTextField tbcustfrtnbr;
     private javax.swing.JTextField tbdelvtime;
     private javax.swing.JTextField tbemail;
+    private javax.swing.JTextField tbmilerate;
     private javax.swing.JTextField tbmisc;
     private javax.swing.JTextField tbname;
     private javax.swing.JTextField tbphone;
@@ -2560,9 +2715,12 @@ public class FOMaint extends javax.swing.JPanel {
     private javax.swing.JTextField tbremarks;
     private javax.swing.JTextField tbshiptime;
     private javax.swing.JTextField tbtpid;
+    private javax.swing.JTextField tbtrailer;
     private javax.swing.JTextField tbunits;
     private javax.swing.JTextField tbweight;
     private javax.swing.JTextField tbzip;
+    private javax.swing.JTextField totcost;
+    private javax.swing.JTextField totmiles;
     private javax.swing.JTextField totunits;
     private javax.swing.JTextField totweight;
     // End of variables declaration//GEN-END:variables
