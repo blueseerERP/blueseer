@@ -34,8 +34,16 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.ConvertIntToYesNo;
+import static com.blueseer.utl.BlueSeerUtils.ConvertStringToBool;
+import static com.blueseer.utl.BlueSeerUtils.bsret;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -43,6 +51,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -934,6 +944,40 @@ public class ediData {
         return list;
     }
     
+    public static ArrayList<wkfd_meta> getWkfdMeta(String code, String line) {
+        wkfd_meta r = null;
+        String[] m = new String[2];
+        ArrayList<wkfd_meta> list = new ArrayList<wkfd_meta>();
+        String sql = "select * from wkfd_meta where wkfdm_id = ? and wkfdm_line = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, code);
+        ps.setString(2, line);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new wkfd_meta(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new wkfd_meta(m, res.getString("wkfdm_id"), 
+                        res.getString("wkfdm_line"), 
+                        res.getString("wkfdm_key"),
+                        res.getString("wkfdm_value"));
+                        list.add(r);
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new wkfd_meta(m);
+               list.add(r);
+        }
+        return list;
+    }
+    
+    
     public static wkf_mstr getWkfMstr(String[] x) {
         wkf_mstr r = null;
         String[] m = new String[2];
@@ -941,6 +985,35 @@ public class ediData {
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new wkf_mstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new wkf_mstr(m, res.getString("wkf_id"), 
+                            res.getString("wkf_desc"),
+                            res.getString("wkf_enabled")
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new wkf_mstr(m);
+        }
+        return r;
+    }
+    
+    public static wkf_mstr getWkfMstr(String x) {
+        wkf_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from wkf_mstr where wkf_id = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x);
              try (ResultSet res = ps.executeQuery();) {
                 if (! res.isBeforeFirst()) {
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
@@ -2355,6 +2428,146 @@ public class ediData {
             MainFrame.bslog(s);
         }
         return x;
+    }
+    
+    public static String[] processWorkFlowID(String id) {
+                
+        wkf_mstr wkf = getWkfMstr(id);
+        if (wkf.wkf_enabled.equals("0")) {
+         return bsret("Workflow is disabled");
+        }
+        ArrayList<wkf_det> wkfdetlist = getWkfDet(id);
+        if (wkfdetlist == null) {
+            return bsret("Null Workflow list");
+        }
+        
+        String[] r = new String[]{"",""};
+        for (wkf_det wkd : wkfdetlist) {
+          switch (wkd.wkfd_action()) {
+            case "file copy" :
+                r = wkfaction_filecopy(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
+                if (! r[1].isBlank()) {
+                    return r;
+                } 
+                break; 
+                
+            case "file delete" :
+                r = wkfaction_filedelete(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
+                if (! r[1].isBlank()) {
+                    return r;
+                } 
+                break; 
+                
+            case "file move" :
+                r = wkfaction_filemove(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
+                if (! r[1].isBlank()) {
+                    return r;
+                } 
+                break;     
+                        
+            default:
+                return bsret("Unknown WorkFlow Action!");
+          
+          }
+        }
+        
+        return bsret("");
+    }
+    
+    public static String[] wkfaction_filecopy(wkf_det wkfd, ArrayList<wkfd_meta> list) {
+        String[] r = new String[]{"0",""};
+        
+        String source = "";
+        String destination = "";
+        boolean append = false;
+        
+        for (wkfd_meta m : list) {
+            if (m.wkfdm_key().equals("source")) {
+                source = m.wkfdm_value();
+            }
+            if (m.wkfdm_key().equals("destination")) {
+                destination = m.wkfdm_value();
+            }
+            if (m.wkfdm_key().equals("append")) {
+                append = ConvertStringToBool(m.wkfdm_value());
+            }
+        }
+        
+        Path sourcepath = FileSystems.getDefault().getPath(source);
+        Path destinationpath = FileSystems.getDefault().getPath(destination);
+       
+        try {
+            if (append) {
+               Files.write(destinationpath, Files.readAllBytes(sourcepath), StandardOpenOption.APPEND);  
+            } else {
+               Files.copy(sourcepath, destinationpath, StandardCopyOption.REPLACE_EXISTING); 
+            }
+            
+        } catch (IOException ex) {
+            r[0] = "1";
+            r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + ex.getMessage();
+        }
+        
+        return r;
+    }
+    
+    public static String[] wkfaction_filedelete(wkf_det wkfd, ArrayList<wkfd_meta> list) {
+        String[] r = new String[]{"0",""};
+        String source = "";
+        
+        for (wkfd_meta m : list) {
+            if (m.wkfdm_key().equals("source")) {
+                source = m.wkfdm_value();
+            }
+        }
+        
+        Path sourcepath = FileSystems.getDefault().getPath(source);
+        try {
+            Files.deleteIfExists(sourcepath);
+        } catch (IOException ex) {
+            r[0] = "1";
+            r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + ex.getMessage();
+        }
+        return r;
+    }
+    
+    public static String[] wkfaction_filemove(wkf_det wkfd, ArrayList<wkfd_meta> list) {
+        String[] r = new String[]{"0",""};
+        
+        String source = "";
+        String destination = "";
+        
+        for (wkfd_meta m : list) {
+            if (m.wkfdm_key().equals("source")) {
+                source = m.wkfdm_value();
+            }
+            if (m.wkfdm_key().equals("destination")) {
+                destination = m.wkfdm_value();
+            }
+        }
+        
+        Path sourcepath = FileSystems.getDefault().getPath(source);
+        Path destinationpath = FileSystems.getDefault().getPath(destination);
+        
+        if (Files.isDirectory(sourcepath)) {
+           r[0] = "1";
+           r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "source path is directory"; 
+           return r;
+        }
+        if (Files.isDirectory(destinationpath)) {
+           r[0] = "1";
+           r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "destination path is directory"; 
+           return r;
+        }
+        
+        try {
+            Files.move(sourcepath, destinationpath);
+        } catch (IOException ex) {
+            r[0] = "1";
+            r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + ex.getMessage();
+        }
+        
+        return r;
     }
     
     

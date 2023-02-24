@@ -1588,7 +1588,15 @@ public class BlueSeerUtils {
          }
      }
      
-    
+     public static String[] bsret(String message) {
+         String[] r = new String[]{"0",""};
+         if (! message.isBlank()) {
+         r[0] = "1";
+         r[1] = message;
+         }
+         return r;
+     }
+     
      public static void messagereset() {
          bsmf.MainFrame.messagelabel.setForeground(Color.BLACK);
          bsmf.MainFrame.messagelabel.setText("");
