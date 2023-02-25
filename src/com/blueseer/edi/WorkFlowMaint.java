@@ -533,9 +533,12 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public void setddactions() {
         ddactions.removeAllItems();
-        ddactions.addItem("file copy");
-        ddactions.addItem("file move");
-        ddactions.addItem("file delete");
+        ddactions.addItem("FileCopy");
+        ddactions.addItem("FileMove");
+        ddactions.addItem("FileDelete");
+        ddactions.addItem("FileCopyAll");
+        ddactions.addItem("FileMoveAll");
+        ddactions.addItem("FileDeleteAll");
         
         for (int i = 0; i < ddactions.getItemCount(); i++) {
             
@@ -544,18 +547,26 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
                 x.add(new String[]{"source", ""});
                 x.add(new String[]{"destination", ""});
                 x.add(new String[]{"append", ""}); 
-                kvs.put("file copy", x);
+                kvs.put("FileCopy", x);
             }
             if (i == 1) {
                 ArrayList<String[]> x = new ArrayList<String[]>();
                 x.add(new String[]{"source", ""});
                 x.add(new String[]{"destination", ""});
-                kvs.put("file move", x);
+                kvs.put("FileMove", x);
             }
             if (i == 2) {
                 ArrayList<String[]> x = new ArrayList<String[]>();
                 x.add(new String[]{"source", ""});
-                kvs.put("file delete", x);
+                kvs.put("FileDelete", x);
+            }
+            if (i == 3) {
+                ArrayList<String[]> x = new ArrayList<String[]>();
+                x.add(new String[]{"source dir", ""});
+                x.add(new String[]{"wildcard", ""});
+                x.add(new String[]{"destination dir", ""});
+                x.add(new String[]{"overwrite", ""}); 
+                kvs.put("FileCopyAll", x);
             }
         }
         

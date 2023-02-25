@@ -38,7 +38,9 @@ import static com.blueseer.utl.BlueSeerUtils.ConvertStringToBool;
 import static com.blueseer.utl.BlueSeerUtils.bsret;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -51,6 +53,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -2444,27 +2447,41 @@ public class ediData {
         String[] r = new String[]{"",""};
         for (wkf_det wkd : wkfdetlist) {
           switch (wkd.wkfd_action()) {
-            case "file copy" :
+            case "FileCopy" :
                 r = wkfaction_filecopy(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
                 if (! r[1].isBlank()) {
                     return r;
                 } 
                 break; 
                 
-            case "file delete" :
+            case "FileDelete" :
                 r = wkfaction_filedelete(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
                 if (! r[1].isBlank()) {
                     return r;
                 } 
                 break; 
                 
-            case "file move" :
+            case "FileMove" :
                 r = wkfaction_filemove(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
                 if (! r[1].isBlank()) {
                     return r;
                 } 
                 break;     
-                        
+            
+                case "FileCopyAll" :
+                r = wkfaction_filecopyall(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
+                if (! r[1].isBlank()) {
+                    return r;
+                } 
+                break; 
+                
+                case "FileMoveAll" :
+                r = wkfaction_filemoveall(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
+                if (! r[1].isBlank()) {
+                    return r;
+                } 
+                break; 
+                
             default:
                 return bsret("Unknown WorkFlow Action!");
           
@@ -2567,6 +2584,98 @@ public class ediData {
             r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + ex.getMessage();
         }
         
+        return r;
+    }
+    
+    public static String[] wkfaction_filecopyall(wkf_det wkfd, ArrayList<wkfd_meta> list) {
+        String[] r = new String[]{"0",""};
+        
+        String source = "";
+        String destination = "";
+        String filter = "";
+        boolean overwrite = false;
+        
+        for (wkfd_meta m : list) {
+            if (m.wkfdm_key().equals("source dir") && ! m.wkfdm_value.isBlank()) {
+                source = m.wkfdm_value();
+            }
+            if (m.wkfdm_key().equals("filter") && ! m.wkfdm_value.isBlank()) {
+                filter = m.wkfdm_value();
+            }
+            if (m.wkfdm_key().equals("destination dir") && ! m.wkfdm_value.isBlank()) {
+                destination = m.wkfdm_value();
+            }
+            if (m.wkfdm_key().equals("overwrite") && ! m.wkfdm_value.isBlank()) {
+                overwrite = ConvertStringToBool(m.wkfdm_value());
+            }
+        }
+        
+        
+       
+        if (! source.isEmpty() && ! destination.isEmpty()) {
+        Path sourcepath = FileSystems.getDefault().getPath(source);
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream(sourcepath, filter)) {
+                int f = 0;
+                for (Path path : stream) {
+                    if (! Files.isDirectory(path)) {
+                    Path destinationpath = FileSystems.getDefault().getPath(destination + "/" + path.getFileName());    
+                    Files.copy(path, destinationpath, StandardCopyOption.REPLACE_EXISTING); 
+                    Files.delete(path);
+                    }
+                }
+            } catch (IOException ex) {  
+                    r[0] = "1";
+                    r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + ex.getMessage();
+            }  
+        } 
+        return r;
+    }
+    
+    public static String[] wkfaction_filemoveall(wkf_det wkfd, ArrayList<wkfd_meta> list) {
+        String[] r = new String[]{"0",""};
+        
+        String source = "";
+        String destination = "";
+        String filter = "";
+        boolean overwrite = false;
+        
+        for (wkfd_meta m : list) {
+            if (m.wkfdm_key().equals("source dir") && ! m.wkfdm_value.isBlank()) {
+                source = m.wkfdm_value();
+            }
+            if (m.wkfdm_key().equals("filter") && ! m.wkfdm_value.isBlank()) {
+                filter = m.wkfdm_value();
+            }
+            if (m.wkfdm_key().equals("destination dir") && ! m.wkfdm_value.isBlank()) {
+                destination = m.wkfdm_value();
+            }
+            if (m.wkfdm_key().equals("overwrite") && ! m.wkfdm_value.isBlank()) {
+                overwrite = ConvertStringToBool(m.wkfdm_value());
+            }
+        }
+        
+        
+       
+        if (! source.isEmpty() && ! destination.isEmpty()) {
+        Path sourcepath = FileSystems.getDefault().getPath(source);
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream(sourcepath, filter)) {
+                int f = 0;
+                for (Path path : stream) {
+                    if (! Files.isDirectory(path)) {
+                    Path destinationpath = FileSystems.getDefault().getPath(destination + "/" + path.getFileName());    
+                        if (! overwrite && Files.exists(destinationpath)) {
+                            destinationpath = FileSystems.getDefault().getPath(destination + "/" + path.getFileName() + "." + Long.toHexString(System.currentTimeMillis())); 
+                            Files.move(path, destinationpath, StandardCopyOption.REPLACE_EXISTING);
+                        } else {
+                            Files.move(path, destinationpath, StandardCopyOption.REPLACE_EXISTING); 
+                        }
+                    }
+                }
+            } catch (IOException ex) {  
+                    r[0] = "1";
+                    r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + ex.getMessage();
+            }  
+        } 
         return r;
     }
     
