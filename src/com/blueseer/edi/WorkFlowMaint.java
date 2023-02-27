@@ -563,10 +563,23 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
             if (i == 3) {
                 ArrayList<String[]> x = new ArrayList<String[]>();
                 x.add(new String[]{"source dir", ""});
-                x.add(new String[]{"wildcard", ""});
+                x.add(new String[]{"filter", ""});
                 x.add(new String[]{"destination dir", ""});
                 x.add(new String[]{"overwrite", ""}); 
                 kvs.put("FileCopyAll", x);
+            }
+            if (i == 4) {
+                ArrayList<String[]> x = new ArrayList<String[]>();
+                x.add(new String[]{"source dir", ""});
+                x.add(new String[]{"filter", ""});
+                x.add(new String[]{"destination dir", ""});
+                x.add(new String[]{"overwrite", ""}); 
+                kvs.put("FileMoveAll", x);
+            }
+            if (i == 5) {
+                ArrayList<String[]> x = new ArrayList<String[]>();
+                x.add(new String[]{"source dir", ""});
+                kvs.put("FileDeleteAll", x);
             }
         }
         
