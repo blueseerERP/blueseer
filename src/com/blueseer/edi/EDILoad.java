@@ -192,6 +192,56 @@ public static void runTranslation(String[] args) {
        }
 }
 
+public static String[] runTranslationSingleFile(Path targetfilepath) {
+    String[] m = new String[]{"",""};
+    try {
+            String inArch = EDData.getEDIInArch(); 
+            String ErrorDir = EDData.getEDIErrorDir();
+             
+                if (targetfilepath.toFile().exists() && targetfilepath.toFile().isFile()) {
+                System.out.println("EDILoad:  processing file " + targetfilepath.toString());
+                  if(targetfilepath.toFile().length() == 0) { 
+                  targetfilepath.toFile().delete();
+                  } else { 
+                 m = EDI.processFile(targetfilepath.toString(),"","","", isDebug, false, 0, 0);
+                 
+                 // show error if exists...usually malformed envelopes
+                    if (m[0].equals("1")) {
+                        System.out.println(m[1]);
+                        // now move to error folder
+                        Path movefrom = FileSystems.getDefault().getPath(targetfilepath.toFile().getName());
+                        Path errortarget = FileSystems.getDefault().getPath(ErrorDir + "/" + targetfilepath.toFile().getName());
+                        // bsmf.MainFrame.show(movefrom.toString() + "  /  " + target.toString());
+                         Files.move(movefrom, errortarget, StandardCopyOption.REPLACE_EXISTING);
+                    }
+                    
+                    // if delete set in control panel...remove file and continue;
+                         if (EDData.isEDIDeleteFlag()) {
+                          Files.delete(targetfilepath);
+                         }
+                    
+                    // now archive file
+                         if (! inArch.isEmpty() && ! EDData.isEDIDeleteFlag() && EDData.isEDIArchFlag() ) {
+                         Path archtarget = FileSystems.getDefault().getPath(inArch + "/" + targetfilepath.toFile().getName());
+                        // bsmf.MainFrame.show(movefrom.toString() + "  /  " + target.toString());
+                         Files.move(targetfilepath, archtarget, StandardCopyOption.REPLACE_EXISTING);
+                          // now remove from list
+                         }
+                 
+                  
+                  }
+                }
+            
+       } catch (IOException ex) {
+          ex.printStackTrace();
+       } catch (ClassNotFoundException ex) {
+          ex.printStackTrace();
+       }
+    
+    return m;
+}
+
+
 public static void runExport(String[] docs) {
         if (docs == null) {
             System.out.println("no doc list for -o exports");

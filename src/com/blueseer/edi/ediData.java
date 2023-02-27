@@ -32,6 +32,7 @@ import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.edi.EDILoad.runTranslationSingleFile;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.ConvertIntToYesNo;
 import static com.blueseer.utl.BlueSeerUtils.ConvertStringToBool;
@@ -2482,6 +2483,13 @@ public class ediData {
                 } 
                 break; 
                 
+                case "FileMap" :
+                r = wkfaction_filemap(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
+                if (! r[1].isBlank()) {
+                    return r;
+                } 
+                break;
+                
             default:
                 return bsret("Unknown WorkFlow Action!");
           
@@ -2676,6 +2684,29 @@ public class ediData {
                     r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + ex.getMessage();
             }  
         } 
+        return r;
+    }
+    
+    public static String[] wkfaction_filemap(wkf_det wkfd, ArrayList<wkfd_meta> list) {
+        String[] r = new String[]{"0",""};
+        
+        String source = "";
+        for (wkfd_meta m : list) {
+            if (m.wkfdm_key().equals("source file") && ! m.wkfdm_value.isBlank()) {
+                source = m.wkfdm_value();
+            }
+        }
+       
+        if (! source.isEmpty()) {
+        Path sourcepath = FileSystems.getDefault().getPath(source);
+            if (sourcepath.toFile().exists()) {
+            r = runTranslationSingleFile(sourcepath);
+            } else {
+            r[0] = "1";
+            r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "sourcepath does not exist";
+            }
+        }
+        
         return r;
     }
     
