@@ -651,6 +651,7 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Action Maintenance"));
+        jPanel2.setName("panelaction"); // NOI18N
 
         actionlist.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -731,6 +732,7 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Header Maintenance"));
+        jPanel3.setName("panelheader"); // NOI18N
 
         btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
         btlookup.addActionListener(new java.awt.event.ActionListener() {
@@ -823,6 +825,7 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
         );
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Key / Value Maintenance"));
+        jPanel4.setName("panelkeyvalue"); // NOI18N
 
         keyvaluetable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -851,7 +854,7 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 814, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btcommit)))

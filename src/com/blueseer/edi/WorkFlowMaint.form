@@ -109,6 +109,7 @@
                 <TitledBorder title="Action Maintenance"/>
               </Border>
             </Property>
+            <Property name="name" type="java.lang.String" value="panelaction" noResource="true"/>
           </Properties>
 
           <Layout>
@@ -246,6 +247,7 @@
                 <TitledBorder title="Header Maintenance"/>
               </Border>
             </Property>
+            <Property name="name" type="java.lang.String" value="panelheader" noResource="true"/>
           </Properties>
 
           <Layout>
@@ -375,6 +377,7 @@
                 <TitledBorder title="Key / Value Maintenance"/>
               </Border>
             </Property>
+            <Property name="name" type="java.lang.String" value="panelkeyvalue" noResource="true"/>
           </Properties>
 
           <Layout>
