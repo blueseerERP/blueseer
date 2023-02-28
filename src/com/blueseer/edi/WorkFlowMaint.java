@@ -540,6 +540,7 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddactions.addItem("FileMoveAll");
         ddactions.addItem("FileDeleteAll");
         ddactions.addItem("FileMap");
+        ddactions.addItem("APICall");
         
         for (int i = 0; i < ddactions.getItemCount(); i++) {
             
@@ -586,6 +587,13 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
                 ArrayList<String[]> x = new ArrayList<String[]>();
                 x.add(new String[]{"source file", ""});
                 kvs.put("FileMap", x);
+            }
+            if (i == 7) {
+                ArrayList<String[]> x = new ArrayList<String[]>();
+                x.add(new String[]{"api id", ""});
+                x.add(new String[]{"api method", ""});
+                x.add(new String[]{"destination", ""});
+                kvs.put("APICall", x);
             }
         }
         

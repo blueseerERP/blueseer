@@ -29,6 +29,8 @@ import static bsmf.MainFrame.bslog;
 import com.blueseer.adm.admData;
 import com.blueseer.adm.admData.pks_mstr;
 import static com.blueseer.edi.AS2Maint.certs;
+import com.blueseer.edi.ediData.api_det;
+import com.blueseer.edi.ediData.api_mstr;
 import static com.blueseer.edi.ediData.getKeyStoreByUser;
 import static com.blueseer.edi.ediData.getKeyStorePass;
 import static com.blueseer.edi.ediData.getKeyUserPass;
@@ -47,8 +49,10 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.math.BigInteger;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -164,6 +168,78 @@ import org.bouncycastle.util.io.pem.PemReader;
  */
 public class apiUtils {
     
+    public static String[] runAPICall(api_mstr api, api_det apid, Path destinationpath) {
+        String[] r = new String[]{"0",""};
+       
+        int k = 0;
+        String method = "";
+        String verb = "";
+        String value = "";
+        
+            try {
+                String urlstring = "";
+                String port = "";
+                if (! apid.apid_value().isBlank()) {
+                    value = "/" + apid.apid_value();
+                }
+                if (api.api_port().isBlank()) {  
+                   port = ""; 
+                } else {
+                   port = ":" + api.api_port();
+                }
+                
+                if (apid.apid_verb().equals("NONE")) {
+                    urlstring = api.api_protocol() + "://" + api.api_url() + port + "/" + api.api_path() + value;
+                } else {
+                    urlstring = api.api_protocol() + "://" + api.api_url() + port + "/" + api.api_path() + apid.apid_verb().toLowerCase() ;
+                }
+                
+                URL url = new URL(urlstring);
+                
+                if (destinationpath == null) {
+                    destinationpath = FileSystems.getDefault().getPath(apid.apid_destination());
+                }
+             
+                
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		if (! verb.equals("NONE")) {
+                conn.setRequestMethod(verb);
+                }
+		conn.setRequestProperty("Accept", "application/json");
+
+                BufferedReader br = null;
+		if (conn.getResponseCode() != 200) {
+                        r[0] = "1";
+                        r[1] = conn.getResponseCode() + ": " + conn.getResponseMessage();
+		} else {
+                    br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+                }
+
+                BufferedWriter outputfile = null;
+                outputfile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(destinationpath.toFile())));
+		String output;
+                if (br != null) {
+                    while ((output = br.readLine()) != null) {
+                             outputfile.write(output);
+                    }
+                    br.close();
+                }
+                outputfile.close(); 
+                conn.disconnect();
+                
+                
+                } catch (MalformedURLException e) {
+		    bslog(e);
+                    bsmf.MainFrame.show("MalformedURLException");
+	        } catch (IOException ex) {
+                    bslog(ex);
+                    bsmf.MainFrame.show("IOException");
+                } catch (Exception ex) {
+                        Logger.getLogger(APIMaint.class.getName()).log(Level.SEVERE, null, ex);
+                    } 
+        
+        return r;
+    }
     
     
     public static PrivateKey getPrivateKey(String user)  {
@@ -1326,6 +1402,9 @@ public class apiUtils {
             this(i, hm, ""); 
         }
     }
+    
+    
+    
     
     
 }

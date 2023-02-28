@@ -33,6 +33,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static com.blueseer.edi.EDILoad.runTranslationSingleFile;
+import static com.blueseer.edi.apiUtils.runAPICall;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.ConvertIntToYesNo;
 import static com.blueseer.utl.BlueSeerUtils.ConvertStringToBool;
@@ -1780,6 +1781,47 @@ public class ediData {
         return r;
     }
     
+    public static api_mstr getAPIMstr(String id) {
+        api_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from api_mstr where api_id = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, id);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new api_mstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new api_mstr(m, res.getString("api_id"), 
+                            res.getString("api_desc"),
+                            res.getString("api_version"),
+                            res.getString("api_url"),
+                            res.getString("api_port"),
+                            res.getString("api_path"),
+                            res.getString("api_user"),
+                            res.getString("api_pass"),
+                            res.getString("api_key"),
+                            res.getString("api_protocol"),
+                            res.getString("api_class"),
+                            res.getString("api_encrypted"),
+                            res.getString("api_signed"),
+                            res.getString("api_cert")
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new api_mstr(m);
+        }
+        return r;
+    }
+    
+    
     public static as2_mstr getAS2Mstr(String[] x) {
         as2_mstr r = null;
         String[] m = new String[2];
@@ -2710,6 +2752,35 @@ public class ediData {
         return r;
     }
     
+    public static String[] wkfaction_apicall(wkf_det wkfd, ArrayList<wkfd_meta> list) {
+       String[] r = new String[]{"0",""};
+        
+        String apiid = "";
+        String apimethod = "";
+        String filedest = "";
+        
+        for (wkfd_meta m : list) {
+            if (m.wkfdm_key().equals("api id") && ! m.wkfdm_value.isBlank()) {
+                apiid = m.wkfdm_value();
+            }
+            if (m.wkfdm_key().equals("api method") && ! m.wkfdm_value.isBlank()) {
+                apimethod = m.wkfdm_value();
+            }
+            if (m.wkfdm_key().equals("destination") && ! m.wkfdm_value.isBlank()) {
+                filedest = m.wkfdm_value();
+            }
+        }
+       
+        api_mstr api = getAPIMstr(apiid);
+        api_det apid = getAPIDet(apiid, apimethod);
+        
+        if (api.m[0].equals("0")) {
+        Path destinationpath = FileSystems.getDefault().getPath(filedest);
+        r = runAPICall(api, apid, destinationpath);
+        }
+        
+        return r; 
+    }
     
     public record edi_xref(String[] m, String exr_tpid, String exr_tpaddr, String exr_ovaddr,
         String exr_gsid, String exr_type ) {
