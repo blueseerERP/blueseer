@@ -2644,7 +2644,7 @@ public class ediData {
         
         String source = "";
         String destination = "";
-        String filter = "";
+        String filter = null;
         boolean overwrite = false;
         
         for (wkfd_meta m : list) {
