@@ -1277,9 +1277,9 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 }
                 
                 if (verb.equals("NONE")) {
-                    urlstring = ddprotocol.getSelectedItem().toString() + "://" + tburl.getText() + port + "/" + tbpath.getText() + value;
+                    urlstring = ddprotocol.getSelectedItem().toString() + "://" + tburl.getText() + port + tbpath.getText() + value;
                 } else {
-                    urlstring = ddprotocol.getSelectedItem().toString() + "://" + tburl.getText() + port + "/" + tbpath.getText() + verb.toLowerCase() ;
+                    urlstring = ddprotocol.getSelectedItem().toString() + "://" + tburl.getText() + port + tbpath.getText() + verb.toLowerCase() ;
                 }
                 lblurl.setText(urlstring);
                 URL url = new URL(urlstring);
