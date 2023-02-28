@@ -176,6 +176,25 @@ public class apiUtils {
         String verb = "";
         String value = "";
         
+        if (api.m()[0].equals("1") || api.api_id().isBlank()) {
+           r[0] = "1";
+           r[1] = "unknown api_mstr id";
+           return r;
+        }
+        
+        if (apid.m()[0].equals("1") || apid.apid_id().isBlank()) {
+           r[0] = "1";
+           r[1] = "unknown api_det id or api_det method";
+           return r;
+        }
+        
+        if (api.api_url().isBlank() || api.api_protocol().isBlank()) {
+           r[0] = "1";
+           r[1] = "api url and/or protocol is blank";
+           return r;
+        }
+        
+        
             try {
                 String urlstring = "";
                 String port = "";
