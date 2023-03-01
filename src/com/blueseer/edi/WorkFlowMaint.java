@@ -593,6 +593,7 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
                 x.add(new String[]{"api id", ""});
                 x.add(new String[]{"api method", ""});
                 x.add(new String[]{"destination", ""});
+                x.add(new String[]{"source", ""});
                 kvs.put("APICall", x);
             }
         }

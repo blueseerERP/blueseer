@@ -168,7 +168,7 @@ import org.bouncycastle.util.io.pem.PemReader;
  */
 public class apiUtils {
     
-    public static String[] runAPICall(api_mstr api, api_det apid, Path destinationpath) {
+    public static String[] runAPICall(api_mstr api, api_det apid, Path destinationpath, Path sourcepath) {
         String[] r = new String[]{"0",""};
        
         int k = 0;
@@ -218,7 +218,11 @@ public class apiUtils {
                 if (destinationpath == null) {
                     destinationpath = FileSystems.getDefault().getPath(apid.apid_destination());
                 }
+                if (sourcepath == null) {
+                    sourcepath = FileSystems.getDefault().getPath(apid.apid_source());
+                }
              
+                // sourcepath api 'push' unfinished
                 
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		if (! verb.equals("NONE")) {

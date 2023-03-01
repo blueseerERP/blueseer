@@ -2758,6 +2758,7 @@ public class ediData {
         String apiid = "";
         String apimethod = "";
         String filedest = "";
+        String filesrc = "";
         
         for (wkfd_meta m : list) {
             if (m.wkfdm_key().equals("api id") && ! m.wkfdm_value.isBlank()) {
@@ -2769,6 +2770,9 @@ public class ediData {
             if (m.wkfdm_key().equals("destination") && ! m.wkfdm_value.isBlank()) {
                 filedest = m.wkfdm_value();
             }
+            if (m.wkfdm_key().equals("source") && ! m.wkfdm_value.isBlank()) {
+                filesrc = m.wkfdm_value();
+            }
         }
        
         api_mstr api = getAPIMstr(apiid);
@@ -2776,7 +2780,8 @@ public class ediData {
         
         if (api.m[0].equals("0")) {
         Path destinationpath = FileSystems.getDefault().getPath(filedest);
-        r = runAPICall(api, apid, destinationpath);
+        Path sourcepath = FileSystems.getDefault().getPath(filesrc);
+        r = runAPICall(api, apid, destinationpath, sourcepath);
         }
         
         return r; 
