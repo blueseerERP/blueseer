@@ -42,6 +42,7 @@ import static com.blueseer.edi.ediData.getAPIMethodsList;
 import static com.blueseer.edi.ediData.getAPIMstr;
 import static com.blueseer.edi.ediData.isAPIMethodUnique;
 import static com.blueseer.edi.ediData.updateAPITransaction;
+import static com.blueseer.utl.BlueSeerUtils.ConvertBoolToYesNo;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
@@ -79,6 +80,7 @@ import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -673,6 +675,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel14 = new javax.swing.JLabel();
         ddtype = new javax.swing.JComboBox<>();
         jLabel15 = new javax.swing.JLabel();
+        btupdatemethod = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         btnew = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
@@ -788,6 +791,13 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel15.setText("Type");
         jLabel15.setName("lbltype"); // NOI18N
 
+        btupdatemethod.setText("Update");
+        btupdatemethod.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btupdatemethodActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -802,7 +812,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(jLabel14))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 484, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
@@ -812,14 +822,9 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(tbsequence, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(30, 30, 30)
-                                .addComponent(cbenabled)
-                                .addGap(27, 27, 27)
-                                .addComponent(btaddmethod)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btdeletemethod))
+                                .addComponent(cbenabled))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(tbkvpair, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(tbdestdir, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(tbsourcedir, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(13, 13, 13)
@@ -827,7 +832,14 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(tbmethod, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(tbkvpair, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(btaddmethod, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btdeletemethod, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btupdatemethod, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -842,19 +854,20 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(ddverb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cbenabled)
                     .addComponent(btaddmethod)
-                    .addComponent(btdeletemethod)
                     .addComponent(tbsequence, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
                     .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbkvpair, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel12))
+                    .addComponent(jLabel12)
+                    .addComponent(btupdatemethod))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel15))
+                        .addComponent(jLabel15)
+                        .addComponent(btdeletemethod))
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(tbsourcedir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel13)))
@@ -1325,14 +1338,14 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 
                 
                 } catch (MalformedURLException e) {
-		    bslog(e);
-                    bsmf.MainFrame.show("MalformedURLException");
-	        } catch (IOException ex) {
-                    bslog(ex);
-                    bsmf.MainFrame.show("IOException");
+                    taoutput.append("MalformedURLException: " + e + "\n");
+	        } catch (UnknownHostException ex) {
+                    taoutput.append("UnknownHostException: " + ex + "\n");
+                } catch (IOException ex) {
+                    taoutput.append("IOException: " + ex + "\n");
                 } catch (Exception ex) {
-                        Logger.getLogger(APIMaint.class.getName()).log(Level.SEVERE, null, ex);
-                    } 
+                    taoutput.append("Exception: " + ex + "\n");
+                } 
     }//GEN-LAST:event_btrunActionPerformed
 
     private void tabledetailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabledetailMouseClicked
@@ -1352,6 +1365,26 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         isLoad = false;
     }//GEN-LAST:event_tabledetailMouseClicked
 
+    private void btupdatemethodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdatemethodActionPerformed
+        int[] rows = tabledetail.getSelectedRows();
+        if (rows.length != 1) {
+            bsmf.MainFrame.show(getMessageTag(1095));
+            return;
+        }
+        for (int i : rows) {
+            tabledetail.setValueAt(tbmethod.getText(), i, 0);
+            tabledetail.setValueAt(ddverb.getSelectedItem().toString(), i, 1);
+            tabledetail.setValueAt(ddtype.getSelectedItem().toString(), i, 2);
+            tabledetail.setValueAt(tbsequence.getText(), i, 3);
+            tabledetail.setValueAt(tbpath.getText(), i, 4);
+            tabledetail.setValueAt(tbkvpair.getText(), i, 5);
+            tabledetail.setValueAt(tbsourcedir.getText(), i, 6);
+            tabledetail.setValueAt(tbdestdir.getText(), i, 7);
+            tabledetail.setValueAt(ConvertBoolToYesNo(cbenabled.isSelected()), i, 8);
+
+        }
+    }//GEN-LAST:event_btupdatemethodActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
@@ -1363,6 +1396,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JButton btnew;
     private javax.swing.JButton btrun;
     private javax.swing.JButton btupdate;
+    private javax.swing.JButton btupdatemethod;
     private javax.swing.JCheckBox cbenabled;
     private javax.swing.JCheckBox cbfile;
     private javax.swing.JCheckBox cboutputencryption;

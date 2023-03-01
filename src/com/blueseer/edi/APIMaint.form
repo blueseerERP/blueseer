@@ -130,10 +130,10 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jScrollPane1" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
                                       <Component id="ddverb" min="-2" pref="89" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="53" max="-2" attributes="0"/>
                                       <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
@@ -141,14 +141,9 @@
                                       <Component id="tbsequence" min="-2" pref="45" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
                                       <Component id="cbenabled" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
-                                      <Component id="btaddmethod" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="btdeletemethod" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
                                       <Group type="103" groupAlignment="1" attributes="0">
-                                          <Component id="tbkvpair" alignment="0" min="-2" pref="221" max="-2" attributes="0"/>
                                           <Component id="tbdestdir" alignment="0" min="-2" pref="221" max="-2" attributes="0"/>
                                           <Component id="tbsourcedir" alignment="0" min="-2" pref="221" max="-2" attributes="0"/>
                                       </Group>
@@ -157,9 +152,18 @@
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="ddtype" min="-2" pref="93" max="-2" attributes="0"/>
                                   </Group>
-                                  <Component id="tbmethod" alignment="0" min="-2" pref="261" max="-2" attributes="0"/>
+                                  <Component id="tbmethod" min="-2" pref="261" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Component id="tbkvpair" min="-2" pref="221" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="btaddmethod" alignment="1" max="32767" attributes="0"/>
+                                  <Component id="btdeletemethod" alignment="1" max="32767" attributes="0"/>
+                                  <Component id="btupdatemethod" alignment="1" max="32767" attributes="0"/>
+                              </Group>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -179,7 +183,6 @@
                           <Component id="ddverb" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="cbenabled" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btaddmethod" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btdeletemethod" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="tbsequence" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -188,12 +191,14 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="tbkvpair" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel12" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btupdatemethod" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                               <Component id="ddtype" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel15" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="btdeletemethod" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="tbsourcedir" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -342,6 +347,14 @@
                 <Property name="text" type="java.lang.String" value="Type"/>
                 <Property name="name" type="java.lang.String" value="lbltype" noResource="true"/>
               </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="btupdatemethod">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Update"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btupdatemethodActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
