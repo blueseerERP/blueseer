@@ -85,22 +85,16 @@
                           <Component id="jLabel6" alignment="1" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel9" alignment="1" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="35" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="ddcomp" min="-2" pref="167" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="lblcomp" min="-2" pref="118" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                  <Component id="tbkey" alignment="0" pref="172" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Component id="tbkey" alignment="0" min="-2" pref="172" max="-2" attributes="0"/>
                                   <Component id="tbqtyper" alignment="0" min="-2" pref="96" max="-2" attributes="0"/>
                                   <Component id="ddop" alignment="0" min="-2" pref="138" max="-2" attributes="0"/>
                                   <Component id="tbref" alignment="0" min="-2" pref="167" max="-2" attributes="0"/>
                                   <Component id="tbcompcost" alignment="0" min="-2" pref="68" max="-2" attributes="0"/>
                                   <Component id="tbcomptype" alignment="0" min="-2" pref="37" max="-2" attributes="0"/>
-                                  <Component id="tbbomdesc" alignment="0" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="btlookup" min="-2" pref="25" max="-2" attributes="0"/>
@@ -118,13 +112,19 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="cbenabled" min="-2" max="-2" attributes="0"/>
                           </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="ddcomp" min="-2" pref="167" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="lblcomp" min="-2" pref="118" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="tbbomdesc" min="-2" pref="209" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="21" max="32767" attributes="0"/>
+                      <EmptySpace pref="23" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jPanel5" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="jPanel6" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="0" pref="35" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="37" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>

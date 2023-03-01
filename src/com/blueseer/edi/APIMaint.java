@@ -390,30 +390,28 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public void setComponentDefaultValues() {
-       isLoad = true;
+        isLoad = true;
         tbkey.setText("");
         detailmodel.setRowCount(0);
-           tabledetail.setModel(detailmodel);
-           
-          
-           tbkey.setText("");
-           tbdesc.setText("");
-           tburl.setText("");
-           tbport.setText("");
-           tbuser.setText("");
-           tbpass.setText("");
-           tbpath.setText("");
-           tbsequence.setText("");
-           tbmethod.setText("");
-           tbkvpair.setText("");
-           tbsourcedir.setText("");
-           tbdestdir.setText("");
-           cbenabled.setSelected(false);
-           taoutput.setText("");
-           lblurl.setText("");
-           tbcert.setText("");
+        tabledetail.setModel(detailmodel);
+        tbkey.setText("");
+        tbdesc.setText("");
+        tburl.setText("");
+        tbport.setText("");
+        tbuser.setText("");
+        tbpass.setText("");
+        tbpath.setText("");
+        tbsequence.setText("");
+        tbmethod.setText("");
+        tbkvpair.setText("");
+        tbsourcedir.setText("");
+        tbdestdir.setText("");
+        cbenabled.setSelected(false);
+        taoutput.setText("");
+        lblurl.setText("");
+        tbcert.setText("");
         
-       isLoad = false;
+        isLoad = false;
     }
     
     public void newAction(String x) {
@@ -804,7 +802,6 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(jLabel14))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tbmethod)
                     .addComponent(jScrollPane1)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -821,14 +818,15 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btdeletemethod))
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(tbdestdir, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
-                                    .addComponent(tbsourcedir, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(tbkvpair, javax.swing.GroupLayout.Alignment.LEADING))
-                                .addGap(5, 5, 5)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(tbkvpair, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tbdestdir, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tbsourcedir, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(13, 13, 13)
                                 .addComponent(jLabel15)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(tbmethod, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -950,9 +948,9 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tbapikey, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbuser))
+                            .addComponent(tbuser, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
