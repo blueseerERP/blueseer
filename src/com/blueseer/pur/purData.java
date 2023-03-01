@@ -1808,6 +1808,145 @@ public class purData {
         return m;
     }
 
+    public static double getPOTotalTax(String nbr) {
+       double tax = 0;
+     try{
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+            
+            double ordertotal = 0;
+            
+            res = st.executeQuery("SELECT  sum(pod_netprice * pod_ord_qty) as mytotal  " +
+                                    " FROM  pod_mstr  " +
+                                    " where pod_nbr = " + "'" + nbr + "'" +       
+                                    ";");
+                while (res.next()) {
+                    ordertotal += res.getDouble("mytotal");
+                }
+            
+            res = st.executeQuery("SELECT * " +
+                                    " FROM  po_meta  " +
+                                    " where pom_nbr = " + "'" + nbr + "'" +
+                                    " and pom_type = 'tax' " +        
+                                    " ;");
+
+                double pomamt = 0;
+                while (res.next()) {
+                    pomamt = res.getDouble("pom_amt");
+                    if (res.getString("pom_amttype").equals("percent")) {
+                        if (pomamt > 0)
+                        tax += (ordertotal * (pomamt / 100)); 
+                    } else {
+                       tax += pomamt;
+                    }
+                }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+                }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return tax;
+
+    }
+    
+    public static double getPOTotal(String nbr) {
+       double tax = 0;
+       double disc = 0;
+       double charge = 0;
+       double ordertotal = 0;
+     try{
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        
+        try{
+            res = st.executeQuery("SELECT  sum(pod_netprice * pod_ord_qty) as mytotal  " +
+                                    " FROM  pod_mstr  " +
+                                    " where pod_nbr = " + "'" + nbr + "'" +       
+                                    ";");
+                while (res.next()) {
+                    ordertotal += res.getDouble("mytotal");
+                }
+            
+            res = st.executeQuery("SELECT * " +
+                                    " FROM  po_meta  " +
+                                    " where pom_nbr = " + "'" + nbr + "'" +
+                                    " and pom_type = 'tax' " +        
+                                    " ;");
+
+                double pomamt = 0;
+                while (res.next()) {
+                    pomamt = res.getDouble("pom_amt");
+                    if (res.getString("pom_amttype").equals("percent")) {
+                        if (pomamt > 0)
+                        tax += (ordertotal * (pomamt / 100)); 
+                    } else {
+                       tax += pomamt;
+                    }
+                }
+            
+                res = st.executeQuery("SELECT * " +
+                                    " FROM  po_meta  " +
+                                    " where pom_nbr = " + "'" + nbr + "'" +
+                                    " and pom_type <> 'tax' " +        
+                                    " ;");
+
+                pomamt = 0;
+                while (res.next()) {
+                    pomamt = res.getDouble("pom_amt");
+                    if (res.getString("pom_type").equals("charge")) {
+                       charge += pomamt; 
+                    }
+                    if (res.getString("pom_type").equals("discount")) {
+                       if (pomamt > 0)
+                        disc += (ordertotal * (pomamt / 100)); 
+                    }
+                }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return ordertotal + charge + tax;
+
+    }
+    
+
     
     public record purchaseOrder(String[] m, po_mstr po, po_addr poa, ArrayList<pod_mstr> pod, ArrayList<po_meta> pom, ArrayList<pod_tax> podtax, ArrayList<po_tax> potax) {
         public purchaseOrder(String[] m) {

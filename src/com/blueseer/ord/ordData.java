@@ -1954,7 +1954,7 @@ public class ordData {
     return tax;
 
     }
-
+    
     public static double getOrderTotal(String nbr) {
        double tax = 0;
        double disc = 0;
@@ -2032,7 +2032,6 @@ public class ordData {
     return ordertotal + charge + tax;
 
     }
-
     
     public static String getOrderItem(String order, String line) {
         String item = "";
