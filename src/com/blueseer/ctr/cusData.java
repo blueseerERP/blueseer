@@ -1532,11 +1532,11 @@ public class cusData {
                lines.add(s);
             }
             
-            res = st.executeQuery("select car_code from car_mstr where car_type = 'carrier' order by car_code;");
+            res = st.executeQuery("select car_id from car_mstr where car_type = 'carrier' order by car_id;");
             while (res.next()) {
                 String[] s = new String[2];
                s[0] = "carriers";
-               s[1] = res.getString("car_code");
+               s[1] = res.getString("car_id");
                lines.add(s);
             }
             

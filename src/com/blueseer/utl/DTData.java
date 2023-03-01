@@ -7772,7 +7772,7 @@ return mymodel;
         try{
                   res = st.executeQuery("select * from car_mstr;");
                 while (res.next()) {
-                    mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("car_code"),
+                    mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("car_id"),
                                res.getString("car_desc"),
                                res.getString("car_scac"),
                                res.getString("car_phone"),

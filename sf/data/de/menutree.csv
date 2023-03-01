@@ -41,7 +41,9 @@ EDI,EDIExport,11,JMenuItem,EDI Export,,,,1,1
 EDI,EDIControl,12,JMenuItem,EDI Control,,,,1,1
 EDI,APIMenu,13,JMenu,API Menu,,,,1,1
 EDI,AS2Menu,14,JMenu,AS2 Menu,,,,1,1
-EDI,EDIUtilities,15,JMenuItem,EDI Utilities,,,,1,1
+EDI,WorkFlowMaint,15,JMenuItem,WorkFlow Maintenance,,,,1,1
+EDI,WorkFlowBrowse,16,JMenuItem,WorkFlow Browse,,1,,1,1
+EDI,EDIUtilities,17,JMenuItem,EDI Utilities,,,,1,1
 APIMenu,APIMaint,1,JMenuItem,API Maintenance,,,,1,1
 APIMenu,APIBrowse,2,JMenuItem,API Browse,,,,1,1
 APIMenu,APILog,3,JMenuItem,API Log,,,,1,1
