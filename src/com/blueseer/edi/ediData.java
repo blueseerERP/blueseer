@@ -2849,7 +2849,7 @@ public class ediData {
     }
     
     public record api_mstr(String[] m, String api_id, String api_desc, String api_version,
-        String api_url, String api_port, String api_path, String api_user ,
+        String api_url, String api_port, String api_path, String api_user,
         String api_pass, String api_key, String api_protocol, String api_class,
         String api_encrypted, String api_signed, String api_cert) {
         public api_mstr(String[] m) {

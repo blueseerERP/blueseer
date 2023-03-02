@@ -1,2 +1,4 @@
-999:getDillon:1:NONE:json:points::34.4166,-79.3712:::1
+999:getDillonGridPoints:1:NONE:json:::34.4166,-79.3712:::1
+995:getDillonForecast:1:NONE:json:::35,69/forecast:::1
+990:getTestStoreData:1:NONE:json::::::1
 888:getIPInfo:1:NONE:json:::132.163.96.6/geo:::1

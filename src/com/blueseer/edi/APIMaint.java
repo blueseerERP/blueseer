@@ -201,7 +201,6 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 getGlobalColumnTag("verb"),
                 getGlobalColumnTag("type"),
                 getGlobalColumnTag("sequence"),
-                getGlobalColumnTag("path"),
                 getGlobalColumnTag("value"),
                 getGlobalColumnTag("source"),
                 getGlobalColumnTag("destination"),
@@ -561,12 +560,12 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tabledetail.getValueAt(j, 3).toString(),
                 tabledetail.getValueAt(j, 1).toString(),
                 tabledetail.getValueAt(j, 2).toString(),
-                tabledetail.getValueAt(j, 4).toString(),
+                tbpath.getText(),
                 "", // key not used
+                tabledetail.getValueAt(j, 4).toString(),
                 tabledetail.getValueAt(j, 5).toString(),
                 tabledetail.getValueAt(j, 6).toString(),
-                tabledetail.getValueAt(j, 7).toString(),
-                String.valueOf(BlueSeerUtils.boolToInt(Boolean.valueOf(tabledetail.getValueAt(j, 8).toString())))
+                String.valueOf(BlueSeerUtils.boolToInt(Boolean.valueOf(tabledetail.getValueAt(j, 7).toString())))
                 );
        
         list.add(x);
@@ -635,7 +634,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         ArrayList<api_det> z = getAPIDet(x.api_id());
         for (api_det d : z) {
             detailmodel.addRow(new Object[]{d.apid_method(), d.apid_verb(), d.apid_type(),
-                 d.apid_seq(), d.apid_path(), d.apid_value(), d.apid_source(), d.apid_destination(), d.apid_enabled()});
+                 d.apid_seq(), d.apid_value(), d.apid_source(), d.apid_destination(), d.apid_enabled()});
         }
         setAction(x.m());
     }
@@ -1199,7 +1198,6 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             ddverb.getSelectedItem().toString(),
             ddtype.getSelectedItem().toString(),
             tbsequence.getText(),
-            tbpath.getText(), // header path
             tbkvpair.getText(),
             tbsourcedir.getText(),
             tbdestdir.getText(),
@@ -1208,7 +1206,6 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             // now clear detail fields
             tbmethod.setText("");
             tbsequence.setText("");
-            tbpath.setText("");
             tbkvpair.setText("");
             tbsourcedir.setText("");
             tbdestdir.setText("");
@@ -1266,86 +1263,93 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         String method = "";
         String verb = "";
         String value = "";
+        HttpURLConnection conn = null;
         for (int i : rows) {
             k++;
             method = tabledetail.getValueAt(i, 0).toString();
             verb = tabledetail.getValueAt(i, 1).toString();
-            value = tabledetail.getValueAt(i, 5).toString();
+            value = tabledetail.getValueAt(i, 4).toString();
             if (k > 0) {
                 break;
             }
         }  
-            try {
-                String urlstring = "";
-                String port = "";
-                if (! value.isBlank()) {
-                    value = "/" + value;
-                }
-                if (tbport.getText().isBlank()) {  
-                   port = ""; 
-                } else {
-                   port = ":" + tbport.getText();
-                }
-                
-                if (verb.equals("NONE")) {
-                    urlstring = ddprotocol.getSelectedItem().toString() + "://" + tburl.getText() + port + tbpath.getText() + value;
-                } else {
-                    urlstring = ddprotocol.getSelectedItem().toString() + "://" + tburl.getText() + port + tbpath.getText() + verb.toLowerCase() ;
-                }
-                lblurl.setText(urlstring);
-                URL url = new URL(urlstring);
-                
-                
-             
-                
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		if (! verb.equals("NONE")) {
-                conn.setRequestMethod(verb);
-                }
-		conn.setRequestProperty("Accept", "application/json");
+        try {
+            String urlstring = "";
+            String port = "";
+           
+            if (tbport.getText().isBlank()) {  
+               port = ""; 
+            } else {
+               port = ":" + tbport.getText();
+            }
 
-                BufferedReader br = null;
-		if (conn.getResponseCode() != 200) {
-                        taoutput.append(conn.getResponseCode() + ": " + conn.getResponseMessage());
-			//throw new RuntimeException("Failed : HTTP error code : "
-			//		+ conn.getResponseCode());
-		} else {
-                    br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
-                }
+            if (verb.equals("NONE")) {
+                urlstring = ddprotocol.getSelectedItem().toString() + "://" + tburl.getText() + port + tbpath.getText() + value;
+            } else {
+                urlstring = ddprotocol.getSelectedItem().toString() + "://" + tburl.getText() + port + tbpath.getText() + verb.toLowerCase() ;
+            }
+            lblurl.setText(urlstring);
+            URL url = new URL(urlstring);
 
-		int filenumber;
-                Path path;
-                BufferedWriter outputfile = null;
-                if (cbfile.isSelected()) {
-                    filenumber = OVData.getNextNbr("ediout");
-                    path = FileSystems.getDefault().getPath("edi/api/in" + "/" + "api." + tbkey.getText() + "." + String.valueOf(filenumber) + ".txt"); 
-                    outputfile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path.toFile())));
+
+
+
+            conn = (HttpURLConnection) url.openConnection();
+            if (! verb.equals("NONE")) {
+            conn.setRequestMethod(verb);
+            }
+            conn.setRequestProperty("Accept", "application/json");
+            
+            if (! tbapikey.getText().isBlank()) {
+            conn.setRequestProperty("Authorization",tbapikey.getText());
+            }
+            
+            BufferedReader br = null;
+            if (conn.getResponseCode() != 200) {
+                    taoutput.append(conn.getResponseCode() + ": " + conn.getResponseMessage());
+                    //throw new RuntimeException("Failed : HTTP error code : "
+                    //		+ conn.getResponseCode());
+            } else {
+                br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+            }
+
+            int filenumber;
+            Path path;
+            BufferedWriter outputfile = null;
+            if (cbfile.isSelected()) {
+                filenumber = OVData.getNextNbr("ediout");
+                path = FileSystems.getDefault().getPath("edi/api/in" + "/" + "api." + tbkey.getText() + "." + String.valueOf(filenumber) + ".txt"); 
+                outputfile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path.toFile())));
+            }
+            String output;
+            if (br != null) {
+                while ((output = br.readLine()) != null) {
+                        taoutput.append(output + "\n");
+                        if (cbfile.isSelected() && outputfile != null) {
+                         outputfile.write(output);
+                        }
                 }
-		String output;
-                if (br != null) {
-                    while ((output = br.readLine()) != null) {
-                            taoutput.append(output + "\n");
-                            if (cbfile.isSelected() && outputfile != null) {
-                             outputfile.write(output);
-                            }
-                    }
-                    br.close();
-                }
-                if (outputfile != null) {
-                    outputfile.close(); 
-                }
+                br.close();
+            }
+            if (outputfile != null) {
+                outputfile.close(); 
+            }
+
+
+
+            } catch (MalformedURLException e) {
+                taoutput.append("MalformedURLException: " + e + "\n");
+            } catch (UnknownHostException ex) {
+                taoutput.append("UnknownHostException: " + ex + "\n");
+            } catch (IOException ex) {
+                taoutput.append("IOException: " + ex + "\n");
+            } catch (Exception ex) {
+                taoutput.append("Exception: " + ex + "\n");
+            } finally {
+               if (conn != null) {
                 conn.disconnect();
-                
-                
-                } catch (MalformedURLException e) {
-                    taoutput.append("MalformedURLException: " + e + "\n");
-	        } catch (UnknownHostException ex) {
-                    taoutput.append("UnknownHostException: " + ex + "\n");
-                } catch (IOException ex) {
-                    taoutput.append("IOException: " + ex + "\n");
-                } catch (Exception ex) {
-                    taoutput.append("Exception: " + ex + "\n");
-                } 
+               }
+            }
     }//GEN-LAST:event_btrunActionPerformed
 
     private void tabledetailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabledetailMouseClicked
@@ -1357,11 +1361,10 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbmethod.setText(tabledetail.getValueAt(row, 0).toString());
         ddtype.setSelectedItem(tabledetail.getValueAt(row, 2).toString());
         tbsequence.setText(tabledetail.getValueAt(row, 3).toString());
-        tbpath.setText(tabledetail.getValueAt(row, 4).toString());
-        tbkvpair.setText(tabledetail.getValueAt(row, 5).toString());
-        tbsourcedir.setText(tabledetail.getValueAt(row, 6).toString());
-        tbdestdir.setText(tabledetail.getValueAt(row, 7).toString());
-        cbenabled.setSelected(bsmf.MainFrame.ConvertStringToBool(tabledetail.getValueAt(row, 8).toString()));
+        tbkvpair.setText(tabledetail.getValueAt(row, 4).toString());
+        tbsourcedir.setText(tabledetail.getValueAt(row, 5).toString());
+        tbdestdir.setText(tabledetail.getValueAt(row, 6).toString());
+        cbenabled.setSelected(bsmf.MainFrame.ConvertStringToBool(tabledetail.getValueAt(row, 7).toString()));
         isLoad = false;
     }//GEN-LAST:event_tabledetailMouseClicked
 
@@ -1376,11 +1379,10 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             tabledetail.setValueAt(ddverb.getSelectedItem().toString(), i, 1);
             tabledetail.setValueAt(ddtype.getSelectedItem().toString(), i, 2);
             tabledetail.setValueAt(tbsequence.getText(), i, 3);
-            tabledetail.setValueAt(tbpath.getText(), i, 4);
-            tabledetail.setValueAt(tbkvpair.getText(), i, 5);
-            tabledetail.setValueAt(tbsourcedir.getText(), i, 6);
-            tabledetail.setValueAt(tbdestdir.getText(), i, 7);
-            tabledetail.setValueAt(ConvertBoolToYesNo(cbenabled.isSelected()), i, 8);
+            tabledetail.setValueAt(tbkvpair.getText(), i, 4);
+            tabledetail.setValueAt(tbsourcedir.getText(), i, 5);
+            tabledetail.setValueAt(tbdestdir.getText(), i, 6);
+            tabledetail.setValueAt(ConvertBoolToYesNo(cbenabled.isSelected()), i, 7);
 
         }
     }//GEN-LAST:event_btupdatemethodActionPerformed

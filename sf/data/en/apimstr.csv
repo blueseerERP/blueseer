@@ -1,2 +1,4 @@
-999,weather.gov,,api.weather.gov,,points,,,,https,HTTPS,0,0,
-888,IP info lookup api,,ipinfo.io,,,,,,https,HTTPS,0,0,
+999,weather.gov Grid Codes,,api.weather.gov,,/points,,,,https,HTTPS,0,0,
+995,weather.gov Dillon SC forecast,,api.weather.gov,,/gridpoints/ILM,,,,https,HTTPS,0,0,
+990,test store data,,fakestoreapi.com,,/products?limit=5,,,,http,HTTP,0,0,
+888,IP - Geographic info api,,ipinfo.io,,,,,,https,HTTPS,0,0,
