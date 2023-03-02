@@ -960,6 +960,7 @@ public class FOMaint extends javax.swing.JPanel {
         jTextField1 = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanelMain = new javax.swing.JPanel();
         jLabel76 = new javax.swing.JLabel();
         freightorder = new javax.swing.JTextField();
@@ -1034,7 +1035,6 @@ public class FOMaint extends javax.swing.JPanel {
         jLabel14 = new javax.swing.JLabel();
         btcommit = new javax.swing.JButton();
         btupdateitem = new javax.swing.JButton();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanelLoad = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         ddshipfrom = new javax.swing.JComboBox<>();
@@ -1100,6 +1100,7 @@ public class FOMaint extends javax.swing.JPanel {
         jLabel10.setText("jLabel10");
 
         setBackground(new java.awt.Color(0, 102, 204));
+        add(jTabbedPane1);
 
         jPanelMain.setBorder(javax.swing.BorderFactory.createTitledBorder("Freight Order Maintenance"));
         jPanelMain.setName("panelmain"); // NOI18N
@@ -1630,7 +1631,6 @@ public class FOMaint extends javax.swing.JPanel {
         );
 
         add(jPanelMain);
-        add(jTabbedPane1);
 
         jPanelLoad.setPreferredSize(new java.awt.Dimension(840, 634));
 
