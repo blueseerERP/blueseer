@@ -660,6 +660,14 @@ CREATE TABLE "api_det" (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "api_meta" (
+  "apim_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "apim_key" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "apim_value" varchar(100) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "apid_meta" (
   "apidm_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "apidm_method" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',

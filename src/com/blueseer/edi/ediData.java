@@ -1317,7 +1317,29 @@ public class ediData {
             return rows;
     }
     
-    public static String[] addAPITransaction(ArrayList<api_det> apid, api_mstr api) {
+    private static int _addAPIDMeta(apid_meta x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from apid_meta where apidm_id = ? and apid_method = ? and apidm_key = ?;";
+        String sqlInsert = "insert into apid_meta (apidm_id, apidm_method, apidm_key, apidm_value )  " 
+                        + " values (?,?,?,?); "; 
+       
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x.apidm_id);
+          ps.setString(2, x.apidm_method);
+          ps.setString(3, x.apidm_key);
+          res = ps.executeQuery();
+          ps = con.prepareStatement(sqlInsert);  
+            if (! res.isBeforeFirst()) {
+            ps.setString(1, x.apidm_id);
+            ps.setString(2, x.apidm_method);
+            ps.setString(3, x.apidm_key);
+            ps.setString(4, x.apidm_value);
+            rows = ps.executeUpdate();
+            } 
+            return rows;
+    }
+          
+    public static String[] addAPITransaction(ArrayList<apid_meta> apidm, ArrayList<api_det> apid, api_mstr api) {
         String[] m = new String[2];
         Connection bscon = null;
         PreparedStatement ps = null;
@@ -1328,6 +1350,9 @@ public class ediData {
             _addAPIMstr(api, bscon, ps, res);  
             for (api_det z : apid) {
                 _addAPIDet(z, bscon, ps, res);
+            }
+            for (apid_meta z : apidm) {
+                _addAPIDMeta(z, bscon, ps, res);
             }
             bscon.commit();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
@@ -1738,6 +1763,11 @@ public class ediData {
         ps.setString(1, x);
         ps.setString(2, line);
         ps.executeUpdate();
+        sql = "delete from apid_meta where apidm_id = ? and apidm_method = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x);
+        ps.setString(2, line);
+        ps.executeUpdate();
         ps.close();
     }
     
@@ -1975,6 +2005,71 @@ public class ediData {
         MainFrame.bslog(e);
     }
         return lines;
+    }
+    
+    public static ArrayList<apid_meta> getAPIDMeta(String code) {
+        apid_meta r = null;
+        String[] m = new String[2];
+        ArrayList<apid_meta> list = new ArrayList<apid_meta>();
+        String sql = "select * from apid_meta where apidm_id = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, code);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new apid_meta(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new apid_meta(m, res.getString("apidm_id"), 
+                        res.getString("apidm_method"), 
+                        res.getString("apidm_key"),
+                        res.getString("apidm_value"));
+                        list.add(r);
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new apid_meta(m);
+               list.add(r);
+        }
+        return list;
+    }
+    
+    public static ArrayList<apid_meta> getAPIDMeta(String code, String line) {
+        apid_meta r = null;
+        String[] m = new String[2];
+        ArrayList<apid_meta> list = new ArrayList<apid_meta>();
+        String sql = "select * from apid_meta where apidm_id = ? and apidm_method = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, code);
+        ps.setString(2, line);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new apid_meta(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new apid_meta(m, res.getString("apidm_id"), 
+                        res.getString("apidm_method"), 
+                        res.getString("apidm_key"),
+                        res.getString("apidm_value"));
+                        list.add(r);
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new apid_meta(m);
+               list.add(r);
+        }
+        return list;
     }
     
     
@@ -2865,6 +2960,13 @@ public class ediData {
             this(m, "", "", "", "", "", "", "", "", "", "", "");
         }
     }
+    
+    public record apid_meta(String[] m, String apidm_id, String apidm_method, String apidm_key, String apidm_value) {
+        public apid_meta(String[] m) {
+            this(m, "", "", "", "");
+        }
+    }
+    
     
     public record jsonRecord(ObjectNode on, boolean isArray) {}
     

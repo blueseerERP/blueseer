@@ -41,6 +41,7 @@ import static bsmf.MainFrame.user;
 import static com.blueseer.edi.ediData.addAPITransaction;
 import com.blueseer.edi.ediData.api_det;
 import com.blueseer.edi.ediData.api_mstr;
+import com.blueseer.edi.ediData.apid_meta;
 import static com.blueseer.edi.ediData.deleteAPIMstr;
 import static com.blueseer.edi.ediData.getAPIDet;
 import static com.blueseer.edi.ediData.getAPIMethodsList;
@@ -90,26 +91,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.PrivateKey;
-import java.security.Security;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertStore;
-import java.security.cert.CertStoreException;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateEncodingException;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateExpiredException;
-import java.security.cert.CertificateFactory;
-import java.security.cert.CertificateNotYetValidException;
-import java.security.cert.X509Certificate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -137,6 +119,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 
 import org.bouncycastle.util.Store;
@@ -153,6 +137,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 boolean isLoad = false;
                 public static Store certs = null;
                 public static api_mstr x = null;
+                public static LinkedHashMap<String, ArrayList<String[]>> apidm = new  LinkedHashMap<String, ArrayList<String[]>>();
     // global datatablemodel declarations   
      javax.swing.table.DefaultTableModel detailmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
@@ -450,7 +435,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public String[] addRecord(String[] x) {
-    String[] m = addAPITransaction(createDetRecord(), createRecord());
+    String[] m = addAPITransaction(createAPIDMetaRecord(), createDetRecord(), createRecord());
          return m;
      }
      
@@ -537,6 +522,27 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
          }
         return list;   
     }
+    
+    public ArrayList<apid_meta> createAPIDMetaRecord() {
+        ArrayList<apid_meta> list = new ArrayList<apid_meta>();
+         for (int j = 0; j < tabledetail.getRowCount(); j++) {
+             for (Map.Entry<String, ArrayList<String[]>> z : apidm.entrySet()) {
+    		 if (z.getKey().equals(tabledetail.getValueAt(j, 0).toString())) {
+    			 ArrayList<String[]> k = z.getValue();
+    			 for (String[] g : k) {
+                                apid_meta x = new apid_meta(null, 
+                                tbkey.getText(),
+                                tabledetail.getValueAt(j, 0).toString(),
+                                g[0],
+                                g[1]); 
+                            list.add(x);
+    			 }
+    		 }
+    	    }
+         }
+        return list;   
+    }
+    
     
     public void lookUpFrame() {
         
