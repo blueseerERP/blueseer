@@ -1627,7 +1627,7 @@ public class ediData {
      
     private static int _updateAPIDMeta(apid_meta x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
-        String sqlSelect = "select * from apid_meta where apidm_id = ? and apid_method = ? and apidm_key = ?;";
+        String sqlSelect = "select * from apid_meta where apidm_id = ? and apidm_method = ? and apidm_key = ?;";
         String sqlInsert = "insert into apid_meta (apidm_id, apidm_method, apidm_key, apidm_value )  " 
                         + " values (?,?,?,?); ";
         String sqlUpdate = "update apid_meta set apidm_key = ?, apidm_value = ? " +
@@ -1636,6 +1636,7 @@ public class ediData {
         ps = con.prepareStatement(sqlSelect);
         ps.setString(1, x.apidm_id);
         ps.setString(2, x.apidm_method);
+        ps.setString(3, x.apidm_key);
         res = ps.executeQuery();
         if (! res.isBeforeFirst()) {  // insert
 	 ps = con.prepareStatement(sqlInsert) ;
@@ -1672,6 +1673,7 @@ public class ediData {
             for (api_det z : apid) {
                 _updateAPIdet(z, bscon, ps, res);
             }
+            _deleteAllAPIDMeta(x, bscon); // delete all meta details for this apidm_id...then add diff back
             for (apid_meta z : apidm) {
                 _updateAPIDMeta(z, bscon, ps, res);
             }
@@ -1789,6 +1791,15 @@ public class ediData {
                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
         }
         return m;
+    }
+    
+    private static void _deleteAllAPIDMeta(String x, Connection con) throws SQLException { 
+        PreparedStatement ps = null; 
+        String sql = "delete from apid_meta where apidm_id = ?;";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x);
+        ps.executeUpdate();
+        ps.close();
     }
     
     

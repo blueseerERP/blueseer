@@ -1,4 +1,6 @@
 999,weather.gov Grid Codes,,api.weather.gov,,/points,,,,https,HTTPS,0,0,
 995,weather.gov Dillon SC forecast,,api.weather.gov,,/gridpoints/ILM,,,,https,HTTPS,0,0,
+993,MapQuest,,www.mapquestapi.com,,/directions/v2/route,,,,http,HTTP,0,0,
+991,crypto currency exchange rates,,api.coingecko.com,,/api/v3/exchange_rates,,,,https,HTTPS,0,0,
 990,test store data,,fakestoreapi.com,,/products?limit=5,,,,http,HTTP,0,0,
 888,IP - Geographic info api,,ipinfo.io,,,,,,https,HTTPS,0,0,
