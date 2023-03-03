@@ -1624,8 +1624,41 @@ public class ediData {
             
         return rows;
     }
-        
-    public static String[] updateAPITransaction(String x, ArrayList<String> lines, ArrayList<api_det> apid, api_mstr api) {
+     
+    private static int _updateAPIDMeta(apid_meta x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from apid_meta where apidm_id = ? and apid_method = ? and apidm_key = ?;";
+        String sqlInsert = "insert into apid_meta (apidm_id, apidm_method, apidm_key, apidm_value )  " 
+                        + " values (?,?,?,?); ";
+        String sqlUpdate = "update apid_meta set apidm_key = ?, apidm_value = ? " +
+                 " where apidm_id = ? and apidm_method = ? ; ";
+       
+        ps = con.prepareStatement(sqlSelect);
+        ps.setString(1, x.apidm_id);
+        ps.setString(2, x.apidm_method);
+        res = ps.executeQuery();
+        if (! res.isBeforeFirst()) {  // insert
+	 ps = con.prepareStatement(sqlInsert) ;
+            ps.setString(1, x.apidm_id);
+            ps.setString(2, x.apidm_method);
+            ps.setString(3, x.apidm_key);
+            ps.setString(4, x.apidm_value);
+            rows = ps.executeUpdate();
+        } else {    // update
+         
+         ps = con.prepareStatement(sqlUpdate) ;
+            ps.setString(1, x.apidm_key);
+            ps.setString(2, x.apidm_value);
+            ps.setString(3, x.apidm_id);
+            ps.setString(4, x.apidm_method);
+            rows = ps.executeUpdate();
+        }
+            
+        return rows;
+    }
+    
+    
+    public static String[] updateAPITransaction(String x, ArrayList<String> lines, ArrayList<apid_meta> apidm, ArrayList<api_det> apid, api_mstr api) {
         String[] m = new String[2];
         Connection bscon = null;
         PreparedStatement ps = null;
@@ -1638,6 +1671,9 @@ public class ediData {
              }
             for (api_det z : apid) {
                 _updateAPIdet(z, bscon, ps, res);
+            }
+            for (apid_meta z : apidm) {
+                _updateAPIDMeta(z, bscon, ps, res);
             }
              _updateAPIMstr(api, bscon, ps);  // update so_mstr
             bscon.commit();

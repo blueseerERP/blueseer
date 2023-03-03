@@ -31,18 +31,13 @@ package com.blueseer.edi;
 import bsmf.MainFrame;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
-import static bsmf.MainFrame.bslog;
-import static bsmf.MainFrame.db;
-import static bsmf.MainFrame.ds;
-import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
-import static bsmf.MainFrame.url;
-import static bsmf.MainFrame.user;
 import static com.blueseer.edi.ediData.addAPITransaction;
 import com.blueseer.edi.ediData.api_det;
 import com.blueseer.edi.ediData.api_mstr;
 import com.blueseer.edi.ediData.apid_meta;
 import static com.blueseer.edi.ediData.deleteAPIMstr;
+import static com.blueseer.edi.ediData.getAPIDMeta;
 import static com.blueseer.edi.ediData.getAPIDet;
 import static com.blueseer.edi.ediData.getAPIMethodsList;
 import static com.blueseer.edi.ediData.getAPIMstr;
@@ -120,7 +115,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
+import javax.swing.DefaultListModel;
 
 
 import org.bouncycastle.util.Store;
@@ -137,6 +135,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 boolean isLoad = false;
                 public static Store certs = null;
                 public static api_mstr x = null;
+                public static ArrayList<apid_meta> apidmlist = null;
                 public static LinkedHashMap<String, ArrayList<String[]>> apidm = new  LinkedHashMap<String, ArrayList<String[]>>();
     // global datatablemodel declarations   
      javax.swing.table.DefaultTableModel detailmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -152,6 +151,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 
             });
     
+     DefaultListModel kvmodel = new DefaultListModel();
   
     public APIMaint() {
         initComponents();
@@ -337,6 +337,9 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     public void setComponentDefaultValues() {
         isLoad = true;
         
+        kvmodel.removeAllElements();
+        listkv.setModel(kvmodel);
+        
         jTabbedPane1.removeAll();
         jTabbedPane1.add("Main", panelMain);
         jTabbedPane1.add("Detail", panelDetail);
@@ -458,7 +461,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
               badmethods.add(method);
           }
         }
-        m = updateAPITransaction(tbkey.getText(), badmethods, createDetRecord(), createRecord());
+        m = updateAPITransaction(tbkey.getText(), badmethods, createAPIDMetaRecord(), createDetRecord(), createRecord());
      return m;
      }
      
@@ -477,6 +480,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     public String[] getRecord(String[] key) {
        api_mstr z = getAPIMstr(key);     
         x = z;
+        apidmlist = getAPIDMeta(key[0]); 
         return x.m();
     }
     
@@ -607,6 +611,23 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             detailmodel.addRow(new Object[]{d.apid_method(), d.apid_verb(), d.apid_type(),
                  d.apid_seq(), d.apid_value(), d.apid_source(), d.apid_destination(), d.apid_enabled()});
         }
+        
+        // now  meta
+           Set<String> set = new LinkedHashSet<String>();
+           for (apid_meta a : apidmlist) { 
+                set.add(a.apidm_key());
+           }
+           for (String s : set) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            for (apid_meta a : apidmlist) { 
+                 if (! a.apidm_method().equals(s)) {
+                     continue;
+                 }
+                 list.add(new String[]{a.apidm_key(), a.apidm_value()});
+            }
+            apidm.put(s, list);
+           }
+        
         setAction(x.m());
     }
     
@@ -684,7 +705,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         btaddattribute = new javax.swing.JButton();
         tbattributevalue = new javax.swing.JTextField();
         jScrollPane3 = new javax.swing.JScrollPane();
-        listAttributes = new javax.swing.JList<>();
+        listkv = new javax.swing.JList<>();
         tbattributekey = new javax.swing.JTextField();
         jLabel19 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
@@ -939,7 +960,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addComponent(btupdate)
                         .addGap(6, 6, 6)
                         .addComponent(btadd)))
-                .addGap(0, 341, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
             .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(panelMainLayout.createSequentialGroup()
                 .addContainerGap()
@@ -1051,7 +1072,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
-        jScrollPane3.setViewportView(listAttributes);
+        jScrollPane3.setViewportView(listkv);
 
         jLabel19.setText("Key");
 
@@ -1413,6 +1434,17 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbsourcedir.setText(tabledetail.getValueAt(row, 5).toString());
         tbdestdir.setText(tabledetail.getValueAt(row, 6).toString());
         cbenabled.setSelected(bsmf.MainFrame.ConvertStringToBool(tabledetail.getValueAt(row, 7).toString()));
+        
+        kvmodel.removeAllElements();
+        for (Map.Entry<String, ArrayList<String[]>> z : apidm.entrySet()) {
+            ArrayList<String[]> x = apidm.get(z);
+            int i = 0;
+            for (String[] xs : x) {
+            kvmodel.add(i, xs[0] + "=" + xs[1]);
+            i++;
+            }
+        }
+        
         isLoad = false;
     }//GEN-LAST:event_tabledetailMouseClicked
 
@@ -1438,23 +1470,20 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     private void btdeleteattributeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteattributeActionPerformed
         boolean proceed = true;
 
-        if (listAttributes.isSelectionEmpty()) {
+        if (listkv.isSelectionEmpty()) {
             proceed = false;
             bsmf.MainFrame.show(getMessageTag(1029));
         } else {
             proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         }
         if (proceed) {
-            String[] z = listAttributes.getSelectedValue().toString().split(":");
-            
+            int i = listkv.getSelectedIndex();
+            listkv.remove(i);            
         }
     }//GEN-LAST:event_btdeleteattributeActionPerformed
 
     private void btaddattributeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddattributeActionPerformed
-/*
-        EDData.addEDIAttributeRecord(tbsndgs.getText(), tbrcvgs.getText(), dddoc.getSelectedItem().toString(), ddattributekey.getSelectedItem().toString(), tbattributevalue.getText());
-        getAttributes(tbsndgs.getText(), tbrcvgs.getText(), dddoc.getSelectedItem().toString());
-        */
+        kvmodel.addElement(tbattributekey.getText() + "=" + tbattributevalue.getText());
         tbattributekey.setText("");
         tbattributevalue.setText("");
     }//GEN-LAST:event_btaddattributeActionPerformed
@@ -1509,7 +1538,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel lblurl;
-    private javax.swing.JList<String> listAttributes;
+    private javax.swing.JList<String> listkv;
     private javax.swing.JPanel panelDetail;
     private javax.swing.JPanel panelMain;
     private javax.swing.JTable tabledetail;
