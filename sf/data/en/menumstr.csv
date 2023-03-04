@@ -214,6 +214,7 @@ EDIExport,,com.blueseer.edi.EDIExport,JMenuItem,edit
 EDIUtilities,,com.blueseer.edi.EDIUtilities,JMenuItem,eutl
 WorkFlowMaint,,com.blueseer.edi.WorkFlowMaint,JMenuItem,wkfm
 WorkFlowBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,wkfb
+WorkFlowLog,,com.blueseer.edi.WorkFlowLog,JMenuItem,wkfl
 MapMaint,,com.blueseer.edi.MapMaint,JMenuItem,map
 StructMaint,,com.blueseer.edi.StructMaint,JMenuItem,mpsm
 APIMaint,,com.blueseer.edi.APIMaint,JMenuItem,apim

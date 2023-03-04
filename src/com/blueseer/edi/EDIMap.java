@@ -1611,11 +1611,15 @@ public abstract class EDIMap {  // took out the implements EDIMapi
 	    	}
 	    	if (x == JsonToken.END_OBJECT) {
                    // System.out.println("myobjectend: " + jsonParser.getCurrentName() + " / " + x.name());
-	    		segments.pop();
+	    	   if (! segments.empty()) {	
+                   segments.pop();
+                   }
 	    	}
 	    	if (x == JsonToken.END_ARRAY) {
                   //  System.out.println("myarrayend: " + jsonParser.getCurrentName() + " / " + x.name());
-	    		segments.pop();
+	    		if (! segments.empty()) {
+                        segments.pop();
+                        }
 	    		arraycount = 0;
 	    		startcount = false;
 	    	}

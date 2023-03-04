@@ -304,3 +304,6 @@ SchemaBrowse,Schema Details of Database BSDB,com.blueseer.utl.ReportPanel,JMenuI
 piechart_profitandloss,,com.blueseer.utl.ChartView,JMenuItem,palc
 CronBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,cronb
 PKSBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,pksb
+WorkFlowMaint,,com.blueseer.edi.WorkFlowMaint,JMenuItem,wkfm
+WorkFlowBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,wkfb
+WorkFlowLog,,com.blueseer.edi.WorkFlowLog,JMenuItem,wkfl
