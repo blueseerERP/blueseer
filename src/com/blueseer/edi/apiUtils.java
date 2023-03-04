@@ -28,6 +28,7 @@ package com.blueseer.edi;
 import static bsmf.MainFrame.bslog;
 import com.blueseer.adm.admData;
 import com.blueseer.adm.admData.pks_mstr;
+import static com.blueseer.edi.APIMaint.apidm;
 import static com.blueseer.edi.AS2Maint.certs;
 import com.blueseer.edi.ediData.api_det;
 import com.blueseer.edi.ediData.api_mstr;
@@ -175,6 +176,7 @@ public class apiUtils {
         String method = "";
         String verb = "";
         String value = "";
+        HttpURLConnection conn = null;
         
         if (api.m()[0].equals("1") || api.api_id().isBlank()) {
            r[0] = "1";
@@ -199,7 +201,16 @@ public class apiUtils {
                 String urlstring = "";
                 String port = "";
                 if (! apid.apid_value().isBlank()) {
-                    value = "/" + apid.apid_value();
+                    ArrayList<String[]> list = apidm.get(apid.apid_method());
+                if (list != null) {
+                    value = "?";
+                    for (String[] s : list) {
+                        value = value + s[0] + "=" + s[1] + "&";
+                    }
+                    if (value.endsWith("&")) {
+                        value = value.substring(0, value.length() - 1);
+                    }
+                }
                 }
                 if (api.api_port().isBlank()) {  
                    port = ""; 
@@ -208,9 +219,9 @@ public class apiUtils {
                 }
                 
                 if (apid.apid_verb().equals("NONE")) {
-                    urlstring = api.api_protocol() + "://" + api.api_url() + port + "/" + api.api_path() + value;
+                    urlstring = api.api_protocol() + "://" + api.api_url() + port + api.api_path() + value;
                 } else {
-                    urlstring = api.api_protocol() + "://" + api.api_url() + port + "/" + api.api_path() + apid.apid_verb().toLowerCase() ;
+                    urlstring = api.api_protocol() + "://" + api.api_url() + port + api.api_path() + apid.apid_verb().toLowerCase() ;
                 }
                 
                 URL url = new URL(urlstring);
@@ -224,7 +235,7 @@ public class apiUtils {
              
                 // sourcepath api 'push' unfinished
                 
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn = (HttpURLConnection) url.openConnection();
 		if (! verb.equals("NONE")) {
                 conn.setRequestMethod(verb);
                 }
@@ -248,18 +259,23 @@ public class apiUtils {
                     br.close();
                 }
                 outputfile.close(); 
-                conn.disconnect();
-                
-                
                 } catch (MalformedURLException e) {
-		    bslog(e);
-                    bsmf.MainFrame.show("MalformedURLException");
-	        } catch (IOException ex) {
-                    bslog(ex);
-                    bsmf.MainFrame.show("IOException");
+                r[0] = "1";    
+                r[1] = ("MalformedURLException: " + e + "\n");
+                } catch (UnknownHostException ex) {
+                    r[0] = "1";   
+                    r[1] = ("UnknownHostException: " + ex + "\n");
+                } catch (IOException ex) {
+                    r[0] = "1";   
+                    r[1] = ("IOException: " + ex + "\n");
                 } catch (Exception ex) {
-                        Logger.getLogger(APIMaint.class.getName()).log(Level.SEVERE, null, ex);
-                    } 
+                    r[0] = "1";   
+                    r[1] = ("Exception: " + ex + "\n");
+                } finally {
+                   if (conn != null) {
+                    conn.disconnect();
+                   }
+                }
         
         return r;
     }

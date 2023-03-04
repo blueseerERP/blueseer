@@ -471,32 +471,33 @@
                                       <Component id="tbmethod" max="32767" attributes="0"/>
                                       <Component id="tbkvpair" alignment="1" pref="221" max="32767" attributes="0"/>
                                   </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="btaddmethod" min="-2" pref="67" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="btupdatemethod" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="btdeletemethod" min="-2" pref="67" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="182" max="-2" attributes="0"/>
+                                  <Component id="cbfile" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="btrun" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <Component id="cbenabled" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace min="-2" pref="80" max="-2" attributes="0"/>
-                                          <Component id="cbfile" min="-2" max="-2" attributes="0"/>
-                                      </Group>
+                                      <Component id="cbenabled" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="tbsequence" alignment="0" min="-2" pref="45" max="-2" attributes="0"/>
                                       <Component id="ddtype" alignment="0" min="-2" pref="93" max="-2" attributes="0"/>
                                       <Component id="ddverb" alignment="0" min="-2" pref="89" max="-2" attributes="0"/>
                                       <Component id="tbdestdir" alignment="0" min="-2" pref="221" max="-2" attributes="0"/>
                                       <Component id="tbsourcedir" alignment="0" min="-2" pref="221" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
                                   <Component id="jPanel5" min="-2" max="-2" attributes="0"/>
                               </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <EmptySpace min="-2" pref="139" max="-2" attributes="0"/>
+                                  <Component id="btdeletemethod" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
+                                  <Component id="btaddmethod" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="btupdatemethod" min="-2" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
+                          <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
                       </Group>
                       <Component id="jScrollPane1" max="32767" attributes="0"/>
                   </Group>
@@ -523,18 +524,13 @@
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="tbmethod" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="btaddmethod" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="btupdatemethod" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="btdeletemethod" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="btrun" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="cbfile" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="cbenabled" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="cbfile" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="cbenabled" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="ddverb" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -569,6 +565,12 @@
                               <Component id="jPanel5" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="btaddmethod" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="btupdatemethod" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="btdeletemethod" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                           <Component id="jScrollPane1" pref="119" max="32767" attributes="0"/>
                       </Group>
                   </Group>
@@ -639,8 +641,8 @@
         </Component>
         <Component class="javax.swing.JButton" name="btdeletemethod">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Delete"/>
-            <Property name="name" type="java.lang.String" value="btdelete" noResource="true"/>
+            <Property name="text" type="java.lang.String" value="Delete Method"/>
+            <Property name="name" type="java.lang.String" value="btdeletemethod" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdeletemethodActionPerformed"/>
@@ -650,8 +652,8 @@
         </Component>
         <Component class="javax.swing.JButton" name="btaddmethod">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Add"/>
-            <Property name="name" type="java.lang.String" value="btadd" noResource="true"/>
+            <Property name="text" type="java.lang.String" value="Add Method"/>
+            <Property name="name" type="java.lang.String" value="btaddmethod" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btaddmethodActionPerformed"/>
@@ -709,7 +711,8 @@
         </Component>
         <Component class="javax.swing.JButton" name="btupdatemethod">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Update"/>
+            <Property name="text" type="java.lang.String" value="Update Method"/>
+            <Property name="name" type="java.lang.String" value="btupdatemethod" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btupdatemethodActionPerformed"/>
@@ -719,7 +722,7 @@
           <Properties>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                <TitledBorder title="Attributes"/>
+                <TitledBorder title="Parameters"/>
               </Border>
             </Property>
           </Properties>
@@ -730,9 +733,9 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Group type="102" attributes="0">
-                              <Component id="btdeleteattribute" min="-2" pref="25" max="-2" attributes="0"/>
+                              <Component id="btdeleteparam" min="-2" pref="25" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="btaddattribute" min="-2" pref="25" max="-2" attributes="0"/>
+                              <Component id="btaddparam" min="-2" pref="25" max="-2" attributes="0"/>
                           </Group>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Group type="102" attributes="0">
@@ -771,35 +774,35 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="btaddattribute" alignment="0" min="-2" pref="20" max="-2" attributes="0"/>
-                          <Component id="btdeleteattribute" alignment="0" min="-2" pref="20" max="-2" attributes="0"/>
+                          <Component id="btaddparam" alignment="0" min="-2" pref="20" max="-2" attributes="0"/>
+                          <Component id="btdeleteparam" alignment="0" min="-2" pref="20" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane3" pref="147" max="32767" attributes="0"/>
+                      <Component id="jScrollPane3" pref="116" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JButton" name="btdeleteattribute">
+            <Component class="javax.swing.JButton" name="btdeleteparam">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/images/delete.png"/>
                 </Property>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdeleteattributeActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdeleteparamActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="btaddattribute">
+            <Component class="javax.swing.JButton" name="btaddparam">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                   <Image iconType="3" name="/images/add.png"/>
                 </Property>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btaddattributeActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btaddparamActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="tbattributevalue">

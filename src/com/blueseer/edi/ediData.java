@@ -1319,7 +1319,7 @@ public class ediData {
     
     private static int _addAPIDMeta(apid_meta x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
-        String sqlSelect = "select * from apid_meta where apidm_id = ? and apid_method = ? and apidm_key = ?;";
+        String sqlSelect = "select * from apid_meta where apidm_id = ? and apidm_method = ? and apidm_key = ?;";
         String sqlInsert = "insert into apid_meta (apidm_id, apidm_method, apidm_key, apidm_value )  " 
                         + " values (?,?,?,?); "; 
        

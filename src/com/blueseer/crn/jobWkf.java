@@ -55,7 +55,11 @@ public class jobWkf implements Job {
         String param = dataMap.getString("param");
         System.out.println("jobWkf firing system method: " + param + " run time: " + now);
                 
-        processWorkFlowID(param);
+        String[] r = processWorkFlowID(param);
+        
+        if (r[0] != "0") {
+        System.out.println(r[1]);
+        }
         
 	now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));  
         System.out.println("jobWkf completing system method: " + param + " end time: " + now);

@@ -170,7 +170,7 @@ public class APIBrowse extends javax.swing.JPanel {
             } else {
               con = DriverManager.getConnection(url + db, user, pass);  
             } 
-            Statement st = bsmf.MainFrame.con.createStatement();
+            Statement st = con.createStatement();
             ResultSet res = null;
             try {
                 
@@ -195,7 +195,7 @@ public class APIBrowse extends javax.swing.JPanel {
                    });
                 }
                 tabledetail.setModel(modeldetail);
-                 this.repaint();
+                // this.repaint();
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
@@ -522,17 +522,17 @@ try {
                  String descto = tbtodesc.getText();
                  
                  if (idfrom.isEmpty()) {
-                     idfrom = bsmf.MainFrame.lownbr;
+                     idfrom = bsmf.MainFrame.lowchar;
                  }
                   if (idto.isEmpty()) {
-                     idto = bsmf.MainFrame.hinbr;
+                     idto = bsmf.MainFrame.hichar;
                  }
               
                    if (descfrom.isEmpty()) {
-                     descfrom = bsmf.MainFrame.lownbr;
+                     descfrom = bsmf.MainFrame.lowchar;
                  }
                   if (descto.isEmpty()) {
-                     descto = bsmf.MainFrame.hinbr;
+                     descto = bsmf.MainFrame.hichar;
                  }
                  
              res = st.executeQuery("select * " +
