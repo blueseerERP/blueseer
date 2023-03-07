@@ -62,6 +62,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -517,17 +519,19 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public tax_mstr createRecord() { 
+        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         tax_mstr x = new tax_mstr(null, 
                 tbkey.getText(),
                 tbdesc.getText(),
-                "", // create date
-                "", // mod date
+                now, // create date
+                now, // mod date
                 bsmf.MainFrame.userid
                 );
         return x;
     }
     
     public ArrayList<taxd_mstr> createDetRecord() {
+        String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         ArrayList<taxd_mstr> list = new ArrayList<taxd_mstr>();
          for (int j = 0; j < tabletax.getRowCount(); j++) {
              taxd_mstr x = new taxd_mstr(null, 
@@ -536,8 +540,8 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tabletax.getValueAt(j, 1).toString(),
                 tabletax.getValueAt(j, 3).toString(),
                 tabletax.getValueAt(j, 2).toString(),
-                "", // createdate
-                "", // moddate
+                now, // createdate
+                now, // moddate
                 ConvertTrueFalseToStringInt(tabletax.getValueAt(j, 4).toString()),
                 bsmf.MainFrame.userid,
                 tabletax.getValueAt(j, 0).toString()
