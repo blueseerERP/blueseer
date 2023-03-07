@@ -550,8 +550,7 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeerT {
          }
         return list;   
     }
-    
-   
+       
     public Integer getmaxline() {
         int max = 0;
         int current = 0;
