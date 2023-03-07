@@ -148,6 +148,11 @@ import org.bouncycastle.cms.jcajce.JceCMSContentEncryptorBuilder;
 import org.bouncycastle.cms.jcajce.JceKeyTransEnvelopedRecipient;
 import org.bouncycastle.cms.jcajce.JceKeyTransRecipient;
 import org.bouncycastle.cms.jcajce.JceKeyTransRecipientInfoGenerator;
+import org.bouncycastle.crypto.params.AsymmetricKeyParameter;
+import org.bouncycastle.crypto.util.OpenSSHPrivateKeyUtil;
+import org.bouncycastle.crypto.util.OpenSSHPublicKeyUtil;
+import org.bouncycastle.crypto.util.PrivateKeyFactory;
+import org.bouncycastle.crypto.util.PublicKeyFactory;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.mail.smime.SMIMEException;
 import org.bouncycastle.mail.smime.SMIMESignedGenerator;
@@ -292,7 +297,9 @@ public class apiUtils {
             KeyStore keystore = KeyStore.getInstance("PKCS12");
              fis = new FileInputStream(FileSystems.getDefault().getPath(k[0]).toString());
             keystore.load(fis, k[2].toCharArray());
+            
             key = (PrivateKey) keystore.getKey(k[3], keyPassword);
+            
             //System.out.println("key-->");
             //System.out.println(key);
         } catch (KeyStoreException ex) {
@@ -319,7 +326,19 @@ public class apiUtils {
         }
         return key;
     }
+    
+    public static String generateSSHCert(String certype) throws NoSuchAlgorithmException, NoSuchProviderException, IOException {
+        Security.addProvider(new BouncyCastleProvider());
+        KeyPair pair = KeyPairGenerator.getInstance("ED25519","BC") .generateKeyPair();
+        AsymmetricKeyParameter bprv = PrivateKeyFactory.createKey(pair.getPrivate().getEncoded());
+        AsymmetricKeyParameter bpuv = PublicKeyFactory.createKey(pair.getPublic().getEncoded());
         
+        byte[] oprv = OpenSSHPrivateKeyUtil.encodePrivateKey(bprv);
+        byte[] opuv = OpenSSHPublicKeyUtil.encodePublicKey(bpuv);
+        String newstring = new String(Base64.encode(opuv));
+        return newstring;
+    }
+    
     public static X509Certificate getPublicKey(String user)  {
         X509Certificate cert = null;
         FileInputStream fis = null;

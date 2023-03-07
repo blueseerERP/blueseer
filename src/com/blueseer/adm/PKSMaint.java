@@ -41,6 +41,7 @@ import com.blueseer.edi.apiUtils;
 import static com.blueseer.edi.apiUtils.createKeyStore;
 import static com.blueseer.edi.apiUtils.createKeyStoreWithNewKeyPair;
 import static com.blueseer.edi.apiUtils.createNewKeyPair;
+import static com.blueseer.edi.apiUtils.generateSSHCert;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
@@ -83,6 +84,7 @@ import java.nio.charset.Charset;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
@@ -676,6 +678,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddsigalgo = new javax.swing.JComboBox<>();
         ddparent = new javax.swing.JComboBox<>();
         btexport = new javax.swing.JButton();
+        bttest = new javax.swing.JButton();
 
         jTextField1.setText("jTextField1");
 
@@ -816,6 +819,13 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
+        bttest.setText("Test");
+        bttest.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bttestActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -872,6 +882,8 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(btexport)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(bttest)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(btencrypt))
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
@@ -946,7 +958,8 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btexport)
-                    .addComponent(btencrypt))
+                    .addComponent(btencrypt)
+                    .addComponent(bttest))
                 .addGap(0, 21, Short.MAX_VALUE))
         );
 
@@ -1089,6 +1102,24 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
     }//GEN-LAST:event_btexportActionPerformed
 
+    private void bttestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttestActionPerformed
+        StringBuilder s = new StringBuilder();
+        s.append("-----BEGIN CERTIFICATE-----\n");
+            try {
+                s.append(generateSSHCert("public")); 
+            } catch (NoSuchAlgorithmException ex) {
+                bsmf.MainFrame.show("cannot generate SSH key: NoSuchAlgorithmException");
+            } catch (NoSuchProviderException ex) {
+                bsmf.MainFrame.show("cannot generate SSH key: NoSuchProviderException");
+            } catch (IOException ex) {
+                bsmf.MainFrame.show("cannot generate SSH key: IOException");
+            }
+        
+        s.append("\n-----END CERTIFICATE-----\n");
+        taoutput.append(s.toString());
+       // exportCertToFile(s.toString(), tbkey.getText());
+    }//GEN-LAST:event_bttestActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
@@ -1100,6 +1131,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btpublickey;
+    private javax.swing.JButton bttest;
     private javax.swing.JButton btupdate;
     private javax.swing.JComboBox<String> ddparent;
     private javax.swing.JComboBox<String> ddsigalgo;
