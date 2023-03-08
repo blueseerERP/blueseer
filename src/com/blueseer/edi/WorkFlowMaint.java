@@ -541,6 +541,8 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddactions.addItem("FileDeleteAll");
         ddactions.addItem("FileMap");
         ddactions.addItem("APICall");
+        ddactions.addItem("X12DirFilter");
+        ddactions.addItem("TrafficDir");
         
         for (int i = 0; i < ddactions.getItemCount(); i++) {
             
@@ -595,6 +597,23 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
                 x.add(new String[]{"destination", ""});
                 x.add(new String[]{"source", ""});
                 kvs.put("APICall", x);
+            }
+            if (i == 8) {
+                ArrayList<String[]> x = new ArrayList<String[]>();
+                x.add(new String[]{"indir", ""});
+                x.add(new String[]{"outdir", ""});
+                x.add(new String[]{"archdir", ""});
+                x.add(new String[]{"logfile", ""});
+                x.add(new String[]{"doctypes", ""});
+                x.add(new String[]{"tffile", ""});
+                kvs.put("X12DirFilter", x);
+            }
+            if (i == 9) {
+                ArrayList<String[]> x = new ArrayList<String[]>();
+                x.add(new String[]{"indir", ""});
+                x.add(new String[]{"logfile", ""});
+                x.add(new String[]{"tffile", ""});
+                kvs.put("TrafficDir", x);
             }
         }
         

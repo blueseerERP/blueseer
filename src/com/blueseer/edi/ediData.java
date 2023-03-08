@@ -34,6 +34,8 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static com.blueseer.edi.EDILoad.runTranslationSingleFile;
 import static com.blueseer.edi.apiUtils.runAPICall;
+import static com.blueseer.edi.ediUtils.filterDir;
+import static com.blueseer.edi.ediUtils.trafficDir;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.ConvertIntToYesNo;
 import static com.blueseer.utl.BlueSeerUtils.ConvertStringToBool;
@@ -2836,6 +2838,25 @@ public class ediData {
           String[] lgd = new String[]{wkd.wkfd_action(), eventtime, "", "", ""}; // action,time,ref,status,messg
           
           switch (wkd.wkfd_action()) {
+             
+            case "TrafficDir" :
+                r = wkfaction_trafficdirectory(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
+                lgd[3] = r[0];
+                lgd[4] = r[1];
+                if (! r[0].equals("0")) {
+                    break forloop;
+                } 
+                break;  
+              
+            case "X12DirFilter" :
+                r = wkfaction_filterdirectory(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
+                lgd[3] = r[0];
+                lgd[4] = r[1];
+                if (! r[0].equals("0")) {
+                    break forloop;
+                } 
+                break; 
+              
             case "FileCopy" :
                 r = wkfaction_filecopy(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
                 lgd[3] = r[0];
@@ -2924,6 +2945,131 @@ public class ediData {
        
         return bsret(status);
     }
+    
+    public static String[] wkfaction_filterdirectory(wkf_det wkfd, ArrayList<wkfd_meta> list) {
+       String[] r = new String[]{"0",""};
+        
+        String indir = "";
+        String outdir = "";
+        String archdir = "";
+        String logfile = "";
+        String doctypes = "";
+        String tffile = "";
+        String[] doctypearray = null;
+        
+        for (wkfd_meta m : list) {
+            if (m.wkfdm_key().equals("indir")) {
+                indir = m.wkfdm_value();
+            }
+            if (m.wkfdm_key().equals("outdir")) {
+                outdir = m.wkfdm_value();
+            }
+            if (m.wkfdm_key().equals("archdir")) {
+                archdir = m.wkfdm_value();
+            }
+            if (m.wkfdm_key().equals("logfile")) {
+                logfile = m.wkfdm_value();
+            }
+            if (m.wkfdm_key().equals("doctypes")) {
+                doctypes = m.wkfdm_value();
+                if (! doctypes.isEmpty()) {
+                  doctypearray = doctypes.split(",",-1);
+                }
+            }
+            if (m.wkfdm_key().equals("tffile")) {
+                tffile = m.wkfdm_value();
+            }
+        }
+        
+        Path indirpath = FileSystems.getDefault().getPath(indir);
+        if (indir.isEmpty() || ! Files.exists(indirpath)) {
+           r[0] = "1";
+           r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "indir path does not exist "; 
+           return r; 
+        }
+        Path outdirpath = FileSystems.getDefault().getPath(outdir);
+        if (outdir.isEmpty() || ! Files.exists(outdirpath)) {
+           r[0] = "1";
+           r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "outdir path does not exist "; 
+           return r; 
+        }
+        Path archdirpath = FileSystems.getDefault().getPath(archdir);
+        if (! archdir.isEmpty() && ! Files.exists(archdirpath)) { // archdir can be blank
+           r[0] = "1";
+           r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "archdir path does not exist "; 
+           return r; 
+        }
+        Path tffilepath = FileSystems.getDefault().getPath(tffile);
+        if (tffile.isEmpty() || ! Files.exists(tffilepath)) {
+           r[0] = "1";
+           r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "tffile path does not exist "; 
+           return r; 
+        }
+        
+        if (doctypearray == null || doctypearray.length == 0) {
+           r[0] = "1";
+           r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + " zero or null doc types provided "; 
+           return r;  
+        }
+        
+        try {
+            r = filterDir(indir, outdir, archdir, logfile, doctypearray, tffile);
+        } catch (IOException ex) {
+            r[0] = "1";
+            r[1] = "IOException occurred: " + ex.getMessage();
+        }
+        
+        return r;
+    }
+    
+    public static String[] wkfaction_trafficdirectory(wkf_det wkfd, ArrayList<wkfd_meta> list) {
+       String[] r = new String[]{"0",""};
+        
+        String indir = "";
+        String logfile = "";
+        String tffile = "";
+        
+        for (wkfd_meta m : list) {
+            if (m.wkfdm_key().equals("indir")) {
+                indir = m.wkfdm_value();
+            }
+           
+            if (m.wkfdm_key().equals("logfile")) {
+                logfile = m.wkfdm_value();
+            }
+           
+            if (m.wkfdm_key().equals("tffile")) {
+                tffile = m.wkfdm_value();
+            }
+        }
+        
+        Path indirpath = FileSystems.getDefault().getPath(indir);
+        if (indir.isEmpty() || ! Files.exists(indirpath)) {
+           r[0] = "1";
+           r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "indir path does not exist "; 
+           return r; 
+        }
+       
+       
+        Path tffilepath = FileSystems.getDefault().getPath(tffile);
+        if (tffile.isEmpty() || ! Files.exists(tffilepath)) {
+           r[0] = "1";
+           r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "tffile path does not exist "; 
+           return r; 
+        }
+        
+        
+        
+        try {
+            r = trafficDir(indir, logfile, tffile);
+        } catch (IOException ex) {
+            r[0] = "1";
+            r[1] = "IOException occurred: " + ex.getMessage();
+        }
+        
+        return r;
+    }
+    
     
     public static String[] wkfaction_filecopy(wkf_det wkfd, ArrayList<wkfd_meta> list) {
         String[] r = new String[]{"0",""};
