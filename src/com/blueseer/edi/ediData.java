@@ -27,22 +27,20 @@ package com.blueseer.edi;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
-import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static com.blueseer.edi.EDILoad.runTranslationSingleFile;
 import static com.blueseer.edi.apiUtils.runAPICall;
-import static com.blueseer.edi.ediUtils.filterDir;
-import static com.blueseer.edi.ediUtils.trafficDir;
+import static com.blueseer.edi.wfUtils.filterDir;
+import static com.blueseer.edi.wfUtils.trafficDir;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.ConvertIntToYesNo;
 import static com.blueseer.utl.BlueSeerUtils.ConvertStringToBool;
 import static com.blueseer.utl.BlueSeerUtils.bsret;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystems;
@@ -59,9 +57,6 @@ import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *

@@ -50,7 +50,7 @@ import java.util.ArrayList;
  *
  * @author TerryVa
  */
-public class ediUtils {
+public class wfUtils {
     
     public static String[] filterDir(String indir, String outdir, String archdir, String logfile, String[] doctypes, String tffile) throws FileNotFoundException, IOException {
     String[] r = new String[]{"0",""};
