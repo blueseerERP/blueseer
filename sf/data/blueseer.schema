@@ -2501,13 +2501,13 @@ CREATE TABLE IF NOT EXISTS `wkfd_meta` (
   `wkfdm_value` varchar(100)  NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `wkf_log` (
-  `wkf_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `wkf_job` varchar(30) NOT NULL  DEFAULT '',
-  `wkf_desc` varchar(200) NOT NULL  DEFAULT '',
-  `wkf_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `wkf_ref` varchar(30) NOT NULL  DEFAULT '',
-  `wkf_status` varchar(10) NOT NULL  DEFAULT '',
-  `wkf_messg` varchar(200) NOT NULL  DEFAULT ''
+  `wkfl_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `wkfl_job` varchar(30) NOT NULL  DEFAULT '',
+  `wkfl_desc` varchar(200) NOT NULL  DEFAULT '',
+  `wkfl_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `wkfl_ref` varchar(30) NOT NULL  DEFAULT '',
+  `wkfl_status` varchar(10) NOT NULL  DEFAULT '',
+  `wkfl_messg` varchar(200) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `wkfd_log` (
   `wkfdl_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,

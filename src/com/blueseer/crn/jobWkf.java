@@ -26,15 +26,9 @@ SOFTWARE.
 package com.blueseer.crn;
 
 
-import com.blueseer.edi.EDI;
-import static com.blueseer.edi.EDI.packageEnvelopes;
-import com.blueseer.edi.EDILoad;
 import static com.blueseer.edi.ediData.processWorkFlowID;
-import com.blueseer.fgl.fglData;
-import com.blueseer.utl.EDData;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 
 import org.quartz.Job;
 import org.quartz.JobDataMap;

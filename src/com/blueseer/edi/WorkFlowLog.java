@@ -196,38 +196,36 @@ public class WorkFlowLog extends javax.swing.JPanel {
                  tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
                  tablereport.getColumnModel().getColumn(1).setMaxWidth(100);
                  tablereport.getColumnModel().getColumn(2).setMaxWidth(100);
-                 tablereport.getColumnModel().getColumn(9).setMaxWidth(50);
-                 tablereport.getColumnModel().getColumn(10).setMaxWidth(50);
                  
                     
                     if (tbapiid.getText().isEmpty()) {
                     res = st.executeQuery("SELECT * FROM wkf_log  " +
-                    " where wkf_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
-                    " AND wkf_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + 
-                    " order by wkf_id desc ;" ) ;
+                    " where wkfl_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
+                    " AND wkfl_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + 
+                    " order by wkfl_id desc ;" ) ;
                     } else {
                     res = st.executeQuery("SELECT * FROM wkf_log  " +
-                    " where wkf_id = " + "'" + tbapiid.getText() + "'" +  
-                    " order by wkf_id desc ;" ) ;    
+                    " where wkfl_id = " + "'" + tbapiid.getText() + "'" +  
+                    " order by wkfl_id desc ;" ) ;    
                     }
                     
               
                 ImageIcon statusImage = null;
                 while (res.next()) {
                     i++;
-                  if (res.getString("wkf_status").equals("success")) {
+                  if (res.getString("wkfl_status").equals("0")) {
                       statusImage = BlueSeerUtils.clickcheck;
                   }  else {
                       statusImage = BlueSeerUtils.clicknocheck;
                   }
                  //   "Select", "IdxNbr", "ComKey", "SenderID", "ReceiverID", "TimeStamp", "InFileType", "InDocType", "InBatch", "OutFileType", "OutDocType", "OutBatch",  "Status"                     
                     filemodel.addRow(new Object[]{BlueSeerUtils.clickbasket,
-                        res.getInt("wkf_id"),
-                        res.getInt("wkf_job"),
-                        res.getString("wkf_desc"),
-                        res.getString("wkf_ts"),
-                        res.getString("wkf_ref"),
-                        res.getString("wkf_messg"),
+                        res.getInt("wkfl_id"),
+                        res.getString("wkfl_job"),
+                        res.getString("wkfl_desc"),
+                        res.getString("wkfl_ts"),
+                        res.getString("wkfl_ref"),
+                        res.getString("wkfl_messg"),
                         statusImage
                     });
                 }
@@ -326,7 +324,7 @@ public class WorkFlowLog extends javax.swing.JPanel {
                 int i = 0;
                 String blanket = "";
                 
-                 res = st.executeQuery("select wkfdl_id, wkfdl_action, wkfdl_ts, wkfdl_messg, wkfdl_satus from wkfd_log " +
+                 res = st.executeQuery("select wkfdl_id, wkfdl_action, wkfdl_ts, wkfdl_messg, wkfdl_status from wkfd_log " +
                         " where wkfdl_parentid = " + "'" + parentid + "'" +
                         ";");   
                  
@@ -337,7 +335,7 @@ public class WorkFlowLog extends javax.swing.JPanel {
                       res.getString("wkfdl_action"),
                       res.getString("wkfdl_ts"),
                       res.getString("wkfdl_messg"),
-                      res.getString("wkfdl_satus")
+                      res.getString("wkfdl_status")
                       });
                 }
                

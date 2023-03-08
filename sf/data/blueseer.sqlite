@@ -2922,13 +2922,13 @@ CREATE TABLE "wkfd_meta" (
   "wkfdm_value" varchar(100) NOT NULL DEFAULT ''
 );
 CREATE TABLE "wkf_log" (
-  "wkf_id" INTEGER PRIMARY KEY,
-  "wkf_jobid" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "wkf_desc" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
-  "wkf_ts" timestamp NOT NULL DEFAULT (datetime('now','localtime')),
-  "wkf_ref" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "wkf_status" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
-  "wkf_messg" varchar(200) NOT NULL COLLATE NOCASE DEFAULT ''
+  "wkfl_id" INTEGER PRIMARY KEY,
+  "wkfl_job" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "wkfl_desc" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
+  "wkfl_ts" timestamp NOT NULL DEFAULT (datetime('now','localtime')),
+  "wkfl_ref" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "wkfl_status" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "wkfl_messg" varchar(200) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 CREATE TABLE "wkfd_log" (
   "wkfdl_id" INTEGER PRIMARY KEY,

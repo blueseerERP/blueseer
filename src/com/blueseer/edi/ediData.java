@@ -54,6 +54,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -1040,6 +1042,186 @@ public class ediData {
         }
         return r;
     }
+    
+    public static int writeWFLog(wkf_log wkfl, int origparentid, ArrayList<wkfd_log> wkfdl) {
+       
+        int parentid = -1;
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            bscon = DriverManager.getConnection(url + db, user, pass);
+            bscon.setAutoCommit(false);
+            
+            parentid = origparentid;
+            
+            if (parentid <= 0 && wkfl != null) {
+            parentid = _addWkfLog(wkfl, bscon, ps, res); 
+            } else {
+                if (wkfdl != null) {
+                    for (wkfd_log z : wkfdl) {
+                    _addWkfDetlog(parentid, z, bscon, ps, res);
+                    }
+                }
+            }
+            
+            bscon.commit();
+            
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return parentid;
+    }
+    
+    public static void updateWFLog(int id, String status, String message, String ref) {
+        String[] m = new String[2];
+        String sql = "update wkf_log set wkfl_status = ?, wkfl_messg = ?, wkfl_ref = ? " +
+                "  where wkfl_id = ? ";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, status);
+        ps.setString(2, message);
+        ps.setString(3, ref);
+        ps.setInt(4, id);
+        int rows = ps.executeUpdate();
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+        }
+    }
+    
+    private static int _addWkfLog(wkf_log x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int returnkey = 0;
+        String sqlInsert = "insert into wkf_log (wkfl_job, wkfl_desc, wkfl_ref, wkfl_status, wkfl_messg "
+                + "  )  " +
+                " values (?,?,?,?,?); ";
+            ps = con.prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, x.wkfl_job);
+            ps.setString(2, x.wkfl_desc);
+            ps.setString(3, x.wkfl_ref);
+            ps.setString(4, x.wkfl_status);
+            ps.setString(5, x.wkfl_messg);
+            ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            while (rs.next()) {
+             returnkey = rs.getInt(1);
+            }
+             
+            return returnkey;
+    }
+    
+    private static int _addWkfDetlog(int parentid, wkfd_log x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlInsert = "insert into wkfd_log (wkfdl_parentid, wkfdl_action, wkfdl_ts, wkfdl_ref, wkfdl_status, wkfdl_messg  )  " 
+                        + " values (?,?,?,?,?,?); ";
+            ps = con.prepareStatement(sqlInsert);
+            ps.setString(1, String.valueOf(parentid));
+            ps.setString(2, x.wkfdl_action);
+            ps.setString(3, x.wkfdl_ts);
+            ps.setString(4, x.wkfdl_ref);
+            ps.setString(5, x.wkfdl_status);
+            ps.setString(6, x.wkfdl_messg);
+            rows = ps.executeUpdate();
+            return rows;
+    }
+    
+    public static wkf_log getWFLog(String id) {
+        wkf_log r = null;
+        String[] m = new String[2];
+        String sql = "select * from wkf_log where wkfl_id = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, id);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new wkf_log(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new wkf_log(m, 
+                            res.getString("wkfl_id"), 
+                            res.getString("wkfl_job"),    
+                            res.getString("wkfl_desc"),
+                            res.getString("wkfl_ts"),
+                            res.getString("wkfl_ref"),
+                            res.getString("wkfl_status"),
+                            res.getString("wkfl_messg")
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new wkf_log(m);
+        }
+        return r;
+    }
+    
+    public static ArrayList<wkfd_log> getWFDLog(String parentid) {
+        wkfd_log r = null;
+        String[] m = new String[2];
+        ArrayList<wkfd_log> list = new ArrayList<wkfd_log>();
+        String sql = "select * from wkfd_log where wkfdl_parentid = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, parentid);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new wkfd_log(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new wkfd_log(m, 
+                        res.getString("wkfdl_id"), 
+                        res.getString("wkfdl_parentid"), 
+                        res.getString("wkfdl_action"),
+                        res.getString("wkfdl_ts"),
+                        res.getString("wkfdl_ref"),
+                        res.getString("wkfdl_status"),
+                        res.getString("wkfdl_messg"));
+                        list.add(r);
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new wkfd_log(m);
+               list.add(r);
+        }
+        return list;
+    }
+    
     
     
     public static String[] addMapStruct(dfs_mstr x) {
@@ -2619,58 +2801,97 @@ public class ediData {
     }
     
     public static String[] processWorkFlowID(String id) {
-                
+          
+       // String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));   
         wkf_mstr wkf = getWkfMstr(id);
+        
+        // log parent workflow ID
+        wkf_log wkfl = new wkf_log(null,
+                "", // id
+                wkf.wkf_id,
+                wkf.wkf_desc,
+                "", // ts auto assigned
+                "", // ref
+                "0", // status
+                "" // message
+                );
+        
+        int logid = writeWFLog(wkfl,0,null); // init log event
+        ArrayList<String[]> logdetail = new ArrayList<String[]>();
+        
         if (wkf.wkf_enabled.equals("0")) {
+         updateWFLog(logid, "error", "Workflow is disabled", "");
          return bsret("Workflow is disabled");
         }
         ArrayList<wkf_det> wkfdetlist = getWkfDet(id);
         if (wkfdetlist == null) {
+            updateWFLog(logid, "error", "Null Workflow list", "");
             return bsret("Null Workflow list");
         }
         
         String[] r = new String[]{"",""};
+        forloop:
         for (wkf_det wkd : wkfdetlist) {
+          String eventtime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));  
+          String[] lgd = new String[]{wkd.wkfd_action(), eventtime, "", "", ""}; // action,time,ref,status,messg
+          
           switch (wkd.wkfd_action()) {
             case "FileCopy" :
                 r = wkfaction_filecopy(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
-                if (! r[1].isBlank()) {
-                    return r;
+                lgd[3] = r[0];
+                lgd[4] = r[1];
+                if (! r[0].equals("0")) {
+                    break forloop;
                 } 
                 break; 
                 
             case "FileDelete" :
                 r = wkfaction_filedelete(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
-                if (! r[1].isBlank()) {
-                    return r;
+                lgd[3] = r[0];
+                lgd[4] = r[1];
+                if (! r[0].equals("0")) {
+                    logdetail.add(lgd);
+                    break forloop;
                 } 
                 break; 
                 
             case "FileMove" :
                 r = wkfaction_filemove(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
-                if (! r[1].isBlank()) {
-                    return r;
+                lgd[3] = r[0];
+                lgd[4] = r[1];
+                if (! r[0].equals("0")) {
+                    logdetail.add(lgd);
+                    break forloop;
                 } 
                 break;     
             
                 case "FileCopyAll" :
                 r = wkfaction_filecopyall(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
-                if (! r[1].isBlank()) {
-                    return r;
+                lgd[3] = r[0];
+                lgd[4] = r[1];
+                if (! r[0].equals("0")) {
+                    logdetail.add(lgd);
+                    break forloop;
                 } 
                 break; 
                 
                 case "FileMoveAll" :
                 r = wkfaction_filemoveall(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
-                if (! r[1].isBlank()) {
-                    return r;
+                lgd[3] = r[0];
+                lgd[4] = r[1];
+                if (! r[0].equals("0")) {
+                    logdetail.add(lgd);
+                    break forloop;
                 } 
                 break; 
                 
                 case "FileMap" :
                 r = wkfaction_filemap(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
-                if (! r[1].isBlank()) {
-                    return r;
+                lgd[3] = r[0];
+                lgd[4] = r[1];
+                if (! r[0].equals("0")) {
+                    logdetail.add(lgd);
+                    break forloop;
                 } 
                 break;
                 
@@ -2678,9 +2899,30 @@ public class ediData {
                 return bsret("Unknown WorkFlow Action!");
           
           }
+          logdetail.add(lgd);
         }
         
-        return bsret("");
+            String status = "";
+            ArrayList<wkfd_log> list = new ArrayList<wkfd_log>();
+            for (String[] s : logdetail) {
+            wkfd_log x = new wkfd_log(null, 
+                "", // detail id
+                String.valueOf(logid), // parentid
+                s[0], // action
+                s[1], // timestamp
+                s[2], // ref
+                s[3], // status
+                s[4] // message
+            );
+            list.add(x);
+            if (! s[3].equals("0")) {
+                status = s[4];
+            }
+            }
+            
+            writeWFLog(wkfl,logid,list);
+       
+        return bsret(status);
     }
     
     public static String[] wkfaction_filecopy(wkf_det wkfd, ArrayList<wkfd_meta> list) {
@@ -2708,8 +2950,10 @@ public class ediData {
         try {
             if (append) {
                Files.write(destinationpath, Files.readAllBytes(sourcepath), StandardOpenOption.APPEND);  
+               r[1] = "Appended file " + sourcepath + " to file: " + destinationpath;
             } else {
-               Files.copy(sourcepath, destinationpath, StandardCopyOption.REPLACE_EXISTING); 
+               Files.copy(sourcepath, destinationpath, StandardCopyOption.REPLACE_EXISTING);
+               r[1] = "Copied file " + sourcepath + " to file: " + destinationpath;
             }
             
         } catch (IOException ex) {
@@ -2976,6 +3220,21 @@ public class ediData {
             this(m, "", "", "", "");
         }
     }
+    
+    public record wkf_log(String[] m, String wkfl_id, String wkfl_job, String wkfl_desc, String wkfl_ts,
+        String wkfl_ref, String wkfl_status, String wkfl_messg ) {
+        public wkf_log(String[] m) {
+            this(m, "", "", "", "", "", "", "");
+        }
+    }
+    
+    public record wkfd_log(String[] m, String wkfdl_id, String wkfdl_parentid, String wkfdl_action, String wkfdl_ts,
+        String wkfdl_ref, String wkfdl_status, String wkfdl_messg ) {
+        public wkfd_log(String[] m) {
+            this(m, "", "", "", "", "", "", "");
+        }
+    }
+    
     
     public record as2_mstr(String[] m, String as2_id, String as2_desc, String as2_version,
         String as2_url, String as2_port, String as2_path, String as2_user ,
