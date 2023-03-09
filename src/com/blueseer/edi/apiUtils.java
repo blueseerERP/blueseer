@@ -52,6 +52,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.StringWriter;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -72,6 +73,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.Security;
 import java.security.UnrecoverableKeyException;
@@ -167,6 +169,7 @@ import org.bouncycastle.util.Store;
 import org.bouncycastle.util.encoders.Base64;
 import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemReader;
+import org.bouncycastle.util.io.pem.PemWriter;
 
 /**
  *
@@ -327,25 +330,126 @@ public class apiUtils {
         return key;
     }
     
+    public static PublicKey getPublicKey(String user)  {
+        X509Certificate cert = null;
+        FileInputStream fis = null;
+        pks_mstr pks = admData.getPksMstr(new String[]{user});
+        try {
+        String[] k = getKeyStoreByUser(user); // store, storeuser, storepass, user, pass
+        k[2] = bsmf.MainFrame.PassWord("1", k[2].toCharArray());
+        k[4] = bsmf.MainFrame.PassWord("1", k[4].toCharArray());
+        KeyStore keystore = KeyStore.getInstance("PKCS12");
+         fis = new FileInputStream(FileSystems.getDefault().getPath(k[0]).toString());
+        keystore.load(fis, k[2].toCharArray());
+        cert = (X509Certificate) keystore.getCertificate(pks.pks_user());
+        fis.close();
+        } catch (KeyStoreException ex) {
+            bslog(ex);
+        } catch (FileNotFoundException ex) {
+            bslog(ex);
+        } catch (IOException ex) {
+            bslog(ex);
+        } catch (NoSuchAlgorithmException ex) {
+            bslog(ex);
+        } catch (CertificateException ex) {
+            bslog(ex);
+        } 
+        
+        return cert.getPublicKey();
+    }
+    
+    public static String getPublicKeyAsOPENSSH(String user)  {
+        String s = "";
+        X509Certificate cert = null;
+        FileInputStream fis = null;
+        pks_mstr pks = admData.getPksMstr(new String[]{user});
+        try {
+        String[] k = getKeyStoreByUser(user); // store, storeuser, storepass, user, pass
+        k[2] = bsmf.MainFrame.PassWord("1", k[2].toCharArray());
+        k[4] = bsmf.MainFrame.PassWord("1", k[4].toCharArray());
+        KeyStore keystore = KeyStore.getInstance("PKCS12");
+         fis = new FileInputStream(FileSystems.getDefault().getPath(k[0]).toString());
+        keystore.load(fis, k[2].toCharArray());
+        cert = (X509Certificate) keystore.getCertificate(pks.pks_user());
+        fis.close();
+        
+        PublicKey pubkey = cert.getPublicKey();
+        AsymmetricKeyParameter bpuv = PublicKeyFactory.createKey(pubkey.getEncoded());
+        byte[] opuv = OpenSSHPublicKeyUtil.encodePublicKey(bpuv);
+        
+        // s = new String(Base64.encode(opuv));
+        
+        StringWriter writer = new StringWriter();
+        PemWriter pemWriter = new PemWriter(writer);
+        pemWriter.writeObject(new PemObject("SSH2 PUBLIC KEY", opuv));
+        pemWriter.flush();
+        pemWriter.close();
+        s = writer.toString();
+        writer.close();
+        
+        
+        } catch (KeyStoreException ex) {
+            bslog(ex);
+        } catch (FileNotFoundException ex) {
+            bslog(ex);
+        } catch (IOException ex) {
+            bslog(ex);
+        } catch (NoSuchAlgorithmException ex) {
+            bslog(ex);
+        } catch (CertificateException ex) {
+            bslog(ex);
+        } 
+        
+        return s;  
+    }
+    
+    
     public static String generateSSHCert(String certype) throws NoSuchAlgorithmException, NoSuchProviderException, IOException {
         Security.addProvider(new BouncyCastleProvider());
-        KeyPair pair = KeyPairGenerator.getInstance("ED25519","BC") .generateKeyPair();
+        String newstring = "";
+        KeyPairGenerator generator;
+         generator = KeyPairGenerator.getInstance("ED25519","BC");
+       // generator = KeyPairGenerator.getInstance("RSA","BC");
+       // generator.initialize(2048);
+        KeyPair pair = generator.generateKeyPair();
         AsymmetricKeyParameter bprv = PrivateKeyFactory.createKey(pair.getPrivate().getEncoded());
         AsymmetricKeyParameter bpuv = PublicKeyFactory.createKey(pair.getPublic().getEncoded());
         
+        
         byte[] oprv = OpenSSHPrivateKeyUtil.encodePrivateKey(bprv);
         byte[] opuv = OpenSSHPublicKeyUtil.encodePublicKey(bpuv);
-        String newstring = new String(Base64.encode(opuv));
+        /*
+        PemWriter w = new PemWriter(new OutputStreamWriter(System.out));
+        w.writeObject(new PemObject("OPENSSH PRIVATE KEY", oprv)); 
+        w.close();
+        */
+        
+        
+        if (certype.equals("public")) {
+        newstring = new String(Base64.encode(opuv));
+        } else {
+        newstring = new String(Base64.encode(oprv));    
+        }
+        
+        StringWriter writer = new StringWriter();
+        PemWriter pemWriter = new PemWriter(writer);
+        pemWriter.writeObject(new PemObject("OPENSSH PUBLIC KEY", opuv));
+        pemWriter.flush();
+        pemWriter.close();
+        newstring = writer.toString();
+        writer.close();
+        
+        
         return newstring;
     }
     
-    public static X509Certificate getPublicKey(String user)  {
+    public static X509Certificate getPublicKeyAsCert(String user)  {
         X509Certificate cert = null;
         FileInputStream fis = null;
         pks_mstr pks = admData.getPksMstr(new String[]{user});
         try {
             // File type
-            if (pks.pks_type().equals("pem") ) {
+            if (pks.pks_type().equals("external pem") ) {
                 Path certfilepath = FileSystems.getDefault().getPath(pks.pks_file());
                 if (! Files.exists(certfilepath)) {
                      // throw new RuntimeException("bad path to cert file: " + certfile);
@@ -391,7 +495,83 @@ public class apiUtils {
         
         return cert;
     }
+    
+    public static String getPublicKeyAsPEM(String user)  {
+        X509Certificate cert = null;
+        String s = "";
+        FileInputStream fis = null;
+        pks_mstr pks = admData.getPksMstr(new String[]{user});
+        try {
+            // File type
+            if (pks.pks_type().equals("external pem") ) {
+                Path certfilepath = FileSystems.getDefault().getPath(pks.pks_file());
+                if (! Files.exists(certfilepath)) {
+                     // throw new RuntimeException("bad path to cert file: " + certfile);
+                     return ""; // return null
+                }
+               // System.out.println("here->" + certfilepath.toString());
+                Security.addProvider(new BouncyCastleProvider());
+                CertificateFactory certFactory = CertificateFactory.getInstance("X.509", "BC");
+                try (FileInputStream fiscert = new FileInputStream(certfilepath.toFile())) {
+                    cert = (X509Certificate) certFactory.generateCertificate(fiscert);
+                    PublicKey pubkey = cert.getPublicKey();
+                    AsymmetricKeyParameter bpuv = PublicKeyFactory.createKey(pubkey.getEncoded());
+                    byte[] opuv = OpenSSHPublicKeyUtil.encodePublicKey(bpuv);
+                    StringWriter writer = new StringWriter();
+                    PemWriter pemWriter = new PemWriter(writer);
+                    pemWriter.writeObject(new PemObject("CERTIFICATE", cert.getEncoded()));
+                    pemWriter.flush();
+                    pemWriter.close();
+                    s = writer.toString();
+                    writer.close();
+                    return s;
+                } catch (IOException ex) {
+                    bslog(ex);
+                }
+            }
+            
+            if (pks.pks_type().equals("keypair") ) {
+            String[] k = getKeyStoreByUser(user); // store, storeuser, storepass, user, pass
+            k[2] = bsmf.MainFrame.PassWord("1", k[2].toCharArray());
+            k[4] = bsmf.MainFrame.PassWord("1", k[4].toCharArray());
+            KeyStore keystore = KeyStore.getInstance("PKCS12");
+             fis = new FileInputStream(FileSystems.getDefault().getPath(k[0]).toString());
+            keystore.load(fis, k[2].toCharArray());
+            cert = (X509Certificate) keystore.getCertificate(pks.pks_user());
+            fis.close();
+            PublicKey pubkey = cert.getPublicKey();
+                    AsymmetricKeyParameter bpuv = PublicKeyFactory.createKey(pubkey.getEncoded());
+                    byte[] opuv = OpenSSHPublicKeyUtil.encodePublicKey(bpuv);
+                    StringWriter writer = new StringWriter();
+                    PemWriter pemWriter = new PemWriter(writer);
+                    pemWriter.writeObject(new PemObject("CERTIFICATE", cert.getEncoded()));
+                    pemWriter.flush();
+                    pemWriter.close();
+                    s = writer.toString();
+                    writer.close();
+                    return s;
+            }
+            
+            //System.out.println("here-->" + cert.getSerialNumber());
+        } catch (KeyStoreException ex) {
+            bslog(ex);
+        } catch (FileNotFoundException ex) {
+            bslog(ex);
+        } catch (IOException ex) {
+            bslog(ex);
+        } catch (NoSuchAlgorithmException ex) {
+            bslog(ex);
+        } catch (CertificateException ex) {
+            bslog(ex);
+        } catch (NoSuchProviderException ex) {
+            bslog(ex);
+        } 
         
+        return s;
+    }
+    
+        
+    
     public static PrivateKey readPrivateKeyFromPem(File file) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
     KeyFactory factory = KeyFactory.getInstance("RSA");
     try (FileReader keyReader = new FileReader(file);
@@ -500,13 +680,13 @@ public class apiUtils {
     }
     
     
-    public static boolean createNewKeyPair(String alias, String userpass, String passphrase, String filename, String sigalgo, int strength, int years) {
+    public static boolean createNewKeyPair(String alias, String userpass, String passphrase, String filename, String algo, String sigalgo, int strength, int years) {
         
         Security.addProvider(new BouncyCastleProvider());
         // --- generate a key pair (you did this already it seems)
         KeyPairGenerator rsaGen;
         try {
-        rsaGen = KeyPairGenerator.getInstance("RSA", "BC");
+        rsaGen = KeyPairGenerator.getInstance(algo, "BC");
         rsaGen.initialize(strength, new SecureRandom());
         
         final KeyPair pair = rsaGen.generateKeyPair();
@@ -794,7 +974,7 @@ public class apiUtils {
        
        // System.out.println("here->" + as2To + "/" +  as2From + "/" + internalURL + "/" + sourceDir + "/" + signkeyid);
         
-        X509Certificate encryptcertificate = getPublicKey(tp[11]);
+        X509Certificate encryptcertificate = getPublicKeyAsCert(tp[11]);
         if (encryptcertificate == null) {
           logdet.add(new String[]{parentkey, "error", "Unable to retrieve encryption cert for " + tp[11]}); 
           writeAS2LogDetail(logdet);
@@ -810,7 +990,7 @@ public class apiUtils {
         X509Certificate signcertificate = null; 
         PrivateKey key = null;
         
-        if ( pks.pks_type().equals("store") || pks.pks_type().equals("pem") ) {
+        if ( pks.pks_type().equals("store") || pks.pks_type().equals("external pem") ) {
           logdet.add(new String[]{parentkey, "error", "Using non-user signing key " + signkeyid}); 
           writeAS2LogDetail(logdet);
           return "Using non-user signing key  " + signkeyid; 

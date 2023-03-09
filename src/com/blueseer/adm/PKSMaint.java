@@ -42,6 +42,8 @@ import static com.blueseer.edi.apiUtils.createKeyStore;
 import static com.blueseer.edi.apiUtils.createKeyStoreWithNewKeyPair;
 import static com.blueseer.edi.apiUtils.createNewKeyPair;
 import static com.blueseer.edi.apiUtils.generateSSHCert;
+import static com.blueseer.edi.apiUtils.getPublicKeyAsOPENSSH;
+import static com.blueseer.edi.apiUtils.getPublicKeyAsPEM;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
@@ -389,7 +391,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                     return b;
                 }
                
-                if ( (x.name().equals("add") || x.name().equals("update")) && ddtype.getSelectedItem().toString().equals("pem") && ! isFile(tbfile.getText())) {
+                if ( (x.name().equals("add") || x.name().equals("update")) && ddtype.getSelectedItem().toString().equals("external pem") && ! isFile(tbfile.getText())) {
                     b = false;
                     bsmf.MainFrame.show("pem file does not exist");
                     tbfile.requestFocus();
@@ -427,6 +429,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                  String.valueOf(tbpass.getPassword()), 
                  getPKSStorePWD(ddparent.getSelectedItem().toString()), 
                  getPKSStoreFileName(ddparent.getSelectedItem().toString()),
+                 ddencalgo.getSelectedItem().toString(),
                  ddsigalgo.getSelectedItem().toString(),
                  Integer.valueOf(ddstrength.getSelectedItem().toString()),
                  Integer.valueOf(ddyears.getSelectedItem().toString())
@@ -590,7 +593,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
             Path outpath = FileSystems.getDefault().getPath(bsmf.MainFrame.temp + "/" + myfile);
             
             byte[] indata = Files.readAllBytes(inpath);
-            byte[] outdata = apiUtils.encryptData(indata, apiUtils.getPublicKey(tbkey.getText()), "" );
+            byte[] outdata = apiUtils.encryptData(indata, apiUtils.getPublicKeyAsCert(tbkey.getText()), "" );
            
          //   Path path = FileSystems.getDefault().getPath("temp" + "/" + "beforefile");
             BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(outpath.toFile()));
@@ -668,8 +671,6 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
         jScrollPane1 = new javax.swing.JScrollPane();
         taoutput = new javax.swing.JTextArea();
         jLabel9 = new javax.swing.JLabel();
-        btdecrypt = new javax.swing.JButton();
-        btencrypt = new javax.swing.JButton();
         btpublickey = new javax.swing.JButton();
         ddyears = new javax.swing.JComboBox<>();
         jLabel10 = new javax.swing.JLabel();
@@ -678,7 +679,9 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddsigalgo = new javax.swing.JComboBox<>();
         ddparent = new javax.swing.JComboBox<>();
         btexport = new javax.swing.JButton();
-        bttest = new javax.swing.JButton();
+        ddencalgo = new javax.swing.JComboBox<>();
+        jLabel12 = new javax.swing.JLabel();
+        ddformat = new javax.swing.JComboBox<>();
 
         jTextField1.setText("jTextField1");
 
@@ -758,7 +761,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel4.setText("File:");
         jLabel4.setName("lblfile"); // NOI18N
 
-        ddtype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "pem", "store", "keypair" }));
+        ddtype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "external pem", "store", "keypair" }));
         ddtype.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ddtypeActionPerformed(evt);
@@ -777,21 +780,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         jLabel9.setText("ParentStore:");
 
-        btdecrypt.setText("decrypt");
-        btdecrypt.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btdecryptActionPerformed(evt);
-            }
-        });
-
-        btencrypt.setText("encrypt");
-        btencrypt.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btencryptActionPerformed(evt);
-            }
-        });
-
-        btpublickey.setText("Public Key");
+        btpublickey.setText("View Public Key");
         btpublickey.setName("btpublickey"); // NOI18N
         btpublickey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -819,12 +808,11 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
-        bttest.setText("Test");
-        bttest.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bttestActionPerformed(evt);
-            }
-        });
+        ddencalgo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "RSA", "DSA", "ED25519" }));
+
+        jLabel12.setText("Encrypt Algorithm");
+
+        ddformat.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { ".cer", "ssh2" }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -853,7 +841,8 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addComponent(jLabel8)
                             .addComponent(jLabel9)
                             .addComponent(jLabel10)
-                            .addComponent(jLabel11))
+                            .addComponent(jLabel11)
+                            .addComponent(jLabel12))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -874,22 +863,19 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                                         .addComponent(tbdesc, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
                                         .addComponent(tbuser)
                                         .addComponent(ddtype, 0, 233, Short.MAX_VALUE))
-                                    .addComponent(ddsigalgo, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(ddyears, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(ddstrength, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(ddparent, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(ddparent, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(ddencalgo, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(ddsigalgo, javax.swing.GroupLayout.Alignment.LEADING, 0, 111, Short.MAX_VALUE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(btexport)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(bttest)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(btencrypt))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                         .addComponent(btpublickey)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(btdecrypt))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btexport))
+                                    .addComponent(ddformat, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(27, 27, 27))))))
         );
@@ -937,6 +923,10 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addComponent(tbstorepass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(ddencalgo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel12))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel8)
                             .addComponent(ddsigalgo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -953,13 +943,11 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(btadd)
                     .addComponent(btdelete)
                     .addComponent(btupdate)
-                    .addComponent(btpublickey)
-                    .addComponent(btdecrypt))
+                    .addComponent(ddformat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btexport)
-                    .addComponent(btencrypt)
-                    .addComponent(bttest))
+                    .addComponent(btpublickey))
                 .addGap(0, 21, Short.MAX_VALUE))
         );
 
@@ -1008,32 +996,18 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
         lookUpFrame();
     }//GEN-LAST:event_btlookupActionPerformed
 
-    private void btdecryptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdecryptActionPerformed
-        decryptFile();
-    }//GEN-LAST:event_btdecryptActionPerformed
-
-    private void btencryptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btencryptActionPerformed
-            try {
-                test();
-            } catch (CertificateException ex) {
-                bslog(ex);
-            } catch (NoSuchProviderException ex) {
-                bslog(ex);
-            } catch (CMSException ex) {
-                bslog(ex);
-            } catch (IOException ex) {
-                bslog(ex);
-            }
-    }//GEN-LAST:event_btencryptActionPerformed
-
     private void btpublickeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btpublickeyActionPerformed
             taoutput.setText("");
-            try {
+            if (ddformat.getSelectedItem().toString().equals(".cer")) {
+                /*
                 taoutput.append("-----BEGIN CERTIFICATE-----\n");
-                taoutput.append(new String(Base64.encode(apiUtils.getPublicKey(tbkey.getText()).getEncoded())).replaceAll("(.{64})", "$1\n"));
+                taoutput.append(new String(Base64.encode(apiUtils.getPublicKeyAsCert(tbkey.getText()).getEncoded())).replaceAll("(.{64})", "$1\n"));
                 taoutput.append("\n-----END CERTIFICATE-----\n");
-            } catch (CertificateEncodingException ex) {
-                bsmf.MainFrame.show("cannot show PEM formatted public key");
+                */
+                taoutput.append(getPublicKeyAsPEM(tbkey.getText()));
+            }
+            if (ddformat.getSelectedItem().toString().equals("ssh2")) {
+                taoutput.append(getPublicKeyAsOPENSSH(tbkey.getText()));
             }
     }//GEN-LAST:event_btpublickeyActionPerformed
 
@@ -1051,8 +1025,6 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                 ddparent.setEnabled(true);
                 btexport.setEnabled(true);
                 btpublickey.setEnabled(true);
-                btencrypt.setEnabled(true);
-                btdecrypt.setEnabled(true);
             break;
             
             case "store" :
@@ -1066,11 +1038,9 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                 ddparent.setEnabled(false);
                 btexport.setEnabled(false);
                 btpublickey.setEnabled(false);
-                btencrypt.setEnabled(false);
-                btdecrypt.setEnabled(false);
             break; 
             
-            case "pem" :
+            case "external pem" :
                 ddyears.setEnabled(false);
                 ddstrength.setEnabled(false);
                 ddsigalgo.setEnabled(false);
@@ -1081,8 +1051,6 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                 ddparent.setEnabled(false);
                 btexport.setEnabled(false);
                 btpublickey.setEnabled(false);
-                btencrypt.setEnabled(false);
-                btdecrypt.setEnabled(false);
             break; 
             
             default:
@@ -1094,7 +1062,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
         StringBuilder s = new StringBuilder();
         try {
          s.append("-----BEGIN CERTIFICATE-----\n");
-         s.append(new String(Base64.encode(apiUtils.getPublicKey(tbkey.getText()).getEncoded())).replaceAll("(.{64})", "$1\n"));
+         s.append(new String(Base64.encode(apiUtils.getPublicKeyAsCert(tbkey.getText()).getEncoded())).replaceAll("(.{64})", "$1\n"));
          s.append("\n-----END CERTIFICATE-----\n");
         exportCertToFile(s.toString(), tbkey.getText());
         } catch (CertificateEncodingException ex) {
@@ -1102,37 +1070,18 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
     }//GEN-LAST:event_btexportActionPerformed
 
-    private void bttestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttestActionPerformed
-        StringBuilder s = new StringBuilder();
-        s.append("-----BEGIN CERTIFICATE-----\n");
-            try {
-                s.append(generateSSHCert("public")); 
-            } catch (NoSuchAlgorithmException ex) {
-                bsmf.MainFrame.show("cannot generate SSH key: NoSuchAlgorithmException");
-            } catch (NoSuchProviderException ex) {
-                bsmf.MainFrame.show("cannot generate SSH key: NoSuchProviderException");
-            } catch (IOException ex) {
-                bsmf.MainFrame.show("cannot generate SSH key: IOException");
-            }
-        
-        s.append("\n-----END CERTIFICATE-----\n");
-        taoutput.append(s.toString());
-       // exportCertToFile(s.toString(), tbkey.getText());
-    }//GEN-LAST:event_bttestActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btclear;
-    private javax.swing.JButton btdecrypt;
     private javax.swing.JButton btdelete;
-    private javax.swing.JButton btencrypt;
     private javax.swing.JButton btexport;
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btpublickey;
-    private javax.swing.JButton bttest;
     private javax.swing.JButton btupdate;
+    private javax.swing.JComboBox<String> ddencalgo;
+    private javax.swing.JComboBox<String> ddformat;
     private javax.swing.JComboBox<String> ddparent;
     private javax.swing.JComboBox<String> ddsigalgo;
     private javax.swing.JComboBox<String> ddstrength;
@@ -1142,6 +1091,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

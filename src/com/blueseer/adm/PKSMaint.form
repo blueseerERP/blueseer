@@ -68,6 +68,7 @@
                               <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel12" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
@@ -91,25 +92,22 @@
                                           <Component id="tbuser" alignment="0" max="32767" attributes="0"/>
                                           <Component id="ddtype" alignment="0" pref="233" max="32767" attributes="0"/>
                                       </Group>
-                                      <Component id="ddsigalgo" min="-2" pref="111" max="-2" attributes="0"/>
                                       <Component id="ddyears" min="-2" max="-2" attributes="0"/>
                                       <Component id="ddstrength" alignment="0" min="-2" pref="71" max="-2" attributes="0"/>
                                       <Component id="ddparent" alignment="0" min="-2" pref="111" max="-2" attributes="0"/>
+                                      <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                                          <Component id="ddencalgo" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="ddsigalgo" alignment="0" pref="111" max="32767" attributes="0"/>
+                                      </Group>
                                   </Group>
                                   <EmptySpace pref="32" max="32767" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" attributes="0">
-                                          <Component id="btexport" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="bttest" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace max="32767" attributes="0"/>
-                                          <Component id="btencrypt" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" alignment="1" attributes="0">
                                           <Component id="btpublickey" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace max="32767" attributes="0"/>
-                                          <Component id="btdecrypt" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="btexport" min="-2" max="-2" attributes="0"/>
                                       </Group>
+                                      <Component id="ddformat" alignment="0" min="-2" pref="95" max="-2" attributes="0"/>
                                       <Component id="jScrollPane1" alignment="1" min="-2" pref="291" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
@@ -174,6 +172,11 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="ddencalgo" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel12" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jLabel8" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="ddsigalgo" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -195,14 +198,12 @@
                       <Component id="btadd" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btdelete" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="btupdate" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="btpublickey" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="btdecrypt" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="ddformat" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btexport" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="btencrypt" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="bttest" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btpublickey" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="0" pref="21" max="32767" attributes="0"/>
               </Group>
@@ -316,7 +317,7 @@
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="3">
-                <StringItem index="0" value="pem"/>
+                <StringItem index="0" value="external pem"/>
                 <StringItem index="1" value="store"/>
                 <StringItem index="2" value="keypair"/>
               </StringArray>
@@ -365,25 +366,9 @@
             <Property name="text" type="java.lang.String" value="ParentStore:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="btdecrypt">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="decrypt"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdecryptActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JButton" name="btencrypt">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="encrypt"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btencryptActionPerformed"/>
-          </Events>
-        </Component>
         <Component class="javax.swing.JButton" name="btpublickey">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Public Key"/>
+            <Property name="text" type="java.lang.String" value="View Public Key"/>
             <Property name="name" type="java.lang.String" value="btpublickey" noResource="true"/>
           </Properties>
           <Events>
@@ -465,13 +450,37 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btexportActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="bttest">
+        <Component class="javax.swing.JComboBox" name="ddencalgo">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Test"/>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="3">
+                <StringItem index="0" value="RSA"/>
+                <StringItem index="1" value="DSA"/>
+                <StringItem index="2" value="ED25519"/>
+              </StringArray>
+            </Property>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="bttestActionPerformed"/>
-          </Events>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel12">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Encrypt Algorithm"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="ddformat">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="2">
+                <StringItem index="0" value=".cer"/>
+                <StringItem index="1" value="ssh2"/>
+              </StringArray>
+            </Property>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+          </AuxValues>
         </Component>
       </SubComponents>
     </Container>

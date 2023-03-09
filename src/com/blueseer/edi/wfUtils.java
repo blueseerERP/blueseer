@@ -73,6 +73,7 @@ public class wfUtils {
      } else {
          log.write(now + " No Traffic File");
          log.write("\n");
+         log.close();
          r[0] = "1";
          r[1] = now + " No Traffic File";
          return r;
@@ -88,6 +89,7 @@ public class wfUtils {
      if (isBad) {
          log.write(now + " Bad Format Traffic File");
          log.write("\n");
+         log.close();
          r[0] = "1";
          r[1] = now + " Bad Format Traffic File";
          return r;
@@ -105,6 +107,7 @@ public class wfUtils {
                if (listOfFiles.length == 0) {
                    log.write(now + ", No files to process,,,,,,,,,,,,,");
                    log.write("\n");
+                   log.close();
                     r[0] = "0";
                     r[1] = now + ", No files to process,,,,,,,,,,,,,";
                     return r;
@@ -185,6 +188,7 @@ return r;
      } else {
          log.write(now + " No Traffic File");
          log.write("\n");
+         log.close();
          r[0] = "1";
          r[1] = now + " No Traffic File";
          return r;
@@ -201,6 +205,7 @@ return r;
      if (isBad) {
          log.write(now + " Bad Format Traffic File");
          log.write("\n");
+         log.close();
          r[0] = "1";
          r[1] = now + " Bad Format Traffic File";
          return r;
@@ -230,6 +235,7 @@ return r;
                if (listOfFiles.length == 0) {
                    log.write(now + " " + listOfFiles.length + " No files to process");
                    log.write("\n");
+                   log.close();
                     r[0] = "0";
                     r[1] = now + " " + listOfFiles.length + " No files to process";
                     return r;
