@@ -83,7 +83,8 @@ DeptBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,depb
 DeptMaint,,com.blueseer.fgl.DeptMaint,JMenuItem,depm
 EDILoad,,com.blueseer.edi.EDILoadMaint,JMenuItem,edip
 EDILog,,com.blueseer.edi.EDITransactionBrowse,JMenuItem,edil
-FreightMaint,,com.blueseer.frt.FreightMaint,JMenuItem,frtm
+CarrierMaint,,com.blueseer.frt.CarrierMaint,JMenuItem,carm
+CarrierBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,carb
 GenCodeBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,genb
 InventoryAdjustment,,com.blueseer.inv.InventoryMaint,JMenuItem,inva
 ItemMaint,,com.blueseer.inv.ItemMaint,JMenuItem,item

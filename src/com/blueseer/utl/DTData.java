@@ -7749,7 +7749,7 @@ return mymodel;
 
     public static DefaultTableModel getCarrierAll() {
           javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                  new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("description"), "SCAC", getGlobalColumnTag("phone"), getGlobalColumnTag("email"), getGlobalColumnTag("user"), getGlobalColumnTag("account")})
+                  new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("description"), getGlobalColumnTag("scac"), getGlobalColumnTag("phone"), getGlobalColumnTag("email"), getGlobalColumnTag("name"), getGlobalColumnTag("city"), getGlobalColumnTag("state")})
                   {
                   @Override  
                   public Class getColumnClass(int col) {  
@@ -7777,8 +7777,9 @@ return mymodel;
                                res.getString("car_scac"),
                                res.getString("car_phone"),
                                res.getString("car_email"),
-                               res.getString("car_contact"),
-                               res.getString("car_acct")
+                               res.getString("car_name"),
+                               res.getString("car_city"),
+                               res.getString("car_state")
                     });
                 }
        }

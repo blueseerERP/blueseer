@@ -94,7 +94,7 @@ public class FOBrowse extends javax.swing.JPanel {
                             getGlobalColumnTag("detail"), 
                             getGlobalColumnTag("order"), 
                             getGlobalColumnTag("custorder"), 
-                            getGlobalColumnTag("commid"),  
+                            getGlobalColumnTag("reference"),  
                             getGlobalColumnTag("carrier"), 
                             getGlobalColumnTag("status"), 
                             getGlobalColumnTag("date"), 
