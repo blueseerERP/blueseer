@@ -3,7 +3,7 @@ param(
 [string] $patch
 )
 
-if (-not($version)) { throw "You must supply a version:  6.3, 6.4, etc" }
+if (-not($version)) { throw "You must supply a version:  6.4, 6.5, etc" }
 if (-not($patch)) { throw "You must supply a 2nd parameter patch nbr:  1, 2, etc" }
 
 

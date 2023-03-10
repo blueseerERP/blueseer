@@ -1,28 +1,8 @@
-# Version 6.4 Patch file
+# Version 6.5 Patch file
 #
 # bszip.ps1 maintains a running account of patches.   All lines in the patch file will be commented out except the
 # current patch.   There can only be one line starting with 'patch=' in the .patch file rolling forward.
 # Once a new patch is added with comments...the previous patch= is commented out
 #
-#patch=0
-# First release of 6.4
-#patch=1
-# updated cron scheduler for edi loader and added standard job to initial download package
-#patch=2
-# Changed EDI reporting to reflect GS02 instead of ISA06 as SenderID; mods to EDITransactionLog; bugfix #88
-#patch=3
-# Added two Jasper prints for both PO print and Order print in event of multiple destination type order
-#patch=4
-# bug fix for #90; length/delim label for EDI Document Recognition Maint table
-#patch=5
-# changed bsdoc type for x12 to include suffix after 3 char code...i.e. 850 to 850x12; updated code_mstr order status for lang packs
-#patch=6
-# hot fix for issue #91...unable to hot reload jar file during map editor run event
-#patch=7
-# update to mapper maint and addition of EDI mapper utilities methods kill and write
-#patch=8
-# Add of field to edi_doc; recompile of db type EDI maps
-#patch=9
-# Added sftp logic to FTPMaint class in addition to new ftp_attr table; relayout of FTPMaint Form adding TabbedPanel
-patch=10
-# update EDDM menu to include structure IFS or OFS as part of EDDM record using edd_subtype as placeholder
+patch=0
+# First release of 6.5
