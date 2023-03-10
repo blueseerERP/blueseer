@@ -27,6 +27,8 @@ package com.blueseer.edi;
 
 import static com.blueseer.edi.EDIbs.dfdate;
 import static com.blueseer.edi.EDIbs.now;
+import static com.blueseer.utl.OVData.sendEmailwSession;
+import static com.blueseer.utl.OVData.setEmailSession;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -45,6 +47,7 @@ import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import javax.mail.Session;
 
 /**
  *
@@ -318,6 +321,119 @@ return r;
                   } // else it's non-zero size...process it
                 } // yep it's a file
               } // for all files found
+       } catch (IOException ex) {
+          ex.printStackTrace();
+          log.write(now + " " + " IOException" ); 
+          log.write("\n");
+       }
+       
+    log.close();     
+    return r;
+ }
+ 
+    public static String[] emailDir(String indir, String logfile, String tffile, String archdir, String from) throws IOException {
+        
+    String[] r = new String[]{"0",""};
+    
+    Path logpath = FileSystems.getDefault().getPath(logfile);
+    BufferedWriter log = new BufferedWriter(new FileWriter(logpath.toFile(), true)); 
+    
+     String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
+     ArrayList<String[]> trafficarray = new ArrayList<String[]>();
+     File tf = new File(tffile);
+     if(tf.exists()) {
+          FileReader reader = new FileReader(tf);
+          BufferedReader br = new BufferedReader(reader);
+          String line = "";
+          while ((line = br.readLine()) != null) {
+                trafficarray.add(line.split(":", -1));  // (pattern,destdir,archdir,singlefilename,deleteOrignal)
+          }
+          br.close();
+          reader.close();
+     } else {
+         log.write(now + " No Traffic File");
+         log.write("\n");
+         log.close();
+         r[0] = "1";
+         r[1] = now + " No Traffic File";
+         return r;
+     }
+     
+     // check trafficarray...make sure 5 elements per row
+     // (pattern,destdir,archdir,singlefilename,deleteOrignal)
+     boolean isBad = false;
+     for (String[] s : trafficarray) {
+         if (s.length != 3) {
+             isBad = true;
+         }
+     }
+     if (isBad) {
+         log.write(now + " Bad Format Traffic File");
+         log.write("\n");
+         log.close();
+         r[0] = "1";
+         r[1] = now + " Bad Format Traffic File";
+         return r;
+     }
+     
+      
+      FileFilter byfiletype = new FileFilter() {
+             @Override
+             public boolean accept(File f) {
+                 // return name.endsWith(".txt");
+                 return f.isFile();
+             }
+         };
+     
+     // OK...now let's loop through indir for files 
+    
+         try {   
+              File folder = new File(indir);
+              File[] listOfFiles = folder.listFiles(byfiletype);
+                  
+               if (listOfFiles.length == 0) {
+                   log.write(now + " " + listOfFiles.length + " No files to process");
+                   log.write("\n");
+                   log.close();
+                    r[0] = "0";
+                    r[1] = now + " " + listOfFiles.length + " No files to process";
+                    return r;
+               }
+              
+              r[1] = now + " " + " File Count=" + listOfFiles.length; 
+              log.write(now + " " + " File Count=" + listOfFiles.length );
+              log.write("\n");
+               
+              boolean sent = false;
+              String message = "This is an automated email alert." + '\n';
+             
+              Session session = setEmailSession();
+              
+              for (int i = 0; i < listOfFiles.length; i++) {
+            	 sent = false;
+                 if (listOfFiles[i].isFile()) {
+                	 for (String[] e : trafficarray) {                		 
+                		 if (listOfFiles[i].getName().contains(e[0])) {
+                			 // found match
+                			 sent = true;
+                			 Path filepath = FileSystems.getDefault().getPath(indir + listOfFiles[i].getName());
+                			 Path archpath = FileSystems.getDefault().getPath(archdir + listOfFiles[i].getName() + "." + now);
+                			 log.write(now + " sending email for file: " + listOfFiles[i].getName() + " to " + e[1] +  "\n");
+                			 log.write("\n");
+                                         sendEmailwSession(session, from, e[2], e[1], message, filepath.toString());
+                			 Files.copy(filepath, archpath, StandardCopyOption.REPLACE_EXISTING);
+                			 Files.delete(filepath);
+                			 break;
+                		 }
+                		 
+                	 }
+                 	
+                 }
+                 if (! sent) {
+                    log.write(now + " no match found in config file...skipping " + listOfFiles[i].getName() +  "\n");
+                    log.write("\n");
+                 }
+             }
        } catch (IOException ex) {
           ex.printStackTrace();
           log.write(now + " " + " IOException" ); 

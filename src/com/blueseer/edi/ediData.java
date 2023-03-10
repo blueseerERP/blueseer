@@ -33,6 +33,7 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static com.blueseer.edi.EDILoad.runTranslationSingleFile;
 import static com.blueseer.edi.apiUtils.runAPICall;
+import static com.blueseer.edi.wfUtils.emailDir;
 import static com.blueseer.edi.wfUtils.filterDir;
 import static com.blueseer.edi.wfUtils.trafficDir;
 import com.blueseer.utl.BlueSeerUtils;
@@ -40,6 +41,8 @@ import static com.blueseer.utl.BlueSeerUtils.ConvertIntToYesNo;
 import static com.blueseer.utl.BlueSeerUtils.ConvertStringToBool;
 import static com.blueseer.utl.BlueSeerUtils.bsret;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.OVData.isSMTPServer;
+import static com.blueseer.utl.OVData.isSMTPServerBool;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -1041,7 +1044,7 @@ public class ediData {
     }
     
     public static int writeWFLog(wkf_log wkfl, int origparentid, ArrayList<wkfd_log> wkfdl) {
-       
+        boolean isError = false;
         int parentid = -1;
         Connection bscon = null;
         PreparedStatement ps = null;
@@ -1058,6 +1061,10 @@ public class ediData {
                 if (wkfdl != null) {
                     for (wkfd_log z : wkfdl) {
                     _addWkfDetlog(parentid, z, bscon, ps, res);
+                    isError = (z.wkfdl_status().equals("1")) ? true : false;
+                    }
+                    if (isError) {
+                       _updateWkfLogStatus(parentid, bscon, ps, "1"); 
                     }
                 }
             }
@@ -1113,6 +1120,17 @@ public class ediData {
 	       MainFrame.bslog(s);
         }
     }
+    
+    private static void _updateWkfLogStatus(int id, Connection con, PreparedStatement ps, String status) throws SQLException {
+        
+        String sql = "update wkf_log set wkfl_status = ? " +
+                "  where wkfl_id = ? ";
+            ps = con.prepareStatement(sql);
+            ps.setString(1, status);
+            ps.setString(2, String.valueOf(id));
+            ps.executeUpdate();
+    }
+    
     
     private static int _addWkfLog(wkf_log x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int returnkey = 0;
@@ -2798,7 +2816,7 @@ public class ediData {
     }
     
     public static String[] processWorkFlowID(String id) {
-          
+      
        // String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));   
         wkf_mstr wkf = getWkfMstr(id);
         
@@ -2834,11 +2852,22 @@ public class ediData {
           
           switch (wkd.wkfd_action()) {
              
+            case "EmailDir" :
+                r = wkfaction_emaildirectory(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
+                lgd[3] = r[0];
+                lgd[4] = r[1];
+                if (! r[0].equals("0")) {
+                    logdetail.add(lgd);
+                    break forloop;
+                } 
+                break;    
+              
             case "TrafficDir" :
                 r = wkfaction_trafficdirectory(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
                 lgd[3] = r[0];
                 lgd[4] = r[1];
                 if (! r[0].equals("0")) {
+                    logdetail.add(lgd);
                     break forloop;
                 } 
                 break;  
@@ -2848,6 +2877,7 @@ public class ediData {
                 lgd[3] = r[0];
                 lgd[4] = r[1];
                 if (! r[0].equals("0")) {
+                    logdetail.add(lgd);
                     break forloop;
                 } 
                 break; 
@@ -2857,6 +2887,7 @@ public class ediData {
                 lgd[3] = r[0];
                 lgd[4] = r[1];
                 if (! r[0].equals("0")) {
+                    logdetail.add(lgd);
                     break forloop;
                 } 
                 break; 
@@ -2918,6 +2949,7 @@ public class ediData {
           logdetail.add(lgd);
         }
         
+            boolean isError = false;
             String status = "";
             ArrayList<wkfd_log> list = new ArrayList<wkfd_log>();
             for (String[] s : logdetail) {
@@ -2933,8 +2965,9 @@ public class ediData {
             list.add(x);
             if (! s[3].equals("0")) {
                 status = s[4];
+                isError = true;
             }
-            }
+            } // for each log detail
             
             writeWFLog(wkfl,logid,list);
        
@@ -3057,6 +3090,84 @@ public class ediData {
         
         try {
             r = trafficDir(indir, logfile, tffile);
+        } catch (IOException ex) {
+            r[0] = "1";
+            r[1] = "IOException occurred: " + ex.getMessage();
+        }
+        
+        return r;
+    }
+    
+    public static String[] wkfaction_emaildirectory(wkf_det wkfd, ArrayList<wkfd_meta> list) {
+       String[] r = new String[]{"0",""};
+       
+        String indir = "";
+        String logfile = "";
+        String tffile = "";
+        String archdir = "";
+        String smtpfrom = "";
+        
+        for (wkfd_meta m : list) {
+            if (m.wkfdm_key().equals("indir")) {
+                indir = m.wkfdm_value();
+            }
+           
+            if (m.wkfdm_key().equals("logfile")) {
+                logfile = m.wkfdm_value();
+            }
+           
+            if (m.wkfdm_key().equals("tffile")) {
+                tffile = m.wkfdm_value();
+            }
+            
+            if (m.wkfdm_key().equals("archdir")) {
+                archdir = m.wkfdm_value();
+            }
+            
+            if (m.wkfdm_key().equals("smtpfrom")) {
+                smtpfrom = m.wkfdm_value();
+            }
+        }
+        
+        
+        
+        if (smtpfrom.isEmpty()) {
+           r[0] = "1";
+           r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "must supply a legitimate from email address "; 
+           return r; 
+        }
+        
+        Path indirpath = FileSystems.getDefault().getPath(indir);
+        if (indir.isEmpty() || ! Files.exists(indirpath)) {
+           r[0] = "1";
+           r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "indir path does not exist "; 
+           return r; 
+        }
+        
+        Path archdirpath = FileSystems.getDefault().getPath(archdir);
+        if (archdir.isEmpty() || ! Files.exists(archdirpath)) {
+           r[0] = "1";
+           r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "archdir path does not exist "; 
+           return r; 
+        }
+       
+       
+        Path tffilepath = FileSystems.getDefault().getPath(tffile);
+        if (tffile.isEmpty() || ! Files.exists(tffilepath)) {
+           r[0] = "1";
+           r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "tffile path does not exist "; 
+           return r; 
+        }
+        
+        
+        if (! isSMTPServerBool()) {
+           r[0] = "1";
+           r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "Missing SMTP server/auth info "; 
+           return r;  
+        }
+         
+        try {
+            r = emailDir(indir, logfile, tffile, archdir, smtpfrom);
         } catch (IOException ex) {
             r[0] = "1";
             r[1] = "IOException occurred: " + ex.getMessage();

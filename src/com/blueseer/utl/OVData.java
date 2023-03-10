@@ -17256,6 +17256,133 @@ MainFrame.bslog(e);
         
     }
     
+    public static boolean isSMTPServerBool() {
+        boolean x = true;
+        try{
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            try{
+                Statement st = con.createStatement();
+                ResultSet res = null;
+
+                res = st.executeQuery("select * from ov_ctrl;" );
+               while (res.next()) {
+                   if (res.getString("ov_email_server").isEmpty()) {
+                    x = false;
+                   }
+                  
+                   // authuser can be empty ...no validation required except for legitimate 'from' ...internal network usage
+                   if (res.getString("ov_smtpauthpass").isEmpty() && ! res.getString("ov_smtpauthuser").isEmpty() ) {
+                    x = false;
+                   }
+                     
+                }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            }
+            con.close();
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return x;
+        
+    }
+    
+    
+    public static Session setEmailSession() {
+      String[] smtpcreds = getSMTPCredentials();
+      String isAuth = getCodeValueByCodeKey("sys_smtp", "auth");
+      String isTLS =  getCodeValueByCodeKey("sys_smtp", "tls");
+      
+      String from = smtpcreds[1];
+      String emailserver = smtpcreds[0];
+
+
+      if (emailserver.isEmpty() || from.isEmpty()) {
+          return null;
+      }
+      // Set smtp properties
+      Properties properties = new Properties();
+      properties.put("mail.smtp.host", emailserver);
+      
+      if (isAuth.toLowerCase().equals("yes")) {
+        properties.put("mail.smtp.auth", "true");
+      }
+      if (isTLS.toLowerCase().equals("yes")) {
+        properties.put("mail.smtp.starttls.enable", "true");
+      }
+      
+      Authenticator auth = new SMTPAuthenticator();
+      Session session = Session.getDefaultInstance(properties, auth);
+      
+      return session;
+    }
+    
+    public static void sendEmailwSession(Session session, String from, String to, String subject, String body, String filename) {
+
+    try {
+   
+    MimeMessage message = new MimeMessage(session);
+
+    message.setFrom(new InternetAddress(from));
+
+    message.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
+
+    message.setSubject(subject);
+
+    message.setSentDate(new Date());
+
+// Set the email body
+
+    MimeBodyPart messagePart = new MimeBodyPart();
+
+    messagePart.setText(body);
+
+// Set the email attachment file
+
+    if (! filename.isEmpty()) {
+            attachmentPart = new MimeBodyPart();
+            FileDataSource fileDataSource = new FileDataSource(filename) {
+
+                @Override
+
+                public String getContentType() {
+
+              return "application/octet-stream";
+
+                }
+
+            };
+            attachmentPart.setDataHandler(new DataHandler(fileDataSource));
+            attachmentPart.setFileName(fileDataSource.getName());
+    }
+// Add all parts of the email to Multipart object
+
+    Multipart multipart = new MimeMultipart();
+
+    multipart.addBodyPart(messagePart);
+     if (! filename.isEmpty()) {
+     multipart.addBodyPart(attachmentPart);
+     }
+    message.setContent(multipart);
+
+    // Send email
+
+    Transport.send(message);
+
+    } catch (MessagingException e) {
+      MainFrame.bslog(e);
+    }
+ }
+    
+    
     public static void sendEmail(String to, String subject, String body, String filename) {
 
   // Strings that contain from, to, subject, body and file path to the attachment
