@@ -1793,6 +1793,13 @@ public class BlueSeerUtils {
               
     }
     
+     public static String cleanDirString(String dir) {    
+      if (dir.isBlank()) {
+          return "";
+      }
+      return (! dir.endsWith("/") || ! dir.endsWith("\\")) ? dir + "/" : dir ;
+    }
+   
      
 }
 

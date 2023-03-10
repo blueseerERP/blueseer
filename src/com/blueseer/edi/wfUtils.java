@@ -25,8 +25,7 @@ SOFTWARE.
  */
 package com.blueseer.edi;
 
-import static com.blueseer.edi.EDIbs.dfdate;
-import static com.blueseer.edi.EDIbs.now;
+import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
 import static com.blueseer.utl.OVData.sendEmailwSession;
 import static com.blueseer.utl.OVData.setEmailSession;
 import java.io.BufferedReader;
@@ -36,7 +35,6 @@ import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -57,6 +55,10 @@ public class wfUtils {
     
     public static String[] filterDir(String indir, String outdir, String archdir, String logfile, String[] doctypes, String tffile) throws FileNotFoundException, IOException {
     String[] r = new String[]{"0",""};
+    
+    indir = cleanDirString(indir);
+    outdir = cleanDirString(outdir);
+    archdir = cleanDirString(archdir);
     
     Path logpath = FileSystems.getDefault().getPath(logfile);
     BufferedWriter log = new BufferedWriter(new FileWriter(logpath.toFile(), true)); 
@@ -172,6 +174,8 @@ return r;
     public static String[] trafficDir(String indir, String logfile, String tffile) throws IOException {
         
     String[] r = new String[]{"0",""};
+    
+    indir = cleanDirString(indir);
     
     Path logpath = FileSystems.getDefault().getPath(logfile);
     BufferedWriter log = new BufferedWriter(new FileWriter(logpath.toFile(), true)); 
@@ -334,6 +338,10 @@ return r;
     public static String[] emailDir(String indir, String logfile, String tffile, String archdir, String from) throws IOException {
         
     String[] r = new String[]{"0",""};
+      
+    indir = cleanDirString(indir);
+    archdir = cleanDirString(archdir);
+    
     
     Path logpath = FileSystems.getDefault().getPath(logfile);
     BufferedWriter log = new BufferedWriter(new FileWriter(logpath.toFile(), true)); 
@@ -404,6 +412,8 @@ return r;
               log.write(now + " " + " File Count=" + listOfFiles.length );
               log.write("\n");
                
+             
+              
               boolean sent = false;
               String message = "This is an automated email alert." + '\n';
              
@@ -438,6 +448,8 @@ return r;
           ex.printStackTrace();
           log.write(now + " " + " IOException" ); 
           log.write("\n");
+          r[0] = "1";
+          r[1] = now + " IOException " + ex.getMessage();
        }
        
     log.close();     
