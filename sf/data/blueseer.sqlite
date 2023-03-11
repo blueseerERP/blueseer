@@ -2917,7 +2917,7 @@ CREATE TABLE "wkf_det" (
 );
 CREATE TABLE "wkfd_meta" (
   "wkfdm_id" varchar(30) NOT NULL DEFAULT '',
-  "wkfdm_line" int(3) NOT NULL DEFAULT '',
+  "wkfdm_line" int(3) NOT NULL DEFAULT '0',
   "wkfdm_key" varchar(100) NOT NULL DEFAULT '',
   "wkfdm_value" varchar(100) NOT NULL DEFAULT ''
 );
@@ -2932,7 +2932,7 @@ CREATE TABLE "wkf_log" (
 );
 CREATE TABLE "wkfd_log" (
   "wkfdl_id" INTEGER PRIMARY KEY,
-  "wkfdl_parentid" int(12) NOT NULL COLLATE NOCASE DEFAULT '',
+  "wkfdl_parentid" int(12) NOT NULL COLLATE NOCASE DEFAULT '0',
   "wkfdl_action" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "wkfdl_ts" timestamp NOT NULL DEFAULT (datetime('now','localtime')),
   "wkfdl_ref" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
