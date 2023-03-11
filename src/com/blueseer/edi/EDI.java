@@ -726,6 +726,7 @@ public class EDI {
         m[0] = "9"; // mixbag...pass code 9 along with start,end of buffer to keep
         m[1] = keepers.deleteCharAt(keepers.length() - 1).toString();
     }
+    
     return m;
     }
     

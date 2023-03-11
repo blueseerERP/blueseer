@@ -116,6 +116,8 @@ public class jobWD implements Job {
             }
         }
         
+        
+        
         System.out.println("List of current Jobs and Triggers: " + " time: " + now);
         
         try {

@@ -75,10 +75,12 @@ public class wfUtils {
           }
           br.close();
           reader.close();
+          
      } else {
          log.write(now + " No Traffic File");
          log.write("\n");
          log.close();
+         log = null;
          r[0] = "1";
          r[1] = now + " No Traffic File";
          return r;
@@ -95,6 +97,7 @@ public class wfUtils {
          log.write(now + " Bad Format Traffic File");
          log.write("\n");
          log.close();
+         log = null;
          r[0] = "1";
          r[1] = now + " Bad Format Traffic File";
          return r;
@@ -113,6 +116,7 @@ public class wfUtils {
                    log.write(now + ", No files to process,,,,,,,,,,,,,");
                    log.write("\n");
                    log.close();
+                   log = null;
                     r[0] = "0";
                     r[1] = now + ", No files to process,,,,,,,,,,,,,";
                     return r;
@@ -161,12 +165,15 @@ public class wfUtils {
                   }
                 }
               }
+              
+        listOfFiles = null;      
        } catch (IOException ex) {
           ex.printStackTrace();
        }
     }
-   
+    
     log.close();
+    log = null;
     
 return r; 
 }
