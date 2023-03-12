@@ -31,6 +31,7 @@ cp -R ../sf/zebra $bsshare/
 cp -R ../sf/edi $bsshare/
 cp -R ../sf/temp $bsshare/
 cp -R ../sf/logs $bsshare/
+cp -R ../sf/conf $bsshare/
 cp -R ../sf/custom $bsshare/
 cp -R ../sf/patches $bsshare/
 cp -R ../sf/jasper $bsshare/
@@ -46,6 +47,7 @@ chmod -R 0777 $bsshare/zebra
 chmod -R 0777 $bsshare/edi
 chmod -R 0777 $bsshare/temp
 chmod -R 0777 $bsshare/logs
+chmod -R 0777 $bsshare/conf
 chmod -R 0777 $bsshare/custom
 chmod -R 0777 $bsshare/patches
 chmod -R 0777 $bsshare/jasper

@@ -56,7 +56,7 @@ rmdir $patchdir -force -recurse
 $myzip = "blueseer.mysql.win.v" + $version + ".zip"
 rm $wip\$myzip
 compress-archive -path ..\sf\zebra -destinationpath $wip\$myzip
-compress-archive -update -path ..\sf\logs,..\sf\patches,..\sf\temp,..\sf\custom,..\sf\jasper,..\sf\data,..\sf\edi,..\sf\images -destinationpath $wip\$myzip
+compress-archive -update -path ..\sf\conf,..\sf\logs,..\sf\patches,..\sf\temp,..\sf\custom,..\sf\jasper,..\sf\data,..\sf\edi,..\sf\images -destinationpath $wip\$myzip
 compress-archive -update -path ..\dist -destinationpath $wip\$myzip
 compress-archive -update -path mysql_install.bat -destinationpath $wip\$myzip
 compress-archive -update -path login.bat -destinationpath $wip\$myzip
