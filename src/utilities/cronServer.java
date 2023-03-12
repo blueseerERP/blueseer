@@ -28,6 +28,9 @@ import static bsmf.MainFrame.tags;
 import com.blueseer.adm.admData;
 import com.blueseer.adm.admData.cron_mstr;
 import com.blueseer.crn.jobWD;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -48,18 +51,25 @@ import org.quartz.impl.triggers.CronTriggerImpl;
  * @author terryva
  */
 public class cronServer {
-    public static Scheduler scheduler = null;
+    //public static Scheduler scheduler = null;
 	
 	public static void main(String[] args) throws Exception {
 	
+        Scheduler scheduler = null; 
 		
 	bsmf.MainFrame.setConfig();	
 	tags = ResourceBundle.getBundle("resources.bs", Locale.getDefault());
         
         String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
-        
-        scheduler = new StdSchedulerFactory().getScheduler();
-        
+       
+        Path path = FileSystems.getDefault().getPath("conf/quartz.properties");
+        if (! Files.exists(path)) {
+            scheduler = new StdSchedulerFactory().getScheduler();
+        } else {
+            StdSchedulerFactory sf = new StdSchedulerFactory("conf/quartz.properties");
+            scheduler = sf.getScheduler();  
+        }
+       
         
         // ...deploy all 'enabled' tasks in cron_mstr
 	ArrayList<cron_mstr> list = admData.getCronMstrEnabled();
@@ -75,6 +85,7 @@ public class cronServer {
                     if (scheduler.checkExists(jk)) {
                      continue;
                     }
+                    
                     scheduler.deleteJob(jk);
                     Class cls = Class.forName(cm.cron_prog());
                     JobDetail job = JobBuilder.newJob(cls)
@@ -86,6 +97,7 @@ public class cronServer {
                     trigger.setCronExpression(cm.cron_expression()); 
                     System.out.println("starting cron job: " + jk + " time: " + now );
                     scheduler.scheduleJob(job, trigger);
+                    
                 } catch (SchedulerException ex) {
                     Logger.getLogger(jobWD.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (ParseException ex) {
@@ -111,6 +123,7 @@ public class cronServer {
         
         
     	scheduler.start();
+        
         
         }	
 }

@@ -40,9 +40,10 @@ import org.quartz.JobExecutionException;
  * @author terryva
  */
 public class jobWkf implements Job {
+    
     public void execute(JobExecutionContext context) throws JobExecutionException {
         
-      
+       
         String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));        
                 
         JobDataMap dataMap = context.getJobDetail().getJobDataMap();
@@ -57,6 +58,12 @@ public class jobWkf implements Job {
         
 	now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));  
         System.out.println("jobWkf completing system method: " + param + " end time: " + now);
+        
+        dataMap = null;
+        now = null;
+        r = null;
+        param = null;
+        
 	}
    
 }

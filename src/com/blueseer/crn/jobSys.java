@@ -80,7 +80,13 @@ public class jobSys implements Job {
             default: 
                 System.out.println("Unkown paramter: " + param + " time: " + now);
         }
-               
+        
+        now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));  
+        System.out.println("jobSys completing system method: " + param + " end time: " + now);
+        
+        dataMap = null;
+        now = null;
+        param = null;
 			
 		
 	}
