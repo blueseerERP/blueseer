@@ -26,7 +26,7 @@ SOFTWARE.
 package com.blueseer.crn;
 
 
-import static com.blueseer.edi.ediData.processWorkFlowID;
+import com.blueseer.edi.ediData;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -50,7 +50,8 @@ public class jobWkf implements Job {
         String param = dataMap.getString("param");
         System.out.println("jobWkf firing system method: " + param + " run time: " + now);
                 
-        String[] r = processWorkFlowID(param);
+        ediData ed = new ediData();
+        String[] r = ed.processWorkFlowID(param);
         
         if (r[0] != "0") {
         System.out.println(r[1]);

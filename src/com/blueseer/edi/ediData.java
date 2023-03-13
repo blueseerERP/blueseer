@@ -2815,7 +2815,7 @@ public class ediData {
         return x;
     }
     
-    public static String[] processWorkFlowID(String id) {
+    public String[] processWorkFlowID(String id) {
       
        // String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));   
         wkf_mstr wkf = getWkfMstr(id);
@@ -2970,7 +2970,11 @@ public class ediData {
             } // for each log detail
             
             writeWFLog(wkfl,logid,list);
-       
+        
+        wkf = null;
+        wkfl = null;
+        wkfdetlist = null;
+        logdetail = null;
         return bsret(status);
     }
     
