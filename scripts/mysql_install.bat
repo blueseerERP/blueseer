@@ -18,6 +18,8 @@ set /p IP=Enter the database server IP addr (ex: 10.15.2.2 or localhost):%=%
 
 set /p pass=Enter the administrator password for the MySQL Database:%=%
 
+set /p DB=Enter the database name (default: bsdb ):%=%
+
 set /p lang=Enter the two character language code (en,de,fr,es,tr,etc):%=%
 
 if not defined lang (
@@ -45,16 +47,15 @@ if "%lang%"=="ro" (
 set "country=RO"
 )
 
-
-
+if not defined DB (
+set "DB=bsdb"
+)
 
 set "ROOT=root"
-set "DB=bsdb"
-
 
 cd %~dp0
 
-@echo "creating bs.cfg file...."
+@echo "creating bs.cfg file for database %DB%...."
 @echo DBTYPE=mysql>bs.cfg
 @echo DB=%DB%>>bs.cfg
 @echo USER=bs_user>>bs.cfg
