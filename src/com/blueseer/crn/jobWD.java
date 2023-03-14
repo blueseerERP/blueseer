@@ -28,28 +28,20 @@ package com.blueseer.crn;
 import static bsmf.MainFrame.bslog;
 import com.blueseer.adm.admData;
 import com.blueseer.adm.admData.cron_mstr;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.quartz.Job;
 import org.quartz.JobBuilder;
-import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.JobKey;
 import org.quartz.Scheduler;
-import org.quartz.SchedulerContext;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.impl.matchers.GroupMatcher;
@@ -135,7 +127,8 @@ public class jobWD implements Job {
         } catch (SchedulerException ex) {
             bslog(ex);
         }
-        
+        list = null;
+        myscheduler = null;
        
     }
 

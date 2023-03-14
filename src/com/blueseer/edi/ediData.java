@@ -3311,8 +3311,14 @@ public class ediData {
                 for (Path path : stream) {
                     if (! Files.isDirectory(path)) {
                     Path destinationpath = FileSystems.getDefault().getPath(destination + "/" + path.getFileName());    
-                    Files.copy(path, destinationpath, StandardCopyOption.REPLACE_EXISTING); 
-                    Files.delete(path);
+                        
+                        if (! Files.exists(destinationpath)) {
+                            Files.copy(path, destinationpath, StandardCopyOption.REPLACE_EXISTING);
+                        } else {
+                            if (overwrite) {
+                            Files.copy(path, destinationpath, StandardCopyOption.REPLACE_EXISTING); 
+                            }
+                        }
                     }
                 }
             } catch (IOException ex) {  
