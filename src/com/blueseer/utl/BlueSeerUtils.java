@@ -1597,6 +1597,16 @@ public class BlueSeerUtils {
          return r;
      }
      
+     public static String[] bsret(String status, String message) {
+         String[] r = new String[]{status,""};
+         if (! message.isBlank()) {
+         r[1] = message;
+         } else {
+             r[1] = "Transaction Complete";
+         }
+         return r;
+     }
+     
      public static void messagereset() {
          bsmf.MainFrame.messagelabel.setForeground(Color.BLACK);
          bsmf.MainFrame.messagelabel.setText("");

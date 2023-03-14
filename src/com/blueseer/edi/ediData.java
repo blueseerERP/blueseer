@@ -40,15 +40,18 @@ import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.ConvertIntToYesNo;
 import static com.blueseer.utl.BlueSeerUtils.ConvertStringToBool;
 import static com.blueseer.utl.BlueSeerUtils.bsret;
+import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.OVData.isSMTPServer;
 import static com.blueseer.utl.OVData.isSMTPServerBool;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
 import java.sql.Connection;
@@ -2932,6 +2935,16 @@ public class ediData {
                 } 
                 break; 
                 
+                case "FileDeleteAll" :
+                r = wkfaction_filedeleteall(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
+                lgd[3] = r[0];
+                lgd[4] = r[1];
+                if (! r[0].equals("0")) {
+                    logdetail.add(lgd);
+                    break forloop;
+                } 
+                break; 
+                
                 case "FileMap" :
                 r = wkfaction_filemap(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
                 lgd[3] = r[0];
@@ -2950,7 +2963,7 @@ public class ediData {
         }
         
             boolean isError = false;
-            String status = "";
+            String statusmessg = "";
             ArrayList<wkfd_log> list = new ArrayList<wkfd_log>();
             for (String[] s : logdetail) {
             wkfd_log x = new wkfd_log(null, 
@@ -2964,7 +2977,7 @@ public class ediData {
             );
             list.add(x);
             if (! s[3].equals("0")) {
-                status = s[4];
+                statusmessg = s[4];
                 isError = true;
             }
             } // for each log detail
@@ -2975,7 +2988,8 @@ public class ediData {
         wkfl = null;
         wkfdetlist = null;
         logdetail = null;
-        return bsret(status);
+        String status = (isError) ? "1" : "0";
+        return bsret(status, statusmessg);
     }
     
     public static String[] wkfaction_filterdirectory(wkf_det wkfd, ArrayList<wkfd_meta> list) {
@@ -3305,11 +3319,13 @@ public class ediData {
         
        
         if (! source.isEmpty() && ! destination.isEmpty()) {
+            int count = 0;
         Path sourcepath = FileSystems.getDefault().getPath(source);
             try (DirectoryStream<Path> stream = Files.newDirectoryStream(sourcepath, filter)) {
                 int f = 0;
                 for (Path path : stream) {
                     if (! Files.isDirectory(path)) {
+                        count++;
                     Path destinationpath = FileSystems.getDefault().getPath(destination + "/" + path.getFileName());    
                         
                         if (! Files.exists(destinationpath)) {
@@ -3321,6 +3337,7 @@ public class ediData {
                         }
                     }
                 }
+                r[1] = "Copying " + count +  " files " + " from " + source + " to " + destination;
             } catch (IOException ex) {  
                     r[0] = "1";
                     r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + ex.getMessage();
@@ -3355,11 +3372,13 @@ public class ediData {
         
        
         if (! source.isEmpty() && ! destination.isEmpty()) {
+        int count = 0;
         Path sourcepath = FileSystems.getDefault().getPath(source);
             try (DirectoryStream<Path> stream = Files.newDirectoryStream(sourcepath, filter)) {
                 int f = 0;
                 for (Path path : stream) {
                     if (! Files.isDirectory(path)) {
+                        count++;
                     Path destinationpath = FileSystems.getDefault().getPath(destination + "/" + path.getFileName());    
                         if (! overwrite && Files.exists(destinationpath)) {
                             destinationpath = FileSystems.getDefault().getPath(destination + "/" + path.getFileName() + "." + Long.toHexString(System.currentTimeMillis())); 
@@ -3369,6 +3388,7 @@ public class ediData {
                         }
                     }
                 }
+                r[1] = "Moving " + count +  " files " + " from " + source + " to " + destination;
             } catch (IOException ex) {  
                     r[0] = "1";
                     r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + ex.getMessage();
@@ -3376,6 +3396,59 @@ public class ediData {
         } 
         return r;
     }
+    
+    public static String[] wkfaction_filedeleteall(wkf_det wkfd, ArrayList<wkfd_meta> list) {
+        String[] r = new String[]{"0",""};
+        
+        String source = "";
+        int days = 0;
+        
+        for (wkfd_meta m : list) {
+            if (m.wkfdm_key().equals("source dir") && ! m.wkfdm_value.isBlank()) {
+                source = cleanDirString(m.wkfdm_value());
+            }
+            if (m.wkfdm_key().equals("days") && ! m.wkfdm_value.isBlank()) {
+                days = Integer.valueOf(m.wkfdm_value());
+            }
+           
+        }
+        
+        
+        
+        File folder = new File(source);
+        File[] listOfFiles = folder.listFiles();
+        
+        long z = System.currentTimeMillis() - ((long)days * 24L * 60L * 60L * 1000L);
+        int count = 0;
+        int cantcount = 0;
+       
+        if (! source.isEmpty()) {
+        Path sourcepath = FileSystems.getDefault().getPath(source);
+            for (int i = 0; i < listOfFiles.length; i++) {
+                if (listOfFiles[i].isFile()) {
+				if (listOfFiles[i].getParentFile().canWrite() && listOfFiles[i].lastModified() < z) {
+				   
+				    Path filepath = FileSystems.getDefault().getPath(source + listOfFiles[i].getName());
+				    
+				    try {
+						Files.delete(filepath);
+						count++;
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						cantcount++;
+						continue;
+					}
+				   
+				   // System.out.println(listOfFiles[i].getName());
+				}
+                }
+            
+            }
+        } 
+        r[1] = "Deleting " + count + " of " + listOfFiles.length + " files using days back: " + days;
+        return r;
+    }
+    
     
     public static String[] wkfaction_filemap(wkf_det wkfd, ArrayList<wkfd_meta> list) {
         String[] r = new String[]{"0",""};

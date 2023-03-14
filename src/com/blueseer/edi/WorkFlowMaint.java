@@ -129,7 +129,7 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
             message[0] = "";
             message[1] = "";
             
-            
+             
              switch(this.type) {
                 case "add":
                     message = addRecord(key);
@@ -143,6 +143,11 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
                 case "get":
                     message = getRecord(key);    
                     break;    
+                case "run":
+                    ediData ed = new ediData();
+                    message = ed.processWorkFlowID(key[0]);
+                    break;
+                    
                 default:
                     message = new String[]{"1", "unknown action"};
             }
@@ -160,6 +165,8 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
              initvars(null);  
            } else if (this.type.equals("get")) {
              updateForm();  
+             tbkey.requestFocus();
+           } else if (this.type.equals("run")) {
              tbkey.requestFocus();
            } else {
              initvars(null);  
@@ -304,6 +311,7 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
         setComponentDefaultValues();
         BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
         btupdate.setEnabled(false);
+        btrun.setEnabled(false);
         btdelete.setEnabled(false);
         btnew.setEnabled(false);
         tbkey.setEditable(true);
@@ -584,6 +592,7 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
             if (i == 5) {
                 ArrayList<String[]> x = new ArrayList<String[]>();
                 x.add(new String[]{"source dir", ""});
+                x.add(new String[]{"days", ""});
                 kvs.put("FileDeleteAll", x);
             }
             if (i == 6) {
@@ -660,6 +669,7 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel1 = new javax.swing.JLabel();
         cbenabled = new javax.swing.JCheckBox();
         btnew = new javax.swing.JButton();
+        btrun = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         keyvaluetable = new javax.swing.JTable();
@@ -822,29 +832,39 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
+        btrun.setText("Run");
+        btrun.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btrunActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbenabled)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btchangelog, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnew)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btclear)))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbenabled)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btchangelog, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnew)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btclear))))
+                    .addComponent(btrun, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -865,7 +885,9 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbenabled)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btrun)
+                .addContainerGap())
         );
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Key / Value Maintenance"));
@@ -1113,6 +1135,14 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
         bsmf.MainFrame.show("key/values committed");
     }//GEN-LAST:event_btcommitActionPerformed
 
+    private void btrunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrunActionPerformed
+         if (! validateInput(dbaction.run)) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask(dbaction.run, new String[]{tbkey.getText()});
+    }//GEN-LAST:event_btrunActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JList<String> actionlist;
@@ -1126,6 +1156,7 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JButton btdown;
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
+    private javax.swing.JButton btrun;
     private javax.swing.JButton btup;
     private javax.swing.JButton btupdate;
     private javax.swing.JCheckBox cbenabled;
