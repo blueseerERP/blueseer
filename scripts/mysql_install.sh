@@ -45,6 +45,13 @@ echo -n "Enter the administrator password for the MySQL Database: "
 read PASS
 echo ""
 echo ""
+echo -n "Enter database name (Default = bsdb): "
+read DB
+if [[ "$DB" == "" ]]; then
+	DB="bsdb"
+fi
+echo ""
+echo ""
 echo "choose your two character language code from the options below..."
 echo "en=english"
 echo "fr=french"
@@ -82,7 +89,6 @@ fi
 
 
 ROOT=root
-DB=bsdb
 
 MYSQL_PWD=$PASS
 export MYSQL_PWD
@@ -102,7 +108,7 @@ echo "COUNTRY=$COUNTRY" >>bs.cfg
 
 cd data
 
-echo "creating database schema...."
+echo "creating database schema for database $DB...."
 mysql -e "drop database if exists $DB;" -u $ROOT  
 mysql -e "create database if not exists $DB character set utf8mb4 collate utf8mb4_unicode_ci;" -u $ROOT  
 mysql -e "drop user if exists 'bs_user'@'%' ;" -u $ROOT 
