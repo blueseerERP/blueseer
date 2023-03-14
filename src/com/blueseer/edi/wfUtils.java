@@ -270,7 +270,7 @@ return r;
                   listOfFiles[i].delete();
                   } else { 
                   for (String[] s : trafficarray) {
-                      if (listOfFiles[i].getName().contains(s[0])) {
+                      if (listOfFiles[i].getName().matches(s[0])) {
                           // found match
                           match = true;
                           singlefile = s[3];
