@@ -4582,6 +4582,9 @@ public class EDI {
         String stctrl = "0001";
         int filenumber = OVData.getNextNbr("ediout");
         String filename = "997_" + c[0] + "_" + tsdfdate.format(now) + ".txt";
+        
+        String outdir = "";
+        
         // create envelope segments
         
         // 997s are generated first without regards to specific 997 partner relationship setup
@@ -4608,15 +4611,12 @@ public class EDI {
        sd = Character.toString((char) sdint );   // "\n"  or "\u001c"
        ed = Character.toString((char) edint );
        ud = Character.toString((char) udint );
+       filename = defaults[10] + "." + String.valueOf(filenumber) + "." + defaults[11];
+       outdir = defaults[9];
+       
        }
         
-         if (! defaults[0].isEmpty()) {
-             filename = defaults[10] + "." + String.valueOf(filenumber) + "." + defaults[11];
-             //  if filepath is defined...use this for explicit file path relative to root
-             if (! defaults[9].isEmpty()) {
-                 filename = defaults[9] + "/" + filename;
-             }
-         }
+         
          
          String isa1 = _isa[1];
          if (attrkeys.containsKey("ISA01")) {isa1 = String.format("%2s",attrkeys.get("ISA01"));}
@@ -4729,7 +4729,10 @@ public class EDI {
          // concat and send content to edi.writeFile
          String content = ISA + sd + GS + sd + ST + Header + SE + GE + sd + IEA + sd;
          
-         
+         // override outdir if specific path is empty
+         if (outdir.isEmpty()) {
+                    outdir = EDData.getEDIOutDir();
+         }
         
          
          // create batch file
@@ -4757,9 +4760,9 @@ public class EDI {
          EDData.writeEDIIDX(cc);
          
         try {
-            // write to file
-            EDI.writeFile(content, EDData.getEDIOutDir(), filename);
-            Files.copy(new File(EDData.getEDIOutDir() + "/" + filename).toPath(), new File(EDData.getEDIBatchDir() + "/" + batchfile).toPath(), StandardCopyOption.REPLACE_EXISTING);
+            
+            EDI.writeFile(content, outdir, filename);
+            Files.copy(new File(outdir + "/" + filename).toPath(), new File(EDData.getEDIBatchDir() + "/" + batchfile).toPath(), StandardCopyOption.REPLACE_EXISTING);
            
         } catch (SmbException ex) {
             edilog(ex);
