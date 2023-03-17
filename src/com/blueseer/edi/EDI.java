@@ -43,6 +43,7 @@ import com.blueseer.utl.EDData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.EDData.getBSDocTypeFromStds;
+import static com.blueseer.utl.EDData.getEDIDocTypeFromBSDoc;
 import static com.blueseer.utl.EDData.getEDIFFDocType;
 import static com.blueseer.utl.EDData.getEDIFFSubType;
 import com.blueseer.utl.OVData;
@@ -4585,8 +4586,8 @@ public class EDI {
         
         // 997s are generated first without regards to specific 997 partner relationship setup
         // if relationship record found...this overrides filename, and various ISA and GS attributes as found
-        String[] defaults = EDData.getEDITPDefaults("997", _gs[2], _gs[3]);
-        ArrayList<String> attrs = EDData.getEDIAttributesList("997", _gs[2], _gs[3]); 
+        String[] defaults = EDData.getEDITPDefaults("997x12", _gs[2], _gs[3]);
+        ArrayList<String> attrs = EDData.getEDIAttributesList("997x12", _gs[2], _gs[3]); 
         Map<String, String> attrkeys = new HashMap<String, String>();
         for (String x : attrs) {
             String[] z = x.split(":", -1);
@@ -4596,6 +4597,19 @@ public class EDI {
         }
          
         //  Override filename with defaults values if found for partner relationship
+       
+       if (! defaults[0].isBlank()) { 
+       defaults[7] = (defaults[7].isBlank() || defaults[7].equals("0")) ? "10" : defaults[7];
+       defaults[6] = (defaults[6].isBlank() || defaults[6].equals("0")) ? "42" : defaults[6];
+       defaults[8] = (defaults[8].isBlank() || defaults[8].equals("0")) ? "126" : defaults[8];
+       int sdint = Integer.valueOf(defaults[7]);
+       int edint = Integer.valueOf(defaults[6]);
+       int udint = Integer.valueOf(defaults[8]);
+       sd = Character.toString((char) sdint );   // "\n"  or "\u001c"
+       ed = Character.toString((char) edint );
+       ud = Character.toString((char) udint );
+       }
+        
          if (! defaults[0].isEmpty()) {
              filename = defaults[10] + "." + String.valueOf(filenumber) + "." + defaults[11];
              //  if filepath is defined...use this for explicit file path relative to root
@@ -4694,7 +4708,7 @@ public class EDI {
          S.add("AK1" + ed + _gs[1] + ed + _gs[6]);
          hdrsegcount += 1;
          for (String d : docs) {
-             S.add("AK2" + ed + c[1] + ed + d);
+             S.add("AK2" + ed + getEDIDocTypeFromBSDoc(c[1]) + ed + d);
              S.add("AK5" + ed + "A");
              hdrsegcount += 2;
          }

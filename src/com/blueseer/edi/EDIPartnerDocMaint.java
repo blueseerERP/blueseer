@@ -202,6 +202,8 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         for (int i = 0; i < maps.size(); i++) {
             ddmap.addItem(maps.get(i));
         }
+        ddmap.insertItemAt("", 0);
+        
         
         ddkey.removeAllItems();
         ArrayList<String> keys = EDData.getEDIPartners();
@@ -1080,13 +1082,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                     ddkey.requestFocus();
                     return;
                 }
-                
-                if (ddmap.getSelectedItem() == null || ddmap.getSelectedItem().toString().isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    ddmap.requestFocus();
-                    return;
-                }
+              
                 
                 if (tbrcvgs.getText().isEmpty()) {
                     proceed = false;
@@ -1205,13 +1201,14 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                     ddkey.requestFocus();
                     return;
                 }
-                
+                /*
                 if (ddmap.getSelectedItem() == null || ddmap.getSelectedItem().toString().isEmpty()) {
                     proceed = false;
                     bsmf.MainFrame.show(getMessageTag(1024));
                     ddmap.requestFocus();
                     return;
                 }
+                */
                 
                 if (tbrcvgs.getText().isEmpty()) {
                     proceed = false;
@@ -1480,6 +1477,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
             lblmessg.setForeground(Color.black);
         }
         
+        ddmap.insertItemAt("", 0);
         
         }
     }//GEN-LAST:event_dddocActionPerformed

@@ -260,7 +260,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
     
     public void setOutputStructureFile(String ofs, String ofstype) {
         ofsfile = ofs;
-        if (ofstype.toUpperCase().equals("XML") || ofstype.toUpperCase().equals("JSON")) {
+        if (ofstype.toUpperCase().toUpperCase().equals("XML") || ofstype.toUpperCase().toUpperCase().equals("JSON")) {
             readOSFTreeType(ofsfile); // revert back to readOSF
         } else {
             readOSF(ofsfile);
@@ -357,7 +357,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
            
         }
         
-        if (c[28].equals("X12")) {
+        if (c[28].toUpperCase().equals("X12")) {
         outsender = gsArrayIN[2];
         outreceiver = gsArrayIN[3];
         } else {
@@ -402,9 +402,9 @@ public abstract class EDIMap {  // took out the implements EDIMapi
     public void setOutPutEnvelopeStrings(String[] c) {         
          if ( ! isOverride) {  // if not override...use internal partner / doc lookup for envelope info
            
-           if (c[29].equals("X12")) {  
+           if (c[29].toUpperCase().equals("X12")) {  
              envelope = EDI.generateEnvelope(c[1], c[0], c[21]); // envelope array holds in this order (isa, gs, ge, iea, filename, controlnumber, gsctrlnbr)
-           } else if(c[29].equals("UNE")) {
+           } else if(c[29].toUpperCase().equals("UNE")) {
              envelope = EDI.generateEnvelopeUNE(c[1], c[0], c[21]); // envelope array holds in this order (isa, gs, ge, iea, filename, controlnumber, gsctrlnbr)
            } else {
                return;
@@ -453,7 +453,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
            }
            
            
-           if (c[29].equals("X12")) { 
+           if (c[29].toUpperCase().equals("X12")) { 
            ST = "ST" + ed + EDData.getEDIDocTypeFromBSDoc(outputdoctype) + ed + stctrl ;
            SE = "SE" + ed + String.valueOf(segcount) + ed + stctrl;  
            }  else {
@@ -780,16 +780,16 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             outfile = tp[10] + String.format("%07d", filenumber) + "." + tp[11];
         }
         
-        if (c[29].equals("X12") || c[29].equals("UNE")) {
+        if (c[29].toUpperCase().equals("X12") || c[29].toUpperCase().equals("UNE")) {
            setOutPutEnvelopeStrings(c);
           
-           if (c[29].equals("X12")) {
+           if (c[29].toUpperCase().equals("X12")) {
            tp[7] = (tp[7].isBlank() || tp[7].equals("0")) ? "10" : tp[7];
            tp[6] = (tp[6].isBlank() || tp[6].equals("0")) ? "42" : tp[6];
            tp[8] = (tp[8].isBlank() || tp[8].equals("0")) ? "126" : tp[8];
            }
            
-           if (c[29].equals("UNE")) {
+           if (c[29].toUpperCase().equals("UNE")) {
            tp[7] = (tp[7].isBlank() || tp[7].equals("0")) ? "39" : tp[7];
            tp[6] = (tp[6].isBlank() || tp[6].equals("0")) ? "43" : tp[6];
            tp[8] = (tp[8].isBlank() || tp[8].equals("0")) ? "58" : tp[8];
@@ -1325,13 +1325,13 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         Stack<Integer> positionStack = new Stack<Integer>();
         
         List<String[]> dataAsArrays = null;
-        if (c[28].equals("JSON")) {
+        if (c[28].toUpperCase().equals("JSON")) {
             try {
                 dataAsArrays = jsonToSegments(data.get(0));
             } catch (IOException ex) {
                 edilog(ex);
             }
-        } else if (c[28].equals("XML")) {   
+        } else if (c[28].toUpperCase().equals("XML")) {   
             try {
                 dataAsArrays = xmlToSegments(data.get(0), ISF);
             } catch (IOException ex) {
@@ -1343,7 +1343,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                     String[] x = null;
                     if (c[28].equals("FF")) {
                         x = splitFFSegment(s, ISF);
-                    } else if (c[28].equals("CSV")) {
+                    } else if (c[28].toUpperCase().equals("CSV")) {
                         s = "ROW," + s;
                         x = s.split(",",-1);
                     } else {
@@ -1361,7 +1361,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                 }
                 
                 String[] IFSseg = null;
-                if (c[28].equals("CSV")) {
+                if (c[28].toUpperCase().equals("CSV")) {
                     segRecord sr = getSegmentInISF(x[0], "", ISF);
                     IFSseg = sr.m();
                     currentPosition = sr.p();
@@ -2104,7 +2104,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         
     	 Map<String, HashMap<String,String>> MD = new LinkedHashMap<String, HashMap<String,String>>(OMD);
     	 
-    	 if (outputfiletype.equals("X12")) {
+    	 if (outputfiletype.toUpperCase().equals("X12")) {
          segcount = 0;  // init segment count for this doc
          if (tp == null || tp[7].equals("0") || tp[7].isBlank()) {
             s = delimConvertIntToStr("10"); // segment delimiter 
@@ -2165,7 +2165,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
          // wrap content with envelope
          } // if x12
          
-          if (outputfiletype.equals("UNE")) {
+          if (outputfiletype.toUpperCase().equals("UNE")) {
          segcount = 0;  // init segment count for this doc
          if (tp == null || tp[7].equals("0") || tp[7].isBlank()) {
             s = delimConvertIntToStr("39"); // segment delimiter 
@@ -2231,7 +2231,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
          // wrap content with envelope
          } // if UNE edifact
          
-         if (outputfiletype.equals("FF")) {
+         if (outputfiletype.toUpperCase().equals("FF")) {
     	 for (Map.Entry<String, HashMap<String,String>> z : MD.entrySet()) {
  		//	ArrayList<String[]> fields = z.getValue();
  			
@@ -2285,7 +2285,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
  		}
          } // if FF
          
-          if (outputfiletype.equals("CSV")) {
+          if (outputfiletype.toUpperCase().equals("CSV")) {
     	 for (Map.Entry<String, HashMap<String,String>> z : MD.entrySet()) {
  		//	ArrayList<String[]> fields = z.getValue();
  			
@@ -2341,7 +2341,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
  		}
          } // if CSV
        
-        if (outputfiletype.equals("XML")) {
+        if (outputfiletype.toUpperCase().equals("XML")) {
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = null;
             ArrayList<String> exclude = new ArrayList<String>();
@@ -2401,7 +2401,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
            
         } // end if XML
         
-        if (outputfiletype.equals("JSON")) {
+        if (outputfiletype.toUpperCase().equals("JSON")) {
             
              if (GlobalDebug) {
             System.out.println("OMD output:");
