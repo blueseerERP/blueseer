@@ -72,6 +72,7 @@ import static bsmf.MainFrame.user;
 import com.blueseer.hrm.hrmData;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -924,11 +925,11 @@ public class PayRollMaint extends javax.swing.JPanel {
     NtlmPasswordAuthentication auth = NtlmPasswordAuthentication.ANONYMOUS;
     // if samba is used filepath should be something akin to smb://10.10.1.1/somepath/somedir/ + filename
    // SmbFile folder = new SmbFile("smb://10.17.2.55/edi/", auth);
-       String dir = EDData.getEDIOutDir();
+       String dir = cleanDirString(EDData.getEDIOutDir());
        String filename = "nacha" + "_" + dfdatetm.format(now) + ".txt";
     
     
-    Path path = Paths.get(dir + "/" + filename);
+    Path path = Paths.get(dir + filename);
     
     
     BufferedWriter output;

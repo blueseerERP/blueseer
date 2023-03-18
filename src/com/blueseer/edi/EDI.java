@@ -41,6 +41,7 @@ import com.blueseer.pur.purData;
 import com.blueseer.shp.shpData;
 import com.blueseer.utl.EDData;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.EDData.getBSDocTypeFromStds;
 import static com.blueseer.utl.EDData.getEDIDocTypeFromBSDoc;
@@ -789,7 +790,7 @@ public class EDI {
               int filenumber = OVData.getNextNbr("edifile");
               batchfile = "R" + String.format("%07d", filenumber); 
               c[24] = batchfile;
-              Files.copy(file.toPath(), new File(EDData.getEDIBatchDir() + "/" + batchfile).toPath(), StandardCopyOption.REPLACE_EXISTING);
+              Files.copy(file.toPath(), new File(cleanDirString(EDData.getEDIBatchDir()) + batchfile).toPath(), StandardCopyOption.REPLACE_EXISTING);
               } else {
                   batchfile = file.getName();
               }
@@ -2287,7 +2288,7 @@ public class EDI {
                 String seg_esc = escapeDelimiter(seg);
                 String ele = delimConvertIntToStr(tp[6]); // element delimiter
                 String ele_esc = escapeDelimiter(ele);
-                String outdir = tp[9];
+                String outdir = cleanDirString(tp[9]);
                 String outfile = z.getValue().get(2);
                 c = 0;
                 docid = 0;
@@ -2310,7 +2311,7 @@ public class EDI {
                 
                 // now write out to file
                 if (outdir.isEmpty()) {
-                    outdir = EDData.getEDIOutDir();
+                    outdir = cleanDirString(EDData.getEDIOutDir());
                 }
                 try {
                     EDI.writeFile(content, outdir, outfile);
@@ -4612,7 +4613,7 @@ public class EDI {
        ed = Character.toString((char) edint );
        ud = Character.toString((char) udint );
        filename = defaults[10] + "." + String.valueOf(filenumber) + "." + defaults[11];
-       outdir = defaults[9];
+       outdir = cleanDirString(defaults[9]);
        
        }
         
@@ -4731,7 +4732,7 @@ public class EDI {
          
          // override outdir if specific path is empty
          if (outdir.isEmpty()) {
-                    outdir = EDData.getEDIOutDir();
+                    outdir = cleanDirString(EDData.getEDIOutDir());
          }
         
          
@@ -4762,7 +4763,7 @@ public class EDI {
         try {
             
             EDI.writeFile(content, outdir, filename);
-            Files.copy(new File(outdir + "/" + filename).toPath(), new File(EDData.getEDIBatchDir() + "/" + batchfile).toPath(), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(new File(outdir + filename).toPath(), new File(EDData.getEDIBatchDir() + batchfile).toPath(), StandardCopyOption.REPLACE_EXISTING);
            
         } catch (SmbException ex) {
             edilog(ex);
@@ -4965,8 +4966,8 @@ public class EDI {
          
         try {
             // write to file
-            EDI.writeFile(content, EDData.getEDIOutDir(), filename);
-            Files.copy(new File(EDData.getEDIOutDir() + "/" + filename).toPath(), new File(EDData.getEDIBatchDir() + "/" + batchfile).toPath(), StandardCopyOption.REPLACE_EXISTING);
+            EDI.writeFile(content, cleanDirString(EDData.getEDIOutDir()), filename);
+            Files.copy(new File(cleanDirString(EDData.getEDIOutDir()) + filename).toPath(), new File(cleanDirString(EDData.getEDIBatchDir()) + batchfile).toPath(), StandardCopyOption.REPLACE_EXISTING);
            
         } catch (SmbException ex) {
             edilog(ex);
@@ -5252,8 +5253,8 @@ public class EDI {
    // SmbFile folder = new SmbFile("smb://10.17.2.55/edi/", auth);
     
    // bsmf.MainFrame.show(dir + " -- " + filename);
-    Path path = FileSystems.getDefault().getPath(dir + "/" + filename);
-    Path archpath = FileSystems.getDefault().getPath(EDData.getEDIOutArch() + "/" + filename);
+    Path path = FileSystems.getDefault().getPath(dir + filename);
+    Path archpath = FileSystems.getDefault().getPath(cleanDirString(EDData.getEDIOutArch()) + filename);
     
     
     BufferedWriter output;

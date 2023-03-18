@@ -35,6 +35,7 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.EDData;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.EDData.updateEDIFileLogStatusManual;
@@ -1038,7 +1039,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                          tafile.setText("");
                          if (! tablereport.getValueAt(row, 7).toString().isEmpty()) {
                          ArrayList<String> segments = EDData.readEDIRawFileByDoc(ackfile, 
-                                 EDData.getEDIBatchDir(),
+                                 cleanDirString(EDData.getEDIBatchDir()),
                                  true,
                                  "0",
                                  "0",
@@ -1079,7 +1080,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                  tafile.setText("");
                  if (! tablereport.getValueAt(row, 7).toString().isEmpty()) {
                  ArrayList<String> segments = EDData.readEDIRawFileByDoc(tablereport.getValueAt(row, 7).toString(), 
-                         EDData.getEDIInArch(),
+                         cleanDirString(EDData.getEDIInArch()),
                          true,
                          "0",
                          "0",
@@ -1110,7 +1111,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                  tafile.setText("");
                  if (! tablereport.getValueAt(row, 8).toString().isEmpty()) {
                  ArrayList<String> segments = EDData.readEDIRawFileByDoc(tablereport.getValueAt(row, 8).toString(), 
-                         EDData.getEDIBatchDir(),
+                         cleanDirString(EDData.getEDIBatchDir()),
                          true,
                          p[2],
                          end,
@@ -1145,7 +1146,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                  tafile.setText("");
                  if (! tablereport.getValueAt(row, 12).toString().isEmpty()) {
                  ArrayList<String> segments = EDData.readEDIRawFileByDoc(tablereport.getValueAt(row, 12).toString(), 
-                         EDData.getEDIBatchDir(),
+                         cleanDirString(EDData.getEDIBatchDir()),
                          true,
                          p[0],
                          p[1],
@@ -1231,7 +1232,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                 String batch = EDData.getEDIBatchFromedi_file(tablereport.getValueAt(i,2).toString());
                 if (! batch.isEmpty())
                     try {
-                        batch = EDData.getEDIBatchDir() + "/" + batch; 
+                        batch = cleanDirString(EDData.getEDIBatchDir()) + batch; 
                        String[] m = EDI.processFile(batch, "", "", "", false, true, Integer.valueOf(tablereport.getValueAt(i, 2).toString()), Integer.valueOf(tablereport.getValueAt(i, 1).toString()));
                        String result = m[0] + " of " + m[1];
                        bsmf.MainFrame.show(getMessageTag(1163,result));

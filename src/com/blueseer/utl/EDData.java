@@ -36,6 +36,7 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.edi.EDI;
 import static com.blueseer.edi.EDI.escapeDelimiter;
+import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -2151,7 +2152,7 @@ public class EDData {
        String path = "";
        
         
-         path =  EDData.getEDIBatchDir() + "/" + filename; 
+         path =  cleanDirString(EDData.getEDIBatchDir()) + filename; 
       
        
        if (OVData.getSystemFileServerType().toString().equals("S")) {  // if Samba type
@@ -2252,9 +2253,9 @@ public class EDData {
        ArrayList<String> segments = new ArrayList<String>();
        String path = "";
        if (dir.equals("In")) {
-         path =  EDData.getEDIInDir() + "/" + filename; 
+         path =  cleanDirString(EDData.getEDIInDir()) + filename; 
        } else {
-         path =  EDData.getEDIOutDir() + "/" + filename;   
+         path =  cleanDirString(EDData.getEDIOutDir()) + filename;   
        }
        
        if (OVData.getSystemFileServerType().toString().equals("S")) {  // if Samba type

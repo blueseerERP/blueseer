@@ -35,6 +35,7 @@ import com.blueseer.edi.ediData.jsonRecord;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.BlueSeerUtils.bsNode;
 import com.blueseer.utl.BlueSeerUtils.bsTree;
+import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
 import com.blueseer.utl.EDData;
 import com.blueseer.utl.OVData;
 import com.fasterxml.jackson.core.JsonParser;
@@ -825,9 +826,9 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         
 
         if (outdir.isEmpty()) {
-            outdir = tp[9];
+            outdir = cleanDirString(tp[9]);
             if (outdir.isEmpty()) {
-                outdir = EDData.getEDIOutDir();
+                outdir = cleanDirString(EDData.getEDIOutDir());
             }
         }
         
@@ -872,7 +873,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         }
         try {
             // Write output batch file
-            EDI.writeFile(content, EDData.getEDIBatchDir(), batchfile);
+            EDI.writeFile(content, cleanDirString(EDData.getEDIBatchDir()), batchfile);
             // Write to outfile if single
             if (tp[20].equals("0")) { // Write to outfile if single envelope...else done at end of EDI.processor
             EDI.writeFile(content, outdir, outfile);  // you can override output directory by assign 2nd parameter here instead of ""

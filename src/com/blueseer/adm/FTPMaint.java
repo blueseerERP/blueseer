@@ -39,6 +39,7 @@ import static com.blueseer.adm.admData.getFTPAttrHash;
 import static com.blueseer.adm.admData.getFTPMstr;
 import static com.blueseer.adm.admData.updateFTPMstr;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -555,13 +556,13 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
         ftp_mstr fm = admData.getFTPMstr(new String[]{c[0]});
         HashMap<String, String> ftpa = getFTPAttrHash(new String[]{c[0]});
         
-        String homeIn = EDData.getEDIInDir();
-        String homeOut = EDData.getEDIOutDir();
+        String homeIn = cleanDirString(EDData.getEDIInDir());
+        String homeOut = cleanDirString(EDData.getEDIOutDir());
         if (! fm.ftp_indir().isEmpty()) {
-         homeIn = fm.ftp_indir();
+         homeIn = cleanDirString(fm.ftp_indir());
         }
         if (! fm.ftp_outdir().isEmpty()) {
-         homeOut = fm.ftp_outdir();
+         homeOut = cleanDirString(fm.ftp_outdir());
         }
         int timeout = 0;
         if (! fm.ftp_timeout().isEmpty()) {

@@ -47,6 +47,7 @@ import static com.blueseer.utl.BlueSeerUtils.ConvertIntToYesNo;
 import static com.blueseer.utl.BlueSeerUtils.ConvertTrueFalseToBoolean;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
+import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
@@ -566,7 +567,7 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         String dirpath;
         boolean isgood = true;
         List<String> lines = new ArrayList<>();
-        dirpath = EDData.getEDIStructureDir() + "/" + structureName;
+        dirpath = cleanDirString(EDData.getEDIStructureDir()) + structureName;
         Path path = FileSystems.getDefault().getPath(dirpath);
         File file = path.toFile();
         long count = 0;
@@ -1392,7 +1393,7 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
     private void btdownloadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdownloadActionPerformed
         
         String filename = "file." + Long.toHexString(System.currentTimeMillis()) + ".csv";
-        Path path = FileSystems.getDefault().getPath(getEDIStructureDir() + "/" + filename);
+        Path path = FileSystems.getDefault().getPath(cleanDirString(EDData.getEDIStructureDir()) + filename);
         BufferedWriter output = null;
          try {
              if (tabledetail.getRowCount() > 0) {

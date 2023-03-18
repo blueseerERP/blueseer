@@ -89,6 +89,7 @@ import com.blueseer.edi.ediData.map_mstr;
 import static com.blueseer.edi.ediData.updateMapMstr;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
+import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
@@ -1997,7 +1998,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
             manifest.getMainAttributes().put(Attributes.Name.MAIN_CLASS, filename);
             JarOutputStream target;
-            Path path = FileSystems.getDefault().getPath(EDData.getEDIMapDir() + "/" + jarname);
+            Path path = FileSystems.getDefault().getPath(cleanDirString(EDData.getEDIMapDir()) + jarname);
             
          try {
              target = new JarOutputStream(new FileOutputStream(path.toFile()), manifest);
@@ -2949,7 +2950,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         URLClassLoader cl = null;
         try {
                 // hot reloadable class capability...new classloader created and closed in finally block
-                List<File> jars = Arrays.asList(new File(EDData.getEDIMapDir()).listFiles(new FilenameFilter() {
+                List<File> jars = Arrays.asList(new File(cleanDirString(EDData.getEDIMapDir())).listFiles(new FilenameFilter() {
                     public boolean accept(File dir, String name) {
                     return name.toLowerCase().endsWith(".jar");
                 }
@@ -3165,7 +3166,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         // IFS file into Zip
         e = new ZipEntry(ddifs.getSelectedItem().toString());
         out.putNextEntry(e);
-        dirpath = EDData.getEDIStructureDir() + "/" + ddifs.getSelectedItem().toString();
+        dirpath = cleanDirString(EDData.getEDIStructureDir()) + ddifs.getSelectedItem().toString();
         path = FileSystems.getDefault().getPath(dirpath);
         file = path.toFile();
         data = null;
@@ -3182,7 +3183,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         // OFS file into Zip
         e = new ZipEntry(ddofs.getSelectedItem().toString());
         out.putNextEntry(e);
-        dirpath = EDData.getEDIStructureDir() + "/" + ddofs.getSelectedItem().toString();
+        dirpath = cleanDirString(EDData.getEDIStructureDir()) + ddofs.getSelectedItem().toString();
         path = FileSystems.getDefault().getPath(dirpath);
         file = path.toFile();
         data = null;
@@ -3200,7 +3201,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         // Map file into Zip
         e = new ZipEntry(tbkey.getText() + ".java");
         out.putNextEntry(e);
-        dirpath = EDData.getEDIMapDir() + "/" + tbkey.getText() + ".java";
+        dirpath = cleanDirString(EDData.getEDIMapDir()) + tbkey.getText() + ".java";
         path = FileSystems.getDefault().getPath(dirpath);
         file = path.toFile();
         data = null;
@@ -3250,7 +3251,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
     private void tbkeyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbkeyFocusLost
         if (! tbkey.getText().isBlank() && tbkey.isEditable() && tbpath.isEnabled()) {
-            tbpath.setText(EDData.getEDIMapDir() + "/" + tbkey.getText() + ".java");
+            tbpath.setText(cleanDirString(EDData.getEDIMapDir()) + tbkey.getText() + ".java");
         }
     }//GEN-LAST:event_tbkeyFocusLost
 

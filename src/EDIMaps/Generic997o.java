@@ -42,6 +42,7 @@ import com.blueseer.edi.EDI;
 import com.blueseer.edi.EDI.*;
 import static com.blueseer.edi.EDI.delimConvertIntToStr;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
 import com.blueseer.utl.EDData;
 
 
@@ -137,7 +138,7 @@ public class Generic997o  {
                  
                  // concat and send content to edi.writeFile
                  String content = ISA + GS + ST + Header + SE + GE + IEA;
-                 edi.writeFile(content, EDData.getEDIOutDir(), filename); 
+                 edi.writeFile(content, cleanDirString(EDData.getEDIOutDir()), filename); 
                  
         /*
          output.write(ISA);

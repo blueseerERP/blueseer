@@ -916,7 +916,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
                  tafile.setText("");
                  if (! tablereport.getValueAt(row, col).toString().isEmpty()) {
                //  ArrayList<String> segments = EDData.readEDIRawFileLiveDirIntoArrayList(tablereport.getValueAt(row, col).toString(), "In");  
-                  File infile = new File(EDData.getEDIInDir() + "/" + tablereport.getValueAt(row, col).toString());
+                  File infile = new File(cleanDirString(EDData.getEDIInDir()) + tablereport.getValueAt(row, col).toString());
                   Path path = FileSystems.getDefault().getPath(infile.getAbsolutePath());
                   List<String> segments = Files.readAllLines(infile.toPath());
                   

@@ -196,8 +196,8 @@ public static void runTranslation(String[] args) {
 public static String[] runTranslationSingleFile(Path targetfilepath) {
     String[] m = new String[]{"",""};
     try {
-            String inArch = EDData.getEDIInArch(); 
-            String ErrorDir = EDData.getEDIErrorDir();
+            String inArch = cleanDirString(EDData.getEDIInArch()); 
+            String ErrorDir = cleanDirString(EDData.getEDIErrorDir());
              
                 if (targetfilepath.toFile().exists() && targetfilepath.toFile().isFile()) {
                 System.out.println("EDILoad:  processing file " + targetfilepath.toString());

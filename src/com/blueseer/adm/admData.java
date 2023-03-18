@@ -33,6 +33,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.log;
 import com.blueseer.utl.EDData;
@@ -1922,8 +1923,8 @@ public class admData {
         ftp_mstr fm = admData.getFTPMstr(new String[]{c});
         HashMap<String, String> ftpa = getFTPAttrHash(new String[]{c});
         
-        String homeIn = EDData.getEDIInDir();
-               String homeOut = EDData.getEDIOutDir();
+        String homeIn = cleanDirString(EDData.getEDIInDir());
+               String homeOut = cleanDirString(EDData.getEDIOutDir());
                int timeout = 0;
                if (! fm.ftp_timeout().isEmpty()) {
                    timeout = Integer.valueOf(fm.ftp_timeout());
