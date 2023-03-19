@@ -1032,6 +1032,7 @@ CREATE TABLE "car_mstr" (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "car_meta" (
   "carm_id" varchar(30) NOT NULL,
+  "carm_type" varchar(80) NOT NULL,
   "carm_key" varchar(80) NOT NULL,
   "carm_value" varchar(80) NOT NULL
 );
@@ -2168,6 +2169,7 @@ CREATE TABLE "or_mstr" (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "or_meta" (
   "orm_bsid" varchar(30) NOT NULL,
+  "orm_type" varchar(80) NOT NULL,
   "orm_key" varchar(80) NOT NULL,
   "orm_value" varchar(80) NOT NULL
 );
@@ -2225,6 +2227,7 @@ CREATE TABLE "ord_det" (
 CREATE TABLE "ord_meta" (
   "ordm_bsid" varchar(30) NOT NULL,
   "ordm_bsline" varchar(30) NOT NULL,
+  "ordm_type" varchar(80) NOT NULL,
   "ordm_key" varchar(80) NOT NULL,
   "ordm_value" varchar(80) NOT NULL
 );
