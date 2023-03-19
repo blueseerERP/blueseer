@@ -156,8 +156,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
@@ -3145,6 +3147,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         File file;
         byte[] data = null;
         
+        
         // clean out old map.zip
         if (Files.exists(f.toPath())) {
             try {
@@ -3181,6 +3184,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         out.closeEntry();
         
         // OFS file into Zip
+        if (! ddofs.getSelectedItem().toString().equals(ddifs.getSelectedItem().toString())) {
         e = new ZipEntry(ddofs.getSelectedItem().toString());
         out.putNextEntry(e);
         dirpath = cleanDirString(EDData.getEDIStructureDir()) + ddofs.getSelectedItem().toString();
@@ -3196,7 +3200,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         }
         out.write(data, 0, data.length);
         out.closeEntry();
-        
+        }
         
         // Map file into Zip
         e = new ZipEntry(tbkey.getText() + ".java");

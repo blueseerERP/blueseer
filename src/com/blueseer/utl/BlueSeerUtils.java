@@ -1810,7 +1810,33 @@ public class BlueSeerUtils {
       return (! dir.endsWith("/") || ! dir.endsWith("\\")) ? dir + "/" : dir ;
     }
    
-     
+     public static String asciivalues(int t) {
+         String r = "";
+         if (t == 0) {
+                r = "NULL";
+            } else if (t == 10) {
+                r = "LF";    
+            } else if (t == 11) {
+                r = "VT";
+            } else if (t == 12) {
+                r = "FF";
+            } else if (t == 13) {
+                r = "CR";
+            } else if (t == 28) {
+                r = "FS";
+            } else if (t == 29) {
+                r = "GS";
+            } else if (t == 30) {
+                r = "RS";   
+            } else if (t > 0 && t < 10) {
+                r = "UNSU";  
+            } else if (t > 13 && t < 28) {
+                r = "UNSU";    
+            } else {
+                r = String.valueOf(Character.toString((char) t));
+            }
+         return r;
+     }
 }
 
 

@@ -1814,8 +1814,42 @@ public class EDData {
         return x;
         
     }
-             
-    
+     
+    public static String getEDIPartnerDesc(String code) {
+       String x = "";
+        try{
+            Class.forName(driver);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                res = st.executeQuery("select edp_desc from edp_partner " +
+                        " where edp_id = " + "'" + code + "'" + ";");
+               while (res.next()) {
+                   x = res.getString("edp_desc");
+                }
+               
+           }
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return x;
+        
+    }
+        
     public static String getEDIXrefIn(String isaid, String gsid, String editype, String addrcode) {
              String mystring = "";
         try{

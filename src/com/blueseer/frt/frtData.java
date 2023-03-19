@@ -38,6 +38,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 
 /**
  *
@@ -208,6 +210,54 @@ public class frtData {
         }
         return m;
     }
+    
+    public static ArrayList<String[]> getCarrierMaintInit() {
+       
+        ArrayList<String[]> lines = new ArrayList<String[]>();
+        try{
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+        
+            res = st.executeQuery("select code_key from code_mstr where code_code = 'state' order by code_key ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "states";
+               s[1] = res.getString("code_key");
+               lines.add(s);
+            }
+            
+            
+            res = st.executeQuery("select code_key from code_mstr where code_code = 'country' order by code_key ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "countries";
+               s[1] = res.getString("code_key");
+               lines.add(s);
+            }
+           
+            
+        }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+        return lines;
+    }
+    
     
     public record car_mstr (String[] m, String car_id, String car_desc, String car_apply,
         String car_scac, String car_name, String car_line1, String car_line2, String car_city,

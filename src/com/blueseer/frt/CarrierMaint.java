@@ -270,8 +270,32 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
     public void setComponentDefaultValues() {
        isLoad = true;
        tbkey.setText("");
-        tbdesc.setText("");
-        cbapply.setSelected(false);
+       tbdesc.setText("");
+       cbapply.setSelected(false);
+       
+        ArrayList<String[]> initDataSets = frtData.getCarrierMaintInit();
+        
+        ddstate.removeAllItems();
+        ddcountry.removeAllItems();
+        
+        
+        for (String[] s : initDataSets) {
+                      
+            if (s[0].equals("states")) {
+              ddstate.addItem(s[1]); 
+            }
+            if (s[0].equals("countries")) {
+              ddcountry.addItem(s[1]); 
+            }
+            
+        }
+        
+        ddstate.insertItemAt("", 0);
+        ddstate.setSelectedIndex(0);
+        ddcountry.insertItemAt("", 0);
+        ddcountry.setSelectedItem("USA");
+       
+       
        isLoad = false;
     }
     
@@ -735,6 +759,8 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         jLabel21.setText("SCAC");
 
+        ddtype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "motor", "rail", "ocean", "air" }));
+
         jLabel22.setText("Type");
 
         jLabel23.setText("AP Acct");
@@ -763,7 +789,7 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addComponent(jLabel22))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(tbscac, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel23)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
