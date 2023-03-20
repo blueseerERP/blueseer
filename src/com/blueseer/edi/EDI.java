@@ -4763,7 +4763,7 @@ public class EDI {
         try {
             
             EDI.writeFile(content, outdir, filename);
-            Files.copy(new File(outdir + filename).toPath(), new File(EDData.getEDIBatchDir() + batchfile).toPath(), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(new File(outdir + filename).toPath(), new File(cleanDirString(EDData.getEDIBatchDir()) + batchfile).toPath(), StandardCopyOption.REPLACE_EXISTING);
            
         } catch (SmbException ex) {
             edilog(ex);
