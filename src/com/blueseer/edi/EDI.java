@@ -745,6 +745,7 @@ public class EDI {
         String[] m = new String[]{"0",""};
         String[] c = null;  // control values to pass to map and log
         File file = new File(infile);
+        // need to research removing ^M characters here with possible solution...replaceAll("\\r$", "");
         BufferedReader f = new BufferedReader(new FileReader(file));
          char[] cbuf = new char[(int) file.length()];
          int max = cbuf.length;
@@ -809,7 +810,11 @@ public class EDI {
          } else if (editype[1].isEmpty()) {
             m = new String[]{"1","unknown doc type: " + infile};
            EDData.writeEDILog(c, "error", "Unknown Doc Type: " + infile + " DOCTYPE:FILETYPE " + editype[1] + ":" + editype[0]); 
-           return m;    
+           return m; 
+         } else if (editype[1].equals("??")) {
+            m = new String[]{"1","unknown doc type: " + infile};
+           EDData.writeEDILog(c, "error", "Unknown Doc Type: " + infile + " DOCTYPE:FILETYPE " + editype[1] + ":" + editype[0]); 
+           return m;   
          } else {
            EDData.writeEDILog(c, "info", "File Type Info: " + " DOCTYPE:FILETYPE " + editype[1] + ":" + editype[0]);
          }
@@ -4743,8 +4748,8 @@ public class EDI {
                // update c for edi_idx
          String[] cc = c.clone();
          cc[0] = c[21];
-         cc[1] = "997";
-         cc[15] = "997";
+         cc[1] = "997x12";
+         cc[15] = "997x12";
          cc[8] = filename;
          cc[21] = c[0];
          cc[24] = batchfile;

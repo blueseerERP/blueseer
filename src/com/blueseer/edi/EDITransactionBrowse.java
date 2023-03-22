@@ -38,6 +38,7 @@ import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.EDData.getEDIStds;
 import static com.blueseer.utl.EDData.updateEDIFileLogStatusManual;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
@@ -61,6 +62,7 @@ import java.sql.Connection;
 import java.text.DecimalFormatSymbols;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Locale;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -200,7 +202,8 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
     public void getDocLogView() {
      
        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-             
+       HashMap<String, String> hm = getEDIStds();
+       
         docmodel.setNumRows(0);
         tafile.setText("");
         try {
@@ -219,7 +222,9 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                 int i = 0;
 
                 String dir = "0";
-               
+                String indoctype = "";
+                String outdoctype = "";
+                
                 tablereport.setModel(docmodel);
                 tablereport.getColumnModel().getColumn(13).setMaxWidth(50);
                 tablereport.getColumnModel().getColumn(14).setMaxWidth(50);
@@ -301,6 +306,19 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     
                     i++;
                     
+                  if (hm.containsKey(res.getString("edx_indoctype"))) {
+                    indoctype = hm.get(res.getString("edx_indoctype"));
+                  } else {
+                    indoctype = res.getString("edx_indoctype");
+                  }
+                  
+                  if (hm.containsKey(res.getString("edx_outdoctype"))) {
+                    outdoctype = hm.get(res.getString("edx_outdoctype"));
+                  } else {
+                    outdoctype = res.getString("edx_outdoctype");
+                  }
+                    
+                    
                  //   "Select", "IdxNbr", "ComKey", "SenderID", "ReceiverID", "TimeStamp", "InFileType", "InDocType", "InBatch", "OutFileType", "OutDocType", "OutBatch",  "Status"                     
                     docmodel.addRow(new Object[]{BlueSeerUtils.clickbasket,
                         res.getInt("edx_id"),
@@ -309,11 +327,11 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                         res.getString("edx_receiver"),
                         res.getString("edx_ts"),
                         res.getString("edx_infiletype"),
-                        res.getString("edx_indoctype"),
+                        indoctype,
                         res.getString("edx_inbatch"),
                         res.getString("edx_ref"), 
                         res.getString("edx_outfiletype"),
-                        res.getString("edx_outdoctype"),
+                        outdoctype,
                         res.getString("edx_outbatch"),
                         BlueSeerUtils.clickleftdoc,
                         BlueSeerUtils.clickrightdoc,
@@ -352,6 +370,9 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
              
         filemodel.setNumRows(0);
         tafile.setText("");
+        
+        HashMap<String, String> hm = getEDIStds();
+        
         try {
             Connection con = null;
             if (ds != null) {
@@ -364,7 +385,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
             try {
 
                 int i = 0;
-
+                String doctype = "";
                
                 tablereport.setModel(filemodel);
                //  tablereport.getColumnModel().getColumn(8).setCellRenderer(new EDITransactionBrowse.SomeRenderer()); 
@@ -413,7 +434,8 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     " order by edf_id desc ;" ) ;
                     }
                     
-              
+                
+                
                 ImageIcon statusImage = null;
                 while (res.next()) {
                     i++;
@@ -422,13 +444,21 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                   }  else {
                       statusImage = BlueSeerUtils.clicknocheck;
                   }
+                  
+                  if (hm.containsKey(res.getString("edf_doctype"))) {
+                    doctype = hm.get(res.getString("edf_doctype"));
+                  } else {
+                    doctype = res.getString("edf_doctype");
+                  }
+                  
+                  
                  //   "Select", "IdxNbr", "ComKey", "SenderID", "ReceiverID", "TimeStamp", "InFileType", "InDocType", "InBatch", "OutFileType", "OutDocType", "OutBatch",  "Status"                     
                     filemodel.addRow(new Object[]{BlueSeerUtils.clickbasket,
                         res.getInt("edf_id"),
                         res.getInt("edf_comkey"),
                         res.getString("edf_partner"),
                         res.getString("edf_filetype"),
-                        res.getString("edf_doctype"),
+                        doctype,
                         res.getString("edf_ts"),
                         res.getString("edf_file"),
                         res.getString("edf_dir"),
@@ -436,6 +466,8 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                         statusImage
                     });
                 }
+                
+                hm.clear();
                 
                 tbtot.setText(String.valueOf(i));
 
@@ -1193,12 +1225,12 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
             tbref.setEnabled(true);
             btreprocess.setEnabled(false);
             btclearstatus.setEnabled(false);
-            getDocLogView();
+           // getDocLogView();
         } else {
             tbref.setEnabled(false);
             btreprocess.setEnabled(true);
             btclearstatus.setEnabled(true);
-            getFileLogView();
+           // getFileLogView();
         }
     }//GEN-LAST:event_rbDocLogActionPerformed
 
@@ -1209,12 +1241,12 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
             tbref.setEnabled(true);
             btreprocess.setEnabled(false);
             btclearstatus.setEnabled(false);
-            getDocLogView();
+           // getDocLogView();
         } else {
             tbref.setEnabled(false);
             btreprocess.setEnabled(true);
             btclearstatus.setEnabled(true);
-            getFileLogView();
+         //   getFileLogView();
         }
     }//GEN-LAST:event_rbFileLogActionPerformed
 
