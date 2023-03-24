@@ -34,6 +34,7 @@ import com.blueseer.utl.EDData;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import org.quartz.DisallowConcurrentExecution;
 
 import org.quartz.Job;
 import org.quartz.JobDataMap;
@@ -44,6 +45,7 @@ import org.quartz.JobExecutionException;
  *
  * @author terryva
  */
+@DisallowConcurrentExecution
 public class jobSys implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
         

@@ -29,6 +29,7 @@ package com.blueseer.crn;
 import com.blueseer.edi.ediData;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import org.quartz.DisallowConcurrentExecution;
 
 import org.quartz.Job;
 import org.quartz.JobDataMap;
@@ -39,6 +40,7 @@ import org.quartz.JobExecutionException;
  *
  * @author terryva
  */
+@DisallowConcurrentExecution
 public class jobWkf implements Job {
     
     public void execute(JobExecutionContext context) throws JobExecutionException {

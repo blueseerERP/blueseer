@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
@@ -41,6 +42,7 @@ import org.quartz.JobExecutionException;
  *
  * @author terryva
  */
+@DisallowConcurrentExecution
 public class jobBch implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
         

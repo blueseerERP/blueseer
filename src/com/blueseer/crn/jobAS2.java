@@ -43,6 +43,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.bouncycastle.cms.CMSException;
 import org.bouncycastle.mail.smime.SMIMEException;
+import org.quartz.DisallowConcurrentExecution;
 
 import org.quartz.Job;
 import org.quartz.JobDataMap;
@@ -53,6 +54,7 @@ import org.quartz.JobExecutionException;
  *
  * @author terryva
  */
+@DisallowConcurrentExecution
 public class jobAS2 implements Job {
     public void execute(JobExecutionContext context)
 	throws JobExecutionException {

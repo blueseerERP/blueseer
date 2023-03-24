@@ -34,6 +34,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.quartz.DisallowConcurrentExecution;
 
 import org.quartz.Job;
 import org.quartz.JobBuilder;
@@ -51,6 +52,7 @@ import org.quartz.impl.triggers.CronTriggerImpl;
  *
  * @author terryva
  */
+@DisallowConcurrentExecution
 public class jobWD implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
 
