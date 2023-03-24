@@ -240,8 +240,9 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     if (! ddtradeid.getSelectedItem().toString().isEmpty() && dddoc.getSelectedItem().toString().isEmpty() ) {
                     res = st.executeQuery("SELECT edx_id, edx_comkey, edx_indoctype, edx_outdoctype, " +
                     " edx_sender, edx_receiver, edx_infiletype, edx_inbatch, edx_outbatch, edx_ref, edx_ts, edx_ack, edx_status, edx_outfiletype,  " +
-                    " coalesce((select elg_severity from edi_log where elg_comkey = edx_comkey and elg_severity = 'error'),'success') as detstatus " +
+                    " coalesce(elg_severity,'success') as detstatus " +
                     " FROM edi_idx  " +
+                    " left outer join edi_log on elg_comkey = edx_comkey and elg_severity = 'error' " +
                     " where edx_sender >= " + "'" + ddtradeid.getSelectedItem().toString() + "'" +
                     " AND edx_sender <= " + "'" + ddtradeid.getSelectedItem().toString() + "'" +
                     " AND edx_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
@@ -251,8 +252,9 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     if (! dddoc.getSelectedItem().toString().isEmpty() && ddtradeid.getSelectedItem().toString().isEmpty()) {
                     res = st.executeQuery("SELECT edx_id, edx_comkey, edx_indoctype, edx_outdoctype, " +
                     " edx_sender, edx_receiver, edx_infiletype, edx_inbatch, edx_outbatch, edx_ref, edx_ts, edx_ack, edx_status, edx_outfiletype,  " +
-                    " coalesce((select elg_severity from edi_log where elg_comkey = edx_comkey and elg_severity = 'error'),'success') as detstatus " +
+                    " coalesce(elg_severity,'success') as detstatus " +
                     " FROM edi_idx  " +
+                    " left outer join edi_log on elg_comkey = edx_comkey and elg_severity = 'error' " +
                     " where " +
                     " edx_indoctype >= " + "'" + dddoc.getSelectedItem().toString() + "'" +
                     " AND edx_indoctype <= " + "'" + dddoc.getSelectedItem().toString() + "'" +        
@@ -263,8 +265,9 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     if (! dddoc.getSelectedItem().toString().isEmpty() && ! ddtradeid.getSelectedItem().toString().isEmpty()) {
                     res = st.executeQuery("SELECT edx_id, edx_comkey, edx_indoctype, edx_outdoctype, " +
                     " edx_sender, edx_receiver, edx_infiletype, edx_inbatch, edx_outbatch, edx_ref, edx_ts, edx_ack, edx_status, edx_outfiletype,  " +
-                    " coalesce((select elg_severity from edi_log where elg_comkey = edx_comkey and elg_severity = 'error'),'success') as detstatus " +
+                    " coalesce(elg_severity,'success') as detstatus " +
                     " FROM edi_idx  " +
+                    " left outer join edi_log on elg_comkey = edx_comkey and elg_severity = 'error' " +
                     " where edx_sender >= " + "'" + ddtradeid.getSelectedItem().toString() + "'" +
                     " AND edx_sender <= " + "'" + ddtradeid.getSelectedItem().toString() + "'" +
                     " AND edx_indoctype >= " + "'" + dddoc.getSelectedItem().toString() + "'" +
@@ -277,8 +280,9 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     if (ddtradeid.getSelectedItem().toString().isEmpty() && dddoc.getSelectedItem().toString().isEmpty()) {
                     res = st.executeQuery("SELECT edx_id, edx_comkey, edx_indoctype, edx_outdoctype, " +
                     " edx_sender, edx_receiver, edx_infiletype, edx_inbatch, edx_outbatch, edx_ref, edx_ts, edx_ack, edx_status, edx_outfiletype,  " +
-                    " coalesce((select elg_severity from edi_log where elg_comkey = edx_comkey and elg_severity = 'error'),'success') as detstatus " +
+                    " coalesce(elg_severity,'success') as detstatus " +
                     " FROM edi_idx  " +
+                    " left outer join edi_log on elg_comkey = edx_comkey and elg_severity = 'error' " +
                     " where edx_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
                     " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + " order by edx_id desc ;" ) ;
                     }
@@ -286,8 +290,9 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     if (! tbref.getText().isEmpty()) {
                     res = st.executeQuery("SELECT edx_id, edx_comkey, edx_indoctype, edx_outdoctype, " +
                     " edx_sender, edx_receiver, edx_infiletype, edx_inbatch, edx_outbatch, edx_ref, edx_ts, edx_ack, edx_status, edx_outfiletype,  " +
-                    " coalesce((select elg_severity from edi_log where elg_comkey = edx_comkey and elg_severity = 'error'),'success') as detstatus " +
+                    " coalesce(elg_severity,'success') as detstatus " +
                     " FROM edi_idx  " +
+                    " left outer join edi_log on elg_comkey = edx_comkey and elg_severity = 'error' " +
                     " where edx_ref like " + "'%" + tbref.getText() + "%'" +
                     " order by edx_id desc ;" ) ;
                     }
