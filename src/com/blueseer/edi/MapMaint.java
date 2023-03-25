@@ -2754,6 +2754,11 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         }
         map_mstr m = getMapMstr(new String[]{tbkey.getText()});
         
+        if (! ddifs.getSelectedItem().toString().equals(m.map_ifs()) || ! ddofs.getSelectedItem().toString().equals(m.map_ofs())) {
+           bsmf.MainFrame.show("you have map meta data changes pending...click save");
+           return;
+        }
+        
         taoutput.setText("");
         
         // now absorb file into doc structure for input into map
