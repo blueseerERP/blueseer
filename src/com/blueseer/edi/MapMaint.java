@@ -150,6 +150,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
 import java.text.DecimalFormatSymbols;
 import java.util.Arrays;
@@ -999,8 +1000,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
                    cbinternal.setEnabled(false);
-                   btfind.setEnabled(false);
-                   tbpath.setEnabled(false);
+                   
                    
                     ddinfiletype.setEnabled(false);
                     ddoutfiletype.setEnabled(false);
@@ -1983,7 +1983,15 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     public void addFile() {
         Path path = FileSystems.getDefault().getPath(tbpath.getText());
          try {
-             path.toFile().createNewFile();  // will create if no file exists
+             if (! path.toFile().exists()) {
+                 if (! tamap.getText().isBlank()) {
+                    BufferedWriter output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path.toFile(), false)));
+                    output.write(tamap.getText());
+                    output.close();  
+                 } else {
+                    path.toFile().createNewFile(); 
+                 }
+             }
          } catch (IOException ex) {
              bslog(ex);
          }
@@ -3106,14 +3114,32 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         
       //  Path path = FileSystems.getDefault().getPath(infile.getAbsolutePath());
         if (infile != null && infile.exists()) {
-            tbpath.setText(infile.getAbsolutePath());
+            Path currpath = FileSystems.getDefault().getPath(infile.getAbsolutePath());
+            Path newpath = FileSystems.getDefault().getPath(cleanDirString(EDData.getEDIMapDir()) + infile.getName());
+            
+            tbpath.setText(newpath.toString());
             tamap.setText("");
             try {   
-                List<String> lines = Files.readAllLines(infile.toPath());
-                for (String segment : lines ) {
-                    tamap.append(segment);
-                    tamap.append("\n");
+                
+                if (! currpath.getParent().toUri().equals(newpath.getParent().toUri())) {
+                    boolean sure = bsmf.MainFrame.warn("Are you sure you want to replace map?");  
+                    if (sure) {
+                        Files.copy(currpath, newpath, StandardCopyOption.REPLACE_EXISTING);
+                        List<String> lines = Files.readAllLines(newpath);
+                        for (String segment : lines ) {
+                            tamap.append(segment);
+                            tamap.append("\n");
+                        }
+                    }
+                } else {
+                    //Files.copy(currpath, newpath, StandardCopyOption.REPLACE_EXISTING);
+                        List<String> lines = Files.readAllLines(newpath);
+                        for (String segment : lines ) {
+                            tamap.append(segment);
+                            tamap.append("\n");
+                        }
                 }
+                
                 
                 btrun.setEnabled(true);
                 btcompile.setEnabled(true);
@@ -3254,8 +3280,8 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }//GEN-LAST:event_btzipActionPerformed
 
     private void tbkeyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbkeyFocusLost
-        if (! tbkey.getText().isBlank() && tbkey.isEditable() && tbpath.isEnabled()) {
-            tbpath.setText(cleanDirString(EDData.getEDIMapDir()) + tbkey.getText() + ".java");
+        if (! tbkey.getText().isBlank() && tbkey.isEditable() && tbpath.isEnabled() && tbpath.getText().isBlank()) {
+           tbpath.setText(cleanDirString(EDData.getEDIMapDir()) + tbkey.getText() + ".java");
         }
     }//GEN-LAST:event_tbkeyFocusLost
 
