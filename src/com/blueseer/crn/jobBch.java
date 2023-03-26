@@ -62,7 +62,8 @@ public class jobBch implements Job {
             String s ;
             while ((s = stdInput.readLine()) != null) {
                 System.out.println("jobBch output: " + s);
-            }
+            }           
+            stdInput.close();
         } catch (IOException ex) {
             System.out.println("IOException occurred...see bslog output " + now);
             bslog(ex);

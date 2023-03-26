@@ -45,8 +45,10 @@ import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.OVData.isSMTPServer;
 import static com.blueseer.utl.OVData.isSMTPServerBool;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -2855,6 +2857,16 @@ public class ediData {
           
           switch (wkd.wkfd_action()) {
              
+            case "ScriptCall" :
+                r = wkfaction_scriptcall(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
+                lgd[3] = r[0];
+                lgd[4] = r[1];
+                if (! r[0].equals("0")) {
+                    logdetail.add(lgd);
+                    break forloop;
+                } 
+                break;     
+              
             case "EmailDir" :
                 r = wkfaction_emaildirectory(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
                 lgd[3] = r[0];
@@ -2956,7 +2968,7 @@ public class ediData {
                 break;
                 
             default:
-                return bsret("Unknown WorkFlow Action!");
+                return bsret("Unknown WorkFlow Action! " + " id: " + id + " action: " + wkd.wkfd_action());
           
           }
           logdetail.add(lgd);
@@ -3189,6 +3201,49 @@ public class ediData {
         } catch (IOException ex) {
             r[0] = "1";
             r[1] = "IOException occurred: " + ex.getMessage();
+        }
+        
+        return r;
+    }
+    
+    public static String[] wkfaction_scriptcall(wkf_det wkfd, ArrayList<wkfd_meta> list) {
+        String[] r = new String[]{"0",""};
+        
+        String source = "";
+        String destination = "";
+        boolean append = false;
+        
+        for (wkfd_meta m : list) {
+            if (m.wkfdm_key().equals("source")) {
+                source = m.wkfdm_value();
+            }
+           
+        }
+        
+        Path sourcepath = FileSystems.getDefault().getPath(source);
+        Runtime rt = Runtime.getRuntime();
+        Process pr;
+        try {
+            if (sourcepath != null && sourcepath.toFile().exists() && sourcepath.toFile().canExecute()) {
+                pr = rt.exec(sourcepath.toString());
+                BufferedReader stdInput = new BufferedReader(
+                new InputStreamReader( pr.getInputStream() ));
+                String s ;
+                StringBuilder sbs = new StringBuilder();
+                while ((s = stdInput.readLine()) != null) {
+                sbs.append(s);
+                sbs.append("\n");
+                }
+                stdInput.close();
+               r[1] = "script file " + sourcepath + " output: " + sbs.toString();
+            } else {
+              r[0] = "1";
+            r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "unable to execute " + sourcepath.toString();  
+            }
+            
+        } catch (IOException ex) {
+            r[0] = "1";
+            r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + ex.getMessage();
         }
         
         return r;
