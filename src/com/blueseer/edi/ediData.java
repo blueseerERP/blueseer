@@ -3210,22 +3210,50 @@ public class ediData {
         String[] r = new String[]{"0",""};
         
         String source = "";
-        String destination = "";
-        boolean append = false;
+        String[] parameters = null;
+        String directory = "";
+        String[] commandstring = null; 
         
         for (wkfd_meta m : list) {
             if (m.wkfdm_key().equals("source")) {
                 source = m.wkfdm_value();
             }
+            if (m.wkfdm_key().equals("parameters")) {
+                parameters = m.wkfdm_value().split(",",-1);
+            }
+            if (m.wkfdm_key().equals("directory")) {
+                directory = m.wkfdm_value();
+            }
            
         }
         
-        Path sourcepath = FileSystems.getDefault().getPath(source);
+        
+        
+        if (parameters != null) {
+           commandstring = new String[parameters.length + 1];
+           commandstring[0] = source;
+           int i = 1;
+           for (String s : parameters) {
+               commandstring[i] = s;
+               i++;
+           }
+        }
+        
+      
+        
+      //  Path sourcepath = FileSystems.getDefault().getPath(source);
+        Path directorypath = FileSystems.getDefault().getPath(directory);
         Runtime rt = Runtime.getRuntime();
         Process pr;
+        
+        
         try {
-            if (sourcepath != null && sourcepath.toFile().exists() && sourcepath.toFile().canExecute()) {
-                pr = rt.exec(sourcepath.toString());
+            if (! commandstring[0].isBlank()) {
+                if (! directory.isBlank() && directorypath.toFile().exists()) {
+                    pr = rt.exec(commandstring, null, directorypath.toFile());
+                } else {
+                    pr = rt.exec(commandstring);
+                }
                 BufferedReader stdInput = new BufferedReader(
                 new InputStreamReader( pr.getInputStream() ));
                 String s ;
@@ -3235,10 +3263,10 @@ public class ediData {
                 sbs.append("\n");
                 }
                 stdInput.close();
-               r[1] = "script file " + sourcepath + " output: " + sbs.toString();
+               r[1] = "script file " + source + " output: " + sbs.toString();
             } else {
               r[0] = "1";
-            r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "unable to execute " + sourcepath.toString();  
+            r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "unable to execute " + source;  
             }
             
         } catch (IOException ex) {

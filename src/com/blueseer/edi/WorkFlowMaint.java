@@ -638,6 +638,8 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
             if (i == 11) {
                 ArrayList<String[]> x = new ArrayList<String[]>();
                 x.add(new String[]{"source", ""});
+                x.add(new String[]{"parameters", ""});
+                x.add(new String[]{"directory", ""});
                 kvs.put("ScriptCall", x);
             }
         }
