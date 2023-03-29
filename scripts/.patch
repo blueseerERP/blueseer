@@ -10,5 +10,9 @@
 # bug resolutions for issues #106 and #107
 #patch=2
 # cleanup of dir lookup methods; change mysql install option to prompt for db name with default as bsdb
-patch=3
+#patch=3
 # EDI partner and transation import routine mod for case sensitive outputdoctype; path cleanup for trans specific outpath
+#patch=4
+# Map maintenance mod for java map path; add preventive declaration for concurrent cron job execution
+patch=5
+# emergency patch fix for issue #108...unable to add customer in customer maintenance
