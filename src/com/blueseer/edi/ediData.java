@@ -44,6 +44,8 @@ import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.OVData.isSMTPServer;
 import static com.blueseer.utl.OVData.isSMTPServerBool;
+import static com.blueseer.utl.OVData.sendEmailwSession;
+import static com.blueseer.utl.OVData.setEmailSession;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.BufferedReader;
 import java.io.File;
@@ -65,6 +67,9 @@ import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.mail.Session;
 
 /**
  *
@@ -2856,7 +2861,17 @@ public class ediData {
           String[] lgd = new String[]{wkd.wkfd_action(), eventtime, "", "", ""}; // action,time,ref,status,messg
           
           switch (wkd.wkfd_action()) {
-             
+            
+            case "APICall" :
+                r = wkfaction_apicall(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
+                lgd[3] = r[0];
+                lgd[4] = r[1];
+                if (! r[0].equals("0")) {
+                    logdetail.add(lgd);
+                    break forloop;
+                } 
+                break;  
+              
             case "ScriptCall" :
                 r = wkfaction_scriptcall(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
                 lgd[3] = r[0];
@@ -2959,6 +2974,16 @@ public class ediData {
                 
                 case "FileMap" :
                 r = wkfaction_filemap(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
+                lgd[3] = r[0];
+                lgd[4] = r[1];
+                if (! r[0].equals("0")) {
+                    logdetail.add(lgd);
+                    break forloop;
+                } 
+                break;
+                
+                case "EmailFile" :
+                r = wkfaction_emailfile(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
                 lgd[3] = r[0];
                 lgd[4] = r[1];
                 if (! r[0].equals("0")) {
@@ -3330,6 +3355,7 @@ public class ediData {
         Path sourcepath = FileSystems.getDefault().getPath(source);
         try {
             Files.deleteIfExists(sourcepath);
+            r[1] = "deleted file " + sourcepath.toString();
         } catch (IOException ex) {
             r[0] = "1";
             r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + ex.getMessage();
@@ -3342,7 +3368,7 @@ public class ediData {
         
         String source = "";
         String destination = "";
-        
+        boolean overwrite = false;
         for (wkfd_meta m : list) {
             if (m.wkfdm_key().equals("source")) {
                 source = m.wkfdm_value();
@@ -3350,10 +3376,14 @@ public class ediData {
             if (m.wkfdm_key().equals("destination")) {
                 destination = m.wkfdm_value();
             }
+            if (m.wkfdm_key().equals("overwrite") && ! m.wkfdm_value.isBlank()) {
+                overwrite = ConvertStringToBool(m.wkfdm_value());
+            }
         }
         
         Path sourcepath = FileSystems.getDefault().getPath(source);
         Path destinationpath = FileSystems.getDefault().getPath(destination);
+        Path dparent = destinationpath.getParent();
         
         if (Files.isDirectory(sourcepath)) {
            r[0] = "1";
@@ -3367,7 +3397,13 @@ public class ediData {
         }
         
         try {
-            Files.move(sourcepath, destinationpath);
+            if (! overwrite && Files.exists(destinationpath)) {
+                destinationpath = FileSystems.getDefault().getPath(dparent + "/" + sourcepath.getFileName() + "." + Long.toHexString(System.currentTimeMillis())); 
+                Files.move(sourcepath, destinationpath, StandardCopyOption.REPLACE_EXISTING);
+            } else {
+                Files.move(sourcepath, destinationpath, StandardCopyOption.REPLACE_EXISTING); 
+            }
+            r[1] = "Moved file from " + sourcepath.toString() +  " to " + destinationpath.toString();
         } catch (IOException ex) {
             r[0] = "1";
             r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + ex.getMessage();
@@ -3462,7 +3498,7 @@ public class ediData {
                 for (Path path : stream) {
                     if (! Files.isDirectory(path)) {
                         count++;
-                    Path destinationpath = FileSystems.getDefault().getPath(destination + "/" + path.getFileName());    
+                        Path destinationpath = FileSystems.getDefault().getPath(destination + "/" + path.getFileName());    
                         if (! overwrite && Files.exists(destinationpath)) {
                             destinationpath = FileSystems.getDefault().getPath(destination + "/" + path.getFileName() + "." + Long.toHexString(System.currentTimeMillis())); 
                             Files.move(path, destinationpath, StandardCopyOption.REPLACE_EXISTING);
@@ -3532,7 +3568,72 @@ public class ediData {
         return r;
     }
     
-    
+    public static String[] wkfaction_emailfile(wkf_det wkfd, ArrayList<wkfd_meta> list) {
+        String[] r = new String[]{"0",""};
+        
+        String filepath = "";
+        String smtpfrom = "";
+        String smtpto = "";
+        String smtpsubject = "";
+        boolean deletefile = false;
+        
+        for (wkfd_meta m : list) {
+            if (m.wkfdm_key().equals("filepath") && ! m.wkfdm_value.isBlank()) {
+                filepath = m.wkfdm_value();
+            }
+            if (m.wkfdm_key().equals("smtpfrom") && ! m.wkfdm_value.isBlank()) {
+                smtpfrom = m.wkfdm_value();
+            }
+            if (m.wkfdm_key().equals("smtpto") && ! m.wkfdm_value.isBlank()) {
+                smtpto = m.wkfdm_value();
+            }
+            if (m.wkfdm_key().equals("smtpsubject") && ! m.wkfdm_value.isBlank()) {
+                smtpsubject = m.wkfdm_value();
+            }
+            if (m.wkfdm_key().equals("delete") && ! m.wkfdm_value.isBlank()) {
+                deletefile = ConvertStringToBool(m.wkfdm_value());
+            }
+        }
+       
+        if (smtpfrom.isEmpty()) {
+           r[0] = "1";
+           r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "must supply a legitimate from email address "; 
+           return r; 
+        }
+        
+        if (smtpto.isEmpty()) {
+           r[0] = "1";
+           r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "must supply a legitimate TO email address "; 
+           return r; 
+        }
+        
+        Path vfilepath = FileSystems.getDefault().getPath(filepath);
+        if (filepath.isEmpty() || ! Files.exists(vfilepath)) {
+           r[0] = "1";
+           r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "file path does not exist "; 
+           return r; 
+        }
+        
+        if (! isSMTPServerBool()) {
+           r[0] = "1";
+           r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "Missing SMTP server/auth info "; 
+           return r;  
+        }
+        
+        Session session = setEmailSession();
+        sendEmailwSession(session, smtpfrom, smtpto, smtpsubject, "", filepath.toString());
+        try {
+            if (deletefile) {
+                Files.delete(vfilepath);
+            }
+        } catch (IOException ex) {
+            r[0] = "1";
+            r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + " unable to delete file after emailing: \n" + ex.getMessage();
+        }
+        r[1] = "File has been emailed file: " + filepath.toString() + " recipient: " + smtpto;
+        return r;
+    }
+        
     public static String[] wkfaction_filemap(wkf_det wkfd, ArrayList<wkfd_meta> list) {
         String[] r = new String[]{"0",""};
         
@@ -3579,14 +3680,34 @@ public class ediData {
             }
         }
        
+        Path destinationpath = FileSystems.getDefault().getPath(filedest);
+        Path sourcepath = FileSystems.getDefault().getPath(filesrc);
+        
+        if (apiid.isBlank()) {
+           r[0] = "1";
+           r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "api ID is blank"; 
+           return r;
+        }
+        if (apimethod.isBlank()) {
+           r[0] = "1";
+           r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "apimethod is blank"; 
+           return r;
+        }
+        
+        
         api_mstr api = getAPIMstr(apiid);
         api_det apid = getAPIDet(apiid, apimethod);
         
-        if (api.m[0].equals("0")) {
-        Path destinationpath = FileSystems.getDefault().getPath(filedest);
-        Path sourcepath = FileSystems.getDefault().getPath(filesrc);
+        if (api.m[0].equals("0") && apid.m[0].equals("0")) { 
         r = runAPICall(api, apid, destinationpath, sourcepath);
+        } else {
+          r[0] = "1";
+          r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "unable to get retrieve api/apid JRT"; 
+             
         }
+        
+        
+        
         
         return r; 
     }

@@ -552,6 +552,7 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddactions.addItem("X12DirFilter");
         ddactions.addItem("TrafficDir");
         ddactions.addItem("EmailDir");
+        ddactions.addItem("EmailFile");
         ddactions.addItem("ScriptCall");
         
         for (int i = 0; i < ddactions.getItemCount(); i++) {
@@ -567,6 +568,7 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
                 ArrayList<String[]> x = new ArrayList<String[]>();
                 x.add(new String[]{"source", ""});
                 x.add(new String[]{"destination", ""});
+                x.add(new String[]{"overwrite", ""});
                 kvs.put("FileMove", x);
             }
             if (i == 2) {
@@ -636,6 +638,15 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
                 kvs.put("EmailDir", x);
             }
             if (i == 11) {
+                ArrayList<String[]> x = new ArrayList<String[]>();
+                x.add(new String[]{"filepath", ""});
+                x.add(new String[]{"smtpfrom", ""});
+                x.add(new String[]{"smtpto", ""});
+                x.add(new String[]{"smtpsubject", ""});
+                x.add(new String[]{"delete", ""});
+                kvs.put("EmailFile", x);
+            }
+            if (i == 12) {
                 ArrayList<String[]> x = new ArrayList<String[]>();
                 x.add(new String[]{"source", ""});
                 x.add(new String[]{"parameters", ""});

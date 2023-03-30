@@ -448,9 +448,16 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
          
          if (ddcarrier.getItemCount() > 0) {
           ddcarrier.setSelectedIndex(0);
+         } else {
+          ddcarrier.insertItemAt("", 0);
+          ddcarrier.setSelectedIndex(0);   
          }
+         
          if (ddfreightterms.getItemCount() > 0) {
           ddfreightterms.setSelectedIndex(0);
+         } else {
+          ddfreightterms.insertItemAt("", 0);
+          ddfreightterms.setSelectedIndex(0);   
          }
         
          if (ddstate.getItemCount() > 0) {

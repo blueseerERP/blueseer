@@ -35,6 +35,7 @@ import com.blueseer.edi.ediData.api_mstr;
 import static com.blueseer.edi.ediData.getKeyStoreByUser;
 import static com.blueseer.edi.ediData.getKeyStorePass;
 import static com.blueseer.edi.ediData.getKeyUserPass;
+import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
 import static com.blueseer.utl.EDData.updateAS2LogMDNFile;
 import static com.blueseer.utl.EDData.writeAS2Log;
 import static com.blueseer.utl.EDData.writeAS2LogDetail;
@@ -184,6 +185,8 @@ public class apiUtils {
         String method = "";
         String verb = "";
         String value = "";
+        String urlstring = "";
+        String port = "";
         HttpURLConnection conn = null;
         
         if (api.m()[0].equals("1") || api.api_id().isBlank()) {
@@ -206,8 +209,8 @@ public class apiUtils {
         
         
             try {
-                String urlstring = "";
-                String port = "";
+                
+                
                 if (! apid.apid_value().isBlank()) {
                     ArrayList<String[]> list = apidm.get(apid.apid_method());
                 if (list != null) {
@@ -244,7 +247,7 @@ public class apiUtils {
                 // sourcepath api 'push' unfinished
                 
 		conn = (HttpURLConnection) url.openConnection();
-		if (! verb.equals("NONE")) {
+		if (! apid.apid_verb().equals("NONE")) {
                 conn.setRequestMethod(verb);
                 }
 		conn.setRequestProperty("Accept", "application/json");
@@ -267,18 +270,22 @@ public class apiUtils {
                     br.close();
                 }
                 outputfile.close(); 
+                if (r[0].equals("0")) {
+                r[1] = "api call to id: " + api.api_id() + " with urlstring: " + urlstring;
+                }
+                
                 } catch (MalformedURLException e) {
                 r[0] = "1";    
-                r[1] = ("MalformedURLException: " + e + "\n");
+                r[1] = ("MalformedURLException: " + urlstring + "\n" + e + "\n");
                 } catch (UnknownHostException ex) {
                     r[0] = "1";   
-                    r[1] = ("UnknownHostException: " + ex + "\n");
+                    r[1] = ("UnknownHostException: " + urlstring + "\n" + ex + "\n");
                 } catch (IOException ex) {
                     r[0] = "1";   
-                    r[1] = ("IOException: " + ex + "\n");
+                    r[1] = ("IOException: " + urlstring + "\n" + ex + "\n");
                 } catch (Exception ex) {
                     r[0] = "1";   
-                    r[1] = ("Exception: " + ex + "\n");
+                    r[1] = ("Exception: " + urlstring + "\n" + ex + "\n");
                 } finally {
                    if (conn != null) {
                     conn.disconnect();

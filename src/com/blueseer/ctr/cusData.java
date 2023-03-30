@@ -1540,6 +1540,8 @@ public class cusData {
                lines.add(s);
             }
             
+            
+            /*
              res = st.executeQuery("select car_id from car_mstr order by car_id;");
             while (res.next()) {
                 String[] s = new String[2];
@@ -1547,6 +1549,7 @@ public class cusData {
                s[1] = res.getString("car_id");
                lines.add(s);
             }
+            */
             
         }
         catch (SQLException s){
