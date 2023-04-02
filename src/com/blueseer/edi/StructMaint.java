@@ -113,7 +113,7 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 // global datatablemodel declarations       
      javax.swing.table.DefaultTableModel detailmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "Segment", "Parent", "LoopCount", "Group", "LandMark", "Field", "Desc", "Mix", "Max", "Align", "Status", "Type"
+                "Segment", "Parent", "LoopCount", "Group", "LandMark", "Field", "Desc", "Min", "Max", "Align", "Status", "Type"
             });
    
     public StructMaint() {
