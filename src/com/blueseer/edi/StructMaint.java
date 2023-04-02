@@ -1441,7 +1441,7 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
     private void tbkeyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbkeyFocusLost
         if (! isLoad) {
             if (btadd.isEnabled() && ! btupdate.isEnabled() && isValidDFSid(tbkey.getText())) {
-                bsmf.MainFrame.show("Key is already used");
+                bsmf.MainFrame.show(getMessageTag(1180));
                 tbkey.setText("");
                 tbkey.requestFocus();
             }
