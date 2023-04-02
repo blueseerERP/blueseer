@@ -39,6 +39,7 @@ import com.blueseer.edi.ediData.dfs_det;
 import com.blueseer.edi.ediData.dfs_mstr;
 import static com.blueseer.edi.ediData.getDFSDet;
 import static com.blueseer.edi.ediData.getDFSMstr;
+import static com.blueseer.edi.ediData.isValidDFSid;
 import static com.blueseer.edi.ediData.updateDFStructureTransaction;
 import static com.blueseer.edi.ediData.updateMapStruct;
 import com.blueseer.utl.OVData;
@@ -729,6 +730,11 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
             }
         });
 
+        tbkey.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbkeyFocusLost(evt);
+            }
+        });
         tbkey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tbkeyActionPerformed(evt);
@@ -1210,9 +1216,9 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }//GEN-LAST:event_tabledetailMouseClicked
 
     private void btupdaterowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdaterowActionPerformed
-        int line = 0;
-        line = getmaxline();
-        line++;
+      //  int line = 0;
+      //  line = getmaxline();
+      //  line++;
         
         int[] rows = tabledetail.getSelectedRows();
         if (rows.length != 1) {
@@ -1428,6 +1434,16 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
              }
          }
     }//GEN-LAST:event_btdownloadActionPerformed
+
+    private void tbkeyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbkeyFocusLost
+        if (! isLoad) {
+            if (btadd.isEnabled() && ! btupdate.isEnabled() && isValidDFSid(tbkey.getText())) {
+                bsmf.MainFrame.show("Key is already used");
+                tbkey.setText("");
+                tbkey.requestFocus();
+            }
+        }
+    }//GEN-LAST:event_tbkeyFocusLost
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

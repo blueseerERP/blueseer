@@ -2379,6 +2379,23 @@ public class ediData {
         return x;
     }
     
+    public static boolean isValidDFSid(String id) {
+        boolean x = false;
+        String sql = "select * from dfs_mstr where dfs_id = ?;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, id);
+             try (ResultSet res = ps.executeQuery();) {
+                if (res.isBeforeFirst()) {
+                x = true;
+                } 
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s); 
+        }
+        return x;
+    }
+    
     
     
     public static ArrayList getMapMstrList() {
