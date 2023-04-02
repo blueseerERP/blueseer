@@ -29,6 +29,7 @@ package com.blueseer.edi;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.tags;
+import static com.blueseer.edi.EDIMap.csvToSegment;
 import static com.blueseer.edi.EDIMap.jsonTagsToSegment;
 import static com.blueseer.edi.EDIMap.jsonToSegments;
 import static com.blueseer.edi.EDIMap.xmlTagsToSegments;
@@ -1337,12 +1338,14 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 try {   
                     //lines = Files.readAllLines(file.toPath());
                     filecontent = new String(Files.readAllBytes(file.toPath()));
-                    if (filecontent.startsWith("{")) {
+                    if (filecontent.startsWith("{") || filecontent.startsWith("[")) {
                      lines = jsonTagsToSegment(filecontent);
                     } else if (filecontent.startsWith("<")) {
                      lines = xmlTagsToSegments(filecontent);   
+                    } else if (ddfiletype.getSelectedItem().toString().equals("CSV")) {
+                     lines = csvToSegment(filecontent);    
                     } else {
-                        bsmf.MainFrame.show("sample file must be xml or json structure...unrecognized format");
+                        bsmf.MainFrame.show("sample file must be csv, xml or json structure...unrecognized format");
                         return;
                     }
                     

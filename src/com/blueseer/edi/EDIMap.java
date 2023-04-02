@@ -1954,6 +1954,26 @@ public abstract class EDIMap {  // took out the implements EDIMapi
 		return newresult;
 	}
 
+    public static List<String[]> csvToSegment(String csv) throws IOException {
+	   
+           String[] lines = csv.split("\n");
+           ArrayList<String[]> result = new ArrayList<String[]>();
+           
+           if (lines != null && lines.length > 0) {
+               String[] fields = lines[0].split(",");
+               for (String s : fields) {
+               String[] k = new String[]{"ROW","","0","no","no",s,s,"8","8","-","M","F"};
+	       result.add(k);
+               }
+               String[] k = new String[]{"ROW","","100","yes","yes","landmark","landmark","0","100","-","M","N"};
+               result.add(0, k);
+           } else {
+               return null;
+           }
+	  
+	    return result;
+	}
+
     
     public static String xmlgetPathToRoot(String tagc, String tagp, String root, LinkedHashMap<String, String> lhm) {
 		String r = tagp;
