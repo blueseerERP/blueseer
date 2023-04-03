@@ -14,5 +14,7 @@
 # EDI partner and transation import routine mod for case sensitive outputdoctype; path cleanup for trans specific outpath
 #patch=4
 # Map maintenance mod for java map path; add preventive declaration for concurrent cron job execution
-patch=5
+#patch=5
 # emergency patch fix for issue #108...unable to add customer in customer maintenance
+patch=6
+# layout modifications for Struct Maintenance and Recognition Maintenance; copy method provided for both menus
