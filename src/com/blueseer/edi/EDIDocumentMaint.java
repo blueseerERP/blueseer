@@ -34,6 +34,7 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static com.blueseer.edi.ediData.getMapStructList;
+import static com.blueseer.edi.ediData.isValidEDDid;
 import static com.blueseer.utl.BlueSeerUtils.ConvertIntegerToBool;
 import static com.blueseer.utl.BlueSeerUtils.ConvertTrueFalseToBoolean;
 import static com.blueseer.utl.BlueSeerUtils.boolToString;
@@ -81,7 +82,7 @@ import javax.swing.SwingWorker;
  */
 
 
-public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
+public class EDIDocumentMaint extends javax.swing.JPanel  {
 
     // global variable declarations
                 boolean isLoad = false;
@@ -299,6 +300,10 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
            tbtag.setText("");
            tbxpath.setText("");
            tbregex.setText("");
+           tbeledelimiter.setText("");
+           tbsegdelimiter.setText("");
+           tblandmark.setText("");
+           tbpriority.setText("");
            cbenableddet.setSelected(false);
        dddoc.removeAllItems();
         ArrayList<String> mylist = OVData.getCodeMstrKeyList("edidoctype");
@@ -323,6 +328,7 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
         BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
         btupdate.setEnabled(false);
         btdelete.setEnabled(false);
+        btcopy.setEnabled(false);
         btnew.setEnabled(false);
         tbkey.setEditable(true);
         tbkey.setForeground(Color.blue);
@@ -479,7 +485,95 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
      
      return m;
      }
+    
+    public String[] copyRecord(String newkey) {
+     String[] m = new String[2];
      
+     try {
+
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                boolean proceed = true;
+                int i = 0;
+                
+                proceed = validateInput("addRecord");
+                String headerenabled = "0";
+                if (cbenabledhdr.isSelected()) {
+                    headerenabled = "1";
+                }
+                if (proceed) {
+
+                    res = st.executeQuery("SELECT edd_id FROM  edi_doc where edd_id = " + "'" + newkey + "'" + ";");
+                    while (res.next()) {
+                        i++;
+                    }
+                    if (i == 0) {
+                        st.executeUpdate("insert into edi_doc (edd_id, edd_desc, edd_type, edd_subtype, edd_segdelim, edd_eledelim, edd_priority, edd_landmark, edd_enabled) values (" + 
+                            "'" + newkey + "'" + "," +
+                            "'" + tbdesc.getText() + "'"  +  "," + 
+                            "'" + dddoc.getSelectedItem().toString() + "'"  +  "," + 
+                            "'" + ddstruct.getSelectedItem().toString() + "'"  + "," + 
+                            "'" + tbsegdelimiter.getText() + "'"  +  "," + 
+                            "'" + tbeledelimiter.getText() + "'"  +  "," +         
+                            "'" + tbpriority.getText() + "'"  +  "," + 
+                            "'" + tblandmark.getText() + "'"  + "," +
+                            "'" + headerenabled + "'" +
+                            ")" + ";");     
+                
+              
+                 for (int j = 0; j < tablerole.getRowCount(); j++) {
+                st.executeUpdate("insert into edi_docdet (edid_id, edid_role, edid_rectype, edid_valuetype, " +
+                        " edid_row, edid_col, edid_length, edid_regex, edid_value, edid_tag, edid_xpath, edid_enabled ) values ( " 
+                        + "'" + newkey + "'" + ","
+                        + "'" + tablerole.getValueAt(j, 0).toString() + "'" + ","
+                        + "'" + tablerole.getValueAt(j, 1).toString() + "'" + ","
+                        + "'" + tablerole.getValueAt(j, 2).toString() + "'" + ","
+                        + "'" + tablerole.getValueAt(j, 3).toString() + "'" + ","
+                        + "'" + tablerole.getValueAt(j, 4).toString() + "'" + ","
+                        + "'" + tablerole.getValueAt(j, 5).toString() + "'" + ","
+                        + "'" + tablerole.getValueAt(j, 6).toString() + "'" + ","
+                        + "'" + tablerole.getValueAt(j, 7).toString() + "'" + ","
+                        + "'" + tablerole.getValueAt(j, 8).toString() + "'" + ","
+                        + "'" + tablerole.getValueAt(j, 9).toString() + "'" + ","
+                        + "'" + BlueSeerUtils.boolToInt(Boolean.valueOf(tablerole.getValueAt(j, 10).toString())) + "'" 
+                        + " );" );
+                 }
+                        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+                    } else {
+                       m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists}; 
+                    }
+
+                   initvars(null);
+                   
+                } // if proceed
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordSQLError};  
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordConnError};
+        }
+     
+     return m;
+     }
+    
+    
     public String[] updateRecord(String[] x) {
      String[] m = new String[2];
      
@@ -698,9 +792,50 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
                 getClassLabelTag("lbldesc", this.getClass().getSimpleName()));
         
     }
-
+    
+    public void lookUpFrameASCIIele() {
+        luTable.removeMouseListener(luml);
+        luml = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0 || column == 1) {
+                ludialog.dispose();
+                tbeledelimiter.setText(target.getValueAt(row,0).toString());
+                }
+            }
+        };
+        luTable.addMouseListener(luml);
+        luModel = DTData.getASCIIChartDT(0, 128);
+        luTable.setModel(luModel);
+        callDialog();
+        
+        
+    }
    
+    public void lookUpFrameASCIIseg() {
+        luTable.removeMouseListener(luml);
+        luml = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0 || column == 1) {
+                ludialog.dispose();
+                tbsegdelimiter.setText(target.getValueAt(row,0).toString());
+                }
+            }
+        };
+        luTable.addMouseListener(luml);
+        luModel = DTData.getASCIIChartDT(0, 128);
+        luTable.setModel(luModel);
+        callDialog();
+        
+        
+    }
    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -760,8 +895,11 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
         tbeledelimiter = new javax.swing.JTextField();
         jLabel18 = new javax.swing.JLabel();
         ddstruct = new javax.swing.JComboBox<>();
+        btlookupele = new javax.swing.JButton();
+        btlookupseg = new javax.swing.JButton();
         btadd = new javax.swing.JButton();
         btdelete = new javax.swing.JButton();
+        btcopy = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -1013,6 +1151,20 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
         jLabel18.setText("EleDelimiter");
         jLabel18.setName("lbleledelim"); // NOI18N
 
+        btlookupele.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
+        btlookupele.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btlookupeleActionPerformed(evt);
+            }
+        });
+
+        btlookupseg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
+        btlookupseg.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btlookupsegActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -1051,15 +1203,21 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(tbeledelimiter)
                             .addComponent(tbsegdelimiter, javax.swing.GroupLayout.DEFAULT_SIZE, 87, Short.MAX_VALUE))
-                        .addGap(27, 27, 27)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addGap(2, 2, 2)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(btlookupseg, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel10))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(btlookupele, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel9)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tblandmark, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tbpriority, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(68, Short.MAX_VALUE))
+                .addContainerGap(64, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1075,26 +1233,31 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
                         .addComponent(cbenabledhdr))
                     .addComponent(btlookup))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel6)
+                            .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(tbsegdelimiter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel10)
+                            .addComponent(tblandmark, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(dddoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(btlookupseg))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(tbsegdelimiter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8)
-                    .addComponent(jLabel10)
-                    .addComponent(tblandmark, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(dddoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(tbpriority, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9)
-                    .addComponent(tbeledelimiter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel18)
-                    .addComponent(ddstruct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel2)
+                        .addComponent(tbpriority, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel9)
+                        .addComponent(tbeledelimiter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel18)
+                        .addComponent(ddstruct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btlookupele, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         btadd.setText("Add");
@@ -1113,6 +1276,13 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
             }
         });
 
+        btcopy.setText("Copy");
+        btcopy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btcopyActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -1124,6 +1294,8 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
                         .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btcopy)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btdelete)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btupdate)
@@ -1142,7 +1314,8 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btupdate)
                     .addComponent(btadd)
-                    .addComponent(btdelete))
+                    .addComponent(btdelete)
+                    .addComponent(btcopy))
                 .addContainerGap())
         );
 
@@ -1286,14 +1459,34 @@ public class EDIDocumentMaint extends javax.swing.JPanel implements IBlueSeer {
        
     }//GEN-LAST:event_tableroleMouseClicked
 
+    private void btcopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcopyActionPerformed
+        String newkey = bsmf.MainFrame.input("Enter new key: ");
+        if (! newkey.isBlank() && ! isValidEDDid(newkey)) {
+         String[] m = copyRecord(newkey);
+        } else {
+            bsmf.MainFrame.show("key is already in use");
+        }
+    }//GEN-LAST:event_btcopyActionPerformed
+
+    private void btlookupeleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupeleActionPerformed
+        lookUpFrameASCIIele();
+    }//GEN-LAST:event_btlookupeleActionPerformed
+
+    private void btlookupsegActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupsegActionPerformed
+        lookUpFrameASCIIseg();
+    }//GEN-LAST:event_btlookupsegActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btaddelement;
     private javax.swing.JButton btclear;
+    private javax.swing.JButton btcopy;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btdeleteelement;
     private javax.swing.JButton btlookup;
+    private javax.swing.JButton btlookupele;
+    private javax.swing.JButton btlookupseg;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
     private javax.swing.JButton btupdateelement;

@@ -102,7 +102,7 @@ import javax.swing.text.JTextComponent;
  *
  * @author vaughnte
  */
-public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {    
+public class StructMaint extends javax.swing.JPanel  {    
 
     
     // global variable declarations
@@ -324,6 +324,7 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
         btupdate.setEnabled(false);
         btdelete.setEnabled(false);
+        btcopy.setEnabled(false);
         btnew.setEnabled(false);
         tbkey.setEditable(true);
         tbkey.setForeground(Color.blue);
@@ -431,8 +432,9 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         return x.m();
     }
     
-    public dfs_mstr createRecord() { 
-        dfs_mstr x = new dfs_mstr(null, tbkey.getText(),
+    public dfs_mstr createRecord(String copykey) { 
+        String k = (copykey == null) ? tbkey.getText() : copykey;
+        dfs_mstr x = new dfs_mstr(null, k,
                 tbdesc.getText(),
                 tbversion.getText(),
                 dddoctype.getSelectedItem().toString(),
@@ -446,11 +448,12 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         return x;
     }
      
-    public ArrayList<dfs_det> createDetRecord() {
+    public ArrayList<dfs_det> createDetRecord(String copykey) {
+        String k = (copykey == null) ? tbkey.getText() : copykey;
         ArrayList<dfs_det> list = new ArrayList<dfs_det>();
          for (int j = 0; j < tabledetail.getRowCount(); j++) {
              dfs_det x = new dfs_det(null, 
-                tbkey.getText(),
+                k,
                 tabledetail.getValueAt(j, 0).toString(),
                 tabledetail.getValueAt(j, 1).toString(),
                 tabledetail.getValueAt(j, 2).toString(),
@@ -472,12 +475,12 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
     
     
     public String[] addRecord(String[] key) {
-         String[] m = addDFStructureTransaction(createDetRecord(), createRecord());
+         String[] m = addDFStructureTransaction(createDetRecord(null), createRecord(null));
          return m;
     }
         
     public String[] updateRecord(String[] key) {
-         String[] m = updateDFStructureTransaction(key[0], createDetRecord(), createRecord());
+         String[] m = updateDFStructureTransaction(key[0], createDetRecord(null), createRecord(null));
          return m;
     }
     
@@ -485,7 +488,7 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         String[] m = new String[2];
         boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
-         m = deleteDFStructure(createRecord()); 
+         m = deleteDFStructure(createRecord(null)); 
          initvars(null);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
@@ -703,6 +706,7 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         btdownload = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabledetail = new javax.swing.JTable();
+        btcopy = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -1026,6 +1030,13 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         });
         jScrollPane1.setViewportView(tabledetail);
 
+        btcopy.setText("Copy");
+        btcopy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btcopyActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelmaintLayout = new javax.swing.GroupLayout(panelmaint);
         panelmaint.setLayout(panelmaintLayout);
         panelmaintLayout.setHorizontalGroup(
@@ -1057,6 +1068,8 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelmaintLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btcopy)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btdelete)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btupdate)
@@ -1105,7 +1118,8 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btadd)
                     .addComponent(btupdate)
-                    .addComponent(btdelete))
+                    .addComponent(btdelete)
+                    .addComponent(btcopy))
                 .addContainerGap())
         );
 
@@ -1448,11 +1462,24 @@ public class StructMaint extends javax.swing.JPanel implements IBlueSeerT  {
         }
     }//GEN-LAST:event_tbkeyFocusLost
 
+    private void btcopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcopyActionPerformed
+        String newkey = bsmf.MainFrame.input("Enter new key: ");
+        if (! newkey.isBlank() && ! isValidDFSid(newkey)) {
+         String[] m = addDFStructureTransaction(createDetRecord(newkey), createRecord(newkey));
+         x = getDFSMstr(new String[]{newkey});  
+         dfsdetlist = getDFSDet(newkey);
+         updateForm();
+        } else {
+            bsmf.MainFrame.show("key is already in use");
+        }
+    }//GEN-LAST:event_btcopyActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btaddrow;
     private javax.swing.JButton btclear;
+    private javax.swing.JButton btcopy;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btdeleterow;
     private javax.swing.JButton btdown;

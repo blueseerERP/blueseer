@@ -423,7 +423,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
     }
 
     public void lookUpFrameASCII() {
-        
+        luTable.removeMouseListener(luml);
         luModel = DTData.getASCIIChartDT(0, 128);
         luTable.setModel(luModel);
         callDialog();
