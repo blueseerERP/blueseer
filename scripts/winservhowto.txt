@@ -1,5 +1,5 @@
 Create Windows Service:
-./prunsrv //IS//bscronServer --DisplayName="bscronServer" --Description="bscronServer" --Install="C:\junk\apachedaemon\amd64\prunsrv.exe" --Jvm="C:\blueseer\jre17\bin\server\jvm.dll" --StartPath="c:\blueseer" --StartClass="utilities.cronServer" --StartMode=jvm --StopMode=jvm --StopClass="java.lang.System" --StopMethod="exit" --StopParams=1 --Startup=auto* --Classpath="C:\blueseer\dist\*" --LogLevel=Info --LogPath="c:\blueseer\logs" --LogPrefix=procrun.log --StdOutput="c:\blueseer\logs\stdout.log" --StdError="c:\blueseer\logs\stderr.log"
+./prunsrv //IS//bscronServer --DisplayName="bscronServer" --Description="bscronServer" --Install="C:\somepath\apachedaemon\amd64\prunsrv.exe" --Jvm="C:\blueseer\jre17\bin\server\jvm.dll" --StartPath="c:\blueseer" --StartClass="utilities.cronServer" --StartMode=jvm --StopMode=jvm --StopClass="java.lang.System" --StopMethod="exit" --StopParams=1 --Startup=auto* --Classpath="C:\blueseer\dist\*" --LogLevel=Info --LogPath="c:\blueseer\logs" --LogPrefix=procrun.log --StdOutput="c:\blueseer\logs\stdout.log" --StdError="c:\blueseer\logs\stderr.log"
 
 Delete Windows Service:
 ./prunsrv //DS//bscronServer
