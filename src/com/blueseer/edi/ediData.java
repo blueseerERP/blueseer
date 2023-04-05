@@ -415,9 +415,9 @@ public class ediData {
     private static int _addDFSMstr(dfs_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
         String sqlSelect = "select * from dfs_mstr where dfs_id = ?";
-        String sqlInsert = "insert into dfs_mstr (dfs_id, dfs_desc, dfs_version, dfs_doctype, dfs_filetype "
+        String sqlInsert = "insert into dfs_mstr (dfs_id, dfs_desc, dfs_version, dfs_doctype, dfs_filetype, dfs_delimiter, dfs_misc "
                 + "  )  " +
-                " values (?,?,?,?,?); "; 
+                " values (?,?,?,?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.dfs_id);
@@ -429,6 +429,8 @@ public class ediData {
             ps.setString(3, x.dfs_version);
             ps.setString(4, x.dfs_doctype);
             ps.setString(5, x.dfs_filetype);
+            ps.setString(6, x.dfs_delimiter);
+            ps.setString(7, x.dfs_misc);
             rows = ps.executeUpdate();
             } 
             return rows;
@@ -520,14 +522,16 @@ public class ediData {
     
     private static int _updateDFSMstr(dfs_mstr x, Connection con, PreparedStatement ps) throws SQLException {
         int rows = 0;
-        String sql = "update dfs_mstr set dfs_desc = ?, dfs_version = ?, dfs_doctype = ?, dfs_filetype = ? " +
+        String sql = "update dfs_mstr set dfs_desc = ?, dfs_version = ?, dfs_doctype = ?, dfs_filetype = ?, dfs_delimiter = ?, dfs_misc = ? " +
                 "  where dfs_id = ? ";
 	ps = con.prepareStatement(sql) ;
             ps.setString(1, x.dfs_desc);
             ps.setString(2, x.dfs_version);
             ps.setString(3, x.dfs_doctype);
-            ps.setString(4, x.dfs_filetype); 
-            ps.setString(5, x.dfs_id);
+            ps.setString(4, x.dfs_filetype);
+            ps.setString(5, x.dfs_delimiter);
+            ps.setString(6, x.dfs_misc); 
+            ps.setString(7, x.dfs_id);
             rows = ps.executeUpdate();
         return rows;
     }
@@ -657,7 +661,9 @@ public class ediData {
                             res.getString("dfs_desc"),
                             res.getString("dfs_version"),
                             res.getString("dfs_doctype"),
-                            res.getString("dfs_filetype")
+                            res.getString("dfs_filetype"),
+                            res.getString("dfs_delimiter"),
+                            res.getString("dfs_misc")
                         );
                     }
                 }
@@ -3761,9 +3767,9 @@ public class ediData {
         }
     }
     
-    public record dfs_mstr(String[] m, String dfs_id, String dfs_desc, String dfs_version, String dfs_doctype, String dfs_filetype) {
+    public record dfs_mstr(String[] m, String dfs_id, String dfs_desc, String dfs_version, String dfs_doctype, String dfs_filetype, String dfs_delimiter, String dfs_misc) {
         public dfs_mstr(String[] m) {
-            this(m, "", "", "", "", "");
+            this(m, "", "", "", "", "", "", "");
         }
     }
     

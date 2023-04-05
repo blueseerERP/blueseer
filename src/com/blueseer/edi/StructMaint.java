@@ -47,6 +47,7 @@ import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.ConvertIntToYesNo;
 import static com.blueseer.utl.BlueSeerUtils.ConvertTrueFalseToBoolean;
+import static com.blueseer.utl.BlueSeerUtils.asciivalues;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
@@ -304,6 +305,7 @@ public class StructMaint extends javax.swing.JPanel  {
        tabledetail.setModel(detailmodel);
        tabledetail.getTableHeader().setReorderingAllowed(false);
         
+        tbdelimiter.setText("");
         tbkey.setText("");
         tbdesc.setText("");
         tbversion.setText("");
@@ -438,7 +440,9 @@ public class StructMaint extends javax.swing.JPanel  {
                 tbdesc.getText(),
                 tbversion.getText(),
                 dddoctype.getSelectedItem().toString(),
-                ddfiletype.getSelectedItem().toString()
+                ddfiletype.getSelectedItem().toString(),
+                tbdelimiter.getText(),
+                "" // misc
                 );
         /* potential validation mechanism...would need association between record field and input field
         for(Field f : x.getClass().getDeclaredFields()){
@@ -537,12 +541,35 @@ public class StructMaint extends javax.swing.JPanel  {
         
     }
 
+    public void lookUpFrameASCIIele() {
+        luTable.removeMouseListener(luml);
+        luml = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0 || column == 1) {
+                ludialog.dispose();
+                tbdelimiter.setText(target.getValueAt(row,0).toString());
+                }
+            }
+        };
+        luTable.addMouseListener(luml);
+        luModel = DTData.getASCIIChartDT(0, 128);
+        luTable.setModel(luModel);
+        callDialog();
+        
+        
+    }
+   
+    
     public void updateForm() {
         tbdesc.setText(x.dfs_desc());
         tbkey.setText(x.dfs_id());
         tbversion.setText(x.dfs_version());
         dddoctype.setSelectedItem(x.dfs_doctype()); 
         ddfiletype.setSelectedItem(x.dfs_filetype()); 
+        tbdelimiter.setText(x.dfs_delimiter());
         setAction(x.m()); 
         
         // now detail
@@ -707,6 +734,9 @@ public class StructMaint extends javax.swing.JPanel  {
         jScrollPane1 = new javax.swing.JScrollPane();
         tabledetail = new javax.swing.JTable();
         btcopy = new javax.swing.JButton();
+        tbdelimiter = new javax.swing.JTextField();
+        jLabel14 = new javax.swing.JLabel();
+        btlookupele = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -1037,6 +1067,21 @@ public class StructMaint extends javax.swing.JPanel  {
             }
         });
 
+        tbdelimiter.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbdelimiterFocusLost(evt);
+            }
+        });
+
+        jLabel14.setText("Delimiter");
+
+        btlookupele.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
+        btlookupele.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btlookupeleActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelmaintLayout = new javax.swing.GroupLayout(panelmaint);
         panelmaint.setLayout(panelmaintLayout);
         panelmaintLayout.setHorizontalGroup(
@@ -1061,10 +1106,19 @@ public class StructMaint extends javax.swing.JPanel  {
                                 .addComponent(btnew)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btclear))
-                            .addComponent(tbversion, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(dddoctype, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ddfiletype, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(ddfiletype, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(panelmaintLayout.createSequentialGroup()
+                                .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelmaintLayout.createSequentialGroup()
+                                        .addComponent(tbversion, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(64, 64, 64)
+                                        .addComponent(jLabel14)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(tbdelimiter, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(tbdesc, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btlookupele, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelmaintLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -1107,19 +1161,26 @@ public class StructMaint extends javax.swing.JPanel  {
                     .addComponent(ddfiletype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbversion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btadd)
-                    .addComponent(btupdate)
-                    .addComponent(btdelete)
-                    .addComponent(btcopy))
+                .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelmaintLayout.createSequentialGroup()
+                        .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tbversion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1)
+                            .addComponent(tbdelimiter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel14))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btadd)
+                            .addComponent(btupdate)
+                            .addComponent(btdelete)
+                            .addComponent(btcopy)))
+                    .addGroup(panelmaintLayout.createSequentialGroup()
+                        .addComponent(btlookupele)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -1474,6 +1535,23 @@ public class StructMaint extends javax.swing.JPanel  {
         }
     }//GEN-LAST:event_btcopyActionPerformed
 
+    private void btlookupeleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupeleActionPerformed
+        lookUpFrameASCIIele();
+    }//GEN-LAST:event_btlookupeleActionPerformed
+
+    private void tbdelimiterFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbdelimiterFocusLost
+             String x = BlueSeerUtils.bsformat("", tbdelimiter.getText(), "0");
+        if (x.equals("error")) {
+            tbdelimiter.setText("");
+            tbdelimiter.setBackground(Color.yellow);
+            bsmf.MainFrame.show(getMessageTag(1000));
+            tbdelimiter.requestFocus();
+        } else {
+            tbdelimiter.setText(x);
+            tbdelimiter.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_tbdelimiterFocusLost
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
@@ -1486,6 +1564,7 @@ public class StructMaint extends javax.swing.JPanel  {
     private javax.swing.JButton btdownload;
     private javax.swing.JButton btimport;
     private javax.swing.JButton btlookup;
+    private javax.swing.JButton btlookupele;
     private javax.swing.JButton btnew;
     private javax.swing.JButton bttransform;
     private javax.swing.JButton btup;
@@ -1503,6 +1582,7 @@ public class StructMaint extends javax.swing.JPanel  {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1517,6 +1597,7 @@ public class StructMaint extends javax.swing.JPanel  {
     private javax.swing.JLabel lblid;
     private javax.swing.JPanel panelmaint;
     private javax.swing.JTable tabledetail;
+    private javax.swing.JTextField tbdelimiter;
     private javax.swing.JTextField tbdesc;
     private javax.swing.JTextField tbfield;
     private javax.swing.JTextField tbfielddesc;

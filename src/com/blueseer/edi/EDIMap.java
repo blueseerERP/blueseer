@@ -1320,7 +1320,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             eledelim = EDI.escapeDelimiter(delims[1]);
         }
         
-       // bsmf.MainFrame.show(delims[0] + "/" + delims[1] + "/" + delims[2]);
+     //  bsmf.MainFrame.show(delims[0] + "/" + delims[1] + "/" + delims[2]);
         int currentPosition = 0;
         int GHP = 0;
         Stack<Integer> positionStack = new Stack<Integer>();
@@ -1345,8 +1345,8 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                     if (c[28].equals("FF")) {
                         x = splitFFSegment(s, ISF);
                     } else if (c[28].toUpperCase().equals("CSV")) {
-                        s = "ROW," + s;
-                        x = s.split(",",-1);
+                        s = "ROW" + eledelim + s;
+                        x = s.split(eledelim,-1);
                     } else {
                         x = s.split(eledelim,-1); // delims = seg, ele, sub
                     }

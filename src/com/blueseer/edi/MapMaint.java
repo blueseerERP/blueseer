@@ -81,6 +81,7 @@ import com.blueseer.edi.EDIMap.UserDefinedException;
 import static com.blueseer.edi.EDIMap.splitFFSegment;
 import static com.blueseer.edi.ediData.addMapMstr;
 import static com.blueseer.edi.ediData.deleteMapMstr;
+import com.blueseer.edi.ediData.dfs_mstr;
 import static com.blueseer.edi.ediData.getDFSMstr;
 import static com.blueseer.edi.ediData.getDSFasString;
 import static com.blueseer.edi.ediData.getMapMstr;
@@ -2779,7 +2780,11 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
        
          */
         // beginning of needs revamping 
-        String[] editype = getEDIType(cbuf, "testdata");
+    //    String[] editype = getEDIType(cbuf, "testdata");
+        String[] editype = new String[]{ddinfiletype.getSelectedItem().toString(),ddindoctype.getSelectedItem().toString()};
+        
+        dfs_mstr dfs = getDFSMstr(new String[]{ddifs.getSelectedItem().toString()});
+        
         ArrayList<String> doc = new ArrayList<String>();
         ArrayList<String[]> messages = new ArrayList<String[]>();
         char segdelim = 0;
@@ -2888,9 +2893,17 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 }
             }
         }
-        
+         
+         
          if (editype[0].equals("CSV")) {
+            
             segdelim = (char) Integer.valueOf("10").intValue(); 
+            if (dfs != null && ! dfs.dfs_delimiter().isBlank()) { 
+              eledelim = (char) Integer.valueOf(dfs.dfs_delimiter()).intValue();
+            } else {
+              eledelim = (char) Integer.valueOf("44").intValue();  
+            }
+           // bsmf.MainFrame.show("CSV HERE: " + eledelim + "/" + segdelim) ;
            StringBuilder segment = new StringBuilder();
            for (int i = 0; i < cbuf.length; i++) {
                 if (cbuf[i] == segdelim) {
@@ -2934,6 +2947,9 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         c[1] = x.map_indoctype();
         c[9] = String.valueOf(Integer.valueOf(segdelim));
         c[10] = String.valueOf(Integer.valueOf(eledelim));
+        
+        
+        
        // c[11] = "0";
         c[15] = x.map_outdoctype();
         c[2] = x.map_id();
