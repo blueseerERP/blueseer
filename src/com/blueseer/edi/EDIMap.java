@@ -1186,7 +1186,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         int i = 0;
         for (String[] x : isf) {
             i++;
-            if (x[5].equals("landmark") || x[5].equals("groupend")) {
+            if (x[4].toLowerCase().equals("yes") || x[5].equals("groupend")) {
                   continue;
             }
           //  System.out.println("HERE: " + rawSegmentLM + "/" + rawGroupHeadLM + "/" + x[0] + "/" + x[1]);
@@ -2157,7 +2157,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                         if (fields != null) { 
                         for (String[] f : fields) {
                         //    System.out.println(f[0] + "/" + f[6]);
-                                if (f[5].equals("landmark") || f[5].equals("groupend")) {
+                                if (f[4].toLowerCase().equals("yes") || f[5].equals("groupend")) {
                                     continue;
                                 }
                                 // overlay with values that were actually assigned...otherwise blanks
@@ -2223,7 +2223,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                         if (fields != null) { 
                         for (String[] f : fields) {
                         //    System.out.println(f[0] + "/" + f[6]);
-                                if (f[5].equals("landmark") || f[5].equals("groupend")) {
+                                if (f[4].toLowerCase().equals("yes") || f[5].equals("groupend")) {
                                     continue;
                                 }
                                 // overlay with values that were actually assigned...otherwise blanks
@@ -2538,7 +2538,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
 		for (Map.Entry<String, ArrayList<String[]>> s : osf.entrySet()) {
                     thiskey = s.getKey();
 			String[] recArray = s.getValue().get(0);
-			if (! recArray[5].equals("landmark")) {
+			if (! recArray[4].toLowerCase().equals("yes")) {
 				continue;
 			}
                         
@@ -2600,7 +2600,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                         if (! x[1].equals(parentx)) {
                             continue OSFLoop;
                         }
-                        if (x[5].equals("landmark")) {
+                        if (x[4].toLowerCase().equals("yes")) {
                                 parent = x[1];
                                 continue;
                         }
@@ -2691,7 +2691,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                 ObjectNode elementNode = new ObjectMapper().createObjectNode(); 
             for (int i = 0; i < fields.size(); i++) {
                                         String[] x = fields.get(i);
-                                        if (x[5].equals("landmark")) {
+                                        if (x[4].toLowerCase().equals("yes")) {
                                             parent = x[1];
                                                 continue;                                        
                                         }
@@ -2715,7 +2715,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             for (int i = 0; i < fields.size(); i++) {
                         
                                     String[] x = fields.get(i);
-                                    if (x[5].equals("landmark")) {
+                                    if (x[4].toLowerCase().equals("yes")) {
                                             parent = x[1];
                                             continue;
                                     }
@@ -2784,7 +2784,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
     public static boolean hasChildren(String x, LinkedHashMap<String, ArrayList<String[]>> osf) {
 	for (Map.Entry<String, ArrayList<String[]>> s : osf.entrySet()) {
 		String[] recArray = s.getValue().get(0);
-		if (! recArray[5].equals("landmark")) {
+		if (! recArray[4].toLowerCase().equals("yes")) {
 			continue;
 		}
 		if (recArray[1].equals(x)) {
@@ -2808,7 +2808,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                 }
                 
 		String[] recArray = s.getValue().get(0);
-		if (! recArray[5].equals("landmark")) {
+		if (! recArray[4].toLowerCase().equals("yes")) {
 			continue;
 		}
 		if (recArray[1].equals(x)) {
@@ -3420,7 +3420,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                   continue;
             } 
             if (seg.equals(z[0]) && (parent.isBlank() || parent.equals(z[1]))) {
-                if (! z[5].equals("landmark")) {
+                if (! z[4].toLowerCase().equals("yes")) {
                   x++;
                 }
              ///   System.out.println("HERE: " + seg + "/" + z[0] + "/" + parent + "/" + z[1] + "/" + x);
