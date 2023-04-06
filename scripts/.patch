@@ -16,5 +16,7 @@
 # Map maintenance mod for java map path; add preventive declaration for concurrent cron job execution
 #patch=5
 # emergency patch fix for issue #108...unable to add customer in customer maintenance
-patch=6
+#patch=6
 # layout modifications for Struct Maintenance and Recognition Maintenance; copy method provided for both menus
+patch=7
+# schema changes for dfs_mstr; alternate delimiter options for CSV processing
