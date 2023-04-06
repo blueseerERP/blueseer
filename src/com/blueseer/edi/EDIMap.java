@@ -462,8 +462,8 @@ public abstract class EDIMap {  // took out the implements EDIMapi
            SE = "UNT" + ed + String.valueOf(segcount) + ed + stctrl;  
            }
            
-           overrideISAWithMapEntries(); 
-           overrideGSWithMapEntries();
+           overrideISAWithMapEntries(ed); 
+           overrideGSWithMapEntries(ed);
            
           
            } else {
@@ -492,7 +492,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
 
      }
 
-    public void overrideISAWithMapEntries() {
+    public void overrideISAWithMapEntries(String _ed) {
         for (int i = 1; i < mapISAArray.length; i++ ) { // skip 0 ...ISA landmark element
             if (mapISAArray[i] != null && ! mapISAArray[i].isEmpty()) {
                switch (i) {
@@ -549,16 +549,16 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                }
             }
         }
-        ISA = String.join(ed,isaArray);
+        ISA = String.join(_ed,isaArray);
     }
     
-    public void overrideGSWithMapEntries() {
+    public void overrideGSWithMapEntries(String _ed) {
         for (int i = 1; i < mapGSArray.length; i++ ) { // skip 0 ...ISA landmark element
             if (mapGSArray[i] != null && ! mapGSArray[i].isEmpty()) {
                 gsArray[i] = String.valueOf(mapGSArray[i]);
             }
         }
-        GS = String.join(ed,gsArray);
+        GS = String.join(_ed,gsArray);
     }
     
     public String getISA(int i) {

@@ -35,6 +35,8 @@ import static com.blueseer.edi.EDIMap.OMD;
 import static com.blueseer.edi.EDIMap.OSF;
 import static com.blueseer.edi.EDIMap.clearStaticVariables;
 import static com.blueseer.edi.EDIMap.delimConvertIntToStr;
+import com.blueseer.edi.ediData.dfs_mstr;
+import static com.blueseer.edi.ediData.getDFSMstr;
 import com.blueseer.ord.ordData;
 import static com.blueseer.ord.ordData.addOrderTransaction;
 import com.blueseer.pur.purData;
@@ -1448,7 +1450,7 @@ public class EDI {
                 }
               } else { // must be delimited rule...delimiter in r[2]
                 if (Integer.valueOf(r[0]) == k) { // row check
-                    String[] delarr = s.split(delimConvertIntToStr(r[2]), -1);
+                    String[] delarr = s.split(delimConvertIntToStr(r[10]), -1);
                     if (delarr.length >= Integer.valueOf(r[1])) {
                         if (delarr[Integer.valueOf(r[1]) - 1].trim().equals(r[3])) {
                           matchcount++;  
@@ -2168,10 +2170,16 @@ public class EDI {
             messages.add(new String[]{"info","CSV:  IFS Type: " + ifs});
             
             String[] defaults = EDData.getEDITPDefaults(x[0], x[3], x[1]);
+            dfs_mstr dfs = getDFSMstr(new String[]{ifs});
             
             c[9]  = defaults[7].isBlank() ? "10" : defaults[7];
             c[10] = defaults[6].isBlank() ? "0" : defaults[6];
             c[11] = defaults[8].isBlank() ? "0" : defaults[8];
+            
+            // for csv inbound...override the defaults[6]
+            if (dfs != null && ! dfs.dfs_delimiter().isBlank()) {
+                c[10] = dfs.dfs_delimiter();
+            }
             
             c[29] = defaults[15]; // defines outputfiletype
             
@@ -4314,7 +4322,7 @@ public class EDI {
        if (grpctrlnbr == 0) {
           grpctrlnbr = envctrlnbr; 
        }
-       
+             
               
        defaults[7] = (defaults[7].isBlank() || defaults[7].equals("0")) ? "10" : defaults[7];
        defaults[6] = (defaults[6].isBlank() || defaults[6].equals("0")) ? "42" : defaults[6];
