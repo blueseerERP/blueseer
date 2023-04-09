@@ -667,7 +667,7 @@ try {
              res = st.executeQuery("select po_nbr, po_vend, vd_name, po_ord_date, po_due_date, po_type, po_status, " +
                       " sum(pod_ord_qty * pod_netprice) as totdol, sum(pod_ord_qty) as totqty, " +
                       " (select sum(case when pom_type = 'discount' and pom_amttype = 'percent' then pom_amt else '0' end) from po_meta where pom_nbr = po_nbr) as 'discountpercent', " +
-                        " (select sum(case when pom_type <> 'tax' and pom_type <> 'passive' then pom_amt else '0' end) from po_meta where pom_nbr = po_nbr) as 'charge'," + 
+                        " (select sum(case when pom_type = 'charge' then pom_amt else '0' end) from po_meta where pom_nbr = po_nbr) as 'charge'," + 
                         " (select sum(case when pom_type = 'tax' and pom_amttype = 'percent' then pom_amt end) from po_meta where pom_nbr = po_nbr)as 'taxpercent', " +
                         " (select sum(case when pom_type = 'tax' and pom_amttype = 'amount' then pom_amt end) from po_meta where pom_nbr = po_nbr) as 'taxcharge' " +
                          " from po_mstr inner join pod_mstr on pod_nbr = po_nbr inner join vd_mstr on vd_addr = po_vend where " +
