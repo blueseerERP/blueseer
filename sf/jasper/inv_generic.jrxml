@@ -91,14 +91,14 @@ where shd_id =  $P{myid}]]>
 	<variable name="mysumprice" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[new Double($F{shd_qty}.doubleValue() * $F{shd_netprice}.doubleValue())]]></variableExpression>
 	</variable>
+	<variable name="gross" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[new Double($F{shd_qty}.doubleValue() * $F{shd_listprice}.doubleValue())]]></variableExpression>
+	</variable>
 	<variable name="totalamount" class="java.lang.Double">
-		<variableExpression><![CDATA[new Double($V{mysumprice}.doubleValue() + 
+		<variableExpression><![CDATA[new Double($V{gross}.doubleValue() + 
 	$V{tax}.doubleValue() + 
 	$V{charges}.doubleValue()
 )]]></variableExpression>
-	</variable>
-	<variable name="gross" class="java.lang.Double" calculation="Sum">
-		<variableExpression><![CDATA[new Double($F{shd_qty}.doubleValue() * $F{shd_listprice}.doubleValue())]]></variableExpression>
 	</variable>
 	<background>
 		<band splitType="Stretch"/>

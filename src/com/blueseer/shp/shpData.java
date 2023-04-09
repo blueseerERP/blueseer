@@ -1735,10 +1735,10 @@ public class shpData {
              }
 
             // get material tax for each item (if any) associated with this shipper
-            res = st.executeQuery("select shd_taxamt, shd_qty, shd_netprice from ship_det where shd_id = " + "'" + shipper + "'" + ";");
+            res = st.executeQuery("select shd_taxamt, shd_qty, shd_listprice from ship_det where shd_id = " + "'" + shipper + "'" + ";");
              while (res.next()) {
                  matltax += res.getDouble("shd_taxamt");
-                 totamt += res.getDouble("shd_qty") * res.getDouble("shd_netprice");
+                 totamt += res.getDouble("shd_qty") * res.getDouble("shd_listprice");
              }
 
 
@@ -1753,6 +1753,7 @@ public class shpData {
                  String myamttype = "";
                  double myamt = 0.00;
 
+                 // sac order of elements...sos_nbr, sos_desc, sos_type, sos_amttype, sos_amt
                  for (String[] s : sac) {
                  myamttype = s[3].toString();
                  myamt = bsParseDoubleUS(s[4].toString());
@@ -1760,7 +1761,11 @@ public class shpData {
                  // adjust if percent based
                  if (s[3].toString().equals("percent") && bsParseDoubleUS(s[4].toString()) > 0) {
                    myamttype = "amount";
-                   myamt = (bsParseDoubleUS(s[4].toString()) / 100) * totamt;
+                   if (s[2].equals("discount")) {
+                     myamt = -1 * (bsParseDoubleUS(s[4].toString()) / 100) * totamt;
+                   } else {
+                     myamt = (bsParseDoubleUS(s[4].toString()) / 100) * totamt;  
+                   }
                  }    
                  st.executeUpdate(" insert into shs_det (shs_nbr, shs_so, shs_desc, shs_type, shs_amttype, shs_amt ) " +
                                  " values ( "  + "'" + shipper + "'" + "," +
