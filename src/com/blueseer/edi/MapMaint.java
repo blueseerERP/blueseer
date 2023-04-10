@@ -2326,12 +2326,24 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         inputpanel.setPreferredSize(new java.awt.Dimension(260, 764));
         inputpanel.setLayout(new javax.swing.BoxLayout(inputpanel, javax.swing.BoxLayout.LINE_AXIS));
 
+        InputTabbedPane.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                InputTabbedPaneStateChanged(evt);
+            }
+        });
+
         tainput.setColumns(20);
         tainput.setRows(5);
         tainput.setName("tainput"); // NOI18N
         inScrollPaneInput.setViewportView(tainput);
 
         InputTabbedPane.addTab("tab2", inScrollPaneInput);
+
+        structScrollPane.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                structScrollPaneMouseClicked(evt);
+            }
+        });
 
         tainstruct.setColumns(20);
         tainstruct.setRows(5);
@@ -2362,6 +2374,12 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         outputpanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Destination"));
         outputpanel.setPreferredSize(new java.awt.Dimension(260, 764));
         outputpanel.setLayout(new javax.swing.BoxLayout(outputpanel, javax.swing.BoxLayout.LINE_AXIS));
+
+        OutputTabbedPane.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                OutputTabbedPaneStateChanged(evt);
+            }
+        });
 
         taoutput.setColumns(20);
         taoutput.setRows(5);
@@ -3321,6 +3339,22 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
           ddoutfiletype.setSelectedItem(x.dfs_filetype());
         }
     }//GEN-LAST:event_ddofsActionPerformed
+
+    private void structScrollPaneMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_structScrollPaneMouseClicked
+        
+    }//GEN-LAST:event_structScrollPaneMouseClicked
+
+    private void InputTabbedPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_InputTabbedPaneStateChanged
+        if (! isLoad && InputTabbedPane.getSelectedIndex() == 1) {
+            showStructure("tainstruct");
+        }
+    }//GEN-LAST:event_InputTabbedPaneStateChanged
+
+    private void OutputTabbedPaneStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_OutputTabbedPaneStateChanged
+        if (! isLoad && OutputTabbedPane.getSelectedIndex() == 1) {
+            showStructure("taoutstruct");
+        }
+    }//GEN-LAST:event_OutputTabbedPaneStateChanged
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
