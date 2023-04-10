@@ -274,7 +274,7 @@ public class MassLoad extends javax.swing.JPanel {
     public ArrayList<String> defineItemMaster() {
         ArrayList<String> list = new ArrayList<String>();
         list.add("it_item,s,36,mandatory,unvalidated");
-        list.add("it_desc,s,50,optional,unvalidated");
+        list.add("it_desc,s,100,optional,unvalidated");
         list.add("it_site,s,10,mandatory,validated");
         list.add("it_code,s,10,mandatory,validated (P or M or A)");
         list.add("it_prodline,s,4,mandatory,validated");
@@ -296,8 +296,8 @@ public class MassLoad extends javax.swing.JPanel {
         list.add("it_net_wt,d,10,optional,unvalidated");
         list.add("it_ship_wt,d,10,optional,unvalidated");
         list.add("it_leadtime,i,11,optional,unvalidated");
-        list.add("it_safestock,i,8,optional,unvalidated");
-        list.add("it_minordqty,i,8,optional,unvalidated");
+        list.add("it_safestock,d,8,optional,unvalidated");
+        list.add("it_minordqty,d,8,optional,unvalidated");
         list.add("it_mrp,b,5,mandatory,validated (1 or 0)");
         list.add("it_sched,b,5,mandatory,validated (1 or 0)");
         list.add("it_plan,b,5,mandatory,validated (1 or 0)");
@@ -1266,7 +1266,7 @@ public class MassLoad extends javax.swing.JPanel {
         list.add("location,s,30,mandatory,validated");
         list.add("account,s,10,mandatory,validated");
         list.add("costcenter,s,4,mandatory,validated");
-        list.add("quantity,i,9,mandatory,validated");
+        list.add("quantity,d,14,mandatory,validated");
         list.add("effdate,s,10,mandatory,validated");
         list.add("serial,s,30,optional,unvalidated");
         list.add("reference,s,30,mandatory,unvalidated");

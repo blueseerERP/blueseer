@@ -368,7 +368,7 @@ inner join site_mstr on site_site = sh_site where shd_id =  $P{myid};]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{shd_po}]]></textFieldExpression>
 			</textField>
-			<textField pattern="###0.00">
+			<textField pattern="###0.#####">
 				<reportElement x="470" y="0" width="97" height="16" uuid="32390b0a-6d5c-4fae-8870-72c4e68a5f90"/>
 				<textElement>
 					<font size="8"/>

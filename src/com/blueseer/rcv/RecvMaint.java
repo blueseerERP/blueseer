@@ -1584,7 +1584,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     private void tbqtyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbqtyFocusLost
         if (! isLoad) {
-        String x = BlueSeerUtils.bsformat("", tbqty.getText(), "0");
+        String x = BlueSeerUtils.bsformat("", tbqty.getText(), "5");
         if (x.equals("error")) {
             tbqty.setText("");
             tbqty.setBackground(Color.yellow);

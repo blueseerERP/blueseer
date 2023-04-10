@@ -53,6 +53,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.FileSystems;
@@ -655,14 +656,19 @@ public class BlueSeerUtils {
     
     public static double bsParseDouble(String x) {
         // always returns . decimal based double
-        double z = 0;
+        double z = 0.00;
+        
+        
         if (! x.isEmpty()) {
         NumberFormat nf = NumberFormat.getInstance(Locale.getDefault());
+        
+        Number number = 0.00;
                     try {
-                        z = nf.parse(x).doubleValue();
+                        number = nf.parse(x.trim());
                     } catch (ParseException ex) {
                         bsmf.MainFrame.show(getMessageTag(1017) + "/" + x);
                     }
+             z =  number.doubleValue();
         }
         return z;
     }
@@ -670,10 +676,10 @@ public class BlueSeerUtils {
     public static double bsParseDoubleUS(String x) {
         double z = 0;
         if (! x.isEmpty()) {
-        NumberFormat format = NumberFormat.getInstance(Locale.US);
+        NumberFormat nf = NumberFormat.getInstance(Locale.US);
         Number number = 0;
                     try {
-                        number = format.parse(x);
+                        number = nf.parse(x);
                     } catch (ParseException ex) {
                         bsmf.MainFrame.show(getMessageTag(1017));
                     }
@@ -681,6 +687,7 @@ public class BlueSeerUtils {
         }
         return z;
     }
+    
     
     public static String bsFormatDouble(double invalue, String precision) {
         String pattern = "";
@@ -807,6 +814,14 @@ public class BlueSeerUtils {
         return outvalue;
     }
     
+    public static String bsNumber(double invalue) {
+        String outvalue = "";
+        String pattern = "#0.#####"; 
+        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());    
+        df.applyPattern(pattern);
+        outvalue = df.format(invalue); 
+        return outvalue;
+    }
     
     public static String bsNumber(String invalue) {
         // invalue will come over as a . decimal regardless of Locale
@@ -816,7 +831,7 @@ public class BlueSeerUtils {
         // currformat("3,56") 
          
         String x = "0";
-        String pattern = "#0.####";
+        String pattern = "#0.#####";
         if (! invalue.isEmpty()) {
         String adjvalue = invalue.replace('.', defaultDecimalSeparator);
        // DecimalFormat df = new DecimalFormat("#0.00###", new DecimalFormatSymbols(Locale.getDefault())); 
@@ -1275,7 +1290,7 @@ public class BlueSeerUtils {
                 
 		super(formatter);
                 formatter.setMinimumFractionDigits(2);
-                formatter.setMaximumFractionDigits(4);
+                formatter.setMaximumFractionDigits(5);
 		setHorizontalAlignment( SwingConstants.RIGHT );
                 
 	}

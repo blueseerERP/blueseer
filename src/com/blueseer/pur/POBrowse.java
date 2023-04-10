@@ -53,6 +53,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.bsNumber;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
@@ -198,8 +199,8 @@ public class POBrowse extends javax.swing.JPanel {
                       res.getString("pod_nbr"), 
                        res.getString("pod_item"),
                        bsParseDouble(currformatDouble(res.getDouble("pod_netprice"))),
-                      res.getInt("pod_ord_qty"), 
-                      res.getInt("pod_rcvd_qty"), 
+                      bsNumber(res.getDouble("pod_ord_qty")), 
+                      bsNumber(res.getDouble("pod_rcvd_qty")), 
                       res.getString("pod_status")});
                 }
                
@@ -733,7 +734,7 @@ try {
                     
                  
                 lblamttot.setText(String.valueOf(currformatDouble(dol)));
-                lblqtytot.setText(String.valueOf(qty));
+                lblqtytot.setText(bsNumber(qty));
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));

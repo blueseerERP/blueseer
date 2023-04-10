@@ -884,7 +884,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
                                 res.getString("in_site"),
                                 res.getString("in_loc"),
                                 res.getString("in_wh"),
-                                res.getInt("in_qoh"),
+                                res.getDouble("in_qoh"),
                                 res.getString("in_serial"),
                                 res.getString("in_date")
                             });

@@ -2561,7 +2561,7 @@ public class ShipperMaint extends javax.swing.JPanel {
 
     private void tbqtyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbqtyFocusLost
         if (! tbqty.getText().isEmpty()) {
-            String x = BlueSeerUtils.bsformat("", tbqty.getText(), "2");
+            String x = BlueSeerUtils.bsformat("", tbqty.getText(), "5");
             if (x.equals("error")) {
                 tbqty.setText("");
                 tbqty.setBackground(Color.yellow);

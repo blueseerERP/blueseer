@@ -55,6 +55,7 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.ctr.cusData;
+import static com.blueseer.utl.BlueSeerUtils.bsNumber;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
@@ -792,7 +793,7 @@ try {
                                 res.getString("so_rmks"),
                                 res.getString("so_ord_date"),
                                 res.getString("so_due_date"),
-                                res.getDouble("totqty"),
+                                bsNumber(res.getDouble("totqty")),
                                 bsParseDouble(currformatDouble(total)),
                                 res.getString("so_curr"),
                                 res.getString("so_status") 
@@ -801,7 +802,7 @@ try {
                 }
                 labeldollar.setText(String.valueOf(currformatDouble(dol)));
                 labelcount.setText(String.valueOf(i));
-                labelqty.setText(String.valueOf(qty));
+                labelqty.setText(bsNumber(qty));
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);

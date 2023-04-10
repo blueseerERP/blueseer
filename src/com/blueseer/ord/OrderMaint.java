@@ -57,6 +57,7 @@ import com.blueseer.shp.shpData.ship_mstr;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsNumber;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDoubleUS;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
@@ -1849,11 +1850,11 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
             
     public void sumqty() {
-        double qty = 0;
+        double qty = 0.00;
          for (int j = 0; j < orddet.getRowCount(); j++) {
              qty = qty + bsParseDouble(orddet.getValueAt(j, 5).toString()); 
          }
-         tbtotqty.setText(String.valueOf(qty));
+         tbtotqty.setText(bsNumber(qty));
     }
     
     public Integer getmaxline() {
@@ -3298,18 +3299,18 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addGap(32, 32, 32)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tbtotqty, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(25, 25, 25)
+                .addComponent(tbtotqty, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tbtottax, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(tbtottax, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tbtotdollars, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblcurr, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(250, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -3530,7 +3531,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     private void qtyshippedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_qtyshippedFocusLost
        
-        String x = BlueSeerUtils.bsformat("", qtyshipped.getText(), "2");
+        String x = BlueSeerUtils.bsformat("", qtyshipped.getText(), "5");
         if (x.equals("error")) {
             qtyshipped.setText("");
             qtyshipped.setBackground(Color.yellow);

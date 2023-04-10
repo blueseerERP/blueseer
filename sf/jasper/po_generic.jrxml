@@ -352,7 +352,7 @@ inner join site_mstr on site_site = po_site where pod_nbr =  $P{myid};]]>
 				<reportElement x="19" y="0" width="141" height="16" uuid="978682a3-4259-41c3-adae-54872ecfe90a"/>
 				<textFieldExpression><![CDATA[$F{pod_item}]]></textFieldExpression>
 			</textField>
-			<textField pattern="###0.00">
+			<textField pattern="###0.#####">
 				<reportElement x="344" y="0" width="72" height="16" uuid="edbe7124-d60b-42b0-a896-8522f841a299"/>
 				<textFieldExpression><![CDATA[$F{pod_ord_qty}]]></textFieldExpression>
 			</textField>

@@ -2804,7 +2804,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     private void qtyshippedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_qtyshippedFocusLost
         if (! qtyshipped.getText().isEmpty()) {
-        String x = BlueSeerUtils.bsformat("", qtyshipped.getText(), "2");
+        String x = BlueSeerUtils.bsformat("", qtyshipped.getText(), "5");
         if (x.equals("error")) {
             qtyshipped.setText("");
             qtyshipped.setBackground(Color.yellow);
