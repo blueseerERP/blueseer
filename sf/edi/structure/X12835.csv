@@ -1,334 +1,334 @@
 #<h1>835 - Health Care Claim Payment/Advice</h1><br>
-#segment,parent,loopcount,isgroup,islandmark,field,desc,min,max,align,status
-ST,,1,no,yes,landmark,Transaction Set Header,2,2,-,M
-ST,,1,no,no,e01,Transaction Set Identifier Code,3,3,-,M/Z
-ST,,1,no,no,e02,Transaction Set Control Number,4,9,-,M
-ST,,1,no,no,e03,Implementation Convention Reference,1,35,-,O/Z
-BPR,,1,no,yes,landmark,Beginning Segment for Payment Order/Remittance Advice,3,3,-,M
-BPR,,1,no,no,e01,Transaction Handling Code,1,2,-,M
-BPR,,1,no,no,e02,Monetary Amount,1,18,-,M/Z
-BPR,,1,no,no,e03,Credit/Debit Flag Code,1,1,-,M
-BPR,,1,no,no,e04,Payment Method Code,3,3,-,M
-BPR,,1,no,no,e05,Payment Format Code,1,10,-,O
-BPR,,1,no,no,e06,(DFI) ID Number Qualifier,2,2,-,X/Z
-BPR,,1,no,no,e07,(DFI) Identification Number,3,12,-,X
-BPR,,1,no,no,e08,Account Number Qualifier,1,3,-,O/Z
-BPR,,1,no,no,e09,Account Number,1,35,-,X/Z
-BPR,,1,no,no,e10,Originating Company Identifier,10,10,-,O/Z
-BPR,,1,no,no,e11,Originating Company Supplemental Code,9,9,-,O
-BPR,,1,no,no,e12,(DFI) ID Number Qualifier,2,2,-,X/Z
-BPR,,1,no,no,e13,(DFI) Identification Number,3,12,-,X
-BPR,,1,no,no,e14,Account Number Qualifier,1,3,-,O/Z
-BPR,,1,no,no,e15,Account Number,1,35,-,X/Z
-BPR,,1,no,no,e16,Date,8,8,-,O/Z
-BPR,,1,no,no,e17,Business Function Code,1,3,-,O/Z
-BPR,,1,no,no,e18,(DFI) ID Number Qualifier,2,2,-,X/Z
-BPR,,1,no,no,e19,(DFI) Identification Number,3,12,-,X
-BPR,,1,no,no,e20,Account Number Qualifier,1,3,-,O/Z
-BPR,,1,no,no,e21,Account Number,1,35,-,X
-NTE,,99999,no,yes,landmark,Note/Special Instruction,3,3,-,O
-NTE,,1,no,no,e01,Note Reference Code,3,3,-,O
-NTE,,1,no,no,e02,Description,1,80,-,M
-TRN,,1,no,yes,landmark,Trace,3,3,-,O
-TRN,,1,no,no,e01,Trace Type Code,1,2,-,M
-TRN,,1,no,no,e02,Reference Identification,1,50,-,M/Z
-TRN,,1,no,no,e03,Originating Company Identifier,10,10,-,O/Z
-TRN,,1,no,no,e04,Reference Identification,1,50,-,O/Z
-CUR,,1,no,yes,landmark,Currency,3,3,-,O
-CUR,,1,no,no,e01,Entity Identifier Code,2,3,-,M
-CUR,,1,no,no,e02,Currency Code,3,3,-,M
-CUR,,1,no,no,e03,Exchange Rate,4,10,-,O
-CUR,,1,no,no,e04,Entity Identifier Code,2,3,-,O
-CUR,,1,no,no,e05,Currency Code,3,3,-,O
-CUR,,1,no,no,e06,Currency Market/Exchange Code,3,3,-,O
-CUR,,1,no,no,e07,Date/Time Qualifier,3,3,-,X
-CUR,,1,no,no,e08,Date,8,8,-,O
-CUR,,1,no,no,e09,Time,4,8,-,O
-CUR,,1,no,no,e10,Date/Time Qualifier,3,3,-,X
-CUR,,1,no,no,e11,Date,8,8,-,X
-CUR,,1,no,no,e12,Time,4,8,-,X
-CUR,,1,no,no,e13,Date/Time Qualifier,3,3,-,X
-CUR,,1,no,no,e14,Date,8,8,-,X
-CUR,,1,no,no,e15,Time,4,8,-,X
-CUR,,1,no,no,e16,Date/Time Qualifier,3,3,-,X
-CUR,,1,no,no,e17,Date,8,8,-,X
-CUR,,1,no,no,e18,Time,4,8,-,X
-CUR,,1,no,no,e19,Date/Time Qualifier,3,3,-,X
-CUR,,1,no,no,e20,Date,8,8,-,X
-CUR,,1,no,no,e21,Time,4,8,-,X
-REF,,99999,no,yes,landmark,Reference Information,3,3,-,O
-REF,,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
-REF,,1,no,no,e02,Reference Identification,1,50,-,X
-REF,,1,no,no,e03,Description,1,80,-,X
-DTM,,99999,no,yes,landmark,Date/Time Reference,3,3,-,O
-DTM,,1,no,no,e01,Date/Time Qualifier,3,3,-,M
-DTM,,1,no,no,e02,Date,8,8,-,X
-DTM,,1,no,no,e03,Time,4,8,-,X
-DTM,,1,no,no,e04,Time Code,2,2,-,O
-DTM,,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X
-DTM,,1,no,no,e06,Date Time Period,1,35,-,X
-N1,,200,yes,yes,landmark,Party Identification,2,2,-,O
-N1,,1,no,no,e01,Entity Identifier Code,2,3,-,M
-N1,,1,no,no,e02,Name,1,60,-,X
-N1,,1,no,no,e03,Identification Code Qualifier,1,2,-,X
-N1,,1,no,no,e04,Identification Code,2,80,-,X
-N1,,1,no,no,e05,Entity Relationship Code,2,2,-,O
-N1,,1,no,no,e06,Entity Identifier Code,2,3,-,O
-N2,N1,99999,no,yes,landmark,Additional Name Information,2,2,-,O
-N2,N1,1,no,no,e01,Name,1,60,-,M
-N2,N1,1,no,no,e02,Name,1,60,-,O
-N3,N1,99999,no,yes,landmark,Party Location,2,2,-,O
-N3,N1,1,no,no,e01,Address Information,1,55,-,M
-N3,N1,1,no,no,e02,Address Information,1,55,-,O
-N4,N1,1,no,yes,landmark,Geographic Location,2,2,-,O
-N4,N1,1,no,no,e01,City Name,2,30,-,O
-N4,N1,1,no,no,e02,State or Province Code,2,2,-,X
-N4,N1,1,no,no,e03,Postal Code,3,15,-,O
-N4,N1,1,no,no,e04,Country Code,2,3,-,X
-N4,N1,1,no,no,e05,Location Qualifier,1,2,-,X
-N4,N1,1,no,no,e06,Location Identifier,1,30,-,O
-N4,N1,1,no,no,e07,Country Subdivision Code,1,3,-,X
-REF,N1,99999,no,yes,landmark,Reference Information,3,3,-,O
-REF,N1,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
-REF,N1,1,no,no,e02,Reference Identification,1,50,-,X
-REF,N1,1,no,no,e03,Description,1,80,-,X
-PER,N1,99999,no,yes,landmark,Administrative Communications Contact,3,3,-,O
-PER,N1,1,no,no,e01,Contact Function Code,2,2,-,M
-PER,N1,1,no,no,e02,Name,1,60,-,O
-PER,N1,1,no,no,e03,Communication Number Qualifier,2,2,-,X
-PER,N1,1,no,no,e04,Communication Number,1,256,-,X
-PER,N1,1,no,no,e05,Communication Number Qualifier,2,2,-,X
-PER,N1,1,no,no,e06,Communication Number,1,256,-,X
-PER,N1,1,no,no,e07,Communication Number Qualifier,2,2,-,X
-PER,N1,1,no,no,e08,Communication Number,1,256,-,X
-PER,N1,1,no,no,e09,Contact Inquiry Reference,1,20,-,O
-RDM,N1,1,no,yes,landmark,Remittance Delivery Method,3,3,-,O
-RDM,N1,1,no,no,e01,Report Transmission Code,1,2,-,M
-RDM,N1,1,no,no,e02,Name,1,60,-,O
-RDM,N1,1,no,no,e03,Communication Number,1,256,-,O
-DTM,N1,1,no,yes,landmark,Date/Time Reference,3,3,-,O
-DTM,N1,1,no,no,e01,Date/Time Qualifier,3,3,-,M
-DTM,N1,1,no,no,e02,Date,8,8,-,X
-DTM,N1,1,no,no,e03,Time,4,8,-,X
-DTM,N1,1,no,no,e04,Time Code,2,2,-,O
-DTM,N1,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X
-DTM,N1,1,no,no,e06,Date Time Period,1,35,-,X
-LX,,99999,yes,yes,landmark,Transaction Set Line Number,2,2,-,O
-LX,,1,no,no,e01,Assigned Number,1,6,-,M
-TS3,LX,1,no,yes,landmark,Transaction Statistics,3,3,-,O
-TS3,LX,1,no,no,e01,Reference Identification,1,50,-,M/Z
-TS3,LX,1,no,no,e02,Facility Code Value,1,2,-,M
-TS3,LX,1,no,no,e03,Date,8,8,-,M/Z
-TS3,LX,1,no,no,e04,Quantity,1,15,-,M/Z
-TS3,LX,1,no,no,e05,Monetary Amount,1,18,-,M/Z
-TS3,LX,1,no,no,e06,Monetary Amount,1,18,-,O/Z
-TS3,LX,1,no,no,e07,Monetary Amount,1,18,-,O/Z
-TS3,LX,1,no,no,e08,Monetary Amount,1,18,-,O/Z
-TS3,LX,1,no,no,e09,Monetary Amount,1,18,-,O/Z
-TS3,LX,1,no,no,e10,Monetary Amount,1,18,-,O/Z
-TS3,LX,1,no,no,e11,Monetary Amount,1,18,-,O/Z
-TS3,LX,1,no,no,e12,Monetary Amount,1,18,-,O/Z
-TS3,LX,1,no,no,e13,Monetary Amount,1,18,-,O/Z
-TS3,LX,1,no,no,e14,Monetary Amount,1,18,-,O/Z
-TS3,LX,1,no,no,e15,Monetary Amount,1,18,-,O/Z
-TS3,LX,1,no,no,e16,Monetary Amount,1,18,-,O/Z
-TS3,LX,1,no,no,e17,Monetary Amount,1,18,-,O/Z
-TS3,LX,1,no,no,e18,Monetary Amount,1,18,-,O/Z
-TS3,LX,1,no,no,e19,Monetary Amount,1,18,-,O/Z
-TS3,LX,1,no,no,e20,Monetary Amount,1,18,-,O/Z
-TS3,LX,1,no,no,e21,Monetary Amount,1,18,-,O/Z
-TS3,LX,1,no,no,e22,Monetary Amount,1,18,-,O/Z
-TS3,LX,1,no,no,e23,Quantity,1,15,-,O/Z
-TS3,LX,1,no,no,e24,Monetary Amount,1,18,-,O/Z
-TS2,LX,1,no,yes,landmark,Transaction Supplemental Statistics,3,3,-,O
-TS2,LX,1,no,no,e01,Monetary Amount,1,18,-,O/Z
-TS2,LX,1,no,no,e02,Monetary Amount,1,18,-,O/Z
-TS2,LX,1,no,no,e03,Monetary Amount,1,18,-,O/Z
-TS2,LX,1,no,no,e04,Monetary Amount,1,18,-,O/Z
-TS2,LX,1,no,no,e05,Monetary Amount,1,18,-,O/Z
-TS2,LX,1,no,no,e06,Monetary Amount,1,18,-,O/Z
-TS2,LX,1,no,no,e07,Quantity,1,15,-,O/Z
-TS2,LX,1,no,no,e08,Monetary Amount,1,18,-,O/Z
-TS2,LX,1,no,no,e09,Monetary Amount,1,18,-,O/Z
-TS2,LX,1,no,no,e10,Quantity,1,15,-,O/Z
-TS2,LX,1,no,no,e11,Quantity,1,15,-,O/Z
-TS2,LX,1,no,no,e12,Quantity,1,15,-,O/Z
-TS2,LX,1,no,no,e13,Quantity,1,15,-,O/Z
-TS2,LX,1,no,no,e14,Quantity,1,15,-,O/Z
-TS2,LX,1,no,no,e15,Monetary Amount,1,18,-,O/Z
-TS2,LX,1,no,no,e16,Quantity,1,15,-,O/Z
-TS2,LX,1,no,no,e17,Monetary Amount,1,18,-,O/Z
-TS2,LX,1,no,no,e18,Monetary Amount,1,18,-,O/Z
-TS2,LX,1,no,no,e19,Monetary Amount,1,18,-,O/Z
-CLP,,99999,yes,yes,landmark,Claim Level Data,3,3,-,M
-CLP,,1,no,no,e01,Claim Submitter's Identifier,1,38,-,M
-CLP,,1,no,no,e02,Claim Status Code,1,2,-,M
-CLP,,1,no,no,e03,Monetary Amount,1,18,-,M/Z
-CLP,,1,no,no,e04,Monetary Amount,1,18,-,M/Z
-CLP,,1,no,no,e05,Monetary Amount,1,18,-,O/Z
-CLP,,1,no,no,e06,Claim Filing Indicator Code,1,2,-,O
-CLP,,1,no,no,e07,Reference Identification,1,50,-,O/Z
-CLP,,1,no,no,e08,Facility Code Value,1,2,-,O
-CLP,,1,no,no,e09,Claim Frequency Type Code,1,1,-,O
-CLP,,1,no,no,e10,Patient Status Code,1,2,-,O
-CLP,,1,no,no,e11,Diagnosis Related Group (DRG) Code,1,4,-,O
-CLP,,1,no,no,e12,Quantity,1,15,-,O/Z
-CLP,,1,no,no,e13,Percentage as Decimal,1,10,-,O/Z
-CLP,,1,no,no,e14,Yes/No Condition or Response Code,1,1,-,O/Z
-CAS,LX:CLP,99,no,yes,landmark,Claims Adjustment,3,3,-,O
-CAS,LX:CLP,1,no,no,e01,Claim Adjustment Group Code,1,2,-,M
-CAS,LX:CLP,1,no,no,e02,Claim Adjustment Reason Code,1,5,-,M
-CAS,LX:CLP,1,no,no,e03,Monetary Amount,1,18,-,M/Z
-CAS,LX:CLP,1,no,no,e04,Quantity,1,15,-,O/Z
-CAS,LX:CLP,1,no,no,e05,Claim Adjustment Reason Code,1,5,-,X
-CAS,LX:CLP,1,no,no,e06,Monetary Amount,1,18,-,X/Z
-CAS,LX:CLP,1,no,no,e07,Quantity,1,15,-,X/Z
-CAS,LX:CLP,1,no,no,e08,Claim Adjustment Reason Code,1,5,-,X
-CAS,LX:CLP,1,no,no,e09,Monetary Amount,1,18,-,X/Z
-CAS,LX:CLP,1,no,no,e10,Quantity,1,15,-,X/Z
-CAS,LX:CLP,1,no,no,e11,Claim Adjustment Reason Code,1,5,-,X
-CAS,LX:CLP,1,no,no,e12,Monetary Amount,1,18,-,X/Z
-CAS,LX:CLP,1,no,no,e13,Quantity,1,15,-,X/Z
-CAS,LX:CLP,1,no,no,e14,Claim Adjustment Reason Code,1,5,-,X
-CAS,LX:CLP,1,no,no,e15,Monetary Amount,1,18,-,X/Z
-CAS,LX:CLP,1,no,no,e16,Quantity,1,15,-,X/Z
-CAS,LX:CLP,1,no,no,e17,Claim Adjustment Reason Code,1,5,-,X
-CAS,LX:CLP,1,no,no,e18,Monetary Amount,1,18,-,X/Z
-CAS,LX:CLP,1,no,no,e19,Quantity,1,15,-,X/Z
-NM1,LX:CLP,9,no,yes,landmark,Individual or Organizational Name,3,3,-,M
-NM1,LX:CLP,1,no,no,e01,Entity Identifier Code,2,3,-,M
-NM1,LX:CLP,1,no,no,e02,Entity Type Qualifier,1,1,-,M/Z
-NM1,LX:CLP,1,no,no,e03,Name Last or Organization Name,1,60,-,X
-NM1,LX:CLP,1,no,no,e04,Name First,1,35,-,O
-NM1,LX:CLP,1,no,no,e05,Name Middle,1,25,-,O
-NM1,LX:CLP,1,no,no,e06,Name Prefix,1,10,-,O
-NM1,LX:CLP,1,no,no,e07,Name Suffix,1,10,-,O
-NM1,LX:CLP,1,no,no,e08,Identification Code Qualifier,1,2,-,X
-NM1,LX:CLP,1,no,no,e09,Identification Code,2,80,-,X
-NM1,LX:CLP,1,no,no,e10,Entity Relationship Code,2,2,-,X
-NM1,LX:CLP,1,no,no,e11,Entity Identifier Code,2,3,-,O
-NM1,LX:CLP,1,no,no,e12,Name Last or Organization Name,1,60,-,O
-MIA,LX:CLP,1,no,yes,landmark,Medicare Inpatient Adjudication,3,3,-,O
-MIA,LX:CLP,1,no,no,e01,Quantity,1,15,-,M/Z
-MIA,LX:CLP,1,no,no,e02,Monetary Amount,1,18,-,O/Z
-MIA,LX:CLP,1,no,no,e03,Quantity,1,15,-,O/Z
-MIA,LX:CLP,1,no,no,e04,Monetary Amount,1,18,-,O/Z
-MIA,LX:CLP,1,no,no,e05,Reference Identification,1,50,-,O/Z
-MIA,LX:CLP,1,no,no,e06,Monetary Amount,1,18,-,O/Z
-MIA,LX:CLP,1,no,no,e07,Monetary Amount,1,18,-,O/Z
-MIA,LX:CLP,1,no,no,e08,Monetary Amount,1,18,-,O/Z
-MIA,LX:CLP,1,no,no,e09,Monetary Amount,1,18,-,O/Z
-MIA,LX:CLP,1,no,no,e10,Monetary Amount,1,18,-,O/Z
-MIA,LX:CLP,1,no,no,e11,Monetary Amount,1,18,-,O/Z
-MIA,LX:CLP,1,no,no,e12,Monetary Amount,1,18,-,O/Z
-MIA,LX:CLP,1,no,no,e13,Monetary Amount,1,18,-,O/Z
-MIA,LX:CLP,1,no,no,e14,Monetary Amount,1,18,-,O/Z
-MIA,LX:CLP,1,no,no,e15,Quantity,1,15,-,O/Z
-MIA,LX:CLP,1,no,no,e16,Monetary Amount,1,18,-,O/Z
-MIA,LX:CLP,1,no,no,e17,Monetary Amount,1,18,-,O/Z
-MIA,LX:CLP,1,no,no,e18,Monetary Amount,1,18,-,O/Z
-MIA,LX:CLP,1,no,no,e19,Monetary Amount,1,18,-,O/Z
-MIA,LX:CLP,1,no,no,e20,Reference Identification,1,50,-,O/Z
-MIA,LX:CLP,1,no,no,e21,Reference Identification,1,50,-,O/Z
-MIA,LX:CLP,1,no,no,e22,Reference Identification,1,50,-,O/Z
-MIA,LX:CLP,1,no,no,e23,Reference Identification,1,50,-,O/Z
-MIA,LX:CLP,1,no,no,e24,Monetary Amount,1,18,-,O/Z
-MOA,LX:CLP,1,no,yes,landmark,Medicare Outpatient Adjudication,3,3,-,O
-MOA,LX:CLP,1,no,no,e01,Percentage as Decimal,1,10,-,O/Z
-MOA,LX:CLP,1,no,no,e02,Monetary Amount,1,18,-,O/Z
-MOA,LX:CLP,1,no,no,e03,Reference Identification,1,50,-,O/Z
-MOA,LX:CLP,1,no,no,e04,Reference Identification,1,50,-,O/Z
-MOA,LX:CLP,1,no,no,e05,Reference Identification,1,50,-,O/Z
-MOA,LX:CLP,1,no,no,e06,Reference Identification,1,50,-,O/Z
-MOA,LX:CLP,1,no,no,e07,Reference Identification,1,50,-,O/Z
-MOA,LX:CLP,1,no,no,e08,Monetary Amount,1,18,-,O/Z
-MOA,LX:CLP,1,no,no,e09,Monetary Amount,1,18,-,O/Z
-REF,LX:CLP,99,no,yes,landmark,Reference Information,3,3,-,O
-REF,LX:CLP,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
-REF,LX:CLP,1,no,no,e02,Reference Identification,1,50,-,X
-REF,LX:CLP,1,no,no,e03,Description,1,80,-,X
-DTM,LX:CLP,9,no,yes,landmark,Date/Time Reference,3,3,-,O
-DTM,LX:CLP,1,no,no,e01,Date/Time Qualifier,3,3,-,M
-DTM,LX:CLP,1,no,no,e02,Date,8,8,-,X
-DTM,LX:CLP,1,no,no,e03,Time,4,8,-,X
-DTM,LX:CLP,1,no,no,e04,Time Code,2,2,-,O
-DTM,LX:CLP,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X
-DTM,LX:CLP,1,no,no,e06,Date Time Period,1,35,-,X
-PER,LX:CLP,3,no,yes,landmark,Administrative Communications Contact,3,3,-,O
-PER,LX:CLP,1,no,no,e01,Contact Function Code,2,2,-,M
-PER,LX:CLP,1,no,no,e02,Name,1,60,-,O
-PER,LX:CLP,1,no,no,e03,Communication Number Qualifier,2,2,-,X
-PER,LX:CLP,1,no,no,e04,Communication Number,1,256,-,X
-PER,LX:CLP,1,no,no,e05,Communication Number Qualifier,2,2,-,X
-PER,LX:CLP,1,no,no,e06,Communication Number,1,256,-,X
-PER,LX:CLP,1,no,no,e07,Communication Number Qualifier,2,2,-,X
-PER,LX:CLP,1,no,no,e08,Communication Number,1,256,-,X
-PER,LX:CLP,1,no,no,e09,Contact Inquiry Reference,1,20,-,O
-AMT,LX:CLP,20,no,yes,landmark,Monetary Amount Information,3,3,-,O
-AMT,LX:CLP,1,no,no,e01,Amount Qualifier Code,1,3,-,M
-AMT,LX:CLP,1,no,no,e02,Monetary Amount,1,18,-,M
-AMT,LX:CLP,1,no,no,e03,Credit/Debit Flag Code,1,1,-,O
-QTY,LX:CLP,20,no,yes,landmark,Quantity Information,3,3,-,O
-QTY,LX:CLP,1,no,no,e01,Quantity Qualifier,2,2,-,M
-QTY,LX:CLP,1,no,no,e02,Quantity,1,15,-,X
-QTY,LX:CLP,1,no,no,e04,Free-form Information,1,30,-,X/Z
-SVC,,999,yes,yes,landmark,Service Information,3,3,-,O
-SVC,,1,no,no,e02,Monetary Amount,1,18,-,M/Z
-SVC,,1,no,no,e03,Monetary Amount,1,18,-,O/Z
-SVC,,1,no,no,e04,Product/Service ID,1,48,-,O/Z
-SVC,,1,no,no,e05,Quantity,1,15,-,O/Z
-SVC,,1,no,no,e07,Quantity,1,15,-,O/Z
-DTM,LX:CLP:SVC,9,no,yes,landmark,Date/Time Reference,3,3,-,O
-DTM,LX:CLP:SVC,1,no,no,e01,Date/Time Qualifier,3,3,-,M
-DTM,LX:CLP:SVC,1,no,no,e02,Date,8,8,-,X
-DTM,LX:CLP:SVC,1,no,no,e03,Time,4,8,-,X
-DTM,LX:CLP:SVC,1,no,no,e04,Time Code,2,2,-,O
-DTM,LX:CLP:SVC,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X
-DTM,LX:CLP:SVC,1,no,no,e06,Date Time Period,1,35,-,X
-CAS,LX:CLP:SVC,99,no,yes,landmark,Claims Adjustment,3,3,-,O
-CAS,LX:CLP:SVC,1,no,no,e01,Claim Adjustment Group Code,1,2,-,M
-CAS,LX:CLP:SVC,1,no,no,e02,Claim Adjustment Reason Code,1,5,-,M
-CAS,LX:CLP:SVC,1,no,no,e03,Monetary Amount,1,18,-,M/Z
-CAS,LX:CLP:SVC,1,no,no,e04,Quantity,1,15,-,O/Z
-CAS,LX:CLP:SVC,1,no,no,e05,Claim Adjustment Reason Code,1,5,-,X
-CAS,LX:CLP:SVC,1,no,no,e06,Monetary Amount,1,18,-,X/Z
-CAS,LX:CLP:SVC,1,no,no,e07,Quantity,1,15,-,X/Z
-CAS,LX:CLP:SVC,1,no,no,e08,Claim Adjustment Reason Code,1,5,-,X
-CAS,LX:CLP:SVC,1,no,no,e09,Monetary Amount,1,18,-,X/Z
-CAS,LX:CLP:SVC,1,no,no,e10,Quantity,1,15,-,X/Z
-CAS,LX:CLP:SVC,1,no,no,e11,Claim Adjustment Reason Code,1,5,-,X
-CAS,LX:CLP:SVC,1,no,no,e12,Monetary Amount,1,18,-,X/Z
-CAS,LX:CLP:SVC,1,no,no,e13,Quantity,1,15,-,X/Z
-CAS,LX:CLP:SVC,1,no,no,e14,Claim Adjustment Reason Code,1,5,-,X
-CAS,LX:CLP:SVC,1,no,no,e15,Monetary Amount,1,18,-,X/Z
-CAS,LX:CLP:SVC,1,no,no,e16,Quantity,1,15,-,X/Z
-CAS,LX:CLP:SVC,1,no,no,e17,Claim Adjustment Reason Code,1,5,-,X
-CAS,LX:CLP:SVC,1,no,no,e18,Monetary Amount,1,18,-,X/Z
-CAS,LX:CLP:SVC,1,no,no,e19,Quantity,1,15,-,X/Z
-REF,LX:CLP:SVC,99,no,yes,landmark,Reference Information,3,3,-,O
-REF,LX:CLP:SVC,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
-REF,LX:CLP:SVC,1,no,no,e02,Reference Identification,1,50,-,X
-REF,LX:CLP:SVC,1,no,no,e03,Description,1,80,-,X
-AMT,LX:CLP:SVC,20,no,yes,landmark,Monetary Amount Information,3,3,-,O
-AMT,LX:CLP:SVC,1,no,no,e01,Amount Qualifier Code,1,3,-,M
-AMT,LX:CLP:SVC,1,no,no,e02,Monetary Amount,1,18,-,M
-AMT,LX:CLP:SVC,1,no,no,e03,Credit/Debit Flag Code,1,1,-,O
-QTY,LX:CLP:SVC,20,no,yes,landmark,Quantity Information,3,3,-,O
-QTY,LX:CLP:SVC,1,no,no,e01,Quantity Qualifier,2,2,-,M
-QTY,LX:CLP:SVC,1,no,no,e02,Quantity,1,15,-,X
-QTY,LX:CLP:SVC,1,no,no,e04,Free-form Information,1,30,-,X/Z
-LQ,LX:CLP:SVC,99,no,yes,landmark,Industry Code Identification,2,2,-,O
-LQ,LX:CLP:SVC,1,no,no,e01,Code List Qualifier Code,1,3,-,O
-LQ,LX:CLP:SVC,1,no,no,e02,Industry Code,1,30,-,X
-PLB,,99999,no,yes,landmark,Provider Level Adjustment,3,3,-,O
-PLB,,1,no,no,e01,Reference Identification,1,50,-,M/Z
-PLB,,1,no,no,e02,Date,8,8,-,M/Z
-PLB,,1,no,no,e04,Monetary Amount,1,18,-,M/Z
-PLB,,1,no,no,e06,Monetary Amount,1,18,-,X/Z
-PLB,,1,no,no,e08,Monetary Amount,1,18,-,X/Z
-PLB,,1,no,no,e10,Monetary Amount,1,18,-,X/Z
-PLB,,1,no,no,e12,Monetary Amount,1,18,-,X/Z
-PLB,,1,no,no,e14,Monetary Amount,1,18,-,X/Z
-SE,,1,no,yes,landmark,Transaction Set Trailer,2,2,-,M
-SE,,1,no,no,e01,Number of Included Segments,1,10,-,M
-SE,,1,no,no,e02,Transaction Set Control Number,4,9,-,M
+#segment,parent,loopcount,isgroup,islandmark,field,desc,min,max,align,status,type
+ST,,1,no,yes,landmark,Transaction Set Header,2,2,-,M,F
+ST,,1,no,no,e01,Transaction Set Identifier Code,3,3,-,M/Z,F
+ST,,1,no,no,e02,Transaction Set Control Number,4,9,-,M,F
+ST,,1,no,no,e03,Implementation Convention Reference,1,35,-,O/Z,F
+BPR,,1,no,yes,landmark,Beginning Segment for Payment Order/Remittance Advice,3,3,-,M,F
+BPR,,1,no,no,e01,Transaction Handling Code,1,2,-,M,F
+BPR,,1,no,no,e02,Monetary Amount,1,18,-,M/Z,F
+BPR,,1,no,no,e03,Credit/Debit Flag Code,1,1,-,M,F
+BPR,,1,no,no,e04,Payment Method Code,3,3,-,M,F
+BPR,,1,no,no,e05,Payment Format Code,1,10,-,O,F
+BPR,,1,no,no,e06,(DFI) ID Number Qualifier,2,2,-,X/Z,F
+BPR,,1,no,no,e07,(DFI) Identification Number,3,12,-,X,F
+BPR,,1,no,no,e08,Account Number Qualifier,1,3,-,O/Z,F
+BPR,,1,no,no,e09,Account Number,1,35,-,X/Z,F
+BPR,,1,no,no,e10,Originating Company Identifier,10,10,-,O/Z,F
+BPR,,1,no,no,e11,Originating Company Supplemental Code,9,9,-,O,F
+BPR,,1,no,no,e12,(DFI) ID Number Qualifier,2,2,-,X/Z,F
+BPR,,1,no,no,e13,(DFI) Identification Number,3,12,-,X,F
+BPR,,1,no,no,e14,Account Number Qualifier,1,3,-,O/Z,F
+BPR,,1,no,no,e15,Account Number,1,35,-,X/Z,F
+BPR,,1,no,no,e16,Date,8,8,-,O/Z,F
+BPR,,1,no,no,e17,Business Function Code,1,3,-,O/Z,F
+BPR,,1,no,no,e18,(DFI) ID Number Qualifier,2,2,-,X/Z,F
+BPR,,1,no,no,e19,(DFI) Identification Number,3,12,-,X,F
+BPR,,1,no,no,e20,Account Number Qualifier,1,3,-,O/Z,F
+BPR,,1,no,no,e21,Account Number,1,35,-,X,F
+NTE,,99999,no,yes,landmark,Note/Special Instruction,3,3,-,O,F
+NTE,,1,no,no,e01,Note Reference Code,3,3,-,O,F
+NTE,,1,no,no,e02,Description,1,80,-,M,F
+TRN,,1,no,yes,landmark,Trace,3,3,-,O,F
+TRN,,1,no,no,e01,Trace Type Code,1,2,-,M,F
+TRN,,1,no,no,e02,Reference Identification,1,50,-,M/Z,F
+TRN,,1,no,no,e03,Originating Company Identifier,10,10,-,O/Z,F
+TRN,,1,no,no,e04,Reference Identification,1,50,-,O/Z,F
+CUR,,1,no,yes,landmark,Currency,3,3,-,O,F
+CUR,,1,no,no,e01,Entity Identifier Code,2,3,-,M,F
+CUR,,1,no,no,e02,Currency Code,3,3,-,M,F
+CUR,,1,no,no,e03,Exchange Rate,4,10,-,O,F
+CUR,,1,no,no,e04,Entity Identifier Code,2,3,-,O,F
+CUR,,1,no,no,e05,Currency Code,3,3,-,O,F
+CUR,,1,no,no,e06,Currency Market/Exchange Code,3,3,-,O,F
+CUR,,1,no,no,e07,Date/Time Qualifier,3,3,-,X,F
+CUR,,1,no,no,e08,Date,8,8,-,O,F
+CUR,,1,no,no,e09,Time,4,8,-,O,F
+CUR,,1,no,no,e10,Date/Time Qualifier,3,3,-,X,F
+CUR,,1,no,no,e11,Date,8,8,-,X,F
+CUR,,1,no,no,e12,Time,4,8,-,X,F
+CUR,,1,no,no,e13,Date/Time Qualifier,3,3,-,X,F
+CUR,,1,no,no,e14,Date,8,8,-,X,F
+CUR,,1,no,no,e15,Time,4,8,-,X,F
+CUR,,1,no,no,e16,Date/Time Qualifier,3,3,-,X,F
+CUR,,1,no,no,e17,Date,8,8,-,X,F
+CUR,,1,no,no,e18,Time,4,8,-,X,F
+CUR,,1,no,no,e19,Date/Time Qualifier,3,3,-,X,F
+CUR,,1,no,no,e20,Date,8,8,-,X,F
+CUR,,1,no,no,e21,Time,4,8,-,X,F
+REF,,99999,no,yes,landmark,Reference Information,3,3,-,O,F
+REF,,1,no,no,e01,Reference Identification Qualifier,2,3,-,M,F
+REF,,1,no,no,e02,Reference Identification,1,50,-,X,F
+REF,,1,no,no,e03,Description,1,80,-,X,F
+DTM,,99999,no,yes,landmark,Date/Time Reference,3,3,-,O,F
+DTM,,1,no,no,e01,Date/Time Qualifier,3,3,-,M,F
+DTM,,1,no,no,e02,Date,8,8,-,X,F
+DTM,,1,no,no,e03,Time,4,8,-,X,F
+DTM,,1,no,no,e04,Time Code,2,2,-,O,F
+DTM,,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X,F
+DTM,,1,no,no,e06,Date Time Period,1,35,-,X,F
+N1,,200,yes,yes,landmark,Party Identification,2,2,-,O,F
+N1,,1,no,no,e01,Entity Identifier Code,2,3,-,M,F
+N1,,1,no,no,e02,Name,1,60,-,X,F
+N1,,1,no,no,e03,Identification Code Qualifier,1,2,-,X,F
+N1,,1,no,no,e04,Identification Code,2,80,-,X,F
+N1,,1,no,no,e05,Entity Relationship Code,2,2,-,O,F
+N1,,1,no,no,e06,Entity Identifier Code,2,3,-,O,F
+N2,N1,99999,no,yes,landmark,Additional Name Information,2,2,-,O,F
+N2,N1,1,no,no,e01,Name,1,60,-,M,F
+N2,N1,1,no,no,e02,Name,1,60,-,O,F
+N3,N1,99999,no,yes,landmark,Party Location,2,2,-,O,F
+N3,N1,1,no,no,e01,Address Information,1,55,-,M,F
+N3,N1,1,no,no,e02,Address Information,1,55,-,O,F
+N4,N1,1,no,yes,landmark,Geographic Location,2,2,-,O,F
+N4,N1,1,no,no,e01,City Name,2,30,-,O,F
+N4,N1,1,no,no,e02,State or Province Code,2,2,-,X,F
+N4,N1,1,no,no,e03,Postal Code,3,15,-,O,F
+N4,N1,1,no,no,e04,Country Code,2,3,-,X,F
+N4,N1,1,no,no,e05,Location Qualifier,1,2,-,X,F
+N4,N1,1,no,no,e06,Location Identifier,1,30,-,O,F
+N4,N1,1,no,no,e07,Country Subdivision Code,1,3,-,X,F
+REF,N1,99999,no,yes,landmark,Reference Information,3,3,-,O,F
+REF,N1,1,no,no,e01,Reference Identification Qualifier,2,3,-,M,F
+REF,N1,1,no,no,e02,Reference Identification,1,50,-,X,F
+REF,N1,1,no,no,e03,Description,1,80,-,X,F
+PER,N1,99999,no,yes,landmark,Administrative Communications Contact,3,3,-,O,F
+PER,N1,1,no,no,e01,Contact Function Code,2,2,-,M,F
+PER,N1,1,no,no,e02,Name,1,60,-,O,F
+PER,N1,1,no,no,e03,Communication Number Qualifier,2,2,-,X,F
+PER,N1,1,no,no,e04,Communication Number,1,256,-,X,F
+PER,N1,1,no,no,e05,Communication Number Qualifier,2,2,-,X,F
+PER,N1,1,no,no,e06,Communication Number,1,256,-,X,F
+PER,N1,1,no,no,e07,Communication Number Qualifier,2,2,-,X,F
+PER,N1,1,no,no,e08,Communication Number,1,256,-,X,F
+PER,N1,1,no,no,e09,Contact Inquiry Reference,1,20,-,O,F
+RDM,N1,1,no,yes,landmark,Remittance Delivery Method,3,3,-,O,F
+RDM,N1,1,no,no,e01,Report Transmission Code,1,2,-,M,F
+RDM,N1,1,no,no,e02,Name,1,60,-,O,F
+RDM,N1,1,no,no,e03,Communication Number,1,256,-,O,F
+DTM,N1,1,no,yes,landmark,Date/Time Reference,3,3,-,O,F
+DTM,N1,1,no,no,e01,Date/Time Qualifier,3,3,-,M,F
+DTM,N1,1,no,no,e02,Date,8,8,-,X,F
+DTM,N1,1,no,no,e03,Time,4,8,-,X,F
+DTM,N1,1,no,no,e04,Time Code,2,2,-,O,F
+DTM,N1,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X,F
+DTM,N1,1,no,no,e06,Date Time Period,1,35,-,X,F
+LX,,99999,yes,yes,landmark,Transaction Set Line Number,2,2,-,O,F
+LX,,1,no,no,e01,Assigned Number,1,6,-,M,F
+TS3,LX,1,no,yes,landmark,Transaction Statistics,3,3,-,O,F
+TS3,LX,1,no,no,e01,Reference Identification,1,50,-,M/Z,F
+TS3,LX,1,no,no,e02,Facility Code Value,1,2,-,M,F
+TS3,LX,1,no,no,e03,Date,8,8,-,M/Z,F
+TS3,LX,1,no,no,e04,Quantity,1,15,-,M/Z,F
+TS3,LX,1,no,no,e05,Monetary Amount,1,18,-,M/Z,F
+TS3,LX,1,no,no,e06,Monetary Amount,1,18,-,O/Z,F
+TS3,LX,1,no,no,e07,Monetary Amount,1,18,-,O/Z,F
+TS3,LX,1,no,no,e08,Monetary Amount,1,18,-,O/Z,F
+TS3,LX,1,no,no,e09,Monetary Amount,1,18,-,O/Z,F
+TS3,LX,1,no,no,e10,Monetary Amount,1,18,-,O/Z,F
+TS3,LX,1,no,no,e11,Monetary Amount,1,18,-,O/Z,F
+TS3,LX,1,no,no,e12,Monetary Amount,1,18,-,O/Z,F
+TS3,LX,1,no,no,e13,Monetary Amount,1,18,-,O/Z,F
+TS3,LX,1,no,no,e14,Monetary Amount,1,18,-,O/Z,F
+TS3,LX,1,no,no,e15,Monetary Amount,1,18,-,O/Z,F
+TS3,LX,1,no,no,e16,Monetary Amount,1,18,-,O/Z,F
+TS3,LX,1,no,no,e17,Monetary Amount,1,18,-,O/Z,F
+TS3,LX,1,no,no,e18,Monetary Amount,1,18,-,O/Z,F
+TS3,LX,1,no,no,e19,Monetary Amount,1,18,-,O/Z,F
+TS3,LX,1,no,no,e20,Monetary Amount,1,18,-,O/Z,F
+TS3,LX,1,no,no,e21,Monetary Amount,1,18,-,O/Z,F
+TS3,LX,1,no,no,e22,Monetary Amount,1,18,-,O/Z,F
+TS3,LX,1,no,no,e23,Quantity,1,15,-,O/Z,F
+TS3,LX,1,no,no,e24,Monetary Amount,1,18,-,O/Z,F
+TS2,LX,1,no,yes,landmark,Transaction Supplemental Statistics,3,3,-,O,F
+TS2,LX,1,no,no,e01,Monetary Amount,1,18,-,O/Z,F
+TS2,LX,1,no,no,e02,Monetary Amount,1,18,-,O/Z,F
+TS2,LX,1,no,no,e03,Monetary Amount,1,18,-,O/Z,F
+TS2,LX,1,no,no,e04,Monetary Amount,1,18,-,O/Z,F
+TS2,LX,1,no,no,e05,Monetary Amount,1,18,-,O/Z,F
+TS2,LX,1,no,no,e06,Monetary Amount,1,18,-,O/Z,F
+TS2,LX,1,no,no,e07,Quantity,1,15,-,O/Z,F
+TS2,LX,1,no,no,e08,Monetary Amount,1,18,-,O/Z,F
+TS2,LX,1,no,no,e09,Monetary Amount,1,18,-,O/Z,F
+TS2,LX,1,no,no,e10,Quantity,1,15,-,O/Z,F
+TS2,LX,1,no,no,e11,Quantity,1,15,-,O/Z,F
+TS2,LX,1,no,no,e12,Quantity,1,15,-,O/Z,F
+TS2,LX,1,no,no,e13,Quantity,1,15,-,O/Z,F
+TS2,LX,1,no,no,e14,Quantity,1,15,-,O/Z,F
+TS2,LX,1,no,no,e15,Monetary Amount,1,18,-,O/Z,F
+TS2,LX,1,no,no,e16,Quantity,1,15,-,O/Z,F
+TS2,LX,1,no,no,e17,Monetary Amount,1,18,-,O/Z,F
+TS2,LX,1,no,no,e18,Monetary Amount,1,18,-,O/Z,F
+TS2,LX,1,no,no,e19,Monetary Amount,1,18,-,O/Z,F
+CLP,,99999,yes,yes,landmark,Claim Level Data,3,3,-,M,F
+CLP,,1,no,no,e01,Claim Submitter's Identifier,1,38,-,M,F
+CLP,,1,no,no,e02,Claim Status Code,1,2,-,M,F
+CLP,,1,no,no,e03,Monetary Amount,1,18,-,M/Z,F
+CLP,,1,no,no,e04,Monetary Amount,1,18,-,M/Z,F
+CLP,,1,no,no,e05,Monetary Amount,1,18,-,O/Z,F
+CLP,,1,no,no,e06,Claim Filing Indicator Code,1,2,-,O,F
+CLP,,1,no,no,e07,Reference Identification,1,50,-,O/Z,F
+CLP,,1,no,no,e08,Facility Code Value,1,2,-,O,F
+CLP,,1,no,no,e09,Claim Frequency Type Code,1,1,-,O,F
+CLP,,1,no,no,e10,Patient Status Code,1,2,-,O,F
+CLP,,1,no,no,e11,Diagnosis Related Group (DRG) Code,1,4,-,O,F
+CLP,,1,no,no,e12,Quantity,1,15,-,O/Z,F
+CLP,,1,no,no,e13,Percentage as Decimal,1,10,-,O/Z,F
+CLP,,1,no,no,e14,Yes/No Condition or Response Code,1,1,-,O/Z,F
+CAS,LX:CLP,99,no,yes,landmark,Claims Adjustment,3,3,-,O,F
+CAS,LX:CLP,1,no,no,e01,Claim Adjustment Group Code,1,2,-,M,F
+CAS,LX:CLP,1,no,no,e02,Claim Adjustment Reason Code,1,5,-,M,F
+CAS,LX:CLP,1,no,no,e03,Monetary Amount,1,18,-,M/Z,F
+CAS,LX:CLP,1,no,no,e04,Quantity,1,15,-,O/Z,F
+CAS,LX:CLP,1,no,no,e05,Claim Adjustment Reason Code,1,5,-,X,F
+CAS,LX:CLP,1,no,no,e06,Monetary Amount,1,18,-,X/Z,F
+CAS,LX:CLP,1,no,no,e07,Quantity,1,15,-,X/Z,F
+CAS,LX:CLP,1,no,no,e08,Claim Adjustment Reason Code,1,5,-,X,F
+CAS,LX:CLP,1,no,no,e09,Monetary Amount,1,18,-,X/Z,F
+CAS,LX:CLP,1,no,no,e10,Quantity,1,15,-,X/Z,F
+CAS,LX:CLP,1,no,no,e11,Claim Adjustment Reason Code,1,5,-,X,F
+CAS,LX:CLP,1,no,no,e12,Monetary Amount,1,18,-,X/Z,F
+CAS,LX:CLP,1,no,no,e13,Quantity,1,15,-,X/Z,F
+CAS,LX:CLP,1,no,no,e14,Claim Adjustment Reason Code,1,5,-,X,F
+CAS,LX:CLP,1,no,no,e15,Monetary Amount,1,18,-,X/Z,F
+CAS,LX:CLP,1,no,no,e16,Quantity,1,15,-,X/Z,F
+CAS,LX:CLP,1,no,no,e17,Claim Adjustment Reason Code,1,5,-,X,F
+CAS,LX:CLP,1,no,no,e18,Monetary Amount,1,18,-,X/Z,F
+CAS,LX:CLP,1,no,no,e19,Quantity,1,15,-,X/Z,F
+NM1,LX:CLP,9,no,yes,landmark,Individual or Organizational Name,3,3,-,M,F
+NM1,LX:CLP,1,no,no,e01,Entity Identifier Code,2,3,-,M,F
+NM1,LX:CLP,1,no,no,e02,Entity Type Qualifier,1,1,-,M/Z,F
+NM1,LX:CLP,1,no,no,e03,Name Last or Organization Name,1,60,-,X,F
+NM1,LX:CLP,1,no,no,e04,Name First,1,35,-,O,F
+NM1,LX:CLP,1,no,no,e05,Name Middle,1,25,-,O,F
+NM1,LX:CLP,1,no,no,e06,Name Prefix,1,10,-,O,F
+NM1,LX:CLP,1,no,no,e07,Name Suffix,1,10,-,O,F
+NM1,LX:CLP,1,no,no,e08,Identification Code Qualifier,1,2,-,X,F
+NM1,LX:CLP,1,no,no,e09,Identification Code,2,80,-,X,F
+NM1,LX:CLP,1,no,no,e10,Entity Relationship Code,2,2,-,X,F
+NM1,LX:CLP,1,no,no,e11,Entity Identifier Code,2,3,-,O,F
+NM1,LX:CLP,1,no,no,e12,Name Last or Organization Name,1,60,-,O,F
+MIA,LX:CLP,1,no,yes,landmark,Medicare Inpatient Adjudication,3,3,-,O,F
+MIA,LX:CLP,1,no,no,e01,Quantity,1,15,-,M/Z,F
+MIA,LX:CLP,1,no,no,e02,Monetary Amount,1,18,-,O/Z,F
+MIA,LX:CLP,1,no,no,e03,Quantity,1,15,-,O/Z,F
+MIA,LX:CLP,1,no,no,e04,Monetary Amount,1,18,-,O/Z,F
+MIA,LX:CLP,1,no,no,e05,Reference Identification,1,50,-,O/Z,F
+MIA,LX:CLP,1,no,no,e06,Monetary Amount,1,18,-,O/Z,F
+MIA,LX:CLP,1,no,no,e07,Monetary Amount,1,18,-,O/Z,F
+MIA,LX:CLP,1,no,no,e08,Monetary Amount,1,18,-,O/Z,F
+MIA,LX:CLP,1,no,no,e09,Monetary Amount,1,18,-,O/Z,F
+MIA,LX:CLP,1,no,no,e10,Monetary Amount,1,18,-,O/Z,F
+MIA,LX:CLP,1,no,no,e11,Monetary Amount,1,18,-,O/Z,F
+MIA,LX:CLP,1,no,no,e12,Monetary Amount,1,18,-,O/Z,F
+MIA,LX:CLP,1,no,no,e13,Monetary Amount,1,18,-,O/Z,F
+MIA,LX:CLP,1,no,no,e14,Monetary Amount,1,18,-,O/Z,F
+MIA,LX:CLP,1,no,no,e15,Quantity,1,15,-,O/Z,F
+MIA,LX:CLP,1,no,no,e16,Monetary Amount,1,18,-,O/Z,F
+MIA,LX:CLP,1,no,no,e17,Monetary Amount,1,18,-,O/Z,F
+MIA,LX:CLP,1,no,no,e18,Monetary Amount,1,18,-,O/Z,F
+MIA,LX:CLP,1,no,no,e19,Monetary Amount,1,18,-,O/Z,F
+MIA,LX:CLP,1,no,no,e20,Reference Identification,1,50,-,O/Z,F
+MIA,LX:CLP,1,no,no,e21,Reference Identification,1,50,-,O/Z,F
+MIA,LX:CLP,1,no,no,e22,Reference Identification,1,50,-,O/Z,F
+MIA,LX:CLP,1,no,no,e23,Reference Identification,1,50,-,O/Z,F
+MIA,LX:CLP,1,no,no,e24,Monetary Amount,1,18,-,O/Z,F
+MOA,LX:CLP,1,no,yes,landmark,Medicare Outpatient Adjudication,3,3,-,O,F
+MOA,LX:CLP,1,no,no,e01,Percentage as Decimal,1,10,-,O/Z,F
+MOA,LX:CLP,1,no,no,e02,Monetary Amount,1,18,-,O/Z,F
+MOA,LX:CLP,1,no,no,e03,Reference Identification,1,50,-,O/Z,F
+MOA,LX:CLP,1,no,no,e04,Reference Identification,1,50,-,O/Z,F
+MOA,LX:CLP,1,no,no,e05,Reference Identification,1,50,-,O/Z,F
+MOA,LX:CLP,1,no,no,e06,Reference Identification,1,50,-,O/Z,F
+MOA,LX:CLP,1,no,no,e07,Reference Identification,1,50,-,O/Z,F
+MOA,LX:CLP,1,no,no,e08,Monetary Amount,1,18,-,O/Z,F
+MOA,LX:CLP,1,no,no,e09,Monetary Amount,1,18,-,O/Z,F
+REF,LX:CLP,99,no,yes,landmark,Reference Information,3,3,-,O,F
+REF,LX:CLP,1,no,no,e01,Reference Identification Qualifier,2,3,-,M,F
+REF,LX:CLP,1,no,no,e02,Reference Identification,1,50,-,X,F
+REF,LX:CLP,1,no,no,e03,Description,1,80,-,X,F
+DTM,LX:CLP,9,no,yes,landmark,Date/Time Reference,3,3,-,O,F
+DTM,LX:CLP,1,no,no,e01,Date/Time Qualifier,3,3,-,M,F
+DTM,LX:CLP,1,no,no,e02,Date,8,8,-,X,F
+DTM,LX:CLP,1,no,no,e03,Time,4,8,-,X,F
+DTM,LX:CLP,1,no,no,e04,Time Code,2,2,-,O,F
+DTM,LX:CLP,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X,F
+DTM,LX:CLP,1,no,no,e06,Date Time Period,1,35,-,X,F
+PER,LX:CLP,3,no,yes,landmark,Administrative Communications Contact,3,3,-,O,F
+PER,LX:CLP,1,no,no,e01,Contact Function Code,2,2,-,M,F
+PER,LX:CLP,1,no,no,e02,Name,1,60,-,O,F
+PER,LX:CLP,1,no,no,e03,Communication Number Qualifier,2,2,-,X,F
+PER,LX:CLP,1,no,no,e04,Communication Number,1,256,-,X,F
+PER,LX:CLP,1,no,no,e05,Communication Number Qualifier,2,2,-,X,F
+PER,LX:CLP,1,no,no,e06,Communication Number,1,256,-,X,F
+PER,LX:CLP,1,no,no,e07,Communication Number Qualifier,2,2,-,X,F
+PER,LX:CLP,1,no,no,e08,Communication Number,1,256,-,X,F
+PER,LX:CLP,1,no,no,e09,Contact Inquiry Reference,1,20,-,O,F
+AMT,LX:CLP,20,no,yes,landmark,Monetary Amount Information,3,3,-,O,F
+AMT,LX:CLP,1,no,no,e01,Amount Qualifier Code,1,3,-,M,F
+AMT,LX:CLP,1,no,no,e02,Monetary Amount,1,18,-,M,F
+AMT,LX:CLP,1,no,no,e03,Credit/Debit Flag Code,1,1,-,O,F
+QTY,LX:CLP,20,no,yes,landmark,Quantity Information,3,3,-,O,F
+QTY,LX:CLP,1,no,no,e01,Quantity Qualifier,2,2,-,M,F
+QTY,LX:CLP,1,no,no,e02,Quantity,1,15,-,X,F
+QTY,LX:CLP,1,no,no,e04,Free-form Information,1,30,-,X/Z,F
+SVC,,999,yes,yes,landmark,Service Information,3,3,-,O,F
+SVC,,1,no,no,e02,Monetary Amount,1,18,-,M/Z,F
+SVC,,1,no,no,e03,Monetary Amount,1,18,-,O/Z,F
+SVC,,1,no,no,e04,Product/Service ID,1,48,-,O/Z,F
+SVC,,1,no,no,e05,Quantity,1,15,-,O/Z,F
+SVC,,1,no,no,e07,Quantity,1,15,-,O/Z,F
+DTM,LX:CLP:SVC,9,no,yes,landmark,Date/Time Reference,3,3,-,O,F
+DTM,LX:CLP:SVC,1,no,no,e01,Date/Time Qualifier,3,3,-,M,F
+DTM,LX:CLP:SVC,1,no,no,e02,Date,8,8,-,X,F
+DTM,LX:CLP:SVC,1,no,no,e03,Time,4,8,-,X,F
+DTM,LX:CLP:SVC,1,no,no,e04,Time Code,2,2,-,O,F
+DTM,LX:CLP:SVC,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X,F
+DTM,LX:CLP:SVC,1,no,no,e06,Date Time Period,1,35,-,X,F
+CAS,LX:CLP:SVC,99,no,yes,landmark,Claims Adjustment,3,3,-,O,F
+CAS,LX:CLP:SVC,1,no,no,e01,Claim Adjustment Group Code,1,2,-,M,F
+CAS,LX:CLP:SVC,1,no,no,e02,Claim Adjustment Reason Code,1,5,-,M,F
+CAS,LX:CLP:SVC,1,no,no,e03,Monetary Amount,1,18,-,M/Z,F
+CAS,LX:CLP:SVC,1,no,no,e04,Quantity,1,15,-,O/Z,F
+CAS,LX:CLP:SVC,1,no,no,e05,Claim Adjustment Reason Code,1,5,-,X,F
+CAS,LX:CLP:SVC,1,no,no,e06,Monetary Amount,1,18,-,X/Z,F
+CAS,LX:CLP:SVC,1,no,no,e07,Quantity,1,15,-,X/Z,F
+CAS,LX:CLP:SVC,1,no,no,e08,Claim Adjustment Reason Code,1,5,-,X,F
+CAS,LX:CLP:SVC,1,no,no,e09,Monetary Amount,1,18,-,X/Z,F
+CAS,LX:CLP:SVC,1,no,no,e10,Quantity,1,15,-,X/Z,F
+CAS,LX:CLP:SVC,1,no,no,e11,Claim Adjustment Reason Code,1,5,-,X,F
+CAS,LX:CLP:SVC,1,no,no,e12,Monetary Amount,1,18,-,X/Z,F
+CAS,LX:CLP:SVC,1,no,no,e13,Quantity,1,15,-,X/Z,F
+CAS,LX:CLP:SVC,1,no,no,e14,Claim Adjustment Reason Code,1,5,-,X,F
+CAS,LX:CLP:SVC,1,no,no,e15,Monetary Amount,1,18,-,X/Z,F
+CAS,LX:CLP:SVC,1,no,no,e16,Quantity,1,15,-,X/Z,F
+CAS,LX:CLP:SVC,1,no,no,e17,Claim Adjustment Reason Code,1,5,-,X,F
+CAS,LX:CLP:SVC,1,no,no,e18,Monetary Amount,1,18,-,X/Z,F
+CAS,LX:CLP:SVC,1,no,no,e19,Quantity,1,15,-,X/Z,F
+REF,LX:CLP:SVC,99,no,yes,landmark,Reference Information,3,3,-,O,F
+REF,LX:CLP:SVC,1,no,no,e01,Reference Identification Qualifier,2,3,-,M,F
+REF,LX:CLP:SVC,1,no,no,e02,Reference Identification,1,50,-,X,F
+REF,LX:CLP:SVC,1,no,no,e03,Description,1,80,-,X,F
+AMT,LX:CLP:SVC,20,no,yes,landmark,Monetary Amount Information,3,3,-,O,F
+AMT,LX:CLP:SVC,1,no,no,e01,Amount Qualifier Code,1,3,-,M,F
+AMT,LX:CLP:SVC,1,no,no,e02,Monetary Amount,1,18,-,M,F
+AMT,LX:CLP:SVC,1,no,no,e03,Credit/Debit Flag Code,1,1,-,O,F
+QTY,LX:CLP:SVC,20,no,yes,landmark,Quantity Information,3,3,-,O,F
+QTY,LX:CLP:SVC,1,no,no,e01,Quantity Qualifier,2,2,-,M,F
+QTY,LX:CLP:SVC,1,no,no,e02,Quantity,1,15,-,X,F
+QTY,LX:CLP:SVC,1,no,no,e04,Free-form Information,1,30,-,X/Z,F
+LQ,LX:CLP:SVC,99,no,yes,landmark,Industry Code Identification,2,2,-,O,F
+LQ,LX:CLP:SVC,1,no,no,e01,Code List Qualifier Code,1,3,-,O,F
+LQ,LX:CLP:SVC,1,no,no,e02,Industry Code,1,30,-,X,F
+PLB,,99999,no,yes,landmark,Provider Level Adjustment,3,3,-,O,F
+PLB,,1,no,no,e01,Reference Identification,1,50,-,M/Z,F
+PLB,,1,no,no,e02,Date,8,8,-,M/Z,F
+PLB,,1,no,no,e04,Monetary Amount,1,18,-,M/Z,F
+PLB,,1,no,no,e06,Monetary Amount,1,18,-,X/Z,F
+PLB,,1,no,no,e08,Monetary Amount,1,18,-,X/Z,F
+PLB,,1,no,no,e10,Monetary Amount,1,18,-,X/Z,F
+PLB,,1,no,no,e12,Monetary Amount,1,18,-,X/Z,F
+PLB,,1,no,no,e14,Monetary Amount,1,18,-,X/Z,F
+SE,,1,no,yes,landmark,Transaction Set Trailer,2,2,-,M,F
+SE,,1,no,no,e01,Number of Included Segments,1,10,-,M,F
+SE,,1,no,no,e02,Transaction Set Control Number,4,9,-,M,F

@@ -1,278 +1,278 @@
 #<h1>274 - Healthcare Provider Information</h1><br>
-#segment,parent,loopcount,isgroup,islandmark,field,desc,min,max,align,status
-ST,,1,no,yes,landmark,Transaction Set Header,2,2,-,M
-ST,,1,no,no,e01,Transaction Set Identifier Code,3,3,-,M/Z
-ST,,1,no,no,e02,Transaction Set Control Number,4,9,-,M
-ST,,1,no,no,e03,Implementation Convention Reference,1,35,-,O/Z
-BHT,,1,no,yes,landmark,Beginning of Hierarchical Transaction,3,3,-,M
-BHT,,1,no,no,e01,Hierarchical Structure Code,4,4,-,M
-BHT,,1,no,no,e02,Transaction Set Purpose Code,2,2,-,M
-BHT,,1,no,no,e03,Reference Identification,1,50,-,O/Z
-BHT,,1,no,no,e04,Date,8,8,-,O/Z
-BHT,,1,no,no,e05,Time,4,8,-,O/Z
-BHT,,1,no,no,e06,Transaction Type Code,2,2,-,O
-DTM,,1,no,yes,landmark,Date/Time Reference,3,3,-,O
-DTM,,1,no,no,e01,Date/Time Qualifier,3,3,-,M
-DTM,,1,no,no,e02,Date,8,8,-,X
-DTM,,1,no,no,e03,Time,4,8,-,X
-DTM,,1,no,no,e04,Time Code,2,2,-,O
-DTM,,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X
-DTM,,1,no,no,e06,Date Time Period,1,35,-,X
-PER,,1,no,yes,landmark,Administrative Communications Contact,3,3,-,O
-PER,,1,no,no,e01,Contact Function Code,2,2,-,M
-PER,,1,no,no,e02,Name,1,60,-,O
-PER,,1,no,no,e03,Communication Number Qualifier,2,2,-,X
-PER,,1,no,no,e04,Communication Number,1,256,-,X
-PER,,1,no,no,e05,Communication Number Qualifier,2,2,-,X
-PER,,1,no,no,e06,Communication Number,1,256,-,X
-PER,,1,no,no,e07,Communication Number Qualifier,2,2,-,X
-PER,,1,no,no,e08,Communication Number,1,256,-,X
-PER,,1,no,no,e09,Contact Inquiry Reference,1,20,-,O
-HL,,99999,yes,yes,landmark,Hierarchical Level,2,2,-,M
-HL,,1,no,no,e01,Hierarchical ID Number,1,12,-,M
-HL,,1,no,no,e02,Hierarchical Parent ID Number,1,12,-,O
-HL,,1,no,no,e03,Hierarchical Level Code,1,2,-,M
-HL,,1,no,no,e04,Hierarchical Child Code,1,1,-,O
-TRN,HL,1,no,yes,landmark,Trace,3,3,-,O
-TRN,HL,1,no,no,e01,Trace Type Code,1,2,-,M
-TRN,HL,1,no,no,e02,Reference Identification,1,50,-,M/Z
-TRN,HL,1,no,no,e03,Originating Company Identifier,10,10,-,O/Z
-TRN,HL,1,no,no,e04,Reference Identification,1,50,-,O/Z
-NM1,,99999,yes,yes,landmark,Individual or Organizational Name,3,3,-,M
-NM1,,1,no,no,e01,Entity Identifier Code,2,3,-,M
-NM1,,1,no,no,e02,Entity Type Qualifier,1,1,-,M/Z
-NM1,,1,no,no,e03,Name Last or Organization Name,1,60,-,X
-NM1,,1,no,no,e04,Name First,1,35,-,O
-NM1,,1,no,no,e05,Name Middle,1,25,-,O
-NM1,,1,no,no,e06,Name Prefix,1,10,-,O
-NM1,,1,no,no,e07,Name Suffix,1,10,-,O
-NM1,,1,no,no,e08,Identification Code Qualifier,1,2,-,X
-NM1,,1,no,no,e09,Identification Code,2,80,-,X
-NM1,,1,no,no,e10,Entity Relationship Code,2,2,-,X
-NM1,,1,no,no,e11,Entity Identifier Code,2,3,-,O
-NM1,,1,no,no,e12,Name Last or Organization Name,1,60,-,O
-N2,HL:NM1,99999,no,yes,landmark,Additional Name Information,2,2,-,O
-N2,HL:NM1,1,no,no,e01,Name,1,60,-,M
-N2,HL:NM1,1,no,no,e02,Name,1,60,-,O
-PER,HL:NM1,99999,no,yes,landmark,Administrative Communications Contact,3,3,-,O
-PER,HL:NM1,1,no,no,e01,Contact Function Code,2,2,-,M
-PER,HL:NM1,1,no,no,e02,Name,1,60,-,O
-PER,HL:NM1,1,no,no,e03,Communication Number Qualifier,2,2,-,X
-PER,HL:NM1,1,no,no,e04,Communication Number,1,256,-,X
-PER,HL:NM1,1,no,no,e05,Communication Number Qualifier,2,2,-,X
-PER,HL:NM1,1,no,no,e06,Communication Number,1,256,-,X
-PER,HL:NM1,1,no,no,e07,Communication Number Qualifier,2,2,-,X
-PER,HL:NM1,1,no,no,e08,Communication Number,1,256,-,X
-PER,HL:NM1,1,no,no,e09,Contact Inquiry Reference,1,20,-,O
-DMG,HL:NM1,1,no,yes,landmark,Demographic Information,3,3,-,O
-DMG,HL:NM1,1,no,no,e01,Date Time Period Format Qualifier,2,3,-,X
-DMG,HL:NM1,1,no,no,e02,Date Time Period,1,35,-,X/Z
-DMG,HL:NM1,1,no,no,e03,Gender Code,1,1,-,O
-DMG,HL:NM1,1,no,no,e04,Marital Status Code,1,1,-,O
-DMG,HL:NM1,1,no,no,e06,Citizenship Status Code,1,2,-,O
-DMG,HL:NM1,1,no,no,e07,Country Code,2,3,-,O/Z
-DMG,HL:NM1,1,no,no,e08,Basis of Verification Code,1,2,-,O
-DMG,HL:NM1,1,no,no,e09,Quantity,1,15,-,O/Z
-DMG,HL:NM1,1,no,no,e10,Code List Qualifier Code,1,3,-,X
-DMG,HL:NM1,1,no,no,e11,Industry Code,1,30,-,X/Z
-AMT,HL:NM1,20,no,yes,landmark,Monetary Amount Information,3,3,-,O
-AMT,HL:NM1,1,no,no,e01,Amount Qualifier Code,1,3,-,M
-AMT,HL:NM1,1,no,no,e02,Monetary Amount,1,18,-,M
-AMT,HL:NM1,1,no,no,e03,Credit/Debit Flag Code,1,1,-,O
-API,HL:NM1,99999,no,yes,landmark,Activity or Process Information,3,3,-,O
-API,HL:NM1,1,no,no,e01,Code Category,2,2,-,M/Z
-API,HL:NM1,1,no,no,e02,Action Code,1,2,-,O/Z
-API,HL:NM1,1,no,no,e03,Maintenance Type Code,3,3,-,O/Z
-API,HL:NM1,1,no,no,e04,Status Reason Code,3,3,-,O/Z
-API,HL:NM1,1,no,no,e05,Affected Area or Section Code,1,1,-,O/Z
-API,HL:NM1,1,no,no,e06,Insurance Type Code,1,3,-,O/Z
-API,HL:NM1,1,no,no,e07,Loan Type Code,1,2,-,O/Z
-API,HL:NM1,1,no,no,e08,Information Status Code,1,1,-,O/Z
-DEG,HL:NM1,9,no,yes,landmark,Degree Record,3,3,-,O
-DEG,HL:NM1,1,no,no,e01,Academic Degree Code,3,3,-,M
-DEG,HL:NM1,1,no,no,e02,Date Time Period Format Qualifier,2,3,-,X/Z
-DEG,HL:NM1,1,no,no,e03,Date Time Period,1,35,-,X
-DEG,HL:NM1,1,no,no,e04,Description,1,80,-,O
-DEG,HL:NM1,1,no,no,e05,Status Reason Code,3,3,-,O/Z
-IND,HL:NM1,1,no,yes,landmark,Additional Individual Demographic Information,3,3,-,O
-IND,HL:NM1,1,no,no,e01,Country Code,2,3,-,O/Z
-IND,HL:NM1,1,no,no,e02,State or Province Code,2,2,-,O
-IND,HL:NM1,1,no,no,e03,County Designator,5,5,-,O
-IND,HL:NM1,1,no,no,e04,City Name,2,30,-,O
-IND,HL:NM1,1,no,no,e05,Language Code,2,3,-,O/Z
-IND,HL:NM1,1,no,no,e06,Language Proficiency Indicator,1,1,-,O
-IND,HL:NM1,1,no,no,e07,Language Code,2,3,-,O/Z
-IND,HL:NM1,1,no,no,e08,Language Code,2,3,-,O/Z
-IND,HL:NM1,1,no,no,e09,Identification Code Qualifier,1,2,-,X
-IND,HL:NM1,1,no,no,e10,Identification Code,2,80,-,X
-IND,HL:NM1,1,no,no,e11,Identification Code Qualifier,1,2,-,X
-IND,HL:NM1,1,no,no,e12,Identification Code,2,80,-,X
-LUI,HL:NM1,9,no,yes,landmark,Language Use,3,3,-,O
-LUI,HL:NM1,1,no,no,e01,Identification Code Qualifier,1,2,-,X
-LUI,HL:NM1,1,no,no,e02,Identification Code,2,80,-,X/Z
-LUI,HL:NM1,1,no,no,e03,Description,1,80,-,X/Z
-LUI,HL:NM1,1,no,no,e04,Use of Language Indicator,1,2,-,O
-LUI,HL:NM1,1,no,no,e05,Language Proficiency Indicator,1,1,-,O
-DTP,HL:NM1,9,no,yes,landmark,Date or Time or Period,3,3,-,O
-DTP,HL:NM1,1,no,no,e01,Date/Time Qualifier,3,3,-,M
-DTP,HL:NM1,1,no,no,e02,Date Time Period Format Qualifier,2,3,-,M/Z
-DTP,HL:NM1,1,no,no,e03,Date Time Period,1,35,-,M
-MTX,HL:NM1,99999,no,yes,landmark,Text,3,3,-,O
-MTX,HL:NM1,1,no,no,e01,Note Reference Code,3,3,-,O
-MTX,HL:NM1,1,no,no,e02,Textual Data,1,4096,-,X
-MTX,HL:NM1,1,no,no,e03,Textual Data,1,4096,-,O
-MTX,HL:NM1,1,no,no,e04,Printer Carriage Control Code,2,2,-,X
-MTX,HL:NM1,1,no,no,e05,Number,1,9,-,O/Z
-MTX,HL:NM1,1,no,no,e06,Language Code,2,3,-,O
-QTY,HL:NM1,99,no,yes,landmark,Quantity Information,3,3,-,O
-QTY,HL:NM1,1,no,no,e01,Quantity Qualifier,2,2,-,M
-QTY,HL:NM1,1,no,no,e02,Quantity,1,15,-,X
-QTY,HL:NM1,1,no,no,e04,Free-form Information,1,30,-,X/Z
-WS,HL:NM1,99,no,yes,landmark,Work Schedule,2,2,-,O
-WS,HL:NM1,1,no,no,e01,Ship/Delivery or Calendar Pattern Code,1,2,-,M/Z
-WS,HL:NM1,1,no,no,e02,Time,4,8,-,O/Z
-WS,HL:NM1,1,no,no,e03,Time,4,8,-,O/Z
-CRC,HL:NM1,9,no,yes,landmark,Conditions Indicator,3,3,-,O
-CRC,HL:NM1,1,no,no,e01,Code Category,2,2,-,M/Z
-CRC,HL:NM1,1,no,no,e02,Yes/No Condition or Response Code,1,1,-,M/Z
-CRC,HL:NM1,1,no,no,e03,Condition Indicator,2,3,-,M
-CRC,HL:NM1,1,no,no,e04,Condition Indicator,2,3,-,O
-CRC,HL:NM1,1,no,no,e05,Condition Indicator,2,3,-,O
-CRC,HL:NM1,1,no,no,e06,Condition Indicator,2,3,-,O
-CRC,HL:NM1,1,no,no,e07,Condition Indicator,2,3,-,O
-HSD,HL:NM1,99,no,yes,landmark,Health Care Services Delivery,3,3,-,O
-HSD,HL:NM1,1,no,no,e01,Quantity Qualifier,2,2,-,X
-HSD,HL:NM1,1,no,no,e02,Quantity,1,15,-,X
-HSD,HL:NM1,1,no,no,e03,Unit or Basis for Measurement Code,2,2,-,O
-HSD,HL:NM1,1,no,no,e04,Sample Selection Modulus,1,6,-,O
-HSD,HL:NM1,1,no,no,e05,Time Period Qualifier,1,2,-,X
-HSD,HL:NM1,1,no,no,e06,Number of Periods,1,3,-,O
-HSD,HL:NM1,1,no,no,e07,Ship/Delivery or Calendar Pattern Code,1,2,-,O
-HSD,HL:NM1,1,no,no,e08,Ship/Delivery Pattern Time Code,1,1,-,O
-BCI,HL:NM1,9,no,yes,landmark,Basic Claim Information,3,3,-,O
-BCI,HL:NM1,1,no,no,e01,Industry Code,1,30,-,O/Z
-BCI,HL:NM1,1,no,no,e02,Insurance Type Code,1,3,-,O
-BCI,HL:NM1,1,no,no,e03,Reference Identification,1,50,-,O/Z
-BCI,HL:NM1,1,no,no,e04,State or Province Code,2,2,-,O/Z
-BCI,HL:NM1,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X
-BCI,HL:NM1,1,no,no,e06,Date Time Period,1,35,-,X/Z
-BCI,HL:NM1,1,no,no,e07,Report Type Code,2,2,-,O
-BCI,HL:NM1,1,no,no,e08,Currency Code,3,3,-,O/Z
-PDI,HL:NM1,1,no,yes,landmark,Practice Detail Information,3,3,-,O
-PDI,HL:NM1,1,no,no,e01,Gender Code,1,1,-,O/Z
-PDI,HL:NM1,1,no,no,e02,Range Minimum,1,20,-,O/Z
-PDI,HL:NM1,1,no,no,e03,Range Maximum,1,20,-,O/Z
-PDI,HL:NM1,1,no,no,e04,Yes/No Condition or Response Code,1,1,-,O/Z
-HAD,HL:NM1,1,no,yes,landmark,Hospital Affiliation Detail,3,3,-,O
-HAD,HL:NM1,1,no,no,e01,Status Code,2,2,-,M/Z
-HAD,HL:NM1,1,no,no,e02,Yes/No Condition or Response Code,1,1,-,O/Z
-HAD,HL:NM1,1,no,no,e03,Yes/No Condition or Response Code,1,1,-,O/Z
-HAD,HL:NM1,1,no,no,e04,Yes/No Condition or Response Code,1,1,-,O/Z
-HAD,HL:NM1,1,no,no,e05,Code List Qualifier Code,1,3,-,X
-HAD,HL:NM1,1,no,no,e06,Industry Code,1,30,-,X/Z
-NX1,,99999,yes,yes,landmark,Property or Entity Identification,3,3,-,O
-NX1,,1,no,no,e01,Entity Identifier Code,2,3,-,M
-NX1,,1,no,no,e02,Entity Identifier Code,2,3,-,O
-NX1,,1,no,no,e03,Entity Identifier Code,2,3,-,O
-NX1,,1,no,no,e04,Entity Identifier Code,2,3,-,O
-NX1,,1,no,no,e05,Entity Identifier Code,2,3,-,O
-N2,HL:NM1:NX1,1,no,yes,landmark,Additional Name Information,2,2,-,O
-N2,HL:NM1:NX1,1,no,no,e01,Name,1,60,-,M
-N2,HL:NM1:NX1,1,no,no,e02,Name,1,60,-,O
-N3,HL:NM1:NX1,2,no,yes,landmark,Party Location,2,2,-,O
-N3,HL:NM1:NX1,1,no,no,e01,Address Information,1,55,-,M
-N3,HL:NM1:NX1,1,no,no,e02,Address Information,1,55,-,O
-N4,HL:NM1:NX1,1,no,yes,landmark,Geographic Location,2,2,-,O
-N4,HL:NM1:NX1,1,no,no,e01,City Name,2,30,-,O
-N4,HL:NM1:NX1,1,no,no,e02,State or Province Code,2,2,-,X
-N4,HL:NM1:NX1,1,no,no,e03,Postal Code,3,15,-,O
-N4,HL:NM1:NX1,1,no,no,e04,Country Code,2,3,-,X
-N4,HL:NM1:NX1,1,no,no,e05,Location Qualifier,1,2,-,X
-N4,HL:NM1:NX1,1,no,no,e06,Location Identifier,1,30,-,O
-N4,HL:NM1:NX1,1,no,no,e07,Country Subdivision Code,1,3,-,X
-PER,HL:NM1:NX1,1,no,yes,landmark,Administrative Communications Contact,3,3,-,O
-PER,HL:NM1:NX1,1,no,no,e01,Contact Function Code,2,2,-,M
-PER,HL:NM1:NX1,1,no,no,e02,Name,1,60,-,O
-PER,HL:NM1:NX1,1,no,no,e03,Communication Number Qualifier,2,2,-,X
-PER,HL:NM1:NX1,1,no,no,e04,Communication Number,1,256,-,X
-PER,HL:NM1:NX1,1,no,no,e05,Communication Number Qualifier,2,2,-,X
-PER,HL:NM1:NX1,1,no,no,e06,Communication Number,1,256,-,X
-PER,HL:NM1:NX1,1,no,no,e07,Communication Number Qualifier,2,2,-,X
-PER,HL:NM1:NX1,1,no,no,e08,Communication Number,1,256,-,X
-PER,HL:NM1:NX1,1,no,no,e09,Contact Inquiry Reference,1,20,-,O
-LQ,,99999,yes,yes,landmark,Industry Code Identification,2,2,-,O
-LQ,,1,no,no,e01,Code List Qualifier Code,1,3,-,O
-LQ,,1,no,no,e02,Industry Code,1,30,-,X
-N1,LQ,2,no,yes,landmark,Party Identification,2,2,-,O
-N1,LQ,1,no,no,e01,Entity Identifier Code,2,3,-,M
-N1,LQ,1,no,no,e02,Name,1,60,-,X
-N1,LQ,1,no,no,e03,Identification Code Qualifier,1,2,-,X
-N1,LQ,1,no,no,e04,Identification Code,2,80,-,X
-N1,LQ,1,no,no,e05,Entity Relationship Code,2,2,-,O
-N1,LQ,1,no,no,e06,Entity Identifier Code,2,3,-,O
-TPB,LQ,99999,no,yes,landmark,Business Professional Title,3,3,-,O
-TPB,LQ,1,no,no,e01,Business Professional Title Code,1,3,-,X
-TPB,LQ,1,no,no,e02,Free-form Message Text,1,264,-,X/Z
-TPB,LQ,1,no,no,e03,Agency Qualifier Code,2,2,-,X
-TPB,LQ,1,no,no,e04,Source Subqualifier,1,15,-,O
-DTP,LQ,9,no,yes,landmark,Date or Time or Period,3,3,-,O
-DTP,LQ,1,no,no,e01,Date/Time Qualifier,3,3,-,M
-DTP,LQ,1,no,no,e02,Date Time Period Format Qualifier,2,3,-,M/Z
-DTP,LQ,1,no,no,e03,Date Time Period,1,35,-,M
-QTY,LQ,1,no,yes,landmark,Quantity Information,3,3,-,O
-QTY,LQ,1,no,no,e01,Quantity Qualifier,2,2,-,M
-QTY,LQ,1,no,no,e02,Quantity,1,15,-,X
-QTY,LQ,1,no,no,e04,Free-form Information,1,30,-,X/Z
-YNQ,LQ,99999,no,yes,landmark,Yes/No Question,3,3,-,O
-YNQ,LQ,1,no,no,e01,Condition Indicator,2,3,-,X
-YNQ,LQ,1,no,no,e02,Yes/No Condition or Response Code,1,1,-,M/Z
-YNQ,LQ,1,no,no,e03,Date Time Period Format Qualifier,2,3,-,X
-YNQ,LQ,1,no,no,e04,Date Time Period,1,35,-,X
-YNQ,LQ,1,no,no,e05,Free-form Message Text,1,264,-,O
-YNQ,LQ,1,no,no,e06,Free-form Message Text,1,264,-,O
-YNQ,LQ,1,no,no,e07,Free-form Message Text,1,264,-,O
-YNQ,LQ,1,no,no,e08,Code List Qualifier Code,1,3,-,X
-YNQ,LQ,1,no,no,e09,Industry Code,1,30,-,X
-YNQ,LQ,1,no,no,e10,Free-form Message Text,1,264,-,X/Z
-HPL,,99,yes,yes,landmark,Health Care Provider License,3,3,-,O
-HPL,,1,no,no,e01,Reference Identification Qualifier,2,3,-,X/Z
-HPL,,1,no,no,e02,Reference Identification,1,50,-,X/Z
-HPL,,1,no,no,e03,Status Code,2,2,-,O
-HPL,,1,no,no,e04,State or Province Code,2,2,-,O/Z
-HPL,,1,no,no,e05,Description,1,80,-,O/Z
-HPL,,1,no,no,e06,Code For Licensing, Certification, Registration, or Accreditation Agency,1,2,-,X
-DTP,HPL,99999,no,yes,landmark,Date or Time or Period,3,3,-,O
-DTP,HPL,1,no,no,e01,Date/Time Qualifier,3,3,-,M
-DTP,HPL,1,no,no,e02,Date Time Period Format Qualifier,2,3,-,M/Z
-DTP,HPL,1,no,no,e03,Date Time Period,1,35,-,M
-REF,,99999,yes,yes,landmark,Reference Information,3,3,-,O
-REF,,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
-REF,,1,no,no,e02,Reference Identification,1,50,-,X
-REF,,1,no,no,e03,Description,1,80,-,X
-DTP,REF,9,no,yes,landmark,Date or Time or Period,3,3,-,O
-DTP,REF,1,no,no,e01,Date/Time Qualifier,3,3,-,M
-DTP,REF,1,no,no,e02,Date Time Period Format Qualifier,2,3,-,M/Z
-DTP,REF,1,no,no,e03,Date Time Period,1,35,-,M
-EMS,,9,yes,yes,landmark,Employment Position,3,3,-,O
-EMS,,1,no,no,e01,Description,1,80,-,O/Z
-EMS,,1,no,no,e02,Employment Class Code,2,3,-,O/Z
-EMS,,1,no,no,e03,Occupation Code,4,6,-,O/Z
-EMS,,1,no,no,e04,Employment Status Code,2,2,-,O/Z
-EMS,,1,no,no,e05,Reference Identification Qualifier,2,3,-,X/Z
-EMS,,1,no,no,e06,Reference Identification,1,50,-,X/Z
-EMS,,1,no,no,e07,Reference Identification,1,50,-,X
-EMS,,1,no,no,e08,Reference Identification Qualifier,2,3,-,X
-EMS,,1,no,no,e09,Identification Code Qualifier,1,2,-,X/Z
-EMS,,1,no,no,e10,Identification Code,2,80,-,X
-EMS,,1,no,no,e11,Percent, Decimal Format,1,6,-,O/Z
-EMS,,1,no,no,e12,Employment Status Code,2,2,-,O/Z
-EMS,,1,no,no,e13,Identification Code Qualifier,1,2,-,X/Z
-EMS,,1,no,no,e14,Identification Code,2,80,-,X
-EMS,,1,no,no,e15,Employment Class Code,2,3,-,O/Z
-DTP,EMS,9,no,yes,landmark,Date or Time or Period,3,3,-,O
-DTP,EMS,1,no,no,e01,Date/Time Qualifier,3,3,-,M
-DTP,EMS,1,no,no,e02,Date Time Period Format Qualifier,2,3,-,M/Z
-DTP,EMS,1,no,no,e03,Date Time Period,1,35,-,M
-SE,,1,no,yes,landmark,Transaction Set Trailer,2,2,-,M
-SE,,1,no,no,e01,Number of Included Segments,1,10,-,M
-SE,,1,no,no,e02,Transaction Set Control Number,4,9,-,M
+#segment,parent,loopcount,isgroup,islandmark,field,desc,min,max,align,status,type
+ST,,1,no,yes,landmark,Transaction Set Header,2,2,-,M,F
+ST,,1,no,no,e01,Transaction Set Identifier Code,3,3,-,M/Z,F
+ST,,1,no,no,e02,Transaction Set Control Number,4,9,-,M,F
+ST,,1,no,no,e03,Implementation Convention Reference,1,35,-,O/Z,F
+BHT,,1,no,yes,landmark,Beginning of Hierarchical Transaction,3,3,-,M,F
+BHT,,1,no,no,e01,Hierarchical Structure Code,4,4,-,M,F
+BHT,,1,no,no,e02,Transaction Set Purpose Code,2,2,-,M,F
+BHT,,1,no,no,e03,Reference Identification,1,50,-,O/Z,F
+BHT,,1,no,no,e04,Date,8,8,-,O/Z,F
+BHT,,1,no,no,e05,Time,4,8,-,O/Z,F
+BHT,,1,no,no,e06,Transaction Type Code,2,2,-,O,F
+DTM,,1,no,yes,landmark,Date/Time Reference,3,3,-,O,F
+DTM,,1,no,no,e01,Date/Time Qualifier,3,3,-,M,F
+DTM,,1,no,no,e02,Date,8,8,-,X,F
+DTM,,1,no,no,e03,Time,4,8,-,X,F
+DTM,,1,no,no,e04,Time Code,2,2,-,O,F
+DTM,,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X,F
+DTM,,1,no,no,e06,Date Time Period,1,35,-,X,F
+PER,,1,no,yes,landmark,Administrative Communications Contact,3,3,-,O,F
+PER,,1,no,no,e01,Contact Function Code,2,2,-,M,F
+PER,,1,no,no,e02,Name,1,60,-,O,F
+PER,,1,no,no,e03,Communication Number Qualifier,2,2,-,X,F
+PER,,1,no,no,e04,Communication Number,1,256,-,X,F
+PER,,1,no,no,e05,Communication Number Qualifier,2,2,-,X,F
+PER,,1,no,no,e06,Communication Number,1,256,-,X,F
+PER,,1,no,no,e07,Communication Number Qualifier,2,2,-,X,F
+PER,,1,no,no,e08,Communication Number,1,256,-,X,F
+PER,,1,no,no,e09,Contact Inquiry Reference,1,20,-,O,F
+HL,,99999,yes,yes,landmark,Hierarchical Level,2,2,-,M,F
+HL,,1,no,no,e01,Hierarchical ID Number,1,12,-,M,F
+HL,,1,no,no,e02,Hierarchical Parent ID Number,1,12,-,O,F
+HL,,1,no,no,e03,Hierarchical Level Code,1,2,-,M,F
+HL,,1,no,no,e04,Hierarchical Child Code,1,1,-,O,F
+TRN,HL,1,no,yes,landmark,Trace,3,3,-,O,F
+TRN,HL,1,no,no,e01,Trace Type Code,1,2,-,M,F
+TRN,HL,1,no,no,e02,Reference Identification,1,50,-,M/Z,F
+TRN,HL,1,no,no,e03,Originating Company Identifier,10,10,-,O/Z,F
+TRN,HL,1,no,no,e04,Reference Identification,1,50,-,O/Z,F
+NM1,,99999,yes,yes,landmark,Individual or Organizational Name,3,3,-,M,F
+NM1,,1,no,no,e01,Entity Identifier Code,2,3,-,M,F
+NM1,,1,no,no,e02,Entity Type Qualifier,1,1,-,M/Z,F
+NM1,,1,no,no,e03,Name Last or Organization Name,1,60,-,X,F
+NM1,,1,no,no,e04,Name First,1,35,-,O,F
+NM1,,1,no,no,e05,Name Middle,1,25,-,O,F
+NM1,,1,no,no,e06,Name Prefix,1,10,-,O,F
+NM1,,1,no,no,e07,Name Suffix,1,10,-,O,F
+NM1,,1,no,no,e08,Identification Code Qualifier,1,2,-,X,F
+NM1,,1,no,no,e09,Identification Code,2,80,-,X,F
+NM1,,1,no,no,e10,Entity Relationship Code,2,2,-,X,F
+NM1,,1,no,no,e11,Entity Identifier Code,2,3,-,O,F
+NM1,,1,no,no,e12,Name Last or Organization Name,1,60,-,O,F
+N2,HL:NM1,99999,no,yes,landmark,Additional Name Information,2,2,-,O,F
+N2,HL:NM1,1,no,no,e01,Name,1,60,-,M,F
+N2,HL:NM1,1,no,no,e02,Name,1,60,-,O,F
+PER,HL:NM1,99999,no,yes,landmark,Administrative Communications Contact,3,3,-,O,F
+PER,HL:NM1,1,no,no,e01,Contact Function Code,2,2,-,M,F
+PER,HL:NM1,1,no,no,e02,Name,1,60,-,O,F
+PER,HL:NM1,1,no,no,e03,Communication Number Qualifier,2,2,-,X,F
+PER,HL:NM1,1,no,no,e04,Communication Number,1,256,-,X,F
+PER,HL:NM1,1,no,no,e05,Communication Number Qualifier,2,2,-,X,F
+PER,HL:NM1,1,no,no,e06,Communication Number,1,256,-,X,F
+PER,HL:NM1,1,no,no,e07,Communication Number Qualifier,2,2,-,X,F
+PER,HL:NM1,1,no,no,e08,Communication Number,1,256,-,X,F
+PER,HL:NM1,1,no,no,e09,Contact Inquiry Reference,1,20,-,O,F
+DMG,HL:NM1,1,no,yes,landmark,Demographic Information,3,3,-,O,F
+DMG,HL:NM1,1,no,no,e01,Date Time Period Format Qualifier,2,3,-,X,F
+DMG,HL:NM1,1,no,no,e02,Date Time Period,1,35,-,X/Z,F
+DMG,HL:NM1,1,no,no,e03,Gender Code,1,1,-,O,F
+DMG,HL:NM1,1,no,no,e04,Marital Status Code,1,1,-,O,F
+DMG,HL:NM1,1,no,no,e06,Citizenship Status Code,1,2,-,O,F
+DMG,HL:NM1,1,no,no,e07,Country Code,2,3,-,O/Z,F
+DMG,HL:NM1,1,no,no,e08,Basis of Verification Code,1,2,-,O,F
+DMG,HL:NM1,1,no,no,e09,Quantity,1,15,-,O/Z,F
+DMG,HL:NM1,1,no,no,e10,Code List Qualifier Code,1,3,-,X,F
+DMG,HL:NM1,1,no,no,e11,Industry Code,1,30,-,X/Z,F
+AMT,HL:NM1,20,no,yes,landmark,Monetary Amount Information,3,3,-,O,F
+AMT,HL:NM1,1,no,no,e01,Amount Qualifier Code,1,3,-,M,F
+AMT,HL:NM1,1,no,no,e02,Monetary Amount,1,18,-,M,F
+AMT,HL:NM1,1,no,no,e03,Credit/Debit Flag Code,1,1,-,O,F
+API,HL:NM1,99999,no,yes,landmark,Activity or Process Information,3,3,-,O,F
+API,HL:NM1,1,no,no,e01,Code Category,2,2,-,M/Z,F
+API,HL:NM1,1,no,no,e02,Action Code,1,2,-,O/Z,F
+API,HL:NM1,1,no,no,e03,Maintenance Type Code,3,3,-,O/Z,F
+API,HL:NM1,1,no,no,e04,Status Reason Code,3,3,-,O/Z,F
+API,HL:NM1,1,no,no,e05,Affected Area or Section Code,1,1,-,O/Z,F
+API,HL:NM1,1,no,no,e06,Insurance Type Code,1,3,-,O/Z,F
+API,HL:NM1,1,no,no,e07,Loan Type Code,1,2,-,O/Z,F
+API,HL:NM1,1,no,no,e08,Information Status Code,1,1,-,O/Z,F
+DEG,HL:NM1,9,no,yes,landmark,Degree Record,3,3,-,O,F
+DEG,HL:NM1,1,no,no,e01,Academic Degree Code,3,3,-,M,F
+DEG,HL:NM1,1,no,no,e02,Date Time Period Format Qualifier,2,3,-,X/Z,F
+DEG,HL:NM1,1,no,no,e03,Date Time Period,1,35,-,X,F
+DEG,HL:NM1,1,no,no,e04,Description,1,80,-,O,F
+DEG,HL:NM1,1,no,no,e05,Status Reason Code,3,3,-,O/Z,F
+IND,HL:NM1,1,no,yes,landmark,Additional Individual Demographic Information,3,3,-,O,F
+IND,HL:NM1,1,no,no,e01,Country Code,2,3,-,O/Z,F
+IND,HL:NM1,1,no,no,e02,State or Province Code,2,2,-,O,F
+IND,HL:NM1,1,no,no,e03,County Designator,5,5,-,O,F
+IND,HL:NM1,1,no,no,e04,City Name,2,30,-,O,F
+IND,HL:NM1,1,no,no,e05,Language Code,2,3,-,O/Z,F
+IND,HL:NM1,1,no,no,e06,Language Proficiency Indicator,1,1,-,O,F
+IND,HL:NM1,1,no,no,e07,Language Code,2,3,-,O/Z,F
+IND,HL:NM1,1,no,no,e08,Language Code,2,3,-,O/Z,F
+IND,HL:NM1,1,no,no,e09,Identification Code Qualifier,1,2,-,X,F
+IND,HL:NM1,1,no,no,e10,Identification Code,2,80,-,X,F
+IND,HL:NM1,1,no,no,e11,Identification Code Qualifier,1,2,-,X,F
+IND,HL:NM1,1,no,no,e12,Identification Code,2,80,-,X,F
+LUI,HL:NM1,9,no,yes,landmark,Language Use,3,3,-,O,F
+LUI,HL:NM1,1,no,no,e01,Identification Code Qualifier,1,2,-,X,F
+LUI,HL:NM1,1,no,no,e02,Identification Code,2,80,-,X/Z,F
+LUI,HL:NM1,1,no,no,e03,Description,1,80,-,X/Z,F
+LUI,HL:NM1,1,no,no,e04,Use of Language Indicator,1,2,-,O,F
+LUI,HL:NM1,1,no,no,e05,Language Proficiency Indicator,1,1,-,O,F
+DTP,HL:NM1,9,no,yes,landmark,Date or Time or Period,3,3,-,O,F
+DTP,HL:NM1,1,no,no,e01,Date/Time Qualifier,3,3,-,M,F
+DTP,HL:NM1,1,no,no,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+DTP,HL:NM1,1,no,no,e03,Date Time Period,1,35,-,M,F
+MTX,HL:NM1,99999,no,yes,landmark,Text,3,3,-,O,F
+MTX,HL:NM1,1,no,no,e01,Note Reference Code,3,3,-,O,F
+MTX,HL:NM1,1,no,no,e02,Textual Data,1,4096,-,X,F
+MTX,HL:NM1,1,no,no,e03,Textual Data,1,4096,-,O,F
+MTX,HL:NM1,1,no,no,e04,Printer Carriage Control Code,2,2,-,X,F
+MTX,HL:NM1,1,no,no,e05,Number,1,9,-,O/Z,F
+MTX,HL:NM1,1,no,no,e06,Language Code,2,3,-,O,F
+QTY,HL:NM1,99,no,yes,landmark,Quantity Information,3,3,-,O,F
+QTY,HL:NM1,1,no,no,e01,Quantity Qualifier,2,2,-,M,F
+QTY,HL:NM1,1,no,no,e02,Quantity,1,15,-,X,F
+QTY,HL:NM1,1,no,no,e04,Free-form Information,1,30,-,X/Z,F
+WS,HL:NM1,99,no,yes,landmark,Work Schedule,2,2,-,O,F
+WS,HL:NM1,1,no,no,e01,Ship/Delivery or Calendar Pattern Code,1,2,-,M/Z,F
+WS,HL:NM1,1,no,no,e02,Time,4,8,-,O/Z,F
+WS,HL:NM1,1,no,no,e03,Time,4,8,-,O/Z,F
+CRC,HL:NM1,9,no,yes,landmark,Conditions Indicator,3,3,-,O,F
+CRC,HL:NM1,1,no,no,e01,Code Category,2,2,-,M/Z,F
+CRC,HL:NM1,1,no,no,e02,Yes/No Condition or Response Code,1,1,-,M/Z,F
+CRC,HL:NM1,1,no,no,e03,Condition Indicator,2,3,-,M,F
+CRC,HL:NM1,1,no,no,e04,Condition Indicator,2,3,-,O,F
+CRC,HL:NM1,1,no,no,e05,Condition Indicator,2,3,-,O,F
+CRC,HL:NM1,1,no,no,e06,Condition Indicator,2,3,-,O,F
+CRC,HL:NM1,1,no,no,e07,Condition Indicator,2,3,-,O,F
+HSD,HL:NM1,99,no,yes,landmark,Health Care Services Delivery,3,3,-,O,F
+HSD,HL:NM1,1,no,no,e01,Quantity Qualifier,2,2,-,X,F
+HSD,HL:NM1,1,no,no,e02,Quantity,1,15,-,X,F
+HSD,HL:NM1,1,no,no,e03,Unit or Basis for Measurement Code,2,2,-,O,F
+HSD,HL:NM1,1,no,no,e04,Sample Selection Modulus,1,6,-,O,F
+HSD,HL:NM1,1,no,no,e05,Time Period Qualifier,1,2,-,X,F
+HSD,HL:NM1,1,no,no,e06,Number of Periods,1,3,-,O,F
+HSD,HL:NM1,1,no,no,e07,Ship/Delivery or Calendar Pattern Code,1,2,-,O,F
+HSD,HL:NM1,1,no,no,e08,Ship/Delivery Pattern Time Code,1,1,-,O,F
+BCI,HL:NM1,9,no,yes,landmark,Basic Claim Information,3,3,-,O,F
+BCI,HL:NM1,1,no,no,e01,Industry Code,1,30,-,O/Z,F
+BCI,HL:NM1,1,no,no,e02,Insurance Type Code,1,3,-,O,F
+BCI,HL:NM1,1,no,no,e03,Reference Identification,1,50,-,O/Z,F
+BCI,HL:NM1,1,no,no,e04,State or Province Code,2,2,-,O/Z,F
+BCI,HL:NM1,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X,F
+BCI,HL:NM1,1,no,no,e06,Date Time Period,1,35,-,X/Z,F
+BCI,HL:NM1,1,no,no,e07,Report Type Code,2,2,-,O,F
+BCI,HL:NM1,1,no,no,e08,Currency Code,3,3,-,O/Z,F
+PDI,HL:NM1,1,no,yes,landmark,Practice Detail Information,3,3,-,O,F
+PDI,HL:NM1,1,no,no,e01,Gender Code,1,1,-,O/Z,F
+PDI,HL:NM1,1,no,no,e02,Range Minimum,1,20,-,O/Z,F
+PDI,HL:NM1,1,no,no,e03,Range Maximum,1,20,-,O/Z,F
+PDI,HL:NM1,1,no,no,e04,Yes/No Condition or Response Code,1,1,-,O/Z,F
+HAD,HL:NM1,1,no,yes,landmark,Hospital Affiliation Detail,3,3,-,O,F
+HAD,HL:NM1,1,no,no,e01,Status Code,2,2,-,M/Z,F
+HAD,HL:NM1,1,no,no,e02,Yes/No Condition or Response Code,1,1,-,O/Z,F
+HAD,HL:NM1,1,no,no,e03,Yes/No Condition or Response Code,1,1,-,O/Z,F
+HAD,HL:NM1,1,no,no,e04,Yes/No Condition or Response Code,1,1,-,O/Z,F
+HAD,HL:NM1,1,no,no,e05,Code List Qualifier Code,1,3,-,X,F
+HAD,HL:NM1,1,no,no,e06,Industry Code,1,30,-,X/Z,F
+NX1,,99999,yes,yes,landmark,Property or Entity Identification,3,3,-,O,F
+NX1,,1,no,no,e01,Entity Identifier Code,2,3,-,M,F
+NX1,,1,no,no,e02,Entity Identifier Code,2,3,-,O,F
+NX1,,1,no,no,e03,Entity Identifier Code,2,3,-,O,F
+NX1,,1,no,no,e04,Entity Identifier Code,2,3,-,O,F
+NX1,,1,no,no,e05,Entity Identifier Code,2,3,-,O,F
+N2,HL:NM1:NX1,1,no,yes,landmark,Additional Name Information,2,2,-,O,F
+N2,HL:NM1:NX1,1,no,no,e01,Name,1,60,-,M,F
+N2,HL:NM1:NX1,1,no,no,e02,Name,1,60,-,O,F
+N3,HL:NM1:NX1,2,no,yes,landmark,Party Location,2,2,-,O,F
+N3,HL:NM1:NX1,1,no,no,e01,Address Information,1,55,-,M,F
+N3,HL:NM1:NX1,1,no,no,e02,Address Information,1,55,-,O,F
+N4,HL:NM1:NX1,1,no,yes,landmark,Geographic Location,2,2,-,O,F
+N4,HL:NM1:NX1,1,no,no,e01,City Name,2,30,-,O,F
+N4,HL:NM1:NX1,1,no,no,e02,State or Province Code,2,2,-,X,F
+N4,HL:NM1:NX1,1,no,no,e03,Postal Code,3,15,-,O,F
+N4,HL:NM1:NX1,1,no,no,e04,Country Code,2,3,-,X,F
+N4,HL:NM1:NX1,1,no,no,e05,Location Qualifier,1,2,-,X,F
+N4,HL:NM1:NX1,1,no,no,e06,Location Identifier,1,30,-,O,F
+N4,HL:NM1:NX1,1,no,no,e07,Country Subdivision Code,1,3,-,X,F
+PER,HL:NM1:NX1,1,no,yes,landmark,Administrative Communications Contact,3,3,-,O,F
+PER,HL:NM1:NX1,1,no,no,e01,Contact Function Code,2,2,-,M,F
+PER,HL:NM1:NX1,1,no,no,e02,Name,1,60,-,O,F
+PER,HL:NM1:NX1,1,no,no,e03,Communication Number Qualifier,2,2,-,X,F
+PER,HL:NM1:NX1,1,no,no,e04,Communication Number,1,256,-,X,F
+PER,HL:NM1:NX1,1,no,no,e05,Communication Number Qualifier,2,2,-,X,F
+PER,HL:NM1:NX1,1,no,no,e06,Communication Number,1,256,-,X,F
+PER,HL:NM1:NX1,1,no,no,e07,Communication Number Qualifier,2,2,-,X,F
+PER,HL:NM1:NX1,1,no,no,e08,Communication Number,1,256,-,X,F
+PER,HL:NM1:NX1,1,no,no,e09,Contact Inquiry Reference,1,20,-,O,F
+LQ,,99999,yes,yes,landmark,Industry Code Identification,2,2,-,O,F
+LQ,,1,no,no,e01,Code List Qualifier Code,1,3,-,O,F
+LQ,,1,no,no,e02,Industry Code,1,30,-,X,F
+N1,LQ,2,no,yes,landmark,Party Identification,2,2,-,O,F
+N1,LQ,1,no,no,e01,Entity Identifier Code,2,3,-,M,F
+N1,LQ,1,no,no,e02,Name,1,60,-,X,F
+N1,LQ,1,no,no,e03,Identification Code Qualifier,1,2,-,X,F
+N1,LQ,1,no,no,e04,Identification Code,2,80,-,X,F
+N1,LQ,1,no,no,e05,Entity Relationship Code,2,2,-,O,F
+N1,LQ,1,no,no,e06,Entity Identifier Code,2,3,-,O,F
+TPB,LQ,99999,no,yes,landmark,Business Professional Title,3,3,-,O,F
+TPB,LQ,1,no,no,e01,Business Professional Title Code,1,3,-,X,F
+TPB,LQ,1,no,no,e02,Free-form Message Text,1,264,-,X/Z,F
+TPB,LQ,1,no,no,e03,Agency Qualifier Code,2,2,-,X,F
+TPB,LQ,1,no,no,e04,Source Subqualifier,1,15,-,O,F
+DTP,LQ,9,no,yes,landmark,Date or Time or Period,3,3,-,O,F
+DTP,LQ,1,no,no,e01,Date/Time Qualifier,3,3,-,M,F
+DTP,LQ,1,no,no,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+DTP,LQ,1,no,no,e03,Date Time Period,1,35,-,M,F
+QTY,LQ,1,no,yes,landmark,Quantity Information,3,3,-,O,F
+QTY,LQ,1,no,no,e01,Quantity Qualifier,2,2,-,M,F
+QTY,LQ,1,no,no,e02,Quantity,1,15,-,X,F
+QTY,LQ,1,no,no,e04,Free-form Information,1,30,-,X/Z,F
+YNQ,LQ,99999,no,yes,landmark,Yes/No Question,3,3,-,O,F
+YNQ,LQ,1,no,no,e01,Condition Indicator,2,3,-,X,F
+YNQ,LQ,1,no,no,e02,Yes/No Condition or Response Code,1,1,-,M/Z,F
+YNQ,LQ,1,no,no,e03,Date Time Period Format Qualifier,2,3,-,X,F
+YNQ,LQ,1,no,no,e04,Date Time Period,1,35,-,X,F
+YNQ,LQ,1,no,no,e05,Free-form Message Text,1,264,-,O,F
+YNQ,LQ,1,no,no,e06,Free-form Message Text,1,264,-,O,F
+YNQ,LQ,1,no,no,e07,Free-form Message Text,1,264,-,O,F
+YNQ,LQ,1,no,no,e08,Code List Qualifier Code,1,3,-,X,F
+YNQ,LQ,1,no,no,e09,Industry Code,1,30,-,X,F
+YNQ,LQ,1,no,no,e10,Free-form Message Text,1,264,-,X/Z,F
+HPL,,99,yes,yes,landmark,Health Care Provider License,3,3,-,O,F
+HPL,,1,no,no,e01,Reference Identification Qualifier,2,3,-,X/Z,F
+HPL,,1,no,no,e02,Reference Identification,1,50,-,X/Z,F
+HPL,,1,no,no,e03,Status Code,2,2,-,O,F
+HPL,,1,no,no,e04,State or Province Code,2,2,-,O/Z,F
+HPL,,1,no,no,e05,Description,1,80,-,O/Z,F
+HPL,,1,no,no,e06,Code For Licensing, Certification, Registration, or Accreditation Agency,1,2,-,X,F
+DTP,HPL,99999,no,yes,landmark,Date or Time or Period,3,3,-,O,F
+DTP,HPL,1,no,no,e01,Date/Time Qualifier,3,3,-,M,F
+DTP,HPL,1,no,no,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+DTP,HPL,1,no,no,e03,Date Time Period,1,35,-,M,F
+REF,,99999,yes,yes,landmark,Reference Information,3,3,-,O,F
+REF,,1,no,no,e01,Reference Identification Qualifier,2,3,-,M,F
+REF,,1,no,no,e02,Reference Identification,1,50,-,X,F
+REF,,1,no,no,e03,Description,1,80,-,X,F
+DTP,REF,9,no,yes,landmark,Date or Time or Period,3,3,-,O,F
+DTP,REF,1,no,no,e01,Date/Time Qualifier,3,3,-,M,F
+DTP,REF,1,no,no,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+DTP,REF,1,no,no,e03,Date Time Period,1,35,-,M,F
+EMS,,9,yes,yes,landmark,Employment Position,3,3,-,O,F
+EMS,,1,no,no,e01,Description,1,80,-,O/Z,F
+EMS,,1,no,no,e02,Employment Class Code,2,3,-,O/Z,F
+EMS,,1,no,no,e03,Occupation Code,4,6,-,O/Z,F
+EMS,,1,no,no,e04,Employment Status Code,2,2,-,O/Z,F
+EMS,,1,no,no,e05,Reference Identification Qualifier,2,3,-,X/Z,F
+EMS,,1,no,no,e06,Reference Identification,1,50,-,X/Z,F
+EMS,,1,no,no,e07,Reference Identification,1,50,-,X,F
+EMS,,1,no,no,e08,Reference Identification Qualifier,2,3,-,X,F
+EMS,,1,no,no,e09,Identification Code Qualifier,1,2,-,X/Z,F
+EMS,,1,no,no,e10,Identification Code,2,80,-,X,F
+EMS,,1,no,no,e11,Percent, Decimal Format,1,6,-,O/Z,F
+EMS,,1,no,no,e12,Employment Status Code,2,2,-,O/Z,F
+EMS,,1,no,no,e13,Identification Code Qualifier,1,2,-,X/Z,F
+EMS,,1,no,no,e14,Identification Code,2,80,-,X,F
+EMS,,1,no,no,e15,Employment Class Code,2,3,-,O/Z,F
+DTP,EMS,9,no,yes,landmark,Date or Time or Period,3,3,-,O,F
+DTP,EMS,1,no,no,e01,Date/Time Qualifier,3,3,-,M,F
+DTP,EMS,1,no,no,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+DTP,EMS,1,no,no,e03,Date Time Period,1,35,-,M,F
+SE,,1,no,yes,landmark,Transaction Set Trailer,2,2,-,M,F
+SE,,1,no,no,e01,Number of Included Segments,1,10,-,M,F
+SE,,1,no,no,e02,Transaction Set Control Number,4,9,-,M,F

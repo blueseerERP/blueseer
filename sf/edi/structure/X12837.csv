@@ -1,977 +1,977 @@
 #<h1>837 - Health Care Claim</h1><br>
-#segment,parent,loopcount,isgroup,islandmark,field,desc,min,max,align,status
-ST,,1,no,yes,landmark,Transaction Set Header,2,2,-,M
-ST,,1,no,no,e01,Transaction Set Identifier Code,3,3,-,M/Z
-ST,,1,no,no,e02,Transaction Set Control Number,4,9,-,M
-ST,,1,no,no,e03,Implementation Convention Reference,1,35,-,O/Z
-BHT,,1,no,yes,landmark,Beginning of Hierarchical Transaction,3,3,-,M
-BHT,,1,no,no,e01,Hierarchical Structure Code,4,4,-,M
-BHT,,1,no,no,e02,Transaction Set Purpose Code,2,2,-,M
-BHT,,1,no,no,e03,Reference Identification,1,50,-,O/Z
-BHT,,1,no,no,e04,Date,8,8,-,O/Z
-BHT,,1,no,no,e05,Time,4,8,-,O/Z
-BHT,,1,no,no,e06,Transaction Type Code,2,2,-,O
-REF,,3,no,yes,landmark,Reference Information,3,3,-,O
-REF,,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
-REF,,1,no,no,e02,Reference Identification,1,50,-,X
-REF,,1,no,no,e03,Description,1,80,-,X
-NM1,,10,yes,yes,landmark,Individual or Organizational Name,3,3,-,O
-NM1,,1,no,no,e01,Entity Identifier Code,2,3,-,M
-NM1,,1,no,no,e02,Entity Type Qualifier,1,1,-,M/Z
-NM1,,1,no,no,e03,Name Last or Organization Name,1,60,-,X
-NM1,,1,no,no,e04,Name First,1,35,-,O
-NM1,,1,no,no,e05,Name Middle,1,25,-,O
-NM1,,1,no,no,e06,Name Prefix,1,10,-,O
-NM1,,1,no,no,e07,Name Suffix,1,10,-,O
-NM1,,1,no,no,e08,Identification Code Qualifier,1,2,-,X
-NM1,,1,no,no,e09,Identification Code,2,80,-,X
-NM1,,1,no,no,e10,Entity Relationship Code,2,2,-,X
-NM1,,1,no,no,e11,Entity Identifier Code,2,3,-,O
-NM1,,1,no,no,e12,Name Last or Organization Name,1,60,-,O
-N2,NM1,2,no,yes,landmark,Additional Name Information,2,2,-,O
-N2,NM1,1,no,no,e01,Name,1,60,-,M
-N2,NM1,1,no,no,e02,Name,1,60,-,O
-N3,NM1,2,no,yes,landmark,Party Location,2,2,-,O
-N3,NM1,1,no,no,e01,Address Information,1,55,-,M
-N3,NM1,1,no,no,e02,Address Information,1,55,-,O
-N4,NM1,1,no,yes,landmark,Geographic Location,2,2,-,O
-N4,NM1,1,no,no,e01,City Name,2,30,-,O
-N4,NM1,1,no,no,e02,State or Province Code,2,2,-,X
-N4,NM1,1,no,no,e03,Postal Code,3,15,-,O
-N4,NM1,1,no,no,e04,Country Code,2,3,-,X
-N4,NM1,1,no,no,e05,Location Qualifier,1,2,-,X
-N4,NM1,1,no,no,e06,Location Identifier,1,30,-,O
-N4,NM1,1,no,no,e07,Country Subdivision Code,1,3,-,X
-REF,NM1,2,no,yes,landmark,Reference Information,3,3,-,O
-REF,NM1,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
-REF,NM1,1,no,no,e02,Reference Identification,1,50,-,X
-REF,NM1,1,no,no,e03,Description,1,80,-,X
-PER,NM1,2,no,yes,landmark,Administrative Communications Contact,3,3,-,O
-PER,NM1,1,no,no,e01,Contact Function Code,2,2,-,M
-PER,NM1,1,no,no,e02,Name,1,60,-,O
-PER,NM1,1,no,no,e03,Communication Number Qualifier,2,2,-,X
-PER,NM1,1,no,no,e04,Communication Number,1,256,-,X
-PER,NM1,1,no,no,e05,Communication Number Qualifier,2,2,-,X
-PER,NM1,1,no,no,e06,Communication Number,1,256,-,X
-PER,NM1,1,no,no,e07,Communication Number Qualifier,2,2,-,X
-PER,NM1,1,no,no,e08,Communication Number,1,256,-,X
-PER,NM1,1,no,no,e09,Contact Inquiry Reference,1,20,-,O
-HL,,99999,yes,yes,landmark,Hierarchical Level,2,2,-,M
-HL,,1,no,no,e01,Hierarchical ID Number,1,12,-,M
-HL,,1,no,no,e02,Hierarchical Parent ID Number,1,12,-,O
-HL,,1,no,no,e03,Hierarchical Level Code,1,2,-,M
-HL,,1,no,no,e04,Hierarchical Child Code,1,1,-,O
-PRV,HL,1,no,yes,landmark,Provider Information,3,3,-,O
-PRV,HL,1,no,no,e01,Provider Code,1,3,-,M
-PRV,HL,1,no,no,e02,Reference Identification Qualifier,2,3,-,X
-PRV,HL,1,no,no,e03,Reference Identification,1,50,-,X
-PRV,HL,1,no,no,e04,State or Province Code,2,2,-,O
-PRV,HL,1,no,no,e06,Provider Organization Code,3,3,-,O
-SBR,HL,1,no,yes,landmark,Subscriber Information,3,3,-,O
-SBR,HL,1,no,no,e01,Payer Responsibility Sequence Number Code,1,1,-,M
-SBR,HL,1,no,no,e02,Individual Relationship Code,2,2,-,O/Z
-SBR,HL,1,no,no,e03,Reference Identification,1,50,-,O/Z
-SBR,HL,1,no,no,e04,Name,1,60,-,O/Z
-SBR,HL,1,no,no,e05,Insurance Type Code,1,3,-,O
-SBR,HL,1,no,no,e06,Coordination of Benefits Code,1,1,-,O
-SBR,HL,1,no,no,e07,Yes/No Condition or Response Code,1,1,-,O/Z
-SBR,HL,1,no,no,e08,Employment Status Code,2,2,-,O
-SBR,HL,1,no,no,e09,Claim Filing Indicator Code,1,2,-,O
-PAT,HL,1,no,yes,landmark,Patient Information,3,3,-,O
-PAT,HL,1,no,no,e01,Individual Relationship Code,2,2,-,O
-PAT,HL,1,no,no,e02,Patient Location Code,1,1,-,O
-PAT,HL,1,no,no,e03,Employment Status Code,2,2,-,O
-PAT,HL,1,no,no,e04,Student Status Code,1,1,-,O
-PAT,HL,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X
-PAT,HL,1,no,no,e06,Date Time Period,1,35,-,X/Z
-PAT,HL,1,no,no,e07,Unit or Basis for Measurement Code,2,2,-,X
-PAT,HL,1,no,no,e08,Weight,1,10,-,X/Z
-PAT,HL,1,no,no,e09,Yes/No Condition or Response Code,1,1,-,O/Z
-DTP,HL,5,no,yes,landmark,Date or Time or Period,3,3,-,O
-DTP,HL,1,no,no,e01,Date/Time Qualifier,3,3,-,M
-DTP,HL,1,no,no,e02,Date Time Period Format Qualifier,2,3,-,M/Z
-DTP,HL,1,no,no,e03,Date Time Period,1,35,-,M
-CUR,HL,1,no,yes,landmark,Currency,3,3,-,O
-CUR,HL,1,no,no,e01,Entity Identifier Code,2,3,-,M
-CUR,HL,1,no,no,e02,Currency Code,3,3,-,M
-CUR,HL,1,no,no,e03,Exchange Rate,4,10,-,O
-CUR,HL,1,no,no,e04,Entity Identifier Code,2,3,-,O
-CUR,HL,1,no,no,e05,Currency Code,3,3,-,O
-CUR,HL,1,no,no,e06,Currency Market/Exchange Code,3,3,-,O
-CUR,HL,1,no,no,e07,Date/Time Qualifier,3,3,-,X
-CUR,HL,1,no,no,e08,Date,8,8,-,O
-CUR,HL,1,no,no,e09,Time,4,8,-,O
-CUR,HL,1,no,no,e10,Date/Time Qualifier,3,3,-,X
-CUR,HL,1,no,no,e11,Date,8,8,-,X
-CUR,HL,1,no,no,e12,Time,4,8,-,X
-CUR,HL,1,no,no,e13,Date/Time Qualifier,3,3,-,X
-CUR,HL,1,no,no,e14,Date,8,8,-,X
-CUR,HL,1,no,no,e15,Time,4,8,-,X
-CUR,HL,1,no,no,e16,Date/Time Qualifier,3,3,-,X
-CUR,HL,1,no,no,e17,Date,8,8,-,X
-CUR,HL,1,no,no,e18,Time,4,8,-,X
-CUR,HL,1,no,no,e19,Date/Time Qualifier,3,3,-,X
-CUR,HL,1,no,no,e20,Date,8,8,-,X
-CUR,HL,1,no,no,e21,Time,4,8,-,X
-NM1,,10,yes,yes,landmark,Individual or Organizational Name,3,3,-,O
-NM1,,1,no,no,e01,Entity Identifier Code,2,3,-,M
-NM1,,1,no,no,e02,Entity Type Qualifier,1,1,-,M/Z
-NM1,,1,no,no,e03,Name Last or Organization Name,1,60,-,X
-NM1,,1,no,no,e04,Name First,1,35,-,O
-NM1,,1,no,no,e05,Name Middle,1,25,-,O
-NM1,,1,no,no,e06,Name Prefix,1,10,-,O
-NM1,,1,no,no,e07,Name Suffix,1,10,-,O
-NM1,,1,no,no,e08,Identification Code Qualifier,1,2,-,X
-NM1,,1,no,no,e09,Identification Code,2,80,-,X
-NM1,,1,no,no,e10,Entity Relationship Code,2,2,-,X
-NM1,,1,no,no,e11,Entity Identifier Code,2,3,-,O
-NM1,,1,no,no,e12,Name Last or Organization Name,1,60,-,O
-N2,HL:NM1,2,no,yes,landmark,Additional Name Information,2,2,-,O
-N2,HL:NM1,1,no,no,e01,Name,1,60,-,M
-N2,HL:NM1,1,no,no,e02,Name,1,60,-,O
-N3,HL:NM1,2,no,yes,landmark,Party Location,2,2,-,O
-N3,HL:NM1,1,no,no,e01,Address Information,1,55,-,M
-N3,HL:NM1,1,no,no,e02,Address Information,1,55,-,O
-N4,HL:NM1,1,no,yes,landmark,Geographic Location,2,2,-,O
-N4,HL:NM1,1,no,no,e01,City Name,2,30,-,O
-N4,HL:NM1,1,no,no,e02,State or Province Code,2,2,-,X
-N4,HL:NM1,1,no,no,e03,Postal Code,3,15,-,O
-N4,HL:NM1,1,no,no,e04,Country Code,2,3,-,X
-N4,HL:NM1,1,no,no,e05,Location Qualifier,1,2,-,X
-N4,HL:NM1,1,no,no,e06,Location Identifier,1,30,-,O
-N4,HL:NM1,1,no,no,e07,Country Subdivision Code,1,3,-,X
-DMG,HL:NM1,1,no,yes,landmark,Demographic Information,3,3,-,O
-DMG,HL:NM1,1,no,no,e01,Date Time Period Format Qualifier,2,3,-,X
-DMG,HL:NM1,1,no,no,e02,Date Time Period,1,35,-,X/Z
-DMG,HL:NM1,1,no,no,e03,Gender Code,1,1,-,O
-DMG,HL:NM1,1,no,no,e04,Marital Status Code,1,1,-,O
-DMG,HL:NM1,1,no,no,e06,Citizenship Status Code,1,2,-,O
-DMG,HL:NM1,1,no,no,e07,Country Code,2,3,-,O/Z
-DMG,HL:NM1,1,no,no,e08,Basis of Verification Code,1,2,-,O
-DMG,HL:NM1,1,no,no,e09,Quantity,1,15,-,O/Z
-DMG,HL:NM1,1,no,no,e10,Code List Qualifier Code,1,3,-,X
-DMG,HL:NM1,1,no,no,e11,Industry Code,1,30,-,X/Z
-REF,HL:NM1,20,no,yes,landmark,Reference Information,3,3,-,O
-REF,HL:NM1,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
-REF,HL:NM1,1,no,no,e02,Reference Identification,1,50,-,X
-REF,HL:NM1,1,no,no,e03,Description,1,80,-,X
-PER,HL:NM1,2,no,yes,landmark,Administrative Communications Contact,3,3,-,O
-PER,HL:NM1,1,no,no,e01,Contact Function Code,2,2,-,M
-PER,HL:NM1,1,no,no,e02,Name,1,60,-,O
-PER,HL:NM1,1,no,no,e03,Communication Number Qualifier,2,2,-,X
-PER,HL:NM1,1,no,no,e04,Communication Number,1,256,-,X
-PER,HL:NM1,1,no,no,e05,Communication Number Qualifier,2,2,-,X
-PER,HL:NM1,1,no,no,e06,Communication Number,1,256,-,X
-PER,HL:NM1,1,no,no,e07,Communication Number Qualifier,2,2,-,X
-PER,HL:NM1,1,no,no,e08,Communication Number,1,256,-,X
-PER,HL:NM1,1,no,no,e09,Contact Inquiry Reference,1,20,-,O
-CLM,,100,yes,yes,landmark,Health Claim,3,3,-,O
-CLM,,1,no,no,e01,Claim Submitter's Identifier,1,38,-,M
-CLM,,1,no,no,e02,Monetary Amount,1,18,-,O/Z
-CLM,,1,no,no,e03,Claim Filing Indicator Code,1,2,-,O
-CLM,,1,no,no,e04,Non-Institutional Claim Type Code,1,2,-,O
-CLM,,1,no,no,e06,Yes/No Condition or Response Code,1,1,-,O/Z
-CLM,,1,no,no,e07,Provider Accept Assignment Code,1,1,-,O
-CLM,,1,no,no,e08,Yes/No Condition or Response Code,1,1,-,O/Z
-CLM,,1,no,no,e09,Release of Information Code,1,1,-,O
-CLM,,1,no,no,e10,Patient Signature Source Code,1,1,-,O
-CLM,,1,no,no,e12,Special Program Code,2,3,-,O
-CLM,,1,no,no,e13,Yes/No Condition or Response Code,1,1,-,O/Z
-CLM,,1,no,no,e14,Level of Service Code,1,3,-,O
-CLM,,1,no,no,e15,Yes/No Condition or Response Code,1,1,-,O/Z
-CLM,,1,no,no,e16,Provider Agreement Code,1,1,-,O
-CLM,,1,no,no,e17,Claim Status Code,1,2,-,O
-CLM,,1,no,no,e18,Yes/No Condition or Response Code,1,1,-,O/Z
-CLM,,1,no,no,e19,Claim Submission Reason Code,2,2,-,O
-CLM,,1,no,no,e20,Delay Reason Code,1,2,-,O
-DTP,CLM,150,no,yes,landmark,Date or Time or Period,3,3,-,O
-DTP,CLM,1,no,no,e01,Date/Time Qualifier,3,3,-,M
-DTP,CLM,1,no,no,e02,Date Time Period Format Qualifier,2,3,-,M/Z
-DTP,CLM,1,no,no,e03,Date Time Period,1,35,-,M
-CL1,CLM,1,no,yes,landmark,Claim Codes,3,3,-,O
-CL1,CLM,1,no,no,e01,Admission Type Code,1,1,-,O
-CL1,CLM,1,no,no,e02,Admission Source Code,1,1,-,O
-CL1,CLM,1,no,no,e03,Patient Status Code,1,2,-,O
-CL1,CLM,1,no,no,e04,Nursing Home Residential Status Code,1,1,-,O
-DN1,CLM,1,no,yes,landmark,Orthodontic Information,3,3,-,O
-DN1,CLM,1,no,no,e01,Quantity,1,15,-,O/Z
-DN1,CLM,1,no,no,e02,Quantity,1,15,-,O/Z
-DN1,CLM,1,no,no,e03,Yes/No Condition or Response Code,1,1,-,O/Z
-DN1,CLM,1,no,no,e04,Description,1,80,-,O/Z
-DN2,CLM,35,no,yes,landmark,Tooth Summary,3,3,-,O
-DN2,CLM,1,no,no,e01,Reference Identification,1,50,-,M/Z
-DN2,CLM,1,no,no,e02,Tooth Status Code,1,2,-,O
-DN2,CLM,1,no,no,e03,Quantity,1,15,-,O/Z
-DN2,CLM,1,no,no,e04,Date Time Period Format Qualifier,2,3,-,X
-DN2,CLM,1,no,no,e05,Date Time Period,1,35,-,X
-DN2,CLM,1,no,no,e06,Code List Qualifier Code,1,3,-,M/Z
-PWK,CLM,10,no,yes,landmark,Paperwork,3,3,-,O
-PWK,CLM,1,no,no,e01,Report Type Code,2,2,-,M
-PWK,CLM,1,no,no,e02,Report Transmission Code,1,2,-,O
-PWK,CLM,1,no,no,e03,Report Copies Needed,1,2,-,O
-PWK,CLM,1,no,no,e04,Entity Identifier Code,2,3,-,O
-PWK,CLM,1,no,no,e05,Identification Code Qualifier,1,2,-,X
-PWK,CLM,1,no,no,e06,Identification Code,2,80,-,X
-PWK,CLM,1,no,no,e07,Description,1,80,-,O
-PWK,CLM,1,no,no,e09,Request Category Code,1,2,-,O
-CN1,CLM,1,no,yes,landmark,Contract Information,3,3,-,O
-CN1,CLM,1,no,no,e01,Contract Type Code,2,2,-,M
-CN1,CLM,1,no,no,e02,Monetary Amount,1,18,-,O/Z
-CN1,CLM,1,no,no,e03,Percent, Decimal Format,1,6,-,O/Z
-CN1,CLM,1,no,no,e04,Reference Identification,1,50,-,O/Z
-CN1,CLM,1,no,no,e05,Terms Discount Percent,1,6,-,O
-CN1,CLM,1,no,no,e06,Version Identifier,1,30,-,O/Z
-DSB,CLM,1,no,yes,landmark,Disability Information,3,3,-,O
-DSB,CLM,1,no,no,e01,Disability Type Code,1,1,-,M
-DSB,CLM,1,no,no,e02,Quantity,1,15,-,O/Z
-DSB,CLM,1,no,no,e03,Occupation Code,4,6,-,O
-DSB,CLM,1,no,no,e04,Work Intensity Code,1,1,-,O
-DSB,CLM,1,no,no,e05,Product Option Code,1,2,-,O
-DSB,CLM,1,no,no,e06,Monetary Amount,1,18,-,O/Z
-DSB,CLM,1,no,no,e07,Product/Service ID Qualifier,2,2,-,X
-DSB,CLM,1,no,no,e08,Medical Code Value,1,15,-,X/Z
-UR,CLM,1,no,yes,landmark,Peer Review Organization or Utilization Review,2,2,-,O
-UR,CLM,1,no,no,e01,Approval Code,1,1,-,M
-UR,CLM,1,no,no,e02,Quantity,1,15,-,O/Z
-AMT,CLM,40,no,yes,landmark,Monetary Amount Information,3,3,-,O
-AMT,CLM,1,no,no,e01,Amount Qualifier Code,1,3,-,M
-AMT,CLM,1,no,no,e02,Monetary Amount,1,18,-,M
-AMT,CLM,1,no,no,e03,Credit/Debit Flag Code,1,1,-,O
-REF,CLM,30,no,yes,landmark,Reference Information,3,3,-,O
-REF,CLM,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
-REF,CLM,1,no,no,e02,Reference Identification,1,50,-,X
-REF,CLM,1,no,no,e03,Description,1,80,-,X
-K3,CLM,10,no,yes,landmark,File Information,2,2,-,O
-K3,CLM,1,no,no,e01,Fixed Format Information,1,80,-,M
-K3,CLM,1,no,no,e02,Record Format Code,1,2,-,O
-NTE,CLM,20,no,yes,landmark,Note/Special Instruction,3,3,-,O
-NTE,CLM,1,no,no,e01,Note Reference Code,3,3,-,O
-NTE,CLM,1,no,no,e02,Description,1,80,-,M
-CR1,CLM,1,no,yes,landmark,Ambulance Certification,3,3,-,O
-CR1,CLM,1,no,no,e01,Unit or Basis for Measurement Code,2,2,-,X
-CR1,CLM,1,no,no,e02,Weight,1,10,-,X/Z
-CR1,CLM,1,no,no,e03,Ambulance Transport Code,1,1,-,O
-CR1,CLM,1,no,no,e04,Ambulance Transport Reason Code,1,1,-,O
-CR1,CLM,1,no,no,e05,Unit or Basis for Measurement Code,2,2,-,X
-CR1,CLM,1,no,no,e06,Quantity,1,15,-,X/Z
-CR1,CLM,1,no,no,e07,Address Information,1,55,-,O/Z
-CR1,CLM,1,no,no,e08,Address Information,1,55,-,O/Z
-CR1,CLM,1,no,no,e09,Description,1,80,-,O/Z
-CR1,CLM,1,no,no,e10,Description,1,80,-,O/Z
-CR2,CLM,1,no,yes,landmark,Chiropractic Certification,3,3,-,O
-CR2,CLM,1,no,no,e01,Count,1,9,-,X/Z
-CR2,CLM,1,no,no,e02,Quantity,1,15,-,X/Z
-CR2,CLM,1,no,no,e03,Subluxation Level Code,2,3,-,X
-CR2,CLM,1,no,no,e04,Subluxation Level Code,2,3,-,O
-CR2,CLM,1,no,no,e05,Unit or Basis for Measurement Code,2,2,-,X
-CR2,CLM,1,no,no,e06,Quantity,1,15,-,X/Z
-CR2,CLM,1,no,no,e07,Quantity,1,15,-,O/Z
-CR2,CLM,1,no,no,e08,Nature of Condition Code,1,1,-,O
-CR2,CLM,1,no,no,e09,Yes/No Condition or Response Code,1,1,-,O/Z
-CR2,CLM,1,no,no,e10,Description,1,80,-,O/Z
-CR2,CLM,1,no,no,e11,Description,1,80,-,O/Z
-CR2,CLM,1,no,no,e12,Yes/No Condition or Response Code,1,1,-,O/Z
-CR3,CLM,1,no,yes,landmark,Durable Medical Equipment Certification,3,3,-,O
-CR3,CLM,1,no,no,e01,Certification Type Code,1,1,-,O
-CR3,CLM,1,no,no,e02,Unit or Basis for Measurement Code,2,2,-,X/Z
-CR3,CLM,1,no,no,e03,Quantity,1,15,-,X
-CR3,CLM,1,no,no,e04,Insulin Dependent Code,1,1,-,O
-CR3,CLM,1,no,no,e05,Description,1,80,-,O/Z
-CR4,CLM,3,no,yes,landmark,Enteral or Parenteral Therapy Certification,3,3,-,O
-CR4,CLM,1,no,no,e01,Yes/No Condition or Response Code,1,1,-,M/Z
-CR4,CLM,1,no,no,e02,Certification Type Code,1,1,-,O
-CR4,CLM,1,no,no,e03,Unit or Basis for Measurement Code,2,2,-,X
-CR4,CLM,1,no,no,e04,Quantity,1,15,-,X/Z
-CR4,CLM,1,no,no,e05,Unit or Basis for Measurement Code,2,2,-,X
-CR4,CLM,1,no,no,e06,Quantity,1,15,-,X/Z
-CR4,CLM,1,no,no,e07,Non-Visit Code,1,1,-,O
-CR4,CLM,1,no,no,e08,Unit or Basis for Measurement Code,2,2,-,X
-CR4,CLM,1,no,no,e09,Quantity,1,15,-,X/Z
-CR4,CLM,1,no,no,e10,Unit or Basis for Measurement Code,2,2,-,X
-CR4,CLM,1,no,no,e11,Height,1,8,-,X/Z
-CR4,CLM,1,no,no,e12,Unit or Basis for Measurement Code,2,2,-,X
-CR4,CLM,1,no,no,e13,Weight,1,10,-,X/Z
-CR4,CLM,1,no,no,e14,Quantity,1,15,-,O/Z
-CR4,CLM,1,no,no,e15,Description,1,80,-,O/Z
-CR4,CLM,1,no,no,e16,Nutrient Administration Method Code,1,1,-,O
-CR4,CLM,1,no,no,e17,Nutrient Administration Technique Code,1,1,-,O
-CR4,CLM,1,no,no,e18,Quantity,1,15,-,O/Z
-CR4,CLM,1,no,no,e19,Quantity,1,15,-,O/Z
-CR4,CLM,1,no,no,e20,Description,1,80,-,O/Z
-CR4,CLM,1,no,no,e21,Quantity,1,15,-,O/Z
-CR4,CLM,1,no,no,e22,Percentage as Decimal,1,10,-,O/Z
-CR4,CLM,1,no,no,e23,Quantity,1,15,-,O/Z
-CR4,CLM,1,no,no,e24,Quantity,1,15,-,O/Z
-CR4,CLM,1,no,no,e25,Percentage as Decimal,1,10,-,O/Z
-CR4,CLM,1,no,no,e26,Quantity,1,15,-,O/Z
-CR4,CLM,1,no,no,e27,Percentage as Decimal,1,10,-,O/Z
-CR4,CLM,1,no,no,e28,Quantity,1,15,-,O/Z
-CR4,CLM,1,no,no,e29,Description,1,80,-,O/Z
-CR5,CLM,1,no,yes,landmark,Oxygen Therapy Certification,3,3,-,O
-CR5,CLM,1,no,no,e01,Certification Type Code,1,1,-,O
-CR5,CLM,1,no,no,e02,Quantity,1,15,-,O/Z
-CR5,CLM,1,no,no,e03,Oxygen Equipment Type Code,1,1,-,O
-CR5,CLM,1,no,no,e04,Oxygen Equipment Type Code,1,1,-,O
-CR5,CLM,1,no,no,e05,Description,1,80,-,O/Z
-CR5,CLM,1,no,no,e06,Quantity,1,15,-,O/Z
-CR5,CLM,1,no,no,e07,Quantity,1,15,-,O/Z
-CR5,CLM,1,no,no,e08,Quantity,1,15,-,O/Z
-CR5,CLM,1,no,no,e09,Description,1,80,-,O/Z
-CR5,CLM,1,no,no,e10,Quantity,1,15,-,O/Z
-CR5,CLM,1,no,no,e11,Quantity,1,15,-,O/Z
-CR5,CLM,1,no,no,e12,Oxygen Test Condition Code,1,1,-,O
-CR5,CLM,1,no,no,e13,Oxygen Test Findings Code,1,1,-,O
-CR5,CLM,1,no,no,e14,Oxygen Test Findings Code,1,1,-,O
-CR5,CLM,1,no,no,e15,Oxygen Test Findings Code,1,1,-,O
-CR5,CLM,1,no,no,e16,Quantity,1,15,-,O/Z
-CR5,CLM,1,no,no,e17,Oxygen Delivery System Code,1,1,-,O
-CR5,CLM,1,no,no,e18,Oxygen Equipment Type Code,1,1,-,O
-CR6,CLM,1,no,yes,landmark,Home Health Care Certification,3,3,-,O
-CR6,CLM,1,no,no,e01,Prognosis Code,1,1,-,M
-CR6,CLM,1,no,no,e02,Date,8,8,-,M/Z
-CR6,CLM,1,no,no,e03,Date Time Period Format Qualifier,2,3,-,X
-CR6,CLM,1,no,no,e04,Date Time Period,1,35,-,X/Z
-CR6,CLM,1,no,no,e05,Date,8,8,-,O/Z
-CR6,CLM,1,no,no,e06,Yes/No Condition or Response Code,1,1,-,O/Z
-CR6,CLM,1,no,no,e07,Yes/No Condition or Response Code,1,1,-,M/Z
-CR6,CLM,1,no,no,e08,Certification Type Code,1,1,-,M
-CR6,CLM,1,no,no,e09,Date,8,8,-,X/Z
-CR6,CLM,1,no,no,e10,Product/Service ID Qualifier,2,2,-,X/Z
-CR6,CLM,1,no,no,e11,Medical Code Value,1,15,-,X/Z
-CR6,CLM,1,no,no,e12,Date,8,8,-,O/Z
-CR6,CLM,1,no,no,e13,Date,8,8,-,O/Z
-CR6,CLM,1,no,no,e14,Date,8,8,-,O/Z
-CR6,CLM,1,no,no,e15,Date Time Period Format Qualifier,2,3,-,X
-CR6,CLM,1,no,no,e16,Date Time Period,1,35,-,X/Z
-CR6,CLM,1,no,no,e17,Patient Location Code,1,1,-,X/Z
-CR6,CLM,1,no,no,e18,Date,8,8,-,O/Z
-CR6,CLM,1,no,no,e19,Date,8,8,-,O/Z
-CR6,CLM,1,no,no,e20,Date,8,8,-,O/Z
-CR6,CLM,1,no,no,e21,Date,8,8,-,O/Z
-CR8,CLM,9,no,yes,landmark,Pacemaker Certification,3,3,-,O
-CR8,CLM,1,no,no,e01,Implant Type Code,1,1,-,M
-CR8,CLM,1,no,no,e02,Implant Status Code,1,1,-,M
-CR8,CLM,1,no,no,e03,Date,8,8,-,M/Z
-CR8,CLM,1,no,no,e04,Date,8,8,-,M/Z
-CR8,CLM,1,no,no,e05,Reference Identification,1,50,-,M/Z
-CR8,CLM,1,no,no,e06,Reference Identification,1,50,-,M/Z
-CR8,CLM,1,no,no,e07,Reference Identification,1,50,-,M/Z
-CR8,CLM,1,no,no,e08,Yes/No Condition or Response Code,1,1,-,M/Z
-CR8,CLM,1,no,no,e09,Yes/No Condition or Response Code,1,1,-,M/Z
-CRC,CLM,100,no,yes,landmark,Conditions Indicator,3,3,-,O
-CRC,CLM,1,no,no,e01,Code Category,2,2,-,M/Z
-CRC,CLM,1,no,no,e02,Yes/No Condition or Response Code,1,1,-,M/Z
-CRC,CLM,1,no,no,e03,Condition Indicator,2,3,-,M
-CRC,CLM,1,no,no,e04,Condition Indicator,2,3,-,O
-CRC,CLM,1,no,no,e05,Condition Indicator,2,3,-,O
-CRC,CLM,1,no,no,e06,Condition Indicator,2,3,-,O
-CRC,CLM,1,no,no,e07,Condition Indicator,2,3,-,O
-HI,CLM,25,no,yes,landmark,Health Care Information Codes,2,2,-,O
-QTY,CLM,10,no,yes,landmark,Quantity Information,3,3,-,O
-QTY,CLM,1,no,no,e01,Quantity Qualifier,2,2,-,M
-QTY,CLM,1,no,no,e02,Quantity,1,15,-,X
-QTY,CLM,1,no,no,e04,Free-form Information,1,30,-,X/Z
-HCP,CLM,1,no,yes,landmark,Health Care Pricing,3,3,-,O
-HCP,CLM,1,no,no,e01,Pricing Methodology,2,2,-,X
-HCP,CLM,1,no,no,e02,Monetary Amount,1,18,-,O/Z
-HCP,CLM,1,no,no,e03,Monetary Amount,1,18,-,O/Z
-HCP,CLM,1,no,no,e04,Reference Identification,1,50,-,O/Z
-HCP,CLM,1,no,no,e05,Rate,1,9,-,O/Z
-HCP,CLM,1,no,no,e06,Reference Identification,1,50,-,O/Z
-HCP,CLM,1,no,no,e07,Monetary Amount,1,18,-,O/Z
-HCP,CLM,1,no,no,e08,Product/Service ID,1,48,-,O/Z
-HCP,CLM,1,no,no,e09,Product/Service ID Qualifier,2,2,-,X
-HCP,CLM,1,no,no,e10,Product/Service ID,1,48,-,X/Z
-HCP,CLM,1,no,no,e11,Unit or Basis for Measurement Code,2,2,-,X
-HCP,CLM,1,no,no,e12,Quantity,1,15,-,X/Z
-HCP,CLM,1,no,no,e13,Reject Reason Code,2,2,-,X/Z
-HCP,CLM,1,no,no,e14,Policy Compliance Code,1,2,-,O
-HCP,CLM,1,no,no,e15,Exception Code,1,2,-,O/Z
-CR7,,6,yes,yes,landmark,Home Health Treatment Plan Certification,3,3,-,O
-CR7,,1,no,no,e01,Discipline Type Code,2,2,-,M
-CR7,,1,no,no,e02,Number,1,9,-,M/Z
-CR7,,1,no,no,e03,Number,1,9,-,M/Z
-HSD,CLM:CR7,12,no,yes,landmark,Health Care Services Delivery,3,3,-,O
-HSD,CLM:CR7,1,no,no,e01,Quantity Qualifier,2,2,-,X
-HSD,CLM:CR7,1,no,no,e02,Quantity,1,15,-,X
-HSD,CLM:CR7,1,no,no,e03,Unit or Basis for Measurement Code,2,2,-,O
-HSD,CLM:CR7,1,no,no,e04,Sample Selection Modulus,1,6,-,O
-HSD,CLM:CR7,1,no,no,e05,Time Period Qualifier,1,2,-,X
-HSD,CLM:CR7,1,no,no,e06,Number of Periods,1,3,-,O
-HSD,CLM:CR7,1,no,no,e07,Ship/Delivery or Calendar Pattern Code,1,2,-,O
-HSD,CLM:CR7,1,no,no,e08,Ship/Delivery Pattern Time Code,1,1,-,O
-NM1,,9,yes,yes,landmark,Individual or Organizational Name,3,3,-,O
-NM1,,1,no,no,e01,Entity Identifier Code,2,3,-,M
-NM1,,1,no,no,e02,Entity Type Qualifier,1,1,-,M/Z
-NM1,,1,no,no,e03,Name Last or Organization Name,1,60,-,X
-NM1,,1,no,no,e04,Name First,1,35,-,O
-NM1,,1,no,no,e05,Name Middle,1,25,-,O
-NM1,,1,no,no,e06,Name Prefix,1,10,-,O
-NM1,,1,no,no,e07,Name Suffix,1,10,-,O
-NM1,,1,no,no,e08,Identification Code Qualifier,1,2,-,X
-NM1,,1,no,no,e09,Identification Code,2,80,-,X
-NM1,,1,no,no,e10,Entity Relationship Code,2,2,-,X
-NM1,,1,no,no,e11,Entity Identifier Code,2,3,-,O
-NM1,,1,no,no,e12,Name Last or Organization Name,1,60,-,O
-PRV,NM1,1,no,yes,landmark,Provider Information,3,3,-,O
-PRV,NM1,1,no,no,e01,Provider Code,1,3,-,M
-PRV,NM1,1,no,no,e02,Reference Identification Qualifier,2,3,-,X
-PRV,NM1,1,no,no,e03,Reference Identification,1,50,-,X
-PRV,NM1,1,no,no,e04,State or Province Code,2,2,-,O
-PRV,NM1,1,no,no,e06,Provider Organization Code,3,3,-,O
-N2,NM1,2,no,yes,landmark,Additional Name Information,2,2,-,O
-N2,NM1,1,no,no,e01,Name,1,60,-,M
-N2,NM1,1,no,no,e02,Name,1,60,-,O
-N3,NM1,2,no,yes,landmark,Party Location,2,2,-,O
-N3,NM1,1,no,no,e01,Address Information,1,55,-,M
-N3,NM1,1,no,no,e02,Address Information,1,55,-,O
-N4,NM1,1,no,yes,landmark,Geographic Location,2,2,-,O
-N4,NM1,1,no,no,e01,City Name,2,30,-,O
-N4,NM1,1,no,no,e02,State or Province Code,2,2,-,X
-N4,NM1,1,no,no,e03,Postal Code,3,15,-,O
-N4,NM1,1,no,no,e04,Country Code,2,3,-,X
-N4,NM1,1,no,no,e05,Location Qualifier,1,2,-,X
-N4,NM1,1,no,no,e06,Location Identifier,1,30,-,O
-N4,NM1,1,no,no,e07,Country Subdivision Code,1,3,-,X
-REF,NM1,20,no,yes,landmark,Reference Information,3,3,-,O
-REF,NM1,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
-REF,NM1,1,no,no,e02,Reference Identification,1,50,-,X
-REF,NM1,1,no,no,e03,Description,1,80,-,X
-PER,NM1,2,no,yes,landmark,Administrative Communications Contact,3,3,-,O
-PER,NM1,1,no,no,e01,Contact Function Code,2,2,-,M
-PER,NM1,1,no,no,e02,Name,1,60,-,O
-PER,NM1,1,no,no,e03,Communication Number Qualifier,2,2,-,X
-PER,NM1,1,no,no,e04,Communication Number,1,256,-,X
-PER,NM1,1,no,no,e05,Communication Number Qualifier,2,2,-,X
-PER,NM1,1,no,no,e06,Communication Number,1,256,-,X
-PER,NM1,1,no,no,e07,Communication Number Qualifier,2,2,-,X
-PER,NM1,1,no,no,e08,Communication Number,1,256,-,X
-PER,NM1,1,no,no,e09,Contact Inquiry Reference,1,20,-,O
-SBR,,10,yes,yes,landmark,Subscriber Information,3,3,-,O
-SBR,,1,no,no,e01,Payer Responsibility Sequence Number Code,1,1,-,M
-SBR,,1,no,no,e02,Individual Relationship Code,2,2,-,O/Z
-SBR,,1,no,no,e03,Reference Identification,1,50,-,O/Z
-SBR,,1,no,no,e04,Name,1,60,-,O/Z
-SBR,,1,no,no,e05,Insurance Type Code,1,3,-,O
-SBR,,1,no,no,e06,Coordination of Benefits Code,1,1,-,O
-SBR,,1,no,no,e07,Yes/No Condition or Response Code,1,1,-,O/Z
-SBR,,1,no,no,e08,Employment Status Code,2,2,-,O
-SBR,,1,no,no,e09,Claim Filing Indicator Code,1,2,-,O
-CAS,SBR,99,no,yes,landmark,Claims Adjustment,3,3,-,O
-CAS,SBR,1,no,no,e01,Claim Adjustment Group Code,1,2,-,M
-CAS,SBR,1,no,no,e02,Claim Adjustment Reason Code,1,5,-,M
-CAS,SBR,1,no,no,e03,Monetary Amount,1,18,-,M/Z
-CAS,SBR,1,no,no,e04,Quantity,1,15,-,O/Z
-CAS,SBR,1,no,no,e05,Claim Adjustment Reason Code,1,5,-,X
-CAS,SBR,1,no,no,e06,Monetary Amount,1,18,-,X/Z
-CAS,SBR,1,no,no,e07,Quantity,1,15,-,X/Z
-CAS,SBR,1,no,no,e08,Claim Adjustment Reason Code,1,5,-,X
-CAS,SBR,1,no,no,e09,Monetary Amount,1,18,-,X/Z
-CAS,SBR,1,no,no,e10,Quantity,1,15,-,X/Z
-CAS,SBR,1,no,no,e11,Claim Adjustment Reason Code,1,5,-,X
-CAS,SBR,1,no,no,e12,Monetary Amount,1,18,-,X/Z
-CAS,SBR,1,no,no,e13,Quantity,1,15,-,X/Z
-CAS,SBR,1,no,no,e14,Claim Adjustment Reason Code,1,5,-,X
-CAS,SBR,1,no,no,e15,Monetary Amount,1,18,-,X/Z
-CAS,SBR,1,no,no,e16,Quantity,1,15,-,X/Z
-CAS,SBR,1,no,no,e17,Claim Adjustment Reason Code,1,5,-,X
-CAS,SBR,1,no,no,e18,Monetary Amount,1,18,-,X/Z
-CAS,SBR,1,no,no,e19,Quantity,1,15,-,X/Z
-AMT,SBR,15,no,yes,landmark,Monetary Amount Information,3,3,-,O
-AMT,SBR,1,no,no,e01,Amount Qualifier Code,1,3,-,M
-AMT,SBR,1,no,no,e02,Monetary Amount,1,18,-,M
-AMT,SBR,1,no,no,e03,Credit/Debit Flag Code,1,1,-,O
-DMG,SBR,1,no,yes,landmark,Demographic Information,3,3,-,O
-DMG,SBR,1,no,no,e01,Date Time Period Format Qualifier,2,3,-,X
-DMG,SBR,1,no,no,e02,Date Time Period,1,35,-,X/Z
-DMG,SBR,1,no,no,e03,Gender Code,1,1,-,O
-DMG,SBR,1,no,no,e04,Marital Status Code,1,1,-,O
-DMG,SBR,1,no,no,e06,Citizenship Status Code,1,2,-,O
-DMG,SBR,1,no,no,e07,Country Code,2,3,-,O/Z
-DMG,SBR,1,no,no,e08,Basis of Verification Code,1,2,-,O
-DMG,SBR,1,no,no,e09,Quantity,1,15,-,O/Z
-DMG,SBR,1,no,no,e10,Code List Qualifier Code,1,3,-,X
-DMG,SBR,1,no,no,e11,Industry Code,1,30,-,X/Z
-OI,SBR,1,no,yes,landmark,Other Health Insurance Information,2,2,-,O
-OI,SBR,1,no,no,e01,Claim Filing Indicator Code,1,2,-,O
-OI,SBR,1,no,no,e02,Claim Submission Reason Code,2,2,-,O
-OI,SBR,1,no,no,e03,Yes/No Condition or Response Code,1,1,-,O/Z
-OI,SBR,1,no,no,e04,Patient Signature Source Code,1,1,-,O
-OI,SBR,1,no,no,e05,Provider Agreement Code,1,1,-,O
-OI,SBR,1,no,no,e06,Release of Information Code,1,1,-,O
-MIA,SBR,1,no,yes,landmark,Medicare Inpatient Adjudication,3,3,-,O
-MIA,SBR,1,no,no,e01,Quantity,1,15,-,M/Z
-MIA,SBR,1,no,no,e02,Monetary Amount,1,18,-,O/Z
-MIA,SBR,1,no,no,e03,Quantity,1,15,-,O/Z
-MIA,SBR,1,no,no,e04,Monetary Amount,1,18,-,O/Z
-MIA,SBR,1,no,no,e05,Reference Identification,1,50,-,O/Z
-MIA,SBR,1,no,no,e06,Monetary Amount,1,18,-,O/Z
-MIA,SBR,1,no,no,e07,Monetary Amount,1,18,-,O/Z
-MIA,SBR,1,no,no,e08,Monetary Amount,1,18,-,O/Z
-MIA,SBR,1,no,no,e09,Monetary Amount,1,18,-,O/Z
-MIA,SBR,1,no,no,e10,Monetary Amount,1,18,-,O/Z
-MIA,SBR,1,no,no,e11,Monetary Amount,1,18,-,O/Z
-MIA,SBR,1,no,no,e12,Monetary Amount,1,18,-,O/Z
-MIA,SBR,1,no,no,e13,Monetary Amount,1,18,-,O/Z
-MIA,SBR,1,no,no,e14,Monetary Amount,1,18,-,O/Z
-MIA,SBR,1,no,no,e15,Quantity,1,15,-,O/Z
-MIA,SBR,1,no,no,e16,Monetary Amount,1,18,-,O/Z
-MIA,SBR,1,no,no,e17,Monetary Amount,1,18,-,O/Z
-MIA,SBR,1,no,no,e18,Monetary Amount,1,18,-,O/Z
-MIA,SBR,1,no,no,e19,Monetary Amount,1,18,-,O/Z
-MIA,SBR,1,no,no,e20,Reference Identification,1,50,-,O/Z
-MIA,SBR,1,no,no,e21,Reference Identification,1,50,-,O/Z
-MIA,SBR,1,no,no,e22,Reference Identification,1,50,-,O/Z
-MIA,SBR,1,no,no,e23,Reference Identification,1,50,-,O/Z
-MIA,SBR,1,no,no,e24,Monetary Amount,1,18,-,O/Z
-MOA,SBR,1,no,yes,landmark,Medicare Outpatient Adjudication,3,3,-,O
-MOA,SBR,1,no,no,e01,Percentage as Decimal,1,10,-,O/Z
-MOA,SBR,1,no,no,e02,Monetary Amount,1,18,-,O/Z
-MOA,SBR,1,no,no,e03,Reference Identification,1,50,-,O/Z
-MOA,SBR,1,no,no,e04,Reference Identification,1,50,-,O/Z
-MOA,SBR,1,no,no,e05,Reference Identification,1,50,-,O/Z
-MOA,SBR,1,no,no,e06,Reference Identification,1,50,-,O/Z
-MOA,SBR,1,no,no,e07,Reference Identification,1,50,-,O/Z
-MOA,SBR,1,no,no,e08,Monetary Amount,1,18,-,O/Z
-MOA,SBR,1,no,no,e09,Monetary Amount,1,18,-,O/Z
-NM1,,10,yes,yes,landmark,Individual or Organizational Name,3,3,-,O
-NM1,,1,no,no,e01,Entity Identifier Code,2,3,-,M
-NM1,,1,no,no,e02,Entity Type Qualifier,1,1,-,M/Z
-NM1,,1,no,no,e03,Name Last or Organization Name,1,60,-,X
-NM1,,1,no,no,e04,Name First,1,35,-,O
-NM1,,1,no,no,e05,Name Middle,1,25,-,O
-NM1,,1,no,no,e06,Name Prefix,1,10,-,O
-NM1,,1,no,no,e07,Name Suffix,1,10,-,O
-NM1,,1,no,no,e08,Identification Code Qualifier,1,2,-,X
-NM1,,1,no,no,e09,Identification Code,2,80,-,X
-NM1,,1,no,no,e10,Entity Relationship Code,2,2,-,X
-NM1,,1,no,no,e11,Entity Identifier Code,2,3,-,O
-NM1,,1,no,no,e12,Name Last or Organization Name,1,60,-,O
-N2,SBR:NM1,2,no,yes,landmark,Additional Name Information,2,2,-,O
-N2,SBR:NM1,1,no,no,e01,Name,1,60,-,M
-N2,SBR:NM1,1,no,no,e02,Name,1,60,-,O
-N3,SBR:NM1,2,no,yes,landmark,Party Location,2,2,-,O
-N3,SBR:NM1,1,no,no,e01,Address Information,1,55,-,M
-N3,SBR:NM1,1,no,no,e02,Address Information,1,55,-,O
-N4,SBR:NM1,1,no,yes,landmark,Geographic Location,2,2,-,O
-N4,SBR:NM1,1,no,no,e01,City Name,2,30,-,O
-N4,SBR:NM1,1,no,no,e02,State or Province Code,2,2,-,X
-N4,SBR:NM1,1,no,no,e03,Postal Code,3,15,-,O
-N4,SBR:NM1,1,no,no,e04,Country Code,2,3,-,X
-N4,SBR:NM1,1,no,no,e05,Location Qualifier,1,2,-,X
-N4,SBR:NM1,1,no,no,e06,Location Identifier,1,30,-,O
-N4,SBR:NM1,1,no,no,e07,Country Subdivision Code,1,3,-,X
-PER,SBR:NM1,2,no,yes,landmark,Administrative Communications Contact,3,3,-,O
-PER,SBR:NM1,1,no,no,e01,Contact Function Code,2,2,-,M
-PER,SBR:NM1,1,no,no,e02,Name,1,60,-,O
-PER,SBR:NM1,1,no,no,e03,Communication Number Qualifier,2,2,-,X
-PER,SBR:NM1,1,no,no,e04,Communication Number,1,256,-,X
-PER,SBR:NM1,1,no,no,e05,Communication Number Qualifier,2,2,-,X
-PER,SBR:NM1,1,no,no,e06,Communication Number,1,256,-,X
-PER,SBR:NM1,1,no,no,e07,Communication Number Qualifier,2,2,-,X
-PER,SBR:NM1,1,no,no,e08,Communication Number,1,256,-,X
-PER,SBR:NM1,1,no,no,e09,Contact Inquiry Reference,1,20,-,O
-DTP,SBR:NM1,9,no,yes,landmark,Date or Time or Period,3,3,-,O
-DTP,SBR:NM1,1,no,no,e01,Date/Time Qualifier,3,3,-,M
-DTP,SBR:NM1,1,no,no,e02,Date Time Period Format Qualifier,2,3,-,M/Z
-DTP,SBR:NM1,1,no,no,e03,Date Time Period,1,35,-,M
-REF,SBR:NM1,99999,no,yes,landmark,Reference Information,3,3,-,O
-REF,SBR:NM1,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
-REF,SBR:NM1,1,no,no,e02,Reference Identification,1,50,-,X
-REF,SBR:NM1,1,no,no,e03,Description,1,80,-,X
-LX,,99999,yes,yes,landmark,Transaction Set Line Number,2,2,-,O
-LX,,1,no,no,e01,Assigned Number,1,6,-,M
-SV1,LX,1,no,yes,landmark,Professional Service,3,3,-,O
-SV1,LX,1,no,no,e02,Monetary Amount,1,18,-,O/Z
-SV1,LX,1,no,no,e03,Unit or Basis for Measurement Code,2,2,-,X
-SV1,LX,1,no,no,e04,Quantity,1,15,-,X
-SV1,LX,1,no,no,e05,Facility Code Value,1,2,-,O/Z
-SV1,LX,1,no,no,e06,Service Type Code,1,2,-,O
-SV1,LX,1,no,no,e08,Monetary Amount,1,18,-,O/Z
-SV1,LX,1,no,no,e09,Yes/No Condition or Response Code,1,1,-,O/Z
-SV1,LX,1,no,no,e10,Multiple Procedure Code,1,2,-,O
-SV1,LX,1,no,no,e11,Yes/No Condition or Response Code,1,1,-,O/Z
-SV1,LX,1,no,no,e12,Yes/No Condition or Response Code,1,1,-,O/Z
-SV1,LX,1,no,no,e13,Review Code,1,2,-,O
-SV1,LX,1,no,no,e14,National or Local Assigned Review Value,1,2,-,O
-SV1,LX,1,no,no,e15,Copay Status Code,1,1,-,O
-SV1,LX,1,no,no,e16,Health Care Professional Shortage Area Code,1,1,-,O
-SV1,LX,1,no,no,e17,Reference Identification,1,50,-,O/Z
-SV1,LX,1,no,no,e18,Postal Code,3,15,-,O/Z
-SV1,LX,1,no,no,e19,Monetary Amount,1,18,-,O/Z
-SV1,LX,1,no,no,e20,Level of Care Code,1,1,-,O
-SV1,LX,1,no,no,e21,Provider Agreement Code,1,1,-,O
-SV2,LX,1,no,yes,landmark,Institutional Service,3,3,-,O
-SV2,LX,1,no,no,e01,Product/Service ID,1,48,-,X/Z
-SV2,LX,1,no,no,e03,Monetary Amount,1,18,-,O/Z
-SV2,LX,1,no,no,e04,Unit or Basis for Measurement Code,2,2,-,X
-SV2,LX,1,no,no,e05,Quantity,1,15,-,X
-SV2,LX,1,no,no,e06,Unit Rate,1,10,-,O
-SV2,LX,1,no,no,e07,Monetary Amount,1,18,-,O/Z
-SV2,LX,1,no,no,e08,Yes/No Condition or Response Code,1,1,-,O/Z
-SV2,LX,1,no,no,e09,Nursing Home Residential Status Code,1,1,-,O
-SV2,LX,1,no,no,e10,Level of Care Code,1,1,-,O
-SV3,LX,1,no,yes,landmark,Dental Service,3,3,-,O
-SV3,LX,1,no,no,e02,Monetary Amount,1,18,-,O/Z
-SV3,LX,1,no,no,e03,Facility Code Value,1,2,-,O/Z
-SV3,LX,1,no,no,e05,Prosthesis, Crown or Inlay Code,1,1,-,O
-SV3,LX,1,no,no,e06,Quantity,1,15,-,O/Z
-SV3,LX,1,no,no,e07,Description,1,80,-,O/Z
-SV3,LX,1,no,no,e08,Copay Status Code,1,1,-,O
-SV3,LX,1,no,no,e09,Provider Agreement Code,1,1,-,O
-SV3,LX,1,no,no,e10,Yes/No Condition or Response Code,1,1,-,O/Z
-TOO,LX,32,no,yes,landmark,Tooth Identification,3,3,-,O
-TOO,LX,1,no,no,e01,Code List Qualifier Code,1,3,-,X
-TOO,LX,1,no,no,e02,Industry Code,1,30,-,X
-SV4,LX,1,no,yes,landmark,Drug Service,3,3,-,O
-SV4,LX,1,no,no,e01,Reference Identification,1,50,-,M/Z
-SV4,LX,1,no,no,e03,Reference Identification,1,50,-,O/Z
-SV4,LX,1,no,no,e04,Yes/No Condition or Response Code,1,1,-,O/Z
-SV4,LX,1,no,no,e05,Dispense as Written Code,1,1,-,O
-SV4,LX,1,no,no,e06,Level of Service Code,1,3,-,O
-SV4,LX,1,no,no,e07,Prescription Origin Code,1,1,-,O
-SV4,LX,1,no,no,e08,Description,1,80,-,O/Z
-SV4,LX,1,no,no,e09,Yes/No Condition or Response Code,1,1,-,O/Z
-SV4,LX,1,no,no,e10,Yes/No Condition or Response Code,1,1,-,O/Z
-SV4,LX,1,no,no,e11,Unit Dose Code,1,1,-,O
-SV4,LX,1,no,no,e12,Basis of Cost Determination Code,1,2,-,O
-SV4,LX,1,no,no,e13,Basis of Days Supply Determination Code,1,1,-,O
-SV4,LX,1,no,no,e14,Dosage Form Code,2,2,-,O
-SV4,LX,1,no,no,e15,Copay Status Code,1,1,-,O
-SV4,LX,1,no,no,e16,Patient Location Code,1,1,-,O
-SV4,LX,1,no,no,e17,Level of Care Code,1,1,-,O
-SV4,LX,1,no,no,e18,Prior Authorization Type Code,1,1,-,O
-SV5,LX,1,no,yes,landmark,Durable Medical Equipment Service,3,3,-,O
-SV5,LX,1,no,no,e02,Unit or Basis for Measurement Code,2,2,-,M
-SV5,LX,1,no,no,e03,Quantity,1,15,-,M/Z
-SV5,LX,1,no,no,e04,Monetary Amount,1,18,-,X/Z
-SV5,LX,1,no,no,e05,Monetary Amount,1,18,-,X/Z
-SV5,LX,1,no,no,e06,Frequency Code,1,1,-,O/Z
-SV5,LX,1,no,no,e07,Prognosis Code,1,1,-,O
-SV6,LX,1,no,yes,landmark,Anesthesia Service,3,3,-,O
-SV6,LX,1,no,no,e02,Facility Code Qualifier,1,2,-,X
-SV6,LX,1,no,no,e03,Facility Code Value,1,2,-,X
-SV6,LX,1,no,no,e04,Monetary Amount,1,18,-,O/Z
-SV6,LX,1,no,no,e06,Quantity,1,15,-,O/Z
-SV6,LX,1,no,no,e07,Yes/No Condition or Response Code,1,1,-,O/Z
-SV7,LX,1,no,yes,landmark,Drug Adjudication,3,3,-,O
-SV7,LX,1,no,no,e01,Reference Identification,1,50,-,O/Z
-SV7,LX,1,no,no,e02,Reference Identification,1,50,-,O/Z
-SV7,LX,1,no,no,e03,Prescription Denial Override Code,2,2,-,O
-SV7,LX,1,no,no,e04,Coverage Level Code,3,3,-,M/Z
-SV7,LX,1,no,no,e05,Product/Process Characteristic Code,2,3,-,M/Z
-SV7,LX,1,no,no,e06,Yes/No Condition or Response Code,1,1,-,O/Z
-HI,LX,25,no,yes,landmark,Health Care Information Codes,2,2,-,O
-PWK,LX,10,no,yes,landmark,Paperwork,3,3,-,O
-PWK,LX,1,no,no,e01,Report Type Code,2,2,-,M
-PWK,LX,1,no,no,e02,Report Transmission Code,1,2,-,O
-PWK,LX,1,no,no,e03,Report Copies Needed,1,2,-,O
-PWK,LX,1,no,no,e04,Entity Identifier Code,2,3,-,O
-PWK,LX,1,no,no,e05,Identification Code Qualifier,1,2,-,X
-PWK,LX,1,no,no,e06,Identification Code,2,80,-,X
-PWK,LX,1,no,no,e07,Description,1,80,-,O
-PWK,LX,1,no,no,e09,Request Category Code,1,2,-,O
-CR1,LX,1,no,yes,landmark,Ambulance Certification,3,3,-,O
-CR1,LX,1,no,no,e01,Unit or Basis for Measurement Code,2,2,-,X
-CR1,LX,1,no,no,e02,Weight,1,10,-,X/Z
-CR1,LX,1,no,no,e03,Ambulance Transport Code,1,1,-,O
-CR1,LX,1,no,no,e04,Ambulance Transport Reason Code,1,1,-,O
-CR1,LX,1,no,no,e05,Unit or Basis for Measurement Code,2,2,-,X
-CR1,LX,1,no,no,e06,Quantity,1,15,-,X/Z
-CR1,LX,1,no,no,e07,Address Information,1,55,-,O/Z
-CR1,LX,1,no,no,e08,Address Information,1,55,-,O/Z
-CR1,LX,1,no,no,e09,Description,1,80,-,O/Z
-CR1,LX,1,no,no,e10,Description,1,80,-,O/Z
-CR2,LX,5,no,yes,landmark,Chiropractic Certification,3,3,-,O
-CR2,LX,1,no,no,e01,Count,1,9,-,X/Z
-CR2,LX,1,no,no,e02,Quantity,1,15,-,X/Z
-CR2,LX,1,no,no,e03,Subluxation Level Code,2,3,-,X
-CR2,LX,1,no,no,e04,Subluxation Level Code,2,3,-,O
-CR2,LX,1,no,no,e05,Unit or Basis for Measurement Code,2,2,-,X
-CR2,LX,1,no,no,e06,Quantity,1,15,-,X/Z
-CR2,LX,1,no,no,e07,Quantity,1,15,-,O/Z
-CR2,LX,1,no,no,e08,Nature of Condition Code,1,1,-,O
-CR2,LX,1,no,no,e09,Yes/No Condition or Response Code,1,1,-,O/Z
-CR2,LX,1,no,no,e10,Description,1,80,-,O/Z
-CR2,LX,1,no,no,e11,Description,1,80,-,O/Z
-CR2,LX,1,no,no,e12,Yes/No Condition or Response Code,1,1,-,O/Z
-CR3,LX,1,no,yes,landmark,Durable Medical Equipment Certification,3,3,-,O
-CR3,LX,1,no,no,e01,Certification Type Code,1,1,-,O
-CR3,LX,1,no,no,e02,Unit or Basis for Measurement Code,2,2,-,X/Z
-CR3,LX,1,no,no,e03,Quantity,1,15,-,X
-CR3,LX,1,no,no,e04,Insulin Dependent Code,1,1,-,O
-CR3,LX,1,no,no,e05,Description,1,80,-,O/Z
-CR4,LX,3,no,yes,landmark,Enteral or Parenteral Therapy Certification,3,3,-,O
-CR4,LX,1,no,no,e01,Yes/No Condition or Response Code,1,1,-,M/Z
-CR4,LX,1,no,no,e02,Certification Type Code,1,1,-,O
-CR4,LX,1,no,no,e03,Unit or Basis for Measurement Code,2,2,-,X
-CR4,LX,1,no,no,e04,Quantity,1,15,-,X/Z
-CR4,LX,1,no,no,e05,Unit or Basis for Measurement Code,2,2,-,X
-CR4,LX,1,no,no,e06,Quantity,1,15,-,X/Z
-CR4,LX,1,no,no,e07,Non-Visit Code,1,1,-,O
-CR4,LX,1,no,no,e08,Unit or Basis for Measurement Code,2,2,-,X
-CR4,LX,1,no,no,e09,Quantity,1,15,-,X/Z
-CR4,LX,1,no,no,e10,Unit or Basis for Measurement Code,2,2,-,X
-CR4,LX,1,no,no,e11,Height,1,8,-,X/Z
-CR4,LX,1,no,no,e12,Unit or Basis for Measurement Code,2,2,-,X
-CR4,LX,1,no,no,e13,Weight,1,10,-,X/Z
-CR4,LX,1,no,no,e14,Quantity,1,15,-,O/Z
-CR4,LX,1,no,no,e15,Description,1,80,-,O/Z
-CR4,LX,1,no,no,e16,Nutrient Administration Method Code,1,1,-,O
-CR4,LX,1,no,no,e17,Nutrient Administration Technique Code,1,1,-,O
-CR4,LX,1,no,no,e18,Quantity,1,15,-,O/Z
-CR4,LX,1,no,no,e19,Quantity,1,15,-,O/Z
-CR4,LX,1,no,no,e20,Description,1,80,-,O/Z
-CR4,LX,1,no,no,e21,Quantity,1,15,-,O/Z
-CR4,LX,1,no,no,e22,Percentage as Decimal,1,10,-,O/Z
-CR4,LX,1,no,no,e23,Quantity,1,15,-,O/Z
-CR4,LX,1,no,no,e24,Quantity,1,15,-,O/Z
-CR4,LX,1,no,no,e25,Percentage as Decimal,1,10,-,O/Z
-CR4,LX,1,no,no,e26,Quantity,1,15,-,O/Z
-CR4,LX,1,no,no,e27,Percentage as Decimal,1,10,-,O/Z
-CR4,LX,1,no,no,e28,Quantity,1,15,-,O/Z
-CR4,LX,1,no,no,e29,Description,1,80,-,O/Z
-CR5,LX,1,no,yes,landmark,Oxygen Therapy Certification,3,3,-,O
-CR5,LX,1,no,no,e01,Certification Type Code,1,1,-,O
-CR5,LX,1,no,no,e02,Quantity,1,15,-,O/Z
-CR5,LX,1,no,no,e03,Oxygen Equipment Type Code,1,1,-,O
-CR5,LX,1,no,no,e04,Oxygen Equipment Type Code,1,1,-,O
-CR5,LX,1,no,no,e05,Description,1,80,-,O/Z
-CR5,LX,1,no,no,e06,Quantity,1,15,-,O/Z
-CR5,LX,1,no,no,e07,Quantity,1,15,-,O/Z
-CR5,LX,1,no,no,e08,Quantity,1,15,-,O/Z
-CR5,LX,1,no,no,e09,Description,1,80,-,O/Z
-CR5,LX,1,no,no,e10,Quantity,1,15,-,O/Z
-CR5,LX,1,no,no,e11,Quantity,1,15,-,O/Z
-CR5,LX,1,no,no,e12,Oxygen Test Condition Code,1,1,-,O
-CR5,LX,1,no,no,e13,Oxygen Test Findings Code,1,1,-,O
-CR5,LX,1,no,no,e14,Oxygen Test Findings Code,1,1,-,O
-CR5,LX,1,no,no,e15,Oxygen Test Findings Code,1,1,-,O
-CR5,LX,1,no,no,e16,Quantity,1,15,-,O/Z
-CR5,LX,1,no,no,e17,Oxygen Delivery System Code,1,1,-,O
-CR5,LX,1,no,no,e18,Oxygen Equipment Type Code,1,1,-,O
-CRC,LX,3,no,yes,landmark,Conditions Indicator,3,3,-,O
-CRC,LX,1,no,no,e01,Code Category,2,2,-,M/Z
-CRC,LX,1,no,no,e02,Yes/No Condition or Response Code,1,1,-,M/Z
-CRC,LX,1,no,no,e03,Condition Indicator,2,3,-,M
-CRC,LX,1,no,no,e04,Condition Indicator,2,3,-,O
-CRC,LX,1,no,no,e05,Condition Indicator,2,3,-,O
-CRC,LX,1,no,no,e06,Condition Indicator,2,3,-,O
-CRC,LX,1,no,no,e07,Condition Indicator,2,3,-,O
-DTP,LX,15,no,yes,landmark,Date or Time or Period,3,3,-,O
-DTP,LX,1,no,no,e01,Date/Time Qualifier,3,3,-,M
-DTP,LX,1,no,no,e02,Date Time Period Format Qualifier,2,3,-,M/Z
-DTP,LX,1,no,no,e03,Date Time Period,1,35,-,M
-QTY,LX,5,no,yes,landmark,Quantity Information,3,3,-,O
-QTY,LX,1,no,no,e01,Quantity Qualifier,2,2,-,M
-QTY,LX,1,no,no,e02,Quantity,1,15,-,X
-QTY,LX,1,no,no,e04,Free-form Information,1,30,-,X/Z
-MEA,LX,20,no,yes,landmark,Measurements,3,3,-,O
-MEA,LX,1,no,no,e01,Measurement Reference ID Code,2,2,-,O
-MEA,LX,1,no,no,e02,Measurement Qualifier,1,3,-,O
-MEA,LX,1,no,no,e03,Measurement Value,1,20,-,X
-MEA,LX,1,no,no,e05,Range Minimum,1,20,-,X
-MEA,LX,1,no,no,e06,Range Maximum,1,20,-,X
-MEA,LX,1,no,no,e07,Measurement Significance Code,2,2,-,O
-MEA,LX,1,no,no,e08,Measurement Attribute Code,2,2,-,X
-MEA,LX,1,no,no,e09,Surface/Layer/Position Code,2,2,-,O
-MEA,LX,1,no,no,e10,Measurement Method or Device,2,4,-,O
-MEA,LX,1,no,no,e11,Code List Qualifier Code,1,3,-,X/Z
-MEA,LX,1,no,no,e12,Industry Code,1,30,-,X/Z
-CN1,LX,1,no,yes,landmark,Contract Information,3,3,-,O
-CN1,LX,1,no,no,e01,Contract Type Code,2,2,-,M
-CN1,LX,1,no,no,e02,Monetary Amount,1,18,-,O/Z
-CN1,LX,1,no,no,e03,Percent, Decimal Format,1,6,-,O/Z
-CN1,LX,1,no,no,e04,Reference Identification,1,50,-,O/Z
-CN1,LX,1,no,no,e05,Terms Discount Percent,1,6,-,O
-CN1,LX,1,no,no,e06,Version Identifier,1,30,-,O/Z
-REF,LX,30,no,yes,landmark,Reference Information,3,3,-,O
-REF,LX,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
-REF,LX,1,no,no,e02,Reference Identification,1,50,-,X
-REF,LX,1,no,no,e03,Description,1,80,-,X
-AMT,LX,15,no,yes,landmark,Monetary Amount Information,3,3,-,O
-AMT,LX,1,no,no,e01,Amount Qualifier Code,1,3,-,M
-AMT,LX,1,no,no,e02,Monetary Amount,1,18,-,M
-AMT,LX,1,no,no,e03,Credit/Debit Flag Code,1,1,-,O
-K3,LX,10,no,yes,landmark,File Information,2,2,-,O
-K3,LX,1,no,no,e01,Fixed Format Information,1,80,-,M
-K3,LX,1,no,no,e02,Record Format Code,1,2,-,O
-NTE,LX,10,no,yes,landmark,Note/Special Instruction,3,3,-,O
-NTE,LX,1,no,no,e01,Note Reference Code,3,3,-,O
-NTE,LX,1,no,no,e02,Description,1,80,-,M
-PS1,LX,1,no,yes,landmark,Purchase Service,3,3,-,O
-PS1,LX,1,no,no,e01,Reference Identification,1,50,-,M/Z
-PS1,LX,1,no,no,e02,Monetary Amount,1,18,-,M/Z
-PS1,LX,1,no,no,e03,State or Province Code,2,2,-,O/Z
-IMM,LX,99999,no,yes,landmark,Immunization Status,3,3,-,O
-IMM,LX,1,no,no,e01,Industry Code,1,30,-,M/Z
-IMM,LX,1,no,no,e02,Date Time Period Format Qualifier,2,3,-,X
-IMM,LX,1,no,no,e03,Date Time Period,1,35,-,X/Z
-IMM,LX,1,no,no,e04,Immunization Status Code,1,2,-,X
-IMM,LX,1,no,no,e05,Report Type Code,2,2,-,O
-IMM,LX,1,no,no,e06,Code List Qualifier Code,1,3,-,M
-HSD,LX,1,no,yes,landmark,Health Care Services Delivery,3,3,-,O
-HSD,LX,1,no,no,e01,Quantity Qualifier,2,2,-,X
-HSD,LX,1,no,no,e02,Quantity,1,15,-,X
-HSD,LX,1,no,no,e03,Unit or Basis for Measurement Code,2,2,-,O
-HSD,LX,1,no,no,e04,Sample Selection Modulus,1,6,-,O
-HSD,LX,1,no,no,e05,Time Period Qualifier,1,2,-,X
-HSD,LX,1,no,no,e06,Number of Periods,1,3,-,O
-HSD,LX,1,no,no,e07,Ship/Delivery or Calendar Pattern Code,1,2,-,O
-HSD,LX,1,no,no,e08,Ship/Delivery Pattern Time Code,1,1,-,O
-HCP,LX,1,no,yes,landmark,Health Care Pricing,3,3,-,O
-HCP,LX,1,no,no,e01,Pricing Methodology,2,2,-,X
-HCP,LX,1,no,no,e02,Monetary Amount,1,18,-,O/Z
-HCP,LX,1,no,no,e03,Monetary Amount,1,18,-,O/Z
-HCP,LX,1,no,no,e04,Reference Identification,1,50,-,O/Z
-HCP,LX,1,no,no,e05,Rate,1,9,-,O/Z
-HCP,LX,1,no,no,e06,Reference Identification,1,50,-,O/Z
-HCP,LX,1,no,no,e07,Monetary Amount,1,18,-,O/Z
-HCP,LX,1,no,no,e08,Product/Service ID,1,48,-,O/Z
-HCP,LX,1,no,no,e09,Product/Service ID Qualifier,2,2,-,X
-HCP,LX,1,no,no,e10,Product/Service ID,1,48,-,X/Z
-HCP,LX,1,no,no,e11,Unit or Basis for Measurement Code,2,2,-,X
-HCP,LX,1,no,no,e12,Quantity,1,15,-,X/Z
-HCP,LX,1,no,no,e13,Reject Reason Code,2,2,-,X/Z
-HCP,LX,1,no,no,e14,Policy Compliance Code,1,2,-,O
-HCP,LX,1,no,no,e15,Exception Code,1,2,-,O/Z
-LIN,,99999,yes,yes,landmark,Item Identification,3,3,-,O
-LIN,,1,no,no,e01,Assigned Identification,1,20,-,O/Z
-LIN,,1,no,no,e02,Product/Service ID Qualifier,2,2,-,M
-LIN,,1,no,no,e03,Product/Service ID,1,48,-,M
-LIN,,1,no,no,e04,Product/Service ID Qualifier,2,2,-,X
-LIN,,1,no,no,e05,Product/Service ID,1,48,-,X
-LIN,,1,no,no,e06,Product/Service ID Qualifier,2,2,-,X
-LIN,,1,no,no,e07,Product/Service ID,1,48,-,X
-LIN,,1,no,no,e08,Product/Service ID Qualifier,2,2,-,X
-LIN,,1,no,no,e09,Product/Service ID,1,48,-,X
-LIN,,1,no,no,e10,Product/Service ID Qualifier,2,2,-,X
-LIN,,1,no,no,e11,Product/Service ID,1,48,-,X
-LIN,,1,no,no,e12,Product/Service ID Qualifier,2,2,-,X
-LIN,,1,no,no,e13,Product/Service ID,1,48,-,X
-LIN,,1,no,no,e14,Product/Service ID Qualifier,2,2,-,X
-LIN,,1,no,no,e15,Product/Service ID,1,48,-,X
-LIN,,1,no,no,e16,Product/Service ID Qualifier,2,2,-,X
-LIN,,1,no,no,e17,Product/Service ID,1,48,-,X
-LIN,,1,no,no,e18,Product/Service ID Qualifier,2,2,-,X
-LIN,,1,no,no,e19,Product/Service ID,1,48,-,X
-LIN,,1,no,no,e20,Product/Service ID Qualifier,2,2,-,X
-LIN,,1,no,no,e21,Product/Service ID,1,48,-,X
-LIN,,1,no,no,e22,Product/Service ID Qualifier,2,2,-,X
-LIN,,1,no,no,e23,Product/Service ID,1,48,-,X
-LIN,,1,no,no,e24,Product/Service ID Qualifier,2,2,-,X
-LIN,,1,no,no,e25,Product/Service ID,1,48,-,X
-LIN,,1,no,no,e26,Product/Service ID Qualifier,2,2,-,X
-LIN,,1,no,no,e27,Product/Service ID,1,48,-,X
-LIN,,1,no,no,e28,Product/Service ID Qualifier,2,2,-,X
-LIN,,1,no,no,e29,Product/Service ID,1,48,-,X
-LIN,,1,no,no,e30,Product/Service ID Qualifier,2,2,-,X
-LIN,,1,no,no,e31,Product/Service ID,1,48,-,X
-CTP,LX:LIN,1,no,yes,landmark,Pricing Information,3,3,-,O
-CTP,LX:LIN,1,no,no,e01,Class of Trade Code,2,2,-,O
-CTP,LX:LIN,1,no,no,e02,Price Identifier Code,3,3,-,X
-CTP,LX:LIN,1,no,no,e03,Unit Price,1,17,-,X
-CTP,LX:LIN,1,no,no,e04,Quantity,1,15,-,X
-CTP,LX:LIN,1,no,no,e06,Price Multiplier Qualifier,3,3,-,O
-CTP,LX:LIN,1,no,no,e07,Multiplier,1,10,-,X/Z
-CTP,LX:LIN,1,no,no,e08,Monetary Amount,1,18,-,O/Z
-CTP,LX:LIN,1,no,no,e09,Basis of Unit Price Code,2,2,-,O
-CTP,LX:LIN,1,no,no,e10,Condition Value,1,10,-,O
-CTP,LX:LIN,1,no,no,e11,Multiple Price Quantity,1,2,-,O
-REF,LX:LIN,1,no,yes,landmark,Reference Information,3,3,-,O
-REF,LX:LIN,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
-REF,LX:LIN,1,no,no,e02,Reference Identification,1,50,-,X
-REF,LX:LIN,1,no,no,e03,Description,1,80,-,X
-NM1,,10,yes,yes,landmark,Individual or Organizational Name,3,3,-,O
-NM1,,1,no,no,e01,Entity Identifier Code,2,3,-,M
-NM1,,1,no,no,e02,Entity Type Qualifier,1,1,-,M/Z
-NM1,,1,no,no,e03,Name Last or Organization Name,1,60,-,X
-NM1,,1,no,no,e04,Name First,1,35,-,O
-NM1,,1,no,no,e05,Name Middle,1,25,-,O
-NM1,,1,no,no,e06,Name Prefix,1,10,-,O
-NM1,,1,no,no,e07,Name Suffix,1,10,-,O
-NM1,,1,no,no,e08,Identification Code Qualifier,1,2,-,X
-NM1,,1,no,no,e09,Identification Code,2,80,-,X
-NM1,,1,no,no,e10,Entity Relationship Code,2,2,-,X
-NM1,,1,no,no,e11,Entity Identifier Code,2,3,-,O
-NM1,,1,no,no,e12,Name Last or Organization Name,1,60,-,O
-PRV,NM1,1,no,yes,landmark,Provider Information,3,3,-,O
-PRV,NM1,1,no,no,e01,Provider Code,1,3,-,M
-PRV,NM1,1,no,no,e02,Reference Identification Qualifier,2,3,-,X
-PRV,NM1,1,no,no,e03,Reference Identification,1,50,-,X
-PRV,NM1,1,no,no,e04,State or Province Code,2,2,-,O
-PRV,NM1,1,no,no,e06,Provider Organization Code,3,3,-,O
-N2,NM1,2,no,yes,landmark,Additional Name Information,2,2,-,O
-N2,NM1,1,no,no,e01,Name,1,60,-,M
-N2,NM1,1,no,no,e02,Name,1,60,-,O
-N3,NM1,2,no,yes,landmark,Party Location,2,2,-,O
-N3,NM1,1,no,no,e01,Address Information,1,55,-,M
-N3,NM1,1,no,no,e02,Address Information,1,55,-,O
-N4,NM1,1,no,yes,landmark,Geographic Location,2,2,-,O
-N4,NM1,1,no,no,e01,City Name,2,30,-,O
-N4,NM1,1,no,no,e02,State or Province Code,2,2,-,X
-N4,NM1,1,no,no,e03,Postal Code,3,15,-,O
-N4,NM1,1,no,no,e04,Country Code,2,3,-,X
-N4,NM1,1,no,no,e05,Location Qualifier,1,2,-,X
-N4,NM1,1,no,no,e06,Location Identifier,1,30,-,O
-N4,NM1,1,no,no,e07,Country Subdivision Code,1,3,-,X
-REF,NM1,20,no,yes,landmark,Reference Information,3,3,-,O
-REF,NM1,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
-REF,NM1,1,no,no,e02,Reference Identification,1,50,-,X
-REF,NM1,1,no,no,e03,Description,1,80,-,X
-PER,NM1,2,no,yes,landmark,Administrative Communications Contact,3,3,-,O
-PER,NM1,1,no,no,e01,Contact Function Code,2,2,-,M
-PER,NM1,1,no,no,e02,Name,1,60,-,O
-PER,NM1,1,no,no,e03,Communication Number Qualifier,2,2,-,X
-PER,NM1,1,no,no,e04,Communication Number,1,256,-,X
-PER,NM1,1,no,no,e05,Communication Number Qualifier,2,2,-,X
-PER,NM1,1,no,no,e06,Communication Number,1,256,-,X
-PER,NM1,1,no,no,e07,Communication Number Qualifier,2,2,-,X
-PER,NM1,1,no,no,e08,Communication Number,1,256,-,X
-PER,NM1,1,no,no,e09,Contact Inquiry Reference,1,20,-,O
-SVD,,99999,yes,yes,landmark,Service Line Adjudication,3,3,-,O
-SVD,,1,no,no,e01,Identification Code,2,80,-,M/Z
-SVD,,1,no,no,e02,Monetary Amount,1,18,-,M/Z
-SVD,,1,no,no,e04,Product/Service ID,1,48,-,O/Z
-SVD,,1,no,no,e05,Quantity,1,15,-,O/Z
-SVD,,1,no,no,e06,Assigned Number,1,6,-,O
-CAS,SVD,99,no,yes,landmark,Claims Adjustment,3,3,-,O
-CAS,SVD,1,no,no,e01,Claim Adjustment Group Code,1,2,-,M
-CAS,SVD,1,no,no,e02,Claim Adjustment Reason Code,1,5,-,M
-CAS,SVD,1,no,no,e03,Monetary Amount,1,18,-,M/Z
-CAS,SVD,1,no,no,e04,Quantity,1,15,-,O/Z
-CAS,SVD,1,no,no,e05,Claim Adjustment Reason Code,1,5,-,X
-CAS,SVD,1,no,no,e06,Monetary Amount,1,18,-,X/Z
-CAS,SVD,1,no,no,e07,Quantity,1,15,-,X/Z
-CAS,SVD,1,no,no,e08,Claim Adjustment Reason Code,1,5,-,X
-CAS,SVD,1,no,no,e09,Monetary Amount,1,18,-,X/Z
-CAS,SVD,1,no,no,e10,Quantity,1,15,-,X/Z
-CAS,SVD,1,no,no,e11,Claim Adjustment Reason Code,1,5,-,X
-CAS,SVD,1,no,no,e12,Monetary Amount,1,18,-,X/Z
-CAS,SVD,1,no,no,e13,Quantity,1,15,-,X/Z
-CAS,SVD,1,no,no,e14,Claim Adjustment Reason Code,1,5,-,X
-CAS,SVD,1,no,no,e15,Monetary Amount,1,18,-,X/Z
-CAS,SVD,1,no,no,e16,Quantity,1,15,-,X/Z
-CAS,SVD,1,no,no,e17,Claim Adjustment Reason Code,1,5,-,X
-CAS,SVD,1,no,no,e18,Monetary Amount,1,18,-,X/Z
-CAS,SVD,1,no,no,e19,Quantity,1,15,-,X/Z
-DTP,SVD,9,no,yes,landmark,Date or Time or Period,3,3,-,O
-DTP,SVD,1,no,no,e01,Date/Time Qualifier,3,3,-,M
-DTP,SVD,1,no,no,e02,Date Time Period Format Qualifier,2,3,-,M/Z
-DTP,SVD,1,no,no,e03,Date Time Period,1,35,-,M
-AMT,SVD,20,no,yes,landmark,Monetary Amount Information,3,3,-,O
-AMT,SVD,1,no,no,e01,Amount Qualifier Code,1,3,-,M
-AMT,SVD,1,no,no,e02,Monetary Amount,1,18,-,M
-AMT,SVD,1,no,no,e03,Credit/Debit Flag Code,1,1,-,O
-LQ,,99999,yes,yes,landmark,Industry Code Identification,2,2,-,O
-LQ,,1,no,no,e01,Code List Qualifier Code,1,3,-,O
-LQ,,1,no,no,e02,Industry Code,1,30,-,X
-FRM,LQ,99,no,yes,landmark,Supporting Documentation,3,3,-,M
-FRM,LQ,1,no,no,e01,Assigned Identification,1,20,-,M/Z
-FRM,LQ,1,no,no,e02,Yes/No Condition or Response Code,1,1,-,X/Z
-FRM,LQ,1,no,no,e03,Reference Identification,1,50,-,X
-FRM,LQ,1,no,no,e04,Date,8,8,-,X
-FRM,LQ,1,no,no,e05,Percent, Decimal Format,1,6,-,X
-SE,,1,no,yes,landmark,Transaction Set Trailer,2,2,-,M
-SE,,1,no,no,e01,Number of Included Segments,1,10,-,M
-SE,,1,no,no,e02,Transaction Set Control Number,4,9,-,M
+#segment,parent,loopcount,isgroup,islandmark,field,desc,min,max,align,status,type
+ST,,1,no,yes,landmark,Transaction Set Header,2,2,-,M,F
+ST,,1,no,no,e01,Transaction Set Identifier Code,3,3,-,M/Z,F
+ST,,1,no,no,e02,Transaction Set Control Number,4,9,-,M,F
+ST,,1,no,no,e03,Implementation Convention Reference,1,35,-,O/Z,F
+BHT,,1,no,yes,landmark,Beginning of Hierarchical Transaction,3,3,-,M,F
+BHT,,1,no,no,e01,Hierarchical Structure Code,4,4,-,M,F
+BHT,,1,no,no,e02,Transaction Set Purpose Code,2,2,-,M,F
+BHT,,1,no,no,e03,Reference Identification,1,50,-,O/Z,F
+BHT,,1,no,no,e04,Date,8,8,-,O/Z,F
+BHT,,1,no,no,e05,Time,4,8,-,O/Z,F
+BHT,,1,no,no,e06,Transaction Type Code,2,2,-,O,F
+REF,,3,no,yes,landmark,Reference Information,3,3,-,O,F
+REF,,1,no,no,e01,Reference Identification Qualifier,2,3,-,M,F
+REF,,1,no,no,e02,Reference Identification,1,50,-,X,F
+REF,,1,no,no,e03,Description,1,80,-,X,F
+NM1,,10,yes,yes,landmark,Individual or Organizational Name,3,3,-,O,F
+NM1,,1,no,no,e01,Entity Identifier Code,2,3,-,M,F
+NM1,,1,no,no,e02,Entity Type Qualifier,1,1,-,M/Z,F
+NM1,,1,no,no,e03,Name Last or Organization Name,1,60,-,X,F
+NM1,,1,no,no,e04,Name First,1,35,-,O,F
+NM1,,1,no,no,e05,Name Middle,1,25,-,O,F
+NM1,,1,no,no,e06,Name Prefix,1,10,-,O,F
+NM1,,1,no,no,e07,Name Suffix,1,10,-,O,F
+NM1,,1,no,no,e08,Identification Code Qualifier,1,2,-,X,F
+NM1,,1,no,no,e09,Identification Code,2,80,-,X,F
+NM1,,1,no,no,e10,Entity Relationship Code,2,2,-,X,F
+NM1,,1,no,no,e11,Entity Identifier Code,2,3,-,O,F
+NM1,,1,no,no,e12,Name Last or Organization Name,1,60,-,O,F
+N2,NM1,2,no,yes,landmark,Additional Name Information,2,2,-,O,F
+N2,NM1,1,no,no,e01,Name,1,60,-,M,F
+N2,NM1,1,no,no,e02,Name,1,60,-,O,F
+N3,NM1,2,no,yes,landmark,Party Location,2,2,-,O,F
+N3,NM1,1,no,no,e01,Address Information,1,55,-,M,F
+N3,NM1,1,no,no,e02,Address Information,1,55,-,O,F
+N4,NM1,1,no,yes,landmark,Geographic Location,2,2,-,O,F
+N4,NM1,1,no,no,e01,City Name,2,30,-,O,F
+N4,NM1,1,no,no,e02,State or Province Code,2,2,-,X,F
+N4,NM1,1,no,no,e03,Postal Code,3,15,-,O,F
+N4,NM1,1,no,no,e04,Country Code,2,3,-,X,F
+N4,NM1,1,no,no,e05,Location Qualifier,1,2,-,X,F
+N4,NM1,1,no,no,e06,Location Identifier,1,30,-,O,F
+N4,NM1,1,no,no,e07,Country Subdivision Code,1,3,-,X,F
+REF,NM1,2,no,yes,landmark,Reference Information,3,3,-,O,F
+REF,NM1,1,no,no,e01,Reference Identification Qualifier,2,3,-,M,F
+REF,NM1,1,no,no,e02,Reference Identification,1,50,-,X,F
+REF,NM1,1,no,no,e03,Description,1,80,-,X,F
+PER,NM1,2,no,yes,landmark,Administrative Communications Contact,3,3,-,O,F
+PER,NM1,1,no,no,e01,Contact Function Code,2,2,-,M,F
+PER,NM1,1,no,no,e02,Name,1,60,-,O,F
+PER,NM1,1,no,no,e03,Communication Number Qualifier,2,2,-,X,F
+PER,NM1,1,no,no,e04,Communication Number,1,256,-,X,F
+PER,NM1,1,no,no,e05,Communication Number Qualifier,2,2,-,X,F
+PER,NM1,1,no,no,e06,Communication Number,1,256,-,X,F
+PER,NM1,1,no,no,e07,Communication Number Qualifier,2,2,-,X,F
+PER,NM1,1,no,no,e08,Communication Number,1,256,-,X,F
+PER,NM1,1,no,no,e09,Contact Inquiry Reference,1,20,-,O,F
+HL,,99999,yes,yes,landmark,Hierarchical Level,2,2,-,M,F
+HL,,1,no,no,e01,Hierarchical ID Number,1,12,-,M,F
+HL,,1,no,no,e02,Hierarchical Parent ID Number,1,12,-,O,F
+HL,,1,no,no,e03,Hierarchical Level Code,1,2,-,M,F
+HL,,1,no,no,e04,Hierarchical Child Code,1,1,-,O,F
+PRV,HL,1,no,yes,landmark,Provider Information,3,3,-,O,F
+PRV,HL,1,no,no,e01,Provider Code,1,3,-,M,F
+PRV,HL,1,no,no,e02,Reference Identification Qualifier,2,3,-,X,F
+PRV,HL,1,no,no,e03,Reference Identification,1,50,-,X,F
+PRV,HL,1,no,no,e04,State or Province Code,2,2,-,O,F
+PRV,HL,1,no,no,e06,Provider Organization Code,3,3,-,O,F
+SBR,HL,1,no,yes,landmark,Subscriber Information,3,3,-,O,F
+SBR,HL,1,no,no,e01,Payer Responsibility Sequence Number Code,1,1,-,M,F
+SBR,HL,1,no,no,e02,Individual Relationship Code,2,2,-,O/Z,F
+SBR,HL,1,no,no,e03,Reference Identification,1,50,-,O/Z,F
+SBR,HL,1,no,no,e04,Name,1,60,-,O/Z,F
+SBR,HL,1,no,no,e05,Insurance Type Code,1,3,-,O,F
+SBR,HL,1,no,no,e06,Coordination of Benefits Code,1,1,-,O,F
+SBR,HL,1,no,no,e07,Yes/No Condition or Response Code,1,1,-,O/Z,F
+SBR,HL,1,no,no,e08,Employment Status Code,2,2,-,O,F
+SBR,HL,1,no,no,e09,Claim Filing Indicator Code,1,2,-,O,F
+PAT,HL,1,no,yes,landmark,Patient Information,3,3,-,O,F
+PAT,HL,1,no,no,e01,Individual Relationship Code,2,2,-,O,F
+PAT,HL,1,no,no,e02,Patient Location Code,1,1,-,O,F
+PAT,HL,1,no,no,e03,Employment Status Code,2,2,-,O,F
+PAT,HL,1,no,no,e04,Student Status Code,1,1,-,O,F
+PAT,HL,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X,F
+PAT,HL,1,no,no,e06,Date Time Period,1,35,-,X/Z,F
+PAT,HL,1,no,no,e07,Unit or Basis for Measurement Code,2,2,-,X,F
+PAT,HL,1,no,no,e08,Weight,1,10,-,X/Z,F
+PAT,HL,1,no,no,e09,Yes/No Condition or Response Code,1,1,-,O/Z,F
+DTP,HL,5,no,yes,landmark,Date or Time or Period,3,3,-,O,F
+DTP,HL,1,no,no,e01,Date/Time Qualifier,3,3,-,M,F
+DTP,HL,1,no,no,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+DTP,HL,1,no,no,e03,Date Time Period,1,35,-,M,F
+CUR,HL,1,no,yes,landmark,Currency,3,3,-,O,F
+CUR,HL,1,no,no,e01,Entity Identifier Code,2,3,-,M,F
+CUR,HL,1,no,no,e02,Currency Code,3,3,-,M,F
+CUR,HL,1,no,no,e03,Exchange Rate,4,10,-,O,F
+CUR,HL,1,no,no,e04,Entity Identifier Code,2,3,-,O,F
+CUR,HL,1,no,no,e05,Currency Code,3,3,-,O,F
+CUR,HL,1,no,no,e06,Currency Market/Exchange Code,3,3,-,O,F
+CUR,HL,1,no,no,e07,Date/Time Qualifier,3,3,-,X,F
+CUR,HL,1,no,no,e08,Date,8,8,-,O,F
+CUR,HL,1,no,no,e09,Time,4,8,-,O,F
+CUR,HL,1,no,no,e10,Date/Time Qualifier,3,3,-,X,F
+CUR,HL,1,no,no,e11,Date,8,8,-,X,F
+CUR,HL,1,no,no,e12,Time,4,8,-,X,F
+CUR,HL,1,no,no,e13,Date/Time Qualifier,3,3,-,X,F
+CUR,HL,1,no,no,e14,Date,8,8,-,X,F
+CUR,HL,1,no,no,e15,Time,4,8,-,X,F
+CUR,HL,1,no,no,e16,Date/Time Qualifier,3,3,-,X,F
+CUR,HL,1,no,no,e17,Date,8,8,-,X,F
+CUR,HL,1,no,no,e18,Time,4,8,-,X,F
+CUR,HL,1,no,no,e19,Date/Time Qualifier,3,3,-,X,F
+CUR,HL,1,no,no,e20,Date,8,8,-,X,F
+CUR,HL,1,no,no,e21,Time,4,8,-,X,F
+NM1,,10,yes,yes,landmark,Individual or Organizational Name,3,3,-,O,F
+NM1,,1,no,no,e01,Entity Identifier Code,2,3,-,M,F
+NM1,,1,no,no,e02,Entity Type Qualifier,1,1,-,M/Z,F
+NM1,,1,no,no,e03,Name Last or Organization Name,1,60,-,X,F
+NM1,,1,no,no,e04,Name First,1,35,-,O,F
+NM1,,1,no,no,e05,Name Middle,1,25,-,O,F
+NM1,,1,no,no,e06,Name Prefix,1,10,-,O,F
+NM1,,1,no,no,e07,Name Suffix,1,10,-,O,F
+NM1,,1,no,no,e08,Identification Code Qualifier,1,2,-,X,F
+NM1,,1,no,no,e09,Identification Code,2,80,-,X,F
+NM1,,1,no,no,e10,Entity Relationship Code,2,2,-,X,F
+NM1,,1,no,no,e11,Entity Identifier Code,2,3,-,O,F
+NM1,,1,no,no,e12,Name Last or Organization Name,1,60,-,O,F
+N2,HL:NM1,2,no,yes,landmark,Additional Name Information,2,2,-,O,F
+N2,HL:NM1,1,no,no,e01,Name,1,60,-,M,F
+N2,HL:NM1,1,no,no,e02,Name,1,60,-,O,F
+N3,HL:NM1,2,no,yes,landmark,Party Location,2,2,-,O,F
+N3,HL:NM1,1,no,no,e01,Address Information,1,55,-,M,F
+N3,HL:NM1,1,no,no,e02,Address Information,1,55,-,O,F
+N4,HL:NM1,1,no,yes,landmark,Geographic Location,2,2,-,O,F
+N4,HL:NM1,1,no,no,e01,City Name,2,30,-,O,F
+N4,HL:NM1,1,no,no,e02,State or Province Code,2,2,-,X,F
+N4,HL:NM1,1,no,no,e03,Postal Code,3,15,-,O,F
+N4,HL:NM1,1,no,no,e04,Country Code,2,3,-,X,F
+N4,HL:NM1,1,no,no,e05,Location Qualifier,1,2,-,X,F
+N4,HL:NM1,1,no,no,e06,Location Identifier,1,30,-,O,F
+N4,HL:NM1,1,no,no,e07,Country Subdivision Code,1,3,-,X,F
+DMG,HL:NM1,1,no,yes,landmark,Demographic Information,3,3,-,O,F
+DMG,HL:NM1,1,no,no,e01,Date Time Period Format Qualifier,2,3,-,X,F
+DMG,HL:NM1,1,no,no,e02,Date Time Period,1,35,-,X/Z,F
+DMG,HL:NM1,1,no,no,e03,Gender Code,1,1,-,O,F
+DMG,HL:NM1,1,no,no,e04,Marital Status Code,1,1,-,O,F
+DMG,HL:NM1,1,no,no,e06,Citizenship Status Code,1,2,-,O,F
+DMG,HL:NM1,1,no,no,e07,Country Code,2,3,-,O/Z,F
+DMG,HL:NM1,1,no,no,e08,Basis of Verification Code,1,2,-,O,F
+DMG,HL:NM1,1,no,no,e09,Quantity,1,15,-,O/Z,F
+DMG,HL:NM1,1,no,no,e10,Code List Qualifier Code,1,3,-,X,F
+DMG,HL:NM1,1,no,no,e11,Industry Code,1,30,-,X/Z,F
+REF,HL:NM1,20,no,yes,landmark,Reference Information,3,3,-,O,F
+REF,HL:NM1,1,no,no,e01,Reference Identification Qualifier,2,3,-,M,F
+REF,HL:NM1,1,no,no,e02,Reference Identification,1,50,-,X,F
+REF,HL:NM1,1,no,no,e03,Description,1,80,-,X,F
+PER,HL:NM1,2,no,yes,landmark,Administrative Communications Contact,3,3,-,O,F
+PER,HL:NM1,1,no,no,e01,Contact Function Code,2,2,-,M,F
+PER,HL:NM1,1,no,no,e02,Name,1,60,-,O,F
+PER,HL:NM1,1,no,no,e03,Communication Number Qualifier,2,2,-,X,F
+PER,HL:NM1,1,no,no,e04,Communication Number,1,256,-,X,F
+PER,HL:NM1,1,no,no,e05,Communication Number Qualifier,2,2,-,X,F
+PER,HL:NM1,1,no,no,e06,Communication Number,1,256,-,X,F
+PER,HL:NM1,1,no,no,e07,Communication Number Qualifier,2,2,-,X,F
+PER,HL:NM1,1,no,no,e08,Communication Number,1,256,-,X,F
+PER,HL:NM1,1,no,no,e09,Contact Inquiry Reference,1,20,-,O,F
+CLM,,100,yes,yes,landmark,Health Claim,3,3,-,O,F
+CLM,,1,no,no,e01,Claim Submitter's Identifier,1,38,-,M,F
+CLM,,1,no,no,e02,Monetary Amount,1,18,-,O/Z,F
+CLM,,1,no,no,e03,Claim Filing Indicator Code,1,2,-,O,F
+CLM,,1,no,no,e04,Non-Institutional Claim Type Code,1,2,-,O,F
+CLM,,1,no,no,e06,Yes/No Condition or Response Code,1,1,-,O/Z,F
+CLM,,1,no,no,e07,Provider Accept Assignment Code,1,1,-,O,F
+CLM,,1,no,no,e08,Yes/No Condition or Response Code,1,1,-,O/Z,F
+CLM,,1,no,no,e09,Release of Information Code,1,1,-,O,F
+CLM,,1,no,no,e10,Patient Signature Source Code,1,1,-,O,F
+CLM,,1,no,no,e12,Special Program Code,2,3,-,O,F
+CLM,,1,no,no,e13,Yes/No Condition or Response Code,1,1,-,O/Z,F
+CLM,,1,no,no,e14,Level of Service Code,1,3,-,O,F
+CLM,,1,no,no,e15,Yes/No Condition or Response Code,1,1,-,O/Z,F
+CLM,,1,no,no,e16,Provider Agreement Code,1,1,-,O,F
+CLM,,1,no,no,e17,Claim Status Code,1,2,-,O,F
+CLM,,1,no,no,e18,Yes/No Condition or Response Code,1,1,-,O/Z,F
+CLM,,1,no,no,e19,Claim Submission Reason Code,2,2,-,O,F
+CLM,,1,no,no,e20,Delay Reason Code,1,2,-,O,F
+DTP,CLM,150,no,yes,landmark,Date or Time or Period,3,3,-,O,F
+DTP,CLM,1,no,no,e01,Date/Time Qualifier,3,3,-,M,F
+DTP,CLM,1,no,no,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+DTP,CLM,1,no,no,e03,Date Time Period,1,35,-,M,F
+CL1,CLM,1,no,yes,landmark,Claim Codes,3,3,-,O,F
+CL1,CLM,1,no,no,e01,Admission Type Code,1,1,-,O,F
+CL1,CLM,1,no,no,e02,Admission Source Code,1,1,-,O,F
+CL1,CLM,1,no,no,e03,Patient Status Code,1,2,-,O,F
+CL1,CLM,1,no,no,e04,Nursing Home Residential Status Code,1,1,-,O,F
+DN1,CLM,1,no,yes,landmark,Orthodontic Information,3,3,-,O,F
+DN1,CLM,1,no,no,e01,Quantity,1,15,-,O/Z,F
+DN1,CLM,1,no,no,e02,Quantity,1,15,-,O/Z,F
+DN1,CLM,1,no,no,e03,Yes/No Condition or Response Code,1,1,-,O/Z,F
+DN1,CLM,1,no,no,e04,Description,1,80,-,O/Z,F
+DN2,CLM,35,no,yes,landmark,Tooth Summary,3,3,-,O,F
+DN2,CLM,1,no,no,e01,Reference Identification,1,50,-,M/Z,F
+DN2,CLM,1,no,no,e02,Tooth Status Code,1,2,-,O,F
+DN2,CLM,1,no,no,e03,Quantity,1,15,-,O/Z,F
+DN2,CLM,1,no,no,e04,Date Time Period Format Qualifier,2,3,-,X,F
+DN2,CLM,1,no,no,e05,Date Time Period,1,35,-,X,F
+DN2,CLM,1,no,no,e06,Code List Qualifier Code,1,3,-,M/Z,F
+PWK,CLM,10,no,yes,landmark,Paperwork,3,3,-,O,F
+PWK,CLM,1,no,no,e01,Report Type Code,2,2,-,M,F
+PWK,CLM,1,no,no,e02,Report Transmission Code,1,2,-,O,F
+PWK,CLM,1,no,no,e03,Report Copies Needed,1,2,-,O,F
+PWK,CLM,1,no,no,e04,Entity Identifier Code,2,3,-,O,F
+PWK,CLM,1,no,no,e05,Identification Code Qualifier,1,2,-,X,F
+PWK,CLM,1,no,no,e06,Identification Code,2,80,-,X,F
+PWK,CLM,1,no,no,e07,Description,1,80,-,O,F
+PWK,CLM,1,no,no,e09,Request Category Code,1,2,-,O,F
+CN1,CLM,1,no,yes,landmark,Contract Information,3,3,-,O,F
+CN1,CLM,1,no,no,e01,Contract Type Code,2,2,-,M,F
+CN1,CLM,1,no,no,e02,Monetary Amount,1,18,-,O/Z,F
+CN1,CLM,1,no,no,e03,Percent, Decimal Format,1,6,-,O/Z,F
+CN1,CLM,1,no,no,e04,Reference Identification,1,50,-,O/Z,F
+CN1,CLM,1,no,no,e05,Terms Discount Percent,1,6,-,O,F
+CN1,CLM,1,no,no,e06,Version Identifier,1,30,-,O/Z,F
+DSB,CLM,1,no,yes,landmark,Disability Information,3,3,-,O,F
+DSB,CLM,1,no,no,e01,Disability Type Code,1,1,-,M,F
+DSB,CLM,1,no,no,e02,Quantity,1,15,-,O/Z,F
+DSB,CLM,1,no,no,e03,Occupation Code,4,6,-,O,F
+DSB,CLM,1,no,no,e04,Work Intensity Code,1,1,-,O,F
+DSB,CLM,1,no,no,e05,Product Option Code,1,2,-,O,F
+DSB,CLM,1,no,no,e06,Monetary Amount,1,18,-,O/Z,F
+DSB,CLM,1,no,no,e07,Product/Service ID Qualifier,2,2,-,X,F
+DSB,CLM,1,no,no,e08,Medical Code Value,1,15,-,X/Z,F
+UR,CLM,1,no,yes,landmark,Peer Review Organization or Utilization Review,2,2,-,O,F
+UR,CLM,1,no,no,e01,Approval Code,1,1,-,M,F
+UR,CLM,1,no,no,e02,Quantity,1,15,-,O/Z,F
+AMT,CLM,40,no,yes,landmark,Monetary Amount Information,3,3,-,O,F
+AMT,CLM,1,no,no,e01,Amount Qualifier Code,1,3,-,M,F
+AMT,CLM,1,no,no,e02,Monetary Amount,1,18,-,M,F
+AMT,CLM,1,no,no,e03,Credit/Debit Flag Code,1,1,-,O,F
+REF,CLM,30,no,yes,landmark,Reference Information,3,3,-,O,F
+REF,CLM,1,no,no,e01,Reference Identification Qualifier,2,3,-,M,F
+REF,CLM,1,no,no,e02,Reference Identification,1,50,-,X,F
+REF,CLM,1,no,no,e03,Description,1,80,-,X,F
+K3,CLM,10,no,yes,landmark,File Information,2,2,-,O,F
+K3,CLM,1,no,no,e01,Fixed Format Information,1,80,-,M,F
+K3,CLM,1,no,no,e02,Record Format Code,1,2,-,O,F
+NTE,CLM,20,no,yes,landmark,Note/Special Instruction,3,3,-,O,F
+NTE,CLM,1,no,no,e01,Note Reference Code,3,3,-,O,F
+NTE,CLM,1,no,no,e02,Description,1,80,-,M,F
+CR1,CLM,1,no,yes,landmark,Ambulance Certification,3,3,-,O,F
+CR1,CLM,1,no,no,e01,Unit or Basis for Measurement Code,2,2,-,X,F
+CR1,CLM,1,no,no,e02,Weight,1,10,-,X/Z,F
+CR1,CLM,1,no,no,e03,Ambulance Transport Code,1,1,-,O,F
+CR1,CLM,1,no,no,e04,Ambulance Transport Reason Code,1,1,-,O,F
+CR1,CLM,1,no,no,e05,Unit or Basis for Measurement Code,2,2,-,X,F
+CR1,CLM,1,no,no,e06,Quantity,1,15,-,X/Z,F
+CR1,CLM,1,no,no,e07,Address Information,1,55,-,O/Z,F
+CR1,CLM,1,no,no,e08,Address Information,1,55,-,O/Z,F
+CR1,CLM,1,no,no,e09,Description,1,80,-,O/Z,F
+CR1,CLM,1,no,no,e10,Description,1,80,-,O/Z,F
+CR2,CLM,1,no,yes,landmark,Chiropractic Certification,3,3,-,O,F
+CR2,CLM,1,no,no,e01,Count,1,9,-,X/Z,F
+CR2,CLM,1,no,no,e02,Quantity,1,15,-,X/Z,F
+CR2,CLM,1,no,no,e03,Subluxation Level Code,2,3,-,X,F
+CR2,CLM,1,no,no,e04,Subluxation Level Code,2,3,-,O,F
+CR2,CLM,1,no,no,e05,Unit or Basis for Measurement Code,2,2,-,X,F
+CR2,CLM,1,no,no,e06,Quantity,1,15,-,X/Z,F
+CR2,CLM,1,no,no,e07,Quantity,1,15,-,O/Z,F
+CR2,CLM,1,no,no,e08,Nature of Condition Code,1,1,-,O,F
+CR2,CLM,1,no,no,e09,Yes/No Condition or Response Code,1,1,-,O/Z,F
+CR2,CLM,1,no,no,e10,Description,1,80,-,O/Z,F
+CR2,CLM,1,no,no,e11,Description,1,80,-,O/Z,F
+CR2,CLM,1,no,no,e12,Yes/No Condition or Response Code,1,1,-,O/Z,F
+CR3,CLM,1,no,yes,landmark,Durable Medical Equipment Certification,3,3,-,O,F
+CR3,CLM,1,no,no,e01,Certification Type Code,1,1,-,O,F
+CR3,CLM,1,no,no,e02,Unit or Basis for Measurement Code,2,2,-,X/Z,F
+CR3,CLM,1,no,no,e03,Quantity,1,15,-,X,F
+CR3,CLM,1,no,no,e04,Insulin Dependent Code,1,1,-,O,F
+CR3,CLM,1,no,no,e05,Description,1,80,-,O/Z,F
+CR4,CLM,3,no,yes,landmark,Enteral or Parenteral Therapy Certification,3,3,-,O,F
+CR4,CLM,1,no,no,e01,Yes/No Condition or Response Code,1,1,-,M/Z,F
+CR4,CLM,1,no,no,e02,Certification Type Code,1,1,-,O,F
+CR4,CLM,1,no,no,e03,Unit or Basis for Measurement Code,2,2,-,X,F
+CR4,CLM,1,no,no,e04,Quantity,1,15,-,X/Z,F
+CR4,CLM,1,no,no,e05,Unit or Basis for Measurement Code,2,2,-,X,F
+CR4,CLM,1,no,no,e06,Quantity,1,15,-,X/Z,F
+CR4,CLM,1,no,no,e07,Non-Visit Code,1,1,-,O,F
+CR4,CLM,1,no,no,e08,Unit or Basis for Measurement Code,2,2,-,X,F
+CR4,CLM,1,no,no,e09,Quantity,1,15,-,X/Z,F
+CR4,CLM,1,no,no,e10,Unit or Basis for Measurement Code,2,2,-,X,F
+CR4,CLM,1,no,no,e11,Height,1,8,-,X/Z,F
+CR4,CLM,1,no,no,e12,Unit or Basis for Measurement Code,2,2,-,X,F
+CR4,CLM,1,no,no,e13,Weight,1,10,-,X/Z,F
+CR4,CLM,1,no,no,e14,Quantity,1,15,-,O/Z,F
+CR4,CLM,1,no,no,e15,Description,1,80,-,O/Z,F
+CR4,CLM,1,no,no,e16,Nutrient Administration Method Code,1,1,-,O,F
+CR4,CLM,1,no,no,e17,Nutrient Administration Technique Code,1,1,-,O,F
+CR4,CLM,1,no,no,e18,Quantity,1,15,-,O/Z,F
+CR4,CLM,1,no,no,e19,Quantity,1,15,-,O/Z,F
+CR4,CLM,1,no,no,e20,Description,1,80,-,O/Z,F
+CR4,CLM,1,no,no,e21,Quantity,1,15,-,O/Z,F
+CR4,CLM,1,no,no,e22,Percentage as Decimal,1,10,-,O/Z,F
+CR4,CLM,1,no,no,e23,Quantity,1,15,-,O/Z,F
+CR4,CLM,1,no,no,e24,Quantity,1,15,-,O/Z,F
+CR4,CLM,1,no,no,e25,Percentage as Decimal,1,10,-,O/Z,F
+CR4,CLM,1,no,no,e26,Quantity,1,15,-,O/Z,F
+CR4,CLM,1,no,no,e27,Percentage as Decimal,1,10,-,O/Z,F
+CR4,CLM,1,no,no,e28,Quantity,1,15,-,O/Z,F
+CR4,CLM,1,no,no,e29,Description,1,80,-,O/Z,F
+CR5,CLM,1,no,yes,landmark,Oxygen Therapy Certification,3,3,-,O,F
+CR5,CLM,1,no,no,e01,Certification Type Code,1,1,-,O,F
+CR5,CLM,1,no,no,e02,Quantity,1,15,-,O/Z,F
+CR5,CLM,1,no,no,e03,Oxygen Equipment Type Code,1,1,-,O,F
+CR5,CLM,1,no,no,e04,Oxygen Equipment Type Code,1,1,-,O,F
+CR5,CLM,1,no,no,e05,Description,1,80,-,O/Z,F
+CR5,CLM,1,no,no,e06,Quantity,1,15,-,O/Z,F
+CR5,CLM,1,no,no,e07,Quantity,1,15,-,O/Z,F
+CR5,CLM,1,no,no,e08,Quantity,1,15,-,O/Z,F
+CR5,CLM,1,no,no,e09,Description,1,80,-,O/Z,F
+CR5,CLM,1,no,no,e10,Quantity,1,15,-,O/Z,F
+CR5,CLM,1,no,no,e11,Quantity,1,15,-,O/Z,F
+CR5,CLM,1,no,no,e12,Oxygen Test Condition Code,1,1,-,O,F
+CR5,CLM,1,no,no,e13,Oxygen Test Findings Code,1,1,-,O,F
+CR5,CLM,1,no,no,e14,Oxygen Test Findings Code,1,1,-,O,F
+CR5,CLM,1,no,no,e15,Oxygen Test Findings Code,1,1,-,O,F
+CR5,CLM,1,no,no,e16,Quantity,1,15,-,O/Z,F
+CR5,CLM,1,no,no,e17,Oxygen Delivery System Code,1,1,-,O,F
+CR5,CLM,1,no,no,e18,Oxygen Equipment Type Code,1,1,-,O,F
+CR6,CLM,1,no,yes,landmark,Home Health Care Certification,3,3,-,O,F
+CR6,CLM,1,no,no,e01,Prognosis Code,1,1,-,M,F
+CR6,CLM,1,no,no,e02,Date,8,8,-,M/Z,F
+CR6,CLM,1,no,no,e03,Date Time Period Format Qualifier,2,3,-,X,F
+CR6,CLM,1,no,no,e04,Date Time Period,1,35,-,X/Z,F
+CR6,CLM,1,no,no,e05,Date,8,8,-,O/Z,F
+CR6,CLM,1,no,no,e06,Yes/No Condition or Response Code,1,1,-,O/Z,F
+CR6,CLM,1,no,no,e07,Yes/No Condition or Response Code,1,1,-,M/Z,F
+CR6,CLM,1,no,no,e08,Certification Type Code,1,1,-,M,F
+CR6,CLM,1,no,no,e09,Date,8,8,-,X/Z,F
+CR6,CLM,1,no,no,e10,Product/Service ID Qualifier,2,2,-,X/Z,F
+CR6,CLM,1,no,no,e11,Medical Code Value,1,15,-,X/Z,F
+CR6,CLM,1,no,no,e12,Date,8,8,-,O/Z,F
+CR6,CLM,1,no,no,e13,Date,8,8,-,O/Z,F
+CR6,CLM,1,no,no,e14,Date,8,8,-,O/Z,F
+CR6,CLM,1,no,no,e15,Date Time Period Format Qualifier,2,3,-,X,F
+CR6,CLM,1,no,no,e16,Date Time Period,1,35,-,X/Z,F
+CR6,CLM,1,no,no,e17,Patient Location Code,1,1,-,X/Z,F
+CR6,CLM,1,no,no,e18,Date,8,8,-,O/Z,F
+CR6,CLM,1,no,no,e19,Date,8,8,-,O/Z,F
+CR6,CLM,1,no,no,e20,Date,8,8,-,O/Z,F
+CR6,CLM,1,no,no,e21,Date,8,8,-,O/Z,F
+CR8,CLM,9,no,yes,landmark,Pacemaker Certification,3,3,-,O,F
+CR8,CLM,1,no,no,e01,Implant Type Code,1,1,-,M,F
+CR8,CLM,1,no,no,e02,Implant Status Code,1,1,-,M,F
+CR8,CLM,1,no,no,e03,Date,8,8,-,M/Z,F
+CR8,CLM,1,no,no,e04,Date,8,8,-,M/Z,F
+CR8,CLM,1,no,no,e05,Reference Identification,1,50,-,M/Z,F
+CR8,CLM,1,no,no,e06,Reference Identification,1,50,-,M/Z,F
+CR8,CLM,1,no,no,e07,Reference Identification,1,50,-,M/Z,F
+CR8,CLM,1,no,no,e08,Yes/No Condition or Response Code,1,1,-,M/Z,F
+CR8,CLM,1,no,no,e09,Yes/No Condition or Response Code,1,1,-,M/Z,F
+CRC,CLM,100,no,yes,landmark,Conditions Indicator,3,3,-,O,F
+CRC,CLM,1,no,no,e01,Code Category,2,2,-,M/Z,F
+CRC,CLM,1,no,no,e02,Yes/No Condition or Response Code,1,1,-,M/Z,F
+CRC,CLM,1,no,no,e03,Condition Indicator,2,3,-,M,F
+CRC,CLM,1,no,no,e04,Condition Indicator,2,3,-,O,F
+CRC,CLM,1,no,no,e05,Condition Indicator,2,3,-,O,F
+CRC,CLM,1,no,no,e06,Condition Indicator,2,3,-,O,F
+CRC,CLM,1,no,no,e07,Condition Indicator,2,3,-,O,F
+HI,CLM,25,no,yes,landmark,Health Care Information Codes,2,2,-,O,F
+QTY,CLM,10,no,yes,landmark,Quantity Information,3,3,-,O,F
+QTY,CLM,1,no,no,e01,Quantity Qualifier,2,2,-,M,F
+QTY,CLM,1,no,no,e02,Quantity,1,15,-,X,F
+QTY,CLM,1,no,no,e04,Free-form Information,1,30,-,X/Z,F
+HCP,CLM,1,no,yes,landmark,Health Care Pricing,3,3,-,O,F
+HCP,CLM,1,no,no,e01,Pricing Methodology,2,2,-,X,F
+HCP,CLM,1,no,no,e02,Monetary Amount,1,18,-,O/Z,F
+HCP,CLM,1,no,no,e03,Monetary Amount,1,18,-,O/Z,F
+HCP,CLM,1,no,no,e04,Reference Identification,1,50,-,O/Z,F
+HCP,CLM,1,no,no,e05,Rate,1,9,-,O/Z,F
+HCP,CLM,1,no,no,e06,Reference Identification,1,50,-,O/Z,F
+HCP,CLM,1,no,no,e07,Monetary Amount,1,18,-,O/Z,F
+HCP,CLM,1,no,no,e08,Product/Service ID,1,48,-,O/Z,F
+HCP,CLM,1,no,no,e09,Product/Service ID Qualifier,2,2,-,X,F
+HCP,CLM,1,no,no,e10,Product/Service ID,1,48,-,X/Z,F
+HCP,CLM,1,no,no,e11,Unit or Basis for Measurement Code,2,2,-,X,F
+HCP,CLM,1,no,no,e12,Quantity,1,15,-,X/Z,F
+HCP,CLM,1,no,no,e13,Reject Reason Code,2,2,-,X/Z,F
+HCP,CLM,1,no,no,e14,Policy Compliance Code,1,2,-,O,F
+HCP,CLM,1,no,no,e15,Exception Code,1,2,-,O/Z,F
+CR7,,6,yes,yes,landmark,Home Health Treatment Plan Certification,3,3,-,O,F
+CR7,,1,no,no,e01,Discipline Type Code,2,2,-,M,F
+CR7,,1,no,no,e02,Number,1,9,-,M/Z,F
+CR7,,1,no,no,e03,Number,1,9,-,M/Z,F
+HSD,CLM:CR7,12,no,yes,landmark,Health Care Services Delivery,3,3,-,O,F
+HSD,CLM:CR7,1,no,no,e01,Quantity Qualifier,2,2,-,X,F
+HSD,CLM:CR7,1,no,no,e02,Quantity,1,15,-,X,F
+HSD,CLM:CR7,1,no,no,e03,Unit or Basis for Measurement Code,2,2,-,O,F
+HSD,CLM:CR7,1,no,no,e04,Sample Selection Modulus,1,6,-,O,F
+HSD,CLM:CR7,1,no,no,e05,Time Period Qualifier,1,2,-,X,F
+HSD,CLM:CR7,1,no,no,e06,Number of Periods,1,3,-,O,F
+HSD,CLM:CR7,1,no,no,e07,Ship/Delivery or Calendar Pattern Code,1,2,-,O,F
+HSD,CLM:CR7,1,no,no,e08,Ship/Delivery Pattern Time Code,1,1,-,O,F
+NM1,,9,yes,yes,landmark,Individual or Organizational Name,3,3,-,O,F
+NM1,,1,no,no,e01,Entity Identifier Code,2,3,-,M,F
+NM1,,1,no,no,e02,Entity Type Qualifier,1,1,-,M/Z,F
+NM1,,1,no,no,e03,Name Last or Organization Name,1,60,-,X,F
+NM1,,1,no,no,e04,Name First,1,35,-,O,F
+NM1,,1,no,no,e05,Name Middle,1,25,-,O,F
+NM1,,1,no,no,e06,Name Prefix,1,10,-,O,F
+NM1,,1,no,no,e07,Name Suffix,1,10,-,O,F
+NM1,,1,no,no,e08,Identification Code Qualifier,1,2,-,X,F
+NM1,,1,no,no,e09,Identification Code,2,80,-,X,F
+NM1,,1,no,no,e10,Entity Relationship Code,2,2,-,X,F
+NM1,,1,no,no,e11,Entity Identifier Code,2,3,-,O,F
+NM1,,1,no,no,e12,Name Last or Organization Name,1,60,-,O,F
+PRV,NM1,1,no,yes,landmark,Provider Information,3,3,-,O,F
+PRV,NM1,1,no,no,e01,Provider Code,1,3,-,M,F
+PRV,NM1,1,no,no,e02,Reference Identification Qualifier,2,3,-,X,F
+PRV,NM1,1,no,no,e03,Reference Identification,1,50,-,X,F
+PRV,NM1,1,no,no,e04,State or Province Code,2,2,-,O,F
+PRV,NM1,1,no,no,e06,Provider Organization Code,3,3,-,O,F
+N2,NM1,2,no,yes,landmark,Additional Name Information,2,2,-,O,F
+N2,NM1,1,no,no,e01,Name,1,60,-,M,F
+N2,NM1,1,no,no,e02,Name,1,60,-,O,F
+N3,NM1,2,no,yes,landmark,Party Location,2,2,-,O,F
+N3,NM1,1,no,no,e01,Address Information,1,55,-,M,F
+N3,NM1,1,no,no,e02,Address Information,1,55,-,O,F
+N4,NM1,1,no,yes,landmark,Geographic Location,2,2,-,O,F
+N4,NM1,1,no,no,e01,City Name,2,30,-,O,F
+N4,NM1,1,no,no,e02,State or Province Code,2,2,-,X,F
+N4,NM1,1,no,no,e03,Postal Code,3,15,-,O,F
+N4,NM1,1,no,no,e04,Country Code,2,3,-,X,F
+N4,NM1,1,no,no,e05,Location Qualifier,1,2,-,X,F
+N4,NM1,1,no,no,e06,Location Identifier,1,30,-,O,F
+N4,NM1,1,no,no,e07,Country Subdivision Code,1,3,-,X,F
+REF,NM1,20,no,yes,landmark,Reference Information,3,3,-,O,F
+REF,NM1,1,no,no,e01,Reference Identification Qualifier,2,3,-,M,F
+REF,NM1,1,no,no,e02,Reference Identification,1,50,-,X,F
+REF,NM1,1,no,no,e03,Description,1,80,-,X,F
+PER,NM1,2,no,yes,landmark,Administrative Communications Contact,3,3,-,O,F
+PER,NM1,1,no,no,e01,Contact Function Code,2,2,-,M,F
+PER,NM1,1,no,no,e02,Name,1,60,-,O,F
+PER,NM1,1,no,no,e03,Communication Number Qualifier,2,2,-,X,F
+PER,NM1,1,no,no,e04,Communication Number,1,256,-,X,F
+PER,NM1,1,no,no,e05,Communication Number Qualifier,2,2,-,X,F
+PER,NM1,1,no,no,e06,Communication Number,1,256,-,X,F
+PER,NM1,1,no,no,e07,Communication Number Qualifier,2,2,-,X,F
+PER,NM1,1,no,no,e08,Communication Number,1,256,-,X,F
+PER,NM1,1,no,no,e09,Contact Inquiry Reference,1,20,-,O,F
+SBR,,10,yes,yes,landmark,Subscriber Information,3,3,-,O,F
+SBR,,1,no,no,e01,Payer Responsibility Sequence Number Code,1,1,-,M,F
+SBR,,1,no,no,e02,Individual Relationship Code,2,2,-,O/Z,F
+SBR,,1,no,no,e03,Reference Identification,1,50,-,O/Z,F
+SBR,,1,no,no,e04,Name,1,60,-,O/Z,F
+SBR,,1,no,no,e05,Insurance Type Code,1,3,-,O,F
+SBR,,1,no,no,e06,Coordination of Benefits Code,1,1,-,O,F
+SBR,,1,no,no,e07,Yes/No Condition or Response Code,1,1,-,O/Z,F
+SBR,,1,no,no,e08,Employment Status Code,2,2,-,O,F
+SBR,,1,no,no,e09,Claim Filing Indicator Code,1,2,-,O,F
+CAS,SBR,99,no,yes,landmark,Claims Adjustment,3,3,-,O,F
+CAS,SBR,1,no,no,e01,Claim Adjustment Group Code,1,2,-,M,F
+CAS,SBR,1,no,no,e02,Claim Adjustment Reason Code,1,5,-,M,F
+CAS,SBR,1,no,no,e03,Monetary Amount,1,18,-,M/Z,F
+CAS,SBR,1,no,no,e04,Quantity,1,15,-,O/Z,F
+CAS,SBR,1,no,no,e05,Claim Adjustment Reason Code,1,5,-,X,F
+CAS,SBR,1,no,no,e06,Monetary Amount,1,18,-,X/Z,F
+CAS,SBR,1,no,no,e07,Quantity,1,15,-,X/Z,F
+CAS,SBR,1,no,no,e08,Claim Adjustment Reason Code,1,5,-,X,F
+CAS,SBR,1,no,no,e09,Monetary Amount,1,18,-,X/Z,F
+CAS,SBR,1,no,no,e10,Quantity,1,15,-,X/Z,F
+CAS,SBR,1,no,no,e11,Claim Adjustment Reason Code,1,5,-,X,F
+CAS,SBR,1,no,no,e12,Monetary Amount,1,18,-,X/Z,F
+CAS,SBR,1,no,no,e13,Quantity,1,15,-,X/Z,F
+CAS,SBR,1,no,no,e14,Claim Adjustment Reason Code,1,5,-,X,F
+CAS,SBR,1,no,no,e15,Monetary Amount,1,18,-,X/Z,F
+CAS,SBR,1,no,no,e16,Quantity,1,15,-,X/Z,F
+CAS,SBR,1,no,no,e17,Claim Adjustment Reason Code,1,5,-,X,F
+CAS,SBR,1,no,no,e18,Monetary Amount,1,18,-,X/Z,F
+CAS,SBR,1,no,no,e19,Quantity,1,15,-,X/Z,F
+AMT,SBR,15,no,yes,landmark,Monetary Amount Information,3,3,-,O,F
+AMT,SBR,1,no,no,e01,Amount Qualifier Code,1,3,-,M,F
+AMT,SBR,1,no,no,e02,Monetary Amount,1,18,-,M,F
+AMT,SBR,1,no,no,e03,Credit/Debit Flag Code,1,1,-,O,F
+DMG,SBR,1,no,yes,landmark,Demographic Information,3,3,-,O,F
+DMG,SBR,1,no,no,e01,Date Time Period Format Qualifier,2,3,-,X,F
+DMG,SBR,1,no,no,e02,Date Time Period,1,35,-,X/Z,F
+DMG,SBR,1,no,no,e03,Gender Code,1,1,-,O,F
+DMG,SBR,1,no,no,e04,Marital Status Code,1,1,-,O,F
+DMG,SBR,1,no,no,e06,Citizenship Status Code,1,2,-,O,F
+DMG,SBR,1,no,no,e07,Country Code,2,3,-,O/Z,F
+DMG,SBR,1,no,no,e08,Basis of Verification Code,1,2,-,O,F
+DMG,SBR,1,no,no,e09,Quantity,1,15,-,O/Z,F
+DMG,SBR,1,no,no,e10,Code List Qualifier Code,1,3,-,X,F
+DMG,SBR,1,no,no,e11,Industry Code,1,30,-,X/Z,F
+OI,SBR,1,no,yes,landmark,Other Health Insurance Information,2,2,-,O,F
+OI,SBR,1,no,no,e01,Claim Filing Indicator Code,1,2,-,O,F
+OI,SBR,1,no,no,e02,Claim Submission Reason Code,2,2,-,O,F
+OI,SBR,1,no,no,e03,Yes/No Condition or Response Code,1,1,-,O/Z,F
+OI,SBR,1,no,no,e04,Patient Signature Source Code,1,1,-,O,F
+OI,SBR,1,no,no,e05,Provider Agreement Code,1,1,-,O,F
+OI,SBR,1,no,no,e06,Release of Information Code,1,1,-,O,F
+MIA,SBR,1,no,yes,landmark,Medicare Inpatient Adjudication,3,3,-,O,F
+MIA,SBR,1,no,no,e01,Quantity,1,15,-,M/Z,F
+MIA,SBR,1,no,no,e02,Monetary Amount,1,18,-,O/Z,F
+MIA,SBR,1,no,no,e03,Quantity,1,15,-,O/Z,F
+MIA,SBR,1,no,no,e04,Monetary Amount,1,18,-,O/Z,F
+MIA,SBR,1,no,no,e05,Reference Identification,1,50,-,O/Z,F
+MIA,SBR,1,no,no,e06,Monetary Amount,1,18,-,O/Z,F
+MIA,SBR,1,no,no,e07,Monetary Amount,1,18,-,O/Z,F
+MIA,SBR,1,no,no,e08,Monetary Amount,1,18,-,O/Z,F
+MIA,SBR,1,no,no,e09,Monetary Amount,1,18,-,O/Z,F
+MIA,SBR,1,no,no,e10,Monetary Amount,1,18,-,O/Z,F
+MIA,SBR,1,no,no,e11,Monetary Amount,1,18,-,O/Z,F
+MIA,SBR,1,no,no,e12,Monetary Amount,1,18,-,O/Z,F
+MIA,SBR,1,no,no,e13,Monetary Amount,1,18,-,O/Z,F
+MIA,SBR,1,no,no,e14,Monetary Amount,1,18,-,O/Z,F
+MIA,SBR,1,no,no,e15,Quantity,1,15,-,O/Z,F
+MIA,SBR,1,no,no,e16,Monetary Amount,1,18,-,O/Z,F
+MIA,SBR,1,no,no,e17,Monetary Amount,1,18,-,O/Z,F
+MIA,SBR,1,no,no,e18,Monetary Amount,1,18,-,O/Z,F
+MIA,SBR,1,no,no,e19,Monetary Amount,1,18,-,O/Z,F
+MIA,SBR,1,no,no,e20,Reference Identification,1,50,-,O/Z,F
+MIA,SBR,1,no,no,e21,Reference Identification,1,50,-,O/Z,F
+MIA,SBR,1,no,no,e22,Reference Identification,1,50,-,O/Z,F
+MIA,SBR,1,no,no,e23,Reference Identification,1,50,-,O/Z,F
+MIA,SBR,1,no,no,e24,Monetary Amount,1,18,-,O/Z,F
+MOA,SBR,1,no,yes,landmark,Medicare Outpatient Adjudication,3,3,-,O,F
+MOA,SBR,1,no,no,e01,Percentage as Decimal,1,10,-,O/Z,F
+MOA,SBR,1,no,no,e02,Monetary Amount,1,18,-,O/Z,F
+MOA,SBR,1,no,no,e03,Reference Identification,1,50,-,O/Z,F
+MOA,SBR,1,no,no,e04,Reference Identification,1,50,-,O/Z,F
+MOA,SBR,1,no,no,e05,Reference Identification,1,50,-,O/Z,F
+MOA,SBR,1,no,no,e06,Reference Identification,1,50,-,O/Z,F
+MOA,SBR,1,no,no,e07,Reference Identification,1,50,-,O/Z,F
+MOA,SBR,1,no,no,e08,Monetary Amount,1,18,-,O/Z,F
+MOA,SBR,1,no,no,e09,Monetary Amount,1,18,-,O/Z,F
+NM1,,10,yes,yes,landmark,Individual or Organizational Name,3,3,-,O,F
+NM1,,1,no,no,e01,Entity Identifier Code,2,3,-,M,F
+NM1,,1,no,no,e02,Entity Type Qualifier,1,1,-,M/Z,F
+NM1,,1,no,no,e03,Name Last or Organization Name,1,60,-,X,F
+NM1,,1,no,no,e04,Name First,1,35,-,O,F
+NM1,,1,no,no,e05,Name Middle,1,25,-,O,F
+NM1,,1,no,no,e06,Name Prefix,1,10,-,O,F
+NM1,,1,no,no,e07,Name Suffix,1,10,-,O,F
+NM1,,1,no,no,e08,Identification Code Qualifier,1,2,-,X,F
+NM1,,1,no,no,e09,Identification Code,2,80,-,X,F
+NM1,,1,no,no,e10,Entity Relationship Code,2,2,-,X,F
+NM1,,1,no,no,e11,Entity Identifier Code,2,3,-,O,F
+NM1,,1,no,no,e12,Name Last or Organization Name,1,60,-,O,F
+N2,SBR:NM1,2,no,yes,landmark,Additional Name Information,2,2,-,O,F
+N2,SBR:NM1,1,no,no,e01,Name,1,60,-,M,F
+N2,SBR:NM1,1,no,no,e02,Name,1,60,-,O,F
+N3,SBR:NM1,2,no,yes,landmark,Party Location,2,2,-,O,F
+N3,SBR:NM1,1,no,no,e01,Address Information,1,55,-,M,F
+N3,SBR:NM1,1,no,no,e02,Address Information,1,55,-,O,F
+N4,SBR:NM1,1,no,yes,landmark,Geographic Location,2,2,-,O,F
+N4,SBR:NM1,1,no,no,e01,City Name,2,30,-,O,F
+N4,SBR:NM1,1,no,no,e02,State or Province Code,2,2,-,X,F
+N4,SBR:NM1,1,no,no,e03,Postal Code,3,15,-,O,F
+N4,SBR:NM1,1,no,no,e04,Country Code,2,3,-,X,F
+N4,SBR:NM1,1,no,no,e05,Location Qualifier,1,2,-,X,F
+N4,SBR:NM1,1,no,no,e06,Location Identifier,1,30,-,O,F
+N4,SBR:NM1,1,no,no,e07,Country Subdivision Code,1,3,-,X,F
+PER,SBR:NM1,2,no,yes,landmark,Administrative Communications Contact,3,3,-,O,F
+PER,SBR:NM1,1,no,no,e01,Contact Function Code,2,2,-,M,F
+PER,SBR:NM1,1,no,no,e02,Name,1,60,-,O,F
+PER,SBR:NM1,1,no,no,e03,Communication Number Qualifier,2,2,-,X,F
+PER,SBR:NM1,1,no,no,e04,Communication Number,1,256,-,X,F
+PER,SBR:NM1,1,no,no,e05,Communication Number Qualifier,2,2,-,X,F
+PER,SBR:NM1,1,no,no,e06,Communication Number,1,256,-,X,F
+PER,SBR:NM1,1,no,no,e07,Communication Number Qualifier,2,2,-,X,F
+PER,SBR:NM1,1,no,no,e08,Communication Number,1,256,-,X,F
+PER,SBR:NM1,1,no,no,e09,Contact Inquiry Reference,1,20,-,O,F
+DTP,SBR:NM1,9,no,yes,landmark,Date or Time or Period,3,3,-,O,F
+DTP,SBR:NM1,1,no,no,e01,Date/Time Qualifier,3,3,-,M,F
+DTP,SBR:NM1,1,no,no,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+DTP,SBR:NM1,1,no,no,e03,Date Time Period,1,35,-,M,F
+REF,SBR:NM1,99999,no,yes,landmark,Reference Information,3,3,-,O,F
+REF,SBR:NM1,1,no,no,e01,Reference Identification Qualifier,2,3,-,M,F
+REF,SBR:NM1,1,no,no,e02,Reference Identification,1,50,-,X,F
+REF,SBR:NM1,1,no,no,e03,Description,1,80,-,X,F
+LX,,99999,yes,yes,landmark,Transaction Set Line Number,2,2,-,O,F
+LX,,1,no,no,e01,Assigned Number,1,6,-,M,F
+SV1,LX,1,no,yes,landmark,Professional Service,3,3,-,O,F
+SV1,LX,1,no,no,e02,Monetary Amount,1,18,-,O/Z,F
+SV1,LX,1,no,no,e03,Unit or Basis for Measurement Code,2,2,-,X,F
+SV1,LX,1,no,no,e04,Quantity,1,15,-,X,F
+SV1,LX,1,no,no,e05,Facility Code Value,1,2,-,O/Z,F
+SV1,LX,1,no,no,e06,Service Type Code,1,2,-,O,F
+SV1,LX,1,no,no,e08,Monetary Amount,1,18,-,O/Z,F
+SV1,LX,1,no,no,e09,Yes/No Condition or Response Code,1,1,-,O/Z,F
+SV1,LX,1,no,no,e10,Multiple Procedure Code,1,2,-,O,F
+SV1,LX,1,no,no,e11,Yes/No Condition or Response Code,1,1,-,O/Z,F
+SV1,LX,1,no,no,e12,Yes/No Condition or Response Code,1,1,-,O/Z,F
+SV1,LX,1,no,no,e13,Review Code,1,2,-,O,F
+SV1,LX,1,no,no,e14,National or Local Assigned Review Value,1,2,-,O,F
+SV1,LX,1,no,no,e15,Copay Status Code,1,1,-,O,F
+SV1,LX,1,no,no,e16,Health Care Professional Shortage Area Code,1,1,-,O,F
+SV1,LX,1,no,no,e17,Reference Identification,1,50,-,O/Z,F
+SV1,LX,1,no,no,e18,Postal Code,3,15,-,O/Z,F
+SV1,LX,1,no,no,e19,Monetary Amount,1,18,-,O/Z,F
+SV1,LX,1,no,no,e20,Level of Care Code,1,1,-,O,F
+SV1,LX,1,no,no,e21,Provider Agreement Code,1,1,-,O,F
+SV2,LX,1,no,yes,landmark,Institutional Service,3,3,-,O,F
+SV2,LX,1,no,no,e01,Product/Service ID,1,48,-,X/Z,F
+SV2,LX,1,no,no,e03,Monetary Amount,1,18,-,O/Z,F
+SV2,LX,1,no,no,e04,Unit or Basis for Measurement Code,2,2,-,X,F
+SV2,LX,1,no,no,e05,Quantity,1,15,-,X,F
+SV2,LX,1,no,no,e06,Unit Rate,1,10,-,O,F
+SV2,LX,1,no,no,e07,Monetary Amount,1,18,-,O/Z,F
+SV2,LX,1,no,no,e08,Yes/No Condition or Response Code,1,1,-,O/Z,F
+SV2,LX,1,no,no,e09,Nursing Home Residential Status Code,1,1,-,O,F
+SV2,LX,1,no,no,e10,Level of Care Code,1,1,-,O,F
+SV3,LX,1,no,yes,landmark,Dental Service,3,3,-,O,F
+SV3,LX,1,no,no,e02,Monetary Amount,1,18,-,O/Z,F
+SV3,LX,1,no,no,e03,Facility Code Value,1,2,-,O/Z,F
+SV3,LX,1,no,no,e05,Prosthesis, Crown or Inlay Code,1,1,-,O,F
+SV3,LX,1,no,no,e06,Quantity,1,15,-,O/Z,F
+SV3,LX,1,no,no,e07,Description,1,80,-,O/Z,F
+SV3,LX,1,no,no,e08,Copay Status Code,1,1,-,O,F
+SV3,LX,1,no,no,e09,Provider Agreement Code,1,1,-,O,F
+SV3,LX,1,no,no,e10,Yes/No Condition or Response Code,1,1,-,O/Z,F
+TOO,LX,32,no,yes,landmark,Tooth Identification,3,3,-,O,F
+TOO,LX,1,no,no,e01,Code List Qualifier Code,1,3,-,X,F
+TOO,LX,1,no,no,e02,Industry Code,1,30,-,X,F
+SV4,LX,1,no,yes,landmark,Drug Service,3,3,-,O,F
+SV4,LX,1,no,no,e01,Reference Identification,1,50,-,M/Z,F
+SV4,LX,1,no,no,e03,Reference Identification,1,50,-,O/Z,F
+SV4,LX,1,no,no,e04,Yes/No Condition or Response Code,1,1,-,O/Z,F
+SV4,LX,1,no,no,e05,Dispense as Written Code,1,1,-,O,F
+SV4,LX,1,no,no,e06,Level of Service Code,1,3,-,O,F
+SV4,LX,1,no,no,e07,Prescription Origin Code,1,1,-,O,F
+SV4,LX,1,no,no,e08,Description,1,80,-,O/Z,F
+SV4,LX,1,no,no,e09,Yes/No Condition or Response Code,1,1,-,O/Z,F
+SV4,LX,1,no,no,e10,Yes/No Condition or Response Code,1,1,-,O/Z,F
+SV4,LX,1,no,no,e11,Unit Dose Code,1,1,-,O,F
+SV4,LX,1,no,no,e12,Basis of Cost Determination Code,1,2,-,O,F
+SV4,LX,1,no,no,e13,Basis of Days Supply Determination Code,1,1,-,O,F
+SV4,LX,1,no,no,e14,Dosage Form Code,2,2,-,O,F
+SV4,LX,1,no,no,e15,Copay Status Code,1,1,-,O,F
+SV4,LX,1,no,no,e16,Patient Location Code,1,1,-,O,F
+SV4,LX,1,no,no,e17,Level of Care Code,1,1,-,O,F
+SV4,LX,1,no,no,e18,Prior Authorization Type Code,1,1,-,O,F
+SV5,LX,1,no,yes,landmark,Durable Medical Equipment Service,3,3,-,O,F
+SV5,LX,1,no,no,e02,Unit or Basis for Measurement Code,2,2,-,M,F
+SV5,LX,1,no,no,e03,Quantity,1,15,-,M/Z,F
+SV5,LX,1,no,no,e04,Monetary Amount,1,18,-,X/Z,F
+SV5,LX,1,no,no,e05,Monetary Amount,1,18,-,X/Z,F
+SV5,LX,1,no,no,e06,Frequency Code,1,1,-,O/Z,F
+SV5,LX,1,no,no,e07,Prognosis Code,1,1,-,O,F
+SV6,LX,1,no,yes,landmark,Anesthesia Service,3,3,-,O,F
+SV6,LX,1,no,no,e02,Facility Code Qualifier,1,2,-,X,F
+SV6,LX,1,no,no,e03,Facility Code Value,1,2,-,X,F
+SV6,LX,1,no,no,e04,Monetary Amount,1,18,-,O/Z,F
+SV6,LX,1,no,no,e06,Quantity,1,15,-,O/Z,F
+SV6,LX,1,no,no,e07,Yes/No Condition or Response Code,1,1,-,O/Z,F
+SV7,LX,1,no,yes,landmark,Drug Adjudication,3,3,-,O,F
+SV7,LX,1,no,no,e01,Reference Identification,1,50,-,O/Z,F
+SV7,LX,1,no,no,e02,Reference Identification,1,50,-,O/Z,F
+SV7,LX,1,no,no,e03,Prescription Denial Override Code,2,2,-,O,F
+SV7,LX,1,no,no,e04,Coverage Level Code,3,3,-,M/Z,F
+SV7,LX,1,no,no,e05,Product/Process Characteristic Code,2,3,-,M/Z,F
+SV7,LX,1,no,no,e06,Yes/No Condition or Response Code,1,1,-,O/Z,F
+HI,LX,25,no,yes,landmark,Health Care Information Codes,2,2,-,O,F
+PWK,LX,10,no,yes,landmark,Paperwork,3,3,-,O,F
+PWK,LX,1,no,no,e01,Report Type Code,2,2,-,M,F
+PWK,LX,1,no,no,e02,Report Transmission Code,1,2,-,O,F
+PWK,LX,1,no,no,e03,Report Copies Needed,1,2,-,O,F
+PWK,LX,1,no,no,e04,Entity Identifier Code,2,3,-,O,F
+PWK,LX,1,no,no,e05,Identification Code Qualifier,1,2,-,X,F
+PWK,LX,1,no,no,e06,Identification Code,2,80,-,X,F
+PWK,LX,1,no,no,e07,Description,1,80,-,O,F
+PWK,LX,1,no,no,e09,Request Category Code,1,2,-,O,F
+CR1,LX,1,no,yes,landmark,Ambulance Certification,3,3,-,O,F
+CR1,LX,1,no,no,e01,Unit or Basis for Measurement Code,2,2,-,X,F
+CR1,LX,1,no,no,e02,Weight,1,10,-,X/Z,F
+CR1,LX,1,no,no,e03,Ambulance Transport Code,1,1,-,O,F
+CR1,LX,1,no,no,e04,Ambulance Transport Reason Code,1,1,-,O,F
+CR1,LX,1,no,no,e05,Unit or Basis for Measurement Code,2,2,-,X,F
+CR1,LX,1,no,no,e06,Quantity,1,15,-,X/Z,F
+CR1,LX,1,no,no,e07,Address Information,1,55,-,O/Z,F
+CR1,LX,1,no,no,e08,Address Information,1,55,-,O/Z,F
+CR1,LX,1,no,no,e09,Description,1,80,-,O/Z,F
+CR1,LX,1,no,no,e10,Description,1,80,-,O/Z,F
+CR2,LX,5,no,yes,landmark,Chiropractic Certification,3,3,-,O,F
+CR2,LX,1,no,no,e01,Count,1,9,-,X/Z,F
+CR2,LX,1,no,no,e02,Quantity,1,15,-,X/Z,F
+CR2,LX,1,no,no,e03,Subluxation Level Code,2,3,-,X,F
+CR2,LX,1,no,no,e04,Subluxation Level Code,2,3,-,O,F
+CR2,LX,1,no,no,e05,Unit or Basis for Measurement Code,2,2,-,X,F
+CR2,LX,1,no,no,e06,Quantity,1,15,-,X/Z,F
+CR2,LX,1,no,no,e07,Quantity,1,15,-,O/Z,F
+CR2,LX,1,no,no,e08,Nature of Condition Code,1,1,-,O,F
+CR2,LX,1,no,no,e09,Yes/No Condition or Response Code,1,1,-,O/Z,F
+CR2,LX,1,no,no,e10,Description,1,80,-,O/Z,F
+CR2,LX,1,no,no,e11,Description,1,80,-,O/Z,F
+CR2,LX,1,no,no,e12,Yes/No Condition or Response Code,1,1,-,O/Z,F
+CR3,LX,1,no,yes,landmark,Durable Medical Equipment Certification,3,3,-,O,F
+CR3,LX,1,no,no,e01,Certification Type Code,1,1,-,O,F
+CR3,LX,1,no,no,e02,Unit or Basis for Measurement Code,2,2,-,X/Z,F
+CR3,LX,1,no,no,e03,Quantity,1,15,-,X,F
+CR3,LX,1,no,no,e04,Insulin Dependent Code,1,1,-,O,F
+CR3,LX,1,no,no,e05,Description,1,80,-,O/Z,F
+CR4,LX,3,no,yes,landmark,Enteral or Parenteral Therapy Certification,3,3,-,O,F
+CR4,LX,1,no,no,e01,Yes/No Condition or Response Code,1,1,-,M/Z,F
+CR4,LX,1,no,no,e02,Certification Type Code,1,1,-,O,F
+CR4,LX,1,no,no,e03,Unit or Basis for Measurement Code,2,2,-,X,F
+CR4,LX,1,no,no,e04,Quantity,1,15,-,X/Z,F
+CR4,LX,1,no,no,e05,Unit or Basis for Measurement Code,2,2,-,X,F
+CR4,LX,1,no,no,e06,Quantity,1,15,-,X/Z,F
+CR4,LX,1,no,no,e07,Non-Visit Code,1,1,-,O,F
+CR4,LX,1,no,no,e08,Unit or Basis for Measurement Code,2,2,-,X,F
+CR4,LX,1,no,no,e09,Quantity,1,15,-,X/Z,F
+CR4,LX,1,no,no,e10,Unit or Basis for Measurement Code,2,2,-,X,F
+CR4,LX,1,no,no,e11,Height,1,8,-,X/Z,F
+CR4,LX,1,no,no,e12,Unit or Basis for Measurement Code,2,2,-,X,F
+CR4,LX,1,no,no,e13,Weight,1,10,-,X/Z,F
+CR4,LX,1,no,no,e14,Quantity,1,15,-,O/Z,F
+CR4,LX,1,no,no,e15,Description,1,80,-,O/Z,F
+CR4,LX,1,no,no,e16,Nutrient Administration Method Code,1,1,-,O,F
+CR4,LX,1,no,no,e17,Nutrient Administration Technique Code,1,1,-,O,F
+CR4,LX,1,no,no,e18,Quantity,1,15,-,O/Z,F
+CR4,LX,1,no,no,e19,Quantity,1,15,-,O/Z,F
+CR4,LX,1,no,no,e20,Description,1,80,-,O/Z,F
+CR4,LX,1,no,no,e21,Quantity,1,15,-,O/Z,F
+CR4,LX,1,no,no,e22,Percentage as Decimal,1,10,-,O/Z,F
+CR4,LX,1,no,no,e23,Quantity,1,15,-,O/Z,F
+CR4,LX,1,no,no,e24,Quantity,1,15,-,O/Z,F
+CR4,LX,1,no,no,e25,Percentage as Decimal,1,10,-,O/Z,F
+CR4,LX,1,no,no,e26,Quantity,1,15,-,O/Z,F
+CR4,LX,1,no,no,e27,Percentage as Decimal,1,10,-,O/Z,F
+CR4,LX,1,no,no,e28,Quantity,1,15,-,O/Z,F
+CR4,LX,1,no,no,e29,Description,1,80,-,O/Z,F
+CR5,LX,1,no,yes,landmark,Oxygen Therapy Certification,3,3,-,O,F
+CR5,LX,1,no,no,e01,Certification Type Code,1,1,-,O,F
+CR5,LX,1,no,no,e02,Quantity,1,15,-,O/Z,F
+CR5,LX,1,no,no,e03,Oxygen Equipment Type Code,1,1,-,O,F
+CR5,LX,1,no,no,e04,Oxygen Equipment Type Code,1,1,-,O,F
+CR5,LX,1,no,no,e05,Description,1,80,-,O/Z,F
+CR5,LX,1,no,no,e06,Quantity,1,15,-,O/Z,F
+CR5,LX,1,no,no,e07,Quantity,1,15,-,O/Z,F
+CR5,LX,1,no,no,e08,Quantity,1,15,-,O/Z,F
+CR5,LX,1,no,no,e09,Description,1,80,-,O/Z,F
+CR5,LX,1,no,no,e10,Quantity,1,15,-,O/Z,F
+CR5,LX,1,no,no,e11,Quantity,1,15,-,O/Z,F
+CR5,LX,1,no,no,e12,Oxygen Test Condition Code,1,1,-,O,F
+CR5,LX,1,no,no,e13,Oxygen Test Findings Code,1,1,-,O,F
+CR5,LX,1,no,no,e14,Oxygen Test Findings Code,1,1,-,O,F
+CR5,LX,1,no,no,e15,Oxygen Test Findings Code,1,1,-,O,F
+CR5,LX,1,no,no,e16,Quantity,1,15,-,O/Z,F
+CR5,LX,1,no,no,e17,Oxygen Delivery System Code,1,1,-,O,F
+CR5,LX,1,no,no,e18,Oxygen Equipment Type Code,1,1,-,O,F
+CRC,LX,3,no,yes,landmark,Conditions Indicator,3,3,-,O,F
+CRC,LX,1,no,no,e01,Code Category,2,2,-,M/Z,F
+CRC,LX,1,no,no,e02,Yes/No Condition or Response Code,1,1,-,M/Z,F
+CRC,LX,1,no,no,e03,Condition Indicator,2,3,-,M,F
+CRC,LX,1,no,no,e04,Condition Indicator,2,3,-,O,F
+CRC,LX,1,no,no,e05,Condition Indicator,2,3,-,O,F
+CRC,LX,1,no,no,e06,Condition Indicator,2,3,-,O,F
+CRC,LX,1,no,no,e07,Condition Indicator,2,3,-,O,F
+DTP,LX,15,no,yes,landmark,Date or Time or Period,3,3,-,O,F
+DTP,LX,1,no,no,e01,Date/Time Qualifier,3,3,-,M,F
+DTP,LX,1,no,no,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+DTP,LX,1,no,no,e03,Date Time Period,1,35,-,M,F
+QTY,LX,5,no,yes,landmark,Quantity Information,3,3,-,O,F
+QTY,LX,1,no,no,e01,Quantity Qualifier,2,2,-,M,F
+QTY,LX,1,no,no,e02,Quantity,1,15,-,X,F
+QTY,LX,1,no,no,e04,Free-form Information,1,30,-,X/Z,F
+MEA,LX,20,no,yes,landmark,Measurements,3,3,-,O,F
+MEA,LX,1,no,no,e01,Measurement Reference ID Code,2,2,-,O,F
+MEA,LX,1,no,no,e02,Measurement Qualifier,1,3,-,O,F
+MEA,LX,1,no,no,e03,Measurement Value,1,20,-,X,F
+MEA,LX,1,no,no,e05,Range Minimum,1,20,-,X,F
+MEA,LX,1,no,no,e06,Range Maximum,1,20,-,X,F
+MEA,LX,1,no,no,e07,Measurement Significance Code,2,2,-,O,F
+MEA,LX,1,no,no,e08,Measurement Attribute Code,2,2,-,X,F
+MEA,LX,1,no,no,e09,Surface/Layer/Position Code,2,2,-,O,F
+MEA,LX,1,no,no,e10,Measurement Method or Device,2,4,-,O,F
+MEA,LX,1,no,no,e11,Code List Qualifier Code,1,3,-,X/Z,F
+MEA,LX,1,no,no,e12,Industry Code,1,30,-,X/Z,F
+CN1,LX,1,no,yes,landmark,Contract Information,3,3,-,O,F
+CN1,LX,1,no,no,e01,Contract Type Code,2,2,-,M,F
+CN1,LX,1,no,no,e02,Monetary Amount,1,18,-,O/Z,F
+CN1,LX,1,no,no,e03,Percent, Decimal Format,1,6,-,O/Z,F
+CN1,LX,1,no,no,e04,Reference Identification,1,50,-,O/Z,F
+CN1,LX,1,no,no,e05,Terms Discount Percent,1,6,-,O,F
+CN1,LX,1,no,no,e06,Version Identifier,1,30,-,O/Z,F
+REF,LX,30,no,yes,landmark,Reference Information,3,3,-,O,F
+REF,LX,1,no,no,e01,Reference Identification Qualifier,2,3,-,M,F
+REF,LX,1,no,no,e02,Reference Identification,1,50,-,X,F
+REF,LX,1,no,no,e03,Description,1,80,-,X,F
+AMT,LX,15,no,yes,landmark,Monetary Amount Information,3,3,-,O,F
+AMT,LX,1,no,no,e01,Amount Qualifier Code,1,3,-,M,F
+AMT,LX,1,no,no,e02,Monetary Amount,1,18,-,M,F
+AMT,LX,1,no,no,e03,Credit/Debit Flag Code,1,1,-,O,F
+K3,LX,10,no,yes,landmark,File Information,2,2,-,O,F
+K3,LX,1,no,no,e01,Fixed Format Information,1,80,-,M,F
+K3,LX,1,no,no,e02,Record Format Code,1,2,-,O,F
+NTE,LX,10,no,yes,landmark,Note/Special Instruction,3,3,-,O,F
+NTE,LX,1,no,no,e01,Note Reference Code,3,3,-,O,F
+NTE,LX,1,no,no,e02,Description,1,80,-,M,F
+PS1,LX,1,no,yes,landmark,Purchase Service,3,3,-,O,F
+PS1,LX,1,no,no,e01,Reference Identification,1,50,-,M/Z,F
+PS1,LX,1,no,no,e02,Monetary Amount,1,18,-,M/Z,F
+PS1,LX,1,no,no,e03,State or Province Code,2,2,-,O/Z,F
+IMM,LX,99999,no,yes,landmark,Immunization Status,3,3,-,O,F
+IMM,LX,1,no,no,e01,Industry Code,1,30,-,M/Z,F
+IMM,LX,1,no,no,e02,Date Time Period Format Qualifier,2,3,-,X,F
+IMM,LX,1,no,no,e03,Date Time Period,1,35,-,X/Z,F
+IMM,LX,1,no,no,e04,Immunization Status Code,1,2,-,X,F
+IMM,LX,1,no,no,e05,Report Type Code,2,2,-,O,F
+IMM,LX,1,no,no,e06,Code List Qualifier Code,1,3,-,M,F
+HSD,LX,1,no,yes,landmark,Health Care Services Delivery,3,3,-,O,F
+HSD,LX,1,no,no,e01,Quantity Qualifier,2,2,-,X,F
+HSD,LX,1,no,no,e02,Quantity,1,15,-,X,F
+HSD,LX,1,no,no,e03,Unit or Basis for Measurement Code,2,2,-,O,F
+HSD,LX,1,no,no,e04,Sample Selection Modulus,1,6,-,O,F
+HSD,LX,1,no,no,e05,Time Period Qualifier,1,2,-,X,F
+HSD,LX,1,no,no,e06,Number of Periods,1,3,-,O,F
+HSD,LX,1,no,no,e07,Ship/Delivery or Calendar Pattern Code,1,2,-,O,F
+HSD,LX,1,no,no,e08,Ship/Delivery Pattern Time Code,1,1,-,O,F
+HCP,LX,1,no,yes,landmark,Health Care Pricing,3,3,-,O,F
+HCP,LX,1,no,no,e01,Pricing Methodology,2,2,-,X,F
+HCP,LX,1,no,no,e02,Monetary Amount,1,18,-,O/Z,F
+HCP,LX,1,no,no,e03,Monetary Amount,1,18,-,O/Z,F
+HCP,LX,1,no,no,e04,Reference Identification,1,50,-,O/Z,F
+HCP,LX,1,no,no,e05,Rate,1,9,-,O/Z,F
+HCP,LX,1,no,no,e06,Reference Identification,1,50,-,O/Z,F
+HCP,LX,1,no,no,e07,Monetary Amount,1,18,-,O/Z,F
+HCP,LX,1,no,no,e08,Product/Service ID,1,48,-,O/Z,F
+HCP,LX,1,no,no,e09,Product/Service ID Qualifier,2,2,-,X,F
+HCP,LX,1,no,no,e10,Product/Service ID,1,48,-,X/Z,F
+HCP,LX,1,no,no,e11,Unit or Basis for Measurement Code,2,2,-,X,F
+HCP,LX,1,no,no,e12,Quantity,1,15,-,X/Z,F
+HCP,LX,1,no,no,e13,Reject Reason Code,2,2,-,X/Z,F
+HCP,LX,1,no,no,e14,Policy Compliance Code,1,2,-,O,F
+HCP,LX,1,no,no,e15,Exception Code,1,2,-,O/Z,F
+LIN,,99999,yes,yes,landmark,Item Identification,3,3,-,O,F
+LIN,,1,no,no,e01,Assigned Identification,1,20,-,O/Z,F
+LIN,,1,no,no,e02,Product/Service ID Qualifier,2,2,-,M,F
+LIN,,1,no,no,e03,Product/Service ID,1,48,-,M,F
+LIN,,1,no,no,e04,Product/Service ID Qualifier,2,2,-,X,F
+LIN,,1,no,no,e05,Product/Service ID,1,48,-,X,F
+LIN,,1,no,no,e06,Product/Service ID Qualifier,2,2,-,X,F
+LIN,,1,no,no,e07,Product/Service ID,1,48,-,X,F
+LIN,,1,no,no,e08,Product/Service ID Qualifier,2,2,-,X,F
+LIN,,1,no,no,e09,Product/Service ID,1,48,-,X,F
+LIN,,1,no,no,e10,Product/Service ID Qualifier,2,2,-,X,F
+LIN,,1,no,no,e11,Product/Service ID,1,48,-,X,F
+LIN,,1,no,no,e12,Product/Service ID Qualifier,2,2,-,X,F
+LIN,,1,no,no,e13,Product/Service ID,1,48,-,X,F
+LIN,,1,no,no,e14,Product/Service ID Qualifier,2,2,-,X,F
+LIN,,1,no,no,e15,Product/Service ID,1,48,-,X,F
+LIN,,1,no,no,e16,Product/Service ID Qualifier,2,2,-,X,F
+LIN,,1,no,no,e17,Product/Service ID,1,48,-,X,F
+LIN,,1,no,no,e18,Product/Service ID Qualifier,2,2,-,X,F
+LIN,,1,no,no,e19,Product/Service ID,1,48,-,X,F
+LIN,,1,no,no,e20,Product/Service ID Qualifier,2,2,-,X,F
+LIN,,1,no,no,e21,Product/Service ID,1,48,-,X,F
+LIN,,1,no,no,e22,Product/Service ID Qualifier,2,2,-,X,F
+LIN,,1,no,no,e23,Product/Service ID,1,48,-,X,F
+LIN,,1,no,no,e24,Product/Service ID Qualifier,2,2,-,X,F
+LIN,,1,no,no,e25,Product/Service ID,1,48,-,X,F
+LIN,,1,no,no,e26,Product/Service ID Qualifier,2,2,-,X,F
+LIN,,1,no,no,e27,Product/Service ID,1,48,-,X,F
+LIN,,1,no,no,e28,Product/Service ID Qualifier,2,2,-,X,F
+LIN,,1,no,no,e29,Product/Service ID,1,48,-,X,F
+LIN,,1,no,no,e30,Product/Service ID Qualifier,2,2,-,X,F
+LIN,,1,no,no,e31,Product/Service ID,1,48,-,X,F
+CTP,LX:LIN,1,no,yes,landmark,Pricing Information,3,3,-,O,F
+CTP,LX:LIN,1,no,no,e01,Class of Trade Code,2,2,-,O,F
+CTP,LX:LIN,1,no,no,e02,Price Identifier Code,3,3,-,X,F
+CTP,LX:LIN,1,no,no,e03,Unit Price,1,17,-,X,F
+CTP,LX:LIN,1,no,no,e04,Quantity,1,15,-,X,F
+CTP,LX:LIN,1,no,no,e06,Price Multiplier Qualifier,3,3,-,O,F
+CTP,LX:LIN,1,no,no,e07,Multiplier,1,10,-,X/Z,F
+CTP,LX:LIN,1,no,no,e08,Monetary Amount,1,18,-,O/Z,F
+CTP,LX:LIN,1,no,no,e09,Basis of Unit Price Code,2,2,-,O,F
+CTP,LX:LIN,1,no,no,e10,Condition Value,1,10,-,O,F
+CTP,LX:LIN,1,no,no,e11,Multiple Price Quantity,1,2,-,O,F
+REF,LX:LIN,1,no,yes,landmark,Reference Information,3,3,-,O,F
+REF,LX:LIN,1,no,no,e01,Reference Identification Qualifier,2,3,-,M,F
+REF,LX:LIN,1,no,no,e02,Reference Identification,1,50,-,X,F
+REF,LX:LIN,1,no,no,e03,Description,1,80,-,X,F
+NM1,,10,yes,yes,landmark,Individual or Organizational Name,3,3,-,O,F
+NM1,,1,no,no,e01,Entity Identifier Code,2,3,-,M,F
+NM1,,1,no,no,e02,Entity Type Qualifier,1,1,-,M/Z,F
+NM1,,1,no,no,e03,Name Last or Organization Name,1,60,-,X,F
+NM1,,1,no,no,e04,Name First,1,35,-,O,F
+NM1,,1,no,no,e05,Name Middle,1,25,-,O,F
+NM1,,1,no,no,e06,Name Prefix,1,10,-,O,F
+NM1,,1,no,no,e07,Name Suffix,1,10,-,O,F
+NM1,,1,no,no,e08,Identification Code Qualifier,1,2,-,X,F
+NM1,,1,no,no,e09,Identification Code,2,80,-,X,F
+NM1,,1,no,no,e10,Entity Relationship Code,2,2,-,X,F
+NM1,,1,no,no,e11,Entity Identifier Code,2,3,-,O,F
+NM1,,1,no,no,e12,Name Last or Organization Name,1,60,-,O,F
+PRV,NM1,1,no,yes,landmark,Provider Information,3,3,-,O,F
+PRV,NM1,1,no,no,e01,Provider Code,1,3,-,M,F
+PRV,NM1,1,no,no,e02,Reference Identification Qualifier,2,3,-,X,F
+PRV,NM1,1,no,no,e03,Reference Identification,1,50,-,X,F
+PRV,NM1,1,no,no,e04,State or Province Code,2,2,-,O,F
+PRV,NM1,1,no,no,e06,Provider Organization Code,3,3,-,O,F
+N2,NM1,2,no,yes,landmark,Additional Name Information,2,2,-,O,F
+N2,NM1,1,no,no,e01,Name,1,60,-,M,F
+N2,NM1,1,no,no,e02,Name,1,60,-,O,F
+N3,NM1,2,no,yes,landmark,Party Location,2,2,-,O,F
+N3,NM1,1,no,no,e01,Address Information,1,55,-,M,F
+N3,NM1,1,no,no,e02,Address Information,1,55,-,O,F
+N4,NM1,1,no,yes,landmark,Geographic Location,2,2,-,O,F
+N4,NM1,1,no,no,e01,City Name,2,30,-,O,F
+N4,NM1,1,no,no,e02,State or Province Code,2,2,-,X,F
+N4,NM1,1,no,no,e03,Postal Code,3,15,-,O,F
+N4,NM1,1,no,no,e04,Country Code,2,3,-,X,F
+N4,NM1,1,no,no,e05,Location Qualifier,1,2,-,X,F
+N4,NM1,1,no,no,e06,Location Identifier,1,30,-,O,F
+N4,NM1,1,no,no,e07,Country Subdivision Code,1,3,-,X,F
+REF,NM1,20,no,yes,landmark,Reference Information,3,3,-,O,F
+REF,NM1,1,no,no,e01,Reference Identification Qualifier,2,3,-,M,F
+REF,NM1,1,no,no,e02,Reference Identification,1,50,-,X,F
+REF,NM1,1,no,no,e03,Description,1,80,-,X,F
+PER,NM1,2,no,yes,landmark,Administrative Communications Contact,3,3,-,O,F
+PER,NM1,1,no,no,e01,Contact Function Code,2,2,-,M,F
+PER,NM1,1,no,no,e02,Name,1,60,-,O,F
+PER,NM1,1,no,no,e03,Communication Number Qualifier,2,2,-,X,F
+PER,NM1,1,no,no,e04,Communication Number,1,256,-,X,F
+PER,NM1,1,no,no,e05,Communication Number Qualifier,2,2,-,X,F
+PER,NM1,1,no,no,e06,Communication Number,1,256,-,X,F
+PER,NM1,1,no,no,e07,Communication Number Qualifier,2,2,-,X,F
+PER,NM1,1,no,no,e08,Communication Number,1,256,-,X,F
+PER,NM1,1,no,no,e09,Contact Inquiry Reference,1,20,-,O,F
+SVD,,99999,yes,yes,landmark,Service Line Adjudication,3,3,-,O,F
+SVD,,1,no,no,e01,Identification Code,2,80,-,M/Z,F
+SVD,,1,no,no,e02,Monetary Amount,1,18,-,M/Z,F
+SVD,,1,no,no,e04,Product/Service ID,1,48,-,O/Z,F
+SVD,,1,no,no,e05,Quantity,1,15,-,O/Z,F
+SVD,,1,no,no,e06,Assigned Number,1,6,-,O,F
+CAS,SVD,99,no,yes,landmark,Claims Adjustment,3,3,-,O,F
+CAS,SVD,1,no,no,e01,Claim Adjustment Group Code,1,2,-,M,F
+CAS,SVD,1,no,no,e02,Claim Adjustment Reason Code,1,5,-,M,F
+CAS,SVD,1,no,no,e03,Monetary Amount,1,18,-,M/Z,F
+CAS,SVD,1,no,no,e04,Quantity,1,15,-,O/Z,F
+CAS,SVD,1,no,no,e05,Claim Adjustment Reason Code,1,5,-,X,F
+CAS,SVD,1,no,no,e06,Monetary Amount,1,18,-,X/Z,F
+CAS,SVD,1,no,no,e07,Quantity,1,15,-,X/Z,F
+CAS,SVD,1,no,no,e08,Claim Adjustment Reason Code,1,5,-,X,F
+CAS,SVD,1,no,no,e09,Monetary Amount,1,18,-,X/Z,F
+CAS,SVD,1,no,no,e10,Quantity,1,15,-,X/Z,F
+CAS,SVD,1,no,no,e11,Claim Adjustment Reason Code,1,5,-,X,F
+CAS,SVD,1,no,no,e12,Monetary Amount,1,18,-,X/Z,F
+CAS,SVD,1,no,no,e13,Quantity,1,15,-,X/Z,F
+CAS,SVD,1,no,no,e14,Claim Adjustment Reason Code,1,5,-,X,F
+CAS,SVD,1,no,no,e15,Monetary Amount,1,18,-,X/Z,F
+CAS,SVD,1,no,no,e16,Quantity,1,15,-,X/Z,F
+CAS,SVD,1,no,no,e17,Claim Adjustment Reason Code,1,5,-,X,F
+CAS,SVD,1,no,no,e18,Monetary Amount,1,18,-,X/Z,F
+CAS,SVD,1,no,no,e19,Quantity,1,15,-,X/Z,F
+DTP,SVD,9,no,yes,landmark,Date or Time or Period,3,3,-,O,F
+DTP,SVD,1,no,no,e01,Date/Time Qualifier,3,3,-,M,F
+DTP,SVD,1,no,no,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+DTP,SVD,1,no,no,e03,Date Time Period,1,35,-,M,F
+AMT,SVD,20,no,yes,landmark,Monetary Amount Information,3,3,-,O,F
+AMT,SVD,1,no,no,e01,Amount Qualifier Code,1,3,-,M,F
+AMT,SVD,1,no,no,e02,Monetary Amount,1,18,-,M,F
+AMT,SVD,1,no,no,e03,Credit/Debit Flag Code,1,1,-,O,F
+LQ,,99999,yes,yes,landmark,Industry Code Identification,2,2,-,O,F
+LQ,,1,no,no,e01,Code List Qualifier Code,1,3,-,O,F
+LQ,,1,no,no,e02,Industry Code,1,30,-,X,F
+FRM,LQ,99,no,yes,landmark,Supporting Documentation,3,3,-,M,F
+FRM,LQ,1,no,no,e01,Assigned Identification,1,20,-,M/Z,F
+FRM,LQ,1,no,no,e02,Yes/No Condition or Response Code,1,1,-,X/Z,F
+FRM,LQ,1,no,no,e03,Reference Identification,1,50,-,X,F
+FRM,LQ,1,no,no,e04,Date,8,8,-,X,F
+FRM,LQ,1,no,no,e05,Percent, Decimal Format,1,6,-,X,F
+SE,,1,no,yes,landmark,Transaction Set Trailer,2,2,-,M,F
+SE,,1,no,no,e01,Number of Included Segments,1,10,-,M,F
+SE,,1,no,no,e02,Transaction Set Control Number,4,9,-,M,F

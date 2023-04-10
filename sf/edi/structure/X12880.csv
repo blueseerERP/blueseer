@@ -1,279 +1,279 @@
-#<h1>880 - Grocery Products Invoice</h1><br>
-#segment,parent,loopcount,isgroup,islandmark,field,desc,min,max,align,status
-ST,,1,no,yes,landmark,Transaction Set Header,2,2,-,M
-ST,,1,no,no,e01,Transaction Set Identifier Code,3,3,-,M/Z
-ST,,1,no,no,e02,Transaction Set Control Number,4,9,-,M
-ST,,1,no,no,e03,Implementation Convention Reference,1,35,-,O/Z
-G01,,1,no,yes,landmark,Invoice Identification,3,3,-,M
-G01,,1,no,no,e01,Date,8,8,-,M/Z
-G01,,1,no,no,e02,Invoice Number,1,22,-,M
-G01,,1,no,no,e03,Date,8,8,-,O/Z
-G01,,1,no,no,e04,Purchase Order Number,1,22,-,O
-G01,,1,no,no,e05,Vendor Order Number,1,22,-,O
-G01,,1,no,no,e06,Master Reference (Link) Number,1,22,-,X
-G01,,1,no,no,e07,Link Sequence Number,6,6,-,X
-G01,,1,no,no,e08,Transaction Type Code,2,2,-,O
-N9,,10,no,yes,landmark,Extended Reference Information,2,2,-,O
-N9,,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
-N9,,1,no,no,e02,Reference Identification,1,50,-,X
-N9,,1,no,no,e03,Free-form Description,1,45,-,X
-N9,,1,no,no,e04,Date,8,8,-,O
-N9,,1,no,no,e05,Time,4,8,-,X
-N9,,1,no,no,e06,Time Code,2,2,-,O/Z
-G61,,3,no,yes,landmark,Contact,3,3,-,O
-G61,,1,no,no,e01,Contact Function Code,2,2,-,M
-G61,,1,no,no,e02,Name,1,60,-,M
-G61,,1,no,no,e03,Communication Number Qualifier,2,2,-,X
-G61,,1,no,no,e04,Communication Number,1,256,-,X
-G61,,1,no,no,e05,Contact Inquiry Reference,1,20,-,O
-G62,,5,no,yes,landmark,Date/Time,3,3,-,O
-G62,,1,no,no,e01,Date Qualifier,2,2,-,X
-G62,,1,no,no,e02,Date,8,8,-,X
-G62,,1,no,no,e03,Time Qualifier,1,2,-,X
-G62,,1,no,no,e04,Time,4,8,-,X
-G62,,1,no,no,e05,Time Code,2,2,-,O
-NTE,,20,no,yes,landmark,Note/Special Instruction,3,3,-,O
-NTE,,1,no,no,e01,Note Reference Code,3,3,-,O
-NTE,,1,no,no,e02,Description,1,80,-,M
-CAD,,5,no,yes,landmark,Carrier Details,3,3,-,O
-CAD,,1,no,no,e01,Transportation Method/Type Code,1,2,-,M
-CAD,,1,no,no,e02,Equipment Initial,1,4,-,O
-CAD,,1,no,no,e03,Equipment Number,1,15,-,O
-CAD,,1,no,no,e04,Standard Carrier Alpha Code,2,4,-,X
-CAD,,1,no,no,e05,Routing,1,35,-,X
-CAD,,1,no,no,e06,Shipment/Order Status Code,2,2,-,O
-CAD,,1,no,no,e07,Reference Identification Qualifier,2,3,-,O
-CAD,,1,no,no,e08,Reference Identification,1,50,-,X
-CAD,,1,no,no,e09,Service Level Code,2,2,-,O
-G23,,20,no,yes,landmark,Terms of Sale,3,3,-,O
-G23,,1,no,no,e01,Terms Type Code,2,2,-,M
-G23,,1,no,no,e02,Terms Basis Date Code,1,2,-,M
-G23,,1,no,no,e03,Terms Start Date,8,8,-,O
-G23,,1,no,no,e04,Terms Due Date Qualifier,2,2,-,O
-G23,,1,no,no,e05,Terms Discount Percent,1,6,-,O
-G23,,1,no,no,e06,Terms Discount Due Date,8,8,-,O
-G23,,1,no,no,e07,Terms Discount Days Due,1,3,-,O
-G23,,1,no,no,e08,Terms Net Due Date,8,8,-,X
-G23,,1,no,no,e09,Terms Net Days,1,3,-,X
-G23,,1,no,no,e10,Terms Discount Amount,1,10,-,O
-G23,,1,no,no,e11,Discounted Amount Due,1,10,-,O
-G23,,1,no,no,e12,Amount Subject to Terms Discount,1,10,-,O
-G23,,1,no,no,e13,Installment Total Invoice Amount Due,1,10,-,O
-G23,,1,no,no,e14,Percent of Invoice Payable,1,5,-,O
-G23,,1,no,no,e15,Free-form Message,1,60,-,O
-G23,,1,no,no,e16,Installment Group Indicator,2,2,-,O
-G25,,1,no,yes,landmark,F.O.B. Information,3,3,-,O
-G25,,1,no,no,e01,Shipment Method of Payment,2,2,-,M
-G25,,1,no,no,e02,F.O.B. Point Code,2,2,-,M
-G25,,1,no,no,e03,F.O.B. Point,1,30,-,O
-N1,,10,yes,yes,landmark,Party Identification,2,2,-,M
-N1,,1,no,no,e01,Entity Identifier Code,2,3,-,M
-N1,,1,no,no,e02,Name,1,60,-,X
-N1,,1,no,no,e03,Identification Code Qualifier,1,2,-,X
-N1,,1,no,no,e04,Identification Code,2,80,-,X
-N1,,1,no,no,e05,Entity Relationship Code,2,2,-,O
-N1,,1,no,no,e06,Entity Identifier Code,2,3,-,O
-N2,N1,1,no,yes,landmark,Additional Name Information,2,2,-,O
-N2,N1,1,no,no,e01,Name,1,60,-,M
-N2,N1,1,no,no,e02,Name,1,60,-,O
-N3,N1,2,no,yes,landmark,Party Location,2,2,-,O
-N3,N1,1,no,no,e01,Address Information,1,55,-,M
-N3,N1,1,no,no,e02,Address Information,1,55,-,O
-N4,N1,1,no,yes,landmark,Geographic Location,2,2,-,O
-N4,N1,1,no,no,e01,City Name,2,30,-,O
-N4,N1,1,no,no,e02,State or Province Code,2,2,-,X
-N4,N1,1,no,no,e03,Postal Code,3,15,-,O
-N4,N1,1,no,no,e04,Country Code,2,3,-,X
-N4,N1,1,no,no,e05,Location Qualifier,1,2,-,X
-N4,N1,1,no,no,e06,Location Identifier,1,30,-,O
-N4,N1,1,no,no,e07,Country Subdivision Code,1,3,-,X
-G72,,100,yes,yes,landmark,Allowance or Charge,3,3,-,O
-G72,,1,no,no,e01,Allowance or Charge Code,1,3,-,M
-G72,,1,no,no,e02,Allowance or Charge Method of Handling Code,2,2,-,M
-G72,,1,no,no,e03,Allowance or Charge Number,1,16,-,X
-G72,,1,no,no,e04,Exception Number,1,16,-,O
-G72,,1,no,no,e05,Allowance or Charge Rate,1,15,-,X
-G72,,1,no,no,e06,Allowance or Charge Quantity,1,10,-,X
-G72,,1,no,no,e07,Unit or Basis for Measurement Code,2,2,-,X
-G72,,1,no,no,e08,Allowance or Charge Total Amount,1,15,-,X
-G72,,1,no,no,e09,Percent, Decimal Format,1,6,-,X/Z
-G72,,1,no,no,e10,Dollar Basis For Percent,1,9,-,X
-G72,,1,no,no,e11,Option Number,1,20,-,O
-G73,G72,10,no,yes,landmark,Allowance or Charge Description,3,3,-,O
-G73,G72,1,no,no,e01,Free-form Description,1,45,-,M
-G17,,9999,yes,yes,landmark,Item Detail - Invoice,3,3,-,O
-G17,,1,no,no,e01,Quantity Invoiced,1,15,-,M
-G17,,1,no,no,e02,Unit or Basis for Measurement Code,2,2,-,M
-G17,,1,no,no,e03,Item List Cost,1,9,-,X
-G17,,1,no,no,e04,U.P.C. Case Code,12,12,-,X
-G17,,1,no,no,e05,Product/Service ID Qualifier,2,2,-,X
-G17,,1,no,no,e06,Product/Service ID,1,48,-,X
-G17,,1,no,no,e07,Product/Service ID Qualifier,2,2,-,X
-G17,,1,no,no,e08,Product/Service ID,1,48,-,X
-G17,,1,no,no,e09,Price Bracket Identifier,1,3,-,O
-G17,,1,no,no,e10,Number of Units Shipped,1,10,-,X
-G17,,1,no,no,e11,Unit or Basis for Measurement Code,2,2,-,X
-G17,,1,no,no,e12,Price List Number,1,16,-,O
-G17,,1,no,no,e13,Price List Issue Number,1,16,-,O
-G17,,1,no,no,e14,Monetary Amount,1,18,-,X/Z
-G69,G17,5,no,yes,landmark,Line Item Detail - Description,3,3,-,O
-G69,G17,1,no,no,e01,Free-form Description,1,45,-,M
-G19,G17,10,no,yes,landmark,Line Item Detail - Quantity/Unit of Measure/Price Differences,3,3,-,O
-G19,G17,1,no,no,e01,Number of Units Shipped,1,10,-,X
-G19,G17,1,no,no,e02,Unit or Basis for Measurement Code,2,2,-,X
-G19,G17,1,no,no,e03,Quantity Difference,1,9,-,X
-G19,G17,1,no,no,e04,Shipment/Order Status Code,2,2,-,X
-G19,G17,1,no,no,e05,Price Reason Code,1,1,-,O
-G19,G17,1,no,no,e06,Terms Exception Code,2,2,-,O
-G19,G17,1,no,no,e07,U.P.C. Case Code,12,12,-,O
-G19,G17,1,no,no,e08,Product/Service ID Qualifier,2,2,-,X
-G19,G17,1,no,no,e09,Product/Service ID,1,48,-,X
-G20,G17,1,no,yes,landmark,Item Packing Detail,3,3,-,O
-G20,G17,1,no,no,e01,Pack,1,6,-,O
-G20,G17,1,no,no,e02,Size,1,8,-,X
-G20,G17,1,no,no,e03,Unit or Basis for Measurement Code,2,2,-,X
-G20,G17,1,no,no,e04,Weight,1,10,-,X
-G20,G17,1,no,no,e05,Unit or Basis for Measurement Code,2,2,-,X
-G20,G17,1,no,no,e06,Volume,1,8,-,X
-G20,G17,1,no,no,e07,Unit or Basis for Measurement Code,2,2,-,X
-G20,G17,1,no,no,e08,Color,1,10,-,O
-G20,G17,1,no,no,e09,Inner Pack,1,6,-,O
-N9,G17,5,no,yes,landmark,Extended Reference Information,2,2,-,O
-N9,G17,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
-N9,G17,1,no,no,e02,Reference Identification,1,50,-,X
-N9,G17,1,no,no,e03,Free-form Description,1,45,-,X
-N9,G17,1,no,no,e04,Date,8,8,-,O
-N9,G17,1,no,no,e05,Time,4,8,-,X
-N9,G17,1,no,no,e06,Time Code,2,2,-,O/Z
-G23,G17,20,no,yes,landmark,Terms of Sale,3,3,-,O
-G23,G17,1,no,no,e01,Terms Type Code,2,2,-,M
-G23,G17,1,no,no,e02,Terms Basis Date Code,1,2,-,M
-G23,G17,1,no,no,e03,Terms Start Date,8,8,-,O
-G23,G17,1,no,no,e04,Terms Due Date Qualifier,2,2,-,O
-G23,G17,1,no,no,e05,Terms Discount Percent,1,6,-,O
-G23,G17,1,no,no,e06,Terms Discount Due Date,8,8,-,O
-G23,G17,1,no,no,e07,Terms Discount Days Due,1,3,-,O
-G23,G17,1,no,no,e08,Terms Net Due Date,8,8,-,X
-G23,G17,1,no,no,e09,Terms Net Days,1,3,-,X
-G23,G17,1,no,no,e10,Terms Discount Amount,1,10,-,O
-G23,G17,1,no,no,e11,Discounted Amount Due,1,10,-,O
-G23,G17,1,no,no,e12,Amount Subject to Terms Discount,1,10,-,O
-G23,G17,1,no,no,e13,Installment Total Invoice Amount Due,1,10,-,O
-G23,G17,1,no,no,e14,Percent of Invoice Payable,1,5,-,O
-G23,G17,1,no,no,e15,Free-form Message,1,60,-,O
-G23,G17,1,no,no,e16,Installment Group Indicator,2,2,-,O
-G25,G17,1,no,yes,landmark,F.O.B. Information,3,3,-,O
-G25,G17,1,no,no,e01,Shipment Method of Payment,2,2,-,M
-G25,G17,1,no,no,e02,F.O.B. Point Code,2,2,-,M
-G25,G17,1,no,no,e03,F.O.B. Point,1,30,-,O
-G72,,100,yes,yes,landmark,Allowance or Charge,3,3,-,O
-G72,,1,no,no,e01,Allowance or Charge Code,1,3,-,M
-G72,,1,no,no,e02,Allowance or Charge Method of Handling Code,2,2,-,M
-G72,,1,no,no,e03,Allowance or Charge Number,1,16,-,X
-G72,,1,no,no,e04,Exception Number,1,16,-,O
-G72,,1,no,no,e05,Allowance or Charge Rate,1,15,-,X
-G72,,1,no,no,e06,Allowance or Charge Quantity,1,10,-,X
-G72,,1,no,no,e07,Unit or Basis for Measurement Code,2,2,-,X
-G72,,1,no,no,e08,Allowance or Charge Total Amount,1,15,-,X
-G72,,1,no,no,e09,Percent, Decimal Format,1,6,-,X/Z
-G72,,1,no,no,e10,Dollar Basis For Percent,1,9,-,X
-G72,,1,no,no,e11,Option Number,1,20,-,O
-G73,G17:G72,10,no,yes,landmark,Allowance or Charge Description,3,3,-,O
-G73,G17:G72,1,no,no,e01,Free-form Description,1,45,-,M
-ENT,,500,yes,yes,landmark,Entity,3,3,-,O
-ENT,,1,no,no,e01,Assigned Number,1,6,-,O
-ENT,,1,no,no,e02,Entity Identifier Code,2,3,-,X
-ENT,,1,no,no,e03,Identification Code Qualifier,1,2,-,X
-ENT,,1,no,no,e04,Identification Code,2,80,-,X
-ENT,,1,no,no,e05,Entity Identifier Code,2,3,-,X
-ENT,,1,no,no,e06,Identification Code Qualifier,1,2,-,X
-ENT,,1,no,no,e07,Identification Code,2,80,-,X
-ENT,,1,no,no,e08,Reference Identification Qualifier,2,3,-,X
-ENT,,1,no,no,e09,Reference Identification,1,50,-,X
-N2,ENT,1,no,yes,landmark,Additional Name Information,2,2,-,O
-N2,ENT,1,no,no,e01,Name,1,60,-,M
-N2,ENT,1,no,no,e02,Name,1,60,-,O
-N3,ENT,1,no,yes,landmark,Party Location,2,2,-,O
-N3,ENT,1,no,no,e01,Address Information,1,55,-,M
-N3,ENT,1,no,no,e02,Address Information,1,55,-,O
-N4,ENT,1,no,yes,landmark,Geographic Location,2,2,-,O
-N4,ENT,1,no,no,e01,City Name,2,30,-,O
-N4,ENT,1,no,no,e02,State or Province Code,2,2,-,X
-N4,ENT,1,no,no,e03,Postal Code,3,15,-,O
-N4,ENT,1,no,no,e04,Country Code,2,3,-,X
-N4,ENT,1,no,no,e05,Location Qualifier,1,2,-,X
-N4,ENT,1,no,no,e06,Location Identifier,1,30,-,O
-N4,ENT,1,no,no,e07,Country Subdivision Code,1,3,-,X
-N9,ENT,5,no,yes,landmark,Extended Reference Information,2,2,-,O
-N9,ENT,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
-N9,ENT,1,no,no,e02,Reference Identification,1,50,-,X
-N9,ENT,1,no,no,e03,Free-form Description,1,45,-,X
-N9,ENT,1,no,no,e04,Date,8,8,-,O
-N9,ENT,1,no,no,e05,Time,4,8,-,X
-N9,ENT,1,no,no,e06,Time Code,2,2,-,O/Z
-REF,,99999,yes,yes,landmark,Reference Information,3,3,-,O
-REF,,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
-REF,,1,no,no,e02,Reference Identification,1,50,-,X
-REF,,1,no,no,e03,Description,1,80,-,X
-QTY,ENT:REF,1,no,yes,landmark,Quantity Information,3,3,-,O
-QTY,ENT:REF,1,no,no,e01,Quantity Qualifier,2,2,-,M
-QTY,ENT:REF,1,no,no,e02,Quantity,1,15,-,X
-QTY,ENT:REF,1,no,no,e04,Free-form Information,1,30,-,X/Z
-AMT,ENT:REF,2,no,yes,landmark,Monetary Amount Information,3,3,-,O
-AMT,ENT:REF,1,no,no,e01,Amount Qualifier Code,1,3,-,M
-AMT,ENT:REF,1,no,no,e02,Monetary Amount,1,18,-,M
-AMT,ENT:REF,1,no,no,e03,Credit/Debit Flag Code,1,1,-,O
-G72,ENT:REF,1,no,yes,landmark,Allowance or Charge,3,3,-,O
-G72,ENT:REF,1,no,no,e01,Allowance or Charge Code,1,3,-,M
-G72,ENT:REF,1,no,no,e02,Allowance or Charge Method of Handling Code,2,2,-,M
-G72,ENT:REF,1,no,no,e03,Allowance or Charge Number,1,16,-,X
-G72,ENT:REF,1,no,no,e04,Exception Number,1,16,-,O
-G72,ENT:REF,1,no,no,e05,Allowance or Charge Rate,1,15,-,X
-G72,ENT:REF,1,no,no,e06,Allowance or Charge Quantity,1,10,-,X
-G72,ENT:REF,1,no,no,e07,Unit or Basis for Measurement Code,2,2,-,X
-G72,ENT:REF,1,no,no,e08,Allowance or Charge Total Amount,1,15,-,X
-G72,ENT:REF,1,no,no,e09,Percent, Decimal Format,1,6,-,X/Z
-G72,ENT:REF,1,no,no,e10,Dollar Basis For Percent,1,9,-,X
-G72,ENT:REF,1,no,no,e11,Option Number,1,20,-,O
-G17,,99999,yes,yes,landmark,Item Detail - Invoice,3,3,-,O
-G17,,1,no,no,e01,Quantity Invoiced,1,15,-,M
-G17,,1,no,no,e02,Unit or Basis for Measurement Code,2,2,-,M
-G17,,1,no,no,e03,Item List Cost,1,9,-,X
-G17,,1,no,no,e04,U.P.C. Case Code,12,12,-,X
-G17,,1,no,no,e05,Product/Service ID Qualifier,2,2,-,X
-G17,,1,no,no,e06,Product/Service ID,1,48,-,X
-G17,,1,no,no,e07,Product/Service ID Qualifier,2,2,-,X
-G17,,1,no,no,e08,Product/Service ID,1,48,-,X
-G17,,1,no,no,e09,Price Bracket Identifier,1,3,-,O
-G17,,1,no,no,e10,Number of Units Shipped,1,10,-,X
-G17,,1,no,no,e11,Unit or Basis for Measurement Code,2,2,-,X
-G17,,1,no,no,e12,Price List Number,1,16,-,O
-G17,,1,no,no,e13,Price List Issue Number,1,16,-,O
-G17,,1,no,no,e14,Monetary Amount,1,18,-,X/Z
-G19,ENT:REF:G17,10,no,yes,landmark,Line Item Detail - Quantity/Unit of Measure/Price Differences,3,3,-,O
-G19,ENT:REF:G17,1,no,no,e01,Number of Units Shipped,1,10,-,X
-G19,ENT:REF:G17,1,no,no,e02,Unit or Basis for Measurement Code,2,2,-,X
-G19,ENT:REF:G17,1,no,no,e03,Quantity Difference,1,9,-,X
-G19,ENT:REF:G17,1,no,no,e04,Shipment/Order Status Code,2,2,-,X
-G19,ENT:REF:G17,1,no,no,e05,Price Reason Code,1,1,-,O
-G19,ENT:REF:G17,1,no,no,e06,Terms Exception Code,2,2,-,O
-G19,ENT:REF:G17,1,no,no,e07,U.P.C. Case Code,12,12,-,O
-G19,ENT:REF:G17,1,no,no,e08,Product/Service ID Qualifier,2,2,-,X
-G19,ENT:REF:G17,1,no,no,e09,Product/Service ID,1,48,-,X
-G31,,1,no,yes,landmark,Total Invoice Quantity,3,3,-,M
-G31,,1,no,no,e01,Number of Units Shipped,1,10,-,M
-G31,,1,no,no,e02,Unit or Basis for Measurement Code,2,2,-,M
-G31,,1,no,no,e03,Weight,1,10,-,X
-G31,,1,no,no,e04,Unit or Basis for Measurement Code,2,2,-,X
-G31,,1,no,no,e05,Volume,1,8,-,X
-G31,,1,no,no,e06,Unit or Basis for Measurement Code,2,2,-,X
-G31,,1,no,no,e07,Order Sizing Factor,1,10,-,O
-G31,,1,no,no,e08,Price Bracket Identifier,1,3,-,O
-G31,,1,no,no,e09,Payment Method Type Code,1,2,-,O
-G31,,1,no,no,e10,Quantity,1,15,-,O/Z
-G31,,1,no,no,e11,Weight,1,10,-,O/Z
-G33,,1,no,yes,landmark,Total Dollars Summary,3,3,-,M
-G33,,1,no,no,e01,Amount,1,15,-,M
-SE,,1,no,yes,landmark,Transaction Set Trailer,2,2,-,M
-SE,,1,no,no,e01,Number of Included Segments,1,10,-,M
-SE,,1,no,no,e02,Transaction Set Control Number,4,9,-,M
+#<h1>880 - Grocery Products Invoice</h1><br>,F
+#segment,parent,loopcount,isgroup,islandmark,field,desc,min,max,align,status,F
+ST,,1,no,yes,landmark,Transaction Set Header,2,2,-,M,F
+ST,,1,no,no,e01,Transaction Set Identifier Code,3,3,-,M/Z,F
+ST,,1,no,no,e02,Transaction Set Control Number,4,9,-,M,F
+ST,,1,no,no,e03,Implementation Convention Reference,1,35,-,O/Z,F
+G01,,1,no,yes,landmark,Invoice Identification,3,3,-,M,F
+G01,,1,no,no,e01,Date,8,8,-,M/Z,F
+G01,,1,no,no,e02,Invoice Number,1,22,-,M,F
+G01,,1,no,no,e03,Date,8,8,-,O/Z,F
+G01,,1,no,no,e04,Purchase Order Number,1,22,-,O,F
+G01,,1,no,no,e05,Vendor Order Number,1,22,-,O,F
+G01,,1,no,no,e06,Master Reference (Link) Number,1,22,-,X,F
+G01,,1,no,no,e07,Link Sequence Number,6,6,-,X,F
+G01,,1,no,no,e08,Transaction Type Code,2,2,-,O,F
+N9,,10,no,yes,landmark,Extended Reference Information,2,2,-,O,F
+N9,,1,no,no,e01,Reference Identification Qualifier,2,3,-,M,F
+N9,,1,no,no,e02,Reference Identification,1,50,-,X,F
+N9,,1,no,no,e03,Free-form Description,1,45,-,X,F
+N9,,1,no,no,e04,Date,8,8,-,O,F
+N9,,1,no,no,e05,Time,4,8,-,X,F
+N9,,1,no,no,e06,Time Code,2,2,-,O/Z,F
+G61,,3,no,yes,landmark,Contact,3,3,-,O,F
+G61,,1,no,no,e01,Contact Function Code,2,2,-,M,F
+G61,,1,no,no,e02,Name,1,60,-,M,F
+G61,,1,no,no,e03,Communication Number Qualifier,2,2,-,X,F
+G61,,1,no,no,e04,Communication Number,1,256,-,X,F
+G61,,1,no,no,e05,Contact Inquiry Reference,1,20,-,O,F
+G62,,5,no,yes,landmark,Date/Time,3,3,-,O,F
+G62,,1,no,no,e01,Date Qualifier,2,2,-,X,F
+G62,,1,no,no,e02,Date,8,8,-,X,F
+G62,,1,no,no,e03,Time Qualifier,1,2,-,X,F
+G62,,1,no,no,e04,Time,4,8,-,X,F
+G62,,1,no,no,e05,Time Code,2,2,-,O,F
+NTE,,20,no,yes,landmark,Note/Special Instruction,3,3,-,O,F
+NTE,,1,no,no,e01,Note Reference Code,3,3,-,O,F
+NTE,,1,no,no,e02,Description,1,80,-,M,F
+CAD,,5,no,yes,landmark,Carrier Details,3,3,-,O,F
+CAD,,1,no,no,e01,Transportation Method/Type Code,1,2,-,M,F
+CAD,,1,no,no,e02,Equipment Initial,1,4,-,O,F
+CAD,,1,no,no,e03,Equipment Number,1,15,-,O,F
+CAD,,1,no,no,e04,Standard Carrier Alpha Code,2,4,-,X,F
+CAD,,1,no,no,e05,Routing,1,35,-,X,F
+CAD,,1,no,no,e06,Shipment/Order Status Code,2,2,-,O,F
+CAD,,1,no,no,e07,Reference Identification Qualifier,2,3,-,O,F
+CAD,,1,no,no,e08,Reference Identification,1,50,-,X,F
+CAD,,1,no,no,e09,Service Level Code,2,2,-,O,F
+G23,,20,no,yes,landmark,Terms of Sale,3,3,-,O,F
+G23,,1,no,no,e01,Terms Type Code,2,2,-,M,F
+G23,,1,no,no,e02,Terms Basis Date Code,1,2,-,M,F
+G23,,1,no,no,e03,Terms Start Date,8,8,-,O,F
+G23,,1,no,no,e04,Terms Due Date Qualifier,2,2,-,O,F
+G23,,1,no,no,e05,Terms Discount Percent,1,6,-,O,F
+G23,,1,no,no,e06,Terms Discount Due Date,8,8,-,O,F
+G23,,1,no,no,e07,Terms Discount Days Due,1,3,-,O,F
+G23,,1,no,no,e08,Terms Net Due Date,8,8,-,X,F
+G23,,1,no,no,e09,Terms Net Days,1,3,-,X,F
+G23,,1,no,no,e10,Terms Discount Amount,1,10,-,O,F
+G23,,1,no,no,e11,Discounted Amount Due,1,10,-,O,F
+G23,,1,no,no,e12,Amount Subject to Terms Discount,1,10,-,O,F
+G23,,1,no,no,e13,Installment Total Invoice Amount Due,1,10,-,O,F
+G23,,1,no,no,e14,Percent of Invoice Payable,1,5,-,O,F
+G23,,1,no,no,e15,Free-form Message,1,60,-,O,F
+G23,,1,no,no,e16,Installment Group Indicator,2,2,-,O,F
+G25,,1,no,yes,landmark,F.O.B. Information,3,3,-,O,F
+G25,,1,no,no,e01,Shipment Method of Payment,2,2,-,M,F
+G25,,1,no,no,e02,F.O.B. Point Code,2,2,-,M,F
+G25,,1,no,no,e03,F.O.B. Point,1,30,-,O,F
+N1,,10,yes,yes,landmark,Party Identification,2,2,-,M,F
+N1,,1,no,no,e01,Entity Identifier Code,2,3,-,M,F
+N1,,1,no,no,e02,Name,1,60,-,X,F
+N1,,1,no,no,e03,Identification Code Qualifier,1,2,-,X,F
+N1,,1,no,no,e04,Identification Code,2,80,-,X,F
+N1,,1,no,no,e05,Entity Relationship Code,2,2,-,O,F
+N1,,1,no,no,e06,Entity Identifier Code,2,3,-,O,F
+N2,N1,1,no,yes,landmark,Additional Name Information,2,2,-,O,F
+N2,N1,1,no,no,e01,Name,1,60,-,M,F
+N2,N1,1,no,no,e02,Name,1,60,-,O,F
+N3,N1,2,no,yes,landmark,Party Location,2,2,-,O,F
+N3,N1,1,no,no,e01,Address Information,1,55,-,M,F
+N3,N1,1,no,no,e02,Address Information,1,55,-,O,F
+N4,N1,1,no,yes,landmark,Geographic Location,2,2,-,O,F
+N4,N1,1,no,no,e01,City Name,2,30,-,O,F
+N4,N1,1,no,no,e02,State or Province Code,2,2,-,X,F
+N4,N1,1,no,no,e03,Postal Code,3,15,-,O,F
+N4,N1,1,no,no,e04,Country Code,2,3,-,X,F
+N4,N1,1,no,no,e05,Location Qualifier,1,2,-,X,F
+N4,N1,1,no,no,e06,Location Identifier,1,30,-,O,F
+N4,N1,1,no,no,e07,Country Subdivision Code,1,3,-,X,F
+G72,,100,yes,yes,landmark,Allowance or Charge,3,3,-,O,F
+G72,,1,no,no,e01,Allowance or Charge Code,1,3,-,M,F
+G72,,1,no,no,e02,Allowance or Charge Method of Handling Code,2,2,-,M,F
+G72,,1,no,no,e03,Allowance or Charge Number,1,16,-,X,F
+G72,,1,no,no,e04,Exception Number,1,16,-,O,F
+G72,,1,no,no,e05,Allowance or Charge Rate,1,15,-,X,F
+G72,,1,no,no,e06,Allowance or Charge Quantity,1,10,-,X,F
+G72,,1,no,no,e07,Unit or Basis for Measurement Code,2,2,-,X,F
+G72,,1,no,no,e08,Allowance or Charge Total Amount,1,15,-,X,F
+G72,,1,no,no,e09,Percent, Decimal Format,1,6,-,X/Z,F
+G72,,1,no,no,e10,Dollar Basis For Percent,1,9,-,X,F
+G72,,1,no,no,e11,Option Number,1,20,-,O,F
+G73,G72,10,no,yes,landmark,Allowance or Charge Description,3,3,-,O,F
+G73,G72,1,no,no,e01,Free-form Description,1,45,-,M,F
+G17,,9999,yes,yes,landmark,Item Detail - Invoice,3,3,-,O,F
+G17,,1,no,no,e01,Quantity Invoiced,1,15,-,M,F
+G17,,1,no,no,e02,Unit or Basis for Measurement Code,2,2,-,M,F
+G17,,1,no,no,e03,Item List Cost,1,9,-,X,F
+G17,,1,no,no,e04,U.P.C. Case Code,12,12,-,X,F
+G17,,1,no,no,e05,Product/Service ID Qualifier,2,2,-,X,F
+G17,,1,no,no,e06,Product/Service ID,1,48,-,X,F
+G17,,1,no,no,e07,Product/Service ID Qualifier,2,2,-,X,F
+G17,,1,no,no,e08,Product/Service ID,1,48,-,X,F
+G17,,1,no,no,e09,Price Bracket Identifier,1,3,-,O,F
+G17,,1,no,no,e10,Number of Units Shipped,1,10,-,X,F
+G17,,1,no,no,e11,Unit or Basis for Measurement Code,2,2,-,X,F
+G17,,1,no,no,e12,Price List Number,1,16,-,O,F
+G17,,1,no,no,e13,Price List Issue Number,1,16,-,O,F
+G17,,1,no,no,e14,Monetary Amount,1,18,-,X/Z,F
+G69,G17,5,no,yes,landmark,Line Item Detail - Description,3,3,-,O,F
+G69,G17,1,no,no,e01,Free-form Description,1,45,-,M,F
+G19,G17,10,no,yes,landmark,Line Item Detail - Quantity/Unit of Measure/Price Differences,3,3,-,O,F
+G19,G17,1,no,no,e01,Number of Units Shipped,1,10,-,X,F
+G19,G17,1,no,no,e02,Unit or Basis for Measurement Code,2,2,-,X,F
+G19,G17,1,no,no,e03,Quantity Difference,1,9,-,X,F
+G19,G17,1,no,no,e04,Shipment/Order Status Code,2,2,-,X,F
+G19,G17,1,no,no,e05,Price Reason Code,1,1,-,O,F
+G19,G17,1,no,no,e06,Terms Exception Code,2,2,-,O,F
+G19,G17,1,no,no,e07,U.P.C. Case Code,12,12,-,O,F
+G19,G17,1,no,no,e08,Product/Service ID Qualifier,2,2,-,X,F
+G19,G17,1,no,no,e09,Product/Service ID,1,48,-,X,F
+G20,G17,1,no,yes,landmark,Item Packing Detail,3,3,-,O,F
+G20,G17,1,no,no,e01,Pack,1,6,-,O,F
+G20,G17,1,no,no,e02,Size,1,8,-,X,F
+G20,G17,1,no,no,e03,Unit or Basis for Measurement Code,2,2,-,X,F
+G20,G17,1,no,no,e04,Weight,1,10,-,X,F
+G20,G17,1,no,no,e05,Unit or Basis for Measurement Code,2,2,-,X,F
+G20,G17,1,no,no,e06,Volume,1,8,-,X,F
+G20,G17,1,no,no,e07,Unit or Basis for Measurement Code,2,2,-,X,F
+G20,G17,1,no,no,e08,Color,1,10,-,O,F
+G20,G17,1,no,no,e09,Inner Pack,1,6,-,O,F
+N9,G17,5,no,yes,landmark,Extended Reference Information,2,2,-,O,F
+N9,G17,1,no,no,e01,Reference Identification Qualifier,2,3,-,M,F
+N9,G17,1,no,no,e02,Reference Identification,1,50,-,X,F
+N9,G17,1,no,no,e03,Free-form Description,1,45,-,X,F
+N9,G17,1,no,no,e04,Date,8,8,-,O,F
+N9,G17,1,no,no,e05,Time,4,8,-,X,F
+N9,G17,1,no,no,e06,Time Code,2,2,-,O/Z,F
+G23,G17,20,no,yes,landmark,Terms of Sale,3,3,-,O,F
+G23,G17,1,no,no,e01,Terms Type Code,2,2,-,M,F
+G23,G17,1,no,no,e02,Terms Basis Date Code,1,2,-,M,F
+G23,G17,1,no,no,e03,Terms Start Date,8,8,-,O,F
+G23,G17,1,no,no,e04,Terms Due Date Qualifier,2,2,-,O,F
+G23,G17,1,no,no,e05,Terms Discount Percent,1,6,-,O,F
+G23,G17,1,no,no,e06,Terms Discount Due Date,8,8,-,O,F
+G23,G17,1,no,no,e07,Terms Discount Days Due,1,3,-,O,F
+G23,G17,1,no,no,e08,Terms Net Due Date,8,8,-,X,F
+G23,G17,1,no,no,e09,Terms Net Days,1,3,-,X,F
+G23,G17,1,no,no,e10,Terms Discount Amount,1,10,-,O,F
+G23,G17,1,no,no,e11,Discounted Amount Due,1,10,-,O,F
+G23,G17,1,no,no,e12,Amount Subject to Terms Discount,1,10,-,O,F
+G23,G17,1,no,no,e13,Installment Total Invoice Amount Due,1,10,-,O,F
+G23,G17,1,no,no,e14,Percent of Invoice Payable,1,5,-,O,F
+G23,G17,1,no,no,e15,Free-form Message,1,60,-,O,F
+G23,G17,1,no,no,e16,Installment Group Indicator,2,2,-,O,F
+G25,G17,1,no,yes,landmark,F.O.B. Information,3,3,-,O,F
+G25,G17,1,no,no,e01,Shipment Method of Payment,2,2,-,M,F
+G25,G17,1,no,no,e02,F.O.B. Point Code,2,2,-,M,F
+G25,G17,1,no,no,e03,F.O.B. Point,1,30,-,O,F
+G72,,100,yes,yes,landmark,Allowance or Charge,3,3,-,O,F
+G72,,1,no,no,e01,Allowance or Charge Code,1,3,-,M,F
+G72,,1,no,no,e02,Allowance or Charge Method of Handling Code,2,2,-,M,F
+G72,,1,no,no,e03,Allowance or Charge Number,1,16,-,X,F
+G72,,1,no,no,e04,Exception Number,1,16,-,O,F
+G72,,1,no,no,e05,Allowance or Charge Rate,1,15,-,X,F
+G72,,1,no,no,e06,Allowance or Charge Quantity,1,10,-,X,F
+G72,,1,no,no,e07,Unit or Basis for Measurement Code,2,2,-,X,F
+G72,,1,no,no,e08,Allowance or Charge Total Amount,1,15,-,X,F
+G72,,1,no,no,e09,Percent, Decimal Format,1,6,-,X/Z,F
+G72,,1,no,no,e10,Dollar Basis For Percent,1,9,-,X,F
+G72,,1,no,no,e11,Option Number,1,20,-,O,F
+G73,G17:G72,10,no,yes,landmark,Allowance or Charge Description,3,3,-,O,F
+G73,G17:G72,1,no,no,e01,Free-form Description,1,45,-,M,F
+ENT,,500,yes,yes,landmark,Entity,3,3,-,O,F
+ENT,,1,no,no,e01,Assigned Number,1,6,-,O,F
+ENT,,1,no,no,e02,Entity Identifier Code,2,3,-,X,F
+ENT,,1,no,no,e03,Identification Code Qualifier,1,2,-,X,F
+ENT,,1,no,no,e04,Identification Code,2,80,-,X,F
+ENT,,1,no,no,e05,Entity Identifier Code,2,3,-,X,F
+ENT,,1,no,no,e06,Identification Code Qualifier,1,2,-,X,F
+ENT,,1,no,no,e07,Identification Code,2,80,-,X,F
+ENT,,1,no,no,e08,Reference Identification Qualifier,2,3,-,X,F
+ENT,,1,no,no,e09,Reference Identification,1,50,-,X,F
+N2,ENT,1,no,yes,landmark,Additional Name Information,2,2,-,O,F
+N2,ENT,1,no,no,e01,Name,1,60,-,M,F
+N2,ENT,1,no,no,e02,Name,1,60,-,O,F
+N3,ENT,1,no,yes,landmark,Party Location,2,2,-,O,F
+N3,ENT,1,no,no,e01,Address Information,1,55,-,M,F
+N3,ENT,1,no,no,e02,Address Information,1,55,-,O,F
+N4,ENT,1,no,yes,landmark,Geographic Location,2,2,-,O,F
+N4,ENT,1,no,no,e01,City Name,2,30,-,O,F
+N4,ENT,1,no,no,e02,State or Province Code,2,2,-,X,F
+N4,ENT,1,no,no,e03,Postal Code,3,15,-,O,F
+N4,ENT,1,no,no,e04,Country Code,2,3,-,X,F
+N4,ENT,1,no,no,e05,Location Qualifier,1,2,-,X,F
+N4,ENT,1,no,no,e06,Location Identifier,1,30,-,O,F
+N4,ENT,1,no,no,e07,Country Subdivision Code,1,3,-,X,F
+N9,ENT,5,no,yes,landmark,Extended Reference Information,2,2,-,O,F
+N9,ENT,1,no,no,e01,Reference Identification Qualifier,2,3,-,M,F
+N9,ENT,1,no,no,e02,Reference Identification,1,50,-,X,F
+N9,ENT,1,no,no,e03,Free-form Description,1,45,-,X,F
+N9,ENT,1,no,no,e04,Date,8,8,-,O,F
+N9,ENT,1,no,no,e05,Time,4,8,-,X,F
+N9,ENT,1,no,no,e06,Time Code,2,2,-,O/Z,F
+REF,,99999,yes,yes,landmark,Reference Information,3,3,-,O,F
+REF,,1,no,no,e01,Reference Identification Qualifier,2,3,-,M,F
+REF,,1,no,no,e02,Reference Identification,1,50,-,X,F
+REF,,1,no,no,e03,Description,1,80,-,X,F
+QTY,ENT:REF,1,no,yes,landmark,Quantity Information,3,3,-,O,F
+QTY,ENT:REF,1,no,no,e01,Quantity Qualifier,2,2,-,M,F
+QTY,ENT:REF,1,no,no,e02,Quantity,1,15,-,X,F
+QTY,ENT:REF,1,no,no,e04,Free-form Information,1,30,-,X/Z,F
+AMT,ENT:REF,2,no,yes,landmark,Monetary Amount Information,3,3,-,O,F
+AMT,ENT:REF,1,no,no,e01,Amount Qualifier Code,1,3,-,M,F
+AMT,ENT:REF,1,no,no,e02,Monetary Amount,1,18,-,M,F
+AMT,ENT:REF,1,no,no,e03,Credit/Debit Flag Code,1,1,-,O,F
+G72,ENT:REF,1,no,yes,landmark,Allowance or Charge,3,3,-,O,F
+G72,ENT:REF,1,no,no,e01,Allowance or Charge Code,1,3,-,M,F
+G72,ENT:REF,1,no,no,e02,Allowance or Charge Method of Handling Code,2,2,-,M,F
+G72,ENT:REF,1,no,no,e03,Allowance or Charge Number,1,16,-,X,F
+G72,ENT:REF,1,no,no,e04,Exception Number,1,16,-,O,F
+G72,ENT:REF,1,no,no,e05,Allowance or Charge Rate,1,15,-,X,F
+G72,ENT:REF,1,no,no,e06,Allowance or Charge Quantity,1,10,-,X,F
+G72,ENT:REF,1,no,no,e07,Unit or Basis for Measurement Code,2,2,-,X,F
+G72,ENT:REF,1,no,no,e08,Allowance or Charge Total Amount,1,15,-,X,F
+G72,ENT:REF,1,no,no,e09,Percent, Decimal Format,1,6,-,X/Z,F
+G72,ENT:REF,1,no,no,e10,Dollar Basis For Percent,1,9,-,X,F
+G72,ENT:REF,1,no,no,e11,Option Number,1,20,-,O,F
+G17,,99999,yes,yes,landmark,Item Detail - Invoice,3,3,-,O,F
+G17,,1,no,no,e01,Quantity Invoiced,1,15,-,M,F
+G17,,1,no,no,e02,Unit or Basis for Measurement Code,2,2,-,M,F
+G17,,1,no,no,e03,Item List Cost,1,9,-,X,F
+G17,,1,no,no,e04,U.P.C. Case Code,12,12,-,X,F
+G17,,1,no,no,e05,Product/Service ID Qualifier,2,2,-,X,F
+G17,,1,no,no,e06,Product/Service ID,1,48,-,X,F
+G17,,1,no,no,e07,Product/Service ID Qualifier,2,2,-,X,F
+G17,,1,no,no,e08,Product/Service ID,1,48,-,X,F
+G17,,1,no,no,e09,Price Bracket Identifier,1,3,-,O,F
+G17,,1,no,no,e10,Number of Units Shipped,1,10,-,X,F
+G17,,1,no,no,e11,Unit or Basis for Measurement Code,2,2,-,X,F
+G17,,1,no,no,e12,Price List Number,1,16,-,O,F
+G17,,1,no,no,e13,Price List Issue Number,1,16,-,O,F
+G17,,1,no,no,e14,Monetary Amount,1,18,-,X/Z,F
+G19,ENT:REF:G17,10,no,yes,landmark,Line Item Detail - Quantity/Unit of Measure/Price Differences,3,3,-,O,F
+G19,ENT:REF:G17,1,no,no,e01,Number of Units Shipped,1,10,-,X,F
+G19,ENT:REF:G17,1,no,no,e02,Unit or Basis for Measurement Code,2,2,-,X,F
+G19,ENT:REF:G17,1,no,no,e03,Quantity Difference,1,9,-,X,F
+G19,ENT:REF:G17,1,no,no,e04,Shipment/Order Status Code,2,2,-,X,F
+G19,ENT:REF:G17,1,no,no,e05,Price Reason Code,1,1,-,O,F
+G19,ENT:REF:G17,1,no,no,e06,Terms Exception Code,2,2,-,O,F
+G19,ENT:REF:G17,1,no,no,e07,U.P.C. Case Code,12,12,-,O,F
+G19,ENT:REF:G17,1,no,no,e08,Product/Service ID Qualifier,2,2,-,X,F
+G19,ENT:REF:G17,1,no,no,e09,Product/Service ID,1,48,-,X,F
+G31,,1,no,yes,landmark,Total Invoice Quantity,3,3,-,M,F
+G31,,1,no,no,e01,Number of Units Shipped,1,10,-,M,F
+G31,,1,no,no,e02,Unit or Basis for Measurement Code,2,2,-,M,F
+G31,,1,no,no,e03,Weight,1,10,-,X,F
+G31,,1,no,no,e04,Unit or Basis for Measurement Code,2,2,-,X,F
+G31,,1,no,no,e05,Volume,1,8,-,X,F
+G31,,1,no,no,e06,Unit or Basis for Measurement Code,2,2,-,X,F
+G31,,1,no,no,e07,Order Sizing Factor,1,10,-,O,F
+G31,,1,no,no,e08,Price Bracket Identifier,1,3,-,O,F
+G31,,1,no,no,e09,Payment Method Type Code,1,2,-,O,F
+G31,,1,no,no,e10,Quantity,1,15,-,O/Z,F
+G31,,1,no,no,e11,Weight,1,10,-,O/Z,F
+G33,,1,no,yes,landmark,Total Dollars Summary,3,3,-,M,F
+G33,,1,no,no,e01,Amount,1,15,-,M,F
+SE,,1,no,yes,landmark,Transaction Set Trailer,2,2,-,M,F
+SE,,1,no,no,e01,Number of Included Segments,1,10,-,M,F
+SE,,1,no,no,e02,Transaction Set Control Number,4,9,-,M,F

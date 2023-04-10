@@ -7503,3 +7503,2474 @@ UNEorders.csv,UNS,,1,0,0,e01,Code,1,80,-,M,F
 UNEorders.csv,UNT,,1,0,1,landmark,Message Trailer,3,3,-,M,F
 UNEorders.csv,UNT,,1,0,0,e01,Number of Segments,1,35,-,M,F
 UNEorders.csv,UNT,,1,0,0,e02,Document Control Number,1,40,-,M,F
+X12270.csv,ST,,1,0,1,landmark,Transaction Set Header,2,2,-,M,F
+X12270.csv,ST,,1,0,0,e01,Transaction Set Identifier Code,3,3,-,M/Z,F
+X12270.csv,ST,,1,0,0,e02,Transaction Set Control Number,4,9,-,M,F
+X12270.csv,ST,,1,0,0,e03,Implementation Convention Reference,1,35,-,O/Z,F
+X12270.csv,BHT,,1,0,1,landmark,Beginning of Hierarchical Transaction,3,3,-,M,F
+X12270.csv,BHT,,1,0,0,e01,Hierarchical Structure Code,4,4,-,M,F
+X12270.csv,BHT,,1,0,0,e02,Transaction Set Purpose Code,2,2,-,M,F
+X12270.csv,BHT,,1,0,0,e03,Reference Identification,1,50,-,O/Z,F
+X12270.csv,BHT,,1,0,0,e04,Date,8,8,-,O/Z,F
+X12270.csv,BHT,,1,0,0,e05,Time,4,8,-,O/Z,F
+X12270.csv,BHT,,1,0,0,e06,Transaction Type Code,2,2,-,O,F
+X12270.csv,HL,,99999,1,1,landmark,Hierarchical Level,2,2,-,M,F
+X12270.csv,HL,,1,0,0,e01,Hierarchical ID Number,1,12,-,M,F
+X12270.csv,HL,,1,0,0,e02,Hierarchical Parent ID Number,1,12,-,O,F
+X12270.csv,HL,,1,0,0,e03,Hierarchical Level Code,1,2,-,M,F
+X12270.csv,HL,,1,0,0,e04,Hierarchical Child Code,1,1,-,O,F
+X12270.csv,TRN,HL,9,0,1,landmark,Trace,3,3,-,O,F
+X12270.csv,TRN,HL,1,0,0,e01,Trace Type Code,1,2,-,M,F
+X12270.csv,TRN,HL,1,0,0,e02,Reference Identification,1,50,-,M/Z,F
+X12270.csv,TRN,HL,1,0,0,e03,Originating Company Identifier,10,10,-,O/Z,F
+X12270.csv,TRN,HL,1,0,0,e04,Reference Identification,1,50,-,O/Z,F
+X12270.csv,NM1,,99999,1,1,landmark,Individual or Organizational Name,3,3,-,M,F
+X12270.csv,NM1,,1,0,0,e01,Entity Identifier Code,2,3,-,M,F
+X12270.csv,NM1,,1,0,0,e02,Entity Type Qualifier,1,1,-,M/Z,F
+X12270.csv,NM1,,1,0,0,e03,Name Last or Organization Name,1,60,-,X,F
+X12270.csv,NM1,,1,0,0,e04,Name First,1,35,-,O,F
+X12270.csv,NM1,,1,0,0,e05,Name Middle,1,25,-,O,F
+X12270.csv,NM1,,1,0,0,e06,Name Prefix,1,10,-,O,F
+X12270.csv,NM1,,1,0,0,e07,Name Suffix,1,10,-,O,F
+X12270.csv,NM1,,1,0,0,e08,Identification Code Qualifier,1,2,-,X,F
+X12270.csv,NM1,,1,0,0,e09,Identification Code,2,80,-,X,F
+X12270.csv,NM1,,1,0,0,e10,Entity Relationship Code,2,2,-,X,F
+X12270.csv,NM1,,1,0,0,e11,Entity Identifier Code,2,3,-,O,F
+X12270.csv,NM1,,1,0,0,e12,Name Last or Organization Name,1,60,-,O,F
+X12270.csv,REF,HL:NM1,9,0,1,landmark,Reference Information,3,3,-,O,F
+X12270.csv,REF,HL:NM1,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12270.csv,REF,HL:NM1,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12270.csv,REF,HL:NM1,1,0,0,e03,Description,1,80,-,X,F
+X12270.csv,N2,HL:NM1,1,0,1,landmark,Additional Name Information,2,2,-,O,F
+X12270.csv,N2,HL:NM1,1,0,0,e01,Name,1,60,-,M,F
+X12270.csv,N2,HL:NM1,1,0,0,e02,Name,1,60,-,O,F
+X12270.csv,N3,HL:NM1,1,0,1,landmark,Party Location,2,2,-,O,F
+X12270.csv,N3,HL:NM1,1,0,0,e01,Address Information,1,55,-,M,F
+X12270.csv,N3,HL:NM1,1,0,0,e02,Address Information,1,55,-,O,F
+X12270.csv,N4,HL:NM1,1,0,1,landmark,Geographic Location,2,2,-,O,F
+X12270.csv,N4,HL:NM1,1,0,0,e01,City Name,2,30,-,O,F
+X12270.csv,N4,HL:NM1,1,0,0,e02,State or Province Code,2,2,-,X,F
+X12270.csv,N4,HL:NM1,1,0,0,e03,Postal Code,3,15,-,O,F
+X12270.csv,N4,HL:NM1,1,0,0,e04,Country Code,2,3,-,X,F
+X12270.csv,N4,HL:NM1,1,0,0,e05,Location Qualifier,1,2,-,X,F
+X12270.csv,N4,HL:NM1,1,0,0,e06,Location Identifier,1,30,-,O,F
+X12270.csv,N4,HL:NM1,1,0,0,e07,Country Subdivision Code,1,3,-,X,F
+X12270.csv,PER,HL:NM1,3,0,1,landmark,Administrative Communications Contact,3,3,-,O,F
+X12270.csv,PER,HL:NM1,1,0,0,e01,Contact Function Code,2,2,-,M,F
+X12270.csv,PER,HL:NM1,1,0,0,e02,Name,1,60,-,O,F
+X12270.csv,PER,HL:NM1,1,0,0,e03,Communication Number Qualifier,2,2,-,X,F
+X12270.csv,PER,HL:NM1,1,0,0,e04,Communication Number,1,256,-,X,F
+X12270.csv,PER,HL:NM1,1,0,0,e05,Communication Number Qualifier,2,2,-,X,F
+X12270.csv,PER,HL:NM1,1,0,0,e06,Communication Number,1,256,-,X,F
+X12270.csv,PER,HL:NM1,1,0,0,e07,Communication Number Qualifier,2,2,-,X,F
+X12270.csv,PER,HL:NM1,1,0,0,e08,Communication Number,1,256,-,X,F
+X12270.csv,PER,HL:NM1,1,0,0,e09,Contact Inquiry Reference,1,20,-,O,F
+X12270.csv,PRV,HL:NM1,1,0,1,landmark,Provider Information,3,3,-,O,F
+X12270.csv,PRV,HL:NM1,1,0,0,e01,Provider Code,1,3,-,M,F
+X12270.csv,PRV,HL:NM1,1,0,0,e02,Reference Identification Qualifier,2,3,-,X,F
+X12270.csv,PRV,HL:NM1,1,0,0,e03,Reference Identification,1,50,-,X,F
+X12270.csv,PRV,HL:NM1,1,0,0,e04,State or Province Code,2,2,-,O,F
+X12270.csv,PRV,HL:NM1,1,0,0,e06,Provider Organization Code,3,3,-,O,F
+X12270.csv,DMG,HL:NM1,1,0,1,landmark,Demographic Information,3,3,-,O,F
+X12270.csv,DMG,HL:NM1,1,0,0,e01,Date Time Period Format Qualifier,2,3,-,X,F
+X12270.csv,DMG,HL:NM1,1,0,0,e02,Date Time Period,1,35,-,X/Z,F
+X12270.csv,DMG,HL:NM1,1,0,0,e03,Gender Code,1,1,-,O,F
+X12270.csv,DMG,HL:NM1,1,0,0,e04,Marital Status Code,1,1,-,O,F
+X12270.csv,DMG,HL:NM1,1,0,0,e06,Citizenship Status Code,1,2,-,O,F
+X12270.csv,DMG,HL:NM1,1,0,0,e07,Country Code,2,3,-,O/Z,F
+X12270.csv,DMG,HL:NM1,1,0,0,e08,Basis of Verification Code,1,2,-,O,F
+X12270.csv,DMG,HL:NM1,1,0,0,e09,Quantity,1,15,-,O/Z,F
+X12270.csv,DMG,HL:NM1,1,0,0,e10,Code List Qualifier Code,1,3,-,X,F
+X12270.csv,DMG,HL:NM1,1,0,0,e11,Industry Code,1,30,-,X/Z,F
+X12270.csv,INS,HL:NM1,1,0,1,landmark,Insured Benefit,3,3,-,O,F
+X12270.csv,INS,HL:NM1,1,0,0,e01,Yes/No Condition or Response Code,1,1,-,M/Z,F
+X12270.csv,INS,HL:NM1,1,0,0,e02,Individual Relationship Code,2,2,-,M,F
+X12270.csv,INS,HL:NM1,1,0,0,e03,Maintenance Type Code,3,3,-,O,F
+X12270.csv,INS,HL:NM1,1,0,0,e04,Maintenance Reason Code,2,3,-,O,F
+X12270.csv,INS,HL:NM1,1,0,0,e05,Benefit Status Code,1,1,-,O,F
+X12270.csv,INS,HL:NM1,1,0,0,e07,Consolidated Omnibus Budget Reconciliation Act (COBRA) Qualifying Event Code,1,2,-,O,F
+X12270.csv,INS,HL:NM1,1,0,0,e08,Employment Status Code,2,2,-,O,F
+X12270.csv,INS,HL:NM1,1,0,0,e09,Student Status Code,1,1,-,O,F
+X12270.csv,INS,HL:NM1,1,0,0,e10,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12270.csv,INS,HL:NM1,1,0,0,e11,Date Time Period Format Qualifier,2,3,-,X,F
+X12270.csv,INS,HL:NM1,1,0,0,e12,Date Time Period,1,35,-,X/Z,F
+X12270.csv,INS,HL:NM1,1,0,0,e13,Confidentiality Code,1,1,-,O,F
+X12270.csv,INS,HL:NM1,1,0,0,e14,City Name,2,30,-,O/Z,F
+X12270.csv,INS,HL:NM1,1,0,0,e15,State or Province Code,2,2,-,O,F
+X12270.csv,INS,HL:NM1,1,0,0,e16,Country Code,2,3,-,O,F
+X12270.csv,INS,HL:NM1,1,0,0,e17,Number,1,9,-,O/Z,F
+X12270.csv,HI,HL:NM1,1,0,1,landmark,Health Care Information Codes,2,2,-,O,F
+X12270.csv,DTP,HL:NM1,9,0,1,landmark,Date or Time or Period,3,3,-,O,F
+X12270.csv,DTP,HL:NM1,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12270.csv,DTP,HL:NM1,1,0,0,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+X12270.csv,DTP,HL:NM1,1,0,0,e03,Date Time Period,1,35,-,M,F
+X12270.csv,MPI,HL:NM1,9,0,1,landmark,Military Personnel Information,3,3,-,O,F
+X12270.csv,MPI,HL:NM1,1,0,0,e01,Information Status Code,1,1,-,M,F
+X12270.csv,MPI,HL:NM1,1,0,0,e02,Employment Status Code,2,2,-,M,F
+X12270.csv,MPI,HL:NM1,1,0,0,e03,Government Service Affiliation Code,1,1,-,M,F
+X12270.csv,MPI,HL:NM1,1,0,0,e04,Description,1,80,-,O/Z,F
+X12270.csv,MPI,HL:NM1,1,0,0,e05,Military Service Rank Code,2,2,-,O,F
+X12270.csv,MPI,HL:NM1,1,0,0,e06,Date Time Period Format Qualifier,2,3,-,X,F
+X12270.csv,MPI,HL:NM1,1,0,0,e07,Date Time Period,1,35,-,X/Z,F
+X12270.csv,EQ,,99,1,1,landmark,Eligibility or Benefit Inquiry,2,2,-,O,F
+X12270.csv,EQ,,1,0,0,e01,Service Type Code,1,2,-,X/Z,F
+X12270.csv,EQ,,1,0,0,e03,Coverage Level Code,3,3,-,O,F
+X12270.csv,EQ,,1,0,0,e04,Insurance Type Code,1,3,-,O,F
+X12270.csv,AMT,HL:NM1:EQ,2,0,1,landmark,Monetary Amount Information,3,3,-,O,F
+X12270.csv,AMT,HL:NM1:EQ,1,0,0,e01,Amount Qualifier Code,1,3,-,M,F
+X12270.csv,AMT,HL:NM1:EQ,1,0,0,e02,Monetary Amount,1,18,-,M,F
+X12270.csv,AMT,HL:NM1:EQ,1,0,0,e03,Credit/Debit Flag Code,1,1,-,O,F
+X12270.csv,VEH,HL:NM1:EQ,1,0,1,landmark,Vehicle Information,3,3,-,O,F
+X12270.csv,VEH,HL:NM1:EQ,1,0,0,e01,Assigned Number,1,6,-,O,F
+X12270.csv,VEH,HL:NM1:EQ,1,0,0,e02,Vehicle Identification Number,1,30,-,O,F
+X12270.csv,VEH,HL:NM1:EQ,1,0,0,e03,Year,4,4,-,O,F
+X12270.csv,VEH,HL:NM1:EQ,1,0,0,e04,Agency Qualifier Code,2,2,-,X/Z,F
+X12270.csv,VEH,HL:NM1:EQ,1,0,0,e05,Reference Identification,1,50,-,X/Z,F
+X12270.csv,VEH,HL:NM1:EQ,1,0,0,e06,Reference Identification,1,50,-,O/Z,F
+X12270.csv,VEH,HL:NM1:EQ,1,0,0,e07,Reference Identification,1,50,-,X/Z,F
+X12270.csv,VEH,HL:NM1:EQ,1,0,0,e08,Length,1,8,-,O/Z,F
+X12270.csv,VEH,HL:NM1:EQ,1,0,0,e09,Reference Identification,1,50,-,O/Z,F
+X12270.csv,VEH,HL:NM1:EQ,1,0,0,e10,State or Province Code,2,2,-,O/Z,F
+X12270.csv,VEH,HL:NM1:EQ,1,0,0,e11,Location Identifier,1,30,-,O/Z,F
+X12270.csv,VEH,HL:NM1:EQ,1,0,0,e12,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12270.csv,VEH,HL:NM1:EQ,1,0,0,e13,Amount,1,15,-,O/Z,F
+X12270.csv,VEH,HL:NM1:EQ,1,0,0,e14,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12270.csv,VEH,HL:NM1:EQ,1,0,0,e15,Amount,1,15,-,O/Z,F
+X12270.csv,VEH,HL:NM1:EQ,1,0,0,e16,Action Code,1,2,-,O,F
+X12270.csv,VEH,HL:NM1:EQ,1,0,0,e17,Country Code,2,3,-,O/Z,F
+X12270.csv,VEH,HL:NM1:EQ,1,0,0,e18,Name,1,60,-,X/Z,F
+X12270.csv,VEH,HL:NM1:EQ,1,0,0,e19,Country Code,2,3,-,X/Z,F
+X12270.csv,PDR,HL:NM1:EQ,1,0,1,landmark,Property Description - Real,3,3,-,O,F
+X12270.csv,PDR,HL:NM1:EQ,1,0,0,e01,Type of Real Estate Asset Code,2,2,-,M,F
+X12270.csv,PDR,HL:NM1:EQ,1,0,0,e02,Code List Qualifier Code,1,3,-,X,F
+X12270.csv,PDR,HL:NM1:EQ,1,0,0,e03,Industry Code,1,30,-,X,F
+X12270.csv,PDR,HL:NM1:EQ,1,0,0,e04,Occupancy Code,2,2,-,O,F
+X12270.csv,PDP,HL:NM1:EQ,1,0,1,landmark,Property Description - Personal,3,3,-,O,F
+X12270.csv,PDP,HL:NM1:EQ,1,0,0,e01,Type of Personal or Business Asset Code,2,2,-,M,F
+X12270.csv,PDP,HL:NM1:EQ,1,0,0,e02,Commodity Code Qualifier,1,1,-,X,F
+X12270.csv,PDP,HL:NM1:EQ,1,0,0,e03,Commodity Code,1,30,-,X,F
+X12270.csv,III,HL:NM1:EQ,10,0,1,landmark,Information,3,3,-,O,F
+X12270.csv,III,HL:NM1:EQ,1,0,0,e01,Code List Qualifier Code,1,3,-,X,F
+X12270.csv,III,HL:NM1:EQ,1,0,0,e02,Industry Code,1,30,-,X,F
+X12270.csv,III,HL:NM1:EQ,1,0,0,e03,Code Category,2,2,-,O/Z,F
+X12270.csv,III,HL:NM1:EQ,1,0,0,e04,Free-form Message Text,1,264,-,X,F
+X12270.csv,III,HL:NM1:EQ,1,0,0,e05,Quantity,1,15,-,X,F
+X12270.csv,III,HL:NM1:EQ,1,0,0,e07,Surface/Layer/Position Code,2,2,-,O,F
+X12270.csv,III,HL:NM1:EQ,1,0,0,e08,Surface/Layer/Position Code,2,2,-,O,F
+X12270.csv,III,HL:NM1:EQ,1,0,0,e09,Surface/Layer/Position Code,2,2,-,O,F
+X12270.csv,REF,HL:NM1:EQ,1,0,1,landmark,Reference Information,3,3,-,O,F
+X12270.csv,REF,HL:NM1:EQ,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12270.csv,REF,HL:NM1:EQ,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12270.csv,REF,HL:NM1:EQ,1,0,0,e03,Description,1,80,-,X,F
+X12270.csv,DTP,HL:NM1:EQ,9,0,1,landmark,Date or Time or Period,3,3,-,O,F
+X12270.csv,DTP,HL:NM1:EQ,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12270.csv,DTP,HL:NM1:EQ,1,0,0,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+X12270.csv,DTP,HL:NM1:EQ,1,0,0,e03,Date Time Period,1,35,-,M,F
+X12270.csv,SE,,1,0,1,landmark,Transaction Set Trailer,2,2,-,M,F
+X12270.csv,SE,,1,0,0,e01,Number of Included Segments,1,10,-,M,F
+X12270.csv,SE,,1,0,0,e02,Transaction Set Control Number,4,9,-,M,F
+X12271.csv,ST,,1,0,1,landmark,Transaction Set Header,2,2,-,M,F
+X12271.csv,ST,,1,0,0,e01,Transaction Set Identifier Code,3,3,-,M/Z,F
+X12271.csv,ST,,1,0,0,e02,Transaction Set Control Number,4,9,-,M,F
+X12271.csv,ST,,1,0,0,e03,Implementation Convention Reference,1,35,-,O/Z,F
+X12271.csv,BHT,,1,0,1,landmark,Beginning of Hierarchical Transaction,3,3,-,M,F
+X12271.csv,BHT,,1,0,0,e01,Hierarchical Structure Code,4,4,-,M,F
+X12271.csv,BHT,,1,0,0,e02,Transaction Set Purpose Code,2,2,-,M,F
+X12271.csv,BHT,,1,0,0,e03,Reference Identification,1,50,-,O/Z,F
+X12271.csv,BHT,,1,0,0,e04,Date,8,8,-,O/Z,F
+X12271.csv,BHT,,1,0,0,e05,Time,4,8,-,O/Z,F
+X12271.csv,BHT,,1,0,0,e06,Transaction Type Code,2,2,-,O,F
+X12271.csv,HL,,99999,1,1,landmark,Hierarchical Level,2,2,-,M,F
+X12271.csv,HL,,1,0,0,e01,Hierarchical ID Number,1,12,-,M,F
+X12271.csv,HL,,1,0,0,e02,Hierarchical Parent ID Number,1,12,-,O,F
+X12271.csv,HL,,1,0,0,e03,Hierarchical Level Code,1,2,-,M,F
+X12271.csv,HL,,1,0,0,e04,Hierarchical Child Code,1,1,-,O,F
+X12271.csv,TRN,HL,9,0,1,landmark,Trace,3,3,-,O,F
+X12271.csv,TRN,HL,1,0,0,e01,Trace Type Code,1,2,-,M,F
+X12271.csv,TRN,HL,1,0,0,e02,Reference Identification,1,50,-,M/Z,F
+X12271.csv,TRN,HL,1,0,0,e03,Originating Company Identifier,10,10,-,O/Z,F
+X12271.csv,TRN,HL,1,0,0,e04,Reference Identification,1,50,-,O/Z,F
+X12271.csv,AAA,HL,9,0,1,landmark,Request Validation,3,3,-,O,F
+X12271.csv,AAA,HL,1,0,0,e01,Yes/No Condition or Response Code,1,1,-,M/Z,F
+X12271.csv,AAA,HL,1,0,0,e02,Agency Qualifier Code,2,2,-,O,F
+X12271.csv,AAA,HL,1,0,0,e03,Reject Reason Code,2,2,-,O,F
+X12271.csv,AAA,HL,1,0,0,e04,Follow-up Action Code,1,1,-,O,F
+X12271.csv,NM1,,99999,1,1,landmark,Individual or Organizational Name,3,3,-,O,F
+X12271.csv,NM1,,1,0,0,e01,Entity Identifier Code,2,3,-,M,F
+X12271.csv,NM1,,1,0,0,e02,Entity Type Qualifier,1,1,-,M/Z,F
+X12271.csv,NM1,,1,0,0,e03,Name Last or Organization Name,1,60,-,X,F
+X12271.csv,NM1,,1,0,0,e04,Name First,1,35,-,O,F
+X12271.csv,NM1,,1,0,0,e05,Name Middle,1,25,-,O,F
+X12271.csv,NM1,,1,0,0,e06,Name Prefix,1,10,-,O,F
+X12271.csv,NM1,,1,0,0,e07,Name Suffix,1,10,-,O,F
+X12271.csv,NM1,,1,0,0,e08,Identification Code Qualifier,1,2,-,X,F
+X12271.csv,NM1,,1,0,0,e09,Identification Code,2,80,-,X,F
+X12271.csv,NM1,,1,0,0,e10,Entity Relationship Code,2,2,-,X,F
+X12271.csv,NM1,,1,0,0,e11,Entity Identifier Code,2,3,-,O,F
+X12271.csv,NM1,,1,0,0,e12,Name Last or Organization Name,1,60,-,O,F
+X12271.csv,REF,HL:NM1,9,0,1,landmark,Reference Information,3,3,-,O,F
+X12271.csv,REF,HL:NM1,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12271.csv,REF,HL:NM1,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12271.csv,REF,HL:NM1,1,0,0,e03,Description,1,80,-,X,F
+X12271.csv,N2,HL:NM1,1,0,1,landmark,Additional Name Information,2,2,-,O,F
+X12271.csv,N2,HL:NM1,1,0,0,e01,Name,1,60,-,M,F
+X12271.csv,N2,HL:NM1,1,0,0,e02,Name,1,60,-,O,F
+X12271.csv,N3,HL:NM1,1,0,1,landmark,Party Location,2,2,-,O,F
+X12271.csv,N3,HL:NM1,1,0,0,e01,Address Information,1,55,-,M,F
+X12271.csv,N3,HL:NM1,1,0,0,e02,Address Information,1,55,-,O,F
+X12271.csv,N4,HL:NM1,1,0,1,landmark,Geographic Location,2,2,-,O,F
+X12271.csv,N4,HL:NM1,1,0,0,e01,City Name,2,30,-,O,F
+X12271.csv,N4,HL:NM1,1,0,0,e02,State or Province Code,2,2,-,X,F
+X12271.csv,N4,HL:NM1,1,0,0,e03,Postal Code,3,15,-,O,F
+X12271.csv,N4,HL:NM1,1,0,0,e04,Country Code,2,3,-,X,F
+X12271.csv,N4,HL:NM1,1,0,0,e05,Location Qualifier,1,2,-,X,F
+X12271.csv,N4,HL:NM1,1,0,0,e06,Location Identifier,1,30,-,O,F
+X12271.csv,N4,HL:NM1,1,0,0,e07,Country Subdivision Code,1,3,-,X,F
+X12271.csv,PER,HL:NM1,3,0,1,landmark,Administrative Communications Contact,3,3,-,O,F
+X12271.csv,PER,HL:NM1,1,0,0,e01,Contact Function Code,2,2,-,M,F
+X12271.csv,PER,HL:NM1,1,0,0,e02,Name,1,60,-,O,F
+X12271.csv,PER,HL:NM1,1,0,0,e03,Communication Number Qualifier,2,2,-,X,F
+X12271.csv,PER,HL:NM1,1,0,0,e04,Communication Number,1,256,-,X,F
+X12271.csv,PER,HL:NM1,1,0,0,e05,Communication Number Qualifier,2,2,-,X,F
+X12271.csv,PER,HL:NM1,1,0,0,e06,Communication Number,1,256,-,X,F
+X12271.csv,PER,HL:NM1,1,0,0,e07,Communication Number Qualifier,2,2,-,X,F
+X12271.csv,PER,HL:NM1,1,0,0,e08,Communication Number,1,256,-,X,F
+X12271.csv,PER,HL:NM1,1,0,0,e09,Contact Inquiry Reference,1,20,-,O,F
+X12271.csv,AAA,HL:NM1,9,0,1,landmark,Request Validation,3,3,-,O,F
+X12271.csv,AAA,HL:NM1,1,0,0,e01,Yes/No Condition or Response Code,1,1,-,M/Z,F
+X12271.csv,AAA,HL:NM1,1,0,0,e02,Agency Qualifier Code,2,2,-,O,F
+X12271.csv,AAA,HL:NM1,1,0,0,e03,Reject Reason Code,2,2,-,O,F
+X12271.csv,AAA,HL:NM1,1,0,0,e04,Follow-up Action Code,1,1,-,O,F
+X12271.csv,PRV,HL:NM1,1,0,1,landmark,Provider Information,3,3,-,O,F
+X12271.csv,PRV,HL:NM1,1,0,0,e01,Provider Code,1,3,-,M,F
+X12271.csv,PRV,HL:NM1,1,0,0,e02,Reference Identification Qualifier,2,3,-,X,F
+X12271.csv,PRV,HL:NM1,1,0,0,e03,Reference Identification,1,50,-,X,F
+X12271.csv,PRV,HL:NM1,1,0,0,e04,State or Province Code,2,2,-,O,F
+X12271.csv,PRV,HL:NM1,1,0,0,e06,Provider Organization Code,3,3,-,O,F
+X12271.csv,DMG,HL:NM1,1,0,1,landmark,Demographic Information,3,3,-,O,F
+X12271.csv,DMG,HL:NM1,1,0,0,e01,Date Time Period Format Qualifier,2,3,-,X,F
+X12271.csv,DMG,HL:NM1,1,0,0,e02,Date Time Period,1,35,-,X/Z,F
+X12271.csv,DMG,HL:NM1,1,0,0,e03,Gender Code,1,1,-,O,F
+X12271.csv,DMG,HL:NM1,1,0,0,e04,Marital Status Code,1,1,-,O,F
+X12271.csv,DMG,HL:NM1,1,0,0,e06,Citizenship Status Code,1,2,-,O,F
+X12271.csv,DMG,HL:NM1,1,0,0,e07,Country Code,2,3,-,O/Z,F
+X12271.csv,DMG,HL:NM1,1,0,0,e08,Basis of Verification Code,1,2,-,O,F
+X12271.csv,DMG,HL:NM1,1,0,0,e09,Quantity,1,15,-,O/Z,F
+X12271.csv,DMG,HL:NM1,1,0,0,e10,Code List Qualifier Code,1,3,-,X,F
+X12271.csv,DMG,HL:NM1,1,0,0,e11,Industry Code,1,30,-,X/Z,F
+X12271.csv,INS,HL:NM1,1,0,1,landmark,Insured Benefit,3,3,-,O,F
+X12271.csv,INS,HL:NM1,1,0,0,e01,Yes/No Condition or Response Code,1,1,-,M/Z,F
+X12271.csv,INS,HL:NM1,1,0,0,e02,Individual Relationship Code,2,2,-,M,F
+X12271.csv,INS,HL:NM1,1,0,0,e03,Maintenance Type Code,3,3,-,O,F
+X12271.csv,INS,HL:NM1,1,0,0,e04,Maintenance Reason Code,2,3,-,O,F
+X12271.csv,INS,HL:NM1,1,0,0,e05,Benefit Status Code,1,1,-,O,F
+X12271.csv,INS,HL:NM1,1,0,0,e07,Consolidated Omnibus Budget Reconciliation Act (COBRA) Qualifying Event Code,1,2,-,O,F
+X12271.csv,INS,HL:NM1,1,0,0,e08,Employment Status Code,2,2,-,O,F
+X12271.csv,INS,HL:NM1,1,0,0,e09,Student Status Code,1,1,-,O,F
+X12271.csv,INS,HL:NM1,1,0,0,e10,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12271.csv,INS,HL:NM1,1,0,0,e11,Date Time Period Format Qualifier,2,3,-,X,F
+X12271.csv,INS,HL:NM1,1,0,0,e12,Date Time Period,1,35,-,X/Z,F
+X12271.csv,INS,HL:NM1,1,0,0,e13,Confidentiality Code,1,1,-,O,F
+X12271.csv,INS,HL:NM1,1,0,0,e14,City Name,2,30,-,O/Z,F
+X12271.csv,INS,HL:NM1,1,0,0,e15,State or Province Code,2,2,-,O,F
+X12271.csv,INS,HL:NM1,1,0,0,e16,Country Code,2,3,-,O,F
+X12271.csv,INS,HL:NM1,1,0,0,e17,Number,1,9,-,O/Z,F
+X12271.csv,HI,HL:NM1,1,0,1,landmark,Health Care Information Codes,2,2,-,O,F
+X12271.csv,DTP,HL:NM1,9,0,1,landmark,Date or Time or Period,3,3,-,O,F
+X12271.csv,DTP,HL:NM1,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12271.csv,DTP,HL:NM1,1,0,0,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+X12271.csv,DTP,HL:NM1,1,0,0,e03,Date Time Period,1,35,-,M,F
+X12271.csv,LUI,HL:NM1,9,0,1,landmark,Language Use,3,3,-,O,F
+X12271.csv,LUI,HL:NM1,1,0,0,e01,Identification Code Qualifier,1,2,-,X,F
+X12271.csv,LUI,HL:NM1,1,0,0,e02,Identification Code,2,80,-,X/Z,F
+X12271.csv,LUI,HL:NM1,1,0,0,e03,Description,1,80,-,X/Z,F
+X12271.csv,LUI,HL:NM1,1,0,0,e04,Use of Language Indicator,1,2,-,O,F
+X12271.csv,LUI,HL:NM1,1,0,0,e05,Language Proficiency Indicator,1,1,-,O,F
+X12271.csv,MPI,HL:NM1,9,0,1,landmark,Military Personnel Information,3,3,-,O,F
+X12271.csv,MPI,HL:NM1,1,0,0,e01,Information Status Code,1,1,-,M,F
+X12271.csv,MPI,HL:NM1,1,0,0,e02,Employment Status Code,2,2,-,M,F
+X12271.csv,MPI,HL:NM1,1,0,0,e03,Government Service Affiliation Code,1,1,-,M,F
+X12271.csv,MPI,HL:NM1,1,0,0,e04,Description,1,80,-,O/Z,F
+X12271.csv,MPI,HL:NM1,1,0,0,e05,Military Service Rank Code,2,2,-,O,F
+X12271.csv,MPI,HL:NM1,1,0,0,e06,Date Time Period Format Qualifier,2,3,-,X,F
+X12271.csv,MPI,HL:NM1,1,0,0,e07,Date Time Period,1,35,-,X/Z,F
+X12271.csv,EB,,99999,1,1,landmark,Eligibility or Benefit Information,2,2,-,O,F
+X12271.csv,EB,,1,0,0,e01,Eligibility or Benefit Information Code,1,2,-,M/Z,F
+X12271.csv,EB,,1,0,0,e02,Coverage Level Code,3,3,-,O,F
+X12271.csv,EB,,1,0,0,e03,Service Type Code,1,2,-,O/Z,F
+X12271.csv,EB,,1,0,0,e04,Insurance Type Code,1,3,-,O,F
+X12271.csv,EB,,1,0,0,e05,Plan Coverage Description,1,50,-,O,F
+X12271.csv,EB,,1,0,0,e06,Time Period Qualifier,1,2,-,O,F
+X12271.csv,EB,,1,0,0,e07,Monetary Amount,1,18,-,O,F
+X12271.csv,EB,,1,0,0,e08,Percentage as Decimal,1,10,-,O,F
+X12271.csv,EB,,1,0,0,e09,Quantity Qualifier,2,2,-,X,F
+X12271.csv,EB,,1,0,0,e10,Quantity,1,15,-,X,F
+X12271.csv,EB,,1,0,0,e11,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12271.csv,EB,,1,0,0,e12,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12271.csv,HSD,HL:NM1:EB,9,0,1,landmark,Health Care Services Delivery,3,3,-,O,F
+X12271.csv,HSD,HL:NM1:EB,1,0,0,e01,Quantity Qualifier,2,2,-,X,F
+X12271.csv,HSD,HL:NM1:EB,1,0,0,e02,Quantity,1,15,-,X,F
+X12271.csv,HSD,HL:NM1:EB,1,0,0,e03,Unit or Basis for Measurement Code,2,2,-,O,F
+X12271.csv,HSD,HL:NM1:EB,1,0,0,e04,Sample Selection Modulus,1,6,-,O,F
+X12271.csv,HSD,HL:NM1:EB,1,0,0,e05,Time Period Qualifier,1,2,-,X,F
+X12271.csv,HSD,HL:NM1:EB,1,0,0,e06,Number of Periods,1,3,-,O,F
+X12271.csv,HSD,HL:NM1:EB,1,0,0,e07,Ship/Delivery or Calendar Pattern Code,1,2,-,O,F
+X12271.csv,HSD,HL:NM1:EB,1,0,0,e08,Ship/Delivery Pattern Time Code,1,1,-,O,F
+X12271.csv,REF,HL:NM1:EB,9,0,1,landmark,Reference Information,3,3,-,O,F
+X12271.csv,REF,HL:NM1:EB,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12271.csv,REF,HL:NM1:EB,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12271.csv,REF,HL:NM1:EB,1,0,0,e03,Description,1,80,-,X,F
+X12271.csv,DTP,HL:NM1:EB,20,0,1,landmark,Date or Time or Period,3,3,-,O,F
+X12271.csv,DTP,HL:NM1:EB,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12271.csv,DTP,HL:NM1:EB,1,0,0,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+X12271.csv,DTP,HL:NM1:EB,1,0,0,e03,Date Time Period,1,35,-,M,F
+X12271.csv,AAA,HL:NM1:EB,9,0,1,landmark,Request Validation,3,3,-,O,F
+X12271.csv,AAA,HL:NM1:EB,1,0,0,e01,Yes/No Condition or Response Code,1,1,-,M/Z,F
+X12271.csv,AAA,HL:NM1:EB,1,0,0,e02,Agency Qualifier Code,2,2,-,O,F
+X12271.csv,AAA,HL:NM1:EB,1,0,0,e03,Reject Reason Code,2,2,-,O,F
+X12271.csv,AAA,HL:NM1:EB,1,0,0,e04,Follow-up Action Code,1,1,-,O,F
+X12271.csv,VEH,HL:NM1:EB,1,0,1,landmark,Vehicle Information,3,3,-,O,F
+X12271.csv,VEH,HL:NM1:EB,1,0,0,e01,Assigned Number,1,6,-,O,F
+X12271.csv,VEH,HL:NM1:EB,1,0,0,e02,Vehicle Identification Number,1,30,-,O,F
+X12271.csv,VEH,HL:NM1:EB,1,0,0,e03,Year,4,4,-,O,F
+X12271.csv,VEH,HL:NM1:EB,1,0,0,e04,Agency Qualifier Code,2,2,-,X/Z,F
+X12271.csv,VEH,HL:NM1:EB,1,0,0,e05,Reference Identification,1,50,-,X/Z,F
+X12271.csv,VEH,HL:NM1:EB,1,0,0,e06,Reference Identification,1,50,-,O/Z,F
+X12271.csv,VEH,HL:NM1:EB,1,0,0,e07,Reference Identification,1,50,-,X/Z,F
+X12271.csv,VEH,HL:NM1:EB,1,0,0,e08,Length,1,8,-,O/Z,F
+X12271.csv,VEH,HL:NM1:EB,1,0,0,e09,Reference Identification,1,50,-,O/Z,F
+X12271.csv,VEH,HL:NM1:EB,1,0,0,e10,State or Province Code,2,2,-,O/Z,F
+X12271.csv,VEH,HL:NM1:EB,1,0,0,e11,Location Identifier,1,30,-,O/Z,F
+X12271.csv,VEH,HL:NM1:EB,1,0,0,e12,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12271.csv,VEH,HL:NM1:EB,1,0,0,e13,Amount,1,15,-,O/Z,F
+X12271.csv,VEH,HL:NM1:EB,1,0,0,e14,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12271.csv,VEH,HL:NM1:EB,1,0,0,e15,Amount,1,15,-,O/Z,F
+X12271.csv,VEH,HL:NM1:EB,1,0,0,e16,Action Code,1,2,-,O,F
+X12271.csv,VEH,HL:NM1:EB,1,0,0,e17,Country Code,2,3,-,O/Z,F
+X12271.csv,VEH,HL:NM1:EB,1,0,0,e18,Name,1,60,-,X/Z,F
+X12271.csv,VEH,HL:NM1:EB,1,0,0,e19,Country Code,2,3,-,X/Z,F
+X12271.csv,PID,HL:NM1:EB,1,0,1,landmark,Product/Item Description,3,3,-,O,F
+X12271.csv,PID,HL:NM1:EB,1,0,0,e01,Item Description Type,1,1,-,M,F
+X12271.csv,PID,HL:NM1:EB,1,0,0,e02,Product/Process Characteristic Code,2,3,-,O,F
+X12271.csv,PID,HL:NM1:EB,1,0,0,e03,Agency Qualifier Code,2,2,-,X/Z,F
+X12271.csv,PID,HL:NM1:EB,1,0,0,e04,Product Description Code,1,12,-,X/Z,F
+X12271.csv,PID,HL:NM1:EB,1,0,0,e05,Description,1,80,-,X,F
+X12271.csv,PID,HL:NM1:EB,1,0,0,e06,Surface/Layer/Position Code,2,2,-,O,F
+X12271.csv,PID,HL:NM1:EB,1,0,0,e07,Source Subqualifier,1,15,-,O,F
+X12271.csv,PID,HL:NM1:EB,1,0,0,e08,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12271.csv,PID,HL:NM1:EB,1,0,0,e09,Language Code,2,3,-,O/Z,F
+X12271.csv,PDR,HL:NM1:EB,1,0,1,landmark,Property Description - Real,3,3,-,O,F
+X12271.csv,PDR,HL:NM1:EB,1,0,0,e01,Type of Real Estate Asset Code,2,2,-,M,F
+X12271.csv,PDR,HL:NM1:EB,1,0,0,e02,Code List Qualifier Code,1,3,-,X,F
+X12271.csv,PDR,HL:NM1:EB,1,0,0,e03,Industry Code,1,30,-,X,F
+X12271.csv,PDR,HL:NM1:EB,1,0,0,e04,Occupancy Code,2,2,-,O,F
+X12271.csv,PDP,HL:NM1:EB,1,0,1,landmark,Property Description - Personal,3,3,-,O,F
+X12271.csv,PDP,HL:NM1:EB,1,0,0,e01,Type of Personal or Business Asset Code,2,2,-,M,F
+X12271.csv,PDP,HL:NM1:EB,1,0,0,e02,Commodity Code Qualifier,1,1,-,X,F
+X12271.csv,PDP,HL:NM1:EB,1,0,0,e03,Commodity Code,1,30,-,X,F
+X12271.csv,LIN,HL:NM1:EB,1,0,1,landmark,Item Identification,3,3,-,O,F
+X12271.csv,LIN,HL:NM1:EB,1,0,0,e01,Assigned Identification,1,20,-,O/Z,F
+X12271.csv,LIN,HL:NM1:EB,1,0,0,e02,Product/Service ID Qualifier,2,2,-,M,F
+X12271.csv,LIN,HL:NM1:EB,1,0,0,e03,Product/Service ID,1,48,-,M,F
+X12271.csv,LIN,HL:NM1:EB,1,0,0,e04,Product/Service ID Qualifier,2,2,-,X,F
+X12271.csv,LIN,HL:NM1:EB,1,0,0,e05,Product/Service ID,1,48,-,X,F
+X12271.csv,LIN,HL:NM1:EB,1,0,0,e06,Product/Service ID Qualifier,2,2,-,X,F
+X12271.csv,LIN,HL:NM1:EB,1,0,0,e07,Product/Service ID,1,48,-,X,F
+X12271.csv,LIN,HL:NM1:EB,1,0,0,e08,Product/Service ID Qualifier,2,2,-,X,F
+X12271.csv,LIN,HL:NM1:EB,1,0,0,e09,Product/Service ID,1,48,-,X,F
+X12271.csv,LIN,HL:NM1:EB,1,0,0,e10,Product/Service ID Qualifier,2,2,-,X,F
+X12271.csv,LIN,HL:NM1:EB,1,0,0,e11,Product/Service ID,1,48,-,X,F
+X12271.csv,LIN,HL:NM1:EB,1,0,0,e12,Product/Service ID Qualifier,2,2,-,X,F
+X12271.csv,LIN,HL:NM1:EB,1,0,0,e13,Product/Service ID,1,48,-,X,F
+X12271.csv,LIN,HL:NM1:EB,1,0,0,e14,Product/Service ID Qualifier,2,2,-,X,F
+X12271.csv,LIN,HL:NM1:EB,1,0,0,e15,Product/Service ID,1,48,-,X,F
+X12271.csv,LIN,HL:NM1:EB,1,0,0,e16,Product/Service ID Qualifier,2,2,-,X,F
+X12271.csv,LIN,HL:NM1:EB,1,0,0,e17,Product/Service ID,1,48,-,X,F
+X12271.csv,LIN,HL:NM1:EB,1,0,0,e18,Product/Service ID Qualifier,2,2,-,X,F
+X12271.csv,LIN,HL:NM1:EB,1,0,0,e19,Product/Service ID,1,48,-,X,F
+X12271.csv,LIN,HL:NM1:EB,1,0,0,e20,Product/Service ID Qualifier,2,2,-,X,F
+X12271.csv,LIN,HL:NM1:EB,1,0,0,e21,Product/Service ID,1,48,-,X,F
+X12271.csv,LIN,HL:NM1:EB,1,0,0,e22,Product/Service ID Qualifier,2,2,-,X,F
+X12271.csv,LIN,HL:NM1:EB,1,0,0,e23,Product/Service ID,1,48,-,X,F
+X12271.csv,LIN,HL:NM1:EB,1,0,0,e24,Product/Service ID Qualifier,2,2,-,X,F
+X12271.csv,LIN,HL:NM1:EB,1,0,0,e25,Product/Service ID,1,48,-,X,F
+X12271.csv,LIN,HL:NM1:EB,1,0,0,e26,Product/Service ID Qualifier,2,2,-,X,F
+X12271.csv,LIN,HL:NM1:EB,1,0,0,e27,Product/Service ID,1,48,-,X,F
+X12271.csv,LIN,HL:NM1:EB,1,0,0,e28,Product/Service ID Qualifier,2,2,-,X,F
+X12271.csv,LIN,HL:NM1:EB,1,0,0,e29,Product/Service ID,1,48,-,X,F
+X12271.csv,LIN,HL:NM1:EB,1,0,0,e30,Product/Service ID Qualifier,2,2,-,X,F
+X12271.csv,LIN,HL:NM1:EB,1,0,0,e31,Product/Service ID,1,48,-,X,F
+X12271.csv,EM,HL:NM1:EB,1,0,1,landmark,Equipment Characteristics,2,2,-,O,F
+X12271.csv,EM,HL:NM1:EB,1,0,0,e01,Weight Unit Code,1,1,-,X,F
+X12271.csv,EM,HL:NM1:EB,1,0,0,e02,Weight,1,10,-,O/Z,F
+X12271.csv,EM,HL:NM1:EB,1,0,0,e03,Volume Unit Qualifier,1,1,-,X,F
+X12271.csv,EM,HL:NM1:EB,1,0,0,e04,Volume,1,8,-,O/Z,F
+X12271.csv,EM,HL:NM1:EB,1,0,0,e05,Country Code,2,3,-,O/Z,F
+X12271.csv,EM,HL:NM1:EB,1,0,0,e06,Construction Type,1,2,-,O,F
+X12271.csv,EM,HL:NM1:EB,1,0,0,e07,Date,8,8,-,O/Z,F
+X12271.csv,SD1,HL:NM1:EB,1,0,1,landmark,Safety Data,3,3,-,O,F
+X12271.csv,SD1,HL:NM1:EB,1,0,0,e01,Item Description Type,1,1,-,M,F
+X12271.csv,SD1,HL:NM1:EB,1,0,0,e02,Safety Characteristic/Hazard Code,3,3,-,M,F
+X12271.csv,SD1,HL:NM1:EB,1,0,0,e03,Agency Qualifier Code,2,2,-,X,F
+X12271.csv,SD1,HL:NM1:EB,1,0,0,e04,Source Subqualifier,1,15,-,O,F
+X12271.csv,SD1,HL:NM1:EB,1,0,0,e05,Product Description Code,1,12,-,X,F
+X12271.csv,SD1,HL:NM1:EB,1,0,0,e06,Description,1,80,-,X/Z,F
+X12271.csv,SD1,HL:NM1:EB,1,0,0,e07,State or Province Code,2,2,-,O/Z,F
+X12271.csv,SD1,HL:NM1:EB,1,0,0,e08,Country Code,2,3,-,O/Z,F
+X12271.csv,PKD,HL:NM1:EB,1,0,1,landmark,Packaging Description,3,3,-,O,F
+X12271.csv,PKD,HL:NM1:EB,1,0,0,e01,Packaging Code,3,5,-,X,F
+X12271.csv,PKD,HL:NM1:EB,1,0,0,e02,Source Subqualifier,1,15,-,X,F
+X12271.csv,PKD,HL:NM1:EB,1,0,0,e03,Agency Qualifier Code,2,2,-,O,F
+X12271.csv,PKD,HL:NM1:EB,1,0,0,e04,Packaging Description Code,1,7,-,O,F
+X12271.csv,PKD,HL:NM1:EB,1,0,0,e05,Ownership Code,1,1,-,O,F
+X12271.csv,MSG,HL:NM1:EB,10,0,1,landmark,Message Text,3,3,-,O,F
+X12271.csv,MSG,HL:NM1:EB,1,0,0,e01,Free-form Message Text,1,264,-,M,F
+X12271.csv,MSG,HL:NM1:EB,1,0,0,e02,Printer Carriage Control Code,2,2,-,X,F
+X12271.csv,MSG,HL:NM1:EB,1,0,0,e03,Number,1,9,-,O/Z,F
+X12271.csv,III,,99999,1,1,landmark,Information,3,3,-,O,F
+X12271.csv,III,,1,0,0,e01,Code List Qualifier Code,1,3,-,X,F
+X12271.csv,III,,1,0,0,e02,Industry Code,1,30,-,X,F
+X12271.csv,III,,1,0,0,e03,Code Category,2,2,-,O/Z,F
+X12271.csv,III,,1,0,0,e04,Free-form Message Text,1,264,-,X,F
+X12271.csv,III,,1,0,0,e05,Quantity,1,15,-,X,F
+X12271.csv,III,,1,0,0,e07,Surface/Layer/Position Code,2,2,-,O,F
+X12271.csv,III,,1,0,0,e08,Surface/Layer/Position Code,2,2,-,O,F
+X12271.csv,III,,1,0,0,e09,Surface/Layer/Position Code,2,2,-,O,F
+X12271.csv,DTP,HL:NM1:EB:III,5,0,1,landmark,Date or Time or Period,3,3,-,O,F
+X12271.csv,DTP,HL:NM1:EB:III,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12271.csv,DTP,HL:NM1:EB:III,1,0,0,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+X12271.csv,DTP,HL:NM1:EB:III,1,0,0,e03,Date Time Period,1,35,-,M,F
+X12271.csv,AMT,HL:NM1:EB:III,5,0,1,landmark,Monetary Amount Information,3,3,-,O,F
+X12271.csv,AMT,HL:NM1:EB:III,1,0,0,e01,Amount Qualifier Code,1,3,-,M,F
+X12271.csv,AMT,HL:NM1:EB:III,1,0,0,e02,Monetary Amount,1,18,-,M,F
+X12271.csv,AMT,HL:NM1:EB:III,1,0,0,e03,Credit/Debit Flag Code,1,1,-,O,F
+X12271.csv,PCT,HL:NM1:EB:III,5,0,1,landmark,Percent Amounts,3,3,-,O,F
+X12271.csv,PCT,HL:NM1:EB:III,1,0,0,e01,Percent Qualifier,1,2,-,M,F
+X12271.csv,PCT,HL:NM1:EB:III,1,0,0,e02,Percentage as Decimal,1,10,-,M,F
+X12271.csv,LQ,,99999,1,1,landmark,Industry Code Identification,2,2,-,O,F
+X12271.csv,LQ,,1,0,0,e01,Code List Qualifier Code,1,3,-,O,F
+X12271.csv,LQ,,1,0,0,e02,Industry Code,1,30,-,X,F
+X12271.csv,AMT,HL:NM1:EB:III:LQ,5,0,1,landmark,Monetary Amount Information,3,3,-,O,F
+X12271.csv,AMT,HL:NM1:EB:III:LQ,1,0,0,e01,Amount Qualifier Code,1,3,-,M,F
+X12271.csv,AMT,HL:NM1:EB:III:LQ,1,0,0,e02,Monetary Amount,1,18,-,M,F
+X12271.csv,AMT,HL:NM1:EB:III:LQ,1,0,0,e03,Credit/Debit Flag Code,1,1,-,O,F
+X12271.csv,PCT,HL:NM1:EB:III:LQ,5,0,1,landmark,Percent Amounts,3,3,-,O,F
+X12271.csv,PCT,HL:NM1:EB:III:LQ,1,0,0,e01,Percent Qualifier,1,2,-,M,F
+X12271.csv,PCT,HL:NM1:EB:III:LQ,1,0,0,e02,Percentage as Decimal,1,10,-,M,F
+X12271.csv,LS,,1,0,1,landmark,Loop Header,2,2,-,O,F
+X12271.csv,LS,,1,0,0,e01,Loop Identifier Code,1,4,-,M,F
+X12271.csv,NM1,,99999,1,1,landmark,Individual or Organizational Name,3,3,-,O,F
+X12271.csv,NM1,,1,0,0,e01,Entity Identifier Code,2,3,-,M,F
+X12271.csv,NM1,,1,0,0,e02,Entity Type Qualifier,1,1,-,M/Z,F
+X12271.csv,NM1,,1,0,0,e03,Name Last or Organization Name,1,60,-,X,F
+X12271.csv,NM1,,1,0,0,e04,Name First,1,35,-,O,F
+X12271.csv,NM1,,1,0,0,e05,Name Middle,1,25,-,O,F
+X12271.csv,NM1,,1,0,0,e06,Name Prefix,1,10,-,O,F
+X12271.csv,NM1,,1,0,0,e07,Name Suffix,1,10,-,O,F
+X12271.csv,NM1,,1,0,0,e08,Identification Code Qualifier,1,2,-,X,F
+X12271.csv,NM1,,1,0,0,e09,Identification Code,2,80,-,X,F
+X12271.csv,NM1,,1,0,0,e10,Entity Relationship Code,2,2,-,X,F
+X12271.csv,NM1,,1,0,0,e11,Entity Identifier Code,2,3,-,O,F
+X12271.csv,NM1,,1,0,0,e12,Name Last or Organization Name,1,60,-,O,F
+X12271.csv,N2,NM1,1,0,1,landmark,Additional Name Information,2,2,-,O,F
+X12271.csv,N2,NM1,1,0,0,e01,Name,1,60,-,M,F
+X12271.csv,N2,NM1,1,0,0,e02,Name,1,60,-,O,F
+X12271.csv,N3,NM1,1,0,1,landmark,Party Location,2,2,-,O,F
+X12271.csv,N3,NM1,1,0,0,e01,Address Information,1,55,-,M,F
+X12271.csv,N3,NM1,1,0,0,e02,Address Information,1,55,-,O,F
+X12271.csv,N4,NM1,1,0,1,landmark,Geographic Location,2,2,-,O,F
+X12271.csv,N4,NM1,1,0,0,e01,City Name,2,30,-,O,F
+X12271.csv,N4,NM1,1,0,0,e02,State or Province Code,2,2,-,X,F
+X12271.csv,N4,NM1,1,0,0,e03,Postal Code,3,15,-,O,F
+X12271.csv,N4,NM1,1,0,0,e04,Country Code,2,3,-,X,F
+X12271.csv,N4,NM1,1,0,0,e05,Location Qualifier,1,2,-,X,F
+X12271.csv,N4,NM1,1,0,0,e06,Location Identifier,1,30,-,O,F
+X12271.csv,N4,NM1,1,0,0,e07,Country Subdivision Code,1,3,-,X,F
+X12271.csv,PER,NM1,3,0,1,landmark,Administrative Communications Contact,3,3,-,O,F
+X12271.csv,PER,NM1,1,0,0,e01,Contact Function Code,2,2,-,M,F
+X12271.csv,PER,NM1,1,0,0,e02,Name,1,60,-,O,F
+X12271.csv,PER,NM1,1,0,0,e03,Communication Number Qualifier,2,2,-,X,F
+X12271.csv,PER,NM1,1,0,0,e04,Communication Number,1,256,-,X,F
+X12271.csv,PER,NM1,1,0,0,e05,Communication Number Qualifier,2,2,-,X,F
+X12271.csv,PER,NM1,1,0,0,e06,Communication Number,1,256,-,X,F
+X12271.csv,PER,NM1,1,0,0,e07,Communication Number Qualifier,2,2,-,X,F
+X12271.csv,PER,NM1,1,0,0,e08,Communication Number,1,256,-,X,F
+X12271.csv,PER,NM1,1,0,0,e09,Contact Inquiry Reference,1,20,-,O,F
+X12271.csv,PRV,NM1,1,0,1,landmark,Provider Information,3,3,-,O,F
+X12271.csv,PRV,NM1,1,0,0,e01,Provider Code,1,3,-,M,F
+X12271.csv,PRV,NM1,1,0,0,e02,Reference Identification Qualifier,2,3,-,X,F
+X12271.csv,PRV,NM1,1,0,0,e03,Reference Identification,1,50,-,X,F
+X12271.csv,PRV,NM1,1,0,0,e04,State or Province Code,2,2,-,O,F
+X12271.csv,PRV,NM1,1,0,0,e06,Provider Organization Code,3,3,-,O,F
+X12271.csv,LE,,1,0,1,landmark,Loop Trailer,2,2,-,O,F
+X12271.csv,LE,,1,0,0,e01,Loop Identifier Code,1,4,-,M,F
+X12271.csv,SE,,1,0,1,landmark,Transaction Set Trailer,2,2,-,M,F
+X12271.csv,SE,,1,0,0,e01,Number of Included Segments,1,10,-,M,F
+X12271.csv,SE,,1,0,0,e02,Transaction Set Control Number,4,9,-,M,F
+X12834.csv,ST,,1,0,1,landmark,Transaction Set Header,2,2,-,M,F
+X12834.csv,ST,,1,0,0,e01,Transaction Set Identifier Code,3,3,-,M/Z,F
+X12834.csv,ST,,1,0,0,e02,Transaction Set Control Number,4,9,-,M,F
+X12834.csv,ST,,1,0,0,e03,Implementation Convention Reference,1,35,-,O/Z,F
+X12834.csv,BGN,,1,0,1,landmark,Beginning Segment,3,3,-,M,F
+X12834.csv,BGN,,1,0,0,e01,Transaction Set Purpose Code,2,2,-,M,F
+X12834.csv,BGN,,1,0,0,e02,Reference Identification,1,50,-,M/Z,F
+X12834.csv,BGN,,1,0,0,e03,Date,8,8,-,M/Z,F
+X12834.csv,BGN,,1,0,0,e04,Time,4,8,-,X/Z,F
+X12834.csv,BGN,,1,0,0,e05,Time Code,2,2,-,O/Z,F
+X12834.csv,BGN,,1,0,0,e06,Reference Identification,1,50,-,O/Z,F
+X12834.csv,BGN,,1,0,0,e07,Transaction Type Code,2,2,-,O,F
+X12834.csv,BGN,,1,0,0,e08,Action Code,1,2,-,O,F
+X12834.csv,BGN,,1,0,0,e09,Security Level Code,2,2,-,O,F
+X12834.csv,REF,,99999,0,1,landmark,Reference Information,3,3,-,O,F
+X12834.csv,REF,,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12834.csv,REF,,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12834.csv,REF,,1,0,0,e03,Description,1,80,-,X,F
+X12834.csv,DTP,,99999,0,1,landmark,Date or Time or Period,3,3,-,O,F
+X12834.csv,DTP,,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12834.csv,DTP,,1,0,0,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+X12834.csv,DTP,,1,0,0,e03,Date Time Period,1,35,-,M,F
+X12834.csv,AMT,,99999,0,1,landmark,Monetary Amount Information,3,3,-,O,F
+X12834.csv,AMT,,1,0,0,e01,Amount Qualifier Code,1,3,-,M,F
+X12834.csv,AMT,,1,0,0,e02,Monetary Amount,1,18,-,M,F
+X12834.csv,AMT,,1,0,0,e03,Credit/Debit Flag Code,1,1,-,O,F
+X12834.csv,QTY,,99999,0,1,landmark,Quantity Information,3,3,-,O,F
+X12834.csv,QTY,,1,0,0,e01,Quantity Qualifier,2,2,-,M,F
+X12834.csv,QTY,,1,0,0,e02,Quantity,1,15,-,X,F
+X12834.csv,QTY,,1,0,0,e04,Free-form Information,1,30,-,X/Z,F
+X12834.csv,N1,,99999,1,1,landmark,Party Identification,2,2,-,M,F
+X12834.csv,N1,,1,0,0,e01,Entity Identifier Code,2,3,-,M,F
+X12834.csv,N1,,1,0,0,e02,Name,1,60,-,X,F
+X12834.csv,N1,,1,0,0,e03,Identification Code Qualifier,1,2,-,X,F
+X12834.csv,N1,,1,0,0,e04,Identification Code,2,80,-,X,F
+X12834.csv,N1,,1,0,0,e05,Entity Relationship Code,2,2,-,O,F
+X12834.csv,N1,,1,0,0,e06,Entity Identifier Code,2,3,-,O,F
+X12834.csv,N2,N1,2,0,1,landmark,Additional Name Information,2,2,-,O,F
+X12834.csv,N2,N1,1,0,0,e01,Name,1,60,-,M,F
+X12834.csv,N2,N1,1,0,0,e02,Name,1,60,-,O,F
+X12834.csv,N3,N1,2,0,1,landmark,Party Location,2,2,-,O,F
+X12834.csv,N3,N1,1,0,0,e01,Address Information,1,55,-,M,F
+X12834.csv,N3,N1,1,0,0,e02,Address Information,1,55,-,O,F
+X12834.csv,N4,N1,1,0,1,landmark,Geographic Location,2,2,-,O,F
+X12834.csv,N4,N1,1,0,0,e01,City Name,2,30,-,O,F
+X12834.csv,N4,N1,1,0,0,e02,State or Province Code,2,2,-,X,F
+X12834.csv,N4,N1,1,0,0,e03,Postal Code,3,15,-,O,F
+X12834.csv,N4,N1,1,0,0,e04,Country Code,2,3,-,X,F
+X12834.csv,N4,N1,1,0,0,e05,Location Qualifier,1,2,-,X,F
+X12834.csv,N4,N1,1,0,0,e06,Location Identifier,1,30,-,O,F
+X12834.csv,N4,N1,1,0,0,e07,Country Subdivision Code,1,3,-,X,F
+X12834.csv,PER,N1,3,0,1,landmark,Administrative Communications Contact,3,3,-,O,F
+X12834.csv,PER,N1,1,0,0,e01,Contact Function Code,2,2,-,M,F
+X12834.csv,PER,N1,1,0,0,e02,Name,1,60,-,O,F
+X12834.csv,PER,N1,1,0,0,e03,Communication Number Qualifier,2,2,-,X,F
+X12834.csv,PER,N1,1,0,0,e04,Communication Number,1,256,-,X,F
+X12834.csv,PER,N1,1,0,0,e05,Communication Number Qualifier,2,2,-,X,F
+X12834.csv,PER,N1,1,0,0,e06,Communication Number,1,256,-,X,F
+X12834.csv,PER,N1,1,0,0,e07,Communication Number Qualifier,2,2,-,X,F
+X12834.csv,PER,N1,1,0,0,e08,Communication Number,1,256,-,X,F
+X12834.csv,PER,N1,1,0,0,e09,Contact Inquiry Reference,1,20,-,O,F
+X12834.csv,ACT,,10,1,1,landmark,Account Identification,3,3,-,O,F
+X12834.csv,ACT,,1,0,0,e01,Account Number,1,35,-,M,F
+X12834.csv,ACT,,1,0,0,e02,Name,1,60,-,O/Z,F
+X12834.csv,ACT,,1,0,0,e03,Identification Code Qualifier,1,2,-,X,F
+X12834.csv,ACT,,1,0,0,e04,Identification Code,2,80,-,X,F
+X12834.csv,ACT,,1,0,0,e05,Account Number Qualifier,1,3,-,X,F
+X12834.csv,ACT,,1,0,0,e06,Account Number,1,35,-,X,F
+X12834.csv,ACT,,1,0,0,e07,Description,1,80,-,O/Z,F
+X12834.csv,ACT,,1,0,0,e08,Payment Method Type Code,1,2,-,O,F
+X12834.csv,ACT,,1,0,0,e09,Benefit Status Code,1,1,-,O,F
+X12834.csv,REF,N1:ACT,5,0,1,landmark,Reference Information,3,3,-,O,F
+X12834.csv,REF,N1:ACT,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12834.csv,REF,N1:ACT,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12834.csv,REF,N1:ACT,1,0,0,e03,Description,1,80,-,X,F
+X12834.csv,N3,N1:ACT,1,0,1,landmark,Party Location,2,2,-,O,F
+X12834.csv,N3,N1:ACT,1,0,0,e01,Address Information,1,55,-,M,F
+X12834.csv,N3,N1:ACT,1,0,0,e02,Address Information,1,55,-,O,F
+X12834.csv,N4,N1:ACT,1,0,1,landmark,Geographic Location,2,2,-,O,F
+X12834.csv,N4,N1:ACT,1,0,0,e01,City Name,2,30,-,O,F
+X12834.csv,N4,N1:ACT,1,0,0,e02,State or Province Code,2,2,-,X,F
+X12834.csv,N4,N1:ACT,1,0,0,e03,Postal Code,3,15,-,O,F
+X12834.csv,N4,N1:ACT,1,0,0,e04,Country Code,2,3,-,X,F
+X12834.csv,N4,N1:ACT,1,0,0,e05,Location Qualifier,1,2,-,X,F
+X12834.csv,N4,N1:ACT,1,0,0,e06,Location Identifier,1,30,-,O,F
+X12834.csv,N4,N1:ACT,1,0,0,e07,Country Subdivision Code,1,3,-,X,F
+X12834.csv,PER,N1:ACT,5,0,1,landmark,Administrative Communications Contact,3,3,-,O,F
+X12834.csv,PER,N1:ACT,1,0,0,e01,Contact Function Code,2,2,-,M,F
+X12834.csv,PER,N1:ACT,1,0,0,e02,Name,1,60,-,O,F
+X12834.csv,PER,N1:ACT,1,0,0,e03,Communication Number Qualifier,2,2,-,X,F
+X12834.csv,PER,N1:ACT,1,0,0,e04,Communication Number,1,256,-,X,F
+X12834.csv,PER,N1:ACT,1,0,0,e05,Communication Number Qualifier,2,2,-,X,F
+X12834.csv,PER,N1:ACT,1,0,0,e06,Communication Number,1,256,-,X,F
+X12834.csv,PER,N1:ACT,1,0,0,e07,Communication Number Qualifier,2,2,-,X,F
+X12834.csv,PER,N1:ACT,1,0,0,e08,Communication Number,1,256,-,X,F
+X12834.csv,PER,N1:ACT,1,0,0,e09,Contact Inquiry Reference,1,20,-,O,F
+X12834.csv,DTP,N1:ACT,1,0,1,landmark,Date or Time or Period,3,3,-,O,F
+X12834.csv,DTP,N1:ACT,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12834.csv,DTP,N1:ACT,1,0,0,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+X12834.csv,DTP,N1:ACT,1,0,0,e03,Date Time Period,1,35,-,M,F
+X12834.csv,AMT,N1:ACT,1,0,1,landmark,Monetary Amount Information,3,3,-,O,F
+X12834.csv,AMT,N1:ACT,1,0,0,e01,Amount Qualifier Code,1,3,-,M,F
+X12834.csv,AMT,N1:ACT,1,0,0,e02,Monetary Amount,1,18,-,M,F
+X12834.csv,AMT,N1:ACT,1,0,0,e03,Credit/Debit Flag Code,1,1,-,O,F
+X12834.csv,INS,,99999,1,1,landmark,Insured Benefit,3,3,-,O,F
+X12834.csv,INS,,1,0,0,e01,Yes/No Condition or Response Code,1,1,-,M/Z,F
+X12834.csv,INS,,1,0,0,e02,Individual Relationship Code,2,2,-,M,F
+X12834.csv,INS,,1,0,0,e03,Maintenance Type Code,3,3,-,O,F
+X12834.csv,INS,,1,0,0,e04,Maintenance Reason Code,2,3,-,O,F
+X12834.csv,INS,,1,0,0,e05,Benefit Status Code,1,1,-,O,F
+X12834.csv,INS,,1,0,0,e07,Consolidated Omnibus Budget Reconciliation Act (COBRA) Qualifying Event Code,1,2,-,O,F
+X12834.csv,INS,,1,0,0,e08,Employment Status Code,2,2,-,O,F
+X12834.csv,INS,,1,0,0,e09,Student Status Code,1,1,-,O,F
+X12834.csv,INS,,1,0,0,e10,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12834.csv,INS,,1,0,0,e11,Date Time Period Format Qualifier,2,3,-,X,F
+X12834.csv,INS,,1,0,0,e12,Date Time Period,1,35,-,X/Z,F
+X12834.csv,INS,,1,0,0,e13,Confidentiality Code,1,1,-,O,F
+X12834.csv,INS,,1,0,0,e14,City Name,2,30,-,O/Z,F
+X12834.csv,INS,,1,0,0,e15,State or Province Code,2,2,-,O,F
+X12834.csv,INS,,1,0,0,e16,Country Code,2,3,-,O,F
+X12834.csv,INS,,1,0,0,e17,Number,1,9,-,O/Z,F
+X12834.csv,REF,INS,99999,0,1,landmark,Reference Information,3,3,-,M,F
+X12834.csv,REF,INS,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12834.csv,REF,INS,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12834.csv,REF,INS,1,0,0,e03,Description,1,80,-,X,F
+X12834.csv,DTP,INS,99999,0,1,landmark,Date or Time or Period,3,3,-,O,F
+X12834.csv,DTP,INS,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12834.csv,DTP,INS,1,0,0,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+X12834.csv,DTP,INS,1,0,0,e03,Date Time Period,1,35,-,M,F
+X12834.csv,NM1,,99999,1,1,landmark,Individual or Organizational Name,3,3,-,O,F
+X12834.csv,NM1,,1,0,0,e01,Entity Identifier Code,2,3,-,M,F
+X12834.csv,NM1,,1,0,0,e02,Entity Type Qualifier,1,1,-,M/Z,F
+X12834.csv,NM1,,1,0,0,e03,Name Last or Organization Name,1,60,-,X,F
+X12834.csv,NM1,,1,0,0,e04,Name First,1,35,-,O,F
+X12834.csv,NM1,,1,0,0,e05,Name Middle,1,25,-,O,F
+X12834.csv,NM1,,1,0,0,e06,Name Prefix,1,10,-,O,F
+X12834.csv,NM1,,1,0,0,e07,Name Suffix,1,10,-,O,F
+X12834.csv,NM1,,1,0,0,e08,Identification Code Qualifier,1,2,-,X,F
+X12834.csv,NM1,,1,0,0,e09,Identification Code,2,80,-,X,F
+X12834.csv,NM1,,1,0,0,e10,Entity Relationship Code,2,2,-,X,F
+X12834.csv,NM1,,1,0,0,e11,Entity Identifier Code,2,3,-,O,F
+X12834.csv,NM1,,1,0,0,e12,Name Last or Organization Name,1,60,-,O,F
+X12834.csv,PER,INS:NM1,1,0,1,landmark,Administrative Communications Contact,3,3,-,O,F
+X12834.csv,PER,INS:NM1,1,0,0,e01,Contact Function Code,2,2,-,M,F
+X12834.csv,PER,INS:NM1,1,0,0,e02,Name,1,60,-,O,F
+X12834.csv,PER,INS:NM1,1,0,0,e03,Communication Number Qualifier,2,2,-,X,F
+X12834.csv,PER,INS:NM1,1,0,0,e04,Communication Number,1,256,-,X,F
+X12834.csv,PER,INS:NM1,1,0,0,e05,Communication Number Qualifier,2,2,-,X,F
+X12834.csv,PER,INS:NM1,1,0,0,e06,Communication Number,1,256,-,X,F
+X12834.csv,PER,INS:NM1,1,0,0,e07,Communication Number Qualifier,2,2,-,X,F
+X12834.csv,PER,INS:NM1,1,0,0,e08,Communication Number,1,256,-,X,F
+X12834.csv,PER,INS:NM1,1,0,0,e09,Contact Inquiry Reference,1,20,-,O,F
+X12834.csv,N3,INS:NM1,1,0,1,landmark,Party Location,2,2,-,O,F
+X12834.csv,N3,INS:NM1,1,0,0,e01,Address Information,1,55,-,M,F
+X12834.csv,N3,INS:NM1,1,0,0,e02,Address Information,1,55,-,O,F
+X12834.csv,N4,INS:NM1,1,0,1,landmark,Geographic Location,2,2,-,O,F
+X12834.csv,N4,INS:NM1,1,0,0,e01,City Name,2,30,-,O,F
+X12834.csv,N4,INS:NM1,1,0,0,e02,State or Province Code,2,2,-,X,F
+X12834.csv,N4,INS:NM1,1,0,0,e03,Postal Code,3,15,-,O,F
+X12834.csv,N4,INS:NM1,1,0,0,e04,Country Code,2,3,-,X,F
+X12834.csv,N4,INS:NM1,1,0,0,e05,Location Qualifier,1,2,-,X,F
+X12834.csv,N4,INS:NM1,1,0,0,e06,Location Identifier,1,30,-,O,F
+X12834.csv,N4,INS:NM1,1,0,0,e07,Country Subdivision Code,1,3,-,X,F
+X12834.csv,DMG,INS:NM1,1,0,1,landmark,Demographic Information,3,3,-,O,F
+X12834.csv,DMG,INS:NM1,1,0,0,e01,Date Time Period Format Qualifier,2,3,-,X,F
+X12834.csv,DMG,INS:NM1,1,0,0,e02,Date Time Period,1,35,-,X/Z,F
+X12834.csv,DMG,INS:NM1,1,0,0,e03,Gender Code,1,1,-,O,F
+X12834.csv,DMG,INS:NM1,1,0,0,e04,Marital Status Code,1,1,-,O,F
+X12834.csv,DMG,INS:NM1,1,0,0,e06,Citizenship Status Code,1,2,-,O,F
+X12834.csv,DMG,INS:NM1,1,0,0,e07,Country Code,2,3,-,O/Z,F
+X12834.csv,DMG,INS:NM1,1,0,0,e08,Basis of Verification Code,1,2,-,O,F
+X12834.csv,DMG,INS:NM1,1,0,0,e09,Quantity,1,15,-,O/Z,F
+X12834.csv,DMG,INS:NM1,1,0,0,e10,Code List Qualifier Code,1,3,-,X,F
+X12834.csv,DMG,INS:NM1,1,0,0,e11,Industry Code,1,30,-,X/Z,F
+X12834.csv,PM,INS:NM1,1,0,1,landmark,Electronic Funds Transfer Information,2,2,-,O,F
+X12834.csv,PM,INS:NM1,1,0,0,e01,(DFI) Identification Number,3,12,-,M/Z,F
+X12834.csv,PM,INS:NM1,1,0,0,e02,Account Number,1,35,-,M/Z,F
+X12834.csv,PM,INS:NM1,1,0,0,e03,Yes/No Condition or Response Code,1,1,-,M/Z,F
+X12834.csv,PM,INS:NM1,1,0,0,e04,Yes/No Condition or Response Code,1,1,-,M/Z,F
+X12834.csv,PM,INS:NM1,1,0,0,e05,Account Number Qualifier,1,3,-,O/Z,F
+X12834.csv,PM,INS:NM1,1,0,0,e06,(DFI) ID Number Qualifier,2,2,-,O/Z,F
+X12834.csv,EC,INS:NM1,99999,0,1,landmark,Employment Class,2,2,-,O,F
+X12834.csv,EC,INS:NM1,1,0,0,e01,Employment Class Code,2,3,-,O,F
+X12834.csv,EC,INS:NM1,1,0,0,e02,Employment Class Code,2,3,-,O,F
+X12834.csv,EC,INS:NM1,1,0,0,e03,Employment Class Code,2,3,-,O,F
+X12834.csv,EC,INS:NM1,1,0,0,e04,Percentage as Decimal,1,10,-,O/Z,F
+X12834.csv,EC,INS:NM1,1,0,0,e05,Information Status Code,1,1,-,O/Z,F
+X12834.csv,EC,INS:NM1,1,0,0,e06,Occupation Code,4,6,-,O,F
+X12834.csv,ICM,INS:NM1,1,0,1,landmark,Individual Income,3,3,-,O,F
+X12834.csv,ICM,INS:NM1,1,0,0,e01,Frequency Code,1,1,-,M/Z,F
+X12834.csv,ICM,INS:NM1,1,0,0,e02,Monetary Amount,1,18,-,M/Z,F
+X12834.csv,ICM,INS:NM1,1,0,0,e03,Quantity,1,15,-,O/Z,F
+X12834.csv,ICM,INS:NM1,1,0,0,e04,Location Identifier,1,30,-,O/Z,F
+X12834.csv,ICM,INS:NM1,1,0,0,e05,Salary Grade,1,5,-,O,F
+X12834.csv,ICM,INS:NM1,1,0,0,e06,Currency Code,3,3,-,O,F
+X12834.csv,AMT,INS:NM1,10,0,1,landmark,Monetary Amount Information,3,3,-,O,F
+X12834.csv,AMT,INS:NM1,1,0,0,e01,Amount Qualifier Code,1,3,-,M,F
+X12834.csv,AMT,INS:NM1,1,0,0,e02,Monetary Amount,1,18,-,M,F
+X12834.csv,AMT,INS:NM1,1,0,0,e03,Credit/Debit Flag Code,1,1,-,O,F
+X12834.csv,HLH,INS:NM1,1,0,1,landmark,Health Information,3,3,-,O,F
+X12834.csv,HLH,INS:NM1,1,0,0,e01,Health-Related Code,1,1,-,O,F
+X12834.csv,HLH,INS:NM1,1,0,0,e02,Height,1,8,-,O,F
+X12834.csv,HLH,INS:NM1,1,0,0,e03,Weight,1,10,-,O/Z,F
+X12834.csv,HLH,INS:NM1,1,0,0,e04,Weight,1,10,-,O/Z,F
+X12834.csv,HLH,INS:NM1,1,0,0,e05,Description,1,80,-,O/Z,F
+X12834.csv,HLH,INS:NM1,1,0,0,e06,Current Health Condition Code,1,1,-,O,F
+X12834.csv,HLH,INS:NM1,1,0,0,e07,Description,1,80,-,O/Z,F
+X12834.csv,HI,INS:NM1,10,0,1,landmark,Health Care Information Codes,2,2,-,O,F
+X12834.csv,LUI,INS:NM1,99999,0,1,landmark,Language Use,3,3,-,O,F
+X12834.csv,LUI,INS:NM1,1,0,0,e01,Identification Code Qualifier,1,2,-,X,F
+X12834.csv,LUI,INS:NM1,1,0,0,e02,Identification Code,2,80,-,X/Z,F
+X12834.csv,LUI,INS:NM1,1,0,0,e03,Description,1,80,-,X/Z,F
+X12834.csv,LUI,INS:NM1,1,0,0,e04,Use of Language Indicator,1,2,-,O,F
+X12834.csv,LUI,INS:NM1,1,0,0,e05,Language Proficiency Indicator,1,1,-,O,F
+X12834.csv,DSB,,4,1,1,landmark,Disability Information,3,3,-,O,F
+X12834.csv,DSB,,1,0,0,e01,Disability Type Code,1,1,-,M,F
+X12834.csv,DSB,,1,0,0,e02,Quantity,1,15,-,O/Z,F
+X12834.csv,DSB,,1,0,0,e03,Occupation Code,4,6,-,O,F
+X12834.csv,DSB,,1,0,0,e04,Work Intensity Code,1,1,-,O,F
+X12834.csv,DSB,,1,0,0,e05,Product Option Code,1,2,-,O,F
+X12834.csv,DSB,,1,0,0,e06,Monetary Amount,1,18,-,O/Z,F
+X12834.csv,DSB,,1,0,0,e07,Product/Service ID Qualifier,2,2,-,X,F
+X12834.csv,DSB,,1,0,0,e08,Medical Code Value,1,15,-,X/Z,F
+X12834.csv,DTP,DSB,10,0,1,landmark,Date or Time or Period,3,3,-,O,F
+X12834.csv,DTP,DSB,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12834.csv,DTP,DSB,1,0,0,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+X12834.csv,DTP,DSB,1,0,0,e03,Date Time Period,1,35,-,M,F
+X12834.csv,AD1,DSB,10,0,1,landmark,Adjustment Amount,3,3,-,O,F
+X12834.csv,AD1,DSB,1,0,0,e01,Adjustment Reason Code,2,2,-,M,F
+X12834.csv,AD1,DSB,1,0,0,e02,Monetary Amount,1,18,-,O/Z,F
+X12834.csv,AD1,DSB,1,0,0,e03,Adjustment Reason Code Characteristic,1,2,-,O,F
+X12834.csv,AD1,DSB,1,0,0,e04,Frequency Code,1,1,-,O/Z,F
+X12834.csv,AD1,DSB,1,0,0,e05,Late Reason Code,2,2,-,O,F
+X12834.csv,HD,,99,1,1,landmark,Health Coverage,2,2,-,O,F
+X12834.csv,HD,,1,0,0,e01,Maintenance Type Code,3,3,-,M,F
+X12834.csv,HD,,1,0,0,e02,Maintenance Reason Code,2,3,-,O,F
+X12834.csv,HD,,1,0,0,e03,Insurance Line Code,2,3,-,O,F
+X12834.csv,HD,,1,0,0,e04,Plan Coverage Description,1,50,-,O,F
+X12834.csv,HD,,1,0,0,e05,Coverage Level Code,3,3,-,O,F
+X12834.csv,HD,,1,0,0,e06,Count,1,9,-,O/Z,F
+X12834.csv,HD,,1,0,0,e07,Count,1,9,-,O/Z,F
+X12834.csv,HD,,1,0,0,e08,Underwriting Decision Code,1,1,-,O,F
+X12834.csv,HD,,1,0,0,e09,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12834.csv,HD,,1,0,0,e10,Drug House Code,2,3,-,O,F
+X12834.csv,HD,,1,0,0,e11,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12834.csv,DTP,HD,10,0,1,landmark,Date or Time or Period,3,3,-,O,F
+X12834.csv,DTP,HD,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12834.csv,DTP,HD,1,0,0,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+X12834.csv,DTP,HD,1,0,0,e03,Date Time Period,1,35,-,M,F
+X12834.csv,AMT,HD,3,0,1,landmark,Monetary Amount Information,3,3,-,O,F
+X12834.csv,AMT,HD,1,0,0,e01,Amount Qualifier Code,1,3,-,M,F
+X12834.csv,AMT,HD,1,0,0,e02,Monetary Amount,1,18,-,M,F
+X12834.csv,AMT,HD,1,0,0,e03,Credit/Debit Flag Code,1,1,-,O,F
+X12834.csv,REF,HD,5,0,1,landmark,Reference Information,3,3,-,O,F
+X12834.csv,REF,HD,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12834.csv,REF,HD,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12834.csv,REF,HD,1,0,0,e03,Description,1,80,-,X,F
+X12834.csv,IDC,HD,99999,0,1,landmark,Identification Card,3,3,-,O,F
+X12834.csv,IDC,HD,1,0,0,e01,Plan Coverage Description,1,50,-,M,F
+X12834.csv,IDC,HD,1,0,0,e02,Identification Card Type Code,1,1,-,M,F
+X12834.csv,IDC,HD,1,0,0,e03,Quantity,1,15,-,O/Z,F
+X12834.csv,IDC,HD,1,0,0,e04,Action Code,1,2,-,O/Z,F
+X12834.csv,LX,,30,1,1,landmark,Transaction Set Line Number,2,2,-,O,F
+X12834.csv,LX,,1,0,0,e01,Assigned Number,1,6,-,M,F
+X12834.csv,NM1,HD:LX,1,0,1,landmark,Individual or Organizational Name,3,3,-,O,F
+X12834.csv,NM1,HD:LX,1,0,0,e01,Entity Identifier Code,2,3,-,M,F
+X12834.csv,NM1,HD:LX,1,0,0,e02,Entity Type Qualifier,1,1,-,M/Z,F
+X12834.csv,NM1,HD:LX,1,0,0,e03,Name Last or Organization Name,1,60,-,X,F
+X12834.csv,NM1,HD:LX,1,0,0,e04,Name First,1,35,-,O,F
+X12834.csv,NM1,HD:LX,1,0,0,e05,Name Middle,1,25,-,O,F
+X12834.csv,NM1,HD:LX,1,0,0,e06,Name Prefix,1,10,-,O,F
+X12834.csv,NM1,HD:LX,1,0,0,e07,Name Suffix,1,10,-,O,F
+X12834.csv,NM1,HD:LX,1,0,0,e08,Identification Code Qualifier,1,2,-,X,F
+X12834.csv,NM1,HD:LX,1,0,0,e09,Identification Code,2,80,-,X,F
+X12834.csv,NM1,HD:LX,1,0,0,e10,Entity Relationship Code,2,2,-,X,F
+X12834.csv,NM1,HD:LX,1,0,0,e11,Entity Identifier Code,2,3,-,O,F
+X12834.csv,NM1,HD:LX,1,0,0,e12,Name Last or Organization Name,1,60,-,O,F
+X12834.csv,N1,HD:LX,3,0,1,landmark,Party Identification,2,2,-,O,F
+X12834.csv,N1,HD:LX,1,0,0,e01,Entity Identifier Code,2,3,-,M,F
+X12834.csv,N1,HD:LX,1,0,0,e02,Name,1,60,-,X,F
+X12834.csv,N1,HD:LX,1,0,0,e03,Identification Code Qualifier,1,2,-,X,F
+X12834.csv,N1,HD:LX,1,0,0,e04,Identification Code,2,80,-,X,F
+X12834.csv,N1,HD:LX,1,0,0,e05,Entity Relationship Code,2,2,-,O,F
+X12834.csv,N1,HD:LX,1,0,0,e06,Entity Identifier Code,2,3,-,O,F
+X12834.csv,N2,HD:LX,1,0,1,landmark,Additional Name Information,2,2,-,O,F
+X12834.csv,N2,HD:LX,1,0,0,e01,Name,1,60,-,M,F
+X12834.csv,N2,HD:LX,1,0,0,e02,Name,1,60,-,O,F
+X12834.csv,N3,HD:LX,2,0,1,landmark,Party Location,2,2,-,O,F
+X12834.csv,N3,HD:LX,1,0,0,e01,Address Information,1,55,-,M,F
+X12834.csv,N3,HD:LX,1,0,0,e02,Address Information,1,55,-,O,F
+X12834.csv,N4,HD:LX,2,0,1,landmark,Geographic Location,2,2,-,O,F
+X12834.csv,N4,HD:LX,1,0,0,e01,City Name,2,30,-,O,F
+X12834.csv,N4,HD:LX,1,0,0,e02,State or Province Code,2,2,-,X,F
+X12834.csv,N4,HD:LX,1,0,0,e03,Postal Code,3,15,-,O,F
+X12834.csv,N4,HD:LX,1,0,0,e04,Country Code,2,3,-,X,F
+X12834.csv,N4,HD:LX,1,0,0,e05,Location Qualifier,1,2,-,X,F
+X12834.csv,N4,HD:LX,1,0,0,e06,Location Identifier,1,30,-,O,F
+X12834.csv,N4,HD:LX,1,0,0,e07,Country Subdivision Code,1,3,-,X,F
+X12834.csv,PER,HD:LX,2,0,1,landmark,Administrative Communications Contact,3,3,-,O,F
+X12834.csv,PER,HD:LX,1,0,0,e01,Contact Function Code,2,2,-,M,F
+X12834.csv,PER,HD:LX,1,0,0,e02,Name,1,60,-,O,F
+X12834.csv,PER,HD:LX,1,0,0,e03,Communication Number Qualifier,2,2,-,X,F
+X12834.csv,PER,HD:LX,1,0,0,e04,Communication Number,1,256,-,X,F
+X12834.csv,PER,HD:LX,1,0,0,e05,Communication Number Qualifier,2,2,-,X,F
+X12834.csv,PER,HD:LX,1,0,0,e06,Communication Number,1,256,-,X,F
+X12834.csv,PER,HD:LX,1,0,0,e07,Communication Number Qualifier,2,2,-,X,F
+X12834.csv,PER,HD:LX,1,0,0,e08,Communication Number,1,256,-,X,F
+X12834.csv,PER,HD:LX,1,0,0,e09,Contact Inquiry Reference,1,20,-,O,F
+X12834.csv,PRV,HD:LX,1,0,1,landmark,Provider Information,3,3,-,O,F
+X12834.csv,PRV,HD:LX,1,0,0,e01,Provider Code,1,3,-,M,F
+X12834.csv,PRV,HD:LX,1,0,0,e02,Reference Identification Qualifier,2,3,-,X,F
+X12834.csv,PRV,HD:LX,1,0,0,e03,Reference Identification,1,50,-,X,F
+X12834.csv,PRV,HD:LX,1,0,0,e04,State or Province Code,2,2,-,O,F
+X12834.csv,PRV,HD:LX,1,0,0,e06,Provider Organization Code,3,3,-,O,F
+X12834.csv,DTP,HD:LX,6,0,1,landmark,Date or Time or Period,3,3,-,O,F
+X12834.csv,DTP,HD:LX,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12834.csv,DTP,HD:LX,1,0,0,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+X12834.csv,DTP,HD:LX,1,0,0,e03,Date Time Period,1,35,-,M,F
+X12834.csv,PLA,HD:LX,1,0,1,landmark,Place or Location,3,3,-,O,F
+X12834.csv,PLA,HD:LX,1,0,0,e01,Action Code,1,2,-,M,F
+X12834.csv,PLA,HD:LX,1,0,0,e02,Entity Identifier Code,2,3,-,M,F
+X12834.csv,PLA,HD:LX,1,0,0,e03,Date,8,8,-,M/Z,F
+X12834.csv,PLA,HD:LX,1,0,0,e04,Time,4,8,-,O/Z,F
+X12834.csv,PLA,HD:LX,1,0,0,e05,Maintenance Reason Code,2,3,-,O,F
+X12834.csv,COB,,5,1,1,landmark,Coordination of Benefits,3,3,-,O,F
+X12834.csv,COB,,1,0,0,e01,Payer Responsibility Sequence Number Code,1,1,-,O,F
+X12834.csv,COB,,1,0,0,e02,Reference Identification,1,50,-,O/Z,F
+X12834.csv,COB,,1,0,0,e03,Coordination of Benefits Code,1,1,-,O,F
+X12834.csv,COB,,1,0,0,e04,Service Type Code,1,2,-,O,F
+X12834.csv,REF,COB,99999,0,1,landmark,Reference Information,3,3,-,O,F
+X12834.csv,REF,COB,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12834.csv,REF,COB,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12834.csv,REF,COB,1,0,0,e03,Description,1,80,-,X,F
+X12834.csv,DTP,COB,2,0,1,landmark,Date or Time or Period,3,3,-,O,F
+X12834.csv,DTP,COB,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12834.csv,DTP,COB,1,0,0,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+X12834.csv,DTP,COB,1,0,0,e03,Date Time Period,1,35,-,M,F
+X12834.csv,NM1,,3,1,1,landmark,Individual or Organizational Name,3,3,-,O,F
+X12834.csv,NM1,,1,0,0,e01,Entity Identifier Code,2,3,-,M,F
+X12834.csv,NM1,,1,0,0,e02,Entity Type Qualifier,1,1,-,M/Z,F
+X12834.csv,NM1,,1,0,0,e03,Name Last or Organization Name,1,60,-,X,F
+X12834.csv,NM1,,1,0,0,e04,Name First,1,35,-,O,F
+X12834.csv,NM1,,1,0,0,e05,Name Middle,1,25,-,O,F
+X12834.csv,NM1,,1,0,0,e06,Name Prefix,1,10,-,O,F
+X12834.csv,NM1,,1,0,0,e07,Name Suffix,1,10,-,O,F
+X12834.csv,NM1,,1,0,0,e08,Identification Code Qualifier,1,2,-,X,F
+X12834.csv,NM1,,1,0,0,e09,Identification Code,2,80,-,X,F
+X12834.csv,NM1,,1,0,0,e10,Entity Relationship Code,2,2,-,X,F
+X12834.csv,NM1,,1,0,0,e11,Entity Identifier Code,2,3,-,O,F
+X12834.csv,NM1,,1,0,0,e12,Name Last or Organization Name,1,60,-,O,F
+X12834.csv,N2,COB:NM1,1,0,1,landmark,Additional Name Information,2,2,-,O,F
+X12834.csv,N2,COB:NM1,1,0,0,e01,Name,1,60,-,M,F
+X12834.csv,N2,COB:NM1,1,0,0,e02,Name,1,60,-,O,F
+X12834.csv,N3,COB:NM1,2,0,1,landmark,Party Location,2,2,-,O,F
+X12834.csv,N3,COB:NM1,1,0,0,e01,Address Information,1,55,-,M,F
+X12834.csv,N3,COB:NM1,1,0,0,e02,Address Information,1,55,-,O,F
+X12834.csv,N4,COB:NM1,1,0,1,landmark,Geographic Location,2,2,-,O,F
+X12834.csv,N4,COB:NM1,1,0,0,e01,City Name,2,30,-,O,F
+X12834.csv,N4,COB:NM1,1,0,0,e02,State or Province Code,2,2,-,X,F
+X12834.csv,N4,COB:NM1,1,0,0,e03,Postal Code,3,15,-,O,F
+X12834.csv,N4,COB:NM1,1,0,0,e04,Country Code,2,3,-,X,F
+X12834.csv,N4,COB:NM1,1,0,0,e05,Location Qualifier,1,2,-,X,F
+X12834.csv,N4,COB:NM1,1,0,0,e06,Location Identifier,1,30,-,O,F
+X12834.csv,N4,COB:NM1,1,0,0,e07,Country Subdivision Code,1,3,-,X,F
+X12834.csv,PER,COB:NM1,1,0,1,landmark,Administrative Communications Contact,3,3,-,O,F
+X12834.csv,PER,COB:NM1,1,0,0,e01,Contact Function Code,2,2,-,M,F
+X12834.csv,PER,COB:NM1,1,0,0,e02,Name,1,60,-,O,F
+X12834.csv,PER,COB:NM1,1,0,0,e03,Communication Number Qualifier,2,2,-,X,F
+X12834.csv,PER,COB:NM1,1,0,0,e04,Communication Number,1,256,-,X,F
+X12834.csv,PER,COB:NM1,1,0,0,e05,Communication Number Qualifier,2,2,-,X,F
+X12834.csv,PER,COB:NM1,1,0,0,e06,Communication Number,1,256,-,X,F
+X12834.csv,PER,COB:NM1,1,0,0,e07,Communication Number Qualifier,2,2,-,X,F
+X12834.csv,PER,COB:NM1,1,0,0,e08,Communication Number,1,256,-,X,F
+X12834.csv,PER,COB:NM1,1,0,0,e09,Contact Inquiry Reference,1,20,-,O,F
+X12834.csv,LC,,10,1,1,landmark,Life Coverage,2,2,-,O,F
+X12834.csv,LC,,1,0,0,e01,Maintenance Type Code,3,3,-,M,F
+X12834.csv,LC,,1,0,0,e02,Maintenance Reason Code,2,3,-,O,F
+X12834.csv,LC,,1,0,0,e03,Insurance Line Code,2,3,-,O,F
+X12834.csv,LC,,1,0,0,e04,Plan Coverage Description,1,50,-,O,F
+X12834.csv,LC,,1,0,0,e05,Quantity,1,15,-,O/Z,F
+X12834.csv,LC,,1,0,0,e06,Product Option Code,1,2,-,O,F
+X12834.csv,LC,,1,0,0,e07,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12834.csv,AMT,LC,5,0,1,landmark,Monetary Amount Information,3,3,-,O,F
+X12834.csv,AMT,LC,1,0,0,e01,Amount Qualifier Code,1,3,-,M,F
+X12834.csv,AMT,LC,1,0,0,e02,Monetary Amount,1,18,-,M,F
+X12834.csv,AMT,LC,1,0,0,e03,Credit/Debit Flag Code,1,1,-,O,F
+X12834.csv,DTP,LC,2,0,1,landmark,Date or Time or Period,3,3,-,O,F
+X12834.csv,DTP,LC,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12834.csv,DTP,LC,1,0,0,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+X12834.csv,DTP,LC,1,0,0,e03,Date Time Period,1,35,-,M,F
+X12834.csv,REF,LC,99999,0,1,landmark,Reference Information,3,3,-,O,F
+X12834.csv,REF,LC,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12834.csv,REF,LC,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12834.csv,REF,LC,1,0,0,e03,Description,1,80,-,X,F
+X12834.csv,BEN,,20,1,1,landmark,Beneficiary or Owner Information,3,3,-,O,F
+X12834.csv,BEN,,1,0,0,e01,Primary or Contingent Code,1,1,-,O,F
+X12834.csv,BEN,,1,0,0,e02,Percentage as Decimal,1,10,-,O/Z,F
+X12834.csv,BEN,,1,0,0,e03,Individual Relationship Code,2,2,-,O,F
+X12834.csv,BEN,,1,0,0,e04,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12834.csv,BEN,,1,0,0,e05,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12834.csv,BEN,,1,0,0,e06,Type of Account Code,2,2,-,O,F
+X12834.csv,NM1,LC:BEN,1,0,1,landmark,Individual or Organizational Name,3,3,-,O,F
+X12834.csv,NM1,LC:BEN,1,0,0,e01,Entity Identifier Code,2,3,-,M,F
+X12834.csv,NM1,LC:BEN,1,0,0,e02,Entity Type Qualifier,1,1,-,M/Z,F
+X12834.csv,NM1,LC:BEN,1,0,0,e03,Name Last or Organization Name,1,60,-,X,F
+X12834.csv,NM1,LC:BEN,1,0,0,e04,Name First,1,35,-,O,F
+X12834.csv,NM1,LC:BEN,1,0,0,e05,Name Middle,1,25,-,O,F
+X12834.csv,NM1,LC:BEN,1,0,0,e06,Name Prefix,1,10,-,O,F
+X12834.csv,NM1,LC:BEN,1,0,0,e07,Name Suffix,1,10,-,O,F
+X12834.csv,NM1,LC:BEN,1,0,0,e08,Identification Code Qualifier,1,2,-,X,F
+X12834.csv,NM1,LC:BEN,1,0,0,e09,Identification Code,2,80,-,X,F
+X12834.csv,NM1,LC:BEN,1,0,0,e10,Entity Relationship Code,2,2,-,X,F
+X12834.csv,NM1,LC:BEN,1,0,0,e11,Entity Identifier Code,2,3,-,O,F
+X12834.csv,NM1,LC:BEN,1,0,0,e12,Name Last or Organization Name,1,60,-,O,F
+X12834.csv,N1,LC:BEN,1,0,1,landmark,Party Identification,2,2,-,O,F
+X12834.csv,N1,LC:BEN,1,0,0,e01,Entity Identifier Code,2,3,-,M,F
+X12834.csv,N1,LC:BEN,1,0,0,e02,Name,1,60,-,X,F
+X12834.csv,N1,LC:BEN,1,0,0,e03,Identification Code Qualifier,1,2,-,X,F
+X12834.csv,N1,LC:BEN,1,0,0,e04,Identification Code,2,80,-,X,F
+X12834.csv,N1,LC:BEN,1,0,0,e05,Entity Relationship Code,2,2,-,O,F
+X12834.csv,N1,LC:BEN,1,0,0,e06,Entity Identifier Code,2,3,-,O,F
+X12834.csv,N2,LC:BEN,1,0,1,landmark,Additional Name Information,2,2,-,O,F
+X12834.csv,N2,LC:BEN,1,0,0,e01,Name,1,60,-,M,F
+X12834.csv,N2,LC:BEN,1,0,0,e02,Name,1,60,-,O,F
+X12834.csv,N3,LC:BEN,1,0,1,landmark,Party Location,2,2,-,O,F
+X12834.csv,N3,LC:BEN,1,0,0,e01,Address Information,1,55,-,M,F
+X12834.csv,N3,LC:BEN,1,0,0,e02,Address Information,1,55,-,O,F
+X12834.csv,N4,LC:BEN,1,0,1,landmark,Geographic Location,2,2,-,O,F
+X12834.csv,N4,LC:BEN,1,0,0,e01,City Name,2,30,-,O,F
+X12834.csv,N4,LC:BEN,1,0,0,e02,State or Province Code,2,2,-,X,F
+X12834.csv,N4,LC:BEN,1,0,0,e03,Postal Code,3,15,-,O,F
+X12834.csv,N4,LC:BEN,1,0,0,e04,Country Code,2,3,-,X,F
+X12834.csv,N4,LC:BEN,1,0,0,e05,Location Qualifier,1,2,-,X,F
+X12834.csv,N4,LC:BEN,1,0,0,e06,Location Identifier,1,30,-,O,F
+X12834.csv,N4,LC:BEN,1,0,0,e07,Country Subdivision Code,1,3,-,X,F
+X12834.csv,DMG,LC:BEN,1,0,1,landmark,Demographic Information,3,3,-,O,F
+X12834.csv,DMG,LC:BEN,1,0,0,e01,Date Time Period Format Qualifier,2,3,-,X,F
+X12834.csv,DMG,LC:BEN,1,0,0,e02,Date Time Period,1,35,-,X/Z,F
+X12834.csv,DMG,LC:BEN,1,0,0,e03,Gender Code,1,1,-,O,F
+X12834.csv,DMG,LC:BEN,1,0,0,e04,Marital Status Code,1,1,-,O,F
+X12834.csv,DMG,LC:BEN,1,0,0,e06,Citizenship Status Code,1,2,-,O,F
+X12834.csv,DMG,LC:BEN,1,0,0,e07,Country Code,2,3,-,O/Z,F
+X12834.csv,DMG,LC:BEN,1,0,0,e08,Basis of Verification Code,1,2,-,O,F
+X12834.csv,DMG,LC:BEN,1,0,0,e09,Quantity,1,15,-,O/Z,F
+X12834.csv,DMG,LC:BEN,1,0,0,e10,Code List Qualifier Code,1,3,-,X,F
+X12834.csv,DMG,LC:BEN,1,0,0,e11,Industry Code,1,30,-,X/Z,F
+X12834.csv,FSA,,5,1,1,landmark,Flexible Spending Account,3,3,-,O,F
+X12834.csv,FSA,,1,0,0,e01,Maintenance Type Code,3,3,-,M,F
+X12834.csv,FSA,,1,0,0,e02,Flexible Spending Account Selection Code,1,1,-,O,F
+X12834.csv,FSA,,1,0,0,e03,Maintenance Reason Code,2,3,-,O,F
+X12834.csv,FSA,,1,0,0,e04,Account Number,1,35,-,O/Z,F
+X12834.csv,FSA,,1,0,0,e05,Frequency Code,1,1,-,O/Z,F
+X12834.csv,FSA,,1,0,0,e06,Plan Coverage Description,1,50,-,O,F
+X12834.csv,FSA,,1,0,0,e07,Product Option Code,1,2,-,O,F
+X12834.csv,FSA,,1,0,0,e08,Product Option Code,1,2,-,O,F
+X12834.csv,FSA,,1,0,0,e09,Product Option Code,1,2,-,O,F
+X12834.csv,AMT,FSA,10,0,1,landmark,Monetary Amount Information,3,3,-,O,F
+X12834.csv,AMT,FSA,1,0,0,e01,Amount Qualifier Code,1,3,-,M,F
+X12834.csv,AMT,FSA,1,0,0,e02,Monetary Amount,1,18,-,M,F
+X12834.csv,AMT,FSA,1,0,0,e03,Credit/Debit Flag Code,1,1,-,O,F
+X12834.csv,DTP,FSA,10,0,1,landmark,Date or Time or Period,3,3,-,O,F
+X12834.csv,DTP,FSA,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12834.csv,DTP,FSA,1,0,0,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+X12834.csv,DTP,FSA,1,0,0,e03,Date Time Period,1,35,-,M,F
+X12834.csv,REF,FSA,99999,0,1,landmark,Reference Information,3,3,-,O,F
+X12834.csv,REF,FSA,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12834.csv,REF,FSA,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12834.csv,REF,FSA,1,0,0,e03,Description,1,80,-,X,F
+X12834.csv,RP,,99999,1,1,landmark,Retirement Product,2,2,-,O,F
+X12834.csv,RP,,1,0,0,e01,Maintenance Type Code,3,3,-,M,F
+X12834.csv,RP,,1,0,0,e02,Insurance Line Code,2,3,-,O,F
+X12834.csv,RP,,1,0,0,e03,Maintenance Reason Code,2,3,-,O,F
+X12834.csv,RP,,1,0,0,e04,Description,1,80,-,O,F
+X12834.csv,RP,,1,0,0,e05,Participant Status Code,1,2,-,O,F
+X12834.csv,RP,,1,0,0,e06,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12834.csv,RP,,1,0,0,e07,Special Processing Type,1,6,-,O,F
+X12834.csv,RP,,1,0,0,e08,Authority,1,20,-,O/Z,F
+X12834.csv,RP,,1,0,0,e09,Plan Coverage Description,1,50,-,O,F
+X12834.csv,DTP,RP,99999,0,1,landmark,Date or Time or Period,3,3,-,O,F
+X12834.csv,DTP,RP,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12834.csv,DTP,RP,1,0,0,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+X12834.csv,DTP,RP,1,0,0,e03,Date Time Period,1,35,-,M,F
+X12834.csv,REF,RP,99999,0,1,landmark,Reference Information,3,3,-,O,F
+X12834.csv,REF,RP,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12834.csv,REF,RP,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12834.csv,REF,RP,1,0,0,e03,Description,1,80,-,X,F
+X12834.csv,INV,RP,99999,0,1,landmark,Investment Vehicle Selection,3,3,-,O,F
+X12834.csv,INV,RP,1,0,0,e01,Description,1,80,-,M/Z,F
+X12834.csv,INV,RP,1,0,0,e02,Percentage as Decimal,1,10,-,X/Z,F
+X12834.csv,INV,RP,1,0,0,e03,Monetary Amount,1,18,-,X/Z,F
+X12834.csv,INV,RP,1,0,0,e04,Quantity,1,15,-,X/Z,F
+X12834.csv,INV,RP,1,0,0,e05,State or Province Code,2,2,-,O/Z,F
+X12834.csv,INV,RP,1,0,0,e06,Description,1,80,-,O/Z,F
+X12834.csv,INV,RP,1,0,0,e07,Monetary Amount,1,18,-,O/Z,F
+X12834.csv,AMT,RP,20,0,1,landmark,Monetary Amount Information,3,3,-,O,F
+X12834.csv,AMT,RP,1,0,0,e01,Amount Qualifier Code,1,3,-,M,F
+X12834.csv,AMT,RP,1,0,0,e02,Monetary Amount,1,18,-,M,F
+X12834.csv,AMT,RP,1,0,0,e03,Credit/Debit Flag Code,1,1,-,O,F
+X12834.csv,QTY,RP,20,0,1,landmark,Quantity Information,3,3,-,O,F
+X12834.csv,QTY,RP,1,0,0,e01,Quantity Qualifier,2,2,-,M,F
+X12834.csv,QTY,RP,1,0,0,e02,Quantity,1,15,-,X,F
+X12834.csv,QTY,RP,1,0,0,e04,Free-form Information,1,30,-,X/Z,F
+X12834.csv,K3,RP,3,0,1,landmark,File Information,2,2,-,O,F
+X12834.csv,K3,RP,1,0,0,e01,Fixed Format Information,1,80,-,M,F
+X12834.csv,K3,RP,1,0,0,e02,Record Format Code,1,2,-,O,F
+X12834.csv,REL,RP,1,0,1,landmark,Relationship,3,3,-,O,F
+X12834.csv,REL,RP,1,0,0,e01,Individual Relationship Code,2,2,-,M,F
+X12834.csv,REL,RP,1,0,0,e02,Number,1,9,-,O/Z,F
+X12834.csv,NM1,,99999,1,1,landmark,Individual or Organizational Name,3,3,-,O,F
+X12834.csv,NM1,,1,0,0,e01,Entity Identifier Code,2,3,-,M,F
+X12834.csv,NM1,,1,0,0,e02,Entity Type Qualifier,1,1,-,M/Z,F
+X12834.csv,NM1,,1,0,0,e03,Name Last or Organization Name,1,60,-,X,F
+X12834.csv,NM1,,1,0,0,e04,Name First,1,35,-,O,F
+X12834.csv,NM1,,1,0,0,e05,Name Middle,1,25,-,O,F
+X12834.csv,NM1,,1,0,0,e06,Name Prefix,1,10,-,O,F
+X12834.csv,NM1,,1,0,0,e07,Name Suffix,1,10,-,O,F
+X12834.csv,NM1,,1,0,0,e08,Identification Code Qualifier,1,2,-,X,F
+X12834.csv,NM1,,1,0,0,e09,Identification Code,2,80,-,X,F
+X12834.csv,NM1,,1,0,0,e10,Entity Relationship Code,2,2,-,X,F
+X12834.csv,NM1,,1,0,0,e11,Entity Identifier Code,2,3,-,O,F
+X12834.csv,NM1,,1,0,0,e12,Name Last or Organization Name,1,60,-,O,F
+X12834.csv,N2,RP:NM1,1,0,1,landmark,Additional Name Information,2,2,-,O,F
+X12834.csv,N2,RP:NM1,1,0,0,e01,Name,1,60,-,M,F
+X12834.csv,N2,RP:NM1,1,0,0,e02,Name,1,60,-,O,F
+X12834.csv,DMG,RP:NM1,1,0,1,landmark,Demographic Information,3,3,-,O,F
+X12834.csv,DMG,RP:NM1,1,0,0,e01,Date Time Period Format Qualifier,2,3,-,X,F
+X12834.csv,DMG,RP:NM1,1,0,0,e02,Date Time Period,1,35,-,X/Z,F
+X12834.csv,DMG,RP:NM1,1,0,0,e03,Gender Code,1,1,-,O,F
+X12834.csv,DMG,RP:NM1,1,0,0,e04,Marital Status Code,1,1,-,O,F
+X12834.csv,DMG,RP:NM1,1,0,0,e06,Citizenship Status Code,1,2,-,O,F
+X12834.csv,DMG,RP:NM1,1,0,0,e07,Country Code,2,3,-,O/Z,F
+X12834.csv,DMG,RP:NM1,1,0,0,e08,Basis of Verification Code,1,2,-,O,F
+X12834.csv,DMG,RP:NM1,1,0,0,e09,Quantity,1,15,-,O/Z,F
+X12834.csv,DMG,RP:NM1,1,0,0,e10,Code List Qualifier Code,1,3,-,X,F
+X12834.csv,DMG,RP:NM1,1,0,0,e11,Industry Code,1,30,-,X/Z,F
+X12834.csv,BEN,RP:NM1,1,0,1,landmark,Beneficiary or Owner Information,3,3,-,O,F
+X12834.csv,BEN,RP:NM1,1,0,0,e01,Primary or Contingent Code,1,1,-,O,F
+X12834.csv,BEN,RP:NM1,1,0,0,e02,Percentage as Decimal,1,10,-,O/Z,F
+X12834.csv,BEN,RP:NM1,1,0,0,e03,Individual Relationship Code,2,2,-,O,F
+X12834.csv,BEN,RP:NM1,1,0,0,e04,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12834.csv,BEN,RP:NM1,1,0,0,e05,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12834.csv,BEN,RP:NM1,1,0,0,e06,Type of Account Code,2,2,-,O,F
+X12834.csv,REF,RP:NM1,99999,0,1,landmark,Reference Information,3,3,-,O,F
+X12834.csv,REF,RP:NM1,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12834.csv,REF,RP:NM1,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12834.csv,REF,RP:NM1,1,0,0,e03,Description,1,80,-,X,F
+X12834.csv,NX1,,99999,1,1,landmark,Property or Entity Identification,3,3,-,O,F
+X12834.csv,NX1,,1,0,0,e01,Entity Identifier Code,2,3,-,M,F
+X12834.csv,NX1,,1,0,0,e02,Entity Identifier Code,2,3,-,O,F
+X12834.csv,NX1,,1,0,0,e03,Entity Identifier Code,2,3,-,O,F
+X12834.csv,NX1,,1,0,0,e04,Entity Identifier Code,2,3,-,O,F
+X12834.csv,NX1,,1,0,0,e05,Entity Identifier Code,2,3,-,O,F
+X12834.csv,N3,RP:NM1:NX1,1,0,1,landmark,Party Location,2,2,-,O,F
+X12834.csv,N3,RP:NM1:NX1,1,0,0,e01,Address Information,1,55,-,M,F
+X12834.csv,N3,RP:NM1:NX1,1,0,0,e02,Address Information,1,55,-,O,F
+X12834.csv,N4,RP:NM1:NX1,1,0,1,landmark,Geographic Location,2,2,-,O,F
+X12834.csv,N4,RP:NM1:NX1,1,0,0,e01,City Name,2,30,-,O,F
+X12834.csv,N4,RP:NM1:NX1,1,0,0,e02,State or Province Code,2,2,-,X,F
+X12834.csv,N4,RP:NM1:NX1,1,0,0,e03,Postal Code,3,15,-,O,F
+X12834.csv,N4,RP:NM1:NX1,1,0,0,e04,Country Code,2,3,-,X,F
+X12834.csv,N4,RP:NM1:NX1,1,0,0,e05,Location Qualifier,1,2,-,X,F
+X12834.csv,N4,RP:NM1:NX1,1,0,0,e06,Location Identifier,1,30,-,O,F
+X12834.csv,N4,RP:NM1:NX1,1,0,0,e07,Country Subdivision Code,1,3,-,X,F
+X12834.csv,DTP,RP:NM1:NX1,99999,0,1,landmark,Date or Time or Period,3,3,-,O,F
+X12834.csv,DTP,RP:NM1:NX1,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12834.csv,DTP,RP:NM1:NX1,1,0,0,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+X12834.csv,DTP,RP:NM1:NX1,1,0,0,e03,Date Time Period,1,35,-,M,F
+X12834.csv,FC,,99999,1,1,landmark,Financial Contribution,2,2,-,O,F
+X12834.csv,FC,,1,0,0,e01,Contribution Code,2,2,-,M,F
+X12834.csv,FC,,1,0,0,e02,Percentage as Decimal,1,10,-,O/Z,F
+X12834.csv,FC,,1,0,0,e03,Monetary Amount,1,18,-,O/Z,F
+X12834.csv,FC,,1,0,0,e04,Number,1,9,-,O/Z,F
+X12834.csv,FC,,1,0,0,e05,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12834.csv,DTP,FC,99999,0,1,landmark,Date or Time or Period,3,3,-,O,F
+X12834.csv,DTP,FC,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12834.csv,DTP,FC,1,0,0,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+X12834.csv,DTP,FC,1,0,0,e03,Date Time Period,1,35,-,M,F
+X12834.csv,INV,,99999,1,1,landmark,Investment Vehicle Selection,3,3,-,O,F
+X12834.csv,INV,,1,0,0,e01,Description,1,80,-,M/Z,F
+X12834.csv,INV,,1,0,0,e02,Percentage as Decimal,1,10,-,X/Z,F
+X12834.csv,INV,,1,0,0,e03,Monetary Amount,1,18,-,X/Z,F
+X12834.csv,INV,,1,0,0,e04,Quantity,1,15,-,X/Z,F
+X12834.csv,INV,,1,0,0,e05,State or Province Code,2,2,-,O/Z,F
+X12834.csv,INV,,1,0,0,e06,Description,1,80,-,O/Z,F
+X12834.csv,INV,,1,0,0,e07,Monetary Amount,1,18,-,O/Z,F
+X12834.csv,DTP,FC:INV,99999,0,1,landmark,Date or Time or Period,3,3,-,O,F
+X12834.csv,DTP,FC:INV,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12834.csv,DTP,FC:INV,1,0,0,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+X12834.csv,DTP,FC:INV,1,0,0,e03,Date Time Period,1,35,-,M,F
+X12834.csv,QTY,FC:INV,99999,0,1,landmark,Quantity Information,3,3,-,O,F
+X12834.csv,QTY,FC:INV,1,0,0,e01,Quantity Qualifier,2,2,-,M,F
+X12834.csv,QTY,FC:INV,1,0,0,e02,Quantity,1,15,-,X,F
+X12834.csv,QTY,FC:INV,1,0,0,e04,Free-form Information,1,30,-,X/Z,F
+X12834.csv,ENT,FC:INV,99999,0,1,landmark,Entity,3,3,-,O,F
+X12834.csv,ENT,FC:INV,1,0,0,e01,Assigned Number,1,6,-,O,F
+X12834.csv,ENT,FC:INV,1,0,0,e02,Entity Identifier Code,2,3,-,X,F
+X12834.csv,ENT,FC:INV,1,0,0,e03,Identification Code Qualifier,1,2,-,X,F
+X12834.csv,ENT,FC:INV,1,0,0,e04,Identification Code,2,80,-,X,F
+X12834.csv,ENT,FC:INV,1,0,0,e05,Entity Identifier Code,2,3,-,X,F
+X12834.csv,ENT,FC:INV,1,0,0,e06,Identification Code Qualifier,1,2,-,X,F
+X12834.csv,ENT,FC:INV,1,0,0,e07,Identification Code,2,80,-,X,F
+X12834.csv,ENT,FC:INV,1,0,0,e08,Reference Identification Qualifier,2,3,-,X,F
+X12834.csv,ENT,FC:INV,1,0,0,e09,Reference Identification,1,50,-,X,F
+X12834.csv,REF,FC:INV,99999,0,1,landmark,Reference Information,3,3,-,O,F
+X12834.csv,REF,FC:INV,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12834.csv,REF,FC:INV,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12834.csv,REF,FC:INV,1,0,0,e03,Description,1,80,-,X,F
+X12834.csv,AMT,FC:INV,20,0,1,landmark,Monetary Amount Information,3,3,-,O,F
+X12834.csv,AMT,FC:INV,1,0,0,e01,Amount Qualifier Code,1,3,-,M,F
+X12834.csv,AMT,FC:INV,1,0,0,e02,Monetary Amount,1,18,-,M,F
+X12834.csv,AMT,FC:INV,1,0,0,e03,Credit/Debit Flag Code,1,1,-,O,F
+X12834.csv,K3,FC:INV,3,0,1,landmark,File Information,2,2,-,O,F
+X12834.csv,K3,FC:INV,1,0,0,e01,Fixed Format Information,1,80,-,M,F
+X12834.csv,K3,FC:INV,1,0,0,e02,Record Format Code,1,2,-,O,F
+X12834.csv,AIN,,99999,1,1,landmark,Income,3,3,-,O,F
+X12834.csv,AIN,,1,0,0,e01,Type of Income Code,2,2,-,M/Z,F
+X12834.csv,AIN,,1,0,0,e02,Frequency Code,1,1,-,M/Z,F
+X12834.csv,AIN,,1,0,0,e03,Monetary Amount,1,18,-,M/Z,F
+X12834.csv,AIN,,1,0,0,e04,Quantity,1,15,-,O/Z,F
+X12834.csv,AIN,,1,0,0,e05,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12834.csv,AIN,,1,0,0,e06,Reference Identification,1,50,-,O/Z,F
+X12834.csv,AIN,,1,0,0,e07,Amount Qualifier Code,1,3,-,O/Z,F
+X12834.csv,AIN,,1,0,0,e08,Tax Treatment Code,1,1,-,O/Z,F
+X12834.csv,AIN,,1,0,0,e09,Earnings Rate of Pay,1,15,-,X,F
+X12834.csv,AIN,,1,0,0,e10,Unit or Basis for Measurement Code,2,2,-,X,F
+X12834.csv,AIN,,1,0,0,e11,Quantity,1,15,-,X/Z,F
+X12834.csv,AIN,,1,0,0,e12,Industry Code,1,30,-,O/Z,F
+X12834.csv,AIN,,1,0,0,e13,Description,1,80,-,O/Z,F
+X12834.csv,QTY,AIN,99999,0,1,landmark,Quantity Information,3,3,-,O,F
+X12834.csv,QTY,AIN,1,0,0,e01,Quantity Qualifier,2,2,-,M,F
+X12834.csv,QTY,AIN,1,0,0,e02,Quantity,1,15,-,X,F
+X12834.csv,QTY,AIN,1,0,0,e04,Free-form Information,1,30,-,X/Z,F
+X12834.csv,DTP,AIN,99999,0,1,landmark,Date or Time or Period,3,3,-,O,F
+X12834.csv,DTP,AIN,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12834.csv,DTP,AIN,1,0,0,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+X12834.csv,DTP,AIN,1,0,0,e03,Date Time Period,1,35,-,M,F
+X12834.csv,LS,,1,0,1,landmark,Loop Header,2,2,-,O,F
+X12834.csv,LS,,1,0,0,e01,Loop Identifier Code,1,4,-,M,F
+X12834.csv,LX,,99999,1,1,landmark,Transaction Set Line Number,2,2,-,O,F
+X12834.csv,LX,,1,0,0,e01,Assigned Number,1,6,-,M,F
+X12834.csv,N1,,99999,1,1,landmark,Party Identification,2,2,-,M,F
+X12834.csv,N1,,1,0,0,e01,Entity Identifier Code,2,3,-,M,F
+X12834.csv,N1,,1,0,0,e02,Name,1,60,-,X,F
+X12834.csv,N1,,1,0,0,e03,Identification Code Qualifier,1,2,-,X,F
+X12834.csv,N1,,1,0,0,e04,Identification Code,2,80,-,X,F
+X12834.csv,N1,,1,0,0,e05,Entity Relationship Code,2,2,-,O,F
+X12834.csv,N1,,1,0,0,e06,Entity Identifier Code,2,3,-,O,F
+X12834.csv,REF,LX:N1,1,0,1,landmark,Reference Information,3,3,-,M,F
+X12834.csv,REF,LX:N1,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12834.csv,REF,LX:N1,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12834.csv,REF,LX:N1,1,0,0,e03,Description,1,80,-,X,F
+X12834.csv,DTP,LX:N1,1,0,1,landmark,Date or Time or Period,3,3,-,O,F
+X12834.csv,DTP,LX:N1,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12834.csv,DTP,LX:N1,1,0,0,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+X12834.csv,DTP,LX:N1,1,0,0,e03,Date Time Period,1,35,-,M,F
+X12834.csv,LE,,1,0,1,landmark,Loop Trailer,2,2,-,O,F
+X12834.csv,LE,,1,0,0,e01,Loop Identifier Code,1,4,-,M,F
+X12834.csv,SE,,1,0,1,landmark,Transaction Set Trailer,2,2,-,M,F
+X12834.csv,SE,,1,0,0,e01,Number of Included Segments,1,10,-,M,F
+X12834.csv,SE,,1,0,0,e02,Transaction Set Control Number,4,9,-,M,F
+X12835.csv,ST,,1,0,1,landmark,Transaction Set Header,2,2,-,M,F
+X12835.csv,ST,,1,0,0,e01,Transaction Set Identifier Code,3,3,-,M/Z,F
+X12835.csv,ST,,1,0,0,e02,Transaction Set Control Number,4,9,-,M,F
+X12835.csv,ST,,1,0,0,e03,Implementation Convention Reference,1,35,-,O/Z,F
+X12835.csv,BPR,,1,0,1,landmark,Beginning Segment for Payment Order/Remittance Advice,3,3,-,M,F
+X12835.csv,BPR,,1,0,0,e01,Transaction Handling Code,1,2,-,M,F
+X12835.csv,BPR,,1,0,0,e02,Monetary Amount,1,18,-,M/Z,F
+X12835.csv,BPR,,1,0,0,e03,Credit/Debit Flag Code,1,1,-,M,F
+X12835.csv,BPR,,1,0,0,e04,Payment Method Code,3,3,-,M,F
+X12835.csv,BPR,,1,0,0,e05,Payment Format Code,1,10,-,O,F
+X12835.csv,BPR,,1,0,0,e06,(DFI) ID Number Qualifier,2,2,-,X/Z,F
+X12835.csv,BPR,,1,0,0,e07,(DFI) Identification Number,3,12,-,X,F
+X12835.csv,BPR,,1,0,0,e08,Account Number Qualifier,1,3,-,O/Z,F
+X12835.csv,BPR,,1,0,0,e09,Account Number,1,35,-,X/Z,F
+X12835.csv,BPR,,1,0,0,e10,Originating Company Identifier,10,10,-,O/Z,F
+X12835.csv,BPR,,1,0,0,e11,Originating Company Supplemental Code,9,9,-,O,F
+X12835.csv,BPR,,1,0,0,e12,(DFI) ID Number Qualifier,2,2,-,X/Z,F
+X12835.csv,BPR,,1,0,0,e13,(DFI) Identification Number,3,12,-,X,F
+X12835.csv,BPR,,1,0,0,e14,Account Number Qualifier,1,3,-,O/Z,F
+X12835.csv,BPR,,1,0,0,e15,Account Number,1,35,-,X/Z,F
+X12835.csv,BPR,,1,0,0,e16,Date,8,8,-,O/Z,F
+X12835.csv,BPR,,1,0,0,e17,Business Function Code,1,3,-,O/Z,F
+X12835.csv,BPR,,1,0,0,e18,(DFI) ID Number Qualifier,2,2,-,X/Z,F
+X12835.csv,BPR,,1,0,0,e19,(DFI) Identification Number,3,12,-,X,F
+X12835.csv,BPR,,1,0,0,e20,Account Number Qualifier,1,3,-,O/Z,F
+X12835.csv,BPR,,1,0,0,e21,Account Number,1,35,-,X,F
+X12835.csv,NTE,,99999,0,1,landmark,Note/Special Instruction,3,3,-,O,F
+X12835.csv,NTE,,1,0,0,e01,Note Reference Code,3,3,-,O,F
+X12835.csv,NTE,,1,0,0,e02,Description,1,80,-,M,F
+X12835.csv,TRN,,1,0,1,landmark,Trace,3,3,-,O,F
+X12835.csv,TRN,,1,0,0,e01,Trace Type Code,1,2,-,M,F
+X12835.csv,TRN,,1,0,0,e02,Reference Identification,1,50,-,M/Z,F
+X12835.csv,TRN,,1,0,0,e03,Originating Company Identifier,10,10,-,O/Z,F
+X12835.csv,TRN,,1,0,0,e04,Reference Identification,1,50,-,O/Z,F
+X12835.csv,CUR,,1,0,1,landmark,Currency,3,3,-,O,F
+X12835.csv,CUR,,1,0,0,e01,Entity Identifier Code,2,3,-,M,F
+X12835.csv,CUR,,1,0,0,e02,Currency Code,3,3,-,M,F
+X12835.csv,CUR,,1,0,0,e03,Exchange Rate,4,10,-,O,F
+X12835.csv,CUR,,1,0,0,e04,Entity Identifier Code,2,3,-,O,F
+X12835.csv,CUR,,1,0,0,e05,Currency Code,3,3,-,O,F
+X12835.csv,CUR,,1,0,0,e06,Currency Market/Exchange Code,3,3,-,O,F
+X12835.csv,CUR,,1,0,0,e07,Date/Time Qualifier,3,3,-,X,F
+X12835.csv,CUR,,1,0,0,e08,Date,8,8,-,O,F
+X12835.csv,CUR,,1,0,0,e09,Time,4,8,-,O,F
+X12835.csv,CUR,,1,0,0,e10,Date/Time Qualifier,3,3,-,X,F
+X12835.csv,CUR,,1,0,0,e11,Date,8,8,-,X,F
+X12835.csv,CUR,,1,0,0,e12,Time,4,8,-,X,F
+X12835.csv,CUR,,1,0,0,e13,Date/Time Qualifier,3,3,-,X,F
+X12835.csv,CUR,,1,0,0,e14,Date,8,8,-,X,F
+X12835.csv,CUR,,1,0,0,e15,Time,4,8,-,X,F
+X12835.csv,CUR,,1,0,0,e16,Date/Time Qualifier,3,3,-,X,F
+X12835.csv,CUR,,1,0,0,e17,Date,8,8,-,X,F
+X12835.csv,CUR,,1,0,0,e18,Time,4,8,-,X,F
+X12835.csv,CUR,,1,0,0,e19,Date/Time Qualifier,3,3,-,X,F
+X12835.csv,CUR,,1,0,0,e20,Date,8,8,-,X,F
+X12835.csv,CUR,,1,0,0,e21,Time,4,8,-,X,F
+X12835.csv,REF,,99999,0,1,landmark,Reference Information,3,3,-,O,F
+X12835.csv,REF,,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12835.csv,REF,,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12835.csv,REF,,1,0,0,e03,Description,1,80,-,X,F
+X12835.csv,DTM,,99999,0,1,landmark,Date/Time Reference,3,3,-,O,F
+X12835.csv,DTM,,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12835.csv,DTM,,1,0,0,e02,Date,8,8,-,X,F
+X12835.csv,DTM,,1,0,0,e03,Time,4,8,-,X,F
+X12835.csv,DTM,,1,0,0,e04,Time Code,2,2,-,O,F
+X12835.csv,DTM,,1,0,0,e05,Date Time Period Format Qualifier,2,3,-,X,F
+X12835.csv,DTM,,1,0,0,e06,Date Time Period,1,35,-,X,F
+X12835.csv,N1,,200,1,1,landmark,Party Identification,2,2,-,O,F
+X12835.csv,N1,,1,0,0,e01,Entity Identifier Code,2,3,-,M,F
+X12835.csv,N1,,1,0,0,e02,Name,1,60,-,X,F
+X12835.csv,N1,,1,0,0,e03,Identification Code Qualifier,1,2,-,X,F
+X12835.csv,N1,,1,0,0,e04,Identification Code,2,80,-,X,F
+X12835.csv,N1,,1,0,0,e05,Entity Relationship Code,2,2,-,O,F
+X12835.csv,N1,,1,0,0,e06,Entity Identifier Code,2,3,-,O,F
+X12835.csv,N2,N1,99999,0,1,landmark,Additional Name Information,2,2,-,O,F
+X12835.csv,N2,N1,1,0,0,e01,Name,1,60,-,M,F
+X12835.csv,N2,N1,1,0,0,e02,Name,1,60,-,O,F
+X12835.csv,N3,N1,99999,0,1,landmark,Party Location,2,2,-,O,F
+X12835.csv,N3,N1,1,0,0,e01,Address Information,1,55,-,M,F
+X12835.csv,N3,N1,1,0,0,e02,Address Information,1,55,-,O,F
+X12835.csv,N4,N1,1,0,1,landmark,Geographic Location,2,2,-,O,F
+X12835.csv,N4,N1,1,0,0,e01,City Name,2,30,-,O,F
+X12835.csv,N4,N1,1,0,0,e02,State or Province Code,2,2,-,X,F
+X12835.csv,N4,N1,1,0,0,e03,Postal Code,3,15,-,O,F
+X12835.csv,N4,N1,1,0,0,e04,Country Code,2,3,-,X,F
+X12835.csv,N4,N1,1,0,0,e05,Location Qualifier,1,2,-,X,F
+X12835.csv,N4,N1,1,0,0,e06,Location Identifier,1,30,-,O,F
+X12835.csv,N4,N1,1,0,0,e07,Country Subdivision Code,1,3,-,X,F
+X12835.csv,REF,N1,99999,0,1,landmark,Reference Information,3,3,-,O,F
+X12835.csv,REF,N1,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12835.csv,REF,N1,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12835.csv,REF,N1,1,0,0,e03,Description,1,80,-,X,F
+X12835.csv,PER,N1,99999,0,1,landmark,Administrative Communications Contact,3,3,-,O,F
+X12835.csv,PER,N1,1,0,0,e01,Contact Function Code,2,2,-,M,F
+X12835.csv,PER,N1,1,0,0,e02,Name,1,60,-,O,F
+X12835.csv,PER,N1,1,0,0,e03,Communication Number Qualifier,2,2,-,X,F
+X12835.csv,PER,N1,1,0,0,e04,Communication Number,1,256,-,X,F
+X12835.csv,PER,N1,1,0,0,e05,Communication Number Qualifier,2,2,-,X,F
+X12835.csv,PER,N1,1,0,0,e06,Communication Number,1,256,-,X,F
+X12835.csv,PER,N1,1,0,0,e07,Communication Number Qualifier,2,2,-,X,F
+X12835.csv,PER,N1,1,0,0,e08,Communication Number,1,256,-,X,F
+X12835.csv,PER,N1,1,0,0,e09,Contact Inquiry Reference,1,20,-,O,F
+X12835.csv,RDM,N1,1,0,1,landmark,Remittance Delivery Method,3,3,-,O,F
+X12835.csv,RDM,N1,1,0,0,e01,Report Transmission Code,1,2,-,M,F
+X12835.csv,RDM,N1,1,0,0,e02,Name,1,60,-,O,F
+X12835.csv,RDM,N1,1,0,0,e03,Communication Number,1,256,-,O,F
+X12835.csv,DTM,N1,1,0,1,landmark,Date/Time Reference,3,3,-,O,F
+X12835.csv,DTM,N1,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12835.csv,DTM,N1,1,0,0,e02,Date,8,8,-,X,F
+X12835.csv,DTM,N1,1,0,0,e03,Time,4,8,-,X,F
+X12835.csv,DTM,N1,1,0,0,e04,Time Code,2,2,-,O,F
+X12835.csv,DTM,N1,1,0,0,e05,Date Time Period Format Qualifier,2,3,-,X,F
+X12835.csv,DTM,N1,1,0,0,e06,Date Time Period,1,35,-,X,F
+X12835.csv,LX,,99999,1,1,landmark,Transaction Set Line Number,2,2,-,O,F
+X12835.csv,LX,,1,0,0,e01,Assigned Number,1,6,-,M,F
+X12835.csv,TS3,LX,1,0,1,landmark,Transaction Statistics,3,3,-,O,F
+X12835.csv,TS3,LX,1,0,0,e01,Reference Identification,1,50,-,M/Z,F
+X12835.csv,TS3,LX,1,0,0,e02,Facility Code Value,1,2,-,M,F
+X12835.csv,TS3,LX,1,0,0,e03,Date,8,8,-,M/Z,F
+X12835.csv,TS3,LX,1,0,0,e04,Quantity,1,15,-,M/Z,F
+X12835.csv,TS3,LX,1,0,0,e05,Monetary Amount,1,18,-,M/Z,F
+X12835.csv,TS3,LX,1,0,0,e06,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,TS3,LX,1,0,0,e07,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,TS3,LX,1,0,0,e08,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,TS3,LX,1,0,0,e09,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,TS3,LX,1,0,0,e10,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,TS3,LX,1,0,0,e11,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,TS3,LX,1,0,0,e12,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,TS3,LX,1,0,0,e13,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,TS3,LX,1,0,0,e14,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,TS3,LX,1,0,0,e15,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,TS3,LX,1,0,0,e16,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,TS3,LX,1,0,0,e17,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,TS3,LX,1,0,0,e18,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,TS3,LX,1,0,0,e19,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,TS3,LX,1,0,0,e20,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,TS3,LX,1,0,0,e21,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,TS3,LX,1,0,0,e22,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,TS3,LX,1,0,0,e23,Quantity,1,15,-,O/Z,F
+X12835.csv,TS3,LX,1,0,0,e24,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,TS2,LX,1,0,1,landmark,Transaction Supplemental Statistics,3,3,-,O,F
+X12835.csv,TS2,LX,1,0,0,e01,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,TS2,LX,1,0,0,e02,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,TS2,LX,1,0,0,e03,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,TS2,LX,1,0,0,e04,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,TS2,LX,1,0,0,e05,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,TS2,LX,1,0,0,e06,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,TS2,LX,1,0,0,e07,Quantity,1,15,-,O/Z,F
+X12835.csv,TS2,LX,1,0,0,e08,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,TS2,LX,1,0,0,e09,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,TS2,LX,1,0,0,e10,Quantity,1,15,-,O/Z,F
+X12835.csv,TS2,LX,1,0,0,e11,Quantity,1,15,-,O/Z,F
+X12835.csv,TS2,LX,1,0,0,e12,Quantity,1,15,-,O/Z,F
+X12835.csv,TS2,LX,1,0,0,e13,Quantity,1,15,-,O/Z,F
+X12835.csv,TS2,LX,1,0,0,e14,Quantity,1,15,-,O/Z,F
+X12835.csv,TS2,LX,1,0,0,e15,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,TS2,LX,1,0,0,e16,Quantity,1,15,-,O/Z,F
+X12835.csv,TS2,LX,1,0,0,e17,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,TS2,LX,1,0,0,e18,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,TS2,LX,1,0,0,e19,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,CLP,,99999,1,1,landmark,Claim Level Data,3,3,-,M,F
+X12835.csv,CLP,,1,0,0,e01,Claim Submitter's Identifier,1,38,-,M,F
+X12835.csv,CLP,,1,0,0,e02,Claim Status Code,1,2,-,M,F
+X12835.csv,CLP,,1,0,0,e03,Monetary Amount,1,18,-,M/Z,F
+X12835.csv,CLP,,1,0,0,e04,Monetary Amount,1,18,-,M/Z,F
+X12835.csv,CLP,,1,0,0,e05,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,CLP,,1,0,0,e06,Claim Filing Indicator Code,1,2,-,O,F
+X12835.csv,CLP,,1,0,0,e07,Reference Identification,1,50,-,O/Z,F
+X12835.csv,CLP,,1,0,0,e08,Facility Code Value,1,2,-,O,F
+X12835.csv,CLP,,1,0,0,e09,Claim Frequency Type Code,1,1,-,O,F
+X12835.csv,CLP,,1,0,0,e10,Patient Status Code,1,2,-,O,F
+X12835.csv,CLP,,1,0,0,e11,Diagnosis Related Group (DRG) Code,1,4,-,O,F
+X12835.csv,CLP,,1,0,0,e12,Quantity,1,15,-,O/Z,F
+X12835.csv,CLP,,1,0,0,e13,Percentage as Decimal,1,10,-,O/Z,F
+X12835.csv,CLP,,1,0,0,e14,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12835.csv,CAS,LX:CLP,99,0,1,landmark,Claims Adjustment,3,3,-,O,F
+X12835.csv,CAS,LX:CLP,1,0,0,e01,Claim Adjustment Group Code,1,2,-,M,F
+X12835.csv,CAS,LX:CLP,1,0,0,e02,Claim Adjustment Reason Code,1,5,-,M,F
+X12835.csv,CAS,LX:CLP,1,0,0,e03,Monetary Amount,1,18,-,M/Z,F
+X12835.csv,CAS,LX:CLP,1,0,0,e04,Quantity,1,15,-,O/Z,F
+X12835.csv,CAS,LX:CLP,1,0,0,e05,Claim Adjustment Reason Code,1,5,-,X,F
+X12835.csv,CAS,LX:CLP,1,0,0,e06,Monetary Amount,1,18,-,X/Z,F
+X12835.csv,CAS,LX:CLP,1,0,0,e07,Quantity,1,15,-,X/Z,F
+X12835.csv,CAS,LX:CLP,1,0,0,e08,Claim Adjustment Reason Code,1,5,-,X,F
+X12835.csv,CAS,LX:CLP,1,0,0,e09,Monetary Amount,1,18,-,X/Z,F
+X12835.csv,CAS,LX:CLP,1,0,0,e10,Quantity,1,15,-,X/Z,F
+X12835.csv,CAS,LX:CLP,1,0,0,e11,Claim Adjustment Reason Code,1,5,-,X,F
+X12835.csv,CAS,LX:CLP,1,0,0,e12,Monetary Amount,1,18,-,X/Z,F
+X12835.csv,CAS,LX:CLP,1,0,0,e13,Quantity,1,15,-,X/Z,F
+X12835.csv,CAS,LX:CLP,1,0,0,e14,Claim Adjustment Reason Code,1,5,-,X,F
+X12835.csv,CAS,LX:CLP,1,0,0,e15,Monetary Amount,1,18,-,X/Z,F
+X12835.csv,CAS,LX:CLP,1,0,0,e16,Quantity,1,15,-,X/Z,F
+X12835.csv,CAS,LX:CLP,1,0,0,e17,Claim Adjustment Reason Code,1,5,-,X,F
+X12835.csv,CAS,LX:CLP,1,0,0,e18,Monetary Amount,1,18,-,X/Z,F
+X12835.csv,CAS,LX:CLP,1,0,0,e19,Quantity,1,15,-,X/Z,F
+X12835.csv,NM1,LX:CLP,9,0,1,landmark,Individual or Organizational Name,3,3,-,M,F
+X12835.csv,NM1,LX:CLP,1,0,0,e01,Entity Identifier Code,2,3,-,M,F
+X12835.csv,NM1,LX:CLP,1,0,0,e02,Entity Type Qualifier,1,1,-,M/Z,F
+X12835.csv,NM1,LX:CLP,1,0,0,e03,Name Last or Organization Name,1,60,-,X,F
+X12835.csv,NM1,LX:CLP,1,0,0,e04,Name First,1,35,-,O,F
+X12835.csv,NM1,LX:CLP,1,0,0,e05,Name Middle,1,25,-,O,F
+X12835.csv,NM1,LX:CLP,1,0,0,e06,Name Prefix,1,10,-,O,F
+X12835.csv,NM1,LX:CLP,1,0,0,e07,Name Suffix,1,10,-,O,F
+X12835.csv,NM1,LX:CLP,1,0,0,e08,Identification Code Qualifier,1,2,-,X,F
+X12835.csv,NM1,LX:CLP,1,0,0,e09,Identification Code,2,80,-,X,F
+X12835.csv,NM1,LX:CLP,1,0,0,e10,Entity Relationship Code,2,2,-,X,F
+X12835.csv,NM1,LX:CLP,1,0,0,e11,Entity Identifier Code,2,3,-,O,F
+X12835.csv,NM1,LX:CLP,1,0,0,e12,Name Last or Organization Name,1,60,-,O,F
+X12835.csv,MIA,LX:CLP,1,0,1,landmark,Medicare Inpatient Adjudication,3,3,-,O,F
+X12835.csv,MIA,LX:CLP,1,0,0,e01,Quantity,1,15,-,M/Z,F
+X12835.csv,MIA,LX:CLP,1,0,0,e02,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,MIA,LX:CLP,1,0,0,e03,Quantity,1,15,-,O/Z,F
+X12835.csv,MIA,LX:CLP,1,0,0,e04,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,MIA,LX:CLP,1,0,0,e05,Reference Identification,1,50,-,O/Z,F
+X12835.csv,MIA,LX:CLP,1,0,0,e06,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,MIA,LX:CLP,1,0,0,e07,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,MIA,LX:CLP,1,0,0,e08,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,MIA,LX:CLP,1,0,0,e09,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,MIA,LX:CLP,1,0,0,e10,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,MIA,LX:CLP,1,0,0,e11,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,MIA,LX:CLP,1,0,0,e12,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,MIA,LX:CLP,1,0,0,e13,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,MIA,LX:CLP,1,0,0,e14,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,MIA,LX:CLP,1,0,0,e15,Quantity,1,15,-,O/Z,F
+X12835.csv,MIA,LX:CLP,1,0,0,e16,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,MIA,LX:CLP,1,0,0,e17,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,MIA,LX:CLP,1,0,0,e18,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,MIA,LX:CLP,1,0,0,e19,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,MIA,LX:CLP,1,0,0,e20,Reference Identification,1,50,-,O/Z,F
+X12835.csv,MIA,LX:CLP,1,0,0,e21,Reference Identification,1,50,-,O/Z,F
+X12835.csv,MIA,LX:CLP,1,0,0,e22,Reference Identification,1,50,-,O/Z,F
+X12835.csv,MIA,LX:CLP,1,0,0,e23,Reference Identification,1,50,-,O/Z,F
+X12835.csv,MIA,LX:CLP,1,0,0,e24,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,MOA,LX:CLP,1,0,1,landmark,Medicare Outpatient Adjudication,3,3,-,O,F
+X12835.csv,MOA,LX:CLP,1,0,0,e01,Percentage as Decimal,1,10,-,O/Z,F
+X12835.csv,MOA,LX:CLP,1,0,0,e02,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,MOA,LX:CLP,1,0,0,e03,Reference Identification,1,50,-,O/Z,F
+X12835.csv,MOA,LX:CLP,1,0,0,e04,Reference Identification,1,50,-,O/Z,F
+X12835.csv,MOA,LX:CLP,1,0,0,e05,Reference Identification,1,50,-,O/Z,F
+X12835.csv,MOA,LX:CLP,1,0,0,e06,Reference Identification,1,50,-,O/Z,F
+X12835.csv,MOA,LX:CLP,1,0,0,e07,Reference Identification,1,50,-,O/Z,F
+X12835.csv,MOA,LX:CLP,1,0,0,e08,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,MOA,LX:CLP,1,0,0,e09,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,REF,LX:CLP,99,0,1,landmark,Reference Information,3,3,-,O,F
+X12835.csv,REF,LX:CLP,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12835.csv,REF,LX:CLP,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12835.csv,REF,LX:CLP,1,0,0,e03,Description,1,80,-,X,F
+X12835.csv,DTM,LX:CLP,9,0,1,landmark,Date/Time Reference,3,3,-,O,F
+X12835.csv,DTM,LX:CLP,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12835.csv,DTM,LX:CLP,1,0,0,e02,Date,8,8,-,X,F
+X12835.csv,DTM,LX:CLP,1,0,0,e03,Time,4,8,-,X,F
+X12835.csv,DTM,LX:CLP,1,0,0,e04,Time Code,2,2,-,O,F
+X12835.csv,DTM,LX:CLP,1,0,0,e05,Date Time Period Format Qualifier,2,3,-,X,F
+X12835.csv,DTM,LX:CLP,1,0,0,e06,Date Time Period,1,35,-,X,F
+X12835.csv,PER,LX:CLP,3,0,1,landmark,Administrative Communications Contact,3,3,-,O,F
+X12835.csv,PER,LX:CLP,1,0,0,e01,Contact Function Code,2,2,-,M,F
+X12835.csv,PER,LX:CLP,1,0,0,e02,Name,1,60,-,O,F
+X12835.csv,PER,LX:CLP,1,0,0,e03,Communication Number Qualifier,2,2,-,X,F
+X12835.csv,PER,LX:CLP,1,0,0,e04,Communication Number,1,256,-,X,F
+X12835.csv,PER,LX:CLP,1,0,0,e05,Communication Number Qualifier,2,2,-,X,F
+X12835.csv,PER,LX:CLP,1,0,0,e06,Communication Number,1,256,-,X,F
+X12835.csv,PER,LX:CLP,1,0,0,e07,Communication Number Qualifier,2,2,-,X,F
+X12835.csv,PER,LX:CLP,1,0,0,e08,Communication Number,1,256,-,X,F
+X12835.csv,PER,LX:CLP,1,0,0,e09,Contact Inquiry Reference,1,20,-,O,F
+X12835.csv,AMT,LX:CLP,20,0,1,landmark,Monetary Amount Information,3,3,-,O,F
+X12835.csv,AMT,LX:CLP,1,0,0,e01,Amount Qualifier Code,1,3,-,M,F
+X12835.csv,AMT,LX:CLP,1,0,0,e02,Monetary Amount,1,18,-,M,F
+X12835.csv,AMT,LX:CLP,1,0,0,e03,Credit/Debit Flag Code,1,1,-,O,F
+X12835.csv,QTY,LX:CLP,20,0,1,landmark,Quantity Information,3,3,-,O,F
+X12835.csv,QTY,LX:CLP,1,0,0,e01,Quantity Qualifier,2,2,-,M,F
+X12835.csv,QTY,LX:CLP,1,0,0,e02,Quantity,1,15,-,X,F
+X12835.csv,QTY,LX:CLP,1,0,0,e04,Free-form Information,1,30,-,X/Z,F
+X12835.csv,SVC,,999,1,1,landmark,Service Information,3,3,-,O,F
+X12835.csv,SVC,,1,0,0,e02,Monetary Amount,1,18,-,M/Z,F
+X12835.csv,SVC,,1,0,0,e03,Monetary Amount,1,18,-,O/Z,F
+X12835.csv,SVC,,1,0,0,e04,Product/Service ID,1,48,-,O/Z,F
+X12835.csv,SVC,,1,0,0,e05,Quantity,1,15,-,O/Z,F
+X12835.csv,SVC,,1,0,0,e07,Quantity,1,15,-,O/Z,F
+X12835.csv,DTM,LX:CLP:SVC,9,0,1,landmark,Date/Time Reference,3,3,-,O,F
+X12835.csv,DTM,LX:CLP:SVC,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12835.csv,DTM,LX:CLP:SVC,1,0,0,e02,Date,8,8,-,X,F
+X12835.csv,DTM,LX:CLP:SVC,1,0,0,e03,Time,4,8,-,X,F
+X12835.csv,DTM,LX:CLP:SVC,1,0,0,e04,Time Code,2,2,-,O,F
+X12835.csv,DTM,LX:CLP:SVC,1,0,0,e05,Date Time Period Format Qualifier,2,3,-,X,F
+X12835.csv,DTM,LX:CLP:SVC,1,0,0,e06,Date Time Period,1,35,-,X,F
+X12835.csv,CAS,LX:CLP:SVC,99,0,1,landmark,Claims Adjustment,3,3,-,O,F
+X12835.csv,CAS,LX:CLP:SVC,1,0,0,e01,Claim Adjustment Group Code,1,2,-,M,F
+X12835.csv,CAS,LX:CLP:SVC,1,0,0,e02,Claim Adjustment Reason Code,1,5,-,M,F
+X12835.csv,CAS,LX:CLP:SVC,1,0,0,e03,Monetary Amount,1,18,-,M/Z,F
+X12835.csv,CAS,LX:CLP:SVC,1,0,0,e04,Quantity,1,15,-,O/Z,F
+X12835.csv,CAS,LX:CLP:SVC,1,0,0,e05,Claim Adjustment Reason Code,1,5,-,X,F
+X12835.csv,CAS,LX:CLP:SVC,1,0,0,e06,Monetary Amount,1,18,-,X/Z,F
+X12835.csv,CAS,LX:CLP:SVC,1,0,0,e07,Quantity,1,15,-,X/Z,F
+X12835.csv,CAS,LX:CLP:SVC,1,0,0,e08,Claim Adjustment Reason Code,1,5,-,X,F
+X12835.csv,CAS,LX:CLP:SVC,1,0,0,e09,Monetary Amount,1,18,-,X/Z,F
+X12835.csv,CAS,LX:CLP:SVC,1,0,0,e10,Quantity,1,15,-,X/Z,F
+X12835.csv,CAS,LX:CLP:SVC,1,0,0,e11,Claim Adjustment Reason Code,1,5,-,X,F
+X12835.csv,CAS,LX:CLP:SVC,1,0,0,e12,Monetary Amount,1,18,-,X/Z,F
+X12835.csv,CAS,LX:CLP:SVC,1,0,0,e13,Quantity,1,15,-,X/Z,F
+X12835.csv,CAS,LX:CLP:SVC,1,0,0,e14,Claim Adjustment Reason Code,1,5,-,X,F
+X12835.csv,CAS,LX:CLP:SVC,1,0,0,e15,Monetary Amount,1,18,-,X/Z,F
+X12835.csv,CAS,LX:CLP:SVC,1,0,0,e16,Quantity,1,15,-,X/Z,F
+X12835.csv,CAS,LX:CLP:SVC,1,0,0,e17,Claim Adjustment Reason Code,1,5,-,X,F
+X12835.csv,CAS,LX:CLP:SVC,1,0,0,e18,Monetary Amount,1,18,-,X/Z,F
+X12835.csv,CAS,LX:CLP:SVC,1,0,0,e19,Quantity,1,15,-,X/Z,F
+X12835.csv,REF,LX:CLP:SVC,99,0,1,landmark,Reference Information,3,3,-,O,F
+X12835.csv,REF,LX:CLP:SVC,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12835.csv,REF,LX:CLP:SVC,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12835.csv,REF,LX:CLP:SVC,1,0,0,e03,Description,1,80,-,X,F
+X12835.csv,AMT,LX:CLP:SVC,20,0,1,landmark,Monetary Amount Information,3,3,-,O,F
+X12835.csv,AMT,LX:CLP:SVC,1,0,0,e01,Amount Qualifier Code,1,3,-,M,F
+X12835.csv,AMT,LX:CLP:SVC,1,0,0,e02,Monetary Amount,1,18,-,M,F
+X12835.csv,AMT,LX:CLP:SVC,1,0,0,e03,Credit/Debit Flag Code,1,1,-,O,F
+X12835.csv,QTY,LX:CLP:SVC,20,0,1,landmark,Quantity Information,3,3,-,O,F
+X12835.csv,QTY,LX:CLP:SVC,1,0,0,e01,Quantity Qualifier,2,2,-,M,F
+X12835.csv,QTY,LX:CLP:SVC,1,0,0,e02,Quantity,1,15,-,X,F
+X12835.csv,QTY,LX:CLP:SVC,1,0,0,e04,Free-form Information,1,30,-,X/Z,F
+X12835.csv,LQ,LX:CLP:SVC,99,0,1,landmark,Industry Code Identification,2,2,-,O,F
+X12835.csv,LQ,LX:CLP:SVC,1,0,0,e01,Code List Qualifier Code,1,3,-,O,F
+X12835.csv,LQ,LX:CLP:SVC,1,0,0,e02,Industry Code,1,30,-,X,F
+X12835.csv,PLB,,99999,0,1,landmark,Provider Level Adjustment,3,3,-,O,F
+X12835.csv,PLB,,1,0,0,e01,Reference Identification,1,50,-,M/Z,F
+X12835.csv,PLB,,1,0,0,e02,Date,8,8,-,M/Z,F
+X12835.csv,PLB,,1,0,0,e04,Monetary Amount,1,18,-,M/Z,F
+X12835.csv,PLB,,1,0,0,e06,Monetary Amount,1,18,-,X/Z,F
+X12835.csv,PLB,,1,0,0,e08,Monetary Amount,1,18,-,X/Z,F
+X12835.csv,PLB,,1,0,0,e10,Monetary Amount,1,18,-,X/Z,F
+X12835.csv,PLB,,1,0,0,e12,Monetary Amount,1,18,-,X/Z,F
+X12835.csv,PLB,,1,0,0,e14,Monetary Amount,1,18,-,X/Z,F
+X12835.csv,SE,,1,0,1,landmark,Transaction Set Trailer,2,2,-,M,F
+X12835.csv,SE,,1,0,0,e01,Number of Included Segments,1,10,-,M,F
+X12835.csv,SE,,1,0,0,e02,Transaction Set Control Number,4,9,-,M,F
+X12837.csv,ST,,1,0,1,landmark,Transaction Set Header,2,2,-,M,F
+X12837.csv,ST,,1,0,0,e01,Transaction Set Identifier Code,3,3,-,M/Z,F
+X12837.csv,ST,,1,0,0,e02,Transaction Set Control Number,4,9,-,M,F
+X12837.csv,ST,,1,0,0,e03,Implementation Convention Reference,1,35,-,O/Z,F
+X12837.csv,BHT,,1,0,1,landmark,Beginning of Hierarchical Transaction,3,3,-,M,F
+X12837.csv,BHT,,1,0,0,e01,Hierarchical Structure Code,4,4,-,M,F
+X12837.csv,BHT,,1,0,0,e02,Transaction Set Purpose Code,2,2,-,M,F
+X12837.csv,BHT,,1,0,0,e03,Reference Identification,1,50,-,O/Z,F
+X12837.csv,BHT,,1,0,0,e04,Date,8,8,-,O/Z,F
+X12837.csv,BHT,,1,0,0,e05,Time,4,8,-,O/Z,F
+X12837.csv,BHT,,1,0,0,e06,Transaction Type Code,2,2,-,O,F
+X12837.csv,REF,,3,0,1,landmark,Reference Information,3,3,-,O,F
+X12837.csv,REF,,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12837.csv,REF,,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12837.csv,REF,,1,0,0,e03,Description,1,80,-,X,F
+X12837.csv,NM1,,10,1,1,landmark,Individual or Organizational Name,3,3,-,O,F
+X12837.csv,NM1,,1,0,0,e01,Entity Identifier Code,2,3,-,M,F
+X12837.csv,NM1,,1,0,0,e02,Entity Type Qualifier,1,1,-,M/Z,F
+X12837.csv,NM1,,1,0,0,e03,Name Last or Organization Name,1,60,-,X,F
+X12837.csv,NM1,,1,0,0,e04,Name First,1,35,-,O,F
+X12837.csv,NM1,,1,0,0,e05,Name Middle,1,25,-,O,F
+X12837.csv,NM1,,1,0,0,e06,Name Prefix,1,10,-,O,F
+X12837.csv,NM1,,1,0,0,e07,Name Suffix,1,10,-,O,F
+X12837.csv,NM1,,1,0,0,e08,Identification Code Qualifier,1,2,-,X,F
+X12837.csv,NM1,,1,0,0,e09,Identification Code,2,80,-,X,F
+X12837.csv,NM1,,1,0,0,e10,Entity Relationship Code,2,2,-,X,F
+X12837.csv,NM1,,1,0,0,e11,Entity Identifier Code,2,3,-,O,F
+X12837.csv,NM1,,1,0,0,e12,Name Last or Organization Name,1,60,-,O,F
+X12837.csv,N2,NM1,2,0,1,landmark,Additional Name Information,2,2,-,O,F
+X12837.csv,N2,NM1,1,0,0,e01,Name,1,60,-,M,F
+X12837.csv,N2,NM1,1,0,0,e02,Name,1,60,-,O,F
+X12837.csv,N3,NM1,2,0,1,landmark,Party Location,2,2,-,O,F
+X12837.csv,N3,NM1,1,0,0,e01,Address Information,1,55,-,M,F
+X12837.csv,N3,NM1,1,0,0,e02,Address Information,1,55,-,O,F
+X12837.csv,N4,NM1,1,0,1,landmark,Geographic Location,2,2,-,O,F
+X12837.csv,N4,NM1,1,0,0,e01,City Name,2,30,-,O,F
+X12837.csv,N4,NM1,1,0,0,e02,State or Province Code,2,2,-,X,F
+X12837.csv,N4,NM1,1,0,0,e03,Postal Code,3,15,-,O,F
+X12837.csv,N4,NM1,1,0,0,e04,Country Code,2,3,-,X,F
+X12837.csv,N4,NM1,1,0,0,e05,Location Qualifier,1,2,-,X,F
+X12837.csv,N4,NM1,1,0,0,e06,Location Identifier,1,30,-,O,F
+X12837.csv,N4,NM1,1,0,0,e07,Country Subdivision Code,1,3,-,X,F
+X12837.csv,REF,NM1,2,0,1,landmark,Reference Information,3,3,-,O,F
+X12837.csv,REF,NM1,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12837.csv,REF,NM1,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12837.csv,REF,NM1,1,0,0,e03,Description,1,80,-,X,F
+X12837.csv,PER,NM1,2,0,1,landmark,Administrative Communications Contact,3,3,-,O,F
+X12837.csv,PER,NM1,1,0,0,e01,Contact Function Code,2,2,-,M,F
+X12837.csv,PER,NM1,1,0,0,e02,Name,1,60,-,O,F
+X12837.csv,PER,NM1,1,0,0,e03,Communication Number Qualifier,2,2,-,X,F
+X12837.csv,PER,NM1,1,0,0,e04,Communication Number,1,256,-,X,F
+X12837.csv,PER,NM1,1,0,0,e05,Communication Number Qualifier,2,2,-,X,F
+X12837.csv,PER,NM1,1,0,0,e06,Communication Number,1,256,-,X,F
+X12837.csv,PER,NM1,1,0,0,e07,Communication Number Qualifier,2,2,-,X,F
+X12837.csv,PER,NM1,1,0,0,e08,Communication Number,1,256,-,X,F
+X12837.csv,PER,NM1,1,0,0,e09,Contact Inquiry Reference,1,20,-,O,F
+X12837.csv,HL,,99999,1,1,landmark,Hierarchical Level,2,2,-,M,F
+X12837.csv,HL,,1,0,0,e01,Hierarchical ID Number,1,12,-,M,F
+X12837.csv,HL,,1,0,0,e02,Hierarchical Parent ID Number,1,12,-,O,F
+X12837.csv,HL,,1,0,0,e03,Hierarchical Level Code,1,2,-,M,F
+X12837.csv,HL,,1,0,0,e04,Hierarchical Child Code,1,1,-,O,F
+X12837.csv,PRV,HL,1,0,1,landmark,Provider Information,3,3,-,O,F
+X12837.csv,PRV,HL,1,0,0,e01,Provider Code,1,3,-,M,F
+X12837.csv,PRV,HL,1,0,0,e02,Reference Identification Qualifier,2,3,-,X,F
+X12837.csv,PRV,HL,1,0,0,e03,Reference Identification,1,50,-,X,F
+X12837.csv,PRV,HL,1,0,0,e04,State or Province Code,2,2,-,O,F
+X12837.csv,PRV,HL,1,0,0,e06,Provider Organization Code,3,3,-,O,F
+X12837.csv,SBR,HL,1,0,1,landmark,Subscriber Information,3,3,-,O,F
+X12837.csv,SBR,HL,1,0,0,e01,Payer Responsibility Sequence Number Code,1,1,-,M,F
+X12837.csv,SBR,HL,1,0,0,e02,Individual Relationship Code,2,2,-,O/Z,F
+X12837.csv,SBR,HL,1,0,0,e03,Reference Identification,1,50,-,O/Z,F
+X12837.csv,SBR,HL,1,0,0,e04,Name,1,60,-,O/Z,F
+X12837.csv,SBR,HL,1,0,0,e05,Insurance Type Code,1,3,-,O,F
+X12837.csv,SBR,HL,1,0,0,e06,Coordination of Benefits Code,1,1,-,O,F
+X12837.csv,SBR,HL,1,0,0,e07,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12837.csv,SBR,HL,1,0,0,e08,Employment Status Code,2,2,-,O,F
+X12837.csv,SBR,HL,1,0,0,e09,Claim Filing Indicator Code,1,2,-,O,F
+X12837.csv,PAT,HL,1,0,1,landmark,Patient Information,3,3,-,O,F
+X12837.csv,PAT,HL,1,0,0,e01,Individual Relationship Code,2,2,-,O,F
+X12837.csv,PAT,HL,1,0,0,e02,Patient Location Code,1,1,-,O,F
+X12837.csv,PAT,HL,1,0,0,e03,Employment Status Code,2,2,-,O,F
+X12837.csv,PAT,HL,1,0,0,e04,Student Status Code,1,1,-,O,F
+X12837.csv,PAT,HL,1,0,0,e05,Date Time Period Format Qualifier,2,3,-,X,F
+X12837.csv,PAT,HL,1,0,0,e06,Date Time Period,1,35,-,X/Z,F
+X12837.csv,PAT,HL,1,0,0,e07,Unit or Basis for Measurement Code,2,2,-,X,F
+X12837.csv,PAT,HL,1,0,0,e08,Weight,1,10,-,X/Z,F
+X12837.csv,PAT,HL,1,0,0,e09,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12837.csv,DTP,HL,5,0,1,landmark,Date or Time or Period,3,3,-,O,F
+X12837.csv,DTP,HL,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12837.csv,DTP,HL,1,0,0,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+X12837.csv,DTP,HL,1,0,0,e03,Date Time Period,1,35,-,M,F
+X12837.csv,CUR,HL,1,0,1,landmark,Currency,3,3,-,O,F
+X12837.csv,CUR,HL,1,0,0,e01,Entity Identifier Code,2,3,-,M,F
+X12837.csv,CUR,HL,1,0,0,e02,Currency Code,3,3,-,M,F
+X12837.csv,CUR,HL,1,0,0,e03,Exchange Rate,4,10,-,O,F
+X12837.csv,CUR,HL,1,0,0,e04,Entity Identifier Code,2,3,-,O,F
+X12837.csv,CUR,HL,1,0,0,e05,Currency Code,3,3,-,O,F
+X12837.csv,CUR,HL,1,0,0,e06,Currency Market/Exchange Code,3,3,-,O,F
+X12837.csv,CUR,HL,1,0,0,e07,Date/Time Qualifier,3,3,-,X,F
+X12837.csv,CUR,HL,1,0,0,e08,Date,8,8,-,O,F
+X12837.csv,CUR,HL,1,0,0,e09,Time,4,8,-,O,F
+X12837.csv,CUR,HL,1,0,0,e10,Date/Time Qualifier,3,3,-,X,F
+X12837.csv,CUR,HL,1,0,0,e11,Date,8,8,-,X,F
+X12837.csv,CUR,HL,1,0,0,e12,Time,4,8,-,X,F
+X12837.csv,CUR,HL,1,0,0,e13,Date/Time Qualifier,3,3,-,X,F
+X12837.csv,CUR,HL,1,0,0,e14,Date,8,8,-,X,F
+X12837.csv,CUR,HL,1,0,0,e15,Time,4,8,-,X,F
+X12837.csv,CUR,HL,1,0,0,e16,Date/Time Qualifier,3,3,-,X,F
+X12837.csv,CUR,HL,1,0,0,e17,Date,8,8,-,X,F
+X12837.csv,CUR,HL,1,0,0,e18,Time,4,8,-,X,F
+X12837.csv,CUR,HL,1,0,0,e19,Date/Time Qualifier,3,3,-,X,F
+X12837.csv,CUR,HL,1,0,0,e20,Date,8,8,-,X,F
+X12837.csv,CUR,HL,1,0,0,e21,Time,4,8,-,X,F
+X12837.csv,NM1,,10,1,1,landmark,Individual or Organizational Name,3,3,-,O,F
+X12837.csv,NM1,,1,0,0,e01,Entity Identifier Code,2,3,-,M,F
+X12837.csv,NM1,,1,0,0,e02,Entity Type Qualifier,1,1,-,M/Z,F
+X12837.csv,NM1,,1,0,0,e03,Name Last or Organization Name,1,60,-,X,F
+X12837.csv,NM1,,1,0,0,e04,Name First,1,35,-,O,F
+X12837.csv,NM1,,1,0,0,e05,Name Middle,1,25,-,O,F
+X12837.csv,NM1,,1,0,0,e06,Name Prefix,1,10,-,O,F
+X12837.csv,NM1,,1,0,0,e07,Name Suffix,1,10,-,O,F
+X12837.csv,NM1,,1,0,0,e08,Identification Code Qualifier,1,2,-,X,F
+X12837.csv,NM1,,1,0,0,e09,Identification Code,2,80,-,X,F
+X12837.csv,NM1,,1,0,0,e10,Entity Relationship Code,2,2,-,X,F
+X12837.csv,NM1,,1,0,0,e11,Entity Identifier Code,2,3,-,O,F
+X12837.csv,NM1,,1,0,0,e12,Name Last or Organization Name,1,60,-,O,F
+X12837.csv,N2,HL:NM1,2,0,1,landmark,Additional Name Information,2,2,-,O,F
+X12837.csv,N2,HL:NM1,1,0,0,e01,Name,1,60,-,M,F
+X12837.csv,N2,HL:NM1,1,0,0,e02,Name,1,60,-,O,F
+X12837.csv,N3,HL:NM1,2,0,1,landmark,Party Location,2,2,-,O,F
+X12837.csv,N3,HL:NM1,1,0,0,e01,Address Information,1,55,-,M,F
+X12837.csv,N3,HL:NM1,1,0,0,e02,Address Information,1,55,-,O,F
+X12837.csv,N4,HL:NM1,1,0,1,landmark,Geographic Location,2,2,-,O,F
+X12837.csv,N4,HL:NM1,1,0,0,e01,City Name,2,30,-,O,F
+X12837.csv,N4,HL:NM1,1,0,0,e02,State or Province Code,2,2,-,X,F
+X12837.csv,N4,HL:NM1,1,0,0,e03,Postal Code,3,15,-,O,F
+X12837.csv,N4,HL:NM1,1,0,0,e04,Country Code,2,3,-,X,F
+X12837.csv,N4,HL:NM1,1,0,0,e05,Location Qualifier,1,2,-,X,F
+X12837.csv,N4,HL:NM1,1,0,0,e06,Location Identifier,1,30,-,O,F
+X12837.csv,N4,HL:NM1,1,0,0,e07,Country Subdivision Code,1,3,-,X,F
+X12837.csv,DMG,HL:NM1,1,0,1,landmark,Demographic Information,3,3,-,O,F
+X12837.csv,DMG,HL:NM1,1,0,0,e01,Date Time Period Format Qualifier,2,3,-,X,F
+X12837.csv,DMG,HL:NM1,1,0,0,e02,Date Time Period,1,35,-,X/Z,F
+X12837.csv,DMG,HL:NM1,1,0,0,e03,Gender Code,1,1,-,O,F
+X12837.csv,DMG,HL:NM1,1,0,0,e04,Marital Status Code,1,1,-,O,F
+X12837.csv,DMG,HL:NM1,1,0,0,e06,Citizenship Status Code,1,2,-,O,F
+X12837.csv,DMG,HL:NM1,1,0,0,e07,Country Code,2,3,-,O/Z,F
+X12837.csv,DMG,HL:NM1,1,0,0,e08,Basis of Verification Code,1,2,-,O,F
+X12837.csv,DMG,HL:NM1,1,0,0,e09,Quantity,1,15,-,O/Z,F
+X12837.csv,DMG,HL:NM1,1,0,0,e10,Code List Qualifier Code,1,3,-,X,F
+X12837.csv,DMG,HL:NM1,1,0,0,e11,Industry Code,1,30,-,X/Z,F
+X12837.csv,REF,HL:NM1,20,0,1,landmark,Reference Information,3,3,-,O,F
+X12837.csv,REF,HL:NM1,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12837.csv,REF,HL:NM1,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12837.csv,REF,HL:NM1,1,0,0,e03,Description,1,80,-,X,F
+X12837.csv,PER,HL:NM1,2,0,1,landmark,Administrative Communications Contact,3,3,-,O,F
+X12837.csv,PER,HL:NM1,1,0,0,e01,Contact Function Code,2,2,-,M,F
+X12837.csv,PER,HL:NM1,1,0,0,e02,Name,1,60,-,O,F
+X12837.csv,PER,HL:NM1,1,0,0,e03,Communication Number Qualifier,2,2,-,X,F
+X12837.csv,PER,HL:NM1,1,0,0,e04,Communication Number,1,256,-,X,F
+X12837.csv,PER,HL:NM1,1,0,0,e05,Communication Number Qualifier,2,2,-,X,F
+X12837.csv,PER,HL:NM1,1,0,0,e06,Communication Number,1,256,-,X,F
+X12837.csv,PER,HL:NM1,1,0,0,e07,Communication Number Qualifier,2,2,-,X,F
+X12837.csv,PER,HL:NM1,1,0,0,e08,Communication Number,1,256,-,X,F
+X12837.csv,PER,HL:NM1,1,0,0,e09,Contact Inquiry Reference,1,20,-,O,F
+X12837.csv,CLM,,100,1,1,landmark,Health Claim,3,3,-,O,F
+X12837.csv,CLM,,1,0,0,e01,Claim Submitter's Identifier,1,38,-,M,F
+X12837.csv,CLM,,1,0,0,e02,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,CLM,,1,0,0,e03,Claim Filing Indicator Code,1,2,-,O,F
+X12837.csv,CLM,,1,0,0,e04,Non-Institutional Claim Type Code,1,2,-,O,F
+X12837.csv,CLM,,1,0,0,e06,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12837.csv,CLM,,1,0,0,e07,Provider Accept Assignment Code,1,1,-,O,F
+X12837.csv,CLM,,1,0,0,e08,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12837.csv,CLM,,1,0,0,e09,Release of Information Code,1,1,-,O,F
+X12837.csv,CLM,,1,0,0,e10,Patient Signature Source Code,1,1,-,O,F
+X12837.csv,CLM,,1,0,0,e12,Special Program Code,2,3,-,O,F
+X12837.csv,CLM,,1,0,0,e13,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12837.csv,CLM,,1,0,0,e14,Level of Service Code,1,3,-,O,F
+X12837.csv,CLM,,1,0,0,e15,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12837.csv,CLM,,1,0,0,e16,Provider Agreement Code,1,1,-,O,F
+X12837.csv,CLM,,1,0,0,e17,Claim Status Code,1,2,-,O,F
+X12837.csv,CLM,,1,0,0,e18,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12837.csv,CLM,,1,0,0,e19,Claim Submission Reason Code,2,2,-,O,F
+X12837.csv,CLM,,1,0,0,e20,Delay Reason Code,1,2,-,O,F
+X12837.csv,DTP,CLM,150,0,1,landmark,Date or Time or Period,3,3,-,O,F
+X12837.csv,DTP,CLM,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12837.csv,DTP,CLM,1,0,0,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+X12837.csv,DTP,CLM,1,0,0,e03,Date Time Period,1,35,-,M,F
+X12837.csv,CL1,CLM,1,0,1,landmark,Claim Codes,3,3,-,O,F
+X12837.csv,CL1,CLM,1,0,0,e01,Admission Type Code,1,1,-,O,F
+X12837.csv,CL1,CLM,1,0,0,e02,Admission Source Code,1,1,-,O,F
+X12837.csv,CL1,CLM,1,0,0,e03,Patient Status Code,1,2,-,O,F
+X12837.csv,CL1,CLM,1,0,0,e04,Nursing Home Residential Status Code,1,1,-,O,F
+X12837.csv,DN1,CLM,1,0,1,landmark,Orthodontic Information,3,3,-,O,F
+X12837.csv,DN1,CLM,1,0,0,e01,Quantity,1,15,-,O/Z,F
+X12837.csv,DN1,CLM,1,0,0,e02,Quantity,1,15,-,O/Z,F
+X12837.csv,DN1,CLM,1,0,0,e03,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12837.csv,DN1,CLM,1,0,0,e04,Description,1,80,-,O/Z,F
+X12837.csv,DN2,CLM,35,0,1,landmark,Tooth Summary,3,3,-,O,F
+X12837.csv,DN2,CLM,1,0,0,e01,Reference Identification,1,50,-,M/Z,F
+X12837.csv,DN2,CLM,1,0,0,e02,Tooth Status Code,1,2,-,O,F
+X12837.csv,DN2,CLM,1,0,0,e03,Quantity,1,15,-,O/Z,F
+X12837.csv,DN2,CLM,1,0,0,e04,Date Time Period Format Qualifier,2,3,-,X,F
+X12837.csv,DN2,CLM,1,0,0,e05,Date Time Period,1,35,-,X,F
+X12837.csv,DN2,CLM,1,0,0,e06,Code List Qualifier Code,1,3,-,M/Z,F
+X12837.csv,PWK,CLM,10,0,1,landmark,Paperwork,3,3,-,O,F
+X12837.csv,PWK,CLM,1,0,0,e01,Report Type Code,2,2,-,M,F
+X12837.csv,PWK,CLM,1,0,0,e02,Report Transmission Code,1,2,-,O,F
+X12837.csv,PWK,CLM,1,0,0,e03,Report Copies Needed,1,2,-,O,F
+X12837.csv,PWK,CLM,1,0,0,e04,Entity Identifier Code,2,3,-,O,F
+X12837.csv,PWK,CLM,1,0,0,e05,Identification Code Qualifier,1,2,-,X,F
+X12837.csv,PWK,CLM,1,0,0,e06,Identification Code,2,80,-,X,F
+X12837.csv,PWK,CLM,1,0,0,e07,Description,1,80,-,O,F
+X12837.csv,PWK,CLM,1,0,0,e09,Request Category Code,1,2,-,O,F
+X12837.csv,CN1,CLM,1,0,1,landmark,Contract Information,3,3,-,O,F
+X12837.csv,CN1,CLM,1,0,0,e01,Contract Type Code,2,2,-,M,F
+X12837.csv,CN1,CLM,1,0,0,e02,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,CN1,CLM,1,0,0,e03,Percent Decimal Format,1,6,-,O/Z,F
+X12837.csv,CN1,CLM,1,0,0,e04,Reference Identification,1,50,-,O/Z,F
+X12837.csv,CN1,CLM,1,0,0,e05,Terms Discount Percent,1,6,-,O,F
+X12837.csv,CN1,CLM,1,0,0,e06,Version Identifier,1,30,-,O/Z,F
+X12837.csv,DSB,CLM,1,0,1,landmark,Disability Information,3,3,-,O,F
+X12837.csv,DSB,CLM,1,0,0,e01,Disability Type Code,1,1,-,M,F
+X12837.csv,DSB,CLM,1,0,0,e02,Quantity,1,15,-,O/Z,F
+X12837.csv,DSB,CLM,1,0,0,e03,Occupation Code,4,6,-,O,F
+X12837.csv,DSB,CLM,1,0,0,e04,Work Intensity Code,1,1,-,O,F
+X12837.csv,DSB,CLM,1,0,0,e05,Product Option Code,1,2,-,O,F
+X12837.csv,DSB,CLM,1,0,0,e06,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,DSB,CLM,1,0,0,e07,Product/Service ID Qualifier,2,2,-,X,F
+X12837.csv,DSB,CLM,1,0,0,e08,Medical Code Value,1,15,-,X/Z,F
+X12837.csv,UR,CLM,1,0,1,landmark,Peer Review Organization or Utilization Review,2,2,-,O,F
+X12837.csv,UR,CLM,1,0,0,e01,Approval Code,1,1,-,M,F
+X12837.csv,UR,CLM,1,0,0,e02,Quantity,1,15,-,O/Z,F
+X12837.csv,AMT,CLM,40,0,1,landmark,Monetary Amount Information,3,3,-,O,F
+X12837.csv,AMT,CLM,1,0,0,e01,Amount Qualifier Code,1,3,-,M,F
+X12837.csv,AMT,CLM,1,0,0,e02,Monetary Amount,1,18,-,M,F
+X12837.csv,AMT,CLM,1,0,0,e03,Credit/Debit Flag Code,1,1,-,O,F
+X12837.csv,REF,CLM,30,0,1,landmark,Reference Information,3,3,-,O,F
+X12837.csv,REF,CLM,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12837.csv,REF,CLM,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12837.csv,REF,CLM,1,0,0,e03,Description,1,80,-,X,F
+X12837.csv,K3,CLM,10,0,1,landmark,File Information,2,2,-,O,F
+X12837.csv,K3,CLM,1,0,0,e01,Fixed Format Information,1,80,-,M,F
+X12837.csv,K3,CLM,1,0,0,e02,Record Format Code,1,2,-,O,F
+X12837.csv,NTE,CLM,20,0,1,landmark,Note/Special Instruction,3,3,-,O,F
+X12837.csv,NTE,CLM,1,0,0,e01,Note Reference Code,3,3,-,O,F
+X12837.csv,NTE,CLM,1,0,0,e02,Description,1,80,-,M,F
+X12837.csv,CR1,CLM,1,0,1,landmark,Ambulance Certification,3,3,-,O,F
+X12837.csv,CR1,CLM,1,0,0,e01,Unit or Basis for Measurement Code,2,2,-,X,F
+X12837.csv,CR1,CLM,1,0,0,e02,Weight,1,10,-,X/Z,F
+X12837.csv,CR1,CLM,1,0,0,e03,Ambulance Transport Code,1,1,-,O,F
+X12837.csv,CR1,CLM,1,0,0,e04,Ambulance Transport Reason Code,1,1,-,O,F
+X12837.csv,CR1,CLM,1,0,0,e05,Unit or Basis for Measurement Code,2,2,-,X,F
+X12837.csv,CR1,CLM,1,0,0,e06,Quantity,1,15,-,X/Z,F
+X12837.csv,CR1,CLM,1,0,0,e07,Address Information,1,55,-,O/Z,F
+X12837.csv,CR1,CLM,1,0,0,e08,Address Information,1,55,-,O/Z,F
+X12837.csv,CR1,CLM,1,0,0,e09,Description,1,80,-,O/Z,F
+X12837.csv,CR1,CLM,1,0,0,e10,Description,1,80,-,O/Z,F
+X12837.csv,CR2,CLM,1,0,1,landmark,Chiropractic Certification,3,3,-,O,F
+X12837.csv,CR2,CLM,1,0,0,e01,Count,1,9,-,X/Z,F
+X12837.csv,CR2,CLM,1,0,0,e02,Quantity,1,15,-,X/Z,F
+X12837.csv,CR2,CLM,1,0,0,e03,Subluxation Level Code,2,3,-,X,F
+X12837.csv,CR2,CLM,1,0,0,e04,Subluxation Level Code,2,3,-,O,F
+X12837.csv,CR2,CLM,1,0,0,e05,Unit or Basis for Measurement Code,2,2,-,X,F
+X12837.csv,CR2,CLM,1,0,0,e06,Quantity,1,15,-,X/Z,F
+X12837.csv,CR2,CLM,1,0,0,e07,Quantity,1,15,-,O/Z,F
+X12837.csv,CR2,CLM,1,0,0,e08,Nature of Condition Code,1,1,-,O,F
+X12837.csv,CR2,CLM,1,0,0,e09,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12837.csv,CR2,CLM,1,0,0,e10,Description,1,80,-,O/Z,F
+X12837.csv,CR2,CLM,1,0,0,e11,Description,1,80,-,O/Z,F
+X12837.csv,CR2,CLM,1,0,0,e12,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12837.csv,CR3,CLM,1,0,1,landmark,Durable Medical Equipment Certification,3,3,-,O,F
+X12837.csv,CR3,CLM,1,0,0,e01,Certification Type Code,1,1,-,O,F
+X12837.csv,CR3,CLM,1,0,0,e02,Unit or Basis for Measurement Code,2,2,-,X/Z,F
+X12837.csv,CR3,CLM,1,0,0,e03,Quantity,1,15,-,X,F
+X12837.csv,CR3,CLM,1,0,0,e04,Insulin Dependent Code,1,1,-,O,F
+X12837.csv,CR3,CLM,1,0,0,e05,Description,1,80,-,O/Z,F
+X12837.csv,CR4,CLM,3,0,1,landmark,Enteral or Parenteral Therapy Certification,3,3,-,O,F
+X12837.csv,CR4,CLM,1,0,0,e01,Yes/No Condition or Response Code,1,1,-,M/Z,F
+X12837.csv,CR4,CLM,1,0,0,e02,Certification Type Code,1,1,-,O,F
+X12837.csv,CR4,CLM,1,0,0,e03,Unit or Basis for Measurement Code,2,2,-,X,F
+X12837.csv,CR4,CLM,1,0,0,e04,Quantity,1,15,-,X/Z,F
+X12837.csv,CR4,CLM,1,0,0,e05,Unit or Basis for Measurement Code,2,2,-,X,F
+X12837.csv,CR4,CLM,1,0,0,e06,Quantity,1,15,-,X/Z,F
+X12837.csv,CR4,CLM,1,0,0,e07,Non-Visit Code,1,1,-,O,F
+X12837.csv,CR4,CLM,1,0,0,e08,Unit or Basis for Measurement Code,2,2,-,X,F
+X12837.csv,CR4,CLM,1,0,0,e09,Quantity,1,15,-,X/Z,F
+X12837.csv,CR4,CLM,1,0,0,e10,Unit or Basis for Measurement Code,2,2,-,X,F
+X12837.csv,CR4,CLM,1,0,0,e11,Height,1,8,-,X/Z,F
+X12837.csv,CR4,CLM,1,0,0,e12,Unit or Basis for Measurement Code,2,2,-,X,F
+X12837.csv,CR4,CLM,1,0,0,e13,Weight,1,10,-,X/Z,F
+X12837.csv,CR4,CLM,1,0,0,e14,Quantity,1,15,-,O/Z,F
+X12837.csv,CR4,CLM,1,0,0,e15,Description,1,80,-,O/Z,F
+X12837.csv,CR4,CLM,1,0,0,e16,Nutrient Administration Method Code,1,1,-,O,F
+X12837.csv,CR4,CLM,1,0,0,e17,Nutrient Administration Technique Code,1,1,-,O,F
+X12837.csv,CR4,CLM,1,0,0,e18,Quantity,1,15,-,O/Z,F
+X12837.csv,CR4,CLM,1,0,0,e19,Quantity,1,15,-,O/Z,F
+X12837.csv,CR4,CLM,1,0,0,e20,Description,1,80,-,O/Z,F
+X12837.csv,CR4,CLM,1,0,0,e21,Quantity,1,15,-,O/Z,F
+X12837.csv,CR4,CLM,1,0,0,e22,Percentage as Decimal,1,10,-,O/Z,F
+X12837.csv,CR4,CLM,1,0,0,e23,Quantity,1,15,-,O/Z,F
+X12837.csv,CR4,CLM,1,0,0,e24,Quantity,1,15,-,O/Z,F
+X12837.csv,CR4,CLM,1,0,0,e25,Percentage as Decimal,1,10,-,O/Z,F
+X12837.csv,CR4,CLM,1,0,0,e26,Quantity,1,15,-,O/Z,F
+X12837.csv,CR4,CLM,1,0,0,e27,Percentage as Decimal,1,10,-,O/Z,F
+X12837.csv,CR4,CLM,1,0,0,e28,Quantity,1,15,-,O/Z,F
+X12837.csv,CR4,CLM,1,0,0,e29,Description,1,80,-,O/Z,F
+X12837.csv,CR5,CLM,1,0,1,landmark,Oxygen Therapy Certification,3,3,-,O,F
+X12837.csv,CR5,CLM,1,0,0,e01,Certification Type Code,1,1,-,O,F
+X12837.csv,CR5,CLM,1,0,0,e02,Quantity,1,15,-,O/Z,F
+X12837.csv,CR5,CLM,1,0,0,e03,Oxygen Equipment Type Code,1,1,-,O,F
+X12837.csv,CR5,CLM,1,0,0,e04,Oxygen Equipment Type Code,1,1,-,O,F
+X12837.csv,CR5,CLM,1,0,0,e05,Description,1,80,-,O/Z,F
+X12837.csv,CR5,CLM,1,0,0,e06,Quantity,1,15,-,O/Z,F
+X12837.csv,CR5,CLM,1,0,0,e07,Quantity,1,15,-,O/Z,F
+X12837.csv,CR5,CLM,1,0,0,e08,Quantity,1,15,-,O/Z,F
+X12837.csv,CR5,CLM,1,0,0,e09,Description,1,80,-,O/Z,F
+X12837.csv,CR5,CLM,1,0,0,e10,Quantity,1,15,-,O/Z,F
+X12837.csv,CR5,CLM,1,0,0,e11,Quantity,1,15,-,O/Z,F
+X12837.csv,CR5,CLM,1,0,0,e12,Oxygen Test Condition Code,1,1,-,O,F
+X12837.csv,CR5,CLM,1,0,0,e13,Oxygen Test Findings Code,1,1,-,O,F
+X12837.csv,CR5,CLM,1,0,0,e14,Oxygen Test Findings Code,1,1,-,O,F
+X12837.csv,CR5,CLM,1,0,0,e15,Oxygen Test Findings Code,1,1,-,O,F
+X12837.csv,CR5,CLM,1,0,0,e16,Quantity,1,15,-,O/Z,F
+X12837.csv,CR5,CLM,1,0,0,e17,Oxygen Delivery System Code,1,1,-,O,F
+X12837.csv,CR5,CLM,1,0,0,e18,Oxygen Equipment Type Code,1,1,-,O,F
+X12837.csv,CR6,CLM,1,0,1,landmark,Home Health Care Certification,3,3,-,O,F
+X12837.csv,CR6,CLM,1,0,0,e01,Prognosis Code,1,1,-,M,F
+X12837.csv,CR6,CLM,1,0,0,e02,Date,8,8,-,M/Z,F
+X12837.csv,CR6,CLM,1,0,0,e03,Date Time Period Format Qualifier,2,3,-,X,F
+X12837.csv,CR6,CLM,1,0,0,e04,Date Time Period,1,35,-,X/Z,F
+X12837.csv,CR6,CLM,1,0,0,e05,Date,8,8,-,O/Z,F
+X12837.csv,CR6,CLM,1,0,0,e06,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12837.csv,CR6,CLM,1,0,0,e07,Yes/No Condition or Response Code,1,1,-,M/Z,F
+X12837.csv,CR6,CLM,1,0,0,e08,Certification Type Code,1,1,-,M,F
+X12837.csv,CR6,CLM,1,0,0,e09,Date,8,8,-,X/Z,F
+X12837.csv,CR6,CLM,1,0,0,e10,Product/Service ID Qualifier,2,2,-,X/Z,F
+X12837.csv,CR6,CLM,1,0,0,e11,Medical Code Value,1,15,-,X/Z,F
+X12837.csv,CR6,CLM,1,0,0,e12,Date,8,8,-,O/Z,F
+X12837.csv,CR6,CLM,1,0,0,e13,Date,8,8,-,O/Z,F
+X12837.csv,CR6,CLM,1,0,0,e14,Date,8,8,-,O/Z,F
+X12837.csv,CR6,CLM,1,0,0,e15,Date Time Period Format Qualifier,2,3,-,X,F
+X12837.csv,CR6,CLM,1,0,0,e16,Date Time Period,1,35,-,X/Z,F
+X12837.csv,CR6,CLM,1,0,0,e17,Patient Location Code,1,1,-,X/Z,F
+X12837.csv,CR6,CLM,1,0,0,e18,Date,8,8,-,O/Z,F
+X12837.csv,CR6,CLM,1,0,0,e19,Date,8,8,-,O/Z,F
+X12837.csv,CR6,CLM,1,0,0,e20,Date,8,8,-,O/Z,F
+X12837.csv,CR6,CLM,1,0,0,e21,Date,8,8,-,O/Z,F
+X12837.csv,CR8,CLM,9,0,1,landmark,Pacemaker Certification,3,3,-,O,F
+X12837.csv,CR8,CLM,1,0,0,e01,Implant Type Code,1,1,-,M,F
+X12837.csv,CR8,CLM,1,0,0,e02,Implant Status Code,1,1,-,M,F
+X12837.csv,CR8,CLM,1,0,0,e03,Date,8,8,-,M/Z,F
+X12837.csv,CR8,CLM,1,0,0,e04,Date,8,8,-,M/Z,F
+X12837.csv,CR8,CLM,1,0,0,e05,Reference Identification,1,50,-,M/Z,F
+X12837.csv,CR8,CLM,1,0,0,e06,Reference Identification,1,50,-,M/Z,F
+X12837.csv,CR8,CLM,1,0,0,e07,Reference Identification,1,50,-,M/Z,F
+X12837.csv,CR8,CLM,1,0,0,e08,Yes/No Condition or Response Code,1,1,-,M/Z,F
+X12837.csv,CR8,CLM,1,0,0,e09,Yes/No Condition or Response Code,1,1,-,M/Z,F
+X12837.csv,CRC,CLM,100,0,1,landmark,Conditions Indicator,3,3,-,O,F
+X12837.csv,CRC,CLM,1,0,0,e01,Code Category,2,2,-,M/Z,F
+X12837.csv,CRC,CLM,1,0,0,e02,Yes/No Condition or Response Code,1,1,-,M/Z,F
+X12837.csv,CRC,CLM,1,0,0,e03,Condition Indicator,2,3,-,M,F
+X12837.csv,CRC,CLM,1,0,0,e04,Condition Indicator,2,3,-,O,F
+X12837.csv,CRC,CLM,1,0,0,e05,Condition Indicator,2,3,-,O,F
+X12837.csv,CRC,CLM,1,0,0,e06,Condition Indicator,2,3,-,O,F
+X12837.csv,CRC,CLM,1,0,0,e07,Condition Indicator,2,3,-,O,F
+X12837.csv,HI,CLM,25,0,1,landmark,Health Care Information Codes,2,2,-,O,F
+X12837.csv,QTY,CLM,10,0,1,landmark,Quantity Information,3,3,-,O,F
+X12837.csv,QTY,CLM,1,0,0,e01,Quantity Qualifier,2,2,-,M,F
+X12837.csv,QTY,CLM,1,0,0,e02,Quantity,1,15,-,X,F
+X12837.csv,QTY,CLM,1,0,0,e04,Free-form Information,1,30,-,X/Z,F
+X12837.csv,HCP,CLM,1,0,1,landmark,Health Care Pricing,3,3,-,O,F
+X12837.csv,HCP,CLM,1,0,0,e01,Pricing Methodology,2,2,-,X,F
+X12837.csv,HCP,CLM,1,0,0,e02,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,HCP,CLM,1,0,0,e03,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,HCP,CLM,1,0,0,e04,Reference Identification,1,50,-,O/Z,F
+X12837.csv,HCP,CLM,1,0,0,e05,Rate,1,9,-,O/Z,F
+X12837.csv,HCP,CLM,1,0,0,e06,Reference Identification,1,50,-,O/Z,F
+X12837.csv,HCP,CLM,1,0,0,e07,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,HCP,CLM,1,0,0,e08,Product/Service ID,1,48,-,O/Z,F
+X12837.csv,HCP,CLM,1,0,0,e09,Product/Service ID Qualifier,2,2,-,X,F
+X12837.csv,HCP,CLM,1,0,0,e10,Product/Service ID,1,48,-,X/Z,F
+X12837.csv,HCP,CLM,1,0,0,e11,Unit or Basis for Measurement Code,2,2,-,X,F
+X12837.csv,HCP,CLM,1,0,0,e12,Quantity,1,15,-,X/Z,F
+X12837.csv,HCP,CLM,1,0,0,e13,Reject Reason Code,2,2,-,X/Z,F
+X12837.csv,HCP,CLM,1,0,0,e14,Policy Compliance Code,1,2,-,O,F
+X12837.csv,HCP,CLM,1,0,0,e15,Exception Code,1,2,-,O/Z,F
+X12837.csv,CR7,,6,1,1,landmark,Home Health Treatment Plan Certification,3,3,-,O,F
+X12837.csv,CR7,,1,0,0,e01,Discipline Type Code,2,2,-,M,F
+X12837.csv,CR7,,1,0,0,e02,Number,1,9,-,M/Z,F
+X12837.csv,CR7,,1,0,0,e03,Number,1,9,-,M/Z,F
+X12837.csv,HSD,CLM:CR7,12,0,1,landmark,Health Care Services Delivery,3,3,-,O,F
+X12837.csv,HSD,CLM:CR7,1,0,0,e01,Quantity Qualifier,2,2,-,X,F
+X12837.csv,HSD,CLM:CR7,1,0,0,e02,Quantity,1,15,-,X,F
+X12837.csv,HSD,CLM:CR7,1,0,0,e03,Unit or Basis for Measurement Code,2,2,-,O,F
+X12837.csv,HSD,CLM:CR7,1,0,0,e04,Sample Selection Modulus,1,6,-,O,F
+X12837.csv,HSD,CLM:CR7,1,0,0,e05,Time Period Qualifier,1,2,-,X,F
+X12837.csv,HSD,CLM:CR7,1,0,0,e06,Number of Periods,1,3,-,O,F
+X12837.csv,HSD,CLM:CR7,1,0,0,e07,Ship/Delivery or Calendar Pattern Code,1,2,-,O,F
+X12837.csv,HSD,CLM:CR7,1,0,0,e08,Ship/Delivery Pattern Time Code,1,1,-,O,F
+X12837.csv,NM1,,9,1,1,landmark,Individual or Organizational Name,3,3,-,O,F
+X12837.csv,NM1,,1,0,0,e01,Entity Identifier Code,2,3,-,M,F
+X12837.csv,NM1,,1,0,0,e02,Entity Type Qualifier,1,1,-,M/Z,F
+X12837.csv,NM1,,1,0,0,e03,Name Last or Organization Name,1,60,-,X,F
+X12837.csv,NM1,,1,0,0,e04,Name First,1,35,-,O,F
+X12837.csv,NM1,,1,0,0,e05,Name Middle,1,25,-,O,F
+X12837.csv,NM1,,1,0,0,e06,Name Prefix,1,10,-,O,F
+X12837.csv,NM1,,1,0,0,e07,Name Suffix,1,10,-,O,F
+X12837.csv,NM1,,1,0,0,e08,Identification Code Qualifier,1,2,-,X,F
+X12837.csv,NM1,,1,0,0,e09,Identification Code,2,80,-,X,F
+X12837.csv,NM1,,1,0,0,e10,Entity Relationship Code,2,2,-,X,F
+X12837.csv,NM1,,1,0,0,e11,Entity Identifier Code,2,3,-,O,F
+X12837.csv,NM1,,1,0,0,e12,Name Last or Organization Name,1,60,-,O,F
+X12837.csv,PRV,NM1,1,0,1,landmark,Provider Information,3,3,-,O,F
+X12837.csv,PRV,NM1,1,0,0,e01,Provider Code,1,3,-,M,F
+X12837.csv,PRV,NM1,1,0,0,e02,Reference Identification Qualifier,2,3,-,X,F
+X12837.csv,PRV,NM1,1,0,0,e03,Reference Identification,1,50,-,X,F
+X12837.csv,PRV,NM1,1,0,0,e04,State or Province Code,2,2,-,O,F
+X12837.csv,PRV,NM1,1,0,0,e06,Provider Organization Code,3,3,-,O,F
+X12837.csv,N2,NM1,2,0,1,landmark,Additional Name Information,2,2,-,O,F
+X12837.csv,N2,NM1,1,0,0,e01,Name,1,60,-,M,F
+X12837.csv,N2,NM1,1,0,0,e02,Name,1,60,-,O,F
+X12837.csv,N3,NM1,2,0,1,landmark,Party Location,2,2,-,O,F
+X12837.csv,N3,NM1,1,0,0,e01,Address Information,1,55,-,M,F
+X12837.csv,N3,NM1,1,0,0,e02,Address Information,1,55,-,O,F
+X12837.csv,N4,NM1,1,0,1,landmark,Geographic Location,2,2,-,O,F
+X12837.csv,N4,NM1,1,0,0,e01,City Name,2,30,-,O,F
+X12837.csv,N4,NM1,1,0,0,e02,State or Province Code,2,2,-,X,F
+X12837.csv,N4,NM1,1,0,0,e03,Postal Code,3,15,-,O,F
+X12837.csv,N4,NM1,1,0,0,e04,Country Code,2,3,-,X,F
+X12837.csv,N4,NM1,1,0,0,e05,Location Qualifier,1,2,-,X,F
+X12837.csv,N4,NM1,1,0,0,e06,Location Identifier,1,30,-,O,F
+X12837.csv,N4,NM1,1,0,0,e07,Country Subdivision Code,1,3,-,X,F
+X12837.csv,REF,NM1,20,0,1,landmark,Reference Information,3,3,-,O,F
+X12837.csv,REF,NM1,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12837.csv,REF,NM1,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12837.csv,REF,NM1,1,0,0,e03,Description,1,80,-,X,F
+X12837.csv,PER,NM1,2,0,1,landmark,Administrative Communications Contact,3,3,-,O,F
+X12837.csv,PER,NM1,1,0,0,e01,Contact Function Code,2,2,-,M,F
+X12837.csv,PER,NM1,1,0,0,e02,Name,1,60,-,O,F
+X12837.csv,PER,NM1,1,0,0,e03,Communication Number Qualifier,2,2,-,X,F
+X12837.csv,PER,NM1,1,0,0,e04,Communication Number,1,256,-,X,F
+X12837.csv,PER,NM1,1,0,0,e05,Communication Number Qualifier,2,2,-,X,F
+X12837.csv,PER,NM1,1,0,0,e06,Communication Number,1,256,-,X,F
+X12837.csv,PER,NM1,1,0,0,e07,Communication Number Qualifier,2,2,-,X,F
+X12837.csv,PER,NM1,1,0,0,e08,Communication Number,1,256,-,X,F
+X12837.csv,PER,NM1,1,0,0,e09,Contact Inquiry Reference,1,20,-,O,F
+X12837.csv,SBR,,10,1,1,landmark,Subscriber Information,3,3,-,O,F
+X12837.csv,SBR,,1,0,0,e01,Payer Responsibility Sequence Number Code,1,1,-,M,F
+X12837.csv,SBR,,1,0,0,e02,Individual Relationship Code,2,2,-,O/Z,F
+X12837.csv,SBR,,1,0,0,e03,Reference Identification,1,50,-,O/Z,F
+X12837.csv,SBR,,1,0,0,e04,Name,1,60,-,O/Z,F
+X12837.csv,SBR,,1,0,0,e05,Insurance Type Code,1,3,-,O,F
+X12837.csv,SBR,,1,0,0,e06,Coordination of Benefits Code,1,1,-,O,F
+X12837.csv,SBR,,1,0,0,e07,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12837.csv,SBR,,1,0,0,e08,Employment Status Code,2,2,-,O,F
+X12837.csv,SBR,,1,0,0,e09,Claim Filing Indicator Code,1,2,-,O,F
+X12837.csv,CAS,SBR,99,0,1,landmark,Claims Adjustment,3,3,-,O,F
+X12837.csv,CAS,SBR,1,0,0,e01,Claim Adjustment Group Code,1,2,-,M,F
+X12837.csv,CAS,SBR,1,0,0,e02,Claim Adjustment Reason Code,1,5,-,M,F
+X12837.csv,CAS,SBR,1,0,0,e03,Monetary Amount,1,18,-,M/Z,F
+X12837.csv,CAS,SBR,1,0,0,e04,Quantity,1,15,-,O/Z,F
+X12837.csv,CAS,SBR,1,0,0,e05,Claim Adjustment Reason Code,1,5,-,X,F
+X12837.csv,CAS,SBR,1,0,0,e06,Monetary Amount,1,18,-,X/Z,F
+X12837.csv,CAS,SBR,1,0,0,e07,Quantity,1,15,-,X/Z,F
+X12837.csv,CAS,SBR,1,0,0,e08,Claim Adjustment Reason Code,1,5,-,X,F
+X12837.csv,CAS,SBR,1,0,0,e09,Monetary Amount,1,18,-,X/Z,F
+X12837.csv,CAS,SBR,1,0,0,e10,Quantity,1,15,-,X/Z,F
+X12837.csv,CAS,SBR,1,0,0,e11,Claim Adjustment Reason Code,1,5,-,X,F
+X12837.csv,CAS,SBR,1,0,0,e12,Monetary Amount,1,18,-,X/Z,F
+X12837.csv,CAS,SBR,1,0,0,e13,Quantity,1,15,-,X/Z,F
+X12837.csv,CAS,SBR,1,0,0,e14,Claim Adjustment Reason Code,1,5,-,X,F
+X12837.csv,CAS,SBR,1,0,0,e15,Monetary Amount,1,18,-,X/Z,F
+X12837.csv,CAS,SBR,1,0,0,e16,Quantity,1,15,-,X/Z,F
+X12837.csv,CAS,SBR,1,0,0,e17,Claim Adjustment Reason Code,1,5,-,X,F
+X12837.csv,CAS,SBR,1,0,0,e18,Monetary Amount,1,18,-,X/Z,F
+X12837.csv,CAS,SBR,1,0,0,e19,Quantity,1,15,-,X/Z,F
+X12837.csv,AMT,SBR,15,0,1,landmark,Monetary Amount Information,3,3,-,O,F
+X12837.csv,AMT,SBR,1,0,0,e01,Amount Qualifier Code,1,3,-,M,F
+X12837.csv,AMT,SBR,1,0,0,e02,Monetary Amount,1,18,-,M,F
+X12837.csv,AMT,SBR,1,0,0,e03,Credit/Debit Flag Code,1,1,-,O,F
+X12837.csv,DMG,SBR,1,0,1,landmark,Demographic Information,3,3,-,O,F
+X12837.csv,DMG,SBR,1,0,0,e01,Date Time Period Format Qualifier,2,3,-,X,F
+X12837.csv,DMG,SBR,1,0,0,e02,Date Time Period,1,35,-,X/Z,F
+X12837.csv,DMG,SBR,1,0,0,e03,Gender Code,1,1,-,O,F
+X12837.csv,DMG,SBR,1,0,0,e04,Marital Status Code,1,1,-,O,F
+X12837.csv,DMG,SBR,1,0,0,e06,Citizenship Status Code,1,2,-,O,F
+X12837.csv,DMG,SBR,1,0,0,e07,Country Code,2,3,-,O/Z,F
+X12837.csv,DMG,SBR,1,0,0,e08,Basis of Verification Code,1,2,-,O,F
+X12837.csv,DMG,SBR,1,0,0,e09,Quantity,1,15,-,O/Z,F
+X12837.csv,DMG,SBR,1,0,0,e10,Code List Qualifier Code,1,3,-,X,F
+X12837.csv,DMG,SBR,1,0,0,e11,Industry Code,1,30,-,X/Z,F
+X12837.csv,OI,SBR,1,0,1,landmark,Other Health Insurance Information,2,2,-,O,F
+X12837.csv,OI,SBR,1,0,0,e01,Claim Filing Indicator Code,1,2,-,O,F
+X12837.csv,OI,SBR,1,0,0,e02,Claim Submission Reason Code,2,2,-,O,F
+X12837.csv,OI,SBR,1,0,0,e03,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12837.csv,OI,SBR,1,0,0,e04,Patient Signature Source Code,1,1,-,O,F
+X12837.csv,OI,SBR,1,0,0,e05,Provider Agreement Code,1,1,-,O,F
+X12837.csv,OI,SBR,1,0,0,e06,Release of Information Code,1,1,-,O,F
+X12837.csv,MIA,SBR,1,0,1,landmark,Medicare Inpatient Adjudication,3,3,-,O,F
+X12837.csv,MIA,SBR,1,0,0,e01,Quantity,1,15,-,M/Z,F
+X12837.csv,MIA,SBR,1,0,0,e02,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,MIA,SBR,1,0,0,e03,Quantity,1,15,-,O/Z,F
+X12837.csv,MIA,SBR,1,0,0,e04,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,MIA,SBR,1,0,0,e05,Reference Identification,1,50,-,O/Z,F
+X12837.csv,MIA,SBR,1,0,0,e06,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,MIA,SBR,1,0,0,e07,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,MIA,SBR,1,0,0,e08,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,MIA,SBR,1,0,0,e09,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,MIA,SBR,1,0,0,e10,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,MIA,SBR,1,0,0,e11,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,MIA,SBR,1,0,0,e12,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,MIA,SBR,1,0,0,e13,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,MIA,SBR,1,0,0,e14,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,MIA,SBR,1,0,0,e15,Quantity,1,15,-,O/Z,F
+X12837.csv,MIA,SBR,1,0,0,e16,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,MIA,SBR,1,0,0,e17,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,MIA,SBR,1,0,0,e18,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,MIA,SBR,1,0,0,e19,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,MIA,SBR,1,0,0,e20,Reference Identification,1,50,-,O/Z,F
+X12837.csv,MIA,SBR,1,0,0,e21,Reference Identification,1,50,-,O/Z,F
+X12837.csv,MIA,SBR,1,0,0,e22,Reference Identification,1,50,-,O/Z,F
+X12837.csv,MIA,SBR,1,0,0,e23,Reference Identification,1,50,-,O/Z,F
+X12837.csv,MIA,SBR,1,0,0,e24,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,MOA,SBR,1,0,1,landmark,Medicare Outpatient Adjudication,3,3,-,O,F
+X12837.csv,MOA,SBR,1,0,0,e01,Percentage as Decimal,1,10,-,O/Z,F
+X12837.csv,MOA,SBR,1,0,0,e02,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,MOA,SBR,1,0,0,e03,Reference Identification,1,50,-,O/Z,F
+X12837.csv,MOA,SBR,1,0,0,e04,Reference Identification,1,50,-,O/Z,F
+X12837.csv,MOA,SBR,1,0,0,e05,Reference Identification,1,50,-,O/Z,F
+X12837.csv,MOA,SBR,1,0,0,e06,Reference Identification,1,50,-,O/Z,F
+X12837.csv,MOA,SBR,1,0,0,e07,Reference Identification,1,50,-,O/Z,F
+X12837.csv,MOA,SBR,1,0,0,e08,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,MOA,SBR,1,0,0,e09,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,NM1,,10,1,1,landmark,Individual or Organizational Name,3,3,-,O,F
+X12837.csv,NM1,,1,0,0,e01,Entity Identifier Code,2,3,-,M,F
+X12837.csv,NM1,,1,0,0,e02,Entity Type Qualifier,1,1,-,M/Z,F
+X12837.csv,NM1,,1,0,0,e03,Name Last or Organization Name,1,60,-,X,F
+X12837.csv,NM1,,1,0,0,e04,Name First,1,35,-,O,F
+X12837.csv,NM1,,1,0,0,e05,Name Middle,1,25,-,O,F
+X12837.csv,NM1,,1,0,0,e06,Name Prefix,1,10,-,O,F
+X12837.csv,NM1,,1,0,0,e07,Name Suffix,1,10,-,O,F
+X12837.csv,NM1,,1,0,0,e08,Identification Code Qualifier,1,2,-,X,F
+X12837.csv,NM1,,1,0,0,e09,Identification Code,2,80,-,X,F
+X12837.csv,NM1,,1,0,0,e10,Entity Relationship Code,2,2,-,X,F
+X12837.csv,NM1,,1,0,0,e11,Entity Identifier Code,2,3,-,O,F
+X12837.csv,NM1,,1,0,0,e12,Name Last or Organization Name,1,60,-,O,F
+X12837.csv,N2,SBR:NM1,2,0,1,landmark,Additional Name Information,2,2,-,O,F
+X12837.csv,N2,SBR:NM1,1,0,0,e01,Name,1,60,-,M,F
+X12837.csv,N2,SBR:NM1,1,0,0,e02,Name,1,60,-,O,F
+X12837.csv,N3,SBR:NM1,2,0,1,landmark,Party Location,2,2,-,O,F
+X12837.csv,N3,SBR:NM1,1,0,0,e01,Address Information,1,55,-,M,F
+X12837.csv,N3,SBR:NM1,1,0,0,e02,Address Information,1,55,-,O,F
+X12837.csv,N4,SBR:NM1,1,0,1,landmark,Geographic Location,2,2,-,O,F
+X12837.csv,N4,SBR:NM1,1,0,0,e01,City Name,2,30,-,O,F
+X12837.csv,N4,SBR:NM1,1,0,0,e02,State or Province Code,2,2,-,X,F
+X12837.csv,N4,SBR:NM1,1,0,0,e03,Postal Code,3,15,-,O,F
+X12837.csv,N4,SBR:NM1,1,0,0,e04,Country Code,2,3,-,X,F
+X12837.csv,N4,SBR:NM1,1,0,0,e05,Location Qualifier,1,2,-,X,F
+X12837.csv,N4,SBR:NM1,1,0,0,e06,Location Identifier,1,30,-,O,F
+X12837.csv,N4,SBR:NM1,1,0,0,e07,Country Subdivision Code,1,3,-,X,F
+X12837.csv,PER,SBR:NM1,2,0,1,landmark,Administrative Communications Contact,3,3,-,O,F
+X12837.csv,PER,SBR:NM1,1,0,0,e01,Contact Function Code,2,2,-,M,F
+X12837.csv,PER,SBR:NM1,1,0,0,e02,Name,1,60,-,O,F
+X12837.csv,PER,SBR:NM1,1,0,0,e03,Communication Number Qualifier,2,2,-,X,F
+X12837.csv,PER,SBR:NM1,1,0,0,e04,Communication Number,1,256,-,X,F
+X12837.csv,PER,SBR:NM1,1,0,0,e05,Communication Number Qualifier,2,2,-,X,F
+X12837.csv,PER,SBR:NM1,1,0,0,e06,Communication Number,1,256,-,X,F
+X12837.csv,PER,SBR:NM1,1,0,0,e07,Communication Number Qualifier,2,2,-,X,F
+X12837.csv,PER,SBR:NM1,1,0,0,e08,Communication Number,1,256,-,X,F
+X12837.csv,PER,SBR:NM1,1,0,0,e09,Contact Inquiry Reference,1,20,-,O,F
+X12837.csv,DTP,SBR:NM1,9,0,1,landmark,Date or Time or Period,3,3,-,O,F
+X12837.csv,DTP,SBR:NM1,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12837.csv,DTP,SBR:NM1,1,0,0,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+X12837.csv,DTP,SBR:NM1,1,0,0,e03,Date Time Period,1,35,-,M,F
+X12837.csv,REF,SBR:NM1,99999,0,1,landmark,Reference Information,3,3,-,O,F
+X12837.csv,REF,SBR:NM1,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12837.csv,REF,SBR:NM1,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12837.csv,REF,SBR:NM1,1,0,0,e03,Description,1,80,-,X,F
+X12837.csv,LX,,99999,1,1,landmark,Transaction Set Line Number,2,2,-,O,F
+X12837.csv,LX,,1,0,0,e01,Assigned Number,1,6,-,M,F
+X12837.csv,SV1,LX,1,0,1,landmark,Professional Service,3,3,-,O,F
+X12837.csv,SV1,LX,1,0,0,e02,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,SV1,LX,1,0,0,e03,Unit or Basis for Measurement Code,2,2,-,X,F
+X12837.csv,SV1,LX,1,0,0,e04,Quantity,1,15,-,X,F
+X12837.csv,SV1,LX,1,0,0,e05,Facility Code Value,1,2,-,O/Z,F
+X12837.csv,SV1,LX,1,0,0,e06,Service Type Code,1,2,-,O,F
+X12837.csv,SV1,LX,1,0,0,e08,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,SV1,LX,1,0,0,e09,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12837.csv,SV1,LX,1,0,0,e10,Multiple Procedure Code,1,2,-,O,F
+X12837.csv,SV1,LX,1,0,0,e11,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12837.csv,SV1,LX,1,0,0,e12,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12837.csv,SV1,LX,1,0,0,e13,Review Code,1,2,-,O,F
+X12837.csv,SV1,LX,1,0,0,e14,National or Local Assigned Review Value,1,2,-,O,F
+X12837.csv,SV1,LX,1,0,0,e15,Copay Status Code,1,1,-,O,F
+X12837.csv,SV1,LX,1,0,0,e16,Health Care Professional Shortage Area Code,1,1,-,O,F
+X12837.csv,SV1,LX,1,0,0,e17,Reference Identification,1,50,-,O/Z,F
+X12837.csv,SV1,LX,1,0,0,e18,Postal Code,3,15,-,O/Z,F
+X12837.csv,SV1,LX,1,0,0,e19,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,SV1,LX,1,0,0,e20,Level of Care Code,1,1,-,O,F
+X12837.csv,SV1,LX,1,0,0,e21,Provider Agreement Code,1,1,-,O,F
+X12837.csv,SV2,LX,1,0,1,landmark,Institutional Service,3,3,-,O,F
+X12837.csv,SV2,LX,1,0,0,e01,Product/Service ID,1,48,-,X/Z,F
+X12837.csv,SV2,LX,1,0,0,e03,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,SV2,LX,1,0,0,e04,Unit or Basis for Measurement Code,2,2,-,X,F
+X12837.csv,SV2,LX,1,0,0,e05,Quantity,1,15,-,X,F
+X12837.csv,SV2,LX,1,0,0,e06,Unit Rate,1,10,-,O,F
+X12837.csv,SV2,LX,1,0,0,e07,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,SV2,LX,1,0,0,e08,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12837.csv,SV2,LX,1,0,0,e09,Nursing Home Residential Status Code,1,1,-,O,F
+X12837.csv,SV2,LX,1,0,0,e10,Level of Care Code,1,1,-,O,F
+X12837.csv,SV3,LX,1,0,1,landmark,Dental Service,3,3,-,O,F
+X12837.csv,SV3,LX,1,0,0,e02,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,SV3,LX,1,0,0,e03,Facility Code Value,1,2,-,O/Z,F
+X12837.csv,SV3,LX,1,0,0,e05,Prosthesis Crown or Inlay Code,1,1,-,O,F
+X12837.csv,SV3,LX,1,0,0,e06,Quantity,1,15,-,O/Z,F
+X12837.csv,SV3,LX,1,0,0,e07,Description,1,80,-,O/Z,F
+X12837.csv,SV3,LX,1,0,0,e08,Copay Status Code,1,1,-,O,F
+X12837.csv,SV3,LX,1,0,0,e09,Provider Agreement Code,1,1,-,O,F
+X12837.csv,SV3,LX,1,0,0,e10,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12837.csv,TOO,LX,32,0,1,landmark,Tooth Identification,3,3,-,O,F
+X12837.csv,TOO,LX,1,0,0,e01,Code List Qualifier Code,1,3,-,X,F
+X12837.csv,TOO,LX,1,0,0,e02,Industry Code,1,30,-,X,F
+X12837.csv,SV4,LX,1,0,1,landmark,Drug Service,3,3,-,O,F
+X12837.csv,SV4,LX,1,0,0,e01,Reference Identification,1,50,-,M/Z,F
+X12837.csv,SV4,LX,1,0,0,e03,Reference Identification,1,50,-,O/Z,F
+X12837.csv,SV4,LX,1,0,0,e04,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12837.csv,SV4,LX,1,0,0,e05,Dispense as Written Code,1,1,-,O,F
+X12837.csv,SV4,LX,1,0,0,e06,Level of Service Code,1,3,-,O,F
+X12837.csv,SV4,LX,1,0,0,e07,Prescription Origin Code,1,1,-,O,F
+X12837.csv,SV4,LX,1,0,0,e08,Description,1,80,-,O/Z,F
+X12837.csv,SV4,LX,1,0,0,e09,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12837.csv,SV4,LX,1,0,0,e10,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12837.csv,SV4,LX,1,0,0,e11,Unit Dose Code,1,1,-,O,F
+X12837.csv,SV4,LX,1,0,0,e12,Basis of Cost Determination Code,1,2,-,O,F
+X12837.csv,SV4,LX,1,0,0,e13,Basis of Days Supply Determination Code,1,1,-,O,F
+X12837.csv,SV4,LX,1,0,0,e14,Dosage Form Code,2,2,-,O,F
+X12837.csv,SV4,LX,1,0,0,e15,Copay Status Code,1,1,-,O,F
+X12837.csv,SV4,LX,1,0,0,e16,Patient Location Code,1,1,-,O,F
+X12837.csv,SV4,LX,1,0,0,e17,Level of Care Code,1,1,-,O,F
+X12837.csv,SV4,LX,1,0,0,e18,Prior Authorization Type Code,1,1,-,O,F
+X12837.csv,SV5,LX,1,0,1,landmark,Durable Medical Equipment Service,3,3,-,O,F
+X12837.csv,SV5,LX,1,0,0,e02,Unit or Basis for Measurement Code,2,2,-,M,F
+X12837.csv,SV5,LX,1,0,0,e03,Quantity,1,15,-,M/Z,F
+X12837.csv,SV5,LX,1,0,0,e04,Monetary Amount,1,18,-,X/Z,F
+X12837.csv,SV5,LX,1,0,0,e05,Monetary Amount,1,18,-,X/Z,F
+X12837.csv,SV5,LX,1,0,0,e06,Frequency Code,1,1,-,O/Z,F
+X12837.csv,SV5,LX,1,0,0,e07,Prognosis Code,1,1,-,O,F
+X12837.csv,SV6,LX,1,0,1,landmark,Anesthesia Service,3,3,-,O,F
+X12837.csv,SV6,LX,1,0,0,e02,Facility Code Qualifier,1,2,-,X,F
+X12837.csv,SV6,LX,1,0,0,e03,Facility Code Value,1,2,-,X,F
+X12837.csv,SV6,LX,1,0,0,e04,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,SV6,LX,1,0,0,e06,Quantity,1,15,-,O/Z,F
+X12837.csv,SV6,LX,1,0,0,e07,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12837.csv,SV7,LX,1,0,1,landmark,Drug Adjudication,3,3,-,O,F
+X12837.csv,SV7,LX,1,0,0,e01,Reference Identification,1,50,-,O/Z,F
+X12837.csv,SV7,LX,1,0,0,e02,Reference Identification,1,50,-,O/Z,F
+X12837.csv,SV7,LX,1,0,0,e03,Prescription Denial Override Code,2,2,-,O,F
+X12837.csv,SV7,LX,1,0,0,e04,Coverage Level Code,3,3,-,M/Z,F
+X12837.csv,SV7,LX,1,0,0,e05,Product/Process Characteristic Code,2,3,-,M/Z,F
+X12837.csv,SV7,LX,1,0,0,e06,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12837.csv,HI,LX,25,0,1,landmark,Health Care Information Codes,2,2,-,O,F
+X12837.csv,PWK,LX,10,0,1,landmark,Paperwork,3,3,-,O,F
+X12837.csv,PWK,LX,1,0,0,e01,Report Type Code,2,2,-,M,F
+X12837.csv,PWK,LX,1,0,0,e02,Report Transmission Code,1,2,-,O,F
+X12837.csv,PWK,LX,1,0,0,e03,Report Copies Needed,1,2,-,O,F
+X12837.csv,PWK,LX,1,0,0,e04,Entity Identifier Code,2,3,-,O,F
+X12837.csv,PWK,LX,1,0,0,e05,Identification Code Qualifier,1,2,-,X,F
+X12837.csv,PWK,LX,1,0,0,e06,Identification Code,2,80,-,X,F
+X12837.csv,PWK,LX,1,0,0,e07,Description,1,80,-,O,F
+X12837.csv,PWK,LX,1,0,0,e09,Request Category Code,1,2,-,O,F
+X12837.csv,CR1,LX,1,0,1,landmark,Ambulance Certification,3,3,-,O,F
+X12837.csv,CR1,LX,1,0,0,e01,Unit or Basis for Measurement Code,2,2,-,X,F
+X12837.csv,CR1,LX,1,0,0,e02,Weight,1,10,-,X/Z,F
+X12837.csv,CR1,LX,1,0,0,e03,Ambulance Transport Code,1,1,-,O,F
+X12837.csv,CR1,LX,1,0,0,e04,Ambulance Transport Reason Code,1,1,-,O,F
+X12837.csv,CR1,LX,1,0,0,e05,Unit or Basis for Measurement Code,2,2,-,X,F
+X12837.csv,CR1,LX,1,0,0,e06,Quantity,1,15,-,X/Z,F
+X12837.csv,CR1,LX,1,0,0,e07,Address Information,1,55,-,O/Z,F
+X12837.csv,CR1,LX,1,0,0,e08,Address Information,1,55,-,O/Z,F
+X12837.csv,CR1,LX,1,0,0,e09,Description,1,80,-,O/Z,F
+X12837.csv,CR1,LX,1,0,0,e10,Description,1,80,-,O/Z,F
+X12837.csv,CR2,LX,5,0,1,landmark,Chiropractic Certification,3,3,-,O,F
+X12837.csv,CR2,LX,1,0,0,e01,Count,1,9,-,X/Z,F
+X12837.csv,CR2,LX,1,0,0,e02,Quantity,1,15,-,X/Z,F
+X12837.csv,CR2,LX,1,0,0,e03,Subluxation Level Code,2,3,-,X,F
+X12837.csv,CR2,LX,1,0,0,e04,Subluxation Level Code,2,3,-,O,F
+X12837.csv,CR2,LX,1,0,0,e05,Unit or Basis for Measurement Code,2,2,-,X,F
+X12837.csv,CR2,LX,1,0,0,e06,Quantity,1,15,-,X/Z,F
+X12837.csv,CR2,LX,1,0,0,e07,Quantity,1,15,-,O/Z,F
+X12837.csv,CR2,LX,1,0,0,e08,Nature of Condition Code,1,1,-,O,F
+X12837.csv,CR2,LX,1,0,0,e09,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12837.csv,CR2,LX,1,0,0,e10,Description,1,80,-,O/Z,F
+X12837.csv,CR2,LX,1,0,0,e11,Description,1,80,-,O/Z,F
+X12837.csv,CR2,LX,1,0,0,e12,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12837.csv,CR3,LX,1,0,1,landmark,Durable Medical Equipment Certification,3,3,-,O,F
+X12837.csv,CR3,LX,1,0,0,e01,Certification Type Code,1,1,-,O,F
+X12837.csv,CR3,LX,1,0,0,e02,Unit or Basis for Measurement Code,2,2,-,X/Z,F
+X12837.csv,CR3,LX,1,0,0,e03,Quantity,1,15,-,X,F
+X12837.csv,CR3,LX,1,0,0,e04,Insulin Dependent Code,1,1,-,O,F
+X12837.csv,CR3,LX,1,0,0,e05,Description,1,80,-,O/Z,F
+X12837.csv,CR4,LX,3,0,1,landmark,Enteral or Parenteral Therapy Certification,3,3,-,O,F
+X12837.csv,CR4,LX,1,0,0,e01,Yes/No Condition or Response Code,1,1,-,M/Z,F
+X12837.csv,CR4,LX,1,0,0,e02,Certification Type Code,1,1,-,O,F
+X12837.csv,CR4,LX,1,0,0,e03,Unit or Basis for Measurement Code,2,2,-,X,F
+X12837.csv,CR4,LX,1,0,0,e04,Quantity,1,15,-,X/Z,F
+X12837.csv,CR4,LX,1,0,0,e05,Unit or Basis for Measurement Code,2,2,-,X,F
+X12837.csv,CR4,LX,1,0,0,e06,Quantity,1,15,-,X/Z,F
+X12837.csv,CR4,LX,1,0,0,e07,Non-Visit Code,1,1,-,O,F
+X12837.csv,CR4,LX,1,0,0,e08,Unit or Basis for Measurement Code,2,2,-,X,F
+X12837.csv,CR4,LX,1,0,0,e09,Quantity,1,15,-,X/Z,F
+X12837.csv,CR4,LX,1,0,0,e10,Unit or Basis for Measurement Code,2,2,-,X,F
+X12837.csv,CR4,LX,1,0,0,e11,Height,1,8,-,X/Z,F
+X12837.csv,CR4,LX,1,0,0,e12,Unit or Basis for Measurement Code,2,2,-,X,F
+X12837.csv,CR4,LX,1,0,0,e13,Weight,1,10,-,X/Z,F
+X12837.csv,CR4,LX,1,0,0,e14,Quantity,1,15,-,O/Z,F
+X12837.csv,CR4,LX,1,0,0,e15,Description,1,80,-,O/Z,F
+X12837.csv,CR4,LX,1,0,0,e16,Nutrient Administration Method Code,1,1,-,O,F
+X12837.csv,CR4,LX,1,0,0,e17,Nutrient Administration Technique Code,1,1,-,O,F
+X12837.csv,CR4,LX,1,0,0,e18,Quantity,1,15,-,O/Z,F
+X12837.csv,CR4,LX,1,0,0,e19,Quantity,1,15,-,O/Z,F
+X12837.csv,CR4,LX,1,0,0,e20,Description,1,80,-,O/Z,F
+X12837.csv,CR4,LX,1,0,0,e21,Quantity,1,15,-,O/Z,F
+X12837.csv,CR4,LX,1,0,0,e22,Percentage as Decimal,1,10,-,O/Z,F
+X12837.csv,CR4,LX,1,0,0,e23,Quantity,1,15,-,O/Z,F
+X12837.csv,CR4,LX,1,0,0,e24,Quantity,1,15,-,O/Z,F
+X12837.csv,CR4,LX,1,0,0,e25,Percentage as Decimal,1,10,-,O/Z,F
+X12837.csv,CR4,LX,1,0,0,e26,Quantity,1,15,-,O/Z,F
+X12837.csv,CR4,LX,1,0,0,e27,Percentage as Decimal,1,10,-,O/Z,F
+X12837.csv,CR4,LX,1,0,0,e28,Quantity,1,15,-,O/Z,F
+X12837.csv,CR4,LX,1,0,0,e29,Description,1,80,-,O/Z,F
+X12837.csv,CR5,LX,1,0,1,landmark,Oxygen Therapy Certification,3,3,-,O,F
+X12837.csv,CR5,LX,1,0,0,e01,Certification Type Code,1,1,-,O,F
+X12837.csv,CR5,LX,1,0,0,e02,Quantity,1,15,-,O/Z,F
+X12837.csv,CR5,LX,1,0,0,e03,Oxygen Equipment Type Code,1,1,-,O,F
+X12837.csv,CR5,LX,1,0,0,e04,Oxygen Equipment Type Code,1,1,-,O,F
+X12837.csv,CR5,LX,1,0,0,e05,Description,1,80,-,O/Z,F
+X12837.csv,CR5,LX,1,0,0,e06,Quantity,1,15,-,O/Z,F
+X12837.csv,CR5,LX,1,0,0,e07,Quantity,1,15,-,O/Z,F
+X12837.csv,CR5,LX,1,0,0,e08,Quantity,1,15,-,O/Z,F
+X12837.csv,CR5,LX,1,0,0,e09,Description,1,80,-,O/Z,F
+X12837.csv,CR5,LX,1,0,0,e10,Quantity,1,15,-,O/Z,F
+X12837.csv,CR5,LX,1,0,0,e11,Quantity,1,15,-,O/Z,F
+X12837.csv,CR5,LX,1,0,0,e12,Oxygen Test Condition Code,1,1,-,O,F
+X12837.csv,CR5,LX,1,0,0,e13,Oxygen Test Findings Code,1,1,-,O,F
+X12837.csv,CR5,LX,1,0,0,e14,Oxygen Test Findings Code,1,1,-,O,F
+X12837.csv,CR5,LX,1,0,0,e15,Oxygen Test Findings Code,1,1,-,O,F
+X12837.csv,CR5,LX,1,0,0,e16,Quantity,1,15,-,O/Z,F
+X12837.csv,CR5,LX,1,0,0,e17,Oxygen Delivery System Code,1,1,-,O,F
+X12837.csv,CR5,LX,1,0,0,e18,Oxygen Equipment Type Code,1,1,-,O,F
+X12837.csv,CRC,LX,3,0,1,landmark,Conditions Indicator,3,3,-,O,F
+X12837.csv,CRC,LX,1,0,0,e01,Code Category,2,2,-,M/Z,F
+X12837.csv,CRC,LX,1,0,0,e02,Yes/No Condition or Response Code,1,1,-,M/Z,F
+X12837.csv,CRC,LX,1,0,0,e03,Condition Indicator,2,3,-,M,F
+X12837.csv,CRC,LX,1,0,0,e04,Condition Indicator,2,3,-,O,F
+X12837.csv,CRC,LX,1,0,0,e05,Condition Indicator,2,3,-,O,F
+X12837.csv,CRC,LX,1,0,0,e06,Condition Indicator,2,3,-,O,F
+X12837.csv,CRC,LX,1,0,0,e07,Condition Indicator,2,3,-,O,F
+X12837.csv,DTP,LX,15,0,1,landmark,Date or Time or Period,3,3,-,O,F
+X12837.csv,DTP,LX,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12837.csv,DTP,LX,1,0,0,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+X12837.csv,DTP,LX,1,0,0,e03,Date Time Period,1,35,-,M,F
+X12837.csv,QTY,LX,5,0,1,landmark,Quantity Information,3,3,-,O,F
+X12837.csv,QTY,LX,1,0,0,e01,Quantity Qualifier,2,2,-,M,F
+X12837.csv,QTY,LX,1,0,0,e02,Quantity,1,15,-,X,F
+X12837.csv,QTY,LX,1,0,0,e04,Free-form Information,1,30,-,X/Z,F
+X12837.csv,MEA,LX,20,0,1,landmark,Measurements,3,3,-,O,F
+X12837.csv,MEA,LX,1,0,0,e01,Measurement Reference ID Code,2,2,-,O,F
+X12837.csv,MEA,LX,1,0,0,e02,Measurement Qualifier,1,3,-,O,F
+X12837.csv,MEA,LX,1,0,0,e03,Measurement Value,1,20,-,X,F
+X12837.csv,MEA,LX,1,0,0,e05,Range Minimum,1,20,-,X,F
+X12837.csv,MEA,LX,1,0,0,e06,Range Maximum,1,20,-,X,F
+X12837.csv,MEA,LX,1,0,0,e07,Measurement Significance Code,2,2,-,O,F
+X12837.csv,MEA,LX,1,0,0,e08,Measurement Attribute Code,2,2,-,X,F
+X12837.csv,MEA,LX,1,0,0,e09,Surface/Layer/Position Code,2,2,-,O,F
+X12837.csv,MEA,LX,1,0,0,e10,Measurement Method or Device,2,4,-,O,F
+X12837.csv,MEA,LX,1,0,0,e11,Code List Qualifier Code,1,3,-,X/Z,F
+X12837.csv,MEA,LX,1,0,0,e12,Industry Code,1,30,-,X/Z,F
+X12837.csv,CN1,LX,1,0,1,landmark,Contract Information,3,3,-,O,F
+X12837.csv,CN1,LX,1,0,0,e01,Contract Type Code,2,2,-,M,F
+X12837.csv,CN1,LX,1,0,0,e02,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,CN1,LX,1,0,0,e03,Percent Decimal Format,1,6,-,O/Z,F
+X12837.csv,CN1,LX,1,0,0,e04,Reference Identification,1,50,-,O/Z,F
+X12837.csv,CN1,LX,1,0,0,e05,Terms Discount Percent,1,6,-,O,F
+X12837.csv,CN1,LX,1,0,0,e06,Version Identifier,1,30,-,O/Z,F
+X12837.csv,REF,LX,30,0,1,landmark,Reference Information,3,3,-,O,F
+X12837.csv,REF,LX,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12837.csv,REF,LX,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12837.csv,REF,LX,1,0,0,e03,Description,1,80,-,X,F
+X12837.csv,AMT,LX,15,0,1,landmark,Monetary Amount Information,3,3,-,O,F
+X12837.csv,AMT,LX,1,0,0,e01,Amount Qualifier Code,1,3,-,M,F
+X12837.csv,AMT,LX,1,0,0,e02,Monetary Amount,1,18,-,M,F
+X12837.csv,AMT,LX,1,0,0,e03,Credit/Debit Flag Code,1,1,-,O,F
+X12837.csv,K3,LX,10,0,1,landmark,File Information,2,2,-,O,F
+X12837.csv,K3,LX,1,0,0,e01,Fixed Format Information,1,80,-,M,F
+X12837.csv,K3,LX,1,0,0,e02,Record Format Code,1,2,-,O,F
+X12837.csv,NTE,LX,10,0,1,landmark,Note/Special Instruction,3,3,-,O,F
+X12837.csv,NTE,LX,1,0,0,e01,Note Reference Code,3,3,-,O,F
+X12837.csv,NTE,LX,1,0,0,e02,Description,1,80,-,M,F
+X12837.csv,PS1,LX,1,0,1,landmark,Purchase Service,3,3,-,O,F
+X12837.csv,PS1,LX,1,0,0,e01,Reference Identification,1,50,-,M/Z,F
+X12837.csv,PS1,LX,1,0,0,e02,Monetary Amount,1,18,-,M/Z,F
+X12837.csv,PS1,LX,1,0,0,e03,State or Province Code,2,2,-,O/Z,F
+X12837.csv,IMM,LX,99999,0,1,landmark,Immunization Status,3,3,-,O,F
+X12837.csv,IMM,LX,1,0,0,e01,Industry Code,1,30,-,M/Z,F
+X12837.csv,IMM,LX,1,0,0,e02,Date Time Period Format Qualifier,2,3,-,X,F
+X12837.csv,IMM,LX,1,0,0,e03,Date Time Period,1,35,-,X/Z,F
+X12837.csv,IMM,LX,1,0,0,e04,Immunization Status Code,1,2,-,X,F
+X12837.csv,IMM,LX,1,0,0,e05,Report Type Code,2,2,-,O,F
+X12837.csv,IMM,LX,1,0,0,e06,Code List Qualifier Code,1,3,-,M,F
+X12837.csv,HSD,LX,1,0,1,landmark,Health Care Services Delivery,3,3,-,O,F
+X12837.csv,HSD,LX,1,0,0,e01,Quantity Qualifier,2,2,-,X,F
+X12837.csv,HSD,LX,1,0,0,e02,Quantity,1,15,-,X,F
+X12837.csv,HSD,LX,1,0,0,e03,Unit or Basis for Measurement Code,2,2,-,O,F
+X12837.csv,HSD,LX,1,0,0,e04,Sample Selection Modulus,1,6,-,O,F
+X12837.csv,HSD,LX,1,0,0,e05,Time Period Qualifier,1,2,-,X,F
+X12837.csv,HSD,LX,1,0,0,e06,Number of Periods,1,3,-,O,F
+X12837.csv,HSD,LX,1,0,0,e07,Ship/Delivery or Calendar Pattern Code,1,2,-,O,F
+X12837.csv,HSD,LX,1,0,0,e08,Ship/Delivery Pattern Time Code,1,1,-,O,F
+X12837.csv,HCP,LX,1,0,1,landmark,Health Care Pricing,3,3,-,O,F
+X12837.csv,HCP,LX,1,0,0,e01,Pricing Methodology,2,2,-,X,F
+X12837.csv,HCP,LX,1,0,0,e02,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,HCP,LX,1,0,0,e03,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,HCP,LX,1,0,0,e04,Reference Identification,1,50,-,O/Z,F
+X12837.csv,HCP,LX,1,0,0,e05,Rate,1,9,-,O/Z,F
+X12837.csv,HCP,LX,1,0,0,e06,Reference Identification,1,50,-,O/Z,F
+X12837.csv,HCP,LX,1,0,0,e07,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,HCP,LX,1,0,0,e08,Product/Service ID,1,48,-,O/Z,F
+X12837.csv,HCP,LX,1,0,0,e09,Product/Service ID Qualifier,2,2,-,X,F
+X12837.csv,HCP,LX,1,0,0,e10,Product/Service ID,1,48,-,X/Z,F
+X12837.csv,HCP,LX,1,0,0,e11,Unit or Basis for Measurement Code,2,2,-,X,F
+X12837.csv,HCP,LX,1,0,0,e12,Quantity,1,15,-,X/Z,F
+X12837.csv,HCP,LX,1,0,0,e13,Reject Reason Code,2,2,-,X/Z,F
+X12837.csv,HCP,LX,1,0,0,e14,Policy Compliance Code,1,2,-,O,F
+X12837.csv,HCP,LX,1,0,0,e15,Exception Code,1,2,-,O/Z,F
+X12837.csv,LIN,,99999,1,1,landmark,Item Identification,3,3,-,O,F
+X12837.csv,LIN,,1,0,0,e01,Assigned Identification,1,20,-,O/Z,F
+X12837.csv,LIN,,1,0,0,e02,Product/Service ID Qualifier,2,2,-,M,F
+X12837.csv,LIN,,1,0,0,e03,Product/Service ID,1,48,-,M,F
+X12837.csv,LIN,,1,0,0,e04,Product/Service ID Qualifier,2,2,-,X,F
+X12837.csv,LIN,,1,0,0,e05,Product/Service ID,1,48,-,X,F
+X12837.csv,LIN,,1,0,0,e06,Product/Service ID Qualifier,2,2,-,X,F
+X12837.csv,LIN,,1,0,0,e07,Product/Service ID,1,48,-,X,F
+X12837.csv,LIN,,1,0,0,e08,Product/Service ID Qualifier,2,2,-,X,F
+X12837.csv,LIN,,1,0,0,e09,Product/Service ID,1,48,-,X,F
+X12837.csv,LIN,,1,0,0,e10,Product/Service ID Qualifier,2,2,-,X,F
+X12837.csv,LIN,,1,0,0,e11,Product/Service ID,1,48,-,X,F
+X12837.csv,LIN,,1,0,0,e12,Product/Service ID Qualifier,2,2,-,X,F
+X12837.csv,LIN,,1,0,0,e13,Product/Service ID,1,48,-,X,F
+X12837.csv,LIN,,1,0,0,e14,Product/Service ID Qualifier,2,2,-,X,F
+X12837.csv,LIN,,1,0,0,e15,Product/Service ID,1,48,-,X,F
+X12837.csv,LIN,,1,0,0,e16,Product/Service ID Qualifier,2,2,-,X,F
+X12837.csv,LIN,,1,0,0,e17,Product/Service ID,1,48,-,X,F
+X12837.csv,LIN,,1,0,0,e18,Product/Service ID Qualifier,2,2,-,X,F
+X12837.csv,LIN,,1,0,0,e19,Product/Service ID,1,48,-,X,F
+X12837.csv,LIN,,1,0,0,e20,Product/Service ID Qualifier,2,2,-,X,F
+X12837.csv,LIN,,1,0,0,e21,Product/Service ID,1,48,-,X,F
+X12837.csv,LIN,,1,0,0,e22,Product/Service ID Qualifier,2,2,-,X,F
+X12837.csv,LIN,,1,0,0,e23,Product/Service ID,1,48,-,X,F
+X12837.csv,LIN,,1,0,0,e24,Product/Service ID Qualifier,2,2,-,X,F
+X12837.csv,LIN,,1,0,0,e25,Product/Service ID,1,48,-,X,F
+X12837.csv,LIN,,1,0,0,e26,Product/Service ID Qualifier,2,2,-,X,F
+X12837.csv,LIN,,1,0,0,e27,Product/Service ID,1,48,-,X,F
+X12837.csv,LIN,,1,0,0,e28,Product/Service ID Qualifier,2,2,-,X,F
+X12837.csv,LIN,,1,0,0,e29,Product/Service ID,1,48,-,X,F
+X12837.csv,LIN,,1,0,0,e30,Product/Service ID Qualifier,2,2,-,X,F
+X12837.csv,LIN,,1,0,0,e31,Product/Service ID,1,48,-,X,F
+X12837.csv,CTP,LX:LIN,1,0,1,landmark,Pricing Information,3,3,-,O,F
+X12837.csv,CTP,LX:LIN,1,0,0,e01,Class of Trade Code,2,2,-,O,F
+X12837.csv,CTP,LX:LIN,1,0,0,e02,Price Identifier Code,3,3,-,X,F
+X12837.csv,CTP,LX:LIN,1,0,0,e03,Unit Price,1,17,-,X,F
+X12837.csv,CTP,LX:LIN,1,0,0,e04,Quantity,1,15,-,X,F
+X12837.csv,CTP,LX:LIN,1,0,0,e06,Price Multiplier Qualifier,3,3,-,O,F
+X12837.csv,CTP,LX:LIN,1,0,0,e07,Multiplier,1,10,-,X/Z,F
+X12837.csv,CTP,LX:LIN,1,0,0,e08,Monetary Amount,1,18,-,O/Z,F
+X12837.csv,CTP,LX:LIN,1,0,0,e09,Basis of Unit Price Code,2,2,-,O,F
+X12837.csv,CTP,LX:LIN,1,0,0,e10,Condition Value,1,10,-,O,F
+X12837.csv,CTP,LX:LIN,1,0,0,e11,Multiple Price Quantity,1,2,-,O,F
+X12837.csv,REF,LX:LIN,1,0,1,landmark,Reference Information,3,3,-,O,F
+X12837.csv,REF,LX:LIN,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12837.csv,REF,LX:LIN,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12837.csv,REF,LX:LIN,1,0,0,e03,Description,1,80,-,X,F
+X12837.csv,NM1,,10,1,1,landmark,Individual or Organizational Name,3,3,-,O,F
+X12837.csv,NM1,,1,0,0,e01,Entity Identifier Code,2,3,-,M,F
+X12837.csv,NM1,,1,0,0,e02,Entity Type Qualifier,1,1,-,M/Z,F
+X12837.csv,NM1,,1,0,0,e03,Name Last or Organization Name,1,60,-,X,F
+X12837.csv,NM1,,1,0,0,e04,Name First,1,35,-,O,F
+X12837.csv,NM1,,1,0,0,e05,Name Middle,1,25,-,O,F
+X12837.csv,NM1,,1,0,0,e06,Name Prefix,1,10,-,O,F
+X12837.csv,NM1,,1,0,0,e07,Name Suffix,1,10,-,O,F
+X12837.csv,NM1,,1,0,0,e08,Identification Code Qualifier,1,2,-,X,F
+X12837.csv,NM1,,1,0,0,e09,Identification Code,2,80,-,X,F
+X12837.csv,NM1,,1,0,0,e10,Entity Relationship Code,2,2,-,X,F
+X12837.csv,NM1,,1,0,0,e11,Entity Identifier Code,2,3,-,O,F
+X12837.csv,NM1,,1,0,0,e12,Name Last or Organization Name,1,60,-,O,F
+X12837.csv,PRV,NM1,1,0,1,landmark,Provider Information,3,3,-,O,F
+X12837.csv,PRV,NM1,1,0,0,e01,Provider Code,1,3,-,M,F
+X12837.csv,PRV,NM1,1,0,0,e02,Reference Identification Qualifier,2,3,-,X,F
+X12837.csv,PRV,NM1,1,0,0,e03,Reference Identification,1,50,-,X,F
+X12837.csv,PRV,NM1,1,0,0,e04,State or Province Code,2,2,-,O,F
+X12837.csv,PRV,NM1,1,0,0,e06,Provider Organization Code,3,3,-,O,F
+X12837.csv,N2,NM1,2,0,1,landmark,Additional Name Information,2,2,-,O,F
+X12837.csv,N2,NM1,1,0,0,e01,Name,1,60,-,M,F
+X12837.csv,N2,NM1,1,0,0,e02,Name,1,60,-,O,F
+X12837.csv,N3,NM1,2,0,1,landmark,Party Location,2,2,-,O,F
+X12837.csv,N3,NM1,1,0,0,e01,Address Information,1,55,-,M,F
+X12837.csv,N3,NM1,1,0,0,e02,Address Information,1,55,-,O,F
+X12837.csv,N4,NM1,1,0,1,landmark,Geographic Location,2,2,-,O,F
+X12837.csv,N4,NM1,1,0,0,e01,City Name,2,30,-,O,F
+X12837.csv,N4,NM1,1,0,0,e02,State or Province Code,2,2,-,X,F
+X12837.csv,N4,NM1,1,0,0,e03,Postal Code,3,15,-,O,F
+X12837.csv,N4,NM1,1,0,0,e04,Country Code,2,3,-,X,F
+X12837.csv,N4,NM1,1,0,0,e05,Location Qualifier,1,2,-,X,F
+X12837.csv,N4,NM1,1,0,0,e06,Location Identifier,1,30,-,O,F
+X12837.csv,N4,NM1,1,0,0,e07,Country Subdivision Code,1,3,-,X,F
+X12837.csv,REF,NM1,20,0,1,landmark,Reference Information,3,3,-,O,F
+X12837.csv,REF,NM1,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12837.csv,REF,NM1,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12837.csv,REF,NM1,1,0,0,e03,Description,1,80,-,X,F
+X12837.csv,PER,NM1,2,0,1,landmark,Administrative Communications Contact,3,3,-,O,F
+X12837.csv,PER,NM1,1,0,0,e01,Contact Function Code,2,2,-,M,F
+X12837.csv,PER,NM1,1,0,0,e02,Name,1,60,-,O,F
+X12837.csv,PER,NM1,1,0,0,e03,Communication Number Qualifier,2,2,-,X,F
+X12837.csv,PER,NM1,1,0,0,e04,Communication Number,1,256,-,X,F
+X12837.csv,PER,NM1,1,0,0,e05,Communication Number Qualifier,2,2,-,X,F
+X12837.csv,PER,NM1,1,0,0,e06,Communication Number,1,256,-,X,F
+X12837.csv,PER,NM1,1,0,0,e07,Communication Number Qualifier,2,2,-,X,F
+X12837.csv,PER,NM1,1,0,0,e08,Communication Number,1,256,-,X,F
+X12837.csv,PER,NM1,1,0,0,e09,Contact Inquiry Reference,1,20,-,O,F
+X12837.csv,SVD,,99999,1,1,landmark,Service Line Adjudication,3,3,-,O,F
+X12837.csv,SVD,,1,0,0,e01,Identification Code,2,80,-,M/Z,F
+X12837.csv,SVD,,1,0,0,e02,Monetary Amount,1,18,-,M/Z,F
+X12837.csv,SVD,,1,0,0,e04,Product/Service ID,1,48,-,O/Z,F
+X12837.csv,SVD,,1,0,0,e05,Quantity,1,15,-,O/Z,F
+X12837.csv,SVD,,1,0,0,e06,Assigned Number,1,6,-,O,F
+X12837.csv,CAS,SVD,99,0,1,landmark,Claims Adjustment,3,3,-,O,F
+X12837.csv,CAS,SVD,1,0,0,e01,Claim Adjustment Group Code,1,2,-,M,F
+X12837.csv,CAS,SVD,1,0,0,e02,Claim Adjustment Reason Code,1,5,-,M,F
+X12837.csv,CAS,SVD,1,0,0,e03,Monetary Amount,1,18,-,M/Z,F
+X12837.csv,CAS,SVD,1,0,0,e04,Quantity,1,15,-,O/Z,F
+X12837.csv,CAS,SVD,1,0,0,e05,Claim Adjustment Reason Code,1,5,-,X,F
+X12837.csv,CAS,SVD,1,0,0,e06,Monetary Amount,1,18,-,X/Z,F
+X12837.csv,CAS,SVD,1,0,0,e07,Quantity,1,15,-,X/Z,F
+X12837.csv,CAS,SVD,1,0,0,e08,Claim Adjustment Reason Code,1,5,-,X,F
+X12837.csv,CAS,SVD,1,0,0,e09,Monetary Amount,1,18,-,X/Z,F
+X12837.csv,CAS,SVD,1,0,0,e10,Quantity,1,15,-,X/Z,F
+X12837.csv,CAS,SVD,1,0,0,e11,Claim Adjustment Reason Code,1,5,-,X,F
+X12837.csv,CAS,SVD,1,0,0,e12,Monetary Amount,1,18,-,X/Z,F
+X12837.csv,CAS,SVD,1,0,0,e13,Quantity,1,15,-,X/Z,F
+X12837.csv,CAS,SVD,1,0,0,e14,Claim Adjustment Reason Code,1,5,-,X,F
+X12837.csv,CAS,SVD,1,0,0,e15,Monetary Amount,1,18,-,X/Z,F
+X12837.csv,CAS,SVD,1,0,0,e16,Quantity,1,15,-,X/Z,F
+X12837.csv,CAS,SVD,1,0,0,e17,Claim Adjustment Reason Code,1,5,-,X,F
+X12837.csv,CAS,SVD,1,0,0,e18,Monetary Amount,1,18,-,X/Z,F
+X12837.csv,CAS,SVD,1,0,0,e19,Quantity,1,15,-,X/Z,F
+X12837.csv,DTP,SVD,9,0,1,landmark,Date or Time or Period,3,3,-,O,F
+X12837.csv,DTP,SVD,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12837.csv,DTP,SVD,1,0,0,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+X12837.csv,DTP,SVD,1,0,0,e03,Date Time Period,1,35,-,M,F
+X12837.csv,AMT,SVD,20,0,1,landmark,Monetary Amount Information,3,3,-,O,F
+X12837.csv,AMT,SVD,1,0,0,e01,Amount Qualifier Code,1,3,-,M,F
+X12837.csv,AMT,SVD,1,0,0,e02,Monetary Amount,1,18,-,M,F
+X12837.csv,AMT,SVD,1,0,0,e03,Credit/Debit Flag Code,1,1,-,O,F
+X12837.csv,LQ,,99999,1,1,landmark,Industry Code Identification,2,2,-,O,F
+X12837.csv,LQ,,1,0,0,e01,Code List Qualifier Code,1,3,-,O,F
+X12837.csv,LQ,,1,0,0,e02,Industry Code,1,30,-,X,F
+X12837.csv,FRM,LQ,99,0,1,landmark,Supporting Documentation,3,3,-,M,F
+X12837.csv,FRM,LQ,1,0,0,e01,Assigned Identification,1,20,-,M/Z,F
+X12837.csv,FRM,LQ,1,0,0,e02,Yes/No Condition or Response Code,1,1,-,X/Z,F
+X12837.csv,FRM,LQ,1,0,0,e03,Reference Identification,1,50,-,X,F
+X12837.csv,FRM,LQ,1,0,0,e04,Date,8,8,-,X,F
+X12837.csv,FRM,LQ,1,0,0,e05,Percent Decimal Format,1,6,-,X,F
+X12837.csv,SE,,1,0,1,landmark,Transaction Set Trailer,2,2,-,M,F
+X12837.csv,SE,,1,0,0,e01,Number of Included Segments,1,10,-,M,F
+X12837.csv,SE,,1,0,0,e02,Transaction Set Control Number,4,9,-,M,F

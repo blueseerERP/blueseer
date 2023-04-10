@@ -1,340 +1,340 @@
 #<h1>271 - Eligibility, Coverage or Benefit Information</h1><br>
-#segment,parent,loopcount,isgroup,islandmark,field,desc,min,max,align,status
-ST,,1,no,yes,landmark,Transaction Set Header,2,2,-,M
-ST,,1,no,no,e01,Transaction Set Identifier Code,3,3,-,M/Z
-ST,,1,no,no,e02,Transaction Set Control Number,4,9,-,M
-ST,,1,no,no,e03,Implementation Convention Reference,1,35,-,O/Z
-BHT,,1,no,yes,landmark,Beginning of Hierarchical Transaction,3,3,-,M
-BHT,,1,no,no,e01,Hierarchical Structure Code,4,4,-,M
-BHT,,1,no,no,e02,Transaction Set Purpose Code,2,2,-,M
-BHT,,1,no,no,e03,Reference Identification,1,50,-,O/Z
-BHT,,1,no,no,e04,Date,8,8,-,O/Z
-BHT,,1,no,no,e05,Time,4,8,-,O/Z
-BHT,,1,no,no,e06,Transaction Type Code,2,2,-,O
-HL,,99999,yes,yes,landmark,Hierarchical Level,2,2,-,M
-HL,,1,no,no,e01,Hierarchical ID Number,1,12,-,M
-HL,,1,no,no,e02,Hierarchical Parent ID Number,1,12,-,O
-HL,,1,no,no,e03,Hierarchical Level Code,1,2,-,M
-HL,,1,no,no,e04,Hierarchical Child Code,1,1,-,O
-TRN,HL,9,no,yes,landmark,Trace,3,3,-,O
-TRN,HL,1,no,no,e01,Trace Type Code,1,2,-,M
-TRN,HL,1,no,no,e02,Reference Identification,1,50,-,M/Z
-TRN,HL,1,no,no,e03,Originating Company Identifier,10,10,-,O/Z
-TRN,HL,1,no,no,e04,Reference Identification,1,50,-,O/Z
-AAA,HL,9,no,yes,landmark,Request Validation,3,3,-,O
-AAA,HL,1,no,no,e01,Yes/No Condition or Response Code,1,1,-,M/Z
-AAA,HL,1,no,no,e02,Agency Qualifier Code,2,2,-,O
-AAA,HL,1,no,no,e03,Reject Reason Code,2,2,-,O
-AAA,HL,1,no,no,e04,Follow-up Action Code,1,1,-,O
-NM1,,99999,yes,yes,landmark,Individual or Organizational Name,3,3,-,O
-NM1,,1,no,no,e01,Entity Identifier Code,2,3,-,M
-NM1,,1,no,no,e02,Entity Type Qualifier,1,1,-,M/Z
-NM1,,1,no,no,e03,Name Last or Organization Name,1,60,-,X
-NM1,,1,no,no,e04,Name First,1,35,-,O
-NM1,,1,no,no,e05,Name Middle,1,25,-,O
-NM1,,1,no,no,e06,Name Prefix,1,10,-,O
-NM1,,1,no,no,e07,Name Suffix,1,10,-,O
-NM1,,1,no,no,e08,Identification Code Qualifier,1,2,-,X
-NM1,,1,no,no,e09,Identification Code,2,80,-,X
-NM1,,1,no,no,e10,Entity Relationship Code,2,2,-,X
-NM1,,1,no,no,e11,Entity Identifier Code,2,3,-,O
-NM1,,1,no,no,e12,Name Last or Organization Name,1,60,-,O
-REF,HL:NM1,9,no,yes,landmark,Reference Information,3,3,-,O
-REF,HL:NM1,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
-REF,HL:NM1,1,no,no,e02,Reference Identification,1,50,-,X
-REF,HL:NM1,1,no,no,e03,Description,1,80,-,X
-N2,HL:NM1,1,no,yes,landmark,Additional Name Information,2,2,-,O
-N2,HL:NM1,1,no,no,e01,Name,1,60,-,M
-N2,HL:NM1,1,no,no,e02,Name,1,60,-,O
-N3,HL:NM1,1,no,yes,landmark,Party Location,2,2,-,O
-N3,HL:NM1,1,no,no,e01,Address Information,1,55,-,M
-N3,HL:NM1,1,no,no,e02,Address Information,1,55,-,O
-N4,HL:NM1,1,no,yes,landmark,Geographic Location,2,2,-,O
-N4,HL:NM1,1,no,no,e01,City Name,2,30,-,O
-N4,HL:NM1,1,no,no,e02,State or Province Code,2,2,-,X
-N4,HL:NM1,1,no,no,e03,Postal Code,3,15,-,O
-N4,HL:NM1,1,no,no,e04,Country Code,2,3,-,X
-N4,HL:NM1,1,no,no,e05,Location Qualifier,1,2,-,X
-N4,HL:NM1,1,no,no,e06,Location Identifier,1,30,-,O
-N4,HL:NM1,1,no,no,e07,Country Subdivision Code,1,3,-,X
-PER,HL:NM1,3,no,yes,landmark,Administrative Communications Contact,3,3,-,O
-PER,HL:NM1,1,no,no,e01,Contact Function Code,2,2,-,M
-PER,HL:NM1,1,no,no,e02,Name,1,60,-,O
-PER,HL:NM1,1,no,no,e03,Communication Number Qualifier,2,2,-,X
-PER,HL:NM1,1,no,no,e04,Communication Number,1,256,-,X
-PER,HL:NM1,1,no,no,e05,Communication Number Qualifier,2,2,-,X
-PER,HL:NM1,1,no,no,e06,Communication Number,1,256,-,X
-PER,HL:NM1,1,no,no,e07,Communication Number Qualifier,2,2,-,X
-PER,HL:NM1,1,no,no,e08,Communication Number,1,256,-,X
-PER,HL:NM1,1,no,no,e09,Contact Inquiry Reference,1,20,-,O
-AAA,HL:NM1,9,no,yes,landmark,Request Validation,3,3,-,O
-AAA,HL:NM1,1,no,no,e01,Yes/No Condition or Response Code,1,1,-,M/Z
-AAA,HL:NM1,1,no,no,e02,Agency Qualifier Code,2,2,-,O
-AAA,HL:NM1,1,no,no,e03,Reject Reason Code,2,2,-,O
-AAA,HL:NM1,1,no,no,e04,Follow-up Action Code,1,1,-,O
-PRV,HL:NM1,1,no,yes,landmark,Provider Information,3,3,-,O
-PRV,HL:NM1,1,no,no,e01,Provider Code,1,3,-,M
-PRV,HL:NM1,1,no,no,e02,Reference Identification Qualifier,2,3,-,X
-PRV,HL:NM1,1,no,no,e03,Reference Identification,1,50,-,X
-PRV,HL:NM1,1,no,no,e04,State or Province Code,2,2,-,O
-PRV,HL:NM1,1,no,no,e06,Provider Organization Code,3,3,-,O
-DMG,HL:NM1,1,no,yes,landmark,Demographic Information,3,3,-,O
-DMG,HL:NM1,1,no,no,e01,Date Time Period Format Qualifier,2,3,-,X
-DMG,HL:NM1,1,no,no,e02,Date Time Period,1,35,-,X/Z
-DMG,HL:NM1,1,no,no,e03,Gender Code,1,1,-,O
-DMG,HL:NM1,1,no,no,e04,Marital Status Code,1,1,-,O
-DMG,HL:NM1,1,no,no,e06,Citizenship Status Code,1,2,-,O
-DMG,HL:NM1,1,no,no,e07,Country Code,2,3,-,O/Z
-DMG,HL:NM1,1,no,no,e08,Basis of Verification Code,1,2,-,O
-DMG,HL:NM1,1,no,no,e09,Quantity,1,15,-,O/Z
-DMG,HL:NM1,1,no,no,e10,Code List Qualifier Code,1,3,-,X
-DMG,HL:NM1,1,no,no,e11,Industry Code,1,30,-,X/Z
-INS,HL:NM1,1,no,yes,landmark,Insured Benefit,3,3,-,O
-INS,HL:NM1,1,no,no,e01,Yes/No Condition or Response Code,1,1,-,M/Z
-INS,HL:NM1,1,no,no,e02,Individual Relationship Code,2,2,-,M
-INS,HL:NM1,1,no,no,e03,Maintenance Type Code,3,3,-,O
-INS,HL:NM1,1,no,no,e04,Maintenance Reason Code,2,3,-,O
-INS,HL:NM1,1,no,no,e05,Benefit Status Code,1,1,-,O
-INS,HL:NM1,1,no,no,e07,Consolidated Omnibus Budget Reconciliation Act (COBRA) Qualifying Event Code,1,2,-,O
-INS,HL:NM1,1,no,no,e08,Employment Status Code,2,2,-,O
-INS,HL:NM1,1,no,no,e09,Student Status Code,1,1,-,O
-INS,HL:NM1,1,no,no,e10,Yes/No Condition or Response Code,1,1,-,O/Z
-INS,HL:NM1,1,no,no,e11,Date Time Period Format Qualifier,2,3,-,X
-INS,HL:NM1,1,no,no,e12,Date Time Period,1,35,-,X/Z
-INS,HL:NM1,1,no,no,e13,Confidentiality Code,1,1,-,O
-INS,HL:NM1,1,no,no,e14,City Name,2,30,-,O/Z
-INS,HL:NM1,1,no,no,e15,State or Province Code,2,2,-,O
-INS,HL:NM1,1,no,no,e16,Country Code,2,3,-,O
-INS,HL:NM1,1,no,no,e17,Number,1,9,-,O/Z
-HI,HL:NM1,1,no,yes,landmark,Health Care Information Codes,2,2,-,O
-DTP,HL:NM1,9,no,yes,landmark,Date or Time or Period,3,3,-,O
-DTP,HL:NM1,1,no,no,e01,Date/Time Qualifier,3,3,-,M
-DTP,HL:NM1,1,no,no,e02,Date Time Period Format Qualifier,2,3,-,M/Z
-DTP,HL:NM1,1,no,no,e03,Date Time Period,1,35,-,M
-LUI,HL:NM1,9,no,yes,landmark,Language Use,3,3,-,O
-LUI,HL:NM1,1,no,no,e01,Identification Code Qualifier,1,2,-,X
-LUI,HL:NM1,1,no,no,e02,Identification Code,2,80,-,X/Z
-LUI,HL:NM1,1,no,no,e03,Description,1,80,-,X/Z
-LUI,HL:NM1,1,no,no,e04,Use of Language Indicator,1,2,-,O
-LUI,HL:NM1,1,no,no,e05,Language Proficiency Indicator,1,1,-,O
-MPI,HL:NM1,9,no,yes,landmark,Military Personnel Information,3,3,-,O
-MPI,HL:NM1,1,no,no,e01,Information Status Code,1,1,-,M
-MPI,HL:NM1,1,no,no,e02,Employment Status Code,2,2,-,M
-MPI,HL:NM1,1,no,no,e03,Government Service Affiliation Code,1,1,-,M
-MPI,HL:NM1,1,no,no,e04,Description,1,80,-,O/Z
-MPI,HL:NM1,1,no,no,e05,Military Service Rank Code,2,2,-,O
-MPI,HL:NM1,1,no,no,e06,Date Time Period Format Qualifier,2,3,-,X
-MPI,HL:NM1,1,no,no,e07,Date Time Period,1,35,-,X/Z
-EB,,99999,yes,yes,landmark,Eligibility or Benefit Information,2,2,-,O
-EB,,1,no,no,e01,Eligibility or Benefit Information Code,1,2,-,M/Z
-EB,,1,no,no,e02,Coverage Level Code,3,3,-,O
-EB,,1,no,no,e03,Service Type Code,1,2,-,O/Z
-EB,,1,no,no,e04,Insurance Type Code,1,3,-,O
-EB,,1,no,no,e05,Plan Coverage Description,1,50,-,O
-EB,,1,no,no,e06,Time Period Qualifier,1,2,-,O
-EB,,1,no,no,e07,Monetary Amount,1,18,-,O
-EB,,1,no,no,e08,Percentage as Decimal,1,10,-,O
-EB,,1,no,no,e09,Quantity Qualifier,2,2,-,X
-EB,,1,no,no,e10,Quantity,1,15,-,X
-EB,,1,no,no,e11,Yes/No Condition or Response Code,1,1,-,O/Z
-EB,,1,no,no,e12,Yes/No Condition or Response Code,1,1,-,O/Z
-HSD,HL:NM1:EB,9,no,yes,landmark,Health Care Services Delivery,3,3,-,O
-HSD,HL:NM1:EB,1,no,no,e01,Quantity Qualifier,2,2,-,X
-HSD,HL:NM1:EB,1,no,no,e02,Quantity,1,15,-,X
-HSD,HL:NM1:EB,1,no,no,e03,Unit or Basis for Measurement Code,2,2,-,O
-HSD,HL:NM1:EB,1,no,no,e04,Sample Selection Modulus,1,6,-,O
-HSD,HL:NM1:EB,1,no,no,e05,Time Period Qualifier,1,2,-,X
-HSD,HL:NM1:EB,1,no,no,e06,Number of Periods,1,3,-,O
-HSD,HL:NM1:EB,1,no,no,e07,Ship/Delivery or Calendar Pattern Code,1,2,-,O
-HSD,HL:NM1:EB,1,no,no,e08,Ship/Delivery Pattern Time Code,1,1,-,O
-REF,HL:NM1:EB,9,no,yes,landmark,Reference Information,3,3,-,O
-REF,HL:NM1:EB,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
-REF,HL:NM1:EB,1,no,no,e02,Reference Identification,1,50,-,X
-REF,HL:NM1:EB,1,no,no,e03,Description,1,80,-,X
-DTP,HL:NM1:EB,20,no,yes,landmark,Date or Time or Period,3,3,-,O
-DTP,HL:NM1:EB,1,no,no,e01,Date/Time Qualifier,3,3,-,M
-DTP,HL:NM1:EB,1,no,no,e02,Date Time Period Format Qualifier,2,3,-,M/Z
-DTP,HL:NM1:EB,1,no,no,e03,Date Time Period,1,35,-,M
-AAA,HL:NM1:EB,9,no,yes,landmark,Request Validation,3,3,-,O
-AAA,HL:NM1:EB,1,no,no,e01,Yes/No Condition or Response Code,1,1,-,M/Z
-AAA,HL:NM1:EB,1,no,no,e02,Agency Qualifier Code,2,2,-,O
-AAA,HL:NM1:EB,1,no,no,e03,Reject Reason Code,2,2,-,O
-AAA,HL:NM1:EB,1,no,no,e04,Follow-up Action Code,1,1,-,O
-VEH,HL:NM1:EB,1,no,yes,landmark,Vehicle Information,3,3,-,O
-VEH,HL:NM1:EB,1,no,no,e01,Assigned Number,1,6,-,O
-VEH,HL:NM1:EB,1,no,no,e02,Vehicle Identification Number,1,30,-,O
-VEH,HL:NM1:EB,1,no,no,e03,Year,4,4,-,O
-VEH,HL:NM1:EB,1,no,no,e04,Agency Qualifier Code,2,2,-,X/Z
-VEH,HL:NM1:EB,1,no,no,e05,Reference Identification,1,50,-,X/Z
-VEH,HL:NM1:EB,1,no,no,e06,Reference Identification,1,50,-,O/Z
-VEH,HL:NM1:EB,1,no,no,e07,Reference Identification,1,50,-,X/Z
-VEH,HL:NM1:EB,1,no,no,e08,Length,1,8,-,O/Z
-VEH,HL:NM1:EB,1,no,no,e09,Reference Identification,1,50,-,O/Z
-VEH,HL:NM1:EB,1,no,no,e10,State or Province Code,2,2,-,O/Z
-VEH,HL:NM1:EB,1,no,no,e11,Location Identifier,1,30,-,O/Z
-VEH,HL:NM1:EB,1,no,no,e12,Yes/No Condition or Response Code,1,1,-,O/Z
-VEH,HL:NM1:EB,1,no,no,e13,Amount,1,15,-,O/Z
-VEH,HL:NM1:EB,1,no,no,e14,Yes/No Condition or Response Code,1,1,-,O/Z
-VEH,HL:NM1:EB,1,no,no,e15,Amount,1,15,-,O/Z
-VEH,HL:NM1:EB,1,no,no,e16,Action Code,1,2,-,O
-VEH,HL:NM1:EB,1,no,no,e17,Country Code,2,3,-,O/Z
-VEH,HL:NM1:EB,1,no,no,e18,Name,1,60,-,X/Z
-VEH,HL:NM1:EB,1,no,no,e19,Country Code,2,3,-,X/Z
-PID,HL:NM1:EB,1,no,yes,landmark,Product/Item Description,3,3,-,O
-PID,HL:NM1:EB,1,no,no,e01,Item Description Type,1,1,-,M
-PID,HL:NM1:EB,1,no,no,e02,Product/Process Characteristic Code,2,3,-,O
-PID,HL:NM1:EB,1,no,no,e03,Agency Qualifier Code,2,2,-,X/Z
-PID,HL:NM1:EB,1,no,no,e04,Product Description Code,1,12,-,X/Z
-PID,HL:NM1:EB,1,no,no,e05,Description,1,80,-,X
-PID,HL:NM1:EB,1,no,no,e06,Surface/Layer/Position Code,2,2,-,O
-PID,HL:NM1:EB,1,no,no,e07,Source Subqualifier,1,15,-,O
-PID,HL:NM1:EB,1,no,no,e08,Yes/No Condition or Response Code,1,1,-,O/Z
-PID,HL:NM1:EB,1,no,no,e09,Language Code,2,3,-,O/Z
-PDR,HL:NM1:EB,1,no,yes,landmark,Property Description - Real,3,3,-,O
-PDR,HL:NM1:EB,1,no,no,e01,Type of Real Estate Asset Code,2,2,-,M
-PDR,HL:NM1:EB,1,no,no,e02,Code List Qualifier Code,1,3,-,X
-PDR,HL:NM1:EB,1,no,no,e03,Industry Code,1,30,-,X
-PDR,HL:NM1:EB,1,no,no,e04,Occupancy Code,2,2,-,O
-PDP,HL:NM1:EB,1,no,yes,landmark,Property Description - Personal,3,3,-,O
-PDP,HL:NM1:EB,1,no,no,e01,Type of Personal or Business Asset Code,2,2,-,M
-PDP,HL:NM1:EB,1,no,no,e02,Commodity Code Qualifier,1,1,-,X
-PDP,HL:NM1:EB,1,no,no,e03,Commodity Code,1,30,-,X
-LIN,HL:NM1:EB,1,no,yes,landmark,Item Identification,3,3,-,O
-LIN,HL:NM1:EB,1,no,no,e01,Assigned Identification,1,20,-,O/Z
-LIN,HL:NM1:EB,1,no,no,e02,Product/Service ID Qualifier,2,2,-,M
-LIN,HL:NM1:EB,1,no,no,e03,Product/Service ID,1,48,-,M
-LIN,HL:NM1:EB,1,no,no,e04,Product/Service ID Qualifier,2,2,-,X
-LIN,HL:NM1:EB,1,no,no,e05,Product/Service ID,1,48,-,X
-LIN,HL:NM1:EB,1,no,no,e06,Product/Service ID Qualifier,2,2,-,X
-LIN,HL:NM1:EB,1,no,no,e07,Product/Service ID,1,48,-,X
-LIN,HL:NM1:EB,1,no,no,e08,Product/Service ID Qualifier,2,2,-,X
-LIN,HL:NM1:EB,1,no,no,e09,Product/Service ID,1,48,-,X
-LIN,HL:NM1:EB,1,no,no,e10,Product/Service ID Qualifier,2,2,-,X
-LIN,HL:NM1:EB,1,no,no,e11,Product/Service ID,1,48,-,X
-LIN,HL:NM1:EB,1,no,no,e12,Product/Service ID Qualifier,2,2,-,X
-LIN,HL:NM1:EB,1,no,no,e13,Product/Service ID,1,48,-,X
-LIN,HL:NM1:EB,1,no,no,e14,Product/Service ID Qualifier,2,2,-,X
-LIN,HL:NM1:EB,1,no,no,e15,Product/Service ID,1,48,-,X
-LIN,HL:NM1:EB,1,no,no,e16,Product/Service ID Qualifier,2,2,-,X
-LIN,HL:NM1:EB,1,no,no,e17,Product/Service ID,1,48,-,X
-LIN,HL:NM1:EB,1,no,no,e18,Product/Service ID Qualifier,2,2,-,X
-LIN,HL:NM1:EB,1,no,no,e19,Product/Service ID,1,48,-,X
-LIN,HL:NM1:EB,1,no,no,e20,Product/Service ID Qualifier,2,2,-,X
-LIN,HL:NM1:EB,1,no,no,e21,Product/Service ID,1,48,-,X
-LIN,HL:NM1:EB,1,no,no,e22,Product/Service ID Qualifier,2,2,-,X
-LIN,HL:NM1:EB,1,no,no,e23,Product/Service ID,1,48,-,X
-LIN,HL:NM1:EB,1,no,no,e24,Product/Service ID Qualifier,2,2,-,X
-LIN,HL:NM1:EB,1,no,no,e25,Product/Service ID,1,48,-,X
-LIN,HL:NM1:EB,1,no,no,e26,Product/Service ID Qualifier,2,2,-,X
-LIN,HL:NM1:EB,1,no,no,e27,Product/Service ID,1,48,-,X
-LIN,HL:NM1:EB,1,no,no,e28,Product/Service ID Qualifier,2,2,-,X
-LIN,HL:NM1:EB,1,no,no,e29,Product/Service ID,1,48,-,X
-LIN,HL:NM1:EB,1,no,no,e30,Product/Service ID Qualifier,2,2,-,X
-LIN,HL:NM1:EB,1,no,no,e31,Product/Service ID,1,48,-,X
-EM,HL:NM1:EB,1,no,yes,landmark,Equipment Characteristics,2,2,-,O
-EM,HL:NM1:EB,1,no,no,e01,Weight Unit Code,1,1,-,X
-EM,HL:NM1:EB,1,no,no,e02,Weight,1,10,-,O/Z
-EM,HL:NM1:EB,1,no,no,e03,Volume Unit Qualifier,1,1,-,X
-EM,HL:NM1:EB,1,no,no,e04,Volume,1,8,-,O/Z
-EM,HL:NM1:EB,1,no,no,e05,Country Code,2,3,-,O/Z
-EM,HL:NM1:EB,1,no,no,e06,Construction Type,1,2,-,O
-EM,HL:NM1:EB,1,no,no,e07,Date,8,8,-,O/Z
-SD1,HL:NM1:EB,1,no,yes,landmark,Safety Data,3,3,-,O
-SD1,HL:NM1:EB,1,no,no,e01,Item Description Type,1,1,-,M
-SD1,HL:NM1:EB,1,no,no,e02,Safety Characteristic/Hazard Code,3,3,-,M
-SD1,HL:NM1:EB,1,no,no,e03,Agency Qualifier Code,2,2,-,X
-SD1,HL:NM1:EB,1,no,no,e04,Source Subqualifier,1,15,-,O
-SD1,HL:NM1:EB,1,no,no,e05,Product Description Code,1,12,-,X
-SD1,HL:NM1:EB,1,no,no,e06,Description,1,80,-,X/Z
-SD1,HL:NM1:EB,1,no,no,e07,State or Province Code,2,2,-,O/Z
-SD1,HL:NM1:EB,1,no,no,e08,Country Code,2,3,-,O/Z
-PKD,HL:NM1:EB,1,no,yes,landmark,Packaging Description,3,3,-,O
-PKD,HL:NM1:EB,1,no,no,e01,Packaging Code,3,5,-,X
-PKD,HL:NM1:EB,1,no,no,e02,Source Subqualifier,1,15,-,X
-PKD,HL:NM1:EB,1,no,no,e03,Agency Qualifier Code,2,2,-,O
-PKD,HL:NM1:EB,1,no,no,e04,Packaging Description Code,1,7,-,O
-PKD,HL:NM1:EB,1,no,no,e05,Ownership Code,1,1,-,O
-MSG,HL:NM1:EB,10,no,yes,landmark,Message Text,3,3,-,O
-MSG,HL:NM1:EB,1,no,no,e01,Free-form Message Text,1,264,-,M
-MSG,HL:NM1:EB,1,no,no,e02,Printer Carriage Control Code,2,2,-,X
-MSG,HL:NM1:EB,1,no,no,e03,Number,1,9,-,O/Z
-III,,99999,yes,yes,landmark,Information,3,3,-,O
-III,,1,no,no,e01,Code List Qualifier Code,1,3,-,X
-III,,1,no,no,e02,Industry Code,1,30,-,X
-III,,1,no,no,e03,Code Category,2,2,-,O/Z
-III,,1,no,no,e04,Free-form Message Text,1,264,-,X
-III,,1,no,no,e05,Quantity,1,15,-,X
-III,,1,no,no,e07,Surface/Layer/Position Code,2,2,-,O
-III,,1,no,no,e08,Surface/Layer/Position Code,2,2,-,O
-III,,1,no,no,e09,Surface/Layer/Position Code,2,2,-,O
-DTP,HL:NM1:EB:III,5,no,yes,landmark,Date or Time or Period,3,3,-,O
-DTP,HL:NM1:EB:III,1,no,no,e01,Date/Time Qualifier,3,3,-,M
-DTP,HL:NM1:EB:III,1,no,no,e02,Date Time Period Format Qualifier,2,3,-,M/Z
-DTP,HL:NM1:EB:III,1,no,no,e03,Date Time Period,1,35,-,M
-AMT,HL:NM1:EB:III,5,no,yes,landmark,Monetary Amount Information,3,3,-,O
-AMT,HL:NM1:EB:III,1,no,no,e01,Amount Qualifier Code,1,3,-,M
-AMT,HL:NM1:EB:III,1,no,no,e02,Monetary Amount,1,18,-,M
-AMT,HL:NM1:EB:III,1,no,no,e03,Credit/Debit Flag Code,1,1,-,O
-PCT,HL:NM1:EB:III,5,no,yes,landmark,Percent Amounts,3,3,-,O
-PCT,HL:NM1:EB:III,1,no,no,e01,Percent Qualifier,1,2,-,M
-PCT,HL:NM1:EB:III,1,no,no,e02,Percentage as Decimal,1,10,-,M
-LQ,,99999,yes,yes,landmark,Industry Code Identification,2,2,-,O
-LQ,,1,no,no,e01,Code List Qualifier Code,1,3,-,O
-LQ,,1,no,no,e02,Industry Code,1,30,-,X
-AMT,HL:NM1:EB:III:LQ,5,no,yes,landmark,Monetary Amount Information,3,3,-,O
-AMT,HL:NM1:EB:III:LQ,1,no,no,e01,Amount Qualifier Code,1,3,-,M
-AMT,HL:NM1:EB:III:LQ,1,no,no,e02,Monetary Amount,1,18,-,M
-AMT,HL:NM1:EB:III:LQ,1,no,no,e03,Credit/Debit Flag Code,1,1,-,O
-PCT,HL:NM1:EB:III:LQ,5,no,yes,landmark,Percent Amounts,3,3,-,O
-PCT,HL:NM1:EB:III:LQ,1,no,no,e01,Percent Qualifier,1,2,-,M
-PCT,HL:NM1:EB:III:LQ,1,no,no,e02,Percentage as Decimal,1,10,-,M
-LS,,1,no,yes,landmark,Loop Header,2,2,-,O
-LS,,1,no,no,e01,Loop Identifier Code,1,4,-,M
-NM1,,99999,yes,yes,landmark,Individual or Organizational Name,3,3,-,O
-NM1,,1,no,no,e01,Entity Identifier Code,2,3,-,M
-NM1,,1,no,no,e02,Entity Type Qualifier,1,1,-,M/Z
-NM1,,1,no,no,e03,Name Last or Organization Name,1,60,-,X
-NM1,,1,no,no,e04,Name First,1,35,-,O
-NM1,,1,no,no,e05,Name Middle,1,25,-,O
-NM1,,1,no,no,e06,Name Prefix,1,10,-,O
-NM1,,1,no,no,e07,Name Suffix,1,10,-,O
-NM1,,1,no,no,e08,Identification Code Qualifier,1,2,-,X
-NM1,,1,no,no,e09,Identification Code,2,80,-,X
-NM1,,1,no,no,e10,Entity Relationship Code,2,2,-,X
-NM1,,1,no,no,e11,Entity Identifier Code,2,3,-,O
-NM1,,1,no,no,e12,Name Last or Organization Name,1,60,-,O
-N2,NM1,1,no,yes,landmark,Additional Name Information,2,2,-,O
-N2,NM1,1,no,no,e01,Name,1,60,-,M
-N2,NM1,1,no,no,e02,Name,1,60,-,O
-N3,NM1,1,no,yes,landmark,Party Location,2,2,-,O
-N3,NM1,1,no,no,e01,Address Information,1,55,-,M
-N3,NM1,1,no,no,e02,Address Information,1,55,-,O
-N4,NM1,1,no,yes,landmark,Geographic Location,2,2,-,O
-N4,NM1,1,no,no,e01,City Name,2,30,-,O
-N4,NM1,1,no,no,e02,State or Province Code,2,2,-,X
-N4,NM1,1,no,no,e03,Postal Code,3,15,-,O
-N4,NM1,1,no,no,e04,Country Code,2,3,-,X
-N4,NM1,1,no,no,e05,Location Qualifier,1,2,-,X
-N4,NM1,1,no,no,e06,Location Identifier,1,30,-,O
-N4,NM1,1,no,no,e07,Country Subdivision Code,1,3,-,X
-PER,NM1,3,no,yes,landmark,Administrative Communications Contact,3,3,-,O
-PER,NM1,1,no,no,e01,Contact Function Code,2,2,-,M
-PER,NM1,1,no,no,e02,Name,1,60,-,O
-PER,NM1,1,no,no,e03,Communication Number Qualifier,2,2,-,X
-PER,NM1,1,no,no,e04,Communication Number,1,256,-,X
-PER,NM1,1,no,no,e05,Communication Number Qualifier,2,2,-,X
-PER,NM1,1,no,no,e06,Communication Number,1,256,-,X
-PER,NM1,1,no,no,e07,Communication Number Qualifier,2,2,-,X
-PER,NM1,1,no,no,e08,Communication Number,1,256,-,X
-PER,NM1,1,no,no,e09,Contact Inquiry Reference,1,20,-,O
-PRV,NM1,1,no,yes,landmark,Provider Information,3,3,-,O
-PRV,NM1,1,no,no,e01,Provider Code,1,3,-,M
-PRV,NM1,1,no,no,e02,Reference Identification Qualifier,2,3,-,X
-PRV,NM1,1,no,no,e03,Reference Identification,1,50,-,X
-PRV,NM1,1,no,no,e04,State or Province Code,2,2,-,O
-PRV,NM1,1,no,no,e06,Provider Organization Code,3,3,-,O
-LE,,1,no,yes,landmark,Loop Trailer,2,2,-,O
-LE,,1,no,no,e01,Loop Identifier Code,1,4,-,M
-SE,,1,no,yes,landmark,Transaction Set Trailer,2,2,-,M
-SE,,1,no,no,e01,Number of Included Segments,1,10,-,M
-SE,,1,no,no,e02,Transaction Set Control Number,4,9,-,M
+#segment,parent,loopcount,isgroup,islandmark,field,desc,min,max,align,status,type
+ST,,1,no,yes,landmark,Transaction Set Header,2,2,-,M,F
+ST,,1,no,no,e01,Transaction Set Identifier Code,3,3,-,M/Z,F
+ST,,1,no,no,e02,Transaction Set Control Number,4,9,-,M,F
+ST,,1,no,no,e03,Implementation Convention Reference,1,35,-,O/Z,F
+BHT,,1,no,yes,landmark,Beginning of Hierarchical Transaction,3,3,-,M,F
+BHT,,1,no,no,e01,Hierarchical Structure Code,4,4,-,M,F
+BHT,,1,no,no,e02,Transaction Set Purpose Code,2,2,-,M,F
+BHT,,1,no,no,e03,Reference Identification,1,50,-,O/Z,F
+BHT,,1,no,no,e04,Date,8,8,-,O/Z,F
+BHT,,1,no,no,e05,Time,4,8,-,O/Z,F
+BHT,,1,no,no,e06,Transaction Type Code,2,2,-,O,F
+HL,,99999,yes,yes,landmark,Hierarchical Level,2,2,-,M,F
+HL,,1,no,no,e01,Hierarchical ID Number,1,12,-,M,F
+HL,,1,no,no,e02,Hierarchical Parent ID Number,1,12,-,O,F
+HL,,1,no,no,e03,Hierarchical Level Code,1,2,-,M,F
+HL,,1,no,no,e04,Hierarchical Child Code,1,1,-,O,F
+TRN,HL,9,no,yes,landmark,Trace,3,3,-,O,F
+TRN,HL,1,no,no,e01,Trace Type Code,1,2,-,M,F
+TRN,HL,1,no,no,e02,Reference Identification,1,50,-,M/Z,F
+TRN,HL,1,no,no,e03,Originating Company Identifier,10,10,-,O/Z,F
+TRN,HL,1,no,no,e04,Reference Identification,1,50,-,O/Z,F
+AAA,HL,9,no,yes,landmark,Request Validation,3,3,-,O,F
+AAA,HL,1,no,no,e01,Yes/No Condition or Response Code,1,1,-,M/Z,F
+AAA,HL,1,no,no,e02,Agency Qualifier Code,2,2,-,O,F
+AAA,HL,1,no,no,e03,Reject Reason Code,2,2,-,O,F
+AAA,HL,1,no,no,e04,Follow-up Action Code,1,1,-,O,F
+NM1,,99999,yes,yes,landmark,Individual or Organizational Name,3,3,-,O,F
+NM1,,1,no,no,e01,Entity Identifier Code,2,3,-,M,F
+NM1,,1,no,no,e02,Entity Type Qualifier,1,1,-,M/Z,F
+NM1,,1,no,no,e03,Name Last or Organization Name,1,60,-,X,F
+NM1,,1,no,no,e04,Name First,1,35,-,O,F
+NM1,,1,no,no,e05,Name Middle,1,25,-,O,F
+NM1,,1,no,no,e06,Name Prefix,1,10,-,O,F
+NM1,,1,no,no,e07,Name Suffix,1,10,-,O,F
+NM1,,1,no,no,e08,Identification Code Qualifier,1,2,-,X,F
+NM1,,1,no,no,e09,Identification Code,2,80,-,X,F
+NM1,,1,no,no,e10,Entity Relationship Code,2,2,-,X,F
+NM1,,1,no,no,e11,Entity Identifier Code,2,3,-,O,F
+NM1,,1,no,no,e12,Name Last or Organization Name,1,60,-,O,F
+REF,HL:NM1,9,no,yes,landmark,Reference Information,3,3,-,O,F
+REF,HL:NM1,1,no,no,e01,Reference Identification Qualifier,2,3,-,M,F
+REF,HL:NM1,1,no,no,e02,Reference Identification,1,50,-,X,F
+REF,HL:NM1,1,no,no,e03,Description,1,80,-,X,F
+N2,HL:NM1,1,no,yes,landmark,Additional Name Information,2,2,-,O,F
+N2,HL:NM1,1,no,no,e01,Name,1,60,-,M,F
+N2,HL:NM1,1,no,no,e02,Name,1,60,-,O,F
+N3,HL:NM1,1,no,yes,landmark,Party Location,2,2,-,O,F
+N3,HL:NM1,1,no,no,e01,Address Information,1,55,-,M,F
+N3,HL:NM1,1,no,no,e02,Address Information,1,55,-,O,F
+N4,HL:NM1,1,no,yes,landmark,Geographic Location,2,2,-,O,F
+N4,HL:NM1,1,no,no,e01,City Name,2,30,-,O,F
+N4,HL:NM1,1,no,no,e02,State or Province Code,2,2,-,X,F
+N4,HL:NM1,1,no,no,e03,Postal Code,3,15,-,O,F
+N4,HL:NM1,1,no,no,e04,Country Code,2,3,-,X,F
+N4,HL:NM1,1,no,no,e05,Location Qualifier,1,2,-,X,F
+N4,HL:NM1,1,no,no,e06,Location Identifier,1,30,-,O,F
+N4,HL:NM1,1,no,no,e07,Country Subdivision Code,1,3,-,X,F
+PER,HL:NM1,3,no,yes,landmark,Administrative Communications Contact,3,3,-,O,F
+PER,HL:NM1,1,no,no,e01,Contact Function Code,2,2,-,M,F
+PER,HL:NM1,1,no,no,e02,Name,1,60,-,O,F
+PER,HL:NM1,1,no,no,e03,Communication Number Qualifier,2,2,-,X,F
+PER,HL:NM1,1,no,no,e04,Communication Number,1,256,-,X,F
+PER,HL:NM1,1,no,no,e05,Communication Number Qualifier,2,2,-,X,F
+PER,HL:NM1,1,no,no,e06,Communication Number,1,256,-,X,F
+PER,HL:NM1,1,no,no,e07,Communication Number Qualifier,2,2,-,X,F
+PER,HL:NM1,1,no,no,e08,Communication Number,1,256,-,X,F
+PER,HL:NM1,1,no,no,e09,Contact Inquiry Reference,1,20,-,O,F
+AAA,HL:NM1,9,no,yes,landmark,Request Validation,3,3,-,O,F
+AAA,HL:NM1,1,no,no,e01,Yes/No Condition or Response Code,1,1,-,M/Z,F
+AAA,HL:NM1,1,no,no,e02,Agency Qualifier Code,2,2,-,O,F
+AAA,HL:NM1,1,no,no,e03,Reject Reason Code,2,2,-,O,F
+AAA,HL:NM1,1,no,no,e04,Follow-up Action Code,1,1,-,O,F
+PRV,HL:NM1,1,no,yes,landmark,Provider Information,3,3,-,O,F
+PRV,HL:NM1,1,no,no,e01,Provider Code,1,3,-,M,F
+PRV,HL:NM1,1,no,no,e02,Reference Identification Qualifier,2,3,-,X,F
+PRV,HL:NM1,1,no,no,e03,Reference Identification,1,50,-,X,F
+PRV,HL:NM1,1,no,no,e04,State or Province Code,2,2,-,O,F
+PRV,HL:NM1,1,no,no,e06,Provider Organization Code,3,3,-,O,F
+DMG,HL:NM1,1,no,yes,landmark,Demographic Information,3,3,-,O,F
+DMG,HL:NM1,1,no,no,e01,Date Time Period Format Qualifier,2,3,-,X,F
+DMG,HL:NM1,1,no,no,e02,Date Time Period,1,35,-,X/Z,F
+DMG,HL:NM1,1,no,no,e03,Gender Code,1,1,-,O,F
+DMG,HL:NM1,1,no,no,e04,Marital Status Code,1,1,-,O,F
+DMG,HL:NM1,1,no,no,e06,Citizenship Status Code,1,2,-,O,F
+DMG,HL:NM1,1,no,no,e07,Country Code,2,3,-,O/Z,F
+DMG,HL:NM1,1,no,no,e08,Basis of Verification Code,1,2,-,O,F
+DMG,HL:NM1,1,no,no,e09,Quantity,1,15,-,O/Z,F
+DMG,HL:NM1,1,no,no,e10,Code List Qualifier Code,1,3,-,X,F
+DMG,HL:NM1,1,no,no,e11,Industry Code,1,30,-,X/Z,F
+INS,HL:NM1,1,no,yes,landmark,Insured Benefit,3,3,-,O,F
+INS,HL:NM1,1,no,no,e01,Yes/No Condition or Response Code,1,1,-,M/Z,F
+INS,HL:NM1,1,no,no,e02,Individual Relationship Code,2,2,-,M,F
+INS,HL:NM1,1,no,no,e03,Maintenance Type Code,3,3,-,O,F
+INS,HL:NM1,1,no,no,e04,Maintenance Reason Code,2,3,-,O,F
+INS,HL:NM1,1,no,no,e05,Benefit Status Code,1,1,-,O,F
+INS,HL:NM1,1,no,no,e07,Consolidated Omnibus Budget Reconciliation Act (COBRA) Qualifying Event Code,1,2,-,O,F
+INS,HL:NM1,1,no,no,e08,Employment Status Code,2,2,-,O,F
+INS,HL:NM1,1,no,no,e09,Student Status Code,1,1,-,O,F
+INS,HL:NM1,1,no,no,e10,Yes/No Condition or Response Code,1,1,-,O/Z,F
+INS,HL:NM1,1,no,no,e11,Date Time Period Format Qualifier,2,3,-,X,F
+INS,HL:NM1,1,no,no,e12,Date Time Period,1,35,-,X/Z,F
+INS,HL:NM1,1,no,no,e13,Confidentiality Code,1,1,-,O,F
+INS,HL:NM1,1,no,no,e14,City Name,2,30,-,O/Z,F
+INS,HL:NM1,1,no,no,e15,State or Province Code,2,2,-,O,F
+INS,HL:NM1,1,no,no,e16,Country Code,2,3,-,O,F
+INS,HL:NM1,1,no,no,e17,Number,1,9,-,O/Z,F
+HI,HL:NM1,1,no,yes,landmark,Health Care Information Codes,2,2,-,O,F
+DTP,HL:NM1,9,no,yes,landmark,Date or Time or Period,3,3,-,O,F
+DTP,HL:NM1,1,no,no,e01,Date/Time Qualifier,3,3,-,M,F
+DTP,HL:NM1,1,no,no,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+DTP,HL:NM1,1,no,no,e03,Date Time Period,1,35,-,M,F
+LUI,HL:NM1,9,no,yes,landmark,Language Use,3,3,-,O,F
+LUI,HL:NM1,1,no,no,e01,Identification Code Qualifier,1,2,-,X,F
+LUI,HL:NM1,1,no,no,e02,Identification Code,2,80,-,X/Z,F
+LUI,HL:NM1,1,no,no,e03,Description,1,80,-,X/Z,F
+LUI,HL:NM1,1,no,no,e04,Use of Language Indicator,1,2,-,O,F
+LUI,HL:NM1,1,no,no,e05,Language Proficiency Indicator,1,1,-,O,F
+MPI,HL:NM1,9,no,yes,landmark,Military Personnel Information,3,3,-,O,F
+MPI,HL:NM1,1,no,no,e01,Information Status Code,1,1,-,M,F
+MPI,HL:NM1,1,no,no,e02,Employment Status Code,2,2,-,M,F
+MPI,HL:NM1,1,no,no,e03,Government Service Affiliation Code,1,1,-,M,F
+MPI,HL:NM1,1,no,no,e04,Description,1,80,-,O/Z,F
+MPI,HL:NM1,1,no,no,e05,Military Service Rank Code,2,2,-,O,F
+MPI,HL:NM1,1,no,no,e06,Date Time Period Format Qualifier,2,3,-,X,F
+MPI,HL:NM1,1,no,no,e07,Date Time Period,1,35,-,X/Z,F
+EB,,99999,yes,yes,landmark,Eligibility or Benefit Information,2,2,-,O,F
+EB,,1,no,no,e01,Eligibility or Benefit Information Code,1,2,-,M/Z,F
+EB,,1,no,no,e02,Coverage Level Code,3,3,-,O,F
+EB,,1,no,no,e03,Service Type Code,1,2,-,O/Z,F
+EB,,1,no,no,e04,Insurance Type Code,1,3,-,O,F
+EB,,1,no,no,e05,Plan Coverage Description,1,50,-,O,F
+EB,,1,no,no,e06,Time Period Qualifier,1,2,-,O,F
+EB,,1,no,no,e07,Monetary Amount,1,18,-,O,F
+EB,,1,no,no,e08,Percentage as Decimal,1,10,-,O,F
+EB,,1,no,no,e09,Quantity Qualifier,2,2,-,X,F
+EB,,1,no,no,e10,Quantity,1,15,-,X,F
+EB,,1,no,no,e11,Yes/No Condition or Response Code,1,1,-,O/Z,F
+EB,,1,no,no,e12,Yes/No Condition or Response Code,1,1,-,O/Z,F
+HSD,HL:NM1:EB,9,no,yes,landmark,Health Care Services Delivery,3,3,-,O,F
+HSD,HL:NM1:EB,1,no,no,e01,Quantity Qualifier,2,2,-,X,F
+HSD,HL:NM1:EB,1,no,no,e02,Quantity,1,15,-,X,F
+HSD,HL:NM1:EB,1,no,no,e03,Unit or Basis for Measurement Code,2,2,-,O,F
+HSD,HL:NM1:EB,1,no,no,e04,Sample Selection Modulus,1,6,-,O,F
+HSD,HL:NM1:EB,1,no,no,e05,Time Period Qualifier,1,2,-,X,F
+HSD,HL:NM1:EB,1,no,no,e06,Number of Periods,1,3,-,O,F
+HSD,HL:NM1:EB,1,no,no,e07,Ship/Delivery or Calendar Pattern Code,1,2,-,O,F
+HSD,HL:NM1:EB,1,no,no,e08,Ship/Delivery Pattern Time Code,1,1,-,O,F
+REF,HL:NM1:EB,9,no,yes,landmark,Reference Information,3,3,-,O,F
+REF,HL:NM1:EB,1,no,no,e01,Reference Identification Qualifier,2,3,-,M,F
+REF,HL:NM1:EB,1,no,no,e02,Reference Identification,1,50,-,X,F
+REF,HL:NM1:EB,1,no,no,e03,Description,1,80,-,X,F
+DTP,HL:NM1:EB,20,no,yes,landmark,Date or Time or Period,3,3,-,O,F
+DTP,HL:NM1:EB,1,no,no,e01,Date/Time Qualifier,3,3,-,M,F
+DTP,HL:NM1:EB,1,no,no,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+DTP,HL:NM1:EB,1,no,no,e03,Date Time Period,1,35,-,M,F
+AAA,HL:NM1:EB,9,no,yes,landmark,Request Validation,3,3,-,O,F
+AAA,HL:NM1:EB,1,no,no,e01,Yes/No Condition or Response Code,1,1,-,M/Z,F
+AAA,HL:NM1:EB,1,no,no,e02,Agency Qualifier Code,2,2,-,O,F
+AAA,HL:NM1:EB,1,no,no,e03,Reject Reason Code,2,2,-,O,F
+AAA,HL:NM1:EB,1,no,no,e04,Follow-up Action Code,1,1,-,O,F
+VEH,HL:NM1:EB,1,no,yes,landmark,Vehicle Information,3,3,-,O,F
+VEH,HL:NM1:EB,1,no,no,e01,Assigned Number,1,6,-,O,F
+VEH,HL:NM1:EB,1,no,no,e02,Vehicle Identification Number,1,30,-,O,F
+VEH,HL:NM1:EB,1,no,no,e03,Year,4,4,-,O,F
+VEH,HL:NM1:EB,1,no,no,e04,Agency Qualifier Code,2,2,-,X/Z,F
+VEH,HL:NM1:EB,1,no,no,e05,Reference Identification,1,50,-,X/Z,F
+VEH,HL:NM1:EB,1,no,no,e06,Reference Identification,1,50,-,O/Z,F
+VEH,HL:NM1:EB,1,no,no,e07,Reference Identification,1,50,-,X/Z,F
+VEH,HL:NM1:EB,1,no,no,e08,Length,1,8,-,O/Z,F
+VEH,HL:NM1:EB,1,no,no,e09,Reference Identification,1,50,-,O/Z,F
+VEH,HL:NM1:EB,1,no,no,e10,State or Province Code,2,2,-,O/Z,F
+VEH,HL:NM1:EB,1,no,no,e11,Location Identifier,1,30,-,O/Z,F
+VEH,HL:NM1:EB,1,no,no,e12,Yes/No Condition or Response Code,1,1,-,O/Z,F
+VEH,HL:NM1:EB,1,no,no,e13,Amount,1,15,-,O/Z,F
+VEH,HL:NM1:EB,1,no,no,e14,Yes/No Condition or Response Code,1,1,-,O/Z,F
+VEH,HL:NM1:EB,1,no,no,e15,Amount,1,15,-,O/Z,F
+VEH,HL:NM1:EB,1,no,no,e16,Action Code,1,2,-,O,F
+VEH,HL:NM1:EB,1,no,no,e17,Country Code,2,3,-,O/Z,F
+VEH,HL:NM1:EB,1,no,no,e18,Name,1,60,-,X/Z,F
+VEH,HL:NM1:EB,1,no,no,e19,Country Code,2,3,-,X/Z,F
+PID,HL:NM1:EB,1,no,yes,landmark,Product/Item Description,3,3,-,O,F
+PID,HL:NM1:EB,1,no,no,e01,Item Description Type,1,1,-,M,F
+PID,HL:NM1:EB,1,no,no,e02,Product/Process Characteristic Code,2,3,-,O,F
+PID,HL:NM1:EB,1,no,no,e03,Agency Qualifier Code,2,2,-,X/Z,F
+PID,HL:NM1:EB,1,no,no,e04,Product Description Code,1,12,-,X/Z,F
+PID,HL:NM1:EB,1,no,no,e05,Description,1,80,-,X,F
+PID,HL:NM1:EB,1,no,no,e06,Surface/Layer/Position Code,2,2,-,O,F
+PID,HL:NM1:EB,1,no,no,e07,Source Subqualifier,1,15,-,O,F
+PID,HL:NM1:EB,1,no,no,e08,Yes/No Condition or Response Code,1,1,-,O/Z,F
+PID,HL:NM1:EB,1,no,no,e09,Language Code,2,3,-,O/Z,F
+PDR,HL:NM1:EB,1,no,yes,landmark,Property Description - Real,3,3,-,O,F
+PDR,HL:NM1:EB,1,no,no,e01,Type of Real Estate Asset Code,2,2,-,M,F
+PDR,HL:NM1:EB,1,no,no,e02,Code List Qualifier Code,1,3,-,X,F
+PDR,HL:NM1:EB,1,no,no,e03,Industry Code,1,30,-,X,F
+PDR,HL:NM1:EB,1,no,no,e04,Occupancy Code,2,2,-,O,F
+PDP,HL:NM1:EB,1,no,yes,landmark,Property Description - Personal,3,3,-,O,F
+PDP,HL:NM1:EB,1,no,no,e01,Type of Personal or Business Asset Code,2,2,-,M,F
+PDP,HL:NM1:EB,1,no,no,e02,Commodity Code Qualifier,1,1,-,X,F
+PDP,HL:NM1:EB,1,no,no,e03,Commodity Code,1,30,-,X,F
+LIN,HL:NM1:EB,1,no,yes,landmark,Item Identification,3,3,-,O,F
+LIN,HL:NM1:EB,1,no,no,e01,Assigned Identification,1,20,-,O/Z,F
+LIN,HL:NM1:EB,1,no,no,e02,Product/Service ID Qualifier,2,2,-,M,F
+LIN,HL:NM1:EB,1,no,no,e03,Product/Service ID,1,48,-,M,F
+LIN,HL:NM1:EB,1,no,no,e04,Product/Service ID Qualifier,2,2,-,X,F
+LIN,HL:NM1:EB,1,no,no,e05,Product/Service ID,1,48,-,X,F
+LIN,HL:NM1:EB,1,no,no,e06,Product/Service ID Qualifier,2,2,-,X,F
+LIN,HL:NM1:EB,1,no,no,e07,Product/Service ID,1,48,-,X,F
+LIN,HL:NM1:EB,1,no,no,e08,Product/Service ID Qualifier,2,2,-,X,F
+LIN,HL:NM1:EB,1,no,no,e09,Product/Service ID,1,48,-,X,F
+LIN,HL:NM1:EB,1,no,no,e10,Product/Service ID Qualifier,2,2,-,X,F
+LIN,HL:NM1:EB,1,no,no,e11,Product/Service ID,1,48,-,X,F
+LIN,HL:NM1:EB,1,no,no,e12,Product/Service ID Qualifier,2,2,-,X,F
+LIN,HL:NM1:EB,1,no,no,e13,Product/Service ID,1,48,-,X,F
+LIN,HL:NM1:EB,1,no,no,e14,Product/Service ID Qualifier,2,2,-,X,F
+LIN,HL:NM1:EB,1,no,no,e15,Product/Service ID,1,48,-,X,F
+LIN,HL:NM1:EB,1,no,no,e16,Product/Service ID Qualifier,2,2,-,X,F
+LIN,HL:NM1:EB,1,no,no,e17,Product/Service ID,1,48,-,X,F
+LIN,HL:NM1:EB,1,no,no,e18,Product/Service ID Qualifier,2,2,-,X,F
+LIN,HL:NM1:EB,1,no,no,e19,Product/Service ID,1,48,-,X,F
+LIN,HL:NM1:EB,1,no,no,e20,Product/Service ID Qualifier,2,2,-,X,F
+LIN,HL:NM1:EB,1,no,no,e21,Product/Service ID,1,48,-,X,F
+LIN,HL:NM1:EB,1,no,no,e22,Product/Service ID Qualifier,2,2,-,X,F
+LIN,HL:NM1:EB,1,no,no,e23,Product/Service ID,1,48,-,X,F
+LIN,HL:NM1:EB,1,no,no,e24,Product/Service ID Qualifier,2,2,-,X,F
+LIN,HL:NM1:EB,1,no,no,e25,Product/Service ID,1,48,-,X,F
+LIN,HL:NM1:EB,1,no,no,e26,Product/Service ID Qualifier,2,2,-,X,F
+LIN,HL:NM1:EB,1,no,no,e27,Product/Service ID,1,48,-,X,F
+LIN,HL:NM1:EB,1,no,no,e28,Product/Service ID Qualifier,2,2,-,X,F
+LIN,HL:NM1:EB,1,no,no,e29,Product/Service ID,1,48,-,X,F
+LIN,HL:NM1:EB,1,no,no,e30,Product/Service ID Qualifier,2,2,-,X,F
+LIN,HL:NM1:EB,1,no,no,e31,Product/Service ID,1,48,-,X,F
+EM,HL:NM1:EB,1,no,yes,landmark,Equipment Characteristics,2,2,-,O,F
+EM,HL:NM1:EB,1,no,no,e01,Weight Unit Code,1,1,-,X,F
+EM,HL:NM1:EB,1,no,no,e02,Weight,1,10,-,O/Z,F
+EM,HL:NM1:EB,1,no,no,e03,Volume Unit Qualifier,1,1,-,X,F
+EM,HL:NM1:EB,1,no,no,e04,Volume,1,8,-,O/Z,F
+EM,HL:NM1:EB,1,no,no,e05,Country Code,2,3,-,O/Z,F
+EM,HL:NM1:EB,1,no,no,e06,Construction Type,1,2,-,O,F
+EM,HL:NM1:EB,1,no,no,e07,Date,8,8,-,O/Z,F
+SD1,HL:NM1:EB,1,no,yes,landmark,Safety Data,3,3,-,O,F
+SD1,HL:NM1:EB,1,no,no,e01,Item Description Type,1,1,-,M,F
+SD1,HL:NM1:EB,1,no,no,e02,Safety Characteristic/Hazard Code,3,3,-,M,F
+SD1,HL:NM1:EB,1,no,no,e03,Agency Qualifier Code,2,2,-,X,F
+SD1,HL:NM1:EB,1,no,no,e04,Source Subqualifier,1,15,-,O,F
+SD1,HL:NM1:EB,1,no,no,e05,Product Description Code,1,12,-,X,F
+SD1,HL:NM1:EB,1,no,no,e06,Description,1,80,-,X/Z,F
+SD1,HL:NM1:EB,1,no,no,e07,State or Province Code,2,2,-,O/Z,F
+SD1,HL:NM1:EB,1,no,no,e08,Country Code,2,3,-,O/Z,F
+PKD,HL:NM1:EB,1,no,yes,landmark,Packaging Description,3,3,-,O,F
+PKD,HL:NM1:EB,1,no,no,e01,Packaging Code,3,5,-,X,F
+PKD,HL:NM1:EB,1,no,no,e02,Source Subqualifier,1,15,-,X,F
+PKD,HL:NM1:EB,1,no,no,e03,Agency Qualifier Code,2,2,-,O,F
+PKD,HL:NM1:EB,1,no,no,e04,Packaging Description Code,1,7,-,O,F
+PKD,HL:NM1:EB,1,no,no,e05,Ownership Code,1,1,-,O,F
+MSG,HL:NM1:EB,10,no,yes,landmark,Message Text,3,3,-,O,F
+MSG,HL:NM1:EB,1,no,no,e01,Free-form Message Text,1,264,-,M,F
+MSG,HL:NM1:EB,1,no,no,e02,Printer Carriage Control Code,2,2,-,X,F
+MSG,HL:NM1:EB,1,no,no,e03,Number,1,9,-,O/Z,F
+III,,99999,yes,yes,landmark,Information,3,3,-,O,F
+III,,1,no,no,e01,Code List Qualifier Code,1,3,-,X,F
+III,,1,no,no,e02,Industry Code,1,30,-,X,F
+III,,1,no,no,e03,Code Category,2,2,-,O/Z,F
+III,,1,no,no,e04,Free-form Message Text,1,264,-,X,F
+III,,1,no,no,e05,Quantity,1,15,-,X,F
+III,,1,no,no,e07,Surface/Layer/Position Code,2,2,-,O,F
+III,,1,no,no,e08,Surface/Layer/Position Code,2,2,-,O,F
+III,,1,no,no,e09,Surface/Layer/Position Code,2,2,-,O,F
+DTP,HL:NM1:EB:III,5,no,yes,landmark,Date or Time or Period,3,3,-,O,F
+DTP,HL:NM1:EB:III,1,no,no,e01,Date/Time Qualifier,3,3,-,M,F
+DTP,HL:NM1:EB:III,1,no,no,e02,Date Time Period Format Qualifier,2,3,-,M/Z,F
+DTP,HL:NM1:EB:III,1,no,no,e03,Date Time Period,1,35,-,M,F
+AMT,HL:NM1:EB:III,5,no,yes,landmark,Monetary Amount Information,3,3,-,O,F
+AMT,HL:NM1:EB:III,1,no,no,e01,Amount Qualifier Code,1,3,-,M,F
+AMT,HL:NM1:EB:III,1,no,no,e02,Monetary Amount,1,18,-,M,F
+AMT,HL:NM1:EB:III,1,no,no,e03,Credit/Debit Flag Code,1,1,-,O,F
+PCT,HL:NM1:EB:III,5,no,yes,landmark,Percent Amounts,3,3,-,O,F
+PCT,HL:NM1:EB:III,1,no,no,e01,Percent Qualifier,1,2,-,M,F
+PCT,HL:NM1:EB:III,1,no,no,e02,Percentage as Decimal,1,10,-,M,F
+LQ,,99999,yes,yes,landmark,Industry Code Identification,2,2,-,O,F
+LQ,,1,no,no,e01,Code List Qualifier Code,1,3,-,O,F
+LQ,,1,no,no,e02,Industry Code,1,30,-,X,F
+AMT,HL:NM1:EB:III:LQ,5,no,yes,landmark,Monetary Amount Information,3,3,-,O,F
+AMT,HL:NM1:EB:III:LQ,1,no,no,e01,Amount Qualifier Code,1,3,-,M,F
+AMT,HL:NM1:EB:III:LQ,1,no,no,e02,Monetary Amount,1,18,-,M,F
+AMT,HL:NM1:EB:III:LQ,1,no,no,e03,Credit/Debit Flag Code,1,1,-,O,F
+PCT,HL:NM1:EB:III:LQ,5,no,yes,landmark,Percent Amounts,3,3,-,O,F
+PCT,HL:NM1:EB:III:LQ,1,no,no,e01,Percent Qualifier,1,2,-,M,F
+PCT,HL:NM1:EB:III:LQ,1,no,no,e02,Percentage as Decimal,1,10,-,M,F
+LS,,1,no,yes,landmark,Loop Header,2,2,-,O,F
+LS,,1,no,no,e01,Loop Identifier Code,1,4,-,M,F
+NM1,,99999,yes,yes,landmark,Individual or Organizational Name,3,3,-,O,F
+NM1,,1,no,no,e01,Entity Identifier Code,2,3,-,M,F
+NM1,,1,no,no,e02,Entity Type Qualifier,1,1,-,M/Z,F
+NM1,,1,no,no,e03,Name Last or Organization Name,1,60,-,X,F
+NM1,,1,no,no,e04,Name First,1,35,-,O,F
+NM1,,1,no,no,e05,Name Middle,1,25,-,O,F
+NM1,,1,no,no,e06,Name Prefix,1,10,-,O,F
+NM1,,1,no,no,e07,Name Suffix,1,10,-,O,F
+NM1,,1,no,no,e08,Identification Code Qualifier,1,2,-,X,F
+NM1,,1,no,no,e09,Identification Code,2,80,-,X,F
+NM1,,1,no,no,e10,Entity Relationship Code,2,2,-,X,F
+NM1,,1,no,no,e11,Entity Identifier Code,2,3,-,O,F
+NM1,,1,no,no,e12,Name Last or Organization Name,1,60,-,O,F
+N2,NM1,1,no,yes,landmark,Additional Name Information,2,2,-,O,F
+N2,NM1,1,no,no,e01,Name,1,60,-,M,F
+N2,NM1,1,no,no,e02,Name,1,60,-,O,F
+N3,NM1,1,no,yes,landmark,Party Location,2,2,-,O,F
+N3,NM1,1,no,no,e01,Address Information,1,55,-,M,F
+N3,NM1,1,no,no,e02,Address Information,1,55,-,O,F
+N4,NM1,1,no,yes,landmark,Geographic Location,2,2,-,O,F
+N4,NM1,1,no,no,e01,City Name,2,30,-,O,F
+N4,NM1,1,no,no,e02,State or Province Code,2,2,-,X,F
+N4,NM1,1,no,no,e03,Postal Code,3,15,-,O,F
+N4,NM1,1,no,no,e04,Country Code,2,3,-,X,F
+N4,NM1,1,no,no,e05,Location Qualifier,1,2,-,X,F
+N4,NM1,1,no,no,e06,Location Identifier,1,30,-,O,F
+N4,NM1,1,no,no,e07,Country Subdivision Code,1,3,-,X,F
+PER,NM1,3,no,yes,landmark,Administrative Communications Contact,3,3,-,O,F
+PER,NM1,1,no,no,e01,Contact Function Code,2,2,-,M,F
+PER,NM1,1,no,no,e02,Name,1,60,-,O,F
+PER,NM1,1,no,no,e03,Communication Number Qualifier,2,2,-,X,F
+PER,NM1,1,no,no,e04,Communication Number,1,256,-,X,F
+PER,NM1,1,no,no,e05,Communication Number Qualifier,2,2,-,X,F
+PER,NM1,1,no,no,e06,Communication Number,1,256,-,X,F
+PER,NM1,1,no,no,e07,Communication Number Qualifier,2,2,-,X,F
+PER,NM1,1,no,no,e08,Communication Number,1,256,-,X,F
+PER,NM1,1,no,no,e09,Contact Inquiry Reference,1,20,-,O,F
+PRV,NM1,1,no,yes,landmark,Provider Information,3,3,-,O,F
+PRV,NM1,1,no,no,e01,Provider Code,1,3,-,M,F
+PRV,NM1,1,no,no,e02,Reference Identification Qualifier,2,3,-,X,F
+PRV,NM1,1,no,no,e03,Reference Identification,1,50,-,X,F
+PRV,NM1,1,no,no,e04,State or Province Code,2,2,-,O,F
+PRV,NM1,1,no,no,e06,Provider Organization Code,3,3,-,O,F
+LE,,1,no,yes,landmark,Loop Trailer,2,2,-,O,F
+LE,,1,no,no,e01,Loop Identifier Code,1,4,-,M,F
+SE,,1,no,yes,landmark,Transaction Set Trailer,2,2,-,M,F
+SE,,1,no,no,e01,Number of Included Segments,1,10,-,M,F
+SE,,1,no,no,e02,Transaction Set Control Number,4,9,-,M,F
