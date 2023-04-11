@@ -1352,6 +1352,9 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public void updateForm() throws ParseException {
+        
+        boolean canInvoice = true;
+        
         tbkey.setText(so.so_nbr());
         tbkey.setEditable(false);
         ddcust.setSelectedItem(so.so_cust());
@@ -1416,6 +1419,9 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                       sod.sod_bom(),
                       sod.sod_ship()
                   });
+                    if (! sod.sod_status().equals("open")) {
+                        canInvoice = false;
+                    }
                 }
         
         // summary charges and discounts
@@ -1451,7 +1457,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         
         setAction(so.m()); 
-       
+        btinvoice.setEnabled(canInvoice);
         
         so = null;
         sodlist = null;
