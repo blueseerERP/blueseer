@@ -1119,7 +1119,7 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_btnewActionPerformed
 
     private void actionlistMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_actionlistMouseClicked
-        if (actionlist != null && ! actionlist.isSelectionEmpty()) {
+        if (keyvaluemodel != null && actionlist != null && ! actionlist.isSelectionEmpty()) {
             int x = actionlist.getSelectedIndex();
             currentkvm = x;
             String label = actionlist.getSelectedValue();

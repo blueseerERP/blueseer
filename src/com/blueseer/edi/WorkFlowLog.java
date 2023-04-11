@@ -339,7 +339,7 @@ public class WorkFlowLog extends javax.swing.JPanel {
                       });
                 }
                
-                tabledetail.setModel(modeldetail);
+                
                 // this.repaint();
 
             } catch (SQLException s) {
@@ -381,6 +381,7 @@ public class WorkFlowLog extends javax.swing.JPanel {
         modeldetail.setNumRows(0);
         tablereport.setModel(filemodel);
         tabledetail.setModel(modeldetail);
+        
         
         tablereport.getTableHeader().setReorderingAllowed(false);
         tabledetail.getTableHeader().setReorderingAllowed(false);

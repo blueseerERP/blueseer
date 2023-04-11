@@ -47,8 +47,8 @@ inner join site_mstr on site_site = sh_site
 where shd_id =  $P{myid}]]>
 	</queryString>
 	<field name="shd_id" class="java.lang.String"/>
-	<field name="sh_curr" class="java.lang.Object"/>
-	<field name="it_desc" class="java.lang.Object"/>
+	<field name="sh_curr" class="java.lang.String"/>
+	<field name="it_desc" class="java.lang.String"/>
 	<field name="charges" class="java.lang.Double"/>
 	<field name="taxes" class="java.lang.Double"/>
 	<field name="sh_cust" class="java.lang.Object"/>

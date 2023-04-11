@@ -605,7 +605,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                       });
                 }
                
-                tabledetail.setModel(modeldetail);
+               
                 this.repaint();
 
             } catch (SQLException s) {
