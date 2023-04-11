@@ -121,7 +121,7 @@ CREATE TABLE IF NOT EXISTS `dfs_mstr` (
   `dfs_version` varchar(15)  NOT NULL DEFAULT '',
   `dfs_doctype` varchar(15)  NOT NULL DEFAULT '',
   `dfs_filetype` varchar(15)  NOT NULL DEFAULT '',
-  `dfs_delimiter` varchar(1)  NOT NULL DEFAULT '',
+  `dfs_delimiter` int(4)  NOT NULL DEFAULT '0',
   `dfs_misc` varchar(50)  NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `ap_ctrl` (
