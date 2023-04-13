@@ -1,4 +1,4 @@
-/* sql updates for  v6.3 */
+/* sql updates for  v6.3, v6.4 --> to 6.5 */
 set @field = 'apc_varchar'; set @table = 'ap_ctrl';
 set @sql = concat('Alter table ', @table, ' add column ' ,@field, ' varchar(50) not null default \'\' ');
 SELECT count(*) into @Cnt FROM information_schema.columns WHERE table_name = @table AND column_name = @field and table_schema = DATABASE();
@@ -172,7 +172,7 @@ prepare stmt from @query; EXECUTE stmt;
 set @field = 'sos_key'; set @table = 'sos_det';
 set @sql = concat('Alter table ', @table, ' add column ' ,@field, ' varchar(50) not null default \'\' ');
 SELECT count(*) into @Cnt FROM information_schema.columns WHERE table_name = @table AND column_name = @field and table_schema = DATABASE();
-set @query = IF(@Cnt <= 0, @sql, 'select @field, \'Exists\' ');
+set @query = IF(@Cnt <= 0, @sql, 'select @field,\'\', \'Exists\' ');
 prepare stmt from @query; EXECUTE stmt;
 set @field = 'sos_value'; set @table = 'sos_det';
 set @sql = concat('Alter table ', @table, ' add column ' ,@field, ' varchar(50) not null default \'\' ');
@@ -374,3 +374,6 @@ CREATE TABLE IF NOT EXISTS `wkfd_log` (
   `wkfdl_status` varchar(10) NOT NULL  DEFAULT '',
   `wkfdl_messg` varchar(200) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+update ov_ctrl set ov_version = '6.5';
+select concat("sql schema version is now: ", ov_version) from ov_ctrl;
