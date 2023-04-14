@@ -2900,12 +2900,13 @@ public class ediData {
           String eventtime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));  
           String[] lgd = new String[]{wkd.wkfd_action(), eventtime, "", "", ""}; // action,time,ref,status,messg
           
+          JRRT rr = null;
           switch (wkd.wkfd_action()) {
             
             case "APICall" :
-                r = wkfaction_apicall(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
-                lgd[3] = r[0];
-                lgd[4] = r[1];
+                rr = wkfaction_apicall(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
+                lgd[3] = rr.status();
+                lgd[4] = rr.messg();
                 if (! r[0].equals("0")) {
                     logdetail.add(lgd);
                     break forloop;
@@ -2913,9 +2914,9 @@ public class ediData {
                 break;  
               
             case "ScriptCall" :
-                r = wkfaction_scriptcall(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
-                lgd[3] = r[0];
-                lgd[4] = r[1];
+                rr = wkfaction_scriptcall(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
+                lgd[3] = rr.status();
+                lgd[4] = rr.messg();
                 if (! r[0].equals("0")) {
                     logdetail.add(lgd);
                     break forloop;
@@ -3271,9 +3272,8 @@ public class ediData {
         return r;
     }
     
-    public static String[] wkfaction_scriptcall(wkf_det wkfd, ArrayList<wkfd_meta> list) {
-        String[] r = new String[]{"0",""};
-        
+    public static JRRT wkfaction_scriptcall(wkf_det wkfd, ArrayList<wkfd_meta> list) {
+                
         String source = "";
         String[] parameters = null;
         String directory = "";
@@ -3310,6 +3310,8 @@ public class ediData {
         Path directorypath = FileSystems.getDefault().getPath(directory);
         Runtime rt = Runtime.getRuntime();
         Process pr;
+        String status = "0";
+        String messg = "";
         
         
         try {
@@ -3328,18 +3330,18 @@ public class ediData {
                 sbs.append("\n");
                 }
                 stdInput.close();
-               r[1] = "script file " + source + " output: " + sbs.toString();
+               messg = "script file " + source + " output: " + sbs.toString(); 
             } else {
-              r[0] = "1";
-            r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "unable to execute " + source;  
+              status = "1";
+              messg = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "unable to execute "; 
             }
             
         } catch (IOException ex) {
-            r[0] = "1";
-            r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + ex.getMessage();
+            status = "1";
+            messg = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + ex.getMessage();
         }
         
-        return r;
+        return new JRRT(status, messg, null);
     }
     
     
@@ -3697,13 +3699,15 @@ public class ediData {
         return r;
     }
     
-    public static String[] wkfaction_apicall(wkf_det wkfd, ArrayList<wkfd_meta> list) {
-       String[] r = new String[]{"0",""};
+    public static JRRT wkfaction_apicall(wkf_det wkfd, ArrayList<wkfd_meta> list) {
+       
         
         String apiid = "";
         String apimethod = "";
         String filedest = "";
         String filesrc = "";
+        String status = "0";
+        String messg = "";
         
         for (wkfd_meta m : list) {
             if (m.wkfdm_key().equals("api id") && ! m.wkfdm_value.isBlank()) {
@@ -3724,14 +3728,14 @@ public class ediData {
         Path sourcepath = FileSystems.getDefault().getPath(filesrc);
         
         if (apiid.isBlank()) {
-           r[0] = "1";
-           r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "api ID is blank"; 
-           return r;
+           status = "1";
+           messg = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "api ID is blank"; 
+           return new JRRT(status, messg, null);
         }
         if (apimethod.isBlank()) {
-           r[0] = "1";
-           r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "apimethod is blank"; 
-           return r;
+           status = "1";
+           messg = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "apimethod is blank"; 
+           return new JRRT(status, messg, null);
         }
         
         
@@ -3739,17 +3743,13 @@ public class ediData {
         api_det apid = getAPIDet(apiid, apimethod);
         
         if (api.m[0].equals("0") && apid.m[0].equals("0")) { 
-        r = runAPICall(api, apid, destinationpath, sourcepath);
+        String[] r = runAPICall(api, apid, destinationpath, sourcepath);
+           return new JRRT(r[0], r[1], null);
         } else {
-          r[0] = "1";
-          r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "unable to get retrieve api/apid JRT"; 
-             
+          status = "1";
+          messg = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "unable to get retrieve api/apid JRT"; 
+           return new JRRT(status, messg, null);  
         }
-        
-        
-        
-        
-        return r; 
     }
     
     public record edi_xref(String[] m, String exr_tpid, String exr_tpaddr, String exr_ovaddr,
@@ -3852,6 +3852,7 @@ public class ediData {
         }
     }
     
+    public record JRRT(String status, String messg, ArrayList<String> rarray) {};
     
     public record jsonRecord(ObjectNode on, boolean isArray) {}
     

@@ -190,7 +190,7 @@ public class WorkFlowLog extends javax.swing.JPanel {
                 int i = 0;
 
                
-                tablereport.setModel(filemodel);
+              //  tablereport.setModel(filemodel);
                //  tablereport.getColumnModel().getColumn(8).setCellRenderer(new EDITransactionBrowse.SomeRenderer()); 
               //   tablereport.getColumnModel().getColumn(7).setCellRenderer(new EDITransactionBrowse.FileViewRenderer()); 
                  tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
