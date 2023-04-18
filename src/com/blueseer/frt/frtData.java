@@ -106,7 +106,7 @@ public class frtData {
     public static String[] updateCarrierMstr(car_mstr x) {
         String[] m = new String[2];
         String sql = "update car_mstr set car_desc = ?, car_apply = ?, car_scac = ?, car_name = ?, " +   
-                     " car_line1 = ?, car_line2 = ?, car_city = ?, car_state = ?, car_zip = ? car_country = ?, " +
+                     " car_line1 = ?, car_line2 = ?, car_city = ?, car_state = ?, car_zip = ?, car_country = ?, " +
                      " car_phone = ?, car_email = ?, car_type = ?, car_acct = ?, car_usdot = ?, car_mc = ?, " +
                      " car_ein = ?, car_minmiles = ?, car_maxmiles = ?, car_maxdh = ?, car_milerate = ?, " +
                      " car_tractors = ?, car_trailers = ? " +

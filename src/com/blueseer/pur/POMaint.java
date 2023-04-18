@@ -719,7 +719,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
                 orddet.getValueAt(j, 2).toString(),
                 orddet.getValueAt(j, 12).toString(),
                 "", //taxcode
-                ""  // taxamt
+                "0"  // taxamt
                 );
         list.add(x);
          }
