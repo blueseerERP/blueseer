@@ -20,5 +20,8 @@
 # layout modifications for Struct Maintenance and Recognition Maintenance; copy method provided for both menus
 #patch=7
 # schema changes for dfs_mstr; alternate delimiter options for CSV processing
-patch=8
+#patch=8
 # Mods for issue #109; sql schema changes for qty fields; additional EDI x12 struct files
+patch=9
+# fix for decimal issue in pod_taxamt; file directory last lookup mod; item image absolute path in lieu of check-in option
+# enforced system control getJasperDirectory lookup and removed hardcoded "/jasper" paths
