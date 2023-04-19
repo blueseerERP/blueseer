@@ -129,6 +129,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
     // global variable declarations
                 boolean isLoad = false;
                 public static item_mstr x = null;
+                String lastfcdir = "";
    
                 
    // global datatablemodel declarations    
@@ -2255,6 +2256,11 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
         File file = null;
         
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        
+        if (! lastfcdir.isBlank()) {
+          fc.setCurrentDirectory(FileSystems.getDefault().getPath(lastfcdir).toFile());
+        }
+        
         int returnVal = fc.showOpenDialog(this);
        
 
@@ -2263,6 +2269,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
             file = fc.getSelectedFile();
             
             String SourceFile = file.getAbsolutePath();
+            lastfcdir = file.getParent();
            // String suffix = FilenameUtils.getExtension(file.getName()); 
            
             OVData.addItemImage(tbkey.getText(), SourceFile);

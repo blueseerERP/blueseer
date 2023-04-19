@@ -83,6 +83,7 @@ public class MassLoad extends javax.swing.JPanel {
 
      // global variable declarations
                 boolean isLoad = false;
+                String lastfcdir = "";
     /**
      * Creates new form FileOrderLoadPanel
      */
@@ -2788,7 +2789,11 @@ public class MassLoad extends javax.swing.JPanel {
         
         File file = null;
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fc.setCurrentDirectory(FileSystems.getDefault().getPath("data/sampledir").toFile());
+        if (lastfcdir.isBlank()) {
+          fc.setCurrentDirectory(FileSystems.getDefault().getPath("data/sampledir").toFile());
+        } else {
+          fc.setCurrentDirectory(FileSystems.getDefault().getPath(lastfcdir).toFile());
+        }
         int returnVal = fc.showOpenDialog(this);
        
 
@@ -2796,6 +2801,7 @@ public class MassLoad extends javax.swing.JPanel {
             try {
             file = fc.getSelectedFile();
             String SourceDir = file.getAbsolutePath();
+            lastfcdir = file.getParent();
             file = new File(SourceDir);
             
             }

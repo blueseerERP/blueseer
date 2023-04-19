@@ -198,6 +198,7 @@ alter table sod_det modify sod_shipped_qty decimal(14,5);
 alter table sod_det modify sod_all_qty decimal(14,5);
 alter table ship_det modify shd_qty decimal(14,5);
 alter table in_mstr modify in_qoh decimal(14,5);
+alter table item_image modify iti_file varchar(200);
 
 drop table if exists map_struct;
 drop table if exists car_mstr;
