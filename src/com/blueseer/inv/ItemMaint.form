@@ -1516,7 +1516,7 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
-                  <Component id="ddimage" min="-2" pref="200" max="-2" attributes="0"/>
+                  <Component id="ddimage" min="-2" pref="534" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="btaddimage" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
@@ -1525,7 +1525,7 @@
                   <Component id="cbdefault" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
                   <Component id="btimageprint" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="211" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
                   <Component id="labelmessage" min="-2" pref="266" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -1537,7 +1537,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="labelmessage" alignment="0" pref="52" max="32767" attributes="0"/>
+                      <Component id="labelmessage" alignment="0" pref="55" max="32767" attributes="0"/>
                       <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                           <Component id="ddimage" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btaddimage" alignment="3" min="-2" max="-2" attributes="0"/>

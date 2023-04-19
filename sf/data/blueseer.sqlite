@@ -1175,7 +1175,7 @@ CREATE TABLE "item_image" (
   "iti_site" varchar(10) COLLATE NOCASE DEFAULT '',
   "iti_order" int COLLATE NOCASE DEFAULT '',
   "iti_default" tinyint(1) COLLATE NOCASE DEFAULT '0',
-  "iti_file" varchar(70) COLLATE NOCASE DEFAULT '',
+  "iti_file" varchar(200) COLLATE NOCASE DEFAULT '',
   "iti_dir" varchar(120) COLLATE NOCASE DEFAULT '',
   "iti_path" varchar(120) COLLATE NOCASE DEFAULT '');
 /*!40101 SET character_set_client = @saved_cs_client */;

@@ -981,7 +981,7 @@ CREATE TABLE IF NOT EXISTS `item_image` (
   `iti_site` varchar(10) NOT NULL DEFAULT '',
   `iti_order` int NOT NULL DEFAULT '0',
   `iti_default` tinyint(1) NOT NULL DEFAULT '0',
-  `iti_file` varchar(70)  NOT NULL DEFAULT '',
+  `iti_file` varchar(200)  NOT NULL DEFAULT '',
   `iti_dir` varchar(120)  NOT NULL DEFAULT '',
   `iti_path` varchar(120)  NOT NULL DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `item_mstr` (

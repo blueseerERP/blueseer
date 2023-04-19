@@ -1875,7 +1875,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -2148,7 +2148,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
         ImagePanelLayout.setHorizontalGroup(
             ImagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(ImagePanelLayout.createSequentialGroup()
-                .addComponent(ddimage, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(ddimage, javax.swing.GroupLayout.PREFERRED_SIZE, 534, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btaddimage)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -2157,7 +2157,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 .addComponent(cbdefault)
                 .addGap(34, 34, 34)
                 .addComponent(btimageprint)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 211, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(labelmessage, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
             .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -2167,7 +2167,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
             .addGroup(ImagePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(ImagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(labelmessage, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
+                    .addComponent(labelmessage, javax.swing.GroupLayout.DEFAULT_SIZE, 55, Short.MAX_VALUE)
                     .addGroup(ImagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(ddimage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(btaddimage)
@@ -2233,17 +2233,15 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
         if (! isLoad) {
             imagelabel.setIcon(null);
         if (ddimage.getSelectedItem() != null && ! ddimage.getSelectedItem().toString().isEmpty()) {
-          Path filepath = FileSystems.getDefault().getPath(OVData.getSystemImageDirectory() + "/" + ddimage.getSelectedItem().toString() );
-          ImageIcon imageIcon = new ImageIcon(filepath.toString());
-          btdeleteimage.setEnabled(true);
-      /* 
-      ImageIcon imageIcon = new ImageIcon((new ImageIcon("images/vcs.png"))
-        .getImage().getScaledInstance(600, 600,
-        java.awt.Image.SCALE_SMOOTH));
-          */
-        Image newimage = imageIcon.getImage().getScaledInstance(jPanel5.getWidth() - 5, jPanel5.getHeight() - 5, Image.SCALE_DEFAULT);
-        imageIcon.setImage(newimage);
-        imagelabel.setIcon(imageIcon);
+            Path filepath = FileSystems.getDefault().getPath(ddimage.getSelectedItem().toString() );
+            ImageIcon imageIcon = new ImageIcon(filepath.toString());
+            btdeleteimage.setEnabled(true);
+            Image newimage = imageIcon.getImage().getScaledInstance(jPanel5.getWidth() - 5, jPanel5.getHeight() - 5, Image.SCALE_DEFAULT);
+            imageIcon.setImage(newimage);
+            imagelabel.setIcon(imageIcon);
+            if (ddimage.getSelectedItem().toString().toLowerCase().endsWith("pdf")) {
+            showPDFusingIcePDF(ddimage.getSelectedItem().toString());
+            }
         } else {
          btdeleteimage.setEnabled(false);  
         }
@@ -2263,22 +2261,22 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             try {
             file = fc.getSelectedFile();
-            String SourceDir = file.getAbsolutePath();
-            String suffix = FilenameUtils.getExtension(file.getName()); 
-            String newFileName = tbkey.getText() + "_" + dfdate.format(now) + "." + suffix;
-            // insert image filename into database
-            OVData.addItemImage(tbkey.getText(), newFileName);
-            Path filepath = FileSystems.getDefault().getPath(OVData.getSystemImageDirectory() + "/" + newFileName );
+            
+            String SourceFile = file.getAbsolutePath();
+           // String suffix = FilenameUtils.getExtension(file.getName()); 
+           
+            OVData.addItemImage(tbkey.getText(), SourceFile);
+           
           
-            // now lets copy the file over to the appropriate directory  
-            file = new File(SourceDir);
+           
             
        //     java.nio.file.Files.copy(file.toPath(), new File("images/" + newFileName).toPath(), 
+             /*
                  java.nio.file.Files.copy(file.toPath(), filepath, 
                  java.nio.file.StandardCopyOption.REPLACE_EXISTING,
                  java.nio.file.StandardCopyOption.COPY_ATTRIBUTES,
                  java.nio.file.LinkOption.NOFOLLOW_LINKS);
-            
+            */
             getItemImages(tbkey.getText());
             
             }
@@ -2308,7 +2306,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
                            + " AND iti_file = " + "'" + ddimage.getSelectedItem().toString() + "'"
                            + " ;");
                     if (i > 0) {
-                        Path filepath = FileSystems.getDefault().getPath(OVData.getSystemImageDirectory() + "/" + ddimage.getSelectedItem().toString() );
+                        Path filepath = FileSystems.getDefault().getPath(ddimage.getSelectedItem().toString() );
                         java.nio.file.Files.deleteIfExists(filepath);
                         getItemImages(tbkey.getText());
                     }
@@ -2589,9 +2587,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
     private void btimageprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btimageprintActionPerformed
         if (ddimage.getSelectedItem() != null && ! ddimage.getSelectedItem().toString().isBlank()) {
-            if (ddimage.getSelectedItem().toString().toLowerCase().endsWith("pdf")) {
-               showPDFusingIcePDF(ddimage.getSelectedItem().toString()); 
-            } else {
+            if (! ddimage.getSelectedItem().toString().toLowerCase().endsWith("pdf")) {
                printImageJasper(ddimage.getSelectedItem().toString());
             }
         }

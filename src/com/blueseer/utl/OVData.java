@@ -1053,6 +1053,59 @@ public class OVData {
         }
     }
 
+    public static void addItemImage(String item, String file, String dir) {
+        try {
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                int i = 0;
+                res = st.executeQuery("SELECT iti_file FROM item_image where iti_item = " + "'" + item + "'"
+                        + " AND iti_file = " + "'" + file + "'"
+                        + " ;");
+                while (res.next()) {
+                    i++;
+                }
+
+                if (i > 0) {
+                    bsmf.MainFrame.show("Filename already exists");
+                } else {
+                    st.executeUpdate("insert into item_image (iti_item, iti_site, iti_order, iti_file, iti_dir) values ( "
+                            + "'" + item + "'" + ","
+                            + "'" + "" + "'" + ","
+                            + "'" + "0" + "'" + ","
+                            + "'" + file + "'" + ","
+                            + "'" + dir + "'" + ")"
+                            + ";");
+                    bsmf.MainFrame.show("Added Item Image");
+                }
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+    }
+
+    
     public static void addItemCostRec(String item, String site, String set, Double mtl, Double ovh, Double out, Double tot) {
         try {
             
@@ -16464,7 +16517,7 @@ return mystring;
     public static void printImageJasper(String image) {
            
         Image photo;
-        Path imagepath = FileSystems.getDefault().getPath("images" + "/" + image);
+        Path imagepath = FileSystems.getDefault().getPath(image);
         ImageIcon icon = new ImageIcon(imagepath.toString());
       //  icon = new ImageIcon(icon.getImage().getScaledInstance(600, 600, Image.SCALE_DEFAULT));
         photo = icon.getImage();
@@ -16521,7 +16574,7 @@ return mystring;
         fileStream = new PrintStream(new FileOutputStream("icePDF.log",true));
         System.setErr(fileStream);
         
-        Path pdfpath = FileSystems.getDefault().getPath("images" + "/" + file);
+        Path pdfpath = FileSystems.getDefault().getPath(file);
 
         // build a controller
         SwingController controller = new SwingController();
