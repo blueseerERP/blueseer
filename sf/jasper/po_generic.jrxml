@@ -20,6 +20,8 @@
 		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="taxes" class="java.lang.Double"/>
+	<parameter name="shipname" class="java.lang.String"/>
+	<parameter name="shipline1" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select po_nbr, it_desc,
 (select case when sum(pom_amt) is null then 0 else sum(pom_amt) end from po_meta 
@@ -29,12 +31,10 @@
 po_terms, po_shipvia, pod_nbr, pod_item, pod_venditem, 
 pod_ord_qty, pod_netprice, pod_listprice, 
 vd_addr, vd_name, vd_line1, vd_line2, 
-vds_name, vds_line1,
 site_desc, site_line1  from pod_mstr 
 left outer join item_mstr on it_item = pod_item 
 inner join po_mstr on po_nbr = pod_nbr 
 inner join vd_mstr on vd_addr = po_vend 
-inner join vds_det on vds_code = po_vend and vds_shipto = po_ship 
 inner join site_mstr on site_site = po_site where pod_nbr =  $P{myid};]]>
 	</queryString>
 	<field name="po_nbr" class="java.lang.String">
@@ -82,8 +82,6 @@ inner join site_mstr on site_site = po_site where pod_nbr =  $P{myid};]]>
 	<field name="site_line1" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="vds_name" class="java.lang.String"/>
-	<field name="vds_line1" class="java.lang.String"/>
 	<field name="pod_listprice" class="java.math.BigDecimal"/>
 	<field name="pod_nbr" class="java.lang.String"/>
 	<field name="charges" class="java.lang.Double"/>
@@ -193,14 +191,14 @@ inner join site_mstr on site_site = po_site where pod_nbr =  $P{myid};]]>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{vds_name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{shipname}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="226" y="29" width="154" height="12" uuid="92f0edcc-29a8-4a03-9eb5-df01dc9d576b"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{vds_line1}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{shipline1}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="225" y="41" width="155" height="17" uuid="271ba4d0-b5fb-418b-8e7a-f9b2fc19c7e8"/>

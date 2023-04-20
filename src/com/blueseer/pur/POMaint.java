@@ -844,7 +844,13 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
                     ddvend.requestFocus();
                     return false;
                 }
-               
+                /*
+                if ( ddship.getSelectedItem() == null || ddship.getSelectedItem().toString().isEmpty() ) {
+                   bsmf.MainFrame.show(getMessageTag(1024));
+                    ddship.requestFocus();
+                    return false;
+                }
+               */
                 if ( duedate.getDate() == null) {
                    bsmf.MainFrame.show(getMessageTag(1024));
                     duedate.requestFocus();
