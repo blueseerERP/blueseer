@@ -305,7 +305,7 @@ public class ordData {
         return rows;
     }
     
-    private static int _updateOrderDet(sod_det x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+    private static int _updateOrderDet(sod_det x, so_mstr z, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
         String sqlSelect = "select * from sod_det where sod_nbr = ? and sod_line = ?";
         String sqlUpdate = "update sod_det set sod_item = ?, sod_custitem = ?, " +
@@ -355,15 +355,15 @@ public class ordData {
             ps.setString(22, x.sod_line);
             ps.setString(1, x.sod_item);
             ps.setString(2, x.sod_custitem);
-            ps.setString(3, x.sod_po);
+            ps.setString(3, z.so_po);
             ps.setString(4, x.sod_ord_qty);
             ps.setString(5, x.sod_uom);
             ps.setString(6, x.sod_all_qty);
             ps.setString(7, x.sod_listprice);
             ps.setString(8, x.sod_disc);
             ps.setString(9, x.sod_netprice);
-            ps.setString(10, x.sod_ord_date);
-            ps.setString(11, x.sod_due_date);
+            ps.setString(10, z.so_ord_date);
+            ps.setString(11, z.so_due_date);
             ps.setString(12, x.sod_shipped_qty);
             ps.setString(13, x.sod_status);
             ps.setString(14, x.sod_wh);
@@ -399,7 +399,7 @@ public class ordData {
                 if (z.sod_status.equals(getGlobalProgTag("closed"))) {
                     continue;
                 }
-                _updateOrderDet(z, bscon, ps, res);
+                _updateOrderDet(z, so, bscon, ps, res);
             }
             _deleteOrderTaxMstr(so.so_nbr, bscon);
             for (so_tax z : sot) {
