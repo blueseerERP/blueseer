@@ -36,9 +36,11 @@ import static bsmf.MainFrame.user;
 import com.blueseer.ctr.cusData;
 import static com.blueseer.lbl.lblData.addLabelMstr;
 import com.blueseer.lbl.lblData.label_mstr;
+import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormat;
 import com.blueseer.utl.OVData;
+import static com.blueseer.utl.OVData.getSystemLabelDirectory;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.print.PrinterJob;
@@ -50,6 +52,8 @@ import java.io.FileReader;
 import java.io.InputStream;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -570,8 +574,8 @@ String shipcountry = "";
 String cust = cusData.getCustFromOrder(tbordnbr.getText());
 String label = cusData.getCustLabel(cust);
 label = label + ".prn";
-String labelfile = "zebra/" + label;
-File f = new File(labelfile);
+Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemLabelDirectory()) + label);
+File f = template.toFile();
 if(f.exists() && !f.isDirectory()) { 
     
       // ok....apparently we have a label/printer match.... lets create the label_mstr record for this label
@@ -619,7 +623,7 @@ concatline = concatline.replace("$TODAYTIME", dftime.format(now));
  
  initvars(null);
 } else {
-    bsmf.MainFrame.show(getMessageTag(1142,labelfile));
+    bsmf.MainFrame.show(getMessageTag(1142,template.toString()));
 }
 
 

@@ -40,6 +40,7 @@ import com.blueseer.lbl.lblData.label_zebra;
 import static com.blueseer.lbl.lblData.updateLabelZebraMstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -54,6 +55,7 @@ import static com.blueseer.utl.BlueSeerUtils.setDateFormat;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeerT;
 import com.blueseer.utl.OVData;
+import static com.blueseer.utl.OVData.getSystemLabelDirectory;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -61,6 +63,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -453,8 +457,8 @@ public class LabelMaint extends javax.swing.JPanel implements IBlueSeerT {
     // misc funcs
     public boolean isFile(String myfile) {
         boolean isgood = false;
-        String labelfile = "zebra/" + myfile;
-        File f = new File(labelfile);
+        Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemLabelDirectory()) + myfile);
+        File f = template.toFile();
         if(f.exists() && !f.isDirectory()) { 
            isgood = true;
         }

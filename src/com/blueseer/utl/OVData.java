@@ -55,6 +55,7 @@ import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble5;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble; 
 import static com.blueseer.utl.BlueSeerUtils.bsParseDoubleUS;
 import static com.blueseer.utl.BlueSeerUtils.bsformat;
+import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
 import static com.blueseer.utl.BlueSeerUtils.currformatDoubleUS;
 import static com.blueseer.utl.BlueSeerUtils.currformatUS;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
@@ -16122,24 +16123,24 @@ return mystring;
         
             try (Connection con = DriverManager.getConnection(url + db, user, pass)) {
                 String site = OVData.getDefaultSite();
-                String imagepath = "";
+                
                 String logo = "";
                 logo = OVData.getSiteLogo(site);
                 String jasperfile = "";
                 jasperfile = OVData.getDefaultPOSJasper(site);
-                imagepath = "images/" + logo;
+                Path imagepath = FileSystems.getDefault().getPath(cleanDirString(getSystemImageDirectory()) + logo);
                 HashMap hm = new HashMap();
                 hm.put("REPORT_TITLE", "RECEIPT");
                 hm.put("myid",  nbr);
                 hm.put("mysite",  site);
-                hm.put("imagepath", imagepath);
+                hm.put("imagepath", imagepath.toString());
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                 // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                 // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
-                File mytemplate = new File(getSystemJasperDirectory() + "/" + jasperfile);
-                //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
-                JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
-                JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/posprt.pdf");
+              //  File mytemplate = new File(getSystemJasperDirectory() + "/" + jasperfile);
+                Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemJasperDirectory()) + jasperfile);
+                JasperPrint jasperPrint = JasperFillManager.fillReport(template.toString(), hm, con );
+                //JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/posprt.pdf");
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
                 jasperViewer.setVisible(true);
             } catch (Exception e) {
@@ -16149,10 +16150,6 @@ return mystring;
        
     public static void printInvoice(String invoice, boolean display) {
         
-        File file = new File("temp/ivprt.pdf");
-        if (file.exists()) {
-            file.delete();
-        }
         
         try{
              
@@ -16189,7 +16186,7 @@ return mystring;
                        }
                 
                 
-                String imagepath = "";
+                
                 String logo = "";
                 logo = cusData.getCustLogo(cust);
                 if (logo.isEmpty()) {
@@ -16201,21 +16198,20 @@ return mystring;
                 if (jasperfile.isEmpty()) {
                     jasperfile = OVData.getDefaultInvoiceJasper(site);
                 }
-               imagepath = "images/" + logo;
+               Path imagepath = FileSystems.getDefault().getPath(cleanDirString(getSystemImageDirectory()) + logo);
                 HashMap hm = new HashMap();
                 hm.put("REPORT_TITLE", "INVOICE");
                 hm.put("myid",  invoice);
                 hm.put("site_csz", site_csz);
                 hm.put("bill_csz", bill_csz);
                 hm.put("ship_csz", ship_csz);
-                hm.put("imagepath", imagepath);
+                hm.put("imagepath", imagepath.toString());
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
-                File mytemplate = new File(getSystemJasperDirectory() + "/" + jasperfile); 
-              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
-                JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
-                JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/ivprt.pdf");
+                Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemJasperDirectory()) + jasperfile);
+                JasperPrint jasperPrint = JasperFillManager.fillReport(template.toString(), hm, con );
+               // JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/ivprt.pdf");
                 
                 if (display) {
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
@@ -16286,7 +16282,7 @@ return mystring;
                 
                 
                 
-                String imagepath = "";
+                
                 String logo = "";
                 logo = cusData.getCustLogo(cust);
                 if (logo.isEmpty()) {
@@ -16300,21 +16296,22 @@ return mystring;
                 }
                 
                
-               imagepath = "images/" + logo;
+              
+               Path imagepath = FileSystems.getDefault().getPath(cleanDirString(getSystemImageDirectory()) + logo);
                 HashMap hm = new HashMap();
                 hm.put("REPORT_TITLE", "INVOICE");
                 hm.put("myid",  invoice);
                 hm.put("site_csz", site_csz);
                 hm.put("bill_csz", bill_csz);
                 hm.put("ship_csz", ship_csz);
-                hm.put("imagepath", imagepath);
+                hm.put("imagepath", imagepath.toString());
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
-                File mytemplate = new File(getSystemJasperDirectory() + "/" + jasperfile); 
-              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
-                JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
-                JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/ivprt.pdf");
+               Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemJasperDirectory()) + jasperfile);
+               JasperPrint jasperPrint = JasperFillManager.fillReport(template.toString(), hm, con );
+               
+              //  JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/ivprt.pdf");
                 
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
                 jasperViewer.setVisible(true);
@@ -16384,13 +16381,11 @@ return mystring;
             jasperfile = "genericJTableL11.jasper";
         }
         
-      
-        
-        File mytemplate = new File(getSystemJasperDirectory() + "/" + jasperfile); 
+        Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemJasperDirectory()) + jasperfile);
+               
         JasperPrint jasperPrint; 
        try {
-           
-         jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, new JRTableModelDataSource(newmodel) );
+         jasperPrint = JasperFillManager.fillReport(template.toString(), hm, new JRTableModelDataSource(newmodel) );
          JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
            jasperViewer.setVisible(true);
            jasperViewer.setFitPageZoomRatio();
@@ -16439,7 +16434,7 @@ return mystring;
                           bill_csz = res.getString(("cm_city")) + " " + res.getString(("cm_state")) + " " + res.getString(("cm_zip"));
                           ship_csz = res.getString(("cms_city")) + " " + res.getString(("cms_state")) + " " + res.getString(("cms_zip"));
                        }
-                String imagepath = "";
+                
                 String logo = "";
                 logo = cusData.getCustLogo(cust);
                 if (logo.isEmpty()) {
@@ -16448,21 +16443,20 @@ return mystring;
                 
                 String jasperfile = "receipt_generic.jasper";
                
-               imagepath = "images/" + logo;
+               Path imagepath = FileSystems.getDefault().getPath(cleanDirString(getSystemImageDirectory()) + logo);
                 HashMap hm = new HashMap();
                 hm.put("REPORT_TITLE", "RECEIPT");
                 hm.put("myid",  shipper);
                 hm.put("site_csz", site_csz);
                 hm.put("bill_csz", bill_csz);
                 hm.put("ship_csz", ship_csz);
-                hm.put("imagepath", imagepath);
+                hm.put("imagepath", imagepath.toString());
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
-                File mytemplate = new File(getSystemJasperDirectory() + "/" + jasperfile); 
-              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
-                JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
-                JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/ivprt.pdf");
+                Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemJasperDirectory()) + jasperfile);
+                JasperPrint jasperPrint = JasperFillManager.fillReport(template.toString(), hm, con );
+              //  JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/ivprt.pdf");
                 
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
                 jasperViewer.setVisible(true);
@@ -16497,11 +16491,9 @@ return mystring;
                
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
-                File mytemplate = new File(getSystemJasperDirectory() + "/" + jasperfile); 
-              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
-                
-                JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
-                JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/chkrun.pdf");
+                Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemJasperDirectory()) + jasperfile);
+                JasperPrint jasperPrint = JasperFillManager.fillReport(template.toString(), hm, con );
+               // JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/chkrun.pdf");
                 
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
                 jasperViewer.setVisible(true);
@@ -16541,12 +16533,9 @@ return mystring;
                
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
-                File mytemplate = new File(getSystemJasperDirectory() + "/" + jasperfile); 
-              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
-                
-                JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, new JREmptyDataSource() );
-               
-               // JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/itemimage.pdf");
+                Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemJasperDirectory()) + jasperfile);
+                JasperPrint jasperPrint = JasperFillManager.fillReport(template.toString(), hm, new JREmptyDataSource() );
+                JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/itemimage.pdf");
                 
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
                                 
@@ -16643,7 +16632,7 @@ return mystring;
                           bill_csz = res.getString(("cm_city")) + " " + res.getString(("cm_state")) + " " + res.getString(("cm_zip"));
                           ship_csz = res.getString(("cms_city")) + " " + res.getString(("cms_state")) + " " + res.getString(("cms_zip"));
                        }
-                String imagepath = "";
+                
                 String logo = cusData.getCustLogo(cust);
                 if (logo.isEmpty()) {
                     logo = OVData.getSiteLogo(site);
@@ -16654,23 +16643,20 @@ return mystring;
                     jasperfile = OVData.getDefaultShipperJasper(site);
                 }
                 
-               imagepath = "images/" + logo;
+               Path imagepath = FileSystems.getDefault().getPath(cleanDirString(getSystemImageDirectory()) + logo);
                 HashMap hm = new HashMap();
                 hm.put("REPORT_TITLE", "SHIPPER");
                 hm.put("myid",  shipper);
                 hm.put("site_csz", site_csz);
                 hm.put("bill_csz", bill_csz);
                 hm.put("ship_csz", ship_csz);
-                hm.put("imagepath", imagepath);
+                hm.put("imagepath", imagepath.toString());
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
-                File mytemplate = new File(getSystemJasperDirectory() + "/" + jasperfile);
-              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
-                
-                
-                JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
-                JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/shprt.pdf");
+                Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemJasperDirectory()) + jasperfile);
+                JasperPrint jasperPrint = JasperFillManager.fillReport(template.toString(), hm, con );
+               // JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/shprt.pdf");
          
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
                 jasperViewer.setVisible(true);
@@ -16726,7 +16712,7 @@ return mystring;
                           }
                        }
                 
-                String imagepath = "";
+                
                 String logo = cusData.getCustLogo(cust);
                 if (logo.isEmpty()) {
                     logo = OVData.getSiteLogo(site);
@@ -16737,22 +16723,20 @@ return mystring;
                     jasperfile = OVData.getDefaultShipperJasper(site);
                 }
                 
-               imagepath = "images/" + logo;
+               Path imagepath = FileSystems.getDefault().getPath(cleanDirString(getSystemImageDirectory()) + logo);
                 HashMap hm = new HashMap();
                 hm.put("REPORT_TITLE", "SHIPPER");
                 hm.put("myid",  shipper);
                 hm.put("site_csz", site_csz);
                 hm.put("bill_csz", bill_csz);
                 hm.put("ship_csz", ship_csz);
-                hm.put("imagepath", imagepath);
+                hm.put("imagepath", imagepath.toString());
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
-                File mytemplate = new File(getSystemJasperDirectory() + "/" + jasperfile);
-              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
-               
-                JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
-                JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/shprt.pdf");
+                Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemJasperDirectory()) + jasperfile);
+                JasperPrint jasperPrint = JasperFillManager.fillReport(template.toString(), hm, con );
+               // JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/shprt.pdf");
          
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
                 jasperViewer.setVisible(true);
@@ -16818,7 +16802,7 @@ return mystring;
                           }
                           
                        }
-                String imagepath = "";
+                
                 String logo = OVData.getSiteLogo(site);
                 
                 
@@ -16828,7 +16812,7 @@ return mystring;
                    jasperfile = "po_generic_multidest.jasper";
                 }
                 
-               imagepath = "images/" + logo;
+               Path imagepath = FileSystems.getDefault().getPath(cleanDirString(getSystemImageDirectory()) + logo);
                 HashMap hm = new HashMap();
                 hm.put("REPORT_TITLE", "SHIPPER");
                 hm.put("myid",  po);
@@ -16837,15 +16821,14 @@ return mystring;
                 hm.put("ship_csz", ship_csz);
                 hm.put("shipname", shipname);
                 hm.put("shipline1", shipline1);
-                hm.put("imagepath", imagepath);
+                hm.put("imagepath", imagepath.toString());
                 hm.put("taxes", taxes);
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
-                File mytemplate = new File(getSystemJasperDirectory() + "/" + jasperfile);
-              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
-                 JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
-                JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/poprt.pdf");
+                Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemJasperDirectory()) + jasperfile);
+                JasperPrint jasperPrint = JasperFillManager.fillReport(template.toString(), hm, con );
+                //JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/poprt.pdf");
          
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
                 jasperViewer.setVisible(true);
@@ -16903,7 +16886,7 @@ return mystring;
                        }
                 
                 
-                String imagepath = "";
+                
                 String logo = "";
                 logo = cusData.getCustLogo(cust);
                 if (logo.isEmpty()) {
@@ -16916,22 +16899,20 @@ return mystring;
                    jasperfile = "ord_generic_multidest.jasper";
                }
                
-               imagepath = "images/" + logo;
+               Path imagepath = FileSystems.getDefault().getPath(cleanDirString(getSystemImageDirectory()) + logo);
                 HashMap hm = new HashMap();
                 hm.put("REPORT_TITLE", "ORDER");
                 hm.put("myid",  order);
                 hm.put("site_csz", site_csz);
                 hm.put("bill_csz", bill_csz);
                 hm.put("ship_csz", ship_csz);
-                hm.put("imagepath", imagepath);
+                hm.put("imagepath", imagepath.toString());
                 hm.put("taxes", taxes);
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
-                File mytemplate = new File(getSystemJasperDirectory() + "/" + jasperfile); 
-              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
-                 JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
-                JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/orprt.pdf");
+                Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemJasperDirectory()) + jasperfile);
+                JasperPrint jasperPrint = JasperFillManager.fillReport(template.toString(), hm, con );
                 
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
                 jasperViewer.setVisible(true);
@@ -16990,7 +16971,7 @@ return mystring;
                        }
                 
                 
-                String imagepath = "";
+                
                 String logo = "";
                 logo = cusData.getCustLogo(cust);
                 if (logo.isEmpty()) {
@@ -16999,7 +16980,7 @@ return mystring;
                
                String jasperfile = "serviceorder.jasper";
                
-               imagepath = "images/" + logo;
+               Path imagepath = FileSystems.getDefault().getPath(cleanDirString(getSystemImageDirectory()) + logo);
                 HashMap hm = new HashMap();
                 if (type.equals("order")) {
                 hm.put("REPORT_TITLE", "SERVICE ORDER");
@@ -17010,14 +16991,12 @@ return mystring;
                 hm.put("site_csz", site_csz);
                 hm.put("bill_csz", bill_csz);
                 hm.put("ship_csz", ship_csz);
-                hm.put("imagepath", imagepath);
+                hm.put("imagepath", imagepath.toString());
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
-                File mytemplate = new File(getSystemJasperDirectory() + "/" + jasperfile); 
-              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
-                 JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
-                JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/svprt.pdf");
+                Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemJasperDirectory()) + jasperfile);
+                JasperPrint jasperPrint = JasperFillManager.fillReport(template.toString(), hm, con );
                 
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
                 jasperViewer.setVisible(true);
@@ -17044,7 +17023,7 @@ return mystring;
              
             try (Connection con = DriverManager.getConnection(url + db, user, pass)) {
                                 
-                String imagepath = "";
+                
                 String logo = "";
               
                 logo = OVData.getSiteLogo(OVData.getDefaultSite());
@@ -17053,7 +17032,7 @@ return mystring;
                String jasperfile = "bom_generic.jasper";
                //jasperfile = OVData.getDefaultOrderJasper(site);
                
-               imagepath = "images/" + logo;
+               Path imagepath = FileSystems.getDefault().getPath(cleanDirString(getSystemImageDirectory()) + logo);
                 HashMap hm = new HashMap();
                
                 hm.put("REPORT_TITLE", "BOM RPT");    
@@ -17063,14 +17042,12 @@ return mystring;
                 hm.put("matcost",  matcost);
                 hm.put("opcost",  opcost);
                 hm.put("curcost",  curcost);
-                hm.put("imagepath", imagepath);
+                hm.put("imagepath", imagepath.toString());
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
-                File mytemplate = new File(getSystemJasperDirectory() + "/" + jasperfile); 
-              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
-                 JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
-                JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/bomprt.pdf");
+                Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemJasperDirectory()) + jasperfile);
+                JasperPrint jasperPrint = JasperFillManager.fillReport(template.toString(), hm, con );
                 
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
                 jasperViewer.setVisible(true);
@@ -17102,8 +17079,11 @@ return mystring;
         if (prt[2].equals("DirectToIP") && prt[1].isEmpty()) {
             prt[1] = "9100";
         }
-
-        BufferedReader fsr = new BufferedReader(new FileReader(new File("zebra/item.prn")));
+        
+        Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemLabelDirectory()) + "item.prn");
+               
+                
+        BufferedReader fsr = new BufferedReader(new FileReader(template.toFile()));
         String line = "";
         String concatline = "";
 
@@ -17199,24 +17179,22 @@ MainFrame.bslog(e);
             } else {
               con = DriverManager.getConnection(url + db, user, pass);  
             }
-                String imagepath = "";
+                
                 String logo = "";
                 logo = OVData.getSiteLogo(OVData.getDefaultSite());
                 String jasperfile = "";
                 jasperfile = "qpr.jasper";
                
-                imagepath = "images/" + logo;
+                Path imagepath = FileSystems.getDefault().getPath(cleanDirString(getSystemImageDirectory()) + logo);
                 HashMap hm = new HashMap();
                 hm.put("REPORT_TITLE", "QPR");
                 hm.put("myid",  id);
-                hm.put("imagepath", imagepath);
+                hm.put("imagepath", imagepath.toString());
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
-                File mytemplate = new File(getSystemJasperDirectory() + "/" + jasperfile); 
-              //  JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, hm, con );
-                 JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
-                JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/qprprt.pdf");
+                Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemJasperDirectory()) + jasperfile);
+                JasperPrint jasperPrint = JasperFillManager.fillReport(template.toString(), hm, con );
                 
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
                 jasperViewer.setVisible(true);

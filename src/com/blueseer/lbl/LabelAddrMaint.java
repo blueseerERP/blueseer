@@ -34,8 +34,10 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.ctr.cusData;
+import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
+import static com.blueseer.utl.OVData.getSystemLabelDirectory;
 import java.awt.Component;
 import java.awt.print.PrinterJob;
 import java.io.BufferedReader;
@@ -46,6 +48,8 @@ import java.io.FileReader;
 import java.io.InputStream;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -384,7 +388,9 @@ String sitecitystatezip = "";
             }
 
             try {
-            BufferedReader fsr = new BufferedReader(new FileReader(new File("zebra/address.prn")));
+            Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemLabelDirectory()) + "address.prn");
+            
+            BufferedReader fsr = new BufferedReader(new FileReader(template.toFile()));
             String line = "";
             String concatline = "";
             while ((line = fsr.readLine()) != null) {
