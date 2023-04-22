@@ -3369,7 +3369,7 @@ public class ediData {
        
         try {
             if (append) {
-               Files.write(destinationpath, Files.readAllBytes(sourcepath), StandardOpenOption.APPEND);  
+               Files.write(destinationpath, Files.readAllBytes(sourcepath), StandardOpenOption.APPEND, StandardOpenOption.CREATE);  
                r[1] = "Appended file " + sourcepath + " to file: " + destinationpath;
             } else {
                Files.copy(sourcepath, destinationpath, StandardCopyOption.REPLACE_EXISTING);
