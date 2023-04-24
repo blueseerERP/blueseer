@@ -37,6 +37,7 @@ import com.blueseer.srv.ItemServ;
 import com.blueseer.srv.SalesOrdServ;
 import com.blueseer.srv.ShipperServ;
 import com.blueseer.srv.WorkOrdServ;
+import static com.blueseer.utl.BlueSeerUtils.isParsableToInt;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -67,16 +68,26 @@ public class apiServer {
         
         
         
-        Server server = new Server(8088);
+        
 	ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/bsapi"); 
         String webdir = "src/web/WEB-INF/";
         context.setResourceBase(webdir);
         
+        int i = 0;
+        int serverport = 8088;
         for (String s : args) {
              if (s.equalsIgnoreCase("-debug"))
                  context.setAttribute("debug", "true");
+             if (s.equalsIgnoreCase("-port")) {
+                 if (args[i+1] != null && ! args[i+1].isBlank() && isParsableToInt(args[i+1])) {
+                     serverport = Integer.valueOf(args[i+1]);
+                 }
+             }
+             i++;
         }
+        
+        Server server = new Server(serverport);
         
         context.addServlet(AS2Serv.class, "/as2/*");
         context.addServlet(WorkOrdServ.class, "/WorkOrder/*");
