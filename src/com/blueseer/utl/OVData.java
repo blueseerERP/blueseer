@@ -16354,7 +16354,11 @@ return mystring;
          
         for (int i = 0 ; i < nRow ; i++) {
            for (int j = 0 ; j < nCol ; j++) {
-            myarray[j] = tablereport.getValueAt(i,(j + offset)).toString();
+               if (tablereport.getValueAt(i,(j + offset)) == null) {
+                myarray[j] = "";
+               } else {
+                myarray[j] = tablereport.getValueAt(i,(j + offset)).toString();   
+               }
            }
            newmodel.addRow(myarray);
          }

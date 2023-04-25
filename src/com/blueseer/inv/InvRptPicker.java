@@ -1541,6 +1541,8 @@ public class InvRptPicker extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btviewActionPerformed
+       btprint.setEnabled(true);
+       btcsv.setEnabled(true);
        String func = OVData.getJasperFuncByTitle(jasperGroup, ddreport.getSelectedItem().toString());
        Method mymethod;
            if (func != null && ! func.isEmpty()) {
@@ -1578,6 +1580,9 @@ public class InvRptPicker extends javax.swing.JPanel {
     private void ddreportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddreportActionPerformed
       
        if (! isLoad)  { 
+       ((DefaultTableModel)tablereport.getModel()).setRowCount(0);
+       btprint.setEnabled(false);
+       btcsv.setEnabled(false);
        String func = OVData.getJasperFuncByTitle(jasperGroup, ddreport.getSelectedItem().toString());
        Method mymethod;
            if (func != null && ! func.isEmpty()) {
