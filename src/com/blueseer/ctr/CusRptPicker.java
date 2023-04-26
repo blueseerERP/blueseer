@@ -1330,6 +1330,8 @@ public class CusRptPicker extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btviewActionPerformed
+       btprint.setEnabled(true);
+       btcsv.setEnabled(true);
        String func = OVData.getJasperFuncByTitle(jasperGroup, ddreport.getSelectedItem().toString());
        Method mymethod;
            if (func != null && ! func.isEmpty()) {
@@ -1369,6 +1371,9 @@ public class CusRptPicker extends javax.swing.JPanel {
        if (! isLoad)  { 
        String func = OVData.getJasperFuncByTitle(jasperGroup, ddreport.getSelectedItem().toString());
        Method mymethod;
+       ((DefaultTableModel)tablereport.getModel()).setRowCount(0);
+       btprint.setEnabled(false);
+       btcsv.setEnabled(false);
            if (func != null && ! func.isEmpty()) {
                try {
                    mymethod = this.getClass().getMethod(func, Boolean.TYPE);

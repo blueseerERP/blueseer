@@ -20,6 +20,7 @@ InvRptGroup,Inventario de artículos por artículo,itemInventoryRange,4,L7
 InvRptGroup,Artículo QOH por artículo,itemQOHRange,5,L6
 InvRptGroup,Asignaciones de pedidos por artículo,itemAllocatedToOrder,6,L7
 InvRptGroup,Artículos por debajo del stock de seguridad,itemStockRange,7,L6
+InvRptGroup,Informe de valoración de inventario,itemValuationRange,8,L7
 VenRptGroup,Maestro de proveedores por código de venta,vendAddrInfoByRange,0,L8
 VenRptGroup,Información de contacto del proveedor por código,vendPhoneEmailByRange,1,L8
 VenRptGroup,Información financiera del proveedor por código,vendFinanceInfoByRange,2,L8

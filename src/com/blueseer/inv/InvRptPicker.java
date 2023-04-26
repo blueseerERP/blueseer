@@ -1160,6 +1160,109 @@ public class InvRptPicker extends javax.swing.JPanel {
                
     }
    
+    /* Item QOH range */
+    public void itemValuationRange (boolean input) {
+        
+        if (input) { // input...draw variable input panel
+           resetVariables();
+           hidePanels();
+           showPanels(new String[]{"tb1"});
+           lbkey1.setText(getClassLabelTag("lblfromitem", this.getClass().getSimpleName()));
+           lbkey2.setText(getClassLabelTag("lbltoitem", this.getClass().getSimpleName()));
+          
+         } else { // output...fill report
+            // colect variables from input
+            String fromitem = tbkey1.getText();
+            String toitem = tbkey2.getText();
+            String site = OVData.getDefaultSite();
+            // cleanup variables
+          
+            if (fromitem.isEmpty()) {
+                  fromitem = bsmf.MainFrame.lownbr;
+            }
+            if (toitem.isEmpty()) {
+                  toitem = bsmf.MainFrame.hinbr;
+            }
+            
+             // create and fill tablemodel
+            // column 1 is always 'select' and always type ImageIcon
+            // the remaining columns are whatever you require
+               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                        new String[]{
+                            getGlobalColumnTag("select"),
+                             getGlobalColumnTag("item"), 
+                             getGlobalColumnTag("description"), 
+                             getGlobalColumnTag("code"),
+                             getGlobalColumnTag("prodline"), 
+                             getGlobalColumnTag("qoh"),
+                             getGlobalColumnTag("cost"),
+                             getGlobalColumnTag("total")})
+                   {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else if (col == 5 || col == 6 || col == 7) 
+                            return Double.class;
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
+           
+           try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+              double totalval = 0.00;                  
+              res = st.executeQuery("select it_item, it_desc, it_prodline, it_code, itc_total, " + 
+                       "case when in_qoh is null then '0' else in_qoh end as qoh " +
+                       " from item_mstr left outer join in_mstr on in_item = it_item " +
+                       " left outer join item_cost on itc_item = it_item and itc_set = 'standard' and itc_site = " + "'" + site + "'" +
+                       " where it_item >= " + "'" + fromitem + "'" +  " AND " 
+                       + " it_item <= " + "'" + toitem + "'"         
+                       + ";" );
+              
+              
+                while (res.next()) {
+                    totalval = (res.getDouble("qoh") * res.getDouble("itc_total"));
+                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, 
+                        res.getString("it_item"),
+                        res.getString("it_desc"),
+                        res.getString("it_code"),
+                        res.getString("it_prodline"),
+                        res.getDouble("qoh"),
+                        bsFormatDouble5(res.getDouble("itc_total")),
+                        bsFormatDouble5(totalval)
+                        });
+                }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+      
+      // now assign tablemodel to table
+            tablereport.setModel(mymodel);
+            tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+            Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+              while (en.hasMoreElements()) {
+                 TableColumn tc = en.nextElement();
+                 if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) { // select column
+                     continue;  
+                 }
+                 tc.setCellRenderer(new InvRptPicker.renderer1());
+             }
+        } // else run report
+               
+    }
+   
     /* CUSTOM FUNCTIONS END */
     
     /**

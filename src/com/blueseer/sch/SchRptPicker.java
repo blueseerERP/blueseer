@@ -920,6 +920,8 @@ public class SchRptPicker extends javax.swing.JPanel {
     private void btviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btviewActionPerformed
        String func = OVData.getJasperFuncByTitle(jasperGroup, ddreport.getSelectedItem().toString());
        Method mymethod;
+       btprint.setEnabled(true);
+       btcsv.setEnabled(true);
            if (func != null && ! func.isEmpty()) {
                try {
                    mymethod = this.getClass().getMethod(func, Boolean.TYPE);
@@ -957,6 +959,9 @@ public class SchRptPicker extends javax.swing.JPanel {
        if (! isLoad)  { 
        String func = OVData.getJasperFuncByTitle(jasperGroup, ddreport.getSelectedItem().toString());
        Method mymethod;
+       ((DefaultTableModel)tablereport.getModel()).setRowCount(0);
+       btprint.setEnabled(false);
+       btcsv.setEnabled(false);
            if (func != null && ! func.isEmpty()) {
                try {
                    mymethod = this.getClass().getMethod(func, Boolean.TYPE);

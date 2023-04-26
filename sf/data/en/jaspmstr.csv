@@ -20,6 +20,7 @@ InvRptGroup,Item Inventory By Item,itemInventoryRange,4,L7
 InvRptGroup,Item QOH By Item,itemQOHRange,5,L6
 InvRptGroup,Order Allocations By Item,itemAllocatedToOrder,6,L7
 InvRptGroup,Items less than safety stock,itemStockRange,7,L6
+InvRptGroup,Inventory Valuation Report,itemValuationRange,8,L7
 VenRptGroup,Vendor Master By Vend Code,vendAddrInfoByRange,0,L8
 VenRptGroup,Vendor Contact Info By Code,vendPhoneEmailByRange,1,L8
 VenRptGroup,Vendor Finance Info By Code,vendFinanceInfoByRange,2,L8

@@ -20,6 +20,7 @@ InvRptGroup,Öğeye Göre Öğe Envanteri,itemInventoryRange,4,L7
 InvRptGroup,Öğe QOH Öğeye Göre,itemQOHRange,5,L6
 InvRptGroup,Öğeye Göre Tahsisleri Sırala,itemAllocatedToOrder,6,L7
 InvRptGroup,Güvenlik stoğundan daha az kalemler,itemStockRange,7,L6
+InvRptGroup,Stok Değerleme Raporu,itemValuationRange,8,L7
 VenRptGroup,Satıcı Koduna Göre Satıcı Yöneticisi,vendAddrInfoByRange,0,L8
 VenRptGroup,Kodla Satıcı İletişim Bilgileri,vendPhoneEmailByRange,1,L8
 VenRptGroup,Kodla Satıcı Finansman Bilgileri,vendFinanceInfoByRange,2,L8
