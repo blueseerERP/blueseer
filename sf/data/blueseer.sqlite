@@ -2961,6 +2961,12 @@ CREATE TABLE "pod_tax" (
   "podt_percent" decimal(14,4) NOT NULL COLLATE NOCASE DEFAULT '0',
   "podt_amt" decimal(14,2) NOT NULL COLLATE NOCASE DEFAULT '0'
 );
+CREATE TABLE "as2_meta" (
+  "as2m_id" varchar(30) NOT NULL,
+  "as2m_type" varchar(80) NOT NULL,
+  "as2m_key" varchar(80) NOT NULL,
+  "as2m_value" varchar(80) NOT NULL
+);
 
 
 End Transaction;
