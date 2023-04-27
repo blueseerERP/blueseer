@@ -414,7 +414,7 @@
             <Component class="javax.swing.JLabel" name="jLabel10">
               <Properties>
                 <Property name="text" type="java.lang.String" value="UserID"/>
-                <Property name="name" type="java.lang.String" value="lbluser" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="lblas2id" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tbapikey">

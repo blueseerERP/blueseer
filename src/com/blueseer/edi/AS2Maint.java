@@ -693,7 +693,7 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel9.setName("lblpath"); // NOI18N
 
         jLabel10.setText("UserID");
-        jLabel10.setName("lbluser"); // NOI18N
+        jLabel10.setName("lblas2id"); // NOI18N
 
         jLabel11.setText("Key");
         jLabel11.setName("lblapikey"); // NOI18N
