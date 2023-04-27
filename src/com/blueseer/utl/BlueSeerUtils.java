@@ -1505,7 +1505,7 @@ public class BlueSeerUtils {
     
      public static String getGlobalProgTag(String key) {
          String tag = "";
-          if (tags.containsKey("global.prog." + key)) {
+          if (tags != null && tags.containsKey("global.prog." + key)) {
             tag = tags.getString("global.prog." + key);
           }
          return tag;
@@ -1513,7 +1513,7 @@ public class BlueSeerUtils {
      
      public static String getGlobalLabelTag(String key) {
          String tag = "";
-          if (tags.containsKey("global.label." + key)) {
+          if (tags != null && tags.containsKey("global.label." + key)) {
             tag = tags.getString("global.label." + key);
           }
          return tag;
@@ -1521,7 +1521,7 @@ public class BlueSeerUtils {
      
      public static String getGlobalMenuTag(String key) {
          String tag = "";
-          if (tags.containsKey("global.menu." + key)) {
+          if (tags != null && tags.containsKey("global.menu." + key)) {
             tag = tags.getString("global.menu." + key);
           }
          return tag;
@@ -1529,7 +1529,7 @@ public class BlueSeerUtils {
     
      public static String getGlobalColumnTag(String key) {
          String tag = "";
-          if (tags.containsKey("global.column." + key)) {
+          if (tags != null && tags.containsKey("global.column." + key)) {
             tag = tags.getString("global.column." + key);
           }
          return tag;
@@ -1537,7 +1537,7 @@ public class BlueSeerUtils {
          
      public static String getClassLabelTag(String key, String thisclass) {
          String tag = "";
-          if (tags.containsKey(thisclass + ".label." + key)) {
+          if (tags != null && tags.containsKey(thisclass + ".label." + key)) {
             tag = tags.getString(thisclass + ".label." + key);
           }
          return tag;
@@ -1545,7 +1545,7 @@ public class BlueSeerUtils {
     
      public static String getMessageTag(int key, String thisclass) {
          String tag = "";
-          if (tags.containsKey("global.message." + key)) {
+          if (tags != null && tags.containsKey("global.message." + key)) {
               tag = MessageFormat.format(tags.getString("global.message." + key).replace("'", "''"), thisclass);
           }
          return tag;
@@ -1553,7 +1553,7 @@ public class BlueSeerUtils {
     
      public static String getMessageTag(int key) {
          String tag = "";
-          if (tags.containsKey("global.message." + key)) {
+          if (tags != null && tags.containsKey("global.message." + key)) {
             tag = tags.getString("global.message." + key);
           }
          return tag;
@@ -1561,7 +1561,7 @@ public class BlueSeerUtils {
     
      public static String getTitleTag(int key) {
          String tag = "";
-          if (tags.containsKey("global.title." + key)) {
+          if (tags != null && tags.containsKey("global.title." + key)) {
             tag = tags.getString("global.title." + key);
           }
          return tag;

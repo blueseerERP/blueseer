@@ -77,6 +77,7 @@ public class apiServer {
         int i = 0;
         int serverport = 8088;
         for (String s : args) {
+            System.out.println(String.valueOf(i+1) + " argument passed: " + s);
              if (s.equalsIgnoreCase("-debug"))
                  context.setAttribute("debug", "true");
              if (s.equalsIgnoreCase("-port")) {
