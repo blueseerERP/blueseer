@@ -58,6 +58,7 @@ import java.io.StringWriter;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.SocketException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.UnknownHostException;
@@ -1266,6 +1267,10 @@ public class apiUtils {
           logdet.add(new String[]{parentkey, "error", " Unknown host server " + request.getURI()}); 
           writeAS2LogDetail(logdet);
           return " Unknown host server " + request.getURI();
+        } catch ( SocketException ex) {
+          logdet.add(new String[]{parentkey, "error", " Socket exception connection reset " + request.getURI()}); 
+          writeAS2LogDetail(logdet);
+          return " Socket exception connection reset " + request.getURI();
         }
         
       // remove file if successful
