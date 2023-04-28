@@ -1380,8 +1380,8 @@ public class ediData {
         String sqlInsert = "insert into as2_mstr (as2_id, as2_desc, as2_version," +
         " as2_url, as2_port, as2_path, as2_user, " +
         " as2_pass, as2_key, as2_protocol, as2_class, as2_indir, as2_outdir, as2_encrypted, as2_signed, as2_enccert, " +
-                " as2_forceencrypted, as2_forcesigned, as2_signcert, as2_encalgo, as2_signalgo, as2_micalgo, as2_contenttype ) " +
-                " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+                " as2_forceencrypted, as2_forcesigned, as2_signcert, as2_encalgo, as2_signalgo, as2_micalgo, as2_contenttype, as2_enabled ) " +
+                " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.as2_id);
@@ -1411,6 +1411,7 @@ public class ediData {
             ps.setString(21, x.as2_signalgo);
             ps.setString(22, x.as2_micalgo);
             ps.setString(23, x.as2_contenttype);
+            ps.setString(24, x.as2_enabled);
             
             int rows = psi.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
@@ -1465,8 +1466,8 @@ public class ediData {
         " as2_url, as2_port, as2_path, as2_user, " +
         " as2_pass, as2_key, as2_protocol, as2_class, as2_indir, as2_outdir, " +
                 " as2_encrypted, as2_signed, as2_enccert, as2_forceencrypted, as2_forcesigned, as2_signcert, " +
-                " as2_encalgo, as2_signalgo, as2_micalgo, as2_contenttype ) " +
-                " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+                " as2_encalgo, as2_signalgo, as2_micalgo, as2_contenttype, as2_enabled ) " +
+                " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.as2_id);
@@ -1496,6 +1497,7 @@ public class ediData {
             ps.setString(21, x.as2_signalgo);
             ps.setString(22, x.as2_micalgo);
             ps.setString(23, x.as2_contenttype);
+            ps.setString(24, x.as2_enabled);
             rows = ps.executeUpdate();
             } 
             return rows;
@@ -1691,7 +1693,7 @@ public class ediData {
                 " as2_indir = ?, as2_outdir = ?, " +
                 " as2_encrypted = ?, as2_signed = ?, as2_enccert = ?, " +
                 " as2_forceencrypted = ?, as2_forcesigned = ?, as2_signcert = ?, " +
-                " as2_encalgo = ?, as2_signalgo = ?, as2_micalgo = ?, as2_contenttype = ? " +
+                " as2_encalgo = ?, as2_signalgo = ?, as2_micalgo = ?, as2_contenttype = ?, as2_enabled = ? " +
                 "  where as2_id = ? ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
@@ -1717,7 +1719,8 @@ public class ediData {
         ps.setString(20, x.as2_signalgo);
         ps.setString(21, x.as2_micalgo);
         ps.setString(22, x.as2_contenttype);
-        ps.setString(23, x.as2_id);
+        ps.setString(23, x.as2_enabled);
+        ps.setString(24, x.as2_id);
         int rows = ps.executeUpdate();
         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
         } catch (SQLException s) {
@@ -1760,7 +1763,7 @@ public class ediData {
                 " as2_indir = ?, as2_outdir = ?, " +
                 " as2_encrypted = ?, as2_signed = ?, as2_enccert = ?, " +
                 " as2_forceencrypted = ?, as2_forcesigned = ?, as2_signcert = ?, " +
-                " as2_encalgo = ?, as2_signalgo = ?, as2_micalgo = ?, as2_contenttype = ? " +
+                " as2_encalgo = ?, as2_signalgo = ?, as2_micalgo = ?, as2_contenttype = ?, as2_enabled = ? " +
                 "  where as2_id = ? ";
 	ps = con.prepareStatement(sql) ;
         ps.setString(1, x.as2_desc);
@@ -1785,7 +1788,8 @@ public class ediData {
         ps.setString(20, x.as2_signalgo);
         ps.setString(21, x.as2_micalgo);
         ps.setString(22, x.as2_contenttype);
-        ps.setString(23, x.as2_id);
+        ps.setString(23, x.as2_enabled);
+        ps.setString(24, x.as2_id);
             rows = ps.executeUpdate();
         return rows;
     }
@@ -2152,7 +2156,8 @@ public class ediData {
                             res.getString("as2_encalgo"),
                             res.getString("as2_signalgo"),
                             res.getString("as2_micalgo"),
-                            res.getString("as2_contenttype")
+                            res.getString("as2_contenttype"),
+                            res.getString("as2_enabled")
                         );
                     }
                 }
@@ -2673,10 +2678,10 @@ public class ediData {
     }
     
     public static String[] getAS2Info(String id) {
-        String[] info = new String[]{"","","","","","","","","","","", "", "", "", "", "", "", "", "", "", "", ""};
+        String[] info = new String[]{"","","","","","","","","","","", "", "", "", "", "", "", "", "", "", "", "", ""};
         String sql = "select as2_id, as2_url, as2_port, as2_path, as2_user, edic_as2id, edic_as2url, " +
                 " as2_encrypted, as2_signed, as2_enccert, as2_forceencrypted, as2_forcesigned, as2_signcert, as2_protocol, as2_indir, as2_outdir, " +
-                " edic_signkey, edic_enckey, as2_encalgo, as2_signalgo, as2_micalgo, as2_contenttype " +
+                " edic_signkey, edic_enckey, as2_encalgo, as2_signalgo, as2_micalgo, as2_contenttype, as2_enabled " +
                 " from as2_mstr " +
                 " inner join edi_ctrl where as2_id = ?;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
@@ -2706,6 +2711,7 @@ public class ediData {
                info[19] = res.getString("as2_signalgo");
                info[20] = res.getString("as2_micalgo");
                info[21] = res.getString("as2_contenttype");
+               info[22] = res.getString("as2_enabled");
                }
             }
         }
@@ -2719,7 +2725,7 @@ public class ediData {
         String[] info = null;
         String sql = "select as2_id, as2_url, as2_port, as2_path, as2_user, edic_as2id, edic_as2url, " +
                 " as2_encrypted, as2_signed, as2_enccert, as2_forceencrypted, as2_forcesigned, as2_signcert, as2_protocol, as2_indir, as2_outdir, " +
-                " edic_signkey, edic_enckey, as2_encalgo, as2_signalgo, as2_micalgo, as2_contenttype " +
+                " edic_signkey, edic_enckey, as2_encalgo, as2_signalgo, as2_micalgo, as2_contenttype, as2_enabled " +
                 " from as2_mstr " +
                 " inner join edi_ctrl where as2_user = ? and edic_as2id = ?;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
@@ -2728,7 +2734,7 @@ public class ediData {
         ps.setString(2, receiver);
              try (ResultSet res = ps.executeQuery();) {
                while (res.next()) {
-               info = new String[22];     
+               info = new String[23];     
                info[0] = res.getString("as2_id");
                info[1] = res.getString("as2_url");
                info[2] = res.getString("as2_port");
@@ -2751,6 +2757,7 @@ public class ediData {
                info[19] = res.getString("as2_signalgo");
                info[20] = res.getString("as2_micalgo");
                info[21] = res.getString("as2_contenttype");
+               info[21] = res.getString("as2_enabled");
                }
             }
         }
@@ -3827,11 +3834,11 @@ public class ediData {
         String as2_pass, String as2_key, String as2_protocol, String as2_class,
         String as2_indir, String as2_outdir, String as2_encrypted, String as2_signed, String as2_enccert,
         String as2_forceencrypted, String as2_forcesigned, String as2_signcert,
-        String as2_encalgo, String as2_signalgo, String as2_micalgo, String as2_contenttype) {
+        String as2_encalgo, String as2_signalgo, String as2_micalgo, String as2_contenttype, String as2_enabled) {
         public as2_mstr(String[] m) {
             this(m, "", "", "", "", "", "", "", "", "", "", 
                     "", "", "", "", "", "", "", "", "", "",
-                    "", "", "");
+                    "", "", "", "");
         }
     }
     

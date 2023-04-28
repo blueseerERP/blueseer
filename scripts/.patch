@@ -25,6 +25,8 @@
 #patch=9
 # fix for decimal issue in pod_taxamt; file directory last lookup mod; item image absolute path in lieu of check-in option
 # enforced system control getJasperDirectory lookup and removed hardcoded "/jasper" paths
-patch=10
+#patch=10
 # adjustments to jasper, images, zebra directory assignments from sysc; removed hardcoded approach
 # po print bug fix for blank po_ship value
+patch=11
+# navcode rpin null value in subreport fix; feature additions to as2 module along with schema changes to as2_mstr and as2_meta tables

@@ -462,7 +462,8 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
                 ddencalgo.getSelectedItem().toString(),
                 ddsignalgo.getSelectedItem().toString(),
                 ddmicalgo.getSelectedItem().toString(),
-                ddcontenttype.getSelectedItem().toString()
+                ddcontenttype.getSelectedItem().toString(),
+                String.valueOf(BlueSeerUtils.boolToInt(cbenabled.isSelected()))
                 );
         return x;
     }
@@ -533,6 +534,7 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
         ddsignalgo.setSelectedItem(x.as2_signalgo());
         ddmicalgo.setSelectedItem(x.as2_micalgo());
         ddcontenttype.setSelectedItem(x.as2_contenttype());
+        cbenabled.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.as2_enabled())));
         getAttributes(x.as2_id());
         setAction(x.m());
     }
