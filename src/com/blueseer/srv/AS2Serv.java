@@ -438,10 +438,12 @@ public class AS2Serv extends HttpServlet {
             filename = filename + "_" + Long.toHexString(System.currentTimeMillis());
             path = FileSystems.getDefault().getPath(info[17] + "/" + filename);
         }
+        Files.write(path, FileBytes);
+        /*
         output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path.toFile())));
         String datastring = new String(FileBytes);   
         output.write(datastring);
-          
+        */  
         } catch (FileNotFoundException ex) {
             bslog(ex);
             return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, " File Not Found Error occurred");

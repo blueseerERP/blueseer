@@ -1,1 +1,1 @@
-999,localhost loopback test,,localhost,8088,bsapi/as2,bstest,,,http,AS2,edi/as2/out,edi/as2/in,1,1,bstest,0,0,0,bstest,AES128_CBC,RSA,SHA-1
+999,localhost loopback test,,localhost,8088,bsapi/as2,bstest,,,http,AS2,edi/as2/out,edi/as2/in,1,1,bstest,0,0,0,bstest,AES128_CBC,RSA,SHA-1,application/edi-x12

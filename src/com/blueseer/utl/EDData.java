@@ -127,6 +127,57 @@ public class EDData {
                   return myreturn;
              } 
     
+    public static boolean addAS2AttributeRecord(String as2id, String metatype, String key, String value) {
+        boolean myreturn = false;
+          try {
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                int i = 0;
+                   res =  st.executeQuery("select as2m_id from as2_meta where " +
+                                           " as2m_id = " + "'" + as2id + "'" +
+                                           " and as2m_type = " + "'" + metatype + "'" +
+                                           " and as2m_key = " + "'" + key + "'" +
+                                           ";");
+                    int j = 0;
+                    while (res.next()) {
+                        j++;
+                    }
+                    if (j == 0) {
+                    st.executeUpdate(" insert into as2_meta " 
+                      + "(as2m_id, as2m_type, as2m_key, as2m_value ) " 
+                      + " values ( " + 
+                    "'" +  as2id + "'" + "," + 
+                    "'" +  metatype + "'" + "," +
+                    "'" +  key + "'" + "," + 
+                    "'" +  value + "'" 
+                    +  ");"
+                           );     
+                   }
+                   
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+                myreturn = true;
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }  
+                  return myreturn;
+             } 
+    
+    
     public static boolean addEDIPartner(ArrayList<String> list) {
                  boolean myreturn = false;
                   try {
@@ -753,6 +804,46 @@ public class EDData {
         return x;
         
          }
+    
+    public static ArrayList<String> getAS2AttributesList(String as2id, String metatype) {
+           
+             ArrayList<String> x = new ArrayList<String>();
+        try{
+            Class.forName(driver);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                
+                   
+                      res = st.executeQuery("select * from as2_meta where as2m_id = " + "'" + as2id + "'" + 
+                        " AND as2m_type = " + "'" + metatype + "'" +
+                              ";");
+                    while (res.next()) {
+                       x.add(res.getString("as2m_key") + ":" + res.getString("as2m_value"));
+                    }
+           }
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+        return x;
+        
+         }
+    
     
     public static int getEDIControlNbr(String doctype, String sndid, String rcvid, String key) {
        int nbr = 0;
@@ -3116,6 +3207,33 @@ public class EDData {
                 st.executeUpdate("update edi_file set " 
                     + " edf_status = 'success' "       
                     + " where edf_comkey = " + "'" + comkey + "'"  
+                    + ";");
+            } catch (SQLException s) {
+                 MainFrame.bslog(s);
+            } finally {
+               if (st != null) st.close();
+               con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+    }
+   
+    public static void deleteAS2attribute(String as2id, String metatype, String key) {
+        try {
+            Class.forName(driver);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            try {
+                st.executeUpdate("delete from as2_meta " 
+                    + " where as2m_id = " + "'" + as2id + "'"
+                    + " and as2m_type = " + "'" + metatype + "'"
+                    + " and as2m_key = " + "'" + key + "'"
                     + ";");
             } catch (SQLException s) {
                  MainFrame.bslog(s);

@@ -168,7 +168,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
 
     }
     
-     public void getAttributes(String sndid, String rcvid, String doctype) {
+    public void getAttributes(String sndid, String rcvid, String doctype) {
         listmodel.removeAllElements();
         ArrayList<String> list = EDData.getEDIAttributesList(doctype, sndid, rcvid);
         for (String x : list) {

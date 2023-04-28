@@ -36,6 +36,7 @@ import static com.blueseer.edi.ediData.getKeyStoreByUser;
 import static com.blueseer.edi.ediData.getKeyStorePass;
 import static com.blueseer.edi.ediData.getKeyUserPass;
 import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
+import com.blueseer.utl.EDData;
 import static com.blueseer.utl.EDData.updateAS2LogMDNFile;
 import static com.blueseer.utl.EDData.writeAS2Log;
 import static com.blueseer.utl.EDData.writeAS2LogDetail;
@@ -99,6 +100,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.activation.DataHandler;
 import javax.mail.MessagingException;
 import javax.mail.internet.ContentType;
 import javax.mail.internet.MimeBodyPart;
@@ -868,7 +870,7 @@ public class apiUtils {
      public static MimeBodyPart signData(
           byte[] data, 
           X509Certificate signingCertificate,
-          PrivateKey signingKey, String filename) throws Exception {
+          PrivateKey signingKey, String filename, String[] tp, String contenttype) throws Exception {
             List<X509Certificate> certList = new ArrayList<X509Certificate>();
             certList.add(signingCertificate);
             certs = new JcaCertStore(certList);
@@ -882,10 +884,24 @@ public class apiUtils {
             dataPart.removeHeader("Content-Type");
             dataPart.removeHeader("Content-Disposition");
             
-            dataPart.setText(new String(data, "UTF-8"));
-            dataPart.setHeader("Content-Type", "application/edi-x12; file=" + filename);
+            InputStream targetStream = new ByteArrayInputStream(data);
+            //InputStream targetStream = new FileInputStream(new File("c:\\junk\\item_costs.pdf"));
+            ByteArrayDataSource ds = new ByteArrayDataSource(targetStream, contenttype); 
+            dataPart.setDataHandler(new DataHandler(ds));
+            
+            // dataPart.setText(new String(data, StandardCharsets.UTF_8), "UTF-8");
+            dataPart.setHeader("Content-Type", contenttype + "; file=" + filename);
             dataPart.setHeader("Content-Disposition", "attachment; filename=" + filename);
             dataPart.setHeader("Content-Transfer-Encoding", "binary");
+            
+            ArrayList<String> list = EDData.getAS2AttributesList(tp[0], "httpheader");
+            for (String x : list) {
+                String[] h = x.split(":",-1);
+                if (h != null && h.length > 1) {
+                 dataPart.setHeader(h[0], h[1]);
+                }
+            }
+            
             MimeMultipart signedData = sGen.generate(dataPart);
             MimeBodyPart tmpBody = new MimeBodyPart();
             tmpBody.setContent(signedData);
@@ -968,6 +984,7 @@ public class apiUtils {
         String internalURL = tp[6];
         String sourceDir = tp[16];
         String signkeyid = tp[7];
+        String contenttype = tp[21];
         
         
         int parent = writeAS2Log(new String[]{"0",as2id,"out",""," Init as2 outbound for partner: " + as2id + "/" + as2From + "/" + as2To,now,""}); 
@@ -1069,6 +1086,7 @@ public class apiUtils {
         // String filecontent;
         try {
             filecontent = Files.readAllBytes(as2filepath);
+            
            // filecontent = Files.readString(as2filepath);
         } catch (IOException ex) {
             bslog(ex);
@@ -1084,7 +1102,7 @@ public class apiUtils {
         if (filecontent != null) {    
                 try {
                     // mbp = signData(filecontent.getBytes(StandardCharsets.UTF_8),signcertificate,key,listOfFiles[i].getName());
-                    mbp = signData(filecontent,signcertificate,key,listOfFiles[i].getName());
+                    mbp = signData(filecontent,signcertificate,key,listOfFiles[i].getName(),tp,contenttype);
                     
                 } catch (Exception ex) {
                     bslog(ex);
