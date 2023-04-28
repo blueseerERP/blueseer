@@ -1495,6 +1495,7 @@ public class apiUtils {
         
         return mp;
     }
+       
     
     public static MimeMultipart code3005(String sender, String receiver, String subject, String filename, String messageid, String mic) {
         MimeBodyPart mbp = new MimeBodyPart();
@@ -1520,6 +1521,30 @@ public class apiUtils {
         return mp;
     }
     
+    public static MimeMultipart code3007(String sender, String receiver, String subject, String filename, String messageid, String mic) {
+        MimeBodyPart mbp = new MimeBodyPart();
+        MimeMultipart mp = new MimeMultipart();
+        LocalDateTime localDateTime = LocalDateTime.now();
+        String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        String z = """
+                The message transmitted at <%s> had zero HTTP headers.
+                """.formatted(now);
+        try {
+           // mbp.setText(z);
+           MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
+           ContentType ct = new ContentType(mpInner.getContentType());
+           String boundary = ct.getParameter("boundary");
+            mbp.setContent(mpInner);
+            mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+            mp.addBodyPart(mbp);
+            
+        } catch (MessagingException ex) {
+            bslog(ex);
+        }
+        
+        return mp;
+    }
+       
     
     public static MimeMultipart code3100(String sender, String receiver, String subject, String filename, String messageid, String mic) {
         MimeBodyPart mbp = new MimeBodyPart();
@@ -1619,7 +1644,11 @@ public class apiUtils {
             break;
             
             case "3005" :
-            mbp.setContent(code3000(e[0], e[1], e[2], e[3], e[4], e[5]));
+            mbp.setContent(code3005(e[0], e[1], e[2], e[3], e[4], e[5]));
+            break;
+           
+            case "3007" :
+            mbp.setContent(code3007(e[0], e[1], e[2], e[3], e[4], e[5]));
             break;
             
             case "3100" :

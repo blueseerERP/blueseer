@@ -229,6 +229,11 @@ public class AS2Serv extends HttpServlet {
         byte[] Signature = null;
         InputStream is = null;
         
+        if (inHM == null || inHM.isEmpty()) {
+          writeAS2LogStop(new String[]{"0","unknown","in","error","There are zero http headers",now,""});
+            return createMDN("3007", elementals, null);   
+        }
+        
         if (inHM.containsKey("AS2-To")) {
             if (inHM.get("AS2-To").equals(sysas2user)) {
               receiver = sysas2user;  
