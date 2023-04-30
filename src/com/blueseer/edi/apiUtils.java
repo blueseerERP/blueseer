@@ -894,7 +894,7 @@ public class apiUtils {
             dataPart.setHeader("Content-Type", contenttype + "; file=" + filename);
             dataPart.setHeader("Content-Disposition", "attachment; filename=" + filename);
             dataPart.setHeader("Content-Transfer-Encoding", "binary");
-            
+            /*
             ArrayList<String> list = EDData.getAS2AttributesList(tp[0], "httpheader");
             for (String x : list) {
                 String[] h = x.split(":",-1);
@@ -902,6 +902,7 @@ public class apiUtils {
                  dataPart.setHeader(h[0], h[1]);
                 }
             }
+            */
             
             MimeMultipart signedData = sGen.generate(dataPart);
             MimeBodyPart tmpBody = new MimeBodyPart();
@@ -1161,6 +1162,8 @@ public class apiUtils {
         RequestBuilder rb = RequestBuilder.post();
         rb.setUri(urlObj.toURI());
         
+        
+        
         if (! isSignedAndEncrypted) {
         rb.addHeader("User-Agent", "java/app (BlueSeer Software; +http://www.blueseer.com/)"); 
         rb.addHeader("AS2-To", as2To);
@@ -1191,8 +1194,17 @@ public class apiUtils {
         rb.addHeader("EDIINT-Features", "CEM, multiple-attachments, AS2-Reliability");
         rb.addHeader("Content-Type", "application/pkcs7-mime; smime-type=enveloped-data; name=smime.p7m");
         rb.addHeader("Content-Transfer-Encoding", "binary");
-        rb.addHeader("Content-Disposition", "attachment; filename=smime.p7m");    
+        rb.addHeader("Content-Disposition", "attachment; filename=smime.p7m");
         }
+        
+        // add custom headers
+        ArrayList<String> list = EDData.getAS2AttributesList(tp[0], "httpheader");
+        for (String x : list) {
+                String[] h = x.split(":",-1);
+                if (h != null && h.length > 1) {
+                 rb.addHeader(h[0], h[1]);
+                }
+            }
         
         InputStreamEntity ise = new InputStreamEntity(new ByteArrayInputStream(signedAndEncrypteddata));
           

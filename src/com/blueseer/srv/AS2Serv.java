@@ -203,7 +203,7 @@ public class AS2Serv extends HttpServlet {
         if (headerNames != null) {
                 while (headerNames.hasMoreElements()) {
                         String key = (String) headerNames.nextElement();
-                        inHM.putIfAbsent(key, request.getHeader(key).toLowerCase());
+                        inHM.putIfAbsent(key.toLowerCase(), request.getHeader(key));
                         
                         if (isDebug)
                         System.out.println("here--> Header: " + key +  "=" + request.getHeader(key));
