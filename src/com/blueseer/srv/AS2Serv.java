@@ -203,7 +203,7 @@ public class AS2Serv extends HttpServlet {
         if (headerNames != null) {
                 while (headerNames.hasMoreElements()) {
                         String key = (String) headerNames.nextElement();
-                        inHM.putIfAbsent(key, request.getHeader(key));
+                        inHM.putIfAbsent(key, request.getHeader(key).toLowerCase());
                         
                         if (isDebug)
                         System.out.println("here--> Header: " + key +  "=" + request.getHeader(key));
@@ -234,8 +234,8 @@ public class AS2Serv extends HttpServlet {
             return createMDN("3007", elementals, null);   
         }
         
-        if (inHM.containsKey("AS2-To")) {
-            if (inHM.get("AS2-To").equals(sysas2user)) {
+        if (inHM.containsKey("as2-to")) {
+            if (inHM.get("as2-to").equals(sysas2user)) {
               receiver = sysas2user;  
             } else {
               writeAS2LogStop(new String[]{"0","unknown","in","error","AS2 receiver ID unknown",now,""});
@@ -247,8 +247,8 @@ public class AS2Serv extends HttpServlet {
             return createMDN("3100", elementals, null); 
         }
         
-        if (inHM.containsKey("AS2-From")) {
-            sender = inHM.get("AS2-From");
+        if (inHM.containsKey("as2-from")) {
+            sender = inHM.get("as2-from");
             info = getAS2InfoByIDs(sender , receiver);
             if (info == null) {
               writeAS2LogStop(new String[]{"0","unknown","in","error","AS2 sender ID unknown with keys: " + sender + "/" + receiver,now,""});  
@@ -266,12 +266,12 @@ public class AS2Serv extends HttpServlet {
               return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "unable to find sender / receiver keys: " + sender + "/" + receiver);    
         }
         
-        if (inHM.containsKey("Subject")) {
-            subject = inHM.get("Subject");
+        if (inHM.containsKey("subject")) {
+            subject = inHM.get("subject");
         }
         
-        if (inHM.containsKey("Message-ID")) {
-            messageid = inHM.get("Message-ID");
+        if (inHM.containsKey("message-id")) {
+            messageid = inHM.get("message-id");
         }
         
         
