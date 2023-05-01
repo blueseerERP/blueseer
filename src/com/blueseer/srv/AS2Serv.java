@@ -307,7 +307,11 @@ public class AS2Serv extends HttpServlet {
          if (isEncrypted) {
           systemEncKey = getSystemEncKey();   
           finalContent = apiUtils.decryptData(content, apiUtils.getPrivateKey(getSystemEncKey()) );
-           } else {
+           if (finalContent == null) {
+             writeAS2LogStop(new String[]{"0","unknown","in","error","Unable to decrypt...possible incorrect public key " + sender + "/" + receiver,now,""}); 
+             return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "Unable to decrypt...possible incorrect public key for " + sender + "/" + receiver);  
+           }  
+         } else {
           finalContent = content;
          }
          

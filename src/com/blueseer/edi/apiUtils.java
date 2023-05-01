@@ -836,7 +836,11 @@ public class apiUtils {
                 Collection<RecipientInformation> recipients = envelopedData.getRecipientInfos().getRecipients();
                 KeyTransRecipientInformation recipientInfo = (KeyTransRecipientInformation) recipients.iterator().next();
                 JceKeyTransRecipient recipient = new JceKeyTransEnvelopedRecipient(decryptionKey);
-                return recipientInfo.getContent(recipient);
+                try {
+                decryptedData = recipientInfo.getContent(recipient);
+                } catch ( CMSException ex) {
+                bslog(ex);
+                }
             }
             return decryptedData;
 }
