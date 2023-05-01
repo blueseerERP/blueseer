@@ -263,7 +263,7 @@ public class AS2Serv extends HttpServlet {
         
         if (info == null) { 
               writeAS2LogStop(new String[]{"0","unknown","in","error","unable to find sender / receiver keys: " + sender + "/" + receiver,now,""});
-              return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "unable to find sender / receiver keys: " + sender + "/" + receiver);    
+              return createMDN("3300", elementals, null);   
         }
         
         if (inHM.containsKey("subject")) {
@@ -298,7 +298,7 @@ public class AS2Serv extends HttpServlet {
         
         if (! isEncrypted && info[9].equals("1")) {
            writeAS2LogStop(new String[]{"0","unknown","in","error","Encryption is required for this partner " + sender + "/" + receiver,now,""}); 
-           return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "Encryption is required for this partner " + sender + "/" + receiver);  
+           return createMDN("3400", elementals, null);
         }
          
         byte[] finalContent = null;
@@ -309,7 +309,7 @@ public class AS2Serv extends HttpServlet {
           finalContent = apiUtils.decryptData(content, apiUtils.getPrivateKey(getSystemEncKey()) );
            if (finalContent == null) {
              writeAS2LogStop(new String[]{"0","unknown","in","error","Unable to decrypt...possible incorrect public key " + sender + "/" + receiver,now,""}); 
-             return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "Unable to decrypt...possible incorrect public key for " + sender + "/" + receiver);  
+             return createMDN("3003", elementals, null);
            }  
          } else {
           finalContent = content;

@@ -102,6 +102,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.activation.DataHandler;
+import javax.crypto.BadPaddingException;
 import javax.mail.MessagingException;
 import javax.mail.internet.ContentType;
 import javax.mail.internet.MimeBodyPart;
@@ -838,7 +839,7 @@ public class apiUtils {
                 JceKeyTransRecipient recipient = new JceKeyTransEnvelopedRecipient(decryptionKey);
                 try {
                 decryptedData = recipientInfo.getContent(recipient);
-                } catch ( CMSException ex) {
+                } catch (Exception ex) {
                 bslog(ex);
                 }
             }
@@ -989,7 +990,7 @@ public class apiUtils {
         String as2From = tp[5];
         String internalURL = tp[6];
         String sourceDir = tp[16];
-        String signkeyid = tp[7];
+        String signkeyid = tp[14];  // was tp[7]
         String contenttype = tp[21];
         
         
@@ -1516,7 +1517,31 @@ public class apiUtils {
         
         return mp;
     }
-       
+     
+    public static MimeMultipart code3003(String sender, String receiver, String subject, String filename, String messageid, String mic) {
+        MimeBodyPart mbp = new MimeBodyPart();
+        MimeMultipart mp = new MimeMultipart();
+        LocalDateTime localDateTime = LocalDateTime.now();
+        String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        String z = """
+                Unable to decrypt message transmitted at <%s>.  Potential bad public key.
+                """.formatted(now);
+        try {
+           // mbp.setText(z);
+           MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
+           ContentType ct = new ContentType(mpInner.getContentType());
+           String boundary = ct.getParameter("boundary");
+            mbp.setContent(mpInner);
+            mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+            mp.addBodyPart(mbp);
+            
+        } catch (MessagingException ex) {
+            bslog(ex);
+        }
+        
+        return mp;
+    }
+    
     
     public static MimeMultipart code3005(String sender, String receiver, String subject, String filename, String messageid, String mic) {
         MimeBodyPart mbp = new MimeBodyPart();
@@ -1565,8 +1590,7 @@ public class apiUtils {
         
         return mp;
     }
-       
-    
+   
     public static MimeMultipart code3100(String sender, String receiver, String subject, String filename, String messageid, String mic) {
         MimeBodyPart mbp = new MimeBodyPart();
         MimeMultipart mp = new MimeMultipart();
@@ -1598,6 +1622,54 @@ public class apiUtils {
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         String z = """
                 The message <%s> transmitted at <%s> was transmitted by unknown sender ID.
+                """.formatted(filename, now);
+        try {
+           // mbp.setText(z);
+           MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
+           ContentType ct = new ContentType(mpInner.getContentType());
+           String boundary = ct.getParameter("boundary");
+            mbp.setContent(mpInner);
+            mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+            mp.addBodyPart(mbp);
+            
+        } catch (MessagingException ex) {
+            bslog(ex);
+        }
+        
+        return mp;
+    }
+    
+    public static MimeMultipart code3300(String sender, String receiver, String subject, String filename, String messageid, String mic) {
+        MimeBodyPart mbp = new MimeBodyPart();
+        MimeMultipart mp = new MimeMultipart();
+        LocalDateTime localDateTime = LocalDateTime.now();
+        String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        String z = """
+                The message <%s> transmitted at <%s>... unable to determine sender / receiver keys.
+                """.formatted(filename, now);
+        try {
+           // mbp.setText(z);
+           MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
+           ContentType ct = new ContentType(mpInner.getContentType());
+           String boundary = ct.getParameter("boundary");
+            mbp.setContent(mpInner);
+            mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+            mp.addBodyPart(mbp);
+            
+        } catch (MessagingException ex) {
+            bslog(ex);
+        }
+        
+        return mp;
+    }
+    
+    public static MimeMultipart code3400(String sender, String receiver, String subject, String filename, String messageid, String mic) {
+        MimeBodyPart mbp = new MimeBodyPart();
+        MimeMultipart mp = new MimeMultipart();
+        LocalDateTime localDateTime = LocalDateTime.now();
+        String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        String z = """
+                The message <%s> transmitted at <%s>... encryption is required.
                 """.formatted(filename, now);
         try {
            // mbp.setText(z);
@@ -1664,6 +1736,10 @@ public class apiUtils {
             mbp.setContent(code3000(e[0], e[1], e[2], e[3], e[4], e[5]));
             break;
             
+            case "3003" :
+            mbp.setContent(code3003(e[0], e[1], e[2], e[3], e[4], e[5]));
+            break;
+            
             case "3005" :
             mbp.setContent(code3005(e[0], e[1], e[2], e[3], e[4], e[5]));
             break;
@@ -1678,6 +1754,14 @@ public class apiUtils {
             
             case "3200" :
             mbp.setContent(code3200(e[0], e[1], e[2], e[3], e[4], e[5]));
+            break;
+            
+            case "3300" :
+            mbp.setContent(code3300(e[0], e[1], e[2], e[3], e[4], e[5]));
+            break;
+            
+            case "3400" :
+            mbp.setContent(code3400(e[0], e[1], e[2], e[3], e[4], e[5]));
             break;
             
             case "2005" :
