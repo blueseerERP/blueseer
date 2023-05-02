@@ -990,7 +990,7 @@ public class apiUtils {
         String as2From = tp[5];
         String internalURL = tp[6];
         String sourceDir = tp[16];
-        String signkeyid = tp[14];  // was tp[7]
+        String signkeyid = tp[7];  // was tp[7]
         String contenttype = tp[21];
         
         
