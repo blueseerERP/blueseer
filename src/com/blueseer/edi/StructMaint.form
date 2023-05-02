@@ -356,7 +356,9 @@
                               <Component id="btupdaterow" min="-2" pref="28" max="-2" attributes="0"/>
                               <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
                               <Component id="btaddrow" min="-2" pref="28" max="-2" attributes="0"/>
-                              <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="btinsertrow" min="-2" pref="28" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="btdeleterow" min="-2" pref="28" max="-2" attributes="0"/>
                               <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
                               <Component id="btimport" min="-2" pref="28" max="-2" attributes="0"/>
@@ -446,6 +448,7 @@
                                   <Component id="btimport" min="-2" max="-2" attributes="0"/>
                                   <Component id="btdown" min="-2" max="-2" attributes="0"/>
                                   <Component id="btdownload" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btinsertrow" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -656,6 +659,17 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdownloadActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="btinsertrow">
+              <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/images/rightdoc.png"/>
+                </Property>
+                <Property name="toolTipText" type="java.lang.String" value="Insert Blank Row"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btinsertrowActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>

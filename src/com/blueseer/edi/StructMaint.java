@@ -731,6 +731,7 @@ public class StructMaint extends javax.swing.JPanel  {
         btup = new javax.swing.JButton();
         bttransform = new javax.swing.JButton();
         btdownload = new javax.swing.JButton();
+        btinsertrow = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tabledetail = new javax.swing.JTable();
         btcopy = new javax.swing.JButton();
@@ -913,6 +914,14 @@ public class StructMaint extends javax.swing.JPanel  {
             }
         });
 
+        btinsertrow.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/rightdoc.png"))); // NOI18N
+        btinsertrow.setToolTipText("Insert Blank Row");
+        btinsertrow.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btinsertrowActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -971,7 +980,9 @@ public class StructMaint extends javax.swing.JPanel  {
                         .addComponent(btupdaterow, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(6, 6, 6)
                         .addComponent(btaddrow, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(6, 6, 6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btinsertrow, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btdeleterow, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(6, 6, 6)
                         .addComponent(btimport, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -1038,7 +1049,8 @@ public class StructMaint extends javax.swing.JPanel  {
                             .addComponent(btdeleterow)
                             .addComponent(btimport)
                             .addComponent(btdown)
-                            .addComponent(btdownload))))
+                            .addComponent(btdownload)
+                            .addComponent(btinsertrow))))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -1232,7 +1244,8 @@ public class StructMaint extends javax.swing.JPanel  {
     private void btaddrowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddrowActionPerformed
          String group = BlueSeerUtils.ConvertIntToYesNo(BlueSeerUtils.boolToInt(cbisgroup.isSelected()));
          String landmark = BlueSeerUtils.ConvertIntToYesNo(BlueSeerUtils.boolToInt(cbislandmark.isSelected()));
-            
+                    
+       
             detailmodel.addRow(new Object[]{ 
                 tbsegment.getText(),
                 tbparent.getText(),
@@ -1247,7 +1260,7 @@ public class StructMaint extends javax.swing.JPanel  {
                 ddstatus.getSelectedItem().toString(),
                 ddtype.getSelectedItem().toString()
             });
-            
+       
        
        tbsegment.setText("");
        tbparent.setText("");
@@ -1382,7 +1395,10 @@ public class StructMaint extends javax.swing.JPanel  {
             return;
         }
         for (int i : rows) {
+            if (i + 1 < tabledetail.getRowCount() ) {
             ((javax.swing.table.DefaultTableModel) tabledetail.getModel()).moveRow(i, i, i + 1);
+            tabledetail.setRowSelectionInterval(i + 1, i + 1);
+            }
         }
     }//GEN-LAST:event_btdownActionPerformed
 
@@ -1399,6 +1415,7 @@ public class StructMaint extends javax.swing.JPanel  {
         for (int i : rows) {
             if (i > 0 && rows.length == 1) {
             ((javax.swing.table.DefaultTableModel) tabledetail.getModel()).moveRow(i, i, i - 1);
+             tabledetail.setRowSelectionInterval(i - 1, i - 1);
             }
         }
     }//GEN-LAST:event_btupActionPerformed
@@ -1552,6 +1569,26 @@ public class StructMaint extends javax.swing.JPanel  {
         }
     }//GEN-LAST:event_tbdelimiterFocusLost
 
+    private void btinsertrowActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btinsertrowActionPerformed
+        int[] rows = tabledetail.getSelectedRows();
+        if (rows != null && rows.length == 1  ) {
+            detailmodel.insertRow(rows[0] + 1, new Object[]{ 
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ddalign.getSelectedItem().toString(),
+                ddstatus.getSelectedItem().toString(),
+                ddtype.getSelectedItem().toString()
+            });
+        }
+    }//GEN-LAST:event_btinsertrowActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
@@ -1563,6 +1600,7 @@ public class StructMaint extends javax.swing.JPanel  {
     private javax.swing.JButton btdown;
     private javax.swing.JButton btdownload;
     private javax.swing.JButton btimport;
+    private javax.swing.JButton btinsertrow;
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btlookupele;
     private javax.swing.JButton btnew;
