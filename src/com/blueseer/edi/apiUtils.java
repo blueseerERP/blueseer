@@ -1235,6 +1235,17 @@ public class apiUtils {
                 //		+ conn.getResponseCode());
         } else {
             r.append("SUCCESS: " + response.getStatusLine().getStatusCode() + ": " + response.getStatusLine().getReasonPhrase() + "\n");
+            if (isDebug) { 
+            String debugfile = "debugAS2responseHeaders." + now + "." + Long.toHexString(System.currentTimeMillis());
+            Path pathinput = FileSystems.getDefault().getPath("temp" + "/" + debugfile);
+            Header[] headers = response.getAllHeaders();
+             try (FileOutputStream stream = new FileOutputStream(pathinput.toFile())) {
+                for (Header x : headers) {
+                    String h = x.getName() + ": " + x.getValue() + "\n";
+                    stream.write(h.getBytes());
+                }
+             }  
+            }
         }
         
         HttpEntity entity = response.getEntity();
@@ -1351,8 +1362,10 @@ public class apiUtils {
            ContentType ct = new ContentType(mpInner.getContentType());
            String boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
-            mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+            mbp.addHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+           //  mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
             mp.addBodyPart(mbp);
+            
             
         } catch (MessagingException ex) {
             bslog(ex);
@@ -1360,6 +1373,37 @@ public class apiUtils {
         
         return mp;
     }
+    
+    public static mmpx code1000x(String sender, String receiver, String subject, String filename, String messageid, String mic) {
+        MimeBodyPart mbp = new MimeBodyPart();
+        String boundary = "";
+        MimeMultipart mp = new MimeMultipart();
+        LocalDateTime localDateTime = LocalDateTime.now();
+        String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        String z = """
+                The message <%s> with subject <%s> has been received.  
+                Message was sent from: <%s>  to:  <%s>
+                Message was received at <%s>
+                Note: The origin and integrity of the message have been verified.
+                """.formatted(filename, subject, sender, receiver, now);
+        try {
+           // mbp.setText(z);
+           MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "processed");
+           ContentType ct = new ContentType(mpInner.getContentType());
+           boundary = ct.getParameter("boundary");
+            mbp.setContent(mpInner);
+            mbp.addHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+           //  mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+            mp.addBodyPart(mbp);
+            
+            
+        } catch (MessagingException ex) {
+            bslog(ex);
+        }
+        
+        return new mmpx(mp, boundary);
+    }
+    
     
     public static MimeMultipart code2000(String sender, String receiver, String subject, String filename, String messageid, String mic) {
         MimeBodyPart mbp = new MimeBodyPart();
@@ -1716,16 +1760,21 @@ public class apiUtils {
     }
     
     
-    public static mdn createMDN(String code, String[] e, ArrayList<String> headers) throws IOException, MessagingException {
+    public static mdn createMDN(String code, String[] e, HashMap<String, String> headers) throws IOException, MessagingException {
         mdn x = null;
         MimeBodyPart mbp = new MimeBodyPart();
+        
         String z;
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_DATE);
+        String boundary = "";
         
         switch (code) {
             case "1000" :
-            mbp.setContent(code1000(e[0], e[1], e[2], e[3], e[4], e[5]));
+          //  mbp.setContent(code1000(e[0], e[1], e[2], e[3], e[4], e[5]));
+           mmpx mymmpx = code1000x(e[0], e[1], e[2], e[3], e[4], e[5]);
+           mbp.setContent(mymmpx.mmp());
+           boundary = mymmpx.boundary();
             break;     
             
             case "2000" :
@@ -1785,8 +1834,11 @@ public class apiUtils {
             
         }        
         
+        
+        
         if (mbp != null) {
-            x = new mdn(HttpServletResponse.SC_OK, null, new String(mbp.getInputStream().readAllBytes()));
+            
+            x = new mdn(HttpServletResponse.SC_OK, headers, new String(mbp.getInputStream().readAllBytes()), boundary);
         } else {
             x = new mdn(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null, "problem creating MIME structure for MDN");
         }
@@ -1794,10 +1846,14 @@ public class apiUtils {
         return x; 
     }
     
-    public record mdn(int status, HashMap<String, String> headers, String message) {
-        public mdn(int i, HashMap<String, String> hm) {
-            this(i, hm, ""); 
+    public record mdn(int status, HashMap<String, String> headers, String message, String boundary) {
+        public mdn(int i, HashMap<String, String> hm, String bs) {
+            this(i, hm, "", bs); 
         }
+    }
+    
+    public record mmpx(MimeMultipart mmp, String boundary) {
+     
     }
     
     

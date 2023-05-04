@@ -156,10 +156,16 @@ public class AS2Serv extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().println("no valid payload provided");
         } else {
-            response.setContentType("text/plain");
-           // response.setStatus(HttpServletResponse.SC_OK);
-            mdn thismdn = processRequest(request, isDebug);
             
+            //response.setContentType("text/plain");
+            mdn thismdn = processRequest(request, isDebug);
+            response.setContentType("multipart/report; report-type=disposition-notification; boundary=" + "\"" + thismdn.boundary() + "\"");
+            
+            if (thismdn.headers() != null) {
+                for (Map.Entry<String, String> z : thismdn.headers().entrySet()) {
+                    response.setHeader(z.getKey(), z.getValue());
+                }
+            } 
             response.setStatus(thismdn.status());
             response.getWriter().println(thismdn.message());
         }
@@ -170,6 +176,7 @@ public class AS2Serv extends HttpServlet {
        
         BufferedWriter output = null;
         String[] elementals = new String[]{"","","","","",""};
+        HashMap<String, String> returnheaders = new HashMap<String, String>();
         mdn mymdn = null;
         String  now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
         ArrayList<String[]> logdet = new ArrayList<String[]>(); 
@@ -229,12 +236,16 @@ public class AS2Serv extends HttpServlet {
         byte[] Signature = null;
         InputStream is = null;
         
+        
         if (inHM == null || inHM.isEmpty()) {
           writeAS2LogStop(new String[]{"0","unknown","in","error","There are zero http headers",now,""});
             return createMDN("3007", elementals, null);   
         }
         
         if (inHM.containsKey("as2-to")) {
+            // set return header as opposite direction
+            returnheaders.put("as2-from", inHM.get("as2-to"));
+            
             if (inHM.get("as2-to").equals(sysas2user)) {
               receiver = sysas2user;  
             } else {
@@ -248,6 +259,9 @@ public class AS2Serv extends HttpServlet {
         }
         
         if (inHM.containsKey("as2-from")) {
+            // set return header as opposite direction
+            returnheaders.put("as2-to", inHM.get("as2-from"));
+            
             sender = inHM.get("as2-from");
             info = getAS2InfoByIDs(sender , receiver);
             if (info == null) {
@@ -470,7 +484,7 @@ public class AS2Serv extends HttpServlet {
              output.close(); 
             }
            try {
-            mymdn = createMDN("1000", elementals, null);  // success assumes encryption and signed
+            mymdn = createMDN("1000", elementals, returnheaders);  // success assumes encryption and signed
             } catch (MessagingException ex) {
                 bslog(ex);
             }
