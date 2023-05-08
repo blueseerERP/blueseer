@@ -29,7 +29,7 @@
 (select case when sum(sos_amt) is null then 0 else sum(sos_amt) end from sos_det 
 	where sos_nbr = $P{myid} and sos_amttype = 'amount' and sos_type <> 'tax' and sos_type <> 'passive'
 ) as charges, 
-so_cust, so_create_date,  so_rmks, sod_po, sod_item, sod_custitem, sod_ord_qty, 
+so_cust, so_create_date, so_due_date,  so_rmks, sod_po, sod_item, sod_custitem, sod_ord_qty, 
 sod_netprice, sod_listprice, sod_taxamt, cm_code, cm_name, cm_line1, cm_line2,  
 cms_name, cms_line1, cms_line2,  site_desc, site_line1 
 from sod_det  
@@ -62,6 +62,7 @@ inner join site_mstr on site_site = so_site where sod_nbr =  $P{myid}]]>
 	<field name="cms_line2" class="java.lang.String"/>
 	<field name="site_desc" class="java.lang.String"/>
 	<field name="site_line1" class="java.lang.String"/>
+	<field name="so_due_date" class="java.lang.String"/>
 	<variable name="mysum" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{sod_ord_qty}]]></variableExpression>
 	</variable>
@@ -249,7 +250,7 @@ inner join site_mstr on site_site = so_site where sod_nbr =  $P{myid}]]>
 				<textFieldExpression><![CDATA[$R{jasper.order.lblremarks}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="54" y="59" width="511" height="20" uuid="5c1f22ce-4e0b-41ff-83f6-433702e5c736"/>
+				<reportElement x="54" y="59" width="352" height="20" uuid="5c1f22ce-4e0b-41ff-83f6-433702e5c736"/>
 				<textFieldExpression><![CDATA[$F{so_rmks}]]></textFieldExpression>
 			</textField>
 			<textField>
@@ -262,6 +263,15 @@ inner join site_mstr on site_site = so_site where sod_nbr =  $P{myid}]]>
 			<textField>
 				<reportElement x="489" y="37" width="76" height="19" uuid="401309e3-7352-4427-8461-a60a49ce6eaa"/>
 				<textFieldExpression><![CDATA[$F{so_create_date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="416" y="56" width="62" height="19" uuid="7133d5ab-3f74-4f07-bceb-2e9a2d00a3fe"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$R{jasper.order.lblduedate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="489" y="56" width="76" height="19" uuid="3ae84711-7768-4a61-9cad-a536dd170f23"/>
+				<textFieldExpression><![CDATA[$F{so_due_date}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
