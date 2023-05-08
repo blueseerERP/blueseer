@@ -1344,7 +1344,7 @@ public class apiUtils {
         }
         return mp;
     }
-    
+    /*
     public static MimeMultipart code1000(String sender, String receiver, String subject, String filename, String messageid, String mic) {
         MimeBodyPart mbp = new MimeBodyPart();
         MimeMultipart mp = new MimeMultipart();
@@ -1373,8 +1373,8 @@ public class apiUtils {
         
         return mp;
     }
-    
-    public static mmpx code1000x(String sender, String receiver, String subject, String filename, String messageid, String mic) {
+    */
+    public static mmpx code1000(String sender, String receiver, String subject, String filename, String messageid, String mic) {
         MimeBodyPart mbp = new MimeBodyPart();
         String boundary = "";
         MimeMultipart mp = new MimeMultipart();
@@ -1405,8 +1405,9 @@ public class apiUtils {
     }
     
     
-    public static MimeMultipart code2000(String sender, String receiver, String subject, String filename, String messageid, String mic) {
+    public static mmpx code2000(String sender, String receiver, String subject, String filename, String messageid, String mic) {
         MimeBodyPart mbp = new MimeBodyPart();
+        String boundary = "";
         MimeMultipart mp = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
@@ -1418,7 +1419,7 @@ public class apiUtils {
            // mbp.setText(z);
            MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
            ContentType ct = new ContentType(mpInner.getContentType());
-           String boundary = ct.getParameter("boundary");
+           boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
             mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
             mp.addBodyPart(mbp);
@@ -1427,12 +1428,13 @@ public class apiUtils {
             bslog(ex);
         }
         
-        return mp;
+        return new mmpx(mp, boundary);
     }
     
     
-    public static MimeMultipart code2005(String sender, String receiver, String subject, String filename, String messageid, String mic) {
+    public static mmpx code2005(String sender, String receiver, String subject, String filename, String messageid, String mic) {
         MimeBodyPart mbp = new MimeBodyPart();
+        String boundary = "";
         MimeMultipart mp = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
@@ -1447,7 +1449,7 @@ public class apiUtils {
            // mbp.setText(z);
            MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
            ContentType ct = new ContentType(mpInner.getContentType());
-           String boundary = ct.getParameter("boundary");
+           boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
             mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
             mp.addBodyPart(mbp);
@@ -1456,11 +1458,12 @@ public class apiUtils {
             bslog(ex);
         }
         
-        return mp;
+        return new mmpx(mp, boundary);
     }
     
-    public static MimeMultipart code2010(String sender, String receiver, String subject, String filename, String messageid, String mic) {
+    public static mmpx code2010(String sender, String receiver, String subject, String filename, String messageid, String mic) {
         MimeBodyPart mbp = new MimeBodyPart();
+        String boundary = "";
         MimeMultipart mp = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
@@ -1474,7 +1477,7 @@ public class apiUtils {
            // mbp.setText(z);
            MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
            ContentType ct = new ContentType(mpInner.getContentType());
-           String boundary = ct.getParameter("boundary");
+           boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
             mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
             mp.addBodyPart(mbp);
@@ -1483,11 +1486,12 @@ public class apiUtils {
             bslog(ex);
         }
         
-        return mp;
+        return new mmpx(mp, boundary);
     }
     
-    public static MimeMultipart code2015(String sender, String receiver, String subject, String filename, String messageid, String mic) {
+    public static mmpx code2015(String sender, String receiver, String subject, String filename, String messageid, String mic) {
         MimeBodyPart mbp = new MimeBodyPart();
+        String boundary = "";
         MimeMultipart mp = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
@@ -1500,7 +1504,7 @@ public class apiUtils {
            // mbp.setText(z);
            MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
            ContentType ct = new ContentType(mpInner.getContentType());
-           String boundary = ct.getParameter("boundary");
+           boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
             mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
             mp.addBodyPart(mbp);
@@ -1509,11 +1513,12 @@ public class apiUtils {
             bslog(ex);
         }
         
-        return mp;
+        return new mmpx(mp, boundary);
     }
     
-    public static MimeMultipart code2020(String sender, String receiver, String subject, String filename, String messageid, String mic) {
+    public static mmpx code2020(String sender, String receiver, String subject, String filename, String messageid, String mic) {
         MimeBodyPart mbp = new MimeBodyPart();
+        String boundary = "";
         MimeMultipart mp = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
@@ -1526,7 +1531,7 @@ public class apiUtils {
            // mbp.setText(z);
            MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
            ContentType ct = new ContentType(mpInner.getContentType());
-           String boundary = ct.getParameter("boundary");
+           boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
             mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
             mp.addBodyPart(mbp);
@@ -1535,11 +1540,12 @@ public class apiUtils {
             bslog(ex);
         }
         
-        return mp;
+        return new mmpx(mp, boundary);
     }
     
-    public static MimeMultipart code3000(String sender, String receiver, String subject, String filename, String messageid, String mic) {
+    public static mmpx code3000(String sender, String receiver, String subject, String filename, String messageid, String mic) {
         MimeBodyPart mbp = new MimeBodyPart();
+        String boundary = "";
         MimeMultipart mp = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
@@ -1550,7 +1556,7 @@ public class apiUtils {
            // mbp.setText(z);
            MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
            ContentType ct = new ContentType(mpInner.getContentType());
-           String boundary = ct.getParameter("boundary");
+           boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
             mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
             mp.addBodyPart(mbp);
@@ -1559,11 +1565,12 @@ public class apiUtils {
             bslog(ex);
         }
         
-        return mp;
+        return new mmpx(mp, boundary);
     }
      
-    public static MimeMultipart code3003(String sender, String receiver, String subject, String filename, String messageid, String mic) {
+    public static mmpx code3003(String sender, String receiver, String subject, String filename, String messageid, String mic) {
         MimeBodyPart mbp = new MimeBodyPart();
+        String boundary = "";
         MimeMultipart mp = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
@@ -1574,7 +1581,7 @@ public class apiUtils {
            // mbp.setText(z);
            MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
            ContentType ct = new ContentType(mpInner.getContentType());
-           String boundary = ct.getParameter("boundary");
+           boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
             mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
             mp.addBodyPart(mbp);
@@ -1583,12 +1590,13 @@ public class apiUtils {
             bslog(ex);
         }
         
-        return mp;
+        return new mmpx(mp, boundary);
     }
     
     
-    public static MimeMultipart code3005(String sender, String receiver, String subject, String filename, String messageid, String mic) {
+    public static mmpx code3005(String sender, String receiver, String subject, String filename, String messageid, String mic) {
         MimeBodyPart mbp = new MimeBodyPart();
+        String boundary = "";
         MimeMultipart mp = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
@@ -1599,7 +1607,7 @@ public class apiUtils {
            // mbp.setText(z);
            MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
            ContentType ct = new ContentType(mpInner.getContentType());
-           String boundary = ct.getParameter("boundary");
+           boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
             mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
             mp.addBodyPart(mbp);
@@ -1608,11 +1616,12 @@ public class apiUtils {
             bslog(ex);
         }
         
-        return mp;
+        return new mmpx(mp, boundary);
     }
     
-    public static MimeMultipart code3007(String sender, String receiver, String subject, String filename, String messageid, String mic) {
+    public static mmpx code3007(String sender, String receiver, String subject, String filename, String messageid, String mic) {
         MimeBodyPart mbp = new MimeBodyPart();
+        String boundary = "";
         MimeMultipart mp = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
@@ -1623,7 +1632,7 @@ public class apiUtils {
            // mbp.setText(z);
            MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
            ContentType ct = new ContentType(mpInner.getContentType());
-           String boundary = ct.getParameter("boundary");
+           boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
             mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
             mp.addBodyPart(mbp);
@@ -1632,11 +1641,12 @@ public class apiUtils {
             bslog(ex);
         }
         
-        return mp;
+        return new mmpx(mp, boundary);
     }
    
-    public static MimeMultipart code3100(String sender, String receiver, String subject, String filename, String messageid, String mic) {
+    public static mmpx code3100(String sender, String receiver, String subject, String filename, String messageid, String mic) {
         MimeBodyPart mbp = new MimeBodyPart();
+        String boundary = "";
         MimeMultipart mp = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
@@ -1647,7 +1657,7 @@ public class apiUtils {
            // mbp.setText(z);
            MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
            ContentType ct = new ContentType(mpInner.getContentType());
-           String boundary = ct.getParameter("boundary");
+           boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
             mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
             mp.addBodyPart(mbp);
@@ -1656,11 +1666,12 @@ public class apiUtils {
             bslog(ex);
         }
         
-        return mp;
+        return new mmpx(mp, boundary);
     }
     
-    public static MimeMultipart code3200(String sender, String receiver, String subject, String filename, String messageid, String mic) {
+    public static mmpx code3200(String sender, String receiver, String subject, String filename, String messageid, String mic) {
         MimeBodyPart mbp = new MimeBodyPart();
+        String boundary = "";
         MimeMultipart mp = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
@@ -1671,7 +1682,7 @@ public class apiUtils {
            // mbp.setText(z);
            MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
            ContentType ct = new ContentType(mpInner.getContentType());
-           String boundary = ct.getParameter("boundary");
+           boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
             mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
             mp.addBodyPart(mbp);
@@ -1680,11 +1691,12 @@ public class apiUtils {
             bslog(ex);
         }
         
-        return mp;
+        return new mmpx(mp, boundary);
     }
     
-    public static MimeMultipart code3300(String sender, String receiver, String subject, String filename, String messageid, String mic) {
+    public static mmpx code3300(String sender, String receiver, String subject, String filename, String messageid, String mic) {
         MimeBodyPart mbp = new MimeBodyPart();
+        String boundary = "";
         MimeMultipart mp = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
@@ -1695,7 +1707,7 @@ public class apiUtils {
            // mbp.setText(z);
            MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
            ContentType ct = new ContentType(mpInner.getContentType());
-           String boundary = ct.getParameter("boundary");
+           boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
             mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
             mp.addBodyPart(mbp);
@@ -1704,11 +1716,12 @@ public class apiUtils {
             bslog(ex);
         }
         
-        return mp;
+        return new mmpx(mp, boundary);
     }
     
-    public static MimeMultipart code3400(String sender, String receiver, String subject, String filename, String messageid, String mic) {
+    public static mmpx code3400(String sender, String receiver, String subject, String filename, String messageid, String mic) {
         MimeBodyPart mbp = new MimeBodyPart();
+        String boundary = "";
         MimeMultipart mp = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
@@ -1719,7 +1732,7 @@ public class apiUtils {
            // mbp.setText(z);
            MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
            ContentType ct = new ContentType(mpInner.getContentType());
-           String boundary = ct.getParameter("boundary");
+           boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
             mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
             mp.addBodyPart(mbp);
@@ -1728,12 +1741,13 @@ public class apiUtils {
             bslog(ex);
         }
         
-        return mp;
+        return new mmpx(mp, boundary);
     }
     
     
-    public static MimeMultipart code9999(String sender, String receiver, String subject, String filename, String messageid, String mic) {
+    public static mmpx code9999(String sender, String receiver, String subject, String filename, String messageid, String mic) {
         MimeBodyPart mbp = new MimeBodyPart();
+        String boundary = "";
         MimeMultipart mp = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_DATE);
@@ -1747,7 +1761,7 @@ public class apiUtils {
            // mbp.setText(z);
            MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "failed");
            ContentType ct = new ContentType(mpInner.getContentType());
-           String boundary = ct.getParameter("boundary");
+           boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
             mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
             mp.addBodyPart(mbp);
@@ -1756,7 +1770,7 @@ public class apiUtils {
             bslog(ex);
         }
         
-        return mp;
+        return new mmpx(mp, boundary);
     }
     
     
@@ -1768,69 +1782,100 @@ public class apiUtils {
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_DATE);
         String boundary = "";
+        mmpx mymmpx = null;
         
         switch (code) {
             case "1000" :
           //  mbp.setContent(code1000(e[0], e[1], e[2], e[3], e[4], e[5]));
-           mmpx mymmpx = code1000x(e[0], e[1], e[2], e[3], e[4], e[5]);
+           mymmpx = code1000(e[0], e[1], e[2], e[3], e[4], e[5]);
            mbp.setContent(mymmpx.mmp());
            boundary = mymmpx.boundary();
             break;     
             
             case "2000" :
-            mbp.setContent(code2000(e[0], e[1], e[2], e[3], e[4], e[5]));
+            // mbp.setContent(code2000(e[0], e[1], e[2], e[3], e[4], e[5]));
+           mymmpx = code2000(e[0], e[1], e[2], e[3], e[4], e[5]);
+           mbp.setContent(mymmpx.mmp());
+           boundary = mymmpx.boundary();
             break;
             
             case "3000" :
-            mbp.setContent(code3000(e[0], e[1], e[2], e[3], e[4], e[5]));
+            mymmpx = code3000(e[0], e[1], e[2], e[3], e[4], e[5]);
+           mbp.setContent(mymmpx.mmp());
+           boundary = mymmpx.boundary();
             break;
             
             case "3003" :
-            mbp.setContent(code3003(e[0], e[1], e[2], e[3], e[4], e[5]));
+            mymmpx = code3003(e[0], e[1], e[2], e[3], e[4], e[5]);
+           mbp.setContent(mymmpx.mmp());
+           boundary = mymmpx.boundary();
             break;
             
             case "3005" :
-            mbp.setContent(code3005(e[0], e[1], e[2], e[3], e[4], e[5]));
+            mymmpx = code3005(e[0], e[1], e[2], e[3], e[4], e[5]);
+           mbp.setContent(mymmpx.mmp());
+           boundary = mymmpx.boundary();
             break;
            
             case "3007" :
-            mbp.setContent(code3007(e[0], e[1], e[2], e[3], e[4], e[5]));
+            mymmpx = code3007(e[0], e[1], e[2], e[3], e[4], e[5]);
+           mbp.setContent(mymmpx.mmp());
+           boundary = mymmpx.boundary();
             break;
             
             case "3100" :
-            mbp.setContent(code3100(e[0], e[1], e[2], e[3], e[4], e[5]));
+            mymmpx = code3100(e[0], e[1], e[2], e[3], e[4], e[5]);
+           mbp.setContent(mymmpx.mmp());
+           boundary = mymmpx.boundary();
             break;
             
             case "3200" :
-            mbp.setContent(code3200(e[0], e[1], e[2], e[3], e[4], e[5]));
+            mymmpx = code3200(e[0], e[1], e[2], e[3], e[4], e[5]);
+           mbp.setContent(mymmpx.mmp());
+           boundary = mymmpx.boundary();
             break;
             
             case "3300" :
-            mbp.setContent(code3300(e[0], e[1], e[2], e[3], e[4], e[5]));
+            mymmpx = code3300(e[0], e[1], e[2], e[3], e[4], e[5]);
+           mbp.setContent(mymmpx.mmp());
+           boundary = mymmpx.boundary();
             break;
             
             case "3400" :
-            mbp.setContent(code3400(e[0], e[1], e[2], e[3], e[4], e[5]));
+            mymmpx = code3400(e[0], e[1], e[2], e[3], e[4], e[5]);
+           mbp.setContent(mymmpx.mmp());
+           boundary = mymmpx.boundary();
             break;
             
             case "2005" :
-            mbp.setContent(code2005(e[0], e[1], e[2], e[3], e[4], e[5]));
+            //  mbp.setContent(code2005(e[0], e[1], e[2], e[3], e[4], e[5]));
+            mymmpx = code2005(e[0], e[1], e[2], e[3], e[4], e[5]);
+            mbp.setContent(mymmpx.mmp());
+            boundary = mymmpx.boundary();
             break;
             
             case "2010" :
-            mbp.setContent(code2010(e[0], e[1], e[2], e[3], e[4], e[5]));
+            mymmpx = code2010(e[0], e[1], e[2], e[3], e[4], e[5]);
+           mbp.setContent(mymmpx.mmp());
+           boundary = mymmpx.boundary();
             break;
             
             case "2015" :
-            mbp.setContent(code2015(e[0], e[1], e[2], e[3], e[4], e[5]));
+            mymmpx = code2015(e[0], e[1], e[2], e[3], e[4], e[5]);
+           mbp.setContent(mymmpx.mmp());
+           boundary = mymmpx.boundary();
             break;
             
             case "2020" :
-            mbp.setContent(code2020(e[0], e[1], e[2], e[3], e[4], e[5]));
+            mymmpx = code2020(e[0], e[1], e[2], e[3], e[4], e[5]);
+           mbp.setContent(mymmpx.mmp());
+           boundary = mymmpx.boundary();
             break;
                         
             default:
-            mbp.setContent(code9999(e[0], e[1], e[2], e[3], e[4], e[5]));
+            mymmpx = code9999(e[0], e[1], e[2], e[3], e[4], e[5]);
+            mbp.setContent(mymmpx.mmp());
+            boundary = mymmpx.boundary();
             
         }        
         
