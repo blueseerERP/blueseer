@@ -1775,7 +1775,7 @@ public class apiUtils {
     }
     
     
-    public static mdn createMDN(String code, String[] e, HashMap<String, String> headers) throws IOException, MessagingException {
+    public static mdn createMDN(String code, String[] e, HashMap<String, String> headers, boolean isDebug) throws IOException, MessagingException {
         mdn x = null;
         MimeBodyPart mbp = new MimeBodyPart();
         
@@ -1883,10 +1883,17 @@ public class apiUtils {
         
         
         if (mbp != null) {
-            
             x = new mdn(HttpServletResponse.SC_OK, headers, new String(mbp.getInputStream().readAllBytes()), boundary);
         } else {
             x = new mdn(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null, "problem creating MIME structure for MDN");
+        }
+        
+         if (isDebug && mbp != null) { 
+            String debugfile = "debugMDN." + now + "." + Long.toHexString(System.currentTimeMillis());
+            Path pathinput = FileSystems.getDefault().getPath("temp" + "/" + debugfile);
+            try (FileOutputStream stream = new FileOutputStream(pathinput.toFile())) {
+            stream.write(mbp.getInputStream().readAllBytes());
+            }
         }
         
         return x; 
