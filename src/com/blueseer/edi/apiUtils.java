@@ -1421,7 +1421,7 @@ public class apiUtils {
            ContentType ct = new ContentType(mpInner.getContentType());
            boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
-            mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+            mbp.addHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
             mp.addBodyPart(mbp);
             
         } catch (MessagingException ex) {
@@ -1451,7 +1451,7 @@ public class apiUtils {
            ContentType ct = new ContentType(mpInner.getContentType());
            boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
-            mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+            mbp.addHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
             mp.addBodyPart(mbp);
             
         } catch (MessagingException ex) {
@@ -1479,7 +1479,7 @@ public class apiUtils {
            ContentType ct = new ContentType(mpInner.getContentType());
            boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
-            mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+            mbp.addHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
             mp.addBodyPart(mbp);
             
         } catch (MessagingException ex) {
@@ -1506,7 +1506,7 @@ public class apiUtils {
            ContentType ct = new ContentType(mpInner.getContentType());
            boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
-            mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+            mbp.addHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
             mp.addBodyPart(mbp);
             
         } catch (MessagingException ex) {
@@ -1533,7 +1533,7 @@ public class apiUtils {
            ContentType ct = new ContentType(mpInner.getContentType());
            boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
-            mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+            mbp.addHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
             mp.addBodyPart(mbp);
             
         } catch (MessagingException ex) {
@@ -1558,7 +1558,7 @@ public class apiUtils {
            ContentType ct = new ContentType(mpInner.getContentType());
            boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
-            mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+            mbp.addHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
             mp.addBodyPart(mbp);
             
         } catch (MessagingException ex) {
@@ -1583,7 +1583,7 @@ public class apiUtils {
            ContentType ct = new ContentType(mpInner.getContentType());
            boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
-            mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+            mbp.addHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
             mp.addBodyPart(mbp);
             
         } catch (MessagingException ex) {
@@ -1609,7 +1609,7 @@ public class apiUtils {
            ContentType ct = new ContentType(mpInner.getContentType());
            boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
-            mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+            mbp.addHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
             mp.addBodyPart(mbp);
             
         } catch (MessagingException ex) {
@@ -1634,7 +1634,7 @@ public class apiUtils {
            ContentType ct = new ContentType(mpInner.getContentType());
            boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
-            mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+            mbp.addHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
             mp.addBodyPart(mbp);
             
         } catch (MessagingException ex) {
@@ -1659,7 +1659,7 @@ public class apiUtils {
            ContentType ct = new ContentType(mpInner.getContentType());
            boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
-            mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+            mbp.addHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
             mp.addBodyPart(mbp);
             
         } catch (MessagingException ex) {
@@ -1684,8 +1684,9 @@ public class apiUtils {
            ContentType ct = new ContentType(mpInner.getContentType());
            boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
-            mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+            mbp.addHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
             mp.addBodyPart(mbp);
+           
             
         } catch (MessagingException ex) {
             bslog(ex);
@@ -1709,7 +1710,7 @@ public class apiUtils {
            ContentType ct = new ContentType(mpInner.getContentType());
            boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
-            mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+            mbp.addHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
             mp.addBodyPart(mbp);
             
         } catch (MessagingException ex) {
@@ -1734,7 +1735,7 @@ public class apiUtils {
            ContentType ct = new ContentType(mpInner.getContentType());
            boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
-            mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+            mbp.addHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
             mp.addBodyPart(mbp);
             
         } catch (MessagingException ex) {
@@ -1763,7 +1764,7 @@ public class apiUtils {
            ContentType ct = new ContentType(mpInner.getContentType());
            boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
-            mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+            mbp.addHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
             mp.addBodyPart(mbp);
             
         } catch (MessagingException ex) {
