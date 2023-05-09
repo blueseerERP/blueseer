@@ -194,7 +194,7 @@ public class AS2Serv extends HttpServlet {
         if (content == null) {
             writeAS2LogStop(new String[]{"0","unknown","in","error","null content",now,""});
            // return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "null content");
-            return createMDN("3000", elementals, null);
+            return createMDN("3000", elementals, returnheaders);
         }
         
        
@@ -219,7 +219,7 @@ public class AS2Serv extends HttpServlet {
             // header info unrecognizable...bail out
             writeAS2LogStop(new String[]{"0","unknown","in","error","http header tags unrecognizable",now,""});
             // return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "http header tags unrecognizable");
-            return createMDN("3005", elementals, null);
+            return createMDN("3005", elementals, returnheaders);
         }
         
         // check for sender / receiver
@@ -239,7 +239,7 @@ public class AS2Serv extends HttpServlet {
         
         if (inHM == null || inHM.isEmpty()) {
           writeAS2LogStop(new String[]{"0","unknown","in","error","There are zero http headers",now,""});
-            return createMDN("3007", elementals, null);   
+            return createMDN("3007", elementals, returnheaders);   
         }
         
         if (inHM.containsKey("as2-to")) {
@@ -250,12 +250,12 @@ public class AS2Serv extends HttpServlet {
               receiver = sysas2user;  
             } else {
               writeAS2LogStop(new String[]{"0","unknown","in","error","AS2 receiver ID unknown",now,""});
-              return createMDN("3100", elementals, null);
+              return createMDN("3100", elementals, returnheaders);
              // return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "AS2 receiver ID unknown");  
             }
         } else {
             writeAS2LogStop(new String[]{"0","unknown","in","error","AS2 receiver ID unrecognized",now,""});
-            return createMDN("3100", elementals, null); 
+            return createMDN("3100", elementals, returnheaders); 
         }
         
         if (inHM.containsKey("as2-from")) {
@@ -267,17 +267,17 @@ public class AS2Serv extends HttpServlet {
             if (info == null) {
               writeAS2LogStop(new String[]{"0","unknown","in","error","AS2 sender ID unknown with keys: " + sender + "/" + receiver,now,""});  
               //return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "AS2 sender ID unknown with keys: " + sender + "/" + receiver);    
-            return createMDN("3200", elementals, null);
+            return createMDN("3200", elementals, returnheaders);
             } 
         } else {
             writeAS2LogStop(new String[]{"0","unknown","in","error","AS2 sender ID unrecognized",now,""});
             // return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "AS2 sender ID unrecognized"); 
-            return createMDN("3200", elementals, null);
+            return createMDN("3200", elementals, returnheaders);
         }
         
         if (info == null) { 
               writeAS2LogStop(new String[]{"0","unknown","in","error","unable to find sender / receiver keys: " + sender + "/" + receiver,now,""});
-              return createMDN("3300", elementals, null);   
+              return createMDN("3300", elementals, returnheaders);   
         }
         
         if (inHM.containsKey("subject")) {
@@ -312,7 +312,7 @@ public class AS2Serv extends HttpServlet {
         
         if (! isEncrypted && info[9].equals("1")) {
            writeAS2LogStop(new String[]{"0","unknown","in","error","Encryption is required for this partner " + sender + "/" + receiver,now,""}); 
-           return createMDN("3400", elementals, null);
+           return createMDN("3400", elementals, returnheaders);
         }
          
         byte[] finalContent = null;
@@ -323,7 +323,7 @@ public class AS2Serv extends HttpServlet {
           finalContent = apiUtils.decryptData(content, apiUtils.getPrivateKey(getSystemEncKey()) );
            if (finalContent == null) {
              writeAS2LogStop(new String[]{"0","unknown","in","error","Unable to decrypt...possible incorrect public key " + sender + "/" + receiver,now,""}); 
-             return createMDN("3003", elementals, null);
+             return createMDN("3003", elementals, returnheaders);
            }  
          } else {
           finalContent = content;
@@ -366,7 +366,7 @@ public class AS2Serv extends HttpServlet {
         
         if (mp.getContentType().isEmpty()) {
             //return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "MimeMultipart is incomplete " + sender + "/" + receiver);  
-            return createMDN("2005", elementals, null);
+            return createMDN("2005", elementals, returnheaders);
         }
         
         if (isDebug) 
@@ -386,7 +386,7 @@ public class AS2Serv extends HttpServlet {
             
             if (mpsub.getCount() < 2 && info[10].equals("1") ) { // info[10] sig required
             //  return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "Signature is required for this partner " + sender + "/" + receiver);    
-              return createMDN("2000", elementals, null);
+              return createMDN("2000", elementals, returnheaders);
             }
             
                
@@ -430,12 +430,12 @@ public class AS2Serv extends HttpServlet {
                
            if (FileWHeadersBytes == null || FileBytes == null) {
             //  return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "unable to retrieve contents of File " + sender + "/" + receiver); 
-              return createMDN("2010", elementals, null);
+              return createMDN("2010", elementals, returnheaders);
            }
 
            if (Signature == null) {
                // return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "Signature content is null" + sender + "/" + receiver);
-               return createMDN("2015", elementals, null);
+               return createMDN("2015", elementals, returnheaders);
            } else {
              validSignature = verifySignature(FileWHeadersBytes, Signature);  
            }
@@ -446,7 +446,7 @@ public class AS2Serv extends HttpServlet {
 
            if (! validSignature) {
              // return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "Signature could not be validated " + sender + "/" + receiver); 
-              return createMDN("2020", elementals, null);
+              return createMDN("2020", elementals, returnheaders);
            } 
               
         }  // for parent mp ...should be just one
