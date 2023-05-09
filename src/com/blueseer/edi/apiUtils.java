@@ -1212,7 +1212,10 @@ public class apiUtils {
             }
         
         InputStreamEntity ise = new InputStreamEntity(new ByteArrayInputStream(signedAndEncrypteddata));
-          
+        
+        String mic = hashdigest(signedAndEncrypteddata, tp[20]); // calc the mic for debugging
+        
+        
           rb.setEntity(new BufferedHttpEntity(ise));
           HttpUriRequest request = rb.build();
         
@@ -1221,6 +1224,8 @@ public class apiUtils {
             Path pathinput = FileSystems.getDefault().getPath("temp" + "/" + debugfile);
             Header[] headers = request.getAllHeaders();
             try (FileOutputStream stream = new FileOutputStream(pathinput.toFile())) {
+                String micdebug = "DEBUG MIC: " + mic + "\n";
+                stream.write(micdebug.getBytes());
                 for (Header x : headers) {
                     String h = x.getName() + ": " + x.getValue() + "\n";
                     stream.write(h.getBytes());
@@ -1328,7 +1333,7 @@ public class apiUtils {
                        Final-Recipient: rfc822; %s
                        Original-Message-ID: %s
                        Disposition: automatic-action/MDN-sent-automatically; %s
-                       Received-Content-MIC: %s, sha
+                       Received-Content-MIC: %s, sha1
                        """.formatted(receiver, receiver, messageid, status, mic);
             
             mbp2.setText(y);

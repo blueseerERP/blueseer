@@ -197,6 +197,12 @@ public class AS2Serv extends HttpServlet {
             return createMDN("3000", elementals, returnheaders, isDebug);
         }
         
+        // lets try to calculate the mic assuming sha1
+        String mic = hashdigest(content, "SHA-1");
+        if (mic == null) {
+            mic = "";
+        }
+        
        
         
         
@@ -228,6 +234,7 @@ public class AS2Serv extends HttpServlet {
         String receiver = "";
         String subject = "";
         String messageid = "";
+        String michash = "";
         String filename = "";
         String[] info = null;
         boolean validSignature = false;
@@ -242,10 +249,28 @@ public class AS2Serv extends HttpServlet {
             return createMDN("3007", elementals, returnheaders, isDebug);   
         }
         
+        if (inHM.containsKey("subject")) {
+            subject = inHM.get("subject");
+            elementals[2] = subject;
+        }
+        
+        if (inHM.containsKey("message-id")) {
+            messageid = inHM.get("message-id");
+            elementals[4] = messageid;
+        }
+        
+        if (inHM.containsKey("disposition-notification-options")) {
+            michash = inHM.get("disposition-notification-options");
+        }
+        
+        if (isDebug)
+            System.out.println("here--> Requested MDN options: " + michash);
+        
+        
         if (inHM.containsKey("as2-to")) {
             // set return header as opposite direction
             returnheaders.put("as2-from", inHM.get("as2-to"));
-            
+            elementals[1] = receiver;
             if (inHM.get("as2-to").equals(sysas2user)) {
               receiver = sysas2user;  
             } else {
@@ -263,6 +288,8 @@ public class AS2Serv extends HttpServlet {
             returnheaders.put("as2-to", inHM.get("as2-from"));
             
             sender = inHM.get("as2-from");
+            elementals[0] = sender;
+            
             info = getAS2InfoByIDs(sender , receiver);
             if (info == null) {
               writeAS2LogStop(new String[]{"0","unknown","in","error","AS2 sender ID unknown with keys: " + sender + "/" + receiver,now,""});  
@@ -280,13 +307,6 @@ public class AS2Serv extends HttpServlet {
               return createMDN("3300", elementals, returnheaders, isDebug);   
         }
         
-        if (inHM.containsKey("subject")) {
-            subject = inHM.get("subject");
-        }
-        
-        if (inHM.containsKey("message-id")) {
-            messageid = inHM.get("message-id");
-        }
         
         
         
@@ -339,10 +359,12 @@ public class AS2Serv extends HttpServlet {
             }
         }
         // perform Digest on decrypted Data
-        String mic = hashdigest(finalContent, info[20]);
+        /*
+        String mic = hashdigest(content, info[20]);
         if (mic == null) {
             mic = "";
         }
+        */
         if (isDebug) {
         System.out.println("here--> mic: " + mic);
         System.out.println("here--> messageid: " + messageid);
