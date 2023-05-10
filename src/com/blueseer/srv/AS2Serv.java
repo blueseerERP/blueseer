@@ -210,7 +210,7 @@ public class AS2Serv extends HttpServlet {
         if (headerNames != null) {
                 while (headerNames.hasMoreElements()) {
                         String key = (String) headerNames.nextElement();
-                        headers += (key + ": " + request.getHeader(key) + "\r\n");
+                        headers += (key + ": " + request.getHeader(key) + "\n");
                         inHM.putIfAbsent(key.toLowerCase(), request.getHeader(key));
                         
                         if (isDebug)
@@ -224,7 +224,7 @@ public class AS2Serv extends HttpServlet {
         }
         
          // lets try to calculate the mic assuming sha1
-         headers += "\r\n";
+         headers += "\n";
         byte[] combined = new byte[headers.getBytes().length + content.length]; 
         for (int i = 0; i < combined.length; ++i) {
           combined[i] = i < headers.getBytes().length ? headers.getBytes()[i] : content[i - headers.getBytes().length];

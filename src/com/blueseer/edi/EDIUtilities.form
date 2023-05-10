@@ -146,7 +146,7 @@
                         <StringItem index="0" value="1.  determine hex value of delimiters in X12 file"/>
                         <StringItem index="1" value="2.  convert delimiter from original to newline in X12 file"/>
                         <StringItem index="2" value="3.  count occurrences of hex character"/>
-                        <StringItem index="3" value="4.  something else"/>
+                        <StringItem index="3" value="4.  get SHA-1 MIC/Digest of content"/>
                       </StringArray>
                     </Property>
                   </Properties>

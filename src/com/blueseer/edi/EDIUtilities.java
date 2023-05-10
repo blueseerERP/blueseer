@@ -31,6 +31,7 @@ import bsmf.MainFrame;
 import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.tags;
 import static com.blueseer.ctr.cusData.addCustMstrMass;
+import static com.blueseer.edi.apiUtils.hashdigest;
 import com.blueseer.inv.invData;
 import static com.blueseer.inv.invData.addItemMasterMass;
 import com.blueseer.utl.OVData;
@@ -298,7 +299,9 @@ public class EDIUtilities extends javax.swing.JPanel {
                 }
                 if (util.equals("3")) {
                     countOccurrencesHex(b);
-                    
+                }
+                if (util.equals("4")) {
+                    getDigest(b);
                 }
             } else { // no period to split...must be blank or malformed selection element
                resetVariables();
@@ -753,6 +756,12 @@ public class EDIUtilities extends javax.swing.JPanel {
         } // else run report
     }
     
+    public void getDigest(boolean input) {
+        taoutput.setText("");
+        if (! tainput.getText().isEmpty()) { 
+            taoutput.setText(hashdigest(tainput.getText().getBytes(), "SHA-1"));
+         }
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -811,7 +820,7 @@ public class EDIUtilities extends javax.swing.JPanel {
         jPanel1.setName("panelmain"); // NOI18N
         jPanel1.setPreferredSize(new java.awt.Dimension(1103, 625));
 
-        ddtable.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1.  determine hex value of delimiters in X12 file", "2.  convert delimiter from original to newline in X12 file", "3.  count occurrences of hex character", "4.  something else" }));
+        ddtable.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1.  determine hex value of delimiters in X12 file", "2.  convert delimiter from original to newline in X12 file", "3.  count occurrences of hex character", "4.  get SHA-1 MIC/Digest of content" }));
         ddtable.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ddtableActionPerformed(evt);
