@@ -207,13 +207,12 @@ public class AS2Serv extends HttpServlet {
         HashMap<String, String> inHM = new HashMap<>();
         HashMap<String, String> outHM = new HashMap<>();
         
-        String headers = "";
+       
         
         Enumeration<String> headerNames = request.getHeaderNames();
         if (headerNames != null) {
                 while (headerNames.hasMoreElements()) {
                         String key = (String) headerNames.nextElement();
-                        headers += (key + ": " + request.getHeader(key) + "\n");
                         inHM.putIfAbsent(key.toLowerCase(), request.getHeader(key));
                         
                         if (isDebug)
@@ -226,7 +225,7 @@ public class AS2Serv extends HttpServlet {
             return createMDN("3005", elementals, returnheaders, isDebug);
         }
         
-         // lets try to calculate the mic assuming sha1
+        /*
          headers += "\n";
         byte[] combined = new byte[headers.getBytes().length + content.length]; 
         for (int i = 0; i < combined.length; ++i) {
@@ -236,7 +235,7 @@ public class AS2Serv extends HttpServlet {
         if (mic == null) {
             mic = "";
         }
-        
+        */
         
         // check for sender / receiver
         String sender = "";
@@ -252,6 +251,7 @@ public class AS2Serv extends HttpServlet {
         byte[] FileBytes = null;
         byte[] Signature = null;
         InputStream is = null;
+        String mic = "";
         
         
         if (inHM == null || inHM.isEmpty()) {
@@ -367,11 +367,6 @@ public class AS2Serv extends HttpServlet {
             try (FileOutputStream stream = new FileOutputStream(pathinput.toFile())) {
             stream.write(finalContent);
             }
-            String debugfile2 = "debugAS2xxx." + now + "." + Long.toHexString(System.currentTimeMillis());
-            Path pathinput2 = FileSystems.getDefault().getPath("temp" + "/" + debugfile2);
-            try (FileOutputStream stream = new FileOutputStream(pathinput2.toFile())) {
-            stream.write(combined);
-            }
         }
         // perform Digest on decrypted Data
         /*
@@ -380,10 +375,7 @@ public class AS2Serv extends HttpServlet {
             mic = "";
         }
         */
-        if (isDebug) {
-        System.out.println("here--> mic: " + mic);
-        System.out.println("here--> messageid: " + messageid);
-        }
+        
         // if here...should have as2 sender / receiver / info data required to create legitimate MDN
         // write original master log record...retrieve log key for parent of detail to follow
         // also...from here on down use writeAS2Log instead of hard stop writeAS2LogStop
@@ -398,7 +390,7 @@ public class AS2Serv extends HttpServlet {
         logdet.add(new String[]{parentkey, "info", "processing as2 for relationship " + sender + "/" + receiver});
         logdet.add(new String[]{parentkey, "info", "Incoming AS2 Message ID = " + messageid});
         logdet.add(new String[]{parentkey, "info", "Decryption system key = " + systemEncKey});
-        logdet.add(new String[]{parentkey, "info", "calculated MIC = " + mic});
+        
         
         // establish mimemultipart format of decrypted data
         MimeMultipart mp  = new MimeMultipart(new ByteArrayDataSource(finalContent, request.getContentType()));
@@ -442,13 +434,10 @@ public class AS2Serv extends HttpServlet {
                       aos.close(); 
                       FileWHeadersBytes = aos.toByteArray();
                       
-                      String testmic = "";
-                        try {
-                            testmic = calculateMIC(FileWHeadersBytes, "SHA-1");
-                        } catch (GeneralSecurityException ex) {
-                            bslog(ex);
-                        }
-                      System.out.println("TESTMIC: " + testmic);
+                      
+                      //  mic = calculateMIC(FileWHeadersBytes, "SHA-1");
+                        mic = hashdigest(FileWHeadersBytes, info[20]);
+                        logdet.add(new String[]{parentkey, "info", "calculated MIC = " + mic});
                       
                       // now get file without headers into byte array
                       is = mbp.getInputStream();
@@ -499,6 +488,14 @@ public class AS2Serv extends HttpServlet {
               
         }  // for parent mp ...should be just one
         
+        
+        
+        if (isDebug) {
+        System.out.println("here--> mic: " + mic);
+        System.out.println("here--> messageid: " + messageid);
+        }
+        
+
         // now save file
         elementals[3] = filename;
         if (info[17].isBlank()) {
