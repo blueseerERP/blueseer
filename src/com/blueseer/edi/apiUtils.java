@@ -45,6 +45,7 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -67,6 +68,8 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.DigestInputStream;
+import java.security.GeneralSecurityException;
 import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -104,6 +107,7 @@ import java.util.regex.Pattern;
 import javax.activation.DataHandler;
 import javax.crypto.BadPaddingException;
 import javax.mail.MessagingException;
+import javax.mail.Part;
 import javax.mail.internet.ContentType;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
@@ -794,6 +798,50 @@ public class apiUtils {
         byte[] hashedbytes = messageDigest.digest(indata);
         x = new String(Base64.encode(hashedbytes));
         return x;
+    }
+    
+    public static String hashdigestString(byte[] indata, String algo) {
+        String x;
+        
+        MessageDigest messageDigest = null;
+                    try {
+                        messageDigest = MessageDigest.getInstance(algo);  // SHA-1, etc
+                    } catch (NoSuchAlgorithmException ex) {
+                        bslog(ex);
+                    }
+        byte[] hashedbytes = messageDigest.digest(indata);
+        x = new String(hashedbytes);
+        return x;
+    }
+    
+     public static String calculateMIC(byte[] data, String digestAlgOID) throws GeneralSecurityException, MessagingException, IOException {
+        if (data == null) {
+            throw new GeneralSecurityException("calculateMIC: Data is null");
+        }
+        Security.addProvider(new BouncyCastleProvider());
+        MessageDigest messageDigest = MessageDigest.getInstance(digestAlgOID, "BC");
+        DigestInputStream digestInputStream = new DigestInputStream(new ByteArrayInputStream(data), messageDigest);
+        for (byte buf[] = new byte[4096]; digestInputStream.read(buf) >= 0;) {
+        }
+        byte mic[] = digestInputStream.getMessageDigest().digest();
+        digestInputStream.close();
+        String micString = new String(Base64.encode(mic));
+        return (micString);
+    }
+
+    /**Calculates the hash value for a passed body part, base 64 encoded
+     *@param digestAlgOID digest OID algorithm, e.g. "1.3.14.3.2.26"
+     */
+    public static String calculateMIC(Part part, String digestAlgOID) throws GeneralSecurityException, MessagingException, IOException {
+        if (part == null) {
+            throw new GeneralSecurityException("calculateMIC: Part is null");
+        }
+        ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+        part.writeTo(bOut);
+        bOut.flush();
+        bOut.close();
+        byte data[] = bOut.toByteArray();
+        return (calculateMIC(data, digestAlgOID));
     }
     
     public static byte[] encryptData(byte[] data, X509Certificate encryptionCertificate, String algo) throws CertificateEncodingException, CMSException, IOException {

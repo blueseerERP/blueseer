@@ -31,7 +31,9 @@ import bsmf.MainFrame;
 import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.tags;
 import static com.blueseer.ctr.cusData.addCustMstrMass;
+import static com.blueseer.edi.apiUtils.calculateMIC;
 import static com.blueseer.edi.apiUtils.hashdigest;
+import static com.blueseer.edi.apiUtils.hashdigestString;
 import com.blueseer.inv.invData;
 import static com.blueseer.inv.invData.addItemMasterMass;
 import com.blueseer.utl.OVData;
@@ -55,6 +57,7 @@ import java.nio.charset.MalformedInputException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.GeneralSecurityException;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -65,6 +68,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.mail.MessagingException;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -84,6 +88,7 @@ import javax.swing.text.JTextComponent;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
+import org.bouncycastle.util.encoders.Base64;
 
 /**
  *
@@ -758,8 +763,20 @@ public class EDIUtilities extends javax.swing.JPanel {
     
     public void getDigest(boolean input) {
         taoutput.setText("");
+        String mic = "";
         if (! tainput.getText().isEmpty()) { 
-            taoutput.setText(hashdigest(tainput.getText().getBytes(), "SHA-1"));
+            String x = hashdigestString(tainput.getText().getBytes(), "SHA-1");
+            try { 
+                mic = calculateMIC(tainput.getText().getBytes(), "SHA-1");
+            } catch (GeneralSecurityException ex) {
+                Logger.getLogger(EDIUtilities.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (MessagingException ex) {
+                Logger.getLogger(EDIUtilities.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(EDIUtilities.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            taoutput.setText("string: " + x + "\n" + "calculateMIC: " + mic + "\n" +  "hashdigest: " + hashdigest(tainput.getText().getBytes(), "SHA-1") + "\n");
          }
     }
     

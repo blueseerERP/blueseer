@@ -35,6 +35,7 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.edi.APIMaint;
 import com.blueseer.edi.apiUtils;
+import static com.blueseer.edi.apiUtils.calculateMIC;
 import static com.blueseer.edi.apiUtils.createMDN;
 import static com.blueseer.edi.apiUtils.hashdigest;
 import com.blueseer.edi.apiUtils.mdn;
@@ -65,6 +66,7 @@ import java.io.StringWriter;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.security.GeneralSecurityException;
 import java.security.cert.CertificateException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -105,6 +107,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.mail.BodyPart;
 import javax.mail.MessagingException;
+import javax.mail.Part;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
@@ -438,6 +441,14 @@ public class AS2Serv extends HttpServlet {
                       mpsub.getBodyPart(0).writeTo(aos);
                       aos.close(); 
                       FileWHeadersBytes = aos.toByteArray();
+                      
+                      String testmic = "";
+                        try {
+                            testmic = calculateMIC(FileWHeadersBytes, "SHA-1");
+                        } catch (GeneralSecurityException ex) {
+                            bslog(ex);
+                        }
+                      System.out.println("TESTMIC: " + testmic);
                       
                       // now get file without headers into byte array
                       is = mbp.getInputStream();
