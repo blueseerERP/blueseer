@@ -210,8 +210,7 @@ public class AS2Serv extends HttpServlet {
         if (headerNames != null) {
                 while (headerNames.hasMoreElements()) {
                         String key = (String) headerNames.nextElement();
-                        headers += key + ": " + request.getHeader(key) + "\r\n";
-                        
+                        headers += (key + ": " + request.getHeader(key) + "\r\n");
                         inHM.putIfAbsent(key.toLowerCase(), request.getHeader(key));
                         
                         if (isDebug)
@@ -225,6 +224,7 @@ public class AS2Serv extends HttpServlet {
         }
         
          // lets try to calculate the mic assuming sha1
+         headers += "\r\n";
         byte[] combined = new byte[headers.getBytes().length + content.length]; 
         for (int i = 0; i < combined.length; ++i) {
           combined[i] = i < headers.getBytes().length ? headers.getBytes()[i] : content[i - headers.getBytes().length];
@@ -363,6 +363,11 @@ public class AS2Serv extends HttpServlet {
             Path pathinput = FileSystems.getDefault().getPath("temp" + "/" + debugfile);
             try (FileOutputStream stream = new FileOutputStream(pathinput.toFile())) {
             stream.write(finalContent);
+            }
+            String debugfile2 = "debugAS2xxx." + now + "." + Long.toHexString(System.currentTimeMillis());
+            Path pathinput2 = FileSystems.getDefault().getPath("temp" + "/" + debugfile2);
+            try (FileOutputStream stream = new FileOutputStream(pathinput2.toFile())) {
+            stream.write(combined);
             }
         }
         // perform Digest on decrypted Data
