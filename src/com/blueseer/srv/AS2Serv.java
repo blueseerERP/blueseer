@@ -438,7 +438,8 @@ public class AS2Serv extends HttpServlet {
                       //  mic = calculateMIC(FileWHeadersBytes, "SHA-1");
                         mic = hashdigest(FileWHeadersBytes, info[20]);
                         logdet.add(new String[]{parentkey, "info", "calculated MIC = " + mic});
-                      
+                        elementals[5] = mic;
+                        
                       // now get file without headers into byte array
                       is = mbp.getInputStream();
                       FileBytes = is.readAllBytes();
