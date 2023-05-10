@@ -183,8 +183,6 @@ public class AS2Serv extends HttpServlet {
         
         // request to inputstream as bytes        
         try {
-        
-            
             byte[] content = null;
             try (InputStream is = request.getInputStream()) {
                 content = is.readAllBytes(); 
@@ -197,11 +195,7 @@ public class AS2Serv extends HttpServlet {
             return createMDN("3000", elementals, returnheaders, isDebug);
         }
         
-        // lets try to calculate the mic assuming sha1
-        String mic = hashdigest(content, "SHA-1");
-        if (mic == null) {
-            mic = "";
-        }
+       
         
        
         
@@ -210,12 +204,14 @@ public class AS2Serv extends HttpServlet {
         HashMap<String, String> inHM = new HashMap<>();
         HashMap<String, String> outHM = new HashMap<>();
         
-       
+        String headers = "";
         
         Enumeration<String> headerNames = request.getHeaderNames();
         if (headerNames != null) {
                 while (headerNames.hasMoreElements()) {
                         String key = (String) headerNames.nextElement();
+                        headers += key + ": " + request.getHeader(key) + "\r\n";
+                        
                         inHM.putIfAbsent(key.toLowerCase(), request.getHeader(key));
                         
                         if (isDebug)
@@ -227,6 +223,17 @@ public class AS2Serv extends HttpServlet {
             // return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "http header tags unrecognizable");
             return createMDN("3005", elementals, returnheaders, isDebug);
         }
+        
+         // lets try to calculate the mic assuming sha1
+        byte[] combined = new byte[headers.getBytes().length + content.length]; 
+        for (int i = 0; i < combined.length; ++i) {
+          combined[i] = i < headers.getBytes().length ? headers.getBytes()[i] : content[i - headers.getBytes().length];
+        }
+        String mic = hashdigest(combined, "SHA-1");
+        if (mic == null) {
+            mic = "";
+        }
+        
         
         // check for sender / receiver
         String sender = "";
