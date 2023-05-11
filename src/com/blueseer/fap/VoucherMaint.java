@@ -36,6 +36,7 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static com.blueseer.fap.fapData.VoucherTransaction;
+import com.blueseer.fgl.fglData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
@@ -166,7 +167,7 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbactualamt.setText("");
         tbqty.setText("");
         lbvendor.setText("");
-       
+        lbacct.setText("");
         tbprice.setDisabledTextColor(Color.black);
         tbprice.setText("");
         
@@ -181,6 +182,11 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
         receiverdet.getTableHeader().setReorderingAllowed(false);
         voucherdet.getTableHeader().setReorderingAllowed(false);
         
+        ddacct.removeAllItems();
+        ArrayList<String> myaccts = fglData.getGLAcctListByType("E");
+        for (String code : myaccts) {
+            ddacct.addItem(code);
+        }
         
         ddvend.removeAllItems();
         ArrayList myvend = venData.getVendMstrList();
@@ -960,7 +966,6 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel37 = new javax.swing.JLabel();
         tbqty = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        tbacct = new javax.swing.JTextField();
         tbcc = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
@@ -970,6 +975,8 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
         btlookup = new javax.swing.JButton();
         btdelete = new javax.swing.JButton();
         btclear = new javax.swing.JButton();
+        ddacct = new javax.swing.JComboBox<>();
+        lbacct = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -1109,6 +1116,15 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel5.setText("Item/Service");
         jLabel5.setName("lblitem"); // NOI18N
 
+        tbprice.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                tbpriceFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbpriceFocusLost(evt);
+            }
+        });
+
         jLabel6.setText("Price");
         jLabel6.setName("lblprice"); // NOI18N
 
@@ -1121,6 +1137,15 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         jLabel37.setText("Type");
         jLabel37.setName("lbltype"); // NOI18N
+
+        tbqty.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                tbqtyFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbqtyFocusLost(evt);
+            }
+        });
 
         jLabel7.setText("Qty");
         jLabel7.setName("lblqty"); // NOI18N
@@ -1158,6 +1183,12 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
         btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btclearActionPerformed(evt);
+            }
+        });
+
+        ddacct.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddacctActionPerformed(evt);
             }
         });
 
@@ -1256,12 +1287,13 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addComponent(jLabel5)
                             .addComponent(jLabel9))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                                .addComponent(tbacct, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(72, 72, 72))
-                            .addComponent(tbitemservice, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tbitemservice, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(ddacct, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lbacct, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(14, 14, 14)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel7)
@@ -1342,11 +1374,12 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbacct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tbcc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8)
-                    .addComponent(jLabel9))
-                .addGap(17, 17, 17)
+                    .addComponent(jLabel9)
+                    .addComponent(ddacct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbacct, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(16, 16, 16)
                 .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -1396,7 +1429,7 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
                                                   tbprice.getText(),
                                                   "expense",
                                                   "0",
-                                                  tbacct.getText(),
+                                                  ddacct.getSelectedItem().toString(),
                                                   tbcc.getText()
                                                   });
         }
@@ -1633,6 +1666,79 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
         initvars(null);
     }//GEN-LAST:event_btclearActionPerformed
 
+    private void ddacctActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddacctActionPerformed
+        if (ddacct.getSelectedItem() != null && ! isLoad )
+        try {
+
+            Connection con = null;
+            if (ds != null) {
+                con = ds.getConnection();
+            } else {
+                con = DriverManager.getConnection(url + db, user, pass);
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                res = st.executeQuery("select ac_desc from ac_mstr where ac_id = " + "'" + ddacct.getSelectedItem().toString() + "'" + ";");
+                while (res.next()) {
+                    lbacct.setText(res.getString("ac_desc"));
+                }
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+    }//GEN-LAST:event_ddacctActionPerformed
+
+    private void tbpriceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbpriceFocusGained
+        if (tbprice.getText().equals("0")) {
+            tbprice.setText("");
+        }
+    }//GEN-LAST:event_tbpriceFocusGained
+
+    private void tbpriceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbpriceFocusLost
+                  String x = BlueSeerUtils.bsformat("", tbprice.getText(), "2");
+        if (x.equals("error")) {
+            tbprice.setText("");
+            tbprice.setBackground(Color.yellow);
+            bsmf.MainFrame.show(getMessageTag(1000));
+            tbprice.requestFocus();
+        } else {
+            tbprice.setText(x);
+            tbprice.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_tbpriceFocusLost
+
+    private void tbqtyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbqtyFocusLost
+                 String x = BlueSeerUtils.bsformat("", tbqty.getText(), "0");
+        if (x.equals("error")) {
+            tbqty.setText("");
+            tbqty.setBackground(Color.yellow);
+            bsmf.MainFrame.show(getMessageTag(1000));
+            tbqty.requestFocus();
+        } else {
+            tbqty.setText(x);
+            tbqty.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_tbqtyFocusLost
+
+    private void tbqtyFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbqtyFocusGained
+        if (tbqty.getText().equals("0")) {
+            tbqty.setText("");
+        }
+    }//GEN-LAST:event_tbqtyFocusGained
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btaddall;
@@ -1644,6 +1750,7 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
     private com.toedter.calendar.JDateChooser dcdate;
+    private javax.swing.JComboBox<String> ddacct;
     private javax.swing.JComboBox ddpo;
     private javax.swing.JComboBox ddreceiver;
     private javax.swing.JComboBox ddsite;
@@ -1668,10 +1775,10 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
+    private javax.swing.JLabel lbacct;
     private javax.swing.JLabel lblreceiver;
     private javax.swing.JLabel lbvendor;
     private javax.swing.JTable receiverdet;
-    private javax.swing.JTextField tbacct;
     private javax.swing.JTextField tbactualamt;
     private javax.swing.JTextField tbcc;
     private javax.swing.JTextField tbcontrolamt;

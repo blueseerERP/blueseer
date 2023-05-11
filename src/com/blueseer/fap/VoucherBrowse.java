@@ -69,6 +69,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -78,6 +79,7 @@ import java.text.DecimalFormatSymbols;
 import java.util.Enumeration;
 import java.util.Locale;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -95,17 +97,24 @@ public class VoucherBrowse extends javax.swing.JPanel {
      public Map<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
      
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{getGlobalColumnTag("po"), 
+                        new String[]{
+                            getGlobalColumnTag("select"),
+                            getGlobalColumnTag("id"), 
                             getGlobalColumnTag("vendor"), 
-                            getGlobalColumnTag("voucher"), 
-                            getGlobalColumnTag("receiver"), 
-                            getGlobalColumnTag("line"), 
-                            getGlobalColumnTag("item"), 
-                            getGlobalColumnTag("packingslip"), 
-                            getGlobalColumnTag("invoice"), 
-                            getGlobalColumnTag("line"), 
-                            getGlobalColumnTag("recvqty"), 
-                            getGlobalColumnTag("vouchqty")});
+                            getGlobalColumnTag("type"), 
+                            getGlobalColumnTag("reference"), 
+                            getGlobalColumnTag("status"), 
+                            getGlobalColumnTag("amount")})
+            {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;
+                        else if (col == 6) 
+                            return Double.class;
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
                 
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{
@@ -147,8 +156,8 @@ public class VoucherBrowse extends javax.swing.JPanel {
         Component c = super.getTableCellRendererComponent(table,
                 value, isSelected, hasFocus, row, column);
         
-        String status = (String)table.getModel().getValueAt(table.convertRowIndexToModel(row), 2);  
-        
+        String status = (String)table.getModel().getValueAt(table.convertRowIndexToModel(row), 5);  
+        /*
          if (status.isEmpty()) {
             c.setBackground(Color.yellow);
             c.setForeground(Color.BLACK);
@@ -157,7 +166,7 @@ public class VoucherBrowse extends javax.swing.JPanel {
             c.setBackground(Color.blue);
             c.setForeground(Color.WHITE);
         }       
-        
+        */
         //c.setBackground(row % 2 == 0 ? Color.LIGHT_GRAY : Color.WHITE);
       // c.setBackground(row % 2 == 0 ? Color.GREEN : Color.LIGHT_GRAY);
       // c.setBackground(row % 3 == 0 ? new Color(245,245,220) : Color.LIGHT_GRAY);
@@ -363,8 +372,8 @@ public class VoucherBrowse extends javax.swing.JPanel {
         ddvendfrom = new javax.swing.JComboBox();
         ddsite = new javax.swing.JComboBox();
         jLabel6 = new javax.swing.JLabel();
-        tbfrompo = new javax.swing.JTextField();
-        tbtopo = new javax.swing.JTextField();
+        tbfromnbr = new javax.swing.JTextField();
+        tbtonbr = new javax.swing.JTextField();
         cbvoucher = new javax.swing.JCheckBox();
         jPanel3 = new javax.swing.JPanel();
 
@@ -437,13 +446,13 @@ public class VoucherBrowse extends javax.swing.JPanel {
         jLabel1.setText("From Vend");
         jLabel1.setName("lblfromvend"); // NOI18N
 
-        jLabel3.setText("To PO");
-        jLabel3.setName("lbltopo"); // NOI18N
+        jLabel3.setText("To ID");
+        jLabel3.setName("lbltoid"); // NOI18N
 
-        jLabel6.setText("From PO");
-        jLabel6.setName("lblfrompo"); // NOI18N
+        jLabel6.setText("From ID");
+        jLabel6.setName("lblfromid"); // NOI18N
 
-        cbvoucher.setText("UnVouchered?");
+        cbvoucher.setText("UnPaid?");
         cbvoucher.setName("cbunvouchered"); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -459,8 +468,8 @@ public class VoucherBrowse extends javax.swing.JPanel {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(tbtopo, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE)
-                            .addComponent(tbfrompo))
+                            .addComponent(tbtonbr, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE)
+                            .addComponent(tbfromnbr))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -489,7 +498,7 @@ public class VoucherBrowse extends javax.swing.JPanel {
                     .addComponent(btRun)
                     .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5)
-                    .addComponent(tbfrompo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbfromnbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6)
                     .addComponent(cbvoucher))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -498,7 +507,7 @@ public class VoucherBrowse extends javax.swing.JPanel {
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(ddvendto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel3)
-                        .addComponent(tbtopo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(tbtonbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -522,7 +531,7 @@ public class VoucherBrowse extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 141, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 176, Short.MAX_VALUE)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -568,25 +577,31 @@ try {
                mymodel.setNumRows(0);
         
               tablereport.setModel(mymodel);
-            //  tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+              tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+               //  tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
             
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
                  while (en.hasMoreElements()) {
                      TableColumn tc = en.nextElement();
+                     if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) {
+                         continue;
+                     }
                      tc.setCellRenderer(new VoucherBrowse.SomeRenderer());
                  }
+            tablereport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+           
             
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 
-                 String pofrom = tbfrompo.getText();
-                 String poto = tbtopo.getText();
+                 String fromnbr = tbfromnbr.getText();
+                 String tonbr = tbtonbr.getText();
                  
                  
-                 if (pofrom.isEmpty()) {
-                     pofrom = bsmf.MainFrame.lowchar;
+                 if (fromnbr.isEmpty()) {
+                     fromnbr = bsmf.MainFrame.lowchar;
                  }
-                  if (poto.isEmpty()) {
-                     poto = bsmf.MainFrame.hichar;
+                  if (tonbr.isEmpty()) {
+                     tonbr = bsmf.MainFrame.hichar;
                  }
                  
                  
@@ -600,7 +615,7 @@ try {
                  
                  
          //     new String[]{"Detail", "PO", "Vend", "Line", "Part", "Type", "Status", "OrdQty", "RecvQty"});   
-        
+        /*
            res = st.executeQuery("select case when vod_id is null then '' else vod_id end as vod_id, " +
                                 " case when vod_invoice is null then '' else vod_invoice end as vod_invoice, rvd_status, rv_id, rv_vend, rvd_po, rvd_poline, rvd_rline, rvd_item, rvd_packingslip, " +
                       " rvd_qty, rvd_voqty " +
@@ -611,26 +626,31 @@ try {
                      " rvd_po >= " + "'" + pofrom + "'" + " AND " +
                         " rvd_po <= " + "'" + poto + "'" +
                         " order by rvd_po ;");
+           */
+           res = st.executeQuery(" select vod_id, ap_nbr, ap_status, ap_ref, ap_vend, vod_rvdid, vod_invoice, ap_amt, vod_voprice, vod_qty " +
+                        " FROM  ap_mstr inner join vod_mstr on ap_nbr = vod_id where " + 
+                        " ap_vend >= " + "'" + vendfrom + "'" + " AND " +
+                        " ap_vend <= " + "'" + vendto + "'" + " AND " +
+                        " ap_nbr >= " + "'" + fromnbr + "'" + " AND " +
+                        " ap_nbr <= " + "'" + tonbr + "'" + " AND " +
+                        " ap_type = 'V' order by ap_nbr desc ;");
                       
         
                   
                 
                        while (res.next()) {
                            
-                         if (cbvoucher.isSelected() && ! res.getString("vod_id").isEmpty()) {
+                         if (cbvoucher.isSelected() && ! res.getString("ap_status").equals("o")) {
                              continue;
                          }  
-                    mymodel.addRow(new Object[]{res.getString("rvd_po"),
-                                res.getString("rv_vend"),
-                                res.getString("vod_id"),
-                                res.getString("rv_id"),
-                                res.getString("rvd_poline"),
-                                res.getString("rvd_item"),
-                                res.getString("rvd_packingslip"),
-                                res.getString("vod_invoice"),
-                                res.getString("rvd_rline"),
-                                res.getDouble("rvd_qty"),
-                                res.getDouble("rvd_voqty")
+                    mymodel.addRow(new Object[]{
+                                BlueSeerUtils.clickflag,
+                                res.getString("ap_nbr"),
+                                res.getString("ap_vend"),
+                                res.getString("vod_rvdid"),
+                                res.getString("ap_ref"),
+                                res.getString("ap_status"),
+                                bsParseDouble(currformatDouble(res.getDouble("ap_amt")))
                             });
                
              
@@ -658,7 +678,15 @@ try {
     }//GEN-LAST:event_btRunActionPerformed
 
     private void tablereportMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablereportMouseClicked
-        
+        int row = tablereport.rowAtPoint(evt.getPoint());
+        int col = tablereport.columnAtPoint(evt.getPoint());
+        if ( col == 0) {
+                String mypanel = "VouchMaintPanel";
+               if (! checkperms(mypanel)) { return; }
+               String[] args = new String[]{tablereport.getValueAt(row, 1).toString()};
+               reinitpanels(mypanel, true, args);
+              
+        } 
     }//GEN-LAST:event_tablereportMouseClicked
 
 
@@ -683,7 +711,7 @@ try {
     private javax.swing.JTable tabledetail;
     private javax.swing.JPanel tablepanel;
     private javax.swing.JTable tablereport;
-    private javax.swing.JTextField tbfrompo;
-    private javax.swing.JTextField tbtopo;
+    private javax.swing.JTextField tbfromnbr;
+    private javax.swing.JTextField tbtonbr;
     // End of variables declaration//GEN-END:variables
 }
