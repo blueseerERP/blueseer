@@ -82,6 +82,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.SwingWorker;
+import javax.swing.event.TableModelEvent;
 
 
 /**
@@ -96,6 +97,7 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
                 String apcc = "";
                 String apbank = "";
                 double actamt = 0;
+                double control = 0.00;
                 double baseamt = 0;
                 double rcvamt = 0;
                 int voucherline = 0;
@@ -131,7 +133,17 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
                 getGlobalColumnTag("account"), 
                 getGlobalColumnTag("costcenter")
             });
-                
+ javax.swing.event.TableModelListener ml = new javax.swing.event.TableModelListener() {
+                    @Override
+                    public void tableChanged(TableModelEvent tme) {
+                        if (tme.getType() == TableModelEvent.UPDATE && 
+                                (tme.getColumn() == 4 || tme.getColumn() == 3)) {
+                            sumdollars();
+                        }
+                        // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    }
+                };            
+                 
                 
     /**
      * Creates new form ShipMaintPanel
@@ -163,14 +175,20 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
          tbkey.setText("");
          tbinvoice.setText("");
         tbrmks.setText("");
-        tbcontrolamt.setText("");
+        
         tbrecvamt.setText("");
-        tbactualamt.setText("");
+        
         tbqty.setText("");
         lbvendor.setText("");
         lbacct.setText("");
         tbprice.setDisabledTextColor(Color.black);
         tbprice.setText("");
+        
+        tbcontrolamt.setText("0");
+        tbcontrolamt.setBackground(Color.white);
+        tbactualamt.setText("0");
+        tbactualamt.setBackground(Color.white);
+        tbactualamt.setEditable(false);
         
         lblstatus.setText("");
         lblstatus.setForeground(Color.black);
@@ -181,10 +199,12 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
        
          receivermodel.setRowCount(0);
         vouchermodel.setRowCount(0);
+        vouchermodel.addTableModelListener(ml);
         receiverdet.setModel(receivermodel);
         voucherdet.setModel(vouchermodel);
         receiverdet.getTableHeader().setReorderingAllowed(false);
         voucherdet.getTableHeader().setReorderingAllowed(false);
+        
         
         ddacct.removeAllItems();
         ArrayList<String> myaccts = fglData.getGLAcctListByType("E");
@@ -222,6 +242,7 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
         setComponentDefaultValues();
         BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
         btnew.setEnabled(false);
+        btvoid.setEnabled(false);
         tbkey.setEditable(true);
         tbkey.setForeground(Color.blue);
         if (! x.isEmpty()) {
@@ -238,7 +259,9 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
                    btadd.setEnabled(false);
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
-                   tbactualamt.setText(currformatDouble(actamt));
+                    tbactualamt.setText(currformatDouble(actamt));
+                   tbcontrolamt.setText(currformatDouble(actamt));
+                   control = actamt;
                    String status = fapData.getVoucherStatus(tbkey.getText());
                    if (status.equals("x")) {
                        lblstatus.setText(getMessageTag(1083));
@@ -277,12 +300,14 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
                 if (ddvend.getSelectedItem() == null || ddvend.getSelectedItem().toString().isEmpty()) {
                     b = false;
                     bsmf.MainFrame.show(getMessageTag(1024, "Vendor"));
+                    ddvend.requestFocus();
                     return b;
                 }
                 
                 if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
                     b = false;
                     bsmf.MainFrame.show(getMessageTag(1024, "Site"));
+                    ddsite.requestFocus();
                     return b;
                 }
                 
@@ -307,9 +332,9 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
                     bsmf.MainFrame.show(getMessageTag(1024, "APAccount"));
                     return b;
                 }
-                 if ( actamt == 0.00 ) {
+                 if ( control != actamt || control == 0.00 || actamt == 0.00 ) {
                     b = false;
-                    bsmf.MainFrame.show(getMessageTag(1036));
+                    bsmf.MainFrame.show(getMessageTag(1039,String.valueOf(control)));
                     return b;
                 }
                 
@@ -650,7 +675,7 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
         lual = new ActionListener() {
         public void actionPerformed(ActionEvent event) {
         if (lurb1.isSelected()) {  
-         luModel = DTData.getVoucherBrowseUtil(luinput.getText(),0, "vod_id");
+         luModel = DTData.getVoucherBrowseUtil(luinput.getText(),0, "ap_nbr");
         } else {
          luModel = DTData.getVoucherBrowseUtil(luinput.getText(),0, "ap_vend");   
         }
@@ -990,6 +1015,30 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
     }
     
+    public void sumdollars() {
+        double dol = 0;
+        double summaryTaxPercent = 0;
+        double headertax = 0;
+        double matltax = 0;
+        double totaltax = 0;
+        
+        actamt = 0;
+         for (int j = 0; j < voucherdet.getRowCount(); j++) {
+             actamt += bsParseDouble(voucherdet.getModel().getValueAt(j,3).toString()) * bsParseDouble(voucherdet.getModel().getValueAt(j,4).toString());
+         }
+         
+          
+         if (control == actamt && control != 0.00 ) {
+             tbcontrolamt.setBackground(Color.green);
+             tbactualamt.setBackground(Color.green);
+         } else {
+            tbcontrolamt.setBackground(Color.white); 
+            tbactualamt.setBackground(Color.white);
+         }
+        tbactualamt.setText(currformatDouble(actamt));
+        
+    }
+    
       
     public void setType(String type) {
           if (type.equals("Receipt")) {
@@ -1089,6 +1138,15 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
         btnew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnewActionPerformed(evt);
+            }
+        });
+
+        tbcontrolamt.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                tbcontrolamtFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbcontrolamtFocusLost(evt);
             }
         });
 
@@ -1357,7 +1415,7 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
                                                         .addComponent(btclear)
                                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                         .addComponent(jLabel27)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 348, Short.MAX_VALUE))
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 225, Short.MAX_VALUE))
                                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                                         .addComponent(lblstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addGap(0, 0, Short.MAX_VALUE))))))))
@@ -1514,14 +1572,18 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
                                                   tbitemservice.getText(),
                                                   tbqty.getText(),
                                                   tbprice.getText(),
-                                                  "expense",
-                                                  "0",
+                                                  "Expense",
+                                                  voucherline,
                                                   ddacct.getSelectedItem().toString(),
                                                   ddcc.getSelectedItem().toString()
                                                   });
         }
         
-        tbactualamt.setText(currformatDouble(actamt));
+        sumdollars();
+        
+        tbitemservice.setText("");
+        tbqty.setText("");
+        tbprice.setText("");
     }//GEN-LAST:event_btadditemActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
@@ -1658,6 +1720,13 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
                                               receiverdet.getModel().getValueAt(i, 13)
                                               });
         }
+         if (control == actamt && control != 0.00 ) {
+             tbcontrolamt.setBackground(Color.green);
+             tbactualamt.setBackground(Color.green);
+         } else {
+            tbcontrolamt.setBackground(Color.white); 
+            tbactualamt.setBackground(Color.white);
+         }
         tbactualamt.setText(currformatDouble(actamt));
     }//GEN-LAST:event_btaddallActionPerformed
 
@@ -1763,6 +1832,40 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
         setPanelComponentState(this, false);
         executeTask(BlueSeerUtils.dbaction.delete, new String[]{tbkey.getText()});   
     }//GEN-LAST:event_btvoidActionPerformed
+
+    private void tbcontrolamtFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbcontrolamtFocusLost
+          String x = BlueSeerUtils.bsformat("", tbcontrolamt.getText(), "2");
+        if (x.equals("error")) {
+            tbcontrolamt.setText("");
+            tbcontrolamt.setBackground(Color.yellow);
+            bsmf.MainFrame.show(getMessageTag(1000));
+            tbcontrolamt.requestFocus();
+        } else {
+            tbcontrolamt.setText(x);
+            tbcontrolamt.setBackground(Color.white);
+        }
+        
+        if (! tbcontrolamt.getText().isEmpty()) {
+            control = bsParseDouble(tbcontrolamt.getText());
+        } else {
+            tbcontrolamt.setText("0.00");
+            control = 0.00;
+        }
+        
+       if (control == actamt && control != 0.00 ) {
+             tbcontrolamt.setBackground(Color.green);
+             tbactualamt.setBackground(Color.green);
+         } else {
+            tbcontrolamt.setBackground(Color.white); 
+            tbactualamt.setBackground(Color.white);
+         }
+    }//GEN-LAST:event_tbcontrolamtFocusLost
+
+    private void tbcontrolamtFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbcontrolamtFocusGained
+       if (tbcontrolamt.getText().equals("0")) {
+            tbcontrolamt.setText("");
+        }
+    }//GEN-LAST:event_tbcontrolamtFocusGained
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;

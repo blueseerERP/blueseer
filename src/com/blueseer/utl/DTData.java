@@ -4684,7 +4684,7 @@ public class DTData {
             
     public static DefaultTableModel getVoucherBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("vendor"), getGlobalColumnTag("recvid"), getGlobalColumnTag("invoice"), getGlobalColumnTag("amount"), getGlobalColumnTag("price"), getGlobalColumnTag("quantity")})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("vendor"), getGlobalColumnTag("type"), getGlobalColumnTag("invoice"), getGlobalColumnTag("status"), getGlobalColumnTag("amount")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -4706,28 +4706,27 @@ public class DTData {
             ResultSet res = null;
             try{
                 if (state == 1) { // begins
-                    res = st.executeQuery(" select vod_id, ap_vend, vod_rvdid, vod_invoice, ap_amt, vod_voprice, vod_qty " +
-                        " FROM  vod_mstr inner join ap_mstr on vod_id = ap_nbr where " + myfield + " like " + "'" + str + "%'" +
+                    res = st.executeQuery(" select ap_nbr, ap_status, ap_ref, ap_vend, ap_amt, ap_subtype " +
+                        " FROM  ap_mstr where " + myfield + " like " + "'" + str + "%'" +
                         " and ap_type = 'V' order by ap_nbr desc ;");
                 }
                 if (state == 2) { // ends
-                    res = st.executeQuery(" select vod_id, ap_vend, vod_rvdid, vod_invoice, ap_amt, vod_voprice, vod_qty  " +
-                        " FROM  vod_mstr inner join ap_mstr on vod_id = ap_nbr where " + myfield + " like " + "'%" + str + "'" +
+                    res = st.executeQuery(" select ap_nbr, ap_status, ap_ref, ap_vend, ap_amt, ap_subtype  " +
+                        " FROM  ap_mstr where " + myfield + " like " + "'%" + str + "'" +
                         " and ap_type = 'V' order by ap_nbr desc ;");
                 }
                  if (state == 0) { // match
-                 res = st.executeQuery(" select vod_id, ap_vend, vod_rvdid, vod_invoice, ap_amt, vod_voprice, vod_qty   " +
-                        " FROM  vod_mstr inner join ap_mstr on vod_id = ap_nbr where " + myfield + " like " + "'%" + str + "%'" +
+                 res = st.executeQuery(" select ap_nbr, ap_status, ap_ref, ap_vend, ap_amt, ap_subtype   " +
+                        " FROM  ap_mstr where " + myfield + " like " + "'%" + str + "%'" +
                         " and ap_type = 'V' order by ap_nbr desc ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("vod_id"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("ap_nbr"),
                                    res.getString("ap_vend"),
-                                   res.getString("vod_rvdid"),
-                                   res.getString("vod_invoice"),
-                                   currformatDouble(res.getDouble("ap_amt")),
-                                   currformatDouble(res.getDouble("vod_voprice")),
-                                   res.getString("vod_qty")
+                                   res.getString("ap_subtype"),
+                                   res.getString("ap_ref"),
+                                   res.getString("ap_status"),
+                                   currformatDouble(res.getDouble("ap_amt"))
                         });
                     }
            }

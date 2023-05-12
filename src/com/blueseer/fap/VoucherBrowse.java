@@ -627,8 +627,8 @@ try {
                         " rvd_po <= " + "'" + poto + "'" +
                         " order by rvd_po ;");
            */
-           res = st.executeQuery(" select vod_id, ap_nbr, ap_status, ap_ref, ap_vend, vod_rvdid, vod_invoice, ap_amt, vod_voprice, vod_qty " +
-                        " FROM  ap_mstr inner join vod_mstr on ap_nbr = vod_id where " + 
+           res = st.executeQuery(" select ap_nbr, ap_status, ap_ref, ap_vend, ap_amt, ap_subtype " +
+                        " FROM  ap_mstr where " + 
                         " ap_vend >= " + "'" + vendfrom + "'" + " AND " +
                         " ap_vend <= " + "'" + vendto + "'" + " AND " +
                         " ap_nbr >= " + "'" + fromnbr + "'" + " AND " +
@@ -647,7 +647,7 @@ try {
                                 BlueSeerUtils.clickflag,
                                 res.getString("ap_nbr"),
                                 res.getString("ap_vend"),
-                                res.getString("vod_rvdid"),
+                                res.getString("ap_subtype"),
                                 res.getString("ap_ref"),
                                 res.getString("ap_status"),
                                 bsParseDouble(currformatDouble(res.getDouble("ap_amt")))

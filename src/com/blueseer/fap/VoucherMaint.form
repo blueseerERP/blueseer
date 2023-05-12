@@ -123,7 +123,7 @@
                                                           <Component id="btclear" min="-2" max="-2" attributes="0"/>
                                                           <EmptySpace max="32767" attributes="0"/>
                                                           <Component id="jLabel27" min="-2" max="-2" attributes="0"/>
-                                                          <EmptySpace pref="348" max="32767" attributes="0"/>
+                                                          <EmptySpace pref="225" max="32767" attributes="0"/>
                                                       </Group>
                                                       <Group type="102" attributes="0">
                                                           <Component id="lblstatus" min="-2" pref="340" max="-2" attributes="0"/>
@@ -299,6 +299,10 @@
           </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="tbcontrolamt">
+          <Events>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbcontrolamtFocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbcontrolamtFocusLost"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel36">
           <Properties>
