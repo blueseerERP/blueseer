@@ -1485,6 +1485,7 @@ public class Scheduler extends javax.swing.JPanel {
 
                 if (cbsched.isSelected()) {
                     res = st.executeQuery("SELECT plan_nbr, plan_type, plan_item, plan_qty_req, plan_qty_comp, "
+                        + "( select coalesce(sum(pland_qty),0) as qtycomp from pland_mstr where pland_parent = plan_nbr) as qtycomp,"
                         + " plan_qty_sched, plan_date_due, plan_date_sched, plan_status, ifnull(plan_is_sched,0) plan_is_sched, plan_cell, plan_order, plan_line " +
                         " FROM  plan_mstr " +
                         " where plan_date_due >= " + "'" + dfdate.format(dcfrom.getDate()) + "'" +
@@ -1497,6 +1498,7 @@ public class Scheduler extends javax.swing.JPanel {
                         " order by plan_item, plan_date_due;");
                 } else {
                     res = st.executeQuery("SELECT plan_nbr, plan_item, plan_type, plan_qty_req, plan_qty_comp, "
+                        + "( select coalesce(sum(pland_qty),0) as qtycomp from pland_mstr where pland_parent = plan_nbr) as qtycomp,"     
                         + " plan_qty_sched, plan_date_due, plan_date_sched, plan_status, ifnull(plan_is_sched,0) plan_is_sched, plan_cell, plan_order, plan_line " +
                         " FROM  plan_mstr " +
                         " where plan_date_due >= " + "'" + dfdate.format(dcfrom.getDate()) + "'" +
@@ -1517,7 +1519,8 @@ public class Scheduler extends javax.swing.JPanel {
                     if (cbclosed.isSelected() && res.getInt("plan_status") == -1) {
                         continue;
                     }
-
+                    
+                
                     i++;
                     reqtot = reqtot + res.getInt("plan_qty_req");
                     schtot = schtot + res.getInt("plan_qty_sched");
@@ -1534,7 +1537,7 @@ public class Scheduler extends javax.swing.JPanel {
                         res.getString("plan_cell"),
                         res.getInt("plan_qty_sched"),
                         res.getInt("plan_qty_req"),
-                        res.getInt("plan_qty_comp"),
+                        res.getInt("qtycomp"), // summed qty of completed pland_mstr records
                         res.getString("plan_date_sched"),
                         res.getString("plan_order"),
                         res.getString("plan_line"),
