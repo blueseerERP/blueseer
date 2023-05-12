@@ -1292,7 +1292,7 @@ public class fglData {
         
         }
     
-    public static boolean _glEntryFromVoucher(String voucher, Date effdate, Connection bscon) throws SQLException {
+    public static boolean _glEntryFromVoucher(String voucher, Date effdate, Connection bscon, boolean Void) throws SQLException {
                 boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
        
           
@@ -1333,8 +1333,13 @@ public class fglData {
                     acct_dr.add(res.getString("poc_rcpt_acct"));
                     cc_cr.add(res.getString("ap_cc"));
                     cc_dr.add(res.getString("poc_rcpt_cc"));
+                    if (Void) {
+                    cost.add(-1 * res.getDouble("ap_amt"));
+                    basecost.add(-1 * res.getDouble("ap_base_amt"));
+                    } else {
                     cost.add(res.getDouble("ap_amt"));
-                    basecost.add(res.getDouble("ap_base_amt"));
+                    basecost.add(res.getDouble("ap_base_amt"));   
+                    }
                     curr.add(res.getString("ap_curr"));
                     basecurr.add(res.getString("ap_base_curr"));
                     site.add(res.getString("ap_site"));
@@ -1440,7 +1445,7 @@ public class fglData {
         
         }
     
-    public static boolean _glEntryFromVoucherExpense(String voucher, Date effdate, Connection bscon) throws SQLException {
+    public static boolean _glEntryFromVoucherExpense(String voucher, Date effdate, Connection bscon, boolean Void) throws SQLException {
                 boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
         
                 Statement st = bscon.createStatement();
@@ -1479,8 +1484,13 @@ public class fglData {
                     acct_dr.add(res.getString("vod_expense_acct"));
                     cc_cr.add(res.getString("ap_cc"));
                     cc_dr.add(res.getString("vod_expense_cc"));
-                      cost.add(amt);
-                      basecost.add(amt);
+                    if (Void) {
+                    cost.add(-1 * amt);
+                    basecost.add(-1 * amt);
+                    } else {
+                    cost.add(amt);
+                    basecost.add(amt);    
+                    }
                     curr.add(res.getString("ap_curr"));
                     basecurr.add(res.getString("ap_base_curr"));
                     site.add(res.getString("ap_site"));

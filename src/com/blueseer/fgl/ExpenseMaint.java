@@ -489,7 +489,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     
     public String[] addRecord(String[] x) {
-     String[] m = VouchAndPayTransaction(OVData.getNextNbr("batch"), "AP-Expense", createDetRecord(), createRecord());
+     String[] m = VouchAndPayTransaction(OVData.getNextNbr("batch"), "AP-Expense", createDetRecord(), createRecord(), false);
      return m;
      }
      
@@ -592,7 +592,8 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
                 basecurr, //ap_base_curr
                 tbkey.getText(), //ap_check // in this case voucher number is reference field
                 "", //ap_batch
-                ddsite.getSelectedItem().toString() //ap_site
+                ddsite.getSelectedItem().toString(), //ap_site
+                "Expense"
                 ); 
         return x;  
     }

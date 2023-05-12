@@ -154,7 +154,9 @@ CREATE TABLE IF NOT EXISTS `ap_mstr` (
   `ap_base_curr` varchar(3)  NOT NULL DEFAULT '',
   `ap_check` varchar(30)  DEFAULT '',
   `ap_batch` int(11)  NOT NULL DEFAULT '0',
-  `ap_site` varchar(10)  DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `ap_site` varchar(10)  DEFAULT '',
+  `ap_subtype` varchar(20)  DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `apd_mstr` (
   `apd_batch` int(11)  NOT NULL DEFAULT '0',
   `apd_vend` varchar(10)  DEFAULT '',

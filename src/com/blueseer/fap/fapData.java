@@ -113,8 +113,10 @@ public class fapData {
                 basecurr, //ap_base_curr
                 String.valueOf(checknbr), //ap_check
                 String.valueOf(batchid), //ap_batch
-                s[1] //ap_site
-                );
+                s[1], //ap_site
+                "");
+                
+                
                 _addAPMstr(x, bscon, ps, res);
                 // increment each check nbr per record
                     checknbr++;
@@ -164,7 +166,7 @@ public class fapData {
     return m;
     }
     
-    public static String[] VouchAndPayTransaction(int batchid, String ctype, ArrayList<vod_mstr> vod, ap_mstr ap) {
+    public static String[] VouchAndPayTransaction(int batchid, String ctype, ArrayList<vod_mstr> vod, ap_mstr ap, boolean Void) {
         String[] m = new String[2];
         Connection bscon = null;
         PreparedStatement ps = null;
@@ -218,19 +220,20 @@ public class fapData {
                 ap.ap_base_curr, //ap_base_curr
                 String.valueOf(batchid), //ap_check 
                 String.valueOf(batchid), //ap_batch
-                ap.ap_site //ap_site
+                ap.ap_site, //ap_site
+                ap.ap_subtype
                 ); 
                 _addAPMstr(x, bscon, ps, res); // add AP Type E payment
             
             if (ctype.equals("AP-Expense")) {
-                fglData._glEntryFromVoucherExpense(ap.ap_nbr, parseDate(ap.ap_effdate), bscon); // aptype=V
+                fglData._glEntryFromVoucherExpense(ap.ap_nbr, parseDate(ap.ap_effdate), bscon, Void); // aptype=V
                 fglData._glEntryFromCheckRun(batchid, parseDate(ap.ap_effdate), ctype, bscon); //aptype=E
             }
             if (ctype.equals("AP-Cash-Purch")) {
                 fglData._glEntryFromCashTranBuy(ap.ap_nbr, parseDate(ap.ap_effdate), ctype, bscon);
             }
             if (ctype.equals("AP-Cash")) {
-                fglData._glEntryFromVoucherExpense(ap.ap_nbr, parseDate(ap.ap_effdate),  bscon);
+                fglData._glEntryFromVoucherExpense(ap.ap_nbr, parseDate(ap.ap_effdate),  bscon, Void);
                 fglData._glEntryFromCheckRun(batchid, parseDate(ap.ap_effdate), ctype, bscon); //aptype=E
             }
             if (ctype.equals("AP-Vendor")) {
@@ -279,7 +282,7 @@ public class fapData {
     return m;
     }
     
-    public static String[] VoucherTransaction(int batchid, String ctype, ArrayList<vod_mstr> vod, ap_mstr ap) {
+    public static String[] VoucherTransaction(int batchid, String ctype, ArrayList<vod_mstr> vod, ap_mstr ap, boolean Void) {
         String[] m = new String[2];
         Connection bscon = null;
         PreparedStatement ps = null;
@@ -292,14 +295,18 @@ public class fapData {
               bscon = DriverManager.getConnection(url + db, user, pass);  
             }
             bscon.setAutoCommit(false);
-             _addAPMstr(ap, bscon, ps, res);  
-            for (vod_mstr z : vod) {
-                _addVODMstr(z, bscon, ps, res);
-            }
+            
+            if (! Void) {
+                 _addAPMstr(ap, bscon, ps, res);  
+                for (vod_mstr z : vod) {
+                    _addVODMstr(z, bscon, ps, res);
+                }
+            } 
+            
             if (ctype.equals("Receipt")) {
-            fglData._glEntryFromVoucher(ap.ap_nbr, parseDate(ap.ap_effdate), bscon); 
+            fglData._glEntryFromVoucher(ap.ap_nbr, parseDate(ap.ap_effdate), bscon, Void); 
             } else {
-            fglData._glEntryFromVoucherExpense(ap.ap_nbr, parseDate(ap.ap_effdate), bscon);    
+            fglData._glEntryFromVoucherExpense(ap.ap_nbr, parseDate(ap.ap_effdate), bscon, Void);    
             }
             // now commit
             bscon.commit();
@@ -391,7 +398,8 @@ public class fapData {
                 basecurr, //ap_base_curr
                 "", //ap_check
                 String.valueOf(batchid), //ap_batch
-                s[1] //ap_site
+                s[1], //ap_site
+                "Expense"
                 );
                 _addAPMstr(x, bscon, ps, res);
                 // increment each check nbr per record
@@ -399,13 +407,13 @@ public class fapData {
             }
             
             if (ctype.equals("AP-Expense")) {
-                fglData._glEntryFromVoucherExpense(voucher, effdate, bscon);
+                fglData._glEntryFromVoucherExpense(voucher, effdate, bscon, false);
             }
             if (ctype.equals("AP-Cash-Purch")) {
                 fglData._glEntryFromCashTranBuy(voucher, effdate, ctype, bscon);
             }
             if (ctype.equals("AP-Cash")) { // Misc Expense from CashClass
-                fglData._glEntryFromVoucherExpense(voucher, effdate, bscon);
+                fglData._glEntryFromVoucherExpense(voucher, effdate, bscon, false);
             }
             if (ctype.equals("AP-Vendor")) {
                 fglData._glEntryFromCheckRun(batchid, effdate, ctype, bscon);
@@ -515,8 +523,8 @@ public class fapData {
         "ap_amt, ap_base_amt, ap_effdate, ap_entdate, ap_duedate, " +
         "ap_type, ap_rmks, ap_ref, ap_terms, ap_acct, " +
         "ap_cc, ap_applied, ap_status, ap_bank, ap_curr, " +
-        "ap_base_curr, ap_check, ap_batch, ap_site ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+        "ap_base_curr, ap_check, ap_batch, ap_site, ap_subtype ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.ap_batch);
@@ -546,6 +554,7 @@ public class fapData {
             ps.setString(19, x.ap_check);
             ps.setString(20, x.ap_batch);
             ps.setString(21, x.ap_site);
+            ps.setString(22, x.ap_subtype);
             rows = ps.executeUpdate();
             } 
             return rows;
@@ -579,7 +588,74 @@ public class fapData {
           
           return list;
     }
+     
+    // misc
+    
+    public static void updateAPVoucherStatus(String nbr, String status) {
+            try{
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            try {
+                           st.executeUpdate(
+                                 " update ap_mstr set ap_status = " + "'" + status + "'" +
+                                 " where ap_type = 'V' and ap_nbr = " + "'" + nbr + "'" + ";" );
+            }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
         
+       }
+    
+    public static String getVoucherStatus(String nbr) {
+       String status = "";
+     try{
+
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+            res = st.executeQuery("select ap_status from ap_mstr where ap_type = 'V' and ap_nbr = " + "'" + nbr + "';" );
+           while (res.next()) {
+            status = res.getString("ap_status");                    
+            }
+
+       }
+        catch (SQLException s){
+             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return status;
+
+}  
+
+    
     public static boolean APCheckRun_apd_mstr(JTable mytable, int batchid) {
        boolean myreturn = false;
 
@@ -809,11 +885,11 @@ public class fapData {
         String ap_amt, String ap_base_amt, String ap_effdate, String ap_entdate, String ap_duedate,
         String ap_type, String ap_rmks, String ap_ref, String ap_terms, String ap_acct,
         String ap_cc, String ap_applied, String ap_status, String ap_bank, String ap_curr,
-        String ap_base_curr, String ap_check, String ap_batch, String ap_site) {
+        String ap_base_curr, String ap_check, String ap_batch, String ap_site, String ap_subtype) {
         public ap_mstr(String[]m) {
             this(m, "", "", "", "", "", "", "", "", "", "", 
                     "", "", "", "", "", "", "", "", "", "",
-                    "", "");
+                    "", "", "");
         }
     }
     
