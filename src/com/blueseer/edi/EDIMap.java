@@ -1729,7 +1729,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                                       if (child.hasAttributes()) {
                                             for (int a = 0; a < child.getAttributes().getLength(); a++){
                                                Attr attr = (Attr) child.getAttributes().item(a);
-                                               temp.add(attr.getNodeName() + "=" + attr.getNodeValue());
+                                               al.add(attr.getNodeName() + "=" + attr.getNodeValue());
                                             }
                                       }
                                       lhm.put(lhmkey, al);
@@ -1909,7 +1909,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                                       if (child.hasAttributes()) {
                                             for (int a = 0; a < child.getAttributes().getLength(); a++){
                                                Attr attr = (Attr) child.getAttributes().item(a);
-                                               temp.add(attr.getNodeName() + "=" + attr.getNodeValue());
+                                               al.add(attr.getNodeName() + "=" + attr.getNodeValue());
                                             //   String k[] = new String[]{child.getNodeName(),node.getNodeName(),"0","no","no",attr.getNodeName(),attr.getNodeName(),"0","100","-","O","A"};
                                             //   newresult.add(k);
                                             }
