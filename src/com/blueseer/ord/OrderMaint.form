@@ -1725,10 +1725,13 @@
             <Component class="javax.swing.JComboBox" name="ddsactype">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="3">
+                  <StringArray count="6">
                     <StringItem index="0" value="discount"/>
                     <StringItem index="1" value="charge"/>
                     <StringItem index="2" value="passive"/>
+                    <StringItem index="3" value="shipping ADD"/>
+                    <StringItem index="4" value="shipping PPD"/>
+                    <StringItem index="5" value="shipping BIL"/>
                   </StringArray>
                 </Property>
               </Properties>

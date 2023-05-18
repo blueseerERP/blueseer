@@ -1489,10 +1489,10 @@ public class ordData {
         String[] m = new String[2];
         String sqlSelect = "SELECT * FROM  order_ctrl"; // there should always be only 1 or 0 records 
         String sqlInsert = "insert into order_ctrl (orc_autosource, orc_autoinvoice, orc_autoallocate, orc_custitem, " +
-                            " orc_srvm_type, orc_srvm_item_default, orc_exceedqohu) "
-                        + " values (?,?,?,?,?,?,?); "; 
+                            " orc_srvm_type, orc_srvm_item_default, orc_exceedqohu, orc_varchar) "
+                        + " values (?,?,?,?,?,?,?,?); "; 
         String sqlUpdate = "update order_ctrl set orc_autosource = ?, orc_autoinvoice = ?, orc_autoallocate = ?, orc_custitem = ?, " +
-                            " orc_srvm_type = ?, orc_srvm_item_default = ?, orc_exceedqohu = ? ";
+                            " orc_srvm_type = ?, orc_srvm_item_default = ?, orc_exceedqohu = ?, orc_varchar = ? ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
           try (ResultSet res = ps.executeQuery();
@@ -1506,6 +1506,7 @@ public class ordData {
             psi.setString(5, x.orc_srvm_type);
             psi.setString(6, x.orc_srvm_item_default);
             psi.setString(7, x.orc_exceedqohu);
+            psi.setString(8, x.orc_varchar);
              rows = psi.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
             } else {
@@ -1516,6 +1517,7 @@ public class ordData {
             psu.setString(5, x.orc_srvm_type);
             psu.setString(6, x.orc_srvm_item_default);
             psu.setString(7, x.orc_exceedqohu);
+            psu.setString(8, x.orc_varchar);
             rows = psu.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};    
             }
@@ -1550,7 +1552,8 @@ public class ordData {
                                 res.getString("orc_custitem"),
                                 res.getString("orc_srvm_type"),
                                 res.getString("orc_srvm_item_default"),
-                                res.getString("orc_exceedqohu")
+                                res.getString("orc_exceedqohu"),
+                                res.getString("orc_varchar")
                         );
                     }
                 }
@@ -2300,9 +2303,9 @@ public class ordData {
 
     public record order_ctrl(String[] m, String orc_autosource, String orc_autoinvoice, 
         String orc_autoallocate, String orc_custitem, String orc_srvm_type, 
-        String orc_srvm_item_default, String orc_exceedqohu)  {
+        String orc_srvm_item_default, String orc_exceedqohu, String orc_varchar)  {
         public order_ctrl(String[] m) {
-            this (m, "", "", "", "", "", "", "");
+            this (m, "", "", "", "", "", "", "", "");
         }
     }
 

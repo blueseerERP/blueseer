@@ -1894,7 +1894,9 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
             if (sactable.getValueAt(j,0).toString().equals("passive")) { // skip passive (info only)
             continue;
             } 
-            if (! sactable.getValueAt(j,0).toString().equals("tax") && ! sactable.getValueAt(j,2).toString().equals("percent") ) {
+            if (! sactable.getValueAt(j,0).toString().equals("tax") &&
+                    ! sactable.getValueAt(j,0).toString().equals("shipping PPD") &&
+                    ! sactable.getValueAt(j,0).toString().equals("shipping BIL") && ! sactable.getValueAt(j,2).toString().equals("percent") ) {
             dol += bsParseDouble(sactable.getValueAt(j,3).toString());  // add charges to total net charge
             }
             if (sactable.getValueAt(j,0).toString().equals("tax") && sactable.getValueAt(j,2).toString().equals("percent")) {
@@ -3215,7 +3217,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
-        ddsactype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "discount", "charge", "passive" }));
+        ddsactype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "discount", "charge", "passive", "shipping ADD", "shipping PPD", "shipping BIL" }));
 
         ddsacamttype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "amount", "percent" }));
         ddsacamttype.addActionListener(new java.awt.event.ActionListener() {

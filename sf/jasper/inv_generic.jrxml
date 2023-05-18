@@ -26,7 +26,7 @@
 	<queryString>
 		<![CDATA[select shd_id, sh_curr, it_desc, cm_terms,
 (select case when sum(shs_amt) is null then 0 else sum(shs_amt) end 
-	from shs_det where shs_nbr = $P{myid} and shs_amttype = 'amount' and shs_type <> 'tax'
+	from shs_det where shs_nbr = $P{myid} and shs_amttype = 'amount' and shs_type <> 'tax'  and shs_type <> 'passive' and shs_type <> 'shipping BIL' and shs_type <> 'shipping PPD'
 ) as charges, 
 (select case when sum(shs_amt) is null then 0 else sum(shs_amt)  
 	end from shs_det where shs_nbr = $P{myid} and shs_amttype = 'amount' and shs_type = 'tax'

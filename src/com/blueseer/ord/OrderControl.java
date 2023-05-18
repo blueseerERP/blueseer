@@ -234,7 +234,8 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
             String.valueOf(BlueSeerUtils.boolToInt(cbcustitem.isSelected())),
             String.valueOf(BlueSeerUtils.boolToInt(cbsrvmtype.isSelected())),
             String.valueOf(BlueSeerUtils.boolToInt(cbsrvmitemdefault.isSelected())),
-            String.valueOf(BlueSeerUtils.boolToInt(cbexceedQOHU.isSelected()))
+            String.valueOf(BlueSeerUtils.boolToInt(cbexceedQOHU.isSelected())),
+            String.valueOf(BlueSeerUtils.boolToInt(cbvouchershipping.isSelected()))
         );
         return x;
     }
@@ -247,6 +248,7 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
     cbsrvmitemdefault.setSelected(BlueSeerUtils.ConvertStringToBool(x.orc_srvm_item_default()));
     cballocate.setSelected(BlueSeerUtils.ConvertStringToBool(x.orc_autoallocate()));  
     cbexceedQOHU.setSelected(BlueSeerUtils.ConvertStringToBool(x.orc_exceedqohu()));  
+    cbvouchershipping.setSelected(BlueSeerUtils.ConvertStringToBool(x.orc_varchar())); 
     }
     
     
@@ -272,6 +274,7 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
         cballocate = new javax.swing.JCheckBox();
         cbexceedQOHU = new javax.swing.JCheckBox();
         btjson = new javax.swing.JButton();
+        cbvouchershipping = new javax.swing.JCheckBox();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -338,6 +341,8 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
             }
         });
 
+        cbvouchershipping.setText("Voucher Shipping?");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -349,7 +354,8 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
                     .addComponent(cbexceedQOHU)
                     .addComponent(cbautosource)
                     .addComponent(cbautoinvoice)
-                    .addComponent(cbcustitem))
+                    .addComponent(cbcustitem)
+                    .addComponent(cbvouchershipping))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -366,7 +372,7 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btupdate)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
                         .addComponent(btjson)
                         .addContainerGap())
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -380,7 +386,9 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
                         .addComponent(cballocate)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbexceedQOHU)
-                        .addGap(0, 48, Short.MAX_VALUE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbvouchershipping)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
 
         add(jPanel1);
@@ -425,6 +433,7 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
     private javax.swing.JCheckBox cbexceedQOHU;
     private javax.swing.JCheckBox cbsrvmitemdefault;
     private javax.swing.JCheckBox cbsrvmtype;
+    private javax.swing.JCheckBox cbvouchershipping;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     // End of variables declaration//GEN-END:variables

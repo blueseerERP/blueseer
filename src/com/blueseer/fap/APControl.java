@@ -239,7 +239,8 @@ public class APControl extends javax.swing.JPanel implements IBlueSeerc {
            tbbank.getText(),
             tbdefaultpurchacct.getText(),
             String.valueOf(BlueSeerUtils.boolToInt(cbautovoucher.isSelected())),
-            tbapacct.getText()
+            tbapacct.getText(),
+            tbshippingacct.getText()
         );
         return x;
     }
@@ -249,6 +250,7 @@ public class APControl extends javax.swing.JPanel implements IBlueSeerc {
         tbdefaultpurchacct.setText(x.apc_assetacct());
         cbautovoucher.setSelected(BlueSeerUtils.ConvertStringToBool(x.apc_autovoucher()));
         tbapacct.setText(x.apc_apacct());
+        tbshippingacct.setText(x.apc_varchar());
     }
     
   
@@ -271,6 +273,8 @@ public class APControl extends javax.swing.JPanel implements IBlueSeerc {
         jLabel2 = new javax.swing.JLabel();
         tbapacct = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
+        tbshippingacct = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -297,6 +301,8 @@ public class APControl extends javax.swing.JPanel implements IBlueSeerc {
         jLabel3.setText("AP Default Acct");
         jLabel3.setName("lbldefaultacct"); // NOI18N
 
+        jLabel4.setText("AP Shipping Acct");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -306,9 +312,11 @@ public class APControl extends javax.swing.JPanel implements IBlueSeerc {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel2)
                     .addComponent(jLabel1)
-                    .addComponent(jLabel3))
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(tbshippingacct)
                     .addComponent(tbbank, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btupdate)
                     .addComponent(cbautovoucher)
@@ -334,6 +342,10 @@ public class APControl extends javax.swing.JPanel implements IBlueSeerc {
                     .addComponent(tbapacct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbshippingacct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btupdate)
                 .addContainerGap(59, Short.MAX_VALUE))
         );
@@ -355,9 +367,11 @@ public class APControl extends javax.swing.JPanel implements IBlueSeerc {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField tbapacct;
     private javax.swing.JTextField tbbank;
     private javax.swing.JTextField tbdefaultpurchacct;
+    private javax.swing.JTextField tbshippingacct;
     // End of variables declaration//GEN-END:variables
 }

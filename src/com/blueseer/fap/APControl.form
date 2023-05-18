@@ -40,9 +40,11 @@
                       <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="tbshippingacct" max="32767" attributes="0"/>
                       <Component id="tbbank" min="-2" pref="64" max="-2" attributes="0"/>
                       <Component id="btupdate" min="-2" max="-2" attributes="0"/>
                       <Component id="cbautovoucher" min="-2" max="-2" attributes="0"/>
@@ -72,6 +74,11 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="tbapacct" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="tbshippingacct" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="btupdate" min="-2" max="-2" attributes="0"/>
@@ -118,6 +125,13 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="AP Default Acct"/>
             <Property name="name" type="java.lang.String" value="lbldefaultacct" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="tbshippingacct">
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel4">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="AP Shipping Acct"/>
           </Properties>
         </Component>
       </SubComponents>

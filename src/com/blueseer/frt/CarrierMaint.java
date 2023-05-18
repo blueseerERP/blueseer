@@ -54,6 +54,8 @@ import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeerT;
 import com.blueseer.utl.OVData;
+import com.blueseer.vdr.venData;
+import static com.blueseer.vdr.venData.addVendMstr;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -368,6 +370,9 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public String[] addRecord(String[] x) {
      String[] m = addCarrierMstr(createRecord());
+        // add to vendor master as well
+        addVendMstr(createVendorRecord());
+     
          return m;
      }
      
@@ -417,7 +422,7 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
         return x.m();
     }
     
-     public car_mstr createRecord() { 
+    public car_mstr createRecord() { 
         car_mstr x = new car_mstr(null, 
                 tbkey.getText(),
                 tbdesc.getText(),
@@ -446,7 +451,45 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
                 );
         return x;
     }
-     
+    
+    public venData.vd_mstr createVendorRecord() { 
+        venData.vd_mstr x = new venData.vd_mstr(null, 
+                tbkey.getText(),
+                "", // site
+                tbname.getText(),
+                tbline1.getText(),
+                "",
+                "",
+                tbcity.getText(),
+                ddstate.getSelectedItem().toString(),
+                tbzip.getText(),
+                ddcountry.getSelectedItem().toString(),
+                BlueSeerUtils.convertDateFormat("yyyyMMdd", BlueSeerUtils.now().substring(0,8)),
+                BlueSeerUtils.convertDateFormat("yyyyMMdd", BlueSeerUtils.now().substring(0,8)),
+                bsmf.MainFrame.userid,
+                "carrier", // group
+                "", // market
+                "", // buyer
+                "N00", // terms
+                tbkey.getText(), // carrier
+                "", // tbpricecode.getText(),
+                "", // tbdisccode.getText(),
+                "", // ddtaxcode.getSelectedItem().toString(),
+                OVData.getDefaultAPAcct(),
+                OVData.getDefaultCC(),
+                "", //remarks 
+                "", // freighttype
+                OVData.getDefaultAPBank(),
+                OVData.getDefaultCurrency(),
+                "", // tbmisc.getText(), 
+                tbphone.getText(),
+                tbemail.getText(),
+                "0" // String.valueOf(BlueSeerUtils.boolToInt(cb850.isSelected()))
+                );
+        return x;
+    }
+   
+    
     public void lookUpFrame() {
         
         luinput.removeActionListener(lual);

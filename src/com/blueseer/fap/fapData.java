@@ -282,6 +282,85 @@ public class fapData {
     return m;
     }
     
+    public static String[] _VouchAndPayTransaction(int batchid, String ctype, Connection bscon, ArrayList<vod_mstr> vod, ap_mstr ap, boolean Void) throws SQLException {
+        String[] m = new String[2];
+       
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        java.util.Date now = new java.util.Date();
+       
+             _addAPMstr(ap, bscon, ps, res);  
+            for (vod_mstr z : vod) {
+                _addVODMstr(z, bscon, ps, res);
+            }
+                // the apd_mstr record holds vouchers to be paid
+                // in the case of a single expense transaction, the apd_mstr is equivalent to ap_mstr type=V (vouchered)
+                // this apd_mstr will be scanned and a new ap_mstr created with type=E (payment)
+                apd_mstr z = new apd_mstr(null, 
+                String.valueOf(batchid),
+                ap.ap_vend,
+                ap.ap_nbr,
+                ap.ap_nbr,
+                ap.ap_check,  // check nbr ...blank in this case
+                ap.ap_amt
+                );
+                _addAPDMstr(z, bscon, ps, res);  
+          
+          
+                // now for the expense side of the ap_mstr to close the ap voucher side
+                ap_mstr x = new ap_mstr(null, 
+                "", //ap_id
+                ap.ap_vend, // ap_vend, 
+                ap.ap_nbr, // ap_nbr
+                ap.ap_amt, // ap_amt
+                ap.ap_base_amt, 
+                ap.ap_effdate,
+                ap.ap_entdate,
+                "", // ap_duedate        
+                "E", // ap_type
+                ap.ap_rmks, //ap_rmks
+                ap.ap_ref, //ap_ref
+                ap.ap_terms, //ap_terms
+                ap.ap_acct, //ap_acct
+                ap.ap_cc, //ap_cc
+                "0", //ap_applied
+                "c", //ap_status
+                ap.ap_bank, //ap_bank
+                ap.ap_curr, //ap_curr
+                ap.ap_base_curr, //ap_base_curr
+                String.valueOf(batchid), //ap_check 
+                String.valueOf(batchid), //ap_batch
+                ap.ap_site, //ap_site
+                ap.ap_subtype
+                ); 
+                _addAPMstr(x, bscon, ps, res); // add AP Type E payment
+            
+            if (ctype.equals("AP-Expense")) {
+                fglData._glEntryFromVoucherExpense(ap.ap_nbr, parseDate(ap.ap_effdate), bscon, Void); // aptype=V
+                fglData._glEntryFromCheckRun(batchid, parseDate(ap.ap_effdate), ctype, bscon); //aptype=E
+            }
+            if (ctype.equals("AP-Cash-Purch")) {
+                fglData._glEntryFromCashTranBuy(ap.ap_nbr, parseDate(ap.ap_effdate), ctype, bscon);
+            }
+            if (ctype.equals("AP-Cash")) {
+                fglData._glEntryFromVoucherExpense(ap.ap_nbr, parseDate(ap.ap_effdate),  bscon, Void);
+                fglData._glEntryFromCheckRun(batchid, parseDate(ap.ap_effdate), ctype, bscon); //aptype=E
+            }
+            if (ctype.equals("AP-Vendor")) {
+                fglData._glEntryFromCheckRun(batchid, parseDate(ap.ap_effdate), ctype, bscon);
+            }
+            
+            
+            // ok...now lets close out the vouchers we just paid
+            _APCheckRunUpdateVouchers(batchid, bscon);
+            
+         
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+       
+    return m;
+    }
+    
+    
     public static String[] VoucherTransaction(int batchid, String ctype, ArrayList<vod_mstr> vod, ap_mstr ap, boolean Void) {
         String[] m = new String[2];
         Connection bscon = null;
@@ -343,6 +422,26 @@ public class fapData {
                 }
             }
         }
+    return m;
+    }
+    
+    public static String[] _VoucherTransaction(int batchid, String ctype, Connection bscon, ArrayList<vod_mstr> vod, ap_mstr ap, boolean Void) throws SQLException {
+        String[] m = new String[2];
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        java.util.Date now = new java.util.Date();
+            if (! Void) {
+                 _addAPMstr(ap, bscon, ps, res);  
+                for (vod_mstr z : vod) {
+                    _addVODMstr(z, bscon, ps, res);
+                }
+            } 
+            if (ctype.equals("Receipt")) {
+            fglData._glEntryFromVoucher(ap.ap_nbr, parseDate(ap.ap_effdate), bscon, Void); 
+            } else {
+            fglData._glEntryFromVoucherExpense(ap.ap_nbr, parseDate(ap.ap_effdate), bscon, Void);    
+            }
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
     return m;
     }
     
@@ -816,9 +915,9 @@ public class fapData {
         int rows = 0;
         String[] m = new String[2];
         String sqlSelect = "SELECT * FROM  ap_ctrl"; // there should always be only 1 or 0 records 
-        String sqlInsert = "insert into ap_ctrl (apc_bank, apc_assetacct, apc_autovoucher, apc_apacct ) "
-                        + " values (?,?,?,?); "; 
-        String sqlUpdate = "update ap_ctrl set apc_bank = ?, apc_assetacct = ?, apc_autovoucher = ?, apc_apacct = ?; ";
+        String sqlInsert = "insert into ap_ctrl (apc_bank, apc_assetacct, apc_autovoucher, apc_apacct, apc_varchar ) "
+                        + " values (?,?,?,?,?); "; 
+        String sqlUpdate = "update ap_ctrl set apc_bank = ?, apc_assetacct = ?, apc_autovoucher = ?,  apc_apacct = ?, apc_varchar = ?; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
           try (ResultSet res = ps.executeQuery();
@@ -829,6 +928,7 @@ public class fapData {
             psi.setString(2, x.apc_assetacct);
             psi.setString(3, x.apc_autovoucher);
             psi.setString(4, x.apc_apacct);
+            psi.setString(5, x.apc_varchar);
              rows = psi.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
             } else {
@@ -836,6 +936,7 @@ public class fapData {
             psu.setString(2, x.apc_assetacct);
             psu.setString(3, x.apc_autovoucher);
             psu.setString(4, x.apc_apacct);
+            psu.setString(5, x.apc_varchar);
             rows = psu.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};    
             }
@@ -867,7 +968,8 @@ public class fapData {
                                 res.getString("apc_bank"),
                                 res.getString("apc_assetacct"),
                                 res.getString("apc_autovoucher"),
-                                res.getString("apc_apacct")
+                                res.getString("apc_apacct"),
+                                res.getString("apc_varchar")
                         );
                     }
                 }
@@ -910,9 +1012,9 @@ public class fapData {
     }
     
     public record ap_ctrl (String[] m, String apc_bank, String apc_assetacct, 
-        String apc_autovoucher, String apc_apacct) {
+        String apc_autovoucher, String apc_apacct, String apc_varchar) {
         public ap_ctrl(String[] m) {
-            this(m,"", "", "", "");
+            this(m,"", "", "", "", "");
         }
     } 
     

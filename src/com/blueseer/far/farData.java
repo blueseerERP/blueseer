@@ -387,12 +387,12 @@ public class farData {
         String sqlInsert = "insert into ar_ctrl (arc_bank, arc_default_acct, arc_default_cc,"
                 + "arc_sales_acct, arc_sales_cc, arc_asset_acct, arc_asset_cc,"
                 + "arc_fedtax_acct, arc_fedtax_cc, arc_statetax_acct, arc_statetax_cc,"
-                + "arc_localtax_acct, arc_localtax_cc, arc_othertax_acct, arc_othertax_cc ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+                + "arc_localtax_acct, arc_localtax_cc, arc_othertax_acct, arc_othertax_cc, arc_varchar ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
         String sqlUpdate = "update ar_ctrl set arc_bank = ?, arc_default_acct = ?, arc_default_cc = ?,"
                 + "arc_sales_acct = ?, arc_sales_cc = ?, arc_asset_acct = ?, arc_asset_cc = ?,"
                 + "arc_fedtax_acct = ?, arc_fedtax_cc = ?, arc_statetax_acct = ?, arc_statetax_cc = ?,"
-                + "arc_localtax_acct = ?, arc_localtax_cc = ?, arc_othertax_acct = ?, arc_othertax_cc = ? ; ";
+                + "arc_localtax_acct = ?, arc_localtax_cc = ?, arc_othertax_acct = ?, arc_othertax_cc = ?, arc_varchar = ? ; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
           try (ResultSet res = ps.executeQuery();
@@ -414,6 +414,7 @@ public class farData {
             psi.setString(13, x.arc_localtax_cc);
             psi.setString(14, x.arc_othertax_acct);
             psi.setString(15, x.arc_othertax_cc);
+            psi.setString(16, x.arc_varchar);
              rows = psi.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
             } else {
@@ -432,6 +433,7 @@ public class farData {
             psu.setString(13, x.arc_localtax_cc);
             psu.setString(14, x.arc_othertax_acct);
             psu.setString(15, x.arc_othertax_cc);
+            psu.setString(16, x.arc_varchar);
             rows = psu.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};    
             }
@@ -474,7 +476,8 @@ public class farData {
                                 res.getString("arc_localtax_acct"),
                                 res.getString("arc_localtax_cc"),
                                 res.getString("arc_othertax_acct"),
-                                res.getString("arc_othertax_cc")
+                                res.getString("arc_othertax_cc"),
+                                res.getString("arc_varchar")
                         );
                     }
                 }
@@ -543,10 +546,11 @@ public class farData {
     public record ar_ctrl(String[] m, String arc_bank, String arc_default_acct, String arc_default_cc, 
         String arc_sales_acct, String arc_sales_cc, String arc_asset_acct, String arc_asset_cc, 
         String arc_fedtax_acct, String arc_fedtax_cc, String arc_statetax_acct, String arc_statetax_cc, 
-        String arc_localtax_acct, String arc_localtax_cc, String arc_othertax_acct, String arc_othertax_cc) {
+        String arc_localtax_acct, String arc_localtax_cc, String arc_othertax_acct, String arc_othertax_cc,
+        String arc_varchar) {
         public ar_ctrl(String[] m) {
             this(m, "", "", "", "", "", "", "", "", "", "",
-                    "", "", "", "", "" );
+                    "", "", "", "", "", "" );
         }
     }
 }

@@ -57,6 +57,7 @@
                               <Component id="jLabel13" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel14" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel15" alignment="1" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel16" alignment="1" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
@@ -64,21 +65,20 @@
                               <Component id="tblocaltax" alignment="0" pref="256" max="32767" attributes="0"/>
                               <Component id="tbothertax" pref="256" max="32767" attributes="0"/>
                               <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                          <Component id="tbothercc" min="-2" pref="64" max="-2" attributes="0"/>
-                                          <Component id="tbstatecc" min="-2" pref="64" max="-2" attributes="0"/>
-                                          <Component id="tbfederalcc" min="-2" pref="64" max="-2" attributes="0"/>
-                                          <Component id="tbaracct" alignment="0" pref="242" max="32767" attributes="0"/>
-                                          <Component id="tbsalesacct" alignment="0" pref="242" max="32767" attributes="0"/>
-                                          <Component id="tbsalescc" alignment="0" min="-2" pref="64" max="-2" attributes="0"/>
-                                          <Component id="tbarcc" alignment="0" min="-2" pref="64" max="-2" attributes="0"/>
-                                          <Component id="tbbank" alignment="0" min="-2" pref="64" max="-2" attributes="0"/>
-                                          <Component id="tbfederaltax" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="tblocalcc" alignment="0" min="-2" pref="64" max="-2" attributes="0"/>
-                                          <Component id="tbasset" alignment="0" max="32767" attributes="0"/>
-                                      </Group>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="tbothercc" min="-2" pref="64" max="-2" attributes="0"/>
+                                      <Component id="tbstatecc" min="-2" pref="64" max="-2" attributes="0"/>
+                                      <Component id="tbfederalcc" min="-2" pref="64" max="-2" attributes="0"/>
+                                      <Component id="tbaracct" alignment="0" pref="242" max="32767" attributes="0"/>
+                                      <Component id="tbsalesacct" alignment="0" pref="242" max="32767" attributes="0"/>
+                                      <Component id="tbsalescc" alignment="0" min="-2" pref="64" max="-2" attributes="0"/>
+                                      <Component id="tbarcc" alignment="0" min="-2" pref="64" max="-2" attributes="0"/>
+                                      <Component id="tbbank" alignment="0" min="-2" pref="64" max="-2" attributes="0"/>
+                                      <Component id="tbfederaltax" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="tblocalcc" alignment="0" min="-2" pref="64" max="-2" attributes="0"/>
+                                      <Component id="tbasset" alignment="0" max="32767" attributes="0"/>
                                       <Component id="tbassetcc" min="-2" pref="63" max="-2" attributes="0"/>
+                                      <Component id="tbshippingacct" alignment="0" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                               </Group>
@@ -102,6 +102,11 @@
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="tbbank" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tbshippingacct" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel16" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -308,6 +313,13 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Asset CC"/>
             <Property name="name" type="java.lang.String" value="lblassetcc" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="tbshippingacct">
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel16">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="AR Shipping Acct"/>
           </Properties>
         </Component>
       </SubComponents>

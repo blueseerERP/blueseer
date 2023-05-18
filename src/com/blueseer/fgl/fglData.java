@@ -2482,7 +2482,11 @@ public class fglData {
                     String taxcode = "";
                     String curr = "";
                     String basecurr = OVData.getDefaultCurrency();
-                    
+                    String defaultsalesacct = OVData.getDefaultSalesAcct(); // sales acct
+                    String defaultsalescc = OVData.getDefaultSalesCC(); // sales cc
+                    String defaultshippingacct = OVData.getDefaultShippingAcct(); // shipping acct 
+                    String apbankacct = OVData.getDefaultBankAcct(OVData.getDefaultAPBank());
+                    String apacct = OVData.getDefaultAPAcct();
                     
                     int i = 0;
                    
@@ -2496,6 +2500,9 @@ public class fglData {
                         shiptype = res.getString("sh_type");
                         curr = res.getString("sh_curr");
                     }
+                    
+                    String custsalesacct = cusData.getCustSalesAcct(cust);  // cust AR acct 
+                    String custsalescc = cusData.getCustSalesCC(cust);  // cust AR cc 
                     
                       res = st.executeQuery("select * from ship_det where shd_id = " + "'" + shipper + "'" +";");
                     while (res.next()) {
@@ -2626,12 +2633,12 @@ public class fglData {
                         acct_cr.add(OVData.getDefaultAssetAcctAR()); 
                         cc_cr.add(OVData.getDefaultAssetCC());
                         } else {
-                        acct_cr.add(OVData.getDefaultSalesAcct());  
-                        cc_cr.add(OVData.getDefaultSalesCC());
+                        acct_cr.add(defaultsalesacct);  
+                        cc_cr.add(defaultsalescc);
                         }
-                        acct_dr.add(cusData.getCustSalesAcct(cust));
+                        acct_dr.add(custsalesacct);
                         
-                        cc_dr.add(cusData.getCustSalesCC(cust));
+                        cc_dr.add(custsalescc);
                         cost.add((res.getDouble("shd_netprice") * qty));
                         if (basecurr.toUpperCase().equals(curr.toUpperCase())) {
                         basecost.add((res.getDouble("shd_netprice") * qty));   
@@ -2661,37 +2668,49 @@ public class fglData {
                               taxvalue = totamt * ( bsParseDoubleUS(elements[1]) / 100 );
                               basetaxvalue = basetotamt * ( bsParseDoubleUS(elements[1]) / 100 );
                            //   bsmf.MainFrame.show(taxvalue + "/" + basetaxvalue + "/" + totamt + "/" + basetotamt );
-                          glEntryXP(bscon, OVData.getDefaultSalesAcct(), OVData.getDefaultSalesCC(), OVData.getDefaultTaxAcctByType(elements[2]), OVData.getDefaultTaxCCByType(elements[2]), BlueSeerUtils.setDateFormat(effdate), taxvalue, basetaxvalue, curr, basecurr, thisref, thissite, thistype, "Tax: " + elements[2]);
+                          glEntryXP(bscon, defaultsalesacct, defaultsalescc, OVData.getDefaultTaxAcctByType(elements[2]), OVData.getDefaultTaxCCByType(elements[2]), BlueSeerUtils.setDateFormat(effdate), taxvalue, basetaxvalue, curr, basecurr, thisref, thissite, thistype, "Tax: " + elements[2]);
                           }
                           // now add matl tax at item level
                     }
                     // now add matl tax at item level
                     if (matltax > 0)
-                    glEntryXP(bscon, OVData.getDefaultSalesAcct(), OVData.getDefaultSalesCC(), OVData.getDefaultTaxAcctByType("MATERIAL"), OVData.getDefaultTaxCCByType("MATERIAL"), BlueSeerUtils.setDateFormat(effdate), matltax, basematltax, curr, basecurr, thisref, thissite, thistype, "Tax: Material ");
+                    glEntryXP(bscon, defaultsalesacct, defaultsalescc, OVData.getDefaultTaxAcctByType("MATERIAL"), OVData.getDefaultTaxCCByType("MATERIAL"), BlueSeerUtils.setDateFormat(effdate), matltax, basematltax, curr, basecurr, thisref, thissite, thistype, "Tax: Material ");
                           
                     
                    // Trailer / Summary Charges
                     // we will credit sales and debit AR
-                    charges = shpData.getShipperTrailerCharges(shipper);
-                    if (charges > 0) {
-                       acct_cr.add(OVData.getDefaultSalesAcct());
-                        acct_dr.add(cusData.getCustSalesAcct(cust));
-                        cc_cr.add(OVData.getDefaultSalesCC());
-                        cc_dr.add(cusData.getCustSalesCC(cust));
-                        cost.add(charges);
+                    ArrayList<String[]> sac = shpData.getShipperSAC(shipper);
+                     
+                   // charges = shpData.getShipperTrailerCharges(shipper);
+                    for (String[] s : sac) {
+                     if (Double.valueOf(s[4]) > 0) {
+                        if (s[2].equals("charge") || s[2].equals("shipping ADD")) {
+                        acct_cr.add(defaultsalesacct);
+                        acct_dr.add(custsalesacct);
+                        cc_cr.add(defaultsalescc);
+                        cc_dr.add(custsalescc);
+                        cost.add(Double.valueOf(s[4]));
                         if (basecurr.toUpperCase().equals(curr.toUpperCase())) {
-                        basecost.add(charges);   
+                        basecost.add(Double.valueOf(s[4]));   
                         } else {
-                        basecost.add(OVData.getExchangeBaseValue(basecurr, curr, charges));  
+                        basecost.add(OVData.getExchangeBaseValue(basecurr, curr, Double.valueOf(s[4])));  
                         }
                         site.add(thissite);
                         ref.add(thisref);
                         type.add(thistype);
                         desc.add("Summary Charges for Shipper");
-                    }
-                   for (int j = 0; j < acct_cr.size(); j++) {
-                      glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), BlueSeerUtils.setDateFormat(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString());  
-                    }
+                    
+                          
+                        } // if 'charge' or 'shipping ADD' type
+                        
+                    } // if charge > 0
+                   } // for each sac charge
+                    
+                for (int j = 0; j < acct_cr.size(); j++) {
+                    glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), BlueSeerUtils.setDateFormat(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString());  
+                } 
+                    
+                    
             res.close();
             nres.close();
             st.close();

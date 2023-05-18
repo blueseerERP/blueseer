@@ -1497,6 +1497,9 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                     for (String s : z.getValue()) {
                      fieldname = "";
                      desc = "";
+                     if (s == null) {
+                         continue;
+                     }
                  //    System.out.println("HERE: " + msf.get(key).toString() + "/" + msf.get(key).get(i).toString() + "/" + s);
                      if (msf.get(key) != null && msf.get(key).get(i) != null) {
                          String[] j = msf.get(key).get(i);

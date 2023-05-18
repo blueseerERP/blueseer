@@ -8090,7 +8090,43 @@ return myreturn;
         return myitem;
         
     }
-         
+     
+    public static String getDefaultShippingAcct() {
+           String myitem = null;
+         try{
+            
+           Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                res = st.executeQuery("select arc_varchar from ar_ctrl;" );
+               while (res.next()) {
+                myitem = res.getString("arc_varchar");                    
+                }
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myitem;
+        
+    }
+    
+    
     public static String getDefaultAssetAcctAR() {
            String myitem = null;
          try{
@@ -10590,6 +10626,44 @@ return mycount;
 
 }   
 
+    public static boolean isVoucherShipping() {
+
+    boolean isvoucher = false;
+    try{
+
+        Connection con = null;
+                if (ds != null) {
+                  con = ds.getConnection();
+                } else {
+                  con = DriverManager.getConnection(url + db, user, pass);  
+                }
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+
+
+            res = st.executeQuery("select orc_varchar from order_ctrl;");
+           while (res.next()) {
+                isvoucher = res.getBoolean("orc_varchar");
+            }
+
+       }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+        } finally {
+                   if (res != null) res.close();
+                   if (st != null) st.close();
+                   con.close();
+            }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return isvoucher;
+
+}   
+
+    
     public static boolean isAutoSource() {
 
 boolean autosource = false;
@@ -14426,7 +14500,7 @@ return mystring;
                     taxamt = matltax;
                     // lets retrieve any summary charges from orders associated with this shipment.
                     res = st.executeQuery("select * from shs_det where shs_nbr = " + "'" + shipper + "'" + 
-                            " and shs_type = 'charge' " +               
+                            " and (shs_type = 'charge' or shs_type = 'shipping ADD') " +               
                             ";");
                     while (res.next()) {
                     amt += res.getDouble("shs_amt");

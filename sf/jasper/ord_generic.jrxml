@@ -27,7 +27,7 @@
 	<queryString>
 		<![CDATA[select so_nbr, sod_nbr, so_curr, sod_desc, 
 (select case when sum(sos_amt) is null then 0 else sum(sos_amt) end from sos_det 
-	where sos_nbr = $P{myid} and sos_amttype = 'amount' and sos_type <> 'tax' and sos_type <> 'passive'
+	where sos_nbr = $P{myid} and sos_amttype = 'amount' and sos_type <> 'tax' and sos_type <> 'passive' and sos_type <> 'shipping BIL' and sos_type <> 'shipping PPD'
 ) as charges, 
 so_cust, so_create_date, so_due_date,  so_rmks, sod_po, sod_item, sod_custitem, sod_ord_qty, 
 sod_netprice, sod_listprice, sod_taxamt, cm_code, cm_name, cm_line1, cm_line2,  
