@@ -103,6 +103,7 @@ public class VoucherBrowse extends javax.swing.JPanel {
                             getGlobalColumnTag("vendor"), 
                             getGlobalColumnTag("type"), 
                             getGlobalColumnTag("reference"), 
+                            getGlobalColumnTag("remarks"),
                             getGlobalColumnTag("status"), 
                             getGlobalColumnTag("amount")})
             {
@@ -627,7 +628,7 @@ try {
                         " rvd_po <= " + "'" + poto + "'" +
                         " order by rvd_po ;");
            */
-           res = st.executeQuery(" select ap_nbr, ap_status, ap_ref, ap_vend, ap_amt, ap_subtype " +
+           res = st.executeQuery(" select ap_nbr, ap_status, ap_ref, ap_rmks, ap_vend, ap_amt, ap_subtype " +
                         " FROM  ap_mstr where " + 
                         " ap_vend >= " + "'" + vendfrom + "'" + " AND " +
                         " ap_vend <= " + "'" + vendto + "'" + " AND " +
@@ -649,6 +650,7 @@ try {
                                 res.getString("ap_vend"),
                                 res.getString("ap_subtype"),
                                 res.getString("ap_ref"),
+                                res.getString("ap_rmks"),
                                 res.getString("ap_status"),
                                 bsParseDouble(currformatDouble(res.getDouble("ap_amt")))
                             });

@@ -1,1 +1,1 @@
-GRAINGER:1000:Grainger Inc:111 someroad:::BooVille:CA:94949:USA::::N30:FEDEX::::30000000:9999:BLAH::BK:USD::444-444-444:asdf@asdf.com:0
+GRAINGER:1000:Grainger Inc:111 someroad:::BooVille:CA:94949:USA::::N30:fedex::::30000000:9999:BLAH::BK:USD::444-444-444:asdf@asdf.com:0

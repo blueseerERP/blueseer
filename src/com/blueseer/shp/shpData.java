@@ -55,6 +55,7 @@ import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormat;
 import com.blueseer.utl.OVData;
 import static com.blueseer.utl.OVData.AREntry;
+import static com.blueseer.utl.OVData.getNextNbr;
 import static com.blueseer.vdr.venData.getVendInfo;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -1166,6 +1167,7 @@ public class shpData {
         String defaultshippingacct = OVData.getDefaultShippingAcct(); // shipping acct 
         
         int batchid = Integer.valueOf(shipper);
+        int voucher = getNextNbr("voucher", bscon);
         
         ArrayList<String[]> sac = shpData.getShipperSAC(shipper);
         // charges = shpData.getShipperTrailerCharges(shipper);
@@ -1178,15 +1180,15 @@ public class shpData {
                         fapData.ap_mstr x = new fapData.ap_mstr(null, 
                         "", //ap_id
                         si[8], // ap_vend, // shipvia carrier 
-                        shipper, // ap_nbr
+                        String.valueOf(voucher), // ap_nbr
                         currformatDouble(Double.valueOf(s[4])).replace(defaultDecimalSeparator, '.'), // ap_amt
                         currformatDouble(Double.valueOf(s[4])).replace(defaultDecimalSeparator, '.'), // ap_base_amt
                         setDateFormat(effdate), // ap_effdate, ship_date
                         setDateFormat(effdate), // ap_entdate, ship_date
                         setDateFormat(OVData.getDueDateFromTerms(parseDate(si[5]), v[5])), // ap_duedate         
                         "V", // ap_type
-                        s[2], //ap_rmks
-                        "", //ap_ref
+                        s[2] + "/" + shipper, //ap_rmks
+                        shipper, //ap_ref
                         v[5], //ap_terms
                         v[1], //ap_acct
                         v[2], //ap_cc
@@ -1196,13 +1198,13 @@ public class shpData {
                         si[13], //ap_curr
                         si[13], //ap_base_curr
                         shipper, //ap_check // in this case voucher number is reference field
-                        "", //ap_batch
+                        String.valueOf(voucher), //ap_batch
                         si[12], //ap_site
                         "Expense"); 
                         
                         // create vod_mstr JRT
                         fapData.vod_mstr y = new fapData.vod_mstr(null, 
-                        shipper,
+                        String.valueOf(voucher),
                         shipper, // receiver
                         "1", // line
                         s[2], // item
@@ -1218,9 +1220,9 @@ public class shpData {
                         vd.add(y);
                         
                         if (s[2].equals("shipping PPD")) {
-                        String[] m = _VouchAndPayTransaction(batchid, "AP-Expense", bscon, vd, x, false);    
+                        String[] m = _VouchAndPayTransaction(voucher, "AP-Expense", bscon, vd, x, false);    
                         } else {
-                        String[] m = _VoucherTransaction(batchid, "AP-Expense", bscon, vd, x, false);
+                        String[] m = _VoucherTransaction(voucher, "AP-Expense", bscon, vd, x, false);
                         }
                         
                         } // if 'shipping BIL' type

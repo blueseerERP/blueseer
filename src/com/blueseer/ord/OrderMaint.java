@@ -78,6 +78,7 @@ import static com.blueseer.utl.BlueSeerUtils.lurb2;
 import static com.blueseer.utl.BlueSeerUtils.priceformat;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeerT;
+import static com.blueseer.utl.OVData.isVoucherShipping;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -431,7 +432,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         lblcustname.setText("");
         lblshiptoaddr.setText("");
         lblcurr.setText("");
-        ddsactype.setSelectedIndex(0);
+        
         tbsacdesc.setText("");
         tbsacamt.setText("");
         duedate.setDate(now);
@@ -562,196 +563,17 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
         ddstatus.setSelectedItem(getGlobalProgTag("open"));
         
-       
         
-        
-        lbqtyavailable.setBackground(Color.gray);
-        lbqtyavailable.setText("");
-        
-        isLoad = false;
-        
-        
-    }
-    
-    public void setComponentDefaultValues_backup() {
-        
-        isLoad = true;
-        
-        basecurr = OVData.getDefaultCurrency();
-        
-        jTabbedPane1.removeAll();
-        jTabbedPane1.add("Main", jPanelMain);
-        jTabbedPane1.add("Lines", jPanelLines);
-        jTabbedPane1.add("Schedule", jPanelSched);
-        
-        jTabbedPane1.setEnabledAt(1, false);
-        jTabbedPane1.setEnabledAt(2, false);
-        
-        tbkey.setText("");
-        tbkey.setEditable(true);
-        tbkey.setForeground(Color.black);
-        
-       
-        cbisallocated.setText("Allocation?");
-        
-        
-        ArrayList<String> mylist = new ArrayList<String>();
-         jPanelSched.setVisible(false);
-        java.util.Date now = new java.util.Date();
-       
-        lblstatus.setText("");
-        lblstatus.setForeground(Color.black);
-       
-        cbissourced.setSelected(false);
-        cbisallocated.setSelected(false);
-        cbconfirm.setSelected(false);
-        cbplan.setSelected(false);
-        
-        listprice.setText("0");
-        netprice.setText("0");
-        qtyshipped.setText("0");
-        discount.setText("0");
-        ponbr.setText("");
-        lblcustname.setText("");
-        lblshiptoaddr.setText("");
-        lblcurr.setText("");
+        ddsactype.removeAllItems();
+        ddsactype.addItem("discount");
+        ddsactype.addItem("charge");
+        ddsactype.addItem("passive");
+        if (isVoucherShipping()) {
+            ddsactype.addItem("shipping ADD");
+            ddsactype.addItem("shipping PPD");
+            ddsactype.addItem("shipping BIL");
+        }
         ddsactype.setSelectedIndex(0);
-        tbsacdesc.setText("");
-        tbsacamt.setText("");
-        duedate.setDate(now);
-        orddate.setDate(now);
-        
-        
-        myorddetmodel.setRowCount(0);
-        myorddetmodel.addTableModelListener(ml);
-        orddet.setModel(myorddetmodel);
-        
-        //hide columns
-        orddet.getColumnModel().getColumn(2).setMaxWidth(0);
-        orddet.getColumnModel().getColumn(2).setMinWidth(0);
-        orddet.getColumnModel().getColumn(3).setMaxWidth(0);
-        orddet.getColumnModel().getColumn(3).setMinWidth(0);
-        orddet.getColumnModel().getColumn(4).setMaxWidth(0);
-        orddet.getColumnModel().getColumn(4).setMinWidth(0);
-        
-        
-        sacmodel.setRowCount(0);
-        sactable.setModel(sacmodel);
-        modelsched.setRowCount(0);
-        tablesched.setModel(modelsched);
-        
-        tbhdrwh.setText("");
-        lblIsSourced.setIcon(null);
-        remarks.setText("");
-        tbtotqty.setText("");
-        tbtotdollars.setText("");
-        lbltotdollars.setText("");
-        tbtottax.setText("");
-        totlines.setText("");
-        custnumber.setText("");
-        
-        ddpart.setForeground(Color.black);
-        custnumber.setForeground(Color.black);
-        custnumber.setEditable(false);
-        tbdesc.setForeground(Color.black);
-        tbdesc.setEditable(false);
-        
-        autoallocate = OVData.isOrderAutoAllocate();
-        cbisallocated.setSelected(autoallocate);
-        
-        
-        ddsite.removeAllItems();
-        mylist = OVData.getSiteList();
-        for (String code : mylist) {
-            ddsite.addItem(code);
-        }
-        ddsite.setSelectedItem(OVData.getDefaultSite());
-        
-        // lets check order control for custitemonly versus any item from item master to be filled into ddpart
-        custitemonly = OVData.isCustItemOnly();
-        if (! custitemonly) {
-            ddpart.removeAllItems();
-            ArrayList<String> items = invData.getItemMasterListBySite(ddsite.getSelectedItem().toString()); 
-            for (String item : items) {
-            ddpart.addItem(item);
-            }  
-        } 
-        
-         ddwh.removeAllItems();
-        ArrayList<String> whs = OVData.getWareHouseList();
-        for (String wh : whs) {
-            ddwh.addItem(wh);
-        }
-         ddwh.insertItemAt("", 0);
-         ddwh.setSelectedIndex(0);
-        
-         ddloc.removeAllItems();
-        ArrayList<String> loc = OVData.getLocationList();
-        for (String lc : loc) {
-            ddloc.addItem(lc);
-        }
-        ddloc.insertItemAt("", 0);
-        ddloc.setSelectedIndex(0);
-        
-        ddcurr.removeAllItems();
-         ddcurr.insertItemAt("", 0);
-         ddcurr.setSelectedIndex(0);
-        mylist = fglData.getCurrlist();
-        for (String code : mylist) {
-            ddcurr.addItem(code);
-        }
-        
-        dduom.removeAllItems();
-        dduom.insertItemAt("", 0);
-         dduom.setSelectedIndex(0);
-        mylist = OVData.getUOMList();
-        for (String code : mylist) {
-            dduom.addItem(code);
-        }
-        
-        ddcust.removeAllItems();
-        ddcust.insertItemAt("", 0);
-        ddcust.setSelectedIndex(0);
-        ArrayList mycusts = cusData.getcustmstrlist();
-        for (int i = 0; i < mycusts.size(); i++) {
-            ddcust.addItem(mycusts.get(i));
-        }
-        ddship.removeAllItems();
-        
-        
-        ddtax.removeAllItems();
-        ArrayList<String> tax = OVData.gettaxcodelist();
-        for (int i = 0; i < tax.size(); i++) {
-            ddtax.addItem(tax.get(i));
-        }
-        ddtax.insertItemAt("", 0);
-        ddtax.setSelectedIndex(0);
-        
-        
-        ddstate.removeAllItems();
-        ArrayList states = OVData.getCodeMstrKeyList("state");
-        for (int i = 0; i < states.size(); i++) {
-            ddstate.addItem(states.get(i).toString());
-        }
-        if (ddstate.getItemCount() > 0) {
-           ddstate.setSelectedIndex(0); 
-        }
-       
-        
-        ddshipvia.removeAllItems();
-        mylist = OVData.getfreightlist();  
-        for (int i = 0; i < mylist.size(); i++) {
-            ddshipvia.addItem(mylist.get(i));
-        }
-        ddshipvia.insertItemAt("", 0);
-        ddshipvia.setSelectedIndex(0);
-        
-        ddstatus.removeAllItems();
-        mylist = OVData.getCodeMstr("orderstatus");
-        for (int i = 0; i < mylist.size(); i++) {
-            ddstatus.addItem(mylist.get(i));
-        }
-        ddstatus.setSelectedItem(getGlobalProgTag("open"));
         
         
         
@@ -762,7 +584,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         
     }
-    
+        
     
     public void newAction(String x) {
        setPanelComponentState(this, true);
@@ -3217,8 +3039,6 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
-        ddsactype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "discount", "charge", "passive", "shipping ADD", "shipping PPD", "shipping BIL" }));
-
         ddsacamttype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "amount", "percent" }));
         ddsacamttype.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -3359,7 +3179,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(59, Short.MAX_VALUE))
+                .addContainerGap(57, Short.MAX_VALUE))
         );
 
         add(jPanelLines);
@@ -3731,6 +3551,13 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
             tbsacdesc.requestFocus();
             return;
         }
+        
+        if (ddsactype.getSelectedItem().toString().startsWith("shipping") &&
+                (ddshipvia.getSelectedItem() == null || ddshipvia.getSelectedItem().toString().isBlank()) ) {
+            bsmf.MainFrame.show(getMessageTag(1181));
+            proceed = false;
+            return;
+        } 
         
         if (ddsactype.getSelectedItem().toString().equals("discount") &&
                 ddsacamttype.getSelectedItem().toString().equals("amount")) {

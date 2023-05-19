@@ -2,7 +2,8 @@ insert into cust_term (cut_code, cut_desc, cut_days) values ('N30', 'NET 30', '3
 insert into cust_term (cut_code, cut_desc, cut_days) values ('N00', 'Due At Sale', '0');
 insert into cust_term (cut_code, cut_desc, cut_days, cut_syscode) values ('CIA','Cash In Advance','0','1') ; 
 insert into cust_term (cut_code, cut_desc, cut_days, cut_syscode) values ('PIA','Payment In Advance','0', '1') ; 
-insert into car_mstr (car_id) values ('PICKUP');
+insert into car_mstr (car_id) values ('pickup');
+insert into car_mstr (car_id) values ('fedex');
 insert into task_mstr (task_id, task_desc) values ('100', 'A Simple Task');
 insert into task_det (taskd_id, taskd_owner, taskd_desc, taskd_sequence) values ('100', 'admin', 'Sample Task action 1', '1');
 insert into task_det (taskd_id, taskd_owner, taskd_desc, taskd_sequence) values ('100', 'admin', 'Sample Task action 2', '2');

@@ -351,7 +351,34 @@ public class OVData {
         return myarray;
         
     }
-     
+    
+    public static int getNextNbr(String countername, Connection bscon) throws SQLException {
+       int nbr = 0;
+       
+            Statement st = bscon.createStatement();
+            ResultSet res = null;
+                
+                if (dbtype.equals("sqlite")) {
+               res = st.executeQuery("select max(counter_id) as 'num' from counter where " +
+                       " counter_name = " + "'" + countername + "'" + ";");
+                } else {
+                res = st.executeQuery("select max(counter_id) as 'num' from counter where " +
+                       " counter_name = " + "'" + countername + "'" + " for update;");    
+                }
+                while (res.next()) {
+                   nbr = res.getInt("num") + 1;
+                }
+                st.executeUpdate(
+                       " update counter set counter_id = " + "'" + nbr + "'" +
+                       " where counter_name = " + "'" + countername + "'" + ";" );
+                
+               // bscon.setAutoCommit(true);
+            
+        return nbr;
+        
+    }
+    
+    
     public static int getNextNbr(String countername) {
        int nbr = 0;
         try{

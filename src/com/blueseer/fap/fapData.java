@@ -81,7 +81,7 @@ public class fapData {
                 mytable.getValueAt(i,0).toString(),
                 mytable.getValueAt(i,2).toString(),
                 mytable.getValueAt(i,3).toString(),
-                "",  // check nbr ...blank in this case
+                String.valueOf(checknbr),  // check nbr 
                 bsFormatDouble(bsParseDouble(mytable.getValueAt(i, 6).toString())).replace(defaultDecimalSeparator, '.')
                 );
                 _addAPDMstr(x, bscon, ps, res);  
