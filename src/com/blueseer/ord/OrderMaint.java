@@ -78,7 +78,8 @@ import static com.blueseer.utl.BlueSeerUtils.lurb2;
 import static com.blueseer.utl.BlueSeerUtils.priceformat;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeerT;
-import static com.blueseer.utl.OVData.isVoucherShipping;
+import static com.blueseer.utl.OVData.isVoucherShippingSO;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -568,7 +569,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddsactype.addItem("discount");
         ddsactype.addItem("charge");
         ddsactype.addItem("passive");
-        if (isVoucherShipping()) {
+        if (isVoucherShippingSO()) {
             ddsactype.addItem("shipping ADD");
             ddsactype.addItem("shipping PPD");
             ddsactype.addItem("shipping BIL");

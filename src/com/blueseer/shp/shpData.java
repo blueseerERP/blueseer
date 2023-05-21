@@ -267,7 +267,7 @@ public class shpData {
             }
             // if type.equals("cash")....no order to update
             
-            if (OVData.isVoucherShipping()) {
+            if (OVData.isVoucherShippingSO()) {
             _processShipperVouchers(shipper, effdate, bscon);
             }
             bscon.commit();

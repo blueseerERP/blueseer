@@ -506,6 +506,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
            ddshipstate.setSelectedIndex(0); 
         }
         ddstatus.setSelectedItem(getGlobalProgTag("open"));
+               
         
         isLoad = false;
         

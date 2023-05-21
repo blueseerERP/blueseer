@@ -10653,7 +10653,7 @@ return mycount;
 
 }   
 
-    public static boolean isVoucherShipping() {
+    public static boolean isVoucherShippingSO() {
 
     boolean isvoucher = false;
     try{
@@ -10689,7 +10689,7 @@ return mycount;
     return isvoucher;
 
 }   
-
+   
     
     public static boolean isAutoSource() {
 

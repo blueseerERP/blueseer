@@ -500,6 +500,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
         if (! error)
         error = fglData.glEntryFromReceiver(tbkey.getText(), dcdate.getDate());
      
+        
     /* create auto-voucher from temptable if autovoucher is on */
     if (cbautovoucher.isSelected()) {
     String messg = OVData.CreateVoucher(createVoucherTable(), ddsite.getSelectedItem().toString(), ddvend.getSelectedItem().toString(), tbpackingslip.getText(), dcdate.getDate(), tbserial.getText()); 
