@@ -1483,6 +1483,8 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                     String[] keyx = z.getKey().split("\\+", -1);
                     String key = keyx[0];
                    
+                   // System.out.println("HERE: " + " key: " + z.getKey() + " value: " + String.join(",", z.getValue()));
+                    
                     /*
                     if (keyx[0].contains(":")) {
                         String[] keyp = keyx[0].split(":", -1); 

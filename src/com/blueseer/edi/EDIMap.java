@@ -1204,6 +1204,8 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         stack = (Stack<String>) instack.clone();
         int i = 0;
         
+      //  System.out.println("vars: " + rawSegmentLM + " current group head: " + currentGroupHeadLM + " count: " + GHP );
+        
         for (String[] x : isf) {
             i++;
             if (i < GHP) {
@@ -1230,6 +1232,8 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                if (GlobalDebug) {
                System.out.println("PRE:" + " IncomingSegment: " + rawSegmentLM + "  GroupHead:" + currentGroupHeadLM + "  x[1]: " + x[1] + " GHP=" + GHP);
                }
+                System.out.println("PRE:" + " IncomingSegment: " + rawSegmentLM + "  GroupHead:" + currentGroupHeadLM + "  x[1]: " + x[1] + " GHP=" + GHP);
+              
                
                break;  
             }
@@ -1261,6 +1265,112 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         
         return new stackGHP(stack, GHP);
     }
+    
+    public static stackGHP preGroupHeadRecursive(String rawSegmentLM, Stack<String> instack, ArrayList<String[]> isf, int GHP) {
+        String currentGroupHeadLM = String.join(":",instack.toArray(new String[instack.size()])); 
+        Stack<String> stack = (Stack<String>) instack.clone();
+        System.out.println("MATCH incoming: " + rawSegmentLM + "/" + currentGroupHeadLM);
+        int i = 0;
+        boolean isMatch = false;
+        boolean isFieldInParent = false;
+        String matchparent = "";
+        long count = currentGroupHeadLM.chars().filter(ch -> ch == ':').count();
+        for (long j = count; j >= 0; j--) {
+            for (String[] x : isf) {
+            if (rawSegmentLM.equals(x[5]) && currentGroupHeadLM.equals(x[1] + ":" + x[0])) {
+                isFieldInParent = true;
+                System.out.println("MATCH FIELD: " + rawSegmentLM + "/" + currentGroupHeadLM);
+                break;
+            }
+            if (! x[4].toLowerCase().equals("yes")) {
+                continue;
+            }
+            
+            if (x[5].equals("groupend")) {
+                  continue;
+            } 
+            if (rawSegmentLM.equals(x[0]) && currentGroupHeadLM.equals(x[1])) {
+                isMatch = true;
+                matchparent = x[1];
+                System.out.println("MATCH GROUP: " + rawSegmentLM + "/" + currentGroupHeadLM);
+                break;
+            }
+        }
+            if (isMatch || isFieldInParent) {
+                break;
+            }
+            if (stack.size() > 0) {
+            stack.pop();
+            currentGroupHeadLM = String.join(":",stack.toArray(new String[stack.size()])); 
+            }
+        }
+       
+        return new stackGHP(stack, GHP);
+        
+       
+        
+    }
+    
+    public static stackGHP preGroupHeadRecursivebkup(String rawSegmentLM, Stack<String> instack, ArrayList<String[]> isf, int GHP) {
+        String currentGroupHeadLM = String.join(":",instack.toArray(new String[instack.size()])); 
+        System.out.println("MATCH incoming: " + rawSegmentLM + "/" + currentGroupHeadLM);
+        Stack<String> stack = new Stack<String>();
+        Stack<String> rstack = new Stack<String>();
+        
+        stack = (Stack<String>) instack.clone();
+        rstack = (Stack<String>) instack.clone();
+        int i = 0;
+        
+      //  System.out.println("vars: " + rawSegmentLM + " current group head: " + currentGroupHeadLM + " count: " + GHP );
+        boolean isMatch = false;
+        boolean isFieldInParent = false;
+        String matchparent = "";
+        
+        
+       // if (stack.size() <= 0) {
+       //    return new stackGHP(stack, GHP); 
+       // }
+        
+        for (String[] x : isf) {
+            if (rawSegmentLM.equals(x[5]) && currentGroupHeadLM.equals(x[1] + ":" + x[0])) {
+                isFieldInParent = true;
+                break;
+            }
+            if (! x[4].toLowerCase().equals("yes")) {
+                continue;
+            }
+            
+            if (x[5].equals("groupend")) {
+                  continue;
+            } 
+            if (rawSegmentLM.equals(x[0]) && currentGroupHeadLM.equals(x[1])) {
+                isMatch = true;
+                matchparent = x[1];
+                //System.out.println("MATCH: " + x[0] + "/" + x[1]);
+                break;
+            }
+        }
+        
+        // if true then return Parent
+        if (isMatch || isFieldInParent ) {
+            System.out.println("MATCH ISMATCH: " + rawSegmentLM + "/" + currentGroupHeadLM + " "  + stack.size());
+            rstack = stack;
+          //  return new stackGHP(stack, GHP);
+        } else {
+            if (stack.size() > 0) {
+            System.out.println("MATCH POPPING: " + rawSegmentLM + "/" + currentGroupHeadLM + " "  + stack.size());
+            stack.pop();
+            Stack<String> newstack = (Stack<String>) stack.clone();
+            preGroupHeadRecursive(rawSegmentLM, newstack, isf, GHP);
+            }
+        }
+        // if not...then recurse with popped parent
+        
+      
+        System.out.println("MATCH: " + rawSegmentLM +  " END SIZE: " + rstack.size());
+        return new stackGHP(rstack, GHP);
+    }
+    
     
     public static stackGHP postGroupHead(String rawSegmentLM, Stack<String> instack, ArrayList<String[]> isf, int GHP) {
         String currentGroupHeadLM = String.join(":",instack.toArray(new String[instack.size()])); 
@@ -1295,6 +1405,8 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                 if (GlobalDebug) {
                 System.out.println("POST:" + " IncomingSegment: " + rawSegmentLM + "  GroupHead:" + currentGroupHeadLM + "  xx[1]: " + x[1] + " GHP=" + GHP);
                 }
+                System.out.println("POST:" + " IncomingSegment: " + rawSegmentLM + "  GroupHead:" + currentGroupHeadLM + "  xx[1]: " + x[1] + " GHP=" + GHP);
+                
                 
                 break;
             }
@@ -1366,6 +1478,17 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                     segRecord sr = getSegmentInISF(x[0], "", ISF);
                     IFSseg = sr.m();
                     currentPosition = sr.p();
+                } else if(c[28].toUpperCase().equals("XML")) {
+                    // identify immediate parent/group head
+                stackGHP sp = preGroupHeadRecursive(x[0], stack, ISF, GHP);
+                stack = sp.s();
+                GHP = sp.i();
+                parenthead = String.join(":",stack.toArray(new String[stack.size()]));
+                // now lets find segments place in ISF
+              //  System.out.println("incoming segment:" + x[0] + " with parenthead: " + parenthead);
+                segRecord sr = getSegmentInISF(x[0], parenthead, ISF);
+                IFSseg = sr.m();
+                currentPosition = sr.p();
                 } else {
                 // identify immediate parent/group head
                 stackGHP sp = preGroupHead(x[0], stack, ISF, GHP);
@@ -1373,7 +1496,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                 GHP = sp.i();
                 parenthead = String.join(":",stack.toArray(new String[stack.size()]));
                 // now lets find segments place in ISF
-              //   System.out.println("incoming segment:" + x[0] + " with parenthead: " + parenthead);
+               // System.out.println("incoming segment:" + x[0] + " with parenthead: " + parenthead);
                 segRecord sr = getSegmentInISF(x[0], parenthead, ISF);
                 IFSseg = sr.m();
                 currentPosition = sr.p();
@@ -1435,13 +1558,12 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                 System.out.println("ifSeg is null: " + x[0] + " with parenthead: " + parenthead);
                 }
                
-                
+              //  if(! c[28].toUpperCase().equals("XML")) {
                 stackGHP postGH = postGroupHead(x[0], stack, ISF, GHP);
                 stack = postGH.s();
                 GHP = postGH.i(); 
-                
                 parenthead = String.join(":",stack.toArray(new String[stack.size()])); 
-                
+              //  }
         }
         }
         return mappedData;
@@ -1685,6 +1807,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                         parent = xmlgetPathToRoot(node.getNodeName(), node.getParentNode().getNodeName(), root, plhm);
                         
                         lhmkey = node.getNodeName() + "," + parent + "," + node.hashCode();
+                      //  System.out.println("here: init" + lhmkey);
                         if (! lhm.containsKey(lhmkey)) {
             				lhm.put(lhmkey, null);
                         }
@@ -1760,8 +1883,9 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                 for (int k = 0; k < t.length; k++) {
                   //  System.out.println("HERE size: " + t.length + "/" + val.getValue().size());
                     for (int m = 0; m < val.getValue().size(); m++) {
-                      //  System.out.println("HERE Loop: " + t[0] + "/" +  val.getKey() + "/" + k + "/" +  t[k] + "/" + val.getValue().get(m));
                         if (t[k].equals(val.getValue().get(m).split("=")[0])) {
+                           // System.out.println("HERE Loop: " + t[0] + "/" +  val.getKey() + "/" + k + "/" +  t[k] + "/" + val.getValue().get(m));
+                        
                             td[k + 1] = val.getValue().get(m).split("=")[1];
                             break;
                         }
