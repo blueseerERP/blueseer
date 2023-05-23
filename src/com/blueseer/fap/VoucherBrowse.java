@@ -306,7 +306,8 @@ public class VoucherBrowse extends javax.swing.JPanel {
         modeldetail.setNumRows(0);
         tablereport.setModel(mymodel);
         tabledetail.setModel(modeldetail);
-        
+        labelopen.setText("0");
+        labeltotal.setText("0");
          
          
        
@@ -377,6 +378,10 @@ public class VoucherBrowse extends javax.swing.JPanel {
         tbtonbr = new javax.swing.JTextField();
         cbvoucher = new javax.swing.JCheckBox();
         jPanel3 = new javax.swing.JPanel();
+        labelopen = new javax.swing.JLabel();
+        labeltotal = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -512,15 +517,45 @@ public class VoucherBrowse extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        labelopen.setBackground(new java.awt.Color(195, 129, 129));
+        labelopen.setText("0");
+
+        labeltotal.setBackground(new java.awt.Color(195, 129, 129));
+        labeltotal.setText("0");
+
+        jLabel2.setText("Open:");
+        jLabel2.setName("lblopen"); // NOI18N
+
+        jLabel7.setText("Total:");
+        jLabel7.setName("lbltotal"); // NOI18N
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 277, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(108, 108, 108)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel7))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labeltotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(labelopen, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelopen, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labeltotal, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -532,7 +567,7 @@ public class VoucherBrowse extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 176, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 172, Short.MAX_VALUE)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -561,20 +596,21 @@ public class VoucherBrowse extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRunActionPerformed
-
-    
-try {
+        labelopen.setText("0");
+        labeltotal.setText("0");
+        try {
             Connection con = null;
             if (ds != null) {
               con = ds.getConnection();
             } else {
               con = DriverManager.getConnection(url + db, user, pass);  
-            }
+            }   
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
                 int i = 0;
-               
+                double open = 0;
+                double total = 0;
                mymodel.setNumRows(0);
         
               tablereport.setModel(mymodel);
@@ -639,11 +675,16 @@ try {
         
                   
                 
-                       while (res.next()) {
+                while (res.next()) {
                            
-                         if (cbvoucher.isSelected() && ! res.getString("ap_status").equals("o")) {
-                             continue;
-                         }  
+                 if (cbvoucher.isSelected() && ! res.getString("ap_status").equals("o")) {
+                     continue;
+                 }  
+                 total += res.getDouble("ap_amt");
+                 if (res.getString("ap_status").equals("o")) {
+                    open += res.getDouble("ap_amt");
+                 }
+                 
                     mymodel.addRow(new Object[]{
                                 BlueSeerUtils.clickflag,
                                 res.getString("ap_nbr"),
@@ -658,7 +699,9 @@ try {
              
                    
                 } // while   
-                    
+               
+                labeltotal.setText(String.valueOf(currformatDouble(total))); 
+                labelopen.setText(String.valueOf(currformatDouble(open)));
                  
         
             } catch (SQLException s) {
@@ -700,15 +743,19 @@ try {
     private javax.swing.JComboBox ddvendto;
     private javax.swing.JPanel detailpanel;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel labelopen;
+    private javax.swing.JLabel labeltotal;
     private javax.swing.JPanel summarypanel;
     private javax.swing.JTable tabledetail;
     private javax.swing.JPanel tablepanel;
