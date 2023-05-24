@@ -1266,7 +1266,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         return new stackGHP(stack, GHP);
     }
     
-    public static stackGHP preGroupHeadRecursive(String rawSegmentLM, Stack<String> instack, ArrayList<String[]> isf, int GHP) {
+    public static stackGHP preGroupHeadRLoop(String rawSegmentLM, Stack<String> instack, ArrayList<String[]> isf, int GHP) {
         String currentGroupHeadLM = String.join(":",instack.toArray(new String[instack.size()])); 
         Stack<String> stack = (Stack<String>) instack.clone();
         System.out.println("MATCH incoming: " + rawSegmentLM + "/" + currentGroupHeadLM);
@@ -1361,7 +1361,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             System.out.println("MATCH POPPING: " + rawSegmentLM + "/" + currentGroupHeadLM + " "  + stack.size());
             stack.pop();
             Stack<String> newstack = (Stack<String>) stack.clone();
-            preGroupHeadRecursive(rawSegmentLM, newstack, isf, GHP);
+            preGroupHeadRecursivebkup(rawSegmentLM, newstack, isf, GHP);
             }
         }
         // if not...then recurse with popped parent
@@ -1396,7 +1396,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             }
             */
             
-            if (rawSegmentLM.equals(x[0]) && (currentGroupHeadLM.equals(x[1])) && x[3].toLowerCase().equals("yes")) {
+            if (rawSegmentLM.equals(x[0]) && (currentGroupHeadLM.equals(x[1])) && x[4].toLowerCase().equals("yes")) {
                 stack.push(rawSegmentLM);
                 if (stack.get(0).equals(x[0]) && x[1].isBlank()) {
                     GHP = i;
@@ -1480,7 +1480,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                     currentPosition = sr.p();
                 } else if(c[28].toUpperCase().equals("XML")) {
                     // identify immediate parent/group head
-                stackGHP sp = preGroupHeadRecursive(x[0], stack, ISF, GHP);
+                stackGHP sp = preGroupHeadRLoop(x[0], stack, ISF, GHP);
                 stack = sp.s();
                 GHP = sp.i();
                 parenthead = String.join(":",stack.toArray(new String[stack.size()]));
@@ -1936,6 +1936,14 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             if (node.getParentNode().getNodeName().equals("#document")) {
                 root = node.getNodeName();
             }
+            
+            String ppath = "";
+            Node pnode = node.getParentNode();
+            while (pnode != null) {
+            ppath = pnode.getNodeName() + ':' + ppath;
+            pnode = pnode.getParentNode();
+            }
+            
             Node nextnode = null;
             counter = 0;
             if (node.getNodeType() == Node.ELEMENT_NODE) {            	
@@ -1949,9 +1957,13 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                          System.out.println("HERE: " + node.getNodeName() + "/" + node.getNodeType() + "/" + parent + "/" +  child.getNodeName() + "/" + child.getNodeType() + "/" + node.hasAttributes() + "/" + child.hasAttributes());
                         }
                         */
-                        parent = xmlgetPathToRoot(node.getNodeName(), node.getParentNode().getNodeName(), root, plhm);
+                      //  parent = xmlgetPathToRoot(node.getNodeName(), node.getParentNode().getNodeName(), root, plhm);
+                      //  System.out.println("node= " + node.getNodeName() + " nodetype=" +  node.getNodeType() + " parentnode= " + node.getParentNode().getNodeName() + " parentNodeType: " + node.getParentNode().getNodeType() + " childNode: " + child.getNodeName() + " nodehash: " + node.hashCode()  + " parentNodehash: " + node.getParentNode().hashCode()); 
+                      //  System.out.println("node= " + node.getNodeName() + "parent: " + ppath);
+                      parent = ppath.substring(10);  
+                      lhmkey = node.getNodeName() + "," + parent + "," + node.hashCode();
+                     //   System.out.println(lhmkey);
                         
-                        lhmkey = node.getNodeName() + "," + parent + "," + node.hashCode();
                         if (! lhm.containsKey(lhmkey)) {
             				lhm.put(lhmkey, null);
                                         
@@ -1961,7 +1973,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                           //  newresult.add(b);
                        
                         
-                   // System.out.println(node.getNodeName() + "," + parent + "," + child.getNodeName() + "," + node.getNodeType() + "," + child.getNodeType() + "," + node.getChildNodes().getLength())  ; 
+                  //  System.out.println(node.getNodeName() + "," + parent + "," + child.getNodeName() + "," + node.getNodeType() + "," + child.getNodeType() + "," + node.getChildNodes().getLength())  ; 
             //        System.out.println(node.getNodeName() + "," + parent + "," + node.getParentNode() + "," + node.hasChildNodes());    
                       
                             if (child.getNodeType() == Node.ELEMENT_NODE && child.getChildNodes().getLength() > 1 && ! uniques.contains(node.getNodeName()+parent+"landmark")) {
