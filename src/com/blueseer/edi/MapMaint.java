@@ -2776,6 +2776,12 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         if (tbkey.getText().isBlank()) {
             return;
         }
+        
+        if (tainput.getText().isBlank()) {
+            bsmf.MainFrame.show("There is no data in the Input Tab");
+            return;
+        }
+        
         map_mstr m = getMapMstr(new String[]{tbkey.getText()});
         
         if (! ddifs.getSelectedItem().toString().equals(m.map_ifs()) || ! ddofs.getSelectedItem().toString().equals(m.map_ofs())) {
