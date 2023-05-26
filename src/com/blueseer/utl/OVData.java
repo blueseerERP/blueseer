@@ -17898,7 +17898,7 @@ MainFrame.bslog(e);
                  st.executeUpdate("insert into ap_mstr "
                     + "(ap_vend, ap_site, ap_nbr, ap_amt, ap_base_amt, ap_type, ap_ref, ap_rmks, "
                     + "ap_entdate, ap_effdate, ap_duedate, ap_acct, ap_cc, "
-                    + "ap_terms, ap_status, ap_bank, ap_curr, ap_base_curr ) "
+                    + "ap_terms, ap_status, ap_bank, ap_curr, ap_base_curr, ap_subtype ) "
                     + " values ( " + "'" + vend + "'" + ","
                           + "'" + site + "'" + ","
                     + "'" + nbr + "'" + ","
@@ -17916,7 +17916,8 @@ MainFrame.bslog(e);
                     + "'" + "o" + "'"  + ","
                     + "'" + apbank + "'" + ","
                     + "'" + curr + "'" + ","
-                    + "'" + basecurr + "'"        
+                    + "'" + basecurr + "'" + ","
+                    + "'" + "Receipt" + "'"        
                     + ")"
                     + ";");
 

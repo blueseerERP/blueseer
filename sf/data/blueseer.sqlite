@@ -52,7 +52,7 @@ CREATE TABLE "ap_mstr" (
   "ap_curr" varchar(3) COLLATE NOCASE DEFAULT '',
   "ap_base_curr" varchar(3) COLLATE NOCASE DEFAULT '',
   "ap_check" varchar(30) COLLATE NOCASE DEFAULT '',
-  "ap_batch" int(11) COLLATE NOCASE DEFAULT '',
+  "ap_batch" int(11) COLLATE NOCASE DEFAULT '0',
   "ap_site" varchar(10) COLLATE NOCASE DEFAULT '',
   "ap_subtype" varchar(20) COLLATE NOCASE DEFAULT '');
 /*!40101 SET character_set_client = @saved_cs_client */;

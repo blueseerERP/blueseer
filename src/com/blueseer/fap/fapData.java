@@ -99,14 +99,14 @@ public class fapData {
                 currformat(s[4]), // ap_base_amt,  String ap_entdate, String ap_duedate,
                 setDateFormat(effdate), // ap_effdate
                 setDateFormat(now), // ap_entdate
-                "", // ap_duedate        
+                setDateFormat(now), // ap_duedate        
                 "C", // ap_type
                 "", //ap_rmks
                 "", //ap_ref
                 vendinfo[5], //ap_terms
                 vendinfo[1], //ap_acct
                 vendinfo[2], //ap_cc
-                "", //ap_applied
+                "0", //ap_applied
                 "", //ap_status
                 vendinfo[4], //ap_bank
                 s[2], //ap_curr
@@ -206,7 +206,7 @@ public class fapData {
                 ap.ap_base_amt, 
                 ap.ap_effdate,
                 ap.ap_entdate,
-                "", // ap_duedate        
+                ap.ap_duedate, // ap_duedate        
                 "E", // ap_type
                 ap.ap_rmks, //ap_rmks
                 ap.ap_ref, //ap_ref
@@ -316,7 +316,7 @@ public class fapData {
                 ap.ap_base_amt, 
                 ap.ap_effdate,
                 ap.ap_entdate,
-                "", // ap_duedate        
+                ap.ap_duedate, // ap_duedate        
                 "E", // ap_type
                 ap.ap_rmks, //ap_rmks
                 ap.ap_ref, //ap_ref

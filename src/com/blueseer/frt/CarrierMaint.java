@@ -296,7 +296,13 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddstate.setSelectedIndex(0);
         ddcountry.insertItemAt("", 0);
         ddcountry.setSelectedItem("USA");
-       
+        
+        tbminmiles.setText("0");
+        tbmaxmiles.setText("0");
+        tbdhmiles.setText("0");
+        tbrate.setText("0");
+        tbtractors.setText("0");
+        tbtrailers.setText("0");
        
        isLoad = false;
     }
@@ -864,11 +870,35 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Capacity and Rates"));
 
+        tbdhmiles.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbdhmilesFocusLost(evt);
+            }
+        });
+
+        tbmaxmiles.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbmaxmilesFocusLost(evt);
+            }
+        });
+
+        tbminmiles.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbminmilesFocusLost(evt);
+            }
+        });
+
         jLabel13.setText("Min Miles");
 
         jLabel14.setText("Max Miles");
 
         jLabel15.setText("DH Miles");
+
+        tbrate.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbrateFocusLost(evt);
+            }
+        });
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -877,6 +907,18 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel16.setText("Rate Per Mile");
 
         jLabel17.setText("Notes");
+
+        tbtractors.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbtractorsFocusLost(evt);
+            }
+        });
+
+        tbtrailers.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbtrailersFocusLost(evt);
+            }
+        });
 
         jLabel18.setText("Tractor Count");
 
@@ -1066,6 +1108,42 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
     private void btchangelogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btchangelogActionPerformed
         callChangeDialog(tbkey.getText(), this.getClass().getSimpleName());
     }//GEN-LAST:event_btchangelogActionPerformed
+
+    private void tbminmilesFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbminmilesFocusLost
+        if (tbminmiles.getText().isBlank()) {
+            tbminmiles.setText("0");
+        }
+    }//GEN-LAST:event_tbminmilesFocusLost
+
+    private void tbmaxmilesFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbmaxmilesFocusLost
+        if (tbmaxmiles.getText().isBlank()) {
+            tbmaxmiles.setText("0");
+        }
+    }//GEN-LAST:event_tbmaxmilesFocusLost
+
+    private void tbdhmilesFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbdhmilesFocusLost
+        if (tbdhmiles.getText().isBlank()) {
+            tbdhmiles.setText("0");
+        }
+    }//GEN-LAST:event_tbdhmilesFocusLost
+
+    private void tbrateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbrateFocusLost
+        if (tbrate.getText().isBlank()) {
+            tbrate.setText("0.00");
+        }
+    }//GEN-LAST:event_tbrateFocusLost
+
+    private void tbtractorsFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbtractorsFocusLost
+        if (tbtractors.getText().isBlank()) {
+            tbtractors.setText("0");
+        }
+    }//GEN-LAST:event_tbtractorsFocusLost
+
+    private void tbtrailersFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbtrailersFocusLost
+        if (tbtrailers.getText().isBlank()) {
+            tbtrailers.setText("0");
+        }
+    }//GEN-LAST:event_tbtrailersFocusLost
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

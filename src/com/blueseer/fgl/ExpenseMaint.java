@@ -591,7 +591,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
                 apcurr, //ap_curr
                 basecurr, //ap_base_curr
                 tbkey.getText(), //ap_check // in this case voucher number is reference field
-                "", //ap_batch
+                "0", //ap_batch
                 ddsite.getSelectedItem().toString(), //ap_site
                 "Expense"
                 ); 

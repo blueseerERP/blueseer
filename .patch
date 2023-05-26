@@ -34,5 +34,7 @@
 # generateJSON method refactor; as2 MDN remod
 #patch=13
 # AS2 MIC calculation refactor
-patch=14
+#patch=14
 # refactor VoucherMaint and VoucherBrowse...added ap_subtype field to ap_mstr schema
+patch=15
+# XML read method modifications for Structure File Maintenance; voucherbrowse enhancements; issue #116

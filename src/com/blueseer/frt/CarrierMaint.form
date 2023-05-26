@@ -605,10 +605,19 @@
           </Layout>
           <SubComponents>
             <Component class="javax.swing.JTextField" name="tbdhmiles">
+              <Events>
+                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbdhmilesFocusLost"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="tbmaxmiles">
+              <Events>
+                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbmaxmilesFocusLost"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="tbminmiles">
+              <Events>
+                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbminmilesFocusLost"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel13">
               <Properties>
@@ -626,6 +635,9 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tbrate">
+              <Events>
+                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbrateFocusLost"/>
+              </Events>
             </Component>
             <Container class="javax.swing.JScrollPane" name="jScrollPane1">
               <AuxValues>
@@ -653,8 +665,14 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tbtractors">
+              <Events>
+                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbtractorsFocusLost"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="tbtrailers">
+              <Events>
+                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbtrailersFocusLost"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel18">
               <Properties>

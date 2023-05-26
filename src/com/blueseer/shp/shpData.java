@@ -1163,6 +1163,11 @@ public class shpData {
         // get carrier/vendor apinfo
          // addr, acct, cc, currency, bank, terms, site
         String[] v = getVendInfo(si[8]);
+        Date duedate = OVData.getDueDateFromTerms(parseDate(si[5]), v[5]);
+        String strduedate = setDateFormat(effdate); // as default...in case no duedate terms
+        if (duedate != null) {
+            strduedate = setDateFormat(duedate);
+        }
         String defaultsalescc = OVData.getDefaultSalesCC(); // sales cc
         String defaultshippingacct = OVData.getDefaultShippingAcct(); // shipping acct 
         
@@ -1185,7 +1190,7 @@ public class shpData {
                         currformatDouble(Double.valueOf(s[4])).replace(defaultDecimalSeparator, '.'), // ap_base_amt
                         setDateFormat(effdate), // ap_effdate, ship_date
                         setDateFormat(effdate), // ap_entdate, ship_date
-                        setDateFormat(OVData.getDueDateFromTerms(parseDate(si[5]), v[5])), // ap_duedate         
+                        strduedate, // ap_duedate         
                         "V", // ap_type
                         s[2] + "/" + shipper, //ap_rmks
                         shipper, //ap_ref
