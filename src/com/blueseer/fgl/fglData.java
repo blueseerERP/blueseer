@@ -1091,7 +1091,7 @@ public class fglData {
           
        
           
-       if ( amt != 0 ) {   
+        if ( amt != 0 && ! acct_cr.isBlank() && ! acct_dr.isBlank()) {
        try {
              
             Connection con = null;
@@ -1151,7 +1151,7 @@ public class fglData {
     public static void glEntryXP(Connection bscon, String acct_cr, String cc_cr, String acct_dr, String cc_dr, String date, Double amt, Double baseamt, String curr, String basecurr, String ref, String site, String type, String desc) throws SQLException {
           
            /* any amount = 0 passed to this method will be ignored */
-           
+           /* record entry requires a non-blank acct_cr and acct_dr
            /* amount passed here will be rounded to 2 decimal places with DecimalFormat func */
            
           /*
@@ -1178,7 +1178,7 @@ public class fglData {
          
           String rndamt = "";
           
-       if ( amt != 0 ) {
+       if ( amt != 0 && ! acct_cr.isBlank() && ! acct_dr.isBlank()) {
         String sqlInsert = "insert into gl_tran "
                         + "( glt_acct, glt_cc, glt_effdate, glt_amt, glt_base_amt, glt_curr, glt_base_curr, glt_ref, glt_site, glt_type, glt_desc ) " +
                           " values (?,?,?,?,?,?,?,?,?,?,?) ";   
