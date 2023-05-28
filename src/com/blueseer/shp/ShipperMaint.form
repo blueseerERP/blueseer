@@ -360,8 +360,14 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tbpallets">
+              <Events>
+                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbpalletsFocusLost"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="tbboxes">
+              <Events>
+                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbboxesFocusLost"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel7">
               <Properties>

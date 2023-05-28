@@ -1,0 +1,10 @@
+/* sql updates for  v6.5 --> to 6.6 */
+set @field = 'ap_subtype'; set @table = 'ap_mstr';
+set @sql = concat('Alter table ', @table, ' add column ' ,@field, ' varchar(20) not null default \'\' ');
+SELECT count(*) into @Cnt FROM information_schema.columns WHERE table_name = @table AND column_name = @field and table_schema = DATABASE();
+set @query = IF(@Cnt <= 0, @sql, 'select @field, \'Exists\' ');
+prepare stmt from @query; EXECUTE stmt;
+
+
+update ov_ctrl set ov_version = '6.6';
+select concat("sql schema version is now: ", ov_version) from ov_ctrl;

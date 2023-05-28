@@ -1555,6 +1555,18 @@ public class ShipperMaint extends javax.swing.JPanel {
         jLabel41.setText("Remarks:");
         jLabel41.setName("lblremarks"); // NOI18N
 
+        tbpallets.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbpalletsFocusLost(evt);
+            }
+        });
+
+        tbboxes.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbboxesFocusLost(evt);
+            }
+        });
+
         jLabel7.setText("Pallets:");
         jLabel7.setName("lblpallets"); // NOI18N
 
@@ -2151,7 +2163,7 @@ public class ShipperMaint extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btdelitem)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
+            .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 213, Short.MAX_VALUE)
         );
 
         tabledetail.setModel(new javax.swing.table.DefaultTableModel(
@@ -2583,6 +2595,32 @@ public class ShipperMaint extends javax.swing.JPanel {
     private void btlookupOrderLineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupOrderLineActionPerformed
         lookUpFrameOrderLine();
     }//GEN-LAST:event_btlookupOrderLineActionPerformed
+
+    private void tbpalletsFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbpalletsFocusLost
+        String x = BlueSeerUtils.bsformat("", tbpallets.getText(), "0");
+        if (x.equals("error")) {
+            tbpallets.setText("");
+            tbpallets.setBackground(Color.yellow);
+            bsmf.MainFrame.show(getMessageTag(1000));
+            tbpallets.requestFocus();
+        } else {
+            tbpallets.setText(x);
+            tbpallets.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_tbpalletsFocusLost
+
+    private void tbboxesFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbboxesFocusLost
+         String x = BlueSeerUtils.bsformat("", tbboxes.getText(), "0");
+        if (x.equals("error")) {
+            tbboxes.setText("");
+            tbboxes.setBackground(Color.yellow);
+            bsmf.MainFrame.show(getMessageTag(1000));
+            tbboxes.requestFocus();
+        } else {
+            tbboxes.setText(x);
+            tbboxes.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_tbboxesFocusLost
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel ChoicePanel;
