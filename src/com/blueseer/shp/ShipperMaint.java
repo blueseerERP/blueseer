@@ -335,8 +335,8 @@ public class ShipperMaint extends javax.swing.JPanel {
         tbtrailer.setText("");
         tbremarks.setText("");
         tbref.setText("");
-        tbpallets.setText("");
-        tbboxes.setText("");
+        tbpallets.setText("0");
+        tbboxes.setText("0");
         
         
         lbladdr.setText("");
