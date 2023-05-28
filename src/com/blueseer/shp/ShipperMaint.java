@@ -1308,13 +1308,17 @@ public class ShipperMaint extends javax.swing.JPanel {
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
         String uniqwh = getUniqueWH();
         String uniqpo = getUniquePO();
-               
+        
+        String pallets = tbpallets.getText().isBlank() ? "0" : tbpallets.getText();
+        String boxes = tbboxes.getText().isBlank() ? "0" : tbboxes.getText();
+              
+        
         ship_mstr x = new ship_mstr(null, 
                 tbshipper.getText(),
                 ddbillto.getSelectedItem().toString(),
                 ddshipto.getSelectedItem().toString(),
-                tbpallets.getText(),
-                tbboxes.getText(),
+                pallets,
+                boxes,
                 ddshipvia.getSelectedItem().toString(),  
                 dfdate.format(dcshipdate.getDate()),
                 podate,
