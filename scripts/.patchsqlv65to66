@@ -4,6 +4,11 @@ set @sql = concat('Alter table ', @table, ' add column ' ,@field, ' varchar(20) 
 SELECT count(*) into @Cnt FROM information_schema.columns WHERE table_name = @table AND column_name = @field and table_schema = DATABASE();
 set @query = IF(@Cnt <= 0, @sql, 'select @field, \'Exists\' ');
 prepare stmt from @query; EXECUTE stmt;
+set @field = 'vd_type'; set @table = 'vd_mstr';
+set @sql = concat('Alter table ', @table, ' add column ' ,@field, ' varchar(30) not null default \'\' ');
+SELECT count(*) into @Cnt FROM information_schema.columns WHERE table_name = @table AND column_name = @field and table_schema = DATABASE();
+set @query = IF(@Cnt <= 0, @sql, 'select @field, \'Exists\' ');
+prepare stmt from @query; EXECUTE stmt;
 
 
 update ov_ctrl set ov_version = '6.6';

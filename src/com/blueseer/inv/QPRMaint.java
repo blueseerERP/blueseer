@@ -334,7 +334,7 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
         
         lbvendname.setText("");
         ddvend.removeAllItems();
-          ArrayList<String> myvends = venData.getVendMstrList();
+          ArrayList<String> myvends = venData.getVendMstrListMinusCarrier();
           for (int i = 0; i < myvends.size(); i++) {
             ddvend.addItem(myvends.get(i));
           }

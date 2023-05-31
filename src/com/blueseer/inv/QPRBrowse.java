@@ -234,7 +234,7 @@ public class QPRBrowse extends javax.swing.JPanel {
         dditem.setSelectedIndex(0);
         
         ddvendfrom.removeAllItems();
-        ArrayList vends = venData.getVendMstrList();
+        ArrayList vends = venData.getVendMstrListMinusCarrier();
         for (Object vend : vends) {
             ddvendfrom.addItem(vend);
         }

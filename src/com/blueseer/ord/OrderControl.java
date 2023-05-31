@@ -73,6 +73,11 @@ import javax.swing.SwingWorker;
 
 public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
 
+    // 20230528...TEV...
+    // using new scheme for additional control fields to use a single table.field...xxx_varchar (50)
+    // xxx_varchar is comma delimited with 0|1 based values...order determines which field
+    // 0 = vouchershipping
+    // 1 = tbd
    
     public OrderControl() {
         initComponents();
@@ -227,6 +232,7 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
     }
     
     public order_ctrl createRecord() {
+        String delimfields = String.valueOf(BlueSeerUtils.boolToInt(cbvouchershipping.isSelected())) + "," ;
         order_ctrl x = new order_ctrl(null, 
            String.valueOf(BlueSeerUtils.boolToInt(cbautosource.isSelected())),
             String.valueOf(BlueSeerUtils.boolToInt(cbautoinvoice.isSelected())),
@@ -235,12 +241,22 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
             String.valueOf(BlueSeerUtils.boolToInt(cbsrvmtype.isSelected())),
             String.valueOf(BlueSeerUtils.boolToInt(cbsrvmitemdefault.isSelected())),
             String.valueOf(BlueSeerUtils.boolToInt(cbexceedQOHU.isSelected())),
-            String.valueOf(BlueSeerUtils.boolToInt(cbvouchershipping.isSelected()))
+            delimfields
         );
         return x;
     }
         
     public void updateForm() {
+    
+   // long delimfieldCnt = x.orc_varchar().chars().filter(ch -> ch == ',').count();
+    String[] delimfields = x.orc_varchar().split(",",-1);
+    if (delimfields != null) {
+        for (int i = 0; i < delimfields.length; i++) {
+            if (i == 0) { // cbvouchershipping
+              cbvouchershipping.setSelected(BlueSeerUtils.ConvertStringToBool(delimfields[i]));  
+            }
+        }
+    }
     cbautosource.setSelected(BlueSeerUtils.ConvertStringToBool(x.orc_autosource()));
     cbautoinvoice.setSelected(BlueSeerUtils.ConvertStringToBool(x.orc_autoinvoice()));      
     cbcustitem.setSelected(BlueSeerUtils.ConvertStringToBool(x.orc_custitem()));    
@@ -248,7 +264,7 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
     cbsrvmitemdefault.setSelected(BlueSeerUtils.ConvertStringToBool(x.orc_srvm_item_default()));
     cballocate.setSelected(BlueSeerUtils.ConvertStringToBool(x.orc_autoallocate()));  
     cbexceedQOHU.setSelected(BlueSeerUtils.ConvertStringToBool(x.orc_exceedqohu()));  
-    cbvouchershipping.setSelected(BlueSeerUtils.ConvertStringToBool(x.orc_varchar())); 
+     
     }
     
     

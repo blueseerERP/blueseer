@@ -473,7 +473,7 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
                 BlueSeerUtils.convertDateFormat("yyyyMMdd", BlueSeerUtils.now().substring(0,8)),
                 BlueSeerUtils.convertDateFormat("yyyyMMdd", BlueSeerUtils.now().substring(0,8)),
                 bsmf.MainFrame.userid,
-                "carrier", // group
+                "", // group
                 "", // market
                 "", // buyer
                 "N00", // terms
@@ -490,7 +490,8 @@ public class CarrierMaint extends javax.swing.JPanel implements IBlueSeerT {
                 "", // tbmisc.getText(), 
                 tbphone.getText(),
                 tbemail.getText(),
-                "0" // String.valueOf(BlueSeerUtils.boolToInt(cb850.isSelected()))
+                "0", // String.valueOf(BlueSeerUtils.boolToInt(cb850.isSelected()))
+                "carrier" // vdtype
                 );
         return x;
     }

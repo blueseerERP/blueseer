@@ -99,6 +99,7 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
     // global variable declarations
                 boolean isLoad = false;
                 public static vd_mstr k = null;
+                public static String vdtype = "";
                 
    // global datatablemodel declarations  
     javax.swing.table.DefaultTableModel contactmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -652,7 +653,8 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tbmisc.getText(), 
                 tbmainphone.getText(),
                 tbmainemail.getText(),
-                String.valueOf(BlueSeerUtils.boolToInt(cb850.isSelected()))
+                String.valueOf(BlueSeerUtils.boolToInt(cb850.isSelected())),
+                vdtype // type ...if added via carrier maintenance...this value will be 'carrier'...otherwise blank
                 );
         return x;
     }
@@ -797,6 +799,7 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbmainphone.setText(k.vd_phone());
         tbmainemail.setText(k.vd_email());
         cb850.setSelected(BlueSeerUtils.ConvertStringToBool(k.vd_is850export()));
+        vdtype = k.vd_type();
         refreshContactTable(k.vd_addr());
         setAction(k.m());
         clearShipTo();

@@ -1365,7 +1365,7 @@ public class purData {
                lines.add(s);
             }
             
-            res = st.executeQuery("select vd_addr from vd_mstr order by vd_addr ;");
+            res = st.executeQuery("select vd_addr from vd_mstr where vd_type <> 'carrier' order by vd_addr ;");
             while (res.next()) {
                 String[] s = new String[2];
                s[0] = "vendors";

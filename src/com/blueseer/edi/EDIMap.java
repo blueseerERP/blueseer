@@ -1790,20 +1790,25 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             if (node.getParentNode().getNodeName().equals("#document")) {
                 root = node.getNodeName();
             }
+            
+            String ppath = "";
+            Node pnode = node.getParentNode();
+            while (pnode != null) {
+            ppath = pnode.getNodeName() + ':' + ppath;
+            pnode = pnode.getParentNode();
+            }
+            
             Node nextnode = null;
             counter = 0;
             if (node.getNodeType() == Node.ELEMENT_NODE) {            	
             	NodeList childnodes = node.getChildNodes();
             	for (int j = 0; j < childnodes.getLength(); j++) {
             		Node child = childnodes.item(j);
-                       /*
-                        if (child.getNodeType() != 3) {
-                         //parent = xmlgetPathToRoot(node.getNodeName(), node.getParentNode().getNodeName(), root, plhm);
-                         System.out.println("HERE: " + node.getNodeName() + "/" + node.getNodeType() + "/" + parent + "/" +  child.getNodeName() + "/" + child.getNodeType() + "/" + node.hasAttributes() + "/" + child.hasAttributes());
+                        if (ppath.length() > 10) {
+                         parent = ppath.substring(10,ppath.length() - 1);  
+                        } else {
+                         parent = ppath.substring(10); 
                         }
-                        */
-                        parent = xmlgetPathToRoot(node.getNodeName(), node.getParentNode().getNodeName(), root, plhm);
-                        
                         lhmkey = node.getNodeName() + "," + parent + "," + node.hashCode();
                       //  System.out.println("here: init" + lhmkey);
                         if (! lhm.containsKey(lhmkey)) {
@@ -1946,11 +1951,16 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             
             Node nextnode = null;
             counter = 0;
-                     	
+                
+                
+                System.out.println("PARENT: " + node.getNodeName() + "/" + node.getNodeType() + "  " + node.hasChildNodes() + "/" + node.hasAttributes());
+                         
             	NodeList childnodes = node.getChildNodes();
                 int ck = 0;
             	for (int j = 0; j < childnodes.getLength(); j++) {
             		Node child = childnodes.item(j);
+                        System.out.println("CHILD: " + child.getNodeName() + "/" + child.getNodeType() + "  " + child.hasChildNodes() + "/" + child.hasAttributes());
+                 
                      if (ppath.length() > 10) {
                          parent = ppath.substring(10,ppath.length() - 1);  
                       } else {
@@ -2027,8 +2037,10 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                                             for (int a = 0; a < child.getAttributes().getLength(); a++){
                                                Attr attr = (Attr) child.getAttributes().item(a);
                                                al.add(attr.getNodeName() + "=" + attr.getNodeValue());
-                                            //   String k[] = new String[]{child.getNodeName(),node.getNodeName(),"0","no","no",attr.getNodeName(),attr.getNodeName(),"0","100","-","O","A"};
-                                            //   newresult.add(k);
+                                               String k[] = new String[]{child.getNodeName(),node.getNodeName(),"0","no","no",attr.getNodeName(),attr.getNodeName(),"0","100","-","O","A"};
+                                               newresult.add(k);
+                                               System.out.println("CHILD ATTR: " + child.getNodeName() + "/" + attr.getNodeName());
+                 
                                             }
                                       }
                                       lhm.put(lhmkey, al);

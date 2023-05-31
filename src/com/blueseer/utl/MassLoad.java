@@ -803,12 +803,12 @@ public class MassLoad extends javax.swing.JPanel {
             
     }
    
-      // Freight stuff
-    public ArrayList<String> defineFreight() {
+      // Carrier stuff
+    public ArrayList<String> defineCarrier() {
         ArrayList<String> list = new ArrayList<String>();
-        list.add("car_id,s,30,mandatory,validated");
-        list.add("car_desc,s,50,optional,unvalidated");
-        list.add("car_apply,i,1,optional,unvalidated");
+        list.add("car_id,s,20,mandatory,validated");
+        list.add("car_desc,s,50,mandatory,unvalidated");
+        list.add("car_apply,b,1,optional,unvalidated");
         list.add("car_scac,s,10,optional,unvalidated");
         list.add("car_name,s,50,optional,unvalidated");
         list.add("car_line1,s,50,optional,unvalidated");
@@ -818,14 +818,23 @@ public class MassLoad extends javax.swing.JPanel {
         list.add("car_zip,s,50,optional,unvalidated");
         list.add("car_phone,s,15,optional,unvalidated");
         list.add("car_email,s,100,optional,unvalidated");
-        list.add("car_type,s,10,mandatory,validated");
-        list.add("car_acct,s,20,optional,unvalidated");
+        list.add("car_type,s,10,optional,limited");
+        list.add("car_acct,s,12,optional,unvalidated");
+        list.add("car_usdot,s,20,optional,unvalidated");
+        list.add("car_mc,s,20,optional,unvalidated");
+        list.add("car_ein,s,20,optional,unvalidated");
+        list.add("car_minmiles,i,12,optional,unvalidated");
+        list.add("car_maxmiles,i,12,optional,unvalidated");
+        list.add("car_maxdh,i,12,optional,unvalidated");
+        list.add("car_milerate,d,12,optional,unvalidated");
+        list.add("car_tractors,i,12,optional,unvalidated");
+        list.add("car_trailers,i,12,optional,unvalidated");
         return list;
     }
     
-    public boolean checkFreight(String[] rs, int i) {
+    public boolean checkCarrier(String[] rs, int i, ArrayList<String> list) {
         boolean proceed = true;
-        ArrayList<String> list = defineFreight();
+        
         // first check for correct number of fields
         if (rs.length != list.size()) {
                    tacomments.append("line " + i + " does not have correct number of fields. " + String.valueOf(rs.length) + " ...should have " + String.valueOf(list.size()) + " fields \n" );
@@ -850,12 +859,13 @@ public class MassLoad extends javax.swing.JPanel {
         return proceed;
     }
     
-    public String[] processFreight(File myfile) throws FileNotFoundException, IOException {
+    public String[] processCarrier(File myfile) throws FileNotFoundException, IOException {
         String[] m = new String[2]; 
         
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
+            ArrayList<String> checklist = defineCarrier();
             BufferedReader fsr = new BufferedReader(new FileReader(myfile));
             String line = "";
             int i = 0;
@@ -866,7 +876,7 @@ public class MassLoad extends javax.swing.JPanel {
                 } 
                 list.add(line);
                String[] recs = line.split(tbdelimiter.getText().trim(), -1);
-               temp = checkFreight(recs, i);
+               temp = checkCarrier(recs, i, checklist);
                    if (! temp) {
                        proceed = false;
                        m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
@@ -878,7 +888,8 @@ public class MassLoad extends javax.swing.JPanel {
                 if (cbignoreheader.isSelected()) {
                     i--; // reduce line count by 1 if ignore header
                    } 
-                   if(! OVData.addFreight(list, tbdelimiter.getText().trim()))
+                   ArrayList<String> newlist = cleanList(list, checklist, tbdelimiter.getText().trim());
+                   if(! OVData.addCarrier(newlist, tbdelimiter.getText().trim()))
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
@@ -1633,6 +1644,7 @@ public class MassLoad extends javax.swing.JPanel {
         list.add("vd_phone,s,15,optional,unvalidated");
         list.add("vd_email,s,60,optional,unvalidated");
         list.add("vd_is850export,i,1,optional,unvalidated");
+        list.add("vd_type,s,30,optional,unvalidated");
         return list;
     }
     
@@ -2684,8 +2696,8 @@ public class MassLoad extends javax.swing.JPanel {
                        proceed = false;
                    }
                }
-              if (ddtable.getSelectedItem().toString().compareTo("Freight Master") == 0) {
-                   temp = checkFreight(recs, i);
+              if (ddtable.getSelectedItem().toString().compareTo("Carrier Master") == 0) {
+                   temp = checkCarrier(recs, i, defineCarrier());
                    if (! temp) {
                        proceed = false;
                    }
@@ -2763,8 +2775,8 @@ public class MassLoad extends javax.swing.JPanel {
                if (x.compareTo("EDI Partner Transactions") == 0) {
                  m = processEDIPartnerTransactions(myfile);
                }
-               if (x.compareTo("Freight Master") == 0) {
-                 m = processFreight(myfile);
+               if (x.compareTo("Carrier Master") == 0) {
+                 m = processCarrier(myfile);
                }
                if (x.compareTo("BOM Master") == 0) {
                  m = processBOMMaster(myfile);
@@ -2857,8 +2869,8 @@ public class MassLoad extends javax.swing.JPanel {
         if (key.compareTo("Customer ShipTo Master") == 0) { 
              list = defineCustShipToMstr();
          }
-         if (key.compareTo("Freight Master") == 0) { 
-             list = defineFreight();
+         if (key.compareTo("Carrier Master") == 0) { 
+             list = defineCarrier();
          }
          if (key.compareTo("BOM Master") == 0) { 
              list = defineBOMMaster();

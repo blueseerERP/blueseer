@@ -61,6 +61,7 @@ import static com.blueseer.utl.BlueSeerUtils.currformatUS;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import com.blueseer.vdr.venData;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -4935,7 +4936,7 @@ public class OVData {
                   return myreturn;
              } 
     
-    public static boolean addFreight(ArrayList<String> list, String delim) {
+    public static boolean addCarrier(ArrayList<String> list, String delim) {
                   boolean myreturn = false;
                   try {
             
@@ -4957,7 +4958,6 @@ public class OVData {
                 // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
                 for (String rec : list) {
                     ld = rec.split(delim, -1);
-                    
                    res =  st.executeQuery("select car_id from car_mstr where " +
                                     " car_id = " + "'" + ld[0] + "'" + ";");
                     int j = 0;
@@ -4968,11 +4968,13 @@ public class OVData {
                     
                     if (j == 0) {
                     st.executeUpdate(" insert into car_mstr " 
-                      + "(car_id, car_desc, car_apply, car_scac, car_name, car_line1, car_line2, car_city, car_state, car_zip, car_phone, car_email, car_type, car_acct ) "
+                      + "(car_id, car_desc, car_apply, car_scac, car_name, car_line1, " +
+                        " car_line2, car_city, car_state, car_zip, car_phone, car_email, " +
+                        " car_type, car_acct, car_usdot, car_mc, car_ein, car_minmiles, car_maxmiles, car_maxdh, car_milerate, car_tractors, car_trailers ) "
                    + " values ( " + 
                     "'" +  ld[0] + "'" + "," + 
                     "'" +  ld[1] + "'" + "," +
-                    "'" +  ld[2] + "'" + "," +  
+                    "'" +  ld[2] + "'" + "," +  // must be zero
                             "'" +  ld[3] + "'" + "," +  
                             "'" +  ld[4] + "'" + "," +  
                             "'" +  ld[5] + "'" + "," +  
@@ -4983,7 +4985,16 @@ public class OVData {
                             "'" +  ld[10] + "'" + "," +  
                             "'" +  ld[11] + "'" + "," +  
                             "'" +  ld[12] + "'" + "," +  
-                            "'" +  ld[13] + "'" + 
+                            "'" +  ld[13] + "'" + "," + 
+                            "'" +  ld[14] + "'" + "," + // usdot
+                            "'" +  ld[15] + "'" + "," + // mc
+                            "'" +  ld[16] + "'" + "," + // ein
+                            "'" +  ld[17] + "'" + "," + // min
+                            "'" +  ld[18] + "'" + "," + // max
+                            "'" +  ld[19] + "'" + "," + // maxdh
+                            "'" +  ld[20] + "'" + "," + // milerate
+                            "'" +  ld[21] + "'" + "," + // tractors
+                            "'" +  ld[22] + "'" +  // trailers
                             " );"
                            );     
                    } else {
@@ -5001,10 +5012,62 @@ public class OVData {
                         " car_phone = " + "'" + ld[10] + "'" + "," +
                         " car_email = " + "'" + ld[11] + "'" + "," +
                         " car_type = " + "'" + ld[12] + "'" + "," + 
-                        " car_acct = " + "'" + ld[13] + "'" +      
+                        " car_acct = " + "'" + ld[13] + "'" + "," +     
+                        " car_usdot = " + "'" + ld[14] + "'" + "," +
+                        " car_mc = " + "'" + ld[15] + "'" + "," +
+                        " car_ein = " + "'" + ld[16] + "'" + "," +
+                        " car_minmiles = " + "'" + ld[17] + "'" + "," +
+                        " car_maxmiles = " + "'" + ld[18] + "'" + "," +
+                        " car_maxdh = " + "'" + ld[19] + "'" + "," +
+                        " car_milerate = " + "'" + ld[20] + "'" + "," +
+                        " car_tractors = " + "'" + ld[21] + "'" + "," +
+                        " car_trailers = " + "'" + ld[22] + "'" +         
                         " where car_id = " + "'" + ld[0] + "'" + ";");
                     }
-                }    
+                    
+                    // add vendor record
+                    venData.vd_mstr x = new venData.vd_mstr(null, 
+                ld[0],
+                "", // site
+                ld[4],
+                ld[5],
+                "",
+                "",
+                ld[7],
+                ld[8],
+                ld[9],
+                "", // country
+                BlueSeerUtils.convertDateFormat("yyyyMMdd", BlueSeerUtils.now().substring(0,8)),
+                BlueSeerUtils.convertDateFormat("yyyyMMdd", BlueSeerUtils.now().substring(0,8)),
+                bsmf.MainFrame.userid,
+                "", // group
+                "", // market
+                "", // buyer
+                "N00", // terms
+                ld[0], // carrier
+                "", // tbpricecode.getText(),
+                "", // tbdisccode.getText(),
+                "", // ddtaxcode.getSelectedItem().toString(),
+                OVData.getDefaultAPAcct(),
+                OVData.getDefaultCC(),
+                "", //remarks 
+                "", // freighttype
+                OVData.getDefaultAPBank(),
+                OVData.getDefaultCurrency(),
+                "", // tbmisc.getText(), 
+                ld[10],
+                ld[11],
+                "0", // String.valueOf(BlueSeerUtils.boolToInt(cb850.isSelected()))
+                "carrier" // vdtype
+                );
+                venData.addVendMstr(x);    
+                    
+                    
+                }  
+                
+                
+                
+                
             } // if proceed
             catch (SQLException s) {
                 MainFrame.bslog(s);
@@ -10668,10 +10731,18 @@ return mycount;
         ResultSet res = null;
         try{
 
-
-            res = st.executeQuery("select orc_varchar from order_ctrl;");
+           
+           res = st.executeQuery("select orc_varchar from order_ctrl;");
            while (res.next()) {
-                isvoucher = res.getBoolean("orc_varchar");
+               // order of fields defined in order_ctrl class
+                String[] delimfields = res.getString("orc_varchar").split(",",-1);
+                if (delimfields != null) {
+                    for (int i = 0; i < delimfields.length; i++) {
+                        if (i == 0) { // cbvouchershipping
+                          isvoucher = BlueSeerUtils.ConvertStringToBool(delimfields[i]);  
+                        }
+                    }
+                }
             }
 
        }

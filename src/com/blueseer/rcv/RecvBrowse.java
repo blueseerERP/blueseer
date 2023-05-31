@@ -282,7 +282,7 @@ public class RecvBrowse extends javax.swing.JPanel {
         }
         
         ddvendfrom.removeAllItems();
-        ArrayList vends = venData.getVendMstrList();
+        ArrayList vends = venData.getVendMstrListMinusCarrier();
         for (Object vend : vends) {
             ddvendfrom.addItem(vend);
         }
