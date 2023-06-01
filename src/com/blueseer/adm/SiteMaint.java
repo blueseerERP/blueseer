@@ -273,6 +273,10 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbcity.setText("");
         tbzip.setText("");
         tblogo.setText("");
+        tbphone.setText("");
+        tbweb.setText("");
+        tbcontact.setText("");
+        tbemail.setText("");
         tb_iv_generic.setText("");
         tb_sh_generic.setText("");
         tb_po_generic.setText("");
@@ -346,6 +350,36 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerT {
             tbline1.requestFocus();
             return false;
         }
+        
+        fc = checkLength(f,"site_phone");
+        if (tbphone.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbphone.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"site_web");
+        if (tbweb.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbweb.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"site_sqename");
+        if (tbcontact.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbcontact.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"site_sqeemail");
+        if (tbemail.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbemail.requestFocus();
+            return false;
+        }
+        
+        
         fc = checkLength(f,"site_logo");
         if (tblogo.getText().length() > fc || tblogo.getText().isEmpty()) {
             bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
@@ -487,15 +521,15 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerT {
                 ddstate.getSelectedItem().toString(),
                 tbzip.getText(),
                 ddcountry.getSelectedItem().toString(),
-                "", // phone
-                "", // web
+                tbphone.getText(), // phone
+                tbweb.getText(), // web
                 tblogo.getText(),
                 tb_iv_generic.getText(),  
                 tb_sh_generic.getText(),
-                "",
-                "",
-                "",
-                "",
+                tbcontact.getText(), // sqename
+                "", // sqephone
+                "", // sqefax
+                tbemail.getText(), // sqemail
                 tb_po_generic.getText(),
                 tb_or_generic.getText(),
                 tb_pos_generic.getText());
@@ -559,6 +593,10 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerT {
         tb_po_generic.setText(x.site_po_jasper());
         tb_or_generic.setText(x.site_or_jasper());
         tb_pos_generic.setText(x.site_pos_jasper());
+        tbphone.setText(x.site_phone());
+        tbweb.setText(x.site_web());
+        tbcontact.setText(x.site_sqename());
+        tbemail.setText(x.site_sqeemail());
         setAction(x.m());
     }
     
@@ -605,6 +643,14 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddcountry = new javax.swing.JComboBox<>();
         jLabel15 = new javax.swing.JLabel();
         btlookup = new javax.swing.JButton();
+        tbphone = new javax.swing.JTextField();
+        tbweb = new javax.swing.JTextField();
+        tbcontact = new javax.swing.JTextField();
+        tbemail = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
@@ -684,6 +730,14 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
+        jLabel16.setText("Phone");
+
+        jLabel17.setText("Web");
+
+        jLabel18.setText("Contact");
+
+        jLabel19.setText("Email");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -699,8 +753,12 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(jLabel6)
                     .addComponent(jLabel7)
                     .addComponent(jLabel8)
-                    .addComponent(jLabel15))
-                .addGap(18, 18, 18)
+                    .addComponent(jLabel15)
+                    .addComponent(jLabel16)
+                    .addComponent(jLabel17)
+                    .addComponent(jLabel18)
+                    .addComponent(jLabel19))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tbline1, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tbline2, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -711,9 +769,6 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addGroup(jPanel2Layout.createSequentialGroup()
                             .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(1, 1, 1)))
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(tbcity, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(tbline3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -722,7 +777,14 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addComponent(btnew)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btclear))
-                    .addComponent(ddcountry, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ddcountry, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(tbemail, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(tbcontact, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(tbweb, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(tbphone, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(tbcity, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(tbline3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -769,7 +831,23 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ddcountry, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel15))
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbphone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel16))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbweb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel17))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbcontact, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel18))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbemail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel19))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Jasper and Image Defaults"));
@@ -980,6 +1058,10 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -998,12 +1080,16 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JTextField tb_pos_generic;
     private javax.swing.JTextField tb_sh_generic;
     private javax.swing.JTextField tbcity;
+    private javax.swing.JTextField tbcontact;
     private javax.swing.JTextField tbdesc;
+    private javax.swing.JTextField tbemail;
     private javax.swing.JTextField tbkey;
     private javax.swing.JTextField tbline1;
     private javax.swing.JTextField tbline2;
     private javax.swing.JTextField tbline3;
     private javax.swing.JTextField tblogo;
+    private javax.swing.JTextField tbphone;
+    private javax.swing.JTextField tbweb;
     private javax.swing.JTextField tbzip;
     // End of variables declaration//GEN-END:variables
 }

@@ -82,9 +82,9 @@ public class admData {
         String[] m = new String[2];
         String sqlSelect = "SELECT * FROM  site_mstr where site_site = ?";
         String sqlInsert = "insert into site_mstr (site_site, site_desc, site_line1, site_line2, site_line3, "
-                        + " site_city, site_state, site_country, site_zip, site_logo, site_iv_jasper, " 
+                        + " site_city, site_state, site_country, site_zip, site_phone, site_web, site_sqename, site_sqeemail, site_logo, site_iv_jasper, " 
                         + " site_sh_jasper, site_po_jasper, site_or_jasper, site_pos_jasper ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.site_site);
@@ -100,12 +100,16 @@ public class admData {
             psi.setString(7, x.site_state);
             psi.setString(8, x.site_country);
             psi.setString(9, x.site_zip);
-            psi.setString(10, x.site_logo);
-            psi.setString(11, x.site_iv_jasper);
-            psi.setString(12, x.site_sh_jasper);
-            psi.setString(13, x.site_po_jasper);
-            psi.setString(14, x.site_or_jasper);
-            psi.setString(15, x.site_pos_jasper);
+            psi.setString(10, x.site_phone);
+            psi.setString(11, x.site_web);
+            psi.setString(12, x.site_sqename);
+            psi.setString(13, x.site_sqeemail);
+            psi.setString(14, x.site_logo);
+            psi.setString(15, x.site_iv_jasper);
+            psi.setString(16, x.site_sh_jasper);
+            psi.setString(17, x.site_po_jasper);
+            psi.setString(18, x.site_or_jasper);
+            psi.setString(19, x.site_pos_jasper);
             int rows = psi.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
             } else {
@@ -126,12 +130,13 @@ public class admData {
         String[] m = new String[2];
         String sql = "update site_mstr set site_desc = ?, site_line1 = ?, site_line2 = ?, "
                 + " site_line3 = ?, site_city = ?, site_state = ?, site_country = ?, "
-                + " site_zip = ?, site_logo = ?, site_iv_jasper = ?, site_sh_jasper = ?, " 
+                + " site_zip = ?, site_phone = ?, site_web = ?, site_sqename = ?, site_sqeemail = ?, "
+                + " site_logo = ?, site_iv_jasper = ?, site_sh_jasper = ?, " 
                 + " site_po_jasper = ?, site_or_jasper = ?, site_pos_jasper = ? " +               
                  " where site_site = ? ; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
-        ps.setString(15, x.site_site);
+        ps.setString(19, x.site_site);
             ps.setString(1, x.site_desc);
             ps.setString(2, x.site_line1);
             ps.setString(3, x.site_line2);
@@ -140,12 +145,16 @@ public class admData {
             ps.setString(6, x.site_state);
             ps.setString(7, x.site_country);
             ps.setString(8, x.site_zip);
-            ps.setString(9, x.site_logo);
-            ps.setString(10, x.site_iv_jasper);
-            ps.setString(11, x.site_sh_jasper);
-            ps.setString(12, x.site_po_jasper);
-            ps.setString(13, x.site_or_jasper);
-            ps.setString(14, x.site_pos_jasper); 
+            ps.setString(9, x.site_phone);
+            ps.setString(10, x.site_web);
+            ps.setString(11, x.site_sqename);
+            ps.setString(12, x.site_sqeemail);
+            ps.setString(13, x.site_logo);
+            ps.setString(14, x.site_iv_jasper);
+            ps.setString(15, x.site_sh_jasper);
+            ps.setString(16, x.site_po_jasper);
+            ps.setString(17, x.site_or_jasper);
+            ps.setString(18, x.site_pos_jasper); 
         int rows = ps.executeUpdate();
         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
         } catch (SQLException s) {

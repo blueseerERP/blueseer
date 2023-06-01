@@ -3002,6 +3002,24 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
                         Statement st = con.createStatement();
                         ResultSet res = null;
                         try {
+                            
+                            if (ddship.getSelectedItem().toString().isBlank()) {
+                              res = st.executeQuery("select * from site_mstr where site_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + ";");
+                            while (res.next()) {
+                                tbshipcode.setText(res.getString("site_site"));
+                                tbshipname.setText(res.getString("site_desc"));
+                                tbshipline1.setText(res.getString("site_line1"));
+                                tbshipline2.setText(res.getString("site_line2"));
+                                tbshipcity.setText(res.getString("site_city"));
+                                tbshipzip.setText(res.getString("site_zip"));
+                                tbshipcontact.setText(res.getString("site_sqename"));
+                                tbshipphone.setText(res.getString("site_phone"));
+                                tbshipemail.setText(res.getString("site_sqeemail"));
+                                ddshipstate.setSelectedItem(res.getString("site_state"));
+                                ddshipcountry.setSelectedItem(res.getString("site_country"));
+                                lbshipto.setText("ship to site");
+                            }  
+                            } else {
                             res = st.executeQuery("select * from vds_det where vds_code = " + "'" + ddvend.getSelectedItem().toString() + "'" +
                                     " AND vds_shipto = " + "'" + ddship.getSelectedItem().toString() + "'" + ";");
                             while (res.next()) {
@@ -3018,6 +3036,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
                                 ddshipcountry.setSelectedItem(res.getString("vds_country"));
                                 lbshipto.setText(res.getString("vds_name"));
                             }
+                        }
                         dditemship.setSelectedItem(ddship.getSelectedItem().toString());
                         } catch (SQLException s) {
                             MainFrame.bslog(s);
