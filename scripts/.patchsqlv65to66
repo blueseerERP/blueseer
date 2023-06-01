@@ -11,5 +11,10 @@ set @query = IF(@Cnt <= 0, @sql, 'select @field, \'Exists\' ');
 prepare stmt from @query; EXECUTE stmt;
 
 
+alter table qual_mstr modify column qual_date_crt varchar(10) NOT NULL DEFAULT '';
+alter table qual_mstr modify column qual_date_upd varchar(10) NOT NULL DEFAULT '';
+alter table qual_mstr modify column qual_date_cls varchar(10) NOT NULL DEFAULT '';
+
+
 update ov_ctrl set ov_version = '6.6';
 select concat("sql schema version is now: ", ov_version) from ov_ctrl;
