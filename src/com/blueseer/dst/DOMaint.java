@@ -423,6 +423,31 @@ public class DOMaint extends javax.swing.JPanel implements IBlueSeerT {
                     return b;
                 }
                 
+                if (dcrecvdate.getDate() == null) {
+                    b = false;
+                    BlueSeerUtils.message(new String[] {"1", "receive date cannot be blank"});
+                    dcrecvdate.requestFocus();
+                    return b;
+                }
+                if (dcshipdate.getDate() == null) {
+                    b = false;
+                    BlueSeerUtils.message(new String[] {"1", "ship date cannot be blank"});
+                    dcshipdate.requestFocus();
+                    return b;
+                }
+                if (ddwhfrom.getSelectedItem() == null || ddwhfrom.getSelectedItem().toString().isBlank() ) {
+                    b = false;
+                    BlueSeerUtils.message(new String[] {"1", "From Warehouse cannot be blank"});
+                    ddwhfrom.requestFocus();
+                    return b;
+                }
+                if (ddwhto.getSelectedItem() == null || ddwhto.getSelectedItem().toString().isBlank() ) {
+                    b = false;
+                    BlueSeerUtils.message(new String[] {"1", "To Warehouse cannot be blank"});
+                    ddwhto.requestFocus();
+                    return b;
+                }
+                
                
                 
                
@@ -461,6 +486,7 @@ public class DOMaint extends javax.swing.JPanel implements IBlueSeerT {
         // now detail
         myorddetmodel.setRowCount(0);
         ArrayList<dod_mstr> z = getDODet(key[0]);
+        // line, item, qty, uom, ref, serial 
         for (dod_mstr d : z) {
             myorddetmodel.addRow(new Object[]{d.dod_line(), d.dod_item(), d.dod_qty(),
                  d.dod_uom(), d.dod_ref(), d.dod_serial()});
@@ -469,7 +495,8 @@ public class DOMaint extends javax.swing.JPanel implements IBlueSeerT {
         return x.m();
     }
     
-    public do_mstr createRecord() { 
+    public do_mstr createRecord() {
+        
         do_mstr x = new do_mstr(null, 
                 tbkey.getText().toString(),
                 ddsite.getSelectedItem().toString(),
@@ -482,8 +509,8 @@ public class DOMaint extends javax.swing.JPanel implements IBlueSeerT {
                 "", //ref
                 remarks.getText(),
                 ddshipvia.getSelectedItem().toString(),
-                "", // pallets
-                "", // gross weight
+                "0", // pallets
+                "0", // gross weight
                 "", //char1
                 "" // char2
                 );

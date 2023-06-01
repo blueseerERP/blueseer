@@ -607,6 +607,29 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }
    
     public emp_mstr createRecord() { 
+        String shiredate = "0000-00-00";
+        String sdobdate = "0000-00-00";
+        String stermdate = "0000-00-00";
+        String rate = "0.00";
+        String vacdays = "0";
+        String vactaken = "0";
+        String fmladays = "0";
+        
+        vacdays = tbvacdays.getText().isBlank() ? "0" : tbvacdays.getText();
+        vactaken = tbvactaken.getText().isBlank() ? "0" : tbvactaken.getText();
+        fmladays = tbefladays.getText().isBlank() ? "0" : tbefladays.getText();
+        rate = tbrate.getText().isBlank() ? "0" : tbrate.getText();
+        
+        if (hiredate.getDate() != null) {
+            shiredate = BlueSeerUtils.setDateFormat(hiredate.getDate());
+        }
+        if (dcdob.getDate() != null) {
+            sdobdate = BlueSeerUtils.setDateFormat(dcdob.getDate());
+        }
+        if (termdate.getDate() != null) {
+            stermdate = BlueSeerUtils.setDateFormat(termdate.getDate());
+        }
+        
         emp_mstr x = new emp_mstr(null, 
                 tbkey.getText().toString(),
                 lastname.getText(),
@@ -614,7 +637,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 middlename.getText(),
                 dddept.getSelectedItem().toString(),
                 ddstatus.getSelectedItem().toString(),
-                BlueSeerUtils.setDateFormat(hiredate.getDate()),
+                shiredate,
                 ddshift.getSelectedItem().toString(),
                 ddtype.getSelectedItem().toString(),
                 ddgender.getSelectedItem().toString(),
@@ -639,8 +662,8 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT  {
                  tbphone.getText(),
                  tbemercontact.getText(),
                  tbemernumber.getText(),
-                 BlueSeerUtils.setDateFormat(dcdob.getDate()),
-                 BlueSeerUtils.setDateFormat(termdate.getDate()),
+                 sdobdate,
+                 stermdate,
                  "0", // emp_clockin add = 0; update = n/a ....always updated by another prog
                  tbsupervisor.getText()
                 );
@@ -1283,6 +1306,11 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT  {
             }
         });
 
+        tbkey.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbkeyFocusLost(evt);
+            }
+        });
         tbkey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tbkeyActionPerformed(evt);
@@ -2189,6 +2217,19 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT  {
     private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
         lookUpFrame();
     }//GEN-LAST:event_btlookupActionPerformed
+
+    private void tbkeyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbkeyFocusLost
+        String x = BlueSeerUtils.bsformat("", tbkey.getText(), "0");
+        if (x.equals("error")) {
+            tbkey.setText("");
+            tbkey.setBackground(Color.yellow);
+            bsmf.MainFrame.show(getMessageTag(1000));
+            tbkey.requestFocus();
+        } else {
+            tbkey.setText(x);
+            tbkey.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_tbkeyFocusLost
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;

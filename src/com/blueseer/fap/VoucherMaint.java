@@ -544,7 +544,7 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     
     public String[] addRecord(String[] x) {
-     String[] m = VoucherTransaction(OVData.getNextNbr("batch"), ddtype.getSelectedItem().toString() , createDetRecord(), createRecord(), false);
+     String[] m = VoucherTransaction(ddtype.getSelectedItem().toString() , createDetRecord(), createRecord(), false);
      updateReceivers(); 
      return m;
      }
@@ -555,7 +555,7 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
      
     public String[] deleteRecord(String[] x) {
      // same function used for add...but with 'true' for void as last parameter
-     String[] m = VoucherTransaction(OVData.getNextNbr("batch"), ddtype.getSelectedItem().toString() , createDetRecord(), createRecord(), true);
+     String[] m = VoucherTransaction(ddtype.getSelectedItem().toString() , createDetRecord(), createRecord(), true);
      updateReceiversVoid(); 
      updateAPVoucherStatus(tbkey.getText(), "x");
      return m;
@@ -643,6 +643,7 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public fapData.ap_mstr createRecord() {
+        int batchid = OVData.getNextNbr("batch");
         fapData.ap_mstr x = new fapData.ap_mstr(null, 
                 "", //ap_id
                 ddvend.getSelectedItem().toString(), // ap_vend, 
@@ -664,7 +665,7 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
                 curr, //ap_curr
                 basecurr, //ap_base_curr
                 tbkey.getText(), //ap_check // in this case voucher number is reference field
-                "", //ap_batch
+                String.valueOf(batchid), //ap_batch
                 ddsite.getSelectedItem().toString(), //ap_site
                 ddtype.getSelectedItem().toString()); 
         return x;  

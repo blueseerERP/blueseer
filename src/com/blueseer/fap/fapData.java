@@ -361,7 +361,7 @@ public class fapData {
     }
     
     
-    public static String[] VoucherTransaction(int batchid, String ctype, ArrayList<vod_mstr> vod, ap_mstr ap, boolean Void) {
+    public static String[] VoucherTransaction(String ctype, ArrayList<vod_mstr> vod, ap_mstr ap, boolean Void) {
         String[] m = new String[2];
         Connection bscon = null;
         PreparedStatement ps = null;

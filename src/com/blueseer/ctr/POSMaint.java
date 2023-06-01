@@ -454,7 +454,7 @@ public class POSMaint extends javax.swing.JPanel {
             OVData.UpdateInventoryFromPOS(nbr, false, bscon);
            // OVData.voidPOSStatus(nbr, bscon);
             bscon.commit();
-            bsmf.MainFrame.show(getMessageTag(1083));
+            bsmf.MainFrame.show(getMessageTag(1125));
         } catch (SQLException s) {
              MainFrame.bslog(s);
              try {

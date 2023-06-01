@@ -518,7 +518,7 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
                         + "'" + taHistory.getText().replace("'", "''") + "'" + ","
                         + "'" + taComments.getText().replace("'", "''") + "'" + ","
                         + "'" + Float.parseFloat(tbChargeBack.getText().replace("'", "''").toString()) + "'" + ","
-                        + null + "," + null + "," + null
+                        + "0" + "," + null + "," + "0"
                         + ")"
                         + ";");
                         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
@@ -1145,8 +1145,26 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
         jLabel8.setText("Part Desc");
         jLabel8.setName("lblitemdesc"); // NOI18N
 
+        tbQtyRejected.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbQtyRejectedFocusLost(evt);
+            }
+        });
+
         jLabel9.setText("Qty Rejected");
         jLabel9.setName("lblqty"); // NOI18N
+
+        tbNumSuspectCont.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbNumSuspectContFocusLost(evt);
+            }
+        });
+
+        tbTotalQty.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbTotalQtyFocusLost(evt);
+            }
+        });
 
         jLabel10.setText("Number of Suspect Containers");
         jLabel10.setName("lblsuspect"); // NOI18N
@@ -1186,6 +1204,12 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
         taComments.setColumns(20);
         taComments.setRows(5);
         jScrollPane3.setViewportView(taComments);
+
+        tbChargeBack.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbChargeBackFocusLost(evt);
+            }
+        });
 
         jLabel19.setText("Total ChargeBack for QPR");
         jLabel19.setName("lblchargeback"); // NOI18N
@@ -1359,36 +1383,30 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
                                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(74, 74, 74)
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                        .addComponent(jLabel9)
+                                                        .addComponent(jLabel10)
+                                                        .addComponent(jLabel11)
+                                                        .addComponent(jLabel19))
+                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(tbNumSuspectCont, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(tbQtyRejected, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(tbTotalQty, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addComponent(tbChargeBack, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                            .addComponent(jLabel9)
-                                                            .addComponent(jLabel10)
-                                                            .addComponent(jLabel11)
-                                                            .addComponent(jLabel19))
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                            .addComponent(tbNumSuspectCont, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                            .addComponent(tbQtyRejected, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                            .addComponent(tbTotalQty, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                            .addComponent(tbChargeBack, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                                        .addComponent(jLabel8)
+                                                        .addGap(15, 15, 15)
+                                                        .addComponent(tbPartDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                        .addGap(1, 1, 1))
                                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                                                .addComponent(jLabel8)
-                                                                .addGap(15, 15, 15)
-                                                                .addComponent(tbPartDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addGap(1, 1, 1))
-                                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                                                .addComponent(jLabel7)
-                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(dditem, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                                        .addComponent(jLabel7)
+                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                        .addComponent(dditem, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addComponent(jLabel15)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(tbContact, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))))
@@ -1641,6 +1659,58 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
             } // if ddvend has a list
         }
     }//GEN-LAST:event_ddvendActionPerformed
+
+    private void tbQtyRejectedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbQtyRejectedFocusLost
+        String x = BlueSeerUtils.bsformat("", tbQtyRejected.getText(), "0");
+        if (x.equals("error")) {
+            tbQtyRejected.setText("");
+            tbQtyRejected.setBackground(Color.yellow);
+            bsmf.MainFrame.show(getMessageTag(1000));
+            tbQtyRejected.requestFocus();
+        } else {
+            tbQtyRejected.setText(x);
+            tbQtyRejected.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_tbQtyRejectedFocusLost
+
+    private void tbNumSuspectContFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbNumSuspectContFocusLost
+         String x = BlueSeerUtils.bsformat("", tbNumSuspectCont.getText(), "0");
+        if (x.equals("error")) {
+            tbNumSuspectCont.setText("");
+            tbNumSuspectCont.setBackground(Color.yellow);
+            bsmf.MainFrame.show(getMessageTag(1000));
+            tbNumSuspectCont.requestFocus();
+        } else {
+            tbNumSuspectCont.setText(x);
+            tbNumSuspectCont.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_tbNumSuspectContFocusLost
+
+    private void tbTotalQtyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbTotalQtyFocusLost
+        String x = BlueSeerUtils.bsformat("", tbTotalQty.getText(), "0");
+        if (x.equals("error")) {
+            tbTotalQty.setText("");
+            tbTotalQty.setBackground(Color.yellow);
+            bsmf.MainFrame.show(getMessageTag(1000));
+            tbTotalQty.requestFocus();
+        } else {
+            tbTotalQty.setText(x);
+            tbTotalQty.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_tbTotalQtyFocusLost
+
+    private void tbChargeBackFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbChargeBackFocusLost
+         String x = BlueSeerUtils.bsformat("", tbChargeBack.getText(), "2");
+        if (x.equals("error")) {
+            tbChargeBack.setText("");
+            tbChargeBack.setBackground(Color.yellow);
+            bsmf.MainFrame.show(getMessageTag(1000));
+            tbChargeBack.requestFocus();
+        } else {
+            tbChargeBack.setText(x);
+            tbChargeBack.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_tbChargeBackFocusLost
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

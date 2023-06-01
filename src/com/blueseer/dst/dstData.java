@@ -414,10 +414,11 @@ public class dstData {
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
                 r = new dod_mstr(m);
                 } else {
+                    // line, item, qty, uom, ref, serial 
                     while(res.next()) {
                         m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                        r = new dod_mstr(m, res.getString("dod_nbr"), res.getString("dod_line"), res.getString("dod_item"), res.getString("dod_qty"), res.getString("dod_ref"),
-                    res.getString("dod_serial"), res.getString("dod_uom"), res.getString("dod_char1")
+                        r = new dod_mstr(m, res.getString("dod_nbr"), res.getString("dod_line"), res.getString("dod_item"), res.getString("dod_qty"), res.getString("dod_uom"),
+                    res.getString("dod_ref"), res.getString("dod_serial"), res.getString("dod_char1")
                     );
                         list.add(r);
                     }
