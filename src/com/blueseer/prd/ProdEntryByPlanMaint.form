@@ -34,22 +34,6 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="1" attributes="0">
-                      <Component id="jLabel5" alignment="1" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabel4" alignment="1" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="tbqty" min="-2" pref="96" max="-2" attributes="0"/>
-                      <Component id="tbscan" alignment="0" min="-2" pref="134" max="-2" attributes="0"/>
-                      <Component id="partlabel" alignment="0" min="-2" pref="195" max="-2" attributes="0"/>
-                      <Component id="ddop" alignment="0" min="-2" pref="131" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="32767" attributes="0"/>
-              </Group>
               <Group type="102" attributes="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
@@ -71,6 +55,23 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Component id="jLabel5" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel4" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="partlabel" min="-2" pref="195" max="-2" attributes="0"/>
+                      <Component id="tbqty" min="-2" pref="96" max="-2" attributes="0"/>
+                      <Component id="tbscan" alignment="0" min="-2" pref="134" max="-2" attributes="0"/>
+                      <Component id="ddop" alignment="0" min="-2" pref="131" max="-2" attributes="0"/>
+                      <Component id="qtylabel" alignment="0" min="-2" pref="324" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="32767" attributes="0"/>
+              </Group>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
@@ -83,6 +84,8 @@
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="partlabel" min="-2" pref="24" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="qtylabel" min="-2" pref="24" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="ddop" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -170,7 +173,7 @@
             <Property name="name" type="java.lang.String" value="lblreference" noResource="true"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="partlabel">
+        <Component class="javax.swing.JLabel" name="qtylabel">
           <Properties>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="e8" green="66" red="19" type="rgb"/>
@@ -178,6 +181,13 @@
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblmessage">
+        </Component>
+        <Component class="javax.swing.JLabel" name="partlabel">
+          <Properties>
+            <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="e8" green="66" red="19" type="rgb"/>
+            </Property>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>

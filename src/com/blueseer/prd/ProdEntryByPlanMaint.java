@@ -160,13 +160,15 @@ String sitecitystatezip = "";
     
     public void validateScan(String scan) {
        
+        lblmessage.setText("");
         if (scan.isEmpty()) {
+            qtylabel.setText("");
             partlabel.setText("");
             return;
         }
         
         if (schData.isPlan(scan)) {
-       tbqty.setText(String.valueOf(schData.getPlanSchedQty(scan)));
+      // tbqty.setText(String.valueOf(schData.getPlanSchedQty(scan)));
        partlabel.setText(schData.getPlanItem(scan));
        partlabel.setForeground(Color.blue);
        ddop.removeAllItems();
@@ -175,19 +177,37 @@ String sitecitystatezip = "";
        for (int i = 0; i < mylist.size(); i++) {
            ddop.addItem(mylist.get(i));
        }
+       
+       
+       
        if (ddop.getItemCount() <= 0) {
            ddop.addItem("0");
            partlabel.setText(partlabel.getText() + " " + "No Operations..." + "\n" + "make sure item has routing AND standard cost");
            partlabel.setForeground(Color.yellow);
+       } else {
+          double prevscanned = schData.getPlanDetTotQtyByOp(tbscan.getText(), ddop.getSelectedItem().toString());
+          double qtysched = schData.getPlanSchedQty(tbscan.getText());
+          double remaining = qtysched - prevscanned;
+          tbqty.setText(String.valueOf(remaining));
+          qtylabel.setText("qty sched: " + String.valueOf(qtysched) + "     qty scanned: " + String.valueOf(prevscanned));
+          qtylabel.setForeground(Color.blue);
+          plan_mstr pm = schData.getPlanMstr(new String[]{tbscan.getText()});
+            if (Integer.valueOf(pm.plan_status()) != 0 ) {
+            lblmessage.setText(getMessageTag(1071,tbscan.getText()));
+            lblmessage.setForeground(Color.red);
+            btcommit.setEnabled(false);
+            } else {
+                btcommit.setEnabled(true);
+            }
        }
        
        tbqty.requestFocusInWindow();
-       btcommit.setEnabled(true);
+       
       } else {
               btcommit.setEnabled(false);
               tbscan.setText("");
-              partlabel.setText("Bad Ticket");
-              partlabel.setForeground(Color.red);
+              qtylabel.setText("Bad Ticket");
+              qtylabel.setForeground(Color.red);
         // bsmf.MainFrame.show("Bad Ticket: " + scan);
          tbscan.requestFocusInWindow();
             return;
@@ -242,8 +262,8 @@ String sitecitystatezip = "";
         
         tbqty.setText("");
         tbscan.setText("");
-        partlabel.setText("");
-        partlabel.setForeground(Color.black);
+        qtylabel.setText("");
+        qtylabel.setForeground(Color.black);
         ddop.removeAllItems();
         tbref.setText("");
       
@@ -274,8 +294,9 @@ String sitecitystatezip = "";
         jLabel7 = new javax.swing.JLabel();
         tbref = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        partlabel = new javax.swing.JLabel();
+        qtylabel = new javax.swing.JLabel();
         lblmessage = new javax.swing.JLabel();
+        partlabel = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -334,25 +355,14 @@ String sitecitystatezip = "";
         jLabel8.setText("Reference");
         jLabel8.setName("lblreference"); // NOI18N
 
+        qtylabel.setForeground(new java.awt.Color(25, 102, 232));
+
         partlabel.setForeground(new java.awt.Color(25, 102, 232));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel7))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tbscan, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(partlabel, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -368,6 +378,20 @@ String sitecitystatezip = "";
                         .addGap(44, 44, 44)
                         .addComponent(lblmessage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel7))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(partlabel, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbscan, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(qtylabel, javax.swing.GroupLayout.PREFERRED_SIZE, 324, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -378,6 +402,8 @@ String sitecitystatezip = "";
                     .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(partlabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(qtylabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -408,9 +434,8 @@ String sitecitystatezip = "";
         inv_ctrl ic = invData.getINVCtrl(new String[]{tbscan.getText()});
         double prevscanned = schData.getPlanDetTotQtyByOp(tbscan.getText(), ddop.getSelectedItem().toString());
         String[] detail = invData.getItemDetail(pm.plan_item());
-        
-        
         boolean isPlan = true;
+        
         if (pm.plan_nbr().isBlank()) {
             isPlan = false;
         }
@@ -463,7 +488,7 @@ String sitecitystatezip = "";
         
         
         if (isPlan &&  Integer.valueOf(pm.plan_status()) == 0 ) {
-            
+            boolean isLastOp = OVData.isLastOperation(pm.plan_item(), ddop.getSelectedItem().toString() );
             //OK ...if here..we should be prepared to commit.... Let's commit the transaction with OVData.loadTranHistByTable
             
             JTable mytable = new JTable();
@@ -513,7 +538,7 @@ String sitecitystatezip = "";
             return;
             } else {
                  //must have successfully enter tran_mstr...now lets create pland_mstr...and update plan_mstr if closing
-                 int key = OVData.CreatePlanDet(mytable);
+                 int key = OVData.CreatePlanDet(mytable, isLastOp);
                  lblmessage.setText("Scan Complete");
                  lblmessage.setForeground(Color.blue);
                 if (BlueSeerUtils.ConvertStringToBool(ic.printsubticket())) {               
@@ -552,8 +577,7 @@ String sitecitystatezip = "";
 
     private void tbscanFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbscanFocusLost
         tbscan.setBackground(Color.white);
-        validateScan(tbscan.getText());
-        lblmessage.setText("");
+        validateScan(tbscan.getText());        
     }//GEN-LAST:event_tbscanFocusLost
 
     private void tbscanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbscanActionPerformed
@@ -579,6 +603,7 @@ String sitecitystatezip = "";
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblmessage;
     private javax.swing.JLabel partlabel;
+    private javax.swing.JLabel qtylabel;
     private javax.swing.JTextField tbqty;
     private javax.swing.JTextField tbref;
     private javax.swing.JTextField tbscan;

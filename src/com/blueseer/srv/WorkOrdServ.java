@@ -635,7 +635,7 @@ public class WorkOrdServ extends HttpServlet {
            return createMessage("Work Order is closed", "fail", "0"); 
         }
         
-        
+        boolean isLastOp = OVData.isLastOperation(item, operation );
         // create table of data
         String[] det = invData.getItemDetail(item); 
         mymodel.addRow(new Object[]{item,
@@ -664,7 +664,7 @@ public class WorkOrdServ extends HttpServlet {
          if (! OVData.loadTranHistByTable(mytable)) {
            return createMessage("loadTranHistByTable failed", "fail", "0");   
          } else {
-             int key = OVData.CreatePlanDet(mytable);
+             int key = OVData.CreatePlanDet(mytable, isLastOp);
              return createMessage("work order loaded successfully", "success", String.valueOf(key));
          }
        
@@ -759,6 +759,7 @@ public class WorkOrdServ extends HttpServlet {
            return createMessage("Work Order is closed", "fail", "0"); 
         }
         
+        boolean isLastOp = OVData.isLastOperation(item, operation );
         
         // create table of data
         String[] det = invData.getItemDetail(item); 
@@ -788,7 +789,7 @@ public class WorkOrdServ extends HttpServlet {
          if (! OVData.loadTranHistByTable(mytable)) {
            return createMessageJSON("fail", "loadTranHistByTable failed", "");   
          } else {
-             int key = OVData.CreatePlanDet(mytable);
+             int key = OVData.CreatePlanDet(mytable, isLastOp);
              return createMessageJSON("success", "work order loaded successfully",String.valueOf(key));
          }
        

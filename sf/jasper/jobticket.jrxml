@@ -46,7 +46,8 @@
      plan_order,
      plan_type,
      plan_line,
-     plan_cell, it_item, it_rev, it_desc, it_wf, wf_op, wf_desc, wf_cell, 
+     plan_cell, it_item, it_rev, it_desc, it_wf, wf_op,  wf_desc, wf_cell, 
+     case when wf_assert = 0 then 'no' else 'yes' end as assert,
      case when wf_run_hours = 0 then '0' when wf_run_hours = '' then '0' when wf_run_hours is null then '0' else (1 / wf_run_hours) end as runrate,
      case when plan_type = 'DEMD' then so_po else 'N/A' end as custpo,
      case when plan_type = 'DEMD' then so_cust else 'N/A' end as custcode,
@@ -114,6 +115,7 @@ order by wf_op;]]>
 	<field name="plan_type" class="java.lang.String"/>
 	<field name="it_desc" class="java.lang.String"/>
 	<field name="it_rev" class="java.lang.String"/>
+	<field name="assert" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -364,14 +366,14 @@ order by wf_op;]]>
 				<reportElement x="4" y="19" width="756" height="1" uuid="c9e36006-c5df-41ef-96b1-529b4e6ddb52"/>
 			</line>
 			<textField>
-				<reportElement x="509" y="2" width="67" height="16" uuid="48d924f9-8b2d-4e1c-a8c5-e0b2cc2a2a9a"/>
+				<reportElement x="551" y="2" width="67" height="16" uuid="48d924f9-8b2d-4e1c-a8c5-e0b2cc2a2a9a"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{jasper.jobticket.lblqtycomp}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="591" y="2" width="78" height="16" uuid="60ac3857-2e43-467e-a193-bf40cb36c714"/>
+				<reportElement x="644" y="2" width="78" height="16" uuid="60ac3857-2e43-467e-a193-bf40cb36c714"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
@@ -391,6 +393,13 @@ order by wf_op;]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{jasper.jobticket.lblpiecesperhour}]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement x="480" y="2" width="58" height="16" uuid="9f5647ea-959e-4395-9444-9213c70a8621"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.jobticket.lblassert}]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>
@@ -408,11 +417,11 @@ order by wf_op;]]>
 				<textFieldExpression><![CDATA[$F{wf_desc}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="510" y="0" width="67" height="20" uuid="ec99802d-5c85-44b8-b76a-dfcaad37615a"/>
+				<reportElement x="552" y="0" width="67" height="20" uuid="ec99802d-5c85-44b8-b76a-dfcaad37615a"/>
 				<text><![CDATA[____________]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="591" y="0" width="67" height="20" uuid="ffe9ad20-571e-47ff-8128-c4944e2a9467"/>
+				<reportElement x="647" y="0" width="67" height="20" uuid="ffe9ad20-571e-47ff-8128-c4944e2a9467"/>
 				<text><![CDATA[____________]]></text>
 			</staticText>
 			<subreport>
@@ -432,6 +441,10 @@ order by wf_op;]]>
 			<textField>
 				<reportElement x="405" y="0" width="58" height="20" uuid="f40fd096-4959-4bab-bce5-550de3f660f3"/>
 				<textFieldExpression><![CDATA[new BigDecimal($F{runrate}).setScale(0, BigDecimal.ROUND_HALF_DOWN)]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="480" y="0" width="40" height="20" uuid="8909e6be-5e4e-43c2-98fc-81420db19990"/>
+				<textFieldExpression><![CDATA[$F{assert}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

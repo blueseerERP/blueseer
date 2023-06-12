@@ -18568,7 +18568,7 @@ MainFrame.bslog(e);
       return myreturn;
   }
 
-    public static int CreatePlanDet(JTable mytable) {
+    public static int CreatePlanDet(JTable mytable, boolean isLastOp) {
   /*  0=part
       1=type 
       2=operation
@@ -18628,14 +18628,16 @@ MainFrame.bslog(e);
                     // if multiscan then close only when plan sched qty = scanned qty exactly
                     double scanqty = schData.getPlanDetTotQtyByOp(_parent, _op);
                     double schedqty = schData.getPlanSchedQty(_parent);
-                    if ((scanqty >= schedqty) && OVData.isLastOperation(_part, _op) ) {
+                    if (isLastOp) {
                      schData.updatePlanQty(_parent, scanqty);
-                     schData.updatePlanStatus(_parent, "1");   
+                        if (scanqty >= schedqty) {
+                        schData.updatePlanStatus(_parent, "1");   
+                        }
                     }
 
 
                     // if not multiscan then close plan order....one scan per planned order regardless if they produced sched qty exactly
-                    if (! OVData.isInvCtrlPlanMultiScan() && OVData.isLastOperation(_part, _op)) {
+                    if (! OVData.isInvCtrlPlanMultiScan() && isLastOp) {
                     schData.updatePlanQty(_parent, _qty);
                     schData.updatePlanStatus(_parent, "1");
                     }
