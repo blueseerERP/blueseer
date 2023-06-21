@@ -143,7 +143,7 @@ inner join site_mstr on site_site = sv_site where svd_nbr =  $P{myid}]]>
 				<textElement>
 					<font size="24"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{jasper.srvorder.lbltitle}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{REPORT_TITLE}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -315,7 +315,7 @@ inner join site_mstr on site_site = sv_site where svd_nbr =  $P{myid}]]>
 	<columnHeader>
 		<band height="26" splitType="Stretch">
 			<textField>
-				<reportElement x="19" y="0" width="199" height="20" uuid="426eb0f3-ca7b-4b29-b91d-24676bc6b0ad"/>
+				<reportElement x="19" y="0" width="173" height="20" uuid="426eb0f3-ca7b-4b29-b91d-24676bc6b0ad"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
@@ -325,46 +325,51 @@ inner join site_mstr on site_site = sv_site where svd_nbr =  $P{myid}]]>
 				<reportElement x="0" y="19" width="555" height="1" uuid="c9e36006-c5df-41ef-96b1-529b4e6ddb52"/>
 			</line>
 			<textField>
-				<reportElement x="410" y="0" width="79" height="20" uuid="6291c7a6-54cd-4ae2-bccd-f8d0c831e424"/>
+				<reportElement x="263" y="0" width="87" height="20" uuid="6291c7a6-54cd-4ae2-bccd-f8d0c831e424"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{jasper.srvorder.lblqtyhrs}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="490" y="0" width="75" height="20" uuid="3afed11b-ffa2-4610-9d5a-01ee91ebdb15"/>
+				<reportElement x="362" y="0" width="92" height="20" uuid="3afed11b-ffa2-4610-9d5a-01ee91ebdb15"/>
 				<textElement textAlignment="Right">
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{jasper.srvorder.lblnetprice}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="218" y="2" width="132" height="20" uuid="0fb8b35c-9f7d-473f-9d87-bcf616ac615f"/>
-				<textElement>
+				<reportElement x="460" y="0" width="105" height="20" uuid="8455487c-3453-404b-ae7f-db7363886d4a"/>
+				<textElement textAlignment="Right">
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{jasper.srvorder.lbldesc}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{jasper.srvorder.lblextprice}]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="30" splitType="Stretch">
+		<band height="32" splitType="Stretch">
 			<textField>
-				<reportElement x="19" y="0" width="199" height="16" uuid="978682a3-4259-41c3-adae-54872ecfe90a"/>
+				<reportElement x="19" y="0" width="173" height="16" uuid="978682a3-4259-41c3-adae-54872ecfe90a"/>
 				<textFieldExpression><![CDATA[$F{svd_item}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.00">
-				<reportElement x="410" y="0" width="79" height="16" uuid="32390b0a-6d5c-4fae-8870-72c4e68a5f90"/>
+				<reportElement x="260" y="0" width="90" height="16" uuid="32390b0a-6d5c-4fae-8870-72c4e68a5f90"/>
 				<textFieldExpression><![CDATA[$F{svd_qty}]]></textFieldExpression>
 			</textField>
 			<textField pattern="¤ #,##0.00">
-				<reportElement x="490" y="0" width="75" height="16" uuid="be6c6e00-ced3-4654-a526-512503b386e0"/>
+				<reportElement x="363" y="0" width="90" height="16" uuid="be6c6e00-ced3-4654-a526-512503b386e0"/>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{svd_netprice}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0">
-				<reportElement x="220" y="0" width="190" height="16" uuid="90c06e0b-5d2f-4b38-8178-2f593a2d83a5"/>
+				<reportElement x="19" y="16" width="214" height="16" uuid="90c06e0b-5d2f-4b38-8178-2f593a2d83a5"/>
 				<textFieldExpression><![CDATA[$F{svd_desc}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="460" y="0" width="105" height="16" uuid="d8b0178a-af54-455d-ad4a-f85d7e1fe002"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[new Double($F{svd_qty}.doubleValue() * $F{svd_netprice}.doubleValue())]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

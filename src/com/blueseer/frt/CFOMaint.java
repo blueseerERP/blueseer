@@ -236,18 +236,14 @@ public class CFOMaint extends javax.swing.JPanel {
                     i++;
                     freightorder.setText(mykey);
                     ddstatus.setSelectedItem(res.getString("fo_status"));
-                    ddcarrierproposed.setSelectedItem(res.getString("fo_carrier"));
-                    ddcarrierassigned.setSelectedItem(res.getString("fo_carrier_assigned"));
-                    shipdate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("fo_date")));
-                    tbcustfrtnbr.setText(res.getString("fo_custfo"));
-                    tbcust.setText(res.getString("fo_cust"));
-                    tbweight.setText(res.getString("fo_weight"));
+                    ddvehicle.setSelectedItem(res.getString("fo_carrier_assigned"));
+                    dcdate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("fo_date")));
+                    tbforevision.setText(res.getString("fo_weight"));
                     tbref.setText(res.getString("fo_ref"));
-                    tbtpid.setText(res.getString("fo_tpid"));
                     tbtrailer.setText(res.getString("fo_trailer"));
-                    tbmilerate.setText(res.getString("fo_milerate"));
-                    totmiles.setText(res.getString("fo_totmiles"));
-                    totcost.setText(res.getString("fo_totcost"));
+                    tbmileage.setText(res.getString("fo_milerate"));
+                    tbcharges.setText(res.getString("fo_totmiles"));
+                    tbnetprice.setText(res.getString("fo_totcost"));
                     dir = res.getString("fo_dir");
                    
                 }
@@ -294,7 +290,6 @@ public class CFOMaint extends javax.swing.JPanel {
                 orddet.setModel(myorddetmodel);
                
                 sumweight();
-                sumunits();
                
                
                 // set appropriate color status and enablement
@@ -312,8 +307,6 @@ public class CFOMaint extends javax.swing.JPanel {
                             } else if (status.compareTo("Tendered") == 0) {
                                 enableAll();
                                 ddstatus.setBackground(Color.blue);
-                                btquote.setEnabled(false);
-                                bttender.setEnabled(false);
                                 btadd.setEnabled(false);
                             } else if (status.compareTo("Close") == 0) {
                                 ddstatus.setBackground(Color.gray);
@@ -330,15 +323,11 @@ public class CFOMaint extends javax.swing.JPanel {
                             } else if (status.compareTo("Declined") == 0) {
                                 ddstatus.setBackground(Color.red);
                                 enableAll();
-                                btquote.setEnabled(false);
-                                bttender.setEnabled(false);
                                 btadd.setEnabled(false);
                                 
                             } else if (status.compareTo("Accepted") == 0) {
                                 enableAll();
                                 ddstatus.setBackground(Color.green);
-                                btquote.setEnabled(false);
-                                bttender.setEnabled(false);
                                 btadd.setEnabled(false);
                                
                                
@@ -374,86 +363,13 @@ public class CFOMaint extends javax.swing.JPanel {
 
     }
     
-    public void showMap(String latitude, String longitude) {
-        StatusTablePanel.setVisible(false);
-        RawFileStatusPanel.setVisible(false);
-        
-        try {
-       // String imageUrl = "https://maps.googleapis.com/maps/api/staticmap?center=40.714%2c%20-73.998&zoom=12&size=400x400&key=AIzaSyAG7xKaSEqdME6sCnRhSn_4ya_T59ihnIM";
-        String imageUrl = "https://maps.googleapis.com/maps/api/staticmap?center="
-        + latitude
-        + ","
-        + longitude
-        //+ "&zoom=11&size=400x400&key=AIzaSyAG7xKaSEqdME6sCnRhSn_4ya_T59ihnIM" ;
-       + "&zoom=8&size=840x580&scale=2&maptype=roadmap&markers=color:green|size:mid|label:H|" + latitude + "," + longitude ;
-        String destinationFile = "fomap.jpg";
-        // read the map image from Google
-        // then save it to a local file: image.jpg
-        //
-        URL url = new URL(imageUrl);
-        InputStream is = url.openStream();
-        OutputStream os = new FileOutputStream(destinationFile);
-        byte[] b = new byte[2048];
-        int length;
-        while ((length = is.read(b)) != -1) {
-        os.write(b, 0, length);
-        }
-        is.close();
-        os.close();
-        } catch (IOException e) {
-        MainFrame.bslog(e);
-        System.exit(1);
-        }
-        
-        
-        
-        ImageIcon imageIcon = new ImageIcon((new ImageIcon("fomap.jpg"))
-        .getImage().getScaledInstance(840, 580,
-        java.awt.Image.SCALE_SMOOTH));
-        labelmap.setIcon(imageIcon);
-        labelmap.setVisible(true);
-        bthidemap.setVisible(true);
-    }
-  
-    public void hideMap() {
-        StatusTablePanel.setVisible(true);
-        RawFileStatusPanel.setVisible(false);
-        labelmap.setVisible(false);
-        bthidemap.setVisible(false);
-    }
     
     
-    public void getQuotes(String nbr) {
-        
-          tablequotes.setModel(DTData.getFreightOrderQuotesTable(nbr));
-          //tablereport.getColumnModel().getColumn(0).setCellRenderer(new ItemMastSearch.SomeRenderer());       
-                tablequotes.getColumn("select").setCellRenderer(new ButtonRenderer()); 
-                tablequotes.getColumnModel().getColumn(0).setMaxWidth(100);
-                if (tablequotes.getModel().getRowCount() == 0) {
-                    lbmessagequote.setText("No records found."); 
-                }
-    }  
     
-    public void getTenders(String nbr) {
-        
-          tabletenders.setModel(DTData.getFreightOrderTendersTable(nbr));
-          //tablereport.getColumnModel().getColumn(0).setCellRenderer(new ItemMastSearch.SomeRenderer());       
-                tabletenders.getColumn("select").setCellRenderer(new ButtonRenderer()); 
-                tabletenders.getColumnModel().getColumn(0).setMaxWidth(100);
-                if (tabletenders.getModel().getRowCount() == 0) {
-                    lbmessagetender.setText("No records found."); 
-                }
-    }  
     
     public void getStatus(String nbr) {
         
-          tablestatus.setModel(DTData.getFreightOrderStatusTable(nbr));
-          //tablereport.getColumnModel().getColumn(0).setCellRenderer(new ItemMastSearch.SomeRenderer());       
-                tablestatus.getColumn("select").setCellRenderer(new ButtonRenderer()); 
-                tablestatus.getColumnModel().getColumn(0).setMaxWidth(100);
-                if (tablestatus.getModel().getRowCount() == 0) {
-                    lbmessagestatus.setText("No records found."); 
-                }
+        
     }  
     
     public void sumweight() {
@@ -464,19 +380,12 @@ public class CFOMaint extends javax.swing.JPanel {
         totweight.setText(String.valueOf(qty));
     }
     
-    public void sumunits() {
-        double qty = 0;
-         for (String[] x : tablelist) {
-            qty = qty + Double.valueOf(x[14]); 
-        }
-         totunits.setText(String.valueOf(qty));
-    }
     
     public void sumTotal() {
         double dol = 0;
-        if (! tbmilerate.getText().isBlank() && ! totmiles.getText().isBlank()) {
-        dol = Double.valueOf(tbmilerate.getText()) * Double.valueOf(totmiles.getText());
-        totcost.setText(String.valueOf(dol));
+        if (! tbforate.getText().isBlank() && ! tbcharges.getText().isBlank()) {
+        dol = Double.valueOf(tbforate.getText()) * Double.valueOf(tbcharges.getText());
+        tbnetprice.setText(String.valueOf(dol));
         }
     }
     
@@ -520,17 +429,10 @@ public class CFOMaint extends javax.swing.JPanel {
                     tbaddr1.setText(res.getString("cms_line1"));
                     tbaddr2.setText(res.getString("cms_line2"));
                     tbcity.setText(res.getString("cms_city"));
-                    delvdate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("sh_shipdate")));
-                    shipdate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("sh_shipdate")));
-                    tbdelvtime.setText("1200");
-                    tbshiptime.setText("1200");
+                    dcdate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("sh_shipdate")));
                     tbzip.setText(res.getString("cms_zip"));
                     ddstate.setSelectedItem(res.getString("cms_state"));
-                    ddcarrierproposed.setSelectedItem((res.getString("sh_shipvia")));
-                    ddshipfrom.setSelectedItem((res.getString("wh_id")));
-                    
-                    lbshipfrom.setText(res.getString("wh_name") + " " + res.getString("wh_addr1") + "... " + res.getString("wh_city") + ", " + res.getString("wh_state") +
-                            " " + res.getString("wh_zip"));
+                 
                 }
                      
             
@@ -614,41 +516,27 @@ public class CFOMaint extends javax.swing.JPanel {
                     tbphone.setText("");
                     tbemail.setText("");
                     tbcontact.setText("");
-                    tbdelvtime.setText("");
-                    tbshiptime.setText("");
-                    tbunits.setText("");
-                    tbweight.setText("");
-                    tbpucontact.setText("");
-                    tbpuphone.setText("");
-                    lbshipfrom.setText("");
-                    
-                    ddshipfrom.setSelectedIndex(0);
+                    tbforate.setText("");
+                    tbforevision.setText("");
+                  
+                   
                     ddstate.setSelectedIndex(0);
-                    ddcarrierproposed.setSelectedIndex(0);
+                    
      }
     
      public void enableAll() {
          
          
      //   freightorder.setEnabled(true);
-        ddreasoncode.setEnabled(true);
-        ddcarrierassigned.setEnabled(true);
-        btquote.setEnabled(true);
-        bttender.setEnabled(true);
+       
+        ddvehicle.setEnabled(true);
         btcommit.setEnabled(true);
        
-          
-        tbcustfrtnbr.setEnabled(true);
-        tbcust.setEnabled(true);
-        tbtpid.setEnabled(true);
-        
-        shipdate.setEnabled(true);
-        delvdate.setEnabled(true);
-        tbpuphone.setEnabled(true);
-        tbpucontact.setEnabled(true);
+       
+        dcdate.setEnabled(true);
+       
         ddstatus.setEnabled(true);
-        ddshipfrom.setEnabled(true);
-        lbshipfrom.setEnabled(true);
+       
         tbname.setEnabled(true);
         tbaddr1.setEnabled(true);
         tbaddr2.setEnabled(true);
@@ -658,27 +546,24 @@ public class CFOMaint extends javax.swing.JPanel {
         tbphone.setEnabled(true);
         tbremarks.setEnabled(true);
         tbemail.setEnabled(true);
-        tbdelvtime.setEnabled(true);
-        tbshiptime.setEnabled(true);
+        ddtime.setEnabled(true);
         tbref.setEnabled(true);
         totweight.setEnabled(true);
-        totunits.setEnabled(true);
-       tbweight.setEnabled(true);
-        tbunits.setEnabled(true);
+       tbforevision.setEnabled(true);
+        tbforate.setEnabled(true);
         tbmisc.setEnabled(true);
-        ddcarrierproposed.setEnabled(true);
-        ddshipper.setEnabled(true);
+        ddcust.setEnabled(true);
         ddequiptype.setEnabled(true);
         ddstate.setEnabled(true);
         ddservice.setEnabled(true);
         
         orddet.setEnabled(true);
         
-        totunits.setEnabled(true);
+       
         totweight.setEnabled(true);
-        totmiles.setEnabled(true);
-        totcost.setEnabled(true);
-        tbmilerate.setEnabled(true);
+        tbcharges.setEnabled(true);
+        tbnetprice.setEnabled(true);
+        tbforate.setEnabled(true);
         tbtrailer.setEnabled(true);
           btlookup.setEnabled(true);
         
@@ -694,24 +579,12 @@ public class CFOMaint extends javax.swing.JPanel {
     
      public void disableAll() {
         freightorder.setEnabled(false);
-        shipdate.setEnabled(false);
-        delvdate.setEnabled(false);
-       ddreasoncode.setEnabled(false);
-        tbpuphone.setEnabled(false);
-        tbpucontact.setEnabled(false);
+        dcdate.setEnabled(false);
       
-        ddcarrierassigned.setEnabled(false);
-        btquote.setEnabled(false);
-        bttender.setEnabled(false);
+        ddvehicle.setEnabled(false);
         btcommit.setEnabled(false);
         
-        tbcustfrtnbr.setEnabled(false);
-        tbcust.setEnabled(false);
-        tbtpid.setEnabled(false);
-        
         ddstatus.setEnabled(false);
-      ddshipfrom.setEnabled(false);
-        lbshipfrom.setEnabled(false);
          tbname.setEnabled(false);
         tbaddr1.setEnabled(false);
         tbaddr2.setEnabled(false);
@@ -721,32 +594,28 @@ public class CFOMaint extends javax.swing.JPanel {
         tbphone.setEnabled(false);
         tbremarks.setEnabled(false);
         tbemail.setEnabled(false);
-        tbdelvtime.setEnabled(false);
-        tbshiptime.setEnabled(false);
+        ddtime.setEnabled(false);
         totweight.setEnabled(false);
-        totunits.setEnabled(false);
-        tbweight.setEnabled(false);
-        tbunits.setEnabled(false);
-        tbweight.setEnabled(false);
-        tbunits.setEnabled(false);
+        tbforevision.setEnabled(false);
+        tbforate.setEnabled(false);
+        tbforevision.setEnabled(false);
+        tbforate.setEnabled(false);
         tbref.setEnabled(false);
         tbtrailer.setEnabled(false);
        
         tbmisc.setEnabled(false);
-        ddcarrierproposed.setEnabled(false);
-        ddshipper.setEnabled(false);
+        ddcust.setEnabled(false);
         ddequiptype.setEnabled(false);
         ddstate.setEnabled(false);
         ddservice.setEnabled(false);
-        totmiles.setEnabled(false);
-        totcost.setEnabled(false);
-        tbmilerate.setEnabled(false);
+        tbcharges.setEnabled(false);
+        tbnetprice.setEnabled(false);
+        tbforate.setEnabled(false);
       
       
         
         orddet.setEnabled(false);
         
-        totunits.setEnabled(false);
         totweight.setEnabled(false);
        
         
@@ -764,21 +633,13 @@ public class CFOMaint extends javax.swing.JPanel {
     public void initvars(String[] arg) {
         jTabbedPane1.removeAll();
         jTabbedPane1.add("Main", jPanelMain);
+        jTabbedPane1.add("Location", jPanelLocation);
       //  jTabbedPane1.add("Load", jPanelLoad);
       //  jTabbedPane1.add("Quotes", jPanelQuotes);
     //    jTabbedPane1.add("Tenders", jPanelTenders);
     //    jTabbedPane1.add("Status", jPanelStatus);
         
-    jPanelLoad.setVisible(false);
-    jPanelQuotes.setVisible(false);
-    jPanelTenders.setVisible(false);
-    jPanelStatus.setVisible(false);
-    
-         RawFileQuotesPanel.setVisible(false);
-         RawFileTenderPanel.setVisible(false);
-         RawFileStatusPanel.setVisible(false);
-         bthidemap.setVisible(false);
-         
+   
          
          java.util.Date now = new java.util.Date();
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -787,8 +648,7 @@ public class CFOMaint extends javax.swing.JPanel {
        
         ddstatus.setBackground(null);
         ddstatus.setSelectedItem("open");
-        shipdate.setDate(now);
-        delvdate.setDate(now);
+        dcdate.setDate(now);
        
         tablelist.clear();
        
@@ -805,12 +665,6 @@ public class CFOMaint extends javax.swing.JPanel {
         btdelitem.setEnabled(true);
       
         
-        lbshipfrom.setText("");
-        
-        lbmessagequote.setText("");
-        lbmessagetender.setText("");
-        lbmessagestatus.setText("");
-        
         
         tbname.setText("");
         tbaddr1.setText("");
@@ -821,54 +675,23 @@ public class CFOMaint extends javax.swing.JPanel {
         tbphone.setText("");
         tbremarks.setText("");
         tbemail.setText("");
-        tbdelvtime.setText("");
-        tbshiptime.setText("");
         tbref.setText("");
         totweight.setText("");
-        totunits.setText("");
-        totmiles.setText("");
-        totcost.setText("");
-        tbmilerate.setText("");
+        tbcharges.setText("");
+        tbnetprice.setText("");
+        tbforate.setText("");
         tbtrailer.setText("");
         
         
-        ddcarrierproposed.removeAllItems();
-         ArrayList<String> carriers = OVData.getScacAll();
-        for (String code : carriers) {
-            ddcarrierproposed.addItem(code);
-        }
-        ddcarrierproposed.insertItemAt("", 0);
-        ddcarrierproposed.setSelectedIndex(0);
-        
-        ddcarrierassigned.removeAllItems();
-          carriers = OVData.getfreightlist();  
-        for (String code : carriers) {
-            ddcarrierassigned.addItem(code);
-        }
-        ddcarrierassigned.insertItemAt("", 0);
-        ddcarrierassigned.setSelectedIndex(0);
+     
+       
         
         
         
         
-        ddshipfrom.removeAllItems();
-         ArrayList<String> shipfroms = OVData.getWareHouseList();
-        for (String code : shipfroms) {
-            ddshipfrom.addItem(code);
-        }
-         ddshipfrom.insertItemAt("", 0);
-         ddshipfrom.setSelectedIndex(0);
+       
         
-        ddshipper.removeAllItems();
-         ArrayList<String> shippers = shpData.getShippersOpenListForFreight();
-         lock_ddshipper = true;
-        for (String code : shippers) {
-            ddshipper.addItem(code);
-        }
-            ddshipper.insertItemAt("", 0);
-            ddshipper.setSelectedIndex(0);
-            lock_ddshipper = false;
-            
+      
         
         
          ddequiptype.removeAllItems();
@@ -967,107 +790,68 @@ public class CFOMaint extends javax.swing.JPanel {
         btnew = new javax.swing.JButton();
         btadd = new javax.swing.JButton();
         btupdate = new javax.swing.JButton();
-        totunits = new javax.swing.JTextField();
-        totweight = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         btprint = new javax.swing.JButton();
-        ddstatus = new javax.swing.JComboBox();
-        jLabel87 = new javax.swing.JLabel();
         btlookup = new javax.swing.JButton();
         jPanel12 = new javax.swing.JPanel();
-        ddcarrierassigned = new javax.swing.JComboBox();
+        ddvehicle = new javax.swing.JComboBox();
         jLabel101 = new javax.swing.JLabel();
         jLabel85 = new javax.swing.JLabel();
         ddequiptype = new javax.swing.JComboBox();
         ddservice = new javax.swing.JComboBox<>();
         jLabel9 = new javax.swing.JLabel();
-        tbmilerate = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
         tbtrailer = new javax.swing.JTextField();
         jLabel16 = new javax.swing.JLabel();
-        bttender = new javax.swing.JButton();
-        btquote = new javax.swing.JButton();
-        totmiles = new javax.swing.JTextField();
-        totcost = new javax.swing.JTextField();
+        jLabel77 = new javax.swing.JLabel();
+        jLabel23 = new javax.swing.JLabel();
+        tbforevision = new javax.swing.JTextField();
+        tbforate = new javax.swing.JTextField();
+        tbcustfo = new javax.swing.JTextField();
+        ddcust = new javax.swing.JComboBox<>();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        tbdrivercell = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        ddfotype = new javax.swing.JComboBox<>();
+        jLabel24 = new javax.swing.JLabel();
+        ddbroker = new javax.swing.JComboBox<>();
+        jLabel28 = new javax.swing.JLabel();
+        tbbrokercontact = new javax.swing.JTextField();
+        jLabel29 = new javax.swing.JLabel();
+        tbbrokercell = new javax.swing.JTextField();
+        jLabel30 = new javax.swing.JLabel();
+        ddratetype = new javax.swing.JComboBox<>();
+        jLabel31 = new javax.swing.JLabel();
+        tbdriverrate = new javax.swing.JTextField();
+        jLabel32 = new javax.swing.JLabel();
+        totweight = new javax.swing.JTextField();
+        jLabel33 = new javax.swing.JLabel();
+        dcloaddate = new com.toedter.calendar.JDateChooser();
+        dcunloaddate = new com.toedter.calendar.JDateChooser();
+        jLabel34 = new javax.swing.JLabel();
+        jLabel35 = new javax.swing.JLabel();
+        cbhazmat = new javax.swing.JCheckBox();
+        ddstatus = new javax.swing.JComboBox();
+        jLabel36 = new javax.swing.JLabel();
+        tbmileage = new javax.swing.JTextField();
+        jLabel37 = new javax.swing.JLabel();
+        cbstandard = new javax.swing.JCheckBox();
+        dddriver = new javax.swing.JComboBox<>();
+        tbcharges = new javax.swing.JTextField();
+        tbnetprice = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         btcommit = new javax.swing.JButton();
-        ddshipper = new javax.swing.JComboBox<>();
-        jLabel77 = new javax.swing.JLabel();
-        jPanelLoad = new javax.swing.JPanel();
-        jPanel4 = new javax.swing.JPanel();
-        ddshipfrom = new javax.swing.JComboBox<>();
-        tbpucontact = new javax.swing.JTextField();
-        jLabel84 = new javax.swing.JLabel();
-        jLabel79 = new javax.swing.JLabel();
-        lbshipfrom = new javax.swing.JLabel();
-        tbpuphone = new javax.swing.JTextField();
-        jLabel78 = new javax.swing.JLabel();
-        jPanel5 = new javax.swing.JPanel();
-        ddcarrierproposed = new javax.swing.JComboBox();
-        jLabel92 = new javax.swing.JLabel();
-        tbcustfrtnbr = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        tbcust = new javax.swing.JTextField();
-        tbtpid = new javax.swing.JTextField();
-        jLabel7 = new javax.swing.JLabel();
-        ddreasoncode = new javax.swing.JComboBox<>();
-        jLabel12 = new javax.swing.JLabel();
-        jPanelQuotes = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
-        bthidequotefiles = new javax.swing.JButton();
-        lbmessagequote = new javax.swing.JLabel();
-        jPanel8 = new javax.swing.JPanel();
-        jPanel6 = new javax.swing.JPanel();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        tablequotes = new javax.swing.JTable();
-        RawFileQuotesPanel = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tafilequotes = new javax.swing.JTextArea();
-        jPanelTenders = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
-        bthidetendersfiles = new javax.swing.JButton();
-        lbmessagetender = new javax.swing.JLabel();
-        jPanel9 = new javax.swing.JPanel();
-        jPanel7 = new javax.swing.JPanel();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        tabletenders = new javax.swing.JTable();
-        RawFileTenderPanel = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        tafiletenders = new javax.swing.JTextArea();
-        jPanelStatus = new javax.swing.JPanel();
-        jPanel10 = new javax.swing.JPanel();
-        bthideEDIStatus = new javax.swing.JButton();
-        lbmessagestatus = new javax.swing.JLabel();
-        bthidemap = new javax.swing.JButton();
-        jPanel11 = new javax.swing.JPanel();
-        labelmap = new javax.swing.JLabel();
-        StatusTablePanel = new javax.swing.JPanel();
-        jScrollPane5 = new javax.swing.JScrollPane();
-        tablestatus = new javax.swing.JTable();
-        RawFileStatusPanel = new javax.swing.JPanel();
-        jScrollPane6 = new javax.swing.JScrollPane();
-        tafilestatus = new javax.swing.JTextArea();
+        jScrollPane8 = new javax.swing.JScrollPane();
+        orddet = new javax.swing.JTable();
+        btclear = new javax.swing.JButton();
+        tbcost = new javax.swing.JTextField();
+        jLabel38 = new javax.swing.JLabel();
         jPanelLocation = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         btadditem = new javax.swing.JButton();
         btupdateitem = new javax.swing.JButton();
         btdelitem = new javax.swing.JButton();
-        jPanel13 = new javax.swing.JPanel();
-        tbshiptime1 = new javax.swing.JTextField();
-        delvdate1 = new com.toedter.calendar.JDateChooser();
-        jComboBox2 = new javax.swing.JComboBox<>();
-        jComboBox6 = new javax.swing.JComboBox<>();
-        delvdate = new com.toedter.calendar.JDateChooser();
-        jComboBox4 = new javax.swing.JComboBox<>();
-        tbshiptime = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        tbshiptime2 = new javax.swing.JTextField();
-        shipdate = new com.toedter.calendar.JDateChooser();
-        jComboBox3 = new javax.swing.JComboBox<>();
-        jComboBox5 = new javax.swing.JComboBox<>();
         jPanel14 = new javax.swing.JPanel();
         ddstate = new javax.swing.JComboBox();
         jLabel18 = new javax.swing.JLabel();
@@ -1095,6 +879,17 @@ public class CFOMaint extends javax.swing.JPanel {
         jLabel90 = new javax.swing.JLabel();
         tbcontact = new javax.swing.JTextField();
         ddstoptype = new javax.swing.JComboBox<>();
+        jPanel16 = new javax.swing.JPanel();
+        jScrollPane7 = new javax.swing.JScrollPane();
+        listdatetime = new javax.swing.JList<>();
+        dcdate = new com.toedter.calendar.JDateChooser();
+        dddatetimetype = new javax.swing.JComboBox<>();
+        ddtime = new javax.swing.JComboBox<>();
+        jLabel25 = new javax.swing.JLabel();
+        jLabel26 = new javax.swing.JLabel();
+        jLabel27 = new javax.swing.JLabel();
+        ddshipto = new javax.swing.JComboBox<>();
+        jLabel12 = new javax.swing.JLabel();
         jPanel15 = new javax.swing.JPanel();
         jLabel95 = new javax.swing.JLabel();
         tbref4 = new javax.swing.JTextField();
@@ -1110,8 +905,6 @@ public class CFOMaint extends javax.swing.JPanel {
         tbref2 = new javax.swing.JTextField();
         jComboBox7 = new javax.swing.JComboBox<>();
         jLabel22 = new javax.swing.JLabel();
-        jScrollPane8 = new javax.swing.JScrollPane();
-        orddet = new javax.swing.JTable();
 
         jLabel4.setText("jLabel4");
 
@@ -1127,7 +920,7 @@ public class CFOMaint extends javax.swing.JPanel {
         jPanelMain.setBorder(javax.swing.BorderFactory.createTitledBorder("Freight Order Maintenance"));
         jPanelMain.setName("panelmain"); // NOI18N
 
-        jLabel76.setText("FreightNbr");
+        jLabel76.setText("Key");
         jLabel76.setName("lblid"); // NOI18N
 
         btnew.setText("New");
@@ -1154,12 +947,6 @@ public class CFOMaint extends javax.swing.JPanel {
             }
         });
 
-        jLabel1.setText("Units");
-        jLabel1.setName("lbltotunits"); // NOI18N
-
-        jLabel2.setText("Weight");
-        jLabel2.setName("lbltotweight"); // NOI18N
-
         btprint.setText("Print");
         btprint.setName("btprint"); // NOI18N
         btprint.addActionListener(new java.awt.event.ActionListener() {
@@ -1168,11 +955,6 @@ public class CFOMaint extends javax.swing.JPanel {
             }
         });
 
-        ddstatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Open", "Quoted", "Tendered", "Accepted", "Declined", "Cancelled", "InTransit", "Delivered", "Close" }));
-
-        jLabel87.setText("Status");
-        jLabel87.setName("lblstatus"); // NOI18N
-
         btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
         btlookup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1180,7 +962,7 @@ public class CFOMaint extends javax.swing.JPanel {
             }
         });
 
-        jLabel101.setText("Carrier");
+        jLabel101.setText("Truck ID");
         jLabel101.setName("lblcarrier"); // NOI18N
 
         jLabel85.setText("EquipType");
@@ -1188,89 +970,246 @@ public class CFOMaint extends javax.swing.JPanel {
 
         jLabel9.setText("Service");
 
-        tbmilerate.addFocusListener(new java.awt.event.FocusAdapter() {
+        jLabel15.setText("Driver");
+
+        jLabel16.setText("Trailer");
+
+        jLabel77.setText("Client Order");
+        jLabel77.setName("lblshipper"); // NOI18N
+
+        jLabel23.setText("Rate");
+
+        tbforevision.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
-                tbmilerateFocusLost(evt);
+                tbforevisionFocusLost(evt);
             }
         });
 
-        jLabel15.setText("Rate Per Mile");
+        tbforate.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbforateFocusLost(evt);
+            }
+        });
 
-        jLabel16.setText("Trailer");
+        jLabel5.setText("Client");
+
+        jLabel6.setText("Revision");
+
+        tbdrivercell.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbdrivercellFocusLost(evt);
+            }
+        });
+
+        jLabel7.setText("Cell#");
+
+        ddfotype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Spot", "Broker" }));
+
+        jLabel24.setText("Type");
+
+        jLabel28.setText("Broker");
+
+        jLabel29.setText("Broker Contact");
+
+        jLabel30.setText("Broker Cell#");
+
+        ddratetype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Flat Rate", "Mileage Rate" }));
+
+        jLabel31.setText("Rate Type");
+
+        tbdriverrate.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbdriverrateFocusLost(evt);
+            }
+        });
+
+        jLabel32.setText("Mileage");
+
+        totweight.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                totweightFocusLost(evt);
+            }
+        });
+
+        jLabel33.setText("Weight");
+
+        dcloaddate.setDateFormatString("yyyy-MM-dd");
+
+        dcunloaddate.setDateFormatString("yyyy-MM-dd");
+
+        jLabel34.setText("Load Date");
+
+        jLabel35.setText("Unload Date");
+
+        cbhazmat.setText("Hazmat");
+
+        ddstatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Open", "Quoted", "Tendered", "Accepted", "Declined", "Cancelled", "InTransit", "Delivered", "Close" }));
+
+        jLabel36.setText("Status");
+
+        tbmileage.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbmileageFocusLost(evt);
+            }
+        });
+
+        jLabel37.setText("Driver Rate");
+
+        cbstandard.setText("Standard");
 
         javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
         jPanel12.setLayout(jPanel12Layout);
         jPanel12Layout.setHorizontalGroup(
             jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel12Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel101)
-                    .addComponent(jLabel15))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel12Layout.createSequentialGroup()
-                        .addComponent(ddcarrierassigned, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel85))
+                        .addGap(37, 37, 37)
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel77, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel85, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel101, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel16, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addGap(4, 4, 4)
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(ddcust, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbforevision, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbtrailer, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(ddequiptype, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(ddservice, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(tbcustfo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE))
+                                .addComponent(ddvehicle, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel15)
+                            .addComponent(jLabel7)
+                            .addComponent(jLabel24)
+                            .addComponent(jLabel28)
+                            .addComponent(jLabel29)
+                            .addComponent(jLabel30)
+                            .addComponent(jLabel36))
+                        .addGap(4, 4, 4)
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tbbrokercell, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(ddbroker, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(ddfotype, javax.swing.GroupLayout.Alignment.LEADING, 0, 131, Short.MAX_VALUE)
+                                    .addComponent(tbdrivercell, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(ddstatus, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(tbbrokercontact, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(dddriver, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(40, 40, 40)
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel35, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel32, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel31, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel23, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addComponent(jLabel37, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addComponent(jLabel33)
+                            .addComponent(jLabel34))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(dcunloaddate, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(dcloaddate, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel12Layout.createSequentialGroup()
+                                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(ddratetype, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(tbforate, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
+                                    .addComponent(tbdriverrate, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
+                                    .addComponent(totweight, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
+                                    .addComponent(tbmileage, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cbstandard))))
                     .addGroup(jPanel12Layout.createSequentialGroup()
-                        .addComponent(tbmilerate, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(118, 118, 118)
-                        .addComponent(jLabel16)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(ddequiptype, 0, 164, Short.MAX_VALUE)
-                    .addComponent(tbtrailer))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(ddservice, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(66, 66, 66))
+                        .addGap(99, 99, 99)
+                        .addComponent(cbhazmat)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel12Layout.setVerticalGroup(
             jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel12Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ddcarrierassigned, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel101)
-                    .addComponent(jLabel85)
-                    .addComponent(ddequiptype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ddservice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbmilerate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel15)
-                    .addComponent(tbtrailer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel16)))
+                    .addComponent(ddcust, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5)
+                    .addComponent(ddstatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel36)
+                    .addComponent(ddratetype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel31))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel12Layout.createSequentialGroup()
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tbcustfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel77)
+                            .addComponent(jLabel15)
+                            .addComponent(tbforate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel23)
+                            .addComponent(dddriver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tbforevision, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6)
+                            .addComponent(tbdrivercell, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7)
+                            .addComponent(tbmileage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel32))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(ddservice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel9)
+                            .addComponent(ddfotype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel24)
+                            .addComponent(tbdriverrate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel37)
+                            .addComponent(cbstandard))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(ddequiptype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel85)
+                            .addComponent(ddbroker, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel28)
+                            .addComponent(totweight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel33))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(ddvehicle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel101)
+                            .addComponent(tbbrokercontact, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel29)
+                            .addComponent(jLabel34)))
+                    .addComponent(dcloaddate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(tbtrailer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tbbrokercell, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel30)
+                        .addComponent(jLabel35))
+                    .addComponent(jLabel16)
+                    .addComponent(dcunloaddate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbhazmat)
+                .addContainerGap(32, Short.MAX_VALUE))
         );
 
-        bttender.setText("Tender");
-        bttender.setName("bttender"); // NOI18N
-        bttender.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bttenderActionPerformed(evt);
-            }
-        });
-
-        btquote.setText("RFQ");
-        btquote.setName("btfrq"); // NOI18N
-        btquote.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btquoteActionPerformed(evt);
-            }
-        });
-
-        totmiles.addFocusListener(new java.awt.event.FocusAdapter() {
+        tbcharges.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
-                totmilesFocusLost(evt);
+                tbchargesFocusLost(evt);
             }
         });
 
-        jLabel13.setText("Est. Mileage");
+        jLabel13.setText("Charges");
 
-        jLabel14.setText("Est. Cost");
+        jLabel14.setText("Net Price");
 
         btcommit.setText("Commit");
         btcommit.addActionListener(new java.awt.event.ActionListener() {
@@ -1279,75 +1218,87 @@ public class CFOMaint extends javax.swing.JPanel {
             }
         });
 
-        ddshipper.addActionListener(new java.awt.event.ActionListener() {
+        orddet.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        orddet.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                orddetMouseClicked(evt);
+            }
+        });
+        jScrollPane8.setViewportView(orddet);
+
+        btclear.setText("Clear");
+        btclear.setName("btclear"); // NOI18N
+        btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ddshipperActionPerformed(evt);
+                btclearActionPerformed(evt);
             }
         });
 
-        jLabel77.setText("Shipper");
-        jLabel77.setName("lblshipper"); // NOI18N
+        tbcost.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tbcostFocusLost(evt);
+            }
+        });
+
+        jLabel38.setText("Cost");
 
         javax.swing.GroupLayout jPanelMainLayout = new javax.swing.GroupLayout(jPanelMain);
         jPanelMain.setLayout(jPanelMainLayout);
         jPanelMainLayout.setHorizontalGroup(
             jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelMainLayout.createSequentialGroup()
-                .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(jPanelMainLayout.createSequentialGroup()
+                .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelMainLayout.createSequentialGroup()
+                        .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanelMainLayout.createSequentialGroup()
+                                .addGap(64, 64, 64)
+                                .addComponent(jLabel76)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(freightorder, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnew)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btclear))
+                            .addGroup(jPanelMainLayout.createSequentialGroup()
+                                .addGap(91, 91, 91)
+                                .addComponent(jLabel38)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tbcost, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(30, 30, 30)
+                                .addComponent(jLabel13)
+                                .addGap(3, 3, 3)
+                                .addComponent(tbcharges, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(24, 24, 24)
+                                .addComponent(jLabel14)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tbnetprice, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btcommit)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btprint)
+                                .addGap(7, 7, 7)
+                                .addComponent(btupdate)
+                                .addGap(12, 12, 12)
+                                .addComponent(btadd)))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanelMainLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanelMainLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel76)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(freightorder, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnew)
-                        .addGap(26, 26, 26)
-                        .addComponent(jLabel87)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ddstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(99, 99, 99)
-                        .addComponent(bttender)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btquote)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanelMainLayout.createSequentialGroup()
-                        .addGap(42, 42, 42)
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(totunits, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(5, 5, 5)
-                        .addComponent(jLabel2)
-                        .addGap(5, 5, 5)
-                        .addComponent(totweight, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel13)
-                        .addGap(3, 3, 3)
-                        .addComponent(totmiles, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(24, 24, 24)
-                        .addComponent(jLabel14)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(totcost, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btcommit)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btprint)
-                        .addGap(7, 7, 7)
-                        .addComponent(btupdate)
-                        .addGap(12, 12, 12)
-                        .addComponent(btadd)
-                        .addGap(0, 21, Short.MAX_VALUE)))
+                        .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel12, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 786, Short.MAX_VALUE))))
                 .addContainerGap())
-            .addGroup(jPanelMainLayout.createSequentialGroup()
-                .addGap(42, 42, 42)
-                .addComponent(jLabel77)
-                .addGap(4, 4, 4)
-                .addComponent(ddshipper, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanelMainLayout.setVerticalGroup(
             jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1361,468 +1312,30 @@ public class CFOMaint extends javax.swing.JPanel {
                                 .addComponent(jLabel76)
                                 .addComponent(freightorder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(ddstatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel87)
-                            .addComponent(bttender)
-                            .addComponent(btquote))
-                        .addComponent(btnew))
+                            .addComponent(btnew)
+                            .addComponent(btclear)))
                     .addComponent(btlookup))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ddshipper, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel77))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 345, Short.MAX_VALUE)
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(11, 11, 11)
                 .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btprint)
-                        .addComponent(totcost, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tbnetprice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel14)
                         .addComponent(btcommit))
                     .addComponent(btupdate)
                     .addComponent(btadd)
                     .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(totunits, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel1))
-                    .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(totweight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(totmiles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel13))
-                    .addGroup(jPanelMainLayout.createSequentialGroup()
-                        .addGap(3, 3, 3)
-                        .addComponent(jLabel2))))
+                        .addComponent(tbcharges, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel13)
+                        .addComponent(tbcost, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel38))))
         );
 
         add(jPanelMain);
-
-        jPanelLoad.setPreferredSize(new java.awt.Dimension(840, 634));
-
-        jPanel4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        jLabel84.setText("Pickup Phone");
-        jLabel84.setName("lblpickupphone"); // NOI18N
-
-        jLabel79.setText("Pickup Contact");
-        jLabel79.setName("lblpickupcontact"); // NOI18N
-
-        jLabel78.setText("Pickup");
-        jLabel78.setName("lblpickup"); // NOI18N
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel78, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel79, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addGap(3, 3, 3)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(ddshipfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tbpucontact, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(37, 37, 37)
-                        .addComponent(jLabel84)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(tbpuphone))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbshipfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 406, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(lbshipfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(3, 3, 3))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(ddshipfrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel78))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbpucontact, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel79)
-                    .addComponent(tbpuphone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel84))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        jPanel5.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        jLabel92.setText("Proposed Carrier");
-        jLabel92.setName("lblproposedcarrier"); // NOI18N
-
-        jLabel5.setText("Cust Frt Nbr");
-        jLabel5.setName("lblcustfreightnbr"); // NOI18N
-
-        jLabel6.setText("Customer");
-        jLabel6.setName("lblcust"); // NOI18N
-
-        jLabel7.setText("TPID");
-        jLabel7.setName("lbltpid"); // NOI18N
-
-        ddreasoncode.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "CPT Capacity Type", "CPU Capacity Unavailable", "EQT Equipment Type", "EQU Equipment Unavailable", "LNH Length of Haul", "PRM Permits", "WGT Weight" }));
-
-        jLabel12.setText("ReasonCode");
-        jLabel12.setName("lblreasoncode"); // NOI18N
-
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel92)
-                    .addComponent(jLabel12))
-                .addGap(5, 5, 5)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(ddreasoncode, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel5Layout.createSequentialGroup()
-                            .addComponent(ddcarrierproposed, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(78, 78, 78))
-                        .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tbcustfrtnbr, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel6)
-                    .addComponent(jLabel7))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(tbtpid, javax.swing.GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE)
-                    .addComponent(tbcust))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ddcarrierproposed, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel92)
-                    .addComponent(jLabel6)
-                    .addComponent(tbcust, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbcustfrtnbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5)
-                    .addComponent(tbtpid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ddreasoncode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel12))
-                .addContainerGap())
-        );
-
-        javax.swing.GroupLayout jPanelLoadLayout = new javax.swing.GroupLayout(jPanelLoad);
-        jPanelLoad.setLayout(jPanelLoadLayout);
-        jPanelLoadLayout.setHorizontalGroup(
-            jPanelLoadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelLoadLayout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(34, 34, 34))
-            .addGroup(jPanelLoadLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(551, 551, 551))
-        );
-        jPanelLoadLayout.setVerticalGroup(
-            jPanelLoadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelLoadLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(559, 559, 559))
-        );
-
-        add(jPanelLoad);
-
-        jPanelQuotes.setPreferredSize(new java.awt.Dimension(840, 634));
-
-        bthidequotefiles.setText("Hide EDI");
-        bthidequotefiles.setName("bthideedi"); // NOI18N
-        bthidequotefiles.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bthidequotefilesActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(bthidequotefiles)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lbmessagequote, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(4, 4, 4)
-                        .addComponent(lbmessagequote, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(bthidequotefiles, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addContainerGap())
-        );
-
-        jPanel8.setLayout(new javax.swing.BoxLayout(jPanel8, javax.swing.BoxLayout.LINE_AXIS));
-
-        jPanel6.setLayout(new java.awt.BorderLayout());
-
-        tablequotes.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        tablequotes.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tablequotesMouseClicked(evt);
-            }
-        });
-        jScrollPane3.setViewportView(tablequotes);
-
-        jPanel6.add(jScrollPane3, java.awt.BorderLayout.CENTER);
-
-        jPanel8.add(jPanel6);
-
-        RawFileQuotesPanel.setLayout(new java.awt.BorderLayout());
-
-        tafilequotes.setColumns(20);
-        tafilequotes.setRows(5);
-        jScrollPane1.setViewportView(tafilequotes);
-
-        RawFileQuotesPanel.add(jScrollPane1, java.awt.BorderLayout.CENTER);
-
-        jPanel8.add(RawFileQuotesPanel);
-
-        javax.swing.GroupLayout jPanelQuotesLayout = new javax.swing.GroupLayout(jPanelQuotes);
-        jPanelQuotes.setLayout(jPanelQuotesLayout);
-        jPanelQuotesLayout.setHorizontalGroup(
-            jPanelQuotesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelQuotesLayout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(34, 34, 34))
-            .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, 840, Short.MAX_VALUE)
-        );
-        jPanelQuotesLayout.setVerticalGroup(
-            jPanelQuotesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelQuotesLayout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel8, javax.swing.GroupLayout.DEFAULT_SIZE, 634, Short.MAX_VALUE))
-        );
-
-        add(jPanelQuotes);
-
-        jPanelTenders.setPreferredSize(new java.awt.Dimension(840, 634));
-
-        bthidetendersfiles.setText("Hide EDI");
-        bthidetendersfiles.setName("bthideedi"); // NOI18N
-        bthidetendersfiles.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bthidetendersfilesActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(bthidetendersfiles)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lbmessagetender, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(4, 4, 4)
-                        .addComponent(lbmessagetender, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(bthidetendersfiles, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addContainerGap())
-        );
-
-        jPanel9.setLayout(new javax.swing.BoxLayout(jPanel9, javax.swing.BoxLayout.LINE_AXIS));
-
-        jPanel7.setLayout(new java.awt.BorderLayout());
-
-        tabletenders.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        tabletenders.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tabletendersMouseClicked(evt);
-            }
-        });
-        jScrollPane4.setViewportView(tabletenders);
-
-        jPanel7.add(jScrollPane4, java.awt.BorderLayout.CENTER);
-
-        jPanel9.add(jPanel7);
-
-        RawFileTenderPanel.setLayout(new java.awt.BorderLayout());
-
-        tafiletenders.setColumns(20);
-        tafiletenders.setRows(5);
-        jScrollPane2.setViewportView(tafiletenders);
-
-        RawFileTenderPanel.add(jScrollPane2, java.awt.BorderLayout.CENTER);
-
-        jPanel9.add(RawFileTenderPanel);
-
-        javax.swing.GroupLayout jPanelTendersLayout = new javax.swing.GroupLayout(jPanelTenders);
-        jPanelTenders.setLayout(jPanelTendersLayout);
-        jPanelTendersLayout.setHorizontalGroup(
-            jPanelTendersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanelTendersLayout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(34, 34, 34))
-            .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, 840, Short.MAX_VALUE)
-        );
-        jPanelTendersLayout.setVerticalGroup(
-            jPanelTendersLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelTendersLayout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel9, javax.swing.GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE))
-        );
-
-        add(jPanelTenders);
-
-        jPanelStatus.setPreferredSize(new java.awt.Dimension(840, 634));
-
-        bthideEDIStatus.setText("Hide EDI");
-        bthideEDIStatus.setName("bthideedi"); // NOI18N
-        bthideEDIStatus.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bthideEDIStatusActionPerformed(evt);
-            }
-        });
-
-        bthidemap.setText("Hide Map");
-        bthidemap.setName("bthidemap"); // NOI18N
-        bthidemap.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bthidemapActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
-        jPanel10.setLayout(jPanel10Layout);
-        jPanel10Layout.setHorizontalGroup(
-            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel10Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(bthideEDIStatus)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lbmessagestatus, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(105, 105, 105)
-                .addComponent(bthidemap)
-                .addGap(17, 17, 17))
-        );
-        jPanel10Layout.setVerticalGroup(
-            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel10Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(bthidemap)
-                    .addGroup(jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(jPanel10Layout.createSequentialGroup()
-                            .addGap(4, 4, 4)
-                            .addComponent(lbmessagestatus, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addComponent(bthideEDIStatus, javax.swing.GroupLayout.Alignment.TRAILING)))
-                .addGap(17, 17, 17))
-        );
-
-        jPanel11.setLayout(new javax.swing.BoxLayout(jPanel11, javax.swing.BoxLayout.LINE_AXIS));
-        jPanel11.add(labelmap);
-
-        StatusTablePanel.setLayout(new java.awt.BorderLayout());
-
-        tablestatus.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        tablestatus.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tablestatusMouseClicked(evt);
-            }
-        });
-        jScrollPane5.setViewportView(tablestatus);
-
-        StatusTablePanel.add(jScrollPane5, java.awt.BorderLayout.CENTER);
-
-        jPanel11.add(StatusTablePanel);
-
-        RawFileStatusPanel.setLayout(new java.awt.BorderLayout());
-
-        tafilestatus.setColumns(20);
-        tafilestatus.setRows(5);
-        jScrollPane6.setViewportView(tafilestatus);
-
-        RawFileStatusPanel.add(jScrollPane6, java.awt.BorderLayout.CENTER);
-
-        jPanel11.add(RawFileStatusPanel);
-
-        javax.swing.GroupLayout jPanelStatusLayout = new javax.swing.GroupLayout(jPanelStatus);
-        jPanelStatus.setLayout(jPanelStatusLayout);
-        jPanelStatusLayout.setHorizontalGroup(
-            jPanelStatusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, 840, Short.MAX_VALUE)
-            .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jPanelStatusLayout.setVerticalGroup(
-            jPanelStatusLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelStatusLayout.createSequentialGroup()
-                .addComponent(jPanel10, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE))
-        );
-
-        add(jPanelStatus);
 
         jPanel3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -1844,93 +1357,6 @@ public class CFOMaint extends javax.swing.JPanel {
             }
         });
 
-        jPanel13.setBorder(javax.swing.BorderFactory.createTitledBorder("Scheduling"));
-
-        delvdate1.setDateFormatString("yyyy-MM-dd");
-
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        jComboBox6.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        delvdate.setDateFormatString("yyyy-MM-dd");
-
-        jComboBox4.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        shipdate.setDateFormatString("yyyy-MM-dd");
-
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        jComboBox5.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        javax.swing.GroupLayout jPanel13Layout = new javax.swing.GroupLayout(jPanel13);
-        jPanel13.setLayout(jPanel13Layout);
-        jPanel13Layout.setHorizontalGroup(
-            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel13Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel13Layout.createSequentialGroup()
-                        .addComponent(shipdate, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(42, 42, 42)
-                        .addComponent(tbshiptime, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel13Layout.createSequentialGroup()
-                        .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel13Layout.createSequentialGroup()
-                                .addComponent(delvdate, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel13Layout.createSequentialGroup()
-                                .addComponent(delvdate1, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(42, 42, 42)
-                        .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel13Layout.createSequentialGroup()
-                                .addComponent(tbshiptime2, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jComboBox6, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel13Layout.createSequentialGroup()
-                                .addComponent(tbshiptime1, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel13Layout.setVerticalGroup(
-            jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel13Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel13Layout.createSequentialGroup()
-                        .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel13Layout.createSequentialGroup()
-                                .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(shipdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(tbshiptime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(3, 3, 3)
-                                .addComponent(delvdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(tbshiptime1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(delvdate1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel13Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(tbshiptime2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jComboBox6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
-        );
-
         jPanel14.setBorder(javax.swing.BorderFactory.createTitledBorder("Address"));
 
         jLabel18.setText("Country");
@@ -1950,7 +1376,7 @@ public class CFOMaint extends javax.swing.JPanel {
         jLabel97.setText("Remarks");
         jLabel97.setName("lblremarks"); // NOI18N
 
-        jLabel17.setText("Stop Type");
+        jLabel17.setText("Location");
 
         jLabel91.setText("Addr1");
         jLabel91.setName("lbladdr1"); // NOI18N
@@ -1972,6 +1398,65 @@ public class CFOMaint extends javax.swing.JPanel {
 
         ddstoptype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Load", "Unload Complete", "Unload Partial" }));
 
+        jPanel16.setBorder(javax.swing.BorderFactory.createTitledBorder("Scheduling"));
+
+        jScrollPane7.setViewportView(listdatetime);
+
+        dcdate.setDateFormatString("yyyy-MM-dd");
+
+        jLabel25.setText("Time");
+
+        jLabel26.setText("Date");
+
+        jLabel27.setText("Event");
+
+        javax.swing.GroupLayout jPanel16Layout = new javax.swing.GroupLayout(jPanel16);
+        jPanel16.setLayout(jPanel16Layout);
+        jPanel16Layout.setHorizontalGroup(
+            jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel16Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane7, javax.swing.GroupLayout.DEFAULT_SIZE, 279, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel16Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel16Layout.createSequentialGroup()
+                                .addComponent(jLabel25)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(ddtime, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel16Layout.createSequentialGroup()
+                                .addComponent(jLabel26)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(dcdate, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel16Layout.createSequentialGroup()
+                                .addComponent(jLabel27)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(dddatetimetype, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap())
+        );
+        jPanel16Layout.setVerticalGroup(
+            jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel16Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(dddatetimetype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel27))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(dcdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel26))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ddtime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel25))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jLabel12.setText("Stop Type");
+
         javax.swing.GroupLayout jPanel14Layout = new javax.swing.GroupLayout(jPanel14);
         jPanel14.setLayout(jPanel14Layout);
         jPanel14Layout.setHorizontalGroup(
@@ -1989,76 +1474,97 @@ public class CFOMaint extends javax.swing.JPanel {
                     .addComponent(jLabel18))
                 .addGap(4, 4, 4)
                 .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel14Layout.createSequentialGroup()
-                        .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(tbaddr1, javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(tbaddr2, javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(tbcity, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(jPanel14Layout.createSequentialGroup()
-                                    .addComponent(ddstate, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addComponent(jLabel11)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(tbzip, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(tbname, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(ddstoptype, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(37, 37, 37)
-                        .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel89)
-                            .addComponent(jLabel96)
-                            .addComponent(jLabel88)
-                            .addComponent(jLabel86))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tbemail, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbcontact, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbphone, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbmisc, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE))
                     .addComponent(tbremarks)
                     .addGroup(jPanel14Layout.createSequentialGroup()
-                        .addComponent(ddstate1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel14Layout.createSequentialGroup()
+                                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(tbcity, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel14Layout.createSequentialGroup()
+                                        .addComponent(ddstate, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jLabel11)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(tbzip, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(tbaddr2, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addComponent(tbaddr1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
+                                            .addComponent(tbname, javax.swing.GroupLayout.Alignment.LEADING)))
+                                    .addComponent(ddshipto, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(43, 43, 43)
+                                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel89)
+                                    .addComponent(jLabel96)
+                                    .addComponent(jLabel88)
+                                    .addComponent(jLabel86)
+                                    .addComponent(jLabel12))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(tbphone, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tbmisc, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tbcontact, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
+                                    .addComponent(tbemail)
+                                    .addComponent(ddstoptype, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(ddstate1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(jPanel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel14Layout.setVerticalGroup(
             jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel14Layout.createSequentialGroup()
-                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ddstoptype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel17))
-                .addGap(5, 5, 5)
-                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel14Layout.createSequentialGroup()
-                        .addGap(3, 3, 3)
-                        .addComponent(jLabel82))
-                    .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(tbname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(tbemail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel96)))
-                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel14Layout.createSequentialGroup()
-                        .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel14Layout.createSequentialGroup()
-                                .addGap(13, 13, 13)
-                                .addComponent(jLabel91))
-                            .addGroup(jPanel14Layout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addComponent(tbaddr1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel14Layout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addComponent(jLabel90))
-                            .addGroup(jPanel14Layout.createSequentialGroup()
-                                .addGap(7, 7, 7)
-                                .addComponent(tbaddr2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(7, 7, 7)
+                        .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel17)
+                            .addComponent(ddshipto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel12)
+                            .addComponent(ddstoptype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(5, 5, 5)
                         .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel14Layout.createSequentialGroup()
                                 .addGap(3, 3, 3)
-                                .addComponent(jLabel93))
-                            .addComponent(tbcity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jLabel82))
+                            .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(tbname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(tbemail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel96)))
+                        .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel14Layout.createSequentialGroup()
+                                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel14Layout.createSequentialGroup()
+                                        .addGap(13, 13, 13)
+                                        .addComponent(jLabel91))
+                                    .addGroup(jPanel14Layout.createSequentialGroup()
+                                        .addGap(10, 10, 10)
+                                        .addComponent(tbaddr1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel14Layout.createSequentialGroup()
+                                        .addGap(10, 10, 10)
+                                        .addComponent(jLabel90))
+                                    .addGroup(jPanel14Layout.createSequentialGroup()
+                                        .addGap(7, 7, 7)
+                                        .addComponent(tbaddr2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(7, 7, 7)
+                                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel14Layout.createSequentialGroup()
+                                        .addGap(3, 3, 3)
+                                        .addComponent(jLabel93))
+                                    .addComponent(tbcity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel14Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(tbcontact, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel88))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(tbphone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel89))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(tbmisc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel86))))
                         .addGap(7, 7, 7)
                         .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel14Layout.createSequentialGroup()
@@ -2067,24 +1573,12 @@ public class CFOMaint extends javax.swing.JPanel {
                             .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(ddstate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel11)
-                                .addComponent(tbzip, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(jPanel14Layout.createSequentialGroup()
+                                .addComponent(tbzip, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tbcontact, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel88))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tbphone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel89))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tbmisc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel86))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ddstate1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel18))
+                            .addComponent(ddstate1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel18)))
+                    .addComponent(jPanel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbremarks, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2163,7 +1657,7 @@ public class CFOMaint extends javax.swing.JPanel {
                     .addComponent(jLabel19)
                     .addComponent(tbref5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel21))
-                .addContainerGap())
+                .addGap(92, 92, 92))
         );
 
         jComboBox7.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -2175,7 +1669,6 @@ public class CFOMaint extends javax.swing.JPanel {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel13, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btadditem)
@@ -2202,8 +1695,6 @@ public class CFOMaint extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -2213,49 +1704,21 @@ public class CFOMaint extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        orddet.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        orddet.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                orddetMouseClicked(evt);
-            }
-        });
-        jScrollPane8.setViewportView(orddet);
-
         javax.swing.GroupLayout jPanelLocationLayout = new javax.swing.GroupLayout(jPanelLocation);
         jPanelLocation.setLayout(jPanelLocationLayout);
         jPanelLocationLayout.setHorizontalGroup(
             jPanelLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelLocationLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane8, javax.swing.GroupLayout.DEFAULT_SIZE, 724, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
-            .addGroup(jPanelLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanelLocationLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addContainerGap()))
         );
         jPanelLocationLayout.setVerticalGroup(
             jPanelLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelLocationLayout.createSequentialGroup()
-                .addContainerGap(338, Short.MAX_VALUE)
-                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-            .addGroup(jPanelLocationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanelLocationLayout.createSequentialGroup()
-                    .addContainerGap()
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(143, Short.MAX_VALUE)))
+            .addGroup(jPanelLocationLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         add(jPanelLocation);
@@ -2273,7 +1736,7 @@ public class CFOMaint extends javax.swing.JPanel {
                 String clockdate = dfdate.format(now);
                 String clocktime = dftime.format(now);
            
-                shipdate.setDate(now);
+                dcdate.setDate(now);
                
                 
                 // tbDateShippedSM.setEnabled(false);
@@ -2285,7 +1748,6 @@ public class CFOMaint extends javax.swing.JPanel {
                 btlookup.setEnabled(false);
                 btupdate.setEnabled(false);
                 btprint.setEnabled(false);
-                ddshipfrom.setEnabled(false); 
                
                 
                  
@@ -2301,8 +1763,7 @@ public class CFOMaint extends javax.swing.JPanel {
         String shipper = "";
         String custpart = "";
         
-        shipper = ddshipper.getSelectedItem().toString();
-          
+      
         
         if (tbzip.getText().toString().isEmpty() ||
             tbname.getText().toString().isEmpty() ||
@@ -2325,28 +1786,28 @@ public class CFOMaint extends javax.swing.JPanel {
         
                  
           // if weight and units are blank....make 0
-          if (tbweight.getText().toString().isEmpty()) {
-              tbweight.setText("0");
+          if (tbforevision.getText().toString().isEmpty()) {
+              tbforevision.setText("0");
           }
-           if (tbunits.getText().toString().isEmpty()) {
-              tbunits.setText("0");
+           if (tbforate.getText().toString().isEmpty()) {
+              tbforate.setText("0");
           }
                  
         // check formatting
          Pattern p = Pattern.compile("^[0-9]\\d*$");
                  // Pattern.compile("^[0-9]\\d*(\\.\\d+)?$");
-        Matcher m = p.matcher(tbweight.getText());
-        if (!m.find() || tbweight.getText() == null) {
+        Matcher m = p.matcher(tbforevision.getText());
+        if (!m.find() || tbforevision.getText() == null) {
             bsmf.MainFrame.show(getMessageTag(1026));
-            tbweight.requestFocus();
+            tbforevision.requestFocus();
             return;
         }
         
          p = Pattern.compile("^[0-9]\\d*$");
-        m = p.matcher(tbunits.getText());
-        if (!m.find() || tbunits.getText() == null) {
+        m = p.matcher(tbforate.getText());
+        if (!m.find() || tbforate.getText() == null) {
             bsmf.MainFrame.show(getMessageTag(1026));
-            tbunits.requestFocus();
+            tbforate.requestFocus();
             return;
         }
         
@@ -2357,27 +1818,25 @@ public class CFOMaint extends javax.swing.JPanel {
             
             // let's first add the pickup...only if this is first time add
             if (myorddetmodel.getRowCount() == 0) {
-                String[] addr = OVData.getWareHouseAddressElements(ddshipfrom.getSelectedItem().toString());
+                String[] addr = OVData.getWareHouseAddressElements(OVData.getDefaultSite());
                  myorddetmodel.addRow(new Object[]{0, freightorder.getText(), "LD", "", addr[5], addr[6], addr[7]});
             
                 String[] k = new String[]{     
                 "0", freightorder.getText(), "LD", "", "", addr[1],
-                addr[2], addr[3], addr[5], addr[6], addr[7], tbpucontact.getText(),
-                tbpuphone.getText(), "", "0", "0", "0000-00-00", "", dfdate.format(shipdate.getDate()), tbshiptime.getText()
-                };
+                addr[2], addr[3], addr[5], addr[6], addr[7], tbcontact.getText(),
+                tbphone.getText(), "", "0", "0", "0000-00-00", "", dfdate.format(dcdate.getDate()), ddtime.getSelectedItem().toString()                };
                 tablelist.add(k);
             }
             
-            String[] j = new String[]{String.valueOf(line), freightorder.getText(), "UL", ddshipper.getSelectedItem().toString(), tbref.getText(), tbname.getText(),
+            String[] j = new String[]{String.valueOf(line), freightorder.getText(), "UL", ddcust.getSelectedItem().toString(), tbref.getText(), tbname.getText(),
             tbaddr1.getText(), tbaddr2.getText(), tbcity.getText(), ddstate.getSelectedItem().toString(), tbzip.getText(), tbcontact.getText(),
-            tbphone.getText(), tbemail.getText(), tbunits.getText(), tbweight.getText(), dfdate.format(delvdate.getDate()), tbshiptime.getText(), "0000-00-00", ""};
+            tbphone.getText(), tbemail.getText(), tbforate.getText(), tbforevision.getText(), dfdate.format(dcdate.getDate()), ddtime.getSelectedItem().toString(), "0000-00-00", ""};
             tablelist.add(j);
             
-                myorddetmodel.addRow(new Object[]{line, freightorder.getText(), "UL", ddshipper.getSelectedItem().toString(), 
+                myorddetmodel.addRow(new Object[]{line, freightorder.getText(), "UL", ddcust.getSelectedItem().toString(), 
                 tbcity.getText(), ddstate.getSelectedItem().toString(), tbzip.getText()});
        
                 sumweight();
-                sumunits();
          
         }
     }//GEN-LAST:event_btadditemActionPerformed
@@ -2405,16 +1864,16 @@ public class CFOMaint extends javax.swing.JPanel {
                         + " values ( " + "'" + freightorder.getText().toString() + "'" + ","
                          + "'" + dfdate.format(now) + "'" + ","
                         + "'" + tbref.getText() + "'" + ","
-                        + "'" + ddcarrierproposed.getSelectedItem() + "'" + ","
-                        + "'" + ddcarrierassigned.getSelectedItem() + "'" + ","
+                        + "'" + ddvehicle.getSelectedItem() + "'" + ","
+                        + "'" + ddvehicle.getSelectedItem() + "'" + ","
                         + "'" + ddequiptype.getSelectedItem() + "'" + ","
                         + "'" + ddservice.getSelectedItem() + "'" + ","        
                         + "'" + ddstatus.getSelectedItem() + "'" + ","  
                         + "'" + tbtrailer.getText() + "'" + "," 
                         + "'" + tbremarks.getText() + "'" + ","         
-                        + "'" + tbmilerate.getText() + "'" + "," 
-                        + "'" + totmiles.getText() + "'" + "," 
-                        + "'" + totcost.getText() + "'"     
+                        + "'" + tbforate.getText() + "'" + "," 
+                        + "'" + tbcharges.getText() + "'" + "," 
+                        + "'" + tbnetprice.getText() + "'"     
                         + ")"
                         + ";");
 
@@ -2519,15 +1978,15 @@ public class CFOMaint extends javax.swing.JPanel {
                 if (proceed) {
                     st.executeUpdate("update fo_mstr set "
                             + " fo_ref = " + "'" + tbref.getText() + "'" + ","
-                            + " fo_carrier = " + "'" + ddcarrierproposed.getSelectedItem() + "'" + ","
-                            + " fo_carrier_assigned = " + "'" + ddcarrierassigned.getSelectedItem() + "'" + ","   
+                            + " fo_carrier = " + "'" + ddvehicle.getSelectedItem() + "'" + ","
+                            + " fo_carrier_assigned = " + "'" + ddvehicle.getSelectedItem() + "'" + ","   
                             + " fo_rmks = " + "'" + tbremarks.getText() + "'" + ","
                             + " fo_equipment_type = " + "'" + ddequiptype.getSelectedItem() + "'" + ","
                             + " fo_service_type = " + "'" + ddservice.getSelectedItem() + "'" + ","
                             + " fo_trailer = " + "'" + tbtrailer.getText() + "'" + ","        
-                            + " fo_milerate = " + "'" + tbmilerate.getText() + "'" + ","
-                            + " fo_totmiles = " + "'" + totmiles.getText() + "'" + ","
-                            + " fo_totcost = " + "'" + totcost.getText() + "'"         
+                            + " fo_milerate = " + "'" + tbforate.getText() + "'" + ","
+                            + " fo_totmiles = " + "'" + tbcharges.getText() + "'" + ","
+                            + " fo_totcost = " + "'" + tbnetprice.getText() + "'"         
                             + " where fo_nbr = " + "'" + freightorder.getText() + "'" 
                         + ";");
 
@@ -2592,116 +2051,6 @@ public class CFOMaint extends javax.swing.JPanel {
        OVData.printPurchaseOrder(freightorder.getText(), false);
     }//GEN-LAST:event_btprintActionPerformed
 
-    private void ddshipperActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddshipperActionPerformed
-        if (ddshipper.getItemCount() > 0  && ! lock_ddshipper) {
-            clearAddrFields();
-           shipperChangeEvent(ddshipper.getSelectedItem().toString());
-        } // if ddcust has a list
-    }//GEN-LAST:event_ddshipperActionPerformed
-
-    private void btquoteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btquoteActionPerformed
-        OVData.quoteFreightOrder(freightorder.getText());
-        initvars(new String[] {freightorder.getText()});
-    }//GEN-LAST:event_btquoteActionPerformed
-
-    private void bttenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttenderActionPerformed
-        OVData.tenderFreightOrder(freightorder.getText());
-        initvars(new String[]{freightorder.getText()});
-    }//GEN-LAST:event_bttenderActionPerformed
-
-    private void bthidequotefilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bthidequotefilesActionPerformed
-       RawFileQuotesPanel.setVisible(false);
-    }//GEN-LAST:event_bthidequotefilesActionPerformed
-
-    private void tablequotesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablequotesMouseClicked
-         int row = tablequotes.rowAtPoint(evt.getPoint());
-        int col = tablequotes.columnAtPoint(evt.getPoint());
-        if ( col == 0) {
-             try {
-                 tafilequotes.setText("");
-                  ArrayList<String> segments = EDData.readEDIRawFileIntoArrayList(tablequotes.getValueAt(row, 5).toString(), tablequotes.getValueAt(row, 6).toString());  
-                    for (String segment : segments ) {
-                        tafilequotes.append(segment);
-                        tafilequotes.append("\n");
-                    }
-                 
-                  RawFileQuotesPanel.setVisible(true);
-             } catch (MalformedURLException ex) {
-                 Logger.getLogger(EDILogBrowse.class.getName()).log(Level.SEVERE, null, ex);
-             } catch (SmbException ex) {
-                 Logger.getLogger(EDILogBrowse.class.getName()).log(Level.SEVERE, null, ex);
-             } catch (IOException ex) {
-                 Logger.getLogger(CFOMaint.class.getName()).log(Level.SEVERE, null, ex);
-             }
-           
-        }
-    }//GEN-LAST:event_tablequotesMouseClicked
-
-    private void bthidetendersfilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bthidetendersfilesActionPerformed
-        RawFileTenderPanel.setVisible(false);
-    }//GEN-LAST:event_bthidetendersfilesActionPerformed
-
-    private void tabletendersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabletendersMouseClicked
-         int row = tabletenders.rowAtPoint(evt.getPoint());
-        int col = tabletenders.columnAtPoint(evt.getPoint());
-        if ( col == 0) {
-             try {
-                  tafiletenders.setText("");
-                  ArrayList<String> segments = EDData.readEDIRawFileIntoArrayList(tabletenders.getValueAt(row, 5).toString(), tabletenders.getValueAt(row, 6).toString());  
-                    for (String segment : segments ) {
-                        tafiletenders.append(segment);
-                        tafiletenders.append("\n");
-                    }
-                 
-                  RawFileTenderPanel.setVisible(true);
-             } catch (MalformedURLException ex) {
-                 Logger.getLogger(EDILogBrowse.class.getName()).log(Level.SEVERE, null, ex);
-             } catch (SmbException ex) {
-                 Logger.getLogger(EDILogBrowse.class.getName()).log(Level.SEVERE, null, ex);
-             } catch (IOException ex) {
-                 Logger.getLogger(CFOMaint.class.getName()).log(Level.SEVERE, null, ex);
-             }
-           
-        }
-    }//GEN-LAST:event_tabletendersMouseClicked
-
-    private void bthideEDIStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bthideEDIStatusActionPerformed
-       RawFileStatusPanel.setVisible(false);
-    }//GEN-LAST:event_bthideEDIStatusActionPerformed
-
-    private void tablestatusMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablestatusMouseClicked
-         int row = tablestatus.rowAtPoint(evt.getPoint());
-        int col = tablestatus.columnAtPoint(evt.getPoint());
-        if ( col == 0) {
-             try {
-                 tafilestatus.setText("");
-                  ArrayList<String> segments = EDData.readEDIRawFileIntoArrayList(tablestatus.getValueAt(row, 5).toString(), tablestatus.getValueAt(row, 10).toString());  
-                    for (String segment : segments ) {
-                        tafilestatus.append(segment);
-                        tafilestatus.append("\n");
-                    } 
-                  RawFileStatusPanel.setVisible(true);
-             } catch (MalformedURLException ex) {
-                 Logger.getLogger(EDILogBrowse.class.getName()).log(Level.SEVERE, null, ex);
-             } catch (SmbException ex) {
-                 Logger.getLogger(EDILogBrowse.class.getName()).log(Level.SEVERE, null, ex);
-             } catch (IOException ex) {
-                 Logger.getLogger(CFOMaint.class.getName()).log(Level.SEVERE, null, ex);
-             }
-           
-        }
-        
-        if ( col == 8 || col == 9) {
-             showMap(tablestatus.getValueAt(row, 8).toString(), tablestatus.getValueAt(row, 9).toString());
-           
-        }
-        
-    }//GEN-LAST:event_tablestatusMouseClicked
-
-    private void bthidemapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bthidemapActionPerformed
-        hideMap();
-    }//GEN-LAST:event_bthidemapActionPerformed
-
     private void orddetMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_orddetMouseClicked
         int row = orddet.rowAtPoint(evt.getPoint());
         int col = orddet.columnAtPoint(evt.getPoint());
@@ -2724,57 +2073,40 @@ public class CFOMaint extends javax.swing.JPanel {
         tbcontact.setText(v[11]);
         tbphone.setText(v[12]);
         tbemail.setText(v[13]);
-        tbunits.setText(v[14]);
+        tbforate.setText(v[14]);
        // tbweight.setText(orddet.getValueAt(row, 15).toString());
         if (v[16].isEmpty() || v[16].equals("0000-00-00")) {
-         delvdate.setDate(null);   
+         dcdate.setDate(null);   
         } else {
-         delvdate.setDate(Date.valueOf(v[16]));   
+         dcdate.setDate(Date.valueOf(v[16]));   
         }
-        tbdelvtime.setText(v[17]);
         if (v[18].isEmpty() || v[18].equals("0000-00-00") ) {
-         shipdate.setDate(null);   
+         dcdate.setDate(null);   
         } else {
-         shipdate.setDate(Date.valueOf(v[18]));   
+         dcdate.setDate(Date.valueOf(v[18]));   
         }
-        tbshiptime.setText(v[19]);
+        ddtime.setSelectedItem(v[19]);
     }//GEN-LAST:event_orddetMouseClicked
 
     private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
         lookUpFrame();
     }//GEN-LAST:event_btlookupActionPerformed
 
-    private void tbmilerateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbmilerateFocusLost
-        if (! tbmilerate.getText().isEmpty()) {
-        String x = BlueSeerUtils.bsformat("", tbmilerate.getText(), "2");
+    private void tbchargesFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbchargesFocusLost
+        if (! tbcharges.getText().isEmpty()) {
+        String x = BlueSeerUtils.bsformat("", tbcharges.getText(), "0");
         if (x.equals("error")) {
-            tbmilerate.setText("");
-            tbmilerate.setBackground(Color.yellow);
+            tbcharges.setText("");
+            tbcharges.setBackground(Color.yellow);
             bsmf.MainFrame.show(getMessageTag(1000));
-            tbmilerate.requestFocus();
+            tbcharges.requestFocus();
         } else {
-            tbmilerate.setText(x);
-            tbmilerate.setBackground(Color.white);
+            tbcharges.setText(x);
+            tbcharges.setBackground(Color.white);
         }
         sumTotal();
         }
-    }//GEN-LAST:event_tbmilerateFocusLost
-
-    private void totmilesFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_totmilesFocusLost
-        if (! totmiles.getText().isEmpty()) {
-        String x = BlueSeerUtils.bsformat("", totmiles.getText(), "0");
-        if (x.equals("error")) {
-            totmiles.setText("");
-            totmiles.setBackground(Color.yellow);
-            bsmf.MainFrame.show(getMessageTag(1000));
-            totmiles.requestFocus();
-        } else {
-            totmiles.setText(x);
-            totmiles.setBackground(Color.white);
-        }
-        sumTotal();
-        }
-    }//GEN-LAST:event_totmilesFocusLost
+    }//GEN-LAST:event_tbchargesFocusLost
 
     private void btcommitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcommitActionPerformed
         java.util.Date now = new java.util.Date();
@@ -2788,48 +2120,72 @@ public class CFOMaint extends javax.swing.JPanel {
         
     }//GEN-LAST:event_btcommitActionPerformed
 
+    private void tbforevisionFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbforevisionFocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tbforevisionFocusLost
+
+    private void tbforateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbforateFocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tbforateFocusLost
+
+    private void tbdrivercellFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbdrivercellFocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tbdrivercellFocusLost
+
+    private void tbdriverrateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbdriverrateFocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tbdriverrateFocusLost
+
+    private void totweightFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_totweightFocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_totweightFocusLost
+
+    private void tbmileageFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbmileageFocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tbmileageFocusLost
+
+    private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
+        BlueSeerUtils.messagereset();
+        initvars(null);
+    }//GEN-LAST:event_btclearActionPerformed
+
+    private void tbcostFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbcostFocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tbcostFocusLost
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel RawFileQuotesPanel;
-    private javax.swing.JPanel RawFileStatusPanel;
-    private javax.swing.JPanel RawFileTenderPanel;
-    private javax.swing.JPanel StatusTablePanel;
     private javax.swing.JButton btadd;
     private javax.swing.JButton btadditem;
+    private javax.swing.JButton btclear;
     private javax.swing.JButton btcommit;
     private javax.swing.JButton btdelitem;
-    private javax.swing.JButton bthideEDIStatus;
-    private javax.swing.JButton bthidemap;
-    private javax.swing.JButton bthidequotefiles;
-    private javax.swing.JButton bthidetendersfiles;
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btprint;
-    private javax.swing.JButton btquote;
-    private javax.swing.JButton bttender;
     private javax.swing.JButton btupdate;
     private javax.swing.JButton btupdateitem;
-    private javax.swing.JComboBox ddcarrierassigned;
-    private javax.swing.JComboBox ddcarrierproposed;
+    private javax.swing.JCheckBox cbhazmat;
+    private javax.swing.JCheckBox cbstandard;
+    private com.toedter.calendar.JDateChooser dcdate;
+    private com.toedter.calendar.JDateChooser dcloaddate;
+    private com.toedter.calendar.JDateChooser dcunloaddate;
+    private javax.swing.JComboBox<String> ddbroker;
+    private javax.swing.JComboBox<String> ddcust;
+    private javax.swing.JComboBox<String> dddatetimetype;
+    private javax.swing.JComboBox<String> dddriver;
     private javax.swing.JComboBox ddequiptype;
-    private javax.swing.JComboBox<String> ddreasoncode;
+    private javax.swing.JComboBox<String> ddfotype;
+    private javax.swing.JComboBox<String> ddratetype;
     private javax.swing.JComboBox<String> ddservice;
-    private javax.swing.JComboBox<String> ddshipfrom;
-    private javax.swing.JComboBox<String> ddshipper;
+    private javax.swing.JComboBox<String> ddshipto;
     private javax.swing.JComboBox ddstate;
     private javax.swing.JComboBox ddstate1;
     private javax.swing.JComboBox ddstatus;
     private javax.swing.JComboBox<String> ddstoptype;
-    private com.toedter.calendar.JDateChooser delvdate;
-    private com.toedter.calendar.JDateChooser delvdate1;
+    private javax.swing.JComboBox<String> ddtime;
+    private javax.swing.JComboBox ddvehicle;
     private javax.swing.JTextField freightorder;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
-    private javax.swing.JComboBox<String> jComboBox3;
-    private javax.swing.JComboBox<String> jComboBox4;
-    private javax.swing.JComboBox<String> jComboBox5;
-    private javax.swing.JComboBox<String> jComboBox6;
     private javax.swing.JComboBox<String> jComboBox7;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel101;
     private javax.swing.JLabel jLabel11;
@@ -2841,93 +2197,79 @@ public class CFOMaint extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
+    private javax.swing.JLabel jLabel27;
+    private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel30;
+    private javax.swing.JLabel jLabel31;
+    private javax.swing.JLabel jLabel32;
+    private javax.swing.JLabel jLabel33;
+    private javax.swing.JLabel jLabel34;
+    private javax.swing.JLabel jLabel35;
+    private javax.swing.JLabel jLabel36;
+    private javax.swing.JLabel jLabel37;
+    private javax.swing.JLabel jLabel38;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel76;
     private javax.swing.JLabel jLabel77;
-    private javax.swing.JLabel jLabel78;
-    private javax.swing.JLabel jLabel79;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel82;
     private javax.swing.JLabel jLabel83;
-    private javax.swing.JLabel jLabel84;
     private javax.swing.JLabel jLabel85;
     private javax.swing.JLabel jLabel86;
-    private javax.swing.JLabel jLabel87;
     private javax.swing.JLabel jLabel88;
     private javax.swing.JLabel jLabel89;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLabel90;
     private javax.swing.JLabel jLabel91;
-    private javax.swing.JLabel jLabel92;
     private javax.swing.JLabel jLabel93;
     private javax.swing.JLabel jLabel94;
     private javax.swing.JLabel jLabel95;
     private javax.swing.JLabel jLabel96;
     private javax.swing.JLabel jLabel97;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel10;
-    private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel12;
-    private javax.swing.JPanel jPanel13;
     private javax.swing.JPanel jPanel14;
     private javax.swing.JPanel jPanel15;
-    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel16;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
-    private javax.swing.JPanel jPanel9;
-    private javax.swing.JPanel jPanelLoad;
     private javax.swing.JPanel jPanelLocation;
     private javax.swing.JPanel jPanelMain;
-    private javax.swing.JPanel jPanelQuotes;
-    private javax.swing.JPanel jPanelStatus;
-    private javax.swing.JPanel jPanelTenders;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JScrollPane jScrollPane6;
+    private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField jTextField1;
-    private javax.swing.JLabel labelmap;
-    private javax.swing.JLabel lbmessagequote;
-    private javax.swing.JLabel lbmessagestatus;
-    private javax.swing.JLabel lbmessagetender;
-    private javax.swing.JLabel lbshipfrom;
+    private javax.swing.JList<String> listdatetime;
     private javax.swing.JTable orddet;
-    private com.toedter.calendar.JDateChooser shipdate;
-    private javax.swing.JTable tablequotes;
-    private javax.swing.JTable tablestatus;
-    private javax.swing.JTable tabletenders;
-    private javax.swing.JTextArea tafilequotes;
-    private javax.swing.JTextArea tafilestatus;
-    private javax.swing.JTextArea tafiletenders;
     private javax.swing.JTextField tbaddr1;
     private javax.swing.JTextField tbaddr2;
+    private javax.swing.JTextField tbbrokercell;
+    private javax.swing.JTextField tbbrokercontact;
+    private javax.swing.JTextField tbcharges;
     private javax.swing.JTextField tbcity;
     private javax.swing.JTextField tbcontact;
-    private javax.swing.JTextField tbcust;
-    private javax.swing.JTextField tbcustfrtnbr;
+    private javax.swing.JTextField tbcost;
+    private javax.swing.JTextField tbcustfo;
+    private javax.swing.JTextField tbdrivercell;
+    private javax.swing.JTextField tbdriverrate;
     private javax.swing.JTextField tbemail;
-    private javax.swing.JTextField tbmilerate;
+    private javax.swing.JTextField tbforate;
+    private javax.swing.JTextField tbforevision;
+    private javax.swing.JTextField tbmileage;
     private javax.swing.JTextField tbmisc;
     private javax.swing.JTextField tbname;
+    private javax.swing.JTextField tbnetprice;
     private javax.swing.JTextField tbphone;
-    private javax.swing.JTextField tbpucontact;
-    private javax.swing.JTextField tbpuphone;
     private javax.swing.JTextField tbref;
     private javax.swing.JTextField tbref1;
     private javax.swing.JTextField tbref2;
@@ -2935,15 +2277,8 @@ public class CFOMaint extends javax.swing.JPanel {
     private javax.swing.JTextField tbref4;
     private javax.swing.JTextField tbref5;
     private javax.swing.JTextField tbremarks;
-    private javax.swing.JTextField tbshiptime;
-    private javax.swing.JTextField tbshiptime1;
-    private javax.swing.JTextField tbshiptime2;
-    private javax.swing.JTextField tbtpid;
     private javax.swing.JTextField tbtrailer;
     private javax.swing.JTextField tbzip;
-    private javax.swing.JTextField totcost;
-    private javax.swing.JTextField totmiles;
-    private javax.swing.JTextField totunits;
     private javax.swing.JTextField totweight;
     // End of variables declaration//GEN-END:variables
 }
