@@ -63,50 +63,46 @@
               <Group type="102" attributes="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" pref="64" max="-2" attributes="0"/>
-                                  <Component id="jLabel76" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="freightorder" min="-2" pref="86" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="btlookup" min="-2" pref="24" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="btnew" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="btclear" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" pref="91" max="-2" attributes="0"/>
-                                  <Component id="jLabel38" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="tbcost" min="-2" pref="69" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
-                                  <Component id="jLabel13" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
-                                  <Component id="tbcharges" min="-2" pref="69" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
-                                  <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="tbnetprice" min="-2" pref="68" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="btcommit" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="btprint" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="7" pref="7" max="-2" attributes="0"/>
-                                  <Component id="btupdate" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="12" pref="12" max="-2" attributes="0"/>
-                                  <Component id="btadd" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          <EmptySpace min="-2" pref="64" max="-2" attributes="0"/>
+                          <Component id="jLabel76" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="tbkey" min="-2" pref="86" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="btlookup" min="-2" pref="24" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="btnew" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="btclear" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="jPanel12" alignment="1" max="32767" attributes="0"/>
-                              <Component id="jScrollPane8" alignment="0" pref="786" max="32767" attributes="0"/>
+                              <Component id="jScrollPane8" alignment="0" max="32767" attributes="0"/>
                           </Group>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="btcommit" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="jLabel38" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="tbexpenses" min="-2" pref="69" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+                          <Component id="jLabel13" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
+                          <Component id="tbcharges" min="-2" pref="69" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
+                          <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="tbcost" min="-2" pref="68" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="79" max="-2" attributes="0"/>
+                          <Component id="btprint" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="btadd" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="btupdate" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
+                          <Component id="btdelete" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -123,7 +119,7 @@
                               <EmptySpace min="3" pref="3" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jLabel76" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="freightorder" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="tbkey" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -137,21 +133,24 @@
                   <Component id="jPanel12" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Component id="jScrollPane8" min="-2" pref="111" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="btprint" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="tbnetprice" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tbcost" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel14" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btcommit" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="btupdate" min="-2" max="-2" attributes="0"/>
-                      <Component id="btadd" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="btupdate" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btadd" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Component id="btdelete" min="-2" max="-2" attributes="0"/>
                       <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                           <Component id="tbcharges" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel13" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="tbcost" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tbexpenses" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel38" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btcommit" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -165,7 +164,10 @@
             <Property name="name" type="java.lang.String" value="lblid" noResource="true"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JTextField" name="freightorder">
+        <Component class="javax.swing.JTextField" name="tbkey">
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tbkeyActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnew">
           <Properties>
@@ -234,12 +236,12 @@
                               <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="ddcust" alignment="0" min="-2" pref="132" max="-2" attributes="0"/>
-                                  <Component id="tbforevision" alignment="0" min="-2" pref="102" max="-2" attributes="0"/>
+                                  <Component id="tbcustforev" alignment="0" min="-2" pref="102" max="-2" attributes="0"/>
                                   <Component id="tbtrailer" alignment="0" min="-2" pref="164" max="-2" attributes="0"/>
                                   <Group type="103" alignment="0" groupAlignment="1" attributes="0">
                                       <Component id="ddequiptype" alignment="1" min="-2" pref="144" max="-2" attributes="0"/>
                                       <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
-                                          <Component id="ddservice" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="ddservicetype" alignment="0" max="32767" attributes="0"/>
                                           <Component id="tbcustfo" alignment="0" pref="144" max="32767" attributes="0"/>
                                       </Group>
                                       <Component id="ddvehicle" alignment="1" min="-2" pref="144" max="-2" attributes="0"/>
@@ -263,7 +265,7 @@
                                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
                                           <Component id="ddfotype" alignment="0" pref="131" max="32767" attributes="0"/>
                                           <Component id="tbdrivercell" alignment="0" max="32767" attributes="0"/>
-                                          <Component id="ddstatus" alignment="0" min="-2" pref="108" max="-2" attributes="0"/>
+                                          <Component id="ddorderstatus" alignment="0" min="-2" pref="108" max="-2" attributes="0"/>
                                       </Group>
                                       <Component id="tbbrokercontact" alignment="1" min="-2" pref="131" max="-2" attributes="0"/>
                                   </Group>
@@ -292,7 +294,7 @@
                                           <Component id="ddratetype" max="32767" attributes="0"/>
                                           <Component id="tbforate" pref="102" max="32767" attributes="0"/>
                                           <Component id="tbdriverrate" alignment="0" pref="102" max="32767" attributes="0"/>
-                                          <Component id="totweight" alignment="0" pref="102" max="32767" attributes="0"/>
+                                          <Component id="tbtotweight" alignment="0" pref="102" max="32767" attributes="0"/>
                                           <Component id="tbmileage" alignment="0" pref="102" max="32767" attributes="0"/>
                                       </Group>
                                       <EmptySpace max="-2" attributes="0"/>
@@ -316,7 +318,7 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="ddcust" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="ddstatus" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="ddorderstatus" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel36" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="ddratetype" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel31" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -334,7 +336,7 @@
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="tbforevision" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="tbcustforev" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="tbdrivercell" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -343,7 +345,7 @@
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="ddservice" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="ddservicetype" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="ddfotype" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel24" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -357,7 +359,7 @@
                                   <Component id="jLabel85" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="ddbroker" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel28" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="totweight" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="tbtotweight" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel33" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
@@ -393,7 +395,11 @@
             <Component class="javax.swing.JComboBox" name="ddvehicle">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="0"/>
+                  <StringArray count="3">
+                    <StringItem index="0" value="test1"/>
+                    <StringItem index="1" value="test2"/>
+                    <StringItem index="2" value="test3"/>
+                  </StringArray>
                 </Property>
               </Properties>
             </Component>
@@ -412,14 +418,25 @@
             <Component class="javax.swing.JComboBox" name="ddequiptype">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="0"/>
+                  <StringArray count="3">
+                    <StringItem index="0" value="test1"/>
+                    <StringItem index="1" value="test2"/>
+                    <StringItem index="2" value="test3"/>
+                  </StringArray>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ddequiptypeActionPerformed"/>
+              </Events>
             </Component>
-            <Component class="javax.swing.JComboBox" name="ddservice">
+            <Component class="javax.swing.JComboBox" name="ddservicetype">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="0"/>
+                  <StringArray count="3">
+                    <StringItem index="0" value="test1"/>
+                    <StringItem index="1" value="test2"/>
+                    <StringItem index="2" value="test3"/>
+                  </StringArray>
                 </Property>
               </Properties>
               <AuxValues>
@@ -454,9 +471,9 @@
                 <Property name="text" type="java.lang.String" value="Rate"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="tbforevision">
+            <Component class="javax.swing.JTextField" name="tbcustforev">
               <Events>
-                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbforevisionFocusLost"/>
+                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbcustforevFocusLost"/>
               </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="tbforate">
@@ -469,7 +486,10 @@
             <Component class="javax.swing.JComboBox" name="ddcust">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="0"/>
+                  <StringArray count="2">
+                    <StringItem index="0" value="test1"/>
+                    <StringItem index="1" value="test2"/>
+                  </StringArray>
                 </Property>
               </Properties>
               <AuxValues>
@@ -517,7 +537,10 @@
             <Component class="javax.swing.JComboBox" name="ddbroker">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="0"/>
+                  <StringArray count="2">
+                    <StringItem index="0" value="test1"/>
+                    <StringItem index="1" value="test2"/>
+                  </StringArray>
                 </Property>
               </Properties>
               <AuxValues>
@@ -571,9 +594,9 @@
                 <Property name="text" type="java.lang.String" value="Mileage"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="totweight">
+            <Component class="javax.swing.JTextField" name="tbtotweight">
               <Events>
-                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="totweightFocusLost"/>
+                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbtotweightFocusLost"/>
               </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel33">
@@ -606,7 +629,7 @@
                 <Property name="text" type="java.lang.String" value="Hazmat"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JComboBox" name="ddstatus">
+            <Component class="javax.swing.JComboBox" name="ddorderstatus">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="9">
@@ -646,7 +669,10 @@
             <Component class="javax.swing.JComboBox" name="dddriver">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="0"/>
+                  <StringArray count="2">
+                    <StringItem index="0" value="test1"/>
+                    <StringItem index="1" value="test2"/>
+                  </StringArray>
                 </Property>
               </Properties>
               <AuxValues>
@@ -660,7 +686,7 @@
             <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbchargesFocusLost"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JTextField" name="tbnetprice">
+        <Component class="javax.swing.JTextField" name="tbcost">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel13">
           <Properties>
@@ -713,15 +739,23 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btclearActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JTextField" name="tbcost">
+        <Component class="javax.swing.JTextField" name="tbexpenses">
           <Events>
-            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbcostFocusLost"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbexpensesFocusLost"/>
           </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel38">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Cost"/>
+            <Property name="text" type="java.lang.String" value="Expenses"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btdelete">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Delete"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdeleteActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -889,7 +923,7 @@
                                               <Component id="tbmisc" min="-2" pref="120" max="-2" attributes="0"/>
                                               <Component id="tbcontact" alignment="0" pref="169" max="32767" attributes="0"/>
                                               <Component id="tbemail" alignment="0" max="32767" attributes="0"/>
-                                              <Component id="ddstoptype" min="-2" pref="61" max="-2" attributes="0"/>
+                                              <Component id="ddstoptype" alignment="0" min="-2" pref="133" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
                                       <Component id="ddstate1" alignment="0" min="-2" pref="110" max="-2" attributes="0"/>

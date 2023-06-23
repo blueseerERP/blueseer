@@ -1580,6 +1580,38 @@ CREATE TABLE IF NOT EXISTS `dod_mstr` (
   `dod_uom` varchar(3) NOT NULL  DEFAULT '',
   `dod_char1` varchar(50) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `cfo_mstr` (
+  `cfo_nbr` varchar(8) NOT NULL  DEFAULT '',
+  `cfo_cust` varchar(30) NOT NULL  DEFAULT '',
+  `cfo_custfonbr` varchar(30) NOT NULL  DEFAULT '',
+  `cfo_custfonbrrev` varchar(30) NOT NULL  DEFAULT '',
+  `cfo_servicetype` varchar(50) NOT NULL  DEFAULT '',
+  `cfo_equipmenttype` varchar(50) NOT NULL  DEFAULT '',
+  `cfo_truckid` varchar(20) NOT NULL  DEFAULT '',
+  `cfo_trailernbr` varchar(20) NOT NULL  DEFAULT '',
+  `cfo_orderstatus` varchar(30) NOT NULL  DEFAULT '',
+  `cfo_deliverystatus` varchar(30) NOT NULL  DEFAULT '',
+  `cfo_driver` varchar(50) NOT NULL  DEFAULT '',
+  `cfo_drivercell` varchar(15) NOT NULL  DEFAULT '',
+  `cfo_type` varchar(30) NOT NULL  DEFAULT '',
+  `cfo_brokerid` varchar(20) NOT NULL  DEFAULT '',
+  `cfo_brokercontact` varchar(50) NOT NULL  DEFAULT '',
+  `cfo_brokercell` varchar(15) NOT NULL  DEFAULT '',
+  `cfo_ratetype` varchar(30) NOT NULL  DEFAULT '',
+  `cfo_rate` decimal(14,5) NOT NULL DEFAULT '0',
+  `cfo_mileage` decimal(14,5) NOT NULL DEFAULT '0',
+  `cfo_driverrate` decimal(14,5) NOT NULL DEFAULT '0',
+  `cfo_driverstd` tinyint(1) NOT NULL  DEFAULT '0',
+  `cfo_weight` decimal(14,5) NOT NULL DEFAULT '0',
+  `cfo_loaddate` varchar(10) NOT NULL  DEFAULT '',
+  `cfo_unloaddate` varchar(10) NOT NULL  DEFAULT '',
+  `cfo_ishazmat` tinyint(1) NOT NULL  DEFAULT '0',
+  `cfo_miscexpense` decimal(14,5) NOT NULL DEFAULT '0',
+  `cfo_misccharges` decimal(14,5) NOT NULL DEFAULT '0',
+  `cfo_cost` decimal(14,5) NOT NULL DEFAULT '0',
+  `cfo_bol` varchar(30) NOT NULL  DEFAULT '',
+  `cfo_rmks` varchar(100) NOT NULL  DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `fo_mstr` (
   `fo_nbr` varchar(8) NOT NULL  DEFAULT '',
   `fo_date` date DEFAULT NULL,

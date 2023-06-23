@@ -18,6 +18,7 @@ order,sales order range,,10000,49999,10000
 srvm,service order range,,50000,99999,50000
 do,Distribution order range,,10000,90000,12022
 fo,freight order range,,50000000,79999999,50005001
+cfo,carrier freight order range,,30000000,79999999,30005001
 ovdev,unknown,,1000,9999,1024
 plan,plan master range,,100000,999999,100250
 pland,plan detail range,,100,999,125

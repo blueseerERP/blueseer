@@ -1868,6 +1868,41 @@ CREATE TABLE "ship_det" (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "cfo_mstr" (
+  "cfo_nbr" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfo_cust" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfo_custfonbr" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfo_custfonbrrev" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfo_servicetype" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfo_equipmenttype" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfo_truckid" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfo_trailernbr" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfo_orderstatus" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfo_deliverystatus" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfo_driver" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfo_drivercell" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfo_type" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfo_brokerid" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfo_brokercontact" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfo_brokercell" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfo_ratetype" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfo_rate" decimal(14,5) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "cfo_mileage" decimal(14,5) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "cfo_driverrate" decimal(14,5) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "cfo_driverstd" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "cfo_weight" decimal(14,5) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "cfo_loaddate" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfo_unloaddate" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfo_ishazmat" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "cfo_miscexpense" decimal(14,5) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "cfo_misccharges" decimal(14,5) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "cfo_cost" decimal(14,5) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "cfo_bol" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfo_rmks" varchar(100) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "fo_mstr" (
   "fo_nbr" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
   "fo_date" date COLLATE NOCASE DEFAULT '',
