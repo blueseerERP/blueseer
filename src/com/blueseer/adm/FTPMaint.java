@@ -73,6 +73,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.SocketException;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -669,22 +670,34 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
                     if (splitLine.length > 1 && splitLine[0].equals("put")) {
                         File localfolder = new File(homeOut);
 	                File[] localFiles = localfolder.listFiles();
+                        boolean isLocalDelete = false;
+                        boolean isSuccess = false;
+                        if (splitLine[1].equals("-d")) {
+                            isLocalDelete = true;
+                        }
                         for (int i = 0; i < localFiles.length; i++) {
                           if (localFiles[i].isFile()) {
-                              String x = ("\\Q" + splitLine[1] + "\\E").replace("*", "\\E.*\\Q");
+                              isSuccess = false;
+                              String x = ("\\Q" + splitLine[splitLine.length - 1] + "\\E").replace("*", "\\E.*\\Q");
                                 if (localFiles[i].getName().matches(x)) {
                                     InputStream inputStream = new FileInputStream(localFiles[i]);
                                     talog.append("storing file: " + localFiles[i].getName() + " size: " + localFiles[i].length() + "\n");
                                     try {
                                     csftp.put(inputStream, localFiles[i].getName());
                                     talog.append("file stored: " + localFiles[i].getName() + "\n");
+                                    isSuccess = true;
                                     } catch(SftpException e){
                                     talog.append("unable to store file: " + localFiles[i].getName() + "\n");
                                     talog.append(e.toString() + "\n");
+                                    isSuccess = false;
                                     } finally {
                                       if (inputStream != null) {
                                           inputStream.close();
                                       }  
+                                      if (isLocalDelete && isSuccess && ! localFiles[i].getName().isBlank()) {
+                                        Path filepath = FileSystems.getDefault().getPath(homeOut + localFiles[i].getName());
+                                        Files.deleteIfExists(filepath);
+                                      }
                                     }
                                 }
                           } 
@@ -822,9 +835,15 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
                     if (splitLine.length > 1 && splitLine[0].equals("put")) {
                         File localfolder = new File(homeOut);
 	                File[] localFiles = localfolder.listFiles();
-                        for (int i = 0; i < localFiles.length; i++) {
+                        boolean isLocalDelete = false;
+                        boolean isSuccess = false;
+                        if (splitLine[1].equals("-d")) {
+                            isLocalDelete = true;
+                        }
+                        for (int i = 0; i < localFiles.length; i++) {                            
                           if (localFiles[i].isFile()) {
-                              String x = ("\\Q" + splitLine[1] + "\\E").replace("*", "\\E.*\\Q");
+                              isSuccess = false;
+                              String x = ("\\Q" + splitLine[splitLine.length - 1] + "\\E").replace("*", "\\E.*\\Q");
                                 if (localFiles[i].getName().matches(x)) {
                                     InputStream inputStream = new FileInputStream(localFiles[i]);
                                     talog.append("storing file: " + localFiles[i].getName() + " size: " + localFiles[i].length() + "\n");
@@ -832,10 +851,15 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
                                     inputStream.close();
                                     if (done) {
                                         talog.append("file stored: " + localFiles[i].getName() + "\n");
+                                        isSuccess = true;
                                     } else {
                                         talog.append("unable to store file: " + localFiles[i].getName() + "\n");
                                     }   
                                     showServerReply(client);
+                                    if (isLocalDelete && isSuccess && ! localFiles[i].getName().isBlank()) {
+                                        Path filepath = FileSystems.getDefault().getPath(homeOut + localFiles[i].getName());
+                                        Files.deleteIfExists(filepath);
+                                    }
                                 }
                           } 
                         }
