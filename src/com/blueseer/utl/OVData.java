@@ -6385,14 +6385,18 @@ public class OVData {
            res = st.executeQuery("select wf_op " +
                    " from wf_mstr inner join item_mstr on wf_id = it_wf " + 
                    " where it_item = " + "'" + item + "'" +
-                   " AND wf_op < " + "'" + op + "'" + " AND " +
-                   " wf_assert = 0 order by wf_op desc ");
+                   " AND wf_op < " + "'" + op + "'" + 
+                   " order by wf_op desc ");
             while (res.next()) {
-               myops.add(res.getString("wf_op"));
+               myops.add(res.getString("wf_op") + ":" + res.getString("wf_assert"));
             }
             res.close();
 
             for ( String myvalue : myops) {
+                String[] opsarray = myvalue.split(":", -1) ; // if previous op is reportable...bail
+                if (opsarray[1].equals("1")) {
+                    break;
+                }
                 wip_iss_mtl_gl_unreported(item, myvalue, csite, qty, date, cref, ctype, cdesc, serial, userid, program, bom);
             }
            } /* if Reportable Op */
@@ -6635,12 +6639,16 @@ public class OVData {
            res = st.executeQuery("select wf_op " +
                    " from wf_mstr inner join item_mstr on wf_id = it_wf " + 
                    " where it_item = " + "'" + item + "'" +
-                   " AND wf_op < " + "'" + cop + "'" + " AND " +
-                   " wf_assert = 0 order by wf_op desc ");
+                   " AND wf_op < " + "'" + cop + "'" + 
+                   " order by wf_op desc ");
             while (res.next()) {
-                op.add(res.getString("wf_op"));
+                op.add(res.getString("wf_op") + ":" + res.getString("wf_assert"));
             }
              for (int j = 0; j < op.size(); j++) {
+                String[] opsarray = op.get(j).toString().split(":", -1) ; // if previous op is reportable...bail
+                if (opsarray[1].equals("1")) {
+                    break;
+                }
                  wip_iss_op_cost_gl_unreported(item, op.get(j).toString(), site, qty, date, ref, type, desc);
              }
         } // if reportable
