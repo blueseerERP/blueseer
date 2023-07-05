@@ -6382,7 +6382,7 @@ public class OVData {
               exclusive of this reported op  */
            if (isReportable) { 
             ArrayList<String> myops = new ArrayList<String>();
-           res = st.executeQuery("select wf_op " +
+           res = st.executeQuery("select wf_op, wf_assert " +
                    " from wf_mstr inner join item_mstr on wf_id = it_wf " + 
                    " where it_item = " + "'" + item + "'" +
                    " AND wf_op < " + "'" + op + "'" + 
@@ -6393,11 +6393,12 @@ public class OVData {
             res.close();
 
             for ( String myvalue : myops) {
+                
                 String[] opsarray = myvalue.split(":", -1) ; // if previous op is reportable...bail
                 if (opsarray[1].equals("1")) {
                     break;
                 }
-                wip_iss_mtl_gl_unreported(item, myvalue, csite, qty, date, cref, ctype, cdesc, serial, userid, program, bom);
+                wip_iss_mtl_gl_unreported(item, opsarray[0], csite, qty, date, cref, ctype, cdesc, serial, userid, program, bom);
             }
            } /* if Reportable Op */
            } // if pmcode "M"
@@ -6476,6 +6477,7 @@ public class OVData {
             crediting the component Inventory account  */
 
            /* now lets get the components of this item and write cost to GL */
+           
            res = st.executeQuery("select ps_child, it_loc, it_wh, ps_qty_per, itc_total, pl_inventory, pl_line " +
                    " from pbm_mstr " +
                    " inner join bom_mstr on bom_id = ps_bom  " +
@@ -6502,7 +6504,7 @@ public class OVData {
 
 
             for (int j = 0; j < acct_cr.size(); j++) {
-
+               //  bsmf.MainFrame.show(child.get(j).toString());
                 // process GL transactions
                 fglData.glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), date, bsParseDouble(cost.get(j).toString()), bsParseDouble(cost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), "ISS-WIP", desc.get(j).toString());  
 
@@ -6636,7 +6638,7 @@ public class OVData {
               exclusive of this reported op  */
            if (isReportable) { 
            ArrayList op = new ArrayList();
-           res = st.executeQuery("select wf_op " +
+           res = st.executeQuery("select wf_op, wf_assert " +
                    " from wf_mstr inner join item_mstr on wf_id = it_wf " + 
                    " where it_item = " + "'" + item + "'" +
                    " AND wf_op < " + "'" + cop + "'" + 
@@ -6649,7 +6651,7 @@ public class OVData {
                 if (opsarray[1].equals("1")) {
                     break;
                 }
-                 wip_iss_op_cost_gl_unreported(item, op.get(j).toString(), site, qty, date, ref, type, desc);
+                 wip_iss_op_cost_gl_unreported(item, opsarray[0], site, qty, date, ref, type, desc);
              }
         } // if reportable
 
