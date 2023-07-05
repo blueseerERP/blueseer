@@ -854,6 +854,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
                                         isSuccess = true;
                                     } else {
                                         talog.append("unable to store file: " + localFiles[i].getName() + "\n");
+                                        isSuccess = false;
                                     }   
                                     showServerReply(client);
                                     if (isLocalDelete && isSuccess && ! localFiles[i].getName().isBlank()) {
