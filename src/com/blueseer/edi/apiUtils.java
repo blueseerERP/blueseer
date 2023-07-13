@@ -167,6 +167,26 @@ import org.bouncycastle.crypto.util.PublicKeyFactory;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.mail.smime.SMIMEException;
 import org.bouncycastle.mail.smime.SMIMESignedGenerator;
+import org.bouncycastle.openpgp.PGPCompressedData;
+import org.bouncycastle.openpgp.PGPEncryptedDataList;
+import org.bouncycastle.openpgp.PGPException;
+import org.bouncycastle.openpgp.PGPLiteralData;
+import org.bouncycastle.openpgp.PGPObjectFactory;
+import org.bouncycastle.openpgp.PGPOnePassSignatureList;
+import org.bouncycastle.openpgp.PGPPBEEncryptedData;
+import org.bouncycastle.openpgp.PGPPrivateKey;
+import org.bouncycastle.openpgp.PGPPublicKeyEncryptedData;
+import org.bouncycastle.openpgp.PGPSecretKey;
+import org.bouncycastle.openpgp.PGPSecretKeyRingCollection;
+import static org.bouncycastle.openpgp.PGPUtil.getDecoderStream;
+import org.bouncycastle.openpgp.jcajce.JcaPGPObjectFactory;
+import org.bouncycastle.openpgp.operator.PBESecretKeyDecryptor;
+import org.bouncycastle.openpgp.operator.PublicKeyDataDecryptorFactory;
+import org.bouncycastle.openpgp.operator.bc.BcKeyFingerprintCalculator;
+import org.bouncycastle.openpgp.operator.jcajce.JcaPGPDigestCalculatorProviderBuilder;
+import org.bouncycastle.openpgp.operator.jcajce.JcePBEDataDecryptorFactoryBuilder;
+import org.bouncycastle.openpgp.operator.jcajce.JcePBESecretKeyDecryptorBuilder;
+import org.bouncycastle.openpgp.operator.jcajce.JcePublicKeyDataDecryptorFactoryBuilder;
 import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
 import org.bouncycastle.operator.ContentSigner;
@@ -344,6 +364,8 @@ public class apiUtils {
         }
         return key;
     }
+    
+    
     
     public static PublicKey getPublicKey(String user)  {
         X509Certificate cert = null;
@@ -587,7 +609,7 @@ public class apiUtils {
     
         
     
-    public static PrivateKey readPrivateKeyFromPem(File file) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+    public static PrivateKey readPrivateKeyFromPem(File file) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException, NoSuchProviderException {
     KeyFactory factory = KeyFactory.getInstance("RSA");
     try (FileReader keyReader = new FileReader(file);
       PemReader pemReader = new PemReader(keyReader)) {
@@ -878,7 +900,7 @@ public class apiUtils {
 	
 }
     
-    public static byte[] decryptData(byte[] encryptedData,PrivateKey decryptionKey)throws CMSException {
+    public static byte[] decryptData(byte[] encryptedData, PrivateKey decryptionKey)throws CMSException {
             byte[] decryptedData = null;
             if (null != encryptedData && null != decryptionKey) {
                 CMSEnvelopedData envelopedData = new CMSEnvelopedData(encryptedData);
@@ -893,6 +915,114 @@ public class apiUtils {
             }
             return decryptedData;
 }
+    
+    public static PGPPrivateKey getPGPSecretKey(InputStream keyIn, long keyID, char[] pass)
+	{
+                PGPPrivateKey pgpkey = null;
+		PGPSecretKeyRingCollection pgpSec;
+        try {
+            pgpSec = new PGPSecretKeyRingCollection(
+                    org.bouncycastle.openpgp.PGPUtil.getDecoderStream(keyIn),new BcKeyFingerprintCalculator());
+        
+		PGPSecretKey pgpSecKey = pgpSec.getSecretKey(keyID);
+		if (pgpSecKey == null) {
+			return null;
+		}
+		PBESecretKeyDecryptor a = new JcePBESecretKeyDecryptorBuilder(new JcaPGPDigestCalculatorProviderBuilder().setProvider("BC").build()).setProvider("BC").build(pass);
+                pgpkey = pgpSecKey.extractPrivateKey(a);
+	} catch (PGPException ex) {
+            bslog(ex.getMessage());
+        } catch (IOException ex) {
+            bslog(ex.getMessage());
+        }
+                return pgpkey;
+	}
+    
+    public static byte[] decryptPGPData(byte[] encryptedData, String passPhrase, Path keyFilePath) throws IOException, PGPException, NoSuchProviderException {
+        byte[] decryptedData = null;
+        InputStream keyIn = new FileInputStream(keyFilePath.toFile());
+      
+        InputStream in = new ByteArrayInputStream(encryptedData);
+        Security.addProvider(new BouncyCastleProvider());
+        in = org.bouncycastle.openpgp.PGPUtil.getDecoderStream(in);
+        PGPObjectFactory pgpF = new PGPObjectFactory(in,new BcKeyFingerprintCalculator());
+        PGPEncryptedDataList enc;
+        Object o = pgpF.nextObject();
+        if (o instanceof  PGPEncryptedDataList) {
+		enc = (PGPEncryptedDataList) o;
+        } else {
+                enc = (PGPEncryptedDataList) pgpF.nextObject();
+        }
+        
+        if (enc == null) {
+            bslog("failed to create PGPEncryptedDataList...enc is null");
+            return null;
+        }
+        Iterator<?> it = enc.getEncryptedDataObjects();
+		PGPPrivateKey sKey = null;
+		PGPPublicKeyEncryptedData pbe = null;
+
+		while (sKey == null && it.hasNext()) {
+			pbe = (PGPPublicKeyEncryptedData) it.next();
+			sKey = getPGPSecretKey(keyIn, pbe.getKeyID(), passPhrase.toCharArray()); 
+		}
+                if (sKey == null) {
+			bslog("Secret key for message not found when decrypting PGP with passphrase: " + passPhrase);
+                        return null;
+		}
+                
+                PublicKeyDataDecryptorFactory b = new JcePublicKeyDataDecryptorFactoryBuilder().setProvider("BC").setContentProvider("BC").build(sKey);
+
+		InputStream clear = pbe.getDataStream(b);
+
+		PGPObjectFactory plainFact = new PGPObjectFactory(clear,new BcKeyFingerprintCalculator());
+
+		Object message = plainFact.nextObject();
+
+		if (message instanceof  PGPCompressedData) {
+			PGPCompressedData cData = (PGPCompressedData) message;
+			PGPObjectFactory pgpFact = new PGPObjectFactory(cData.getDataStream(),null);
+
+			message = pgpFact.nextObject();
+		}
+
+		if (message instanceof  PGPLiteralData) {
+			PGPLiteralData ld = (PGPLiteralData) message;
+			//InputStream unc = ld.getInputStream();
+                        decryptedData = ld.getInputStream().readAllBytes();
+			/*
+                        int ch;
+			while ((ch = unc.read()) >= 0) {
+				out.write(ch);
+			}
+                        */
+		} else if (message instanceof  PGPOnePassSignatureList) {
+			throw new PGPException("Encrypted message contains a signed message - not literal data.");
+		} else {
+			throw new PGPException("Message is not a simple encrypted file - type unknown.");
+		}
+
+		if (pbe.isIntegrityProtected()) {
+			if (!pbe.verify()) {
+				throw new PGPException("Message failed integrity check");
+			}
+		}
+                
+     //   InputStream clear = pbe.getDataStream(decryptorFactoryBuilder.build(passPhrase.toCharArray()));
+      
+     //  InputStream clear =  pbe.getDataStream(privateKey, "BC");
+    //     PGPObjectFactory plainFact = new PGPObjectFactory(pbe.getDataStream(privateKey, "BC"));
+
+      //  pgpF = new JcaPGPObjectFactory(clear);
+        
+         //
+        // if we're trying to read a file generated by someone other than us
+        // the data might not be compressed, so we check the return type from
+        // the factory and behave accordingly.
+             
+        
+        return decryptedData;
+    }
     
     public static boolean verifySignature(final byte[] plaintext, final byte[] signedData)  {
         boolean x = false;

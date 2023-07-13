@@ -469,5 +469,38 @@ public class frtData {
                    "","","","","","","","","","");
         }
     } 
+   
+    public record cfo_det (String[] m, String cfod_nbr, String cfod_stopline, String cfod_seq, String cfod_type,
+        String cfod_code, String cfod_name, String cfod_line1, String cfod_line2, String cfod_line3,
+        String cfod_city, String cfod_state, String cfod_zip, String cfod_country, 
+        String cfod_phone, String cfod_email, String cfod_contact, String cfod_misc,
+        String cfod_rmks, String cfod_reference, String cfod_ordnum,
+        String cfod_weight, String cfod_pallet, String cfod_ladingqty, String cfod_hazmat ) {
+        public cfo_det(String[] m) {
+            this(m,"","","","","","","","","","",
+                   "","","","","","","","","","",
+                   "","","","");
+        }
+    }
+   
+    public record cfo_sched (String[] m, String cfos_nbr, String cfos_stopline, String cfos_schedtype, String cfos_timezone,
+        String cfos_scheddate, String cfos_schedtime, String cfos_scheddate2, String cfos_schedtime2) {
+        public cfo_sched(String[] m) {
+            this(m,"","","","","","","",""
+                   );
+        }
+    }
+    
+    public record cfo_item (String[] m, String cfoi_nbr, String cfoi_stopline, String cfoi_itemline,
+        String cfoi_item, String cfoi_itemdesc, String cfoi_order, 
+        String cfoi_qty, String cfoi_pallets, String cfoi_weight,
+        String cfoi_ref, String cfoi_rmks) {
+        public cfo_item(String[] m) {
+            this(m,"","","","","","","","","","",
+                   "");
+        }
+    }
+    
+    
     
 }

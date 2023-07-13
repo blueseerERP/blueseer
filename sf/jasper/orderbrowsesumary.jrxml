@@ -28,13 +28,13 @@
 	<field name="COLUMN_6" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="COLUMN_7" class="java.lang.Integer">
+	<field name="COLUMN_7" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="COLUMN_8" class="java.lang.Double">
+	<field name="COLUMN_8" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="COLUMN_9" class="java.lang.String"/>
+	<field name="COLUMN_9" class="java.lang.Double"/>
 	<field name="COLUMN_10" class="java.lang.String"/>
 	<field name="COLUMN_11" class="java.lang.String"/>
 	<background>

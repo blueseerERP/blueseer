@@ -1035,10 +1035,10 @@ CREATE TABLE "car_mstr" (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "car_meta" (
-  "carm_id" varchar(30) NOT NULL,
-  "carm_type" varchar(80) NOT NULL,
-  "carm_key" varchar(80) NOT NULL,
-  "carm_value" varchar(80) NOT NULL
+  "carm_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "carm_type" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "carm_key" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "carm_value" varchar(80) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -1903,6 +1903,94 @@ CREATE TABLE "cfo_mstr" (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "cfo_det" (
+  "cfod_nbr" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfod_stopline" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfod_seq" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfod_type" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfod_code" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfod_name" varchar(50)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfod_line1" varchar(50)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfod_line2" varchar(50)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfod_line3" varchar(50)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfod_city" varchar(50)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfod_state" varchar(3)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfod_zip" varchar(15)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfod_country" varchar(3)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfod_phone" varchar(15)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfod_email" varchar(80)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfod_contact" varchar(80)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfod_misc" varchar(80)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfod_rmks" varchar(200)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfod_reference" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfod_ordnum" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfod_weight" decimal(14,5) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "cfod_pallet" decimal(14,5) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "cfod_ladingqty" decimal(14,5) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "cfod_hazmat" varchar(50) NOT NULL COLLATE NOCASE DEFAULT ''
+); 
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "cfo_sched" (
+  "cfos_nbr" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfos_stopline" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfos_schedtype" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfos_timezone" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfos_scheddate" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfos_schedtime" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfos_scheddate2" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfos_schedtime2" varchar(8) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "cfo_item" (
+  "cfoi_nbr" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfoi_stopline" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfoi_itemline" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfoi_item" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfoi_itemdesc" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfoi_order" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfoi_qty" decimal(14,5) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "cfoi_pallets" decimal(14,5) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "cfoi_weight" decimal(14,5) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "cfoi_ref" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfoi_rmks" varchar(200) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "cfo_meta" (
+  "cfom_id" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfom_type" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfom_key" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfom_value" varchar(80) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "cfod_meta" (
+  "cfodm_id" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfodm_stopline" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfodm_type" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfodm_key" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfodm_value" varchar(80) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE "cfoi_meta" (
+  "cfoim_id" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfoim_stopline" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfoim_itemline" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfoim_type" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfoim_key" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfoim_value" varchar(80) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "fo_mstr" (
   "fo_nbr" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
   "fo_date" date COLLATE NOCASE DEFAULT '',
@@ -2207,10 +2295,10 @@ CREATE TABLE "or_mstr" (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "or_meta" (
-  "orm_bsid" varchar(30) NOT NULL,
-  "orm_type" varchar(80) NOT NULL,
-  "orm_key" varchar(80) NOT NULL,
-  "orm_value" varchar(80) NOT NULL
+  "orm_bsid" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "orm_type" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "orm_key" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "orm_value" varchar(80) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -2264,11 +2352,11 @@ CREATE TABLE "ord_det" (
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "ord_meta" (
-  "ordm_bsid" varchar(30) NOT NULL,
-  "ordm_bsline" varchar(30) NOT NULL,
-  "ordm_type" varchar(80) NOT NULL,
-  "ordm_key" varchar(80) NOT NULL,
-  "ordm_value" varchar(80) NOT NULL
+  "ordm_bsid" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "ordm_bsline" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "ordm_type" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "ordm_key" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "ordm_value" varchar(80) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -3000,10 +3088,10 @@ CREATE TABLE "pod_tax" (
   "podt_amt" decimal(14,2) NOT NULL COLLATE NOCASE DEFAULT '0'
 );
 CREATE TABLE "as2_meta" (
-  "as2m_id" varchar(30) NOT NULL,
-  "as2m_type" varchar(80) NOT NULL,
-  "as2m_key" varchar(80) NOT NULL,
-  "as2m_value" varchar(80) NOT NULL
+  "as2m_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "as2m_type" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "as2m_key" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "as2m_value" varchar(80) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 
 

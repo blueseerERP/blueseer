@@ -45,11 +45,13 @@ import static com.blueseer.utl.OVData.createTestDataSO;
 import static com.blueseer.utl.OVData.createTestDataTC;
 import com.blueseer.vdr.venData;
 import java.awt.Component;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -292,6 +294,7 @@ public class EDIUtilities extends javax.swing.JPanel {
     }
    
     public void processAction(boolean b) {
+        taoutput.removeAll();
         String x = ddtable.getSelectedItem().toString();
             String[] xar = x.split("\\.",-1);
             String util = xar[0];
@@ -307,6 +310,9 @@ public class EDIUtilities extends javax.swing.JPanel {
                 }
                 if (util.equals("4")) {
                     getDigest(b);
+                }
+                if (util.equals("5")) {
+                    decryptPGPFile(b);
                 }
             } else { // no period to split...must be blank or malformed selection element
                resetVariables();
@@ -600,6 +606,57 @@ public class EDIUtilities extends javax.swing.JPanel {
         } // else run report
     }
     
+    public void decryptPGPFile(boolean input) {
+        taoutput.removeAll();
+        File file = null;
+        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        int returnVal = fc.showOpenDialog(this);
+        java.util.Date now = new java.util.Date();
+        DateFormat dfdate = new SimpleDateFormat("yyyyMMddHHmmss");
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            try {
+            file = fc.getSelectedFile();
+            
+            Path inpath = FileSystems.getDefault().getPath(file.getAbsolutePath());
+            
+            String myfile = file.getName() + "." + dfdate.format(now) + ".dec";
+            Path outpath = FileSystems.getDefault().getPath(bsmf.MainFrame.temp + "/" + myfile);
+            
+            
+            byte[] indata = Files.readAllBytes(inpath);
+            
+            String text = bsmf.MainFrame.input("passPhrase: ");
+            if (text == null || text.isBlank()) {
+                bsmf.MainFrame.show("passPhrase is empty");
+                return;
+            }
+            String keyfiletext = bsmf.MainFrame.input("SecretKeyFile Path: ");
+            Path keyfilepath = FileSystems.getDefault().getPath(keyfiletext);
+            if (! keyfilepath.toFile().exists()) {
+                bsmf.MainFrame.show("keyfile path does not exist");
+                return;
+            }
+            
+            byte[] outdata = apiUtils.decryptPGPData(indata, text, keyfilepath ); 
+            if (outdata == null) {
+                bsmf.MainFrame.show("unable to decrypt file");
+                return;
+            }
+            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(outpath.toFile()));
+            bos.write(outdata);
+            bos.flush();
+            bos.close();   
+           
+            taoutput.append(new String(outdata));
+            }
+            catch (Exception ex) {
+            ex.printStackTrace();
+            }
+           
+        } else {
+           System.out.println("cancelled");
+        }
+    }
     
     
     public void determineX12Delimiters(boolean input) {
@@ -837,7 +894,7 @@ public class EDIUtilities extends javax.swing.JPanel {
         jPanel1.setName("panelmain"); // NOI18N
         jPanel1.setPreferredSize(new java.awt.Dimension(1103, 625));
 
-        ddtable.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1.  determine hex value of delimiters in X12 file", "2.  convert delimiter from original to newline in X12 file", "3.  count occurrences of hex character", "4.  get SHA-1 MIC/Digest of content" }));
+        ddtable.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1.  determine hex value of delimiters in X12 file", "2.  convert delimiter from original to newline in X12 file", "3.  count occurrences of hex character", "4.  get SHA-1 MIC/Digest of content", "5.  decrypt PGP file with passphrase and keyfile" }));
         ddtable.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ddtableActionPerformed(evt);

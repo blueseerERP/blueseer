@@ -88,6 +88,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JViewport;
+import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
@@ -283,6 +284,7 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
                 if (component instanceof JLabel ) {
                     if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
                        ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                    //   ((JLabel) component).setHorizontalAlignment(SwingConstants.LEFT);
                     }
                 }
                 if (component instanceof JButton ) {
