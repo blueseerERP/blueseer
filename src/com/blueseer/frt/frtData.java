@@ -626,6 +626,66 @@ public class frtData {
         return r;
     }
     
+    public static ArrayList<cfo_det> getCFODet(String code) {
+        cfo_det r = null;
+        String[] m = new String[2];
+        ArrayList<cfo_det> list = new ArrayList<cfo_det>();
+        String sql = "select * from cfo_det where cfod_nbr = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, code);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new cfo_det(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new cfo_det(m, res.getString("cfod_nbr"), 
+                        res.getString("cfod_stopline"), 
+                        res.getString("cfod_seq"), 
+                        res.getString("cfod_type"), 
+                        res.getString("cfod_code"), 
+                        res.getString("cfod_name"), 
+                        res.getString("cfod_line1"), 
+                        res.getString("cfod_line2"), 
+                        res.getString("cfod_line3"), 
+                        res.getString("cfod_city"), 
+                        res.getString("cfod_state"), 
+                        res.getString("cfod_zip"), 
+                        res.getString("cfod_country"), 
+                        res.getString("cfod_phone"), 
+                        res.getString("cfod_email"), 
+                        res.getString("cfod_contact"), 
+                        res.getString("cfod_misc"), 
+                        res.getString("cfod_rmks"), 
+                        res.getString("cfod_reference"), 
+                        res.getString("cfod_ordnum"), 
+                        res.getString("cfod_weight"), 
+                        res.getString("cfod_pallet"), 
+                        res.getString("cfod_ladingqty"), 
+                        res.getString("cfod_hazmat"), 
+                        res.getString("cfod_datetype"), 
+                        res.getString("cfod_date"), 
+                        res.getString("cfod_timetype1"), 
+                        res.getString("cfod_time1"), 
+                        res.getString("cfod_timetype2"), 
+                        res.getString("cfod_time2"),
+                        res.getString("cfod_timezone"));
+                        list.add(r);
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new cfo_det(m);
+               list.add(r);
+        }
+        return list;
+    }
+    
+    
     public static String[] deleteCFOMstr(cfo_mstr x) { 
        String[] m = new String[2];
         String sql = "delete from cfo_mstr where cfo_nbr = ?; ";

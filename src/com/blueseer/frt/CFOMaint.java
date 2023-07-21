@@ -46,6 +46,7 @@ import com.blueseer.frt.frtData.cfo_det;
 import com.blueseer.frt.frtData.cfo_item;
 import com.blueseer.frt.frtData.cfo_mstr;
 import static com.blueseer.frt.frtData.deleteCFOMstr;
+import static com.blueseer.frt.frtData.getCFODet;
 import static com.blueseer.frt.frtData.getCFOMstr;
 import static com.blueseer.frt.frtData.updateCFOMstr;
 import com.blueseer.shp.shpData;
@@ -156,7 +157,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
     public static cfo_mstr x = null;
     public static ArrayList<cfo_det> cfodetlist = null;
     public static ArrayList<cfo_item> cfoitemlist = null;
-    public static LinkedHashMap<String, ArrayList<String[]>> kvs = new  LinkedHashMap<String, ArrayList<String[]>>();
+    public static LinkedHashMap<String, String[]> kvstop = new  LinkedHashMap<String, String[]>();
     public static LinkedHashMap<String, ArrayList<String[]>> itemmap = new  LinkedHashMap<String, ArrayList<String[]>>();
     public static LinkedHashMap<String, ArrayList<String[]>> schedmap = new  LinkedHashMap<String, ArrayList<String[]>>();
     public static LinkedHashMap<String, String> stk = new  LinkedHashMap<String, String>();
@@ -168,35 +169,13 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
     javax.swing.table.DefaultTableModel myorddetmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
                 getGlobalColumnTag("line"), 
-                getGlobalColumnTag("sequence"), 
-                getGlobalColumnTag("type"), 
-                getGlobalColumnTag("code"), 
+                getGlobalColumnTag("type"),
+                getGlobalColumnTag("date"),
                 getGlobalColumnTag("name"), 
                 getGlobalColumnTag("line1"), 
-                getGlobalColumnTag("line2"), 
-                getGlobalColumnTag("line3"), 
                 getGlobalColumnTag("city"), 
                 getGlobalColumnTag("state"), 
-                getGlobalColumnTag("zip"),
-                getGlobalColumnTag("country"), 
-                getGlobalColumnTag("phone"), 
-                getGlobalColumnTag("email"), 
-                getGlobalColumnTag("contact"), 
-                getGlobalColumnTag("misc"), 
-                getGlobalColumnTag("remarks"), 
-                getGlobalColumnTag("reference"), 
-                getGlobalColumnTag("ordnbr"), 
-                getGlobalColumnTag("weight"), 
-                getGlobalColumnTag("pallet"),
-                getGlobalColumnTag("qty"),
-                getGlobalColumnTag("hazmat"),
-                getGlobalColumnTag("datetype"),
-                getGlobalColumnTag("date"),
-                getGlobalColumnTag("timetype"),
-                getGlobalColumnTag("time"),
-                getGlobalColumnTag("timetype"),
-                getGlobalColumnTag("time"),
-                getGlobalColumnTag("timezone")
+                getGlobalColumnTag("zip")
             });
       
     javax.swing.table.DefaultTableModel itemdetmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -476,6 +455,8 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
        ddstopsequence.removeAllItems();
        ddstopsequence.addItem("");
        
+       dcdate.setDate(new java.util.Date());
+       
         tbkey.setText("");
         tbcustfo.setText("");
         tbcustforev.setText("");
@@ -507,6 +488,16 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
        
         myorddetmodel.setRowCount(0);
         orddet.setModel(myorddetmodel);
+        orddet.getTableHeader().setReorderingAllowed(false);
+        /*
+        orddet.getColumnModel().getColumn(10).setMaxWidth(0);
+        orddet.getColumnModel().getColumn(10).setMinWidth(0);
+        orddet.getColumnModel().getColumn(10).setPreferredWidth(0);
+        orddet.getColumnModel().getColumn(11).setMaxWidth(0);
+        orddet.getColumnModel().getColumn(11).setMinWidth(0);
+        orddet.getColumnModel().getColumn(11).setPreferredWidth(0);
+        */
+        
         
         itemdetmodel.setRowCount(0);
         itemdet.setModel(itemdetmodel);
@@ -699,6 +690,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
       
     public String[] getRecord(String[] key) {
        x = getCFOMstr(key);
+       cfodetlist = getCFODet(key[0]); 
         return x.m();
     }
     
@@ -741,40 +733,41 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     public ArrayList<cfo_det> createDetRecord() {
         ArrayList<cfo_det> list = new ArrayList<cfo_det>();
-            for (int j = 0; j < orddet.getRowCount(); j++) {               
-                cfo_det x = new cfo_det(null, 
+         //   for (int j = 0; j < orddet.getRowCount(); j++) {               
+         for (Map.Entry<String, String[]> z : kvstop.entrySet()) { 
+         String[] v = z.getValue();
+         cfo_det x = new cfo_det(null, 
                 tbkey.getText().toString(),
-                orddet.getValueAt(j, 0).toString(),
-                orddet.getValueAt(j, 1).toString(),
-                orddet.getValueAt(j, 2).toString(),
-                orddet.getValueAt(j, 3).toString(),
-                orddet.getValueAt(j, 4).toString(),
-                orddet.getValueAt(j, 5).toString(),
-                orddet.getValueAt(j, 6).toString(),
-                orddet.getValueAt(j, 7).toString(),
-                orddet.getValueAt(j, 8).toString(),
-                orddet.getValueAt(j, 9).toString(),
-                orddet.getValueAt(j, 10).toString(),
-                orddet.getValueAt(j, 11).toString(),
-                orddet.getValueAt(j, 12).toString(),
-                orddet.getValueAt(j, 13).toString(),
-                orddet.getValueAt(j, 14).toString(),
-                orddet.getValueAt(j, 15).toString(),
-                orddet.getValueAt(j, 16).toString(),
-                orddet.getValueAt(j, 17).toString(),
-                orddet.getValueAt(j, 18).toString(),
-                orddet.getValueAt(j, 19).toString().replace(defaultDecimalSeparator, '.'),
-                orddet.getValueAt(j, 20).toString().replace(defaultDecimalSeparator, '.'),
-                orddet.getValueAt(j, 21).toString().replace(defaultDecimalSeparator, '.'),
-                orddet.getValueAt(j, 22).toString(),
-                orddet.getValueAt(j, 23).toString(),
-                orddet.getValueAt(j, 24).toString(),
-                orddet.getValueAt(j, 25).toString(),
-                orddet.getValueAt(j, 26).toString(),
-                orddet.getValueAt(j, 27).toString(),
-                orddet.getValueAt(j, 28).toString(),
-                orddet.getValueAt(j, 29).toString()
-                        
+                v[0],
+                v[1],
+                v[2],
+                v[3],
+                v[4],
+                v[5],
+                v[6],
+                v[7],
+                v[8],
+                v[9],
+                v[10],
+                v[11],
+                v[12],
+                v[13],
+                v[14],
+                v[15],
+                v[16],
+                v[17],
+                v[18],
+                v[19].replace(defaultDecimalSeparator, '.'),
+                v[20].replace(defaultDecimalSeparator, '.'),
+                v[21].replace(defaultDecimalSeparator, '.'),
+                v[22],
+                v[23],
+                v[24],
+                v[25],
+                v[26],
+                v[27],
+                v[28],
+                v[29]
                 );  
                 list.add(x);
             }    
@@ -854,6 +847,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
 
     public void updateForm() throws ParseException {
+        isLoad = true;
         tbkey.setText(x.cfo_nbr());
         ddcust.setSelectedItem(x.cfo_cust());
         tbcustfo.setText(x.cfo_custfonbr());
@@ -881,6 +875,64 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbexpenses.setText(x.cfo_miscexpense());
         tbcharges.setText(x.cfo_misccharges());
         tbcost.setText(x.cfo_cost());
+        
+        // now detail
+        kvstop.clear();
+        for (cfo_det cfod : cfodetlist) {
+            
+            // det table first
+            myorddetmodel.addRow(new Object[]{
+            cfod.cfod_stopline(), 
+            cfod.cfod_type(), 
+            cfod.cfod_date(),
+            cfod.cfod_name(), 
+            cfod.cfod_line1(), 
+            cfod.cfod_city(), 
+            cfod.cfod_state(),
+            cfod.cfod_zip()
+            });
+            
+            // kvstop map
+            String[] v = new String[]{
+                        cfod.cfod_stopline(),
+                        cfod.cfod_seq(),
+                        cfod.cfod_type(),
+                        cfod.cfod_code(), 
+                        cfod.cfod_name(), 
+                        cfod.cfod_line1(),
+                        cfod.cfod_line2(), 
+                        cfod.cfod_line3(),
+                        cfod.cfod_city(), 
+                        cfod.cfod_state(),
+                        cfod.cfod_zip(), 
+                        cfod.cfod_country(),
+                        cfod.cfod_phone(),
+                        cfod.cfod_email(),
+                        cfod.cfod_contact(),
+                        cfod.cfod_misc(), 
+                        cfod.cfod_rmks(),
+                        cfod.cfod_reference(), 
+                        cfod.cfod_ordnum(), 
+                        cfod.cfod_weight(), 
+                        cfod.cfod_pallet(), 
+                        cfod.cfod_ladingqty(),
+                        cfod.cfod_hazmat(), 
+                        cfod.cfod_datetype(), 
+                        cfod.cfod_date(), 
+                        cfod.cfod_timetype1(),
+                        cfod.cfod_time1(), 
+                        cfod.cfod_timetype2(), 
+                        cfod.cfod_time2(),
+                        cfod.cfod_timezone()};
+            kvstop.put(v[0], v);
+            
+            // now dropdown sequence
+            ddstopsequence.addItem("STOP: " + cfod.cfod_stopline());
+        }
+        isLoad = false;
+        if (ddstopsequence.getItemCount() >= 1) {
+            ddstopsequence.setSelectedIndex(0);
+        }
         setAction(x.m());
     }
     
@@ -1005,6 +1057,51 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         if (ddtimetype2.getItemCount() > 0) {
           ddtimetype2.setSelectedIndex(0); 
         }
+    }
+    
+    public void setStopState(boolean state) {
+        
+        // ddstopsequence.setEnabled(state);
+       
+        
+        ddshipto.setEnabled(state);
+        tbname.setEnabled(state);
+        tbcity.setEnabled(state);
+        tbzip.setEnabled(state);
+        tbaddr1.setEnabled(state);
+        tbaddr2.setEnabled(state);
+        ddstate.setEnabled(state);
+        ddcountry.setEnabled(state);
+        tbmisc.setEnabled(state);
+        tbcontact.setEnabled(state);
+        tbemail.setEnabled(state);
+        tbphone.setEnabled(state);
+        tbremarks.setEnabled(state);
+        
+        btclearstop.setEnabled(state);
+        btaddstop.setEnabled(state);
+        btupdatestop.setEnabled(state);
+        btdeletestop.setEnabled(state);
+        
+                
+        dddatetype.setEnabled(state);
+        dcdate.setEnabled(state);
+        ddtimetype1.setEnabled(state);
+        ddtime1.setEnabled(state);
+        ddtimetype2.setEnabled(state);
+        ddtime2.setEnabled(state);
+        ddtimezone.setEnabled(state);
+        
+        tbstopitem.setEnabled(state);
+        tbstopqty.setEnabled(state);
+        tbstoppallets.setEnabled(state);
+        tbstopitemdesc.setEnabled(state);
+        tbstopweight.setEnabled(state);
+        tbstopref.setEnabled(state);
+        
+        btdeleteitem.setEnabled(state);
+        btadditem.setEnabled(state);
+        
     }
     
     /**
@@ -1163,6 +1260,12 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel10.setText("jLabel10");
 
         setBackground(new java.awt.Color(0, 102, 204));
+
+        jTabbedPane1.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jTabbedPane1StateChanged(evt);
+            }
+        });
         add(jTabbedPane1);
 
         jPanelMain.setBorder(javax.swing.BorderFactory.createTitledBorder("Freight Order Maintenance"));
@@ -1682,7 +1785,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         jLabel26.setText("Date");
 
-        jLabel27.setText("Date Event");
+        jLabel27.setText("Type");
 
         jLabel2.setText("TimeZone");
 
@@ -1695,7 +1798,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         jPanel16Layout.setHorizontalGroup(
             jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel16Layout.createSequentialGroup()
-                .addContainerGap(19, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel25)
                     .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1707,7 +1810,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                                     .addComponent(jLabel26)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(dcdate, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(dddatetype, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(dddatetype, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel16Layout.createSequentialGroup()
                                 .addComponent(jLabel2)
@@ -1730,7 +1833,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(dddatetype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel27))
-                .addGap(9, 9, 9)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(dcdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel26))
@@ -1738,7 +1841,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ddtimezone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel21)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel16Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -2093,8 +2196,12 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_btnewActionPerformed
 
     private void btaddstopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddstopActionPerformed
-         boolean canproceed = true;
-        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        
+        String datestr = "0000-00-00";
+        if (dcdate.getDate() != null) {
+            datestr = bsmf.MainFrame.dfdate.format(dcdate.getDate()).toString();
+        }
+        
         String shipper = "";
         
         String shiptocode = "";
@@ -2118,8 +2225,19 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
        // line++;
             
             
-        myorddetmodel.addRow(new Object[]{currentstopline, 
+        myorddetmodel.addRow(new Object[]{
             currentstopline, 
+            ddstoptype.getSelectedItem().toString(), 
+            datestr,
+            tbname.getText(), 
+            tbaddr1.getText(), 
+            tbcity.getText(), 
+            ddstate.getSelectedItem().toString(),
+            tbzip.getText()
+         });
+        
+        String[] stoparray = new String[]{String.valueOf(currentstopline), 
+            String.valueOf(currentstopline), 
             ddstoptype.getSelectedItem().toString(), 
             shiptocode,
             tbname.getText(), 
@@ -2142,21 +2260,23 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
             "", // ladingqty
             "", // hazmat
             dddatetype.getSelectedItem().toString(),
-            bsmf.MainFrame.dfdate.format(dcdate.getDate()).toString(),
+            datestr,
             ddtimetype1.getSelectedItem().toString(),
             ddtime1.getSelectedItem().toString(),
             ddtimetype2.getSelectedItem().toString(),
             ddtime2.getSelectedItem().toString(),
             ddtimezone.getSelectedItem().toString()
-         });
+         };
+        kvstop.put(String.valueOf(currentstopline), stoparray);
+        
+         
 
         isLoad = true;
         ddstopsequence.addItem("STOP: " + currentstopline);
         isLoad = false;
         
         sumweight();
-        clearStopFields(); 
-      
+        clearStopFields();       
     }//GEN-LAST:event_btaddstopActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
@@ -2383,37 +2503,53 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     private void btnewstopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewstopActionPerformed
         currentstopline = orddet.getRowCount() + 1;
+        clearStopFields();
+        setStopState(true);
     }//GEN-LAST:event_btnewstopActionPerformed
 
     private void btclearstopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearstopActionPerformed
-        // TODO add your handling code here:
+        clearStopFields();
     }//GEN-LAST:event_btclearstopActionPerformed
 
     private void ddstopsequenceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddstopsequenceActionPerformed
         if (! isLoad && ddstopsequence.getItemCount() > 0 && ddstopsequence.getSelectedItem() != null && ! ddstopsequence.getSelectedItem().toString().isBlank()) {
            int stopnumber = Integer.valueOf(ddstopsequence.getSelectedItem().toString().substring(6));
-           for (int j = 0; j < orddet.getRowCount(); j++) {
-                if ((stopnumber - 1) == j) {
-                ddstoptype.setSelectedItem(orddet.getValueAt(j, 2).toString()); 
-                ddshipto.setSelectedItem(orddet.getValueAt(j, 3).toString()); 
-                tbname.setText(orddet.getValueAt(j, 4).toString()); 
-                tbaddr1.setText(orddet.getValueAt(j, 5).toString()); 
-                tbaddr2.setText(orddet.getValueAt(j, 6).toString());  
-                tbcity.setText(orddet.getValueAt(j, 8).toString());  
-                ddstate.setSelectedItem(orddet.getValueAt(j, 9).toString());
-                tbzip.setText(orddet.getValueAt(j, 10).toString()); 
-                ddcountry.setSelectedItem(orddet.getValueAt(j, 11).toString());
-                tbphone.setText(orddet.getValueAt(j, 12).toString());
-                tbemail.setText(orddet.getValueAt(j, 13).toString());
-                tbcontact.setText(orddet.getValueAt(j, 14).toString());
-                tbmisc.setText(orddet.getValueAt(j, 15).toString()); 
-                tbremarks.setText(orddet.getValueAt(j, 16).toString());
-                break;
-               }
-           }
+           //for (int j = 0; j < orddet.getRowCount(); j++) {
+            String[] v = kvstop.get(String.valueOf(stopnumber));
+                
+                ddstoptype.setSelectedItem(v[2]); 
+                ddshipto.setSelectedItem(v[3]); 
+                tbname.setText(v[4]); 
+                tbaddr1.setText(v[5]); 
+                tbaddr2.setText(v[6]);  
+                tbcity.setText(v[8]);  
+                ddstate.setSelectedItem(v[9]);
+                tbzip.setText(v[10]); 
+                ddcountry.setSelectedItem(v[11]);
+                tbphone.setText(v[12]);
+                tbemail.setText(v[13]);
+                tbcontact.setText(v[14]);
+                tbmisc.setText(v[15]); 
+                tbremarks.setText(v[16]);
            
+          setStopState(true); 
         }
+        
+         if (! isLoad && ddstopsequence.getItemCount() > 0 && ddstopsequence.getSelectedItem() != null && ddstopsequence.getSelectedItem().toString().isBlank()) {
+          clearStopFields();
+          setStopState(false);
+         }
+        
+        
     }//GEN-LAST:event_ddstopsequenceActionPerformed
+
+    private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPane1StateChanged
+       if (! isLoad && jTabbedPane1.getSelectedIndex() == 1) {
+            if (orddet.getRowCount() == 0) {
+                setStopState(false);
+            }
+        }
+    }//GEN-LAST:event_jTabbedPane1StateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
