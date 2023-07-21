@@ -1636,17 +1636,14 @@ CREATE TABLE IF NOT EXISTS `cfo_det` (
   `cfod_weight` decimal(14,5) NOT NULL DEFAULT '0',
   `cfod_pallet` decimal(14,5) NOT NULL DEFAULT '0',
   `cfod_ladingqty` decimal(14,5) NOT NULL DEFAULT '0',
-  `cfod_hazmat` varchar(50) NOT NULL DEFAULT ''
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-CREATE TABLE IF NOT EXISTS `cfo_sched` (
-  `cfos_nbr` varchar(8) NOT NULL  DEFAULT '',
-  `cfos_stopline` varchar(8) NOT NULL  DEFAULT '',
-  `cfos_schedtype` varchar(8) NOT NULL  DEFAULT '',
-  `cfos_timezone` varchar(8) NOT NULL  DEFAULT '',
-  `cfos_scheddate` varchar(8) NOT NULL DEFAULT '',
-  `cfos_schedtime` varchar(8) NOT NULL DEFAULT '',
-  `cfos_scheddate2` varchar(8) NOT NULL DEFAULT '',
-  `cfos_schedtime2` varchar(8) NOT NULL DEFAULT ''
+  `cfod_hazmat` varchar(50) NOT NULL DEFAULT '',
+  `cfod_datetype` varchar(80)  NOT NULL DEFAULT '',
+  `cfod_date` varchar(8)  NOT NULL DEFAULT '',
+  `cfod_timetype1` varchar(50)  NOT NULL DEFAULT '',
+  `cfod_time1` varchar(8)  NOT NULL DEFAULT '',
+  `cfod_timetype2` varchar(50)  NOT NULL DEFAULT '',
+  `cfod_time2` varchar(8)  NOT NULL DEFAULT '',
+  `cfod_timezone` varchar(20)  NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `cfo_item` (
   `cfoi_nbr` varchar(8) NOT NULL  DEFAULT '',

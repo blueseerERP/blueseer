@@ -1927,21 +1927,15 @@ CREATE TABLE "cfo_det" (
   "cfod_weight" decimal(14,5) NOT NULL COLLATE NOCASE DEFAULT '0',
   "cfod_pallet" decimal(14,5) NOT NULL COLLATE NOCASE DEFAULT '0',
   "cfod_ladingqty" decimal(14,5) NOT NULL COLLATE NOCASE DEFAULT '0',
-  "cfod_hazmat" varchar(50) NOT NULL COLLATE NOCASE DEFAULT ''
+  "cfod_hazmat" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfod_datetype" varchar(80)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfod_date" varchar(8)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfod_timetype1" varchar(50)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfod_time1" varchar(8)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfod_timetype2" varchar(50)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfod_time2" varchar(8)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfod_timezone" varchar(10)  NOT NULL COLLATE NOCASE DEFAULT ''
 ); 
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE "cfo_sched" (
-  "cfos_nbr" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
-  "cfos_stopline" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
-  "cfos_schedtype" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
-  "cfos_timezone" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
-  "cfos_scheddate" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
-  "cfos_schedtime" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
-  "cfos_scheddate2" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
-  "cfos_schedtime2" varchar(8) NOT NULL COLLATE NOCASE DEFAULT ''
-);
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
