@@ -486,7 +486,7 @@ public class apiUtils {
         pks_mstr pks = admData.getPksMstr(new String[]{user});
         try {
             // File type
-            if (pks.pks_type().equals("external pem") ) {
+            if (pks.pks_type().equals("publickey") ) {
                 Path certfilepath = FileSystems.getDefault().getPath(pks.pks_file());
                 if (! Files.exists(certfilepath)) {
                      // throw new RuntimeException("bad path to cert file: " + certfile);
@@ -540,7 +540,7 @@ public class apiUtils {
         pks_mstr pks = admData.getPksMstr(new String[]{user});
         try {
             // File type
-            if (pks.pks_type().equals("external pem") ) {
+            if (pks.pks_type().equals("publickey") ) {
                 Path certfilepath = FileSystems.getDefault().getPath(pks.pks_file());
                 if (! Files.exists(certfilepath)) {
                      // throw new RuntimeException("bad path to cert file: " + certfile);
@@ -1199,7 +1199,7 @@ public class apiUtils {
         X509Certificate signcertificate = null; 
         PrivateKey key = null;
         
-        if ( pks.pks_type().equals("store") || pks.pks_type().equals("external pem") ) {
+        if ( pks.pks_type().equals("store") || pks.pks_type().equals("publickey") ) {
           logdet.add(new String[]{parentkey, "error", "Using non-user signing key " + signkeyid}); 
           writeAS2LogDetail(logdet);
           return "Using non-user signing key  " + signkeyid; 

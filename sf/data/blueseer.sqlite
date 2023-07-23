@@ -3013,7 +3013,9 @@ CREATE TABLE "pks_mstr" (
   "pks_storeuser" varchar(50) NOT NULL DEFAULT '',
   "pks_storepass" varchar(50) NOT NULL DEFAULT '',
   "pks_expire" varchar(50) NOT NULL DEFAULT '',
-  "pks_create" varchar(50) NOT NULL DEFAULT ''
+  "pks_create" varchar(50) NOT NULL DEFAULT '',
+  "pks_standard" varchar(50) NOT NULL DEFAULT '',
+  "pks_external" tinyint(1) NOT NULL DEFAULT '0'
 );
 CREATE TABLE "dfs_det" (
   "dfsd_id" varchar(80) NOT NULL DEFAULT '',

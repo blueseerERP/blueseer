@@ -1220,8 +1220,8 @@ public class admData {
         String sqlSelect = "SELECT * FROM  pks_mstr where pks_id = ? ";
         String sqlInsert = "insert into pks_mstr (pks_id, pks_desc, pks_type, "
                         + " pks_user, pks_pass, pks_file, pks_storeuser, pks_storepass, " 
-                        + " pks_expire, pks_create, pks_parent ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?); "; 
+                        + " pks_expire, pks_create, pks_parent, pks_standard, pks_external ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.pks_id);
@@ -1239,6 +1239,8 @@ public class admData {
             psi.setString(9, x.pks_expire);
             psi.setString(10, x.pks_create);
             psi.setString(11, x.pks_parent);
+            psi.setString(12, x.pks_standard);
+            psi.setString(13, x.pks_external);
             int rows = psi.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
             } else {
@@ -1259,7 +1261,8 @@ public class admData {
         String[] m = new String[2];
         String sql = "update pks_mstr set pks_desc = ?, pks_type = ?, pks_user = ?,  " +   
                           " pks_pass = ? , pks_file = ?, pks_storeuser = ?, " +
-                          " pks_storepass = ?, pks_expire = ?, pks_create = ?, pks_parent = ? " +
+                          " pks_storepass = ?, pks_expire = ?, pks_create = ?, pks_parent = ?, " +
+                          " pks_standard = ?, pks_external = ? " +
                           " where pks_id = ? ; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
@@ -1273,7 +1276,9 @@ public class admData {
         ps.setString(8, x.pks_expire);
         ps.setString(9, x.pks_create);
         ps.setString(10, x.pks_parent);
-        ps.setString(11, x.pks_id);
+        ps.setString(11, x.pks_standard);
+        ps.setString(12, x.pks_external);
+        ps.setString(13, x.pks_id);
         int rows = ps.executeUpdate();
         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
         } catch (SQLException s) {
@@ -1322,7 +1327,9 @@ public class admData {
                             res.getString("pks_storepass"),
                             res.getString("pks_expire"),
                             res.getString("pks_create"),
-                            res.getString("pks_parent")
+                            res.getString("pks_parent"),
+                            res.getString("pks_standard"),
+                            res.getString("pks_external")
                         );
                     }
                 }
@@ -2648,9 +2655,9 @@ public class admData {
             
     public record pks_mstr(String[] m, String pks_id, String pks_desc, String pks_type, 
         String pks_user, String pks_pass, String pks_file, String pks_storeuser, String pks_storepass,
-        String pks_expire, String pks_create, String pks_parent ) {
+        String pks_expire, String pks_create, String pks_parent, String pks_standard, String pks_external ) {
         public pks_mstr(String[] m) {
-            this(m, "", "", "", "", "", "", "", "", "", "", "");
+            this(m, "", "", "", "", "", "", "", "", "", "", "", "", "");
         }
     }
     

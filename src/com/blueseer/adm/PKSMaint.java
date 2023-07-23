@@ -324,6 +324,12 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddparent.insertItemAt("", 0);
         ddparent.setSelectedIndex(0);
         
+        ddstandard.removeAllItems();
+        ddstandard.addItem("X.509");
+        ddstandard.addItem("openPGP");
+        ddstandard.insertItemAt("", 0);
+        ddstandard.setSelectedIndex(0);
+        
        isLoad = false;
     }
     
@@ -391,7 +397,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                     return b;
                 }
                
-                if ( (x.name().equals("add") || x.name().equals("update")) && ddtype.getSelectedItem().toString().equals("external pem") && ! isFile(tbfile.getText())) {
+                if ( (x.name().equals("add") || x.name().equals("update")) && (ddtype.getSelectedItem().toString().equals("publickey") || ddtype.getSelectedItem().toString().equals("privatekey")) && ! isFile(tbfile.getText())) {
                     b = false;
                     bsmf.MainFrame.show("pem file does not exist");
                     tbfile.requestFocus();
@@ -477,7 +483,9 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                 storepass,
                 "", // expire
                 "", //create
-                ddparent.getSelectedItem().toString()
+                ddparent.getSelectedItem().toString(),
+                ddstandard.getSelectedItem().toString(),
+                String.valueOf(BlueSeerUtils.boolToInt(cbexternal.isSelected()))
                 );
         return x;
     }
@@ -536,6 +544,8 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddparent.setSelectedItem(x.pks_parent());
         tbpass.setText(bsmf.MainFrame.PassWord("1", x.pks_pass().toCharArray()));
         tbstorepass.setText(bsmf.MainFrame.PassWord("1", x.pks_storepass().toCharArray()));
+        ddstandard.setSelectedItem(x.pks_standard());
+        cbexternal.setSelected(BlueSeerUtils.ConvertStringToBool(x.pks_external()));
         setAction(x.m());
     }
     
@@ -682,6 +692,9 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddencalgo = new javax.swing.JComboBox<>();
         jLabel12 = new javax.swing.JLabel();
         ddformat = new javax.swing.JComboBox<>();
+        cbexternal = new javax.swing.JCheckBox();
+        ddstandard = new javax.swing.JComboBox<>();
+        jLabel13 = new javax.swing.JLabel();
 
         jTextField1.setText("jTextField1");
 
@@ -761,7 +774,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel4.setText("File:");
         jLabel4.setName("lblfile"); // NOI18N
 
-        ddtype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "external pem", "store", "keypair" }));
+        ddtype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "keypair", "store", "publickey", "privatekey" }));
         ddtype.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ddtypeActionPerformed(evt);
@@ -814,6 +827,10 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         ddformat.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { ".cer", "ssh2" }));
 
+        cbexternal.setText("External");
+
+        jLabel13.setText("Standard:");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -842,7 +859,8 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addComponent(jLabel9)
                             .addComponent(jLabel10)
                             .addComponent(jLabel11)
-                            .addComponent(jLabel12))
+                            .addComponent(jLabel12)
+                            .addComponent(jLabel13))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -865,10 +883,13 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                                         .addComponent(ddtype, 0, 233, Short.MAX_VALUE))
                                     .addComponent(ddyears, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(ddstrength, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(ddparent, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                         .addComponent(ddencalgo, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(ddsigalgo, javax.swing.GroupLayout.Alignment.LEADING, 0, 111, Short.MAX_VALUE)))
+                                        .addComponent(ddsigalgo, javax.swing.GroupLayout.Alignment.LEADING, 0, 111, Short.MAX_VALUE))
+                                    .addComponent(cbexternal)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(ddstandard, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(ddparent, javax.swing.GroupLayout.Alignment.LEADING, 0, 111, Short.MAX_VALUE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -905,6 +926,12 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel9)
                             .addComponent(ddparent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(ddstandard, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel13))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbexternal)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tbfile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -948,7 +975,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btexport)
                     .addComponent(btpublickey))
-                .addGap(0, 21, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         add(jPanel1);
@@ -1027,6 +1054,19 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                 btpublickey.setEnabled(true);
             break;
             
+            case "privatekey" :
+                ddyears.setEnabled(true);
+                ddstrength.setEnabled(true);
+                ddsigalgo.setEnabled(true);
+                tbuser.setEnabled(true);
+                tbpass.setEnabled(true);
+                tbstorepass.setEnabled(false);
+                tbfile.setEnabled(true);
+                ddparent.setEnabled(true);
+                btexport.setEnabled(true);
+                btpublickey.setEnabled(true);
+            break;
+            
             case "store" :
                 ddyears.setEnabled(false);
                 ddstrength.setEnabled(false);
@@ -1040,7 +1080,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                 btpublickey.setEnabled(false);
             break; 
             
-            case "external pem" :
+            case "publickey" :
                 ddyears.setEnabled(false);
                 ddstrength.setEnabled(false);
                 ddsigalgo.setEnabled(false);
@@ -1080,10 +1120,12 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JButton btnew;
     private javax.swing.JButton btpublickey;
     private javax.swing.JButton btupdate;
+    private javax.swing.JCheckBox cbexternal;
     private javax.swing.JComboBox<String> ddencalgo;
     private javax.swing.JComboBox<String> ddformat;
     private javax.swing.JComboBox<String> ddparent;
     private javax.swing.JComboBox<String> ddsigalgo;
+    private javax.swing.JComboBox<String> ddstandard;
     private javax.swing.JComboBox<String> ddstrength;
     private javax.swing.JComboBox<String> ddtype;
     private javax.swing.JComboBox<String> ddyears;
@@ -1092,6 +1134,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
