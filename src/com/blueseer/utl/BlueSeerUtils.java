@@ -1852,6 +1852,12 @@ public class BlueSeerUtils {
             }
          return r;
      }
+
+    public record bsr(String[] m, byte[] data) {
+     
+    }
+    
+
 }
 
 

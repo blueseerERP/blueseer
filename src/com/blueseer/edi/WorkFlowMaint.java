@@ -554,6 +554,8 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddactions.addItem("EmailDir");
         ddactions.addItem("EmailFile");
         ddactions.addItem("ScriptCall");
+        ddactions.addItem("Decrypt");
+        ddactions.addItem("Encrypt");
         
         for (int i = 0; i < ddactions.getItemCount(); i++) {
             
@@ -652,6 +654,20 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
                 x.add(new String[]{"parameters", ""});
                 x.add(new String[]{"directory", ""});
                 kvs.put("ScriptCall", x);
+            }
+            if (i == 13) {
+                ArrayList<String[]> x = new ArrayList<String[]>();
+                x.add(new String[]{"key id", ""});
+                x.add(new String[]{"source dir", ""});
+                x.add(new String[]{"destination dir", ""});
+                kvs.put("Decrypt", x);
+            }
+            if (i == 14) {
+                ArrayList<String[]> x = new ArrayList<String[]>();
+                x.add(new String[]{"Key ID", ""});
+                x.add(new String[]{"source dir", ""});
+                x.add(new String[]{"destination dir", ""});
+                kvs.put("Encrypt", x);
             }
         }
         

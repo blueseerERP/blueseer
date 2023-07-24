@@ -31,6 +31,9 @@ import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.adm.admData.getPksMstr;
+import static com.blueseer.adm.admData.isValidKeyID;
+import com.blueseer.adm.admData.pks_mstr;
 import static com.blueseer.edi.EDILoad.runTranslationSingleFile;
 import static com.blueseer.edi.apiUtils.runAPICall;
 import static com.blueseer.edi.wfUtils.emailDir;
@@ -47,8 +50,10 @@ import static com.blueseer.utl.OVData.isSMTPServerBool;
 import static com.blueseer.utl.OVData.sendEmailwSession;
 import static com.blueseer.utl.OVData.setEmailSession;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.DirectoryStream;
@@ -58,6 +63,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
+import java.security.NoSuchProviderException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -70,6 +76,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.Session;
+import org.bouncycastle.openpgp.PGPException;
 
 /**
  *
@@ -2917,6 +2924,26 @@ public class ediData {
           JRRT rr = null;
           switch (wkd.wkfd_action()) {
             
+            case "Encrypt" :
+                r = wkfaction_encrypt(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
+                lgd[3] = r[0];
+                lgd[4] = r[1];
+                if (! r[0].equals("0")) {
+                    logdetail.add(lgd);
+                    break forloop;
+                } 
+                break; 
+                
+            case "Decrypt" :
+                r = wkfaction_decrypt(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
+                lgd[3] = r[0];
+                lgd[4] = r[1];
+                if (! r[0].equals("0")) {
+                    logdetail.add(lgd);
+                    break forloop;
+                } 
+                break;     
+              
             case "APICall" :
                 rr = wkfaction_apicall(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
                 lgd[3] = rr.status();
@@ -3765,6 +3792,83 @@ public class ediData {
            return new JRRT(status, messg, null);  
         }
     }
+    
+    public static String[] wkfaction_encrypt(wkf_det wkfd, ArrayList<wkfd_meta> list) {
+        String[] r = new String[]{"0",""};
+        return r;
+    }
+    
+    public static String[] wkfaction_decrypt(wkf_det wkfd, ArrayList<wkfd_meta> list) {
+        String[] r = new String[]{"0",""};
+        
+        String keyid = "";
+        String destination = "";
+        String source = "";
+        
+        for (wkfd_meta m : list) {
+            if (m.wkfdm_key().equals("key id") && ! m.wkfdm_value.isBlank()) {
+                keyid = m.wkfdm_value();
+            }
+            if (m.wkfdm_key().equals("source dir") && ! m.wkfdm_value.isBlank()) {
+                source = m.wkfdm_value();
+            }
+            if (m.wkfdm_key().equals("destination dir") && ! m.wkfdm_value.isBlank()) {
+                destination = m.wkfdm_value();
+            }
+        }
+        
+        if (! isValidKeyID(keyid)) {
+            r[0] = "1";
+            r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "unknown PKS key id: " + keyid;
+            return r;  
+        }
+        
+        Path sourcepath = FileSystems.getDefault().getPath(source);
+        Path destinationpath = FileSystems.getDefault().getPath(destination);
+        
+        if (! Files.isDirectory(sourcepath)) {
+           r[0] = "1";
+           r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "invalid source path: " + source; 
+           return r;
+        }
+        
+        if (! Files.isDirectory(destinationpath)) {
+           r[0] = "1";
+           r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "invalid destination path: " + destination; 
+           return r;
+        }
+        
+        int count = 0;
+       
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream(sourcepath, "*")) {
+                int f = 0;
+                for (Path path : stream) {
+                    if (! Files.isDirectory(path)) {
+                        count++;
+                        byte[] indata = Files.readAllBytes(path);
+                        BlueSeerUtils.bsr x = apiUtils.decryptFile(indata, keyid);
+                        if (x.data() != null) {
+                        Path outpath = FileSystems.getDefault().getPath(destination + "/" + path.getFileName() + ".dec");    
+                        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(outpath.toFile()));
+                        bos.write(x.data());
+                        bos.flush();
+                        bos.close();
+                        } else {
+                         r[0] = "1";
+                         r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "decrypted data is null "; 
+                         return r;   
+                        }
+                    }
+                }
+                r[1] = "Moving " + count +  " files " + " from " + source + " to " + destination;
+            } catch (IOException ex) {  
+                    r[0] = "1";
+                    r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + ex.getMessage();
+            }  
+        
+        return r;
+    }
+    
     
     public record edi_xref(String[] m, String exr_tpid, String exr_tpaddr, String exr_ovaddr,
         String exr_gsid, String exr_type ) {

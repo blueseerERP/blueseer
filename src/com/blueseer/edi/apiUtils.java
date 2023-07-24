@@ -27,6 +27,7 @@ package com.blueseer.edi;
 
 import static bsmf.MainFrame.bslog;
 import com.blueseer.adm.admData;
+import static com.blueseer.adm.admData.getPksMstr;
 import com.blueseer.adm.admData.pks_mstr;
 import static com.blueseer.edi.APIMaint.apidm;
 import static com.blueseer.edi.AS2Maint.certs;
@@ -35,6 +36,7 @@ import com.blueseer.edi.ediData.api_mstr;
 import static com.blueseer.edi.ediData.getKeyStoreByUser;
 import static com.blueseer.edi.ediData.getKeyStorePass;
 import static com.blueseer.edi.ediData.getKeyUserPass;
+import com.blueseer.utl.BlueSeerUtils.bsr;
 import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
 import com.blueseer.utl.EDData;
 import static com.blueseer.utl.EDData.updateAS2LogMDNFile;
@@ -1050,8 +1052,36 @@ public class apiUtils {
         return x;
 }
     
-  
-     public static MimeBodyPart signData(
+    public static bsr decryptFile(byte[] indata, String keyid) throws IOException {
+     byte[] decryptedData = null;
+     String[] r = new String[]{"0",""};
+     pks_mstr pks = getPksMstr(new String[]{keyid}); 
+     
+     if (pks.pks_standard().equals("openPGP")) {
+         try {
+            Path keyfilepath = FileSystems.getDefault().getPath(pks.pks_file());
+            if (! keyfilepath.toFile().exists()) {
+                r[0] = "1";
+                r[1] = "pgp keyfile path does not exist: " + keyid;
+                return new bsr(r, null);
+            } 
+            String passphrase = bsmf.MainFrame.PassWord("1", pks.pks_pass().toCharArray());
+            System.out.println("HERE: " + keyid + "/" + passphrase);
+            decryptedData = apiUtils.decryptPGPData(indata, passphrase, keyfilepath );
+            
+            } catch (PGPException ex) {
+                r[0] = "1";
+                r[1] = ex.getMessage();
+            } catch (NoSuchProviderException ex) {
+                r[0] = "1";
+                r[1] = ex.getMessage();
+            }
+     }
+     
+     return new bsr(r,decryptedData);
+    }
+    
+    public static MimeBodyPart signData(
           byte[] data, 
           X509Certificate signingCertificate,
           PrivateKey signingKey, String filename, String[] tp, String contenttype) throws Exception {
