@@ -10478,7 +10478,7 @@ return mycount;
             try {
 
                   res = st.executeQuery("select wf_op from wf_mstr inner join item_mstr on it_wf = wf_id where it_item = " + "'" + item + "'" + 
-                          " order by wf_op asc " + ";" ); 
+                          " order by abs(wf_op) " + ";" ); 
              
                 int i = 0;
                 while (res.next()) {

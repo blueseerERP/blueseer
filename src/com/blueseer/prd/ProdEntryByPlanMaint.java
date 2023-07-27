@@ -60,6 +60,7 @@ import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Component;
 import java.sql.Connection;
 import java.util.Collections;
+import java.util.Comparator;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -172,9 +173,11 @@ String sitecitystatezip = "";
        partlabel.setText(schData.getPlanItem(scan));
        partlabel.setForeground(Color.blue);
        ddop.removeAllItems();
-       ArrayList mylist = invData.getItemRoutingOPs(partlabel.getText());
-       Collections.sort(mylist, Collections.reverseOrder());
-       for (int i = 0; i < mylist.size(); i++) {
+       ArrayList<String> mylist = invData.getItemRoutingOPs(partlabel.getText());
+       mylist.sort(Comparator.comparingInt(Integer::parseInt)); 
+      // Collections.sort(mylist, Collections.reverseOrder());
+    //   for (int i = 0; i < mylist.size(); i++) {
+       for (int i = mylist.size() - 1; i >= 0; i--) {    
            ddop.addItem(mylist.get(i));
        }
        
