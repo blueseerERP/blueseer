@@ -1066,7 +1066,7 @@ public class apiUtils {
                 return new bsr(r, null);
             } 
             String passphrase = bsmf.MainFrame.PassWord("1", pks.pks_pass().toCharArray());
-            System.out.println("HERE: " + keyid + "/" + passphrase);
+            
             decryptedData = apiUtils.decryptPGPData(indata, passphrase, keyfilepath );
             
             } catch (PGPException ex) {
