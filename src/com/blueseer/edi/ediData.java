@@ -45,6 +45,7 @@ import static com.blueseer.utl.BlueSeerUtils.ConvertStringToBool;
 import static com.blueseer.utl.BlueSeerUtils.bsret;
 import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.parseFileName;
 import static com.blueseer.utl.OVData.isSMTPServer;
 import static com.blueseer.utl.OVData.isSMTPServerBool;
 import static com.blueseer.utl.OVData.sendEmailwSession;
@@ -2924,6 +2925,16 @@ public class ediData {
           JRRT rr = null;
           switch (wkd.wkfd_action()) {
             
+            case "FileMatchMove" :
+                r = wkfaction_filematchmove(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
+                lgd[3] = r[0];
+                lgd[4] = r[1];
+                if (! r[0].equals("0")) {
+                    logdetail.add(lgd);
+                    break forloop;
+                } 
+                break;   
+              
             case "Encrypt" :
                 r = wkfaction_encrypt(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
                 lgd[3] = r[0];
@@ -3866,6 +3877,62 @@ public class ediData {
                     r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + ex.getMessage();
             }  
         
+        return r;
+    }
+    
+    public static String[] wkfaction_filematchmove(wkf_det wkfd, ArrayList<wkfd_meta> list) {
+        String[] r = new String[]{"0",""};
+        
+        String source = "";
+        String destination = "";
+        String destinationFileName = "";
+        String filter = null;
+        boolean overwrite = false;
+        
+        for (wkfd_meta m : list) {
+            if (m.wkfdm_key().equals("source dir") && ! m.wkfdm_value.isBlank()) {
+                source = m.wkfdm_value();
+            }
+            if (m.wkfdm_key().equals("filter") && ! m.wkfdm_value.isBlank()) {
+                filter = m.wkfdm_value();
+            }
+            if (m.wkfdm_key().equals("destination dir") && ! m.wkfdm_value.isBlank()) {
+                destination = m.wkfdm_value();
+            }
+            if (m.wkfdm_key().equals("destination filename") && ! m.wkfdm_value.isBlank()) {
+                destinationFileName = m.wkfdm_value();
+            }
+            if (m.wkfdm_key().equals("overwrite") && ! m.wkfdm_value.isBlank()) {
+                overwrite = ConvertStringToBool(m.wkfdm_value());
+            }
+        }
+        
+        // parse filename if contains %% date formatting
+        destinationFileName = parseFileName(destinationFileName);
+       
+        if (! source.isEmpty() && ! destination.isEmpty() && ! destinationFileName.isEmpty()) {
+        int count = 0;
+        Path sourcepath = FileSystems.getDefault().getPath(source);
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream(sourcepath, filter)) {
+                int f = 0;
+                for (Path path : stream) {
+                    if (! Files.isDirectory(path)) {
+                        count++;
+                        Path destinationpath = FileSystems.getDefault().getPath(destination + "/" + destinationFileName);    
+                        if (! overwrite && Files.exists(destinationpath)) {
+                            destinationpath = FileSystems.getDefault().getPath(destination + "/" + destinationFileName + "." + Long.toHexString(System.currentTimeMillis())); 
+                            Files.move(path, destinationpath, StandardCopyOption.REPLACE_EXISTING);
+                        } else {
+                            Files.move(path, destinationpath, StandardCopyOption.REPLACE_EXISTING); 
+                        }
+                    }
+                }
+                r[1] = "Moving " + count +  " files " + " from " + source + " to " + destination + " as " + destinationFileName;
+            } catch (IOException ex) {  
+                    r[0] = "1";
+                    r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + ex.getMessage();
+            }  
+        } 
         return r;
     }
     

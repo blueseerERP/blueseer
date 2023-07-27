@@ -79,6 +79,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -1857,7 +1859,27 @@ public class BlueSeerUtils {
      
     }
     
-
+    public static String parseFileName(String x) {
+        String filename = "";
+        Pattern pattern = Pattern.compile("%(.*?)%");
+        Matcher matcher = pattern.matcher(x);
+        String format = "";
+        if (matcher.find()) {
+            format = matcher.group(1);
+            try {
+            SimpleDateFormat sdf = new SimpleDateFormat(format);  
+            Date now = new Date();
+            String d = sdf.format(now);
+            int index = x.indexOf("%");
+            filename = x.substring(0,index) + d + x.substring(index + (format.length() + 2));
+            } catch (IllegalArgumentException ex) {
+            	return x.replace("%", "");
+            }
+        } else {
+            return x.replace("%", "");
+        }
+        return filename.replace("%", "");
+    }
 }
 
 
