@@ -1134,7 +1134,18 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
         int[] rows = actionlist.getSelectedIndices();
         for (int i : rows) {
             actionlistmodel.removeElementAt(i);
-            kvm.remove(String.valueOf(i));
+          //  kvm.remove(String.valueOf(i));
+            // reset the order from i
+            String LastKey = "";
+            for (Map.Entry<String, ArrayList<String[]>> z : kvm.entrySet()) {
+                if ( Integer.valueOf(z.getKey()) >= i) {
+                ArrayList<String[]> slist = kvm.get(String.valueOf(Integer.valueOf(z.getKey()) + 1));
+                kvm.replace(String.valueOf(z.getKey()), slist);
+               // System.out.println("HERE: " + i + " / " +  z.getKey() + " / " + z.getValue());
+                }
+                LastKey = z.getKey();
+    	    }
+            kvm.remove(LastKey);
            // bsmf.MainFrame.show(getMessageTag(1031,String.valueOf(i)));
           //  ((javax.swing.table.DefaultTableModel) keyvaluetable.getModel()).removeRow(i);
         }
@@ -1161,11 +1172,15 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
             */
             
             ArrayList<String[]> list = kvm.get(String.valueOf(x));
-            for (String[] v : list) {
-                keyvaluemodel.addRow(new Object[]{
-                v[0],
-                v[1]
-                });
+            if (list != null) {
+                for (String[] v : list) {
+                    keyvaluemodel.addRow(new Object[]{
+                    v[0],
+                    v[1]
+                    });
+                }
+            } else {
+                bsmf.MainFrame.show(String.valueOf(x));
             }
         }
     }//GEN-LAST:event_actionlistMouseClicked
