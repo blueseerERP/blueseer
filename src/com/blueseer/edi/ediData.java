@@ -3805,7 +3805,73 @@ public class ediData {
     }
     
     public static String[] wkfaction_encrypt(wkf_det wkfd, ArrayList<wkfd_meta> list) {
-        String[] r = new String[]{"0",""};
+         String[] r = new String[]{"0",""};
+        
+        String keyid = "";
+        String destination = "";
+        String source = "";
+        
+        for (wkfd_meta m : list) {
+            if (m.wkfdm_key().equals("key id") && ! m.wkfdm_value.isBlank()) {
+                keyid = m.wkfdm_value();
+            }
+            if (m.wkfdm_key().equals("source dir") && ! m.wkfdm_value.isBlank()) {
+                source = m.wkfdm_value();
+            }
+            if (m.wkfdm_key().equals("destination dir") && ! m.wkfdm_value.isBlank()) {
+                destination = m.wkfdm_value();
+            }
+        }
+        
+        if (! isValidKeyID(keyid)) {
+            r[0] = "1";
+            r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "unknown PKS key id: " + keyid;
+            return r;  
+        }
+        
+        Path sourcepath = FileSystems.getDefault().getPath(source);
+        Path destinationpath = FileSystems.getDefault().getPath(destination);
+        
+        if (! Files.isDirectory(sourcepath)) {
+           r[0] = "1";
+           r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "invalid source path: " + source; 
+           return r;
+        }
+        
+        if (! Files.isDirectory(destinationpath)) {
+           r[0] = "1";
+           r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "invalid destination path: " + destination; 
+           return r;
+        }
+        
+        int count = 0;
+       
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream(sourcepath, "*")) {
+                int f = 0;
+                for (Path path : stream) {
+                    if (! Files.isDirectory(path)) {
+                        count++;
+                        byte[] indata = Files.readAllBytes(path);
+                        BlueSeerUtils.bsr x = apiUtils.encryptFile(indata, keyid);
+                        if (x.data() != null) {
+                        Path outpath = FileSystems.getDefault().getPath(destination + "/" + path.getFileName() + ".enc");    
+                        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(outpath.toFile()));
+                        bos.write(x.data());
+                        bos.flush();
+                        bos.close();
+                        } else {
+                         r[0] = "1";
+                         r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "encrypted data is null "; 
+                         return r;   
+                        }
+                    }
+                }
+                r[1] = "encrypting " + count +  " files " + " from " + source + " to " + destination;
+            } catch (IOException ex) {  
+                    r[0] = "1";
+                    r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + ex.getMessage();
+            }  
+        
         return r;
     }
     
@@ -3871,7 +3937,7 @@ public class ediData {
                         }
                     }
                 }
-                r[1] = "Moving " + count +  " files " + " from " + source + " to " + destination;
+                r[1] = "decrypting " + count +  " files " + " from " + source + " to " + destination;
             } catch (IOException ex) {  
                     r[0] = "1";
                     r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + ex.getMessage();

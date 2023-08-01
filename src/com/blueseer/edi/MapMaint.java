@@ -76,6 +76,7 @@ import static com.blueseer.edi.EDI.createMAPUNE;
 import static com.blueseer.edi.EDI.edilog;
 import static com.blueseer.edi.EDI.escapeDelimiter;
 import static com.blueseer.edi.EDI.getEDIType;
+import static com.blueseer.edi.EDIMap.GlobalDebug;
 import static com.blueseer.edi.EDIMap.SegmentCounter;
 import com.blueseer.edi.EDIMap.UserDefinedException;
 import static com.blueseer.edi.EDIMap.splitFFSegment;
@@ -1396,7 +1397,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
   }
     
     public void showOverlay(String taname) {
-       
+        //GlobalDebug = true;
         List<String> structure = null;
         ArrayList<String> input = null;
         String[] delims = new String[]{"","",""};
@@ -1483,7 +1484,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                     String[] keyx = z.getKey().split("\\+", -1);
                     String key = keyx[0];
                    
-                   // System.out.println("HERE: " + " key: " + z.getKey() + " value: " + String.join(",", z.getValue()));
+                 //   System.out.println("HERE: " + " key: " + z.getKey() + " value: " + String.join(",", z.getValue()));
                     
                     /*
                     if (keyx[0].contains(":")) {

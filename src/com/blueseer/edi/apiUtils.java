@@ -1052,6 +1052,53 @@ public class apiUtils {
         return x;
 }
     
+    public static bsr encryptFile(byte[] indata, String keyid) throws IOException {
+     byte[] encryptedData = null;
+     String[] r = new String[]{"0",""};
+     pks_mstr pks = getPksMstr(new String[]{keyid}); 
+     
+     if (pks.pks_standard().equals("openPGP")) {
+         try {
+            Path keyfilepath = FileSystems.getDefault().getPath(pks.pks_file());
+            if (! keyfilepath.toFile().exists()) {
+                r[0] = "1";
+                r[1] = "pgp keyfile path does not exist: " + keyid;
+                return new bsr(r, null);
+            } 
+            String passphrase = bsmf.MainFrame.PassWord("1", pks.pks_pass().toCharArray());
+            
+            encryptedData = apiUtils.decryptPGPData(indata, passphrase, keyfilepath );
+            
+            } catch (PGPException ex) {
+                r[0] = "1";
+                r[1] = ex.getMessage();
+            } catch (NoSuchProviderException ex) {
+                r[0] = "1";
+                r[1] = ex.getMessage();
+            }
+     }
+     if (pks.pks_standard().equals("X.509")) {
+         try {
+            Path keyfilepath = FileSystems.getDefault().getPath(pks.pks_file());
+            if (! keyfilepath.toFile().exists()) {
+                r[0] = "1";
+                r[1] = "x.509 keyfile path does not exist: " + keyid;
+                return new bsr(r, null);
+            } 
+            encryptedData = apiUtils.encryptData(indata, apiUtils.getPublicKeyAsCert(keyid), "" );
+            } catch (CMSException ex) {
+                r[0] = "1";
+                r[1] = ex.getMessage();
+            } catch (CertificateEncodingException ex) {
+                r[0] = "1";
+                r[1] = ex.getMessage();
+            }
+     }
+     
+     return new bsr(r,encryptedData);
+    }
+    
+    
     public static bsr decryptFile(byte[] indata, String keyid) throws IOException {
      byte[] decryptedData = null;
      String[] r = new String[]{"0",""};
@@ -1076,6 +1123,20 @@ public class apiUtils {
                 r[0] = "1";
                 r[1] = ex.getMessage();
             }
+     }
+     if (pks.pks_standard().equals("X.509")) {
+         try {
+            Path keyfilepath = FileSystems.getDefault().getPath(pks.pks_file());
+            if (! keyfilepath.toFile().exists()) {
+                r[0] = "1";
+                r[1] = "x.509 keyfile path does not exist: " + keyid;
+                return new bsr(r, null);
+            } 
+            decryptedData = apiUtils.decryptData(indata, apiUtils.getPrivateKey(keyid) );
+            } catch (CMSException ex) {
+             r[0] = "1";
+                r[1] = ex.getMessage();
+         }
      }
      
      return new bsr(r,decryptedData);

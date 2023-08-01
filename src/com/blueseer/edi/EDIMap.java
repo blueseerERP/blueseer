@@ -153,6 +153,8 @@ public abstract class EDIMap {  // took out the implements EDIMapi
      public static String outfile = "";
      public static String outputfiletype = "";
      public static String outputdoctype = "";
+     public static String inputfiletype = "";
+     public static String inputdoctype = "";
      public static String ifsfile = "";
      public static String ofsfile = "";
      public static String filename = "";
@@ -292,6 +294,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         
         insender = c[0];
         inreceiver = c[21];
+        inputfiletype = c[28];
      //   outsender = insender;  // can override within map
     //    outreceiver = inreceiver; // can override within map
         doctype = c[1];
@@ -1438,7 +1441,9 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         List<String[]> dataAsArrays = null;
         if (c[28].toUpperCase().equals("JSON")) {
             try {
-                dataAsArrays = jsonToSegments(data.get(0));
+               // dataAsArrays = jsonToSegmentsNew(data.get(0));
+               return mappedData = jsonToSegmentsNew(data.get(0));
+               
             } catch (IOException ex) {
                 edilog(ex);
             }
@@ -1567,6 +1572,220 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         return mappedData;
     }
   
+    public static LinkedHashMap<String, String[]> jsonToSegmentsNew(String json) throws IOException {
+	    ObjectMapper mapper = new ObjectMapper();
+            JsonNode jsonNode = mapper.readTree(json);
+	    JsonParser jsonParser = jsonNode.traverse();
+	    String parent = "";
+	    String lhmkey = "";
+	    Stack<String> segments = new Stack<String>();
+            Stack<String> arraystack = new Stack<String>();
+            LinkedHashMap<String,Integer> arraycounter = new LinkedHashMap<String,Integer>();
+	    LinkedHashMap<String,ArrayList<String>> lhm = new LinkedHashMap<String,ArrayList<String>>();
+            LinkedHashMap<String,String[]> lhmnew = new LinkedHashMap<String,String[]>();
+	   JsonToken z = null;
+	   int arraycount = 0;
+	   boolean startcount = false;
+           JsonToken previous = null;
+	    while (!jsonParser.isClosed()) {
+	    	
+	    	JsonToken x = jsonParser.nextToken();
+                if (x != null) {
+             //   System.out.println("jpx: " + x.name() + " / " + jsonParser.getCurrentName());
+                }
+	    	if (x == JsonToken.FIELD_NAME) {
+	    		z = jsonParser.nextToken();
+                        
+                        if (z != null) {
+                     //   System.out.println("jpxz: " + x.name() + " / " + z.name() + " / " + jsonParser.getCurrentName());
+                        }
+                        
+	    		if (z.name().startsWith("VALUE")) {
+                          
+	    		  ArrayList<String> temp = lhm.get(lhmkey);
+	    		  if (temp != null) {
+	    			  temp.add(jsonParser.getText());
+	    			  lhm.put(lhmkey, temp);
+	    		  } else {
+	    			  ArrayList<String> al = new ArrayList<String>();
+	    			  al.add(jsonParser.getText());
+	    			  lhm.put(lhmkey, al);
+	    		  }
+                          String currentstack = String.join(":",segments.toArray(new String[segments.size()])); 
+                          String currentarraystack = String.join(":",arraystack.toArray(new String[segments.size()])); 
+                          
+                          String lc = "";
+                          for (String g : segments) {
+                              if (arraycounter.containsKey(g)) {
+                                 lc += String.valueOf(arraycounter.get(g)) + ","; 
+                              } else {
+                                  lc += "1" + ",";
+                              }
+                          }
+                          lc = lc.replaceAll(",$", "");
+                          lhmnew.put(currentstack + ":" + jsonParser.getCurrentName() + "+" + lc, new String[]{jsonParser.getText()});
+                          
+                       //   System.out.println("VALUEz lhmkey-->: " + lhmkey +  " / " + jsonParser.getCurrentName());
+                       //   System.out.println("VALUEz segment stack-->: " + currentstack +  " / " + jsonParser.getCurrentName());
+                       //   System.out.println("VALUEz array stack-->: " + currentarraystack +  " / " + jsonParser.getCurrentName());
+	    		} else if(z == JsonToken.START_OBJECT) {
+                                segments.push(jsonParser.getCurrentName());
+	    			parent = jsonParser.getCurrentName();
+                                int k = 1;
+                                if (! arraystack.empty()) {
+                                 k = arraycounter.get(arraystack.peek());
+                                    lhmkey = segments.peek() + ":" + String.valueOf(k);
+                                } else {
+                                    lhmkey = parent + ":" + String.valueOf(k);
+                                }
+	    			
+	    			if (! lhmkey.isBlank()) {
+	  	    		  lhm.put(lhmkey, null);
+	    			}
+                           //     System.out.println("START OBJECTz -->: " + lhmkey +  " / " + jsonParser.getCurrentName());
+	    		} else if(z == JsonToken.START_ARRAY) {
+	    			parent = jsonParser.getCurrentName();
+	    			segments.push(parent);
+	    			startcount = true;
+                                arraystack.push(jsonParser.getCurrentName());
+                                arraycounter.put(jsonParser.getCurrentName(), 1);
+                                int k = 1;
+                                if (! arraystack.empty()) {
+                                 k = arraycounter.get(arraystack.peek());
+                                    lhmkey = arraystack.peek() + ":" + String.valueOf(k);
+                                } else {
+                                    lhmkey = parent + ":" + String.valueOf(k);
+                                }
+	    			
+	    			if (! lhmkey.isBlank()) {
+	  	    		  lhm.put(lhmkey, null);
+	    			}
+                             //   System.out.println("START ARRAYz -->: " + lhmkey +  " / " + jsonParser.getCurrentName());
+	    		} else if(z == JsonToken.END_ARRAY) {
+	    			parent = jsonParser.getCurrentName();
+	    			segments.pop();
+                                arraystack.pop();
+                                int k = 1;
+                                if (! arraystack.empty()) {
+                                 k = arraycounter.get(arraystack.peek());
+                                    lhmkey = arraystack.peek() + ":" + String.valueOf(k);
+                                } else {
+                                    lhmkey = parent + ":" + String.valueOf(k);
+                                }
+	    			startcount = true;
+                            //    System.out.println("END ARRAYz -->: " + lhmkey +  " / " + jsonParser.getCurrentName());
+	    		} else if(z == JsonToken.END_OBJECT) {
+	    			parent = jsonParser.getCurrentName();
+	    			segments.pop();
+	    			startcount = true;
+                            //    System.out.println("END OBJECTz -->: " + lhmkey +  " / " + jsonParser.getCurrentName());
+	    		}
+	    	}
+	    	if (x == JsonToken.START_OBJECT) {
+	    		
+                        int k = 1;
+                        if (! arraystack.empty()) {
+                             k = arraycounter.get(arraystack.peek());
+
+                            lhmkey = arraystack.peek() + ":" + String.valueOf(k);
+
+                            if (! parent.isBlank()) {
+                              lhm.put(lhmkey, null);
+                            }
+                            if (jsonParser.getCurrentName() != null) {
+                             segments.push(jsonParser.getCurrentName());
+                            }
+                        }
+                     //   System.out.println("START OBJECTx -->: " + lhmkey +  " / " + jsonParser.getCurrentName());
+	    	}
+	    	if (x == JsonToken.END_OBJECT) {
+	    		
+                        if (jsonParser.getCurrentName() == null && jsonParser.getText().equals("}") && jsonParser.getValueAsString() == null) {
+                           // this is end of object within an array....increase the counter of this array
+                           int k = 1;
+                           if (! arraystack.isEmpty()) {
+                             k = arraycounter.get(arraystack.peek());
+                             k++;
+                             arraycounter.replace(arraystack.peek(), k);
+                             lhmkey = arraystack.peek() + ":" + String.valueOf(k);
+                          //   System.out.println(" array comma -->: " + lhmkey);
+                           }
+                           
+                        } else {
+                           if (! segments.isEmpty()) {
+                            segments.pop();
+                        } 
+                        }
+                       // System.out.println("END OBJECTx -->: " + lhmkey +  " / " + jsonParser.getCurrentName() + "/" + jsonParser.getText() + "/" + jsonParser.getValueAsString());
+	    	}
+	    	if (x == JsonToken.END_ARRAY) {
+	    		if (! segments.isEmpty()) {
+                            segments.pop();
+                        }
+	    		arraycount = 0;
+	    		startcount = false;
+                        if (! arraystack.isEmpty()) {
+                            arraystack.pop();
+                        }
+                        int k = 1;
+                        if (! arraystack.empty()) {
+                         k = arraycounter.get(arraystack.peek());
+                            lhmkey = segments.peek() + ":" + String.valueOf(k);
+                        } else {
+                            lhmkey = parent + ":" + String.valueOf(k);
+                        }
+                     //   System.out.println("END ARRAYx -->: " + lhmkey +  " / " + jsonParser.getCurrentName());
+	    	}
+                if (x != null && x.name().startsWith("VALUE") && previous == JsonToken.START_ARRAY ) {
+                    // must be inside value array
+                    
+                    String lc = "";
+                    String currentstack = String.join(":",segments.toArray(new String[segments.size()]));                           
+                          for (String g : segments) {
+                              if (arraycounter.containsKey(g)) {
+                                 lc += String.valueOf(arraycounter.get(g)) + ","; 
+                              } else {
+                                  lc += "1" + ",";
+                              }
+                          }
+                          lc = lc.replaceAll(",$", "");
+                          lhmnew.put(currentstack +  "+" + lc, new String[]{jsonParser.getText()});
+                    
+                          int k = 1;
+                           if (! arraystack.isEmpty()) {
+                             k = arraycounter.get(arraystack.peek());
+                             k++;
+                             arraycounter.replace(arraystack.peek(), k);
+                           }
+                          
+                      //    System.out.println("Valuex -->: " + lhmkey +  " / " + x.name() + " / " + jsonParser.getText());
+                }
+                
+              if (z != null) {
+                 previous = z;
+              } else {
+                 previous = x;   
+              }
+	      
+	    }
+	    ArrayList<String[]> result = new ArrayList<String[]>();
+	    for (Map.Entry<String, ArrayList<String>> val : lhm.entrySet()) {
+	    	if (val.getValue() != null) {
+                    String[] j = new String[val.getValue().size() + 1];
+                    j[0] = val.getKey().split(":")[0];
+                    for (int k = 1; k < val.getValue().size() + 1; k++) {
+                            j[k] = val.getValue().get(k - 1);
+                    }
+                    result.add(j);
+                }
+	    }
+	  //  lhm.forEach((k,v) -> System.out.println("lhm: " + k + " = " + v));
+           
+           // lhmnew.forEach((k,v) -> System.out.println("lhmnew: " + k + " = " + v));
+	   // result.forEach((k) -> System.out.println("result: " + k[0]));
+	    return lhmnew;
+	}
+
     public static List<String[]> jsonToSegments(String json) throws IOException {
 	    ObjectMapper mapper = new ObjectMapper();
             JsonNode jsonNode = mapper.readTree(json);
@@ -1581,8 +1800,16 @@ public abstract class EDIMap {  // took out the implements EDIMapi
 	    while (!jsonParser.isClosed()) {
 	    	
 	    	JsonToken x = jsonParser.nextToken();
+                if (x != null) {
+                System.out.println("jpx: " + x.name() + " / " + jsonParser.getCurrentName());
+                }
 	    	if (x == JsonToken.FIELD_NAME) {
 	    		z = jsonParser.nextToken();
+                        
+                        if (z != null) {
+                        System.out.println("jpxz: " + x.name() + " / " + z.name() + " / " + jsonParser.getCurrentName());
+                        }
+                        
 	    		if (z.name().startsWith("VALUE")) {
 	    		  ArrayList<String> temp = lhm.get(lhmkey);
 	    		  if (temp != null) {
@@ -1637,11 +1864,12 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                     result.add(j);
                 }
 	    }
-	   // lhm.forEach((k,v) -> System.out.println(k + ":" + v));
-	 //   result.forEach((k) -> System.out.println(k[0]));
+	    lhm.forEach((k,v) -> System.out.println("lhm: " + k + " : " + v));
+	    result.forEach((k) -> System.out.println("result: " + k[0]));
 	    return result;
 	}
 
+    
     public static List<String[]> jsonTagsToSegment(String json) throws IOException {
 	    ObjectMapper mapper = new ObjectMapper();
             JsonNode jsonNode = mapper.readTree(json);
@@ -3321,6 +3549,41 @@ public abstract class EDIMap {  // took out the implements EDIMapi
     }
     
     // non-looping getInput
+     @EDI.AnnoDoc(desc = {"method reads value from source at segment and element (by name).",
+                        "Example:  getInput(\"BEG\",\"fieldname\") returns: specific field of BEG segment"},
+            params = {"String segment","String ElementName"}) 
+    public static String getInputJSON(String segment, String elementName) {
+         String x = "";
+         //int elementNbr = getElementNumber(segment, elementName); 
+         //if (elementNbr == 0) {
+         //    return x;
+         //}
+         
+         String[] k = null;
+         if (segment.contains("+")) {  // overloading (again) as key type entry (used with getLoopKeys)
+           k = mappedInput.get(segment);  
+         } else { // else as actual segment entry
+            // segment = ":" + segment; // preprend blank
+             for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
+                String[] v = z.getKey().split("\\+");
+                if (v[0].equals(segment + ":" + elementName)) {
+                    k = z.getValue();
+                }
+             }
+         }
+         if (k != null && k.length > 0 && k[0] != null) {
+          x =  k[0].trim();
+         }
+         if (GlobalDebug)
+         System.out.println("getInput:" + segment + "/" + x);
+         
+         
+         return x;
+         
+     }
+    
+    
+    
     @EDI.AnnoDoc(desc = {"method reads value from source at segment and element (by integer) with qualifier x.",
                      "NOTE: Qualifier has a position indicator of which field/element the qualifier is in",
                      "NOTE: this method only supports integer qualifier positions...not named",
@@ -3417,10 +3680,14 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             params = {"String segment","String ElementName"}) 
     public static String getInput(String segment, String elementName) {
          String x = "";
-         int elementNbr = getElementNumber(segment, elementName); 
-         if (elementNbr == 0) {
-             return x;
-         }
+         int elementNbr = 0;
+         if (inputfiletype.equals("X12") || inputfiletype.equals("UNE")) {
+             elementNbr = getElementNumber(segment, elementName);
+             if (elementNbr == 0) {
+              return x;
+             }
+         } 
+         
          String[] k = null;
          if (segment.contains("+")) {  // overloading (again) as key type entry (used with getLoopKeys)
            k = mappedInput.get(segment);  
@@ -3428,11 +3695,19 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             // segment = ":" + segment; // preprend blank
              for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
                 String[] v = z.getKey().split("\\+");
-                if (v[0].equals(segment)) {
-                    k = z.getValue();
+                if (inputfiletype.equals("X12") || inputfiletype.equals("UNE")) {
+                    if (v[0].equals(segment)) {
+                        k = z.getValue();
+                    }
+                } else {
+                    if (v[0].equals(segment + ":" + elementName)) {
+                        k = z.getValue();
+                    }
                 }
+                
              }
          }
+         
          if (k != null && k.length > elementNbr && k[elementNbr] != null) {
           x =  k[elementNbr].trim();
          }
