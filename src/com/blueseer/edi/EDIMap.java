@@ -3549,39 +3549,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
     }
     
     // non-looping getInput
-     @EDI.AnnoDoc(desc = {"method reads value from source at segment and element (by name).",
-                        "Example:  getInput(\"BEG\",\"fieldname\") returns: specific field of BEG segment"},
-            params = {"String segment","String ElementName"}) 
-    public static String getInputJSON(String segment, String elementName) {
-         String x = "";
-         //int elementNbr = getElementNumber(segment, elementName); 
-         //if (elementNbr == 0) {
-         //    return x;
-         //}
-         
-         String[] k = null;
-         if (segment.contains("+")) {  // overloading (again) as key type entry (used with getLoopKeys)
-           k = mappedInput.get(segment);  
-         } else { // else as actual segment entry
-            // segment = ":" + segment; // preprend blank
-             for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
-                String[] v = z.getKey().split("\\+");
-                if (v[0].equals(segment + ":" + elementName)) {
-                    k = z.getValue();
-                }
-             }
-         }
-         if (k != null && k.length > 0 && k[0] != null) {
-          x =  k[0].trim();
-         }
-         if (GlobalDebug)
-         System.out.println("getInput:" + segment + "/" + x);
-         
-         
-         return x;
-         
-     }
-    
+  
     
     
     @EDI.AnnoDoc(desc = {"method reads value from source at segment and element (by integer) with qualifier x.",
@@ -3681,7 +3649,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
     public static String getInput(String segment, String elementName) {
          String x = "";
          int elementNbr = 0;
-         if (inputfiletype.equals("X12") || inputfiletype.equals("UNE")) {
+         if (inputfiletype.equals("X12") || inputfiletype.equals("UNE") || inputfiletype.equals("FF")) {
              elementNbr = getElementNumber(segment, elementName);
              if (elementNbr == 0) {
               return x;
@@ -3695,7 +3663,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             // segment = ":" + segment; // preprend blank
              for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
                 String[] v = z.getKey().split("\\+");
-                if (inputfiletype.equals("X12") || inputfiletype.equals("UNE")) {
+                if (inputfiletype.equals("X12") || inputfiletype.equals("UNE") || inputfiletype.equals("FF")) {
                     if (v[0].equals(segment)) {
                         k = z.getValue();
                     }
@@ -3916,19 +3884,34 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             params = {"Integer LoopIndex", "String segment", "String ElementName"})  
     public static String getInput(Integer gloop, String segment, String elementName) {
          String x = "";
-         int elementNbr = getElementNumber(segment, elementName); 
-         if (elementNbr == 0) {
-             return x;
+         int elementNbr = 0;
+         if (inputfiletype.equals("X12") || inputfiletype.equals("UNE") || inputfiletype.equals("FF")) {
+             elementNbr = getElementNumber(segment, elementName);
+             if (elementNbr == 0) {
+              return x;
+             }
          }
-        
+         // get count of tags in segment... for json/xml usage
+         String[] j = segment.split(":",-1);
+         
          String[] k = null;
         // segment = ":" + segment; // preprend blank
          for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
              String[] v = z.getKey().split("\\+");
-             if (v[0].equals(segment) && v[1].equals(String.valueOf(gloop))) {
-                 k = z.getValue();
-             }
+             
+            if (inputfiletype.equals("X12") || inputfiletype.equals("UNE") || inputfiletype.equals("FF")) {
+                    if (v[0].equals(segment) && v[1].equals(String.valueOf(gloop))) {
+                        k = z.getValue();
+                    }
+            } else {
+                String[] vsub = v[1].split(",",-1);
+                if (v[0].equals(segment + ":" + elementName) && vsub.length >= j.length && vsub[j.length-1].equals(String.valueOf(gloop))) {
+                    k = z.getValue();
+                }
+            }
+             
          }
+         
          if (k != null && k.length > elementNbr && k[elementNbr] != null) {
           x =  k[elementNbr].trim();
          }
@@ -4147,6 +4130,27 @@ public abstract class EDIMap {  // took out the implements EDIMapi
          }
          return k;
      }
+    
+      @EDI.AnnoDoc(desc = {"method retrieves the loop count of a parent:tag segment...used in json and xml inbound",
+                     "NOTE: tag/position format:  A:B:C+1,1,1+ ...x,x,x is 'positional loop count' of A or B or C ",
+                     "NOTE: The keys are defined as unique identifier tags for each occurence of the repeating segment.",
+                     "Example:  getLoopCount(\"GPARENT:PARENT:CHILD:\", pos) returns: last count of tag position subelement(tag+,,,+) "},
+                 params = {"String segment", "Integer TagPosition"}) 
+    public static int getLoopCount(String segment, Integer g) {
+         int k = 0;
+       //  segment = ":" + segment; // preprend blank
+         for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
+             String[] v = z.getKey().split("\\+");
+             if (v != null && v.length > 1 && v[0].startsWith(segment)) {
+                 String[] tagLoopPosition = v[1].split(",",-1);
+                 if (tagLoopPosition != null && tagLoopPosition.length > g) {
+                   k = Integer.valueOf(tagLoopPosition[g]);
+                 }
+             }
+         }
+         return k;
+     }
+  
     
        @EDI.AnnoDoc(desc = {"method kills or stops the execution of the map at point of call",
                      "NOTE:  the first variable...mx...is not a String...and should not be put in quotes",
