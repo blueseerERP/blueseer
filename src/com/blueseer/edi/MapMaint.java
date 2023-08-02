@@ -3251,7 +3251,11 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         out = new ZipOutputStream(new FileOutputStream(f));
         
         // IFS file into Zip
-        e = new ZipEntry(ddifs.getSelectedItem().toString());
+        String ifsname = ddifs.getSelectedItem().toString();
+        if (! ifsname.toLowerCase().endsWith(".csv")) {
+            ifsname = ifsname + ".csv";
+        }
+        e = new ZipEntry(ifsname);
         out.putNextEntry(e);
         
         // get data from tables instead of file
@@ -3279,7 +3283,11 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         
         // OFS file into Zip
         if (! ddofs.getSelectedItem().toString().equals(ddifs.getSelectedItem().toString())) {
-        e = new ZipEntry(ddofs.getSelectedItem().toString());
+        String ofsname = ddofs.getSelectedItem().toString();
+        if (! ofsname.toLowerCase().endsWith(".csv")) {
+            ofsname = ofsname + ".csv";
+        }
+        e = new ZipEntry(ofsname);
         out.putNextEntry(e);
         
         ArrayList<String[]> listofs = getDSFasArray(ddofs.getSelectedItem().toString());
