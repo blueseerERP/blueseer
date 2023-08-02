@@ -273,6 +273,7 @@ QTY,LX:CLP,1,no,no,e01,Quantity Qualifier,2,2,-,M,F
 QTY,LX:CLP,1,no,no,e02,Quantity,1,15,-,X,F
 QTY,LX:CLP,1,no,no,e04,Free-form Information,1,30,-,X/Z,F
 SVC,,999,yes,yes,landmark,Service Information,3,3,-,O,F
+SVC,,1,no,no,e01,Procedure Idenfitier Composite,1,120,-,M/Z,F
 SVC,,1,no,no,e02,Monetary Amount,1,18,-,M/Z,F
 SVC,,1,no,no,e03,Monetary Amount,1,18,-,O/Z,F
 SVC,,1,no,no,e04,Product/Service ID,1,48,-,O/Z,F

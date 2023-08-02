@@ -582,6 +582,7 @@ REF,SBR:NM1,1,no,no,e03,Description,1,80,-,X,F
 LX,,99999,yes,yes,landmark,Transaction Set Line Number,2,2,-,O,F
 LX,,1,no,no,e01,Assigned Number,1,6,-,M,F
 SV1,LX,1,no,yes,landmark,Professional Service,3,3,-,O,F
+SV1,LX,1,no,no,e01,Procedural Identifier Composite,1,120,-,O/Z,F
 SV1,LX,1,no,no,e02,Monetary Amount,1,18,-,O/Z,F
 SV1,LX,1,no,no,e03,Unit or Basis for Measurement Code,2,2,-,X,F
 SV1,LX,1,no,no,e04,Quantity,1,15,-,X,F
@@ -603,6 +604,7 @@ SV1,LX,1,no,no,e20,Level of Care Code,1,1,-,O,F
 SV1,LX,1,no,no,e21,Provider Agreement Code,1,1,-,O,F
 SV2,LX,1,no,yes,landmark,Institutional Service,3,3,-,O,F
 SV2,LX,1,no,no,e01,Product/Service ID,1,48,-,X/Z,F
+SV2,LX,1,no,no,e02,Procedural Identifier Composite,1,120,-,O/Z,F
 SV2,LX,1,no,no,e03,Monetary Amount,1,18,-,O/Z,F
 SV2,LX,1,no,no,e04,Unit or Basis for Measurement Code,2,2,-,X,F
 SV2,LX,1,no,no,e05,Quantity,1,15,-,X,F
@@ -612,6 +614,7 @@ SV2,LX,1,no,no,e08,Yes/No Condition or Response Code,1,1,-,O/Z,F
 SV2,LX,1,no,no,e09,Nursing Home Residential Status Code,1,1,-,O,F
 SV2,LX,1,no,no,e10,Level of Care Code,1,1,-,O,F
 SV3,LX,1,no,yes,landmark,Dental Service,3,3,-,O,F
+SV3,LX,1,no,no,e01,Procedural Identifier Composite,1,120,-,O/Z,F
 SV3,LX,1,no,no,e02,Monetary Amount,1,18,-,O/Z,F
 SV3,LX,1,no,no,e03,Facility Code Value,1,2,-,O/Z,F
 SV3,LX,1,no,no,e05,Prosthesis Crown or Inlay Code,1,1,-,O,F

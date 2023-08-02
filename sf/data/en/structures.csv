@@ -8940,6 +8940,7 @@ X12835.csv,QTY,LX:CLP,1,0,0,e01,Quantity Qualifier,2,2,-,M,F
 X12835.csv,QTY,LX:CLP,1,0,0,e02,Quantity,1,15,-,X,F
 X12835.csv,QTY,LX:CLP,1,0,0,e04,Free-form Information,1,30,-,X/Z,F
 X12835.csv,SVC,,999,1,1,landmark,Service Information,3,3,-,O,F
+X12835.csv,SVC,,1,0,0,e01,Procedural Identifier Composite,1,150,-,O/Z,F
 X12835.csv,SVC,,1,0,0,e02,Monetary Amount,1,18,-,M/Z,F
 X12835.csv,SVC,,1,0,0,e03,Monetary Amount,1,18,-,O/Z,F
 X12835.csv,SVC,,1,0,0,e04,Product/Service ID,1,48,-,O/Z,F
@@ -9581,6 +9582,7 @@ X12837.csv,REF,SBR:NM1,1,0,0,e03,Description,1,80,-,X,F
 X12837.csv,LX,,99999,1,1,landmark,Transaction Set Line Number,2,2,-,O,F
 X12837.csv,LX,,1,0,0,e01,Assigned Number,1,6,-,M,F
 X12837.csv,SV1,LX,1,0,1,landmark,Professional Service,3,3,-,O,F
+X12837.csv,SV1,LX,1,0,0,e01,Procedural Identifier Composite,1,150,-,O/Z,F
 X12837.csv,SV1,LX,1,0,0,e02,Monetary Amount,1,18,-,O/Z,F
 X12837.csv,SV1,LX,1,0,0,e03,Unit or Basis for Measurement Code,2,2,-,X,F
 X12837.csv,SV1,LX,1,0,0,e04,Quantity,1,15,-,X,F
@@ -9602,6 +9604,7 @@ X12837.csv,SV1,LX,1,0,0,e20,Level of Care Code,1,1,-,O,F
 X12837.csv,SV1,LX,1,0,0,e21,Provider Agreement Code,1,1,-,O,F
 X12837.csv,SV2,LX,1,0,1,landmark,Institutional Service,3,3,-,O,F
 X12837.csv,SV2,LX,1,0,0,e01,Product/Service ID,1,48,-,X/Z,F
+X12837.csv,SV2,LX,1,0,0,e02,Procedural Identifier Composite,1,150,-,O/Z,F
 X12837.csv,SV2,LX,1,0,0,e03,Monetary Amount,1,18,-,O/Z,F
 X12837.csv,SV2,LX,1,0,0,e04,Unit or Basis for Measurement Code,2,2,-,X,F
 X12837.csv,SV2,LX,1,0,0,e05,Quantity,1,15,-,X,F
@@ -9611,6 +9614,7 @@ X12837.csv,SV2,LX,1,0,0,e08,Yes/No Condition or Response Code,1,1,-,O/Z,F
 X12837.csv,SV2,LX,1,0,0,e09,Nursing Home Residential Status Code,1,1,-,O,F
 X12837.csv,SV2,LX,1,0,0,e10,Level of Care Code,1,1,-,O,F
 X12837.csv,SV3,LX,1,0,1,landmark,Dental Service,3,3,-,O,F
+X12837.csv,SV3,LX,1,0,0,e01,Procedural Identifier Composite,1,150,-,O/Z,F
 X12837.csv,SV3,LX,1,0,0,e02,Monetary Amount,1,18,-,O/Z,F
 X12837.csv,SV3,LX,1,0,0,e03,Facility Code Value,1,2,-,O/Z,F
 X12837.csv,SV3,LX,1,0,0,e05,Prosthesis Crown or Inlay Code,1,1,-,O,F
@@ -9624,6 +9628,7 @@ X12837.csv,TOO,LX,1,0,0,e01,Code List Qualifier Code,1,3,-,X,F
 X12837.csv,TOO,LX,1,0,0,e02,Industry Code,1,30,-,X,F
 X12837.csv,SV4,LX,1,0,1,landmark,Drug Service,3,3,-,O,F
 X12837.csv,SV4,LX,1,0,0,e01,Reference Identification,1,50,-,M/Z,F
+X12837.csv,SV4,LX,1,0,0,e02,Procedural Identifier Composite,1,150,-,O/Z,F
 X12837.csv,SV4,LX,1,0,0,e03,Reference Identification,1,50,-,O/Z,F
 X12837.csv,SV4,LX,1,0,0,e04,Yes/No Condition or Response Code,1,1,-,O/Z,F
 X12837.csv,SV4,LX,1,0,0,e05,Dispense as Written Code,1,1,-,O,F
@@ -9641,6 +9646,7 @@ X12837.csv,SV4,LX,1,0,0,e16,Patient Location Code,1,1,-,O,F
 X12837.csv,SV4,LX,1,0,0,e17,Level of Care Code,1,1,-,O,F
 X12837.csv,SV4,LX,1,0,0,e18,Prior Authorization Type Code,1,1,-,O,F
 X12837.csv,SV5,LX,1,0,1,landmark,Durable Medical Equipment Service,3,3,-,O,F
+X12837.csv,SV5,LX,1,0,0,e01,Procedural Identifier Composite,1,150,-,O/Z,F
 X12837.csv,SV5,LX,1,0,0,e02,Unit or Basis for Measurement Code,2,2,-,M,F
 X12837.csv,SV5,LX,1,0,0,e03,Quantity,1,15,-,M/Z,F
 X12837.csv,SV5,LX,1,0,0,e04,Monetary Amount,1,18,-,X/Z,F
@@ -9648,6 +9654,7 @@ X12837.csv,SV5,LX,1,0,0,e05,Monetary Amount,1,18,-,X/Z,F
 X12837.csv,SV5,LX,1,0,0,e06,Frequency Code,1,1,-,O/Z,F
 X12837.csv,SV5,LX,1,0,0,e07,Prognosis Code,1,1,-,O,F
 X12837.csv,SV6,LX,1,0,1,landmark,Anesthesia Service,3,3,-,O,F
+X12837.csv,SV6,LX,1,0,0,e01,Procedural Identifier Composite,1,150,-,O/Z,F
 X12837.csv,SV6,LX,1,0,0,e02,Facility Code Qualifier,1,2,-,X,F
 X12837.csv,SV6,LX,1,0,0,e03,Facility Code Value,1,2,-,X,F
 X12837.csv,SV6,LX,1,0,0,e04,Monetary Amount,1,18,-,O/Z,F
@@ -9931,6 +9938,7 @@ X12837.csv,PER,NM1,1,0,0,e09,Contact Inquiry Reference,1,20,-,O,F
 X12837.csv,SVD,,99999,1,1,landmark,Service Line Adjudication,3,3,-,O,F
 X12837.csv,SVD,,1,0,0,e01,Identification Code,2,80,-,M/Z,F
 X12837.csv,SVD,,1,0,0,e02,Monetary Amount,1,18,-,M/Z,F
+X12837.csv,SVD,,1,0,0,e03,Procedural Identifier Composite,1,150,-,O/Z,F
 X12837.csv,SVD,,1,0,0,e04,Product/Service ID,1,48,-,O/Z,F
 X12837.csv,SVD,,1,0,0,e05,Quantity,1,15,-,O/Z,F
 X12837.csv,SVD,,1,0,0,e06,Assigned Number,1,6,-,O,F
