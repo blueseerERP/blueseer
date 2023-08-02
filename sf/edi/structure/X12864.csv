@@ -1,102 +1,102 @@
 #864 - Text Message
-#segment,parent,loopcount,isgroup,islandmark,field,desc,min,max,align,status
-ST,,1,no,yes,landmark,Transaction Set Header,2,2,-,M
-ST,,1,no,no,e01,Transaction Set Identifier Code,3,3,-,M/Z
-ST,,1,no,no,e02,Transaction Set Control Number,4,9,-,M
-ST,,1,no,no,e03,Implementation Convention Reference,1,35,-,O/Z
-BMG,,1,no,yes,landmark,Beginning Segment For Text Message,3,3,-,M
-BMG,,1,no,no,e01,Transaction Set Purpose Code,2,2,-,M
-BMG,,1,no,no,e02,Description,1,80,-,O
-BMG,,1,no,no,e03,Transaction Type Code,2,2,-,O
-DTM,,10,no,yes,landmark,Date/Time Reference,3,3,-,O
-DTM,,1,no,no,e01,Date/Time Qualifier,3,3,-,M
-DTM,,1,no,no,e02,Date,8,8,-,X
-DTM,,1,no,no,e03,Time,4,8,-,X
-DTM,,1,no,no,e04,Time Code,2,2,-,O
-DTM,,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X
-DTM,,1,no,no,e06,Date Time Period,1,35,-,X
-N1,,200,yes,yes,landmark,Party Identification,2,2,-,O
-N1,,1,no,no,e01,Entity Identifier Code,2,3,-,M
-N1,,1,no,no,e02,Name,1,60,-,X
-N1,,1,no,no,e03,Identification Code Qualifier,1,2,-,X
-N1,,1,no,no,e04,Identification Code,2,80,-,X
-N1,,1,no,no,e05,Entity Relationship Code,2,2,-,O
-N1,,1,no,no,e06,Entity Identifier Code,2,3,-,O
-N2,N1,2,no,yes,landmark,Additional Name Information,2,2,-,O
-N2,N1,1,no,no,e01,Name,1,60,-,M
-N2,N1,1,no,no,e02,Name,1,60,-,O
-N3,N1,2,no,yes,landmark,Party Location,2,2,-,O
-N3,N1,1,no,no,e01,Address Information,1,55,-,M
-N3,N1,1,no,no,e02,Address Information,1,55,-,O
-N4,N1,1,no,yes,landmark,Geographic Location,2,2,-,O
-N4,N1,1,no,no,e01,City Name,2,30,-,O
-N4,N1,1,no,no,e02,State or Province Code,2,2,-,X
-N4,N1,1,no,no,e03,Postal Code,3,15,-,O
-N4,N1,1,no,no,e04,Country Code,2,3,-,X
-N4,N1,1,no,no,e05,Location Qualifier,1,2,-,X
-N4,N1,1,no,no,e06,Location Identifier,1,30,-,O
-N4,N1,1,no,no,e07,Country Subdivision Code,1,3,-,X
-REF,N1,12,no,yes,landmark,Reference Information,3,3,-,O
-REF,N1,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
-REF,N1,1,no,no,e02,Reference Identification,1,50,-,X
-REF,N1,1,no,no,e03,Description,1,80,-,X
-PER,N1,3,no,yes,landmark,Administrative Communications Contact,3,3,-,O
-PER,N1,1,no,no,e01,Contact Function Code,2,2,-,M
-PER,N1,1,no,no,e02,Name,1,60,-,O
-PER,N1,1,no,no,e03,Communication Number Qualifier,2,2,-,X
-PER,N1,1,no,no,e04,Communication Number,1,256,-,X
-PER,N1,1,no,no,e05,Communication Number Qualifier,2,2,-,X
-PER,N1,1,no,no,e06,Communication Number,1,256,-,X
-PER,N1,1,no,no,e07,Communication Number Qualifier,2,2,-,X
-PER,N1,1,no,no,e08,Communication Number,1,256,-,X
-PER,N1,1,no,no,e09,Contact Inquiry Reference,1,20,-,O
-N1,,,,,groupend,,,,,
-MIT,,99999,yes,yes,landmark,Message Identification,3,3,-,M
-MIT,,1,no,no,e01,Reference Identification,1,50,-,M/Z
-MIT,,1,no,no,e02,Description,1,80,-,O/Z
-MIT,,1,no,no,e03,Page Width,1,3,-,O
-MIT,,1,no,no,e04,Page Length Lines,1,3,-,O
-N1,MIT,200,yes,yes,landmark,Party Identification,2,2,-,O
-N1,MIT,1,no,no,e01,Entity Identifier Code,2,3,-,M
-N1,MIT,1,no,no,e02,Name,1,60,-,X
-N1,MIT,1,no,no,e03,Identification Code Qualifier,1,2,-,X
-N1,MIT,1,no,no,e04,Identification Code,2,80,-,X
-N1,MIT,1,no,no,e05,Entity Relationship Code,2,2,-,O
-N1,MIT,1,no,no,e06,Entity Identifier Code,2,3,-,O
-N2,MIT:N1,2,no,yes,landmark,Additional Name Information,2,2,-,O
-N2,MIT:N1,1,no,no,e01,Name,1,60,-,M
-N2,MIT:N1,1,no,no,e02,Name,1,60,-,O
-N3,MIT:N1,2,no,yes,landmark,Party Location,2,2,-,O
-N3,MIT:N1,1,no,no,e01,Address Information,1,55,-,M
-N3,MIT:N1,1,no,no,e02,Address Information,1,55,-,O
-N4,MIT:N1,1,no,yes,landmark,Geographic Location,2,2,-,O
-N4,MIT:N1,1,no,no,e01,City Name,2,30,-,O
-N4,MIT:N1,1,no,no,e02,State or Province Code,2,2,-,X
-N4,MIT:N1,1,no,no,e03,Postal Code,3,15,-,O
-N4,MIT:N1,1,no,no,e04,Country Code,2,3,-,X
-N4,MIT:N1,1,no,no,e05,Location Qualifier,1,2,-,X
-N4,MIT:N1,1,no,no,e06,Location Identifier,1,30,-,O
-N4,MIT:N1,1,no,no,e07,Country Subdivision Code,1,3,-,X
-REF,MIT:N1,12,no,yes,landmark,Reference Information,3,3,-,O
-REF,MIT:N1,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
-REF,MIT:N1,1,no,no,e02,Reference Identification,1,50,-,X
-REF,MIT:N1,1,no,no,e03,Description,1,80,-,X
-PER,MIT:N1,3,no,yes,landmark,Administrative Communications Contact,3,3,-,O
-PER,MIT:N1,1,no,no,e01,Contact Function Code,2,2,-,M
-PER,MIT:N1,1,no,no,e02,Name,1,60,-,O
-PER,MIT:N1,1,no,no,e03,Communication Number Qualifier,2,2,-,X
-PER,MIT:N1,1,no,no,e04,Communication Number,1,256,-,X
-PER,MIT:N1,1,no,no,e05,Communication Number Qualifier,2,2,-,X
-PER,MIT:N1,1,no,no,e06,Communication Number,1,256,-,X
-PER,MIT:N1,1,no,no,e07,Communication Number Qualifier,2,2,-,X
-PER,MIT:N1,1,no,no,e08,Communication Number,1,256,-,X
-PER,MIT:N1,1,no,no,e09,Contact Inquiry Reference,1,20,-,O
-N1,,,,,groupend,,,,,
-MSG,MIT,99999,no,yes,landmark,Message Text,3,3,-,M
-MSG,MIT,1,no,no,e01,Free-form Message Text,1,264,-,M
-MSG,MIT,1,no,no,e02,Printer Carriage Control Code,2,2,-,X
-MSG,MIT,1,no,no,e03,Number,1,9,-,O/Z
-MIT,,,,,groupend,,,,,
-SE,,1,no,yes,landmark,Transaction Set Trailer,2,2,-,M
-SE,,1,no,no,e01,Number of Included Segments,1,10,-,M
-SE,,1,no,no,e02,Transaction Set Control Number,4,9,-,M
+#segment,parent,loopcount,isgroup,islandmark,field,desc,min,max,align,status,type
+ST,,1,no,yes,landmark,Transaction Set Header,2,2,-,M,F
+ST,,1,no,no,e01,Transaction Set Identifier Code,3,3,-,M/Z,F
+ST,,1,no,no,e02,Transaction Set Control Number,4,9,-,M,F
+ST,,1,no,no,e03,Implementation Convention Reference,1,35,-,O/Z,F
+BMG,,1,no,yes,landmark,Beginning Segment For Text Message,3,3,-,M,F
+BMG,,1,no,no,e01,Transaction Set Purpose Code,2,2,-,M,F
+BMG,,1,no,no,e02,Description,1,80,-,O,F
+BMG,,1,no,no,e03,Transaction Type Code,2,2,-,O,F
+DTM,,10,no,yes,landmark,Date/Time Reference,3,3,-,O,F
+DTM,,1,no,no,e01,Date/Time Qualifier,3,3,-,M,F
+DTM,,1,no,no,e02,Date,8,8,-,X,F
+DTM,,1,no,no,e03,Time,4,8,-,X,F
+DTM,,1,no,no,e04,Time Code,2,2,-,O,F
+DTM,,1,no,no,e05,Date Time Period Format Qualifier,2,3,-,X,F
+DTM,,1,no,no,e06,Date Time Period,1,35,-,X,F
+N1,,200,yes,yes,landmark,Party Identification,2,2,-,O,F
+N1,,1,no,no,e01,Entity Identifier Code,2,3,-,M,F
+N1,,1,no,no,e02,Name,1,60,-,X,F
+N1,,1,no,no,e03,Identification Code Qualifier,1,2,-,X,F
+N1,,1,no,no,e04,Identification Code,2,80,-,X,F
+N1,,1,no,no,e05,Entity Relationship Code,2,2,-,O,F
+N1,,1,no,no,e06,Entity Identifier Code,2,3,-,O,F
+N2,N1,2,no,yes,landmark,Additional Name Information,2,2,-,O,F
+N2,N1,1,no,no,e01,Name,1,60,-,M,F
+N2,N1,1,no,no,e02,Name,1,60,-,O,F
+N3,N1,2,no,yes,landmark,Party Location,2,2,-,O,F
+N3,N1,1,no,no,e01,Address Information,1,55,-,M,F
+N3,N1,1,no,no,e02,Address Information,1,55,-,O,F
+N4,N1,1,no,yes,landmark,Geographic Location,2,2,-,O,F
+N4,N1,1,no,no,e01,City Name,2,30,-,O,F
+N4,N1,1,no,no,e02,State or Province Code,2,2,-,X,F
+N4,N1,1,no,no,e03,Postal Code,3,15,-,O,F
+N4,N1,1,no,no,e04,Country Code,2,3,-,X,F
+N4,N1,1,no,no,e05,Location Qualifier,1,2,-,X,F
+N4,N1,1,no,no,e06,Location Identifier,1,30,-,O,F
+N4,N1,1,no,no,e07,Country Subdivision Code,1,3,-,X,F
+REF,N1,12,no,yes,landmark,Reference Information,3,3,-,O,F
+REF,N1,1,no,no,e01,Reference Identification Qualifier,2,3,-,M,F
+REF,N1,1,no,no,e02,Reference Identification,1,50,-,X,F
+REF,N1,1,no,no,e03,Description,1,80,-,X,F
+PER,N1,3,no,yes,landmark,Administrative Communications Contact,3,3,-,O,F
+PER,N1,1,no,no,e01,Contact Function Code,2,2,-,M,F
+PER,N1,1,no,no,e02,Name,1,60,-,O,F
+PER,N1,1,no,no,e03,Communication Number Qualifier,2,2,-,X,F
+PER,N1,1,no,no,e04,Communication Number,1,256,-,X,F
+PER,N1,1,no,no,e05,Communication Number Qualifier,2,2,-,X,F
+PER,N1,1,no,no,e06,Communication Number,1,256,-,X,F
+PER,N1,1,no,no,e07,Communication Number Qualifier,2,2,-,X,F
+PER,N1,1,no,no,e08,Communication Number,1,256,-,X,F
+PER,N1,1,no,no,e09,Contact Inquiry Reference,1,20,-,O,F
+N1,,,,,groupend,,,,,,F
+MIT,,99999,yes,yes,landmark,Message Identification,3,3,-,M,F
+MIT,,1,no,no,e01,Reference Identification,1,50,-,M/Z,F
+MIT,,1,no,no,e02,Description,1,80,-,O/Z,F
+MIT,,1,no,no,e03,Page Width,1,3,-,O,F
+MIT,,1,no,no,e04,Page Length Lines,1,3,-,O,F
+N1,MIT,200,yes,yes,landmark,Party Identification,2,2,-,O,F
+N1,MIT,1,no,no,e01,Entity Identifier Code,2,3,-,M,F
+N1,MIT,1,no,no,e02,Name,1,60,-,X,F
+N1,MIT,1,no,no,e03,Identification Code Qualifier,1,2,-,X,F
+N1,MIT,1,no,no,e04,Identification Code,2,80,-,X,F
+N1,MIT,1,no,no,e05,Entity Relationship Code,2,2,-,O,F
+N1,MIT,1,no,no,e06,Entity Identifier Code,2,3,-,O,F
+N2,MIT:N1,2,no,yes,landmark,Additional Name Information,2,2,-,O,F
+N2,MIT:N1,1,no,no,e01,Name,1,60,-,M,F
+N2,MIT:N1,1,no,no,e02,Name,1,60,-,O,F
+N3,MIT:N1,2,no,yes,landmark,Party Location,2,2,-,O,F
+N3,MIT:N1,1,no,no,e01,Address Information,1,55,-,M,F
+N3,MIT:N1,1,no,no,e02,Address Information,1,55,-,O,F
+N4,MIT:N1,1,no,yes,landmark,Geographic Location,2,2,-,O,F
+N4,MIT:N1,1,no,no,e01,City Name,2,30,-,O,F
+N4,MIT:N1,1,no,no,e02,State or Province Code,2,2,-,X,F
+N4,MIT:N1,1,no,no,e03,Postal Code,3,15,-,O,F
+N4,MIT:N1,1,no,no,e04,Country Code,2,3,-,X,F
+N4,MIT:N1,1,no,no,e05,Location Qualifier,1,2,-,X,F
+N4,MIT:N1,1,no,no,e06,Location Identifier,1,30,-,O,F
+N4,MIT:N1,1,no,no,e07,Country Subdivision Code,1,3,-,X,F
+REF,MIT:N1,12,no,yes,landmark,Reference Information,3,3,-,O,F
+REF,MIT:N1,1,no,no,e01,Reference Identification Qualifier,2,3,-,M,F
+REF,MIT:N1,1,no,no,e02,Reference Identification,1,50,-,X,F
+REF,MIT:N1,1,no,no,e03,Description,1,80,-,X,F
+PER,MIT:N1,3,no,yes,landmark,Administrative Communications Contact,3,3,-,O,F
+PER,MIT:N1,1,no,no,e01,Contact Function Code,2,2,-,M,F
+PER,MIT:N1,1,no,no,e02,Name,1,60,-,O,F
+PER,MIT:N1,1,no,no,e03,Communication Number Qualifier,2,2,-,X,F
+PER,MIT:N1,1,no,no,e04,Communication Number,1,256,-,X,F
+PER,MIT:N1,1,no,no,e05,Communication Number Qualifier,2,2,-,X,F
+PER,MIT:N1,1,no,no,e06,Communication Number,1,256,-,X,F
+PER,MIT:N1,1,no,no,e07,Communication Number Qualifier,2,2,-,X,F
+PER,MIT:N1,1,no,no,e08,Communication Number,1,256,-,X,F
+PER,MIT:N1,1,no,no,e09,Contact Inquiry Reference,1,20,-,O,F
+N1,,,,,groupend,,,,,,F
+MSG,MIT,99999,no,yes,landmark,Message Text,3,3,-,M,F
+MSG,MIT,1,no,no,e01,Free-form Message Text,1,264,-,M,F
+MSG,MIT,1,no,no,e02,Printer Carriage Control Code,2,2,-,X,F
+MSG,MIT,1,no,no,e03,Number,1,9,-,O/Z,F
+MIT,,,,,groupend,,,,,,F
+SE,,1,no,yes,landmark,Transaction Set Trailer,2,2,-,M,F
+SE,,1,no,no,e01,Number of Included Segments,1,10,-,M,F
+SE,,1,no,no,e02,Transaction Set Control Number,4,9,-,M,F

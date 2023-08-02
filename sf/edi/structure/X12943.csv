@@ -1,151 +1,151 @@
 #943 - Warehouse Stock Transfer Shipment Advice
-#segment,parent,loopcount,isgroup,islandmark,field,desc,min,max,align,status
-ST,,1,no,yes,landmark,Transaction Set Header,2,2,-,M
-ST,,1,no,no,e01,Transaction Set Identifier Code,3,3,-,M/Z
-ST,,1,no,no,e02,Transaction Set Control Number,4,9,-,M
-ST,,1,no,no,e03,Implementation Convention Reference,1,35,-,O/Z
-W06,,1,no,yes,landmark,Warehouse Shipment Identification,3,3,-,M
-W06,,1,no,no,e01,Reporting Code,1,1,-,M
-W06,,1,no,no,e02,Depositor Order Number,1,22,-,O
-W06,,1,no,no,e03,Date,8,8,-,O/Z
-W06,,1,no,no,e04,Shipment Identification Number,1,30,-,O
-W06,,1,no,no,e05,Agent Shipment ID Number,1,12,-,O
-W06,,1,no,no,e06,Purchase Order Number,1,22,-,O
-W06,,1,no,no,e07,Master Reference (Link) Number,1,22,-,X
-W06,,1,no,no,e08,Link Sequence Number,6,6,-,X
-W06,,1,no,no,e09,Special Handling Code,2,3,-,O
-W06,,1,no,no,e10,Shipping Date Change Reason Code,2,2,-,O
-W06,,1,no,no,e11,Transaction Type Code,2,2,-,O
-W06,,1,no,no,e12,Action Code,1,2,-,O
-N1,,10,yes,yes,landmark,Party Identification,2,2,-,M
-N1,,1,no,no,e01,Entity Identifier Code,2,3,-,M
-N1,,1,no,no,e02,Name,1,60,-,X
-N1,,1,no,no,e03,Identification Code Qualifier,1,2,-,X
-N1,,1,no,no,e04,Identification Code,2,80,-,X
-N1,,1,no,no,e05,Entity Relationship Code,2,2,-,O
-N1,,1,no,no,e06,Entity Identifier Code,2,3,-,O
-N2,N1,1,no,yes,landmark,Additional Name Information,2,2,-,O
-N2,N1,1,no,no,e01,Name,1,60,-,M
-N2,N1,1,no,no,e02,Name,1,60,-,O
-N3,N1,2,no,yes,landmark,Party Location,2,2,-,O
-N3,N1,1,no,no,e01,Address Information,1,55,-,M
-N3,N1,1,no,no,e02,Address Information,1,55,-,O
-N4,N1,1,no,yes,landmark,Geographic Location,2,2,-,O
-N4,N1,1,no,no,e01,City Name,2,30,-,O
-N4,N1,1,no,no,e02,State or Province Code,2,2,-,X
-N4,N1,1,no,no,e03,Postal Code,3,15,-,O
-N4,N1,1,no,no,e04,Country Code,2,3,-,X
-N4,N1,1,no,no,e05,Location Qualifier,1,2,-,X
-N4,N1,1,no,no,e06,Location Identifier,1,30,-,O
-N4,N1,1,no,no,e07,Country Subdivision Code,1,3,-,X
-PER,N1,5,no,yes,landmark,Administrative Communications Contact,3,3,-,O
-PER,N1,1,no,no,e01,Contact Function Code,2,2,-,M
-PER,N1,1,no,no,e02,Name,1,60,-,O
-PER,N1,1,no,no,e03,Communication Number Qualifier,2,2,-,X
-PER,N1,1,no,no,e04,Communication Number,1,256,-,X
-PER,N1,1,no,no,e05,Communication Number Qualifier,2,2,-,X
-PER,N1,1,no,no,e06,Communication Number,1,256,-,X
-PER,N1,1,no,no,e07,Communication Number Qualifier,2,2,-,X
-PER,N1,1,no,no,e08,Communication Number,1,256,-,X
-PER,N1,1,no,no,e09,Contact Inquiry Reference,1,20,-,O
-N1,,,,,groupend,,,,,
-N9,,10,no,yes,landmark,Extended Reference Information,2,2,-,O
-N9,,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
-N9,,1,no,no,e02,Reference Identification,1,50,-,X
-N9,,1,no,no,e03,Free-form Description,1,45,-,X
-N9,,1,no,no,e04,Date,8,8,-,O
-N9,,1,no,no,e05,Time,4,8,-,X
-N9,,1,no,no,e06,Time Code,2,2,-,O/Z
-G61,,3,no,yes,landmark,Contact,3,3,-,O
-G61,,1,no,no,e01,Contact Function Code,2,2,-,M
-G61,,1,no,no,e02,Name,1,60,-,M
-G61,,1,no,no,e03,Communication Number Qualifier,2,2,-,X
-G61,,1,no,no,e04,Communication Number,1,256,-,X
-G61,,1,no,no,e05,Contact Inquiry Reference,1,20,-,O
-G62,,5,no,yes,landmark,Date/Time,3,3,-,O
-G62,,1,no,no,e01,Date Qualifier,2,2,-,X
-G62,,1,no,no,e02,Date,8,8,-,X
-G62,,1,no,no,e03,Time Qualifier,1,2,-,X
-G62,,1,no,no,e04,Time,4,8,-,X
-G62,,1,no,no,e05,Time Code,2,2,-,O
-NTE,,20,no,yes,landmark,Note/Special Instruction,3,3,-,O
-NTE,,1,no,no,e01,Note Reference Code,3,3,-,O
-NTE,,1,no,no,e02,Description,1,80,-,M
-W27,,1,no,yes,landmark,Carrier Details (Warehouse),3,3,-,M
-W27,,1,no,no,e01,Transportation Method/Type Code,1,2,-,M
-W27,,1,no,no,e02,Standard Carrier Alpha Code,2,4,-,X/Z
-W27,,1,no,no,e03,Routing,1,35,-,X
-W27,,1,no,no,e04,Shipment Method of Payment,2,2,-,O
-W27,,1,no,no,e05,Equipment Description Code,2,2,-,O
-W27,,1,no,no,e06,Equipment Initial,1,4,-,O/Z
-W27,,1,no,no,e07,Equipment Number,1,15,-,O
-W27,,1,no,no,e08,Shipment/Order Status Code,2,2,-,O
-W27,,1,no,no,e09,Special Handling Code,2,3,-,O
-W27,,1,no,no,e10,Carrier/Route Change Reason Code,2,2,-,O
-W28,,1,no,yes,landmark,Consolidation Information,3,3,-,O
-W28,,1,no,no,e01,Consolidation Code,1,1,-,M
-W28,,1,no,no,e02,Weight,1,10,-,X
-W28,,1,no,no,e03,Weight Qualifier,1,2,-,X
-W28,,1,no,no,e04,Weight Unit Code,1,1,-,X
-W28,,1,no,no,e05,Total Stop-offs,1,2,-,O
-W28,,1,no,no,e06,Location Identifier,1,30,-,X
-W28,,1,no,no,e07,Location Qualifier,1,2,-,X
-W28,,1,no,no,e08,Bill of Lading/Waybill Number,1,25,-,O/Z
-W10,,1,no,yes,landmark,Warehouse Additional Carrier Information,3,3,-,O
-W10,,1,no,no,e01,Unit Load Option Code,2,2,-,O
-W10,,1,no,no,e02,Quantity of Pallets Shipped,1,3,-,O
-W10,,1,no,no,e03,Pallet Exchange Code,1,1,-,O
-W10,,1,no,no,e04,Seal Number,2,15,-,O
-W10,,1,no,no,e05,Seal Number,2,15,-,O
-W10,,1,no,no,e06,Temperature,1,4,-,X/Z
-W10,,1,no,no,e07,Unit or Basis for Measurement Code,2,2,-,X
-W10,,1,no,no,e08,Temperature,1,4,-,X/Z
-W10,,1,no,no,e09,Unit or Basis for Measurement Code,2,2,-,X
-W04,,9999,yes,yes,landmark,Item Detail Total,3,3,-,M
-W04,,1,no,no,e01,Number of Units Shipped,1,10,-,M
-W04,,1,no,no,e02,Unit or Basis for Measurement Code,2,2,-,M
-W04,,1,no,no,e03,U.P.C. Case Code,12,12,-,X
-W04,,1,no,no,e04,Product/Service ID Qualifier,2,2,-,X
-W04,,1,no,no,e05,Product/Service ID,1,48,-,X
-W04,,1,no,no,e06,Product/Service ID Qualifier,2,2,-,X
-W04,,1,no,no,e07,Product/Service ID,1,48,-,X
-W04,,1,no,no,e08,Freight Class Code,2,5,-,O
-W04,,1,no,no,e09,Rate Class Code,1,3,-,O
-W04,,1,no,no,e10,Commodity Code Qualifier,1,1,-,X
-W04,,1,no,no,e11,Commodity Code,1,30,-,X
-W04,,1,no,no,e12,Pallet Block and Tiers,6,6,-,O
-W04,,1,no,no,e13,Inbound Condition Hold Code,2,2,-,O
-W04,,1,no,no,e14,Product/Service ID Qualifier,2,2,-,X
-W04,,1,no,no,e15,Product/Service ID,1,48,-,X
-G69,W04,5,no,yes,landmark,Line Item Detail - Description,3,3,-,O
-G69,W04,1,no,no,e01,Free-form Description,1,45,-,M
-N9,W04,200,no,yes,landmark,Extended Reference Information,2,2,-,O
-N9,W04,1,no,no,e01,Reference Identification Qualifier,2,3,-,M
-N9,W04,1,no,no,e02,Reference Identification,1,50,-,X
-N9,W04,1,no,no,e03,Free-form Description,1,45,-,X
-N9,W04,1,no,no,e04,Date,8,8,-,O
-N9,W04,1,no,no,e05,Time,4,8,-,X
-N9,W04,1,no,no,e06,Time Code,2,2,-,O/Z
-W20,W04,2,no,yes,landmark,Line Item Detail - Packing,3,3,-,O
-W20,W04,1,no,no,e01,Pack,1,6,-,O
-W20,W04,1,no,no,e02,Size,1,8,-,X
-W20,W04,1,no,no,e03,Unit or Basis for Measurement Code,2,2,-,X
-W20,W04,1,no,no,e04,Weight,1,10,-,X
-W20,W04,1,no,no,e05,Weight Qualifier,1,2,-,X
-W20,W04,1,no,no,e06,Weight Unit Code,1,1,-,X
-W20,W04,1,no,no,e07,Unit Weight,1,8,-,O
-W20,W04,1,no,no,e08,Volume,1,8,-,X
-W20,W04,1,no,no,e09,Unit or Basis for Measurement Code,2,2,-,X
-W20,W04,1,no,no,e10,Color,1,10,-,O
-W04,,,,,groupend,,,,,
-W03,,1,no,yes,landmark,Total Shipment Information (Warehouse),3,3,-,M
-W03,,1,no,no,e01,Number of Units Shipped,1,10,-,M
-W03,,1,no,no,e02,Weight,1,10,-,X
-W03,,1,no,no,e03,Unit or Basis for Measurement Code,2,2,-,X
-W03,,1,no,no,e04,Volume,1,8,-,X
-W03,,1,no,no,e05,Unit or Basis for Measurement Code,2,2,-,X
-W03,,1,no,no,e06,Lading Quantity,1,7,-,X
-W03,,1,no,no,e07,Unit or Basis for Measurement Code,2,2,-,X
-SE,,1,no,yes,landmark,Transaction Set Trailer,2,2,-,M
-SE,,1,no,no,e01,Number of Included Segments,1,10,-,M
-SE,,1,no,no,e02,Transaction Set Control Number,4,9,-,M
+#segment,parent,loopcount,isgroup,islandmark,field,desc,min,max,align,status,type
+ST,,1,no,yes,landmark,Transaction Set Header,2,2,-,M,F
+ST,,1,no,no,e01,Transaction Set Identifier Code,3,3,-,M/Z,F
+ST,,1,no,no,e02,Transaction Set Control Number,4,9,-,M,F
+ST,,1,no,no,e03,Implementation Convention Reference,1,35,-,O/Z,F
+W06,,1,no,yes,landmark,Warehouse Shipment Identification,3,3,-,M,F
+W06,,1,no,no,e01,Reporting Code,1,1,-,M,F
+W06,,1,no,no,e02,Depositor Order Number,1,22,-,O,F
+W06,,1,no,no,e03,Date,8,8,-,O/Z,F
+W06,,1,no,no,e04,Shipment Identification Number,1,30,-,O,F
+W06,,1,no,no,e05,Agent Shipment ID Number,1,12,-,O,F
+W06,,1,no,no,e06,Purchase Order Number,1,22,-,O,F
+W06,,1,no,no,e07,Master Reference (Link) Number,1,22,-,X,F
+W06,,1,no,no,e08,Link Sequence Number,6,6,-,X,F
+W06,,1,no,no,e09,Special Handling Code,2,3,-,O,F
+W06,,1,no,no,e10,Shipping Date Change Reason Code,2,2,-,O,F
+W06,,1,no,no,e11,Transaction Type Code,2,2,-,O,F
+W06,,1,no,no,e12,Action Code,1,2,-,O,F
+N1,,10,yes,yes,landmark,Party Identification,2,2,-,M,F
+N1,,1,no,no,e01,Entity Identifier Code,2,3,-,M,F
+N1,,1,no,no,e02,Name,1,60,-,X,F
+N1,,1,no,no,e03,Identification Code Qualifier,1,2,-,X,F
+N1,,1,no,no,e04,Identification Code,2,80,-,X,F
+N1,,1,no,no,e05,Entity Relationship Code,2,2,-,O,F
+N1,,1,no,no,e06,Entity Identifier Code,2,3,-,O,F
+N2,N1,1,no,yes,landmark,Additional Name Information,2,2,-,O,F
+N2,N1,1,no,no,e01,Name,1,60,-,M,F
+N2,N1,1,no,no,e02,Name,1,60,-,O,F
+N3,N1,2,no,yes,landmark,Party Location,2,2,-,O,F
+N3,N1,1,no,no,e01,Address Information,1,55,-,M,F
+N3,N1,1,no,no,e02,Address Information,1,55,-,O,F
+N4,N1,1,no,yes,landmark,Geographic Location,2,2,-,O,F
+N4,N1,1,no,no,e01,City Name,2,30,-,O,F
+N4,N1,1,no,no,e02,State or Province Code,2,2,-,X,F
+N4,N1,1,no,no,e03,Postal Code,3,15,-,O,F
+N4,N1,1,no,no,e04,Country Code,2,3,-,X,F
+N4,N1,1,no,no,e05,Location Qualifier,1,2,-,X,F
+N4,N1,1,no,no,e06,Location Identifier,1,30,-,O,F
+N4,N1,1,no,no,e07,Country Subdivision Code,1,3,-,X,F
+PER,N1,5,no,yes,landmark,Administrative Communications Contact,3,3,-,O,F
+PER,N1,1,no,no,e01,Contact Function Code,2,2,-,M,F
+PER,N1,1,no,no,e02,Name,1,60,-,O,F
+PER,N1,1,no,no,e03,Communication Number Qualifier,2,2,-,X,F
+PER,N1,1,no,no,e04,Communication Number,1,256,-,X,F
+PER,N1,1,no,no,e05,Communication Number Qualifier,2,2,-,X,F
+PER,N1,1,no,no,e06,Communication Number,1,256,-,X,F
+PER,N1,1,no,no,e07,Communication Number Qualifier,2,2,-,X,F
+PER,N1,1,no,no,e08,Communication Number,1,256,-,X,F
+PER,N1,1,no,no,e09,Contact Inquiry Reference,1,20,-,O,F
+N1,,,,,groupend,,,,,,F
+N9,,10,no,yes,landmark,Extended Reference Information,2,2,-,O,F
+N9,,1,no,no,e01,Reference Identification Qualifier,2,3,-,M,F
+N9,,1,no,no,e02,Reference Identification,1,50,-,X,F
+N9,,1,no,no,e03,Free-form Description,1,45,-,X,F
+N9,,1,no,no,e04,Date,8,8,-,O,F
+N9,,1,no,no,e05,Time,4,8,-,X,F
+N9,,1,no,no,e06,Time Code,2,2,-,O/Z,F
+G61,,3,no,yes,landmark,Contact,3,3,-,O,F
+G61,,1,no,no,e01,Contact Function Code,2,2,-,M,F
+G61,,1,no,no,e02,Name,1,60,-,M,F
+G61,,1,no,no,e03,Communication Number Qualifier,2,2,-,X,F
+G61,,1,no,no,e04,Communication Number,1,256,-,X,F
+G61,,1,no,no,e05,Contact Inquiry Reference,1,20,-,O,F
+G62,,5,no,yes,landmark,Date/Time,3,3,-,O,F
+G62,,1,no,no,e01,Date Qualifier,2,2,-,X,F
+G62,,1,no,no,e02,Date,8,8,-,X,F
+G62,,1,no,no,e03,Time Qualifier,1,2,-,X,F
+G62,,1,no,no,e04,Time,4,8,-,X,F
+G62,,1,no,no,e05,Time Code,2,2,-,O,F
+NTE,,20,no,yes,landmark,Note/Special Instruction,3,3,-,O,F
+NTE,,1,no,no,e01,Note Reference Code,3,3,-,O,F
+NTE,,1,no,no,e02,Description,1,80,-,M,F
+W27,,1,no,yes,landmark,Carrier Details (Warehouse),3,3,-,M,F
+W27,,1,no,no,e01,Transportation Method/Type Code,1,2,-,M,F
+W27,,1,no,no,e02,Standard Carrier Alpha Code,2,4,-,X/Z,F
+W27,,1,no,no,e03,Routing,1,35,-,X,F
+W27,,1,no,no,e04,Shipment Method of Payment,2,2,-,O,F
+W27,,1,no,no,e05,Equipment Description Code,2,2,-,O,F
+W27,,1,no,no,e06,Equipment Initial,1,4,-,O/Z,F
+W27,,1,no,no,e07,Equipment Number,1,15,-,O,F
+W27,,1,no,no,e08,Shipment/Order Status Code,2,2,-,O,F
+W27,,1,no,no,e09,Special Handling Code,2,3,-,O,F
+W27,,1,no,no,e10,Carrier/Route Change Reason Code,2,2,-,O,F
+W28,,1,no,yes,landmark,Consolidation Information,3,3,-,O,F
+W28,,1,no,no,e01,Consolidation Code,1,1,-,M,F
+W28,,1,no,no,e02,Weight,1,10,-,X,F
+W28,,1,no,no,e03,Weight Qualifier,1,2,-,X,F
+W28,,1,no,no,e04,Weight Unit Code,1,1,-,X,F
+W28,,1,no,no,e05,Total Stop-offs,1,2,-,O,F
+W28,,1,no,no,e06,Location Identifier,1,30,-,X,F
+W28,,1,no,no,e07,Location Qualifier,1,2,-,X,F
+W28,,1,no,no,e08,Bill of Lading/Waybill Number,1,25,-,O/Z,F
+W10,,1,no,yes,landmark,Warehouse Additional Carrier Information,3,3,-,O,F
+W10,,1,no,no,e01,Unit Load Option Code,2,2,-,O,F
+W10,,1,no,no,e02,Quantity of Pallets Shipped,1,3,-,O,F
+W10,,1,no,no,e03,Pallet Exchange Code,1,1,-,O,F
+W10,,1,no,no,e04,Seal Number,2,15,-,O,F
+W10,,1,no,no,e05,Seal Number,2,15,-,O,F
+W10,,1,no,no,e06,Temperature,1,4,-,X/Z,F
+W10,,1,no,no,e07,Unit or Basis for Measurement Code,2,2,-,X,F
+W10,,1,no,no,e08,Temperature,1,4,-,X/Z,F
+W10,,1,no,no,e09,Unit or Basis for Measurement Code,2,2,-,X,F
+W04,,9999,yes,yes,landmark,Item Detail Total,3,3,-,M,F
+W04,,1,no,no,e01,Number of Units Shipped,1,10,-,M,F
+W04,,1,no,no,e02,Unit or Basis for Measurement Code,2,2,-,M,F
+W04,,1,no,no,e03,U.P.C. Case Code,12,12,-,X,F
+W04,,1,no,no,e04,Product/Service ID Qualifier,2,2,-,X,F
+W04,,1,no,no,e05,Product/Service ID,1,48,-,X,F
+W04,,1,no,no,e06,Product/Service ID Qualifier,2,2,-,X,F
+W04,,1,no,no,e07,Product/Service ID,1,48,-,X,F
+W04,,1,no,no,e08,Freight Class Code,2,5,-,O,F
+W04,,1,no,no,e09,Rate Class Code,1,3,-,O,F
+W04,,1,no,no,e10,Commodity Code Qualifier,1,1,-,X,F
+W04,,1,no,no,e11,Commodity Code,1,30,-,X,F
+W04,,1,no,no,e12,Pallet Block and Tiers,6,6,-,O,F
+W04,,1,no,no,e13,Inbound Condition Hold Code,2,2,-,O,F
+W04,,1,no,no,e14,Product/Service ID Qualifier,2,2,-,X,F
+W04,,1,no,no,e15,Product/Service ID,1,48,-,X,F
+G69,W04,5,no,yes,landmark,Line Item Detail - Description,3,3,-,O,F
+G69,W04,1,no,no,e01,Free-form Description,1,45,-,M,F
+N9,W04,200,no,yes,landmark,Extended Reference Information,2,2,-,O,F
+N9,W04,1,no,no,e01,Reference Identification Qualifier,2,3,-,M,F
+N9,W04,1,no,no,e02,Reference Identification,1,50,-,X,F
+N9,W04,1,no,no,e03,Free-form Description,1,45,-,X,F
+N9,W04,1,no,no,e04,Date,8,8,-,O,F
+N9,W04,1,no,no,e05,Time,4,8,-,X,F
+N9,W04,1,no,no,e06,Time Code,2,2,-,O/Z,F
+W20,W04,2,no,yes,landmark,Line Item Detail - Packing,3,3,-,O,F
+W20,W04,1,no,no,e01,Pack,1,6,-,O,F
+W20,W04,1,no,no,e02,Size,1,8,-,X,F
+W20,W04,1,no,no,e03,Unit or Basis for Measurement Code,2,2,-,X,F
+W20,W04,1,no,no,e04,Weight,1,10,-,X,F
+W20,W04,1,no,no,e05,Weight Qualifier,1,2,-,X,F
+W20,W04,1,no,no,e06,Weight Unit Code,1,1,-,X,F
+W20,W04,1,no,no,e07,Unit Weight,1,8,-,O,F
+W20,W04,1,no,no,e08,Volume,1,8,-,X,F
+W20,W04,1,no,no,e09,Unit or Basis for Measurement Code,2,2,-,X,F
+W20,W04,1,no,no,e10,Color,1,10,-,O,F
+W04,,,,,groupend,,,,,,F
+W03,,1,no,yes,landmark,Total Shipment Information (Warehouse),3,3,-,M,F
+W03,,1,no,no,e01,Number of Units Shipped,1,10,-,M,F
+W03,,1,no,no,e02,Weight,1,10,-,X,F
+W03,,1,no,no,e03,Unit or Basis for Measurement Code,2,2,-,X,F
+W03,,1,no,no,e04,Volume,1,8,-,X,F
+W03,,1,no,no,e05,Unit or Basis for Measurement Code,2,2,-,X,F
+W03,,1,no,no,e06,Lading Quantity,1,7,-,X,F
+W03,,1,no,no,e07,Unit or Basis for Measurement Code,2,2,-,X,F
+SE,,1,no,yes,landmark,Transaction Set Trailer,2,2,-,M,F
+SE,,1,no,no,e01,Number of Included Segments,1,10,-,M,F
+SE,,1,no,no,e02,Transaction Set Control Number,4,9,-,M,F

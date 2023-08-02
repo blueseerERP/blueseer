@@ -217,7 +217,7 @@ PWK,CLM,1,no,no,e09,Request Category Code,1,2,-,O,F
 CN1,CLM,1,no,yes,landmark,Contract Information,3,3,-,O,F
 CN1,CLM,1,no,no,e01,Contract Type Code,2,2,-,M,F
 CN1,CLM,1,no,no,e02,Monetary Amount,1,18,-,O/Z,F
-CN1,CLM,1,no,no,e03,Percent, Decimal Format,1,6,-,O/Z,F
+CN1,CLM,1,no,no,e03,Percent Decimal Format,1,6,-,O/Z,F
 CN1,CLM,1,no,no,e04,Reference Identification,1,50,-,O/Z,F
 CN1,CLM,1,no,no,e05,Terms Discount Percent,1,6,-,O,F
 CN1,CLM,1,no,no,e06,Version Identifier,1,30,-,O/Z,F
@@ -614,7 +614,7 @@ SV2,LX,1,no,no,e10,Level of Care Code,1,1,-,O,F
 SV3,LX,1,no,yes,landmark,Dental Service,3,3,-,O,F
 SV3,LX,1,no,no,e02,Monetary Amount,1,18,-,O/Z,F
 SV3,LX,1,no,no,e03,Facility Code Value,1,2,-,O/Z,F
-SV3,LX,1,no,no,e05,Prosthesis, Crown or Inlay Code,1,1,-,O,F
+SV3,LX,1,no,no,e05,Prosthesis Crown or Inlay Code,1,1,-,O,F
 SV3,LX,1,no,no,e06,Quantity,1,15,-,O/Z,F
 SV3,LX,1,no,no,e07,Description,1,80,-,O/Z,F
 SV3,LX,1,no,no,e08,Copay Status Code,1,1,-,O,F
@@ -781,7 +781,7 @@ MEA,LX,1,no,no,e12,Industry Code,1,30,-,X/Z,F
 CN1,LX,1,no,yes,landmark,Contract Information,3,3,-,O,F
 CN1,LX,1,no,no,e01,Contract Type Code,2,2,-,M,F
 CN1,LX,1,no,no,e02,Monetary Amount,1,18,-,O/Z,F
-CN1,LX,1,no,no,e03,Percent, Decimal Format,1,6,-,O/Z,F
+CN1,LX,1,no,no,e03,Percent Decimal Format,1,6,-,O/Z,F
 CN1,LX,1,no,no,e04,Reference Identification,1,50,-,O/Z,F
 CN1,LX,1,no,no,e05,Terms Discount Percent,1,6,-,O,F
 CN1,LX,1,no,no,e06,Version Identifier,1,30,-,O/Z,F
@@ -971,7 +971,7 @@ FRM,LQ,1,no,no,e01,Assigned Identification,1,20,-,M/Z,F
 FRM,LQ,1,no,no,e02,Yes/No Condition or Response Code,1,1,-,X/Z,F
 FRM,LQ,1,no,no,e03,Reference Identification,1,50,-,X,F
 FRM,LQ,1,no,no,e04,Date,8,8,-,X,F
-FRM,LQ,1,no,no,e05,Percent, Decimal Format,1,6,-,X,F
+FRM,LQ,1,no,no,e05,Percent Decimal Format,1,6,-,X,F
 SE,,1,no,yes,landmark,Transaction Set Trailer,2,2,-,M,F
 SE,,1,no,no,e01,Number of Included Segments,1,10,-,M,F
 SE,,1,no,no,e02,Transaction Set Control Number,4,9,-,M,F

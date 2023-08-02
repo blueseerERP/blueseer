@@ -1,22 +1,22 @@
 #990 - Response to a Load Tender
-#segment,parent,loopcount,isgroup,islandmark,field,desc,min,max,align,status
-ST,,1,no,yes,landmark,Transaction Set Header,2,2,-,M
-ST,,1,no,no,e01,Transaction Set Identifier Code,3,3,-,M/Z
-ST,,1,no,no,e02,Transaction Set Control Number,4,9,-,M
-ST,,1,no,no,e03,Implementation Convention Reference,1,35,-,O/Z
-B1,,1,no,yes,landmark,Beginning Segment for Booking or Pickup/Delivery,2,2,-,M
-B1,,1,no,no,e01,Standard Carrier Alpha Code,2,4,-,M/Z
-B1,,1,no,no,e02,Shipment Identification Number,1,30,-,O
-B1,,1,no,no,e03,Date,8,8,-,O/Z
-B1,,1,no,no,e04,Reservation Action Code,1,1,-,O
-B1,,1,no,no,e05,Yes/No Condition or Response Code,1,1,-,O/Z
-B1,,1,no,no,e06,Shipment or Work Assignment Decline Reason Code,3,3,-,O/Z
-L11,,1,no,yes,landmark,Business Instructions and Reference Number,3,3,-,O
-L11,,1,no,no,e01,Reference Identification,1,50,-,X
-L11,,1,no,no,e02,Reference Identification Qualifier,2,3,-,X
-L11,,1,no,no,e03,Description,1,80,-,X
-L11,,1,no,no,e04,Date,8,8,-,O/Z
-L11,,1,no,no,e05,Yes/No Condition or Response Code,1,1,-,O/Z
-SE,,1,no,yes,landmark,Transaction Set Trailer,2,2,-,M
-SE,,1,no,no,e01,Number of Included Segments,1,10,-,M
-SE,,1,no,no,e02,Transaction Set Control Number,4,9,-,M
+#segment,parent,loopcount,isgroup,islandmark,field,desc,min,max,align,status,type
+ST,,1,no,yes,landmark,Transaction Set Header,2,2,-,M,F
+ST,,1,no,no,e01,Transaction Set Identifier Code,3,3,-,M/Z,F
+ST,,1,no,no,e02,Transaction Set Control Number,4,9,-,M,F
+ST,,1,no,no,e03,Implementation Convention Reference,1,35,-,O/Z,F
+B1,,1,no,yes,landmark,Beginning Segment for Booking or Pickup/Delivery,2,2,-,M,F
+B1,,1,no,no,e01,Standard Carrier Alpha Code,2,4,-,M/Z,F
+B1,,1,no,no,e02,Shipment Identification Number,1,30,-,O,F
+B1,,1,no,no,e03,Date,8,8,-,O/Z,F
+B1,,1,no,no,e04,Reservation Action Code,1,1,-,O,F
+B1,,1,no,no,e05,Yes/No Condition or Response Code,1,1,-,O/Z,F
+B1,,1,no,no,e06,Shipment or Work Assignment Decline Reason Code,3,3,-,O/Z,F
+L11,,1,no,yes,landmark,Business Instructions and Reference Number,3,3,-,O,F
+L11,,1,no,no,e01,Reference Identification,1,50,-,X,F
+L11,,1,no,no,e02,Reference Identification Qualifier,2,3,-,X,F
+L11,,1,no,no,e03,Description,1,80,-,X,F
+L11,,1,no,no,e04,Date,8,8,-,O/Z,F
+L11,,1,no,no,e05,Yes/No Condition or Response Code,1,1,-,O/Z,F
+SE,,1,no,yes,landmark,Transaction Set Trailer,2,2,-,M,F
+SE,,1,no,no,e01,Number of Included Segments,1,10,-,M,F
+SE,,1,no,no,e02,Transaction Set Control Number,4,9,-,M,F

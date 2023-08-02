@@ -1,5 +1,5 @@
 #<h1>404 - Rail Carrier Shipment Information</h1><br>,F
-#segment,parent,loopcount,isgroup,islandmark,field,desc,min,max,align,status,F
+#segment,parent,loopcount,isgroup,islandmark,field,desc,min,max,align,status,type
 ST,,1,no,yes,landmark,Transaction Set Header,2,2,-,M,F
 ST,,1,no,no,e01,Transaction Set Identifier Code,3,3,-,M/Z,F
 ST,,1,no,no,e02,Transaction Set Control Number,4,9,-,M,F

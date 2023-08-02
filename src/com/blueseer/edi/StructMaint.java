@@ -614,7 +614,7 @@ public class StructMaint extends javax.swing.JPanel  {
                             continue;
                         }
                         count = s.chars().filter(ch -> ch == ',').count();
-                        if (count != 10) {
+                        if (count != 11) {
                             isgood = false;
                             numoferrors++;
                         }
