@@ -80,15 +80,35 @@ edidoctype,315x12,X12,1
 edidoctype,304x12,X12,1
 edidoctype,210x12,X12,1
 edidoctype,270x12,X12,1
+edidoctype,270json,JSON,1
+edidoctype,270xml,XML,1
 edidoctype,271x12,X12,1
+edidoctype,271json,JSON,1
+edidoctype,271xml,XML,1
 edidoctype,274x12,X12,1
+edidoctype,274json,JSON,1
+edidoctype,274xml,XML,1
 edidoctype,275x12,X12,1
+edidoctype,275json,JSON,1
+edidoctype,275xml,XML,1
 edidoctype,276x12,X12,1
+edidoctype,276json,JSON,1
+edidoctype,276xml,XML,1
 edidoctype,277x12,X12,1
+edidoctype,277json,JSON,1
+edidoctype,277xml,XML,1
 edidoctype,278x12,X12,1
+edidoctype,278json,JSON,1
+edidoctype,278xml,XML,1
 edidoctype,834x12,X12,1
+edidoctype,834json,JSON,1
+edidoctype,834xml,XML,1
 edidoctype,835x12,X12,1
-edidoctype,837x12,X12,1
+edidoctype,835json,JSON,1
+edidoctype,835xml,XML,1
+edidoctype,837x12,X12 Health Claim,1
+edidoctype,837json,JSON CLAIM,1
+edidoctype,837xml,XML CLAIM,1
 trantype,ISS-SALES,,1
 trantype,ISS-SCRAP,,1
 trantype,WIP-ISFG,,1

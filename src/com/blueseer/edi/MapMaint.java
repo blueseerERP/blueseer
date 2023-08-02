@@ -84,6 +84,7 @@ import static com.blueseer.edi.ediData.addMapMstr;
 import static com.blueseer.edi.ediData.deleteMapMstr;
 import com.blueseer.edi.ediData.dfs_mstr;
 import static com.blueseer.edi.ediData.getDFSMstr;
+import static com.blueseer.edi.ediData.getDSFasArray;
 import static com.blueseer.edi.ediData.getDSFasString;
 import static com.blueseer.edi.ediData.getMapMstr;
 
@@ -3236,7 +3237,13 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         }
         
         // make call to grab a test file
-        File testfile = getfile("open test data file if to be included in map zip");
+        File testfile = null;
+         boolean proceed = bsmf.MainFrame.warn("would you like to include an input sample file?");
+        if (proceed) {
+            testfile = getfile("open test data file if to be included in map zip");
+        }
+        
+       
         
         
         // now try to zip all 4, testfile, ifs, ofs, and map
@@ -3246,6 +3253,15 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         // IFS file into Zip
         e = new ZipEntry(ddifs.getSelectedItem().toString());
         out.putNextEntry(e);
+        
+        // get data from tables instead of file
+        ArrayList<String[]> list = getDSFasArray(ddifs.getSelectedItem().toString());
+        StringBuilder sb = new StringBuilder();
+        for (String[] sarray : list) {
+            sb.append(String.join(",",Arrays.copyOfRange(sarray, 1, sarray.length))).append("\n");
+        }
+        data = sb.toString().getBytes();
+        /*
         dirpath = cleanDirString(EDData.getEDIStructureDir()) + ddifs.getSelectedItem().toString();
         path = FileSystems.getDefault().getPath(dirpath);
         file = path.toFile();
@@ -3257,6 +3273,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                     bslog(ex);
                 }   
         }
+        */
         out.write(data, 0, data.length);
         out.closeEntry();
         
@@ -3264,6 +3281,15 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         if (! ddofs.getSelectedItem().toString().equals(ddifs.getSelectedItem().toString())) {
         e = new ZipEntry(ddofs.getSelectedItem().toString());
         out.putNextEntry(e);
+        
+        ArrayList<String[]> listofs = getDSFasArray(ddofs.getSelectedItem().toString());
+        StringBuilder sbofs = new StringBuilder();
+        for (String[] sarray : listofs) {
+            sbofs.append(String.join(",",Arrays.copyOfRange(sarray, 1, sarray.length))).append("\n");
+        }
+        data = sbofs.toString().getBytes();
+        
+        /*
         dirpath = cleanDirString(EDData.getEDIStructureDir()) + ddofs.getSelectedItem().toString();
         path = FileSystems.getDefault().getPath(dirpath);
         file = path.toFile();
@@ -3275,6 +3301,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                     bslog(ex);
                 }   
         }
+        */
         out.write(data, 0, data.length);
         out.closeEntry();
         }
