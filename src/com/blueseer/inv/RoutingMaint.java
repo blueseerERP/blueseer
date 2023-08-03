@@ -43,6 +43,7 @@ import com.blueseer.inv.invData.wf_mstr;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
@@ -72,6 +73,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -336,48 +338,46 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public boolean validateInput(dbaction x) {
-        boolean b = true;
-                if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1026));
-                    ddsite.requestFocus();
-                    return b;
-                }
-               
-                if (ddop.getSelectedItem() == null || ddop.getSelectedItem().toString().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1077));
-                    ddop.requestFocus();
-                    return b;
-                }
-                
-                if (ddwc.getSelectedItem() == null || ddwc.getSelectedItem().toString().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1078));
-                    ddwc.requestFocus();
-                    return b;
-                }
-                
-                if (tbkey.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbkey.requestFocus();
-                    return b;
-                }
-                
-                if (tbopdesc.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbopdesc.requestFocus();
-                    return b;
-                }
-                
-                
-                
-                
-                
-               
-        return b;
+       
+        
+        Map<String,Integer> f = OVData.getTableInfo("wf_mstr");
+        int fc;
+
+        fc = checkLength(f,"wf_id");
+        if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbkey.requestFocus();
+            return false;
+        }  
+        
+        fc = checkLength(f,"wf_op");
+        if (ddop.getSelectedItem().toString().length() > fc || ddop.getSelectedItem().toString().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            ddop.requestFocus();
+            return false;
+        } 
+        
+        fc = checkLength(f,"wf_site");
+        if (ddsite.getSelectedItem().toString().length() > fc || ddsite.getSelectedItem().toString().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            ddsite.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"wf_cell");
+        if (ddwc.getSelectedItem().toString().length() > fc || ddwc.getSelectedItem().toString().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            ddwc.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"wf_desc");
+        if (tbopdesc.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbopdesc.requestFocus();
+            return false;
+        }        
+        return true;
     }
     
     public void initvars(String[] arg) {

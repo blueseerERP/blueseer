@@ -42,6 +42,7 @@ import static com.blueseer.inv.invData.updateWorkCenterMstr;
 import com.blueseer.inv.invData.wc_mstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import static com.blueseer.utl.BlueSeerUtils.currformat;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
@@ -68,6 +69,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -327,39 +329,40 @@ public class WorkCenterMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public boolean validateInput(dbaction x) {
-        boolean b = true;
-                if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    ddsite.requestFocus();
-                    return b;
-                }
+       
+        
+        Map<String,Integer> f = OVData.getTableInfo("wc_mstr");
+        int fc;
+
+        fc = checkLength(f,"wc_cell");
+        if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbkey.requestFocus();
+            return false;
+        }  
+        
+        fc = checkLength(f,"wc_site");
+        if (ddsite.getSelectedItem().toString().length() > fc || ddsite.getSelectedItem().toString().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            ddsite.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"wc_cc");
+        if (ddcc.getSelectedItem().toString().length() > fc || ddcc.getSelectedItem().toString().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            ddcc.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"wc_desc");
+        if (tbdesc.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbdesc.requestFocus();
+            return false;
+        }    
                
-                if (ddcc.getSelectedItem() == null || ddcc.getSelectedItem().toString().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    ddcc.requestFocus();
-                    return b;
-                }
-                
-                if (tbkey.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbkey.requestFocus();
-                    return b;
-                }
-                
-                if (tbdesc.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbdesc.requestFocus();
-                    return b;
-                }
-                
-                
-                
-               
-        return b;
+        return true;
     }
     
     public void initvars(String[] arg) {
