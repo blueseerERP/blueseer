@@ -3459,6 +3459,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
      }
         
     @EDI.AnnoDoc(desc = {"method reads value from source at segment and element (by name).",
+                        "NOTE: JSON compatible ",
                         "Example:  getInput(\"BEG\",\"fieldname\") returns: specific field of BEG segment"},
             params = {"String segment","String ElementName"}) 
     public static String getInput(String segment, String elementName) {
@@ -3693,8 +3694,9 @@ public abstract class EDIMap {  // took out the implements EDIMapi
      }
     
     
-    @EDI.AnnoDoc(desc = {"method reads value from source at segment and element (by fieldname) for a Group Segment.",
-                      "Note:  this is typically used in a looping construct in conjunction with getGroupCount()",  
+    @EDI.AnnoDoc(desc = {"method reads value from source at segment and element (by fieldname) for a Group/Loop Segment.",
+                      "NOTE: JSON compatible ",
+                      "Note:  this is typically used in a looping construct in conjunction with getGroupCount() or getLoopCount()",  
                       "Example:  getInput(i,\"E2EDP01\",\"belnr\") returns: fieldname 'belnr' of idoc segment ED2EDP01 in loop index 'i' "},
             params = {"Integer LoopIndex", "String segment", "String ElementName"})  
     public static String getInput(Integer gloop, String segment, String elementName) {
@@ -3947,6 +3949,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
      }
     
       @EDI.AnnoDoc(desc = {"method retrieves the loop count of a parent:tag segment...used in json and xml inbound",
+                     "NOTE: JSON compatible ",
                      "NOTE: tag/position format:  A:B:C+1,1,1+ ...x,x,x is 'positional loop count' of A or B or C ",
                      "NOTE: The keys are defined as unique identifier tags for each occurence of the repeating segment.",
                      "Example:  getLoopCount(\"GPARENT:PARENT:CHILD:\", pos) returns: last count of tag position subelement(tag+,,,+) "},
