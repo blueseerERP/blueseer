@@ -357,6 +357,12 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeerT {
             return false;
         } 
         
+        if (! BlueSeerUtils.isParsableToInt(ddop.getSelectedItem().toString()) ) {
+            bsmf.MainFrame.show(getMessageTag(1028));
+            ddop.requestFocus();
+            return false;            
+        }
+        
         fc = checkLength(f,"wf_site");
         if (ddsite.getSelectedItem().toString().length() > fc || ddsite.getSelectedItem().toString().isEmpty()) {
             bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
@@ -376,7 +382,10 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeerT {
             bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
             tbopdesc.requestFocus();
             return false;
-        }        
+        }  
+        
+        
+        
         return true;
     }
     

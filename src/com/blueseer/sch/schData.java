@@ -208,7 +208,8 @@ public class schData {
                     res.getString("pland_cell"),
                     res.getString("pland_date"),
                     res.getString("pland_ref"),
-                    res.getString("pland_qty")
+                    res.getString("pland_qty"),
+                    res.getString("pland_userid")
                };
                x.add(w);
            }

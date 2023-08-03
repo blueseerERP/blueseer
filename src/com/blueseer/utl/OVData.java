@@ -18623,7 +18623,7 @@ MainFrame.bslog(e);
                   _op = mytable.getValueAt(i, 2).toString();
                   planid = OVData.getNextNbr("pland");
                     st.executeUpdate("insert into pland_mstr "
-                        + " (pland_id, pland_parent, pland_item, pland_op, pland_qty, pland_cell, pland_ref, pland_date ) "
+                        + " (pland_id, pland_parent, pland_item, pland_op, pland_qty, pland_cell, pland_ref, pland_date, pland_userid ) "
                         + " values ( " + "'" + planid + "'" + ","  
                         + "'" + _parent + "'" + ","
                         + "'" + _part + "'" + ","
@@ -18631,7 +18631,8 @@ MainFrame.bslog(e);
                         + "'" + _qty + "'" + ","
                         + "'" + mytable.getValueAt(i, 11).toString() + "'" + ","
                         + "'" + mytable.getValueAt(i, 7).toString() + "'" + ","
-                        + "'" + mytable.getValueAt(i, 4).toString() + "'" 
+                        + "'" + mytable.getValueAt(i, 4).toString() + "'" + ","
+                        + "'" + mytable.getValueAt(i, 9).toString() + "'"         
                         + ")"
                         + ";");
 

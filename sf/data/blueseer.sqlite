@@ -1234,7 +1234,7 @@ CREATE TABLE "itemr_cost" (
   "itr_site" varchar(10) COLLATE NOCASE DEFAULT '',
   "itr_set" varchar(20) COLLATE NOCASE DEFAULT '',
   "itr_routing" varchar(20) COLLATE NOCASE DEFAULT '',
-  "itr_op" int(4) COLLATE NOCASE DEFAULT '',
+  "itr_op" varchar(4) COLLATE NOCASE DEFAULT '',
   "itr_total" decimal(8,5) COLLATE NOCASE DEFAULT '',
   "itr_mtl_top" decimal(8,5) COLLATE NOCASE DEFAULT '',
   "itr_lbr_top" decimal(8,5) COLLATE NOCASE DEFAULT '',
@@ -1373,7 +1373,7 @@ CREATE TABLE "pbm_mstr" (
   "ps_type" varchar(1) COLLATE NOCASE DEFAULT '',
   "ps_qty_per" decimal(7,5) COLLATE NOCASE DEFAULT '',
   "ps_desc" varchar(30) COLLATE NOCASE DEFAULT '',
-  "ps_op" varchar(3) COLLATE NOCASE DEFAULT '',
+  "ps_op" varchar(4) COLLATE NOCASE DEFAULT '',
   "ps_sequence" int(4) COLLATE NOCASE DEFAULT '',
   "ps_userid" varchar(8) COLLATE NOCASE DEFAULT '',
   "ps_misc1" varchar(30) COLLATE NOCASE DEFAULT '',
@@ -1459,11 +1459,12 @@ CREATE TABLE "pland_mstr" (
   "pland_id" int(8) NOT NULL DEFAULT '0',
   "pland_parent" int(8) NOT NULL DEFAULT '0',
   "pland_item" varchar(36) NOT NULL COLLATE NOCASE DEFAULT '',
-  "pland_op" varchar(3) NOT NULL COLLATE NOCASE DEFAULT '',
+  "pland_op" varchar(4) NOT NULL COLLATE NOCASE DEFAULT '',
   "pland_qty" decimal(14,5) NOT NULL DEFAULT '0',
   "pland_cell" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "pland_date" date COLLATE NOCASE DEFAULT '',
-  "pland_ref" varchar(30) NOT NULL COLLATE NOCASE DEFAULT ''
+  "pland_ref" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "pland_userid" varchar(30) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -2688,7 +2689,7 @@ CREATE TABLE "tran_mstr" (
   "tr_ovh" decimal(9,5) COLLATE NOCASE DEFAULT '',
   "tr_out" decimal(9,5) COLLATE NOCASE DEFAULT '',
   "tr_batch" varchar(10) COLLATE NOCASE DEFAULT '',
-  "tr_op" varchar(10) COLLATE NOCASE DEFAULT '',
+  "tr_op" varchar(4) COLLATE NOCASE DEFAULT '',
   "tr_loc" varchar(30) COLLATE NOCASE DEFAULT '',
   "tr_wh" varchar(10) COLLATE NOCASE DEFAULT '',
   "tr_expire" varchar(10) COLLATE NOCASE DEFAULT '',
@@ -2867,7 +2868,7 @@ CREATE TABLE "wf_mstr" (
   "wf_id" varchar(30) NOT NULL,
   "wf_desc" varchar(100) COLLATE NOCASE DEFAULT '',
   "wf_site" varchar(10) COLLATE NOCASE DEFAULT '',
-  "wf_op" int(8) NOT NULL,
+  "wf_op" varchar(4) NOT NULL,
   "wf_assert" tinyint(1) COLLATE NOCASE DEFAULT '0',
   "wf_op_desc" varchar(100) COLLATE NOCASE DEFAULT '',
   "wf_cell" varchar(20) COLLATE NOCASE DEFAULT '',

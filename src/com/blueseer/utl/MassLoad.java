@@ -2018,7 +2018,7 @@ public class MassLoad extends javax.swing.JPanel {
         list.add("wf_id,s,30,mandatory,unvalidated");
         list.add("wf_desc,s,100,optional,unvalidated");
         list.add("wf_site,s,10,mandatory,validated");
-        list.add("wf_op,i,8,mandatory,unvalidated");
+        list.add("wf_op,i,4,mandatory,unvalidated");
         list.add("wf_assert,b,1,mandatory,unvalidated");
         list.add("wf_op_desc,s,100,optional,unvalidated");
         list.add("wf_cell,s,20,mandator,validated");

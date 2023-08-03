@@ -92,7 +92,7 @@ String sitecitystatezip = "";
 
 javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "jobid", "operation", "qty", "date"
+                "jobid", "operation", "qty", "date", "userid"
             });
     
     
@@ -162,10 +162,23 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
  
     }
     
+    public void getScanHistory(String scan) {
+       historymodel.setRowCount(0);
+       ArrayList<String[]> hist = getPlanDetHistory(scan);
+       for (String[] h : hist) {
+            historymodel.addRow(new Object[]{
+                      h[1], // jobid
+                      h[3], // op
+                      h[7], // qty
+                      h[5], // date
+                      h[8] // userid
+                  });
+       }
+    }
     
     public void validateScan(String scan) {
        
-        historymodel.setRowCount(0);
+        
         
         lblmessage.setText("");
         if (scan.isEmpty()) {
@@ -222,15 +235,8 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
        }
        
        // now get history of plan jobid (scan)
-       ArrayList<String[]> hist = getPlanDetHistory(tbscan.getText());
-       for (String[] h : hist) {
-            historymodel.addRow(new Object[]{
-                      h[1], // jobid
-                      h[3], // op
-                      h[7], // qty
-                      h[5]  // date
-                  });
-       }
+       getScanHistory(tbscan.getText());
+       
        tbqty.requestFocusInWindow();
        
       } else {
@@ -297,11 +303,13 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         ddop.removeAllItems();
         tbref.setText("");
       
-       historymodel.setRowCount(0);
+       
        historytable.setModel(historymodel);
        historytable.getTableHeader().setReorderingAllowed(false);
-        
-        btcommit.setEnabled(false);
+       historymodel.setRowCount(0);
+       
+       
+       btcommit.setEnabled(false);
         
        tbscan.requestFocusInWindow();
         
@@ -609,6 +617,8 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
                  int key = OVData.CreatePlanDet(mytable, isLastOp);
                  lblmessage.setText("Scan Complete");
                  lblmessage.setForeground(Color.blue);
+                 getScanHistory(tbscan.getText());
+                 
                 if (BlueSeerUtils.ConvertStringToBool(ic.printsubticket())) {               
                      try {
                         printTubTicket(tbscan.getText(), String.valueOf(key));
