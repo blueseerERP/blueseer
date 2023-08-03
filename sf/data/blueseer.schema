@@ -1216,7 +1216,7 @@ CREATE TABLE IF NOT EXISTS `pland_mstr` (
   `pland_id` int(8) NOT NULL DEFAULT '0',
   `pland_parent` int(8) NOT NULL DEFAULT '0',
   `pland_item` varchar(36) NOT NULL  DEFAULT '',
-  `pland_op` varchar(2) NOT NULL  DEFAULT '',
+  `pland_op` varchar(3) NOT NULL  DEFAULT '',
   `pland_qty` decimal(14,5) NOT NULL DEFAULT '0',
   `pland_cell` varchar(30) NOT NULL  DEFAULT '',
   `pland_date` date  DEFAULT NULL,
