@@ -41,6 +41,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 /**
  *
@@ -179,7 +180,57 @@ public class schData {
     }
       return x;
   }
-       
+    
+    public static ArrayList<String[]> getPlanDetHistory(String serialno) {
+
+      // From perspective of "has it been scanned...or is there a 1 in lbl_scan which is set when label is scanned
+      // assume it's false i.e. hasn't been scanned.
+      ArrayList<String[]> x = new ArrayList<String[]>();
+
+      try {
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+             res = st.executeQuery("select * from pland_mstr where pland_parent = " + "'" + serialno + "'"
+                     + " ;");
+           while (res.next()) {
+               String[] w = new String[]{
+                   res.getString("pland_id"),
+                    res.getString("pland_parent"),
+                    res.getString("pland_item"),
+                    res.getString("pland_op"),
+                    res.getString("pland_cell"),
+                    res.getString("pland_date"),
+                    res.getString("pland_ref"),
+                    res.getString("pland_qty")
+               };
+               x.add(w);
+           }
+
+        } catch (SQLException s) {
+            MainFrame.bslog(s);
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+    } catch (Exception e) {
+        MainFrame.bslog(e);
+    }
+      return x;
+  }
+    
+    
     public static int getPlanStatus(String serialno) {
           
           // -1 plan_status is void
