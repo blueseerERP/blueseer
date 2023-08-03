@@ -12065,7 +12065,7 @@ return myarray;
                 i++;
                 // delete original itemr_cost records for this item, op, routing, standard
                 st.executeUpdate(" delete FROM  itemr_cost where itr_item = " + "'" + item + "'" 
-                                     +  " AND itr_op = " + "'" + op + "'"
+                                  /*   +  " AND itr_op = " + "'" + op + "'"  remove all ops even ones that were changed/removed by routing maint*/
                                      + " AND itr_set = 'standard' "
                                      + " AND itr_site = " + "'" + site + "'"
                                      + " AND itr_routing = " + "'" + routing + "'" + ";");
@@ -12157,7 +12157,7 @@ return myarray;
                     " wc_desc, wc_cc, wc_run_rate, wc_setup_rate, wc_bdn_rate " +
                     " from wf_mstr inner join item_mstr on it_wf = wf_id " + 
                     " inner join wc_mstr on wc_cell = wf_cell  " + 
-                    " left outer join itemr_cost on itr_item = it_item and itr_site = it_site and itr_routing = item_mstr.it_wf and itr_op = wf_op " +
+                    " left outer join itemr_cost on itr_item = it_item and itr_site = it_site and itr_routing = item_mstr.it_wf and itr_op = wf_op and itr_set = 'standard' " +
                     " where it_item = " + "'" + item + "'" + 
                     " order by wf_op; " );
            int i = 0;         

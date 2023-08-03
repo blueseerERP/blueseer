@@ -1008,7 +1008,7 @@ public class CostRollMaint extends javax.swing.JPanel {
                     i++;
                     // delete original itemr_cost records for this item, op, routing, standard
                     st.executeUpdate(" delete FROM  itemr_cost where itr_item = " + "'" + tbitem.getText() + "'" 
-                                         +  " AND itr_op = " + "'" + op + "'"
+                                     /*    +  " AND itr_op = " + "'" + op + "'"  need to remove all ops in case routing change*/
                                          + " AND itr_set = 'standard' "
                                          + " AND itr_site = " + "'" + thissite + "'"
                                          + " AND itr_routing = " + "'" + routing + "'" + ";");

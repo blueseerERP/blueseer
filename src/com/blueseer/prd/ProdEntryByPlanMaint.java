@@ -173,7 +173,8 @@ String sitecitystatezip = "";
        partlabel.setText(schData.getPlanItem(scan));
        partlabel.setForeground(Color.blue);
        ddop.removeAllItems();
-       ArrayList<String> mylist = invData.getItemRoutingOPs(partlabel.getText());
+       ArrayList<String> mylist = OVData.getOperationsByItem(partlabel.getText());
+     //  ArrayList<String> mylist = invData.getItemRoutingOPs(partlabel.getText());
        mylist.sort(Comparator.comparingInt(Integer::parseInt)); 
       // Collections.sort(mylist, Collections.reverseOrder());
     //   for (int i = 0; i < mylist.size(); i++) {
