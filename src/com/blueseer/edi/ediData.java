@@ -3417,6 +3417,8 @@ public class ediData {
         }
         
         Path sourcepath = FileSystems.getDefault().getPath(source);
+        // parse destination filename if contains %% date formatting
+        destination = parseFileName(destination);
         Path destinationpath = FileSystems.getDefault().getPath(destination);
        
         try {
@@ -3476,6 +3478,10 @@ public class ediData {
         }
         
         Path sourcepath = FileSystems.getDefault().getPath(source);
+        
+        // parse destination filename if contains %% date formatting
+        destination = parseFileName(destination);
+        
         Path destinationpath = FileSystems.getDefault().getPath(destination);
         Path dparent = destinationpath.getParent();
         
@@ -3492,7 +3498,7 @@ public class ediData {
         
         try {
             if (! overwrite && Files.exists(destinationpath)) {
-                destinationpath = FileSystems.getDefault().getPath(dparent + "/" + sourcepath.getFileName() + "." + Long.toHexString(System.currentTimeMillis())); 
+                destinationpath = FileSystems.getDefault().getPath(dparent + "/" + destinationpath.getFileName() + "." + Long.toHexString(System.currentTimeMillis())); 
                 Files.move(sourcepath, destinationpath, StandardCopyOption.REPLACE_EXISTING);
             } else {
                 Files.move(sourcepath, destinationpath, StandardCopyOption.REPLACE_EXISTING); 
