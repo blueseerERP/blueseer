@@ -67,6 +67,7 @@ import static com.blueseer.utl.BlueSeerUtils.ludialog;
 import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import static com.blueseer.utl.BlueSeerUtils.lurb2;
 import com.blueseer.utl.DTData;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -118,7 +119,7 @@ public class GLTranMaint extends javax.swing.JPanel {
            DefaultTableCellRenderer tableRender = new DefaultTableCellRenderer();
     javax.swing.table.DefaultTableModel transmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "Line", "Acct", "CC", "Desc", "Amt"
+                "Line", "Acct", "CC", "Desc", "Amt", "Number", "Reference", "Type"
             })    {
     @Override
     public boolean isCellEditable(int row, int column) {
@@ -271,7 +272,7 @@ public class GLTranMaint extends javax.swing.JPanel {
        
     }
     
-    public void getGLTran(String refid) {
+    public void getGLTran(String docid) {
         try {
             Connection con = null;
             if (ds != null) {
@@ -283,8 +284,8 @@ public class GLTranMaint extends javax.swing.JPanel {
             ResultSet res = null;
             try {
                 int i = 0;
-                res = st.executeQuery("SELECT glt_id, glt_ref, glt_acct, glt_cc, glt_site, glt_effdate, glt_entdate, glt_desc, glt_amt, glt_userid " +
-                        " FROM  gl_tran where glt_ref = " + "'" + refid + "'" +
+                res = st.executeQuery("SELECT glt_id, glt_ref, glt_acct, glt_cc, glt_site, glt_effdate, glt_entdate, glt_desc, glt_amt, glt_userid, glt_type, glt_doc " +
+                        " FROM  gl_tran where glt_doc = " + "'" + docid + "'" +
                         "  ;");
                 
                 while (res.next()) {
@@ -296,7 +297,10 @@ public class GLTranMaint extends javax.swing.JPanel {
                     res.getString("glt_acct"),
                     res.getString("glt_cc"),
                     res.getString("glt_desc"),
-                    currformat(res.getString("glt_amt"))
+                    currformat(res.getString("glt_amt")),
+                    res.getString("glt_doc"),
+                    res.getString("glt_ref"),
+                    res.getString("glt_type")
                     });
                 }
                 
@@ -492,9 +496,11 @@ public class GLTranMaint extends javax.swing.JPanel {
         lual = new ActionListener() {
         public void actionPerformed(ActionEvent event) {
         if (lurb1.isSelected()) {  
-         luModel = DTData.getGLTranBrowseUtil(luinput.getText(),0, "glt_ref");
+         luModel = DTData.getGLTranBrowseUtil2(luinput.getText(),0, "glt_doc");
+         } else if (lurb2.isSelected()) {
+         luModel = DTData.getGLTranBrowseUtil2(luinput.getText(),0, "glt_acct");  
         } else {
-         luModel = DTData.getGLTranBrowseUtil(luinput.getText(),0, "glt_acct");   
+         luModel = DTData.getGLTranBrowseUtil2(luinput.getText(),0, "glt_effdate");   
         }
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
@@ -515,13 +521,15 @@ public class GLTranMaint extends javax.swing.JPanel {
                 int column = target.getSelectedColumn();
                 if ( column == 0) {
                 ludialog.dispose();
-                initvars(new String[]{target.getValueAt(row,1).toString(), target.getValueAt(row,2).toString()});
+                initvars(new String[]{target.getValueAt(row,2).toString(), target.getValueAt(row,1).toString()});
                 }
             }
         };
         luTable.addMouseListener(luml);
       
-        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), getClassLabelTag("lblacct", this.getClass().getSimpleName())); 
+        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()),
+                getClassLabelTag("lblacct", this.getClass().getSimpleName()),
+                getClassLabelTag("lbleffdate", this.getClass().getSimpleName())); 
         
         
         
@@ -811,9 +819,6 @@ public class GLTranMaint extends javax.swing.JPanel {
                         .addGap(12, 12, 12)
                         .addComponent(btdeleteALL))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(74, 74, 74)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 579, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(397, 397, 397)
                         .addComponent(jLabel51)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -821,7 +826,10 @@ public class GLTranMaint extends javax.swing.JPanel {
                         .addGap(18, 18, 18)
                         .addComponent(btadd)
                         .addGap(12, 12, 12)
-                        .addComponent(btdelete)))
+                        .addComponent(btdelete))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1)))
                 .addGap(6, 6, 6))
         );
         jPanel1Layout.setVerticalGroup(
@@ -998,7 +1006,7 @@ public class GLTranMaint extends javax.swing.JPanel {
                         amt = bsParseDouble(transtable.getValueAt(i, 4).toString());
                         
                         st.executeUpdate("insert into gl_tran "
-                        + "(glt_line, glt_acct, glt_cc, glt_effdate, glt_amt, glt_base_amt, glt_curr, glt_base_curr, glt_ref, glt_site, glt_type, glt_desc, glt_userid, glt_entdate )"
+                        + "(glt_line, glt_acct, glt_cc, glt_effdate, glt_amt, glt_base_amt, glt_curr, glt_base_curr, glt_ref, glt_doc, glt_site, glt_type, glt_desc, glt_userid, glt_entdate )"
                         + " values ( " 
                         + "'" + transtable.getValueAt(i, 0).toString() + "'" + ","
                         + "'" + transtable.getValueAt(i, 1).toString() + "'" + ","
@@ -1008,31 +1016,36 @@ public class GLTranMaint extends javax.swing.JPanel {
                         + "'" + transtable.getValueAt(i, 4).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
                         + "'" + curr + "'" + ","
                         + "'" + basecurr + "'" + ","        
-                        + "'" + tbref.getText().toString() + "'" + ","
+                        + "'" + tbcontrolamt.getText() + "'" + ","
+                        + "'" + tbref.getText() + "'" + ","
                         + "'" + ddsite.getSelectedItem().toString() + "'" + ","
                         + "'" + type + "'" + ","
                         + "'" + transtable.getValueAt(i, 3).toString() + "'" + ","
-                        + "'" + tbuserid.getText().toString() + "'" + ","
-                         + "'" + dateentered.getText().toString() + "'"
+                        + "'" + tbuserid.getText() + "'" + ","
+                         + "'" + dateentered.getText() + "'"
                                 + ")"
                         + ";" );
                         
                         //if reversing...add entries to next immediate period start date
                         if (type.equals("RV")) {
                             st.executeUpdate("insert into gl_tran "
-                        + "(glt_line, glt_acct, glt_cc, glt_effdate, glt_amt, glt_ref, glt_site, glt_type, glt_desc, glt_userid, glt_entdate )"
+                        + "(glt_line, glt_acct, glt_cc, glt_effdate, glt_amt, glt_base_amt, glt_curr, glt_base_curr, glt_ref, glt_doc, glt_site, glt_type, glt_desc, glt_userid, glt_entdate )"
                         + " values ( " 
                         + "'" + transtable.getValueAt(i, 0).toString() + "'" + ","
                         + "'" + transtable.getValueAt(i, 1).toString() + "'" + ","
                         + "'" + transtable.getValueAt(i, 2).toString() + "'" + ","
                         + "'" + nextstartdate + "'" + ","
                         + "'" + String.valueOf(-1 * amt).replace(defaultDecimalSeparator, '.') + "'" + ","
-                        + "'" + tbref.getText().toString() + "'" + ","
+                        + "'" + String.valueOf(-1 * amt).replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + curr + "'" + ","
+                        + "'" + basecurr + "'" + ","         
+                        + "'" + tbcontrolamt.getText() + "'" + ","
+                        + "'" + tbref.getText() + "'" + ","
                         + "'" + ddsite.getSelectedItem().toString() + "'" + ","
                         + "'" + type + "'" + ","
                         + "'" + transtable.getValueAt(i, 3).toString() + "'" + ","
-                        + "'" + tbuserid.getText().toString() + "'" + ","
-                         + "'" + dateentered.getText().toString() + "'"
+                        + "'" + tbuserid.getText() + "'" + ","
+                         + "'" + dateentered.getText() + "'"
                                 + ")"
                         + ";" );
                         }
@@ -1063,12 +1076,12 @@ public class GLTranMaint extends javax.swing.JPanel {
 
     private void btdeleteALLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteALLActionPerformed
             boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
-            
+            /*
             if (! tbref.getText().toString().startsWith("JL")) {
                 proceed = false;
                 bsmf.MainFrame.show(getMessageTag(1044));
             }
-            
+            */
         if (proceed) {
         try {
 

@@ -41,6 +41,7 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.ctr.cusData;
 import com.blueseer.fgl.fglData;
+import static com.blueseer.fgl.fglData.setGLRecNbr;
 import com.blueseer.hrm.hrmData;
 import com.blueseer.inv.calcCost;
 import com.blueseer.inv.invData;
@@ -4868,6 +4869,7 @@ public class OVData {
                    String op = "";
                    String type = "";
                    DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                   String gldoc = setGLRecNbr("IN");
           
             try {
                 
@@ -4917,10 +4919,10 @@ public class OVData {
         if (! isError) {
             if (ld[0].toString().toLowerCase().equals("receipt")) {
                 fglData.glEntry(invacct, prodline, ld[4], ld[5],  
-                        ld[7], (cost * bsParseDouble(ld[6])), (cost * bsParseDouble(ld[6])), curr, basecurr, ld[9] , ld[2], type, ld[10] + "-" + ld[1]);
+                        ld[7], (cost * bsParseDouble(ld[6])), (cost * bsParseDouble(ld[6])), curr, basecurr, ld[9] , ld[2], type, ld[10] + "-" + ld[1], gldoc);
             } else {
                 fglData.glEntry(ld[4], ld[5], invacct, prodline, 
-                        ld[7], (cost * bsParseDouble(ld[6])), (cost * bsParseDouble(ld[6])), curr, basecurr, ld[9] , ld[2], type, ld[10] + "-" + ld[1]);
+                        ld[7], (cost * bsParseDouble(ld[6])), (cost * bsParseDouble(ld[6])), curr, basecurr, ld[9] , ld[2], type, ld[10] + "-" + ld[1], gldoc);
             }
         } else {
           bsmf.MainFrame.show("Error during UpdateInventoryDiscrete of MassLoad");  
@@ -6179,7 +6181,7 @@ public class OVData {
         
               
                
-    public static void wip_to_fg(String item, String site, Double cost, String date, String ref, String type, String desc) {
+    public static void wip_to_fg(String item, String site, Double cost, String date, String ref, String type, String desc, String gldoc) {
         try{
 
 
@@ -6217,7 +6219,7 @@ public class OVData {
              }
 
                 // process GL transactions
-               fglData.glEntry(acct_cr, cc_cr, acct_dr, cc_dr, date, cost, cost, curr, basecurr, ref, site, type, desc); // post bdn entry
+               fglData.glEntry(acct_cr, cc_cr, acct_dr, cc_dr, date, cost, cost, curr, basecurr, ref, site, type, desc, gldoc); // post bdn entry
 
        }
         catch (SQLException s){
@@ -6233,13 +6235,14 @@ public class OVData {
     }
     }        
 
-    public static void wip_iss_mtl_gl(String item, String op, String csite, Double qty, String date, String cref, String ctype, String cdesc, String serial, String userid, String program, String bom) {
+    public static void wip_iss_mtl_gl(String item, String op, String csite, Double qty, String date, String cref, String ctype, String cdesc, String serial, String userid, String program, String bom, String gldoc) {
 
     try{
 
          // added SQLITE adjustment here...create arraylist of entries for glentry instead of inline
                 ArrayList acct_cr = new ArrayList();
                 ArrayList ref =  new ArrayList();
+                ArrayList doc =  new ArrayList();
                 ArrayList desc =   new ArrayList();
                 ArrayList type =   new ArrayList();
                 ArrayList cc_cr =   new ArrayList();
@@ -6327,11 +6330,12 @@ public class OVData {
                 ref.add(thisref);
                 type.add(thistype);
                 desc.add(thisdesc);
+                doc.add(gldoc);
                 }
                 res.close();
                 // now process into GL
                   for (int j = 0; j < acct_cr.size(); j++) {
-                  fglData.glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), date, bsParseDouble(cost.get(j).toString()), bsParseDouble(cost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString());  
+                  fglData.glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), date, bsParseDouble(cost.get(j).toString()), bsParseDouble(cost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
                 }
            } else {
            res = st.executeQuery("select ps_child, ps_qty_per, it_loc, it_wh, itc_total, pl_inventory, pl_line " +
@@ -6352,6 +6356,7 @@ public class OVData {
                 ref.add(thisref);
                 type.add("ISS-SUB");
                 desc.add(thisdesc);
+                doc.add(gldoc);
                 child.add(res.getString("ps_child"));
                 loc.add(res.getString("it_loc"));
                 wh.add(res.getString("it_wh"));
@@ -6362,7 +6367,7 @@ public class OVData {
            for (int j = 0; j < acct_cr.size(); j++) {
 
                // now process to GL
-               fglData.glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), date, bsParseDouble(cost.get(j).toString()), bsParseDouble(cost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), "ISS-WIP", desc.get(j).toString());  
+               fglData.glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), date, bsParseDouble(cost.get(j).toString()), bsParseDouble(cost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), "ISS-WIP", desc.get(j).toString(), doc.get(j).toString());  
 
                // process tran_hist
                if (ctype.equals("ISS-SCRAP")) {
@@ -6398,7 +6403,7 @@ public class OVData {
                 if (opsarray[1].equals("1")) {
                     break;
                 }
-                wip_iss_mtl_gl_unreported(item, opsarray[0], csite, qty, date, cref, ctype, cdesc, serial, userid, program, bom);
+                wip_iss_mtl_gl_unreported(item, opsarray[0], csite, qty, date, cref, ctype, cdesc, serial, userid, program, bom, gldoc);
             }
            } /* if Reportable Op */
            } // if pmcode "M"
@@ -6419,7 +6424,7 @@ public class OVData {
 
     }
 
-    public static void wip_iss_mtl_gl_unreported(String item, String op, String csite, Double qty, String date, String cref, String ctype, String cdesc, String serial, String userid, String program, String bom) {
+    public static void wip_iss_mtl_gl_unreported(String item, String op, String csite, Double qty, String date, String cref, String ctype, String cdesc, String serial, String userid, String program, String bom, String gldoc) {
 
 
     try{
@@ -6428,6 +6433,7 @@ public class OVData {
 
                 ArrayList acct_cr = new ArrayList();
                 ArrayList ref =  new ArrayList();
+                ArrayList doc =  new ArrayList();
                 ArrayList desc =   new ArrayList();
                 ArrayList type =   new ArrayList();
                 ArrayList cc_cr =   new ArrayList();
@@ -6494,6 +6500,7 @@ public class OVData {
                cost.add((res.getDouble("ps_qty_per") * res.getDouble("itc_total") * qty));
                site.add(thissite);
                 ref.add(thisref);
+                doc.add(gldoc);
                 type.add(thistype);
                 desc.add(thisdesc);
                 child.add(res.getString("ps_child"));
@@ -6506,7 +6513,7 @@ public class OVData {
             for (int j = 0; j < acct_cr.size(); j++) {
                //  bsmf.MainFrame.show(child.get(j).toString());
                 // process GL transactions
-                fglData.glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), date, bsParseDouble(cost.get(j).toString()), bsParseDouble(cost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), "ISS-WIP", desc.get(j).toString());  
+                fglData.glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), date, bsParseDouble(cost.get(j).toString()), bsParseDouble(cost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), "ISS-WIP", desc.get(j).toString(), doc.get(j).toString());  
 
                // process tran_hist
                OVData.TRHistIssDiscrete(BlueSeerUtils.mysqlDateFormat.parse(date), child.get(j).toString(), (-1 * qty), op, "ISS-WIP", 0, 0, csite, 
@@ -6535,7 +6542,7 @@ public class OVData {
 
     }
 
-    public static void wip_iss_op_cost_gl(String item, String cop, String site, Double qty, String date, String ref, String type, String desc) {
+    public static void wip_iss_op_cost_gl(String item, String cop, String site, Double qty, String date, String ref, String type, String desc, String gldoc) {
 
     ArrayList myarray = new ArrayList();
     double cost = 0.00;
@@ -6619,16 +6626,16 @@ public class OVData {
            cc_cr = cc;
            desc = item + " - lbr op " + cop;
          //  bsmf.MainFrame.show(desc + "/" + String.valueOf(cost) + "/" + String.valueOf(actcost));
-           fglData.glEntry(acct_cr, cc_cr, acct_dr, cc_dr, date, cost, cost, curr, basecurr, ref, site, type, desc);  // post lbr entry
-           fglData.glEntry(lbrvaracct, cc_cr, acct_dr, cc_dr, date, (cost - actcost), (cost - actcost), curr, basecurr, ref, site, type, desc);  // post lbr variance entry
+           fglData.glEntry(acct_cr, cc_cr, acct_dr, cc_dr, date, cost, cost, curr, basecurr, ref, site, type, desc, gldoc);  // post lbr entry
+           fglData.glEntry(lbrvaracct, cc_cr, acct_dr, cc_dr, date, (cost - actcost), (cost - actcost), curr, basecurr, ref, site, type, desc, gldoc);  // post lbr variance entry
            /* Lets do Burden */
            actcost = (getBurdenWithOutSetup(item, cop) * qty);
            cost = invData.getItemBdnCost(item, cop, site, "standard") * qty;  // let's use standard cost to hit the GL
            acct_cr = bdnacct;
            cc_cr = cc;
            desc = item + " - bdn op " + cop;
-           fglData.glEntry(acct_cr, cc_cr, acct_dr, cc_dr, date, cost, cost, curr, basecurr, ref, site, type, desc); // post bdn entry
-           fglData.glEntry(bdnvaracct, cc_cr, acct_dr, cc_dr, date, (cost - actcost), (cost - actcost), curr, basecurr, ref, site, type, desc); // post bdn variance entry
+           fglData.glEntry(acct_cr, cc_cr, acct_dr, cc_dr, date, cost, cost, curr, basecurr, ref, site, type, desc, gldoc); // post bdn entry
+           fglData.glEntry(bdnvaracct, cc_cr, acct_dr, cc_dr, date, (cost - actcost), (cost - actcost), curr, basecurr, ref, site, type, desc, gldoc); // post bdn variance entry
 
 
 
@@ -6651,7 +6658,7 @@ public class OVData {
                 if (opsarray[1].equals("1")) {
                     break;
                 }
-                 wip_iss_op_cost_gl_unreported(item, opsarray[0], site, qty, date, ref, type, desc);
+                 wip_iss_op_cost_gl_unreported(item, opsarray[0], site, qty, date, ref, type, desc, gldoc);
              }
         } // if reportable
 
@@ -6672,13 +6679,14 @@ public class OVData {
 
     }
 
-    public static void wip_iss_op_cost_gl_unreported(String item, String op, String csite, Double qty, String date, String cref, String ctype, String cdesc) {
+    public static void wip_iss_op_cost_gl_unreported(String item, String op, String csite, Double qty, String date, String cref, String ctype, String cdesc, String gldoc) {
     try{
                 ArrayList acct_cr_lbr = new ArrayList();
                 ArrayList acct_cr_lbrvar = new ArrayList();
                 ArrayList acct_cr_bdn = new ArrayList();
                 ArrayList acct_cr_bdnvar = new ArrayList();
                 ArrayList ref =  new ArrayList();
+                ArrayList doc =  new ArrayList();
                 ArrayList desc_lbr =   new ArrayList();
                 ArrayList desc_bdn =   new ArrayList();
                 ArrayList type =   new ArrayList();
@@ -6766,6 +6774,7 @@ public class OVData {
               cost_bdn.add(invData.getItemBdnCost(item, op, thissite, "standard") * qty); 
              site.add(thissite);
                 ref.add(thisref);
+                doc.add(gldoc);
                 type.add(thistype);
                 desc_lbr.add(item + " - lbr op " + op);
                 desc_bdn.add(item + " - bdn op " + op);
@@ -6778,12 +6787,12 @@ public class OVData {
             for (int j = 0; j < acct_cr_lbr.size(); j++) {
 
                 /* Lets do Labor */
-                fglData.glEntry(acct_cr_lbr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), date, bsParseDouble(cost_lbr.get(j).toString()), bsParseDouble(cost_lbr.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc_lbr.get(j).toString());  
-                fglData.glEntry(acct_cr_lbrvar.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), date, (bsParseDouble(cost_lbr.get(j).toString()) - bsParseDouble(actcost_lbr.get(j).toString())), (bsParseDouble(cost_lbr.get(j).toString()) - bsParseDouble(actcost_lbr.get(j).toString())), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc_lbr.get(j).toString());  
+                fglData.glEntry(acct_cr_lbr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), date, bsParseDouble(cost_lbr.get(j).toString()), bsParseDouble(cost_lbr.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc_lbr.get(j).toString(), doc.get(j).toString());  
+                fglData.glEntry(acct_cr_lbrvar.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), date, (bsParseDouble(cost_lbr.get(j).toString()) - bsParseDouble(actcost_lbr.get(j).toString())), (bsParseDouble(cost_lbr.get(j).toString()) - bsParseDouble(actcost_lbr.get(j).toString())), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc_lbr.get(j).toString(), doc.get(j).toString());  
 
                 /* Lets do Burden */
-                fglData.glEntry(acct_cr_bdn.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), date, bsParseDouble(cost_bdn.get(j).toString()), bsParseDouble(cost_bdn.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc_bdn.get(j).toString());  
-                fglData.glEntry(acct_cr_bdnvar.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), date, (bsParseDouble(cost_bdn.get(j).toString()) - bsParseDouble(actcost_bdn.get(j).toString())), (bsParseDouble(cost_bdn.get(j).toString()) - bsParseDouble(actcost_bdn.get(j).toString())), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc_bdn.get(j).toString());  
+                fglData.glEntry(acct_cr_bdn.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), date, bsParseDouble(cost_bdn.get(j).toString()), bsParseDouble(cost_bdn.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc_bdn.get(j).toString(), doc.get(j).toString());  
+                fglData.glEntry(acct_cr_bdnvar.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), date, (bsParseDouble(cost_bdn.get(j).toString()) - bsParseDouble(actcost_bdn.get(j).toString())), (bsParseDouble(cost_bdn.get(j).toString()) - bsParseDouble(actcost_bdn.get(j).toString())), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc_bdn.get(j).toString(), doc.get(j).toString());  
 
 
             }
@@ -13786,7 +13795,9 @@ return mystring;
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 String today = dfdate.format(now);
           
-          
+        // set parent GL ref number
+              String gldoc = fglData.setGLRecNbr("IN");
+                
           // try block for updating tran_mstr
        try {
              
@@ -13881,6 +13892,9 @@ return mystring;
            if (_type == "ISS-WIP") {
                   /* let's first load the tran_hist */
                   
+                  
+                  
+                  
                   // if lastop convert type to RCT-FG else leave type as iss-wip
                  if (islastop) {
                      temptype = "RCT-FG";
@@ -13958,19 +13972,22 @@ return mystring;
                     mytrkey = String.valueOf(res.getInt(1));
                 }
               res.close();
+              
+              
+              
                   /* we need to consume material component inventory
                    and gl cost of this item through all unreported operations since last 
                   reported Operation */
-                  wip_iss_mtl_gl(_part, _op, _site, _qty, _date, mytrkey, _type, mytrkey, _serial, _userid, _program, _bom);
+                  wip_iss_mtl_gl(_part, _op, _site, _qty, _date, _ref, _type, mytrkey, _serial, _userid, _program, _bom, gldoc);
                   
-                  wip_iss_op_cost_gl(_part, _op, _site, _qty, _date, mytrkey, _type, mytrkey);
+                  wip_iss_op_cost_gl(_part, _op, _site, _qty, _date, _ref, _type, mytrkey, gldoc);
                   
                   /* if this is last op... */
                   /* adjust inventory for this part FG being produced ...if last OP */
                   if (islastop) {
                      OVData.UpdateInventoryDiscrete(_part, _site, _loc, _wh, _serial, _expiredate, _qty);
                      double cost = (invData.getItemCost(_part, "standard", _site) * _qty);
-                     OVData.wip_to_fg(_part, _site, cost, _date, mytrkey, "RCT-FG", _remarks);
+                     OVData.wip_to_fg(_part, _site, cost, _date, _ref, "RCT-FG", _remarks, gldoc); 
                   }
               }
            
@@ -14047,8 +14064,8 @@ return mystring;
                   /* we need to consume material component inventory
                    and gl cost of this item through all unreported operations since last 
                   reported Operation */
-                  wip_iss_mtl_gl(_part, _op, _site, _qty, _date, mytrkey, _type, mytrkey, _serial, _userid, _program, _bom);
-                  wip_iss_op_cost_gl(_part, _op, _site, _qty, _date, mytrkey, _type, mytrkey);
+                  wip_iss_mtl_gl(_part, _op, _site, _qty, _date, mytrkey, _type, mytrkey, _serial, _userid, _program, _bom, gldoc);
+                  wip_iss_op_cost_gl(_part, _op, _site, _qty, _date, mytrkey, _type, mytrkey, gldoc);
                   
                   
               }
@@ -14092,8 +14109,8 @@ return mystring;
                   /* we need to consume material component inventory
                    and gl cost of this item through all unreported operations since last 
                   reported Operation */
-                  wip_iss_mtl_gl(_part, _op, _site, _qty, _date, mytrkey, _type, mytrkey, _serial, _userid, _program, _bom);
-                  wip_iss_op_cost_gl(_part, _op, _site, _qty, _date, mytrkey, _type, mytrkey);
+                  wip_iss_mtl_gl(_part, _op, _site, _qty, _date, mytrkey, _type, mytrkey, _serial, _userid, _program, _bom, gldoc);
+                  wip_iss_op_cost_gl(_part, _op, _site, _qty, _date, mytrkey, _type, mytrkey, gldoc);
                   
                   
               }

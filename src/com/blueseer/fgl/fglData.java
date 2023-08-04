@@ -1051,15 +1051,17 @@ public class fglData {
      
     public static String setGLRecNbr(String type) {
            String mystring = "";
-           int nextnbr = OVData.getNextNbr("gl");
+          // int nextnbr = OVData.getNextNbr("gl");
            java.util.Date now = new java.util.Date();
            DateFormat dfdate = new SimpleDateFormat("yyyyMMdd");
            // format should be two char type code + 8 char date code + 6 char unique number ...16 chars in all
-           mystring = type + dfdate.format(now) + String.format("%06d", nextnbr);       
+          // mystring = type + dfdate.format(now) + String.format("%06d", nextnbr);   
+           // 20230804 TEV using hex string instead of getNextNbr for performance
+           mystring = type + dfdate.format(now) + Long.toHexString(System.currentTimeMillis());
            return mystring;
        }
     
-    public static void glEntry(String acct_cr, String cc_cr, String acct_dr, String cc_dr, String date, Double amt, Double baseamt, String curr, String basecurr, String ref, String site, String type, String desc) {
+    public static void glEntry(String acct_cr, String cc_cr, String acct_dr, String cc_dr, String date, Double amt, Double baseamt, String curr, String basecurr, String ref, String site, String type, String desc, String doc) {
           
            /* any amount = 0 passed to this method will be ignored */
            
@@ -1101,8 +1103,8 @@ public class fglData {
               con = DriverManager.getConnection(url + db, user, pass);  
             }
             String sqlInsert = "insert into gl_tran "
-                            + "( glt_acct, glt_cc, glt_effdate, glt_amt, glt_base_amt, glt_curr, glt_base_curr, glt_ref, glt_site, glt_type, glt_desc ) " +
-                              " values (?,?,?,?,?,?,?,?,?,?,?) ";   
+                            + "( glt_acct, glt_cc, glt_effdate, glt_amt, glt_base_amt, glt_curr, glt_base_curr, glt_ref, glt_site, glt_type, glt_desc, glt_doc ) " +
+                              " values (?,?,?,?,?,?,?,?,?,?,?,?) ";   
             PreparedStatement ps = con.prepareStatement(sqlInsert); 
             try {
                 ps.setString(1, acct_cr);
@@ -1116,6 +1118,7 @@ public class fglData {
                 ps.setString(9, site);
                 ps.setString(10, type);
                 ps.setString(11, desc);
+                ps.setString(12, doc);
                 ps.executeUpdate();
 
                 ps.setString(1, acct_dr);
@@ -1129,6 +1132,7 @@ public class fglData {
                 ps.setString(9, site);
                 ps.setString(10, type);
                 ps.setString(11, desc);
+                ps.setString(12, doc);
                 ps.executeUpdate();
 
                 ps.close();
@@ -1148,7 +1152,7 @@ public class fglData {
           
       }
     
-    public static void glEntryXP(Connection bscon, String acct_cr, String cc_cr, String acct_dr, String cc_dr, String date, Double amt, Double baseamt, String curr, String basecurr, String ref, String site, String type, String desc) throws SQLException {
+    public static void glEntryXP(Connection bscon, String acct_cr, String cc_cr, String acct_dr, String cc_dr, String date, Double amt, Double baseamt, String curr, String basecurr, String ref, String site, String type, String desc, String doc) throws SQLException {
           
            /* any amount = 0 passed to this method will be ignored */
            /* record entry requires a non-blank acct_cr and acct_dr
@@ -1180,8 +1184,8 @@ public class fglData {
           
        if ( amt != 0 && ! acct_cr.isBlank() && ! acct_dr.isBlank()) {
         String sqlInsert = "insert into gl_tran "
-                        + "( glt_acct, glt_cc, glt_effdate, glt_amt, glt_base_amt, glt_curr, glt_base_curr, glt_ref, glt_site, glt_type, glt_desc ) " +
-                          " values (?,?,?,?,?,?,?,?,?,?,?) ";   
+                        + "( glt_acct, glt_cc, glt_effdate, glt_amt, glt_base_amt, glt_curr, glt_base_curr, glt_ref, glt_site, glt_type, glt_desc, glt_doc ) " +
+                          " values (?,?,?,?,?,?,?,?,?,?,?,?) ";   
         PreparedStatement ps = bscon.prepareStatement(sqlInsert);  
             ps.setString(1, acct_cr);
             ps.setString(2, cc_cr);
@@ -1194,6 +1198,7 @@ public class fglData {
             ps.setString(9, site);
             ps.setString(10, type);
             ps.setString(11, desc);
+            ps.setString(12, doc);
             ps.executeUpdate();
             
             ps.setString(1, acct_dr);
@@ -1207,6 +1212,7 @@ public class fglData {
             ps.setString(9, site);
             ps.setString(10, type);
             ps.setString(11, desc);
+            ps.setString(12, doc);
             ps.executeUpdate();
        
             ps.close();
@@ -1238,6 +1244,7 @@ public class fglData {
                  // added SQLITE adjustment here...create arraylist of entries for glentry instead of inline
                     ArrayList acct_cr = new ArrayList();
                     ArrayList ref =  new ArrayList();
+                    ArrayList doc =  new ArrayList();
                     ArrayList desc =   new ArrayList();
                     ArrayList type =   new ArrayList();
                     ArrayList cc_cr =   new ArrayList();
@@ -1252,7 +1259,8 @@ public class fglData {
                     String thistype = "RCT-VOUCH";
                     String thisdesc = "RCT VOUCHER";   
                 
-                    
+                    // set parent GL ref number
+                    String gldoc = fglData.setGLRecNbr("AP");
                    
                        res = st.executeQuery("select ap_amt, ap_base_amt, ap_curr, ap_base_curr, ap_ref, ap_site, ap_acct, ap_cc, ap_vend, poc_rcpt_cc, poc_rcpt_acct from ap_mstr " +
                                " inner join po_ctrl where ap_type = 'V' and ap_nbr = " + "'" + voucher + "'" +";");
@@ -1270,12 +1278,13 @@ public class fglData {
                     site.add(res.getString("ap_site"));
                     ref.add(res.getString("ap_ref"));
                     type.add(thistype);
-                    desc.add(res.getString("ap_ref"));     
+                    desc.add(res.getString("ap_ref"));   
+                    doc.add(gldoc);
           
                     // need to do discounts ..credit sales, debit disc, debit AR (-$4.00, $.02, $3.98)
                     }
                       for (int j = 0; j < acct_cr.size(); j++) {
-                      glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString());  
+                      glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
                     }
            }
             catch (SQLException s){
@@ -1318,11 +1327,13 @@ public class fglData {
                     ArrayList basecost =  new ArrayList();
                     ArrayList curr =  new ArrayList();
                     ArrayList basecurr =  new ArrayList();
+                    ArrayList doc =  new ArrayList();
                    
                     String thistype = "RCT-VOUCH";
                     String thisdesc = "RCT VOUCHER";   
                 
-                    
+                    // set parent GL doc number
+                    String gldoc = fglData.setGLRecNbr("AP");
                    
                        res = st.executeQuery("select ap_amt, ap_base_amt, ap_curr, ap_base_curr, ap_ref, ap_site, ap_acct, ap_cc, ap_vend, poc_rcpt_cc, poc_rcpt_acct from ap_mstr " +
                                " inner join po_ctrl where ap_type = 'V' and ap_nbr = " + "'" + voucher + "'" +";");
@@ -1343,7 +1354,8 @@ public class fglData {
                     curr.add(res.getString("ap_curr"));
                     basecurr.add(res.getString("ap_base_curr"));
                     site.add(res.getString("ap_site"));
-                    ref.add(res.getString("ap_ref"));
+                    ref.add(res.getString("ap_site"));
+                    doc.add(gldoc);
                     type.add(thistype);
                     desc.add(res.getString("ap_ref"));     
           
@@ -1352,7 +1364,7 @@ public class fglData {
                     res.close();
                     st.close();
                       for (int j = 0; j < acct_cr.size(); j++) {
-                      glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString());  
+                      glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
                     }
           
         return myerror;
@@ -1384,6 +1396,7 @@ public class fglData {
                    // added SQLITE adjustment here...create arraylist of entries for glentry instead of inline
                     ArrayList acct_cr = new ArrayList();
                     ArrayList ref =  new ArrayList();
+                    ArrayList doc =  new ArrayList();
                     ArrayList desc =   new ArrayList();
                     ArrayList type =   new ArrayList();
                     ArrayList cc_cr =   new ArrayList();
@@ -1396,7 +1409,7 @@ public class fglData {
                     ArrayList basecurr =  new ArrayList();
                    
                     String thistype = "RCT-VOUCH";
-                   
+                    String gldoc = setGLRecNbr("AP");
                    
                        res = st.executeQuery("select ap_amt, ap_base_amt, ap_curr, ap_base_curr, ap_ref, ap_check, ap_nbr, vod_item, ap_site, ap_acct, ap_cc, ap_vend, vod_qty, vod_voprice, vod_expense_acct, vod_expense_cc from vod_mstr " +
                                "inner join ap_mstr on ap_nbr = vod_id and ap_type = 'V' where vod_id = " + "'" + voucher + "'" +";");
@@ -1415,6 +1428,7 @@ public class fglData {
                     basecurr.add(res.getString("ap_base_curr"));
                     site.add(res.getString("ap_site"));
                     ref.add(res.getString("ap_check"));
+                    doc.add(gldoc);
                     type.add(thistype);
                     if (res.getString("ap_ref").isEmpty()) {
                        desc.add(res.getString("vod_item")); 
@@ -1428,7 +1442,7 @@ public class fglData {
                 
                     }
                      for (int j = 0; j < acct_cr.size(); j++) {
-                      glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString());  
+                      glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
                     }
            }
             catch (SQLException s){
@@ -1469,10 +1483,14 @@ public class fglData {
                     ArrayList basecost =  new ArrayList();
                     ArrayList curr =  new ArrayList();
                     ArrayList basecurr =  new ArrayList();
+                    ArrayList doc =  new ArrayList();
                    
                     String thistype = "RCT-VOUCH";
                    
-                   
+                    // set parent GL doc number
+                    String gldoc = fglData.setGLRecNbr("AP");
+                    
+                    
                        res = st.executeQuery("select ap_amt, ap_base_amt, ap_curr, ap_base_curr, ap_ref, ap_check, ap_nbr, vod_item, ap_site, ap_acct, ap_cc, ap_vend, vod_qty, vod_voprice, vod_expense_acct, vod_expense_cc from vod_mstr " +
                                "inner join ap_mstr on ap_nbr = vod_id and ap_type = 'V' where vod_id = " + "'" + voucher + "'" +";");
                    
@@ -1495,6 +1513,7 @@ public class fglData {
                     basecurr.add(res.getString("ap_base_curr"));
                     site.add(res.getString("ap_site"));
                     ref.add(res.getString("ap_check"));
+                    doc.add(gldoc);
                     type.add(thistype);
                     if (res.getString("ap_ref").isEmpty()) {
                        desc.add(res.getString("vod_item")); 
@@ -1508,7 +1527,7 @@ public class fglData {
                 
                     }
                      for (int j = 0; j < acct_cr.size(); j++) {
-                      glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString());  
+                      glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
                     }
           
                      res.close();
@@ -1542,6 +1561,7 @@ public class fglData {
                    // added SQLITE adjustment here...create arraylist of entries for glentry instead of inline
                     ArrayList acct_cr = new ArrayList();
                     ArrayList ref =  new ArrayList();
+                    ArrayList doc =  new ArrayList();
                     ArrayList desc =   new ArrayList();
                     ArrayList type =   new ArrayList();
                     ArrayList cc_cr =   new ArrayList();
@@ -1553,6 +1573,7 @@ public class fglData {
                     ArrayList curr =  new ArrayList();
                     ArrayList basecurr =  new ArrayList();
                    
+                    String gldoc = setGLRecNbr("PR");
                     String thistype = "PayRoll";
                     String laboracct = OVData.getDefaultPayLaborAcct();
                     String withhold = OVData.getDefaultPayWithHoldAcct();
@@ -1589,7 +1610,8 @@ public class fglData {
                     site.add(res.getString("py_site"));
                     ref.add(res.getString("py_id"));
                     type.add(thistype);
-                    desc.add("CheckNbr:" + res.getString("pyd_checknbr"));  
+                    desc.add("CheckNbr:" + res.getString("pyd_checknbr"));
+                    doc.add(gldoc);
                     }
                     
                     
@@ -1625,12 +1647,13 @@ public class fglData {
                     ref.add(res.getString("py_id"));
                     type.add(thistype);
                     desc.add("WithholdType:" + res.getString("pyl_desc"));  
+                    doc.add(gldoc);
                     }
                     
                     
                     
                      for (int j = 0; j < acct_cr.size(); j++) {
-                      glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString());  
+                      glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
                     }
                      
                      
@@ -1677,6 +1700,7 @@ public class fglData {
                    // added SQLITE adjustment here...create arraylist of entries for glentry instead of inline
                     ArrayList acct_cr = new ArrayList();
                     ArrayList ref =  new ArrayList();
+                    ArrayList doc =  new ArrayList();
                     ArrayList desc =   new ArrayList();
                     ArrayList type =   new ArrayList();
                     ArrayList cc_cr =   new ArrayList();
@@ -1689,7 +1713,7 @@ public class fglData {
                     ArrayList basecurr =  new ArrayList(); 
                    
                     String thistype = "RCT-VOUCH";
-                   
+                    String gldoc = setGLRecNbr("AP");
                    
                        res = st.executeQuery("select pl_line, pl_po_rcpt, pl_inventory, ap_amt, ap_base_amt, ap_curr, ap_base_curr, ap_ref, ap_nbr, vod_item, ap_site, ap_acct, ap_cc, ap_vend, " +
                                " vod_qty, vod_voprice, vod_expense_acct, vod_expense_cc from vod_mstr " +
@@ -1713,7 +1737,7 @@ public class fglData {
                     ref.add(res.getString("ap_nbr"));
                     type.add(thistype);
                     desc.add("cashtranvouch:" + res.getString("ap_ref") + "/" + res.getString("vod_item"));         
-               
+                    doc.add(gldoc);
                     // need to do discounts ..credit sales, debit disc, debit AR (-$4.00, $.02, $3.98)
                     
                          // Now we do the Rct-purch so that we add to inventory account
@@ -1730,10 +1754,10 @@ public class fglData {
                     ref.add(res.getString("ap_nbr"));
                     type.add("RCT-PURCH");
                     desc.add("cashtranpurch:" + res.getString("ap_ref") + "/" + res.getString("vod_item"));      
-                    
+                    doc.add(gldoc);
                     }
                      for (int j = 0; j < acct_cr.size(); j++) {
-                      glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString());  
+                      glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
                     }
            }
             catch (SQLException s){
@@ -1763,6 +1787,7 @@ public class fglData {
                    // added SQLITE adjustment here...create arraylist of entries for glentry instead of inline
                     ArrayList acct_cr = new ArrayList();
                     ArrayList ref =  new ArrayList();
+                    ArrayList doc =  new ArrayList();
                     ArrayList desc =   new ArrayList();
                     ArrayList type =   new ArrayList();
                     ArrayList cc_cr =   new ArrayList();
@@ -1776,7 +1801,10 @@ public class fglData {
                    
                     String thistype = "RCT-VOUCH";
                    
-                   
+                    // set parent GL doc number
+                    String gldoc = fglData.setGLRecNbr("AP");
+                    
+                    
                        res = st.executeQuery("select pl_line, pl_po_rcpt, pl_inventory, ap_amt, ap_base_amt, ap_curr, ap_base_curr, ap_ref, ap_nbr, vod_item, ap_site, ap_acct, ap_cc, ap_vend, " +
                                " vod_qty, vod_voprice, vod_expense_acct, vod_expense_cc from vod_mstr " +
                                " inner join item_mstr on it_item = vod_item " +
@@ -1797,6 +1825,7 @@ public class fglData {
                     basecurr.add(res.getString("ap_base_curr"));
                     site.add(res.getString("ap_site"));
                     ref.add(res.getString("ap_nbr"));
+                    doc.add(gldoc);
                     type.add(thistype);
                     desc.add("cashtranvouch:" + res.getString("ap_ref") + "/" + res.getString("vod_item"));         
                
@@ -1819,7 +1848,7 @@ public class fglData {
                     
                     }
                      for (int j = 0; j < acct_cr.size(); j++) {
-                      glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString());  
+                      glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
                     }
           
                      res.close();
@@ -1851,6 +1880,7 @@ public class fglData {
                     // added SQLITE adjustment here...create arraylist of entries for glentry instead of inline
                     ArrayList acct_cr = new ArrayList();
                     ArrayList ref =  new ArrayList();
+                    ArrayList doc =  new ArrayList();
                     ArrayList desc =   new ArrayList();
                     ArrayList type =   new ArrayList();
                     ArrayList cc_cr =   new ArrayList();
@@ -1864,8 +1894,9 @@ public class fglData {
                    
                     String thistype = "";
                     String thisdesc = "AR Memo";
-                   
-                       res = st.executeQuery("select ar_type, ard_acct, ard_cc, ard_id, ard_amt, ard_base_amt, ard_curr, ard_base_curr, ar_ref, ard_ref, ar_site, ar_acct, ar_cc from ard_mstr " +
+                    String gldoc = setGLRecNbr("AR");
+                    
+                    res = st.executeQuery("select ar_type, ard_acct, ard_cc, ard_id, ard_amt, ard_base_amt, ard_curr, ard_base_curr, ar_ref, ard_ref, ar_site, ar_acct, ar_cc from ard_mstr " +
                                " inner join ar_mstr on ar_nbr = ard_id  where ard_id = " + "'" + batchnbr + "'" +";");
                    
                     while (res.next()) {
@@ -1893,12 +1924,13 @@ public class fglData {
                     ref.add(res.getString("ard_id"));
                     type.add(thistype);
                     desc.add("Memo " + res.getString("ard_ref"));
+                    doc.add(gldoc);
                     
                     // need to do discounts ..credit sales, debit disc, debit AR (-$4.00, $.02, $3.98)
                     }
                     
                      for (int j = 0; j < acct_cr.size(); j++) {
-                      glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString());  
+                      glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
                     }
                     
            }
@@ -1944,6 +1976,7 @@ public class fglData {
                 // added SQLITE adjustment here...create arraylist of entries for glentry instead of inline
                     ArrayList acct_cr = new ArrayList();
                     ArrayList ref =  new ArrayList();
+                    ArrayList doc =  new ArrayList();
                     ArrayList desc =   new ArrayList();
                     ArrayList type =   new ArrayList();
                     ArrayList cc_cr =   new ArrayList();
@@ -1958,6 +1991,7 @@ public class fglData {
                     
                     String thistype = "AR-Payment";
                     String thisdesc = "";
+                    String gldoc = fglData.setGLRecNbr("AR");
                 
                    double net = 0.00;
                    double netbase = 0.00;
@@ -1990,6 +2024,7 @@ public class fglData {
                     ref.add(res.getString("ard_ref"));
                     type.add(thistype);
                     desc.add(thisdesc);
+                    doc.add(gldoc);
                                        
                     
                     // now lets do any taxes
@@ -2024,6 +2059,7 @@ public class fglData {
                                     ref.add(res.getString("ard_ref"));
                                     type.add(thistype);
                                     desc.add(thisdesc);
+                                    doc.add(gldoc);
 
                               }
                             }
@@ -2042,6 +2078,7 @@ public class fglData {
                         ref.add(res.getString("ard_ref"));
                         type.add(thistype);
                         desc.add(thisdesc); 
+                        doc.add(gldoc);
                         
                     }
                     
@@ -2074,6 +2111,7 @@ public class fglData {
                                     ref.add(res.getString("ard_ref"));
                                     type.add(thistype);
                                     desc.add(thisdesc);
+                                    doc.add(gldoc);
                     }
                     
                     
@@ -2089,7 +2127,7 @@ public class fglData {
                     
                      // process the arrays into glEntry
                     for (int j = 0; j < acct_cr.size(); j++) {
-                      glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString());  
+                      glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
                     }
            }
             catch (SQLException s){
@@ -2126,9 +2164,13 @@ public class fglData {
                        // POS is always in base currency
                        String curr = OVData.getDefaultCurrency();
                        String basecurr = curr;
-                                 
+                       
+                       // set parent GL doc number
+                    String gldoc = fglData.setGLRecNbr("POS");
+                       
                    ArrayList v_acct_cr = new ArrayList();
                     ArrayList v_ref =  new ArrayList();
+                    ArrayList v_doc =  new ArrayList();
                     ArrayList v_desc =   new ArrayList();
                     ArrayList v_type =   new ArrayList();
                     ArrayList v_cc_cr =   new ArrayList();
@@ -2151,6 +2193,7 @@ public class fglData {
                     v_site.add(OVData.getDefaultSite());
                     v_desc.add("Point Of Sales");
                     v_type.add("POS");
+                    v_doc.add(gldoc);
                                  
           
                     // now do tax entry
@@ -2163,11 +2206,12 @@ public class fglData {
                     v_site.add(OVData.getDefaultSite());
                     v_desc.add("POS Sales Tax");
                     v_type.add("POS");
+                    v_doc.add(gldoc);
                     }
                     res.close();
                     // process the arrays into glEntry
                     for (int j = 0; j < v_acct_cr.size(); j++) {
-                      glEntryXP(bscon, v_acct_cr.get(j).toString(), v_cc_cr.get(j).toString(), v_acct_dr.get(j).toString(), v_cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(v_cost.get(j).toString()), bsParseDoubleUS(v_cost.get(j).toString()), curr, basecurr, v_ref.get(j).toString(), v_site.get(j).toString(), v_type.get(j).toString(), v_desc.get(j).toString());  
+                      glEntryXP(bscon, v_acct_cr.get(j).toString(), v_cc_cr.get(j).toString(), v_acct_dr.get(j).toString(), v_cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(v_cost.get(j).toString()), bsParseDoubleUS(v_cost.get(j).toString()), curr, basecurr, v_ref.get(j).toString(), v_site.get(j).toString(), v_type.get(j).toString(), v_desc.get(j).toString(), v_doc.get(j).toString());  
                     }
                     
            }
@@ -2204,6 +2248,7 @@ public class fglData {
                  // added SQLITE adjustment here...create arraylist of entries for glentry instead of inline
                     ArrayList acct_cr = new ArrayList();
                     ArrayList ref =  new ArrayList();
+                    ArrayList doc =  new ArrayList();
                     ArrayList desc =   new ArrayList();
                     ArrayList type =   new ArrayList();
                     ArrayList cc_cr =   new ArrayList();
@@ -2214,7 +2259,8 @@ public class fglData {
                    
                     String thistype = "POS";
                     String thisdesc = "POS REVERSE";   
-                   
+                       // set parent GL doc number
+                    String gldoc = fglData.setGLRecNbr("POS");
                      // POS is always in base currency
                        String curr = OVData.getDefaultCurrency();
                        String basecurr = curr;
@@ -2232,7 +2278,8 @@ public class fglData {
                     site.add(OVData.getDefaultSite());
                     ref.add(res.getString("pos_nbr"));
                     type.add(thistype);
-                    desc.add(thisdesc);     
+                    desc.add(thisdesc); 
+                    doc.add(gldoc);
           
                   
                     // now do tax entry
@@ -2244,11 +2291,12 @@ public class fglData {
                     site.add(OVData.getDefaultSite());
                     ref.add(res.getString("pos_nbr"));
                     type.add(thistype);
-                    desc.add(thisdesc);     
+                    desc.add(thisdesc);   
+                    doc.add(gldoc);
                        
                     }
                      for (int j = 0; j < acct_cr.size(); j++) {
-                      glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(cost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString());  
+                      glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(cost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
                     }
                     
                     st.close();
@@ -2281,6 +2329,7 @@ public class fglData {
                 // added SQLITE adjustment here...create arraylist of entries for glentry instead of inline
                     ArrayList acct_cr = new ArrayList();
                     ArrayList ref =  new ArrayList();
+                    ArrayList doc =  new ArrayList();
                     ArrayList desc =   new ArrayList();
                     ArrayList type =   new ArrayList();
                     ArrayList cc_cr =   new ArrayList();
@@ -2297,7 +2346,7 @@ public class fglData {
                     String thisdesc = "";  
                     String thissite = "";
                     String thisref = "";
-                
+                    String gldoc = fglData.setGLRecNbr("AP");
                 
                     String unvouchacct = "";
                     String unvouchcc = "";
@@ -2362,7 +2411,8 @@ public class fglData {
                     basecurrarray.add(basecurr);
                     ref.add(thisref);
                     type.add(thistype);
-                    desc.add(thisdesc);     
+                    desc.add(thisdesc); 
+                    doc.add(gldoc);
           
                    
           
@@ -2378,7 +2428,8 @@ public class fglData {
                     basecurrarray.add(basecurr);
                     ref.add(thisref);
                     type.add(thistype);
-                    desc.add(thisdesc);   
+                    desc.add(thisdesc); 
+                    doc.add(gldoc);
           
                     // overhead cost
                     acct_cr.add(unvouchacct);
@@ -2392,7 +2443,8 @@ public class fglData {
                     basecurrarray.add(basecurr);
                     ref.add(thisref);
                     type.add(thistype);
-                    desc.add(thisdesc);   
+                    desc.add(thisdesc); 
+                    doc.add(gldoc);
           
                
           
@@ -2401,7 +2453,7 @@ public class fglData {
                     nres.close();
                   }
                     for (int j = 0; j < acct_cr.size(); j++) {
-                      glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), currarray.get(j).toString(), basecurrarray.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString());  
+                      glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), currarray.get(j).toString(), basecurrarray.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
                     }
                     
            }
@@ -2448,6 +2500,7 @@ public class fglData {
                  // added SQLITE adjustment here...create arraylist of entries for glentry instead of inline
                     ArrayList acct_cr = new ArrayList();
                     ArrayList ref =  new ArrayList();
+                    ArrayList doc =  new ArrayList();
                     ArrayList desc =   new ArrayList();
                     ArrayList type =   new ArrayList();
                     ArrayList cc_cr =   new ArrayList();
@@ -2461,7 +2514,8 @@ public class fglData {
                     String thistype = "ISS-SALES";
                     String thisdesc = "Sales Order Shipment";
                     
-                    
+                       // set parent GL doc number
+                    String gldoc = fglData.setGLRecNbr("SO");
                     
                     String aracct = "";
                     String cust = "";
@@ -2555,6 +2609,7 @@ public class fglData {
                     ref.add(thisref);
                     type.add(thistype);
                     desc.add(thisdesc);
+                    doc.add(gldoc);
                    
           
                     // labor COGS
@@ -2568,6 +2623,7 @@ public class fglData {
                     ref.add(thisref);
                     type.add(thistype);
                     desc.add(thisdesc);
+                    doc.add(gldoc);
                              
                     // burden COGS
                     acct_cr.add(nres.getString("pl_inventory"));
@@ -2580,6 +2636,7 @@ public class fglData {
                     ref.add(thisref);
                     type.add(thistype);
                     desc.add(thisdesc);
+                    doc.add(gldoc);
                     
           
                     // overhead COGS
@@ -2593,6 +2650,7 @@ public class fglData {
                     ref.add(thisref);
                     type.add(thistype);
                     desc.add(thisdesc);
+                    doc.add(gldoc);
           
                     // services COGS
                     acct_cr.add(nres.getString("pl_inventory"));
@@ -2605,6 +2663,7 @@ public class fglData {
                     ref.add(thisref);
                     type.add(thistype);
                     desc.add(thisdesc);
+                    doc.add(gldoc);
           
                     
                     // credit sales and debit AR
@@ -2623,6 +2682,7 @@ public class fglData {
                     ref.add(thisref);
                     type.add(thistype);
                     desc.add(thisdesc);
+                    doc.add(gldoc);
           
                     // need to do discounts ..credit sales, debit disc, debit AR (-$4.00, $.02, $3.98)
                     }
@@ -2649,6 +2709,7 @@ public class fglData {
                         ref.add(thisref);
                         type.add(thistype);
                         desc.add("Misc Item Shipment NonInventory");
+                        doc.add(gldoc);
                       }  
                         
                         
@@ -2668,13 +2729,13 @@ public class fglData {
                               taxvalue = totamt * ( bsParseDoubleUS(elements[1]) / 100 );
                               basetaxvalue = basetotamt * ( bsParseDoubleUS(elements[1]) / 100 );
                            //   bsmf.MainFrame.show(taxvalue + "/" + basetaxvalue + "/" + totamt + "/" + basetotamt );
-                          glEntryXP(bscon, defaultsalesacct, defaultsalescc, OVData.getDefaultTaxAcctByType(elements[2]), OVData.getDefaultTaxCCByType(elements[2]), BlueSeerUtils.setDateFormat(effdate), taxvalue, basetaxvalue, curr, basecurr, thisref, thissite, thistype, "Tax: " + elements[2]);
+                          glEntryXP(bscon, defaultsalesacct, defaultsalescc, OVData.getDefaultTaxAcctByType(elements[2]), OVData.getDefaultTaxCCByType(elements[2]), BlueSeerUtils.setDateFormat(effdate), taxvalue, basetaxvalue, curr, basecurr, thisref, thissite, thistype, "Tax: " + elements[2], gldoc);
                           }
                           // now add matl tax at item level
                     }
                     // now add matl tax at item level
                     if (matltax > 0)
-                    glEntryXP(bscon, defaultsalesacct, defaultsalescc, OVData.getDefaultTaxAcctByType("MATERIAL"), OVData.getDefaultTaxCCByType("MATERIAL"), BlueSeerUtils.setDateFormat(effdate), matltax, basematltax, curr, basecurr, thisref, thissite, thistype, "Tax: Material ");
+                    glEntryXP(bscon, defaultsalesacct, defaultsalescc, OVData.getDefaultTaxAcctByType("MATERIAL"), OVData.getDefaultTaxCCByType("MATERIAL"), BlueSeerUtils.setDateFormat(effdate), matltax, basematltax, curr, basecurr, thisref, thissite, thistype, "Tax: Material ", gldoc);
                           
                     
                    // Trailer / Summary Charges
@@ -2699,6 +2760,7 @@ public class fglData {
                         ref.add(thisref);
                         type.add(thistype);
                         desc.add("Summary Charges for Shipper");
+                        doc.add(gldoc);
                     
                           
                         } // if 'charge' or 'shipping ADD' type
@@ -2707,7 +2769,7 @@ public class fglData {
                    } // for each sac charge
                     
                 for (int j = 0; j < acct_cr.size(); j++) {
-                    glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), BlueSeerUtils.setDateFormat(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString());  
+                    glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), BlueSeerUtils.setDateFormat(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
                 } 
                     
                     
@@ -2742,6 +2804,7 @@ public class fglData {
                  // added SQLITE adjustment here...create arraylist of entries for glentry instead of inline
                     ArrayList acct_cr = new ArrayList();
                     ArrayList ref =  new ArrayList();
+                    ArrayList doc =  new ArrayList();
                     ArrayList desc =   new ArrayList();
                     ArrayList type =   new ArrayList();
                     ArrayList cc_cr =   new ArrayList();
@@ -2754,7 +2817,7 @@ public class fglData {
                     String thisref = "";
                     String thistype = "ISS-SALES";
                     String thisdesc = "Sales Order RV";
-                
+                    String gldoc = setGLRecNbr("RV");
                 
                     String aracct = "";
                     String cust = "";
@@ -2840,6 +2903,7 @@ public class fglData {
                     ref.add(thisref);
                     type.add(thistype);
                     desc.add(thisdesc);
+                    doc.add(gldoc);
                    
           
                     // labor COGS
@@ -2853,6 +2917,7 @@ public class fglData {
                     ref.add(thisref);
                     type.add(thistype);
                     desc.add(thisdesc);
+                    doc.add(gldoc);
                              
                     // burden COGS
                     acct_cr.add(nres.getString("pl_inventory"));
@@ -2865,6 +2930,7 @@ public class fglData {
                     ref.add(thisref);
                     type.add(thistype);
                     desc.add(thisdesc);
+                    doc.add(gldoc);
                     
           
                     // overhead COGS
@@ -2878,6 +2944,7 @@ public class fglData {
                     ref.add(thisref);
                     type.add(thistype);
                     desc.add(thisdesc);
+                    doc.add(gldoc);
           
                     // services COGS
                     acct_cr.add(nres.getString("pl_inventory"));
@@ -2890,6 +2957,7 @@ public class fglData {
                     ref.add(thisref);
                     type.add(thistype);
                     desc.add(thisdesc);
+                    doc.add(gldoc);
           
           
                     
@@ -2908,6 +2976,7 @@ public class fglData {
                     ref.add(thisref);
                     type.add(thistype);
                     desc.add(thisdesc);
+                    doc.add(gldoc);
           
                     // need to do discounts ..credit sales, debit disc, debit AR (-$4.00, $.02, $3.98)
                     }
@@ -2928,6 +2997,7 @@ public class fglData {
                         ref.add(thisref);
                         type.add(thistype);
                         desc.add("Misc Item Shipment NonInventory");
+                        doc.add(gldoc);
                       }  
                                                
                     }
@@ -2939,7 +3009,7 @@ public class fglData {
                     if (tottax > 0) {
                       ArrayList<String[]> taxelements = OVData.getTaxPercentElementsApplicableByTaxCode(taxcode);
                           for (String[] elements : taxelements) {
-                          glEntry(OVData.getDefaultSalesAcct(), OVData.getDefaultSalesCC(), OVData.getDefaultTaxAcctByType(elements[2]), OVData.getDefaultTaxCCByType(elements[2]), dfdate.format(effdate), ( totamt * ( bsParseDoubleUS(elements[1]) / 100 )), ( basetotamt * ( bsParseDoubleUS(elements[1]) / 100 )), curr, basecurr, thisref, thissite, thistype, "Tax: " + elements[2]);
+                          glEntry(OVData.getDefaultSalesAcct(), OVData.getDefaultSalesCC(), OVData.getDefaultTaxAcctByType(elements[2]), OVData.getDefaultTaxCCByType(elements[2]), dfdate.format(effdate), ( totamt * ( bsParseDoubleUS(elements[1]) / 100 )), ( basetotamt * ( bsParseDoubleUS(elements[1]) / 100 )), curr, basecurr, thisref, thissite, thistype, "Tax: " + elements[2], gldoc);
                           }
                     }
                     
@@ -2961,11 +3031,12 @@ public class fglData {
                         ref.add(thisref);
                         type.add(thistype);
                         desc.add("Summary Charges for Shipper");
+                        doc.add(gldoc);
                     }
                     
                     
                       for (int j = 0; j < acct_cr.size(); j++) {
-                      glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString());  
+                      glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
                     }
                     
            }
@@ -2996,6 +3067,7 @@ public class fglData {
                  // added SQLITE adjustment here...create arraylist of entries for glentry instead of inline
                     ArrayList acct_cr = new ArrayList();
                     ArrayList ref =  new ArrayList();
+                    ArrayList doc =  new ArrayList();
                     ArrayList desc =   new ArrayList();
                     ArrayList type =   new ArrayList();
                     ArrayList cc_cr =   new ArrayList();
@@ -3009,7 +3081,8 @@ public class fglData {
                    
                     
                     
-                    
+                       // set parent GL doc number
+                    String gldoc = fglData.setGLRecNbr("AP");
                     
                     String thistype = ctype;
                     String thisdesc = "";   
@@ -3042,10 +3115,11 @@ public class fglData {
                         ref.add(res.getString("ap_check"));
                         type.add(thistype);
                         desc.add(thisdesc);
+                        doc.add(gldoc);
                     }
                     
                      for (int j = 0; j < acct_cr.size(); j++) {
-                      glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString());  
+                      glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), dfdate.format(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
                     }
                  
                     st.close();
@@ -4995,7 +5069,7 @@ return myarray;
     public static void setYearEndValues(String site, String year) {
 
        String[] myarray = new String[2];
-
+       String gldoc = setGLRecNbr("YE");
        ArrayList<String[]> accounts = new ArrayList<String[]>();
 
     try {
@@ -5055,7 +5129,7 @@ return myarray;
 
         // now do glentry for all the reversed accounts in the arraylist..washing against the Retained Earnings account
          for (String[] a : accounts) {
-              fglData.glEntry(re_acct, cc, a[0], cc, date, bsParseDoubleUS(a[1]), bsParseDoubleUS(a[1]), curr, basecurr, "YearEndClose", site, "GL", "YearEndClose");  
+              fglData.glEntry(re_acct, cc, a[0], cc, date, bsParseDoubleUS(a[1]), bsParseDoubleUS(a[1]), curr, basecurr, "YearEndClose", site, "GL", "YearEndClose", gldoc);  
          }
 
        // now post

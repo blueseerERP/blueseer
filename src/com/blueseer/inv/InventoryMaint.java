@@ -32,6 +32,7 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.fgl.fglData;
+import static com.blueseer.fgl.fglData.setGLRecNbr;
 
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
@@ -644,6 +645,7 @@ public class InventoryMaint extends javax.swing.JPanel {
             qty = qty;
         }
         
+        String gldoc = setGLRecNbr("AJ");
         
         // all inventory transactions performed in base currency
         String basecurr = OVData.getDefaultCurrency();
@@ -708,10 +710,10 @@ public class InventoryMaint extends javax.swing.JPanel {
         if (! isError) {
             if (ddtype.getSelectedItem().toString().equals("issue")) {
                 fglData.glEntry(invacct, prodline, acct, cc,  
-                        dfdate.format(dcdate.getDate()), (cost * Double.valueOf(tbqty.getText())), (cost * Double.valueOf(tbqty.getText())), basecurr, basecurr, tbref.getText() , site, type, tbrmks.getText());
+                        dfdate.format(dcdate.getDate()), (cost * Double.valueOf(tbqty.getText())), (cost * Double.valueOf(tbqty.getText())), basecurr, basecurr, tbref.getText() , site, type, tbrmks.getText(), gldoc);
             } else {
                 fglData.glEntry(ddacct.getSelectedItem().toString(), ddcc.getSelectedItem().toString(), invacct, prodline, 
-                        dfdate.format(dcdate.getDate()), (cost * Double.valueOf(tbqty.getText())), (cost * Double.valueOf(tbqty.getText())), basecurr, basecurr, tbref.getText() , site, type, tbrmks.getText());
+                        dfdate.format(dcdate.getDate()), (cost * Double.valueOf(tbqty.getText())), (cost * Double.valueOf(tbqty.getText())), basecurr, basecurr, tbref.getText() , site, type, tbrmks.getText(), gldoc);
             }
         } else {
           bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));  
