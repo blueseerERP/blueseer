@@ -3854,15 +3854,13 @@ public class ediData {
                         byte[] indata = Files.readAllBytes(path);
                         BlueSeerUtils.bsr x = apiUtils.encryptFile(indata, keyid);
                         if (x.data() != null) {
-                        Path outpath = FileSystems.getDefault().getPath(destination + "/" + path.getFileName() + ".enc");    
-                        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(outpath.toFile()));
-                        bos.write(x.data());
-                        bos.flush();
-                        bos.close();
+                            Path outpath = FileSystems.getDefault().getPath(destination + "/" + path.getFileName() + ".enc");    
+                            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(outpath.toFile()));
+                            bos.write(x.data());
+                            bos.flush();
+                            bos.close();
                         } else {
-                         r[0] = "1";
-                         r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "encrypted data is null "; 
-                         return r;   
+                            return x.m();   
                         }
                     }
                 }
@@ -3925,15 +3923,13 @@ public class ediData {
                         byte[] indata = Files.readAllBytes(path);
                         BlueSeerUtils.bsr x = apiUtils.decryptFile(indata, keyid);
                         if (x.data() != null) {
-                        Path outpath = FileSystems.getDefault().getPath(destination + "/" + path.getFileName() + ".dec");    
-                        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(outpath.toFile()));
-                        bos.write(x.data());
-                        bos.flush();
-                        bos.close();
+                            Path outpath = FileSystems.getDefault().getPath(destination + "/" + path.getFileName() + ".dec");    
+                            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(outpath.toFile()));
+                            bos.write(x.data());
+                            bos.flush();
+                            bos.close();
                         } else {
-                         r[0] = "1";
-                         r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "decrypted data is null "; 
-                         return r;   
+                            return x.m();   
                         }
                     }
                 }

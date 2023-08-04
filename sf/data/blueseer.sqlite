@@ -2868,7 +2868,7 @@ CREATE TABLE "wf_mstr" (
   "wf_id" varchar(30) NOT NULL,
   "wf_desc" varchar(100) COLLATE NOCASE DEFAULT '',
   "wf_site" varchar(10) COLLATE NOCASE DEFAULT '',
-  "wf_op" varchar(4) NOT NULL,
+  "wf_op" int(4) NOT NULL DEFAULT '0',
   "wf_assert" tinyint(1) COLLATE NOCASE DEFAULT '0',
   "wf_op_desc" varchar(100) COLLATE NOCASE DEFAULT '',
   "wf_cell" varchar(20) COLLATE NOCASE DEFAULT '',

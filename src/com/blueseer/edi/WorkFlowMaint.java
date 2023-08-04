@@ -167,6 +167,7 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
              updateForm();  
              tbkey.requestFocus();
            } else if (this.type.equals("run")) {
+               setAction(new String[]{"0",""});
              tbkey.requestFocus();
            } else {
              initvars(null);  
@@ -665,7 +666,7 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
             if (i == 14) {
                 ArrayList<String[]> x = new ArrayList<String[]>();
-                x.add(new String[]{"Key ID", ""});
+                x.add(new String[]{"key id", ""});
                 x.add(new String[]{"source dir", ""});
                 x.add(new String[]{"destination dir", ""});
                 kvs.put("Encrypt", x);

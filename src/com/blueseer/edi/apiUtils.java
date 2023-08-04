@@ -488,6 +488,8 @@ public class apiUtils {
         pks_mstr pks = admData.getPksMstr(new String[]{user});
         try {
             // File type
+            Security.addProvider(new BouncyCastleProvider());
+            
             if (pks.pks_type().equals("publickey") ) {
                 Path certfilepath = FileSystems.getDefault().getPath(pks.pks_file());
                 if (! Files.exists(certfilepath)) {
@@ -495,7 +497,7 @@ public class apiUtils {
                      return cert; // return null
                 }
                // System.out.println("here->" + certfilepath.toString());
-                Security.addProvider(new BouncyCastleProvider());
+                
                 CertificateFactory certFactory = CertificateFactory.getInstance("X.509", "BC");
                 try (FileInputStream fiscert = new FileInputStream(certfilepath.toFile())) {
                     cert = (X509Certificate) certFactory.generateCertificate(fiscert);
@@ -1079,12 +1081,6 @@ public class apiUtils {
      }
      if (pks.pks_standard().equals("X.509")) {
          try {
-            Path keyfilepath = FileSystems.getDefault().getPath(pks.pks_file());
-            if (! keyfilepath.toFile().exists()) {
-                r[0] = "1";
-                r[1] = "x.509 keyfile path does not exist: " + keyid;
-                return new bsr(r, null);
-            } 
             encryptedData = apiUtils.encryptData(indata, apiUtils.getPublicKeyAsCert(keyid), "" );
             } catch (CMSException ex) {
                 r[0] = "1";
@@ -1126,12 +1122,6 @@ public class apiUtils {
      }
      if (pks.pks_standard().equals("X.509")) {
          try {
-            Path keyfilepath = FileSystems.getDefault().getPath(pks.pks_file());
-            if (! keyfilepath.toFile().exists()) {
-                r[0] = "1";
-                r[1] = "x.509 keyfile path does not exist: " + keyid;
-                return new bsr(r, null);
-            } 
             decryptedData = apiUtils.decryptData(indata, apiUtils.getPrivateKey(keyid) );
             } catch (CMSException ex) {
              r[0] = "1";
