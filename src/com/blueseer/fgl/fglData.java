@@ -1053,11 +1053,11 @@ public class fglData {
            String mystring = "";
           // int nextnbr = OVData.getNextNbr("gl");
            java.util.Date now = new java.util.Date();
-           DateFormat dfdate = new SimpleDateFormat("yyyyMMdd");
+           DateFormat dfdate = new SimpleDateFormat("yyyyMM");
            // format should be two char type code + 8 char date code + 6 char unique number ...16 chars in all
           // mystring = type + dfdate.format(now) + String.format("%06d", nextnbr);   
            // 20230804 TEV using hex string instead of getNextNbr for performance
-           mystring = type + dfdate.format(now) + Long.toHexString(System.currentTimeMillis());
+           mystring = type + Long.toHexString(System.currentTimeMillis());
            return mystring;
        }
     
