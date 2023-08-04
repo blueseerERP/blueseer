@@ -151,6 +151,11 @@ public class ProdEntryMaint extends javax.swing.JPanel {
             if (ddop.getItemCount() <= 0) {
             ddop.addItem("0");
             }
+            if (ddop.getItemCount() > 0) {
+                ddop.setSelectedIndex(myops.size() - 1);
+            }
+            
+            
             ddbom.removeAllItems();
             ddbom.insertItemAt("", 0);
             String primary = "";

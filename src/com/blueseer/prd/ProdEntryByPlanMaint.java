@@ -196,12 +196,13 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
      //  ArrayList<String> mylist = invData.getItemRoutingOPs(partlabel.getText());
        mylist.sort(Comparator.comparingInt(Integer::parseInt)); 
       // Collections.sort(mylist, Collections.reverseOrder());
-    //   for (int i = 0; i < mylist.size(); i++) {
-       for (int i = mylist.size() - 1; i >= 0; i--) {    
+       for (int i = 0; i < mylist.size(); i++) {
+    //   for (int i = mylist.size() - 1; i >= 0; i--) {    
            ddop.addItem(mylist.get(i));
        }
-       
-       
+       if (ddop.getItemCount() > 0) {
+        ddop.setSelectedIndex(mylist.size() - 1);
+       }
        
        if (ddop.getItemCount() <= 0) {
            ddop.addItem("0");
