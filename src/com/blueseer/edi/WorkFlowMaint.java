@@ -339,17 +339,17 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
     public boolean validateInput(dbaction x) {
        
                
-        Map<String,Integer> f = OVData.getTableInfo("car_mstr");
+        Map<String,Integer> f = OVData.getTableInfo("wkf_mstr");
         int fc;
 
-        fc = checkLength(f,"car_id");
+        fc = checkLength(f,"wkf_id");
         if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {
             bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
             tbkey.requestFocus();
             return false;
         }     
          
-        fc = checkLength(f,"car_desc");
+        fc = checkLength(f,"wkf_desc");
         if (tbdesc.getText().length() > fc ) {
             bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
             tbdesc.requestFocus();
@@ -1188,12 +1188,21 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     private void btcommitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcommitActionPerformed
         ArrayList<String[]> list = new ArrayList<String[]>();
+        boolean proceed = true;
         for (int j = 0; j < keyvaluetable.getRowCount(); j++) {
+            if (keyvaluetable.getValueAt(j, 1).toString().length() > 100) {
+                proceed = false;
+                break;
+            }
             String[] arr = new String[]{keyvaluetable.getValueAt(j, 0).toString(), keyvaluetable.getValueAt(j, 1).toString()};
             list.add(arr);
         }
+        if (proceed) {
         kvm.put(String.valueOf(currentkvm), list);
-        bsmf.MainFrame.show("key/values committed");
+         bsmf.MainFrame.show("key/values committed");
+        } else {
+         bsmf.MainFrame.show("Value length cannot exceed 100 chars");   
+        }
     }//GEN-LAST:event_btcommitActionPerformed
 
     private void btrunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrunActionPerformed

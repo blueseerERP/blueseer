@@ -532,7 +532,7 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
 
     public void updateForm() {
-        
+        if (x != null && ! x.wf_id().isBlank()) {
         double runhours = 0;
         assignOPs(x.wf_id());
                  
@@ -549,7 +549,8 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbsetuphours.setText(x.wf_setup_hours().replace('.',defaultDecimalSeparator));
         tbrunhoursinverted.setText(bsFormatDouble(runhours,"0").replace('.',defaultDecimalSeparator));
         cbmilestone.setSelected(BlueSeerUtils.ConvertStringToBool(x.wf_assert()));
-        setAction(x.m());      
+        setAction(x.m());  
+        }
     }
     
     // custom funcs

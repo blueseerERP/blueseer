@@ -198,7 +198,7 @@ public class schData {
             ResultSet res = null;
             try {
              res = st.executeQuery("select * from pland_mstr where pland_parent = " + "'" + serialno + "'"
-                     + " ;");
+                     + " order by abs(pland_op) ;");
            while (res.next()) {
                String[] w = new String[]{
                    res.getString("pland_id"),
