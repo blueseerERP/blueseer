@@ -95,6 +95,7 @@ public class GLTranRpt1 extends javax.swing.JPanel {
  
      MyTableModel mymodel = new GLTranRpt1.MyTableModel(new Object[][]{},
                         new String[]{getGlobalColumnTag("id"), 
+                            getGlobalColumnTag("document"),
                             getGlobalColumnTag("reference"), 
                             getGlobalColumnTag("effectivedate"), 
                             getGlobalColumnTag("date"), 
@@ -102,7 +103,16 @@ public class GLTranRpt1 extends javax.swing.JPanel {
                             getGlobalColumnTag("site"), 
                             getGlobalColumnTag("type"), 
                             getGlobalColumnTag("account"),
-                            getGlobalColumnTag("costcenter"), getGlobalColumnTag("amount")});
+                            getGlobalColumnTag("costcenter"), getGlobalColumnTag("amount")})
+             {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if ( col == 10)       
+                        return Double.class;
+                        else if (col == 0) return Integer.class;
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
     
     
     /**
@@ -140,7 +150,7 @@ public class GLTranRpt1 extends javax.swing.JPanel {
         Component c = super.getTableCellRendererComponent(table,
                 value, isSelected, hasFocus, row, column);
         
-        String status = (String)table.getModel().getValueAt(table.convertRowIndexToModel(row), 8);  // 8 = status column
+        String status = (String)table.getModel().getValueAt(table.convertRowIndexToModel(row), 9);  // 8 = status column
         
          if ("error".equals(status)) {
             c.setBackground(Color.red);
@@ -453,7 +463,7 @@ try {
                
                 tablereport.setModel(mymodel);
                // tableorder.getColumnModel().getColumn(0).setCellRenderer(new OrderReport1.SomeRenderer());  
-                tablereport.getColumnModel().getColumn(9).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+                tablereport.getColumnModel().getColumn(10).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
                 Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
                  
              
@@ -475,7 +485,8 @@ try {
                  
                     i++;
                         mymodel.addRow(new Object[]{
-                                res.getString("glh_id"),
+                                res.getInt("glh_id"),
+                                res.getString("glh_doc"),
                                 res.getString("glh_ref"),
                                 res.getString("glh_effdate"),
                                 res.getString("glh_entdate"),

@@ -7226,11 +7226,11 @@ return mymodel;
 
     public static DefaultTableModel getUnPostedGLTrans() {
               javax.swing.table.DefaultTableModel mymodel =  new javax.swing.table.DefaultTableModel(new Object[][]{},
-              new String[]{getGlobalColumnTag("id"), getGlobalColumnTag("account"), getGlobalColumnTag("description"), getGlobalColumnTag("costcenter"), getGlobalColumnTag("type"), getGlobalColumnTag("reference"), getGlobalColumnTag("description"), getGlobalColumnTag("effectivedate"), getGlobalColumnTag("date"), getGlobalColumnTag("amount")})
+              new String[]{getGlobalColumnTag("id"), getGlobalColumnTag("account"), getGlobalColumnTag("description"), getGlobalColumnTag("costcenter"), getGlobalColumnTag("type"), getGlobalColumnTag("document"), getGlobalColumnTag("reference"), getGlobalColumnTag("description"), getGlobalColumnTag("effectivedate"), getGlobalColumnTag("date"), getGlobalColumnTag("amount")})
                       {
               @Override  
               public Class getColumnClass(int col) {  
-                if (col == 9) {      
+                if (col == 10) {      
                     return Double.class;
                 } else if ( col == 0) {
                  return Integer.class;   
@@ -7249,7 +7249,7 @@ return mymodel;
             Statement st = con.createStatement();
             ResultSet res = null;
             try{
-                       res = st.executeQuery("SELECT glt_id, glt_acct, glt_cc, glt_ref, glt_effdate, glt_entdate, glt_base_amt, glt_desc, glt_type, ac_desc " +
+                       res = st.executeQuery("SELECT glt_id, glt_acct, glt_doc, glt_cc, glt_ref, glt_effdate, glt_entdate, glt_base_amt, glt_desc, glt_type, ac_desc " +
                         "from gl_tran inner join ac_mstr on ac_id = glt_acct order by glt_id desc ;");
                                
                     while (res.next()) {
@@ -7259,6 +7259,7 @@ return mymodel;
                                    res.getString("ac_desc"),
                                 res.getString("glt_cc"),
                                 res.getString("glt_type"),
+                                res.getString("glt_doc"),
                                 res.getString("glt_ref"),
                                 res.getString("glt_desc"),
                                 res.getString("glt_effdate"),

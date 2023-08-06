@@ -247,7 +247,7 @@ public int[] mywidth;
         if (arg[0].equals("UnPostedTransRpt")) {
              mymodel = DTData.getUnPostedGLTrans();
               TableReport.setModel(mymodel);
-              TableReport.getColumnModel().getColumn(9).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+              TableReport.getColumnModel().getColumn(10).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
         }
         if (arg[0].equals("CalendarBrowse")) {
              mymodel = DTData.getGLCalendar();
