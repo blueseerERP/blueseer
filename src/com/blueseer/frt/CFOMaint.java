@@ -40,6 +40,7 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.adm.admData;
 import static com.blueseer.adm.admData.addChangeLog;
+import com.blueseer.ctr.cusData;
 import static com.blueseer.frt.frtData.addCFOMstr;
 import static com.blueseer.frt.frtData.addCFOTransaction;
 import com.blueseer.frt.frtData.cfo_det;
@@ -442,9 +443,13 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
     public void setComponentDefaultValues() {
        isLoad = true;
        
+       
+       ArrayList<String[]> initDataSets = frtData.getCFOMaintInit();
+       
+       
        jTabbedPane1.removeAll();
-        jTabbedPane1.add("Main", jPanelMain);
-        jTabbedPane1.add("Location", jPanelLocation);
+       jTabbedPane1.add("Main", jPanelMain);
+       jTabbedPane1.add("Location", jPanelLocation);
        
        tbkey.setText("");
        cbhazmat.setSelected(false);
@@ -504,10 +509,9 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         
        
-        ArrayList<String[]> initDataSets = frtData.getCarrierMaintInit();
-        
+       
         ddstate.removeAllItems();
-        
+        ddcust.removeAllItems();
         
         for (String[] s : initDataSets) {
                       
@@ -517,11 +521,17 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
             if (s[0].equals("countries")) {
             
             }
+            if (s[0].equals("customers")) {
+              ddcust.addItem(s[1]); 
+            }
             
         }
         
         ddstate.insertItemAt("", 0);
         ddstate.setSelectedIndex(0);
+        
+        ddcust.insertItemAt("", 0);
+        ddcust.setSelectedIndex(0);
        
         // add schedule types to stk (schedule type key) LinkedHashMap
         stk.put("", pass);
@@ -1104,6 +1114,16 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         
     }
     
+    public void clientChangeEvent(String mykey) {
+            
+       if (! isLoad && ddcust.getSelectedItem() != null && ! ddcust.getSelectedItem().toString().isEmpty() ) {
+           lbclientname.setText(cusData.getCustName(ddcust.getSelectedItem().toString()));
+       } else {
+           lbclientname.setText("");
+       }
+    }
+  
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -1171,6 +1191,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel37 = new javax.swing.JLabel();
         cbstandard = new javax.swing.JCheckBox();
         dddriver = new javax.swing.JComboBox<>();
+        lbclientname = new javax.swing.JLabel();
         tbcharges = new javax.swing.JTextField();
         tbcost = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
@@ -1360,6 +1381,11 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         ddcust.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "test1", "test2" }));
+        ddcust.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddcustActionPerformed(evt);
+            }
+        });
 
         jLabel5.setText("Client");
 
@@ -1448,25 +1474,30 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addComponent(jLabel101, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel16, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addGap(4, 4, 4)
-                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(ddcust, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbcustforev, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbtrailer, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(ddequiptype, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(ddservicetype, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(tbcustfo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE))
-                                .addComponent(ddvehicle, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel15)
-                            .addComponent(jLabel7)
-                            .addComponent(jLabel24)
-                            .addComponent(jLabel28)
-                            .addComponent(jLabel29)
-                            .addComponent(jLabel30)
-                            .addComponent(jLabel36))
+                            .addGroup(jPanel12Layout.createSequentialGroup()
+                                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(tbcustforev, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tbtrailer, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(ddequiptype, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(ddservicetype, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(tbcustfo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(ddvehicle, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(68, 68, 68)
+                                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel15, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel24, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel28, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel29, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel30, javax.swing.GroupLayout.Alignment.TRAILING)))
+                            .addGroup(jPanel12Layout.createSequentialGroup()
+                                .addComponent(ddcust, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lbclientname, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel36)))
                         .addGap(4, 4, 4)
                         .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tbbrokercell, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1517,7 +1548,8 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(ddorderstatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel36)
                     .addComponent(ddratetype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel31))
+                    .addComponent(jLabel31)
+                    .addComponent(lbclientname, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel12Layout.createSequentialGroup()
@@ -2551,6 +2583,12 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
     }//GEN-LAST:event_jTabbedPane1StateChanged
 
+    private void ddcustActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddcustActionPerformed
+          if (ddcust.getItemCount() > 0) {
+           clientChangeEvent(ddcust.getSelectedItem().toString());
+        } // if ddcust has a list
+    }//GEN-LAST:event_ddcustActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btadditem;
@@ -2658,6 +2696,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel lbclientname;
     private javax.swing.JTable orddet;
     private javax.swing.JTextField tbaddr1;
     private javax.swing.JTextField tbaddr2;
