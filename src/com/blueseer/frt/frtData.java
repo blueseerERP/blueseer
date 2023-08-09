@@ -211,6 +211,518 @@ public class frtData {
         return m;
     }
     
+    public static String[] addVehicleMstr(veh_mstr x) {
+        String[] m = new String[2];
+        String sqlSelect = "SELECT * FROM  veh_mstr where veh_id = ?";
+        String sqlInsert = "insert into veh_mstr (veh_id, veh_desc, veh_type," +
+        "veh_subtype,  veh_status,  veh_make,  veh_model,  veh_submodel," +
+        "veh_engine,  veh_fueltype,  veh_year,  veh_vin,  veh_rmks," +
+        "veh_servicedate,  veh_servicefreqdays,  veh_servicefreqmiles,  veh_odometer,  veh_odometerdate," +
+        "veh_regnbr,  veh_regdate,  veh_regtax,  veh_regstate," +
+        "veh_weight,  veh_condition,  veh_loc,  veh_misc1," +
+        "veh_misc2,  veh_misc3 ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+             ps.setString(1, x.veh_id);
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.veh_id);
+            psi.setString(2, x.veh_desc);
+            psi.setString(3, x.veh_type);
+            psi.setString(4, x.veh_subtype);
+            psi.setString(5, x.veh_status);
+            psi.setString(6, x.veh_make);
+            psi.setString(7, x.veh_model);
+            psi.setString(8, x.veh_submodel);
+            psi.setString(9, x.veh_engine);
+            psi.setString(10, x.veh_fueltype);
+            psi.setString(11, x.veh_year);
+            psi.setString(12, x.veh_vin);
+            psi.setString(13, x.veh_rmks);
+            psi.setString(14, x.veh_servicedate);
+            psi.setString(15, x.veh_servicefreqdays);
+            psi.setString(16, x.veh_servicefreqmiles);
+            psi.setString(17, x.veh_odometer);
+            psi.setString(18, x.veh_odometerdate);
+            psi.setString(19, x.veh_regnbr);
+            psi.setString(20, x.veh_regdate);
+            psi.setString(21, x.veh_regtax);
+            psi.setString(22, x.veh_regstate);
+            psi.setString(23, x.veh_weight);
+            psi.setString(24, x.veh_condition);
+            psi.setString(25, x.veh_loc);
+            psi.setString(26, x.veh_misc1);
+            psi.setString(27, x.veh_misc2);
+            psi.setString(28, x.veh_misc3);
+        
+            int rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+
+    public static String[] updateVehicleMstr(veh_mstr x) {
+        String[] m = new String[2];
+        String sql = "update veh_mstr set veh_desc = ?, veh_type = ?," +
+        "veh_subtype = ?,  veh_status = ?,  veh_make = ?,  veh_model = ?,  veh_submodel = ?," +
+        "veh_engine = ?,  veh_fueltype = ?,  veh_year = ?,  veh_vin = ?,  veh_rmks = ?," +
+        "veh_servicedate = ?,  veh_servicefreqdays = ?,  veh_servicefreqmiles = ?,  veh_odometer = ?,  veh_odometerdate = ?," +
+        "veh_regnbr = ?,  veh_regdate = ?,  veh_regtax = ?,  veh_regstate = ?," +
+        "veh_weight = ?,  veh_condition = ?,  veh_loc = ?,  veh_misc1 = ?," +
+        "veh_misc2 = ?,  veh_misc3 = ?  " +
+                     " where veh_id = ? ; ";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
+	PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, x.veh_desc);
+            ps.setString(2, x.veh_type);
+            ps.setString(3, x.veh_subtype);
+            ps.setString(4, x.veh_status);
+            ps.setString(5, x.veh_make);
+            ps.setString(6, x.veh_model);
+            ps.setString(7, x.veh_submodel);
+            ps.setString(8, x.veh_engine);
+            ps.setString(9, x.veh_fueltype);
+            ps.setString(10, x.veh_year);
+            ps.setString(11, x.veh_vin);
+            ps.setString(12, x.veh_rmks);
+            ps.setString(13, x.veh_servicedate);
+            ps.setString(14, x.veh_servicefreqdays);
+            ps.setString(15, x.veh_servicefreqmiles);
+            ps.setString(16, x.veh_odometer);
+            ps.setString(17, x.veh_odometerdate);
+            ps.setString(18, x.veh_regnbr);
+            ps.setString(19, x.veh_regdate);
+            ps.setString(20, x.veh_regtax);
+            ps.setString(21, x.veh_regstate);
+            ps.setString(22, x.veh_weight);
+            ps.setString(23, x.veh_condition);
+            ps.setString(24, x.veh_loc);
+            ps.setString(25, x.veh_misc1);
+            ps.setString(26, x.veh_misc2);
+            ps.setString(27, x.veh_misc3);
+            ps.setString(28, x.veh_id);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static veh_mstr getVehicleMstr(String[] x) {
+        veh_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from veh_mstr where veh_id = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new veh_mstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new veh_mstr(m, res.getString("veh_id"), 
+                            res.getString("veh_desc"),
+                            res.getString("veh_type"),
+                            res.getString("veh_subtype"),
+                            res.getString("veh_status"),
+                            res.getString("veh_make"),
+                            res.getString("veh_model"),
+                            res.getString("veh_submodel"),
+                            res.getString("veh_engine"),
+                            res.getString("veh_fueltype"),
+                            res.getString("veh_year"), 
+                            res.getString("veh_vin"),
+                            res.getString("veh_rmks"),
+                            res.getString("veh_servicedate"),
+                            res.getString("veh_servicefreqdays"),
+                            res.getString("veh_servicefreqmiles"),
+                            res.getString("veh_odometer"),
+                            res.getString("veh_odometerdate"),
+                            res.getString("veh_regnbr"),
+                            res.getString("veh_regdate"),
+                            res.getString("veh_regtax"),
+                            res.getString("veh_regstate"),
+                            res.getString("veh_weight"),
+                            res.getString("veh_condition"),
+                            res.getString("veh_loc"),
+                            res.getString("veh_misc1"),
+                            res.getString("veh_misc2"),
+                            res.getString("veh_misc3")
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new veh_mstr(m);
+        }
+        return r;
+    }
+    
+    public static String[] deleteVehicleMstr(veh_mstr x) { 
+       String[] m = new String[2];
+        String sql = "delete from veh_mstr where veh_id = ?; ";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.veh_id);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static String[] addDriverMstr(drv_mstr x) {
+        String[] m = new String[2];
+        String sqlSelect = "SELECT * FROM  drv_mstr where drv_id = ?";
+        String sqlInsert = "insert into drv_mstr (drv_id, drv_status, drv_lname," +
+        "drv_fname,  drv_line1,  drv_line2,  drv_city,  drv_state," +
+        "drv_zip,  drv_country,  drv_phone,  drv_email,  drv_type," +
+        "drv_ap_acct,  drv_ap_cc,  drv_terms,  drv_certificate,  drv_licensenbr," +
+        "drv_licenseexpire,  drv_insurancenbr,  drv_insuranceexpire,  drv_insurancecarrier," +
+        "drv_dhmiles,  drv_milerate,  drv_payrate,  drv_paytype," +
+        "drv_hiredate,  drv_termdate ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+             ps.setString(1, x.drv_id);
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.drv_id);
+            psi.setString(2, x.drv_status);
+            psi.setString(3, x.drv_lname);
+            psi.setString(4, x.drv_fname);
+            psi.setString(5, x.drv_line1);
+            psi.setString(6, x.drv_line2);
+            psi.setString(7, x.drv_city);
+            psi.setString(8, x.drv_state);
+            psi.setString(9, x.drv_zip);
+            psi.setString(10, x.drv_country);
+            psi.setString(11, x.drv_phone);
+            psi.setString(12, x.drv_email);
+            psi.setString(13, x.drv_type);
+            psi.setString(14, x.drv_ap_acct);
+            psi.setString(15, x.drv_ap_cc);
+            psi.setString(16, x.drv_terms);
+            psi.setString(17, x.drv_certificate);
+            psi.setString(18, x.drv_licensenbr);
+            psi.setString(19, x.drv_licenseexpire);
+            psi.setString(20, x.drv_insurancenbr);
+            psi.setString(21, x.drv_insuranceexpire);
+            psi.setString(22, x.drv_insurancecarrier);
+            psi.setString(23, x.drv_dhmiles);
+            psi.setString(24, x.drv_milerate);
+            psi.setString(25, x.drv_payrate);
+            psi.setString(26, x.drv_paytype);
+            psi.setString(27, x.drv_hiredate);
+            psi.setString(28, x.drv_termdate);
+        
+            int rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+
+    public static String[] updateDriverMstr(drv_mstr x) {
+        String[] m = new String[2];
+        String sql = "update drv_mstr set drv_status = ?, drv_lname = ?," +
+        "drv_fname = ?,  drv_line1 = ?,  drv_line2 = ?,  drv_city = ?,  drv_state = ?," +
+        "drv_zip = ?,  drv_country = ?,  drv_phone = ?,  drv_email = ?,  drv_type = ?," +
+        "drv_ap_acct = ?,  drv_ap_cc = ?,  drv_terms = ?,  drv_certificate = ?,  drv_licensenbr = ?," +
+        "drv_licenseexpire = ?,  drv_insurancenbr = ?,  drv_insuranceexpire = ?,  drv_insurancecarrier = ?," +
+        "drv_dhmiles = ?,  drv_milerate = ?,  drv_payrate = ?,  drv_paytype = ?," +
+        "drv_hiredate = ?,  drv_termdate = ?" +
+                     " where drv_id = ? ; ";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
+	PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, x.drv_status);
+            ps.setString(2, x.drv_lname);
+            ps.setString(3, x.drv_fname);
+            ps.setString(4, x.drv_line1);
+            ps.setString(5, x.drv_line2);
+            ps.setString(6, x.drv_city);
+            ps.setString(7, x.drv_state);
+            ps.setString(8, x.drv_zip);
+            ps.setString(9, x.drv_country);
+            ps.setString(10, x.drv_phone);
+            ps.setString(11, x.drv_email);
+            ps.setString(12, x.drv_type);
+            ps.setString(13, x.drv_ap_acct);
+            ps.setString(14, x.drv_ap_cc);
+            ps.setString(15, x.drv_terms);
+            ps.setString(16, x.drv_certificate);
+            ps.setString(17, x.drv_licensenbr);
+            ps.setString(18, x.drv_licenseexpire);
+            ps.setString(19, x.drv_insurancenbr);
+            ps.setString(20, x.drv_insuranceexpire);
+            ps.setString(21, x.drv_insurancecarrier);
+            ps.setString(22, x.drv_dhmiles);
+            ps.setString(23, x.drv_milerate);
+            ps.setString(24, x.drv_payrate);
+            ps.setString(25, x.drv_paytype);
+            ps.setString(26, x.drv_hiredate);
+            ps.setString(27, x.drv_termdate);
+            ps.setString(28, x.drv_id);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static drv_mstr getDriverMstr(String[] x) {
+        drv_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from drv_mstr where drv_id = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new drv_mstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new drv_mstr(m, res.getString("drv_id"), 
+                            res.getString("drv_status"),
+                            res.getString("drv_lname"),
+                            res.getString("drv_fname"),
+                            res.getString("drv_line1"),
+                            res.getString("drv_line2"),
+                            res.getString("drv_city"),
+                            res.getString("drv_state"),
+                            res.getString("drv_zip"),
+                            res.getString("drv_country"),
+                            res.getString("drv_phone"),
+                            res.getString("drv_email"),
+                            res.getString("drv_type"),
+                            res.getString("drv_ap_acct"),
+                            res.getString("drv_ap_cc"),
+                            res.getString("drv_terms"),
+                            res.getString("drv_certificate"),
+                            res.getString("drv_licensenbr"),
+                            res.getString("drv_licenseexpire"),
+                            res.getString("drv_insurancenbr"),
+                            res.getString("drv_insuranceexpire"),
+                            res.getString("drv_insurancecarrier"),
+                            res.getString("drv_dhmiles"),
+                            res.getString("drv_milerate"),
+                            res.getString("drv_payrate"),
+                            res.getString("drv_paytype"),
+                            res.getString("drv_hiredate"),
+                            res.getString("drv_termdate")
+                                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new drv_mstr(m);
+        }
+        return r;
+    }
+    
+    public static String[] deleteDriverMstr(drv_mstr x) { 
+       String[] m = new String[2];
+        String sql = "delete from drv_mstr where drv_id = ?; ";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.drv_id);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static String[] addBrokerMstr(brk_mstr x) {
+        String[] m = new String[2];
+        String sqlSelect = "SELECT * FROM  brk_mstr where brk_id = ?";
+        String sqlInsert = "insert into brk_mstr (brk_id, brk_status, brk_name," +
+            "brk_line1, brk_line2, brk_city, brk_state, brk_zip," +
+            "brk_country, brk_phone, brk_contact, brk_email, brk_type," +
+            "brk_ap_acct, brk_ap_cc, brk_certificate, brk_payrate, brk_paytype," +
+            "brk_terms) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+             ps.setString(1, x.brk_id);
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.brk_id);
+            psi.setString(2, x.brk_status);
+            psi.setString(3, x.brk_name);
+            psi.setString(4, x.brk_line1);
+            psi.setString(5, x.brk_line2);
+            psi.setString(6, x.brk_city);
+            psi.setString(7, x.brk_state);
+            psi.setString(8, x.brk_zip);
+            psi.setString(9, x.brk_country);
+            psi.setString(10, x.brk_phone);
+            psi.setString(11, x.brk_contact);
+            psi.setString(12, x.brk_email);
+            psi.setString(13, x.brk_type);
+            psi.setString(14, x.brk_ap_acct);
+            psi.setString(15, x.brk_ap_cc);
+            psi.setString(16, x.brk_certificate);
+            psi.setString(17, x.brk_payrate);
+            psi.setString(18, x.brk_paytype);
+            psi.setString(19, x.brk_terms);
+        
+            int rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+
+    public static String[] updateBrokerMstr(brk_mstr x) {
+        String[] m = new String[2];
+        String sql = "update brk_mstr set brk_status = ?, brk_name = ?," +
+            "brk_line1 = ?, brk_line2 = ?, brk_city = ?, brk_state = ?, brk_zip = ?," +
+            "brk_country = ?, brk_phone = ?, brk_contact = ?, brk_email = ?, brk_type = ?," +
+            "brk_ap_acct = ?, brk_ap_cc = ?, brk_certificate = ?, brk_payrate = ?, brk_paytype = ?," +
+            "brk_terms = ?" +
+                     " where brk_id = ? ; ";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
+	PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, x.brk_status);
+            ps.setString(2, x.brk_name);
+            ps.setString(3, x.brk_line1);
+            ps.setString(4, x.brk_line2);
+            ps.setString(5, x.brk_city);
+            ps.setString(6, x.brk_state);
+            ps.setString(7, x.brk_zip);
+            ps.setString(8, x.brk_country);
+            ps.setString(9, x.brk_phone);
+            ps.setString(10, x.brk_contact);
+            ps.setString(11, x.brk_email);
+            ps.setString(12, x.brk_type);
+            ps.setString(13, x.brk_ap_acct);
+            ps.setString(14, x.brk_ap_cc);
+            ps.setString(15, x.brk_certificate);
+            ps.setString(16, x.brk_payrate);
+            ps.setString(17, x.brk_paytype);
+            ps.setString(18, x.brk_terms);
+            ps.setString(19, x.brk_id);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static brk_mstr getBrokerMstr(String[] x) {
+        brk_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from brk_mstr where brk_id = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new brk_mstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new brk_mstr(m, res.getString("brk_id"), 
+                            res.getString("brk_status"),
+                            res.getString("brk_name"),
+                            res.getString("brk_line1"),
+                            res.getString("brk_line2"),
+                            res.getString("brk_city"),
+                            res.getString("brk_state"),
+                            res.getString("brk_zip"),
+                            res.getString("brk_country"),
+                            res.getString("brk_phone"),
+                            res.getString("brk_contact"),
+                            res.getString("brk_email"),
+                            res.getString("brk_type"),
+                            res.getString("brk_ap_acct"),
+                            res.getString("brk_ap_cc"),
+                            res.getString("brk_certificate"),
+                            res.getString("brk_payrate"),
+                            res.getString("brk_paytype"),
+                            res.getString("brk_terms")
+                            
+                                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new brk_mstr(m);
+        }
+        return r;
+    }
+    
+    public static String[] deleteBrokerMstr(brk_mstr x) { 
+       String[] m = new String[2];
+        String sql = "delete from brk_mstr where brk_id = ?; ";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.brk_id);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    
+    
     public static ArrayList<String[]> getCarrierMaintInit() {
        
         ArrayList<String[]> lines = new ArrayList<String[]>();
@@ -763,6 +1275,22 @@ public class frtData {
                lines.add(s);
             }
             
+            res = st.executeQuery("select code_key from code_mstr where code_code = 'freightsvctype' order by code_key ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "servicetypes";
+               s[1] = res.getString("code_key");
+               lines.add(s);
+            }
+            
+            res = st.executeQuery("select code_key from code_mstr where code_code = 'freighteqptype' order by code_key ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "equipmenttypes";
+               s[1] = res.getString("code_key");
+               lines.add(s);
+            }
+            
             res = st.executeQuery("select car_id from car_mstr order by car_id;");
             while (res.next()) {
                 String[] s = new String[2];
@@ -852,6 +1380,72 @@ public class frtData {
         public cfo_item(String[] m) {
             this(m,"","","","","","","","","","",
                    "");
+        }
+    }
+    
+
+    public record veh_mstr (String[] m, String veh_id, String veh_desc, String veh_type,
+        String veh_subtype, String veh_status, String veh_make, String veh_model, String veh_submodel,
+        String veh_engine, String veh_fueltype, String veh_year, String veh_vin, String veh_rmks,
+        String veh_servicedate, String veh_servicefreqdays, String veh_servicefreqmiles, String veh_odometer, String veh_odometerdate,
+        String veh_regnbr, String veh_regdate, String veh_regtax, String veh_regstate,
+        String veh_weight, String veh_condition, String veh_loc, String veh_misc1,
+        String veh_misc2, String veh_misc3) {
+        public veh_mstr(String[] m) {
+            this(m,"","","","","","","","","","",
+                   "","","","","","","","","","",
+                   "","","","","","","","");
+        }
+    } 
+  
+
+    public record drv_mstr (String[] m, String drv_id, String drv_status, String drv_lname,
+        String drv_fname, String drv_line1, String drv_line2, String drv_city, String drv_state,
+        String drv_zip, String drv_country, String drv_phone, String drv_email, String drv_type,
+        String drv_ap_acct, String drv_ap_cc, String drv_terms, String drv_certificate, String drv_licensenbr,
+        String drv_licenseexpire, String drv_insurancenbr, String drv_insuranceexpire, String drv_insurancecarrier,
+        String drv_dhmiles, String drv_milerate, String drv_payrate, String drv_paytype,
+        String drv_hiredate, String drv_termdate) {
+        public drv_mstr(String[] m) {
+            this(m,"","","","","","","","","","",
+                   "","","","","","","","","","",
+                   "","","","","","","","");
+        }
+    } 
+    
+  
+    public record brk_mstr (String[] m, String brk_id, String brk_status, String brk_name,
+        String brk_line1, String brk_line2, String brk_city, String brk_state, String brk_zip,
+        String brk_country, String brk_phone, String brk_contact, String brk_email, String brk_type,
+        String brk_ap_acct, String brk_ap_cc, String brk_certificate, String brk_payrate, String brk_paytype,
+        String brk_terms) {
+        public brk_mstr(String[] m) {
+            this(m,"","","","","","","","","","",
+                   "","","","","","","","","");
+        }
+    }
+    
+    public record veh_meta(String[] m, String vehm_id, String vehm_type, String vehm_key, String vehm_value) {
+        public veh_meta(String[] m) {
+            this (m, "", "", "", "");
+        }
+    } 
+    
+    public record drv_meta(String[] m, String drvm_id, String drvm_type, String drvm_key, String drvm_value) {
+        public drv_meta(String[] m) {
+            this (m, "", "", "", "");
+        }
+    }
+    
+    public record brk_meta(String[] m, String brkm_id, String brkm_type, String brkm_key, String brkm_value) {
+        public brk_meta(String[] m) {
+            this (m, "", "", "", "");
+        }
+    }
+    
+    public record frt_ctrl(String[] m, String frtc_function, String frtc_varchar)  {
+        public frt_ctrl(String[] m) {
+            this (m, "", "");
         }
     }
     

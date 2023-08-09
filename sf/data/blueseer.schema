@@ -2635,3 +2635,106 @@ CREATE TABLE IF NOT EXISTS `as2_meta` (
   `as2m_key` varchar(80) NOT NULL DEFAULT '',
   `as2m_value` varchar(80) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `veh_mstr` (
+  `veh_id` varchar(30) NOT NULL DEFAULT '',
+  `veh_desc` varchar(100) NOT NULL DEFAULT '',
+  `veh_type` varchar(80) NOT NULL DEFAULT '',
+  `veh_subtype` varchar(80) NOT NULL DEFAULT '',
+  `veh_status` varchar(80) NOT NULL DEFAULT '',
+  `veh_make` varchar(80) NOT NULL DEFAULT '',
+  `veh_model` varchar(80) NOT NULL DEFAULT '',
+  `veh_submodel` varchar(80) NOT NULL DEFAULT '',
+  `veh_engine` varchar(80) NOT NULL DEFAULT '',
+  `veh_fueltype` varchar(80) NOT NULL DEFAULT '',
+  `veh_year` varchar(4) NOT NULL DEFAULT '',
+  `veh_vin` varchar(80) NOT NULL DEFAULT '',
+  `veh_rmks` varchar(200) NOT NULL DEFAULT '',
+  `veh_servicedate` varchar(8) NOT NULL DEFAULT '',
+  `veh_servicefreqdays` int(8) NOT NULL DEFAULT '0',
+  `veh_servicefreqmiles` int(8) NOT NULL DEFAULT '0',
+  `veh_odometer` int(7) NOT NULL DEFAULT '0',
+  `veh_odometerdate` varchar(8) NOT NULL DEFAULT '',
+  `veh_regnbr` varchar(20) NOT NULL DEFAULT '',
+  `veh_regdate` varchar(8) NOT NULL DEFAULT '',
+  `veh_regtax` decimal(14,2) NOT NULL DEFAULT '0',
+  `veh_regstate` varchar(20) NOT NULL DEFAULT '',
+  `veh_weight` int(7) NOT NULL DEFAULT '0',
+  `veh_condition` varchar(30) NOT NULL DEFAULT '',
+  `veh_loc` varchar(30) NOT NULL DEFAULT '',
+  `veh_misc1` varchar(50) NOT NULL DEFAULT '',
+  `veh_misc2` varchar(50) NOT NULL DEFAULT '',
+  `veh_misc3` varchar(50) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `veh_meta` (
+  `vehm_id` varchar(30) NOT NULL DEFAULT '',
+  `vehm_type` varchar(80) NOT NULL DEFAULT '',
+  `vehm_key` varchar(80) NOT NULL DEFAULT '',
+  `vehm_value` varchar(80) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `drv_mstr` (
+  `drv_id` varchar(20)  NOT NULL DEFAULT '',
+  `drv_status` varchar(20)  NOT NULL DEFAULT '',
+  `drv_lname` varchar(80)  NOT NULL DEFAULT '',
+  `drv_fname` varchar(80)  NOT NULL DEFAULT '',
+  `drv_line1` varchar(50)  NOT NULL DEFAULT '',
+  `drv_line2` varchar(50)  NOT NULL DEFAULT '',
+  `drv_city` varchar(50)  NOT NULL DEFAULT '',
+  `drv_state` varchar(50)  NOT NULL DEFAULT '',
+  `drv_zip` varchar(50)  NOT NULL DEFAULT '',
+  `drv_country` varchar(3)  NOT NULL DEFAULT '',
+  `drv_phone` varchar(15)  NOT NULL DEFAULT '',
+  `drv_email` varchar(100)  NOT NULL DEFAULT '',
+  `drv_type` varchar(10)  NOT NULL DEFAULT '',
+  `drv_ap_acct` varchar(12)  NOT NULL DEFAULT '', 
+  `drv_ap_cc` varchar(4)  NOT NULL DEFAULT '', 
+  `drv_terms` varchar(30)  NOT NULL DEFAULT '', 
+  `drv_certificate` varchar(30)  NOT NULL DEFAULT '', 
+  `drv_licensenbr` varchar(20)  NOT NULL DEFAULT '', 
+  `drv_licenseexpire` varchar(8)  NOT NULL DEFAULT '', 
+  `drv_insurancenbr` varchar(80)  NOT NULL DEFAULT '', 
+  `drv_insuranceexpire` varchar(8)  NOT NULL DEFAULT '', 
+  `drv_insurancecarrier` varchar(80)  NOT NULL DEFAULT '', 
+  `drv_dhmiles` int(12)  NOT NULL DEFAULT '0', 
+  `drv_milerate` decimal(12,5)  NOT NULL DEFAULT '0',
+  `drv_payrate` decimal(12,5)  NOT NULL DEFAULT '0',
+  `drv_paytype` varchar(12)  NOT NULL DEFAULT '', 
+  `drv_hiredate` varchar(8)  NOT NULL DEFAULT '', 
+  `drv_termdate` varchar(8)  NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `drv_meta` (
+  `drvm_id` varchar(30) NOT NULL DEFAULT '',
+  `drvm_type` varchar(80) NOT NULL DEFAULT '',
+  `drvm_key` varchar(80) NOT NULL DEFAULT '',
+  `drvm_value` varchar(80) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `brk_mstr` (
+  `brk_id` varchar(20)  NOT NULL DEFAULT '',
+  `brk_status` varchar(20)  NOT NULL DEFAULT '',
+  `brk_name` varchar(80)  NOT NULL DEFAULT '',
+  `brk_line1` varchar(50)  NOT NULL DEFAULT '',
+  `brk_line2` varchar(50)  NOT NULL DEFAULT '',
+  `brk_city` varchar(50)  NOT NULL DEFAULT '',
+  `brk_state` varchar(50)  NOT NULL DEFAULT '',
+  `brk_zip` varchar(50)  NOT NULL DEFAULT '',
+  `brk_country` varchar(3)  NOT NULL DEFAULT '',
+  `brk_phone` varchar(15)  NOT NULL DEFAULT '',
+  `brk_contact` varchar(50)  NOT NULL DEFAULT '',
+  `brk_email` varchar(100)  NOT NULL DEFAULT '',
+  `brk_type` varchar(10)  NOT NULL DEFAULT '',
+  `brk_ap_acct` varchar(12)  NOT NULL DEFAULT '', 
+  `brk_ap_cc` varchar(4)  NOT NULL DEFAULT '', 
+  `brk_certificate` varchar(30)  NOT NULL DEFAULT '', 
+  `brk_payrate` decimal(12,5)  NOT NULL DEFAULT '0',
+  `brk_paytype` varchar(12)  NOT NULL DEFAULT '',
+  `brk_terms` varchar(30)  NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `brk_meta` (
+  `brkm_id` varchar(30) NOT NULL DEFAULT '',
+  `brkm_type` varchar(80) NOT NULL DEFAULT '',
+  `brkm_key` varchar(80) NOT NULL DEFAULT '',
+  `brkm_value` varchar(80) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `frt_ctrl` (
+  `frtc_function` tinyint(1) NOT NULL DEFAULT '0',
+  `frtc_varchar` varchar(50) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

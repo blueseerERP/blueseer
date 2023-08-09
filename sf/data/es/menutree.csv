@@ -293,7 +293,7 @@ root,Finanzas,6,JMenu,Finanzas,,,,1,1
 root,Inventario,7,JMenu,Inventario,,,,1,1
 root,Ingenieria,8,JMenu,Ingenieria,,,,1,1
 root,Calidad,9,JMenu,Calidad,,,,1,1
-root,Personalizado,10,JMenu,Personalizado,,,,1,0
+root,Transporte,10,JMenu,Transporte,,,,1,0
 root,HR,11,JMenu,HR,,,,1,1
 root,Admin,12,JMenu,Admin,,,,1,1
 root,Ayudar,13,JMenu,Ayudar,,,,1,1

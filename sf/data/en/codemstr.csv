@@ -20,6 +20,23 @@ ItemType,RAW,Raw Material,1
 ItemType,SUB,Sub Assembly,1
 ItemType,ASSET,Asset,1
 ItemType,SERVICE,Service,1
+freightsrvtype,LTL,Less Than Truckload,1
+freightsrvtype,FTL,Full Truckload,1
+freightsrvtype,Flatbed,Flat Bed Services,1
+freightsrvtype,Refrigerated,Refridgerated Services,1
+freightsrvtype,Expedite,Expedited Services,1
+freightsrvtype,Intermodal,Intermodal,1
+freighteqptype,Box Truck,Box Truck,1
+freighteqptype,Enclosed 53,53 Enclosed Trailer,1
+freighteqptype,Flatbed,Flat bed trailer,1
+freighteqptype,Stepdeck,stepdeck singledrop trailer,1
+freighteqptype,Conestoga,Conestoga trailer,1
+freighteqptype,Gooseneck,Gooseneck trailer,1
+freighteqptype,Removable Gooseneck,RGN Gooseneck trailer,1
+freighteqptype,Stretch RGN,Stretch RGN Gooseneck trailer,1
+freighteqptype,Lowboy,Lowboy double drop trailer,1
+freighteqptype,Reefer,Refrigerated trailer,1
+freighteqptype,Specialized,Specialized trailer,1
 edidoctype,850csv,CSV Order,1
 edidoctype,856csv,CSV Shipping Notice,1
 edidoctype,810csv,CSV Invoice,1

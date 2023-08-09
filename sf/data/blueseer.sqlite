@@ -1219,9 +1219,9 @@ CREATE TABLE "item_mstr" (
   "it_mtl_cost" decimal(9,5) NOT NULL DEFAULT '0.00000',
   "it_sched" tinyint(1) NOT NULL DEFAULT '0',
   "it_disc_pct" decimal(10,2) NOT NULL DEFAULT '0.00',
-  "it_taxcode" varchar(10) NOT NULL DEFAULT '',
+  "it_taxcode" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
   "it_createdate" date NOT NULL DEFAULT '0000-00-00',
-  "it_cont" varchar(30) NOT NULL DEFAULT '',
+  "it_cont" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "it_contqty" int(8) COLLATE NOCASE DEFAULT '0',
   "it_expire" varchar(10) COLLATE NOCASE DEFAULT '',
   "it_expiredays" int(4) COLLATE NOCASE DEFAULT '0',
@@ -1594,10 +1594,10 @@ CREATE TABLE "pos_det" (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "pos_mstr" (
   "pos_nbr" int(11) NOT NULL DEFAULT '0',
-  "pos_key" varchar(20) NOT NULL DEFAULT '',
-  "pos_type" varchar(10) NOT NULL DEFAULT '',
-  "pos_entity" varchar(10) NOT NULL DEFAULT '',
-  "pos_entityname" varchar(30) NOT NULL DEFAULT '',
+  "pos_key" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
+  "pos_type" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "pos_entity" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "pos_entityname" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "pos_entrydate" date COLLATE NOCASE DEFAULT '',
   "pos_entrytime" time COLLATE NOCASE DEFAULT '',
   "pos_aracct" varchar(12) NOT NULL COLLATE NOCASE DEFAULT '',
@@ -1609,7 +1609,7 @@ CREATE TABLE "pos_mstr" (
   "pos_bank" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
   "pos_grossamt" decimal(14,2) NOT NULL DEFAULT '0.00',
   "pos_status" varchar(6) NOT NULL DEFAULT 'commit',
-  "pos_site" varchar(10) NOT NULL DEFAULT ''
+  "pos_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -2767,7 +2767,7 @@ CREATE TABLE "vd_mstr" (
   "vd_phone" varchar(15) NOT NULL DEFAULT '0',
   "vd_email" varchar(60) NOT NULL DEFAULT '0',
   "vd_is850export" tinyint(1) NOT NULL DEFAULT '0',
-  "vd_type" varchar(30) NOT NULL DEFAULT ''
+  "vd_type" varchar(30) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -2963,10 +2963,10 @@ CREATE TABLE "code_mstr" (
   "code_internal" tinyint(1) NOT NULL DEFAULT '0'
 );
 CREATE TABLE "label_zebra" (
-  "lblz_code" varchar(10) NOT NULL DEFAULT '',
-  "lblz_desc" varchar(100) NOT NULL DEFAULT '',
-  "lblz_file" varchar(100) NOT NULL DEFAULT '',
-  "lblz_type" varchar(10) NOT NULL DEFAULT ''
+  "lblz_code" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "lblz_desc" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "lblz_file" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "lblz_type" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 CREATE TABLE "exp_mstr" (
 "exp_id" varchar(10) DEFAULT '' COLLATE NOCASE,
@@ -2984,70 +2984,70 @@ CREATE TABLE "exp_mstr" (
 "exp_active" tinyint(1) DEFAULT '0' COLLATE NOCASE
 );
 CREATE TABLE "web_mstr" (
-  "web_id" varchar(10) NOT NULL DEFAULT '',
-  "web_desc" varchar(100) NOT NULL DEFAULT '',
-  "web_url" varchar(200) NOT NULL DEFAULT '',
-  "web_port" varchar(8) NOT NULL DEFAULT '',
-  "web_credname" varchar(80) NOT NULL DEFAULT '',
-  "web_credpass" varchar(80) NOT NULL DEFAULT '',
+  "web_id" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "web_desc" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "web_url" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
+  "web_port" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "web_credname" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "web_credpass" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
   "web_active" tinyint(1) NOT NULL DEFAULT '0',
-  "web_path" varchar(100) NOT NULL DEFAULT '',
-  "web_misc1" varchar(100) NOT NULL DEFAULT '',
-  "web_misc2" varchar(100) NOT NULL DEFAULT '',
-  "web_misc3" varchar(100) NOT NULL DEFAULT ''
+  "web_path" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "web_misc1" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "web_misc2" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "web_misc3" varchar(100) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 CREATE TABLE "web_verb" (
-  "wbv_id" varchar(10) NOT NULL DEFAULT '',
-  "wbv_verb" varchar(10) NOT NULL DEFAULT '',
-  "wbv_desc" varchar(100) NOT NULL DEFAULT '',
-  "wbv_path" varchar(100) NOT NULL DEFAULT '',
+  "wbv_id" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "wbv_verb" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "wbv_desc" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "wbv_path" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
   "wbv_active" tinyint(1) NOT NULL DEFAULT '0'
 );
 CREATE TABLE "pks_mstr" (
-  "pks_id" varchar(50) NOT NULL DEFAULT '',
-  "pks_desc" varchar(100) NOT NULL DEFAULT '',
-  "pks_type" varchar(10) NOT NULL DEFAULT '',
-  "pks_user" varchar(50) NOT NULL DEFAULT '',
-  "pks_pass" varchar(50) NOT NULL DEFAULT '',
-  "pks_parent" varchar(50) NOT NULL DEFAULT '',
-  "pks_file" varchar(80) NOT NULL DEFAULT '',
-  "pks_storeuser" varchar(50) NOT NULL DEFAULT '',
-  "pks_storepass" varchar(50) NOT NULL DEFAULT '',
-  "pks_expire" varchar(50) NOT NULL DEFAULT '',
-  "pks_create" varchar(50) NOT NULL DEFAULT '',
-  "pks_standard" varchar(50) NOT NULL DEFAULT '',
+  "pks_id" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "pks_desc" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "pks_type" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "pks_user" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "pks_pass" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "pks_parent" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "pks_file" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "pks_storeuser" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "pks_storepass" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "pks_expire" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "pks_create" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "pks_standard" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
   "pks_external" tinyint(1) NOT NULL DEFAULT '0'
 );
 CREATE TABLE "dfs_det" (
-  "dfsd_id" varchar(80) NOT NULL DEFAULT '',
-  "dfsd_segment" varchar(80) NOT NULL DEFAULT '',
-  "dfsd_parent" varchar(200) NOT NULL DEFAULT '',
+  "dfsd_id" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "dfsd_segment" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "dfsd_parent" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
   "dfsd_loopcount" int(3) NOT NULL DEFAULT '0',
   "dfsd_isgroup" tinyint(1) NOT NULL DEFAULT '0',
   "dfsd_islandmark" tinyint(1) NOT NULL DEFAULT '0',
-  "dfsd_field" varchar(80) NOT NULL DEFAULT '',
-  "dfsd_desc" varchar(100) NOT NULL DEFAULT '',
+  "dfsd_field" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "dfsd_desc" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
   "dfsd_min" int(5) NOT NULL DEFAULT '0',
   "dfsd_max" int(5) NOT NULL DEFAULT '0',
-  "dfsd_align" varchar(1) NOT NULL DEFAULT '',
-  "dfsd_status" varchar(1) NOT NULL DEFAULT '',
-  "dfsd_type" varchar(1) NOT NULL DEFAULT ''
+  "dfsd_align" varchar(1) NOT NULL COLLATE NOCASE DEFAULT '',
+  "dfsd_status" varchar(1) NOT NULL COLLATE NOCASE DEFAULT '',
+  "dfsd_type" varchar(1) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 CREATE TABLE "wkf_mstr" (
-  "wkf_id" varchar(30) NOT NULL DEFAULT '',
-  "wkf_desc" varchar(100) NOT NULL DEFAULT '',
+  "wkf_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "wkf_desc" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
   "wkf_enabled" tinyint(1) NOT NULL DEFAULT '0'
 );
 CREATE TABLE "wkf_det" (
-  "wkfd_id" varchar(30) NOT NULL DEFAULT '',
-  "wkfd_action" varchar(100) NOT NULL DEFAULT '',
+  "wkfd_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "wkfd_action" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
   "wkfd_line" int(3) NOT NULL DEFAULT '0'
 );
 CREATE TABLE "wkfd_meta" (
-  "wkfdm_id" varchar(30) NOT NULL DEFAULT '',
+  "wkfdm_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "wkfdm_line" int(3) NOT NULL DEFAULT '0',
-  "wkfdm_key" varchar(100) NOT NULL DEFAULT '',
-  "wkfdm_value" varchar(100) NOT NULL DEFAULT ''
+  "wkfdm_key" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "wkfdm_value" varchar(100) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 CREATE TABLE "wkf_log" (
   "wkfl_id" INTEGER PRIMARY KEY,
@@ -3089,6 +3089,109 @@ CREATE TABLE "as2_meta" (
   "as2m_type" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
   "as2m_key" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
   "as2m_value" varchar(80) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+CREATE TABLE "veh_mstr" (
+  "veh_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "veh_desc" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "veh_type" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "veh_subtype" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "veh_status" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "veh_make" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "veh_model" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "veh_submodel" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "veh_engine" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "veh_fueltype" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "veh_year" varchar(4) NOT NULL COLLATE NOCASE DEFAULT '',
+  "veh_vin" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "veh_rmks" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
+  "veh_servicedate" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "veh_servicefreqdays" int(8) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "veh_servicefreqmiles" int(8) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "veh_odometer" int(7) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "veh_odometerdate" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "veh_regnbr" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
+  "veh_regdate" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "veh_regtax" decimal(14,2) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "veh_regstate" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
+  "veh_weight" int(7) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "veh_condition" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "veh_loc" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "veh_misc1" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "veh_misc2" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "veh_misc3" varchar(50) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+CREATE TABLE "veh_meta" (
+  "vehm_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "vehm_type" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "vehm_key" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "vehm_value" varchar(80) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+CREATE TABLE "drv_mstr" (
+  "drv_id" varchar(20)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "drv_status" varchar(20)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "drv_lname" varchar(80)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "drv_fname" varchar(80)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "drv_line1" varchar(50)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "drv_line2" varchar(50)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "drv_city" varchar(50)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "drv_state" varchar(50)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "drv_zip" varchar(50)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "drv_country" varchar(3)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "drv_phone" varchar(15)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "drv_email" varchar(100)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "drv_type" varchar(10)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "drv_ap_acct" varchar(12)  NOT NULL COLLATE NOCASE DEFAULT '', 
+  "drv_ap_cc" varchar(4)  NOT NULL COLLATE NOCASE DEFAULT '', 
+  "drv_terms" varchar(30)  NOT NULL COLLATE NOCASE DEFAULT '', 
+  "drv_certificate" varchar(30)  NOT NULL COLLATE NOCASE DEFAULT '', 
+  "drv_licensenbr" varchar(20)  NOT NULL COLLATE NOCASE DEFAULT '', 
+  "drv_licenseexpire" varchar(8)  NOT NULL COLLATE NOCASE DEFAULT '', 
+  "drv_insurancenbr" varchar(80)  NOT NULL COLLATE NOCASE DEFAULT '', 
+  "drv_insuranceexpire" varchar(8)  NOT NULL COLLATE NOCASE DEFAULT '', 
+  "drv_insurancecarrier" varchar(80)  NOT NULL COLLATE NOCASE DEFAULT '', 
+  "drv_dhmiles" int(12)  NOT NULL COLLATE NOCASE DEFAULT '0', 
+  "drv_milerate" decimal(12,5)  NOT NULL COLLATE NOCASE DEFAULT '0',
+  "drv_payrate" decimal(12,5)  NOT NULL COLLATE NOCASE DEFAULT '0',
+  "drv_paytype" varchar(12)  NOT NULL COLLATE NOCASE DEFAULT '', 
+  "drv_hiredate" varchar(8)  NOT NULL COLLATE NOCASE DEFAULT '', 
+  "drv_termdate" varchar(8)  NOT NULL COLLATE NOCASE DEFAULT ''
+);
+CREATE TABLE "drv_meta" (
+  "drvm_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "drvm_type" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "drvm_key" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "drvm_value" varchar(80) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+CREATE TABLE "brk_mstr" (
+  "brk_id" varchar(20)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "brk_status" varchar(20)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "brk_name" varchar(80)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "brk_line1" varchar(50)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "brk_line2" varchar(50)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "brk_city" varchar(50)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "brk_state" varchar(50)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "brk_zip" varchar(50)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "brk_country" varchar(3)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "brk_phone" varchar(15)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "brk_contact" varchar(50)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "brk_email" varchar(100)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "brk_type" varchar(10)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "brk_ap_acct" varchar(12)  NOT NULL COLLATE NOCASE DEFAULT '', 
+  "brk_ap_cc" varchar(4)  NOT NULL COLLATE NOCASE DEFAULT '', 
+  "brk_certificate" varchar(30)  NOT NULL COLLATE NOCASE DEFAULT '', 
+  "brk_payrate" decimal(12,5)  NOT NULL COLLATE NOCASE DEFAULT '0',
+  "brk_paytype" varchar(12)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "brk_terms" varchar(30)  NOT NULL COLLATE NOCASE DEFAULT ''
+);
+CREATE TABLE "brk_meta" (
+  "brkm_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "brkm_type" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "brkm_key" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "brkm_value" varchar(80) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+CREATE TABLE "frt_ctrl" (
+  "frtc_function" tinyint(1) NOT NULL DEFAULT '0',
+  "frtc_varchar" varchar(50) COLLATE NOCASE DEFAULT ''
 );
 
 

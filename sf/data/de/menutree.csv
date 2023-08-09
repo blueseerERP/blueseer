@@ -293,7 +293,7 @@ root,Finanzen,6,JMenu,Finanzen,,,,1,1
 root,Inventar,7,JMenu,Inventar,,,,1,1
 root,Maschinenbau,8,JMenu,Maschinenbau,,,,1,1
 root,QualitÃ¤t,9,JMenu,QualitÃ¤t,,,,1,1
-root,Anpassung,10,JMenu,Custom,,,,1,0
+root,Frach,10,JMenu,Custom,,,,1,0
 root,HR,11,JMenu,HR,,,,1,1
 root,Admin,12,JMenu,Admin,,,,1,1
 root,Hilfe,13,JMenu,Hilfe,,,,1,1

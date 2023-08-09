@@ -466,8 +466,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbcustfo.setText("");
         tbcustforev.setText("");
         cbhazmat.setSelected(false);
-        ddservicetype.setSelectedIndex(0);
-        ddequiptype.setSelectedIndex(0);
+        
         ddvehicle.setSelectedIndex(0);
         tbtrailer.setText("");
         ddorderstatus.setSelectedIndex(0);
@@ -494,15 +493,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         myorddetmodel.setRowCount(0);
         orddet.setModel(myorddetmodel);
         orddet.getTableHeader().setReorderingAllowed(false);
-        /*
-        orddet.getColumnModel().getColumn(10).setMaxWidth(0);
-        orddet.getColumnModel().getColumn(10).setMinWidth(0);
-        orddet.getColumnModel().getColumn(10).setPreferredWidth(0);
-        orddet.getColumnModel().getColumn(11).setMaxWidth(0);
-        orddet.getColumnModel().getColumn(11).setMinWidth(0);
-        orddet.getColumnModel().getColumn(11).setPreferredWidth(0);
-        */
-        
+      
         
         itemdetmodel.setRowCount(0);
         itemdet.setModel(itemdetmodel);
@@ -512,6 +503,8 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
        
         ddstate.removeAllItems();
         ddcust.removeAllItems();
+        ddequiptype.removeAllItems();
+        ddservicetype.removeAllItems();
         
         for (String[] s : initDataSets) {
                       
@@ -524,14 +517,23 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
             if (s[0].equals("customers")) {
               ddcust.addItem(s[1]); 
             }
+            if (s[0].equals("servicetypes")) {
+              ddservicetype.addItem(s[1]); 
+            }
+            if (s[0].equals("equipmenttypes")) {
+              ddequiptype.addItem(s[1]); 
+            }
             
         }
         
         ddstate.insertItemAt("", 0);
         ddstate.setSelectedIndex(0);
-        
         ddcust.insertItemAt("", 0);
         ddcust.setSelectedIndex(0);
+        ddservicetype.insertItemAt("", 0);
+        ddservicetype.setSelectedIndex(0);
+        ddequiptype.insertItemAt("", 0);
+        ddequiptype.setSelectedIndex(0);
        
         // add schedule types to stk (schedule type key) LinkedHashMap
         stk.put("", pass);

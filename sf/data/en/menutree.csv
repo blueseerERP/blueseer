@@ -295,7 +295,7 @@ root,Finance,6,JMenu,Finance,,,,1,1
 root,Inventory,7,JMenu,Inventory,,,,1,1
 root,Engineering,8,JMenu,Engineering,,,,1,1
 root,Quality,9,JMenu,Quality,,,,1,1
-root,Custom,10,JMenu,Custom,,,,1,0
+root,Freight,10,JMenu,Freight,,,,1,1
 root,HR,11,JMenu,HR,,,,1,1
 root,Admin,12,JMenu,Admin,,,,1,1
 root,Help,13,JMenu,Help,,,,1,1

@@ -294,7 +294,7 @@ root,Finanţe,6,JMenu,Finanţe,,,,1,1
 root,Inventar,7,JMenu,Inventar,,,,1,1
 root,Inginerie,8,JMenu,Inginerie,,,,1,1
 root,Calitate,9,JMenu,Calitate,,,,1,1
-root,Personalizat,10,JMenu,Personalizat,,,,1,0
+root,Marfa,10,JMenu,Marfa,,,,1,0
 root,HR,11,JMenu,HR,,,,1,1
 root,Admin,12,JMenu,Admin,,,,1,1
 root,Ajutor,13,JMenu,Ajutor,,,,1,1
