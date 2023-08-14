@@ -278,6 +278,8 @@ admin,DOMaint
 admin,DOBrowse
 admin,DOMenu
 admin,TransportationMenu
+admin,CFOMaint
+admin,VehicleMaint
 admin,FOMaint
 admin,FTPMaint
 admin,FOBrowse

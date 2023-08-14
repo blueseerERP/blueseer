@@ -202,6 +202,8 @@ TransBrowse,,com.blueseer.prd.TransBrowse,JMenuItem,tran
 RetailReorderRpt,,com.blueseer.sch.RetailReorderRpt,JMenuItem,reor
 ProjectionBrowse,,com.blueseer.sch.ProjectionBrowse,JMenuItem,proj
 ComponentDemandBrowse,,com.blueseer.sch.ComponentDemandBrowse,JMenuItem,comd
+CFOMaint,,com.blueseer.frt.CFOMaint,JMenuItem,cfom
+VehicleMaint,,com.blueseer.frt.VehicleMaint,JMenuItem,vehm
 EDIPartnerMaint,,com.blueseer.edi.EDIPartnerMaint,JMenuItem,edtp
 EDIPartnerBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,edib
 EDIDocumentMaint,,com.blueseer.edi.EDIDocumentMaint,JMenuItem,eddm

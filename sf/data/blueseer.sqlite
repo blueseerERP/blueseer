@@ -3118,7 +3118,8 @@ CREATE TABLE "veh_mstr" (
   "veh_loc" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "veh_misc1" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
   "veh_misc2" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
-  "veh_misc3" varchar(50) NOT NULL COLLATE NOCASE DEFAULT ''
+  "veh_misc3" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "veh_inspectdate" varchar(8) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 CREATE TABLE "veh_meta" (
   "vehm_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
@@ -3192,6 +3193,10 @@ CREATE TABLE "brk_meta" (
 CREATE TABLE "frt_ctrl" (
   "frtc_function" tinyint(1) NOT NULL DEFAULT '0',
   "frtc_varchar" varchar(50) COLLATE NOCASE DEFAULT ''
+);
+CREATE TABLE "makemodel" (
+  "make" varchar(100) NOT NULL DEFAULT '',
+  "model" varchar(100) COLLATE NOCASE DEFAULT ''
 );
 
 

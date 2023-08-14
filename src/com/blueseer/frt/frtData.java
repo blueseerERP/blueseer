@@ -220,8 +220,8 @@ public class frtData {
         "veh_servicedate,  veh_servicefreqdays,  veh_servicefreqmiles,  veh_odometer,  veh_odometerdate," +
         "veh_regnbr,  veh_regdate,  veh_regtax,  veh_regstate," +
         "veh_weight,  veh_condition,  veh_loc,  veh_misc1," +
-        "veh_misc2,  veh_misc3 ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+        "veh_misc2,  veh_misc3, veh_inspectdate ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.veh_id);
@@ -256,6 +256,7 @@ public class frtData {
             psi.setString(26, x.veh_misc1);
             psi.setString(27, x.veh_misc2);
             psi.setString(28, x.veh_misc3);
+            psi.setString(29, x.veh_inspectdate);
         
             int rows = psi.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
@@ -281,7 +282,7 @@ public class frtData {
         "veh_servicedate = ?,  veh_servicefreqdays = ?,  veh_servicefreqmiles = ?,  veh_odometer = ?,  veh_odometerdate = ?," +
         "veh_regnbr = ?,  veh_regdate = ?,  veh_regtax = ?,  veh_regstate = ?," +
         "veh_weight = ?,  veh_condition = ?,  veh_loc = ?,  veh_misc1 = ?," +
-        "veh_misc2 = ?,  veh_misc3 = ?  " +
+        "veh_misc2 = ?,  veh_misc3 = ?, veh_inspectdate = ? " +
                      " where veh_id = ? ; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql)) {
@@ -312,7 +313,8 @@ public class frtData {
             ps.setString(25, x.veh_misc1);
             ps.setString(26, x.veh_misc2);
             ps.setString(27, x.veh_misc3);
-            ps.setString(28, x.veh_id);
+            ps.setString(28, x.veh_inspectdate);
+            ps.setString(29, x.veh_id);
         int rows = ps.executeUpdate();
         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
         } catch (SQLException s) {
@@ -363,7 +365,8 @@ public class frtData {
                             res.getString("veh_loc"),
                             res.getString("veh_misc1"),
                             res.getString("veh_misc2"),
-                            res.getString("veh_misc3")
+                            res.getString("veh_misc3"),
+                            res.getString("veh_inspectdate")
                         );
                     }
                 }
@@ -769,6 +772,95 @@ public class frtData {
     }
         return lines;
     }
+    
+    public static ArrayList<String[]> getVehicleMaintInit() {
+       
+        ArrayList<String[]> lines = new ArrayList<String[]>();
+        try{
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+        
+            res = st.executeQuery("select code_key from code_mstr where code_code = 'state' order by code_key ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "states";
+               s[1] = res.getString("code_key");
+               lines.add(s);
+            }
+            
+            
+            res = st.executeQuery("select code_key from code_mstr where code_code = 'country' order by code_key ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "countries";
+               s[1] = res.getString("code_key");
+               lines.add(s);
+            }
+            
+            res = st.executeQuery("select distinct make from makemodel order by make ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "make";
+               s[1] = res.getString("make");
+               lines.add(s);
+            }
+           
+            
+        }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+        return lines;
+    }
+    
+    public static ArrayList<String> getMakeModel(String make) {
+       
+        ArrayList<String> lines = new ArrayList<String>();
+        try{
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+        
+            res = st.executeQuery("select model from makemodel where make = " + "'" + make + "'" + " order by model ;");
+            while (res.next()) {
+               lines.add(res.getString("model"));
+            }
+        }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+        return lines;
+    }
+    
     
     public static String[] addCFOTransaction(ArrayList<cfo_det> cfod, cfo_mstr cfo, ArrayList<cfo_item> cfoi) {
         String[] m = new String[2];
@@ -1299,6 +1391,14 @@ public class frtData {
                lines.add(s);
             }
             
+            res = st.executeQuery("select veh_id from veh_mstr order by veh_id;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "vehicle";
+               s[1] = res.getString("veh_id");
+               lines.add(s);
+            }
+            
             
             /*
              res = st.executeQuery("select car_id from car_mstr order by car_id;");
@@ -1390,11 +1490,11 @@ public class frtData {
         String veh_servicedate, String veh_servicefreqdays, String veh_servicefreqmiles, String veh_odometer, String veh_odometerdate,
         String veh_regnbr, String veh_regdate, String veh_regtax, String veh_regstate,
         String veh_weight, String veh_condition, String veh_loc, String veh_misc1,
-        String veh_misc2, String veh_misc3) {
+        String veh_misc2, String veh_misc3, String veh_inspectdate) {
         public veh_mstr(String[] m) {
             this(m,"","","","","","","","","","",
                    "","","","","","","","","","",
-                   "","","","","","","","");
+                   "","","","","","","","","");
         }
     } 
   
