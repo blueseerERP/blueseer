@@ -3151,7 +3151,7 @@ CREATE TABLE "drv_mstr" (
   "drv_insuranceexpire" varchar(8)  NOT NULL COLLATE NOCASE DEFAULT '', 
   "drv_insurancecarrier" varchar(80)  NOT NULL COLLATE NOCASE DEFAULT '', 
   "drv_dhmiles" int(12)  NOT NULL COLLATE NOCASE DEFAULT '0', 
-  "drv_milerate" decimal(12,5)  NOT NULL COLLATE NOCASE DEFAULT '0',
+  "drv_rmks" varchar(200)  NOT NULL COLLATE NOCASE DEFAULT '',
   "drv_payrate" decimal(12,5)  NOT NULL COLLATE NOCASE DEFAULT '0',
   "drv_paytype" varchar(12)  NOT NULL COLLATE NOCASE DEFAULT '', 
   "drv_hiredate" varchar(8)  NOT NULL COLLATE NOCASE DEFAULT '', 

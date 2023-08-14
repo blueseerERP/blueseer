@@ -280,6 +280,8 @@ admin,DOMenu
 admin,TransportationMenu
 admin,CFOMaint
 admin,VehicleMaint
+admin,DriverMaint
+admin,BrokerMaint
 admin,FOMaint
 admin,FTPMaint
 admin,FOBrowse

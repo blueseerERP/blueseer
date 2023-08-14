@@ -402,7 +402,7 @@ public class frtData {
         "drv_zip,  drv_country,  drv_phone,  drv_email,  drv_type," +
         "drv_ap_acct,  drv_ap_cc,  drv_terms,  drv_certificate,  drv_licensenbr," +
         "drv_licenseexpire,  drv_insurancenbr,  drv_insuranceexpire,  drv_insurancecarrier," +
-        "drv_dhmiles,  drv_milerate,  drv_payrate,  drv_paytype," +
+        "drv_dhmiles,  drv_rmks,  drv_payrate,  drv_paytype," +
         "drv_hiredate,  drv_termdate ) "
                         + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
@@ -434,7 +434,7 @@ public class frtData {
             psi.setString(21, x.drv_insuranceexpire);
             psi.setString(22, x.drv_insurancecarrier);
             psi.setString(23, x.drv_dhmiles);
-            psi.setString(24, x.drv_milerate);
+            psi.setString(24, x.drv_rmks);
             psi.setString(25, x.drv_payrate);
             psi.setString(26, x.drv_paytype);
             psi.setString(27, x.drv_hiredate);
@@ -463,7 +463,7 @@ public class frtData {
         "drv_zip = ?,  drv_country = ?,  drv_phone = ?,  drv_email = ?,  drv_type = ?," +
         "drv_ap_acct = ?,  drv_ap_cc = ?,  drv_terms = ?,  drv_certificate = ?,  drv_licensenbr = ?," +
         "drv_licenseexpire = ?,  drv_insurancenbr = ?,  drv_insuranceexpire = ?,  drv_insurancecarrier = ?," +
-        "drv_dhmiles = ?,  drv_milerate = ?,  drv_payrate = ?,  drv_paytype = ?," +
+        "drv_dhmiles = ?,  drv_rmks = ?,  drv_payrate = ?,  drv_paytype = ?," +
         "drv_hiredate = ?,  drv_termdate = ?" +
                      " where drv_id = ? ; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
@@ -490,7 +490,7 @@ public class frtData {
             ps.setString(20, x.drv_insuranceexpire);
             ps.setString(21, x.drv_insurancecarrier);
             ps.setString(22, x.drv_dhmiles);
-            ps.setString(23, x.drv_milerate);
+            ps.setString(23, x.drv_rmks);
             ps.setString(24, x.drv_payrate);
             ps.setString(25, x.drv_paytype);
             ps.setString(26, x.drv_hiredate);
@@ -1504,7 +1504,7 @@ public class frtData {
         String drv_zip, String drv_country, String drv_phone, String drv_email, String drv_type,
         String drv_ap_acct, String drv_ap_cc, String drv_terms, String drv_certificate, String drv_licensenbr,
         String drv_licenseexpire, String drv_insurancenbr, String drv_insuranceexpire, String drv_insurancecarrier,
-        String drv_dhmiles, String drv_milerate, String drv_payrate, String drv_paytype,
+        String drv_dhmiles, String drv_rmks, String drv_payrate, String drv_paytype,
         String drv_hiredate, String drv_termdate) {
         public drv_mstr(String[] m) {
             this(m,"","","","","","","","","","",

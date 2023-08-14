@@ -26,6 +26,8 @@ com.blueseer.ctr.CustXrefRpt,,1
 com.blueseer.frt.CarrierMaint,,1
 com.blueseer.frt.CFOMaint,,1
 com.blueseer.frt.VehicleMaint,,1
+com.blueseer.frt.DriverMaint,,1
+com.blueseer.frt.BrokerMaint,,1
 com.blueseer.ctr.POSBrowse,,1
 com.blueseer.ctr.POSControl,,1
 com.blueseer.ctr.POSMaint,,1

@@ -29,6 +29,8 @@ VendorMenu,VenRptPicker,7,JMenuItem,Vendor Report Selector,,,,1,1
 VendorMenu,VendControl,8,JMenuItem,Vendor Control,,,,1,1
 Freight,CFOMaint,1,JMenuItem,Freight Order Maintenance,,,,1,1
 Freight,VehicleMaint,2,JMenuItem,Vehicle Management,,,,1,1
+Freight,DriverMaint,3,JMenuItem,Driver Management,,,,1,1
+Freight,BrokerMaint,4,JMenuItem,Broker Management,,,,1,1
 EDI,EDILoad,1,JMenuItem,EDI Load,,,,1,1
 EDI,EDILog,2,JMenuItem,EDI Log,,,,1,1
 EDI,EDIPartnerMaint,3,JMenuItem,EDI Partner Maintenance,,,,1,1

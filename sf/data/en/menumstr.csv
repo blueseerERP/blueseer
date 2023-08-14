@@ -204,6 +204,8 @@ ProjectionBrowse,,com.blueseer.sch.ProjectionBrowse,JMenuItem,proj
 ComponentDemandBrowse,,com.blueseer.sch.ComponentDemandBrowse,JMenuItem,comd
 CFOMaint,,com.blueseer.frt.CFOMaint,JMenuItem,cfom
 VehicleMaint,,com.blueseer.frt.VehicleMaint,JMenuItem,vehm
+DriverMaint,,com.blueseer.frt.DriverMaint,JMenuItem,drvm
+BrokerMaint,,com.blueseer.frt.BrokerMaint,JMenuItem,brkm
 EDIPartnerMaint,,com.blueseer.edi.EDIPartnerMaint,JMenuItem,edtp
 EDIPartnerBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,edib
 EDIDocumentMaint,,com.blueseer.edi.EDIDocumentMaint,JMenuItem,eddm
