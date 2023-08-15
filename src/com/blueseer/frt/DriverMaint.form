@@ -504,11 +504,13 @@
             <Component class="javax.swing.JLabel" name="jLabel10">
               <Properties>
                 <Property name="text" type="java.lang.String" value="LastName:"/>
+                <Property name="name" type="java.lang.String" value="lbllastname" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel11">
               <Properties>
                 <Property name="text" type="java.lang.String" value="FirstName:"/>
+                <Property name="name" type="java.lang.String" value="lblfirstname" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel12">

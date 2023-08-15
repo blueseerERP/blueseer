@@ -541,9 +541,9 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
         lual = new ActionListener() {
         public void actionPerformed(ActionEvent event) {
         if (lurb1.isSelected()) {  
-         luModel = DTData.getVehicleBrowseUtil(luinput.getText(),0, "veh_id"); 
+         luModel = DTData.getDriverBrowseUtil(luinput.getText(),0, "drv_id"); 
         } else {
-         luModel = DTData.getVehicleBrowseUtil(luinput.getText(),0, "veh_desc");   
+         luModel = DTData.getDriverBrowseUtil(luinput.getText(),0, "drv_lname");   
         }
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
@@ -571,7 +571,7 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
         luTable.addMouseListener(luml);
       
         callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), 
-                getClassLabelTag("lbldesc", this.getClass().getSimpleName()));  
+                getClassLabelTag("lbllastname", this.getClass().getSimpleName()));  
         
         
     }
@@ -851,8 +851,10 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Address Info"));
 
         jLabel10.setText("LastName:");
+        jLabel10.setName("lbllastname"); // NOI18N
 
         jLabel11.setText("FirstName:");
+        jLabel11.setName("lblfirstname"); // NOI18N
 
         jLabel12.setText("Email:");
 

@@ -542,7 +542,7 @@ public class frtData {
                             res.getString("drv_insuranceexpire"),
                             res.getString("drv_insurancecarrier"),
                             res.getString("drv_dhmiles"),
-                            res.getString("drv_milerate"),
+                            res.getString("drv_rmks"),
                             res.getString("drv_payrate"),
                             res.getString("drv_paytype"),
                             res.getString("drv_hiredate"),
