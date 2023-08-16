@@ -318,3 +318,8 @@ admin,AS2Browse
 admin,CronMaint
 admin,CronBrowse
 admin,PKSBrowse
+admin,CFOBrowse
+admin,CFOSchedule
+admin,VehicleBrowse
+admin,DriverBrowse
+admin,BrokerBrowse

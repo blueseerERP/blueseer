@@ -30,10 +30,15 @@ import bsmf.MainFrame;
 import static bsmf.MainFrame.tags;
 import com.blueseer.adm.admData;
 import static com.blueseer.adm.admData.addChangeLog;
+import static com.blueseer.frt.frtData.addBrokerMstr;
 import static com.blueseer.frt.frtData.addDriverMstr;
+import com.blueseer.frt.frtData.brk_mstr;
+import static com.blueseer.frt.frtData.deleteBrokerMstr;
 import static com.blueseer.frt.frtData.deleteDriverMstr;
 import com.blueseer.frt.frtData.drv_mstr;
+import static com.blueseer.frt.frtData.getBrokerMstr;
 import static com.blueseer.frt.frtData.getDriverMstr;
+import static com.blueseer.frt.frtData.updateBrokerMstr;
 import static com.blueseer.frt.frtData.updateDriverMstr;
 import com.blueseer.frt.frtData.veh_mstr;
 import com.blueseer.utl.BlueSeerUtils;
@@ -83,14 +88,14 @@ import javax.swing.SwingWorker;
  *
  * @author vaughnte
  */
-public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
+public class BrokerMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     // global variable declarations
                 boolean isLoad = false;
-                public static drv_mstr x = null;
+                public static brk_mstr x = null;
     // global datatablemodel declarations       
    
-    public DriverMaint() {
+    public BrokerMaint() {
         initComponents();
         setLanguageTags(this);
     }
@@ -278,45 +283,35 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
        String  now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
        int year = Integer.valueOf(now.substring(0,4));
        tbkey.setText("");
+       tbline2.setText("");
+       tbname.setText("");
        tbline1.setText("");
-       tblname.setText("");
-       tbfname.setText("");
        tbcity.setText("");
        tbzip.setText("");
        tbphone.setText("");
        tbemail.setText("");
-       tblicensenbr.setText("");
-       
-       tbdhmiles.setText("");
-       tbrate.setText("0");
-       tblicensenbr.setText("");
-       tbinsurancenumber.setText("");
-       tbinsurancecarrier.setText("");
-       tbcertificate.setText("");
+       tbcontact.setText("");
+       tbbrokerlicense.setText("");
+       tbtaxid.setText("0");
        tarmks.setText("");
-       dchiredate.setDate(null);
-       dctermdate.setDate(null);
-       dclicenseexpiredate.setDate(null);
-       dcinsuranceexpiredate.setDate(null);
        
        
         
        
-        ArrayList<String[]> initDataSets = frtData.getDriverMaintInit();
+        ArrayList<String[]> initDataSets = frtData.getBrokerMaintInit();
         
         ddstate.removeAllItems();
-        ddlicensestate.removeAllItems();
         ddcountry.removeAllItems();
         ddacct.removeAllItems();
         ddcc.removeAllItems();
         ddterms.removeAllItems();
+        ddbank.removeAllItems();
         
         
         
         for (String[] s : initDataSets) {
             if (s[0].equals("states")) {
               ddstate.addItem(s[1]); 
-              ddlicensestate.addItem(s[1]);
             }
             if (s[0].equals("countries")) {
               ddcountry.addItem(s[1]); 
@@ -330,13 +325,16 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
             if (s[0].equals("terms")) {
               ddterms.addItem(s[1]); 
             }
+            if (s[0].equals("banks")) {
+              ddbank.addItem(s[1]); 
+            }
         }
        
         
         ddstate.insertItemAt("", 0);
         ddstate.setSelectedIndex(0);
-        ddlicensestate.insertItemAt("", 0);
-        ddlicensestate.setSelectedIndex(0);
+        ddbank.insertItemAt("", 0);
+        ddbank.setSelectedIndex(0);
         ddcountry.insertItemAt("", 0);
         ddcountry.setSelectedIndex(0);
         ddterms.insertItemAt("", 0);
@@ -350,7 +348,6 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
         // hardcoded selection boxes
         ddstatus.setSelectedIndex(0);
         ddtype.setSelectedIndex(0);
-        ddratetype.setSelectedIndex(0);
         
         
         
@@ -390,29 +387,22 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
     public boolean validateInput(dbaction x) {
        
                
-        Map<String,Integer> f = OVData.getTableInfo("drv_mstr");
+        Map<String,Integer> f = OVData.getTableInfo("brk_mstr");
         int fc;
 
-        fc = checkLength(f,"drv_id");
+        fc = checkLength(f,"brk_id");
         if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {
             bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
             tbkey.requestFocus();
             return false;
         }     
          
-        fc = checkLength(f,"drv_lname");
-        if (tblname.getText().length() > fc ) {
+        fc = checkLength(f,"brk_name");
+        if (tbname.getText().length() > fc ) {
             bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
-            tblname.requestFocus();
+            tbname.requestFocus();
             return false;
-        } 
-        fc = checkLength(f,"drv_fname");
-        if (tbfname.getText().length() > fc ) {
-            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
-            tbfname.requestFocus();
-            return false;
-        } 
-               
+        }      
         return true;
     }
     
@@ -433,15 +423,15 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public String[] addRecord(String[] x) {
-     String[] m = addDriverMstr(createRecord());
+     String[] m = addBrokerMstr(createRecord()); 
          return m;
      }
      
     public String[] updateRecord(String[] x) {
      
-     drv_mstr _x = this.x;
-     drv_mstr _y = createRecord();   
-     String[] m = updateDriverMstr(_y); 
+     brk_mstr _x = this.x;
+     brk_mstr _y = createRecord();   
+     String[] m = updateBrokerMstr(_y); 
      
       // change log check
      if (m[0].equals("0")) {
@@ -457,7 +447,7 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
      String[] m = new String[2];
         boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
-         m = deleteDriverMstr(createRecord()); 
+         m = deleteBrokerMstr(createRecord()); 
          initvars(null);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
@@ -465,7 +455,7 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
         // change log check
         if (m[0].equals("0")) {
             ArrayList<admData.change_log> c = new ArrayList<admData.change_log>();
-            c.add(clog(this.x.drv_id(), 
+            c.add(clog(this.x.brk_id(), 
                      this.x.getClass().getName(), 
                      this.getClass().getSimpleName(), 
                      "deletion", 
@@ -479,58 +469,36 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
      }
       
     public String[] getRecord(String[] key) {
-       x = getDriverMstr(key);
+       x = getBrokerMstr(key);
         return x.m();
     }
     
-    public drv_mstr createRecord() { 
-        String hiredate = "0000-00-00";
-        String termdate = "0000-00-00";
-        String licensedate = "0000-00-00";
-        String insurancedate = "0000-00-00";
+    public brk_mstr createRecord() { 
         
-        if (dclicenseexpiredate.getDate() != null) {
-            licensedate = BlueSeerUtils.setDateFormat(dclicenseexpiredate.getDate());
-        }
-        if (dchiredate.getDate() != null) {
-            hiredate = BlueSeerUtils.setDateFormat(dchiredate.getDate());
-        }
-        if (dctermdate.getDate() != null) {
-            termdate = BlueSeerUtils.setDateFormat(dctermdate.getDate());
-        }
-        if (dcinsuranceexpiredate.getDate() != null) {
-            insurancedate = BlueSeerUtils.setDateFormat(dcinsuranceexpiredate.getDate());
-        }
         
-        drv_mstr x = new drv_mstr(null, 
+        brk_mstr x = new brk_mstr(null, 
                 tbkey.getText(),
                 ddstatus.getSelectedItem().toString(),
-                tblname.getText(),
-                tbfname.getText(),
+                tbname.getText(),
                 tbline1.getText(),
-                "",
+                tbline2.getText(),
                 tbcity.getText(),
                 ddstate.getSelectedItem().toString(),
                 tbzip.getText(),
                 ddcountry.getSelectedItem().toString(),
                 tbphone.getText(),
+                tbcontact.getText(),
                 tbemail.getText(),
                 ddtype.getSelectedItem().toString(),
                 ddacct.getSelectedItem().toString(),
                 ddcc.getSelectedItem().toString(),
+                tbbrokerlicense.getText(),
+                "", // payrate
+                "", // paytype
                 ddterms.getSelectedItem().toString(),
-                tbcertificate.getText(),
-                tblicensenbr.getText(),
-                licensedate,
-                tbinsurancenumber.getText(),
-                insurancedate,
-                tbinsurancecarrier.getText(),
-                tbdhmiles.getText(),
-                tarmks.getText(),
-                tbrate.getText(), 
-                ddratetype.getSelectedItem().toString(),
-                hiredate,
-                termdate
+                ddbank.getSelectedItem().toString(),
+                tbtaxid.getText(),
+                tarmks.getText()
                 );
         return x;
     }
@@ -541,9 +509,9 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
         lual = new ActionListener() {
         public void actionPerformed(ActionEvent event) {
         if (lurb1.isSelected()) {  
-         luModel = DTData.getDriverBrowseUtil(luinput.getText(),0, "drv_id"); 
+         luModel = DTData.getBrokerBrowseUtil(luinput.getText(),0, "brk_id"); 
         } else {
-         luModel = DTData.getDriverBrowseUtil(luinput.getText(),0, "drv_lname");   
+         luModel = DTData.getBrokerBrowseUtil(luinput.getText(),0, "brk_name");   
         }
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
@@ -571,39 +539,30 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
         luTable.addMouseListener(luml);
       
         callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), 
-                getClassLabelTag("lbllastname", this.getClass().getSimpleName()));  
+                getClassLabelTag("lblname", this.getClass().getSimpleName()));  
         
         
     }
 
     public void updateForm() {
-        tbkey.setText(x.drv_id());
-        tblname.setText(x.drv_lname());
-        tbfname.setText(x.drv_fname());
-        tbline1.setText(x.drv_line1());
-        tbcity.setText(x.drv_city());
-        ddstate.setSelectedItem(x.drv_state());
-        tbzip.setText(x.drv_zip());
-        ddcountry.setSelectedItem(x.drv_country());
-        tbphone.setText(x.drv_phone());
-        tbemail.setText(x.drv_email());
-        ddtype.setSelectedItem(x.drv_type());
-        ddacct.setSelectedItem(x.drv_ap_acct());
-        ddcc.setSelectedItem(x.drv_ap_cc());
-        ddterms.setSelectedItem(x.drv_terms());
-        tbcertificate.setText(x.drv_certificate());
-        tblicensenbr.setText(x.drv_licensenbr());
-        dclicenseexpiredate.setDate(BlueSeerUtils.parseDate(x.drv_licenseexpire()));
-        tbinsurancenumber.setText(x.drv_insurancenbr());
-        dcinsuranceexpiredate.setDate(BlueSeerUtils.parseDate(x.drv_insuranceexpire()));
-        tbinsurancecarrier.setText(x.drv_insurancecarrier());
-        tbdhmiles.setText(x.drv_dhmiles());
-        tarmks.setText(x.drv_rmks());
-        tbrate.setText(x.drv_payrate());
-        ddratetype.setSelectedItem(x.drv_paytype());
-        dchiredate.setDate(BlueSeerUtils.parseDate(x.drv_hiredate()));
-        dctermdate.setDate(BlueSeerUtils.parseDate(x.drv_termdate()));
-        
+        tbkey.setText(x.brk_id());
+        tbname.setText(x.brk_name());
+        tbline1.setText(x.brk_line1());
+        tbline2.setText(x.brk_line2());
+        tbcity.setText(x.brk_city());
+        ddstate.setSelectedItem(x.brk_state());
+        tbzip.setText(x.brk_zip());
+        ddcountry.setSelectedItem(x.brk_country());
+        tbphone.setText(x.brk_phone());
+        tbemail.setText(x.brk_email());
+        ddtype.setSelectedItem(x.brk_type());
+        ddacct.setSelectedItem(x.brk_acct());
+        ddcc.setSelectedItem(x.brk_cc());
+        ddterms.setSelectedItem(x.brk_terms());
+        tbbrokerlicense.setText(x.brk_certificate());
+        tarmks.setText(x.brk_rmks());
+        tbtaxid.setText(x.brk_taxid());
+        ddbank.setSelectedItem(x.brk_bank());
         setAction(x.m());
     }
     
@@ -628,21 +587,6 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
         btclear = new javax.swing.JButton();
         btlookup = new javax.swing.JButton();
         btchangelog = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
-        ddlicensestate = new javax.swing.JComboBox<>();
-        tblicensenbr = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        dclicenseexpiredate = new com.toedter.calendar.JDateChooser();
-        tbinsurancenumber = new javax.swing.JTextField();
-        dcinsuranceexpiredate = new com.toedter.calendar.JDateChooser();
-        tbinsurancecarrier = new javax.swing.JTextField();
-        jLabel9 = new javax.swing.JLabel();
-        tbcertificate = new javax.swing.JTextField();
-        jLabel21 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
@@ -651,10 +595,10 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel22 = new javax.swing.JLabel();
         jLabel24 = new javax.swing.JLabel();
         jLabel25 = new javax.swing.JLabel();
-        tbline1 = new javax.swing.JTextField();
+        tbline2 = new javax.swing.JTextField();
         tbphone = new javax.swing.JTextField();
-        tblname = new javax.swing.JTextField();
-        tbfname = new javax.swing.JTextField();
+        tbname = new javax.swing.JTextField();
+        tbline1 = new javax.swing.JTextField();
         tbcity = new javax.swing.JTextField();
         jLabel26 = new javax.swing.JLabel();
         ddstate = new javax.swing.JComboBox<>();
@@ -664,23 +608,21 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbemail = new javax.swing.JTextField();
         ddcountry = new javax.swing.JComboBox<>();
         jLabel29 = new javax.swing.JLabel();
-        dchiredate = new com.toedter.calendar.JDateChooser();
-        jLabel2 = new javax.swing.JLabel();
-        dctermdate = new com.toedter.calendar.JDateChooser();
-        jLabel19 = new javax.swing.JLabel();
         ddstatus = new javax.swing.JComboBox<>();
         jLabel18 = new javax.swing.JLabel();
+        tbcontact = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
-        tbdhmiles = new javax.swing.JTextField();
+        tbbrokerlicense = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
-        tbrate = new javax.swing.JTextField();
+        tbtaxid = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tarmks = new javax.swing.JTextArea();
         jLabel16 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
-        ddratetype = new javax.swing.JComboBox<>();
+        ddbank = new javax.swing.JComboBox<>();
         ddterms = new javax.swing.JComboBox<>();
         ddacct = new javax.swing.JComboBox<>();
         jLabel6 = new javax.swing.JLabel();
@@ -755,105 +697,12 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("License / Insurance"));
-
-        jLabel3.setText("License Number:");
-
-        jLabel4.setText("License State:");
-
-        jLabel5.setText("License Expire:");
-
-        jLabel7.setText("Insurance Expire Date:");
-
-        jLabel8.setText("Insurance Number:");
-
-        dclicenseexpiredate.setDateFormatString("yyyy-MM-dd");
-
-        dcinsuranceexpiredate.setDateFormatString("yyyy-MM-dd");
-
-        jLabel9.setText("Insurance Carrier:");
-
-        jLabel21.setText("Certificate:");
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(1, 1, 1)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4)
-                    .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(ddlicensestate, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tblicensenbr, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(dclicenseexpiredate, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addComponent(jLabel8))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(23, 23, 23)
-                        .addComponent(jLabel9))
-                    .addComponent(jLabel7))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(dcinsuranceexpiredate, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbinsurancecarrier, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(tbinsurancenumber, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel21)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tbcertificate, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel8)
-                            .addComponent(tbinsurancenumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbcertificate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel21))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel7)
-                            .addComponent(dcinsuranceexpiredate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tbinsurancecarrier, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel9)))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tblicensenbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel4)
-                            .addComponent(ddlicensestate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
-                            .addComponent(dclicenseexpiredate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Address Info"));
 
-        jLabel10.setText("LastName:");
-        jLabel10.setName("lbllastname"); // NOI18N
+        jLabel10.setText("Name:");
+        jLabel10.setName("lblname"); // NOI18N
 
-        jLabel11.setText("FirstName:");
+        jLabel11.setText("Addr Line1:");
         jLabel11.setName("lblfirstname"); // NOI18N
 
         jLabel12.setText("Email:");
@@ -862,7 +711,7 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         jLabel22.setText("Type:");
 
-        jLabel24.setText("Addr Line:");
+        jLabel24.setText("Addr Line2:");
 
         jLabel25.setText("Phone:");
 
@@ -874,17 +723,11 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         jLabel29.setText("Country:");
 
-        dchiredate.setDateFormatString("yyyy-MM-dd");
-
-        jLabel2.setText("HireDate:");
-
-        dctermdate.setDateFormatString("yyyy-MM-dd");
-
-        jLabel19.setText("TermDate:");
-
-        ddstatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Available", "Maintenance", "Offline" }));
+        ddstatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Active", "Inactive" }));
 
         jLabel18.setText("Status:");
+
+        jLabel2.setText("Contact:");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -900,9 +743,9 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(tbline1, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
-                        .addComponent(tblname)
-                        .addComponent(tbfname)
+                        .addComponent(tbline2, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE)
+                        .addComponent(tbname)
+                        .addComponent(tbline1)
                         .addComponent(tbcity))
                     .addComponent(ddstate, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(45, 45, 45)
@@ -920,55 +763,39 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tbemail)
                             .addComponent(ddcountry, 0, 141, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel18)
+                            .addComponent(jLabel2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(dchiredate, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel19)
-                                    .addComponent(jLabel18))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(ddstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(dctermdate, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(tbzip, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                            .addComponent(ddstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbcontact, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(tbzip, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel10)
+                    .addComponent(jLabel25)
+                    .addComponent(tbname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbphone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel10)
-                        .addComponent(jLabel25)
-                        .addComponent(tblname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(tbphone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel2))
-                    .addComponent(dchiredate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(ddstatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel18)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel11)
-                                    .addComponent(tbfname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(tbline1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel24)))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(dctermdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(ddstatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel18))))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel11)
+                            .addComponent(tbline1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tbline2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel24))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tbcity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -986,7 +813,8 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel12)
                             .addComponent(tbemail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel19))
+                            .addComponent(tbcontact, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -996,37 +824,29 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Payables"));
 
-        tbdhmiles.addFocusListener(new java.awt.event.FocusAdapter() {
+        tbbrokerlicense.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
-                tbdhmilesFocusLost(evt);
+                tbbrokerlicenseFocusLost(evt);
             }
         });
 
-        jLabel13.setText("DH Miles");
+        jLabel13.setText("Broker #");
 
-        jLabel14.setText("Rate Type:");
+        jLabel14.setText("Bank:");
 
         jLabel15.setText("Terms:");
-
-        tbrate.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                tbrateFocusLost(evt);
-            }
-        });
 
         tarmks.setColumns(20);
         tarmks.setRows(5);
         jScrollPane1.setViewportView(tarmks);
 
-        jLabel16.setText("Standard Rate:");
+        jLabel16.setText("Tax ID:");
 
         jLabel17.setText("Remarks:");
 
-        ddratetype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Mileage", "Flat", "Payroll" }));
+        jLabel6.setText("Account:");
 
-        jLabel6.setText("AP Account:");
-
-        jLabel20.setText("AP CC:");
+        jLabel20.setText("CC:");
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -1041,21 +861,21 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 548, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(tbdhmiles, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbrate, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(36, 36, 36)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel15)
-                            .addComponent(jLabel14))
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(tbtaxid, javax.swing.GroupLayout.DEFAULT_SIZE, 128, Short.MAX_VALUE)
+                            .addComponent(tbbrokerlicense))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel15, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addComponent(ddterms, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 87, Short.MAX_VALUE)
                                 .addComponent(jLabel6))
                             .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(ddratetype, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(ddbank, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel20)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1069,7 +889,7 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbdhmiles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbbrokerlicense, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel13)
                     .addComponent(jLabel15)
                     .addComponent(ddterms, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1077,11 +897,11 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbrate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbtaxid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel16)
                     .addComponent(ddcc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel20)
-                    .addComponent(ddratetype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ddbank, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel14))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1117,10 +937,6 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addContainerGap(339, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
@@ -1143,10 +959,8 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(31, 31, 31)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btadd)
                     .addComponent(btdelete)
@@ -1202,17 +1016,11 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
         callChangeDialog(tbkey.getText(), this.getClass().getSimpleName());
     }//GEN-LAST:event_btchangelogActionPerformed
 
-    private void tbdhmilesFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbdhmilesFocusLost
-        if (tbdhmiles.getText().isBlank()) {
-            tbdhmiles.setText("0");
+    private void tbbrokerlicenseFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbbrokerlicenseFocusLost
+        if (tbbrokerlicense.getText().isBlank()) {
+            tbbrokerlicense.setText("0");
         }
-    }//GEN-LAST:event_tbdhmilesFocusLost
-
-    private void tbrateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbrateFocusLost
-        if (tbrate.getText().isBlank()) {
-            tbrate.setText("0.00");
-        }
-    }//GEN-LAST:event_tbrateFocusLost
+    }//GEN-LAST:event_tbbrokerlicenseFocusLost
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1223,15 +1031,10 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
-    private com.toedter.calendar.JDateChooser dchiredate;
-    private com.toedter.calendar.JDateChooser dcinsuranceexpiredate;
-    private com.toedter.calendar.JDateChooser dclicenseexpiredate;
-    private com.toedter.calendar.JDateChooser dctermdate;
     private javax.swing.JComboBox<String> ddacct;
+    private javax.swing.JComboBox<String> ddbank;
     private javax.swing.JComboBox<String> ddcc;
     private javax.swing.JComboBox<String> ddcountry;
-    private javax.swing.JComboBox<String> ddlicensestate;
-    private javax.swing.JComboBox<String> ddratetype;
     private javax.swing.JComboBox<String> ddstate;
     private javax.swing.JComboBox<String> ddstatus;
     private javax.swing.JComboBox<String> ddterms;
@@ -1246,10 +1049,8 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
@@ -1257,32 +1058,22 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel29;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea tarmks;
-    private javax.swing.JTextField tbcertificate;
+    private javax.swing.JTextField tbbrokerlicense;
     private javax.swing.JTextField tbcity;
-    private javax.swing.JTextField tbdhmiles;
+    private javax.swing.JTextField tbcontact;
     private javax.swing.JTextField tbemail;
-    private javax.swing.JTextField tbfname;
-    private javax.swing.JTextField tbinsurancecarrier;
-    private javax.swing.JTextField tbinsurancenumber;
     private javax.swing.JTextField tbkey;
-    private javax.swing.JTextField tblicensenbr;
     private javax.swing.JTextField tbline1;
-    private javax.swing.JTextField tblname;
+    private javax.swing.JTextField tbline2;
+    private javax.swing.JTextField tbname;
     private javax.swing.JTextField tbphone;
-    private javax.swing.JTextField tbrate;
+    private javax.swing.JTextField tbtaxid;
     private javax.swing.JTextField tbzip;
     // End of variables declaration//GEN-END:variables
 }

@@ -28,9 +28,14 @@ VendorMenu,VendPriceRpt1,6,JMenuItem,Vendor Price Browse,,,,1,1
 VendorMenu,VenRptPicker,7,JMenuItem,Vendor Report Selector,,,,1,1
 VendorMenu,VendControl,8,JMenuItem,Vendor Control,,,,1,1
 Freight,CFOMaint,1,JMenuItem,Freight Order Maintenance,,,,1,1
-Freight,VehicleMaint,2,JMenuItem,Vehicle Management,,,,1,1
-Freight,DriverMaint,3,JMenuItem,Driver Management,,,,1,1
-Freight,BrokerMaint,4,JMenuItem,Broker Management,,,,1,1
+Freight,CFOBrowse,2,JMenuItem,Freight Order Report,,,,1,1
+Freight,CFOSchedule,3,JMenuItem,Freight Order Schedule,,,,1,1
+Freight,VehicleMaint,4,JMenuItem,Vehicle Management,,,,1,1
+Freight,VehicleBrowse,5,JMenuItem,Vehicle Browse,,1,,1,1
+Freight,DriverMaint,6,JMenuItem,Driver Management,,,,1,1
+Freight,DriverBrowse,7,JMenuItem,Driver Browse,,1,,1,1
+Freight,BrokerMaint,8,JMenuItem,Broker Management,,,,1,1
+Freight,BrokerBrowse,9,JMenuItem,Broker Browse,,1,,1,1
 EDI,EDILoad,1,JMenuItem,EDI Load,,,,1,1
 EDI,EDILog,2,JMenuItem,EDI Log,,,,1,1
 EDI,EDIPartnerMaint,3,JMenuItem,EDI Partner Maintenance,,,,1,1

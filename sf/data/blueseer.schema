@@ -2722,12 +2722,15 @@ CREATE TABLE IF NOT EXISTS `brk_mstr` (
   `brk_contact` varchar(50)  NOT NULL DEFAULT '',
   `brk_email` varchar(100)  NOT NULL DEFAULT '',
   `brk_type` varchar(10)  NOT NULL DEFAULT '',
-  `brk_ap_acct` varchar(12)  NOT NULL DEFAULT '', 
-  `brk_ap_cc` varchar(4)  NOT NULL DEFAULT '', 
+  `brk_acct` varchar(12)  NOT NULL DEFAULT '', 
+  `brk_cc` varchar(4)  NOT NULL DEFAULT '', 
   `brk_certificate` varchar(30)  NOT NULL DEFAULT '', 
   `brk_payrate` decimal(12,5)  NOT NULL DEFAULT '0',
   `brk_paytype` varchar(12)  NOT NULL DEFAULT '',
-  `brk_terms` varchar(30)  NOT NULL DEFAULT ''
+  `brk_terms` varchar(30)  NOT NULL DEFAULT '',
+  `brk_bank` varchar(30)  NOT NULL DEFAULT '',
+  `brk_taxid` varchar(30)  NOT NULL DEFAULT '',
+  `brk_rmks` varchar(200)  NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `brk_meta` (
   `brkm_id` varchar(30) NOT NULL DEFAULT '',

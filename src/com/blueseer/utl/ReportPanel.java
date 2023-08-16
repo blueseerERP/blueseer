@@ -108,6 +108,9 @@ public int[] mywidth;
          javax.swing.table.DefaultTableModel mymodel = null;
         java.util.Date now = new java.util.Date();
        
+        if (mymodel != null) {
+        mymodel.setRowCount(0);
+        }
         
         if (arg == null || arg.length < 1) {
             return;
@@ -222,6 +225,15 @@ public int[] mywidth;
         }
         if (arg[0].equals("FreightBrowse")) {
              mymodel = DTData.getFreightAll();
+        }
+        if (arg[0].equals("VehicleBrowse")) {
+             mymodel = DTData.getVehicleAll(); 
+        }
+        if (arg[0].equals("DriverBrowse")) {
+             mymodel = DTData.getDriverAll(); 
+        }
+        if (arg[0].equals("BrokerBrowse")) {
+             mymodel = DTData.getBrokerAll(); 
         }
         if (arg[0].equals("CarrierBrowse")) {
              mymodel = DTData.getCarrierAll();
@@ -498,6 +510,24 @@ public int[] mywidth;
             }
             if (TableReport.getName() != null && TableReport.getName().compareTo("CarrierBrowse") == 0) {
                mypanel = "CarrierMaint";
+                if (! checkperms(mypanel)) { return; }
+               args = new String[]{TableReport.getValueAt(row, 1).toString()};
+               reinitpanels(mypanel, true, args);
+            }
+            if (TableReport.getName() != null && TableReport.getName().compareTo("VehicleBrowse") == 0) {
+               mypanel = "VehicleMaint";
+                if (! checkperms(mypanel)) { return; }
+               args = new String[]{TableReport.getValueAt(row, 1).toString()};
+               reinitpanels(mypanel, true, args);
+            }
+            if (TableReport.getName() != null && TableReport.getName().compareTo("DriverBrowse") == 0) {
+               mypanel = "DriverMaint";
+                if (! checkperms(mypanel)) { return; }
+               args = new String[]{TableReport.getValueAt(row, 1).toString()};
+               reinitpanels(mypanel, true, args);
+            }
+            if (TableReport.getName() != null && TableReport.getName().compareTo("BrokerBrowse") == 0) {
+               mypanel = "BrokerMaint";
                 if (! checkperms(mypanel)) { return; }
                args = new String[]{TableReport.getValueAt(row, 1).toString()};
                reinitpanels(mypanel, true, args);

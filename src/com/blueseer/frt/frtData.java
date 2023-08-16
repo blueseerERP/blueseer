@@ -580,9 +580,9 @@ public class frtData {
         String sqlInsert = "insert into brk_mstr (brk_id, brk_status, brk_name," +
             "brk_line1, brk_line2, brk_city, brk_state, brk_zip," +
             "brk_country, brk_phone, brk_contact, brk_email, brk_type," +
-            "brk_ap_acct, brk_ap_cc, brk_certificate, brk_payrate, brk_paytype," +
-            "brk_terms) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+            "brk_acct, brk_cc, brk_certificate, brk_payrate, brk_paytype," +
+            "brk_terms, brk_bank, brk_taxid, brk_rmks) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.brk_id);
@@ -602,12 +602,15 @@ public class frtData {
             psi.setString(11, x.brk_contact);
             psi.setString(12, x.brk_email);
             psi.setString(13, x.brk_type);
-            psi.setString(14, x.brk_ap_acct);
-            psi.setString(15, x.brk_ap_cc);
+            psi.setString(14, x.brk_acct);
+            psi.setString(15, x.brk_cc);
             psi.setString(16, x.brk_certificate);
             psi.setString(17, x.brk_payrate);
             psi.setString(18, x.brk_paytype);
             psi.setString(19, x.brk_terms);
+            psi.setString(20, x.brk_bank);
+            psi.setString(21, x.brk_taxid);
+            psi.setString(22, x.brk_rmks);
         
             int rows = psi.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
@@ -631,7 +634,7 @@ public class frtData {
             "brk_line1 = ?, brk_line2 = ?, brk_city = ?, brk_state = ?, brk_zip = ?," +
             "brk_country = ?, brk_phone = ?, brk_contact = ?, brk_email = ?, brk_type = ?," +
             "brk_ap_acct = ?, brk_ap_cc = ?, brk_certificate = ?, brk_payrate = ?, brk_paytype = ?," +
-            "brk_terms = ?" +
+            "brk_terms = ?, brk_bank = ?, brk_taxid = ?, brk_rmks = ?" +
                      " where brk_id = ? ; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql)) {
@@ -647,13 +650,16 @@ public class frtData {
             ps.setString(10, x.brk_contact);
             ps.setString(11, x.brk_email);
             ps.setString(12, x.brk_type);
-            ps.setString(13, x.brk_ap_acct);
-            ps.setString(14, x.brk_ap_cc);
+            ps.setString(13, x.brk_acct);
+            ps.setString(14, x.brk_cc);
             ps.setString(15, x.brk_certificate);
             ps.setString(16, x.brk_payrate);
             ps.setString(17, x.brk_paytype);
             ps.setString(18, x.brk_terms);
-            ps.setString(19, x.brk_id);
+            ps.setString(19, x.brk_bank);
+            ps.setString(20, x.brk_taxid);
+            ps.setString(21, x.brk_rmks);
+            ps.setString(22, x.brk_id);
         int rows = ps.executeUpdate();
         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
         } catch (SQLException s) {
@@ -690,12 +696,15 @@ public class frtData {
                             res.getString("brk_contact"),
                             res.getString("brk_email"),
                             res.getString("brk_type"),
-                            res.getString("brk_ap_acct"),
-                            res.getString("brk_ap_cc"),
+                            res.getString("brk_acct"),
+                            res.getString("brk_cc"),
                             res.getString("brk_certificate"),
                             res.getString("brk_payrate"),
                             res.getString("brk_paytype"),
-                            res.getString("brk_terms")
+                            res.getString("brk_terms"),
+                            res.getString("brk_bank"),
+                            res.getString("brk_taxid"),
+                            res.getString("brk_rmks")
                             
                                         );
                     }
@@ -827,6 +836,284 @@ public class frtData {
     }
         return lines;
     }
+    
+    public static ArrayList<String[]> getDriverMaintInit() {
+       
+        ArrayList<String[]> lines = new ArrayList<String[]>();
+        try{
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+        
+            res = st.executeQuery("select code_key from code_mstr where code_code = 'state' order by code_key ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "states";
+               s[1] = res.getString("code_key");
+               lines.add(s);
+            }
+            
+            
+            res = st.executeQuery("select code_key from code_mstr where code_code = 'country' order by code_key ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "countries";
+               s[1] = res.getString("code_key");
+               lines.add(s);
+            }
+            
+                 res = st.executeQuery("select bk_id from bk_mstr order by bk_id ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "banks";
+               s[1] = res.getString("bk_id");
+               lines.add(s);
+            }
+            
+             res = st.executeQuery("select cut_code from cust_term order by cut_code ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "terms";
+               s[1] = res.getString("cut_code");
+               lines.add(s);
+            }
+            
+            res = st.executeQuery("select ac_id from ac_mstr order by ac_id;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "accounts";
+               s[1] = res.getString("ac_id");
+               lines.add(s);
+            }
+            
+            res = st.executeQuery("select dept_id from dept_mstr order by dept_id ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "depts";
+               s[1] = res.getString("dept_id");
+               lines.add(s);
+            }
+           
+            
+        }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+        return lines;
+    }
+    
+    public static ArrayList<String[]> getBrokerMaintInit() {
+       
+        ArrayList<String[]> lines = new ArrayList<String[]>();
+        try{
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+        
+            res = st.executeQuery("select code_key from code_mstr where code_code = 'state' order by code_key ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "states";
+               s[1] = res.getString("code_key");
+               lines.add(s);
+            }
+            
+            
+            res = st.executeQuery("select code_key from code_mstr where code_code = 'country' order by code_key ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "countries";
+               s[1] = res.getString("code_key");
+               lines.add(s);
+            }
+            
+               res = st.executeQuery("select bk_id from bk_mstr order by bk_id ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "banks";
+               s[1] = res.getString("bk_id");
+               lines.add(s);
+            }
+            
+             res = st.executeQuery("select cut_code from cust_term order by cut_code ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "terms";
+               s[1] = res.getString("cut_code");
+               lines.add(s);
+            }
+            
+            res = st.executeQuery("select ac_id from ac_mstr order by ac_id;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "accounts";
+               s[1] = res.getString("ac_id");
+               lines.add(s);
+            }
+            
+            res = st.executeQuery("select dept_id from dept_mstr order by dept_id ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "depts";
+               s[1] = res.getString("dept_id");
+               lines.add(s);
+            }
+           
+            
+        }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+        return lines;
+    }
+    
+    public static ArrayList<String[]> getCFOMaintInit() {
+        String defaultsite = "";
+        ArrayList<String[]> lines = new ArrayList<String[]>();
+        try{
+        Connection con = null;
+        if (ds != null) {
+        con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+        // allocate, custitemonly, site, currency, sites, currencies, uoms, 
+        // states, warehouses, locations, customers, taxcodes, carriers, statuses    
+            
+            res = st.executeQuery("select cm_code from cm_mstr order by cm_code;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "customers";
+               s[1] = res.getString("cm_code");
+               lines.add(s);
+            }
+        
+            res = st.executeQuery("select site_site from site_mstr;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "sites";
+               s[1] = res.getString("site_site");
+               lines.add(s);
+            }
+            
+            res = st.executeQuery("select ov_site, ov_currency from ov_mstr;" );
+            while (res.next()) {
+               String[] s = new String[2];
+               s[0] = "currency";
+               s[1] = res.getString("ov_currency");
+               lines.add(s);
+               s = new String[2];
+               s[0] = "site";
+               s[1] = res.getString("ov_site");
+               lines.add(s);
+               defaultsite = s[1];
+            }
+                        
+            res = st.executeQuery("select code_key from code_mstr where code_code = 'country' order by code_key ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "countries";
+               s[1] = res.getString("code_key");
+               lines.add(s);
+            }
+            
+            res = st.executeQuery("select code_key from code_mstr where code_code = 'state' order by code_key ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "states";
+               s[1] = res.getString("code_key");
+               lines.add(s);
+            }
+            
+            res = st.executeQuery("select code_key from code_mstr where code_code = 'freightsvctype' order by code_key ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "servicetypes";
+               s[1] = res.getString("code_key");
+               lines.add(s);
+            }
+            
+            res = st.executeQuery("select code_key from code_mstr where code_code = 'freighteqptype' order by code_key ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "equipmenttypes";
+               s[1] = res.getString("code_key");
+               lines.add(s);
+            }
+            
+            res = st.executeQuery("select car_id from car_mstr order by car_id;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "carriers";
+               s[1] = res.getString("car_id");
+               lines.add(s);
+            }
+            
+            res = st.executeQuery("select veh_id from veh_mstr order by veh_id;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "vehicle";
+               s[1] = res.getString("veh_id");
+               lines.add(s);
+            }
+            
+            
+            /*
+             res = st.executeQuery("select car_id from car_mstr order by car_id;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "freight";
+               s[1] = res.getString("car_id");
+               lines.add(s);
+            }
+            */
+            
+        }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+        return lines;
+    }
+    
     
     public static ArrayList<String> getMakeModel(String make) {
        
@@ -1306,124 +1593,6 @@ public class frtData {
     }
     
     
-    public static ArrayList<String[]> getCFOMaintInit() {
-        String defaultsite = "";
-        ArrayList<String[]> lines = new ArrayList<String[]>();
-        try{
-        Connection con = null;
-        if (ds != null) {
-        con = ds.getConnection();
-        } else {
-          con = DriverManager.getConnection(url + db, user, pass);  
-        }
-        Statement st = con.createStatement();
-        ResultSet res = null;
-        try{
-        // allocate, custitemonly, site, currency, sites, currencies, uoms, 
-        // states, warehouses, locations, customers, taxcodes, carriers, statuses    
-            
-            res = st.executeQuery("select cm_code from cm_mstr order by cm_code;");
-            while (res.next()) {
-                String[] s = new String[2];
-               s[0] = "customers";
-               s[1] = res.getString("cm_code");
-               lines.add(s);
-            }
-        
-            res = st.executeQuery("select site_site from site_mstr;");
-            while (res.next()) {
-                String[] s = new String[2];
-               s[0] = "sites";
-               s[1] = res.getString("site_site");
-               lines.add(s);
-            }
-            
-            res = st.executeQuery("select ov_site, ov_currency from ov_mstr;" );
-            while (res.next()) {
-               String[] s = new String[2];
-               s[0] = "currency";
-               s[1] = res.getString("ov_currency");
-               lines.add(s);
-               s = new String[2];
-               s[0] = "site";
-               s[1] = res.getString("ov_site");
-               lines.add(s);
-               defaultsite = s[1];
-            }
-                        
-            res = st.executeQuery("select code_key from code_mstr where code_code = 'country' order by code_key ;");
-            while (res.next()) {
-                String[] s = new String[2];
-               s[0] = "countries";
-               s[1] = res.getString("code_key");
-               lines.add(s);
-            }
-            
-            res = st.executeQuery("select code_key from code_mstr where code_code = 'state' order by code_key ;");
-            while (res.next()) {
-                String[] s = new String[2];
-               s[0] = "states";
-               s[1] = res.getString("code_key");
-               lines.add(s);
-            }
-            
-            res = st.executeQuery("select code_key from code_mstr where code_code = 'freightsvctype' order by code_key ;");
-            while (res.next()) {
-                String[] s = new String[2];
-               s[0] = "servicetypes";
-               s[1] = res.getString("code_key");
-               lines.add(s);
-            }
-            
-            res = st.executeQuery("select code_key from code_mstr where code_code = 'freighteqptype' order by code_key ;");
-            while (res.next()) {
-                String[] s = new String[2];
-               s[0] = "equipmenttypes";
-               s[1] = res.getString("code_key");
-               lines.add(s);
-            }
-            
-            res = st.executeQuery("select car_id from car_mstr order by car_id;");
-            while (res.next()) {
-                String[] s = new String[2];
-               s[0] = "carriers";
-               s[1] = res.getString("car_id");
-               lines.add(s);
-            }
-            
-            res = st.executeQuery("select veh_id from veh_mstr order by veh_id;");
-            while (res.next()) {
-                String[] s = new String[2];
-               s[0] = "vehicle";
-               s[1] = res.getString("veh_id");
-               lines.add(s);
-            }
-            
-            
-            /*
-             res = st.executeQuery("select car_id from car_mstr order by car_id;");
-            while (res.next()) {
-                String[] s = new String[2];
-               s[0] = "freight";
-               s[1] = res.getString("car_id");
-               lines.add(s);
-            }
-            */
-            
-        }
-        catch (SQLException s){
-             MainFrame.bslog(s);
-        } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               con.close();
-        }
-    }
-    catch (Exception e){
-        MainFrame.bslog(e);
-    }
-        return lines;
-    }
     
     
     
@@ -1517,11 +1686,12 @@ public class frtData {
     public record brk_mstr (String[] m, String brk_id, String brk_status, String brk_name,
         String brk_line1, String brk_line2, String brk_city, String brk_state, String brk_zip,
         String brk_country, String brk_phone, String brk_contact, String brk_email, String brk_type,
-        String brk_ap_acct, String brk_ap_cc, String brk_certificate, String brk_payrate, String brk_paytype,
-        String brk_terms) {
+        String brk_acct, String brk_cc, String brk_certificate, String brk_payrate, String brk_paytype,
+        String brk_terms, String brk_bank, String brk_taxid, String brk_rmks) {
         public brk_mstr(String[] m) {
             this(m,"","","","","","","","","","",
-                   "","","","","","","","","");
+                   "","","","","","","","","","",
+                   "","");
         }
     }
     

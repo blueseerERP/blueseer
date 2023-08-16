@@ -311,3 +311,8 @@ MassLoad,,com.blueseer.utl.MassLoad,JMenuItem,load
 SchemaBrowse,Schema Details of Database BSDB,com.blueseer.utl.ReportPanel,JMenuItem,schema
 CronBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,cronb
 PKSBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,pksb
+CFOBrowse,,com.blueseer.frt.CFOBrowse,JMenuItem,cfob
+CFOSchedule,,com.blueseer.frt.CFOSchedule,JMenuItem,cfos
+VehicleBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,vehb
+DriverBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,drvb
+BrokerBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,brkb

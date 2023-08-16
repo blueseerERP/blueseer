@@ -3177,12 +3177,15 @@ CREATE TABLE "brk_mstr" (
   "brk_contact" varchar(50)  NOT NULL COLLATE NOCASE DEFAULT '',
   "brk_email" varchar(100)  NOT NULL COLLATE NOCASE DEFAULT '',
   "brk_type" varchar(10)  NOT NULL COLLATE NOCASE DEFAULT '',
-  "brk_ap_acct" varchar(12)  NOT NULL COLLATE NOCASE DEFAULT '', 
-  "brk_ap_cc" varchar(4)  NOT NULL COLLATE NOCASE DEFAULT '', 
+  "brk_acct" varchar(12)  NOT NULL COLLATE NOCASE DEFAULT '', 
+  "brk_cc" varchar(4)  NOT NULL COLLATE NOCASE DEFAULT '', 
   "brk_certificate" varchar(30)  NOT NULL COLLATE NOCASE DEFAULT '', 
   "brk_payrate" decimal(12,5)  NOT NULL COLLATE NOCASE DEFAULT '0',
   "brk_paytype" varchar(12)  NOT NULL COLLATE NOCASE DEFAULT '',
-  "brk_terms" varchar(30)  NOT NULL COLLATE NOCASE DEFAULT ''
+  "brk_terms" varchar(30)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "brk_bank" varchar(30)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "brk_taxid" varchar(30)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "brk_rmks" varchar(200)  NOT NULL COLLATE NOCASE DEFAULT ''
 );
 CREATE TABLE "brk_meta" (
   "brkm_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
