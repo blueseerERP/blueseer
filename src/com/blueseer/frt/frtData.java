@@ -1398,8 +1398,8 @@ public class frtData {
         " cfo_orderstatus, cfo_deliverystatus, cfo_driver, cfo_drivercell, cfo_type, " +
         " cfo_brokerid, cfo_brokercontact, cfo_brokercell, cfo_ratetype, cfo_rate, " +
         " cfo_mileage, cfo_driverrate, cfo_driverstd, cfo_weight, cfo_loaddate, cfo_unloaddate, cfo_ishazmat, " +
-        " cfo_miscexpense, cfo_misccharges, cfo_cost, cfo_bol, cfo_rmks) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+        " cfo_miscexpense, cfo_misccharges, cfo_cost, cfo_bol, cfo_rmks, cfo_derived, cfo_logic) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.cfo_nbr);
@@ -1436,6 +1436,8 @@ public class frtData {
             ps.setString(28, x.cfo_cost);
             ps.setString(29, x.cfo_bol);
             ps.setString(30, x.cfo_rmks);
+            ps.setString(31, x.cfo_derived);
+            ps.setString(32, x.cfo_logic);
             rows = ps.executeUpdate();
             } 
             return rows;
@@ -1450,8 +1452,9 @@ public class frtData {
                         + "cfod_city, cfod_state, cfod_zip, cfod_country, cfod_phone, " 
                         + "cfod_email, cfod_contact, cfod_misc, cfod_rmks, "
                         + "cfod_reference, cfod_ordnum, cfod_weight, cfod_pallet, cfod_ladingqty, cfod_hazmat, "
-                        + "cfod_datetype, cfod_date, cfod_timetype1, cfod_time1, cfod_timetype2, cfod_time2, cfod_timezone  ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+                        + "cfod_datetype, cfod_date, cfod_timetype1, cfod_time1, cfod_timetype2, cfod_time2, cfod_timezone, "
+                        + "cfod_rate, cfod_miles ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.cfod_nbr);
@@ -1490,6 +1493,8 @@ public class frtData {
             ps.setString(29, x.cfod_timetype2);
             ps.setString(30, x.cfod_time2);
             ps.setString(31, x.cfod_timezone);
+            ps.setString(32, x.cfod_rate);
+            ps.setString(33, x.cfod_miles);
             rows = ps.executeUpdate();
             } 
             return rows;
@@ -1651,7 +1656,7 @@ public class frtData {
         " cfo_orderstatus = ?, cfo_deliverystatus = ?, cfo_driver = ?, cfo_drivercell = ?, cfo_type = ?, " +
         " cfo_brokerid = ?, cfo_brokercontact = ?, cfo_brokercell = ?, cfo_ratetype = ?, cfo_rate = ?, " +
         " cfo_mileage = ?, cfo_driverrate = ?, cfo_driverstd = ?, cfo_weight = ?, cfo_loaddate = ?, cfo_unloaddate = ?, cfo_ishazmat = ?, " +
-        " cfo_miscexpense = ?, cfo_misccharges = ?, cfo_cost = ?, cfo_bol = ?, cfo_rmks = ? " +
+        " cfo_miscexpense = ?, cfo_misccharges = ?, cfo_cost = ?, cfo_bol = ?, cfo_rmks = ?, cfo_derived = ?, cfo_logic = ? " +
                      " where cfo_nbr = ? ; ";
         
             ps = con.prepareStatement(sql);
@@ -1684,7 +1689,9 @@ public class frtData {
             ps.setString(27, x.cfo_cost);
             ps.setString(28, x.cfo_bol);
             ps.setString(29, x.cfo_rmks);
-            ps.setString(30, x.cfo_nbr);
+            ps.setString(30, x.cfo_derived);
+            ps.setString(31, x.cfo_logic);
+            ps.setString(32, x.cfo_nbr);
             rows = ps.executeUpdate();
         
         return rows;
@@ -1699,14 +1706,15 @@ public class frtData {
                         + "cfod_city, cfod_state, cfod_zip, cfod_country, cfod_phone, " 
                         + "cfod_email, cfod_contact, cfod_misc, cfod_rmks, "
                         + "cfod_reference, cfod_ordnum, cfod_weight, cfod_pallet, cfod_ladingqty, cfod_hazmat, "
-                        + "cfod_datetype, cfod_date, cfod_timetype1, cfod_time1, cfod_timetype2, cfod_time2, cfod_timezone  ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+                        + "cfod_datetype, cfod_date, cfod_timetype1, cfod_time1, cfod_timetype2, cfod_time2, cfod_timezone, cfod_rate, cfod_miles  ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
         String sqlUpdate = "update cfo_det set cfod_seq = ?, cfod_type = ?, " 
                         + "cfod_code = ?, cfod_name = ?, cfod_line1 = ?, cfod_line2 = ?, cfod_line3 = ?, " 
                         + "cfod_city = ?, cfod_state = ?, cfod_zip = ?, cfod_country = ?, cfod_phone = ?, " 
                         + "cfod_email = ?, cfod_contact = ?, cfod_misc = ?, cfod_rmks = ?, "
                         + "cfod_reference = ?, cfod_ordnum = ?, cfod_weight = ?, cfod_pallet = ?, cfod_ladingqty = ?, cfod_hazmat = ?, "
-                        + "cfod_datetype = ?, cfod_date = ?, cfod_timetype1 = ?, cfod_time1 = ?, cfod_timetype2 = ?, cfod_time2 = ?, cfod_timezone = ? "
+                        + "cfod_datetype = ?, cfod_date = ?, cfod_timetype1 = ?, cfod_time1 = ?, cfod_timetype2 = ?, cfod_time2 = ?, cfod_timezone = ?, "
+                        + "cfod_rate = ?, cfod_miles = ? "
                         + " where cfod_nbr = ? and cfod_stopline = ?; ";
        
           ps = con.prepareStatement(sqlSelect); 
@@ -1746,11 +1754,13 @@ public class frtData {
             ps.setString(29, x.cfod_timetype2);
             ps.setString(30, x.cfod_time2);
             ps.setString(31, x.cfod_timezone);
+            ps.setString(32, x.cfod_rate);
+            ps.setString(33, x.cfod_miles);
             rows = ps.executeUpdate();
             } else {
             ps = con.prepareStatement(sqlUpdate) ;    
-            ps.setString(30, x.cfod_nbr);
-            ps.setString(31, x.cfod_stopline);
+            ps.setString(32, x.cfod_nbr);
+            ps.setString(33, x.cfod_stopline);
             ps.setString(1, x.cfod_seq);
             ps.setString(2, x.cfod_type);
             ps.setString(3, x.cfod_code);
@@ -1780,6 +1790,8 @@ public class frtData {
             ps.setString(27, x.cfod_timetype2);
             ps.setString(28, x.cfod_time2);
             ps.setString(29, x.cfod_timezone);
+            ps.setString(30, x.cfod_rate);
+            ps.setString(31, x.cfod_miles);
             rows = ps.executeUpdate();
             }
             return rows;
@@ -1845,7 +1857,9 @@ public class frtData {
                             res.getString("cfo_misccharges"),
                             res.getString("cfo_cost"),
                             res.getString("cfo_bol"),
-                            res.getString("cfo_rmks")    
+                            res.getString("cfo_rmks"),
+                            res.getString("cfo_derived"),
+                            res.getString("cfo_logic")
                         );
                     }
                 }
@@ -1903,7 +1917,9 @@ public class frtData {
                         res.getString("cfod_time1"), 
                         res.getString("cfod_timetype2"), 
                         res.getString("cfod_time2"),
-                        res.getString("cfod_timezone"));
+                        res.getString("cfod_timezone"),
+                        res.getString("cfod_rate"),
+                        res.getString("cfod_miles"));
                         list.add(r);
                     }
                 }
@@ -1998,11 +2014,12 @@ public class frtData {
         String cfo_brokerid, String cfo_brokercontact, String cfo_brokercell, String cfo_ratetype, String cfo_rate,
         String cfo_mileage, String cfo_driverrate, String cfo_driverstd, String cfo_weight,
         String cfo_loaddate, String cfo_unloaddate, String cfo_ishazmat, String cfo_miscexpense,
-        String cfo_misccharges, String cfo_cost, String cfo_bol, String cfo_rmks) {
+        String cfo_misccharges, String cfo_cost, String cfo_bol, String cfo_rmks, String cfo_derived, String cfo_logic) {
         public cfo_mstr(String[] m) {
             this(m,"","","","","","","","","","",
                    "","","","","","","","","","",
-                   "","","","","","","","","","");
+                   "","","","","","","","","","",
+                   "","");
         }
     } 
    
@@ -2013,12 +2030,12 @@ public class frtData {
         String cfod_rmks, String cfod_reference, String cfod_ordnum,
         String cfod_weight, String cfod_pallet, String cfod_ladingqty, String cfod_hazmat,
         String cfod_datetype, String cfod_date, String cfod_timetype1, String cfod_time1, 
-        String cfod_timetype2, String cfod_time2, String cfod_timezone) {
+        String cfod_timetype2, String cfod_time2, String cfod_timezone, String cfod_rate, String cfod_miles) {
         public cfo_det(String[] m) {
             this(m,"","","","","","","","","","",
                    "","","","","","","","","","",
                    "","","","","","","","","","",
-                   "");
+                   "","","");
         }
     }
    

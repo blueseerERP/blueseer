@@ -1899,7 +1899,9 @@ CREATE TABLE "cfo_mstr" (
   "cfo_misccharges" decimal(14,5) NOT NULL COLLATE NOCASE DEFAULT '0',
   "cfo_cost" decimal(14,5) NOT NULL COLLATE NOCASE DEFAULT '0',
   "cfo_bol" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "cfo_rmks" varchar(100) NOT NULL COLLATE NOCASE DEFAULT ''
+  "cfo_rmks" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfo_derived" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfo_logic" varchar(100) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -1935,7 +1937,9 @@ CREATE TABLE "cfo_det" (
   "cfod_time1" varchar(8)  NOT NULL COLLATE NOCASE DEFAULT '',
   "cfod_timetype2" varchar(50)  NOT NULL COLLATE NOCASE DEFAULT '',
   "cfod_time2" varchar(8)  NOT NULL COLLATE NOCASE DEFAULT '',
-  "cfod_timezone" varchar(10)  NOT NULL COLLATE NOCASE DEFAULT ''
+  "cfod_timezone" varchar(10)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfod_rate" decimal(14,5)  NOT NULL COLLATE NOCASE DEFAULT '0',
+  "cfod_miles" varchar(14,5)  NOT NULL COLLATE NOCASE DEFAULT '0'
 ); 
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

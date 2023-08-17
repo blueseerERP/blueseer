@@ -1611,7 +1611,9 @@ CREATE TABLE IF NOT EXISTS `cfo_mstr` (
   `cfo_misccharges` decimal(14,5) NOT NULL DEFAULT '0',
   `cfo_cost` decimal(14,5) NOT NULL DEFAULT '0',
   `cfo_bol` varchar(30) NOT NULL  DEFAULT '',
-  `cfo_rmks` varchar(100) NOT NULL  DEFAULT ''
+  `cfo_rmks` varchar(100) NOT NULL  DEFAULT '',
+  `cfo_derived` varchar(100) NOT NULL  DEFAULT '',
+  `cfo_logic` varchar(100) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `cfo_det` (
   `cfod_nbr` varchar(8) NOT NULL  DEFAULT '',
@@ -1644,7 +1646,9 @@ CREATE TABLE IF NOT EXISTS `cfo_det` (
   `cfod_time1` varchar(8)  NOT NULL DEFAULT '',
   `cfod_timetype2` varchar(50)  NOT NULL DEFAULT '',
   `cfod_time2` varchar(8)  NOT NULL DEFAULT '',
-  `cfod_timezone` varchar(20)  NOT NULL DEFAULT ''
+  `cfod_timezone` varchar(20)  NOT NULL DEFAULT '',
+  `cfod_rate` decimal(14,5)  NOT NULL DEFAULT '0',
+  `cfod_miles` decimal(14,5)  NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `cfo_item` (
   `cfoi_nbr` varchar(8) NOT NULL  DEFAULT '',
