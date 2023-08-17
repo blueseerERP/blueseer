@@ -1087,6 +1087,20 @@ public class frtData {
                s[1] = res.getString("veh_id");
                lines.add(s);
             }
+            res = st.executeQuery("select drv_id from drv_mstr order by drv_id;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "driver";
+               s[1] = res.getString("drv_id");
+               lines.add(s);
+            }
+            res = st.executeQuery("select brk_id from brk_mstr order by brk_id;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "broker";
+               s[1] = res.getString("brk_id");
+               lines.add(s);
+            }
             
             
             /*
@@ -1148,6 +1162,111 @@ public class frtData {
         return lines;
     }
     
+    public static String getDriverPhone(String driver) {
+       
+        String x = "";
+        try{
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+            res = st.executeQuery("select drv_phone from drv_mstr where drv_id = " + "'" + driver + "'" + ";");
+            while (res.next()) {
+               x =res.getString("drv_phone");
+            }
+        }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+        return x;
+    }
+    
+    public static String[] getBrokerInfo(String broker) {
+       
+        String[] x = new String[8]; // id, name, phone, contact, acct, cc, bank, terms
+        try{
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+            res = st.executeQuery("select * from brk_mstr where brk_id = " + "'" + broker + "'" + ";");
+            while (res.next()) {
+               x[0] =res.getString("brk_id");
+               x[1] =res.getString("brk_name");
+               x[2] =res.getString("brk_phone");
+               x[3] =res.getString("brk_contact");
+               x[4] =res.getString("brk_acct");
+               x[5] =res.getString("brk_cc");
+               x[6] =res.getString("brk_bank");
+               x[7] =res.getString("brk_terms");
+            }
+        }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+        return x;
+    }
+    
+    public static ArrayList<String> getCFOLines(String order) {
+        ArrayList<String> lines = new ArrayList<String>();
+        try{
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+
+           res = st.executeQuery("SELECT cfod_stopline from cfo_det " +
+                   " where cfod_nbr = " + "'" + order + "'" + ";");
+                        while (res.next()) {
+                          lines.add(res.getString("cfod_stopline"));
+                        }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+        return lines;
+    }
+    
+    
     
     public static String[] addCFOTransaction(ArrayList<cfo_det> cfod, cfo_mstr cfo, ArrayList<cfo_item> cfoi) {
         String[] m = new String[2];
@@ -1207,6 +1326,70 @@ public class frtData {
         }
     return m;
     }
+    
+    public static String[] updateCFOTransaction(String x, ArrayList<String> lines, ArrayList<cfo_det> cfod, cfo_mstr cfo, ArrayList<cfo_item> cfoi) {
+        String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            if (ds != null) {
+              bscon = ds.getConnection();
+            } else {
+              bscon = DriverManager.getConnection(url + db, user, pass);  
+            }
+            bscon.setAutoCommit(false);
+            for (String line : lines) {
+               _deleteCFOLines(x, line, bscon, ps);  // discard unwanted lines
+             }
+            _updateCFOMstr(cfo, bscon, ps);  
+            for (cfo_det z : cfod) {
+                _updateCFODet(z, bscon, ps, res);
+            }
+            if (cfoi != null) {
+                _deleteCFOItemsALL(x, bscon, ps);  // delete ALL items for all stops and re-add
+                for (cfo_item z : cfoi) {
+                    _addCFOItem(z, bscon, ps, res);
+                }
+            }
+            
+            bscon.commit();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
     
     private static int _addCFOMstr(cfo_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
@@ -1461,6 +1644,164 @@ public class frtData {
         return m;
     }
     
+    private static int _updateCFOMstr(cfo_mstr x, Connection con, PreparedStatement ps) throws SQLException {
+        int rows = 0;  
+        
+        String sql = "update cfo_mstr set cfo_cust = ?, cfo_custfonbr = ?, cfo_custfonbrrev = ?, cfo_servicetype = ?, cfo_equipmenttype = ?, cfo_truckid = ?, cfo_trailernbr = ?, " +
+        " cfo_orderstatus = ?, cfo_deliverystatus = ?, cfo_driver = ?, cfo_drivercell = ?, cfo_type = ?, " +
+        " cfo_brokerid = ?, cfo_brokercontact = ?, cfo_brokercell = ?, cfo_ratetype = ?, cfo_rate = ?, " +
+        " cfo_mileage = ?, cfo_driverrate = ?, cfo_driverstd = ?, cfo_weight = ?, cfo_loaddate = ?, cfo_unloaddate = ?, cfo_ishazmat = ?, " +
+        " cfo_miscexpense = ?, cfo_misccharges = ?, cfo_cost = ?, cfo_bol = ?, cfo_rmks = ? " +
+                     " where cfo_nbr = ? ; ";
+        
+            ps = con.prepareStatement(sql);
+            ps.setString(1, x.cfo_cust);
+            ps.setString(2, x.cfo_custfonbr);
+            ps.setString(3, x.cfo_custfonbrrev);
+            ps.setString(4, x.cfo_servicetype);
+            ps.setString(5, x.cfo_equipmenttype);
+            ps.setString(6, x.cfo_truckid);
+            ps.setString(7, x.cfo_trailernbr);
+            ps.setString(8, x.cfo_orderstatus);
+            ps.setString(9, x.cfo_deliverystatus);
+            ps.setString(10, x.cfo_driver);
+            ps.setString(11, x.cfo_drivercell);
+            ps.setString(12, x.cfo_type);
+            ps.setString(13, x.cfo_brokerid);
+            ps.setString(14, x.cfo_brokercontact);
+            ps.setString(15, x.cfo_brokercell);
+            ps.setString(16, x.cfo_ratetype);
+            ps.setString(17, x.cfo_rate);
+            ps.setString(18, x.cfo_mileage);
+            ps.setString(19, x.cfo_driverrate);
+            ps.setString(20, x.cfo_driverstd);
+            ps.setString(21, x.cfo_weight);
+            ps.setString(22, x.cfo_loaddate);
+            ps.setString(23, x.cfo_unloaddate);
+            ps.setString(24, x.cfo_ishazmat);
+            ps.setString(25, x.cfo_miscexpense);
+            ps.setString(26, x.cfo_misccharges);
+            ps.setString(27, x.cfo_cost);
+            ps.setString(28, x.cfo_bol);
+            ps.setString(29, x.cfo_rmks);
+            ps.setString(30, x.cfo_nbr);
+            rows = ps.executeUpdate();
+        
+        return rows;
+    }
+    
+    private static int _updateCFODet(cfo_det x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+       
+        String sqlSelect = "select * from cfo_det where cfod_nbr = ? and cfod_stopline = ?";
+        String sqlInsert = "insert into cfo_det (cfod_nbr, cfod_stopline, cfod_seq, cfod_type, " 
+                        + "cfod_code, cfod_name, cfod_line1, cfod_line2, cfod_line3, " 
+                        + "cfod_city, cfod_state, cfod_zip, cfod_country, cfod_phone, " 
+                        + "cfod_email, cfod_contact, cfod_misc, cfod_rmks, "
+                        + "cfod_reference, cfod_ordnum, cfod_weight, cfod_pallet, cfod_ladingqty, cfod_hazmat, "
+                        + "cfod_datetype, cfod_date, cfod_timetype1, cfod_time1, cfod_timetype2, cfod_time2, cfod_timezone  ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+        String sqlUpdate = "update cfo_det set cfod_seq = ?, cfod_type = ?, " 
+                        + "cfod_code = ?, cfod_name = ?, cfod_line1 = ?, cfod_line2 = ?, cfod_line3 = ?, " 
+                        + "cfod_city = ?, cfod_state = ?, cfod_zip = ?, cfod_country = ?, cfod_phone = ?, " 
+                        + "cfod_email = ?, cfod_contact = ?, cfod_misc = ?, cfod_rmks = ?, "
+                        + "cfod_reference = ?, cfod_ordnum = ?, cfod_weight = ?, cfod_pallet = ?, cfod_ladingqty = ?, cfod_hazmat = ?, "
+                        + "cfod_datetype = ?, cfod_date = ?, cfod_timetype1 = ?, cfod_time1 = ?, cfod_timetype2 = ?, cfod_time2 = ?, cfod_timezone = ? "
+                        + " where cfod_nbr = ? and cfod_stopline = ?; ";
+       
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x.cfod_nbr);
+          ps.setString(2, x.cfod_stopline);
+          res = ps.executeQuery();
+          ps = con.prepareStatement(sqlInsert);  
+            if (! res.isBeforeFirst()) {
+            ps.setString(1, x.cfod_nbr);
+            ps.setString(2, x.cfod_stopline);
+            ps.setString(3, x.cfod_seq);
+            ps.setString(4, x.cfod_type);
+            ps.setString(5, x.cfod_code);
+            ps.setString(6, x.cfod_name);
+            ps.setString(7, x.cfod_line1);
+            ps.setString(8, x.cfod_line2);
+            ps.setString(9, x.cfod_line3);
+            ps.setString(10, x.cfod_city);
+            ps.setString(11, x.cfod_state);
+            ps.setString(12, x.cfod_zip);
+            ps.setString(13, x.cfod_country);
+            ps.setString(14, x.cfod_phone);
+            ps.setString(15, x.cfod_email);
+            ps.setString(16, x.cfod_contact);
+            ps.setString(17, x.cfod_misc);
+            ps.setString(18, x.cfod_rmks);
+            ps.setString(19, x.cfod_reference);
+            ps.setString(20, x.cfod_ordnum);
+            ps.setString(21, x.cfod_weight);
+            ps.setString(22, x.cfod_pallet);
+            ps.setString(23, x.cfod_ladingqty);
+            ps.setString(24, x.cfod_hazmat);
+            ps.setString(25, x.cfod_datetype);
+            ps.setString(26, x.cfod_date);
+            ps.setString(27, x.cfod_timetype1);
+            ps.setString(28, x.cfod_time1);
+            ps.setString(29, x.cfod_timetype2);
+            ps.setString(30, x.cfod_time2);
+            ps.setString(31, x.cfod_timezone);
+            rows = ps.executeUpdate();
+            } else {
+            ps = con.prepareStatement(sqlUpdate) ;    
+            ps.setString(30, x.cfod_nbr);
+            ps.setString(31, x.cfod_stopline);
+            ps.setString(1, x.cfod_seq);
+            ps.setString(2, x.cfod_type);
+            ps.setString(3, x.cfod_code);
+            ps.setString(4, x.cfod_name);
+            ps.setString(5, x.cfod_line1);
+            ps.setString(6, x.cfod_line2);
+            ps.setString(7, x.cfod_line3);
+            ps.setString(8, x.cfod_city);
+            ps.setString(9, x.cfod_state);
+            ps.setString(10, x.cfod_zip);
+            ps.setString(11, x.cfod_country);
+            ps.setString(12, x.cfod_phone);
+            ps.setString(13, x.cfod_email);
+            ps.setString(14, x.cfod_contact);
+            ps.setString(15, x.cfod_misc);
+            ps.setString(16, x.cfod_rmks);
+            ps.setString(17, x.cfod_reference);
+            ps.setString(18, x.cfod_ordnum);
+            ps.setString(19, x.cfod_weight);
+            ps.setString(20, x.cfod_pallet);
+            ps.setString(21, x.cfod_ladingqty);
+            ps.setString(22, x.cfod_hazmat);
+            ps.setString(23, x.cfod_datetype);
+            ps.setString(24, x.cfod_date);
+            ps.setString(25, x.cfod_timetype1);
+            ps.setString(26, x.cfod_time1);
+            ps.setString(27, x.cfod_timetype2);
+            ps.setString(28, x.cfod_time2);
+            ps.setString(29, x.cfod_timezone);
+            rows = ps.executeUpdate();
+            }
+            return rows;
+    }
+    
+    private static void _deleteCFOLines(String x, String line, Connection con, PreparedStatement ps) throws SQLException { 
+        
+        String sql = "delete from cfo_det where cfod_nbr = ? and cfod_stopline = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x);
+        ps.setString(2, line);
+        ps.executeUpdate();
+    }
+    
+    private static void _deleteCFOItemsALL(String x, Connection con, PreparedStatement ps) throws SQLException { 
+        String sql = "delete from cfo_item where cfoi_nbr = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x);
+        ps.executeUpdate();
+    }
+    
+    
     public static cfo_mstr getCFOMstr(String[] x) {
         cfo_mstr r = null;
         String[] m = new String[2];
@@ -1571,6 +1912,46 @@ public class frtData {
 	       MainFrame.bslog(s);  
                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
                r = new cfo_det(m);
+               list.add(r);
+        }
+        return list;
+    }
+    
+    public static ArrayList<cfo_item> getCFOItem(String code) {
+        cfo_item r = null;
+        String[] m = new String[2];
+        ArrayList<cfo_item> list = new ArrayList<cfo_item>();
+        String sql = "select * from cfo_item where cfoi_nbr = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, code);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new cfo_item(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new cfo_item(m, 
+                        res.getString("cfoi_nbr"), 
+                        res.getString("cfoi_stopline"), 
+                        res.getString("cfoi_itemline"), 
+                        res.getString("cfoi_item"), 
+                        res.getString("cfoi_itemdesc"), 
+                        res.getString("cfoi_order"), 
+                        res.getString("cfoi_qty"), 
+                        res.getString("cfoi_pallets"), 
+                        res.getString("cfoi_weight"), 
+                        res.getString("cfoi_ref"), 
+                        res.getString("cfoi_rmks"));
+                        list.add(r);
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new cfo_item(m);
                list.add(r);
         }
         return list;

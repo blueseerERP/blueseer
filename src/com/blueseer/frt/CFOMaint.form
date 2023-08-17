@@ -485,9 +485,6 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tbcustforev">
-              <Events>
-                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbcustforevFocusLost"/>
-              </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="tbforate">
               <Events>
@@ -515,6 +512,7 @@
             <Component class="javax.swing.JLabel" name="jLabel5">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Client"/>
+                <Property name="name" type="java.lang.String" value="lblclient" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel6">
@@ -523,9 +521,6 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tbdrivercell">
-              <Events>
-                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbdrivercellFocusLost"/>
-              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel7">
               <Properties>
@@ -559,6 +554,9 @@
                   </StringArray>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ddbrokerActionPerformed"/>
+              </Events>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>
@@ -611,9 +609,6 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tbtotweight">
-              <Events>
-                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbtotweightFocusLost"/>
-              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel33">
               <Properties>
@@ -691,6 +686,9 @@
                   </StringArray>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="dddriverActionPerformed"/>
+              </Events>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>
@@ -875,6 +873,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Update Stop"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btupdatestopActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btdeletestop">
               <Properties>
@@ -1376,6 +1377,9 @@
                       <StringArray count="0"/>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ddshiptoActionPerformed"/>
+                  </Events>
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
                   </AuxValues>
@@ -1430,7 +1434,7 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                       <Group type="102" alignment="0" attributes="0">
-                                          <Component id="tbstopref" min="-2" pref="128" max="-2" attributes="0"/>
+                                          <Component id="tbstopordernbr" min="-2" pref="128" max="-2" attributes="0"/>
                                           <EmptySpace min="-2" pref="127" max="-2" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="0" attributes="0">
@@ -1458,7 +1462,7 @@
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="tbstopitem" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel83" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="tbstopref" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="tbstopordernbr" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel84" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="tbstoppallets" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel19" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -1523,11 +1527,11 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="tbstopweight">
                 </Component>
-                <Component class="javax.swing.JTextField" name="tbstopref">
+                <Component class="javax.swing.JTextField" name="tbstopordernbr">
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel84">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Reference"/>
+                    <Property name="text" type="java.lang.String" value="Order Number"/>
                     <Property name="name" type="java.lang.String" value="lblref" noResource="true"/>
                   </Properties>
                 </Component>

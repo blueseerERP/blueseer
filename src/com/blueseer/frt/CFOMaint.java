@@ -47,9 +47,14 @@ import com.blueseer.frt.frtData.cfo_det;
 import com.blueseer.frt.frtData.cfo_item;
 import com.blueseer.frt.frtData.cfo_mstr;
 import static com.blueseer.frt.frtData.deleteCFOMstr;
+import static com.blueseer.frt.frtData.getBrokerInfo;
 import static com.blueseer.frt.frtData.getCFODet;
+import static com.blueseer.frt.frtData.getCFOItem;
+import static com.blueseer.frt.frtData.getCFOLines;
 import static com.blueseer.frt.frtData.getCFOMstr;
+import static com.blueseer.frt.frtData.getDriverPhone;
 import static com.blueseer.frt.frtData.updateCFOMstr;
+import static com.blueseer.frt.frtData.updateCFOTransaction;
 import com.blueseer.shp.shpData;
 import static com.blueseer.shp.shpData.confirmShipperTransaction;
 import com.blueseer.utl.BlueSeerUtils;
@@ -59,6 +64,7 @@ import static com.blueseer.utl.BlueSeerUtils.clog;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.logChange;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
@@ -160,8 +166,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
     public static ArrayList<cfo_item> cfoitemlist = null;
     public static LinkedHashMap<String, String[]> kvstop = new  LinkedHashMap<String, String[]>();
     public static LinkedHashMap<String, ArrayList<String[]>> itemmap = new  LinkedHashMap<String, ArrayList<String[]>>();
-    public static LinkedHashMap<String, ArrayList<String[]>> schedmap = new  LinkedHashMap<String, ArrayList<String[]>>();
-    public static LinkedHashMap<String, String> stk = new  LinkedHashMap<String, String>();
+     public static LinkedHashMap<String, String> stk = new  LinkedHashMap<String, String>();
     
                 
     // global datatablemodel declarations       
@@ -188,8 +193,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                 getGlobalColumnTag("qty"),
                 getGlobalColumnTag("pallets"),
                 getGlobalColumnTag("weight"),
-                getGlobalColumnTag("ref"),
-                getGlobalColumnTag("remarks")
+                getGlobalColumnTag("description")
             });
     
    
@@ -505,6 +509,9 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddcust.removeAllItems();
         ddequiptype.removeAllItems();
         ddservicetype.removeAllItems();
+        ddvehicle.removeAllItems();
+        dddriver.removeAllItems();
+        ddbroker.removeAllItems();
         
         for (String[] s : initDataSets) {
                       
@@ -520,6 +527,12 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
             if (s[0].equals("vehicle")) {
               ddvehicle.addItem(s[1]); 
             }
+            if (s[0].equals("driver")) {
+              dddriver.addItem(s[1]); 
+            }
+            if (s[0].equals("broker")) {
+              ddbroker.addItem(s[1]); 
+            }
             if (s[0].equals("servicetypes")) {
               ddservicetype.addItem(s[1]); 
             }
@@ -533,6 +546,12 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddstate.setSelectedIndex(0);
         ddcust.insertItemAt("", 0);
         ddcust.setSelectedIndex(0);
+        ddvehicle.insertItemAt("", 0);
+        ddvehicle.setSelectedIndex(0);
+        dddriver.insertItemAt("", 0);
+        dddriver.setSelectedIndex(0);
+        ddbroker.insertItemAt("", 0);
+        ddbroker.setSelectedIndex(0);
         ddservicetype.insertItemAt("", 0);
         ddservicetype.setSelectedIndex(0);
         ddequiptype.insertItemAt("", 0);
@@ -565,6 +584,11 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddtimetype2.addItem("Scheduled Delivery Time");
         ddtimetype2.addItem("Earliest Delivery Time");
         ddtimetype2.addItem("Latest Delivery Time");
+        ddtimetype1.insertItemAt("", 0);
+        ddtimetype1.setSelectedIndex(0);
+        ddtimetype2.insertItemAt("", 0);
+        ddtimetype2.setSelectedIndex(0);
+        
         
         ddtime1.removeAllItems();
         ddtime2.removeAllItems();
@@ -576,7 +600,11 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                 ddtime2.addItem(timevar);
             }
         }
-       
+        ddtime1.insertItemAt("", 0);
+        ddtime1.setSelectedIndex(0);
+        ddtime2.insertItemAt("", 0);
+        ddtime2.setSelectedIndex(0);
+        
         ddtimezone.removeAllItems();
         ddtimezone.addItem("AST");
         ddtimezone.addItem("EST");
@@ -663,19 +691,39 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
      }
      
     public String[] updateRecord(String[] x) {
+      String[] m = new String[2];
+     // disposed from the current orddet table
+        ArrayList<String> lines = new ArrayList<String>();
+        ArrayList<String> badlines = new ArrayList<String>();
+        boolean goodLine = false;
+        
+        lines = getCFOLines(tbkey.getText());
+       for (String line : lines) {
+          goodLine = false;
+          for (int j = 0; j < orddet.getRowCount(); j++) {
+             if (orddet.getValueAt(j, 0).toString().equals(line)) {
+                 goodLine = true;
+             }
+          }
+          if (! goodLine) {
+              badlines.add(line);
+          }
+        }
      
-     cfo_mstr _x = this.x;
-     cfo_mstr _y = createRecord();   
-     String[] m = updateCFOMstr(_y);
+       m = updateCFOTransaction(tbkey.getText(), badlines, createDetRecord(), createRecord(), createItemRecord());
      
-      // change log check
-     if (m[0].equals("0")) {
-       ArrayList<admData.change_log> c = logChange(tbkey.getText(), this.getClass().getSimpleName(),_x,_y);
-       if (! c.isEmpty()) {
-           addChangeLog(c);
-       } 
-     }
-         return m;
+     
+        // change log check
+       if (m[0].equals("0")) {
+           cfo_mstr _x = this.x;
+           cfo_mstr _y = createRecord();     
+         ArrayList<admData.change_log> c = logChange(tbkey.getText(), this.getClass().getSimpleName(),_x,_y);
+         if (! c.isEmpty()) {
+             addChangeLog(c);
+         } 
+       }
+       
+       return m;
      }
      
     public String[] deleteRecord(String[] x) {
@@ -706,6 +754,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
     public String[] getRecord(String[] key) {
        x = getCFOMstr(key);
        cfodetlist = getCFODet(key[0]); 
+       cfoitemlist = getCFOItem(key[0]); 
         return x.m();
     }
     
@@ -793,26 +842,25 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
      
     public ArrayList<cfo_item> createItemRecord() {
         ArrayList<cfo_item> list = new ArrayList<cfo_item>();
-          for (int k = 0; k < orddet.getRowCount(); k++) {                
-            for (int j = 0; j < itemdet.getRowCount(); j++) {   
-                if (! orddet.getValueAt(k, 0).toString().equals(itemdet.getValueAt(j, 0).toString())) {
-                    continue;
-                }
+          for (Map.Entry<String, ArrayList<String[]>> z : itemmap.entrySet()) { 
+           ArrayList<String[]> itemlist = z.getValue();
+                for (String[] s : itemlist) {
                 cfo_item x = new cfo_item(null, 
                 tbkey.getText().toString(), // nbr
-                itemdet.getValueAt(j, 0).toString(), // stopline
-                itemdet.getValueAt(j, 1).toString(), // itemline
-                itemdet.getValueAt(j, 2).toString(), // item
-                itemdet.getValueAt(j, 3).toString(), // desc
-                itemdet.getValueAt(j, 4).toString(), // order
-                itemdet.getValueAt(j, 5).toString(), // qty
-                itemdet.getValueAt(j, 6).toString(), // pallets
-                itemdet.getValueAt(j, 7).toString(), // weight
-                itemdet.getValueAt(j, 8).toString(), // ref
-                itemdet.getValueAt(j, 9).toString() // remarks
+                s[0], // stopline
+                s[1], // itemline
+                s[2], // item
+                s[3], // desc
+                s[4], // order
+                s[5], // qty
+                s[6], // pallets
+                s[7], // weight
+                s[8], // ref
+                s[9] // remarks
                 );  
                 list.add(x);
-            }  
+                }
+              
           }
            
             
@@ -857,7 +905,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
       
         
         callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), 
-                getClassLabelTag("lblcarrier", this.getClass().getSimpleName())); 
+                getClassLabelTag("lblclient", this.getClass().getSimpleName())); 
         
     }
 
@@ -894,7 +942,6 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         // now detail
         kvstop.clear();
         for (cfo_det cfod : cfodetlist) {
-            
             // det table first
             myorddetmodel.addRow(new Object[]{
             cfod.cfod_stopline(), 
@@ -944,6 +991,36 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
             // now dropdown sequence
             ddstopsequence.addItem("STOP: " + cfod.cfod_stopline());
         }
+        
+        // now items
+        itemmap.clear();
+        for (cfo_item cfoi : cfoitemlist) {
+            String[] v = new String[]{
+                        cfoi.cfoi_stopline(),
+                        cfoi.cfoi_itemline(),
+                        cfoi.cfoi_item(),
+                        cfoi.cfoi_itemdesc(), 
+                        cfoi.cfoi_order(), 
+                        cfoi.cfoi_qty(),
+                        cfoi.cfoi_pallets(), 
+                        cfoi.cfoi_weight(),
+                        cfoi.cfoi_ref(), 
+                        cfoi.cfoi_rmks()};
+           
+            if (itemmap.containsKey(cfoi.cfoi_stopline())) {
+               ArrayList<String[]> t = itemmap.get(cfoi.cfoi_stopline());
+               t.add(v);
+               itemmap.put(cfoi.cfoi_stopline(), t);
+            } else {
+               ArrayList<String[]> g = new ArrayList<String[]>();
+               g.add(v);
+               itemmap.put(cfoi.cfoi_stopline(), g); 
+            }
+            
+        }
+        
+        
+        
         isLoad = false;
         if (ddstopsequence.getItemCount() >= 1) {
             ddstopsequence.setSelectedIndex(0);
@@ -1060,6 +1137,14 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbcontact.setText(""); 
         tbmisc.setText(""); 
         tbremarks.setText(""); 
+        
+        tbstopitem.setText("");
+        tbstopqty.setText("");
+        tbstoppallets.setText("");
+        tbstopordernbr.setText("");
+        tbstopweight.setText("");
+        tbstopitemdesc.setText("");
+        
         if (ddtime1.getItemCount() > 0) {
           ddtime1.setSelectedIndex(0); 
         }
@@ -1112,7 +1197,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbstoppallets.setEnabled(state);
         tbstopitemdesc.setEnabled(state);
         tbstopweight.setEnabled(state);
-        tbstopref.setEnabled(state);
+        tbstopordernbr.setEnabled(state);
         
         btdeleteitem.setEnabled(state);
         btadditem.setEnabled(state);
@@ -1123,11 +1208,34 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
             
        if (! isLoad && ddcust.getSelectedItem() != null && ! ddcust.getSelectedItem().toString().isEmpty() ) {
            lbclientname.setText(cusData.getCustName(ddcust.getSelectedItem().toString()));
+           ddshipto.removeAllItems();
+           ArrayList<String> list = cusData.getcustshipmstrlist(ddcust.getSelectedItem().toString());
+            for (String s : list) {
+                ddshipto.addItem(s);
+            }
+            ddshipto.insertItemAt("",0);
+           
+           
        } else {
            lbclientname.setText("");
        }
     }
   
+    public void clearShipAddress() {
+        tbname.setText("");
+        tbaddr1.setText("");
+        tbaddr2.setText("");
+        tbcity.setText("");
+        tbzip.setText("");
+        tbphone.setText("");
+        tbemail.setText("");
+        tbcontact.setText("");
+        tbmisc.setText("");
+        if (ddstate.getItemCount() > 0) {
+        ddstate.setSelectedIndex(0);
+        }
+    }
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -1266,7 +1374,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel19 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
         tbstopweight = new javax.swing.JTextField();
-        tbstopref = new javax.swing.JTextField();
+        tbstopordernbr = new javax.swing.JTextField();
         jLabel84 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         itemdet = new javax.swing.JTable();
@@ -1373,12 +1481,6 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         jLabel23.setText("Rate");
 
-        tbcustforev.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                tbcustforevFocusLost(evt);
-            }
-        });
-
         tbforate.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 tbforateFocusLost(evt);
@@ -1393,14 +1495,9 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         jLabel5.setText("Client");
+        jLabel5.setName("lblclient"); // NOI18N
 
         jLabel6.setText("Revision");
-
-        tbdrivercell.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                tbdrivercellFocusLost(evt);
-            }
-        });
 
         jLabel7.setText("Cell#");
 
@@ -1409,6 +1506,11 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel24.setText("Type");
 
         ddbroker.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "test1", "test2" }));
+        ddbroker.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddbrokerActionPerformed(evt);
+            }
+        });
 
         jLabel28.setText("Broker");
 
@@ -1427,12 +1529,6 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         jLabel32.setText("Mileage");
-
-        tbtotweight.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                tbtotweightFocusLost(evt);
-            }
-        });
 
         jLabel33.setText("Weight");
 
@@ -1461,6 +1557,11 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         cbstandard.setText("Standard");
 
         dddriver.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "test1", "test2" }));
+        dddriver.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dddriverActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
         jPanel12.setLayout(jPanel12Layout);
@@ -1767,6 +1868,11 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         btupdatestop.setText("Update Stop");
+        btupdatestop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btupdatestopActionPerformed(evt);
+            }
+        });
 
         btdeletestop.setText("Delete Stop");
         btdeletestop.setName("btdeleteitem"); // NOI18N
@@ -1893,6 +1999,12 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(ddtimetype2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
+
+        ddshipto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddshiptoActionPerformed(evt);
+            }
+        });
 
         jLabel12.setText("Stop Type");
 
@@ -2039,7 +2151,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         jLabel20.setText("Quantity");
 
-        jLabel84.setText("Reference");
+        jLabel84.setText("Order Number");
         jLabel84.setName("lblref"); // NOI18N
 
         itemdet.setModel(new javax.swing.table.DefaultTableModel(
@@ -2099,7 +2211,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel15Layout.createSequentialGroup()
-                                .addComponent(tbstopref, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(tbstopordernbr, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(127, 127, 127))
                             .addGroup(jPanel15Layout.createSequentialGroup()
                                 .addComponent(tbstopqty, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2119,7 +2231,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addGroup(jPanel15Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbstopitem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel83)
-                    .addComponent(tbstopref, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbstopordernbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel84)
                     .addComponent(tbstoppallets, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel19))
@@ -2307,6 +2419,21 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
          };
         kvstop.put(String.valueOf(currentstopline), stoparray);
         
+        ArrayList<String[]> z = new ArrayList<String[]>();
+        for (int j = 0; j < itemdet.getRowCount(); j++) {
+            String[] v = new String[]{
+              orddet.getValueAt(j, 0).toString(),
+              orddet.getValueAt(j, 1).toString(),
+              orddet.getValueAt(j, 2).toString(),
+              orddet.getValueAt(j, 3).toString(),
+              orddet.getValueAt(j, 4).toString(),
+              orddet.getValueAt(j, 5).toString(),
+              orddet.getValueAt(j, 6).toString(),
+              orddet.getValueAt(j, 7).toString()
+            };
+            z.add(v);
+         }
+        itemmap.put(String.valueOf(currentstopline), z);
          
 
         isLoad = true;
@@ -2408,7 +2535,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     private void tbchargesFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbchargesFocusLost
         if (! tbcharges.getText().isEmpty()) {
-        String x = BlueSeerUtils.bsformat("", tbcharges.getText(), "0");
+        String x = BlueSeerUtils.bsformat("", tbcharges.getText(), "2");
         if (x.equals("error")) {
             tbcharges.setText("");
             tbcharges.setBackground(Color.yellow);
@@ -2434,28 +2561,52 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         
     }//GEN-LAST:event_btcommitActionPerformed
 
-    private void tbcustforevFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbcustforevFocusLost
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tbcustforevFocusLost
-
     private void tbforateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbforateFocusLost
-        // TODO add your handling code here:
+        if (! tbforate.getText().isEmpty()) {
+        String x = BlueSeerUtils.bsformat("", tbforate.getText(), "2");
+        if (x.equals("error")) {
+            tbforate.setText("");
+            tbforate.setBackground(Color.yellow);
+            bsmf.MainFrame.show(getMessageTag(1000));
+            tbforate.requestFocus();
+        } else {
+            tbforate.setText(x);
+            tbforate.setBackground(Color.white);
+        }
+        sumTotal();
+        }
     }//GEN-LAST:event_tbforateFocusLost
 
-    private void tbdrivercellFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbdrivercellFocusLost
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tbdrivercellFocusLost
-
     private void tbdriverrateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbdriverrateFocusLost
-        // TODO add your handling code here:
+        if (! tbdriverrate.getText().isEmpty()) {
+        String x = BlueSeerUtils.bsformat("", tbdriverrate.getText(), "2");
+        if (x.equals("error")) {
+            tbdriverrate.setText("");
+            tbdriverrate.setBackground(Color.yellow);
+            bsmf.MainFrame.show(getMessageTag(1000));
+            tbdriverrate.requestFocus();
+        } else {
+            tbdriverrate.setText(x);
+            tbdriverrate.setBackground(Color.white);
+        }
+        sumTotal();
+        }
     }//GEN-LAST:event_tbdriverrateFocusLost
 
-    private void tbtotweightFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbtotweightFocusLost
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tbtotweightFocusLost
-
     private void tbmileageFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbmileageFocusLost
-        // TODO add your handling code here:
+         if (! tbmileage.getText().isEmpty()) {
+        String x = BlueSeerUtils.bsformat("", tbmileage.getText(), "0");
+        if (x.equals("error")) {
+            tbmileage.setText("");
+            tbmileage.setBackground(Color.yellow);
+            bsmf.MainFrame.show(getMessageTag(1000));
+            tbmileage.requestFocus();
+        } else {
+            tbmileage.setText(x);
+            tbmileage.setBackground(Color.white);
+        }
+        sumTotal();
+        }
     }//GEN-LAST:event_tbmileageFocusLost
 
     private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
@@ -2484,59 +2635,26 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_tbkeyActionPerformed
 
     private void btadditemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadditemActionPerformed
-/*
-        EDData.addEDIAttributeRecord(tbsndgs.getText(), tbrcvgs.getText(), dddoc.getSelectedItem().toString(), ddattributekey.getSelectedItem().toString(), tbattributevalue.getText());
-        getAttributes(tbsndgs.getText(), tbrcvgs.getText(), dddoc.getSelectedItem().toString());
-        ddattributekey.setSelectedIndex(0);
-        tbattributevalue.setText("");
-        */
+        int i = itemdetmodel.getRowCount();
+        i++;
+        itemdetmodel.addRow(new Object[]{
+                    String.valueOf(currentstopline), 
+                    String.valueOf(i), 
+                    tbstopitem.getText(),
+                    tbstopordernbr.getText(), // ordernumber
+                    tbstopqty.getText(), 
+                    tbstoppallets.getText(), 
+                    tbstopweight.getText(),
+                    tbstopitemdesc.getText() 
+                    });
     }//GEN-LAST:event_btadditemActionPerformed
 
     private void btdeleteitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteitemActionPerformed
-        boolean proceed = true;
-/*
-        if (listAttributes.isSelectionEmpty()) {
-            proceed = false;
-            bsmf.MainFrame.show(getMessageTag(1029));
-        } else {
-            proceed = bsmf.MainFrame.warn(getMessageTag(1004));
+      int[] rows = itemdet.getSelectedRows();
+        for (int i : rows) {
+            bsmf.MainFrame.show(getMessageTag(1031, String.valueOf(i)));
+            ((javax.swing.table.DefaultTableModel) itemdet.getModel()).removeRow(i);
         }
-        if (proceed) {
-            String[] z = listAttributes.getSelectedValue().toString().split(":");
-            try {
-
-                Connection con = null;
-                if (ds != null) {
-                    con = ds.getConnection();
-                } else {
-                    con = DriverManager.getConnection(url + db, user, pass);
-                }
-                Statement st = con.createStatement();
-                try {
-
-                    int i = st.executeUpdate("delete from edi_attr where exa_sndid = " + "'" + tbsndgs.getText() + "'" +
-                        " and exa_rcvid = " + "'" + tbrcvgs.getText() + "'" +
-                        " and exa_doc = " + "'" + dddoc.getSelectedItem().toString() + "'" +
-                        " and exa_key = " + "'" + z[0].toString() + "'" +
-                        ";");
-                    if (i > 0) {
-                        bsmf.MainFrame.show(getMessageTag(1031,listAttributes.getSelectedValue().toString()));
-                        getAttributes(tbsndgs.getText(), tbrcvgs.getText(), dddoc.getSelectedItem().toString());
-                    }
-                } catch (SQLException s) {
-                    MainFrame.bslog(s);
-                    bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-                } finally {
-                    if (st != null) {
-                        st.close();
-                    }
-                    con.close();
-                }
-            } catch (Exception e) {
-                MainFrame.bslog(e);
-            }
-        }
-*/
     }//GEN-LAST:event_btdeleteitemActionPerformed
 
     private void btnewstopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewstopActionPerformed
@@ -2569,8 +2687,31 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tbcontact.setText(v[14]);
                 tbmisc.setText(v[15]); 
                 tbremarks.setText(v[16]);
-           
+                dddatetype.setSelectedItem(v[23]);
+                dcdate.setDate(BlueSeerUtils.parseDate(v[24]));
+                ddtimezone.setSelectedItem(v[29]);
+                ddtimetype1.setSelectedItem(v[25]);
+                ddtime1.setSelectedItem(v[26]);
+                ddtimetype2.setSelectedItem(v[27]);
+                ddtime2.setSelectedItem(v[28]);
           setStopState(true); 
+          
+          // lets get items of this stop
+          itemdetmodel.setRowCount(0);
+           for (cfo_item cfoi : cfoitemlist) {
+                if (cfoi.cfoi_stopline().equals(String.valueOf(stopnumber))) {
+                    itemdetmodel.addRow(new Object[]{
+                    cfoi.cfoi_stopline(), 
+                    cfoi.cfoi_itemline(), 
+                    cfoi.cfoi_item(),
+                    cfoi.cfoi_order(), 
+                    cfoi.cfoi_qty(), 
+                    cfoi.cfoi_pallets(), 
+                    cfoi.cfoi_weight(),
+                    cfoi.cfoi_itemdesc()
+                    });
+                }
+           }
         }
         
          if (! isLoad && ddstopsequence.getItemCount() > 0 && ddstopsequence.getSelectedItem() != null && ddstopsequence.getSelectedItem().toString().isBlank()) {
@@ -2594,6 +2735,135 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
            clientChangeEvent(ddcust.getSelectedItem().toString());
         } // if ddcust has a list
     }//GEN-LAST:event_ddcustActionPerformed
+
+    private void dddriverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dddriverActionPerformed
+        if (isLoad == false && dddriver.getSelectedItem() != null && ! dddriver.getSelectedItem().toString().isBlank()) {
+          tbdrivercell.setText(getDriverPhone(dddriver.getSelectedItem().toString()));
+        }
+    }//GEN-LAST:event_dddriverActionPerformed
+
+    private void ddbrokerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddbrokerActionPerformed
+        if (isLoad == false && ddbroker.getSelectedItem() != null && ! ddbroker.getSelectedItem().toString().isBlank()) {
+            String[] x = getBrokerInfo(ddbroker.getSelectedItem().toString());
+            tbbrokercell.setText(x[2]);
+            tbbrokercontact.setText(x[3]);
+        }
+    }//GEN-LAST:event_ddbrokerActionPerformed
+
+    private void ddshiptoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddshiptoActionPerformed
+         if (ddshipto.getItemCount() > 0)  {
+            clearShipAddress();
+            
+            
+                    try {
+                        Connection con = null;
+                        if (ds != null) {
+                          con = ds.getConnection();
+                        } else {
+                          con = DriverManager.getConnection(url + db, user, pass);  
+                        }
+                        Statement st = con.createStatement();
+                        ResultSet res = null;
+                        try {
+
+                            res = st.executeQuery("select * from cms_det where cms_code = " + "'" + ddcust.getSelectedItem().toString() + "'" +
+                                    " AND cms_shipto = " + "'" + ddshipto.getSelectedItem().toString() + "'" + ";");
+                            while (res.next()) {
+                                tbname.setText(res.getString("cms_name"));
+                                tbaddr1.setText(res.getString("cms_line1"));
+                                tbaddr2.setText(res.getString("cms_line2"));
+                                tbcity.setText(res.getString("cms_city"));
+                                tbzip.setText(res.getString("cms_zip"));
+                                tbcontact.setText(res.getString("cms_contact"));
+                                tbphone.setText(res.getString("cms_phone"));
+                                tbemail.setText(res.getString("cms_email"));
+                                tbmisc.setText(res.getString("cms_misc"));
+                                ddstate.setSelectedItem(res.getString("cms_state"));
+                            }
+
+                        } catch (SQLException s) {
+                            MainFrame.bslog(s);
+                        } finally {
+                            if (res != null) {
+                                res.close();
+                            }
+                            if (st != null) {
+                                st.close();
+                            }
+                            con.close();
+                        }
+                    } catch (Exception e) {
+                        MainFrame.bslog(e);
+                    }
+              
+        }
+    }//GEN-LAST:event_ddshiptoActionPerformed
+
+    private void btupdatestopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdatestopActionPerformed
+        
+        String shiptocode = "";
+        String datestr = "0000-00-00";
+        
+        if (dcdate.getDate() != null) {
+            datestr = bsmf.MainFrame.dfdate.format(dcdate.getDate()).toString();
+        }
+        
+        if ( ddshipto.getSelectedItem() != null) {
+            shiptocode = ddshipto.getSelectedItem().toString();
+        }
+      
+        String country = "";
+        if ( ddcountry.getSelectedItem() != null) {
+            country = ddcountry.getSelectedItem().toString();
+        }
+        
+        int stopnumber = Integer.valueOf(ddstopsequence.getSelectedItem().toString().substring(6));
+            String[] stoparray = new String[]{String.valueOf(stopnumber), 
+            String.valueOf(String.valueOf(stopnumber)), 
+            ddstoptype.getSelectedItem().toString(), 
+            shiptocode,
+            tbname.getText(), 
+            tbaddr1.getText(), 
+            tbaddr2.getText(), 
+            "", // line3 
+            tbcity.getText(), 
+            ddstate.getSelectedItem().toString(),
+            tbzip.getText(),
+            country,
+            tbphone.getText(),
+            tbemail.getText(),
+            tbcontact.getText(),
+            tbmisc.getText(),
+            tbremarks.getText(),
+            "", // ref
+            "", // ordnum
+            "", // weight
+            "", // pallets
+            "", // ladingqty
+            "", // hazmat
+            dddatetype.getSelectedItem().toString(),
+            datestr,
+            ddtimetype1.getSelectedItem().toString(),
+            ddtime1.getSelectedItem().toString(),
+            ddtimetype2.getSelectedItem().toString(),
+            ddtime2.getSelectedItem().toString(),
+            ddtimezone.getSelectedItem().toString()
+         };
+        kvstop.put(String.valueOf(stopnumber), stoparray);
+        
+        // now update orddet table
+        for (int j = 0; j < orddet.getRowCount(); j++) {
+            if (orddet.getValueAt(j, 0).toString().equals(String.valueOf(stopnumber))) {
+                orddet.setValueAt(ddstoptype.getSelectedItem().toString(), j, 1);
+                orddet.setValueAt(datestr, j, 2);
+                orddet.setValueAt(tbname.getText(), j, 3);
+                orddet.setValueAt(tbaddr1.getText(), j, 4);
+                orddet.setValueAt(tbcity.getText(), j, 5);
+                orddet.setValueAt(ddstate.getSelectedItem().toString(), j, 6);
+                orddet.setValueAt(tbzip.getText(), j, 7);
+            }
+         }
+    }//GEN-LAST:event_btupdatestopActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
@@ -2727,9 +2997,9 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JTextField tbremarks;
     private javax.swing.JTextField tbstopitem;
     private javax.swing.JTextField tbstopitemdesc;
+    private javax.swing.JTextField tbstopordernbr;
     private javax.swing.JTextField tbstoppallets;
     private javax.swing.JTextField tbstopqty;
-    private javax.swing.JTextField tbstopref;
     private javax.swing.JTextField tbstopweight;
     private javax.swing.JTextField tbtotweight;
     private javax.swing.JTextField tbtrailer;
