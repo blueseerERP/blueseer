@@ -1082,8 +1082,10 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
       
       for (Map.Entry<String, String[]> z : kvstop.entrySet()) { 
            String[] v = z.getValue();
+           if (! v[30].isBlank() && ! v[31].isBlank()) {
            rate += Double.valueOf(v[30]);
            miles += Double.valueOf(v[31]);
+           }
       }
       
       
@@ -2518,16 +2520,16 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
             weight += Double.valueOf(itemdet.getValueAt(j, 6).toString());
             ladingqty += Double.valueOf(itemdet.getValueAt(j, 4).toString());
             pallets += Double.valueOf(itemdet.getValueAt(j, 5).toString());
-            
+          
             String[] v = new String[]{
               itemdet.getValueAt(j, 0).toString(),
               itemdet.getValueAt(j, 1).toString(),
               itemdet.getValueAt(j, 2).toString(),
+              itemdet.getValueAt(j, 7).toString(),
               itemdet.getValueAt(j, 3).toString(),
               itemdet.getValueAt(j, 4).toString(),
               itemdet.getValueAt(j, 5).toString(),
               itemdet.getValueAt(j, 6).toString(),
-              itemdet.getValueAt(j, 7).toString(),
               "", // ref
               "" // rmks
             };
@@ -2777,6 +2779,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                     tbstopweight.getText(),
                     tbstopitemdesc.getText() 
                     });
+                    
     }//GEN-LAST:event_btadditemActionPerformed
 
     private void btdeleteitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteitemActionPerformed
@@ -2828,7 +2831,8 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
           
           // lets get items of this stop
           itemdetmodel.setRowCount(0);
-           for (cfo_item cfoi : cfoitemlist) {
+            if (cfoitemlist != null) {
+             for (cfo_item cfoi : cfoitemlist) {
                 if (cfoi.cfoi_stopline().equals(String.valueOf(stopnumber))) {
                     itemdetmodel.addRow(new Object[]{
                     cfoi.cfoi_stopline(), 
@@ -2841,13 +2845,13 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                     cfoi.cfoi_itemdesc()
                     });
                 }
-           }
+             }
+            }
         }
-        
-         if (! isLoad && ddstopsequence.getItemCount() > 0 && ddstopsequence.getSelectedItem() != null && ddstopsequence.getSelectedItem().toString().isBlank()) {
+        if (! isLoad && ddstopsequence.getItemCount() > 0 && ddstopsequence.getSelectedItem() != null && ddstopsequence.getSelectedItem().toString().isBlank()) {
           clearStopFields();
           setStopState(false);
-         }
+        }
         
         
     }//GEN-LAST:event_ddstopsequenceActionPerformed
@@ -2964,17 +2968,17 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
               itemdet.getValueAt(j, 0).toString(),
               itemdet.getValueAt(j, 1).toString(),
               itemdet.getValueAt(j, 2).toString(),
+              itemdet.getValueAt(j, 7).toString(),
               itemdet.getValueAt(j, 3).toString(),
               itemdet.getValueAt(j, 4).toString(),
               itemdet.getValueAt(j, 5).toString(),
               itemdet.getValueAt(j, 6).toString(),
-              itemdet.getValueAt(j, 7).toString(),
               "",
               ""
             };
             z.add(v);
          }
-        itemmap.put(String.valueOf(currentstopline), z);
+        itemmap.replace(String.valueOf(currentstopline), z);
         
             String[] stoparray = new String[]{String.valueOf(stopnumber), 
             String.valueOf(String.valueOf(stopnumber)), 
@@ -3005,9 +3009,11 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
             ddtime1.getSelectedItem().toString(),
             ddtimetype2.getSelectedItem().toString(),
             ddtime2.getSelectedItem().toString(),
-            ddtimezone.getSelectedItem().toString()
+            ddtimezone.getSelectedItem().toString(),
+            tbstoprate.getText(),
+            tbstopmiles.getText()
          };
-        kvstop.put(String.valueOf(stopnumber), stoparray);
+        kvstop.replace(String.valueOf(stopnumber), stoparray);
         
         // now update orddet table
         for (int j = 0; j < orddet.getRowCount(); j++) {
@@ -3022,7 +3028,8 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
          }
         
-       
+       summarize();
+       clearStopFields();
         
         
     }//GEN-LAST:event_btupdatestopActionPerformed
