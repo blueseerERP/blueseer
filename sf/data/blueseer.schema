@@ -1604,8 +1604,8 @@ CREATE TABLE IF NOT EXISTS `cfo_mstr` (
   `cfo_driverrate` decimal(14,5) NOT NULL DEFAULT '0',
   `cfo_driverstd` tinyint(1) NOT NULL  DEFAULT '0',
   `cfo_weight` decimal(14,5) NOT NULL DEFAULT '0',
-  `cfo_loaddate` varchar(10) NOT NULL  DEFAULT '',
-  `cfo_unloaddate` varchar(10) NOT NULL  DEFAULT '',
+  `cfo_orddate` varchar(10) NOT NULL  DEFAULT '',
+  `cfo_confdate` varchar(10) NOT NULL  DEFAULT '',
   `cfo_ishazmat` tinyint(1) NOT NULL  DEFAULT '0',
   `cfo_miscexpense` decimal(14,5) NOT NULL DEFAULT '0',
   `cfo_misccharges` decimal(14,5) NOT NULL DEFAULT '0',
@@ -1613,7 +1613,8 @@ CREATE TABLE IF NOT EXISTS `cfo_mstr` (
   `cfo_bol` varchar(30) NOT NULL  DEFAULT '',
   `cfo_rmks` varchar(100) NOT NULL  DEFAULT '',
   `cfo_derived` varchar(100) NOT NULL  DEFAULT '',
-  `cfo_logic` varchar(100) NOT NULL  DEFAULT ''
+  `cfo_logic` varchar(100) NOT NULL  DEFAULT '',
+  `cfo_site` varchar(10) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `cfo_det` (
   `cfod_nbr` varchar(8) NOT NULL  DEFAULT '',
@@ -2750,3 +2751,12 @@ CREATE TABLE IF NOT EXISTS `makemodel` (
   `make` varchar(100) NOT NULL DEFAULT '',
   `model` varchar(100) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `cfo_sos` (
+  `cfos_nbr` varchar(8) NOT NULL,
+  `cfos_desc` varchar(80)  NOT NULL DEFAULT '',
+  `cfos_type` varchar(20) NOT NULL DEFAULT '',
+  `cfos_amttype` varchar(20) NOT NULL DEFAULT '',
+  `cfos_amt` decimal(14,2) NOT NULL DEFAULT '0',
+  `cfos_key` varchar(50) NOT NULL DEFAULT '',
+  `cfos_value` varchar(50) NOT NULL DEFAULT '')
+ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

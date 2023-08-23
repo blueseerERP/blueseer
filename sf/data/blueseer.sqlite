@@ -1892,8 +1892,8 @@ CREATE TABLE "cfo_mstr" (
   "cfo_driverrate" decimal(14,5) NOT NULL COLLATE NOCASE DEFAULT '0',
   "cfo_driverstd" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',
   "cfo_weight" decimal(14,5) NOT NULL COLLATE NOCASE DEFAULT '0',
-  "cfo_loaddate" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
-  "cfo_unloaddate" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfo_orddate" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfo_confdate" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
   "cfo_ishazmat" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',
   "cfo_miscexpense" decimal(14,5) NOT NULL COLLATE NOCASE DEFAULT '0',
   "cfo_misccharges" decimal(14,5) NOT NULL COLLATE NOCASE DEFAULT '0',
@@ -1901,7 +1901,8 @@ CREATE TABLE "cfo_mstr" (
   "cfo_bol" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "cfo_rmks" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
   "cfo_derived" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
-  "cfo_logic" varchar(100) NOT NULL COLLATE NOCASE DEFAULT ''
+  "cfo_logic" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfo_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -3204,6 +3205,15 @@ CREATE TABLE "frt_ctrl" (
 CREATE TABLE "makemodel" (
   "make" varchar(100) NOT NULL DEFAULT '',
   "model" varchar(100) COLLATE NOCASE DEFAULT ''
+);
+CREATE TABLE "cfo_sos" (
+  "cfos_nbr" varchar(8) NOT NULL,
+  "cfos_desc" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfos_type" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfos_amttype" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfos_amt" decimal(14,2) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "cfos_key" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfos_value" varchar(50) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 
 

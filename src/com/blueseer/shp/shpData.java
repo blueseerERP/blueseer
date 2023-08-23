@@ -253,9 +253,11 @@ public class shpData {
             // String[] m = VoucherTransaction(OVData.getNextNbr("batch"), ddtype.getSelectedItem().toString() , createDetRecord(), createRecord(), false);
            // ArrayList<String[]> sac = shpData.getShipperSAC(shipper);
            // add function that takes shipper number and loops through sac to create vouchers
-           
+            if (! type.equals("freight")) {
             _addTranMstrShipper(shipper, effdate, bscon);
             _updateInventoryFromShipper(shipper, bscon);
+            }
+            
             fglData._glEntryFromShipper(shipper, effdate, bscon);
             
             _updateShipperStatus(shipper, effdate, bscon); 
@@ -566,6 +568,40 @@ public class shpData {
                   "", // wh
                   "", // loc
                   "0", // taxamt
+                  "", // cont
+                  "", // ref
+                  "", // serial
+                  site,
+                  "" // bom
+                  );
+          list.add(x);
+        }
+        return list;
+    }
+    
+    public static ArrayList<ship_det> createShipDetFreight(ArrayList<String[]> detail, String shippernbr, String confdate, String site) {
+        ArrayList<ship_det> list = new ArrayList<ship_det>();
+        for (String[] d : detail) {            
+            // Freight field order:  "Line", "Item", "FO", "CUSTFO", "NetPrice", "TAXAMT"
+            ship_det x = new ship_det(null,
+                  shippernbr,
+                  d[0], // shline
+                  d[1], //item
+                  "", //custitem
+                  d[2], // fo
+                  d[0], // foline = shline  
+                  confdate, //confdate
+                  d[3], // po
+                  "1", // qty
+                  "EA", // uom
+                  "", // currency
+                  d[4].replace(defaultDecimalSeparator, '.'), // netprice
+                  "0", // disc
+                  d[4].replace(defaultDecimalSeparator, '.'), // listprice
+                  "", // desc
+                  "", // wh
+                  "", // loc
+                  d[5].replace(defaultDecimalSeparator, '.'), // taxamt
                   "", // cont
                   "", // ref
                   "", // serial

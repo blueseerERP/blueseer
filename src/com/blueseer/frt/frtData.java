@@ -1268,7 +1268,7 @@ public class frtData {
     
     
     
-    public static String[] addCFOTransaction(ArrayList<cfo_det> cfod, cfo_mstr cfo, ArrayList<cfo_item> cfoi) {
+    public static String[] addCFOTransaction(ArrayList<cfo_det> cfod, cfo_mstr cfo, ArrayList<cfo_item> cfoi, ArrayList<cfo_sos> cfos) {
         String[] m = new String[2];
         Connection bscon = null;
         PreparedStatement ps = null;
@@ -1287,6 +1287,11 @@ public class frtData {
             if (cfoi != null) {
                 for (cfo_item z : cfoi) {
                     _addCFOItem(z, bscon, ps, res);
+                }
+            }
+            if (cfos != null) {
+                for (cfo_sos z : cfos) {
+                    _addCFOSummaryDet(z, bscon, ps, res);
                 }
             }
             
@@ -1327,7 +1332,7 @@ public class frtData {
     return m;
     }
     
-    public static String[] updateCFOTransaction(String x, ArrayList<String> lines, ArrayList<cfo_det> cfod, cfo_mstr cfo, ArrayList<cfo_item> cfoi) {
+    public static String[] updateCFOTransaction(String x, ArrayList<String> lines, ArrayList<cfo_det> cfod, cfo_mstr cfo, ArrayList<cfo_item> cfoi, ArrayList<cfo_sos> cfos) {
         String[] m = new String[2];
         Connection bscon = null;
         PreparedStatement ps = null;
@@ -1351,6 +1356,10 @@ public class frtData {
                 for (cfo_item z : cfoi) {
                     _addCFOItem(z, bscon, ps, res);
                 }
+            }
+             _deleteCFOSummaryDet(cfo.cfo_nbr, bscon);
+            for (cfo_sos z : cfos) {
+                _addCFOSummaryDet(z, bscon, ps, res);
             }
             
             bscon.commit();
@@ -1397,9 +1406,9 @@ public class frtData {
         String sqlInsert = "insert into cfo_mstr (cfo_nbr, cfo_cust, cfo_custfonbr, cfo_custfonbrrev, cfo_servicetype, cfo_equipmenttype, cfo_truckid, cfo_trailernbr, " +
         " cfo_orderstatus, cfo_deliverystatus, cfo_driver, cfo_drivercell, cfo_type, " +
         " cfo_brokerid, cfo_brokercontact, cfo_brokercell, cfo_ratetype, cfo_rate, " +
-        " cfo_mileage, cfo_driverrate, cfo_driverstd, cfo_weight, cfo_loaddate, cfo_unloaddate, cfo_ishazmat, " +
-        " cfo_miscexpense, cfo_misccharges, cfo_cost, cfo_bol, cfo_rmks, cfo_derived, cfo_logic) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+        " cfo_mileage, cfo_driverrate, cfo_driverstd, cfo_weight, cfo_orddate, cfo_confdate, cfo_ishazmat, " +
+        " cfo_miscexpense, cfo_misccharges, cfo_cost, cfo_bol, cfo_rmks, cfo_derived, cfo_logic, cfo_site) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.cfo_nbr);
@@ -1428,8 +1437,8 @@ public class frtData {
             ps.setString(20, x.cfo_driverrate);
             ps.setString(21, x.cfo_driverstd);
             ps.setString(22, x.cfo_weight);
-            ps.setString(23, x.cfo_loaddate);
-            ps.setString(24, x.cfo_unloaddate);
+            ps.setString(23, x.cfo_orddate);
+            ps.setString(24, x.cfo_confdate);
             ps.setString(25, x.cfo_ishazmat);
             ps.setString(26, x.cfo_miscexpense);
             ps.setString(27, x.cfo_misccharges);
@@ -1438,6 +1447,7 @@ public class frtData {
             ps.setString(30, x.cfo_rmks);
             ps.setString(31, x.cfo_derived);
             ps.setString(32, x.cfo_logic);
+            ps.setString(33, x.cfo_site);
             rows = ps.executeUpdate();
             } 
             return rows;
@@ -1537,116 +1547,27 @@ public class frtData {
             return rows;
     }
     
-    
-    public static String[] addCFOMstr(cfo_mstr x) {
-        String[] m = new String[2];
-        String sqlSelect = "SELECT * FROM  cfo_mstr where cfo_nbr = ?";
-        String sqlInsert = "insert into cfo_mstr (cfo_nbr, cfo_cust, cfo_custfonbr, cfo_custfonbrrev, cfo_servicetype, cfo_equipmenttype, cfo_truckid, cfo_trailernbr, " +
-        " cfo_orderstatus, cfo_deliverystatus, cfo_driver, cfo_drivercell, cfo_type, " +
-        " cfo_brokerid, cfo_brokercontact, cfo_brokercell, cfo_ratetype, cfo_rate, " +
-        " cfo_mileage, cfo_driverrate, cfo_driverstd, cfo_weight, cfo_loaddate, cfo_unloaddate, cfo_ishazmat, " +
-        " cfo_miscexpense, cfo_misccharges, cfo_cost, cfo_bol, cfo_rmks) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
-        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
-             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
-             ps.setString(1, x.cfo_nbr);
-          try (ResultSet res = ps.executeQuery();
-               PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
+    private static int _addCFOSummaryDet(cfo_sos x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from cfo_sos where cfos_nbr = ? and cfos_desc = ?";
+        String sqlInsert = "insert into cfo_sos (cfos_nbr, cfos_desc, cfos_type, " 
+                        + "cfos_amttype, cfos_amt ) "
+                        + " values (?,?,?,?,?); "; 
+       
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x.cfos_nbr);
+          ps.setString(2, x.cfos_desc);
+          res = ps.executeQuery();
+          ps = con.prepareStatement(sqlInsert); 
             if (! res.isBeforeFirst()) {
-            psi.setString(1, x.cfo_nbr);
-            psi.setString(2, x.cfo_cust);
-            psi.setString(3, x.cfo_custfonbr);
-            psi.setString(4, x.cfo_custfonbrrev);
-            psi.setString(5, x.cfo_servicetype);
-            psi.setString(6, x.cfo_equipmenttype);
-            psi.setString(7, x.cfo_truckid);
-            psi.setString(8, x.cfo_trailernbr);
-            psi.setString(9, x.cfo_orderstatus);
-            psi.setString(10, x.cfo_deliverystatus);
-            psi.setString(11, x.cfo_driver);
-            psi.setString(12, x.cfo_drivercell);
-            psi.setString(13, x.cfo_type);
-            psi.setString(14, x.cfo_brokerid);
-            psi.setString(15, x.cfo_brokercontact);
-            psi.setString(16, x.cfo_brokercell);
-            psi.setString(17, x.cfo_ratetype);
-            psi.setString(18, x.cfo_rate);
-            psi.setString(19, x.cfo_mileage);
-            psi.setString(20, x.cfo_driverrate);
-            psi.setString(21, x.cfo_driverstd);
-            psi.setString(22, x.cfo_weight);
-            psi.setString(23, x.cfo_loaddate);
-            psi.setString(24, x.cfo_unloaddate);
-            psi.setString(25, x.cfo_ishazmat);
-            psi.setString(26, x.cfo_miscexpense);
-            psi.setString(27, x.cfo_misccharges);
-            psi.setString(28, x.cfo_cost);
-            psi.setString(29, x.cfo_bol);
-            psi.setString(30, x.cfo_rmks);
-        
-            int rows = psi.executeUpdate();
-            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-            } else {
-            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
-            }
-          } catch (SQLException s) {
-	       MainFrame.bslog(s);
-               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
-          }
-        } catch (SQLException s) {
-	       MainFrame.bslog(s);
-               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
-        }
-        return m;
-    }
-
-    public static String[] updateCFOMstr(cfo_mstr x) {
-        String[] m = new String[2];
-        String sql = "update cfo_mstr set cfo_cust = ?, cfo_custfonbr = ?, cfo_custfonbrrev = ?, cfo_servicetype = ?, cfo_equipmenttype = ?, cfo_truckid = ?, cfo_trailernbr = ?, " +
-        " cfo_orderstatus = ?, cfo_deliverystatus = ?, cfo_driver = ?, cfo_drivercell = ?, cfo_type = ?, " +
-        " cfo_brokerid = ?, cfo_brokercontact = ?, cfo_brokercell = ?, cfo_ratetype = ?, cfo_rate = ?, " +
-        " cfo_mileage = ?, cfo_driverrate = ?, cfo_driverstd = ?, cfo_weight = ?, cfo_loaddate = ?, cfo_unloaddate = ?, cfo_ishazmat = ?, " +
-        " cfo_miscexpense = ?, cfo_misccharges = ?, cfo_cost = ?, cfo_bol = ?, cfo_rmks = ? " +
-                     " where cfo_nbr = ? ; ";
-        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
-	PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setString(1, x.cfo_cust);
-            ps.setString(2, x.cfo_custfonbr);
-            ps.setString(3, x.cfo_custfonbrrev);
-            ps.setString(4, x.cfo_servicetype);
-            ps.setString(5, x.cfo_equipmenttype);
-            ps.setString(6, x.cfo_truckid);
-            ps.setString(7, x.cfo_trailernbr);
-            ps.setString(8, x.cfo_orderstatus);
-            ps.setString(9, x.cfo_deliverystatus);
-            ps.setString(10, x.cfo_driver);
-            ps.setString(11, x.cfo_drivercell);
-            ps.setString(12, x.cfo_type);
-            ps.setString(13, x.cfo_brokerid);
-            ps.setString(14, x.cfo_brokercontact);
-            ps.setString(15, x.cfo_brokercell);
-            ps.setString(16, x.cfo_ratetype);
-            ps.setString(17, x.cfo_rate);
-            ps.setString(18, x.cfo_mileage);
-            ps.setString(19, x.cfo_driverrate);
-            ps.setString(20, x.cfo_driverstd);
-            ps.setString(21, x.cfo_weight);
-            ps.setString(22, x.cfo_loaddate);
-            ps.setString(23, x.cfo_unloaddate);
-            ps.setString(24, x.cfo_ishazmat);
-            ps.setString(25, x.cfo_miscexpense);
-            ps.setString(26, x.cfo_misccharges);
-            ps.setString(27, x.cfo_cost);
-            ps.setString(28, x.cfo_bol);
-            ps.setString(29, x.cfo_rmks);
-            ps.setString(30, x.cfo_nbr);
-        int rows = ps.executeUpdate();
-        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
-        } catch (SQLException s) {
-	       MainFrame.bslog(s);
-               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
-        }
-        return m;
+            ps.setString(1, x.cfos_nbr);
+            ps.setString(2, x.cfos_desc);
+            ps.setString(3, x.cfos_type);
+            ps.setString(4, x.cfos_amttype);
+            ps.setString(5, x.cfos_amt);
+            rows = ps.executeUpdate();
+            } 
+            return rows;
     }
     
     private static int _updateCFOMstr(cfo_mstr x, Connection con, PreparedStatement ps) throws SQLException {
@@ -1655,8 +1576,8 @@ public class frtData {
         String sql = "update cfo_mstr set cfo_cust = ?, cfo_custfonbr = ?, cfo_custfonbrrev = ?, cfo_servicetype = ?, cfo_equipmenttype = ?, cfo_truckid = ?, cfo_trailernbr = ?, " +
         " cfo_orderstatus = ?, cfo_deliverystatus = ?, cfo_driver = ?, cfo_drivercell = ?, cfo_type = ?, " +
         " cfo_brokerid = ?, cfo_brokercontact = ?, cfo_brokercell = ?, cfo_ratetype = ?, cfo_rate = ?, " +
-        " cfo_mileage = ?, cfo_driverrate = ?, cfo_driverstd = ?, cfo_weight = ?, cfo_loaddate = ?, cfo_unloaddate = ?, cfo_ishazmat = ?, " +
-        " cfo_miscexpense = ?, cfo_misccharges = ?, cfo_cost = ?, cfo_bol = ?, cfo_rmks = ?, cfo_derived = ?, cfo_logic = ? " +
+        " cfo_mileage = ?, cfo_driverrate = ?, cfo_driverstd = ?, cfo_weight = ?, cfo_orddate = ?, cfo_confdate = ?, cfo_ishazmat = ?, " +
+        " cfo_miscexpense = ?, cfo_misccharges = ?, cfo_cost = ?, cfo_bol = ?, cfo_rmks = ?, cfo_derived = ?, cfo_logic = ?, cfo_site = ? " +
                      " where cfo_nbr = ? ; ";
         
             ps = con.prepareStatement(sql);
@@ -1681,8 +1602,8 @@ public class frtData {
             ps.setString(19, x.cfo_driverrate);
             ps.setString(20, x.cfo_driverstd);
             ps.setString(21, x.cfo_weight);
-            ps.setString(22, x.cfo_loaddate);
-            ps.setString(23, x.cfo_unloaddate);
+            ps.setString(22, x.cfo_orddate);
+            ps.setString(23, x.cfo_confdate);
             ps.setString(24, x.cfo_ishazmat);
             ps.setString(25, x.cfo_miscexpense);
             ps.setString(26, x.cfo_misccharges);
@@ -1691,7 +1612,8 @@ public class frtData {
             ps.setString(29, x.cfo_rmks);
             ps.setString(30, x.cfo_derived);
             ps.setString(31, x.cfo_logic);
-            ps.setString(32, x.cfo_nbr);
+            ps.setString(32, x.cfo_site);
+            ps.setString(33, x.cfo_nbr);
             rows = ps.executeUpdate();
         
         return rows;
@@ -1813,6 +1735,15 @@ public class frtData {
         ps.executeUpdate();
     }
     
+    private static void _deleteCFOSummaryDet(String x, Connection con) throws SQLException { 
+        PreparedStatement ps = null; 
+        String sql = "delete from cfo_sos where cfos_nbr = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x);
+        ps.executeUpdate();
+        ps.close();
+    }
+    
     
     public static cfo_mstr getCFOMstr(String[] x) {
         cfo_mstr r = null;
@@ -1850,8 +1781,8 @@ public class frtData {
                             res.getString("cfo_driverrate"),
                             res.getString("cfo_driverstd"),
                             res.getString("cfo_weight"),
-                            res.getString("cfo_loaddate"),
-                            res.getString("cfo_unloaddate"),
+                            res.getString("cfo_orddate"),
+                            res.getString("cfo_confdate"),
                             res.getString("cfo_ishazmat"),
                             res.getString("cfo_miscexpense"),
                             res.getString("cfo_misccharges"),
@@ -1859,7 +1790,8 @@ public class frtData {
                             res.getString("cfo_bol"),
                             res.getString("cfo_rmks"),
                             res.getString("cfo_derived"),
-                            res.getString("cfo_logic")
+                            res.getString("cfo_logic"),
+                            res.getString("cfo_site")
                         );
                     }
                 }
@@ -2013,13 +1945,14 @@ public class frtData {
         String cfo_orderstatus, String cfo_deliverystatus, String cfo_driver, String cfo_drivercell, String cfo_type,
         String cfo_brokerid, String cfo_brokercontact, String cfo_brokercell, String cfo_ratetype, String cfo_rate,
         String cfo_mileage, String cfo_driverrate, String cfo_driverstd, String cfo_weight,
-        String cfo_loaddate, String cfo_unloaddate, String cfo_ishazmat, String cfo_miscexpense,
-        String cfo_misccharges, String cfo_cost, String cfo_bol, String cfo_rmks, String cfo_derived, String cfo_logic) {
+        String cfo_orddate, String cfo_confdate, String cfo_ishazmat, String cfo_miscexpense,
+        String cfo_misccharges, String cfo_cost, String cfo_bol, String cfo_rmks, String cfo_derived, String cfo_logic,
+        String cfo_site ) {
         public cfo_mstr(String[] m) {
             this(m,"","","","","","","","","","",
                    "","","","","","","","","","",
                    "","","","","","","","","","",
-                   "","");
+                   "","","");
         }
     } 
    
@@ -2049,6 +1982,15 @@ public class frtData {
                    "");
         }
     }
+    
+    
+    public record cfo_sos(String[] m, String cfos_nbr, String cfos_desc, String cfos_type, 
+        String cfos_amttype, String cfos_amt) {
+        public cfo_sos(String[] m) {
+            this (m, "", "", "", "", "");
+        }
+    }
+    
     
 
     public record veh_mstr (String[] m, String veh_id, String veh_desc, String veh_type,

@@ -15844,6 +15844,54 @@ return mystring;
       return sac;
    }
 
+    public static ArrayList<String[]> getFreightSAC(String order) {
+      ArrayList<String[]> sac = new ArrayList<String[]>();
+      try{
+
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+             res = st.executeQuery("select cfos_nbr, cfos_desc, cfos_type, cfos_amttype, cfos_amt " +
+                     " from cfo_sos where cfos_nbr = " + "'" + order + "'" + 
+                     " and cfos_type <> 'passive' " + 
+                     ";");
+             while (res.next()) {
+                 String[] myarray = new String[5];
+                 myarray[0] = res.getString("cfos_nbr");
+                 myarray[1] = res.getString("cfos_desc");
+                 myarray[2] = res.getString("cfos_type");
+                 myarray[3] = res.getString("cfos_amttype");
+                 myarray[4] = res.getString("cfos_amt");
+                 sac.add(myarray);
+             }
+        }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+            if (res != null) {
+                res.close();
+            }
+            if (st != null) {
+                st.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+      return sac;
+   }
+
+    
     public static void voidPOSStatus(String nbr, Connection bscon) throws SQLException {
      Statement st = bscon.createStatement();
                st.executeUpdate(

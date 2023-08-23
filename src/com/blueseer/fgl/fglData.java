@@ -2590,7 +2590,7 @@ public class fglData {
                        " from item_mstr  " + 
                        " inner join pl_mstr on pl_line = it_prodline " +
                        " inner join item_cost on itc_item = it_item and itc_set = 'standard' " +
-                       " where it_item = " + "'" + part.toString() + "'" +  ";"
+                       " where it_item = " + "'" + part + "'" +  ";"
                         );
                     
                     while (nres.next()) {
