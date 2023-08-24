@@ -87,8 +87,8 @@ public class shpData {
         String sqlInsert = "insert into ship_mstr (sh_id, sh_cust, sh_ship, sh_pallets, sh_boxes,  "
                     + "  sh_shipvia, sh_shipdate, sh_po_date, sh_ref, sh_po, " 
                     + " sh_rmks, sh_userid, sh_site, sh_curr, sh_wh, "
-                    + " sh_cust_terms, sh_taxcode, sh_ar_acct, sh_ar_cc) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+                    + " sh_cust_terms, sh_taxcode, sh_ar_acct, sh_ar_cc, sh_type, sh_so) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.sh_id);
@@ -114,6 +114,8 @@ public class shpData {
             ps.setString(17, x.sh_taxcode);
             ps.setString(18, x.sh_ar_acct);
             ps.setString(19, x.sh_ar_cc);
+            ps.setString(20, x.sh_type);
+            ps.setString(21, x.sh_so);
             rows = ps.executeUpdate();
             } 
             return rows;
@@ -505,7 +507,9 @@ public class shpData {
                 terms,
                 taxcode,
                 acct,
-                cc );
+                cc,
+                shiptype,
+                so);
                 
         return x;        
     }
@@ -2520,11 +2524,11 @@ public class shpData {
         String sh_boxes, String sh_shipvia, String sh_shipdate, String sh_po_date,
         String sh_ref, String sh_po, String sh_rmks, String sh_userid, String sh_site,
         String sh_curr, String sh_wh, String sh_cust_terms, String sh_taxcode,
-        String sh_ar_acct, String sh_ar_cc ) {
+        String sh_ar_acct, String sh_ar_cc, String sh_type, String sh_so ) {
          public ship_mstr(String[] m) {
             this(m, "", "", "", "", "", "", "", "", "", "",
-                    "", "", "", "", "", "", "", "", ""
-                    );
+                    "", "", "", "", "", "", "", "", "", "",
+                    "" );
         }
     }
    

@@ -459,6 +459,9 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
        kvstop.clear();
        itemmap.clear();
        
+       clearStopFields();
+       
+       
        ArrayList<String[]> initDataSets = frtData.getCFOMaintInit();
        
        
@@ -466,6 +469,9 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
        jTabbedPane1.add("Main", jPanelMain);
        jTabbedPane1.add("Location", jPanelLocation);
        jTabbedPane1.add("Charges", jPanelCharges);
+       
+       lblstatus.setText("");
+       lblstatus.setForeground(Color.black);
        
        tbkey.setText("");
        cbhazmat.setSelected(false);
@@ -669,8 +675,18 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                    btadd.setEnabled(false);
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
+                   if (ddorderstatus.getSelectedItem().toString().compareTo(getGlobalProgTag("closed")) == 0) {
+                        btadd.setEnabled(false);
+                        btupdate.setEnabled(false);
+                        btdelete.setEnabled(false);
+                        btcommit.setEnabled(false);   
+                        lblstatus.setText(getMessageTag(1097));
+                        lblstatus.setForeground(Color.blue);
+                   }
         } else {
                    tbkey.setForeground(Color.red); 
+                   lblstatus.setText(getMessageTag(1098));
+                   lblstatus.setForeground(Color.red);
         }
     }
     
@@ -1317,6 +1333,9 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbstopordernbr.setText("");
         tbstopweight.setText("");
         tbstopitemdesc.setText("");
+        tbstopmiles.setText("");
+        tbstoprate.setText("");
+        lblstop.setText("");
         
         itemdetmodel.setRowCount(0);
         
@@ -1375,7 +1394,8 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbstopitemdesc.setEnabled(state);
         tbstopweight.setEnabled(state);
         tbstopordernbr.setEnabled(state);
-        
+        tbstoprate.setEnabled(state);
+        tbstopmiles.setEnabled(state);
         btdeleteitem.setEnabled(state);
         btadditem.setEnabled(state);
         
@@ -1498,6 +1518,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbexpenses = new javax.swing.JTextField();
         jLabel38 = new javax.swing.JLabel();
         btdelete = new javax.swing.JButton();
+        lblstatus = new javax.swing.JLabel();
         jPanelLocation = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         btaddstop = new javax.swing.JButton();
@@ -1570,6 +1591,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel22 = new javax.swing.JLabel();
         btnewstop = new javax.swing.JButton();
         btclearstop = new javax.swing.JButton();
+        lblstop = new javax.swing.JLabel();
         jPanelCharges = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         sactable = new javax.swing.JTable();
@@ -1741,7 +1763,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         cbhazmat.setText("Hazmat");
 
-        ddorderstatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Open", "Quoted", "Tendered", "Accepted", "Declined", "Cancelled", "InTransit", "Delivered", "Close" }));
+        ddorderstatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "open", "declined", "cancelled", "intransit", "closed" }));
 
         jLabel36.setText("Status");
 
@@ -2018,43 +2040,48 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
             .addGroup(jPanelMainLayout.createSequentialGroup()
                 .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelMainLayout.createSequentialGroup()
-                        .addGap(64, 64, 64)
-                        .addComponent(jLabel76)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnew)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btclear))
-                    .addGroup(jPanelMainLayout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel12, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jScrollPane8)))
                     .addGroup(jPanelMainLayout.createSequentialGroup()
-                        .addComponent(btcommit)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel38)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tbexpenses, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30)
-                        .addComponent(jLabel13)
-                        .addGap(3, 3, 3)
-                        .addComponent(tbcharges, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(24, 24, 24)
-                        .addComponent(jLabel14)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tbcost, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(79, 79, 79)
-                        .addComponent(btprint)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btadd)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btupdate)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btdelete)))
+                        .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanelMainLayout.createSequentialGroup()
+                                .addGap(64, 64, 64)
+                                .addComponent(jLabel76)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnew)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btclear)
+                                .addGap(39, 39, 39)
+                                .addComponent(lblstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanelMainLayout.createSequentialGroup()
+                                .addComponent(btcommit)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel38)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tbexpenses, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(30, 30, 30)
+                                .addComponent(jLabel13)
+                                .addGap(3, 3, 3)
+                                .addComponent(tbcharges, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(24, 24, 24)
+                                .addComponent(jLabel14)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tbcost, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(79, 79, 79)
+                                .addComponent(btprint)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btadd)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btupdate)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btdelete)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanelMainLayout.setVerticalGroup(
@@ -2070,7 +2097,8 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                                 .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnew)
-                            .addComponent(btclear)))
+                            .addComponent(btclear)
+                            .addComponent(lblstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(btlookup))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2550,6 +2578,8 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addComponent(btnewstop)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btclearstop)
+                .addGap(43, 43, 43)
+                .addComponent(lblstop, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
@@ -2560,7 +2590,8 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(ddstopsequence, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel22)
                     .addComponent(btnewstop)
-                    .addComponent(btclearstop))
+                    .addComponent(btclearstop)
+                    .addComponent(lblstop, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -2813,7 +2844,10 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         summarize();
         sumTotal();
-        clearStopFields();       
+        clearStopFields();    
+        setStopState(false);
+        bsmf.MainFrame.show("STOP: " + currentstopline + " has been added");
+        
     }//GEN-LAST:event_btaddstopActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
@@ -2930,8 +2964,8 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                               dfdate.format(now), // delivery date
                               dfdate.format(now), // ord date
                               tbcustforev.getText().replace("'", ""),
-                              ddsite.getSelectedItem().toString(),
-                              "S", 
+                              ddsite.getSelectedItem().toString(), // shipvia
+                              "F", 
                               "" // tax
                               ); 
         ArrayList<String[]> detail = costToDetail();
@@ -2940,7 +2974,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
        // shpData.updateShipperSAC(String.valueOf(shipperid));
         
         String[] message = confirmShipperTransaction("freight", String.valueOf(shipperid), now);
-            updateFreightOrderStatus(tbkey.getText(),"Close");
+            updateFreightOrderStatus(tbkey.getText(),"closed");
             bsmf.MainFrame.show("committed freight order to invoice number: " + String.valueOf(shipperid));
         
         
@@ -3048,6 +3082,13 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         currentstopline = orddet.getRowCount() + 1;
         clearStopFields();
         setStopState(true);
+        if (currentstopline > 1) {
+            ddstoptype.setSelectedItem("Unload Complete");
+        }
+        lblstop.setText("Stop: " + currentstopline);
+        btupdatestop.setEnabled(false);
+        btdeletestop.setEnabled(false);
+        btaddstop.setEnabled(true);
     }//GEN-LAST:event_btnewstopActionPerformed
 
     private void btclearstopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearstopActionPerformed
@@ -3083,6 +3124,8 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                 ddtime2.setSelectedItem(v[28]);
           setStopState(true); 
           
+          lblstop.setText("Stop: " + stopnumber);
+          
           // lets get items of this stop
           itemdetmodel.setRowCount(0);
           if (itemmap.containsKey(String.valueOf(stopnumber))) {
@@ -3101,28 +3144,9 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                 }
           }
           
-          
-          // lets get items of this stop
-          /*
-          itemdetmodel.setRowCount(0);
-            if (cfoitemlist != null) {
-             for (cfo_item cfoi : cfoitemlist) {
-                if (cfoi.cfoi_stopline().equals(String.valueOf(stopnumber))) {
-                    itemdetmodel.addRow(new Object[]{
-                    cfoi.cfoi_stopline(), 
-                    cfoi.cfoi_itemline(), 
-                    cfoi.cfoi_item(),
-                    cfoi.cfoi_order(), 
-                    cfoi.cfoi_qty(), 
-                    cfoi.cfoi_pallets(), 
-                    cfoi.cfoi_weight(),
-                    cfoi.cfoi_itemdesc()
-                    });
-                }
-             }
-            }
-            
-            */
+        btupdatestop.setEnabled(true);
+        btdeletestop.setEnabled(true);
+        btaddstop.setEnabled(false);
             
         }
         if (! isLoad && ddstopsequence.getItemCount() > 0 && ddstopsequence.getSelectedItem() != null && ddstopsequence.getSelectedItem().toString().isBlank()) {
@@ -3513,6 +3537,8 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel lbclientname;
+    private javax.swing.JLabel lblstatus;
+    private javax.swing.JLabel lblstop;
     private javax.swing.JTable orddet;
     private javax.swing.JLabel percentlabel;
     private javax.swing.JTable sactable;

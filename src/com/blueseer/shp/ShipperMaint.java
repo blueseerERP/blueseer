@@ -1415,7 +1415,10 @@ public class ShipperMaint extends javax.swing.JPanel {
                 terms,
                 taxcode,
                 aracct,
-                arcc );
+                arcc,
+                "S", // type
+                "" // sh_so 
+                );
                 
         return x;        
     }

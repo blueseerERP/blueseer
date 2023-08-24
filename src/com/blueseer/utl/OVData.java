@@ -16413,11 +16413,19 @@ return mystring;
                
                  String cust = ""; 
                  String site = ""; 
+                 String shtype = "S";
+                 String shorder = "";
                  String site_csz = "";
                  String bill_csz = "";
                  String ship_csz = "";
+                 int linecount = 0;
+                res = st.executeQuery("select shd_line from ship_det " +
+                        " where shd_id = " + "'" + invoice + "'" + ";"); 
+                while (res.next()) {
+                    linecount++;
+                }
                  
-                res = st.executeQuery("select sh_cust, sh_site, cm_city, cm_state, cm_zip, " +
+                res = st.executeQuery("select sh_cust, sh_site, sh_type, sh_so, cm_city, cm_state, cm_zip, " +
                         " cms_city, cms_state, cms_zip, site_city, site_state, site_zip " +
                         " from ship_mstr " +
                         " inner join cm_mstr on cm_code = sh_cust " +
@@ -16427,6 +16435,8 @@ return mystring;
                        while (res.next()) {
                           cust = res.getString(("sh_cust"));
                           site = res.getString(("sh_site"));
+                          shtype = res.getString(("sh_type"));
+                          shorder = res.getString(("sh_so"));
                           site_csz = res.getString(("site_city")) + " " + res.getString(("site_state")) + " " + res.getString(("site_zip"));
                           bill_csz = res.getString(("cm_city")) + " " + res.getString(("cm_state")) + " " + res.getString(("cm_zip"));
                           ship_csz = res.getString(("cms_city")) + " " + res.getString(("cms_state")) + " " + res.getString(("cms_zip"));
@@ -16441,14 +16451,22 @@ return mystring;
                 }
                 
                 String jasperfile = "";
-               jasperfile = cusData.getCustInvoiceJasper(cust);
-                if (jasperfile.isEmpty()) {
-                    jasperfile = OVData.getDefaultInvoiceJasper(site);
+                if (shtype.equals("F")) {
+                    jasperfile = "inv_freight.jasper";
+                } else {
+                    jasperfile = cusData.getCustInvoiceJasper(cust);
+                    if (jasperfile.isEmpty()) {
+                        jasperfile = OVData.getDefaultInvoiceJasper(site);
+                    }
                 }
                Path imagepath = FileSystems.getDefault().getPath(cleanDirString(getSystemImageDirectory()) + logo);
                 HashMap hm = new HashMap();
                 hm.put("REPORT_TITLE", "INVOICE");
                 hm.put("myid",  invoice);
+                if (shtype.equals("F")) {
+                   hm.put("myfreightnbr", shorder); 
+                   hm.put("linecount", linecount);
+                }
                 hm.put("site_csz", site_csz);
                 hm.put("bill_csz", bill_csz);
                 hm.put("ship_csz", ship_csz);
@@ -19063,8 +19081,8 @@ MainFrame.bslog(e);
             Statement st = con.createStatement();
             try {
                        st.executeUpdate(
-                             " update fo_mstr set fo_status = " + "'" + status + "'" +
-                             " where fo_nbr = " + "'" + nbr + "'" + ";" );
+                             " update cfo_mstr set cfo_orderstatus = " + "'" + status + "'" +
+                             " where cfo_nbr = " + "'" + nbr + "'" + ";" );
         }
         catch (SQLException s){
              MainFrame.bslog(s);

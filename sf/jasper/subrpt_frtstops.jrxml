@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="800" pageHeight="50" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="800" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" whenResourceMissingType="Empty" uuid="078cf306-3884-4a22-bf78-2e22eac8a13d">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="myfreightnbr" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select cfod_stopline, cfod_type, cfod_name, cfod_line1, cfod_city, cfod_state, cfod_zip, cfod_phone
+from cfo_det where cfod_nbr = $P{myfreightnbr}]]>
+	</queryString>
+	<field name="cfod_stopline" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cfod_type" class="java.lang.String"/>
+	<field name="cfod_name" class="java.lang.String"/>
+	<field name="cfod_line1" class="java.lang.String"/>
+	<field name="cfod_city" class="java.lang.String"/>
+	<field name="cfod_state" class="java.lang.String"/>
+	<field name="cfod_zip" class="java.lang.String"/>
+	<field name="cfod_phone" class="java.lang.String"/>
+	<background>
+		<band height="1" splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+		</band>
+	</background>
+	<detail>
+		<band height="50">
+			<textField>
+				<reportElement x="3" y="0" width="135" height="16" uuid="ef1f99aa-fd86-4cb0-9c48-159aa0047968">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA["STOP: " + $F{cfod_stopline}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="3" y="20" width="135" height="16" uuid="bd5ec989-3432-41df-bcb2-9daa3e9e9c1e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{cfod_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="163" y="0" width="200" height="16" uuid="20bf2cd9-1fb6-482a-953d-266368d4a36e">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{cfod_type}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="290" y="20" width="100" height="16" uuid="69ce7f38-9278-4565-9c48-d2f9cf0ebf80">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{cfod_city}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="390" y="20" width="69" height="16" uuid="a675bbc1-5a49-45fc-8950-fe2cbe1a7a97">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{cfod_state}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="460" y="20" width="70" height="16" uuid="07f2d37c-b720-4bcd-9ce0-5a6b991a0bf3">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{cfod_zip}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="140" y="20" width="150" height="16" uuid="efebc144-53ad-42ba-9328-b39b6e5d6066">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{cfod_line1}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

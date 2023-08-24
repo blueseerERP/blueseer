@@ -616,7 +616,10 @@ public class ShipperMaintSerial extends javax.swing.JPanel implements IBlueSeer 
                 terms,
                 "", // taxcode
                 aracct,
-                arcc );
+                arcc,
+                "S", // type
+                "" // sh_so 
+                );
                 
         return x;        
     }
