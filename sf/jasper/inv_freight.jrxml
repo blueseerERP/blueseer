@@ -25,23 +25,21 @@
 	<parameter name="ship_csz" class="java.lang.String"/>
 	<parameter name="myfreightnbr" class="java.lang.String"/>
 	<parameter name="linecount" class="java.lang.Integer"/>
+	<parameter name="deliverydate" class="java.lang.String"/>
+	<parameter name="weight" class="java.lang.String"/>
+	<parameter name="miles" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[select shd_id, sh_curr, it_desc, cm_terms,
-(select case when sum(shs_amt) is null then 0 else sum(shs_amt) end 
-	from shs_det where shs_nbr = $P{myid} and shs_amttype = 'amount' and shs_type <> 'tax'  and shs_type <> 'passive' and shs_type <> 'shipping BIL' and shs_type <> 'shipping PPD'
-) as charges, 
-(select case when sum(shs_amt) is null then 0 else sum(shs_amt)  
-	end from shs_det where shs_nbr = $P{myid} and shs_amttype = 'amount' and shs_type = 'tax'
-) as taxes,
-sh_cust, sh_confdate, sh_shipvia, sh_bol, sh_ref, sh_rmks, sh_so,
+		<![CDATA[select shd_id, sh_curr, cm_terms, 
+cfo_servicetype, cfo_equipmenttype, cfo_ratetype,
+sh_cust, sh_confdate, sh_shipvia, sh_bol, sh_ref, sh_rmks, sh_so, sh_po,
 sh_boxes, sh_pallets, shd_po, shd_item, shd_custitem, shd_line,
 shd_serial, shd_cont, shd_qty, shd_netprice, shd_listprice, shd_uom, 
-shd_taxamt, shd_taxpercent, cm_code, cm_name, cm_line1, 
+shd_taxamt, shd_taxpercent, shd_desc, cm_code, cm_name, cm_line1, 
 cm_line2, 
 cms_name, cms_line1, cms_line2, 
 site_desc, site_line1 
 from ship_det 
-left outer join item_mstr on it_item = shd_item 
+inner join cfo_mstr on cfo_nbr = sh_so 
 inner join ship_mstr on sh_id = shd_id 
 inner join cm_mstr on cm_code = sh_cust 
 left outer join cms_det on cms_code = sh_cust and cms_shipto = sh_ship 
@@ -50,9 +48,6 @@ where shd_id =  $P{myid}]]>
 	</queryString>
 	<field name="shd_id" class="java.lang.String"/>
 	<field name="sh_curr" class="java.lang.String"/>
-	<field name="it_desc" class="java.lang.String"/>
-	<field name="charges" class="java.lang.Double"/>
-	<field name="taxes" class="java.lang.Double"/>
 	<field name="sh_cust" class="java.lang.Object"/>
 	<field name="sh_rmks" class="java.lang.Object"/>
 	<field name="shd_po" class="java.lang.Object"/>
@@ -83,14 +78,11 @@ where shd_id =  $P{myid}]]>
 	<field name="shd_uom" class="java.lang.String"/>
 	<field name="sh_so" class="java.lang.String"/>
 	<field name="shd_line" class="java.lang.Integer"/>
+	<field name="sh_po" class="java.lang.String"/>
+	<field name="shd_desc" class="java.lang.String"/>
+	<field name="cfo_ratetype" class="java.lang.String"/>
 	<variable name="mysum" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{shd_qty}]]></variableExpression>
-	</variable>
-	<variable name="tax" class="java.lang.Double">
-		<variableExpression><![CDATA[new Double($F{taxes}.doubleValue())]]></variableExpression>
-	</variable>
-	<variable name="charges" class="java.lang.Double">
-		<variableExpression><![CDATA[new Double($F{charges}.doubleValue())]]></variableExpression>
 	</variable>
 	<variable name="mysumprice" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[new Double($F{shd_qty}.doubleValue() * $F{shd_netprice}.doubleValue())]]></variableExpression>
@@ -99,10 +91,7 @@ where shd_id =  $P{myid}]]>
 		<variableExpression><![CDATA[new Double($F{shd_qty}.doubleValue() * $F{shd_listprice}.doubleValue())]]></variableExpression>
 	</variable>
 	<variable name="totalamount" class="java.lang.Double">
-		<variableExpression><![CDATA[new Double($V{gross}.doubleValue() + 
-	$V{tax}.doubleValue() + 
-	$V{charges}.doubleValue()
-)]]></variableExpression>
+		<variableExpression><![CDATA[new Double($V{gross}.doubleValue())]]></variableExpression>
 	</variable>
 	<background>
 		<band splitType="Stretch"/>
@@ -191,11 +180,11 @@ where shd_id =  $P{myid}]]>
 				<textFieldExpression><![CDATA[$F{shd_id}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="9" y="79" width="42" height="11" uuid="73d69283-89e6-40c1-bc15-f45714523d1f"/>
+				<reportElement x="9" y="79" width="91" height="11" uuid="73d69283-89e6-40c1-bc15-f45714523d1f"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{jasper.invoice.lblcarrier}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{jasper.frtinvoice.lblfonbr}]]></textFieldExpression>
 			</textField>
 			<rectangle>
 				<reportElement x="109" y="79" width="109" height="30" uuid="583ab691-ae2e-4d6f-a2f9-67fdda8d408d"/>
@@ -210,32 +199,32 @@ where shd_id =  $P{myid}]]>
 				<reportElement x="430" y="79" width="125" height="30" uuid="7f25945d-ab08-4b5f-a20d-63a887879f9d"/>
 			</rectangle>
 			<textField>
-				<reportElement x="120" y="79" width="40" height="11" uuid="18d2e738-da05-49d7-87cc-ec79aace1926"/>
+				<reportElement x="120" y="79" width="90" height="11" uuid="18d2e738-da05-49d7-87cc-ec79aace1926"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{jasper.invoice.lblreference}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{jasper.frtinvoice.lblcustfonbr}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="228" y="79" width="63" height="11" uuid="64cf8971-0cf8-4c42-918c-1f3cbe8117e4"/>
+				<reportElement x="228" y="79" width="92" height="11" uuid="64cf8971-0cf8-4c42-918c-1f3cbe8117e4"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{jasper.invoice.lblbol}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{jasper.frtinvoice.lblfreighttype}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="327" y="79" width="40" height="11" uuid="607b08c2-a675-45c1-98f7-a35e5146ff42"/>
+				<reportElement x="327" y="79" width="97" height="11" uuid="607b08c2-a675-45c1-98f7-a35e5146ff42"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{jasper.invoice.lblcustomer}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{jasper.frtinvoice.lblratetype}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="437" y="79" width="52" height="11" uuid="b05fddee-613d-478f-a4e5-a1d3c5db265c"/>
+				<reportElement x="437" y="79" width="110" height="11" uuid="b05fddee-613d-478f-a4e5-a1d3c5db265c"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{jasper.invoice.lblterms}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{jasper.frtinvoice.lblterms}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="14" y="1" width="151" height="17" uuid="1691e66d-5b7b-4d75-a07d-cd2a556fdf90"/>
@@ -282,14 +271,14 @@ where shd_id =  $P{myid}]]>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{myfreightnbr}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{sh_po}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="9" y="90" width="91" height="20" uuid="a1ba299a-a179-4444-be21-552320c351d6"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{sh_shipvia}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{sh_so}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -311,13 +300,6 @@ where shd_id =  $P{myid}]]>
 					<font isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{jasper.frtinvoice.lbldesc}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="268" y="0" width="90" height="20" uuid="988f61b6-6252-45a0-a6cd-f9db970635d4"/>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{jasper.frtinvoice.lblponbr}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="406" y="0" width="45" height="20" uuid="cce099f1-590a-4911-a1a7-1d5e05e7770c"/>
@@ -347,50 +329,43 @@ where shd_id =  $P{myid}]]>
 			<textField>
 				<reportElement x="19" y="0" width="90" height="16" uuid="978682a3-4259-41c3-adae-54872ecfe90a"/>
 				<textElement>
-					<font size="8"/>
+					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{shd_item}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="109" y="0" width="155" height="16" uuid="a33e94ca-e3f8-4f4f-9bd9-5152ed973656"/>
 				<textElement>
-					<font size="8"/>
+					<font size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{myfreightnbr}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="266" y="0" width="86" height="16" uuid="edbe7124-d60b-42b0-a896-8522f841a299"/>
-				<textElement>
-					<font size="8"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{shd_po}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{shd_desc}]]></textFieldExpression>
 			</textField>
 			<textField pattern="¤ #,##0.00">
 				<reportElement x="406" y="0" width="46" height="16" uuid="592ac78d-fe13-4933-a359-766c6b58c1e7"/>
 				<textElement textAlignment="Right">
-					<font size="8"/>
+					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{shd_netprice}]]></textFieldExpression>
 			</textField>
 			<textField pattern="¤ #,##0.00">
 				<reportElement x="501" y="0" width="64" height="16" uuid="be6c6e00-ced3-4654-a526-512503b386e0"/>
 				<textElement textAlignment="Right">
-					<font size="8"/>
+					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[new Double(($F{shd_qty}.doubleValue() * $F{shd_netprice}.doubleValue()) + $F{shd_taxamt}.doubleValue())]]></textFieldExpression>
 			</textField>
 			<textField pattern="¤ #,##0.00">
 				<reportElement x="456" y="0" width="41" height="16" uuid="22086fe6-4cb1-40cc-a0bd-389ae084f7f1"/>
 				<textElement textAlignment="Right">
-					<font size="8"/>
+					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{shd_taxamt}]]></textFieldExpression>
 			</textField>
 		</band>
-		<band height="33">
+		<band height="25">
 			<subreport>
-				<reportElement x="19" y="2" width="547" height="28" uuid="e6fbe7dc-71d2-4b1c-91a6-15b692dc5278">
-					<printWhenExpression><![CDATA[$F{shd_line} == $P{linecount}]]></printWhenExpression>
+				<reportElement x="40" y="2" width="526" height="18" uuid="e6fbe7dc-71d2-4b1c-91a6-15b692dc5278">
+					<printWhenExpression><![CDATA[$F{shd_line} == 1]]></printWhenExpression>
 				</reportElement>
 				<subreportParameter name="myfreightnbr">
 					<subreportParameterExpression><![CDATA[$F{sh_so}]]></subreportParameterExpression>
@@ -430,6 +405,27 @@ where shd_id =  $P{myid}]]>
 			<textField>
 				<reportElement x="340" y="100" width="100" height="20" uuid="811834f6-d14f-48bb-bf9f-6ec299e0d5b0"/>
 				<textFieldExpression><![CDATA[$R{jasper.frtinvoice.lblnettotal} + "(" +  $F{sh_curr} + "):"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="10" y="2" width="172" height="20" uuid="9d80cc22-5f5b-46e4-8880-b88c100a185e"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Delivery Date: " + $P{deliverydate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="10" y="24" width="172" height="20" uuid="c6a2b344-0fa7-47b0-8cba-573966f662cd"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Est Mileage: " + $P{miles}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="10" y="46" width="172" height="20" uuid="568f7034-cd20-4949-98c3-eba3307d81aa"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Weight: " + $P{weight}]]></textFieldExpression>
 			</textField>
 		</band>
 	</lastPageFooter>

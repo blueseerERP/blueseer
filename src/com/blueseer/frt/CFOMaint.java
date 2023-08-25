@@ -328,6 +328,10 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
            } else if (this.type.equals("get")) {
              updateForm();  
              tbkey.requestFocus();
+            } else if (this.type.equals("add") && message[0].equals("0")) {
+             initvars(key);
+           } else if (this.type.equals("update") && message[0].equals("0")) {
+             initvars(key);    
            } else {
              initvars(null);  
            }
@@ -506,7 +510,6 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbtotweight.setText("");
         dcorddate.setDate(bsmf.MainFrame.now);
         dcconfdate.setDate(bsmf.MainFrame.now);
-        tbexpenses.setText("");
         tbcharges.setText("");
         tbcost.setText("");
         
@@ -836,7 +839,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                 bsmf.MainFrame.dfdate.format(dcorddate.getDate()).toString(),
                 bsmf.MainFrame.dfdate.format(dcconfdate.getDate()).toString(),
                 String.valueOf(BlueSeerUtils.boolToInt(cbhazmat.isSelected())),
-                tbexpenses.getText(),
+                "0", // expenses
                 tbcharges.getText(),
                 tbcost.getText(),
                 "", // bol
@@ -1021,7 +1024,6 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbtotweight.setText(x.cfo_weight());
         dcorddate.setDate(bsmf.MainFrame.dfdate.parse(x.cfo_orddate()));
         dcconfdate.setDate(bsmf.MainFrame.dfdate.parse(x.cfo_confdate()));
-        tbexpenses.setText(x.cfo_miscexpense());
         tbcharges.setText(x.cfo_misccharges());
         tbcost.setText(x.cfo_cost());
         ddsite.setSelectedItem(x.cfo_site());
@@ -1191,6 +1193,16 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
       double pallets = 0.00;
       double miles = 0.00;
       
+      double dol = 0;
+      
+      double totalcharges = 0.00;
+      
+      for (int j = 0; j < sactable.getRowCount(); j++) {
+             totalcharges += Double.valueOf(sactable.getValueAt(j, 3).toString()); 
+      }  
+      tbcharges.setText(String.valueOf(totalcharges));
+      
+      
       for (Map.Entry<String, ArrayList<String[]>> z : itemmap.entrySet()) { 
            ArrayList<String[]> itemlist = z.getValue();
            for (String[] s : itemlist) {
@@ -1217,18 +1229,13 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
       }
       if (cbderivedmiles.isSelected()) {
         tbmileage.setText(String.valueOf(miles));
+      } else {
+        if (! tbmileage.getText().isBlank()) {
+         miles = Double.valueOf(tbmileage.getText());  // if not derived...take text value
+        }
       }
       
-    }
-    
-        
-    public void sumTotal() {
-        double dol = 0;
-        double miles = 0.00;
-        if (! tbmileage.getText().isBlank()) {
-            miles = Double.valueOf(tbmileage.getText());
-        }
-        if (! tbforate.getText().isBlank() && ! tbcharges.getText().isBlank()) {
+      if (! tbforate.getText().isBlank() && ! tbcharges.getText().isBlank()) {
             if (ddratetype.getSelectedItem().toString().equals("Flat Rate")) {
                 dol = Double.valueOf(tbforate.getText()) + Double.valueOf(tbcharges.getText());
             } else {
@@ -1236,8 +1243,11 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         
         tbcost.setText(String.valueOf(dol));
-        }
+      }
+      
+      
     }
+    
         
     public Integer getmaxline() {
         int max = 0;
@@ -1515,8 +1525,6 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         jScrollPane8 = new javax.swing.JScrollPane();
         orddet = new javax.swing.JTable();
         btclear = new javax.swing.JButton();
-        tbexpenses = new javax.swing.JTextField();
-        jLabel38 = new javax.swing.JLabel();
         btdelete = new javax.swing.JButton();
         lblstatus = new javax.swing.JLabel();
         jPanelLocation = new javax.swing.JPanel();
@@ -2018,14 +2026,6 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
-        tbexpenses.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                tbexpensesFocusLost(evt);
-            }
-        });
-
-        jLabel38.setText("Expenses");
-
         btdelete.setText("Delete");
         btdelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -2061,11 +2061,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                                 .addComponent(lblstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanelMainLayout.createSequentialGroup()
                                 .addComponent(btcommit)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel38)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tbexpenses, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(30, 30, 30)
+                                .addGap(153, 153, 153)
                                 .addComponent(jLabel13)
                                 .addGap(3, 3, 3)
                                 .addComponent(tbcharges, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2117,8 +2113,6 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(tbcharges, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel13)
-                        .addComponent(tbexpenses, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel38)
                         .addComponent(btcommit))))
         );
 
@@ -2843,7 +2837,6 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         isLoad = false;
         
         summarize();
-        sumTotal();
         clearStopFields();    
         setStopState(false);
         bsmf.MainFrame.show("STOP: " + currentstopline + " has been added");
@@ -2943,7 +2936,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
             tbcharges.setText(x);
             tbcharges.setBackground(Color.white);
         }
-        sumTotal();
+        summarize();
         }
     }//GEN-LAST:event_tbchargesFocusLost
 
@@ -2993,7 +2986,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
             tbforate.setText(x);
             tbforate.setBackground(Color.white);
         }
-        sumTotal();
+        summarize();
         }
     }//GEN-LAST:event_tbforateFocusLost
 
@@ -3009,7 +3002,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
             tbdriverrate.setText(x);
             tbdriverrate.setBackground(Color.white);
         }
-        sumTotal();
+        summarize();
         }
     }//GEN-LAST:event_tbdriverrateFocusLost
 
@@ -3025,7 +3018,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
             tbmileage.setText(x);
             tbmileage.setBackground(Color.white);
         }
-        sumTotal();
+        summarize();
         }
     }//GEN-LAST:event_tbmileageFocusLost
 
@@ -3033,10 +3026,6 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         BlueSeerUtils.messagereset();
         initvars(null);
     }//GEN-LAST:event_btclearActionPerformed
-
-    private void tbexpensesFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbexpensesFocusLost
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tbexpensesFocusLost
 
     private void ddequiptypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddequiptypeActionPerformed
         // TODO add your handling code here:
@@ -3338,7 +3327,6 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
          }
         
        summarize();
-       sumTotal();
        clearStopFields();
         
         
@@ -3495,7 +3483,6 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JLabel jLabel35;
     private javax.swing.JLabel jLabel36;
     private javax.swing.JLabel jLabel37;
-    private javax.swing.JLabel jLabel38;
     private javax.swing.JLabel jLabel39;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel40;
@@ -3555,7 +3542,6 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JTextField tbdrivercell;
     private javax.swing.JTextField tbdriverrate;
     private javax.swing.JTextField tbemail;
-    private javax.swing.JTextField tbexpenses;
     private javax.swing.JTextField tbforate;
     private javax.swing.JTextField tbkey;
     private javax.swing.JTextField tbmileage;

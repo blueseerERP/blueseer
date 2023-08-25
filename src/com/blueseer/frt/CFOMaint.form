@@ -90,11 +90,7 @@
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="btcommit" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jLabel38" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="tbexpenses" min="-2" pref="69" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="153" max="-2" attributes="0"/>
                                   <Component id="jLabel13" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
                                   <Component id="tbcharges" min="-2" pref="69" max="-2" attributes="0"/>
@@ -159,8 +155,6 @@
                       <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                           <Component id="tbcharges" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel13" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="tbexpenses" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel38" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btcommit" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
@@ -825,16 +819,6 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btclearActionPerformed"/>
           </Events>
-        </Component>
-        <Component class="javax.swing.JTextField" name="tbexpenses">
-          <Events>
-            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbexpensesFocusLost"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JLabel" name="jLabel38">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Expenses"/>
-          </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btdelete">
           <Properties>

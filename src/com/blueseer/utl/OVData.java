@@ -16424,6 +16424,9 @@ return mystring;
                 while (res.next()) {
                     linecount++;
                 }
+                
+                
+                
                  
                 res = st.executeQuery("select sh_cust, sh_site, sh_type, sh_so, cm_city, cm_state, cm_zip, " +
                         " cms_city, cms_state, cms_zip, site_city, site_state, site_zip " +
@@ -16442,6 +16445,24 @@ return mystring;
                           ship_csz = res.getString(("cms_city")) + " " + res.getString(("cms_state")) + " " + res.getString(("cms_zip"));
                        }
                 
+                // if Freight type
+                String deliverydate = "";
+                String weight = "";
+                String miles = "";
+                if (shtype.equals("F")) {
+                    res = st.executeQuery("select cfod_date from cfo_det " +
+                            " where cfod_nbr = " + "'" + shorder + "'" + 
+                            " and cfod_type = 'Unload Complete' " + ";"); 
+                    while (res.next()) {
+                        deliverydate = res.getString(("cfod_date"));
+                    }
+                    res = st.executeQuery("select cfo_mileage, cfo_weight from cfo_mstr " +
+                            " where cfo_nbr = " + "'" + shorder + "'"  + ";"); 
+                    while (res.next()) {
+                        miles = res.getString(("cfo_mileage"));
+                        weight = res.getString(("cfo_weight"));
+                    }
+                }
                 
                 
                 String logo = "";
@@ -16466,6 +16487,9 @@ return mystring;
                 if (shtype.equals("F")) {
                    hm.put("myfreightnbr", shorder); 
                    hm.put("linecount", linecount);
+                   hm.put("deliverydate", deliverydate);
+                   hm.put("miles", miles);
+                   hm.put("weight", weight);
                 }
                 hm.put("site_csz", site_csz);
                 hm.put("bill_csz", bill_csz);
