@@ -4455,7 +4455,7 @@ public class DTData {
     
     public static DefaultTableModel getCFOBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("number"), getGlobalColumnTag("customer"), getGlobalColumnTag("status")})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("number"), getGlobalColumnTag("revision"), getGlobalColumnTag("reference"), getGlobalColumnTag("customer"), getGlobalColumnTag("status")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -4477,24 +4477,26 @@ public class DTData {
             ResultSet res = null;
             try{
                 if (state == 1) { // begins
-                    res = st.executeQuery(" select cfo_nbr, cfo_cust, cfo_orderstatus " +
+                    res = st.executeQuery(" select cfo_nbr, cfo_revision, cfo_custfonbr, cfo_cust, cfo_orderstatus " +
                         " FROM  cfo_mstr where " + myfield + " like " + "'" + str + "%'" +
                         " order by cfo_nbr desc ;");
                 }
                 if (state == 2) { // ends
-                    res = st.executeQuery("select cfo_nbr, cfo_cust, cfo_orderstatus  " +
+                    res = st.executeQuery("select cfo_nbr, cfo_revision, cfo_custfonbr, cfo_cust, cfo_orderstatus  " +
                         " FROM  cfo_mstr where " + myfield + " like " + "'%" + str + "'" +
                         " order by cfo_nbr desc ;");
                 }
                  if (state == 0) { // match
-                 res = st.executeQuery(" select cfo_nbr, cfo_cust, cfo_orderstatus " +
+                 res = st.executeQuery(" select cfo_nbr, cfo_revision, cfo_custfonbr, cfo_cust, cfo_orderstatus " +
                         " FROM  cfo_mstr where " + myfield + " like " + "'%" + str + "%'" +
                         " order by cfo_nbr desc ;");
                  }
                     while (res.next()) {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("cfo_nbr"),
-                                   res.getString("cfo_cust"),
-                                   res.getString("cfo_orderstatus")
+                            res.getString("cfo_revision"),
+                            res.getString("cfo_custfonbr"),
+                            res.getString("cfo_cust"),
+                            res.getString("cfo_orderstatus")
                         });
                     }
            }

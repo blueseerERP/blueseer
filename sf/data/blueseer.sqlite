@@ -1873,7 +1873,7 @@ CREATE TABLE "cfo_mstr" (
   "cfo_nbr" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
   "cfo_cust" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "cfo_custfonbr" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "cfo_custfonbrrev" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfo_revision" int(3) NOT NULL COLLATE NOCASE DEFAULT '0',
   "cfo_servicetype" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
   "cfo_equipmenttype" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
   "cfo_truckid" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
@@ -1899,16 +1899,19 @@ CREATE TABLE "cfo_mstr" (
   "cfo_misccharges" decimal(14,5) NOT NULL COLLATE NOCASE DEFAULT '0',
   "cfo_cost" decimal(14,5) NOT NULL COLLATE NOCASE DEFAULT '0',
   "cfo_bol" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "cfo_rmks" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfo_rmks" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
   "cfo_derived" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
   "cfo_logic" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
-  "cfo_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
+  "cfo_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfo_edi" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "cfo_edireason" varchar(50) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "cfo_det" (
   "cfod_nbr" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfod_revision" int(3) NOT NULL COLLATE NOCASE DEFAULT '0',
   "cfod_stopline" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
   "cfod_seq" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
   "cfod_type" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
@@ -1947,6 +1950,7 @@ CREATE TABLE "cfo_det" (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "cfo_item" (
   "cfoi_nbr" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfoi_revision" int(3) NOT NULL COLLATE NOCASE DEFAULT '0',
   "cfoi_stopline" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
   "cfoi_itemline" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
   "cfoi_item" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
@@ -1963,6 +1967,7 @@ CREATE TABLE "cfo_item" (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "cfo_meta" (
   "cfom_id" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfom_revision" int(3) NOT NULL COLLATE NOCASE DEFAULT '0',
   "cfom_type" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
   "cfom_key" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
   "cfom_value" varchar(80) NOT NULL COLLATE NOCASE DEFAULT ''
@@ -1972,6 +1977,7 @@ CREATE TABLE "cfo_meta" (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "cfod_meta" (
   "cfodm_id" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfodm_revision" int(3) NOT NULL COLLATE NOCASE DEFAULT '0',
   "cfodm_stopline" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
   "cfodm_type" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
   "cfodm_key" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
@@ -1982,6 +1988,7 @@ CREATE TABLE "cfod_meta" (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "cfoi_meta" (
   "cfoim_id" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfoim_revision" int(3) NOT NULL COLLATE NOCASE DEFAULT '0',
   "cfoim_stopline" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
   "cfoim_itemline" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
   "cfoim_type" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
@@ -3208,6 +3215,7 @@ CREATE TABLE "makemodel" (
 );
 CREATE TABLE "cfo_sos" (
   "cfos_nbr" varchar(8) NOT NULL,
+  "cfos_revision" int(3) NOT NULL COLLATE NOCASE DEFAULT '0',
   "cfos_desc" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
   "cfos_type" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
   "cfos_amttype" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
