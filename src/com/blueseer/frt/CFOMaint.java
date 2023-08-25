@@ -48,10 +48,12 @@ import com.blueseer.frt.frtData.cfo_mstr;
 import com.blueseer.frt.frtData.cfo_sos;
 import static com.blueseer.frt.frtData.deleteCFOMstr;
 import static com.blueseer.frt.frtData.getBrokerInfo;
+import static com.blueseer.frt.frtData.getCFODefaultRevision;
 import static com.blueseer.frt.frtData.getCFODet;
 import static com.blueseer.frt.frtData.getCFOItem;
 import static com.blueseer.frt.frtData.getCFOLines;
 import static com.blueseer.frt.frtData.getCFOMstr;
+import static com.blueseer.frt.frtData.getCFORevisions;
 import static com.blueseer.frt.frtData.getDriverPhone;
 import static com.blueseer.frt.frtData.updateCFOTransaction;
 import com.blueseer.shp.shpData;
@@ -481,6 +483,9 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
        
        tbkey.setText("");
        cbhazmat.setSelected(false);
+       cbrev.setSelected(false);
+       cbedi.setSelected(false);
+       cbedi.setEnabled(false);
        
        ddorderstatus.setBackground(null);
        ddorderstatus.setSelectedItem("open");
@@ -512,7 +517,9 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         dcorddate.setDate(bsmf.MainFrame.now);
         dcconfdate.setDate(bsmf.MainFrame.now);
         tbcharges.setText("");
+        tbcharges.setEditable(false);
         tbcost.setText("");
+        tbcost.setEditable(false);
         
        // tablelist.clear();
        
@@ -853,8 +860,9 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                 logic,
                 ddsite.getSelectedItem().toString(),
                 String.valueOf(BlueSeerUtils.boolToInt(cbedi.isSelected())),
-                "" // edi rejection reason..to be added
-                );
+                "", // edi rejection reason..to be added
+                String.valueOf(BlueSeerUtils.boolToInt(cbrev.isSelected()))
+        );
         return x;
     }
 
@@ -993,6 +1001,20 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
     public void updateForm() throws ParseException {
         isLoad = true;
         
+        ArrayList<String> revlist = getCFORevisions(x.cfo_nbr());
+        for (String r : revlist) {
+         ddrevision.addItem(r);
+        }
+        ddrevision.setSelectedItem(x.cfo_revision());
+        /*
+        if (! x.cfo_revision().equals(getCFODefaultRevision(x.cfo_nbr()))) {
+            lblrevision.setText("Not Default");
+        } else {
+            lblrevision.setText("Default");
+        }
+        */
+        
+        
         String[] delimfields = x.cfo_derived().split(",",-1);
         if (delimfields != null) {
             for (int i = 0; i < delimfields.length; i++) {
@@ -1015,6 +1037,8 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbcustfo.setText(x.cfo_custfonbr());
         ddrevision.setSelectedItem(x.cfo_revision());
         cbhazmat.setSelected(BlueSeerUtils.ConvertStringToBool(x.cfo_ishazmat()));
+        cbrev.setSelected(BlueSeerUtils.ConvertStringToBool(x.cfo_defaultrev()));
+        cbedi.setSelected(BlueSeerUtils.ConvertStringToBool(x.cfo_edi()));
         ddservicetype.setSelectedItem(x.cfo_servicetype());
         ddequiptype.setSelectedItem(x.cfo_equipmenttype());
         ddvehicle.setSelectedItem(x.cfo_truckid());
@@ -1203,7 +1227,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
       double pallets = 0.00;
       double miles = 0.00;
       
-      double dol = 0;
+      double dol = 0.00;
       
       double totalcharges = 0.00;
       
@@ -1245,16 +1269,14 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
       }
       
-      if (! tbforate.getText().isBlank() && ! tbcharges.getText().isBlank()) {
+      if (! tbforate.getText().isBlank()) {
             if (ddratetype.getSelectedItem().toString().equals("Flat Rate")) {
                 dol = Double.valueOf(tbforate.getText()) + Double.valueOf(tbcharges.getText());
             } else {
                 dol = (Double.valueOf(tbforate.getText()) * miles) + Double.valueOf(tbcharges.getText());
             }
-        
-        tbcost.setText(String.valueOf(dol));
-      }
-      
+      } 
+      tbcost.setText(String.valueOf(dol));
       
     }
     
@@ -1529,6 +1551,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         cbedi = new javax.swing.JCheckBox();
         ddrevision = new javax.swing.JComboBox<>();
         lblrevision = new javax.swing.JLabel();
+        cbrev = new javax.swing.JCheckBox();
         tbcharges = new javax.swing.JTextField();
         tbcost = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
@@ -1783,7 +1806,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         cbhazmat.setText("Hazmat");
 
-        ddorderstatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "open", "declined", "cancelled", "intransit", "closed" }));
+        ddorderstatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "open", "pending", "declined", "cancelled", "intransit", "closed" }));
 
         jLabel36.setText("Status");
 
@@ -1824,6 +1847,8 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         cbedi.setText("EDI");
 
+        cbrev.setText("Default");
+
         javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
         jPanel12.setLayout(jPanel12Layout);
         jPanel12Layout.setHorizontalGroup(
@@ -1854,11 +1879,13 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                                     .addComponent(tbtrailer, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(jPanel12Layout.createSequentialGroup()
                                         .addComponent(tbcustfo, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(cbedi))
                                     .addGroup(jPanel12Layout.createSequentialGroup()
                                         .addComponent(ddrevision, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(cbrev)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(lblrevision, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1950,7 +1977,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(cbderivedrate)
                     .addComponent(cbedi))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel6)
                         .addComponent(tbdrivercell, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1958,8 +1985,9 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addComponent(tbmileage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel32)
                         .addComponent(cbderivedmiles)
-                        .addComponent(ddrevision, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(lblrevision, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(ddrevision, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cbrev))
+                    .addComponent(lblrevision, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbtotweight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2005,12 +2033,6 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addComponent(jLabel40)))
                 .addContainerGap(29, Short.MAX_VALUE))
         );
-
-        tbcharges.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                tbchargesFocusLost(evt);
-            }
-        });
 
         jLabel13.setText("Charges");
 
@@ -2872,7 +2894,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask(dbaction.add, new String[]{tbkey.getText()});
+        executeTask(dbaction.add, new String[]{tbkey.getText(), ddrevision.getSelectedItem().toString()});
     }//GEN-LAST:event_btaddActionPerformed
 
     private void btdeletestopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeletestopActionPerformed
@@ -2898,7 +2920,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
            return;
        }
         setPanelComponentState(this, false);
-        executeTask(dbaction.update, new String[]{tbkey.getText()});  
+        executeTask(dbaction.update, new String[]{tbkey.getText(), ddrevision.getSelectedItem().toString()});  
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
@@ -2948,22 +2970,6 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         lookUpFrame();
     }//GEN-LAST:event_btlookupActionPerformed
 
-    private void tbchargesFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbchargesFocusLost
-        if (! tbcharges.getText().isEmpty()) {
-        String x = BlueSeerUtils.bsformat("", tbcharges.getText(), "2");
-        if (x.equals("error")) {
-            tbcharges.setText("");
-            tbcharges.setBackground(Color.yellow);
-            bsmf.MainFrame.show(getMessageTag(1000));
-            tbcharges.requestFocus();
-        } else {
-            tbcharges.setText(x);
-            tbcharges.setBackground(Color.white);
-        }
-        summarize();
-        }
-    }//GEN-LAST:event_tbchargesFocusLost
-
     private void btcommitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcommitActionPerformed
         java.util.Date now = new java.util.Date();
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -3010,8 +3016,8 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
             tbforate.setText(x);
             tbforate.setBackground(Color.white);
         }
+        } 
         summarize();
-        }
     }//GEN-LAST:event_tbforateFocusLost
 
     private void tbdriverrateFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbdriverrateFocusLost
@@ -3448,6 +3454,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JCheckBox cbderivedweight;
     private javax.swing.JCheckBox cbedi;
     private javax.swing.JCheckBox cbhazmat;
+    private javax.swing.JCheckBox cbrev;
     private javax.swing.JCheckBox cbstandard;
     private com.toedter.calendar.JDateChooser dcconfdate;
     private com.toedter.calendar.JDateChooser dcdate;

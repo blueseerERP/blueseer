@@ -1347,6 +1347,10 @@ public class frtData {
             for (String line : lines) {
                _deleteCFOLines(x, y, line, bscon, ps);  // discard unwanted lines
              }
+            // before updating CFOMstr...check if incoming default revision has changed to '1'
+            if (cfo.cfo_defaultrev.equals("1")) {
+                _resetCFOMstrRev(cfo, bscon, ps);
+            }
             _updateCFOMstr(cfo, bscon, ps);  
             for (cfo_det z : cfod) {
                 _updateCFODet(z, bscon, ps, res);
@@ -1407,8 +1411,8 @@ public class frtData {
         " cfo_orderstatus, cfo_deliverystatus, cfo_driver, cfo_drivercell, cfo_type, " +
         " cfo_brokerid, cfo_brokercontact, cfo_brokercell, cfo_ratetype, cfo_rate, " +
         " cfo_mileage, cfo_driverrate, cfo_driverstd, cfo_weight, cfo_orddate, cfo_confdate, cfo_ishazmat, " +
-        " cfo_miscexpense, cfo_misccharges, cfo_cost, cfo_bol, cfo_rmks, cfo_derived, cfo_logic, cfo_site, cfo_edi, cfo_edireason ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+        " cfo_miscexpense, cfo_misccharges, cfo_cost, cfo_bol, cfo_rmks, cfo_derived, cfo_logic, cfo_site, cfo_edi, cfo_edireason, cfo_defaultrev ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.cfo_nbr);
@@ -1451,6 +1455,7 @@ public class frtData {
             ps.setString(33, x.cfo_site);
             ps.setString(34, x.cfo_edi);
             ps.setString(35, x.cfo_edireason);
+            ps.setString(36, x.cfo_defaultrev);
             rows = ps.executeUpdate();
             } 
             return rows;
@@ -1587,7 +1592,7 @@ public class frtData {
         " cfo_brokerid = ?, cfo_brokercontact = ?, cfo_brokercell = ?, cfo_ratetype = ?, cfo_rate = ?, " +
         " cfo_mileage = ?, cfo_driverrate = ?, cfo_driverstd = ?, cfo_weight = ?, cfo_orddate = ?, cfo_confdate = ?, cfo_ishazmat = ?, " +
         " cfo_miscexpense = ?, cfo_misccharges = ?, cfo_cost = ?, cfo_bol = ?, cfo_rmks = ?, cfo_derived = ?, cfo_logic = ?, cfo_site = ?, " +
-        " cfo_edi = ?, cfo_edireason = ? " +
+        " cfo_edi = ?, cfo_edireason = ?, cfo_defaultrev = ? " +
         " where cfo_nbr = ? and cfo_revision = ? ; ";
         
             ps = con.prepareStatement(sql);
@@ -1624,13 +1629,27 @@ public class frtData {
             ps.setString(31, x.cfo_site);
             ps.setString(32, x.cfo_edi);
             ps.setString(33, x.cfo_edireason);
-            ps.setString(34, x.cfo_nbr);
-            ps.setString(35, x.cfo_revision);
+            ps.setString(34, x.cfo_defaultrev);
+            ps.setString(35, x.cfo_nbr);
+            ps.setString(36, x.cfo_revision);
             
             rows = ps.executeUpdate();
         
         return rows;
     }
+    
+    private static int _resetCFOMstrRev(cfo_mstr x, Connection con, PreparedStatement ps) throws SQLException {
+        int rows = 0;  
+        
+        String sql = "update cfo_mstr set cfo_defaultrev = '0' " +
+        " where cfo_nbr = ?; ";
+            ps = con.prepareStatement(sql);
+            ps.setString(1, x.cfo_nbr);
+            rows = ps.executeUpdate();
+        
+        return rows;
+    }
+    
     
     private static int _updateCFODet(cfo_det x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
@@ -1813,7 +1832,8 @@ public class frtData {
                             res.getString("cfo_logic"),
                             res.getString("cfo_site"),
                             res.getString("cfo_edi"),
-                            res.getString("cfo_edireason")
+                            res.getString("cfo_edireason"),
+                            res.getString("cfo_defaultrev")
                         );
                     }
                 }
@@ -1930,8 +1950,7 @@ public class frtData {
         }
         return list;
     }
-    
-    
+        
     public static String[] deleteCFOMstr(cfo_mstr x) { 
        String[] m = new String[2];
         String sql = "delete from cfo_mstr where cfo_nbr = ? and cfo_revision = ?; ";
@@ -1948,6 +1967,71 @@ public class frtData {
         return m;
     }
     
+    // misc
+    public static ArrayList<String> getCFORevisions(String cfo) {
+        ArrayList<String> lines = new ArrayList<String>();
+        try{
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+
+           res = st.executeQuery("SELECT cfo_revision from cfo_mstr " +
+                   " where cfo_nbr = " + "'" + cfo + "'" + " order by cfo_revision ;");
+                        while (res.next()) {
+                          lines.add(res.getString("cfo_revision"));
+                        }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+        return lines;
+    }
+    
+    public static String getCFODefaultRevision(String cfo) {
+        String item = "";
+        try{
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        ResultSet res = null;
+            try{
+                res = st.executeQuery("select cfo_revision from cfo_mstr where cfo_nbr = " + "'" + cfo + "'" + 
+                        " and cfo_defaultrev = " + "'" + "1" + "'" + ";");
+                while (res.next()) {
+                    item = res.getString("cfo_revision");
+                }
+            }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+             return item;
+    }
     
     
     
@@ -1974,12 +2058,12 @@ public class frtData {
         String cfo_mileage, String cfo_driverrate, String cfo_driverstd, String cfo_weight,
         String cfo_orddate, String cfo_confdate, String cfo_ishazmat, String cfo_miscexpense,
         String cfo_misccharges, String cfo_cost, String cfo_bol, String cfo_rmks, String cfo_derived, String cfo_logic,
-        String cfo_site, String cfo_edi, String cfo_edireason ) {
+        String cfo_site, String cfo_edi, String cfo_edireason, String cfo_defaultrev ) {
         public cfo_mstr(String[] m) {
             this(m,"","","","","","","","","","",
                    "","","","","","","","","","",
                    "","","","","","","","","","",
-                   "","","","","");
+                   "","","","","","");
         }
     } 
    

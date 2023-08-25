@@ -1616,7 +1616,8 @@ CREATE TABLE IF NOT EXISTS `cfo_mstr` (
   `cfo_logic` varchar(100) NOT NULL  DEFAULT '',
   `cfo_site` varchar(10) NOT NULL  DEFAULT '',
   `cfo_edi` tinyint(1) NOT NULL  DEFAULT '0',
-  `cfo_edireason` varchar(50) NOT NULL  DEFAULT ''
+  `cfo_edireason` varchar(50) NOT NULL  DEFAULT '',
+  `cfo_defaultrev` tinyint(1) NOT NULL  DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `cfo_det` (
   `cfod_nbr` varchar(8) NOT NULL  DEFAULT '',

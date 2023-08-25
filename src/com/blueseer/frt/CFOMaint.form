@@ -253,12 +253,14 @@
                                           <Component id="tbtrailer" alignment="0" min="-2" pref="164" max="-2" attributes="0"/>
                                           <Group type="102" alignment="0" attributes="0">
                                               <Component id="tbcustfo" min="-2" pref="144" max="-2" attributes="0"/>
-                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
                                               <Component id="cbedi" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                           <Group type="102" alignment="0" attributes="0">
                                               <Component id="ddrevision" min="-2" pref="44" max="-2" attributes="0"/>
                                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                              <Component id="cbrev" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
                                               <Component id="lblrevision" min="-2" pref="76" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
@@ -380,7 +382,7 @@
                           <Component id="cbedi" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="tbdrivercell" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -389,8 +391,9 @@
                               <Component id="jLabel32" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="cbderivedmiles" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="ddrevision" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="cbrev" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="lblrevision" min="-2" pref="17" max="-2" attributes="0"/>
+                          <Component id="lblrevision" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -686,12 +689,13 @@
             <Component class="javax.swing.JComboBox" name="ddorderstatus">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="5">
+                  <StringArray count="6">
                     <StringItem index="0" value="open"/>
-                    <StringItem index="1" value="declined"/>
-                    <StringItem index="2" value="cancelled"/>
-                    <StringItem index="3" value="intransit"/>
-                    <StringItem index="4" value="closed"/>
+                    <StringItem index="1" value="pending"/>
+                    <StringItem index="2" value="declined"/>
+                    <StringItem index="3" value="cancelled"/>
+                    <StringItem index="4" value="intransit"/>
+                    <StringItem index="5" value="closed"/>
                   </StringArray>
                 </Property>
               </Properties>
@@ -787,12 +791,14 @@
             </Component>
             <Component class="javax.swing.JLabel" name="lblrevision">
             </Component>
+            <Component class="javax.swing.JCheckBox" name="cbrev">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Default"/>
+              </Properties>
+            </Component>
           </SubComponents>
         </Container>
         <Component class="javax.swing.JTextField" name="tbcharges">
-          <Events>
-            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbchargesFocusLost"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="tbcost">
         </Component>

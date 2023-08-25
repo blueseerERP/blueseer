@@ -1904,7 +1904,8 @@ CREATE TABLE "cfo_mstr" (
   "cfo_logic" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
   "cfo_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
   "cfo_edi" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',
-  "cfo_edireason" varchar(50) NOT NULL COLLATE NOCASE DEFAULT ''
+  "cfo_edireason" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cfo_defaultrev" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0'
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
