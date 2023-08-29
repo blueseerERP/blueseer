@@ -4462,6 +4462,8 @@ public class EDData {
         }
       }  
        
+       
+       
        public static String CreateFOMSTRFrom204i(String[] control, String custfo, String carrier, String equiptype, String remarks, String bol, String cust, String tpid, String weight, String ref ) {
            String fo = "";           
            try {

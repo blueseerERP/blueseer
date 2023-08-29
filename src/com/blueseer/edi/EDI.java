@@ -37,6 +37,8 @@ import static com.blueseer.edi.EDIMap.clearStaticVariables;
 import static com.blueseer.edi.EDIMap.delimConvertIntToStr;
 import com.blueseer.edi.ediData.dfs_mstr;
 import static com.blueseer.edi.ediData.getDFSMstr;
+import com.blueseer.frt.frtData;
+import static com.blueseer.frt.frtData.addCFOTransaction;
 import com.blueseer.ord.ordData;
 import static com.blueseer.ord.ordData.addOrderTransaction;
 import com.blueseer.pur.purData;
@@ -3272,43 +3274,96 @@ public class EDI {
     
     }
     
-    public static String[] createFOMSTRFrom204i(edi204i e, String[] control) {
+    public static String[] createCFOFrom204(edi204 e, String[] control) {
             String[] m = new String[]{"",""}; 
-            control[7] = e.custfo;
-             String fo = EDData.CreateFOMSTRFrom204i(control, e.custfo, e.carrier, e.equiptype, e.remarks, e.bol, e.cust, e.tpid, e.weight, e.ref);  
-             for (int j = 0; j < e.getDetCount(); j++ ) {
-               EDData.CreateFODDETFrom204i(fo,
-                       e.getDetLine(j), 
-                       e.getDetType(j), 
-                       e.getDetShipper(j),
-                       e.getDetDelvDate(j),
-                       e.getDetDelvTime(j),
-                       e.getDetShipDate(j),
-                       e.getDetShipTime(j),
-                       e.getDetAddrCode(j),
-                       e.getDetAddrName(j), 
-                       e.getDetAddrLine1(j), 
-                       e.getDetAddrLine2(j),
-                       e.getDetAddrCity(j), 
-                       e.getDetAddrState(j),
-                       e.getDetAddrZip(j),
-                       e.getDetUnits(j),
-                       e.getDetBoxes(j),
-                       e.getDetWeight(j),
-                       e.getDetWeightUOM(j),
-                       e.getDetRef(j),
-                       e.getDetRemarks(j)); 
-               // System.out.println(((edi850)e.get(i)).getDetCustItem(j));
+            String cfokey = String.valueOf(OVData.getNextNbr("cfo"));
+            frtData.cfo_mstr x = new frtData.cfo_mstr(null, 
+                cfokey,
+                e.cust,
+                e.custfo,
+                "1", // revision
+                "", // service type
+                e.equiptype,
+                "", //vehicle ID
+                "", // trailer 
+                "pending", // status
+                "", // delivery status
+                "", // driver
+                "", // driver cell
+                "", // fotype
+                "", // broker
+                "", // broker contact
+                "", // broker cell
+                "", // rate type
+                "", // rate
+                "", // miles
+                "", // driver rate
+                "0", // driver standard toggle
+                e.weight, // weight
+                BlueSeerUtils.convertDateFormat("yyyyMMdd", BlueSeerUtils.now().substring(0,8)),
+                "", // confirm date
+                "0", // is hazmat
+                "0", // expenses
+                "0", // charges
+                "", // total cost
+                "", // bol
+                e.remarks, // remarks
+                "0,0,0", // derived construct
+                "", // logic
+                "", // site
+                "1", // is EDI
+                "", // edi rejection reason..to be added
+                "1" // revision is default? ...assumes latest always default when created via EDI
+        );
+            
+            // now the detail
+            ArrayList<frtData.cfo_det> list = new ArrayList<frtData.cfo_det>();
+            for (int j = 0; j < e.getDetCount(); j++ ) {
+               frtData.cfo_det y = new frtData.cfo_det(null, 
+                cfokey,
+                "1", // revision 
+                e.getDetLine(j),  //stopline
+                "", // sequence
+                e.getDetType(j),  // type
+                e.getDetAddrCode(j), // code
+                e.getDetAddrName(j), 
+                e.getDetAddrLine1(j), 
+                e.getDetAddrLine2(j),
+                "", //line3
+                e.getDetAddrCity(j), 
+                e.getDetAddrState(j),
+                e.getDetAddrZip(j),
+                "", // country
+                "", // phone
+                "", // email
+                "", // contacts
+                "", // misc
+                e.getDetRemarks(j), // remarks
+                e.getDetRef(j), // reference
+                "", // ordnum
+                e.getDetWeight(j).replace(defaultDecimalSeparator, '.'), // weight
+                e.getDetBoxes(j).replace(defaultDecimalSeparator, '.'), // pallets
+                e.getDetUnits(j).replace(defaultDecimalSeparator, '.'), // quantity
+                "0", // hazmat
+                "", // datetype
+                e.getDetShipDate(j), // date
+                "",// timetype1
+                "", // time
+                "", // timetype2
+                "", // time2
+                "", // timezone
+                "", // rate 
+                "" // miles
+                );  
+                list.add(y);
+                
+               
                }
-             
-       if (! fo.isEmpty()) {
-            m[0] = "success";
-            m[1] = m[1] + ": " + fo;
-        } else {
-            m[0] = "error";
-        }      
-      return m;
-    } 
+            
+            m = addCFOTransaction(list, x, null, null);
+            
+            return m;
+     }
      
     public static void createFOTDETFrom214(edi214 e, String[] control) {
              control[7] = e.order;
@@ -6226,7 +6281,7 @@ public class EDI {
         
     }
     
-      public static class edi204i {
+      public static class edi204 {
     // Header fields
     public String isaSenderID = "";
     public String isaReceiverID = "";
@@ -6259,11 +6314,11 @@ public class EDI {
     }
    
         
-        public edi204i() {
+        public edi204() {
             
         }
         
-        public edi204i(String isasenderid, String isareceiverid, 
+        public edi204(String isasenderid, String isareceiverid, 
                       String gssenderid, String gsreceiverid,
                       String isactrlnum, String isadate, 
                       String doctype, String docid) {

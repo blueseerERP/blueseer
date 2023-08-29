@@ -9982,3 +9982,660 @@ X12837.csv,FRM,LQ,1,0,0,e05,Percent Decimal Format,1,6,-,X,F
 X12837.csv,SE,,1,0,1,landmark,Transaction Set Trailer,2,2,-,M,F
 X12837.csv,SE,,1,0,0,e01,Number of Included Segments,1,10,-,M,F
 X12837.csv,SE,,1,0,0,e02,Transaction Set Control Number,4,9,-,M,F
+X12204.csv,ST,,1,0,1,landmark,Transaction Set Header,2,2,-,M,F
+X12204.csv,ST,,1,0,0,e01,Transaction Set Identifier Code,3,3,-,M/Z,F
+X12204.csv,ST,,1,0,0,e02,Transaction Set Control Number,4,9,-,M,F
+X12204.csv,ST,,1,0,0,e03,Implementation Convention Reference,1,35,-,O/Z,F
+X12204.csv,B2,,1,0,1,landmark,Beginning Segment for Shipment Information Transaction,2,2,-,M,F
+X12204.csv,B2,,1,0,0,e01,Tariff Service Code,2,2,-,O,F
+X12204.csv,B2,,1,0,0,e02,Standard Carrier Alpha Code,2,4,-,O/Z,F
+X12204.csv,B2,,1,0,0,e03,Standard Point Location Code,6,9,-,O,F
+X12204.csv,B2,,1,0,0,e04,Shipment Identification Number,1,30,-,O,F
+X12204.csv,B2,,1,0,0,e05,Weight Unit Code,1,1,-,O,F
+X12204.csv,B2,,1,0,0,e06,Shipment Method of Payment,2,2,-,M,F
+X12204.csv,B2,,1,0,0,e07,Shipment Qualifier,1,1,-,O,F
+X12204.csv,B2,,1,0,0,e08,Total Equipment,1,3,-,O,F
+X12204.csv,B2,,1,0,0,e09,Shipment Weight Code,1,1,-,O,F
+X12204.csv,B2,,1,0,0,e10,Customs Documentation Handling Code,2,2,-,O,F
+X12204.csv,B2,,1,0,0,e11,Transportation Terms Code,3,3,-,O/Z,F
+X12204.csv,B2,,1,0,0,e12,Payment Method Code,3,3,-,O,F
+X12204.csv,B2A,,1,0,1,landmark,Set Purpose,3,3,-,M,F
+X12204.csv,B2A,,1,0,0,e01,Transaction Set Purpose Code,2,2,-,M,F
+X12204.csv,B2A,,1,0,0,e02,Application Type,2,2,-,O,F
+X12204.csv,C3,,1,0,1,landmark,Currency Identifier,2,2,-,O,F
+X12204.csv,C3,,1,0,0,e01,Currency Code,3,3,-,M/Z,F
+X12204.csv,C3,,1,0,0,e02,Exchange Rate,4,10,-,O,F
+X12204.csv,C3,,1,0,0,e03,Currency Code,3,3,-,O/Z,F
+X12204.csv,C3,,1,0,0,e04,Currency Code,3,3,-,O/Z,F
+X12204.csv,L11,,99999,0,1,landmark,Business Instructions and Reference Number,3,3,-,O,F
+X12204.csv,L11,,1,0,0,e01,Reference Identification,1,50,-,X,F
+X12204.csv,L11,,1,0,0,e02,Reference Identification Qualifier,2,3,-,X,F
+X12204.csv,L11,,1,0,0,e03,Description,1,80,-,X,F
+X12204.csv,L11,,1,0,0,e04,Date,8,8,-,O/Z,F
+X12204.csv,L11,,1,0,0,e05,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12204.csv,G62,,1,0,1,landmark,Date/Time,3,3,-,O,F
+X12204.csv,G62,,1,0,0,e01,Date Qualifier,2,2,-,X,F
+X12204.csv,G62,,1,0,0,e02,Date,8,8,-,X,F
+X12204.csv,G62,,1,0,0,e03,Time Qualifier,1,2,-,X,F
+X12204.csv,G62,,1,0,0,e04,Time,4,8,-,X,F
+X12204.csv,G62,,1,0,0,e05,Time Code,2,2,-,O,F
+X12204.csv,MS3,,1,0,1,landmark,Interline Information,3,3,-,O,F
+X12204.csv,MS3,,1,0,0,e01,Standard Carrier Alpha Code,2,4,-,M/Z,F
+X12204.csv,MS3,,1,0,0,e02,Routing Sequence Code,1,2,-,M,F
+X12204.csv,MS3,,1,0,0,e03,City Name,2,30,-,X/Z,F
+X12204.csv,MS3,,1,0,0,e04,Transportation Method/Type Code,1,2,-,O,F
+X12204.csv,MS3,,1,0,0,e05,State or Province Code,2,2,-,O,F
+X12204.csv,AT5,,6,1,1,landmark,Bill of Lading Handling Requirements,3,3,-,O,F
+X12204.csv,AT5,,1,0,0,e01,Special Handling Code,2,3,-,X,F
+X12204.csv,AT5,,1,0,0,e02,Special Services Code,2,10,-,X,F
+X12204.csv,AT5,,1,0,0,e03,Special Handling Description,2,30,-,X,F
+X12204.csv,AT5,,1,0,0,e04,Unit or Basis for Measurement Code,2,2,-,X,F
+X12204.csv,AT5,,1,0,0,e05,Temperature,1,4,-,X/Z,F
+X12204.csv,AT5,,1,0,0,e06,Temperature,1,4,-,X/Z,F
+X12204.csv,RTT,AT5,1,0,1,landmark,Freight Rate Information,3,3,-,O,F
+X12204.csv,RTT,AT5,1,0,0,e01,Rate/Value Qualifier,2,2,-,M,F
+X12204.csv,RTT,AT5,1,0,0,e02,Freight Rate,1,9,-,M,F
+X12204.csv,C3,AT5,1,0,1,landmark,Currency Identifier,2,2,-,O,F
+X12204.csv,C3,AT5,1,0,0,e01,Currency Code,3,3,-,M/Z,F
+X12204.csv,C3,AT5,1,0,0,e02,Exchange Rate,4,10,-,O,F
+X12204.csv,C3,AT5,1,0,0,e03,Currency Code,3,3,-,O/Z,F
+X12204.csv,C3,AT5,1,0,0,e04,Currency Code,3,3,-,O/Z,F
+X12204.csv,AT5,,,0,0,groupend,,,,,,F
+X12204.csv,PLD,,1,0,1,landmark,Pallet Shipment Information,3,3,-,O,F
+X12204.csv,PLD,,1,0,0,e01,Quantity of Pallets Shipped,1,3,-,M,F
+X12204.csv,PLD,,1,0,0,e02,Pallet Exchange Code,1,1,-,O,F
+X12204.csv,PLD,,1,0,0,e03,Weight Unit Code,1,1,-,X,F
+X12204.csv,PLD,,1,0,0,e04,Weight,1,10,-,X,F
+X12204.csv,LH6,,6,0,1,landmark,Hazardous Certification,3,3,-,O,F
+X12204.csv,LH6,,1,0,0,e01,Name,1,60,-,O,F
+X12204.csv,LH6,,1,0,0,e02,Hazardous Certification Code,1,1,-,X,F
+X12204.csv,LH6,,1,0,0,e03,Hazardous Certification Declaration,1,25,-,X,F
+X12204.csv,LH6,,1,0,0,e04,Hazardous Certification Declaration,1,25,-,O,F
+X12204.csv,NTE,,10,0,1,landmark,Note/Special Instruction,3,3,-,O,F
+X12204.csv,NTE,,1,0,0,e01,Note Reference Code,3,3,-,O,F
+X12204.csv,NTE,,1,0,0,e02,Description,1,80,-,M,F
+X12204.csv,N1,,5,1,1,landmark,Party Identification,2,2,-,O,F
+X12204.csv,N1,,1,0,0,e01,Entity Identifier Code,2,3,-,M,F
+X12204.csv,N1,,1,0,0,e02,Name,1,60,-,X,F
+X12204.csv,N1,,1,0,0,e03,Identification Code Qualifier,1,2,-,X,F
+X12204.csv,N1,,1,0,0,e04,Identification Code,2,80,-,X,F
+X12204.csv,N1,,1,0,0,e05,Entity Relationship Code,2,2,-,O,F
+X12204.csv,N1,,1,0,0,e06,Entity Identifier Code,2,3,-,O,F
+X12204.csv,N2,N1,1,0,1,landmark,Additional Name Information,2,2,-,O,F
+X12204.csv,N2,N1,1,0,0,e01,Name,1,60,-,M,F
+X12204.csv,N2,N1,1,0,0,e02,Name,1,60,-,O,F
+X12204.csv,N3,N1,2,0,1,landmark,Party Location,2,2,-,O,F
+X12204.csv,N3,N1,1,0,0,e01,Address Information,1,55,-,M,F
+X12204.csv,N3,N1,1,0,0,e02,Address Information,1,55,-,O,F
+X12204.csv,N4,N1,1,0,1,landmark,Geographic Location,2,2,-,O,F
+X12204.csv,N4,N1,1,0,0,e01,City Name,2,30,-,O,F
+X12204.csv,N4,N1,1,0,0,e02,State or Province Code,2,2,-,X,F
+X12204.csv,N4,N1,1,0,0,e03,Postal Code,3,15,-,O,F
+X12204.csv,N4,N1,1,0,0,e04,Country Code,2,3,-,X,F
+X12204.csv,N4,N1,1,0,0,e05,Location Qualifier,1,2,-,X,F
+X12204.csv,N4,N1,1,0,0,e06,Location Identifier,1,30,-,O,F
+X12204.csv,N4,N1,1,0,0,e07,Country Subdivision Code,1,3,-,X,F
+X12204.csv,L11,N1,1,0,1,landmark,Business Instructions and Reference Number,3,3,-,O,F
+X12204.csv,L11,N1,1,0,0,e01,Reference Identification,1,50,-,X,F
+X12204.csv,L11,N1,1,0,0,e02,Reference Identification Qualifier,2,3,-,X,F
+X12204.csv,L11,N1,1,0,0,e03,Description,1,80,-,X,F
+X12204.csv,L11,N1,1,0,0,e04,Date,8,8,-,O/Z,F
+X12204.csv,L11,N1,1,0,0,e05,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12204.csv,G61,N1,3,0,1,landmark,Contact,3,3,-,O,F
+X12204.csv,G61,N1,1,0,0,e01,Contact Function Code,2,2,-,M,F
+X12204.csv,G61,N1,1,0,0,e02,Name,1,60,-,M,F
+X12204.csv,G61,N1,1,0,0,e03,Communication Number Qualifier,2,2,-,X,F
+X12204.csv,G61,N1,1,0,0,e04,Communication Number,1,256,-,X,F
+X12204.csv,G61,N1,1,0,0,e05,Contact Inquiry Reference,1,20,-,O,F
+X12204.csv,N1,,,0,0,groupend,,,,,,F
+X12204.csv,N7,,10,1,1,landmark,Equipment Details,2,2,-,O,F
+X12204.csv,N7,,1,0,0,e01,Equipment Initial,1,4,-,O,F
+X12204.csv,N7,,1,0,0,e02,Equipment Number,1,15,-,M,F
+X12204.csv,N7,,1,0,0,e03,Weight,1,10,-,X,F
+X12204.csv,N7,,1,0,0,e04,Weight Qualifier,1,2,-,X,F
+X12204.csv,N7,,1,0,0,e05,Tare Weight,3,8,-,X,F
+X12204.csv,N7,,1,0,0,e06,Weight Allowance,2,6,-,O,F
+X12204.csv,N7,,1,0,0,e07,Dunnage,1,6,-,O,F
+X12204.csv,N7,,1,0,0,e08,Volume,1,8,-,X,F
+X12204.csv,N7,,1,0,0,e09,Volume Unit Qualifier,1,1,-,X,F
+X12204.csv,N7,,1,0,0,e10,Ownership Code,1,1,-,O,F
+X12204.csv,N7,,1,0,0,e11,Equipment Description Code,2,2,-,O,F
+X12204.csv,N7,,1,0,0,e12,Standard Carrier Alpha Code,2,4,-,O/Z,F
+X12204.csv,N7,,1,0,0,e13,Temperature Control,3,6,-,O,F
+X12204.csv,N7,,1,0,0,e14,Position,1,3,-,O,F
+X12204.csv,N7,,1,0,0,e15,Equipment Length,4,5,-,O,F
+X12204.csv,N7,,1,0,0,e16,Tare Qualifier Code,1,1,-,X,F
+X12204.csv,N7,,1,0,0,e17,Weight Unit Code,1,1,-,O,F
+X12204.csv,N7,,1,0,0,e18,Equipment Number Check Digit,1,1,-,O,F
+X12204.csv,N7,,1,0,0,e19,Type of Service Code,2,2,-,O,F
+X12204.csv,N7,,1,0,0,e20,Height,1,8,-,O,F
+X12204.csv,N7,,1,0,0,e21,Width,1,8,-,O,F
+X12204.csv,N7,,1,0,0,e22,Equipment Type,4,4,-,O,F
+X12204.csv,N7,,1,0,0,e23,Standard Carrier Alpha Code,2,4,-,O/Z,F
+X12204.csv,N7,,1,0,0,e24,Car Type Code,1,4,-,O,F
+X12204.csv,N7A,N7,1,0,1,landmark,Accessorial Equipment Details,3,3,-,O,F
+X12204.csv,N7A,N7,1,0,0,e01,Load or Device Code,2,2,-,O,F
+X12204.csv,N7A,N7,1,0,0,e02,Length,1,8,-,O/Z,F
+X12204.csv,N7A,N7,1,0,0,e03,Diameter,1,2,-,O/Z,F
+X12204.csv,N7A,N7,1,0,0,e04,Hose Type Code,3,3,-,O,F
+X12204.csv,N7A,N7,1,0,0,e05,Diameter,1,2,-,O/Z,F
+X12204.csv,N7A,N7,1,0,0,e06,Diameter,1,2,-,O/Z,F
+X12204.csv,N7A,N7,1,0,0,e07,Inlet or Outlet Material Type Code,2,2,-,O,F
+X12204.csv,N7A,N7,1,0,0,e08,Inlet or Outlet Fitting Type Code,2,2,-,O,F
+X12204.csv,N7A,N7,1,0,0,e09,Miscellaneous Equipment Code,2,2,-,O,F
+X12204.csv,N7B,N7,1,0,1,landmark,Additional Equipment Details,3,3,-,O,F
+X12204.csv,N7B,N7,1,0,0,e01,Number of Tank Compartments,1,2,-,O,F
+X12204.csv,N7B,N7,1,0,0,e02,Loading or Discharge Location Code,1,1,-,O,F
+X12204.csv,N7B,N7,1,0,0,e03,Vessel Material Code,3,3,-,O,F
+X12204.csv,N7B,N7,1,0,0,e04,Gasket Type Code,3,3,-,O,F
+X12204.csv,N7B,N7,1,0,0,e05,Trailer Lining Type Code,3,3,-,O,F
+X12204.csv,N7B,N7,1,0,0,e06,Reference Identification,1,50,-,O/Z,F
+X12204.csv,MEA,N7,1,0,1,landmark,Measurements,3,3,-,O,F
+X12204.csv,MEA,N7,1,0,0,e01,Measurement Reference ID Code,2,2,-,O,F
+X12204.csv,MEA,N7,1,0,0,e02,Measurement Qualifier,1,3,-,O,F
+X12204.csv,MEA,N7,1,0,0,e03,Measurement Value,1,20,-,X,F
+X12204.csv,MEA,N7,1,0,0,e05,Range Minimum,1,20,-,X,F
+X12204.csv,MEA,N7,1,0,0,e06,Range Maximum,1,20,-,X,F
+X12204.csv,MEA,N7,1,0,0,e07,Measurement Significance Code,2,2,-,O,F
+X12204.csv,MEA,N7,1,0,0,e08,Measurement Attribute Code,2,2,-,X,F
+X12204.csv,MEA,N7,1,0,0,e09,Surface/Layer/Position Code,2,2,-,O,F
+X12204.csv,MEA,N7,1,0,0,e10,Measurement Method or Device,2,4,-,O,F
+X12204.csv,MEA,N7,1,0,0,e11,Code List Qualifier Code,1,3,-,X/Z,F
+X12204.csv,MEA,N7,1,0,0,e12,Industry Code,1,30,-,X/Z,F
+X12204.csv,M7,N7,2,0,1,landmark,Seal Numbers,2,2,-,O,F
+X12204.csv,M7,N7,1,0,0,e01,Seal Number,2,15,-,M,F
+X12204.csv,M7,N7,1,0,0,e02,Seal Number,2,15,-,O,F
+X12204.csv,M7,N7,1,0,0,e03,Seal Number,2,15,-,O,F
+X12204.csv,M7,N7,1,0,0,e04,Seal Number,2,15,-,O,F
+X12204.csv,M7,N7,1,0,0,e05,Entity Identifier Code,2,3,-,O,F
+X12204.csv,N7,,,0,0,groupend,,,,,,F
+X12204.csv,S5,,999,1,1,landmark,Stop-off Details,2,2,-,M,F
+X12204.csv,S5,,1,0,0,e01,Stop Sequence Number,1,3,-,M,F
+X12204.csv,S5,,1,0,0,e02,Stop Reason Code,2,2,-,M,F
+X12204.csv,S5,,1,0,0,e03,Weight,1,10,-,X,F
+X12204.csv,S5,,1,0,0,e04,Weight Unit Code,1,1,-,X,F
+X12204.csv,S5,,1,0,0,e05,Number of Units Shipped,1,10,-,X,F
+X12204.csv,S5,,1,0,0,e06,Unit or Basis for Measurement Code,2,2,-,X,F
+X12204.csv,S5,,1,0,0,e07,Volume,1,8,-,X,F
+X12204.csv,S5,,1,0,0,e08,Volume Unit Qualifier,1,1,-,X,F
+X12204.csv,S5,,1,0,0,e09,Description,1,80,-,O/Z,F
+X12204.csv,S5,,1,0,0,e10,Standard Point Location Code,6,9,-,O,F
+X12204.csv,S5,,1,0,0,e11,Accomplish Code,1,1,-,O,F
+X12204.csv,L11,S5,99999,0,1,landmark,Business Instructions and Reference Number,3,3,-,O,F
+X12204.csv,L11,S5,1,0,0,e01,Reference Identification,1,50,-,X,F
+X12204.csv,L11,S5,1,0,0,e02,Reference Identification Qualifier,2,3,-,X,F
+X12204.csv,L11,S5,1,0,0,e03,Description,1,80,-,X,F
+X12204.csv,L11,S5,1,0,0,e04,Date,8,8,-,O/Z,F
+X12204.csv,L11,S5,1,0,0,e05,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12204.csv,G62,S5,3,0,1,landmark,Date/Time,3,3,-,O,F
+X12204.csv,G62,S5,1,0,0,e01,Date Qualifier,2,2,-,X,F
+X12204.csv,G62,S5,1,0,0,e02,Date,8,8,-,X,F
+X12204.csv,G62,S5,1,0,0,e03,Time Qualifier,1,2,-,X,F
+X12204.csv,G62,S5,1,0,0,e04,Time,4,8,-,X,F
+X12204.csv,G62,S5,1,0,0,e05,Time Code,2,2,-,O,F
+X12204.csv,AT8,S5,1,0,1,landmark,Shipment Weight Packaging and Quantity Data,3,3,-,O,F
+X12204.csv,AT8,S5,1,0,0,e01,Weight Qualifier,1,2,-,X,F
+X12204.csv,AT8,S5,1,0,0,e02,Weight Unit Code,1,1,-,X,F
+X12204.csv,AT8,S5,1,0,0,e03,Weight,1,10,-,X,F
+X12204.csv,AT8,S5,1,0,0,e04,Lading Quantity,1,7,-,O/Z,F
+X12204.csv,AT8,S5,1,0,0,e05,Lading Quantity,1,7,-,O/Z,F
+X12204.csv,AT8,S5,1,0,0,e06,Volume Unit Qualifier,1,1,-,X,F
+X12204.csv,AT8,S5,1,0,0,e07,Volume,1,8,-,X,F
+X12204.csv,LAD,S5,99999,0,1,landmark,Lading Detail,3,3,-,O,F
+X12204.csv,LAD,S5,1,0,0,e01,Packaging Form Code,3,3,-,X,F
+X12204.csv,LAD,S5,1,0,0,e02,Lading Quantity,1,7,-,X,F
+X12204.csv,LAD,S5,1,0,0,e03,Weight Unit Code,1,1,-,X,F
+X12204.csv,LAD,S5,1,0,0,e04,Unit Weight,1,8,-,X,F
+X12204.csv,LAD,S5,1,0,0,e05,Weight Unit Code,1,1,-,X,F
+X12204.csv,LAD,S5,1,0,0,e06,Weight,1,10,-,X,F
+X12204.csv,LAD,S5,1,0,0,e07,Product/Service ID Qualifier,2,2,-,X,F
+X12204.csv,LAD,S5,1,0,0,e08,Product/Service ID,1,48,-,X,F
+X12204.csv,LAD,S5,1,0,0,e09,Product/Service ID Qualifier,2,2,-,X,F
+X12204.csv,LAD,S5,1,0,0,e10,Product/Service ID,1,48,-,X,F
+X12204.csv,LAD,S5,1,0,0,e11,Product/Service ID Qualifier,2,2,-,X,F
+X12204.csv,LAD,S5,1,0,0,e12,Product/Service ID,1,48,-,X,F
+X12204.csv,LAD,S5,1,0,0,e13,Lading Description,1,50,-,O,F
+X12204.csv,LAD,S5,1,0,0,e14,Lading Value,2,9,-,O,F
+X12204.csv,AT5,S5,6,1,1,landmark,Bill of Lading Handling Requirements,3,3,-,O,F
+X12204.csv,AT5,S5,1,0,0,e01,Special Handling Code,2,3,-,X,F
+X12204.csv,AT5,S5,1,0,0,e02,Special Services Code,2,10,-,X,F
+X12204.csv,AT5,S5,1,0,0,e03,Special Handling Description,2,30,-,X,F
+X12204.csv,AT5,S5,1,0,0,e04,Unit or Basis for Measurement Code,2,2,-,X,F
+X12204.csv,AT5,S5,1,0,0,e05,Temperature,1,4,-,X/Z,F
+X12204.csv,AT5,S5,1,0,0,e06,Temperature,1,4,-,X/Z,F
+X12204.csv,RTT,S5:AT5,1,0,1,landmark,Freight Rate Information,3,3,-,O,F
+X12204.csv,RTT,S5:AT5,1,0,0,e01,Rate/Value Qualifier,2,2,-,M,F
+X12204.csv,RTT,S5:AT5,1,0,0,e02,Freight Rate,1,9,-,M,F
+X12204.csv,C3,S5:AT5,1,0,1,landmark,Currency Identifier,2,2,-,O,F
+X12204.csv,C3,S5:AT5,1,0,0,e01,Currency Code,3,3,-,M/Z,F
+X12204.csv,C3,S5:AT5,1,0,0,e02,Exchange Rate,4,10,-,O,F
+X12204.csv,C3,S5:AT5,1,0,0,e03,Currency Code,3,3,-,O/Z,F
+X12204.csv,C3,S5:AT5,1,0,0,e04,Currency Code,3,3,-,O/Z,F
+X12204.csv,AT5,,,0,0,groupend,,,,,,F
+X12204.csv,S5,,,0,0,groupend,,,,,,F
+X12204.csv,PLD,S5,1,0,1,landmark,Pallet Shipment Information,3,3,-,O,F
+X12204.csv,PLD,S5,1,0,0,e01,Quantity of Pallets Shipped,1,3,-,M,F
+X12204.csv,PLD,S5,1,0,0,e02,Pallet Exchange Code,1,1,-,O,F
+X12204.csv,PLD,S5,1,0,0,e03,Weight Unit Code,1,1,-,X,F
+X12204.csv,PLD,S5,1,0,0,e04,Weight,1,10,-,X,F
+X12204.csv,NTE,S5,20,0,1,landmark,Note/Special Instruction,3,3,-,O,F
+X12204.csv,NTE,S5,1,0,0,e01,Note Reference Code,3,3,-,O,F
+X12204.csv,NTE,S5,1,0,0,e02,Description,1,80,-,M,F
+X12204.csv,N1,S5,1,1,1,landmark,Party Identification,2,2,-,O,F
+X12204.csv,N1,S5,1,0,0,e01,Entity Identifier Code,2,3,-,M,F
+X12204.csv,N1,S5,1,0,0,e02,Name,1,60,-,X,F
+X12204.csv,N1,S5,1,0,0,e03,Identification Code Qualifier,1,2,-,X,F
+X12204.csv,N1,S5,1,0,0,e04,Identification Code,2,80,-,X,F
+X12204.csv,N1,S5,1,0,0,e05,Entity Relationship Code,2,2,-,O,F
+X12204.csv,N1,S5,1,0,0,e06,Entity Identifier Code,2,3,-,O,F
+X12204.csv,N2,S5:N1,1,0,1,landmark,Additional Name Information,2,2,-,O,F
+X12204.csv,N2,S5:N1,1,0,0,e01,Name,1,60,-,M,F
+X12204.csv,N2,S5:N1,1,0,0,e02,Name,1,60,-,O,F
+X12204.csv,N3,S5:N1,2,0,1,landmark,Party Location,2,2,-,O,F
+X12204.csv,N3,S5:N1,1,0,0,e01,Address Information,1,55,-,M,F
+X12204.csv,N3,S5:N1,1,0,0,e02,Address Information,1,55,-,O,F
+X12204.csv,N4,S5:N1,1,0,1,landmark,Geographic Location,2,2,-,O,F
+X12204.csv,N4,S5:N1,1,0,0,e01,City Name,2,30,-,O,F
+X12204.csv,N4,S5:N1,1,0,0,e02,State or Province Code,2,2,-,X,F
+X12204.csv,N4,S5:N1,1,0,0,e03,Postal Code,3,15,-,O,F
+X12204.csv,N4,S5:N1,1,0,0,e04,Country Code,2,3,-,X,F
+X12204.csv,N4,S5:N1,1,0,0,e05,Location Qualifier,1,2,-,X,F
+X12204.csv,N4,S5:N1,1,0,0,e06,Location Identifier,1,30,-,O,F
+X12204.csv,N4,S5:N1,1,0,0,e07,Country Subdivision Code,1,3,-,X,F
+X12204.csv,G61,S5:N1,3,0,1,landmark,Contact,3,3,-,O,F
+X12204.csv,G61,S5:N1,1,0,0,e01,Contact Function Code,2,2,-,M,F
+X12204.csv,G61,S5:N1,1,0,0,e02,Name,1,60,-,M,F
+X12204.csv,G61,S5:N1,1,0,0,e03,Communication Number Qualifier,2,2,-,X,F
+X12204.csv,G61,S5:N1,1,0,0,e04,Communication Number,1,256,-,X,F
+X12204.csv,G61,S5:N1,1,0,0,e05,Contact Inquiry Reference,1,20,-,O,F
+X12204.csv,N1,,,0,0,groupend,,,,,,F
+X12204.csv,L5,S5,99999,1,1,landmark,Description Marks and Numbers,2,2,-,O,F
+X12204.csv,L5,S5,1,0,0,e01,Lading Line Item Number,1,3,-,O,F
+X12204.csv,L5,S5,1,0,0,e02,Lading Description,1,50,-,O,F
+X12204.csv,L5,S5,1,0,0,e03,Commodity Code,1,30,-,X,F
+X12204.csv,L5,S5,1,0,0,e04,Commodity Code Qualifier,1,1,-,X,F
+X12204.csv,L5,S5,1,0,0,e05,Packaging Code,3,5,-,O,F
+X12204.csv,L5,S5,1,0,0,e06,Marks and Numbers,1,48,-,X,F
+X12204.csv,L5,S5,1,0,0,e07,Marks and Numbers Qualifier,1,2,-,O,F
+X12204.csv,L5,S5,1,0,0,e08,Commodity Code Qualifier,1,1,-,X,F
+X12204.csv,L5,S5,1,0,0,e09,Commodity Code,1,30,-,X,F
+X12204.csv,L5,S5,1,0,0,e10,Compartment ID Code,1,1,-,O,F
+X12204.csv,AT8,S5:L5,1,0,1,landmark,Shipment Weight Packaging and Quantity Data,3,3,-,O,F
+X12204.csv,AT8,S5:L5,1,0,0,e01,Weight Qualifier,1,2,-,X,F
+X12204.csv,AT8,S5:L5,1,0,0,e02,Weight Unit Code,1,1,-,X,F
+X12204.csv,AT8,S5:L5,1,0,0,e03,Weight,1,10,-,X,F
+X12204.csv,AT8,S5:L5,1,0,0,e04,Lading Quantity,1,7,-,O/Z,F
+X12204.csv,AT8,S5:L5,1,0,0,e05,Lading Quantity,1,7,-,O/Z,F
+X12204.csv,AT8,S5:L5,1,0,0,e06,Volume Unit Qualifier,1,1,-,X,F
+X12204.csv,AT8,S5:L5,1,0,0,e07,Volume,1,8,-,X,F
+X12204.csv,AT5,S5:L5,6,1,1,landmark,Bill of Lading Handling Requirements,3,3,-,O,F
+X12204.csv,AT5,S5:L5,1,0,0,e01,Special Handling Code,2,3,-,X,F
+X12204.csv,AT5,S5:L5,1,0,0,e02,Special Services Code,2,10,-,X,F
+X12204.csv,AT5,S5:L5,1,0,0,e03,Special Handling Description,2,30,-,X,F
+X12204.csv,AT5,S5:L5,1,0,0,e04,Unit or Basis for Measurement Code,2,2,-,X,F
+X12204.csv,AT5,S5:L5,1,0,0,e05,Temperature,1,4,-,X/Z,F
+X12204.csv,AT5,S5:L5,1,0,0,e06,Temperature,1,4,-,X/Z,F
+X12204.csv,RTT,S5:L5:AT5,1,0,1,landmark,Freight Rate Information,3,3,-,O,F
+X12204.csv,RTT,S5:L5:AT5,1,0,0,e01,Rate/Value Qualifier,2,2,-,M,F
+X12204.csv,RTT,S5:L5:AT5,1,0,0,e02,Freight Rate,1,9,-,M,F
+X12204.csv,C3,S5:L5:AT5,1,0,1,landmark,Currency Identifier,2,2,-,O,F
+X12204.csv,C3,S5:L5:AT5,1,0,0,e01,Currency Code,3,3,-,M/Z,F
+X12204.csv,C3,S5:L5:AT5,1,0,0,e02,Exchange Rate,4,10,-,O,F
+X12204.csv,C3,S5:L5:AT5,1,0,0,e03,Currency Code,3,3,-,O/Z,F
+X12204.csv,C3,S5:L5:AT5,1,0,0,e04,Currency Code,3,3,-,O/Z,F
+X12204.csv,AT5,,,0,0,groupend,,,,,,F
+X12204.csv,L5,,,0,0,groupend,,,,,,F
+X12204.csv,L11,S5:L5,99999,0,1,landmark,Business Instructions and Reference Number,3,3,-,O,F
+X12204.csv,L11,S5:L5,1,0,0,e01,Reference Identification,1,50,-,X,F
+X12204.csv,L11,S5:L5,1,0,0,e02,Reference Identification Qualifier,2,3,-,X,F
+X12204.csv,L11,S5:L5,1,0,0,e03,Description,1,80,-,X,F
+X12204.csv,L11,S5:L5,1,0,0,e04,Date,8,8,-,O/Z,F
+X12204.csv,L11,S5:L5,1,0,0,e05,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12204.csv,MEA,S5:L5,10,0,1,landmark,Measurements,3,3,-,O,F
+X12204.csv,MEA,S5:L5,1,0,0,e01,Measurement Reference ID Code,2,2,-,O,F
+X12204.csv,MEA,S5:L5,1,0,0,e02,Measurement Qualifier,1,3,-,O,F
+X12204.csv,MEA,S5:L5,1,0,0,e03,Measurement Value,1,20,-,X,F
+X12204.csv,MEA,S5:L5,1,0,0,e05,Range Minimum,1,20,-,X,F
+X12204.csv,MEA,S5:L5,1,0,0,e06,Range Maximum,1,20,-,X,F
+X12204.csv,MEA,S5:L5,1,0,0,e07,Measurement Significance Code,2,2,-,O,F
+X12204.csv,MEA,S5:L5,1,0,0,e08,Measurement Attribute Code,2,2,-,X,F
+X12204.csv,MEA,S5:L5,1,0,0,e09,Surface/Layer/Position Code,2,2,-,O,F
+X12204.csv,MEA,S5:L5,1,0,0,e10,Measurement Method or Device,2,4,-,O,F
+X12204.csv,MEA,S5:L5,1,0,0,e11,Code List Qualifier Code,1,3,-,X/Z,F
+X12204.csv,MEA,S5:L5,1,0,0,e12,Industry Code,1,30,-,X/Z,F
+X12204.csv,PER,S5:L5,1,0,1,landmark,Administrative Communications Contact,3,3,-,O,F
+X12204.csv,PER,S5:L5,1,0,0,e01,Contact Function Code,2,2,-,M,F
+X12204.csv,PER,S5:L5,1,0,0,e02,Name,1,60,-,O,F
+X12204.csv,PER,S5:L5,1,0,0,e03,Communication Number Qualifier,2,2,-,X,F
+X12204.csv,PER,S5:L5,1,0,0,e04,Communication Number,1,256,-,X,F
+X12204.csv,PER,S5:L5,1,0,0,e05,Communication Number Qualifier,2,2,-,X,F
+X12204.csv,PER,S5:L5,1,0,0,e06,Communication Number,1,256,-,X,F
+X12204.csv,PER,S5:L5,1,0,0,e07,Communication Number Qualifier,2,2,-,X,F
+X12204.csv,PER,S5:L5,1,0,0,e08,Communication Number,1,256,-,X,F
+X12204.csv,PER,S5:L5,1,0,0,e09,Contact Inquiry Reference,1,20,-,O,F
+X12204.csv,L4,S5:L5,1,0,1,landmark,Measurement,2,2,-,O,F
+X12204.csv,L4,S5:L5,1,0,0,e01,Length,1,8,-,M,F
+X12204.csv,L4,S5:L5,1,0,0,e02,Width,1,8,-,M,F
+X12204.csv,L4,S5:L5,1,0,0,e03,Height,1,8,-,M,F
+X12204.csv,L4,S5:L5,1,0,0,e04,Measurement Unit Qualifier,1,1,-,M,F
+X12204.csv,L4,S5:L5,1,0,0,e05,Quantity,1,15,-,O,F
+X12204.csv,L4,S5:L5,1,0,0,e06,Industry Code,1,30,-,O/Z,F
+X12204.csv,G61,S5:L5,99,1,1,landmark,Contact,3,3,-,O,F
+X12204.csv,G61,S5:L5,1,0,0,e01,Contact Function Code,2,2,-,M,F
+X12204.csv,G61,S5:L5,1,0,0,e02,Name,1,60,-,M,F
+X12204.csv,G61,S5:L5,1,0,0,e03,Communication Number Qualifier,2,2,-,X,F
+X12204.csv,G61,S5:L5,1,0,0,e04,Communication Number,1,256,-,X,F
+X12204.csv,G61,S5:L5,1,0,0,e05,Contact Inquiry Reference,1,20,-,O,F
+X12204.csv,L11,S5:L5:G61,5,0,1,landmark,Business Instructions and Reference Number,3,3,-,O,F
+X12204.csv,L11,S5:L5:G61,1,0,0,e01,Reference Identification,1,50,-,X,F
+X12204.csv,L11,S5:L5:G61,1,0,0,e02,Reference Identification Qualifier,2,3,-,X,F
+X12204.csv,L11,S5:L5:G61,1,0,0,e03,Description,1,80,-,X,F
+X12204.csv,L11,S5:L5:G61,1,0,0,e04,Date,8,8,-,O/Z,F
+X12204.csv,L11,S5:L5:G61,1,0,0,e05,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12204.csv,LH6,S5:L5:G61,6,0,1,landmark,Hazardous Certification,3,3,-,O,F
+X12204.csv,LH6,S5:L5:G61,1,0,0,e01,Name,1,60,-,O,F
+X12204.csv,LH6,S5:L5:G61,1,0,0,e02,Hazardous Certification Code,1,1,-,X,F
+X12204.csv,LH6,S5:L5:G61,1,0,0,e03,Hazardous Certification Declaration,1,25,-,X,F
+X12204.csv,LH6,S5:L5:G61,1,0,0,e04,Hazardous Certification Declaration,1,25,-,O,F
+X12204.csv,LH1,S5:L5:G61,25,1,1,landmark,Hazardous Identification Information,3,3,-,O,F
+X12204.csv,LH1,S5:L5:G61,1,0,0,e01,Unit or Basis for Measurement Code,2,2,-,M,F
+X12204.csv,LH1,S5:L5:G61,1,0,0,e02,Lading Quantity,1,7,-,M,F
+X12204.csv,LH1,S5:L5:G61,1,0,0,e03,UN/NA Identification Code,6,6,-,O,F
+X12204.csv,LH1,S5:L5:G61,1,0,0,e04,Hazardous Materials Page,1,6,-,O,F
+X12204.csv,LH1,S5:L5:G61,1,0,0,e05,Commodity Code,1,30,-,O,F
+X12204.csv,LH1,S5:L5:G61,1,0,0,e06,Unit or Basis for Measurement Code,2,2,-,O,F
+X12204.csv,LH1,S5:L5:G61,1,0,0,e07,Quantity,1,15,-,O,F
+X12204.csv,LH1,S5:L5:G61,1,0,0,e08,Compartment ID Code,1,1,-,O,F
+X12204.csv,LH1,S5:L5:G61,1,0,0,e09,Residue Indicator Code,1,1,-,O,F
+X12204.csv,LH1,S5:L5:G61,1,0,0,e10,Packing Group Code,1,3,-,O,F
+X12204.csv,LH1,S5:L5:G61,1,0,0,e11,Interim Hazardous Material Regulatory Number,1,5,-,O,F
+X12204.csv,LH2,S5:L5:G61:LH1,4,0,1,landmark,Hazardous Classification Information,3,3,-,O,F
+X12204.csv,LH2,S5:L5:G61:LH1,1,0,0,e01,Hazardous Classification,1,30,-,O,F
+X12204.csv,LH2,S5:L5:G61:LH1,1,0,0,e02,Hazardous Class Qualifier,1,1,-,O,F
+X12204.csv,LH2,S5:L5:G61:LH1,1,0,0,e03,Hazardous Placard Notation,14,40,-,O,F
+X12204.csv,LH2,S5:L5:G61:LH1,1,0,0,e04,Hazardous Endorsement,4,25,-,O,F
+X12204.csv,LH2,S5:L5:G61:LH1,1,0,0,e05,Reportable Quantity Code,2,2,-,O,F
+X12204.csv,LH2,S5:L5:G61:LH1,1,0,0,e06,Unit or Basis for Measurement Code,2,2,-,X/Z,F
+X12204.csv,LH2,S5:L5:G61:LH1,1,0,0,e07,Temperature,1,4,-,X,F
+X12204.csv,LH2,S5:L5:G61:LH1,1,0,0,e08,Unit or Basis for Measurement Code,2,2,-,X/Z,F
+X12204.csv,LH2,S5:L5:G61:LH1,1,0,0,e09,Temperature,1,4,-,X,F
+X12204.csv,LH2,S5:L5:G61:LH1,1,0,0,e10,Unit or Basis for Measurement Code,2,2,-,X/Z,F
+X12204.csv,LH2,S5:L5:G61:LH1,1,0,0,e11,Temperature,1,4,-,X,F
+X12204.csv,LH2,S5:L5:G61:LH1,1,0,0,e12,Weight Unit Code,1,1,-,X/Z,F
+X12204.csv,LH2,S5:L5:G61:LH1,1,0,0,e13,Net Explosive Quantity,1,10,-,X,F
+X12204.csv,LH3,S5:L5:G61:LH1,10,0,1,landmark,Hazardous Material Shipping Name Information,3,3,-,O,F
+X12204.csv,LH3,S5:L5:G61:LH1,1,0,0,e01,Hazardous Material Shipping Name,1,25,-,X,F
+X12204.csv,LH3,S5:L5:G61:LH1,1,0,0,e02,Hazardous Material Shipping Name Qualifier,1,1,-,X,F
+X12204.csv,LH3,S5:L5:G61:LH1,1,0,0,e03,N.O.S. Indicator Code,3,3,-,O,F
+X12204.csv,LH3,S5:L5:G61:LH1,1,0,0,e04,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12204.csv,LFH,S5:L5:G61:LH1,20,0,1,landmark,Free-form Hazardous Material Information,3,3,-,O,F
+X12204.csv,LFH,S5:L5:G61:LH1,1,0,0,e01,Hazardous Material Shipment Information Qualifier,3,3,-,M,F
+X12204.csv,LFH,S5:L5:G61:LH1,1,0,0,e02,Hazardous Material Shipment Information,1,25,-,M,F
+X12204.csv,LFH,S5:L5:G61:LH1,1,0,0,e03,Hazardous Material Shipment Information,1,25,-,O,F
+X12204.csv,LFH,S5:L5:G61:LH1,1,0,0,e04,Hazard Zone Code,1,1,-,O,F
+X12204.csv,LFH,S5:L5:G61:LH1,1,0,0,e05,Unit or Basis for Measurement Code,2,2,-,X,F
+X12204.csv,LFH,S5:L5:G61:LH1,1,0,0,e06,Quantity,1,15,-,X/Z,F
+X12204.csv,LFH,S5:L5:G61:LH1,1,0,0,e07,Quantity,1,15,-,O/Z,F
+X12204.csv,LFH,S5:L5:G61:LH1,1,0,0,e08,Date,8,8,-,O/Z,F
+X12204.csv,LEP,S5:L5:G61:LH1,3,0,1,landmark,EPA Required Data,3,3,-,O,F
+X12204.csv,LEP,S5:L5:G61:LH1,1,0,0,e01,EPA Waste Stream Number Code,4,6,-,O,F
+X12204.csv,LEP,S5:L5:G61:LH1,1,0,0,e02,Waste Characteristics Code,12,16,-,O,F
+X12204.csv,LEP,S5:L5:G61:LH1,1,0,0,e03,State or Province Code,2,2,-,X/Z,F
+X12204.csv,LEP,S5:L5:G61:LH1,1,0,0,e04,Reference Identification,1,50,-,X/Z,F
+X12204.csv,LH4,S5:L5:G61:LH1,1,0,1,landmark,Canadian Dangerous Requirements,3,3,-,O,F
+X12204.csv,LH4,S5:L5:G61:LH1,1,0,0,e01,Emergency Response Plan Number,1,12,-,X,F
+X12204.csv,LH4,S5:L5:G61:LH1,1,0,0,e02,Communication Number,1,256,-,X,F
+X12204.csv,LH4,S5:L5:G61:LH1,1,0,0,e03,Packing Group Code,1,3,-,O,F
+X12204.csv,LH4,S5:L5:G61:LH1,1,0,0,e04,Subsidiary Classification,1,3,-,O,F
+X12204.csv,LH4,S5:L5:G61:LH1,1,0,0,e05,Subsidiary Classification,1,3,-,O,F
+X12204.csv,LH4,S5:L5:G61:LH1,1,0,0,e06,Subsidiary Classification,1,3,-,O,F
+X12204.csv,LH4,S5:L5:G61:LH1,1,0,0,e07,Subsidiary Risk Indicator,1,2,-,O,F
+X12204.csv,LH4,S5:L5:G61:LH1,1,0,0,e08,Net Explosive Quantity,1,10,-,X,F
+X12204.csv,LH4,S5:L5:G61:LH1,1,0,0,e09,Canadian Hazardous Notation,1,25,-,O,F
+X12204.csv,LH4,S5:L5:G61:LH1,1,0,0,e10,Special Commodity Indicator Code,1,1,-,O,F
+X12204.csv,LH4,S5:L5:G61:LH1,1,0,0,e11,Communication Number,1,256,-,O/Z,F
+X12204.csv,LH4,S5:L5:G61:LH1,1,0,0,e12,Unit or Basis for Measurement Code,2,2,-,X,F
+X12204.csv,LHT,S5:L5:G61:LH1,3,0,1,landmark,Transborder Hazardous Requirements,3,3,-,O,F
+X12204.csv,LHT,S5:L5:G61:LH1,1,0,0,e01,Hazardous Classification,1,30,-,O,F
+X12204.csv,LHT,S5:L5:G61:LH1,1,0,0,e02,Hazardous Placard Notation,14,40,-,O,F
+X12204.csv,LHT,S5:L5:G61:LH1,1,0,0,e03,Hazardous Endorsement,4,25,-,O,F
+X12204.csv,LH1,,,0,0,groupend,,,,,,F
+X12204.csv,G61,,,0,0,groupend,,,,,,F
+X12204.csv,L5,,,0,0,groupend,,,,,,F
+X12204.csv,OID,S5:G61,99999,1,1,landmark,Order Information Detail,3,3,-,O,F
+X12204.csv,OID,S5:G61,1,0,0,e01,Reference Identification,1,50,-,X/Z,F
+X12204.csv,OID,S5:G61,1,0,0,e02,Purchase Order Number,1,22,-,X,F
+X12204.csv,OID,S5:G61,1,0,0,e03,Reference Identification,1,50,-,O/Z,F
+X12204.csv,OID,S5:G61,1,0,0,e04,Packaging Form Code,3,3,-,X,F
+X12204.csv,OID,S5:G61,1,0,0,e05,Quantity,1,15,-,X,F
+X12204.csv,OID,S5:G61,1,0,0,e06,Weight Unit Code,1,1,-,X,F
+X12204.csv,OID,S5:G61,1,0,0,e07,Weight,1,10,-,X,F
+X12204.csv,OID,S5:G61,1,0,0,e08,Volume Unit Qualifier,1,1,-,X,F
+X12204.csv,OID,S5:G61,1,0,0,e09,Volume,1,8,-,X,F
+X12204.csv,OID,S5:G61,1,0,0,e10,Application Error Condition Code,1,3,-,O,F
+X12204.csv,OID,S5:G61,1,0,0,e11,Reference Identification,1,50,-,O/Z,F
+X12204.csv,G62,S5:G61:OID,2,0,1,landmark,Date/Time,3,3,-,O,F
+X12204.csv,G62,S5:G61:OID,1,0,0,e01,Date Qualifier,2,2,-,X,F
+X12204.csv,G62,S5:G61:OID,1,0,0,e02,Date,8,8,-,X,F
+X12204.csv,G62,S5:G61:OID,1,0,0,e03,Time Qualifier,1,2,-,X,F
+X12204.csv,G62,S5:G61:OID,1,0,0,e04,Time,4,8,-,X,F
+X12204.csv,G62,S5:G61:OID,1,0,0,e05,Time Code,2,2,-,O,F
+X12204.csv,LAD,S5:G61:OID,99999,0,1,landmark,Lading Detail,3,3,-,O,F
+X12204.csv,LAD,S5:G61:OID,1,0,0,e01,Packaging Form Code,3,3,-,X,F
+X12204.csv,LAD,S5:G61:OID,1,0,0,e02,Lading Quantity,1,7,-,X,F
+X12204.csv,LAD,S5:G61:OID,1,0,0,e03,Weight Unit Code,1,1,-,X,F
+X12204.csv,LAD,S5:G61:OID,1,0,0,e04,Unit Weight,1,8,-,X,F
+X12204.csv,LAD,S5:G61:OID,1,0,0,e05,Weight Unit Code,1,1,-,X,F
+X12204.csv,LAD,S5:G61:OID,1,0,0,e06,Weight,1,10,-,X,F
+X12204.csv,LAD,S5:G61:OID,1,0,0,e07,Product/Service ID Qualifier,2,2,-,X,F
+X12204.csv,LAD,S5:G61:OID,1,0,0,e08,Product/Service ID,1,48,-,X,F
+X12204.csv,LAD,S5:G61:OID,1,0,0,e09,Product/Service ID Qualifier,2,2,-,X,F
+X12204.csv,LAD,S5:G61:OID,1,0,0,e10,Product/Service ID,1,48,-,X,F
+X12204.csv,LAD,S5:G61:OID,1,0,0,e11,Product/Service ID Qualifier,2,2,-,X,F
+X12204.csv,LAD,S5:G61:OID,1,0,0,e12,Product/Service ID,1,48,-,X,F
+X12204.csv,LAD,S5:G61:OID,1,0,0,e13,Lading Description,1,50,-,O,F
+X12204.csv,LAD,S5:G61:OID,1,0,0,e14,Lading Value,2,9,-,O,F
+X12204.csv,L5,S5:G61:OID,99999,1,1,landmark,Description Marks and Numbers,2,2,-,O,F
+X12204.csv,L5,S5:G61:OID,1,0,0,e01,Lading Line Item Number,1,3,-,O,F
+X12204.csv,L5,S5:G61:OID,1,0,0,e02,Lading Description,1,50,-,O,F
+X12204.csv,L5,S5:G61:OID,1,0,0,e03,Commodity Code,1,30,-,X,F
+X12204.csv,L5,S5:G61:OID,1,0,0,e04,Commodity Code Qualifier,1,1,-,X,F
+X12204.csv,L5,S5:G61:OID,1,0,0,e05,Packaging Code,3,5,-,O,F
+X12204.csv,L5,S5:G61:OID,1,0,0,e06,Marks and Numbers,1,48,-,X,F
+X12204.csv,L5,S5:G61:OID,1,0,0,e07,Marks and Numbers Qualifier,1,2,-,O,F
+X12204.csv,L5,S5:G61:OID,1,0,0,e08,Commodity Code Qualifier,1,1,-,X,F
+X12204.csv,L5,S5:G61:OID,1,0,0,e09,Commodity Code,1,30,-,X,F
+X12204.csv,L5,S5:G61:OID,1,0,0,e10,Compartment ID Code,1,1,-,O,F
+X12204.csv,AT8,S5:G61:OID:L5,1,0,1,landmark,Shipment Weight Packaging and Quantity Data,3,3,-,O,F
+X12204.csv,AT8,S5:G61:OID:L5,1,0,0,e01,Weight Qualifier,1,2,-,X,F
+X12204.csv,AT8,S5:G61:OID:L5,1,0,0,e02,Weight Unit Code,1,1,-,X,F
+X12204.csv,AT8,S5:G61:OID:L5,1,0,0,e03,Weight,1,10,-,X,F
+X12204.csv,AT8,S5:G61:OID:L5,1,0,0,e04,Lading Quantity,1,7,-,O/Z,F
+X12204.csv,AT8,S5:G61:OID:L5,1,0,0,e05,Lading Quantity,1,7,-,O/Z,F
+X12204.csv,AT8,S5:G61:OID:L5,1,0,0,e06,Volume Unit Qualifier,1,1,-,X,F
+X12204.csv,AT8,S5:G61:OID:L5,1,0,0,e07,Volume,1,8,-,X,F
+X12204.csv,L4,S5:G61:OID:L5,1,0,1,landmark,Measurement,2,2,-,O,F
+X12204.csv,L4,S5:G61:OID:L5,1,0,0,e01,Length,1,8,-,M,F
+X12204.csv,L4,S5:G61:OID:L5,1,0,0,e02,Width,1,8,-,M,F
+X12204.csv,L4,S5:G61:OID:L5,1,0,0,e03,Height,1,8,-,M,F
+X12204.csv,L4,S5:G61:OID:L5,1,0,0,e04,Measurement Unit Qualifier,1,1,-,M,F
+X12204.csv,L4,S5:G61:OID:L5,1,0,0,e05,Quantity,1,15,-,O,F
+X12204.csv,L4,S5:G61:OID:L5,1,0,0,e06,Industry Code,1,30,-,O/Z,F
+X12204.csv,G61,S5:G61:OID:L5,99,1,1,landmark,Contact,3,3,-,O,F
+X12204.csv,G61,S5:G61:OID:L5,1,0,0,e01,Contact Function Code,2,2,-,M,F
+X12204.csv,G61,S5:G61:OID:L5,1,0,0,e02,Name,1,60,-,M,F
+X12204.csv,G61,S5:G61:OID:L5,1,0,0,e03,Communication Number Qualifier,2,2,-,X,F
+X12204.csv,G61,S5:G61:OID:L5,1,0,0,e04,Communication Number,1,256,-,X,F
+X12204.csv,G61,S5:G61:OID:L5,1,0,0,e05,Contact Inquiry Reference,1,20,-,O,F
+X12204.csv,L11,S5:G61:OID:L5:G61,5,0,1,landmark,Business Instructions and Reference Number,3,3,-,O,F
+X12204.csv,L11,S5:G61:OID:L5:G61,1,0,0,e01,Reference Identification,1,50,-,X,F
+X12204.csv,L11,S5:G61:OID:L5:G61,1,0,0,e02,Reference Identification Qualifier,2,3,-,X,F
+X12204.csv,L11,S5:G61:OID:L5:G61,1,0,0,e03,Description,1,80,-,X,F
+X12204.csv,L11,S5:G61:OID:L5:G61,1,0,0,e04,Date,8,8,-,O/Z,F
+X12204.csv,L11,S5:G61:OID:L5:G61,1,0,0,e05,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12204.csv,LH6,S5:G61:OID:L5:G61,6,0,1,landmark,Hazardous Certification,3,3,-,O,F
+X12204.csv,LH6,S5:G61:OID:L5:G61,1,0,0,e01,Name,1,60,-,O,F
+X12204.csv,LH6,S5:G61:OID:L5:G61,1,0,0,e02,Hazardous Certification Code,1,1,-,X,F
+X12204.csv,LH6,S5:G61:OID:L5:G61,1,0,0,e03,Hazardous Certification Declaration,1,25,-,X,F
+X12204.csv,LH6,S5:G61:OID:L5:G61,1,0,0,e04,Hazardous Certification Declaration,1,25,-,O,F
+X12204.csv,LH1,S5:G61:OID:L5:G61,25,1,1,landmark,Hazardous Identification Information,3,3,-,O,F
+X12204.csv,LH1,S5:G61:OID:L5:G61,1,0,0,e01,Unit or Basis for Measurement Code,2,2,-,M,F
+X12204.csv,LH1,S5:G61:OID:L5:G61,1,0,0,e02,Lading Quantity,1,7,-,M,F
+X12204.csv,LH1,S5:G61:OID:L5:G61,1,0,0,e03,UN/NA Identification Code,6,6,-,O,F
+X12204.csv,LH1,S5:G61:OID:L5:G61,1,0,0,e04,Hazardous Materials Page,1,6,-,O,F
+X12204.csv,LH1,S5:G61:OID:L5:G61,1,0,0,e05,Commodity Code,1,30,-,O,F
+X12204.csv,LH1,S5:G61:OID:L5:G61,1,0,0,e06,Unit or Basis for Measurement Code,2,2,-,O,F
+X12204.csv,LH1,S5:G61:OID:L5:G61,1,0,0,e07,Quantity,1,15,-,O,F
+X12204.csv,LH1,S5:G61:OID:L5:G61,1,0,0,e08,Compartment ID Code,1,1,-,O,F
+X12204.csv,LH1,S5:G61:OID:L5:G61,1,0,0,e09,Residue Indicator Code,1,1,-,O,F
+X12204.csv,LH1,S5:G61:OID:L5:G61,1,0,0,e10,Packing Group Code,1,3,-,O,F
+X12204.csv,LH1,S5:G61:OID:L5:G61,1,0,0,e11,Interim Hazardous Material Regulatory Number,1,5,-,O,F
+X12204.csv,LH2,S5:G61:OID:L5:G61:LH1,4,0,1,landmark,Hazardous Classification Information,3,3,-,O,F
+X12204.csv,LH2,S5:G61:OID:L5:G61:LH1,1,0,0,e01,Hazardous Classification,1,30,-,O,F
+X12204.csv,LH2,S5:G61:OID:L5:G61:LH1,1,0,0,e02,Hazardous Class Qualifier,1,1,-,O,F
+X12204.csv,LH2,S5:G61:OID:L5:G61:LH1,1,0,0,e03,Hazardous Placard Notation,14,40,-,O,F
+X12204.csv,LH2,S5:G61:OID:L5:G61:LH1,1,0,0,e04,Hazardous Endorsement,4,25,-,O,F
+X12204.csv,LH2,S5:G61:OID:L5:G61:LH1,1,0,0,e05,Reportable Quantity Code,2,2,-,O,F
+X12204.csv,LH2,S5:G61:OID:L5:G61:LH1,1,0,0,e06,Unit or Basis for Measurement Code,2,2,-,X/Z,F
+X12204.csv,LH2,S5:G61:OID:L5:G61:LH1,1,0,0,e07,Temperature,1,4,-,X,F
+X12204.csv,LH2,S5:G61:OID:L5:G61:LH1,1,0,0,e08,Unit or Basis for Measurement Code,2,2,-,X/Z,F
+X12204.csv,LH2,S5:G61:OID:L5:G61:LH1,1,0,0,e09,Temperature,1,4,-,X,F
+X12204.csv,LH2,S5:G61:OID:L5:G61:LH1,1,0,0,e10,Unit or Basis for Measurement Code,2,2,-,X/Z,F
+X12204.csv,LH2,S5:G61:OID:L5:G61:LH1,1,0,0,e11,Temperature,1,4,-,X,F
+X12204.csv,LH2,S5:G61:OID:L5:G61:LH1,1,0,0,e12,Weight Unit Code,1,1,-,X/Z,F
+X12204.csv,LH2,S5:G61:OID:L5:G61:LH1,1,0,0,e13,Net Explosive Quantity,1,10,-,X,F
+X12204.csv,LH3,S5:G61:OID:L5:G61:LH1,10,0,1,landmark,Hazardous Material Shipping Name Information,3,3,-,O,F
+X12204.csv,LH3,S5:G61:OID:L5:G61:LH1,1,0,0,e01,Hazardous Material Shipping Name,1,25,-,X,F
+X12204.csv,LH3,S5:G61:OID:L5:G61:LH1,1,0,0,e02,Hazardous Material Shipping Name Qualifier,1,1,-,X,F
+X12204.csv,LH3,S5:G61:OID:L5:G61:LH1,1,0,0,e03,N.O.S. Indicator Code,3,3,-,O,F
+X12204.csv,LH3,S5:G61:OID:L5:G61:LH1,1,0,0,e04,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12204.csv,LFH,S5:G61:OID:L5:G61:LH1,20,0,1,landmark,Free-form Hazardous Material Information,3,3,-,O,F
+X12204.csv,LFH,S5:G61:OID:L5:G61:LH1,1,0,0,e01,Hazardous Material Shipment Information Qualifier,3,3,-,M,F
+X12204.csv,LFH,S5:G61:OID:L5:G61:LH1,1,0,0,e02,Hazardous Material Shipment Information,1,25,-,M,F
+X12204.csv,LFH,S5:G61:OID:L5:G61:LH1,1,0,0,e03,Hazardous Material Shipment Information,1,25,-,O,F
+X12204.csv,LFH,S5:G61:OID:L5:G61:LH1,1,0,0,e04,Hazard Zone Code,1,1,-,O,F
+X12204.csv,LFH,S5:G61:OID:L5:G61:LH1,1,0,0,e05,Unit or Basis for Measurement Code,2,2,-,X,F
+X12204.csv,LFH,S5:G61:OID:L5:G61:LH1,1,0,0,e06,Quantity,1,15,-,X/Z,F
+X12204.csv,LFH,S5:G61:OID:L5:G61:LH1,1,0,0,e07,Quantity,1,15,-,O/Z,F
+X12204.csv,LFH,S5:G61:OID:L5:G61:LH1,1,0,0,e08,Date,8,8,-,O/Z,F
+X12204.csv,LEP,S5:G61:OID:L5:G61:LH1,3,0,1,landmark,EPA Required Data,3,3,-,O,F
+X12204.csv,LEP,S5:G61:OID:L5:G61:LH1,1,0,0,e01,EPA Waste Stream Number Code,4,6,-,O,F
+X12204.csv,LEP,S5:G61:OID:L5:G61:LH1,1,0,0,e02,Waste Characteristics Code,12,16,-,O,F
+X12204.csv,LEP,S5:G61:OID:L5:G61:LH1,1,0,0,e03,State or Province Code,2,2,-,X/Z,F
+X12204.csv,LEP,S5:G61:OID:L5:G61:LH1,1,0,0,e04,Reference Identification,1,50,-,X/Z,F
+X12204.csv,LH4,S5:G61:OID:L5:G61:LH1,1,0,1,landmark,Canadian Dangerous Requirements,3,3,-,O,F
+X12204.csv,LH4,S5:G61:OID:L5:G61:LH1,1,0,0,e01,Emergency Response Plan Number,1,12,-,X,F
+X12204.csv,LH4,S5:G61:OID:L5:G61:LH1,1,0,0,e02,Communication Number,1,256,-,X,F
+X12204.csv,LH4,S5:G61:OID:L5:G61:LH1,1,0,0,e03,Packing Group Code,1,3,-,O,F
+X12204.csv,LH4,S5:G61:OID:L5:G61:LH1,1,0,0,e04,Subsidiary Classification,1,3,-,O,F
+X12204.csv,LH4,S5:G61:OID:L5:G61:LH1,1,0,0,e05,Subsidiary Classification,1,3,-,O,F
+X12204.csv,LH4,S5:G61:OID:L5:G61:LH1,1,0,0,e06,Subsidiary Classification,1,3,-,O,F
+X12204.csv,LH4,S5:G61:OID:L5:G61:LH1,1,0,0,e07,Subsidiary Risk Indicator,1,2,-,O,F
+X12204.csv,LH4,S5:G61:OID:L5:G61:LH1,1,0,0,e08,Net Explosive Quantity,1,10,-,X,F
+X12204.csv,LH4,S5:G61:OID:L5:G61:LH1,1,0,0,e09,Canadian Hazardous Notation,1,25,-,O,F
+X12204.csv,LH4,S5:G61:OID:L5:G61:LH1,1,0,0,e10,Special Commodity Indicator Code,1,1,-,O,F
+X12204.csv,LH4,S5:G61:OID:L5:G61:LH1,1,0,0,e11,Communication Number,1,256,-,O/Z,F
+X12204.csv,LH4,S5:G61:OID:L5:G61:LH1,1,0,0,e12,Unit or Basis for Measurement Code,2,2,-,X,F
+X12204.csv,LHT,S5:G61:OID:L5:G61:LH1,3,0,1,landmark,Transborder Hazardous Requirements,3,3,-,O,F
+X12204.csv,LHT,S5:G61:OID:L5:G61:LH1,1,0,0,e01,Hazardous Classification,1,30,-,O,F
+X12204.csv,LHT,S5:G61:OID:L5:G61:LH1,1,0,0,e02,Hazardous Placard Notation,14,40,-,O,F
+X12204.csv,LHT,S5:G61:OID:L5:G61:LH1,1,0,0,e03,Hazardous Endorsement,4,25,-,O,F
+X12204.csv,LH1,,,0,0,groupend,,,,,,F
+X12204.csv,G61,,,0,0,groupend,,,,,,F
+X12204.csv,L5,,,0,0,groupend,,,,,,F
+X12204.csv,OID,,,0,0,groupend,,,,,,F
+X12204.csv,G61,,,0,0,groupend,,,,,,F
+X12204.csv,N7,S5:OID:L5:G61,10,1,1,landmark,Equipment Details,2,2,-,O,F
+X12204.csv,N7,S5:OID:L5:G61,1,0,0,e01,Equipment Initial,1,4,-,O,F
+X12204.csv,N7,S5:OID:L5:G61,1,0,0,e02,Equipment Number,1,15,-,M,F
+X12204.csv,N7,S5:OID:L5:G61,1,0,0,e03,Weight,1,10,-,X,F
+X12204.csv,N7,S5:OID:L5:G61,1,0,0,e04,Weight Qualifier,1,2,-,X,F
+X12204.csv,N7,S5:OID:L5:G61,1,0,0,e05,Tare Weight,3,8,-,X,F
+X12204.csv,N7,S5:OID:L5:G61,1,0,0,e06,Weight Allowance,2,6,-,O,F
+X12204.csv,N7,S5:OID:L5:G61,1,0,0,e07,Dunnage,1,6,-,O,F
+X12204.csv,N7,S5:OID:L5:G61,1,0,0,e08,Volume,1,8,-,X,F
+X12204.csv,N7,S5:OID:L5:G61,1,0,0,e09,Volume Unit Qualifier,1,1,-,X,F
+X12204.csv,N7,S5:OID:L5:G61,1,0,0,e10,Ownership Code,1,1,-,O,F
+X12204.csv,N7,S5:OID:L5:G61,1,0,0,e11,Equipment Description Code,2,2,-,O,F
+X12204.csv,N7,S5:OID:L5:G61,1,0,0,e12,Standard Carrier Alpha Code,2,4,-,O/Z,F
+X12204.csv,N7,S5:OID:L5:G61,1,0,0,e13,Temperature Control,3,6,-,O,F
+X12204.csv,N7,S5:OID:L5:G61,1,0,0,e14,Position,1,3,-,O,F
+X12204.csv,N7,S5:OID:L5:G61,1,0,0,e15,Equipment Length,4,5,-,O,F
+X12204.csv,N7,S5:OID:L5:G61,1,0,0,e16,Tare Qualifier Code,1,1,-,X,F
+X12204.csv,N7,S5:OID:L5:G61,1,0,0,e17,Weight Unit Code,1,1,-,O,F
+X12204.csv,N7,S5:OID:L5:G61,1,0,0,e18,Equipment Number Check Digit,1,1,-,O,F
+X12204.csv,N7,S5:OID:L5:G61,1,0,0,e19,Type of Service Code,2,2,-,O,F
+X12204.csv,N7,S5:OID:L5:G61,1,0,0,e20,Height,1,8,-,O,F
+X12204.csv,N7,S5:OID:L5:G61,1,0,0,e21,Width,1,8,-,O,F
+X12204.csv,N7,S5:OID:L5:G61,1,0,0,e22,Equipment Type,4,4,-,O,F
+X12204.csv,N7,S5:OID:L5:G61,1,0,0,e23,Standard Carrier Alpha Code,2,4,-,O/Z,F
+X12204.csv,N7,S5:OID:L5:G61,1,0,0,e24,Car Type Code,1,4,-,O,F
+X12204.csv,N7A,S5:OID:L5:G61:N7,1,0,1,landmark,Accessorial Equipment Details,3,3,-,O,F
+X12204.csv,N7A,S5:OID:L5:G61:N7,1,0,0,e01,Load or Device Code,2,2,-,O,F
+X12204.csv,N7A,S5:OID:L5:G61:N7,1,0,0,e02,Length,1,8,-,O/Z,F
+X12204.csv,N7A,S5:OID:L5:G61:N7,1,0,0,e03,Diameter,1,2,-,O/Z,F
+X12204.csv,N7A,S5:OID:L5:G61:N7,1,0,0,e04,Hose Type Code,3,3,-,O,F
+X12204.csv,N7A,S5:OID:L5:G61:N7,1,0,0,e05,Diameter,1,2,-,O/Z,F
+X12204.csv,N7A,S5:OID:L5:G61:N7,1,0,0,e06,Diameter,1,2,-,O/Z,F
+X12204.csv,N7A,S5:OID:L5:G61:N7,1,0,0,e07,Inlet or Outlet Material Type Code,2,2,-,O,F
+X12204.csv,N7A,S5:OID:L5:G61:N7,1,0,0,e08,Inlet or Outlet Fitting Type Code,2,2,-,O,F
+X12204.csv,N7A,S5:OID:L5:G61:N7,1,0,0,e09,Miscellaneous Equipment Code,2,2,-,O,F
+X12204.csv,N7B,S5:OID:L5:G61:N7,1,0,1,landmark,Additional Equipment Details,3,3,-,O,F
+X12204.csv,N7B,S5:OID:L5:G61:N7,1,0,0,e01,Number of Tank Compartments,1,2,-,O,F
+X12204.csv,N7B,S5:OID:L5:G61:N7,1,0,0,e02,Loading or Discharge Location Code,1,1,-,O,F
+X12204.csv,N7B,S5:OID:L5:G61:N7,1,0,0,e03,Vessel Material Code,3,3,-,O,F
+X12204.csv,N7B,S5:OID:L5:G61:N7,1,0,0,e04,Gasket Type Code,3,3,-,O,F
+X12204.csv,N7B,S5:OID:L5:G61:N7,1,0,0,e05,Trailer Lining Type Code,3,3,-,O,F
+X12204.csv,N7B,S5:OID:L5:G61:N7,1,0,0,e06,Reference Identification,1,50,-,O/Z,F
+X12204.csv,MEA,S5:OID:L5:G61:N7,1,0,1,landmark,Measurements,3,3,-,O,F
+X12204.csv,MEA,S5:OID:L5:G61:N7,1,0,0,e01,Measurement Reference ID Code,2,2,-,O,F
+X12204.csv,MEA,S5:OID:L5:G61:N7,1,0,0,e02,Measurement Qualifier,1,3,-,O,F
+X12204.csv,MEA,S5:OID:L5:G61:N7,1,0,0,e03,Measurement Value,1,20,-,X,F
+X12204.csv,MEA,S5:OID:L5:G61:N7,1,0,0,e05,Range Minimum,1,20,-,X,F
+X12204.csv,MEA,S5:OID:L5:G61:N7,1,0,0,e06,Range Maximum,1,20,-,X,F
+X12204.csv,MEA,S5:OID:L5:G61:N7,1,0,0,e07,Measurement Significance Code,2,2,-,O,F
+X12204.csv,MEA,S5:OID:L5:G61:N7,1,0,0,e08,Measurement Attribute Code,2,2,-,X,F
+X12204.csv,MEA,S5:OID:L5:G61:N7,1,0,0,e09,Surface/Layer/Position Code,2,2,-,O,F
+X12204.csv,MEA,S5:OID:L5:G61:N7,1,0,0,e10,Measurement Method or Device,2,4,-,O,F
+X12204.csv,MEA,S5:OID:L5:G61:N7,1,0,0,e11,Code List Qualifier Code,1,3,-,X/Z,F
+X12204.csv,MEA,S5:OID:L5:G61:N7,1,0,0,e12,Industry Code,1,30,-,X/Z,F
+X12204.csv,M7,S5:OID:L5:G61:N7,2,0,1,landmark,Seal Numbers,2,2,-,O,F
+X12204.csv,M7,S5:OID:L5:G61:N7,1,0,0,e01,Seal Number,2,15,-,M,F
+X12204.csv,M7,S5:OID:L5:G61:N7,1,0,0,e02,Seal Number,2,15,-,O,F
+X12204.csv,M7,S5:OID:L5:G61:N7,1,0,0,e03,Seal Number,2,15,-,O,F
+X12204.csv,M7,S5:OID:L5:G61:N7,1,0,0,e04,Seal Number,2,15,-,O,F
+X12204.csv,M7,S5:OID:L5:G61:N7,1,0,0,e05,Entity Identifier Code,2,3,-,O,F
+X12204.csv,N7,,,0,0,groupend,,,,,,F
+X12204.csv,G61,,,0,0,groupend,,,,,,F
+X12204.csv,L5,,,0,0,groupend,,,,,,F
+X12204.csv,OID,,,0,0,groupend,,,,,,F
+X12204.csv,S5,,,0,0,groupend,,,,,,F
+X12204.csv,L3,,1,0,1,landmark,Total Weight and Charges,2,2,-,O,F
+X12204.csv,L3,,1,0,0,e01,Weight,1,10,-,X,F
+X12204.csv,L3,,1,0,0,e02,Weight Qualifier,1,2,-,X,F
+X12204.csv,L3,,1,0,0,e03,Freight Rate,1,9,-,X,F
+X12204.csv,L3,,1,0,0,e04,Rate/Value Qualifier,2,2,-,X,F
+X12204.csv,L3,,1,0,0,e05,Amount Charged,1,15,-,O/Z,F
+X12204.csv,L3,,1,0,0,e06,Advances,1,9,-,O,F
+X12204.csv,L3,,1,0,0,e07,Prepaid Amount,1,15,-,O,F
+X12204.csv,L3,,1,0,0,e08,Special Charge or Allowance Code,3,3,-,O,F
+X12204.csv,L3,,1,0,0,e09,Volume,1,8,-,X,F
+X12204.csv,L3,,1,0,0,e10,Volume Unit Qualifier,1,1,-,X,F
+X12204.csv,L3,,1,0,0,e11,Lading Quantity,1,7,-,O,F
+X12204.csv,L3,,1,0,0,e12,Weight Unit Code,1,1,-,O,F
+X12204.csv,L3,,1,0,0,e13,Tariff Number,1,7,-,O,F
+X12204.csv,L3,,1,0,0,e14,Declared Value,2,12,-,X,F
+X12204.csv,L3,,1,0,0,e15,Rate/Value Qualifier,2,2,-,X,F
+X12204.csv,LX,,1,1,1,landmark,Transaction Set Line Number,2,2,-,O,F
+X12204.csv,LX,,1,0,0,e01,Assigned Number,1,6,-,M,F
+X12204.csv,L4,LX,1,0,1,landmark,Measurement,2,2,-,O,F
+X12204.csv,L4,LX,1,0,0,e01,Length,1,8,-,M,F
+X12204.csv,L4,LX,1,0,0,e02,Width,1,8,-,M,F
+X12204.csv,L4,LX,1,0,0,e03,Height,1,8,-,M,F
+X12204.csv,L4,LX,1,0,0,e04,Measurement Unit Qualifier,1,1,-,M,F
+X12204.csv,L4,LX,1,0,0,e05,Quantity,1,15,-,O,F
+X12204.csv,L4,LX,1,0,0,e06,Industry Code,1,30,-,O/Z,F
+X12204.csv,LX,,,0,0,groupend,,,,,,F
+X12204.csv,SE,,1,0,1,landmark,Transaction Set Trailer,2,2,-,M,F
+X12204.csv,SE,,1,0,0,e01,Number of Included Segments,1,10,-,M,F
+X12204.csv,SE,,1,0,0,e02,Transaction Set Control Number,4,9,-,M,F

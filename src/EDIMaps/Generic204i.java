@@ -27,7 +27,7 @@ SOFTWARE.
 package EDIMaps;
 
 import com.blueseer.edi.EDI;
-import com.blueseer.edi.EDI.edi204i;
+import com.blueseer.edi.EDI.edi204;
 import java.util.ArrayList;
 import com.blueseer.utl.OVData;
 import static com.blueseer.utl.BlueSeerUtils.convertDateFormat;
@@ -52,7 +52,7 @@ public class Generic204i extends com.blueseer.edi.EDIMap {
         setReference(getInput("B2","e04")); // must be ran after mappedInput
        // debuginput(mappedInput);  // for debug purposes
     
-       edi204i e = new edi204i(getInputISA(6).trim(), getInputISA(8).trim(), getInputGS(2), getInputGS(3), c[4], getInputISA(9), c[1], c[6]);   
+       edi204 e = new edi204(getInputISA(6).trim(), getInputISA(8).trim(), getInputGS(2), getInputGS(3), c[4], getInputISA(9), c[1], c[6]);   
        isDBWrite(c);
        
     
@@ -130,7 +130,7 @@ public class Generic204i extends com.blueseer.edi.EDIMap {
          /* Load Sales Order */
          /* call processDB ONLY if the output is direction of DataBase Internal */
         if (! isError &&  purpose.equals("00")) {
-         processDB(c,com.blueseer.edi.EDI.createFOMSTRFrom204i(e, c)); 
+         processDB(c,com.blueseer.edi.EDI.createCFOFrom204(e, c)); 
         }
         
         return packagePayLoad(c);

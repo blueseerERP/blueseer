@@ -74,8 +74,11 @@ edidoctype,943x12,X12,1
 edidoctype,944x12,X12,1
 edidoctype,945x12,X12,1
 edidoctype,204x12,X12,1
+edidoctype,204db,Database Freight Order,1
 edidoctype,990x12,X12,1
+edidoctype,990db,Database Freight Order Response,1
 edidoctype,214x12,X12,1
+edidoctype,214db,Database Freight Status,1
 edidoctype,997x12,X12,1
 edidoctype,864x12,X12,1
 edidoctype,847x12,X12,1

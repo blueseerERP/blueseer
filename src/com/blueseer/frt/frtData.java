@@ -31,6 +31,7 @@ import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.edi.EDI;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.sql.Connection;
@@ -1331,7 +1332,7 @@ public class frtData {
         }
     return m;
     }
-    
+        
     public static String[] updateCFOTransaction(String x, String y, ArrayList<String> lines, ArrayList<cfo_det> cfod, cfo_mstr cfo, ArrayList<cfo_item> cfoi, ArrayList<cfo_sos> cfos) {
         String[] m = new String[2];
         Connection bscon = null;
@@ -1461,6 +1462,8 @@ public class frtData {
             return rows;
     }
     
+    
+    
     private static int _addCFODet(cfo_det x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
        
@@ -1519,6 +1522,8 @@ public class frtData {
             } 
             return rows;
     }
+    
+    
     
     private static int _addCFOItem(cfo_item x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
