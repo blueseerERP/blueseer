@@ -1056,8 +1056,8 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbdriverrate.setText(x.cfo_driverrate());
         cbstandard.setSelected(BlueSeerUtils.ConvertStringToBool(x.cfo_driverstd()));
         tbtotweight.setText(x.cfo_weight());
-        dcorddate.setDate(bsmf.MainFrame.dfdate.parse(x.cfo_orddate()));
-        dcconfdate.setDate(bsmf.MainFrame.dfdate.parse(x.cfo_confdate()));
+        dcorddate.setDate(BlueSeerUtils.parseDate(x.cfo_orddate()));
+        dcconfdate.setDate(BlueSeerUtils.parseDate(x.cfo_confdate()));
         tbcharges.setText(x.cfo_misccharges());
         tbcost.setText(x.cfo_cost());
         ddsite.setSelectedItem(x.cfo_site());

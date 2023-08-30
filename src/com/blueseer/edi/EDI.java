@@ -39,6 +39,7 @@ import com.blueseer.edi.ediData.dfs_mstr;
 import static com.blueseer.edi.ediData.getDFSMstr;
 import com.blueseer.frt.frtData;
 import static com.blueseer.frt.frtData.addCFOTransaction;
+import static com.blueseer.frt.frtData.getCFOPrevious;
 import com.blueseer.ord.ordData;
 import static com.blueseer.ord.ordData.addOrderTransaction;
 import com.blueseer.pur.purData;
@@ -3276,12 +3277,22 @@ public class EDI {
     
     public static String[] createCFOFrom204(edi204 e, String[] control) {
             String[] m = new String[]{"",""}; 
-            String cfokey = String.valueOf(OVData.getNextNbr("cfo"));
+            String[] z = getCFOPrevious(e.custfo); // returns latest cfo_nbr, cfo_revision ...if exists 
+            String cfokey = "";
+            String revision = "";
+            if (z[0].isBlank()) {
+             cfokey = String.valueOf(OVData.getNextNbr("cfo"));
+             revision = "1";
+            } else {
+             cfokey = z[0];
+             revision = String.valueOf(Integer.valueOf(z[1]) + 1); // up the revision
+            }
+            
             frtData.cfo_mstr x = new frtData.cfo_mstr(null, 
                 cfokey,
                 e.cust,
                 e.custfo,
-                "1", // revision
+                revision, // revision
                 "", // service type
                 e.equiptype,
                 "", //vehicle ID
@@ -3319,10 +3330,11 @@ public class EDI {
             // now the detail
             ArrayList<frtData.cfo_det> list = new ArrayList<frtData.cfo_det>();
             for (int j = 0; j < e.getDetCount(); j++ ) {
+               System.out.println("detcount: " + j + "/" + e.getDetType(j));
                frtData.cfo_det y = new frtData.cfo_det(null, 
                 cfokey,
-                "1", // revision 
-                e.getDetLine(j),  //stopline
+                revision, // revision 
+                String.valueOf(j + 1),  //stopline
                 "", // sequence
                 e.getDetType(j),  // type
                 e.getDetAddrCode(j), // code
@@ -3345,7 +3357,7 @@ public class EDI {
                 e.getDetBoxes(j).replace(defaultDecimalSeparator, '.'), // pallets
                 e.getDetUnits(j).replace(defaultDecimalSeparator, '.'), // quantity
                 "0", // hazmat
-                "", // datetype
+                e.getDetDateType(j), // datetype
                 e.getDetShipDate(j), // date
                 "",// timetype1
                 "", // time
@@ -6305,7 +6317,7 @@ public class EDI {
     
     // Detail fields     
     public ArrayList<String[]> detailArray = new ArrayList<String[]>();
-    public int DetFieldsCount204i = 22;
+    public int DetFieldsCount204i = 23;
     public String[] initDetailArray(String[] a) {
         for (int i = 0; i < a.length; i++) {
             a[i] = "";
@@ -6399,6 +6411,10 @@ public class EDI {
         public void setDetRemarks(int i, String v) {
            this.detailArray.get(i)[21] = v;
         }
+        public void setDetDateType(int i, String v) {
+           this.detailArray.get(i)[22] = v;
+        }
+        
         
         
        // getters for detail
@@ -6468,7 +6484,11 @@ public class EDI {
         public String getDetRemarks(int i) {
            return detailArray.get(i)[21];
         }
-       // header setters 
+        public String getDetDateType(int i) {
+           return detailArray.get(i)[22];
+        }
+              
+// header setters 
    
     
         public void setCustFO(String v) {

@@ -574,7 +574,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
 
     public String getInputISA(int i) {
        if (isaArrayIN != null && isaArrayIN.length >= i) {
-       return isaArrayIN[i];
+       return isaArrayIN[i].trim();
        } else {
            return "";
        }

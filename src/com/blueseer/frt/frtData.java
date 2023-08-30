@@ -1281,6 +1281,10 @@ public class frtData {
               bscon = DriverManager.getConnection(url + db, user, pass);  
             }
             bscon.setAutoCommit(false);
+            // before updating CFOMstr...check if incoming default revision has changed to '1'
+            if (cfo.cfo_defaultrev.equals("1")) {
+                _resetCFOMstrRev(cfo, bscon, ps);
+            }
             _addCFOMstr(cfo, bscon, ps, res);  
             for (cfo_det z : cfod) {
                 _addCFODet(z, bscon, ps, res);
@@ -2036,6 +2040,40 @@ public class frtData {
             MainFrame.bslog(e);
         }
              return item;
+    }
+    
+    public static String[] getCFOPrevious(String custfo) {
+        String revision = "";
+        String[] r = new String[]{"",""};
+        try{
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        ResultSet res = null;
+            try{
+                res = st.executeQuery("select cfo_nbr, cfo_revision from cfo_mstr where cfo_custfonbr = " + "'" + custfo + "'" + 
+                        " order by cfo_revision" + ";");
+                while (res.next()) {
+                    r[0] = res.getString("cfo_nbr");
+                    r[1] = res.getString("cfo_revision");
+                }
+            }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+             return r;
     }
     
     

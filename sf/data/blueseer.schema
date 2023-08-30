@@ -2769,3 +2769,10 @@ CREATE TABLE IF NOT EXISTS `cfo_sos` (
   `cfos_key` varchar(50) NOT NULL DEFAULT '',
   `cfos_value` varchar(50) NOT NULL DEFAULT '')
 ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `edi_xcode` (
+  `edix_doctype` varchar(8) NOT NULL DEFAULT '',
+  `edix_seg` varchar(20) NOT NULL DEFAULT '',
+  `edix_ele` varchar(3) NOT NULL DEFAULT '',
+  `edix_code` varchar(30) NOT NULL DEFAULT '',
+  `edix_value` varchar(80) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

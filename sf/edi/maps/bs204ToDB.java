@@ -13,13 +13,11 @@ import com.blueseer.utl.EDData;
     
     //optional...set some global variables as necessary
     String  now = now();
-    int i = 0; 
         String custfo = ""; 
         String origfo = "";
         String purpose = "";
-        int S5Count = 0;
-        int linecount = 0;
-        boolean S5 = false;
+        int eline = 0;
+        
 
     // begin mapping
     
@@ -27,7 +25,7 @@ import com.blueseer.utl.EDData;
        e.setCarrier(getInput("B2","e02"));
        // lets set tpid and cust at this point with ISA sender ID and cross reference lookup into cmedi_mstr
        e.setTPID(getInputISA(6).trim()); 
-       e.setCust(EDData.getEDIXrefIn(getInputISA(6), getInputGS(2), "BT", ""));
+       e.setCust(EDData.getEDIXrefIn(getInputISA(6).trim(), getInputGS(2), "BT", getInputGS(3)));
 
 
 
@@ -51,37 +49,43 @@ import com.blueseer.utl.EDData;
            e.setRef(getInput("L11","e01"));
        }
 
-       S5 = true;  
-       S5Count++;
-       linecount = S5Count - 1; // for base zero array
+// S5 Stop details
+var linecount = getGroupCount("S5");
+
+for (int i = 1; i <= linecount; i++) {
        String[] a = new String[e.DetFieldsCount204i];
        e.detailArray.add(e.initDetailArray(a)); 
-       e.setDetLine(linecount, getInput("S5","e01"));
-       e.setDetType(linecount, getInput("S5","e02"));              
-        if ( getInput("G62","e01").equals("68") || getInput("G62","e01").equals("70")) {
-        e.setDetDelvDate(linecount, convertDate("yyyyMMdd", getInput("G62","e02")));
-          if ( ! getInput("G62","e04").isEmpty() ) {
-          e.setDetDelvTime(linecount, getInput("G62","e04"));
+       eline = i - 1;  // base zero
+       e.setDetLine(eline, getInput(i,"S5","e01"));
+       e.setDetType(eline, getInput(i,"S5","e02"));              
+        if ( getInput(i,"G62","e01").equals("68") || getInput(i,"G62","e01").equals("70")) {
+        e.setDetDelvDate(eline, convertDate("yyyyMMdd", getInput(i,"G62","e02")));
+          if ( ! getInput(i,"G62","e04").isEmpty() ) {
+          e.setDetDelvTime(eline, getInput(i,"G62","e04"));
           }
         } 
-        if ( getInput("G62","e01").equals("69") || getInput("G62","e01").equals("78")) {
-           e.setDetShipDate(linecount, convertDate("yyyyMMdd", getInput("G62","e02")));
-           if ( ! getInput("G62","e04").isEmpty() ) {
-          e.setDetShipTime(linecount, getInput("G62","e04"));
+        if ( getInput("i,G62","e01").equals("69") || getInput(i,"G62","e01").equals("78")) {
+           e.setDetShipDate(eline, convertDate("yyyyMMdd", getInput(i,"G62","e02")));
+           if ( ! getInput(i,"G62","e04").isEmpty() ) {
+          e.setDetShipTime(eline, getInput(i,"G62","e04"));
           }
         }  
-        e.setDetAddrName(linecount, getInput("N1","e02"));
-        if (! getInput("N1","e04").isEmpty()) {
-          e.setDetAddrCode(linecount, getInput("N1","e04"));
+        e.setDetAddrName(eline, getInput(i,"S5:N1","e02"));
+        if (! getInput(i,"S5:N1","e04").isEmpty()) {
+          e.setDetAddrCode(eline, getInput(i,"S5:N1","e04"));
         }
-        e.setDetAddrLine1(linecount, getInput("N3","e01"));
-        e.setDetAddrCity(linecount, getInput("N4","e01"));
-        e.setDetAddrState(linecount, getInput("N4","e02"));
-        e.setDetAddrZip(linecount, getInput("N4","e03"));
+        e.setDetAddrLine1(eline, getInput(i,"S5:N1:N3","e01"));
+        e.setDetAddrCity(eline, getInput(i,"S5:N1:N4","e01"));
+        e.setDetAddrState(eline, getInput(i,"S5:N1:N4","e02"));
+        e.setDetAddrZip(eline, getInput(i,"S5:N1:N4","e03"));
         e.setWeight(getInput("L3","e01"));
-
+}
     // mapping end
-    
+
+for (int j = 0; j < e.getDetCount(); j++ ) {
+System.out.println("inMap: " + j + "/" + e.getDetType(j));
+} 
+   
     mappedInput.clear();
 
      /* Load Sales Order */

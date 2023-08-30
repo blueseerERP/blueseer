@@ -3224,6 +3224,13 @@ CREATE TABLE "cfo_sos" (
   "cfos_key" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
   "cfos_value" varchar(50) NOT NULL COLLATE NOCASE DEFAULT ''
 );
+CREATE TABLE "edi_xcode" (
+  "edix_doctype" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edix_seg" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edix_ele" varchar(3) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edix_code" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edix_value" varchar(80) NOT NULL COLLATE NOCASE DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
 End Transaction;
