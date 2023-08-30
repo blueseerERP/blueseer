@@ -2775,6 +2775,48 @@ public class ediData {
         return info;
     }
     
+    public static String getEDIXvalue(String doctype, String seg, String ele, String code) {
+        String x = "";
+        String sql = "select edix_value from edi_xcode where edix_doctype = ? and edix_seg = ? and edix_ele = ? and edix_code = ?";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, doctype);
+        ps.setString(2, seg);
+        ps.setString(3, ele);
+        ps.setString(4, code);
+             try (ResultSet res = ps.executeQuery();) {
+               while (res.next()) {
+               x = res.getString("edix_value");
+               }
+            }
+        }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+        }
+        return x;
+    }
+    
+    public static String getEDIXcode(String doctype, String seg, String ele, String value) {
+        String x = "";
+        String sql = "select edix_code from edi_xcode where edix_doctype = ? and edix_seg = ? and edix_ele = ? and edix_code = ?";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, doctype);
+        ps.setString(2, seg);
+        ps.setString(3, ele);
+        ps.setString(4, value);
+             try (ResultSet res = ps.executeQuery();) {
+               while (res.next()) {
+               x = res.getString("edix_code");
+               }
+            }
+        }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+        }
+        return x;
+    }
+    
     
     public static String getKeyStorePass(String id) {
         String x = "";
