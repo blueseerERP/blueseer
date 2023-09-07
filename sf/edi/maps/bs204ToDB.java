@@ -58,22 +58,23 @@ for (int i = 1; i <= linecount; i++) {
        eline = i - 1;  // base zero
        e.setDetLine(eline, getInput(i,"S5","e01"));
        e.setDetType(eline, getInput(i,"S5","e02"));              
-        if ( getInput(i,"G62","e01").equals("68") || getInput(i,"G62","e01").equals("70")) {
-        e.setDetDelvDate(eline, convertDate("yyyyMMdd", getInput(i,"G62","e02")));
-          if ( ! getInput(i,"G62","e04").isEmpty() ) {
-          e.setDetDelvTime(eline, getInput(i,"G62","e04"));
+        if ( getInput(i,"S5:G62","e01").equals("68") || getInput(i,"S5:G62","e01").equals("70")) {
+        e.setDetDate(eline, convertDate("yyyyMMdd", getInput(i,"S5:G62","e02")));
+          if ( ! getInput(i,"S5:G62","e04").isEmpty() ) {
+          e.setDetTime1(eline, getInput(i,"S5:G62","e04"));
           }
         } 
-        if ( getInput("i,G62","e01").equals("69") || getInput(i,"G62","e01").equals("78")) {
-           e.setDetShipDate(eline, convertDate("yyyyMMdd", getInput(i,"G62","e02")));
-           if ( ! getInput(i,"G62","e04").isEmpty() ) {
-          e.setDetShipTime(eline, getInput(i,"G62","e04"));
+        if ( getInput(i,"S5:G62","e01").equals("69") || getInput(i,"S5:G62","e01").equals("78")) {
+           e.setDetDate(eline, convertDate("yyyyMMdd", getInput(i,"S5:G62","e02")));
+           if ( ! getInput(i,"S5:G62","e04").isEmpty() ) {
+          e.setDetTime1(eline, getInput(i,"S5:G62","e04"));
           }
         }  
         e.setDetAddrName(eline, getInput(i,"S5:N1","e02"));
         if (! getInput(i,"S5:N1","e04").isEmpty()) {
           e.setDetAddrCode(eline, getInput(i,"S5:N1","e04"));
         }
+        e.setDetPhone(eline, getInput(i,"S5:N1:G61","e04"));
         e.setDetAddrLine1(eline, getInput(i,"S5:N1:N3","e01"));
         e.setDetAddrCity(eline, getInput(i,"S5:N1:N4","e01"));
         e.setDetAddrState(eline, getInput(i,"S5:N1:N4","e02"));
@@ -82,9 +83,7 @@ for (int i = 1; i <= linecount; i++) {
 }
     // mapping end
 
-for (int j = 0; j < e.getDetCount(); j++ ) {
-System.out.println("inMap: " + j + "/" + e.getDetType(j));
-} 
+
    
     mappedInput.clear();
 

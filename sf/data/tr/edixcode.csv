@@ -1,0 +1,17 @@
+204,S5,2,CU,Unload Complete
+204,S5,2,UL,Unload Partial
+204,S5,2,LD,Load
+204,G62,1,69,Scheduled Pickup Date
+204,G62,1,EP,Earliest Pickup Date
+204,G62,1,LP,Latest Pickup Date
+204,G62,1,96,Scheduled Pickup Date; Needs Confirmation
+204,G62,1,54,Latest Delivery Date
+204,G62,1,68,Scheduled Delivery Date
+204,G62,1,53,Earliest Delivery Date
+204,G62,1,97,Scheduled Delivery Date; Needs Confirmation
+204,G62,3,U,Scheduled Pickup Time
+204,G62,3,EP,Earliest Pickup Time
+204,G62,3,LP,Latest Pickup Time
+204,G62,3,X,Scheduled Delivery Time
+204,G62,3,ED,Earliest Delivery Time
+204,G62,3,LD,Latest Delivery Time

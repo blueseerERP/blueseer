@@ -103,15 +103,15 @@ public class Generic204i extends com.blueseer.edi.EDIMap {
        e.setDetLine(linecount, getInput("S5","e01"));
        e.setDetType(linecount, getInput("S5","e02"));              
         if ( getInput("G62","e01").equals("68") || getInput("G62","e01").equals("70")) {
-        e.setDetDelvDate(linecount, convertDateFormat("yyyyMMdd", getInput("G62","e02")));
+        e.setDetDate(linecount, convertDateFormat("yyyyMMdd", getInput("G62","e02")));
           if ( ! getInput("G62","e04").isEmpty() ) {
-          e.setDetDelvTime(linecount, getInput("G62","e04"));
+          e.setDetTime1(linecount, getInput("G62","e04"));
           }
         } 
         if ( getInput("G62","e01").equals("69") || getInput("G62","e01").equals("78")) {
-           e.setDetShipDate(linecount, convertDateFormat("yyyyMMdd", getInput("G62","e02")));
+           e.setDetDate(linecount, convertDateFormat("yyyyMMdd", getInput("G62","e02")));
            if ( ! getInput("G62","e04").isEmpty() ) {
-          e.setDetShipTime(linecount, getInput("G62","e04"));
+          e.setDetTime1(linecount, getInput("G62","e04"));
           }
         }  
         e.setDetAddrName(linecount, getInput("N1","e02"));

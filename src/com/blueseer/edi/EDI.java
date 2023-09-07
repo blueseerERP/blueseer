@@ -3276,7 +3276,8 @@ public class EDI {
     }
     
     public static String[] createCFOFrom204(edi204 e, String[] control) {
-            String[] m = new String[]{"",""}; 
+            String[] m = new String[]{"",""};
+            
             String[] z = getCFOPrevious(e.custfo); // returns latest cfo_nbr, cfo_revision ...if exists 
             String cfokey = "";
             String revision = "";
@@ -3287,14 +3288,35 @@ public class EDI {
              cfokey = z[0];
              revision = String.valueOf(Integer.valueOf(z[1]) + 1); // up the revision
             }
+            String ratetype = "Flat Rate";
+            double amt = 0.00;
+            double miles = 0.00;
+            double rate = 0.00;
+            
+            if (BlueSeerUtils.isParsableToDouble(e.getRate())) {
+                rate = Double.valueOf(e.getRate());
+            }
+            if (BlueSeerUtils.isParsableToDouble(e.getMiles())) {
+                miles = Double.valueOf(e.getMiles());
+            }
+            
+            if (e.getRateType().equals("PM")) {
+                ratetype = "Mileage Rate";
+                amt = rate * miles;
+            } else {
+                ratetype = "Flat Rate";
+                amt = rate;
+            }
+              
+            
             
             frtData.cfo_mstr x = new frtData.cfo_mstr(null, 
                 cfokey,
-                e.cust,
-                e.custfo,
+                e.getCust(),
+                e.getCustFO(),
                 revision, // revision
                 "", // service type
-                e.equiptype,
+                e.getEquipType(),
                 "", //vehicle ID
                 "", // trailer 
                 "pending", // status
@@ -3305,20 +3327,20 @@ public class EDI {
                 "", // broker
                 "", // broker contact
                 "", // broker cell
-                "", // rate type
-                "", // rate
-                "", // miles
+                ratetype, // rate type 
+                BlueSeerUtils.currformatDoubleUS(rate), // rate
+                String.valueOf(miles), // miles
                 "", // driver rate
                 "0", // driver standard toggle
-                e.weight, // weight
+                e.getWeight(), // weight
                 BlueSeerUtils.convertDateFormat("yyyyMMdd", BlueSeerUtils.now().substring(0,8)),
                 "", // confirm date
-                "0", // is hazmat
+                e.getHazmat(), // is hazmat
                 "0", // expenses
                 "0", // charges
-                "", // total cost
+                BlueSeerUtils.currformatDoubleUS(amt), // total cost
                 "", // bol
-                e.remarks, // remarks
+                e.getRemarks(), // remarks
                 "0,0,0", // derived construct
                 "", // logic
                 "", // site
@@ -3329,14 +3351,21 @@ public class EDI {
             
             // now the detail
             ArrayList<frtData.cfo_det> list = new ArrayList<frtData.cfo_det>();
+            String dettype = "";
             for (int j = 0; j < e.getDetCount(); j++ ) {
                System.out.println("detcount: " + j + "/" + e.getDetType(j));
-               frtData.cfo_det y = new frtData.cfo_det(null, 
+                dettype = ediData.getEDIXvalue("204", "S5", "2", e.getDetType(j)); // three types supported... LD = Load; CU = Unload Complete; UL = Unload Partial
+                if (dettype.isBlank()) {
+                   m[0] = "1"; 
+                   m[1] = "unknown S5 type: " + e.getDetType(j);
+                   break;
+                }
+                frtData.cfo_det y = new frtData.cfo_det(null, 
                 cfokey,
                 revision, // revision 
                 String.valueOf(j + 1),  //stopline
                 "", // sequence
-                e.getDetType(j),  // type
+                dettype,  // type
                 e.getDetAddrCode(j), // code
                 e.getDetAddrName(j), 
                 e.getDetAddrLine1(j), 
@@ -3345,10 +3374,10 @@ public class EDI {
                 e.getDetAddrCity(j), 
                 e.getDetAddrState(j),
                 e.getDetAddrZip(j),
-                "", // country
-                "", // phone
-                "", // email
-                "", // contacts
+                e.getDetCountry(j), // country
+                e.getDetPhone(j), // phone
+                e.getDetEmail(j), // email
+                e.getDetContact(j), // contacts
                 "", // misc
                 e.getDetRemarks(j), // remarks
                 e.getDetRef(j), // reference
@@ -3358,22 +3387,22 @@ public class EDI {
                 e.getDetUnits(j).replace(defaultDecimalSeparator, '.'), // quantity
                 "0", // hazmat
                 e.getDetDateType(j), // datetype
-                e.getDetShipDate(j), // date
-                "",// timetype1
-                "", // time
-                "", // timetype2
-                "", // time2
-                "", // timezone
-                "", // rate 
-                "" // miles
+                e.getDetDate(j), // date
+                e.getDetTimeType1(j),// timetype1
+                e.getDetTime1(j), // time
+                e.getDetTimeType1(j), // timetype2
+                e.getDetTimeType2(j), // time2
+                e.getDetTimeZone(j), // timezone
+                e.getDetRate(j), // rate 
+                e.getDetMiles(j) // miles
                 );  
                 list.add(y);
-                
-               
-               }
+               } // for each det
             
-            m = addCFOTransaction(list, x, null, null);
-            
+            if (m[0].isBlank()) { // if not error
+                m = addCFOTransaction(list, x, null, null);
+            } 
+            System.out.println("HERE: " + m[0] + "/" + m[1]);
             return m;
      }
      
@@ -6314,10 +6343,14 @@ public class EDI {
     public String fodate = "";
     public String bol = "";
     public String weight = "";
+    public String rate = "";
+    public String ratetype = "";
+    public String miles = "";
+    public String hazmat = "";
     
     // Detail fields     
     public ArrayList<String[]> detailArray = new ArrayList<String[]>();
-    public int DetFieldsCount204i = 23;
+    public int DetFieldsCount204i = 31;
     public String[] initDetailArray(String[] a) {
         for (int i = 0; i < a.length; i++) {
             a[i] = "";
@@ -6354,16 +6387,16 @@ public class EDI {
         public void setDetShipper(int i, String v) {
           this.detailArray.get(i)[2] = v;
         }
-        public void setDetShipDate(int i, String v) {
+        public void setDetDate(int i, String v) {
            this.detailArray.get(i)[3] = v;
         }
-        public void setDetShipTime(int i, String v) {
+        public void setDetTime1(int i, String v) {
            this.detailArray.get(i)[4] = v;
         }
-        public void setDetDelvDate(int i, String v) {
+        public void setDetTimeType1(int i, String v) {
           this.detailArray.get(i)[5] = v;
         }
-        public void setDetDelvTime(int i, String v) {
+        public void setDetTime2(int i, String v) {
            this.detailArray.get(i)[6] = v;
         }
         public void setDetRef(int i, String v) {
@@ -6414,7 +6447,30 @@ public class EDI {
         public void setDetDateType(int i, String v) {
            this.detailArray.get(i)[22] = v;
         }
-        
+        public void setDetTimeType2(int i, String v) {
+           this.detailArray.get(i)[23] = v;
+        }
+        public void setDetRate(int i, String v) {
+           this.detailArray.get(i)[24] = v;
+        }
+        public void setDetMiles(int i, String v) {
+           this.detailArray.get(i)[25] = v;
+        }
+        public void setDetTimeZone(int i, String v) {
+           this.detailArray.get(i)[26] = v;
+        }
+        public void setDetCountry(int i, String v) {
+           this.detailArray.get(i)[27] = v;
+        }
+        public void setDetPhone(int i, String v) {
+           this.detailArray.get(i)[28] = v;
+        }
+        public void setDetEmail(int i, String v) {
+           this.detailArray.get(i)[29] = v;
+        }
+        public void setDetContact(int i, String v) {
+           this.detailArray.get(i)[30] = v;
+        }
         
         
        // getters for detail
@@ -6427,16 +6483,16 @@ public class EDI {
          public String getDetShipper(int i) {
            return detailArray.get(i)[2];
         }
-         public String getDetShipDate(int i) {
+         public String getDetDate(int i) {
             return detailArray.get(i)[3];
         }
-          public String getDetShipTime(int i) {
+          public String getDetTime1(int i) {
             return detailArray.get(i)[4];
         }
-          public String getDetDelvDate(int i) {
+          public String getDetTimeType1(int i) {
            return detailArray.get(i)[5];
         }
-        public String getDetDelvTime(int i) {
+        public String getDetTime2(int i) {
            return detailArray.get(i)[6];
         }
         public String getDetRef(int i) {
@@ -6487,6 +6543,30 @@ public class EDI {
         public String getDetDateType(int i) {
            return detailArray.get(i)[22];
         }
+        public String getDetTimeType2(int i) {
+           return detailArray.get(i)[23];
+        }
+        public String getDetRate(int i) {
+           return detailArray.get(i)[24];
+        }
+        public String getDetMiles(int i) {
+           return detailArray.get(i)[25];
+        }
+        public String getDetTimeZone(int i) {
+           return detailArray.get(i)[26];
+        }
+        public String getDetCountry(int i) {
+           return detailArray.get(i)[27];
+        }
+        public String getDetPhone(int i) {
+           return detailArray.get(i)[28];
+        }
+        public String getDetEmail(int i) {
+           return detailArray.get(i)[29];
+        }
+        public String getDetContact(int i) {
+           return detailArray.get(i)[30];
+        }
               
 // header setters 
    
@@ -6524,7 +6604,19 @@ public class EDI {
           public void setWeight(String v) {
            this.weight = v;
         }  
-       
+        public void setRate(String v) {
+           this.rate = v;
+        }  
+        public void setMiles(String v) {
+           this.miles = v;
+        }  
+        public void setHazmat(String v) {
+           this.hazmat = v;
+        }  
+        public void setRateType(String v) {
+           this.ratetype = v;
+        }  
+        
  
         // header getters
         public String getCustFO() {
@@ -6572,6 +6664,18 @@ public class EDI {
         }
         public String getWeight() {
            return this.weight;
+        }
+        public String getRate() {
+           return this.rate;
+        }
+        public String getMiles() {
+           return this.miles;
+        }
+        public String getHazmat() {
+           return this.hazmat;
+        }
+        public String getRateType() {
+           return this.ratetype;
         }
         
 
