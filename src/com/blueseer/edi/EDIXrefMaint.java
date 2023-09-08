@@ -303,6 +303,14 @@ public class EDIXrefMaint extends javax.swing.JPanel implements IBlueSeerT    {
         tbtpid.setText("");
         tbtpaddr.setText("");
         
+        ddtype.removeAllItems();
+        ArrayList<String> mylist = OVData.getCodeMstrKeyList("edixreftype");
+        for (int i = 0; i < mylist.size(); i++) {
+            ddtype.addItem(mylist.get(i));
+        }
+        ddtype.insertItemAt("", 0);
+        ddtype.setSelectedIndex(0);
+        
        isLoad = false;
     }
     
@@ -349,6 +357,13 @@ public class EDIXrefMaint extends javax.swing.JPanel implements IBlueSeerT    {
                     b = false;
                     bsmf.MainFrame.show(getMessageTag(1024));
                     tbtpid.requestFocus();
+                    return b;
+                }
+                
+                if (ddtype.getSelectedItem().toString().isEmpty()) {
+                    b = false;
+                    bsmf.MainFrame.show(getMessageTag(1024));
+                    ddtype.requestFocus();
                     return b;
                 }
                
@@ -554,8 +569,6 @@ public class EDIXrefMaint extends javax.swing.JPanel implements IBlueSeerT    {
 
         jLabel4.setText("BSAddr");
 
-        ddtype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "BT", "ST", "PY", "VN" }));
-
         jLabel5.setText("Type");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -592,7 +605,7 @@ public class EDIXrefMaint extends javax.swing.JPanel implements IBlueSeerT    {
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(tbbsaddr, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 123, Short.MAX_VALUE)
                         .addComponent(tbtpaddr, javax.swing.GroupLayout.Alignment.LEADING))
-                    .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(104, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(

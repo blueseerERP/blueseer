@@ -238,6 +238,9 @@ public int[] mywidth;
         if (arg[0].equals("CarrierBrowse")) {
              mymodel = DTData.getCarrierAll();
         }
+        if (arg[0].equals("EDIXrefBrowse")) {
+             mymodel = DTData.getEDIXrefAll(); 
+        }
         if (arg[0].equals("TaxBrowse")) {
              mymodel = DTData.getTaxAll();
         }
@@ -402,7 +405,15 @@ public int[] mywidth;
                 if (! checkperms(mypanel)) { return; }
                args = new String[]{TableReport.getValueAt(row, 1).toString()};
                reinitpanels(mypanel, true, args);
-            }  
+            } 
+            
+            if (TableReport.getName() != null && TableReport.getName().compareTo("EDIXrefBrowse") == 0) {
+                mypanel = "EDIXrefMaint";
+                if (! checkperms(mypanel)) { return; }
+               args = new String[]{TableReport.getValueAt(row, 1).toString(),TableReport.getValueAt(row, 2).toString(),TableReport.getValueAt(row, 3).toString(),TableReport.getValueAt(row, 4).toString(),TableReport.getValueAt(row, 5).toString()};
+               reinitpanels(mypanel, true, args);
+            } 
+            
             if (TableReport.getName() != null && TableReport.getName().compareTo("WorkCellBrowse") == 0) {
                 mypanel = "WorkCellMaint";
                 if (! checkperms(mypanel)) { return; }

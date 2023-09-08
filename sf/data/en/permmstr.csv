@@ -324,3 +324,4 @@ admin,VehicleBrowse
 admin,DriverBrowse
 admin,BrokerBrowse
 admin,CFOControl
+admin,EDIXrefBrowse

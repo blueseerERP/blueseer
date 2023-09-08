@@ -317,3 +317,4 @@ CFOControl,,com.blueseer.frt.CFOControl,JMenuItem,cfoc
 VehicleBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,vehb
 DriverBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,drvb
 BrokerBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,brkb
+EDIXrefBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,xref

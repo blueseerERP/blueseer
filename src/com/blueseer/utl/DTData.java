@@ -8620,6 +8620,62 @@ return mymodel;
 
      }
 
+     public static DefaultTableModel getEDIXrefAll() {
+          javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                  new String[]{getGlobalColumnTag("select"), 
+                      getGlobalColumnTag("tpid"), 
+                      getGlobalColumnTag("gsid"),
+                      getGlobalColumnTag("type"), 
+                      getGlobalColumnTag("tpaddr"), 
+                      getGlobalColumnTag("bsaddr")})
+                  {
+                  @Override  
+                  public Class getColumnClass(int col) {  
+                    if (col == 0)       
+                        return ImageIcon.class;  
+                    else return String.class;  //other columns accept String values  
+                  }  
+                    }; 
+
+  try{
+
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+
+                  res = st.executeQuery("select * from edi_xref order by exr_tpid;");
+                while (res.next()) {
+                    mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("exr_tpid"),
+                               res.getString("exr_gsid"),
+                               res.getString("exr_type"),
+                               res.getString("exr_tpaddr"),
+                               res.getString("exr_ovaddr")
+                    });
+                }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+         } finally {
+           if (res != null) res.close();
+           if (st != null) st.close();
+           if (con != null) con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+
+    }
+    return mymodel;
+
+     }
+
+    
     public static DefaultTableModel getCustAddrInfoAll() {
           javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                   new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("market"), getGlobalColumnTag("name"), getGlobalColumnTag("addr1"), getGlobalColumnTag("city"), getGlobalColumnTag("state"), getGlobalColumnTag("zip")})

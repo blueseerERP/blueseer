@@ -2021,6 +2021,44 @@ public class EDData {
         
     }
     
+    public static boolean hasEDIXref(String bsaddr, String editype) {
+             boolean has = false;
+        try{
+            Class.forName(driver);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                      res = st.executeQuery("select * from edi_xref where " +
+                              " exr_ovaddr = " + "'" + bsaddr + "'" + 
+                              " AND exr_type = " + "'" + editype + "'" +        
+                                ";");
+                    while (res.next()) {
+                        has = true;
+                    }
+           }
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+        return has;
+        
+    }
+    
+    
     public static String getBSDocTypeFromStds(String invalue) {
        String x = "??";
         try{

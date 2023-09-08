@@ -129,6 +129,14 @@ edidoctype,835xml,XML,1
 edidoctype,837x12,X12 Health Claim,1
 edidoctype,837json,JSON CLAIM,1
 edidoctype,837xml,XML CLAIM,1
+edixreftype,BT,bill-to,1
+edixreftype,ST,ship-to,1
+edixreftype,PY,payer,1
+edixreftype,VN,vendor,1
+edixreftype,SM,204 code,1
+edixreftype,IM,210 code,1
+edixreftype,QM,214 code,1
+edixreftype,GF,990 code,1
 trantype,ISS-SALES,,1
 trantype,ISS-SCRAP,,1
 trantype,WIP-ISFG,,1

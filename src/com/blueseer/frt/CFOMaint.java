@@ -82,6 +82,7 @@ import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.EDData;
+import static com.blueseer.utl.EDData.hasEDIXref;
 import com.blueseer.utl.IBlueSeerT;
 import static com.blueseer.utl.OVData.updateFreightOrderStatus;
 import java.awt.Color;
@@ -3440,7 +3441,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     private void ddorderstatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddorderstatusActionPerformed
         if (! isLoad) {
-            if (cbedi.isSelected()) {
+            if (cbedi.isSelected() && hasEDIXref(ddcust.getSelectedItem().toString(),"GF")) {
                 if (ddorderstatus.getSelectedItem().toString().equals("open") ||
                     ddorderstatus.getSelectedItem().toString().equals("declined") ||
                     ddorderstatus.getSelectedItem().toString().equals("declined")) {

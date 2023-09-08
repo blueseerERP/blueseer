@@ -424,3 +424,11 @@ sys_job_class,com.blueseer.crn.jobWkf,,1
 edimaps,internal,1,1
 sys_smtp,auth,yes,1
 sys_smtp,tls,yes,1
+edixreftype,BT,bill-to,1
+edixreftype,ST,ship-to,1
+edixreftype,PY,payer,1
+edixreftype,VN,vendor,1
+edixreftype,SM,204 code,1
+edixreftype,IM,210 code,1
+edixreftype,QM,214 code,1
+edixreftype,GF,990 code,1
