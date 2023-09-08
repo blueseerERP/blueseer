@@ -1007,8 +1007,8 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                    
                     ddinfiletype.setEnabled(false);
                     ddoutfiletype.setEnabled(false);
-                    ddindoctype.setEnabled(false);
-                    ddoutdoctype.setEnabled(false);
+                   // ddindoctype.setEnabled(false);
+                   // ddoutdoctype.setEnabled(false);
                    
         } else {
                    tbkey.setForeground(Color.red); 

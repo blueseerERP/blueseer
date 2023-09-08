@@ -36,6 +36,7 @@ Freight,DriverMaint,6,JMenuItem,Driver Management,,,,1,1
 Freight,DriverBrowse,7,JMenuItem,Driver Browse,,1,,1,1
 Freight,BrokerMaint,8,JMenuItem,Broker Management,,,,1,1
 Freight,BrokerBrowse,9,JMenuItem,Broker Browse,,1,,1,1
+Freight,CFOControl,10,JMenuItem,Freight Control,,,,1,1
 EDI,EDILoad,1,JMenuItem,EDI Load,,,,1,1
 EDI,EDILog,2,JMenuItem,EDI Log,,,,1,1
 EDI,EDIPartnerMaint,3,JMenuItem,EDI Partner Maintenance,,,,1,1

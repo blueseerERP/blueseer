@@ -278,6 +278,10 @@ admin,DOMaint
 admin,DOBrowse
 admin,DOMenu
 admin,TransportationMenu
+admin,CFOMaint
+admin,VehicleMaint
+admin,DriverMaint
+admin,BrokerMaint
 admin,FOMaint
 admin,FTPMaint
 admin,FOBrowse
@@ -314,3 +318,9 @@ admin,AS2Browse
 admin,CronMaint
 admin,CronBrowse
 admin,PKSBrowse
+admin,CFOBrowse
+admin,CFOSchedule
+admin,VehicleBrowse
+admin,DriverBrowse
+admin,BrokerBrowse
+admin,CFOControl

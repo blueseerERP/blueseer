@@ -3208,6 +3208,7 @@ CREATE TABLE "brk_meta" (
 );
 CREATE TABLE "frt_ctrl" (
   "frtc_function" tinyint(1) NOT NULL DEFAULT '0',
+  "frtc_export990" tinyint(1) NOT NULL DEFAULT '0',
   "frtc_varchar" varchar(50) COLLATE NOCASE DEFAULT ''
 );
 CREATE TABLE "makemodel" (

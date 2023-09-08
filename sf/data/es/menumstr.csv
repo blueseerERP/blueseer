@@ -307,3 +307,4 @@ PKSBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,pksb
 WorkFlowMaint,,com.blueseer.edi.WorkFlowMaint,JMenuItem,wkfm
 WorkFlowBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,wkfb
 WorkFlowLog,,com.blueseer.edi.WorkFlowLog,JMenuItem,wkfl
+CFOControl,,com.blueseer.frt.CFOControl,JMenuItem,cfoc

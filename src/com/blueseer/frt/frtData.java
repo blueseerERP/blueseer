@@ -734,6 +734,72 @@ public class frtData {
         return m;
     }
     
+    public static String[] addUpdateCFOCtrl(frt_ctrl x) {
+        int rows = 0;
+        String[] m = new String[2];
+        String sqlSelect = "SELECT * FROM  frt_ctrl"; // there should always be only 1 or 0 records 
+        String sqlInsert = "insert into frt_ctrl (frtc_function, frtc_export990, frtc_varchar ) " +
+                         " values (?,?,?); "; 
+        String sqlUpdate = "update frt_ctrl set frtc_function = ?, frtc_export990 = ?, frtc_varchar = ? ";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);
+               PreparedStatement psu = con.prepareStatement(sqlUpdate);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setString(1, x.frtc_function);
+            psi.setString(2, x.frtc_export990);
+            psi.setString(3, x.frtc_varchar);
+             rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            psu.setString(1, x.frtc_function);
+            psu.setString(2, x.frtc_export990);
+            psu.setString(3, x.frtc_varchar);
+            rows = psu.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+   
+    public static frt_ctrl getCFOCtrl(String[] x) {
+        frt_ctrl r = null;
+        String[] m = new String[2];
+        String sql = "select * from frt_ctrl;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
+	PreparedStatement ps = con.prepareStatement(sql);) {
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new frt_ctrl(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new frt_ctrl(m, 
+                                res.getString("frtc_function"),
+                                res.getString("frtc_export990"),
+                                res.getString("frtc_varchar")
+                        );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new frt_ctrl(m);
+        }
+        return r;
+    }
+    
+    
     
     
     public static ArrayList<String[]> getCarrierMaintInit() {
@@ -1795,11 +1861,18 @@ public class frtData {
     public static cfo_mstr getCFOMstr(String[] x) {
         cfo_mstr r = null;
         String[] m = new String[2];
-        String sql = "select * from cfo_mstr where cfo_nbr = ? and cfo_revision = ? ;";
+        String sql = "";
+        if (x.length > 1 && x[1] != null && ! x[1].isBlank()) {
+            sql = "select * from cfo_mstr where cfo_nbr = ? and cfo_revision = ? ;";
+        } else {
+            sql = "select * from cfo_mstr where cfo_nbr = ? and cfo_defaultrev = '1' ;";
+        }
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
+        if (! x[1].isBlank()) {
         ps.setString(2, x[1]);
+        }
              try (ResultSet res = ps.executeQuery();) {
                 if (! res.isBeforeFirst()) {
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
@@ -1854,7 +1927,7 @@ public class frtData {
         }
         return r;
     }
-    
+     
     public static ArrayList<cfo_det> getCFODet(String code, String revision) {
         cfo_det r = null;
         String[] m = new String[2];
@@ -2076,7 +2149,82 @@ public class frtData {
              return r;
     }
     
-    
+    public static String getCFOCust(String order) {
+        String cust = "";
+          try{
+
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+        Statement st = con.createStatement();
+            ResultSet res = null;
+        try{
+            
+
+                  // select statement will return all 'unique' warehouses assigned to source the order
+                  res = st.executeQuery("select cfo_cust from cfo_mstr where cfo_nbr = " + "'" + order + "'" + 
+                          " and cfo_defaultrev = '1' " + ";");
+                  while (res.next()) {
+                      cust = res.getString("cfo_cust"); 
+                  }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+
+        } finally {
+            if (res != null) res.close();
+            if (st != null) st.close();
+            con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+
+    }
+         return cust;
+   }
+
+    public static String getCFOCustfonbr(String order) {
+        String custfonbr = "";
+          try{
+
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+        Statement st = con.createStatement();
+            ResultSet res = null;
+        try{
+            
+
+                  // select statement will return all 'unique' warehouses assigned to source the order
+                  res = st.executeQuery("select cfo_custfonbr from cfo_mstr where cfo_nbr = " + "'" + order + "'" + 
+                          " and cfo_defaultrev = '1' " + ";");
+                  while (res.next()) {
+                      custfonbr = res.getString("cfo_custfonbr"); 
+                  }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+
+        } finally {
+            if (res != null) res.close();
+            if (st != null) st.close();
+            con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+
+    }
+         return custfonbr;
+   }
+
     
     
     public record car_mstr (String[] m, String car_id, String car_desc, String car_apply,
@@ -2207,9 +2355,9 @@ public class frtData {
         }
     }
     
-    public record frt_ctrl(String[] m, String frtc_function, String frtc_varchar)  {
+    public record frt_ctrl(String[] m, String frtc_function, String frtc_export990, String frtc_varchar)  {
         public frt_ctrl(String[] m) {
-            this (m, "", "");
+            this (m, "", "", "");
         }
     }
     

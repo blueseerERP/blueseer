@@ -313,6 +313,7 @@ CronBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,cronb
 PKSBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,pksb
 CFOBrowse,,com.blueseer.frt.CFOBrowse,JMenuItem,cfob
 CFOSchedule,,com.blueseer.frt.CFOSchedule,JMenuItem,cfos
+CFOControl,,com.blueseer.frt.CFOControl,JMenuItem,cfoc
 VehicleBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,vehb
 DriverBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,drvb
 BrokerBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,brkb

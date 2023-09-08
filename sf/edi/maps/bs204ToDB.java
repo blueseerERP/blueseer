@@ -79,8 +79,14 @@ for (int i = 1; i <= linecount; i++) {
         e.setDetAddrCity(eline, getInput(i,"S5:N1:N4","e01"));
         e.setDetAddrState(eline, getInput(i,"S5:N1:N4","e02"));
         e.setDetAddrZip(eline, getInput(i,"S5:N1:N4","e03"));
-        e.setWeight(getInput("L3","e01"));
+        
 }
+
+    // summary assignments
+    e.setWeight(getInput("L3","e01"));
+    e.setRateType(getInput("L3","e04"));
+    e.setRate(getInput("L3","e03"));
+
     // mapping end
 
 

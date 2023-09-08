@@ -41,6 +41,7 @@ import static bsmf.MainFrame.user;
 import com.blueseer.adm.admData;
 import static com.blueseer.adm.admData.addChangeLog;
 import com.blueseer.ctr.cusData;
+import static com.blueseer.edi.EDI.Create990;
 import static com.blueseer.frt.frtData.addCFOTransaction;
 import com.blueseer.frt.frtData.cfo_det;
 import com.blueseer.frt.frtData.cfo_item;
@@ -688,6 +689,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         if (x[0].equals("0")) {
                    setPanelComponentState(this, true);
                    btadd.setEnabled(false);
+                   cbedi.setEnabled(false);
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
                    if (ddorderstatus.getSelectedItem().toString().compareTo(getGlobalProgTag("closed")) == 0) {
@@ -848,8 +850,8 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tbdriverrate.getText(),
                 String.valueOf(BlueSeerUtils.boolToInt(cbstandard.isSelected())),
                 tbtotweight.getText(),
-                bsmf.MainFrame.dfdate.format(dcorddate.getDate()).toString(),
-                bsmf.MainFrame.dfdate.format(dcconfdate.getDate()).toString(),
+                BlueSeerUtils.setDateFormat(dcorddate.getDate()).toString(),
+                BlueSeerUtils.setDateFormat(dcconfdate.getDate()).toString(),
                 String.valueOf(BlueSeerUtils.boolToInt(cbhazmat.isSelected())),
                 "0", // expenses
                 tbcharges.getText(),
@@ -1807,6 +1809,11 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         cbhazmat.setText("Hazmat");
 
         ddorderstatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "open", "pending", "declined", "cancelled", "intransit", "closed" }));
+        ddorderstatus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddorderstatusActionPerformed(evt);
+            }
+        });
 
         jLabel36.setText("Status");
 
@@ -3430,6 +3437,21 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
             percentlabel.setText("amount");
         }
     }//GEN-LAST:event_ddsacamttypeActionPerformed
+
+    private void ddorderstatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddorderstatusActionPerformed
+        if (! isLoad) {
+            if (cbedi.isSelected()) {
+                if (ddorderstatus.getSelectedItem().toString().equals("open") ||
+                    ddorderstatus.getSelectedItem().toString().equals("declined") ||
+                    ddorderstatus.getSelectedItem().toString().equals("declined")) {
+                    boolean proceed = bsmf.MainFrame.warn(getMessageTag(1183));
+                    if (proceed) {
+                       Create990(tbkey.getText());
+                    }
+                }
+            }
+        }
+    }//GEN-LAST:event_ddorderstatusActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;

@@ -3774,8 +3774,7 @@ public class EDI {
        return errorcode; 
          
      }
-    
-     
+         
     public static int Create810(String shipper)  {
         int errorcode = 0;
         // errorcode = 0 ... clean exit
@@ -4207,7 +4206,134 @@ public class EDI {
         
         return errorcode;
      }
-      
+    
+    public static int Create990(String nbr)  {
+        int errorcode = 0;
+        // errorcode = 0 ... clean exit
+        // errorcode = 1 ... no record found in getEDIXrefOut/getEDITPDefaults
+        // errorcode = 2 ... any catch error below ...try running from command line to see trace dump
+        // errorcode = 3 ... error in map...see edi log
+        
+        String tp = "";
+        String doctype = "990db";
+        String map = "";
+        ArrayList<String[]> messages = new ArrayList<String[]>();
+         
+        // lets determine the billto of this shipper
+        tp = frtData.getCFOCust(nbr);
+        
+        
+        messages.add(new String[]{"info","exporting 990 response: " + nbr + " for partner: " + tp});
+        
+        int comkey = OVData.getNextNbr("edilog");
+        
+        String[] c = initEDIControl();   
+        
+        c[1] = doctype;
+        c[2] = map;
+        c[3] = "";
+        c[4] = "";
+        c[5] = "";
+        c[6] = "";
+        c[7] = nbr;
+        c[15] = "990x12"; // outdoctype
+        c[12] = "0"; // is override
+        c[22] = String.valueOf(comkey);
+        c[28] = "DB";
+        c[29] = "X12";
+        c[17] = "0";
+        c[18] = "999999";
+        c[19] = "0";
+        c[20] = "999999";
+        
+        // get Delimiters from Cust Defaults
+        
+        String[] ids = EDData.getEDIXrefOut(tp, "PY");
+        messages.add(new String[]{"info","edi_xref: " + ids[0] + "/" + ids[1] + "/" + ids[2] + "/" + ids[3] + "/" + ids[4]});
+        
+        String[] defaults = EDData.getEDITPDefaults(doctype, EDData.getEDIgsid(), ids[1]  ); //990db, ourGS, theirsGS
+        messages.add(new String[]{"info","edi_mstr (id,doc): " + defaults[18] + "/" + defaults[19]});
+        messages.add(new String[]{"info","edi_mstr (sndISA/GS,rcvISA/GS): " + defaults[0] + "/" + defaults[2] + "/" + defaults[3] + "/" + defaults[5]});
+        
+        c[9] = defaults[7]; 
+        c[10] = defaults[6]; 
+        c[11] = defaults[8]; 
+        
+        c[0] = defaults[2];
+        c[21] = defaults[5];
+        
+        int idxnbr = EDData.writeEDIIDX(c);
+        c[16] = String.valueOf(idxnbr);
+        
+        messages.add(new String[]{"info","searching for map with: " + c[1] + "/" + defaults[2] + "/" + defaults[5]});
+        map = EDData.getEDIMap(c[1], defaults[2], defaults[5]);
+        
+          if (map.isEmpty()) {
+            errorcode = 1;
+            messages.add(new String[]{"error","990: map variable is empty for partner/gs02/gs03/doc: " + tp + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
+            EDData.writeEDILogMulti(c, messages);
+            messages.clear();  // clear message here
+            return errorcode;
+        } 
+          
+        if (! BlueSeerUtils.isEDIClassFile(map)) {
+            errorcode = 1;
+            messages.add(new String[]{"error","990: unable to locate compiled map (" + map + ") billto/gs02/gs03/doc: " + tp + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
+            EDData.writeEDILogMulti(c, messages);
+            messages.clear();  // clear message here
+            return errorcode;
+        }     
+        messages.add(new String[]{"info","using map: " + map});
+       
+        
+        // Mapdata method call below requires two parameters (ArrayList, String[]) ...doc and c
+        ArrayList doc = new ArrayList();
+        doc.add(nbr);
+        
+        
+         // call map 
+        try {
+        Class cls = Class.forName(map);
+        Object obj = cls.getDeclaredConstructor().newInstance();
+        Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class, ArrayList.class);
+        Object oc = method.invoke(obj, doc, c, messages);
+        String[] oString = (String[]) oc;
+        messages.add(new String[]{oString[0], oString[1]});
+        EDData.updateEDIIDX(idxnbr, c); 
+        if (oString[0].equals("error")) {
+            errorcode = 3;
+        }
+        } catch (InvocationTargetException ex) {
+        errorcode = 2;    
+        if (c[12].isEmpty()) {
+        messages.add(new String[]{"error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1]});    
+        clearStaticVariables();
+        }
+        edilog(ex); 
+        } catch (ClassNotFoundException ex) {
+        errorcode = 2;    
+        if (c[12].isEmpty()) {
+        messages.add(new String[]{"error", "Map Class not found " + map + "/" + c[0] + " / " + c[1]});        
+        }
+        edilog(ex); 
+        } catch (IllegalAccessException |
+             InstantiationException | NoSuchMethodException ex
+            ) {
+        errorcode = 2;    
+        if (c[12].isEmpty()) {
+        messages.add(new String[]{"error", "IllegalAccess|Instantiation|NoSuchMethod " + map + "/" + c[0] + " / " + c[1]});        
+       }
+        edilog(ex);
+       } finally {
+          EDData.writeEDILogMulti(c, messages);
+          messages.clear();  // clear message here...and at 997...and at end   
+       }
+         
+       return errorcode; 
+         
+     }
+    
+    
     public static int Create990o(String nbr, String response)  {
         int errorcode = 0;
        

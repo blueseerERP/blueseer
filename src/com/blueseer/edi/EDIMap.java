@@ -1016,7 +1016,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         String lastkey = "";
         LinkedHashMap<Integer, String[]> z = new LinkedHashMap<Integer, String[]>();
         
-        if (lines == null || lines.size() == 0) {
+        if (! isf.equals("DB") && (lines == null || lines.size() == 0)) {
             setError("Structure File (dsf) not available: " + isf);
             return;
         }
