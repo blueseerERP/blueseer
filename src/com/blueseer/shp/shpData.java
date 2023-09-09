@@ -87,8 +87,8 @@ public class shpData {
         String sqlInsert = "insert into ship_mstr (sh_id, sh_cust, sh_ship, sh_pallets, sh_boxes,  "
                     + "  sh_shipvia, sh_shipdate, sh_po_date, sh_ref, sh_po, " 
                     + " sh_rmks, sh_userid, sh_site, sh_curr, sh_wh, "
-                    + " sh_cust_terms, sh_taxcode, sh_ar_acct, sh_ar_cc, sh_type, sh_so) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+                    + " sh_cust_terms, sh_taxcode, sh_ar_acct, sh_ar_cc, sh_type, sh_so, sh_from) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.sh_id);
@@ -116,6 +116,7 @@ public class shpData {
             ps.setString(19, x.sh_ar_cc);
             ps.setString(20, x.sh_type);
             ps.setString(21, x.sh_so);
+            ps.setString(22, x.sh_from);
             rows = ps.executeUpdate();
             } 
             return rows;
@@ -463,7 +464,7 @@ public class shpData {
     }
     
     
-    public static ship_mstr createShipMstrJRT(String nbr, String site, String bol, String billto, String shipto, String so, String po, String ref, String shipdate, String orddate, String remarks, String shipvia, String shiptype, String taxcode) {
+    public static ship_mstr createShipMstrJRT(String nbr, String site, String bol, String billto, String shipto, String so, String po, String ref, String shipdate, String orddate, String remarks, String shipvia, String shiptype, String taxcode, String shipfrom) {
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
         cm_mstr cm = cusData.getCustMstr(new String[]{billto});
         String acct = cm.cm_ar_acct();
@@ -509,7 +510,8 @@ public class shpData {
                 acct,
                 cc,
                 shiptype,
-                so);
+                so,
+                shipfrom);
                 
         return x;        
     }
@@ -2524,11 +2526,11 @@ public class shpData {
         String sh_boxes, String sh_shipvia, String sh_shipdate, String sh_po_date,
         String sh_ref, String sh_po, String sh_rmks, String sh_userid, String sh_site,
         String sh_curr, String sh_wh, String sh_cust_terms, String sh_taxcode,
-        String sh_ar_acct, String sh_ar_cc, String sh_type, String sh_so ) {
+        String sh_ar_acct, String sh_ar_cc, String sh_type, String sh_so, String sh_from ) {
          public ship_mstr(String[] m) {
             this(m, "", "", "", "", "", "", "", "", "", "",
                     "", "", "", "", "", "", "", "", "", "",
-                    "" );
+                    "", "" );
         }
     }
    

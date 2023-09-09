@@ -2146,7 +2146,8 @@ CREATE TABLE "ship_mstr" (
   "sh_boxes" int(8) NOT NULL DEFAULT '0',
   "sh_pallets" int(8) NOT NULL DEFAULT '0',
   "sh_export_810" tinyint(1) NOT NULL DEFAULT '0',
-  "sh_export_856" tinyint(1) NOT NULL DEFAULT '0');
+  "sh_export_856" tinyint(1) NOT NULL DEFAULT '0',
+  "sh_from" varchar(8) COLLATE NOCASE DEFAULT '');
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;

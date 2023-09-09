@@ -618,8 +618,8 @@ public class ShipperMaintSerial extends javax.swing.JPanel implements IBlueSeer 
                 aracct,
                 arcc,
                 "S", // type
-                "" // sh_so 
-                );
+                "", // sh_so 
+                ddsite.getSelectedItem().toString());
                 
         return x;        
     }
