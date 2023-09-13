@@ -25,18 +25,8 @@ SOFTWARE.
  */
 package com.blueseer.edi;
 
-import com.blueseer.adm.*;
 import bsmf.MainFrame;
-import static bsmf.MainFrame.db;
-import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
-import static bsmf.MainFrame.url;
-import static bsmf.MainFrame.user;
-import static com.blueseer.adm.admData.addCodeMstr;
-import com.blueseer.adm.admData.code_mstr;
-import static com.blueseer.adm.admData.deleteCodeMstr;
-import static com.blueseer.adm.admData.getCodeMstr;
-import static com.blueseer.adm.admData.updateCodeMstr;
 import static com.blueseer.edi.ediData.addEDIXref;
 import static com.blueseer.edi.ediData.deleteEDIXref;
 import com.blueseer.edi.ediData.edi_xref;
