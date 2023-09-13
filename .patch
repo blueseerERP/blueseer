@@ -1,10 +1,8 @@
-# Version 6.6 Patch file
+# Version 6.7 Patch file
 #
 # bszip.ps1 maintains a running account of patches.   All lines in the patch file will be commented out except the
 # current patch.   There can only be one line starting with 'patch=' in the .patch file rolling forward.
 # Once a new patch is added with comments...the previous patch= is commented out
 #
 patch=0
-# First release of 6.6
-patch=1
-# added extended price field to service order jasper print; made alterations to jasper layout; bug fix for 'quote' report title
+# First release of 6.7
