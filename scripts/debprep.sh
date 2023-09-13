@@ -2,11 +2,11 @@
 
 # script to create directory structure for deb packaging
 
-bs="blueseer.sqlite.linux.v6.5"
+bs="blueseer.sqlite.linux.v6.7"
 bsshare="$bs/usr/share/blueseer"
-rm -fR blueseer.sqlite.linux.v6.5
-rm -f blueseer.sqlite.linux.v6.5.deb
-cp -R ../sf/linux/blueseer.sqlite.linux.v6.5 $bs
+rm -fR blueseer.sqlite.linux.v6.7
+rm -f blueseer.sqlite.linux.v6.7.deb
+cp -R ../sf/linux/blueseer.sqlite.linux.v6.7 $bs
 mkdir $bs/usr
 mkdir $bs/usr/share
 mkdir $bs/usr/share/blueseer

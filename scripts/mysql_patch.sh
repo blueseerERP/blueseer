@@ -26,7 +26,7 @@ export MYSQL_PWD
 echo ""
 echo ""
 echo "updating BlueSeer Schema....."
-mysql $DB -u $ROOT <.patchsqlv6.5
+mysql $DB -u $ROOT <.patchsqlv6.7
 
 
 echo ''

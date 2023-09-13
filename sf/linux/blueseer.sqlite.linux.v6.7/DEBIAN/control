@@ -1,6 +1,6 @@
 Package: blueseer
-Version: 6.5
+Version: 6.7
 Architecture: all
 Maintainer: Terry Vaughn <terry@blueseer.com>
 Homepage:  http://www.blueseer.com
-Description:  Free ERP for manufacturing
+Description:  Free ERP and EDI for manufacturing
