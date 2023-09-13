@@ -1109,8 +1109,12 @@ public class apiUtils {
                 return new bsr(r, null);
             } 
             String passphrase = bsmf.MainFrame.PassWord("1", pks.pks_pass().toCharArray());
-            
             decryptedData = apiUtils.decryptPGPData(indata, passphrase, keyfilepath );
+            
+            if (decryptedData == null) {
+                r[0] = "1";
+                r[1] = "failed to decrypt message in apiUtils.decryptPGPData";
+            }
             
             } catch (PGPException ex) {
                 r[0] = "1";

@@ -3969,6 +3969,7 @@ public class ediData {
                     if (! Files.isDirectory(path)) {
                         count++;
                         byte[] indata = Files.readAllBytes(path);
+                        
                         BlueSeerUtils.bsr x = apiUtils.decryptFile(indata, keyid);
                         if (x.data() != null) {
                             Path outpath = FileSystems.getDefault().getPath(destination + "/" + path.getFileName() + ".dec");    

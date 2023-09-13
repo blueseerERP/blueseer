@@ -307,8 +307,6 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
     public void setComponentDefaultValues() {
        isLoad = true;
        
-        btupdate.setVisible(false); // not going to allow usage of update button...only add and delete
-       
         tbkey.setText("");
         tbdesc.setText("");
         tbuser.setText("");
