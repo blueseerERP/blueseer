@@ -101,12 +101,11 @@ OrderReports,pcOpenOrdersByCust,1,JMenuItem,Vade Tarihine Göre Müşteriye Gör
 OrderReports,DiscreteOrderPerWeekUnits,2,JMenuItem,Haftaya Göre Sipariş Birimleri (BarChart),,1,,1,1
 OrderReports,DiscreteOrderPerWeekDollars,3,JMenuItem,Haftaya Göre Sipariş Satışları (BarChart),,1,,1,1
 Nakliye,ShipMaint,1,JMenuItem,Nakliyeci Bakımı,,,,1,1
-Nakliye,ShipMaintSerial,1,JMenuItem,Nakliyeci Bakımı (Serileştirilmiş),,,,1,1
-Nakliye,ShipperBrowse,2,JMenuItem,Gönderici Gözat,,1,,1,1
-Nakliye,ShipperBrowseDet,3,JMenuItem,Gönderici Detay Gözat,,1,,1,1
-Nakliye,ShipConfirm,4,JMenuItem,Gönderici Onayı,,,,1,1
-Nakliye,ShipUnconfirm,5,JMenuItem,Gönderici Onayı İptal Et,,,,1,1
-Nakliye,TransportationMenu,6,JMenu,Ulaşım Menüsü,,,,1,1
+Nakliye,ShipMaintSerial,2,JMenuItem,Nakliyeci Bakımı (Serileştirilmiş),,,,1,1
+Nakliye,ShipperBrowse,3,JMenuItem,Gönderici Gözat,,1,,1,1
+Nakliye,ShipperBrowseDet,4,JMenuItem,Gönderici Detay Gözat,,1,,1,1
+Nakliye,ShipConfirm,5,JMenuItem,Gönderici Onayı,,,,1,1
+Nakliye,ShipUnconfirm,6,JMenuItem,Gönderici Onayı İptal Et,,,,1,1
 Nakliye,ShpRptPicker,7,JMenuItem,Gönderi Raporu Seçici,,,,1,1
 Nakliye,ShipReports,8,JMenu,Diğer Raporlar,,,,1,1
 Nakliye,ShipperControl,9,JMenuItem,Gönderici Kontrolü,,,,1,1
@@ -312,8 +311,6 @@ POSMenu,POSControlMaint,3,JMenuItem,POS Kontrolü,,,,1,1
 POSMenu,POSBrowse,2,JMenuItem,POS Gözat,,1,,1,1
 DOMenu,DOMaint,1,JMenuItem,Dist Order Bakımı,,,,1,1
 DOMenu,DOBrowse,2,JMenuItem,Dist Order Gözat,,,,1,1
-TransportationMenu,FOMaint,1,JMenuItem,Navlun Siparişi Bakımı,,,,1,1
-TransportationMenu,FOBrowse,2,JMenuItem,Navlun Siparişi Gözat,,,,1,1
 RequisitionMenu,ReqControl,8,JMenuItem,Talep Kontrolü,,,,1,1
 Mühendislik,ECNMaint,1,JMenuItem,ECN Bakımı,,,,1,1
 Mühendislik,ECNBrowse,2,JMenuItem,ECN Gözat,,1,,1,1

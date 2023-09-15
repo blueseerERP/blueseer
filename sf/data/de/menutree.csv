@@ -106,10 +106,9 @@ Versand,ShipperBrowse,3,JMenuItem,Versender Durchsuchen,,1,,1,1
 Versand,ShipperBrowseDet,4,JMenuItem,Versenderdetails Durchsuchen,,1,,1,1
 Versand,ShipConfirm,5,JMenuItem,Versender bestätigen,,,,1,1
 Versand,ShipUnconfirm,6,JMenuItem,Absender nicht bestätigen,,,,1,1
-Versand,TransportationMenu,7,JMenu,Transportmenü,,,,1,1
-Versand,ShpRptPicker,8,JMenuItem,Versandberichtsauswahl,,,,1,1
-Versand,ShipReports,9,JMenu,Andere Berichte,,,,1,1
-Versand,ShipperControl,10,JMenuItem,Versenderkontrolle,,,,1,1
+Versand,ShpRptPicker,7,JMenuItem,Versandberichtsauswahl,,,,1,1
+Versand,ShipReports,8,JMenu,Andere Berichte,,,,1,1
+Versand,ShipperControl,9,JMenuItem,Versenderkontrolle,,,,1,1
 ShipReports,ShipPerWeekDollarsChart,1,JMenuItem,Versand-Dollar pro Woche (BarChart),,1,,1,1
 Finanzen,LedgerSetupMenu,1,JMenu,Ledger-Setup,,,,1,1
 LedgerSetupMenu,AcctMaint,1,JMenuItem,Kontopflege,,,,1,1
@@ -312,8 +311,6 @@ POSMenu,POSControlMaint,3,JMenuItem,POS-Steuerung,,,,1,1
 POSMenu,POSBrowse,2,JMenuItem,POS-Durchsuchen,,1,,1,1
 DOMenu,DOMaint,1,JMenuItem,Dist-Order-Wartung,,,,1,1
 DOMenu,DOBrowse,2,JMenuItem,Dist Order Browse,,,,1,1
-TransportationMenu,FOMaint,1,JMenuItem,Frachtauftragspflege,,,,1,1
-TransportationMenu,FOBrowse,2,JMenuItem,Frachtauftrag durchsuchen,,,,1,1
 RequisitionMenu,ReqControl,8,JMenuItem,Erforderliche Steuerung,,,,1,1
 Maschinenbau,ECNMaint,1,JMenuItem,ECN-Wartung,,,,1,1
 Maschinenbau,ECNBrowse,2,JMenuItem,ECN Durchsuchen,,1,,1,1

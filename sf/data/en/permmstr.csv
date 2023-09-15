@@ -277,14 +277,11 @@ admin,OrderSourceBrowse
 admin,DOMaint
 admin,DOBrowse
 admin,DOMenu
-admin,TransportationMenu
 admin,CFOMaint
 admin,VehicleMaint
 admin,DriverMaint
 admin,BrokerMaint
-admin,FOMaint
 admin,FTPMaint
-admin,FOBrowse
 admin,FOMenu
 admin,WareHouseMaint
 admin,WareHouseBrowse

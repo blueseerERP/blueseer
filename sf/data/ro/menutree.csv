@@ -106,10 +106,9 @@ Transport,ShipperBrowse,3,JMenuItem,Expeditorul Răsfoiește,,1,,1,1
 Transport,ShipperBrowseDet,4,JMenuItem,Detalii expeditor Răsfoire,,1,,1,1
 Transport,ShipConfirm,5,JMenuItem,Expeditorul Confirm,,,,1,1
 Transport,ShipUnconfirm,6,JMenuItem,Expeditorul Anulează confirmarea,,,,1,1
-Transport,TransportationMenu,7,JMenu,Meniul de transport,,,,1,1
-Transport,ShpRptPicker,8,JMenuItem,Selector de rapoarte de expediere,,,,1,1
-Transport,ShipReports,9,JMenu,Alte Rapoarte,,,,1,1
-Transport,ShipperControl,10,JMenuItem,Controlul expeditorului,,,,1,1
+Transport,ShpRptPicker,7,JMenuItem,Selector de rapoarte de expediere,,,,1,1
+Transport,ShipReports,8,JMenu,Alte Rapoarte,,,,1,1
+Transport,ShipperControl,9,JMenuItem,Controlul expeditorului,,,,1,1
 ShipReports,ShipPerWeekDollarsChart,1,JMenuItem,Livrare dolari pe săptămână (BarChart),,1,,1,1
 Finanţe,LedgerSetupMenu,1,JMenu,Configurare registru,,,,1,1
 LedgerSetupMenu,AcctMaint,1,JMenuItem,Întreținerea contului,,,,1,1
@@ -313,8 +312,6 @@ POSMenu,POSControlMaint,3,JMenuItem,Control POS,,,,1,1
 POSMenu,POSBrowse,2,JMenuItem,Răsfoire POS,,1,,1,1
 DOMenu,DOMaint,1,JMenuItem,Întreținere Dist Order,,,,1,1
 DOMenu,DOBrowse,2,JMenuItem,Răsfoire Dist Order,,,,1,1
-TransportationMenu,FOMaint,1,JMenuItem,Întreținerea comenzilor de marfă,,,,1,1
-TransportationMenu,FOBrowse,2,JMenuItem,Comenzi de marfă Răsfoiți,,,,1,1
 RequisitionMenu,ReqControl,8,JMenuItem,Req Control,,,,1,1
 Inginerie,ECNMaint,1,JMenuItem,Întreținere ECN,,,,1,1
 Inginerie,ECNBrowse,2,JMenuItem,ECN Browse,,1,,1,1

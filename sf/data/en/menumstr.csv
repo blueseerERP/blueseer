@@ -43,7 +43,6 @@ TCAdminMenu,,,JMenu,
 TCReportsMenu,,,JMenu, 
 POSMenu,,,JMenu, 
 DOMenu,,,JMenu, 
-TransportationMenu,,,JMenu, 
 CashTransactionMenu,,,JMenu, 
 PayRollMenu,,,JMenu,
 AcctBalSumYTD,,com.blueseer.fgl.GLAcctBalYTD,JMenuItem,absy
@@ -103,8 +102,6 @@ OrderSource,,com.blueseer.ord.OrderSource,JMenuItem,orsc
 OrderSourceBrowse,,com.blueseer.ord.OrderSourceBrowse,JMenuItem,orsb
 DOMaint,,com.blueseer.dst.DOMaint,JMenuItem,domm
 DOBrowse,,com.blueseer.dst.DOBrowse,JMenuItem,domb
-FOMaint,,com.blueseer.frt.FOMaint,JMenuItem,form
-FOBrowse,,com.blueseer.frt.FOBrowse,JMenuItem,forb
 WareHouseMaint,,com.blueseer.inv.WareHouseMaint,JMenuItem,wahm
 WareHouseBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,wahb
 LocationTransfer,,com.blueseer.inv.LocationTransfer,JMenuItem,loaj

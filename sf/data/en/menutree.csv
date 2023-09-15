@@ -107,10 +107,9 @@ Shipping,ShipperBrowse,3,JMenuItem,Shipper Browse ,,1,,1,1
 Shipping,ShipperBrowseDet,4,JMenuItem,Shipper Detail Browse,,1,,1,1
 Shipping,ShipConfirm,5,JMenuItem,Shipper Confirm,,,,1,1
 Shipping,ShipUnconfirm,6,JMenuItem,Shipper UnConfirm,,,,1,1
-Shipping,TransportationMenu,7,JMenu,Transportation Menu,,,,1,1
-Shipping,ShpRptPicker,8,JMenuItem,Shipping Report Selector,,,,1,1
-Shipping,ShipReports,9,JMenu,Other Reports,,,,1,1
-Shipping,ShipperControl,10,JMenuItem,Shipper Control,,,,1,1
+Shipping,ShpRptPicker,7,JMenuItem,Shipping Report Selector,,,,1,1
+Shipping,ShipReports,8,JMenu,Other Reports,,,,1,1
+Shipping,ShipperControl,9,JMenuItem,Shipper Control,,,,1,1
 ShipReports,ShipPerWeekDollarsChart,1,JMenuItem,Shipment Dollars Per Week (BarChart),,1,,1,1
 Finance,LedgerSetupMenu,1,JMenu,Ledger Setup,,,,1,1
 LedgerSetupMenu,AcctMaint,1,JMenuItem,Account Maintenance,,,,1,1
@@ -315,8 +314,6 @@ POSMenu,POSControlMaint,3,JMenuItem,POS Control,,,,1,1
 POSMenu,POSBrowse,2,JMenuItem,POS Browse,,1,,1,1
 DOMenu,DOMaint,1,JMenuItem,Dist Order Maintenance,,,,1,1
 DOMenu,DOBrowse,2,JMenuItem,Dist Order Browse,,,,1,1
-TransportationMenu,FOMaint,1,JMenuItem,Freight Order Maintenance,,,,1,1
-TransportationMenu,FOBrowse,2,JMenuItem,Freight Order Browse,,,,1,1
 RequisitionMenu,ReqControl,8,JMenuItem,Req Control,,,,1,1
 Engineering,ECNMaint,1,JMenuItem,ECN Maintenance,,,,1,1
 Engineering,ECNBrowse,2,JMenuItem,ECN Browse,,1,,1,1

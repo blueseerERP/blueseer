@@ -101,12 +101,11 @@ OrderReports,pcOpenOrdersByCust,1,JMenuItem,Ordres ouverts par client par date d
 OrderReports,DiscreteOrderPerWeekUnits,2,JMenuItem,Unités de commande par semaine (Bar Chart),,1,,1,1
 OrderReports,DiscreteOrderPerWeekDollars,3,JMenuItem,Ordre des ventes par semaine (BarChart),,1,,1,1
 Expédition,ShipMaint,1,JMenuItem,Maintenance de l'expéditeur,,,,1,1
-Expédition,ShipMaintSerial,1,JMenuItem,Maintenance de l'expéditeur (sérialisé),,,,1,1
-Expédition,ShipperBrowse,2,JMenuItem,Expéditeur Parcourir,,1,,1,1
-Expédition,ShipperBrowseDet,3,JMenuItem,Détails de l'expéditeur Parcourir,,1,,1,1
-Expédition,ShipConfirm,4,JMenuItem,Expéditeur Confirmer,,,,1,1
-Expédition,ShipUnconfirm,5,JMenuItem,Expéditeur non confirmé,,,,1,1
-Expédition,TransportationMenu,6,JMenu,Menu des transports,,,,1,1
+Expédition,ShipMaintSerial,2,JMenuItem,Maintenance de l'expéditeur (sérialisé),,,,1,1
+Expédition,ShipperBrowse,3,JMenuItem,Expéditeur Parcourir,,1,,1,1
+Expédition,ShipperBrowseDet,4,JMenuItem,Détails de l'expéditeur Parcourir,,1,,1,1
+Expédition,ShipConfirm,5,JMenuItem,Expéditeur Confirmer,,,,1,1
+Expédition,ShipUnconfirm,6,JMenuItem,Expéditeur non confirmé,,,,1,1
 Expédition,ShpRptPicker,7,JMenuItem,Sélecteur de rapport d'expédition,,,,1,1
 Expédition,ShipReports,8,JMenu,Autres rapports,,,,1,1
 Expédition,ShipperControl,9,JMenuItem,Contrôle de l'expéditeur,,,,1,1
@@ -312,8 +311,6 @@ POSMenu,POSControlMaint,3,JMenuItem,Contrôle de point de vente,,,,1,1
 POSMenu,POSBrowse,2,JMenuItem,Parcourir les points de vente,,1,,1,1
 DOMenu,DOMaint,1,JMenuItem,Maintenance des ordres de distance,,,,1,1
 DOMenu,DOBrowse,2,JMenuItem,Dist Order Parcourir,,,,1,1
-TransportationMenu,FOMaint,1,JMenuItem,Maintenance des ordres de fret,,,,1,1
-TransportationMenu,FOBrowse,2,JMenuItem,Parcourir les ordres de fret,,,,1,1
 RequisitionMenu,ReqControl,8,JMenuItem,Contrôle de la demande,,,,1,1
 Ingénierie,ECNMaint,1,JMenuItem,Maintenance ECN,,,,1,1
 Ingénierie,ECNBrowse,2,JMenuItem,Parcourir ECN,,1,,1,1
