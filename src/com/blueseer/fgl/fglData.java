@@ -2771,10 +2771,11 @@ public class fglData {
                 for (int j = 0; j < acct_cr.size(); j++) {
                     glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), BlueSeerUtils.setDateFormat(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
                 } 
-                    
-                    
-            res.close();
-            nres.close();
+            
+            res.close();    
+            if (nres != null) {       
+              nres.close();
+            }
             st.close();
             st2.close();
     }

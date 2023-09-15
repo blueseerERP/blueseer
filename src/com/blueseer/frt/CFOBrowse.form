@@ -202,18 +202,18 @@
                               <Group type="103" groupAlignment="1" attributes="0">
                                   <Group type="102" alignment="1" attributes="0">
                                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                      <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
+                                      <Component id="tokeynumber" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="tbtocustfo" min="-2" pref="96" max="-2" attributes="0"/>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                                      <Component id="tokeypartner" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="102" alignment="1" attributes="0">
-                                      <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                                      <Component id="fromkeynumber" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace max="-2" attributes="0"/>
                                       <Component id="tbfromcustfo" min="-2" pref="96" max="-2" attributes="0"/>
                                       <EmptySpace max="32767" attributes="0"/>
-                                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="fromkeypartner" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
@@ -238,7 +238,7 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="fromkeypartner" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="ddcustfrom" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btRun" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btdetail" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -247,14 +247,14 @@
                           <Component id="tbfromnbr" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="tbfromcustfo" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="fromkeynumber" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="tokeypartner" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="tbtocustfo" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="tokeynumber" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                               <Component id="ddcustto" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -277,7 +277,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdetailActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JLabel" name="jLabel4">
+            <Component class="javax.swing.JLabel" name="tokeypartner">
               <Properties>
                 <Property name="text" type="java.lang.String" value="To Customer"/>
                 <Property name="name" type="java.lang.String" value="lbltovend" noResource="true"/>
@@ -298,7 +298,7 @@
                 <Property name="name" type="java.lang.String" value="lblsite" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="jLabel1">
+            <Component class="javax.swing.JLabel" name="fromkeypartner">
               <Properties>
                 <Property name="text" type="java.lang.String" value="From Customer"/>
                 <Property name="name" type="java.lang.String" value="lblfromvend" noResource="true"/>
@@ -343,14 +343,14 @@
             </Component>
             <Component class="javax.swing.JTextField" name="tbfromcustfo">
             </Component>
-            <Component class="javax.swing.JLabel" name="jLabel2">
+            <Component class="javax.swing.JLabel" name="fromkeynumber">
               <Properties>
                 <Property name="text" type="java.lang.String" value="From Customer Order"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tbtocustfo">
             </Component>
-            <Component class="javax.swing.JLabel" name="jLabel7">
+            <Component class="javax.swing.JLabel" name="tokeynumber">
               <Properties>
                 <Property name="text" type="java.lang.String" value="To Customer Order"/>
               </Properties>

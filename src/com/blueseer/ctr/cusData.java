@@ -1639,8 +1639,8 @@ public class cusData {
                custinfo[4] = res.getString("cms_line3");
                custinfo[5] = res.getString("cms_city");
                custinfo[6] = res.getString("cms_state");
-               custinfo[7] = res.getString("cms_country");
-               custinfo[8] = res.getString("cms_plantcode");                   
+               custinfo[7] = res.getString("cms_zip");
+               custinfo[8] = res.getString("cms_country");                   
                }
             }
         }

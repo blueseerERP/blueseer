@@ -228,8 +228,8 @@
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="jLabel5" alignment="1" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel77" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblclient" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblnumber" alignment="1" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel6" alignment="1" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel9" alignment="1" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel85" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -252,14 +252,16 @@
                                           <Component id="ddvehicle" alignment="0" min="-2" pref="144" max="-2" attributes="0"/>
                                           <Component id="tbtrailer" alignment="0" min="-2" pref="164" max="-2" attributes="0"/>
                                           <Group type="102" alignment="0" attributes="0">
-                                              <Component id="tbcustfo" min="-2" pref="144" max="-2" attributes="0"/>
+                                              <Component id="tbnumber" min="-2" pref="144" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
-                                              <Component id="cbedi" min="-2" max="-2" attributes="0"/>
+                                              <Component id="btaddshipper" min="-2" pref="25" max="-2" attributes="0"/>
                                           </Group>
                                           <Group type="102" alignment="0" attributes="0">
-                                              <Component id="ddrevision" min="-2" pref="44" max="-2" attributes="0"/>
-                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                              <Component id="ddrevision" min="-2" pref="48" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
                                               <Component id="cbrev" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="cbedi" min="-2" max="-2" attributes="0"/>
                                               <EmptySpace max="-2" attributes="0"/>
                                               <Component id="lblrevision" min="-2" pref="76" max="-2" attributes="0"/>
                                           </Group>
@@ -358,96 +360,122 @@
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="65" pref="65" max="-2" attributes="0"/>
+                      <Component id="lblrevision" max="32767" attributes="0"/>
+                      <EmptySpace min="160" pref="160" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="lbclientname" alignment="0" min="-2" pref="17" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="ddcust" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="ddorderstatus" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel36" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="ddratetype" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel31" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="lbclientname" alignment="0" min="-2" pref="17" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="ddcust" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lblclient" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="ddorderstatus" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel36" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="ddratetype" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel31" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="tbnumber" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lblnumber" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel15" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="tbforate" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel23" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="dddriver" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbderivedrate" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Component id="btaddshipper" min="-2" pref="20" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                                      <Component id="ddrevision" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Component id="cbrev" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cbedi" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="tbtotweight" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel33" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="ddservicetype" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="ddfotype" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel24" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cbderivedweight" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="tbdriverrate" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel37" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cbstandard" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="ddequiptype" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel85" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="ddbroker" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel28" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="jLabel34" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="ddvehicle" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel101" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="tbbrokercontact" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel29" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Component id="dcorddate" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="dcconfdate" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="tbbrokercell" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel30" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel35" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                                      <Component id="tbtrailer" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel16" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="cbhazmat" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="ddsite" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel40" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <EmptySpace min="65" pref="65" max="-2" attributes="0"/>
+                              <Component id="cbderivedmiles" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <EmptySpace min="69" pref="69" max="-2" attributes="0"/>
+                              <Component id="jLabel32" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <EmptySpace min="66" pref="66" max="-2" attributes="0"/>
+                              <Component id="tbmileage" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <EmptySpace min="69" pref="69" max="-2" attributes="0"/>
+                              <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <EmptySpace min="66" pref="66" max="-2" attributes="0"/>
+                              <Component id="tbdrivercell" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="tbcustfo" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel77" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel15" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="tbforate" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel23" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="dddriver" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbderivedrate" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbedi" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="tbdrivercell" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="tbmileage" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel32" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="cbderivedmiles" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="ddrevision" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="cbrev" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Component id="lblrevision" max="32767" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="tbtotweight" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel33" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="ddservicetype" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="ddfotype" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel24" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbderivedweight" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="tbdriverrate" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel37" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbstandard" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="ddequiptype" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel85" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="ddbroker" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel28" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="jLabel34" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="ddvehicle" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel101" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="tbbrokercontact" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel29" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Component id="dcorddate" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="dcconfdate" min="-2" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="tbbrokercell" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel30" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel35" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                              <Component id="tbtrailer" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel16" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="cbhazmat" min="-2" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="ddsite" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel40" alignment="3" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <EmptySpace pref="29" max="32767" attributes="0"/>
+                      <EmptySpace pref="28" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -521,7 +549,7 @@
                 <Property name="text" type="java.lang.String" value="Trailer"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="jLabel77">
+            <Component class="javax.swing.JLabel" name="lblnumber">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Client Order"/>
                 <Property name="name" type="java.lang.String" value="lblshipper" noResource="true"/>
@@ -537,7 +565,7 @@
                 <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbforateFocusLost"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JTextField" name="tbcustfo">
+            <Component class="javax.swing.JTextField" name="tbnumber">
             </Component>
             <Component class="javax.swing.JComboBox" name="ddcust">
               <Properties>
@@ -555,7 +583,7 @@
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>
             </Component>
-            <Component class="javax.swing.JLabel" name="jLabel5">
+            <Component class="javax.swing.JLabel" name="lblclient">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Client"/>
                 <Property name="name" type="java.lang.String" value="lblclient" noResource="true"/>
@@ -798,6 +826,16 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Default"/>
               </Properties>
+            </Component>
+            <Component class="javax.swing.JButton" name="btaddshipper">
+              <Properties>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/images/add.png"/>
+                </Property>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btaddshipperActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>

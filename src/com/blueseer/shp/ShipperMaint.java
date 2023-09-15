@@ -299,12 +299,16 @@ public class ShipperMaint extends javax.swing.JPanel {
       
         
         ddwh.removeAllItems();
+        ddshipfrom.removeAllItems();
         ArrayList<String> whs = OVData.getWareHouseList();
         for (String wh : whs) {
             ddwh.addItem(wh);
+            ddshipfrom.addItem(wh);
         }
         ddwh.insertItemAt("", 0);
         ddwh.setSelectedIndex(0);
+        ddshipfrom.insertItemAt("", 0);
+        ddshipfrom.setSelectedIndex(0);
         
         
          ddloc.removeAllItems();
@@ -385,14 +389,12 @@ public class ShipperMaint extends javax.swing.JPanel {
         ddshipvia.setSelectedIndex(0);
         
          ddsite.removeAllItems();
-         ddshipfrom.removeAllItems();
+         
         mylist = OVData.getSiteList();
         for (String code : mylist) {
             ddsite.addItem(code);
-            ddshipfrom.addItem(code);
         }
         ddsite.setSelectedItem(OVData.getDefaultSite());
-        ddshipfrom.setSelectedItem(OVData.getDefaultSite());
         
         tbqty.setText("");
         tbdesc.setText("");

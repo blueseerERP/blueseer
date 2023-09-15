@@ -2581,7 +2581,7 @@ public class FOMaint extends javax.swing.JPanel {
         for (int j = 0; j < orddet.getRowCount(); j++) {
             if (! orddet.getValueAt(j, 3).toString().isBlank()) {
             String[] message = confirmShipperTransaction("order", orddet.getValueAt(j, 3).toString(), now);
-            updateFreightOrderStatus(freightorder.getText(),"Close");
+            updateFreightOrderStatus(freightorder.getText(),"closed");
             bsmf.MainFrame.show("committed shipper: " + orddet.getValueAt(j, 3).toString());
             }
          } 

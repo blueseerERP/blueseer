@@ -41,6 +41,7 @@ import static bsmf.MainFrame.user;
 import com.blueseer.adm.admData;
 import static com.blueseer.adm.admData.addChangeLog;
 import com.blueseer.ctr.cusData;
+import static com.blueseer.ctr.cusData.getShipAddressInfo;
 import static com.blueseer.edi.EDI.Create990;
 import static com.blueseer.frt.frtData.addCFOTransaction;
 import com.blueseer.frt.frtData.cfo_det;
@@ -48,7 +49,9 @@ import com.blueseer.frt.frtData.cfo_item;
 import com.blueseer.frt.frtData.cfo_mstr;
 import com.blueseer.frt.frtData.cfo_sos;
 import static com.blueseer.frt.frtData.deleteCFOMstr;
+import com.blueseer.frt.frtData.frt_ctrl;
 import static com.blueseer.frt.frtData.getBrokerInfo;
+import static com.blueseer.frt.frtData.getCFOCtrl;
 import static com.blueseer.frt.frtData.getCFODefaultRevision;
 import static com.blueseer.frt.frtData.getCFODet;
 import static com.blueseer.frt.frtData.getCFOItem;
@@ -59,6 +62,7 @@ import static com.blueseer.frt.frtData.getDriverPhone;
 import static com.blueseer.frt.frtData.updateCFOTransaction;
 import com.blueseer.shp.shpData;
 import static com.blueseer.shp.shpData.confirmShipperTransaction;
+import static com.blueseer.shp.shpData.getShipperHeader;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDoubleUS;
@@ -84,6 +88,7 @@ import com.blueseer.utl.DTData;
 import com.blueseer.utl.EDData;
 import static com.blueseer.utl.EDData.hasEDIXref;
 import com.blueseer.utl.IBlueSeerT;
+import static com.blueseer.utl.OVData.isValidShipper;
 import static com.blueseer.utl.OVData.updateFreightOrderStatus;
 import java.awt.Color;
 import java.awt.Component;
@@ -167,7 +172,9 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
     public boolean lock_ddshipper = false;
     public int currentstopline = 0;
     boolean isLoad = false;
+    boolean carrierPOV = true;
     public static cfo_mstr x = null;
+    public static frt_ctrl fc = null;
     public static ArrayList<cfo_det> cfodetlist = null;
     public static ArrayList<cfo_sos> soslist = null;
     public static ArrayList<cfo_item> cfoitemlist = null;
@@ -188,7 +195,8 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                 getGlobalColumnTag("addr1"), 
                 getGlobalColumnTag("city"), 
                 getGlobalColumnTag("state"), 
-                getGlobalColumnTag("zip")
+                getGlobalColumnTag("zip"),
+                getGlobalColumnTag("reference")
             });
       
     javax.swing.table.DefaultTableModel itemdetmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -469,9 +477,24 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
        
        clearStopFields();
        
+       fc = getCFOCtrl(null);
+       // note:  fc.frtc_function() = 1 for Trucking POV...and 0 for Customer POV
+       carrierPOV = (fc.frtc_function().equals("1"));
        
-       ArrayList<String[]> initDataSets = frtData.getCFOMaintInit();
        
+       ArrayList<String[]> initDataSets = frtData.getCFOMaintInit(fc.frtc_function());
+       
+       
+       
+       if (! carrierPOV) {
+           lblclient.setText(getGlobalColumnTag("carrier"));
+           lblnumber.setText(getGlobalColumnTag("shipper"));
+           btaddshipper.setVisible(true);
+       } else {
+           lblclient.setText(getGlobalColumnTag("customer"));
+           lblnumber.setText(getGlobalColumnTag("custorder"));
+           btaddshipper.setVisible(false);
+       }
        
        jTabbedPane1.removeAll();
        jTabbedPane1.add("Main", jPanelMain);
@@ -498,7 +521,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
        dcdate.setDate(new java.util.Date());
        
         tbkey.setText("");
-        tbcustfo.setText("");
+        tbnumber.setText("");
         cbhazmat.setSelected(false);
         
         ddvehicle.setSelectedIndex(0);
@@ -558,6 +581,9 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
             
             }
             if (s[0].equals("customers")) {
+              ddcust.addItem(s[1]); 
+            }
+            if (s[0].equals("carriers")) {
               ddcust.addItem(s[1]); 
             }
             if (s[0].equals("vehicle")) {
@@ -831,7 +857,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         cfo_mstr x = new cfo_mstr(null, 
                 tbkey.getText(),
                 ddcust.getSelectedItem().toString(),
-                tbcustfo.getText(),
+                tbnumber.getText(),
                 ddrevision.getSelectedItem().toString(),
                 ddservicetype.getSelectedItem().toString(),
                 ddequiptype.getSelectedItem().toString(),
@@ -1037,7 +1063,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         tbkey.setText(x.cfo_nbr());
         ddcust.setSelectedItem(x.cfo_cust());
-        tbcustfo.setText(x.cfo_custfonbr());
+        tbnumber.setText(x.cfo_custfonbr());
         ddrevision.setSelectedItem(x.cfo_revision());
         cbhazmat.setSelected(BlueSeerUtils.ConvertStringToBool(x.cfo_ishazmat()));
         cbrev.setSelected(BlueSeerUtils.ConvertStringToBool(x.cfo_defaultrev()));
@@ -1077,7 +1103,8 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
             cfod.cfod_line1(), 
             cfod.cfod_city(), 
             cfod.cfod_state(),
-            cfod.cfod_zip()
+            cfod.cfod_zip(),
+            x.cfo_custfonbr()
             });
             
             // kvstop map
@@ -1179,7 +1206,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
              "1", // shline
              ddratetype.getSelectedItem().toString(), // item
              tbkey.getText(), // order
-             tbcustfo.getText(), // cust fo
+             tbnumber.getText(), // cust fo
              currformatUS(tbcost.getText()), // netprice
              "0" // taxamt
              };
@@ -1208,7 +1235,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                  String.valueOf(cnt), // shline
                  ss[1], // item
                  tbkey.getText(), // order
-                 tbcustfo.getText(), // cust fo
+                 tbnumber.getText(), // cust fo
                  currformatDoubleUS(myamt), // netprice
                  "0" // taxamt
                  };
@@ -1511,12 +1538,12 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel15 = new javax.swing.JLabel();
         tbtrailer = new javax.swing.JTextField();
         jLabel16 = new javax.swing.JLabel();
-        jLabel77 = new javax.swing.JLabel();
+        lblnumber = new javax.swing.JLabel();
         jLabel23 = new javax.swing.JLabel();
         tbforate = new javax.swing.JTextField();
-        tbcustfo = new javax.swing.JTextField();
+        tbnumber = new javax.swing.JTextField();
         ddcust = new javax.swing.JComboBox<>();
-        jLabel5 = new javax.swing.JLabel();
+        lblclient = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         tbdrivercell = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
@@ -1555,6 +1582,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddrevision = new javax.swing.JComboBox<>();
         lblrevision = new javax.swing.JLabel();
         cbrev = new javax.swing.JCheckBox();
+        btaddshipper = new javax.swing.JButton();
         tbcharges = new javax.swing.JTextField();
         tbcost = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
@@ -1743,8 +1771,8 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         jLabel16.setText("Trailer");
 
-        jLabel77.setText("Client Order");
-        jLabel77.setName("lblshipper"); // NOI18N
+        lblnumber.setText("Client Order");
+        lblnumber.setName("lblshipper"); // NOI18N
 
         jLabel23.setText("Rate");
 
@@ -1761,8 +1789,8 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
-        jLabel5.setText("Client");
-        jLabel5.setName("lblclient"); // NOI18N
+        lblclient.setText("Client");
+        lblclient.setName("lblclient"); // NOI18N
 
         jLabel6.setText("Revision");
 
@@ -1857,6 +1885,13 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         cbrev.setText("Default");
 
+        btaddshipper.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/add.png"))); // NOI18N
+        btaddshipper.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btaddshipperActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
         jPanel12.setLayout(jPanel12Layout);
         jPanel12Layout.setHorizontalGroup(
@@ -1864,8 +1899,8 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel12Layout.createSequentialGroup()
                 .addGap(37, 37, 37)
                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel77)
+                    .addComponent(lblclient)
+                    .addComponent(lblnumber)
                     .addComponent(jLabel6)
                     .addComponent(jLabel9)
                     .addComponent(jLabel85)
@@ -1886,13 +1921,15 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                                     .addComponent(ddvehicle, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(tbtrailer, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(jPanel12Layout.createSequentialGroup()
-                                        .addComponent(tbcustfo, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(tbnumber, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(cbedi))
+                                        .addComponent(btaddshipper, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(jPanel12Layout.createSequentialGroup()
-                                        .addComponent(ddrevision, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(ddrevision, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(cbrev)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(cbedi)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(lblrevision, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1964,82 +2001,99 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         jPanel12Layout.setVerticalGroup(
             jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel12Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(65, 65, 65)
+                .addComponent(lblrevision, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(160, 160, 160))
+            .addGroup(jPanel12Layout.createSequentialGroup()
                 .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbclientname, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(ddcust, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel5)
-                        .addComponent(ddorderstatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel36)
-                        .addComponent(ddratetype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel31)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbcustfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel77)
-                    .addComponent(jLabel15)
-                    .addComponent(tbforate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel23)
-                    .addComponent(dddriver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cbderivedrate)
-                    .addComponent(cbedi))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel6)
-                        .addComponent(tbdrivercell, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel7)
-                        .addComponent(tbmileage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel32)
-                        .addComponent(cbderivedmiles)
-                        .addComponent(ddrevision, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(cbrev))
-                    .addComponent(lblrevision, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbtotweight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel33)
-                    .addComponent(ddservicetype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9)
-                    .addComponent(ddfotype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel24)
-                    .addComponent(cbderivedweight))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbdriverrate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel37)
-                    .addComponent(cbstandard)
-                    .addComponent(ddequiptype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel85)
-                    .addComponent(ddbroker, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel28))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel34)
-                        .addComponent(ddvehicle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel101)
-                        .addComponent(tbbrokercontact, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel29))
-                    .addComponent(dcorddate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(dcconfdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(tbbrokercell, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel30)
-                        .addComponent(jLabel35))
-                    .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(tbtrailer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel16)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cbhazmat)
-                    .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel40)))
-                .addContainerGap(29, Short.MAX_VALUE))
+                    .addGroup(jPanel12Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lbclientname, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(ddcust, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblclient)
+                                .addComponent(ddorderstatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel36)
+                                .addComponent(ddratetype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel31)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(tbnumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblnumber)
+                                .addComponent(jLabel15)
+                                .addComponent(tbforate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel23)
+                                .addComponent(dddriver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(cbderivedrate))
+                            .addComponent(btaddshipper, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(ddrevision, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel6))
+                            .addComponent(cbrev)
+                            .addComponent(cbedi))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tbtotweight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel33)
+                            .addComponent(ddservicetype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel9)
+                            .addComponent(ddfotype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel24)
+                            .addComponent(cbderivedweight))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tbdriverrate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel37)
+                            .addComponent(cbstandard)
+                            .addComponent(ddequiptype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel85)
+                            .addComponent(ddbroker, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel28))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel34)
+                                .addComponent(ddvehicle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel101)
+                                .addComponent(tbbrokercontact, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel29))
+                            .addComponent(dcorddate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(dcconfdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(tbbrokercell, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel30)
+                                .addComponent(jLabel35))
+                            .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(tbtrailer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel16)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cbhazmat)
+                            .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel40))))
+                    .addGroup(jPanel12Layout.createSequentialGroup()
+                        .addGap(65, 65, 65)
+                        .addComponent(cbderivedmiles))
+                    .addGroup(jPanel12Layout.createSequentialGroup()
+                        .addGap(69, 69, 69)
+                        .addComponent(jLabel32))
+                    .addGroup(jPanel12Layout.createSequentialGroup()
+                        .addGap(66, 66, 66)
+                        .addComponent(tbmileage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel12Layout.createSequentialGroup()
+                        .addGap(69, 69, 69)
+                        .addComponent(jLabel7))
+                    .addGroup(jPanel12Layout.createSequentialGroup()
+                        .addGap(66, 66, 66)
+                        .addComponent(tbdrivercell, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
 
         jLabel13.setText("Charges");
@@ -2819,7 +2873,8 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
             tbaddr1.getText(), 
             tbcity.getText(), 
             ddstate.getSelectedItem().toString(),
-            tbzip.getText()
+            tbzip.getText(),
+            tbnumber.getText()
          });
         
         
@@ -2981,8 +3036,8 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
     private void btcommitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcommitActionPerformed
         java.util.Date now = new java.util.Date();
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-        int shipperid = OVData.getNextNbr("shipper");   
-         
+        if (carrierPOV) {
+        int shipperid = OVData.getNextNbr("shipper"); 
         shpData.ship_mstr sh = shpData.createShipMstrJRT(
                              String.valueOf(shipperid), 
                               ddsite.getSelectedItem().toString(),
@@ -2990,7 +3045,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                               ddcust.getSelectedItem().toString(),
                               ddcust.getSelectedItem().toString(),
                               tbkey.getText(),
-                              tbcustfo.getText().replace("'", ""),  // po
+                              tbnumber.getText().replace("'", ""),  // po
                               tbkey.getText().replace("'", ""),  // ref
                               dfdate.format(now), // delivery date
                               dfdate.format(now), // ord date
@@ -3005,9 +3060,20 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
        // shpData.updateShipperSAC(String.valueOf(shipperid));
         
         String[] message = confirmShipperTransaction("freight", String.valueOf(shipperid), now);
-            updateFreightOrderStatus(tbkey.getText(),"closed");
-            bsmf.MainFrame.show("committed freight order to invoice number: " + String.valueOf(shipperid));
-        
+        updateFreightOrderStatus(tbkey.getText(),"closed");
+        bsmf.MainFrame.show("committed freight order to invoice number: " + String.valueOf(shipperid));
+        } else {
+            for (int j = 0; j < orddet.getRowCount(); j++) {
+                if (orddet.getValueAt(j, 1).toString().equals("Load")) {
+                    continue;
+                }
+                if (! orddet.getValueAt(j, 8).toString().isBlank()) {
+                String[] message = confirmShipperTransaction("order", orddet.getValueAt(j, 8).toString(), now);
+                updateFreightOrderStatus(tbkey.getText(),"closed");
+                bsmf.MainFrame.show("committed shipper: " + orddet.getValueAt(j, 8).toString());
+                }
+            } 
+        }
         
         
     }//GEN-LAST:event_btcommitActionPerformed
@@ -3372,17 +3438,17 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     private void cbderivedrateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbderivedrateActionPerformed
         if (cbderivedrate.isSelected()) {
-            tbforate.setEnabled(true);
-        } else {
             tbforate.setEnabled(false);
+        } else {
+            tbforate.setEnabled(true);
         }
     }//GEN-LAST:event_cbderivedrateActionPerformed
 
     private void cbderivedmilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbderivedmilesActionPerformed
         if (cbderivedmiles.isSelected()) {
-            tbmileage.setEnabled(true);
-        } else {
             tbmileage.setEnabled(false);
+        } else {
+            tbmileage.setEnabled(true);
         }
     }//GEN-LAST:event_cbderivedmilesActionPerformed
 
@@ -3454,9 +3520,146 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
     }//GEN-LAST:event_ddorderstatusActionPerformed
 
+    private void btaddshipperActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddshipperActionPerformed
+        String[] sh = getShipperHeader(tbnumber.getText());
+        String[] wh = OVData.getWareHouseAddressElements(sh[14]);
+        
+        if (tbnumber.getText().isBlank() || ! isValidShipper(tbnumber.getText())) {
+            bsmf.MainFrame.show("invalid shipper");
+            return;
+        }
+        
+        
+        String datestr = "0000-00-00";
+        double weight = 0.00;
+        double ladingqty = 0.00;
+        double pallets = 0.00;
+        
+        
+       
+        Enumeration<TableColumn> en = orddet.getColumnModel().getColumns();
+         while (en.hasMoreElements()) {
+             TableColumn tc = en.nextElement();
+             tc.setCellRenderer(new SomeRenderer()); 
+         }
+        
+         // do Load first...from info in sh_shipfrom
+        currentstopline = orddet.getRowCount() + 1;
+        
+        myorddetmodel.addRow(new Object[]{
+            currentstopline, 
+            "Load", 
+            datestr,
+            wh[1], 
+            wh[2], 
+            wh[5], 
+            wh[6],
+            wh[7],
+            tbnumber.getText()
+         });
+        
+        String[] stoparray = new String[]{String.valueOf(currentstopline), 
+            String.valueOf(currentstopline), 
+            "Load", 
+            wh[0],
+            wh[1], 
+            wh[2],  
+            wh[3], 
+            wh[4], 
+            wh[5], 
+            wh[6],
+            wh[7],
+            wh[8],
+            "", // phone
+            "", // email
+            "", // contact
+            "", // misc
+            "", // remarks
+            "", // ref
+            "", // ordnum
+            String.valueOf(weight), // weight
+            String.valueOf(pallets), // pallets
+            String.valueOf(ladingqty), // ladingqty
+            "", // hazmat
+            dddatetype.getSelectedItem().toString(),
+            datestr,
+            ddtimetype1.getSelectedItem().toString(),
+            ddtime1.getSelectedItem().toString(),
+            ddtimetype2.getSelectedItem().toString(),
+            ddtime2.getSelectedItem().toString(),
+            ddtimezone.getSelectedItem().toString(),
+            tbstoprate.getText(),
+            tbstopmiles.getText()
+         };
+        kvstop.put(String.valueOf(currentstopline), stoparray);
+        isLoad = true;
+        ddstopsequence.addItem("STOP: " + currentstopline);
+        isLoad = false; 
+         
+        // Now shipto of shipper...
+        String[] st = getShipAddressInfo(sh[0], sh[1]);
+        currentstopline = orddet.getRowCount() + 1;
+        
+        myorddetmodel.addRow(new Object[]{
+            currentstopline, 
+            "Unload Complete", 
+            datestr,
+            st[1], 
+            st[2], 
+            st[5], 
+            st[6],
+            st[7],
+            tbnumber.getText()
+         });
+        
+            stoparray = new String[]{String.valueOf(currentstopline), 
+            String.valueOf(currentstopline), 
+            "Unload Complete", 
+            st[0],
+            st[1], 
+            st[2],  
+            st[3], 
+            st[4], 
+            st[5], 
+            st[6],
+            st[7],
+            st[8],
+            "", // phone
+            "", // email
+            "", // contact
+            "", // misc
+            sh[6], // remarks
+            sh[7], // ref
+            sh[2], // ordnum
+            String.valueOf(weight), // weight
+            String.valueOf(pallets), // pallets
+            String.valueOf(ladingqty), // ladingqty
+            "", // hazmat
+            dddatetype.getSelectedItem().toString(),
+            datestr,
+            ddtimetype1.getSelectedItem().toString(),
+            ddtime1.getSelectedItem().toString(),
+            ddtimetype2.getSelectedItem().toString(),
+            ddtime2.getSelectedItem().toString(),
+            ddtimezone.getSelectedItem().toString(),
+            tbstoprate.getText(),
+            tbstopmiles.getText()
+         };
+        kvstop.put(String.valueOf(currentstopline), stoparray);
+        
+        isLoad = true;
+        ddstopsequence.addItem("STOP: " + currentstopline);
+        isLoad = false;
+        
+        summarize();
+        
+        
+    }//GEN-LAST:event_btaddshipperActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btadditem;
+    private javax.swing.JButton btaddshipper;
     private javax.swing.JButton btaddstop;
     private javax.swing.JButton btclear;
     private javax.swing.JButton btclearstop;
@@ -3545,11 +3748,9 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JLabel jLabel41;
     private javax.swing.JLabel jLabel42;
     private javax.swing.JLabel jLabel43;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel76;
-    private javax.swing.JLabel jLabel77;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel82;
     private javax.swing.JLabel jLabel83;
@@ -3580,6 +3781,8 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel lbclientname;
+    private javax.swing.JLabel lblclient;
+    private javax.swing.JLabel lblnumber;
     private javax.swing.JLabel lblrevision;
     private javax.swing.JLabel lblstatus;
     private javax.swing.JLabel lblstop;
@@ -3594,7 +3797,6 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JTextField tbcity;
     private javax.swing.JTextField tbcontact;
     private javax.swing.JTextField tbcost;
-    private javax.swing.JTextField tbcustfo;
     private javax.swing.JTextField tbdrivercell;
     private javax.swing.JTextField tbdriverrate;
     private javax.swing.JTextField tbemail;
@@ -3603,6 +3805,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JTextField tbmileage;
     private javax.swing.JTextField tbmisc;
     private javax.swing.JTextField tbname;
+    private javax.swing.JTextField tbnumber;
     private javax.swing.JTextField tbphone;
     private javax.swing.JTextField tbremarks;
     private javax.swing.JTextField tbsacamt;

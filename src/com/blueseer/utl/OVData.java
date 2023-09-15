@@ -11174,7 +11174,44 @@ return autosource;
         return isgood;
         
     }
-         
+    
+    public static boolean isValidShipper(String nbr) {
+             
+       boolean isValid = false;
+        try{
+           
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                res = st.executeQuery("select sh_id from ship_mstr where sh_id = " + "'" + nbr + "'" +
+                        ";");
+               while (res.next()) {
+                    isValid = true;
+                }
+               
+           }
+            catch (SQLException s){
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return isValid;
+        
+    }
+    
+    
     public static boolean isValidFreightOrderNbr(String nbr) {
              
        boolean isgood = false;
@@ -14553,7 +14590,6 @@ return mystring;
     /* start ar related functions */
     public static Date getDueDateFromTerms(Date effdate, String terms) {
            Date duedate = new Date();
-           duedate = null;
            
            try{
             
@@ -14587,7 +14623,7 @@ return mystring;
         catch (Exception e){
             MainFrame.bslog(e);
         }
-                   
+              
            return duedate;           
        }
     

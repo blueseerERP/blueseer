@@ -1062,7 +1062,7 @@ public class frtData {
         return lines;
     }
     
-    public static ArrayList<String[]> getCFOMaintInit() {
+    public static ArrayList<String[]> getCFOMaintInit(String appfunc) {
         String defaultsite = "";
         ArrayList<String[]> lines = new ArrayList<String[]>();
         try{
@@ -1078,14 +1078,23 @@ public class frtData {
         // allocate, custitemonly, site, currency, sites, currencies, uoms, 
         // states, warehouses, locations, customers, taxcodes, carriers, statuses    
             
-            res = st.executeQuery("select cm_code from cm_mstr order by cm_code;");
-            while (res.next()) {
-                String[] s = new String[2];
-               s[0] = "customers";
-               s[1] = res.getString("cm_code");
-               lines.add(s);
+            if (appfunc != null && appfunc.equals("1")) { // assumes trucking industry pov
+                res = st.executeQuery("select cm_code from cm_mstr order by cm_code;");
+                while (res.next()) {
+                    String[] s = new String[2];
+                   s[0] = "customers";
+                   s[1] = res.getString("cm_code");
+                   lines.add(s);
+                }
+            } else { // customer industry POV
+               res = st.executeQuery("select car_id from car_mstr order by car_id;");
+                while (res.next()) {
+                    String[] s = new String[2];
+                   s[0] = "carriers";
+                   s[1] = res.getString("car_id");
+                   lines.add(s);
+                } 
             }
-        
             res = st.executeQuery("select site_site from site_mstr;");
             while (res.next()) {
                 String[] s = new String[2];
@@ -1139,13 +1148,6 @@ public class frtData {
                lines.add(s);
             }
             
-            res = st.executeQuery("select car_id from car_mstr order by car_id;");
-            while (res.next()) {
-                String[] s = new String[2];
-               s[0] = "carriers";
-               s[1] = res.getString("car_id");
-               lines.add(s);
-            }
             
             res = st.executeQuery("select veh_id from veh_mstr order by veh_id;");
             while (res.next()) {
