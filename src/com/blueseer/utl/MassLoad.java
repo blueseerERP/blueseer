@@ -2563,6 +2563,25 @@ public class MassLoad extends javax.swing.JPanel {
     
     
     
+    public String[] processSQLCode (File myfile) throws FileNotFoundException, IOException {
+            String[] m = new String[2];
+            ArrayList<String> list = new ArrayList<String>();
+            BufferedReader fsr = new BufferedReader(new FileReader(myfile));
+            String line = "";
+            while ((line = fsr.readLine()) != null) {
+                list.add(line);
+            }
+            fsr.close();
+            ArrayList<String> x = OVData.runSQLCode(list);
+           if(x.isEmpty()) { 
+               m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1065)};
+           } else {
+               m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
+           }
+           
+             return m;
+    }
+        
     public static ArrayList<String> cleanList(ArrayList<String> list, ArrayList<String> checklist, String delim) {
         ArrayList<String> newlist = new ArrayList<String>();
         int j = 0;
@@ -2789,6 +2808,9 @@ public class MassLoad extends javax.swing.JPanel {
                }
                if (x.compareTo("Fulfillment - Shopify") == 0) {
                  m = processShopifyFulfillmentCSV(myfile);
+               }
+               if (x.compareTo("SQL Code") == 0) {
+                 m = processSQLCode(myfile);
                }
               
          }
@@ -3043,7 +3065,7 @@ public class MassLoad extends javax.swing.JPanel {
         jLabel1.setText("Master Table:");
         jLabel1.setName("lblid"); // NOI18N
 
-        ddtable.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item Master", "BOM Master", "Customer Master", "Customer ShipTo Master", "Customer Xref", "Customer Price List", "Vendor Master", "Vendor Xref", "Vendor Price List", "Inventory Adjustment", "GL Account Balances", "Generic Code", "EDI Partners", "EDI Partner Transactions", "EDI Document Structures", "Carrier Master", "Routing Master", "WorkCenter Master", "Order - Shopify", "Fulfillment - Shopify" }));
+        ddtable.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item Master", "BOM Master", "Customer Master", "Customer ShipTo Master", "Customer Xref", "Customer Price List", "Vendor Master", "Vendor Xref", "Vendor Price List", "Inventory Adjustment", "GL Account Balances", "Generic Code", "EDI Partners", "EDI Partner Transactions", "EDI Document Structures", "Carrier Master", "Routing Master", "WorkCenter Master", "Order - Shopify", "Fulfillment - Shopify", "SQL Code" }));
         ddtable.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ddtableActionPerformed(evt);
