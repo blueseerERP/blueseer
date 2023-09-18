@@ -265,12 +265,10 @@ public class MassLoad extends javax.swing.JPanel {
    
     
     public void initvars(String[] arg) {
+      setComponentDefaultValues();
       if (! ddtable.getItemAt(0).equals("")) {
           ddtable.insertItemAt("", 0);
       }  
-      tbdelimiter.setText(":");
-      cbignoreheader.setSelected(false);
-      tacomments.setText("");
     }
     
     
@@ -2821,7 +2819,7 @@ public class MassLoad extends javax.swing.JPanel {
         ArrayList<String> list = new ArrayList<String>();
         String[] lines = tacomments.getText().split("\n",-1);
         for (String s : lines) {
-            if (! s.isBlank() && ! s.trim().startsWith("sqlres:") ) {
+            if (! s.isBlank() && ! s.trim().startsWith("sqlres:") && ! s.trim().startsWith("[SQ")) {
             list.add(s);
             }
         }
@@ -2835,7 +2833,6 @@ public class MassLoad extends javax.swing.JPanel {
         if(! x.isEmpty()) { 
             for (String r : x) {
                 tacomments.append(r);
-                tacomments.append("\n");
             }
            }
            
@@ -3202,10 +3199,12 @@ public class MassLoad extends javax.swing.JPanel {
     }//GEN-LAST:event_btuploadActionPerformed
 
     private void ddtableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddtableActionPerformed
-        tacomments.setText("");
-        btrunsql.setVisible(false);
-        if (ddtable.getSelectedItem().toString().equals(("SQL Code"))) {
-            btrunsql.setVisible(true);
+        if (! isLoad) {
+            tacomments.setText("");
+            btrunsql.setVisible(false);
+            if (ddtable.getSelectedItem().toString().equals(("SQL Code"))) {
+                btrunsql.setVisible(true);
+            }
         }
     }//GEN-LAST:event_ddtableActionPerformed
 
