@@ -201,6 +201,7 @@ public class MassLoad extends javax.swing.JPanel {
     
     public void setComponentDefaultValues() {
        isLoad = true;
+        btrunsql.setVisible(false);
         tacomments.setText("");
         tbdelimiter.setText(":");
         cbignoreheader.setSelected(false);
@@ -232,6 +233,8 @@ public class MassLoad extends javax.swing.JPanel {
             
             if (type.equals("testdata")) {
             message = loadTestData();    
+            } else if (type.equals("runsql")) {
+            message = runsql();
             } else {
             message = processfile(x, y);
             }
@@ -2563,23 +2566,16 @@ public class MassLoad extends javax.swing.JPanel {
     
     
     
-    public String[] processSQLCode (File myfile) throws FileNotFoundException, IOException {
+    public void processSQLCode (File myfile) throws FileNotFoundException, IOException {
             String[] m = new String[2];
             ArrayList<String> list = new ArrayList<String>();
             BufferedReader fsr = new BufferedReader(new FileReader(myfile));
             String line = "";
             while ((line = fsr.readLine()) != null) {
-                list.add(line);
+                tacomments.append(line);
+                tacomments.append("\n");
             }
             fsr.close();
-            ArrayList<String> x = OVData.runSQLCode(list);
-           if(x.isEmpty()) { 
-               m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1065)};
-           } else {
-               m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
-           }
-           
-             return m;
     }
         
     public static ArrayList<String> cleanList(ArrayList<String> list, ArrayList<String> checklist, String delim) {
@@ -2810,13 +2806,40 @@ public class MassLoad extends javax.swing.JPanel {
                  m = processShopifyFulfillmentCSV(myfile);
                }
                if (x.compareTo("SQL Code") == 0) {
-                 m = processSQLCode(myfile);
+                 btrunsql.setVisible(true);
+                 processSQLCode(myfile);
                }
               
          }
          
                   
          return m; 
+    }
+    
+    public String[] runsql() {
+        String[] m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1065)};
+        ArrayList<String> list = new ArrayList<String>();
+        String[] lines = tacomments.getText().split("\n",-1);
+        for (String s : lines) {
+            if (! s.isBlank() && ! s.trim().startsWith("sqlres:") ) {
+            list.add(s);
+            }
+        }
+        tacomments.setText("");
+        for (String r : list) {
+            tacomments.append(r);
+            tacomments.append("\n");
+        }
+        ArrayList<String> x = OVData.runSQLCode(list);
+        tacomments.append("\n");   
+        if(! x.isEmpty()) { 
+            for (String r : x) {
+                tacomments.append(r);
+                tacomments.append("\n");
+            }
+           }
+           
+             return m;
     }
     
     public File getfile() {
@@ -3049,6 +3072,7 @@ public class MassLoad extends javax.swing.JPanel {
         tbdelimiter = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         cbignoreheader = new javax.swing.JCheckBox();
+        btrunsql = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -3100,6 +3124,13 @@ public class MassLoad extends javax.swing.JPanel {
 
         cbignoreheader.setText("Ignore Header Row");
 
+        btrunsql.setText("Execute SQL");
+        btrunsql.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btrunsqlActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -3128,7 +3159,10 @@ public class MassLoad extends javax.swing.JPanel {
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(cbignoreheader)
-                                    .addComponent(bttestdata))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(bttestdata)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btrunsql)))
                                 .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
@@ -3151,7 +3185,9 @@ public class MassLoad extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cbignoreheader)
                 .addGap(9, 9, 9)
-                .addComponent(bttestdata)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(bttestdata)
+                    .addComponent(btrunsql))
                 .addContainerGap())
         );
 
@@ -3167,6 +3203,10 @@ public class MassLoad extends javax.swing.JPanel {
 
     private void ddtableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddtableActionPerformed
         tacomments.setText("");
+        btrunsql.setVisible(false);
+        if (ddtable.getSelectedItem().toString().equals(("SQL Code"))) {
+            btrunsql.setVisible(true);
+        }
     }//GEN-LAST:event_ddtableActionPerformed
 
     private void btdescribeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdescribeActionPerformed
@@ -3183,8 +3223,13 @@ public class MassLoad extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_bttestdataActionPerformed
 
+    private void btrunsqlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrunsqlActionPerformed
+        executeTask("", null, "runsql");
+    }//GEN-LAST:event_btrunsqlActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btdescribe;
+    private javax.swing.JButton btrunsql;
     private javax.swing.JButton bttestdata;
     private javax.swing.JButton btupload;
     private javax.swing.JCheckBox cbignoreheader;

@@ -2228,7 +2228,30 @@ public class OVData {
             ResultSet res = null;
             try {
                 for (String rec : list) {
+                    if (rec.isBlank() || rec.trim().startsWith("#")) {
+                        continue;
+                    }
+                    if (rec.trim().startsWith("select")) {
+                    res = st.executeQuery(rec);
+                    ResultSetMetaData meta = res.getMetaData();
+                    
+                    int colCount = meta.getColumnCount();
+                        while (res.next()) {
+                            StringBuilder sb = new StringBuilder();
+                            sb.append("sqlres:  ");
+                            for (int col=1; col <= colCount; col++) {
+                                Object value = res.getObject(col);
+                                if (value != null) 
+                                {
+                                    sb.append(value.toString()).append(",");
+                                }
+                            }
+                            sb.append("\n");
+                            x.add(sb.toString());
+                        }
+                    } else {
                     st.executeUpdate(rec);
+                    }
                 }
             } 
             catch (SQLException s) {
