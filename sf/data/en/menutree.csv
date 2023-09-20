@@ -29,7 +29,7 @@ VendorMenu,VenRptPicker,7,JMenuItem,Vendor Report Selector,,,,1,1
 VendorMenu,VendControl,8,JMenuItem,Vendor Control,,,,1,1
 Freight,CFOMaint,1,JMenuItem,Freight Order Maintenance,,,,1,1
 Freight,CFOBrowse,2,JMenuItem,Freight Order Report,,,,1,1
-Freight,CFOSchedule,3,JMenuItem,Freight Order Schedule,,,,1,1
+Freight,CFODriverWindow,3,JMenuItem,Order/Driver Schedule,,,,1,1
 Freight,VehicleMaint,4,JMenuItem,Vehicle Management,,,,1,1
 Freight,VehicleBrowse,5,JMenuItem,Vehicle Browse,,1,,1,1
 Freight,DriverMaint,6,JMenuItem,Driver Management,,,,1,1

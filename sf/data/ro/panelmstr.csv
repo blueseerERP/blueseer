@@ -29,7 +29,7 @@ com.blueseer.frt.VehicleMaint,,1
 com.blueseer.frt.DriverMaint,,1
 com.blueseer.frt.BrokerMaint,,1
 com.blueseer.frt.CFOBrowse,,1
-com.blueseer.frt.CFOSchedule,,1
+com.blueseer.frt.CFODriverWindow,,1
 com.blueseer.frt.CFOControl,,1
 com.blueseer.ctr.POSBrowse,,1
 com.blueseer.ctr.POSControl,,1

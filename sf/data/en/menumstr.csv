@@ -309,7 +309,7 @@ SchemaBrowse,Schema Details of Database BSDB,com.blueseer.utl.ReportPanel,JMenuI
 CronBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,cronb
 PKSBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,pksb
 CFOBrowse,,com.blueseer.frt.CFOBrowse,JMenuItem,cfob
-CFOSchedule,,com.blueseer.frt.CFOSchedule,JMenuItem,cfos
+CFODriverWindow,,com.blueseer.frt.CFODriverWindow,JMenuItem,cfow
 CFOControl,,com.blueseer.frt.CFOControl,JMenuItem,cfoc
 VehicleBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,vehb
 DriverBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,drvb
