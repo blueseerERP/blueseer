@@ -842,8 +842,8 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
       
     public String[] getRecord(String[] key) {
        x = getCFOMstr(key);
-       cfodetlist = getCFODet(key[0], key[1]); 
-       cfoitemlist = getCFOItem(key[0], key[1]); 
+       cfodetlist = getCFODet(key[0], x.cfo_revision()); 
+       cfoitemlist = getCFOItem(key[0], x.cfo_revision()); 
         return x.m();
     }
     

@@ -94,20 +94,17 @@ public class CFODriverWindow extends javax.swing.JPanel {
      String enddate = "";
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{getGlobalColumnTag("select"), 
-                            getGlobalColumnTag("detail"), 
-                            getGlobalColumnTag("number"), 
-                            getGlobalColumnTag("revision"), 
+                            getGlobalColumnTag("number"),  
                             getGlobalColumnTag("status"), 
-                            getGlobalColumnTag("code"), 
                             getGlobalColumnTag("name"),
-                            getGlobalColumnTag("truckid"), 
                             getGlobalColumnTag("driverid"),
                             getGlobalColumnTag("type"),
+                            getGlobalColumnTag("miles"),
                             getGlobalColumnTag("cost")})
             {
                       @Override  
                       public Class getColumnClass(int col) {  
-                        if (col == 0 || col == 1)       
+                        if (col == 0)       
                             return ImageIcon.class;  
                         else return String.class;  //other columns accept String values  
                       }  
@@ -399,6 +396,8 @@ public class CFODriverWindow extends javax.swing.JPanel {
         tbtonbr = new javax.swing.JTextField();
         dcFrom = new com.toedter.calendar.JDateChooser();
         jLabel1 = new javax.swing.JLabel();
+        ddweek = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         lbllines = new javax.swing.JLabel();
@@ -485,20 +484,29 @@ public class CFODriverWindow extends javax.swing.JPanel {
 
         jLabel1.setText("Date");
 
+        ddweek.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "week1", "week2", "week3", "week4" }));
+
+        jLabel2.setText("Week");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap(33, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addContainerGap(22, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(dcFrom, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(jLabel6))
-                    .addComponent(jLabel3))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(ddweek, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel3)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(tbtonbr)
@@ -536,7 +544,9 @@ public class CFODriverWindow extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
-                            .addComponent(tbtonbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(tbtonbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ddweek, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2)))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(fromkeypartner)
@@ -600,7 +610,7 @@ public class CFODriverWindow extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 114, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 121, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(labeldettotal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -641,62 +651,52 @@ try {
                     return;
                 }
                 
-                Date date = dcFrom.getDate();
+                String[] days = new String[7];
+                String[] daysh = new String[7];
+                String[] daysv = new String[7];
+                
+                
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 DateFormat hf = new SimpleDateFormat("EEE-MM-dd");
                 Calendar cal = Calendar.getInstance();
+                
+                Date date = dcFrom.getDate();
                 cal.setTime(date);
+                if (ddweek.getSelectedItem().toString().equals("week2")) {
+                  cal.add(Calendar.DATE,7);  
+                }
+                if (ddweek.getSelectedItem().toString().equals("week3")) {
+                  cal.add(Calendar.DATE,14);  
+                }
+                if (ddweek.getSelectedItem().toString().equals("week4")) {
+                  cal.add(Calendar.DATE,21);  
+                }
+                
                 startdate = dfdate.format(cal.getTime());
-                String d1 = dfdate.format(cal.getTime());
-                String d1h = hf.format(cal.getTime());
-                String d1v = "0";
+                for (int v = 0; v < days.length; v++) {
+                    if (v == 0) {
+                      days[v] = dfdate.format(cal.getTime()); // startdate
+                      daysh[v] = hf.format(cal.getTime());
+                      daysv[v] = "open";
+                      continue;
+                    }
+                    cal.add(Calendar.DATE,1);
+                    days[v] = dfdate.format(cal.getTime());
+                    daysh[v] = hf.format(cal.getTime());
+                    daysv[v] = "open";
+                }
                 
-                // now day 2 of week x  
-                cal.add(Calendar.DATE,1);
-                String d2 = dfdate.format(cal.getTime());
-                String d2h = hf.format(cal.getTime());
-                String d2v = "0";
-                
-                // now day 3 of week x
-                cal.add(Calendar.DATE,1);
-                String d3 = dfdate.format(cal.getTime());
-                String d3h = hf.format(cal.getTime());
-                String d3v = "0";
-                
-                // now day 4 of week x
-                cal.add(Calendar.DATE,1);
-                String d4 = dfdate.format(cal.getTime());
-                String d4h = hf.format(cal.getTime());
-                String d4v = "0";
-                
-                // now day 5 of week x
-                cal.add(Calendar.DATE,1);
-                String d5 = dfdate.format(cal.getTime());
-                String d5h = hf.format(cal.getTime());
-                String d5v = "0";
-                
-                // now day 6 of week x
-                cal.add(Calendar.DATE,1);
-                String d6 = dfdate.format(cal.getTime());
-                String d6h = hf.format(cal.getTime());
-                String d6v = "0";
-                
-                // now day 7 of week x
-                cal.add(Calendar.DATE,1);
-                String d7 = dfdate.format(cal.getTime());
-                String d7h = hf.format(cal.getTime());
-                String d7v = "0";
                 enddate = dfdate.format(cal.getTime());
                 
                 
                 
-                tabledetail.getColumnModel().getColumn(3).setHeaderValue(d1h);
-                tabledetail.getColumnModel().getColumn(4).setHeaderValue(d2h);
-                tabledetail.getColumnModel().getColumn(5).setHeaderValue(d3h);
-                tabledetail.getColumnModel().getColumn(6).setHeaderValue(d4h);
-                tabledetail.getColumnModel().getColumn(7).setHeaderValue(d5h);
-                tabledetail.getColumnModel().getColumn(8).setHeaderValue(d6h);
-                tabledetail.getColumnModel().getColumn(9).setHeaderValue(d7h);
+                tabledetail.getColumnModel().getColumn(3).setHeaderValue(daysh[0]);
+                tabledetail.getColumnModel().getColumn(4).setHeaderValue(daysh[1]);
+                tabledetail.getColumnModel().getColumn(5).setHeaderValue(daysh[2]);
+                tabledetail.getColumnModel().getColumn(6).setHeaderValue(daysh[3]);
+                tabledetail.getColumnModel().getColumn(7).setHeaderValue(daysh[4]);
+                tabledetail.getColumnModel().getColumn(8).setHeaderValue(daysh[5]);
+                tabledetail.getColumnModel().getColumn(9).setHeaderValue(daysh[6]);
                 
                 tabledetail.getTableHeader().repaint();
     
@@ -723,7 +723,6 @@ try {
         
               tablereport.setModel(mymodel);
               tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-              tablereport.getColumnModel().getColumn(1).setMaxWidth(100);
               
               modeldriver.setNumRows(0);
               tabledetail.setModel(modeldriver);
@@ -763,12 +762,12 @@ try {
                      }
                      tc.setCellRenderer(new CFODriverWindow.SomeRenderer());
                  }
-                 tablereport.getColumnModel().getColumn(10).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+                 tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
               
              if (! ddstatus.getSelectedItem().toString().isBlank()) {    
              
                 if (carrierPOV) { 
-                res = st.executeQuery("select cfo_nbr, cfo_revision, cfo_orderstatus, cfo_cust, " +
+                res = st.executeQuery("select cfo_nbr, cfo_revision, cfo_orderstatus, cfo_cust, cfo_mileage, " +
                       " cfo_truckid, cfo_driver, cfo_ratetype, cfo_cost, cm_name " +
                          " from cfo_mstr inner join cm_mstr on cm_code = cfo_cust where " +
                         " cfo_cust >= " + "'" + custfrom + "'" + " AND " +
@@ -778,7 +777,7 @@ try {
                         " cfo_orderstatus = " + "'" + ddstatus.getSelectedItem().toString() + "'" +
                         " order by cfo_nbr ;");
                 } else {
-                    res = st.executeQuery("select cfo_nbr, cfo_revision, cfo_orderstatus, cfo_cust, " +
+                    res = st.executeQuery("select cfo_nbr, cfo_revision, cfo_orderstatus, cfo_cust, cfo_mileage, " +
                       " cfo_truckid, cfo_driver, cfo_ratetype, cfo_cost, car_name " +
                          " from cfo_mstr inner join car_mstr on car_id = cfo_cust where " +
                         " cfo_cust >= " + "'" + custfrom + "'" + " AND " +
@@ -791,7 +790,7 @@ try {
              } else {
                  
                 if (carrierPOV) {  
-                res = st.executeQuery("select cfo_nbr, cfo_revision, cfo_orderstatus, cfo_cust, " +
+                res = st.executeQuery("select cfo_nbr, cfo_revision, cfo_orderstatus, cfo_cust, cfo_mileage, " +
                       " cfo_truckid, cfo_driver, cfo_ratetype, cfo_cost, cm_name " +
                          " from cfo_mstr inner join cm_mstr on cm_code = cfo_cust where " +
                         " cfo_cust >= " + "'" + custfrom + "'" + " AND " +
@@ -800,7 +799,7 @@ try {
                         " cfo_nbr <= " + "'" + nbrto + "'" + 
                         " order by cfo_nbr ;"); 
                 } else {
-                    res = st.executeQuery("select cfo_nbr, cfo_revision, cfo_orderstatus, cfo_cust, " +
+                    res = st.executeQuery("select cfo_nbr, cfo_revision, cfo_orderstatus, cfo_cust, cfo_mileage, " +
                       " cfo_truckid, cfo_driver, cfo_ratetype, cfo_cost, car_name " +
                          " from cfo_mstr inner join car_mstr on car_id = cfo_cust where " +
                         " cfo_cust >= " + "'" + custfrom + "'" + " AND " +
@@ -816,27 +815,23 @@ try {
                         dol = dol + total;
                         i++;      
                         if (carrierPOV) {  
-                        mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, BlueSeerUtils.clickbasket, 
+                        mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, 
                                 res.getString("cfo_nbr"),
-                                res.getString("cfo_revision"),
                                 res.getString("cfo_orderstatus"),
-                                res.getString("cfo_cust"),
                                 res.getString("cm_name"),
-                                res.getString("cfo_truckid"),
                                 res.getString("cfo_driver"),
                                 res.getString("cfo_ratetype"),
+                                res.getString("cfo_mileage"),
                                 bsParseDouble(currformatDouble(total))
                             });
                         } else {
-                            mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, BlueSeerUtils.clickbasket, 
+                            mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, 
                                 res.getString("cfo_nbr"),
-                                res.getString("cfo_revision"),
                                 res.getString("cfo_orderstatus"),
-                                res.getString("cfo_cust"),
                                 res.getString("car_name"),
-                                res.getString("cfo_truckid"),
                                 res.getString("cfo_driver"),
                                 res.getString("cfo_ratetype"),
+                                res.getString("cfo_mileage"),
                                 bsParseDouble(currformatDouble(total))
                                 });
                         }
@@ -847,7 +842,9 @@ try {
                     " (select cfo_driver, cfo_nbr, cfo_orderstatus, (select cfod_date from cfo_det where cfod_nbr = cfo_nbr and " +
                     " cfod_datetype like '%Pickup%') as date1, (select cfod_date from cfo_det where cfod_nbr = cfo_nbr and cfod_datetype like '%Delivery%') as date2 " +
                     " from cfo_mstr inner join cfo_det on cfod_nbr = cfo_nbr and cfod_revision = cfo_revision " +
-                    " where cfod_date >= '2023-09-19' and cfod_date <= '2023-09-27' and cfod_datetype like '%Pickup%' ) x  " +
+                    " where cfod_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" + 
+                    " and cfod_date <= " + "'" + enddate + "'" +
+                    " and cfod_datetype like '%Pickup%' ) x  " +
                     " on x.cfo_driver = drv_id; " ); 
             Date date1 = null;
             Date date2 = null;
@@ -914,25 +911,25 @@ try {
                 String[] drv = getDriverInfo(val.getKey());
                 
 	    	ArrayList<String> f = val.getValue();
-                d1v = (f.contains(d1)) ? "scheduled" : "open";
-                d2v = (f.contains(d2)) ? "scheduled" : "open";
-                d3v = (f.contains(d3)) ? "scheduled" : "open";
-                d4v = (f.contains(d4)) ? "scheduled" : "open";
-                d5v = (f.contains(d5)) ? "scheduled" : "open";
-                d6v = (f.contains(d6)) ? "scheduled" : "open";
-                d7v = (f.contains(d7)) ? "scheduled" : "open";
+                daysv[0] = (f.contains(days[0])) ? "scheduled" : "open";
+                daysv[1] = (f.contains(days[1])) ? "scheduled" : "open";
+                daysv[2] = (f.contains(days[2])) ? "scheduled" : "open";
+                daysv[3] = (f.contains(days[3])) ? "scheduled" : "open";
+                daysv[4] = (f.contains(days[4])) ? "scheduled" : "open";
+                daysv[5] = (f.contains(days[5])) ? "scheduled" : "open";
+                daysv[6] = (f.contains(days[6])) ? "scheduled" : "open";
                 
                 modeldriver.addRow(new Object[]{ 
                       val.getKey(),
                       drv[0],
                       drv[1],
-                      d1v,
-                      d2v,
-                      d3v,
-                      d4v,
-                      d5v,
-                      d6v,
-                      d7v
+                      daysv[0],
+                      daysv[1],
+                      daysv[2],
+                      daysv[3],
+                      daysv[4],
+                      daysv[5],
+                      daysv[6]
                 });
                
 	    }
@@ -965,7 +962,7 @@ try {
         if ( col == 0) {
                 String mypanel = "CFOMaint";
                if (! checkperms(mypanel)) { return; }
-               String[] args = new String[]{tablereport.getValueAt(row, 2).toString(), tablereport.getValueAt(row, 3).toString()};
+               String[] args = new String[]{tablereport.getValueAt(row, 1).toString(), ""};
                reinitpanels(mypanel, true, args);
               
         }
@@ -979,9 +976,11 @@ try {
     private javax.swing.JComboBox ddcustfrom;
     private javax.swing.JComboBox ddcustto;
     private javax.swing.JComboBox ddstatus;
+    private javax.swing.JComboBox<String> ddweek;
     private javax.swing.JPanel detailpanel;
     private javax.swing.JLabel fromkeypartner;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
