@@ -57,6 +57,7 @@ import static bsmf.MainFrame.user;
 import com.blueseer.ctr.cusData;
 import static com.blueseer.frt.CFOMaint.fc;
 import static com.blueseer.frt.frtData.getCFOCtrl;
+import static com.blueseer.frt.frtData.getDriverInfo;
 import static com.blueseer.utl.BlueSeerUtils.bsNumber;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
@@ -64,9 +65,12 @@ import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.vdr.venData;
 import java.sql.Connection;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.LinkedHashMap;
+import java.util.concurrent.TimeUnit;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -150,13 +154,10 @@ public class CFODriverWindow extends javax.swing.JPanel {
         Component c = super.getTableCellRendererComponent(table,
                 value, isSelected, hasFocus, row, column);
         
-        String status = (String)table.getModel().getValueAt(table.convertRowIndexToModel(row), 7);  
+        String status = (String)table.getModel().getValueAt(table.convertRowIndexToModel(row), column);  
         
-         if ("pending".equals(status)) {
-            c.setBackground(Color.red);
-            c.setForeground(Color.WHITE);
-        } else if ("closed".equals(status)) {
-            c.setBackground(Color.blue);
+         if ("scheduled".equals(status)) {
+            c.setBackground(Color.BLUE);
             c.setForeground(Color.WHITE);
         } else {
             c.setBackground(table.getBackground());
@@ -648,36 +649,43 @@ try {
                 startdate = dfdate.format(cal.getTime());
                 String d1 = dfdate.format(cal.getTime());
                 String d1h = hf.format(cal.getTime());
+                String d1v = "0";
                 
                 // now day 2 of week x  
                 cal.add(Calendar.DATE,1);
                 String d2 = dfdate.format(cal.getTime());
                 String d2h = hf.format(cal.getTime());
+                String d2v = "0";
                 
                 // now day 3 of week x
                 cal.add(Calendar.DATE,1);
                 String d3 = dfdate.format(cal.getTime());
                 String d3h = hf.format(cal.getTime());
+                String d3v = "0";
                 
                 // now day 4 of week x
                 cal.add(Calendar.DATE,1);
                 String d4 = dfdate.format(cal.getTime());
                 String d4h = hf.format(cal.getTime());
+                String d4v = "0";
                 
                 // now day 5 of week x
                 cal.add(Calendar.DATE,1);
                 String d5 = dfdate.format(cal.getTime());
                 String d5h = hf.format(cal.getTime());
+                String d5v = "0";
                 
                 // now day 6 of week x
                 cal.add(Calendar.DATE,1);
                 String d6 = dfdate.format(cal.getTime());
                 String d6h = hf.format(cal.getTime());
+                String d6v = "0";
                 
                 // now day 7 of week x
                 cal.add(Calendar.DATE,1);
                 String d7 = dfdate.format(cal.getTime());
                 String d7h = hf.format(cal.getTime());
+                String d7v = "0";
                 enddate = dfdate.format(cal.getTime());
                 
                 
@@ -747,10 +755,10 @@ try {
                  
                  
                  
-                  Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+                 Enumeration<TableColumn> en = tabledetail.getColumnModel().getColumns();
                  while (en.hasMoreElements()) {
                      TableColumn tc = en.nextElement();
-                     if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) {
+                     if (modeldriver.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) {
                          continue;
                      }
                      tc.setCellRenderer(new CFODriverWindow.SomeRenderer());
@@ -835,15 +843,101 @@ try {
                     } // while   
                     
                        // now driver scheduling info
-            res = st.executeQuery("select drv_id, drv_lname, drv_fname " +
-                         " from drv_mstr order by drv_id; "); 
-             while (res.next()) {
-                 modeldriver.addRow(new Object[]{ 
-                      res.getString("drv_id"),
-                      res.getString("drv_lname"),
-                      res.getString("drv_fname")});
-             }
-                 
+            res = st.executeQuery("select drv_id, drv_lname, drv_fname, cfo_nbr, cfo_orderstatus, date1, date2 from drv_mstr left outer join " +
+                    " (select cfo_driver, cfo_nbr, cfo_orderstatus, (select cfod_date from cfo_det where cfod_nbr = cfo_nbr and " +
+                    " cfod_datetype like '%Pickup%') as date1, (select cfod_date from cfo_det where cfod_nbr = cfo_nbr and cfod_datetype like '%Delivery%') as date2 " +
+                    " from cfo_mstr inner join cfo_det on cfod_nbr = cfo_nbr and cfod_revision = cfo_revision " +
+                    " where cfod_date >= '2023-09-19' and cfod_date <= '2023-09-27' and cfod_datetype like '%Pickup%' ) x  " +
+                    " on x.cfo_driver = drv_id; " ); 
+            Date date1 = null;
+            Date date2 = null;
+            long diffInMillies = 0;
+            long diff = 0;
+            LinkedHashMap<String,ArrayList<String>> lhm = new LinkedHashMap<String,ArrayList<String>>();
+            
+            while (res.next()) {
+                date1 = null;
+                date2 = null;
+                diffInMillies = 0;
+                diff = 0;
+                if (res.getString("date1") != null && ! res.getString("date1").isBlank()) {
+                 date1 = dfdate.parse(res.getString("date1"));
+                }
+                if (res.getString("date2") != null && ! res.getString("date2").isBlank()) {
+                 date2 = dfdate.parse(res.getString("date2"));
+                }
+                if (date1 != null && date2 != null) {
+                 diffInMillies = Math.abs(date2.getTime() - date1.getTime());
+                 diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+                }
+                
+                ArrayList<String> temp = lhm.get(res.getString("drv_id"));
+                if (temp != null && res.getString("date1") != null) {
+                          if (! temp.contains(dfdate.format(date1))) { // put pickup date first...if not already there
+                                temp.add(dfdate.format(date1));
+                          }
+                          if (diff > 0) { // now add dates in between pickup and delivery dates if exist
+                          Calendar c = Calendar.getInstance();
+                          c.setTime(date1);
+                            for (int k = 1; k <= diff; k++) {
+                            c.add(Calendar.DATE, 1);
+                            Date newdate = c.getTime();
+                                if (! temp.contains(dfdate.format(newdate))) {
+                                temp.add(dfdate.format(newdate));
+                                }
+                            }
+                          }
+                          lhm.put(res.getString("drv_id"), temp);
+                          
+                } else {
+                          ArrayList<String> al = new ArrayList<String>();
+                          al.add(res.getString("date1")); // if blank...let it ride
+                          if (diff > 0) { // now add dates in between pickup and delivery dates if exist
+                          Calendar c = Calendar.getInstance();
+                          c.setTime(date1);
+                            for (int k = 1; k <= diff; k++) {
+                            c.add(Calendar.DATE, 1);
+                            Date newdate = c.getTime();
+                                if (! al.contains(dfdate.format(newdate))) {
+                                al.add(dfdate.format(newdate));
+                                }
+                            }
+                          }
+                          lhm.put(res.getString("drv_id"), al);
+                }
+                
+            }
+            
+            // now enter into model table
+            for (Map.Entry<String, ArrayList<String>> val : lhm.entrySet()) {
+                
+                String[] drv = getDriverInfo(val.getKey());
+                
+	    	ArrayList<String> f = val.getValue();
+                d1v = (f.contains(d1)) ? "scheduled" : "open";
+                d2v = (f.contains(d2)) ? "scheduled" : "open";
+                d3v = (f.contains(d3)) ? "scheduled" : "open";
+                d4v = (f.contains(d4)) ? "scheduled" : "open";
+                d5v = (f.contains(d5)) ? "scheduled" : "open";
+                d6v = (f.contains(d6)) ? "scheduled" : "open";
+                d7v = (f.contains(d7)) ? "scheduled" : "open";
+                
+                modeldriver.addRow(new Object[]{ 
+                      val.getKey(),
+                      drv[0],
+                      drv[1],
+                      d1v,
+                      d2v,
+                      d3v,
+                      d4v,
+                      d5v,
+                      d6v,
+                      d7v
+                });
+               
+	    }
+                      
+            
                 lblamttot.setText(String.valueOf(currformatDouble(dol)));
                 lbllines.setText(bsNumber(i));
             } catch (SQLException s) {

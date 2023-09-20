@@ -2227,6 +2227,39 @@ public class frtData {
          return custfonbr;
    }
 
+    public static String[] getDriverInfo(String drvid) {
+        
+        String[] r = new String[]{"",""}; // lname, lfname
+        try{
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        ResultSet res = null;
+            try{
+                res = st.executeQuery("select drv_lname, drv_fname from drv_mstr where drv_id = " + "'" + drvid + "'" + 
+                        ";");
+                while (res.next()) {
+                    r[0] = res.getString("drv_lname");
+                    r[1] = res.getString("drv_fname");
+                }
+            }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+             return r;
+    }
     
     
     public record car_mstr (String[] m, String car_id, String car_desc, String car_apply,
