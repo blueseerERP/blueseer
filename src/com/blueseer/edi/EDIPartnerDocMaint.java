@@ -1091,7 +1091,29 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                 String una = "";
                 String ung = "";
                 int i = 0;
+                String infiletype = "";
                 
+                if (dddoc.getSelectedItem().toString().endsWith("db")) {
+                    infiletype = "DB";
+                }
+                if (dddoc.getSelectedItem().toString().endsWith("x12")) {
+                    infiletype = "X12";
+                }
+                if (dddoc.getSelectedItem().toString().endsWith("csv")) {
+                    infiletype = "CSV";
+                }
+                if (dddoc.getSelectedItem().toString().endsWith("une")) {
+                    infiletype = "UNE";
+                }
+                if (dddoc.getSelectedItem().toString().endsWith("xml")) {
+                    infiletype = "XML";
+                }
+                if (dddoc.getSelectedItem().toString().endsWith("json")) {
+                    infiletype = "JSON";
+                }
+                if (infiletype.isBlank()) {
+                    infiletype = "FF";
+                }
                
                 if (ddkey.getSelectedItem() == null || ddkey.getSelectedItem().toString().isEmpty()) {
                     proceed = false;
@@ -1141,7 +1163,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                         st.executeUpdate("insert into edi_mstr "
                             + "(edi_id, edi_doc, edi_sndisa, edi_sndq, " 
                             + "edi_sndgs, edi_map, edi_eledelim, edi_segdelim, edi_subdelim, edi_fileprefix, edi_filesuffix, edi_filepath, "
-                            + "edi_version, edi_rcvisa, edi_rcvgs, edi_rcvq, edi_supcode, edi_doctypeout, edi_filetypeout, edi_ifs, edi_ofs, " +
+                            + "edi_version, edi_rcvisa, edi_rcvgs, edi_rcvq, edi_supcode, edi_doctypeout, edi_filetypeout, edi_ifs, edi_ofs, edi_filetype, " +
                                 " edi_fa_required, edi_envelopeall, edi_una, edi_ung ) "
                             + " values ( " + "'" + ddkey.getSelectedItem().toString() + "'" + ","
                                 + "'" + dddoc.getSelectedItem().toString() + "'" + ","
@@ -1163,7 +1185,8 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                                 + "'" + ddoutdoctype.getSelectedItem().toString() + "'" + ","
                                 + "'" + ddoutfiletype.getSelectedItem().toString() + "'" + ","
                                 + "'" + tbIFS.getText() + "'"  + ","
-                                + "'" + tbOFS.getText() + "'"  + ","        
+                                + "'" + tbOFS.getText() + "'"  + ","      
+                                + "'" + infiletype + "'"  + ","        
                                 + "'" + fa + "'" + ","
                                 + "'" + envelopeall + "'" + ","
                                 + "'" + una + "'" + ","

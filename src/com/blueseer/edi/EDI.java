@@ -47,6 +47,7 @@ import com.blueseer.shp.shpData;
 import com.blueseer.utl.EDData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
+import static com.blueseer.utl.BlueSeerUtils.getEDIClassLoader;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.EDData.getBSDocTypeFromStds;
 import static com.blueseer.utl.EDData.getEDIDocTypeFromBSDoc;
@@ -4248,8 +4249,8 @@ public class EDI {
         
         // get Delimiters from Cust Defaults
         
-        String[] ids = EDData.getEDIXrefOut(tp, "PY");
-        messages.add(new String[]{"info","edi_xref: " + ids[0] + "/" + ids[1] + "/" + ids[2] + "/" + ids[3] + "/" + ids[4]});
+        String[] ids = EDData.getEDIXrefOut(tp, "GF");
+        messages.add(new String[]{"info","edi_xref: " + ids[0] + "/" + ids[1] + "/" + ids[2] + "/" + ids[3] + "/" + ids[4] + " with lookup key: " + tp + "/GF" });
         
         String[] defaults = EDData.getEDITPDefaults(doctype, EDData.getEDIgsid(), ids[1]  ); //990db, ourGS, theirsGS
         messages.add(new String[]{"info","edi_mstr (id,doc): " + defaults[18] + "/" + defaults[19]});
@@ -4270,7 +4271,7 @@ public class EDI {
         
           if (map.isEmpty()) {
             errorcode = 1;
-            messages.add(new String[]{"error","990: map variable is empty for partner/gs02/gs03/doc: " + tp + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
+            messages.add(new String[]{"error","990: map variable is empty for partner/gs02/gs03/doc: " + tp + "/" + defaults[2] + "/" + defaults[5] + "/" + c[1]});
             EDData.writeEDILogMulti(c, messages);
             messages.clear();  // clear message here
             return errorcode;
@@ -4278,7 +4279,7 @@ public class EDI {
           
         if (! BlueSeerUtils.isEDIClassFile(map)) {
             errorcode = 1;
-            messages.add(new String[]{"error","990: unable to locate compiled map (" + map + ") billto/gs02/gs03/doc: " + tp + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
+            messages.add(new String[]{"error","990: unable to locate compiled map (" + map + ") billto/gs02/gs03/doc: " + tp + "/" + defaults[2] + "/" + defaults[5] + "/" + c[1]});
             EDData.writeEDILogMulti(c, messages);
             messages.clear();  // clear message here
             return errorcode;
@@ -4293,7 +4294,8 @@ public class EDI {
         
          // call map 
         try {
-        Class cls = Class.forName(map);
+        URLClassLoader cl = getEDIClassLoader();  
+        Class cls = Class.forName(map,true,cl); 
         Object obj = cls.getDeclaredConstructor().newInstance();
         Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class, ArrayList.class);
         Object oc = method.invoke(obj, doc, c, messages);

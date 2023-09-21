@@ -773,6 +773,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         System.out.println("Value of tp defaults found: " + String.join(",", tp));
         }
         
+        
          // concatenate all output strings to string variable 'content' 
         writeOMD(c, tp);
         

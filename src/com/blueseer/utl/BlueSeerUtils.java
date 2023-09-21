@@ -1024,11 +1024,13 @@ public class BlueSeerUtils {
                 }
                 }
                cl = new URLClassLoader(urls);
-              Class.forName(myfile,true,cl);
+               Class.forName(myfile,true,cl);
               return true;
            
        } catch( ClassNotFoundException e ) {
+           edilog(e);
            return false;
+           
         //my class isn't there!
        } finally {
            if (cl != null) {
@@ -1039,6 +1041,26 @@ public class BlueSeerUtils {
                }
            }
        }
+    }
+    
+    public static URLClassLoader getEDIClassLoader() {
+         // lets check and see if class exists in package
+       URLClassLoader cl = null;
+       List<File> jars = Arrays.asList(new File("edi/maps").listFiles(new FilenameFilter() {
+           public boolean accept(File dir, String name) {
+               return name.toLowerCase().endsWith(".jar");
+           }
+       })); //my class isn't there!
+       URL[] urls = new URL[jars.size()];
+       for (int i = 0; i < jars.size(); i++) {
+           try {
+               urls[i] = jars.get(i).toURI().toURL();
+           } catch (Exception e) {
+               edilog(e);
+           }
+       }
+       cl = new URLClassLoader(urls);
+       return cl;
     }
     
     
