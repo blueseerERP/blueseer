@@ -39,3 +39,4 @@ vendor,vendor number range,,400000,499999,400000
 item,item number range,,50000000,59999999,50000000
 employee,employee number range,,10000,19999,10000
 payroll,payroll transaction number range,,30000,99999,30000
+driver,driver transaction number range,,100,99999,100

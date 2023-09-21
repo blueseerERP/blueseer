@@ -358,11 +358,11 @@ public class CFOBrowse extends javax.swing.JPanel {
         
         ddstatus.removeAllItems();
         ddstatus.addItem("");
-        ddstatus.addItem("open");
         ddstatus.addItem("pending");
+        ddstatus.addItem("scheduled");
+        ddstatus.addItem("delivered");
         ddstatus.addItem("declined");
         ddstatus.addItem("cancelled");
-        ddstatus.addItem("intransit");
         ddstatus.addItem("closed");
         ddstatus.setSelectedIndex(0);
         

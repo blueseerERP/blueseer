@@ -663,6 +663,9 @@
                   </StringArray>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ddratetypeActionPerformed"/>
+              </Events>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>
@@ -718,11 +721,11 @@
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="6">
-                    <StringItem index="0" value="open"/>
-                    <StringItem index="1" value="pending"/>
-                    <StringItem index="2" value="declined"/>
-                    <StringItem index="3" value="cancelled"/>
-                    <StringItem index="4" value="intransit"/>
+                    <StringItem index="0" value="pending"/>
+                    <StringItem index="1" value="scheduled"/>
+                    <StringItem index="2" value="delivered"/>
+                    <StringItem index="3" value="declined"/>
+                    <StringItem index="4" value="cancelled"/>
                     <StringItem index="5" value="closed"/>
                   </StringArray>
                 </Property>

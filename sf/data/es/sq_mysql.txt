@@ -61,6 +61,8 @@ load data local infile 'mapmstr.csv' replace into table map_mstr fields terminat
 load data local infile 'pksmstr.csv' replace into table pks_mstr fields terminated by ',' ignore 0 Lines; show errors;  
 load data local infile 'as2mstr.csv' replace into table as2_mstr fields terminated by ',' ignore 0 Lines; show errors;  
 load data local infile 'apimstr.csv' replace into table api_mstr fields terminated by ',' ignore 0 Lines; show errors;  
+load data local infile 'makemodel.csv' replace into table makemodel fields terminated by ',' ignore 0 Lines; show errors;
 load data local infile 'apidet.csv' replace into table api_det fields terminated by ':' ignore 0 Lines; show errors;  
 load data local infile 'edixcode.csv' replace into table edi_xcode fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'cfoctrl.csv' replace into table frt_ctrl fields terminated by ',' ignore 0 Lines; show errors; 
+load data local infile 'timezone.csv' replace into table time_zone fields terminated by ',' ignore 0 Lines; show errors;

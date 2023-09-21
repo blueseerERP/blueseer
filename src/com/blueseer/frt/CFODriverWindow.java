@@ -352,14 +352,14 @@ public class CFODriverWindow extends javax.swing.JPanel {
         
         if (ddcustto.getItemCount() > 0)
         ddcustto.setSelectedIndex(ddcustto.getItemCount() - 1);
-        
+      
         ddstatus.removeAllItems();
         ddstatus.addItem("");
-        ddstatus.addItem("open");
         ddstatus.addItem("pending");
+        ddstatus.addItem("scheduled");
+        ddstatus.addItem("delivered");
         ddstatus.addItem("declined");
         ddstatus.addItem("cancelled");
-        ddstatus.addItem("intransit");
         ddstatus.addItem("closed");
         ddstatus.setSelectedIndex(0);
         

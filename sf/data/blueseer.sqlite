@@ -2010,93 +2010,6 @@ CREATE TABLE "cfoi_meta" (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE "fo_mstr" (
-  "fo_nbr" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fo_date" date COLLATE NOCASE DEFAULT '',
-  "fo_ref" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fo_type" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fo_dir" varchar(3) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fo_cust" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fo_custfo" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fo_tpid" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fo_weight" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fo_bol" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fo_carrier" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fo_carrier_assigned" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fo_carrier_type" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fo_equipment_type" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fo_service_type" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fo_trailer" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fo_status" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fo_rmks" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fo_reasoncode" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fo_isquoted" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',
-  "fo_istendered" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',
-  "fo_wh" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fo_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fo_milerate" decimal(12,2) NOT NULL COLLATE NOCASE DEFAULT '0',
-  "fo_totmiles" decimal(12,2) NOT NULL COLLATE NOCASE DEFAULT '0',
-  "fo_totcost" decimal(12,2) NOT NULL COLLATE NOCASE DEFAULT '0');
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE "fot_det" (
-  "fot_id" INTEGER PRIMARY KEY,
-  "fot_nbr" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fot_uniqueid" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fot_partnerid" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fot_status" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fot_reasoncode" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fot_remarks" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fot_dir" varchar(3) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fot_lat" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fot_lon" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fot_equipnbr" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fot_equiptype" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fot_apptdate" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fot_appttime" varchar(4) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fot_type" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fot_doctype" varchar(3) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fot_docfile" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fot_date" date COLLATE NOCASE DEFAULT '',
-  "fot_quoteref" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fot_amt" decimal(11,2) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fot_surcharge" decimal(11,2) NOT NULL COLLATE NOCASE DEFAULT '');
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE "fod_det" (
-  "fod_nbr" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fod_type" varchar(2) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fod_line" int(11) NOT NULL COLLATE NOCASE DEFAULT '0',
-  "fod_shipdate" date NOT NULL COLLATE NOCASE DEFAULT '',
-  "fod_shiptime" time NOT NULL COLLATE NOCASE DEFAULT '',
-  "fod_delvdate" date NOT NULL COLLATE NOCASE DEFAULT '',
-  "fod_delvtime" time NOT NULL COLLATE NOCASE DEFAULT '',
-  "fod_recvdate" date NOT NULL COLLATE NOCASE DEFAULT '',
-  "fod_recvtime" time NOT NULL COLLATE NOCASE DEFAULT '',
-  "fod_shipper" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fod_code" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fod_name" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fod_addr1" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fod_addr2" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fod_addr3" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fod_city" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fod_state" varchar(3) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fod_zip" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fod_phone" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fod_email" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fod_contact" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fod_ref" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fod_status" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fod_remarks" varchar(300) NOT NULL COLLATE NOCASE DEFAULT '',
-  "fod_units" int(11) NOT NULL COLLATE NOCASE DEFAULT '0',
-  "fod_boxes" int(11) NOT NULL COLLATE NOCASE DEFAULT '0',
-  "fod_weight" decimal(11,2) NOT NULL COLLATE NOCASE DEFAULT '0',
-  "fod_wt_uom" varchar(3) NOT NULL COLLATE NOCASE DEFAULT '');
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "do_mstr" (
   "do_nbr" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
   "do_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
@@ -3244,6 +3157,11 @@ CREATE TABLE "edi_xcode" (
   "edix_ele" varchar(3) NOT NULL COLLATE NOCASE DEFAULT '',
   "edix_code" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "edix_value" varchar(80) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+CREATE TABLE "time_zone" (
+  "tz_code" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "tz_desc" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
+  "tz_utc" varchar(30) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 
 

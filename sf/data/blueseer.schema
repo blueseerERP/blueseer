@@ -1701,87 +1701,6 @@ CREATE TABLE IF NOT EXISTS `cfoi_meta` (
   `cfoim_key` varchar(80) NOT NULL,
   `cfoim_value` varchar(80) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-CREATE TABLE IF NOT EXISTS `fo_mstr` (
-  `fo_nbr` varchar(8) NOT NULL  DEFAULT '',
-  `fo_date` date DEFAULT NULL,
-  `fo_ref` varchar(30) NOT NULL  DEFAULT '',
-  `fo_type` varchar(30) NOT NULL  DEFAULT '',
-  `fo_dir` varchar(3) NOT NULL  DEFAULT '',
-  `fo_cust` varchar(30) NOT NULL  DEFAULT '',
-  `fo_custfo` varchar(30) NOT NULL  DEFAULT '',
-  `fo_bol` varchar(30) NOT NULL  DEFAULT '',
-  `fo_tpid` varchar(30) NOT NULL  DEFAULT '',
-  `fo_weight` varchar(20) NOT NULL  DEFAULT '',
-  `fo_carrier` varchar(30) NOT NULL  DEFAULT '',
-  `fo_carrier_assigned` varchar(30) NOT NULL  DEFAULT '',
-  `fo_carrier_type` varchar(20) NOT NULL  DEFAULT '',
-  `fo_equipment_type` varchar(30) NOT NULL  DEFAULT '',
-  `fo_service_type` varchar(30) NOT NULL  DEFAULT '',
-  `fo_trailer` varchar(30) NOT NULL  DEFAULT '',
-  `fo_status` varchar(10) NOT NULL  DEFAULT '',
-  `fo_rmks` varchar(100) NOT NULL  DEFAULT '',
-  `fo_reasoncode` varchar(30) NOT NULL  DEFAULT '',
-  `fo_isquoted` tinyint(1) NOT NULL  DEFAULT '0',
-  `fo_istendered` tinyint(1) NOT NULL  DEFAULT '0',
-  `fo_wh` varchar(10) NOT NULL  DEFAULT '',
-  `fo_site` varchar(10) NOT NULL DEFAULT '',
-  `fo_milerate` decimal(12,4) NOT NULL DEFAULT '0',
-  `fo_totmiles` decimal(14,2) NOT NULL DEFAULT '0',
-  `fo_totcost` decimal(12,4) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-CREATE TABLE IF NOT EXISTS `fot_det` (
-  `fot_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `fot_nbr` varchar(8) NOT NULL  DEFAULT '',
-  `fot_uniqueid` varchar(20) NOT NULL  DEFAULT '',
-  `fot_partnerid` varchar(20) NOT NULL  DEFAULT '',
-  `fot_status` varchar(10) NOT NULL  DEFAULT '',
-  `fot_reasoncode` varchar(30) NOT NULL  DEFAULT '',
-  `fot_remarks` varchar(80) NOT NULL  DEFAULT '',
-  `fot_dir` varchar(3) NOT NULL  DEFAULT '',
-  `fot_lat` varchar(30) NOT NULL  DEFAULT '',
-  `fot_lon` varchar(30) NOT NULL  DEFAULT '',
-  `fot_equipnbr` varchar(30) NOT NULL  DEFAULT '',
-  `fot_equiptype` varchar(30) NOT NULL  DEFAULT '',
-  `fot_apptdate` varchar(8) NOT NULL  DEFAULT '',
-  `fot_appttime` varchar(4) NOT NULL  DEFAULT '',
-  `fot_type` varchar(10) NOT NULL  DEFAULT '',
-  `fot_doctype` varchar(3) NOT NULL  DEFAULT '',
-  `fot_docfile` varchar(100) NOT NULL  DEFAULT '',
-  `fot_date` date DEFAULT NULL,
-  `fot_quoteref` varchar(30) NOT NULL  DEFAULT '',
-  `fot_amt` decimal(11,2) NOT NULL  DEFAULT '0',
-  `fot_surcharge` decimal(11,2) NOT NULL  DEFAULT '0')
-ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-CREATE TABLE IF NOT EXISTS `fod_det` (
-  `fod_nbr` varchar(8) NOT NULL  DEFAULT '',
-  `fod_type` varchar(2) NOT NULL  DEFAULT '',
-  `fod_line` int(11) NOT NULL  DEFAULT '0',
-  `fod_shipdate` date DEFAULT NULL,
-  `fod_shiptime` time NOT NULL  DEFAULT '0',
-  `fod_delvdate` date DEFAULT NULL,
-  `fod_delvtime` time NOT NULL  DEFAULT '0',
-  `fod_recvdate` date DEFAULT NULL,
-  `fod_recvtime` time NOT NULL  DEFAULT '0',
-  `fod_shipper` varchar(30) NOT NULL  DEFAULT '',
-  `fod_code` varchar(30) NOT NULL  DEFAULT '',
-  `fod_name` varchar(50) NOT NULL  DEFAULT '',
-  `fod_addr1` varchar(50) NOT NULL  DEFAULT '',
-  `fod_addr2` varchar(50) NOT NULL  DEFAULT '',
-  `fod_addr3` varchar(50) NOT NULL  DEFAULT '',
-  `fod_city` varchar(50) NOT NULL  DEFAULT '',
-  `fod_state` varchar(3) NOT NULL  DEFAULT '',
-  `fod_zip` varchar(15) NOT NULL  DEFAULT '',
-  `fod_phone` varchar(12) NOT NULL  DEFAULT '',
-  `fod_email` varchar(50) NOT NULL  DEFAULT '',
-  `fod_contact` varchar(50) NOT NULL  DEFAULT '',
-  `fod_ref` varchar(30) NOT NULL  DEFAULT '',
-  `fod_status` varchar(10) NOT NULL  DEFAULT '',
-  `fod_remarks` varchar(300) NOT NULL  DEFAULT '',
-  `fod_units` int(11) NOT NULL  DEFAULT '0',
-  `fod_boxes` int(11) NOT NULL  DEFAULT '0',
-  `fod_weight` decimal(11,2) NOT NULL  DEFAULT '0',
-  `fod_wt_uom` varchar(3) NOT NULL  DEFAULT '')
-ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `do_mstr` (
   `do_nbr` varchar(8) NOT NULL  DEFAULT '',
   `do_site` varchar(10) NOT NULL  DEFAULT '',
@@ -2786,4 +2705,9 @@ CREATE TABLE IF NOT EXISTS `edi_xcode` (
   `edix_ele` varchar(3) NOT NULL DEFAULT '',
   `edix_code` varchar(30) NOT NULL DEFAULT '',
   `edix_value` varchar(80) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `time_zone` (
+  `tz_code` varchar(8) NOT NULL DEFAULT '',
+  `tz_desc` varchar(200) NOT NULL DEFAULT '',
+  `tz_utc` varchar(30) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

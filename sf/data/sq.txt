@@ -73,5 +73,6 @@ insert into task_det (taskd_id, taskd_owner, taskd_desc, taskd_sequence) values 
 .import pksmstr.csv pks_mstr
 .import structures.csv dfs_det
 .import makemodel.csv makemodel
+.import timezone.csv time_zone
 .separator :
 .import apidet.csv api_det

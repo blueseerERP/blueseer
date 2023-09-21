@@ -1132,7 +1132,7 @@ public class frtData {
                lines.add(s);
             }
             
-            res = st.executeQuery("select code_key from code_mstr where code_code = 'freightsvctype' order by code_key ;");
+            res = st.executeQuery("select code_key from code_mstr where code_code = 'freightsrvtype' order by code_key ;");
             while (res.next()) {
                 String[] s = new String[2];
                s[0] = "servicetypes";
@@ -1168,6 +1168,13 @@ public class frtData {
                 String[] s = new String[2];
                s[0] = "broker";
                s[1] = res.getString("brk_id");
+               lines.add(s);
+            }
+            res = st.executeQuery("select tz_code from time_zone order by tz_code ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "timezones";
+               s[1] = res.getString("tz_code");
                lines.add(s);
             }
             

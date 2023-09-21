@@ -119,8 +119,10 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -168,7 +170,7 @@ import org.xml.sax.SAXException;
 public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     // global variable declarations
-    public String globalstatus = "Open";
+    public String globalstatus = "pending";
     public boolean lock_ddshipper = false;
     public int currentstopline = 0;
     boolean isLoad = false;
@@ -511,9 +513,10 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
        cbrev.setSelected(false);
        cbedi.setSelected(false);
        cbedi.setEnabled(false);
+       cbstandard.setSelected(false);
        
        ddorderstatus.setBackground(null);
-       ddorderstatus.setSelectedItem("open");
+       ddorderstatus.setSelectedItem("pending");
        
        ddstopsequence.removeAllItems();
        ddstopsequence.addItem("");
@@ -571,6 +574,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddvehicle.removeAllItems();
         dddriver.removeAllItems();
         ddbroker.removeAllItems();
+        ddtimezone.removeAllItems();
         
         for (String[] s : initDataSets) {
                       
@@ -606,6 +610,9 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
             if (s[0].equals("site")) {
               defaultsite = s[1]; 
+            }
+            if (s[0].equals("timezones")) {
+              ddtimezone.addItem(s[1]); 
             }
             
         }
@@ -680,14 +687,10 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddtime2.insertItemAt("", 0);
         ddtime2.setSelectedIndex(0);
         
-        ddtimezone.removeAllItems();
-        ddtimezone.addItem("AST");
-        ddtimezone.addItem("EST");
-        ddtimezone.addItem("CST");
-        ddtimezone.addItem("MST");
-        ddtimezone.addItem("PST");
-        ddtimezone.addItem("AKST");
-        ddtimezone.addItem("HST");
+                
+        DateFormat getTimeZoneShort = new SimpleDateFormat("z", Locale.US);
+        String timeZoneShort = getTimeZoneShort.format(Calendar.getInstance().getTime());
+        ddtimezone.setSelectedItem(timeZoneShort);
         
        isLoad = false;
     }
@@ -703,6 +706,8 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbkey.setForeground(Color.blue);
         ddrevision.addItem("1");
         ddrevision.setSelectedIndex(0);
+        cbrev.setSelected(true);
+        cbstandard.setSelected(true);
         
         if (! x.isEmpty()) {
           tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
@@ -1814,6 +1819,11 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel30.setText("Broker Cell#");
 
         ddratetype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Flat Rate", "Mileage Rate" }));
+        ddratetype.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddratetypeActionPerformed(evt);
+            }
+        });
 
         jLabel31.setText("Rate Type");
 
@@ -1837,7 +1847,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         cbhazmat.setText("Hazmat");
 
-        ddorderstatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "open", "pending", "declined", "cancelled", "intransit", "closed" }));
+        ddorderstatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "pending", "scheduled", "delivered", "declined", "cancelled", "closed" }));
         ddorderstatus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ddorderstatusActionPerformed(evt);
@@ -3177,7 +3187,9 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         setStopState(true);
         if (currentstopline > 1) {
             ddstoptype.setSelectedItem("Unload Complete");
+            dddatetype.setSelectedItem("Scheduled Delivery Date");
         }
+        
         lblstop.setText("Stop: " + currentstopline);
         btupdatestop.setEnabled(false);
         btdeletestop.setEnabled(false);
@@ -3508,9 +3520,9 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
     private void ddorderstatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddorderstatusActionPerformed
         if (! isLoad) {
             if (cbedi.isSelected() && hasEDIXref(ddcust.getSelectedItem().toString(),"GF")) {
-                if (ddorderstatus.getSelectedItem().toString().equals("open") ||
+                if (ddorderstatus.getSelectedItem().toString().equals("scheduled") ||
                     ddorderstatus.getSelectedItem().toString().equals("declined") ||
-                    ddorderstatus.getSelectedItem().toString().equals("declined")) {
+                    ddorderstatus.getSelectedItem().toString().equals("cancelled")) {
                     boolean proceed = bsmf.MainFrame.warn(getMessageTag(1183));
                     if (proceed) {
                        Create990(tbkey.getText());
@@ -3655,6 +3667,10 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         
     }//GEN-LAST:event_btaddshipperActionPerformed
+
+    private void ddratetypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddratetypeActionPerformed
+        summarize();
+    }//GEN-LAST:event_ddratetypeActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
