@@ -1453,6 +1453,13 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             } catch (IOException ex) {
                 edilog(ex);
             }
+        } else if (c[28].toUpperCase().equals("CSV")) {   
+            try {
+                return mappedData = csvToSegments(data, eledelim);
+            } catch (IOException ex) {
+                edilog(ex);
+            }
+               
         } else {
           dataAsArrays  = new ArrayList<String[]>();
             for (String s : data) {
@@ -1520,6 +1527,9 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                     int loop = 1;
                     boolean hasloop = false;
                     String groupparent = parenthead + x[0];
+                    
+                    
+                    
                     if (groupcount.containsKey(groupparent)) {
                             int g = groupcount.get(groupparent);
 
@@ -1572,6 +1582,21 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         return mappedData;
     }
   
+    public static LinkedHashMap<String, String[]> csvToSegments(ArrayList<String> data, String eledelim) throws IOException {
+	   
+            LinkedHashMap<String,String[]> lhm = new LinkedHashMap<String,String[]>();
+	    int lc = 0;
+            for (String s : data) {
+                lc++;
+                s = "ROW" + eledelim + s; // prepend row on each line of csv file
+                String[] recs = s.split(eledelim, -1);
+                lhm.put("ROW" + "+1+" + lc, recs); 
+            }
+            // lhm.forEach((k,v) -> System.out.println("lhmnew: " + k + " = " + v));
+	    return lhm;
+	}
+    
+    
     public static LinkedHashMap<String, String[]> jsonToSegments(String json) throws IOException {
 	    ObjectMapper mapper = new ObjectMapper();
             JsonNode jsonNode = mapper.readTree(json);
@@ -3827,8 +3852,17 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                       "Example:  getRowCount() returns: x number of rows "},
             params = {})  
     public static int getRowCount() {
-         ArrayList<String> k = new ArrayList<String>();
-         return mappedInput.size();
+         int i = 0;
+         for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
+             if (z.getKey() == null || z.getKey().isBlank()) {
+                 continue;
+             }
+             if (z.getValue() == null || z.getValue().length <= 0) {
+                 continue;
+             }
+            i++; 
+         }
+         return i;
      }
     
     @EDI.AnnoDoc(desc = {"method returns sum of all row of column x in a CSV file",

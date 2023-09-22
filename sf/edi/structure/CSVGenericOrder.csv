@@ -1,13 +1,13 @@
-#segment,parent,loopcount,isgroup,islandmark,field,desc,min,max,align,status,M
-ROW,,100,no,yes,landmark,landmark,6,6,-,M
-ROW,,1,no,no,f1,Purchase Order Number,1,40,-,M
-ROW,,1,no,no,f2,Bill-To Code,1,40,-,M
-ROW,,1,no,no,f3,Bill-To Name,1,40,-,M
-ROW,,1,no,no,f4,Ship-To Code,1,40,-,M
-ROW,,1,no,no,f5,Ship-To Name,1,40,-,M
-ROW,,1,no,no,f6,Item Number,1,40,-,M
-ROW,,1,no,no,f7,Sku Number,1,40,-,M
-ROW,,1,no,no,f8,Quantity,0,10,-,M
-ROW,,1,no,no,f9,UOM,0,4,-,M
-ROW,,1,no,no,f10,Price,0,10,-,M
-ROW,,1,no,no,f11,Reference,0,40,-,O
+#segment,parent,loopcount,isgroup,islandmark,field,desc,min,max,align,status,type
+ROW,,100,no,yes,landmark,landmark,6,6,-,M,F
+ROW,,1,no,no,f1,Purchase Order Number,1,40,-,M,F
+ROW,,1,no,no,f2,Bill-To Code,1,40,-,M,F
+ROW,,1,no,no,f3,Bill-To Name,1,40,-,M,F
+ROW,,1,no,no,f4,Ship-To Code,1,40,-,M,F
+ROW,,1,no,no,f5,Ship-To Name,1,40,-,M,F
+ROW,,1,no,no,f6,Item Number,1,40,-,M,F
+ROW,,1,no,no,f7,Sku Number,1,40,-,M,F
+ROW,,1,no,no,f8,Quantity,0,10,-,M,F
+ROW,,1,no,no,f9,UOM,0,4,-,M,F
+ROW,,1,no,no,f10,Price,0,10,-,M,F
+ROW,,1,no,no,f11,Reference,0,40,-,O,F

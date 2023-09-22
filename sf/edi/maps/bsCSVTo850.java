@@ -28,7 +28,8 @@ commitSegment("N1");
 var rows = getRowCount();
 var lines = 0;
 var total = 0;
-for (int i = 2; i <= rows; i++) {
+
+for (int i = 2; i <= rows ; i++) {
 
 lines++;  // count lines
 total += Integer.valueOf(getRow(i,7));  // sum total qty

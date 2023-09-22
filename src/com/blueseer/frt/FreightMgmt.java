@@ -2454,7 +2454,7 @@ public class FreightMgmt extends javax.swing.JPanel {
     }//GEN-LAST:event_orddetMouseClicked
 
     private void btacceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btacceptActionPerformed
-        OVData.tenderResponse(freightorder.getText(), "Accepted");
+      //  OVData.tenderResponse(freightorder.getText(), "Accepted");
         initvars(new String[]{freightorder.getText()});
     }//GEN-LAST:event_btacceptActionPerformed
 
@@ -2468,7 +2468,7 @@ public class FreightMgmt extends javax.swing.JPanel {
         
         if (proceed) {
            OVData.updateFreightOrderReasonCode(freightorder.getText(), ddreasoncode.getSelectedItem().toString().substring(0, 4));
-           OVData.tenderResponse(freightorder.getText(), "Declined");
+          // OVData.tenderResponse(freightorder.getText(), "Declined");
            initvars(new String[]{freightorder.getText()}); 
         }
     }//GEN-LAST:event_btdeclineActionPerformed

@@ -15679,78 +15679,7 @@ return mystring;
             MainFrame.bslog(e);
         }
        }  
-       
-    public static void tenderResponse(String order, String response) {
-            
-           try {
-
-            
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                String status = "";
-                 /* check to see if order number exists */
-                 res = st.executeQuery("select fo_nbr, fo_status from fo_mstr where fo_nbr = " + "'" + order + "'" + ";");
-                 int i = 0;
-                 while (res.next()) {
-                     i++;
-                     status = res.getString("fo_status");
-                 }
-                 
-                 if (status.equals("Accepted")) {
-                     bsmf.MainFrame.show("Order is already accepted");
-                     return;
-                 }
-                 if (status.equals("Declined")) {
-                     bsmf.MainFrame.show("Order is already declined");
-                     return;
-                 }
-                 
-                 
-                 if (i > 0 ) {
-                       int error = EDI.Create990o(order, response);
-                       if (error == 0) {
-                          bsmf.MainFrame.show("Response has been sent.");
-                          OVData.updateFreightOrderStatus(order, response);
-                       }
-                       if (error == 1)
-                           bsmf.MainFrame.show("Missing WH/Doctype/Dir Record in cmedi_mstr");
-
-                       if (error == 2)
-                           bsmf.MainFrame.show("Unable to retrieve wh from order");
-
-                       if (error == 3)
-                           bsmf.MainFrame.show("ClassDef and/or Invocation error");
-                      
-                 } else {
-                     bsmf.MainFrame.show("Order does not exist");
-                     return;
-                 }
-              
              
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-            if (res != null) {
-                res.close();
-            }
-            if (st != null) {
-                st.close();
-            }
-            con.close();
-        }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-       }  
-        
     public static void tenderFreightOrder(String order) {
 
        try {

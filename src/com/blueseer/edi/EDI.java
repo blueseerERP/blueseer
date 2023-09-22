@@ -3610,7 +3610,8 @@ public class EDI {
         
          // call map 
         try {
-        Class cls = Class.forName(map);
+        URLClassLoader cl = getEDIClassLoader();  
+        Class cls = Class.forName(map,true,cl); 
         Object obj = cls.getDeclaredConstructor().newInstance();
         Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class, ArrayList.class);
         Object oc = method.invoke(obj, doc, c, messages);
@@ -3736,7 +3737,8 @@ public class EDI {
         
          // call map 
         try {
-        Class cls = Class.forName(map);
+        URLClassLoader cl = getEDIClassLoader();  
+        Class cls = Class.forName(map,true,cl); 
         Object obj = cls.getDeclaredConstructor().newInstance();
         Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class, ArrayList.class);
         Object oc = method.invoke(obj, doc, c, messages);
@@ -3861,7 +3863,8 @@ public class EDI {
         
          // call map 
         try {
-        Class cls = Class.forName(map);
+        URLClassLoader cl = getEDIClassLoader();  
+        Class cls = Class.forName(map,true,cl); 
         Object obj = cls.getDeclaredConstructor().newInstance();
         Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class, ArrayList.class);
         Object oc = method.invoke(obj, doc, c, messages);
@@ -4333,96 +4336,6 @@ public class EDI {
          
        return errorcode; 
          
-     }
-    
-    
-    public static int Create990o(String nbr, String response)  {
-        int errorcode = 0;
-       
-        // errorcode = 0 ... clean exit
-        // errorcode = 1 ... no record found in wh_mstr for wh doctype
-        // errorcode = 2 ... unable to retrieve carriers from order
-        // errorcode = 3 ... any catch error below ...try running from command line to see trace dump
-        // errorcode = 4 ... shipper does not exist
-        
-        
-        
-        String doctype = "990";
-        String map = "";
-        
-        
-      
-        
-         String tp = OVData.getFreightOrderCarrierAssigned(nbr);
-       
-            
-        
-        map = EDData.getEDIMap(tp, doctype, ""); 
-        
-        String[] c_in = initEDIControl();   // controlarray in this order : entity, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
-        
-         c_in[0] = tp;
-        c_in[1] = doctype;
-        c_in[2] = map;
-        c_in[3] = "";
-        c_in[4] = "";
-        c_in[5] = "";
-        c_in[6] = "";
-        c_in[7] = nbr;
-        c_in[15] = "0"; // dir out
-        c_in[12] = "0"; // is override
-        
-        // get Delimiters from Cust Defaults
-        String[] defaults = EDData.getEDITPDefaults(tp, doctype, "");
-        c_in[9] = defaults[7]; 
-        c_in[10] = defaults[6]; 
-        c_in[11] = defaults[8]; 
-        
-        if (tp.isEmpty()) {
-            EDData.writeEDILog(c_in, "error", "no carrier for this freight order " + tp + " / " + doctype);
-            errorcode = 1;
-            return errorcode;
-        } 
-        
-        if (map.isEmpty()) {
-            EDData.writeEDILog(c_in, "error", "no edi_mstr map for " + tp + " / " + doctype);
-            errorcode = 1;
-            return errorcode;
-        } 
-        
-        // Mapdata method call below requires two parameters (ArrayList, String[]) ...doc and c
-        ArrayList doc = new ArrayList();
-        doc.add(nbr);
-        
-                    try {
-                   Class cls = Class.forName(map);
-                    Object obj = cls.getDeclaredConstructor().newInstance();
-                    Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class, ArrayList.class);
-               
-                    
-                    Object envelope = method.invoke(obj, doc, c_in); // envelope array holds in this order (isa, gs, ge, iea, filename, isactrlnum, gsctrlnum, stctrlnum)
-                    String[] c_out = (String[])envelope;
-                    
-                    EDData.writeEDILog(c_out, "INFO", "Export"); 
-                    EDData.CreateFreightEDIRecs(c_out, nbr);
-
-                    } catch (IllegalAccessException | ClassNotFoundException |
-                             InstantiationException | NoSuchMethodException |
-                            InvocationTargetException ex) {
-                        EDData.writeEDILog(c_in, "error", "unable to find map class or invocation error for " + tp + " / " + doctype);
-                        clearStaticVariables();
-                        errorcode = 3;
-                        edilog(ex);
-                    }
-           
-     
-        
-        // now lets set the order issourced flag if errorcode still equals 0
-        if (errorcode == 0) {
-           // EDData.updateOrderSourceFlag(nbr);
-        }
-        
-        return errorcode;
      }
       
     public static int Create204(String nbr)  {

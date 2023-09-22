@@ -1,47 +1,47 @@
-#segment,parent,loopcount,isgroup,islandmark,field,desc,min,max,align,status
-order,,1,no,yes,landmark,landmark,5,5,-,M
-order,,1,no,no,orderid,Order Number,1,40,-,O
-order,,1,no,no,site,Site Code,1,40,-,O
-order,,1,no,no,orderdate,Order Date,1,40,-,O
-order,,1,no,no,duedate,Due Date,1,40,-,O
-order,,1,no,no,remarks,Remarks,1,40,-,O
-order,,1,no,no,reference,Reference,1,40,-,O
-order,,1,no,no,doctype,Document Type,1,40,-,O
-order,,1,no,no,ordertype,Order Type,1,40,-,O
-order,,1,no,no,senderid,Sender ID,1,40,-,O
-order,,1,no,no,receiverid,Receiver ID,1,40,-,O
-order,,1,no,no,currency,Currency,1,40,-,O
-order,,1,no,no,shipvia,Ship Via,1,40,-,O
-order,,1,no,no,transportmethod,Method Of Transport,1,40,-,O
-order,,1,no,no,status,Status,1,40,-,O
-addresses,order,5,yes,yes,landmark,landmark,9,9,-,M
-address,addresses,5,yes,yes,landmark,landmark,9,9,-,M
-address,addresses,1,no,no,type,Type,1,40,-,O
-address,addresses,1,no,no,addrid,Address No,1,40,-,O
-address,addresses,1,no,no,name,Name,1,40,-,O
-address,addresses,1,no,no,line1,Line 1 Addr,1,70,-,O
-address,addresses,1,no,no,line2,Line 2 Addr,1,70,-,O
-address,addresses,1,no,no,line3,Line 3 Addr,1,70,-,O
-address,addresses,1,no,no,city,City,1,40,-,O
-address,addresses,1,no,no,state,State,1,40,-,O
-address,addresses,1,no,no,zip,Postal Code,1,40,-,O
-address,addresses,1,no,no,country,Country,1,3,-,O
-address,addresses,1,no,no,phone,Phone,1,30,-,O
-address,addresses,1,no,no,email,Email,1,60,-,O
-address,addresses,1,no,no,url,URL,1,60,-,O
-items,order,100,yes,yes,landmark,landmark,9,9,-,M
-item,items,100,yes,yes,landmark,landmark,9,9,-,M
-item,items,1,no,no,itemnumber,Item Number,1,40,-,O
-item,items,1,no,no,line,Line Number,1,40,-,O
-item,items,1,no,no,uom,Unit of Measure,1,40,-,O
-item,items,1,no,no,description,Description,1,40,-,O
-item,items,1,no,no,skunumber,Sku Number,1,40,-,O
-item,items,1,no,no,upcnumber,UPC Number,1,40,-,O
-item,items,1,no,no,orderquantity,Quantity Ordered,1,40,-,O
-item,items,1,no,no,shippedquantity,Quantity Shipped,1,40,-,O
-item,items,1,no,no,status,Status,1,40,-,O
-item,items,1,no,no,listprice,List Price,1,40,-,O
-item,items,1,no,no,netprice,Net Price,1,40,-,O
-item,items,1,no,no,discount,Discount Percent,1,40,-,O
-item,items,1,no,no,location,Location,1,40,-,O
-item,items,1,no,no,warehouse,Warehouse,1,40,-,O
+#segment,parent,loopcount,isgroup,islandmark,field,desc,min,max,align,status,type
+order,,1,no,yes,landmark,landmark,5,5,-,M,F
+order,,1,no,no,orderid,Order Number,1,40,-,O,F
+order,,1,no,no,site,Site Code,1,40,-,O,F
+order,,1,no,no,orderdate,Order Date,1,40,-,O,F
+order,,1,no,no,duedate,Due Date,1,40,-,O,F
+order,,1,no,no,remarks,Remarks,1,40,-,O,F
+order,,1,no,no,reference,Reference,1,40,-,O,F
+order,,1,no,no,doctype,Document Type,1,40,-,O,F
+order,,1,no,no,ordertype,Order Type,1,40,-,O,F
+order,,1,no,no,senderid,Sender ID,1,40,-,O,F
+order,,1,no,no,receiverid,Receiver ID,1,40,-,O,F
+order,,1,no,no,currency,Currency,1,40,-,O,F
+order,,1,no,no,shipvia,Ship Via,1,40,-,O,F
+order,,1,no,no,transportmethod,Method Of Transport,1,40,-,O,F
+order,,1,no,no,status,Status,1,40,-,O,F
+addresses,order,5,yes,yes,landmark,landmark,9,9,-,M,F
+address,addresses,5,yes,yes,landmark,landmark,9,9,-,M,F
+address,addresses,1,no,no,type,Type,1,40,-,O,F
+address,addresses,1,no,no,addrid,Address No,1,40,-,O,F
+address,addresses,1,no,no,name,Name,1,40,-,O,F
+address,addresses,1,no,no,line1,Line 1 Addr,1,70,-,O,F
+address,addresses,1,no,no,line2,Line 2 Addr,1,70,-,O,F
+address,addresses,1,no,no,line3,Line 3 Addr,1,70,-,O,F
+address,addresses,1,no,no,city,City,1,40,-,O,F
+address,addresses,1,no,no,state,State,1,40,-,O,F
+address,addresses,1,no,no,zip,Postal Code,1,40,-,O,F
+address,addresses,1,no,no,country,Country,1,3,-,O,F
+address,addresses,1,no,no,phone,Phone,1,30,-,O,F
+address,addresses,1,no,no,email,Email,1,60,-,O,F
+address,addresses,1,no,no,url,URL,1,60,-,O,F
+items,order,100,yes,yes,landmark,landmark,9,9,-,M,F
+item,items,100,yes,yes,landmark,landmark,9,9,-,M,F
+item,items,1,no,no,itemnumber,Item Number,1,40,-,O,F
+item,items,1,no,no,line,Line Number,1,40,-,O,F
+item,items,1,no,no,uom,Unit of Measure,1,40,-,O,F
+item,items,1,no,no,description,Description,1,40,-,O,F
+item,items,1,no,no,skunumber,Sku Number,1,40,-,O,F
+item,items,1,no,no,upcnumber,UPC Number,1,40,-,O,F
+item,items,1,no,no,orderquantity,Quantity Ordered,1,40,-,O,F
+item,items,1,no,no,shippedquantity,Quantity Shipped,1,40,-,O,F
+item,items,1,no,no,status,Status,1,40,-,O,F
+item,items,1,no,no,listprice,List Price,1,40,-,O,F
+item,items,1,no,no,netprice,Net Price,1,40,-,O,F
+item,items,1,no,no,discount,Discount Percent,1,40,-,O,F
+item,items,1,no,no,location,Location,1,40,-,O,F
+item,items,1,no,no,warehouse,Warehouse,1,40,-,O,F
