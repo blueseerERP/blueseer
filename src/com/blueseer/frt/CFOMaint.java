@@ -569,6 +569,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddsite.removeAllItems();
         ddstate.removeAllItems();
         ddcust.removeAllItems();
+        ddshipto.removeAllItems();
         ddequiptype.removeAllItems();
         ddservicetype.removeAllItems();
         ddvehicle.removeAllItems();
@@ -1479,17 +1480,14 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public void clientChangeEvent(String mykey) {
-            
+       ddshipto.removeAllItems();     
        if (! isLoad && ddcust.getSelectedItem() != null && ! ddcust.getSelectedItem().toString().isEmpty() ) {
            lbclientname.setText(cusData.getCustName(ddcust.getSelectedItem().toString()));
-           ddshipto.removeAllItems();
            ArrayList<String> list = cusData.getcustshipmstrlist(ddcust.getSelectedItem().toString());
             for (String s : list) {
                 ddshipto.addItem(s);
             }
             ddshipto.insertItemAt("",0);
-           
-           
        } else {
            lbclientname.setText("");
        }

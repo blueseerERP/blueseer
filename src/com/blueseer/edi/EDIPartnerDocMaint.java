@@ -116,6 +116,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                     dddoc.setSelectedItem(doctype);
                     ddoutdoctype.setSelectedItem(res.getString("edi_doctypeout"));
                     ddoutfiletype.setSelectedItem(res.getString("edi_filetypeout"));
+                    ddinfiletype.setSelectedItem(res.getString("edi_filetype"));
                     tbIFS.setText(res.getString("edi_ifs"));
                     tbOFS.setText(res.getString("edi_ofs"));
                     tbrcvisa.setText(res.getString("edi_rcvisa"));
@@ -299,6 +300,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         ddmap.setEnabled(false);
         dddoc.setEnabled(false);
         ddoutfiletype.setEnabled(false);
+        ddinfiletype.setEnabled(false);
         ddoutdoctype.setEnabled(false);
         tbversion.setEnabled(false);
         tbsupplier.setEnabled(false);
@@ -479,6 +481,8 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         tbIFS = new javax.swing.JTextField();
         jLabel20 = new javax.swing.JLabel();
         tbOFS = new javax.swing.JTextField();
+        ddinfiletype = new javax.swing.JComboBox<>();
+        jLabel21 = new javax.swing.JLabel();
         lblmessg = new javax.swing.JLabel();
         panelOutbound = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
@@ -718,7 +722,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         jLabel8.setText("outFileType");
         jLabel8.setName("lbloutfiletype"); // NOI18N
 
-        ddoutfiletype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "FF", "X12", "DB" }));
+        ddoutfiletype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "DB", "CSV", "FF", "JSON", "UNE", "X12", "XML" }));
 
         jLabel19.setText("ISF File");
         jLabel19.setName("lblifs"); // NOI18N
@@ -726,19 +730,25 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         jLabel20.setText("OSF File");
         jLabel20.setName("lblofs"); // NOI18N
 
+        ddinfiletype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "DB", "CSV", "FF", "JSON", "UNE", "X12", "XML" }));
+
+        jLabel21.setText("InFileType");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel19, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel20, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel19)
+                    .addComponent(jLabel20)
+                    .addComponent(jLabel21))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(ddinfiletype, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(ddoutdoctype, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(ddoutfiletype, 0, 112, Short.MAX_VALUE)
                     .addComponent(tbIFS)
@@ -748,7 +758,11 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(15, 15, 15)
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ddinfiletype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel21))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(ddoutdoctype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -764,7 +778,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbOFS, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel20))
-                .addContainerGap(128, Short.MAX_VALUE))
+                .addContainerGap(106, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout panelMainLayout = new javax.swing.GroupLayout(panelMain);
@@ -1091,29 +1105,9 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                 String una = "";
                 String ung = "";
                 int i = 0;
-                String infiletype = "";
+               
                 
-                if (dddoc.getSelectedItem().toString().endsWith("db")) {
-                    infiletype = "DB";
-                }
-                if (dddoc.getSelectedItem().toString().endsWith("x12")) {
-                    infiletype = "X12";
-                }
-                if (dddoc.getSelectedItem().toString().endsWith("csv")) {
-                    infiletype = "CSV";
-                }
-                if (dddoc.getSelectedItem().toString().endsWith("une")) {
-                    infiletype = "UNE";
-                }
-                if (dddoc.getSelectedItem().toString().endsWith("xml")) {
-                    infiletype = "XML";
-                }
-                if (dddoc.getSelectedItem().toString().endsWith("json")) {
-                    infiletype = "JSON";
-                }
-                if (infiletype.isBlank()) {
-                    infiletype = "FF";
-                }
+               
                
                 if (ddkey.getSelectedItem() == null || ddkey.getSelectedItem().toString().isEmpty()) {
                     proceed = false;
@@ -1186,7 +1180,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                                 + "'" + ddoutfiletype.getSelectedItem().toString() + "'" + ","
                                 + "'" + tbIFS.getText() + "'"  + ","
                                 + "'" + tbOFS.getText() + "'"  + ","      
-                                + "'" + infiletype + "'"  + ","        
+                                + "'" + ddinfiletype.getSelectedItem().toString() + "'"  + ","        
                                 + "'" + fa + "'" + ","
                                 + "'" + envelopeall + "'" + ","
                                 + "'" + una + "'" + ","
@@ -1493,6 +1487,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
             ediData.map_mstr x = getMapMstr(new String[]{ddmap.getSelectedItem().toString()});
             ddoutdoctype.setSelectedItem(x.map_outdoctype());
             ddoutfiletype.setSelectedItem(x.map_outfiletype());
+            ddinfiletype.setSelectedItem(x.map_infiletype());
             tbIFS.setText(x.map_ifs());
             tbOFS.setText(x.map_ofs());
         }
@@ -1554,6 +1549,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
     private javax.swing.JCheckBox cbung;
     private javax.swing.JComboBox<String> ddattributekey;
     private javax.swing.JComboBox<String> dddoc;
+    private javax.swing.JComboBox<String> ddinfiletype;
     private javax.swing.JComboBox<String> ddkey;
     private javax.swing.JComboBox<String> ddmap;
     private javax.swing.JComboBox<String> ddoutdoctype;
@@ -1571,6 +1567,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;

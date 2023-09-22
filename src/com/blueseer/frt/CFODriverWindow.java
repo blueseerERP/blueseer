@@ -111,9 +111,7 @@ public class CFODriverWindow extends javax.swing.JPanel {
                         };
                 
     javax.swing.table.DefaultTableModel modeldriver = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{getGlobalColumnTag("id"), 
-                            getGlobalColumnTag("lastname"),
-                            getGlobalColumnTag("firstname"),
+                        new String[]{getGlobalColumnTag("driverid"),
                             "DATE1", 
                             "DATE2", 
                             "DATE3", 
@@ -690,13 +688,13 @@ try {
                 
                 
                 
-                tabledetail.getColumnModel().getColumn(3).setHeaderValue(daysh[0]);
-                tabledetail.getColumnModel().getColumn(4).setHeaderValue(daysh[1]);
-                tabledetail.getColumnModel().getColumn(5).setHeaderValue(daysh[2]);
-                tabledetail.getColumnModel().getColumn(6).setHeaderValue(daysh[3]);
-                tabledetail.getColumnModel().getColumn(7).setHeaderValue(daysh[4]);
-                tabledetail.getColumnModel().getColumn(8).setHeaderValue(daysh[5]);
-                tabledetail.getColumnModel().getColumn(9).setHeaderValue(daysh[6]);
+                tabledetail.getColumnModel().getColumn(1).setHeaderValue(daysh[0]);
+                tabledetail.getColumnModel().getColumn(2).setHeaderValue(daysh[1]);
+                tabledetail.getColumnModel().getColumn(3).setHeaderValue(daysh[2]);
+                tabledetail.getColumnModel().getColumn(4).setHeaderValue(daysh[3]);
+                tabledetail.getColumnModel().getColumn(5).setHeaderValue(daysh[4]);
+                tabledetail.getColumnModel().getColumn(6).setHeaderValue(daysh[5]);
+                tabledetail.getColumnModel().getColumn(7).setHeaderValue(daysh[6]);
                 
                 tabledetail.getTableHeader().repaint();
     
@@ -906,6 +904,7 @@ try {
             }
             
             // now enter into model table
+            String driverconcat = "";
             for (Map.Entry<String, ArrayList<String>> val : lhm.entrySet()) {
                 
                 String[] drv = getDriverInfo(val.getKey());
@@ -919,10 +918,9 @@ try {
                 daysv[5] = (f.contains(days[5])) ? "scheduled" : "open";
                 daysv[6] = (f.contains(days[6])) ? "scheduled" : "open";
                 
+                driverconcat = val.getKey() + " - " + drv[0] + ", " + drv[1];
                 modeldriver.addRow(new Object[]{ 
-                      val.getKey(),
-                      drv[0],
-                      drv[1],
+                      driverconcat,
                       daysv[0],
                       daysv[1],
                       daysv[2],

@@ -1466,9 +1466,6 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                     String[] x = null;
                     if (c[28].equals("FF")) {
                         x = splitFFSegment(s, ISF);
-                    } else if (c[28].toUpperCase().equals("CSV")) {
-                        s = "ROW" + eledelim + s;
-                        x = s.split(eledelim,-1);
                     } else {
                         x = s.split(eledelim,-1); // delims = seg, ele, sub
                     }
@@ -1484,11 +1481,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                 }
                 
                 String[] IFSseg = null;
-                if (c[28].toUpperCase().equals("CSV")) {
-                    segRecord sr = getSegmentInISF(x[0], "", ISF);
-                    IFSseg = sr.m();
-                    currentPosition = sr.p();
-                } else if(c[28].toUpperCase().equals("XML")) {
+                if(c[28].toUpperCase().equals("XML")) {
                     // identify immediate parent/group head
                 stackGHP sp = preGroupHeadRLoop(x[0], stack, ISF, GHP);
                 stack = sp.s();
