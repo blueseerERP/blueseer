@@ -1105,7 +1105,7 @@ public class VehicleMaint extends javax.swing.JPanel implements IBlueSeerT {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
-        newAction("");
+        newAction("vehicle");
     }//GEN-LAST:event_btnewActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
