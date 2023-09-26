@@ -396,6 +396,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                    btdeleteparam.setEnabled(false);
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
+                   btrun.setEnabled(false);
         } else {
                    tbkey.setForeground(Color.red); 
         }
@@ -1510,7 +1511,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         } 
        
         setlblurl();  
-        
+        btrun.setEnabled(true);
         isLoad = false;
     }//GEN-LAST:event_tabledetailMouseClicked
 
