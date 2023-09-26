@@ -378,6 +378,7 @@ public class WorkFlowLog extends javax.swing.JPanel {
        dcfrom.setDate(now);
         dcto.setDate(now);
         
+        filemodel.setNumRows(0);
         modeldetail.setNumRows(0);
         tablereport.setModel(filemodel);
         tabledetail.setModel(modeldetail);

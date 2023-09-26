@@ -214,7 +214,7 @@ public class apiUtils {
         int k = 0;
         String method = "";
         String verb = "";
-        String value = "";
+        String value = apid.apid_value();
         String urlstring = "";
         String port = "";
         HttpURLConnection conn = null;
@@ -285,7 +285,7 @@ public class apiUtils {
                 BufferedReader br = null;
 		if (conn.getResponseCode() != 200) {
                         r[0] = "1";
-                        r[1] = conn.getResponseCode() + ": " + conn.getResponseMessage();
+                        r[1] = "api call to id: " + api.api_id() + " with urlstring: " + urlstring + " response->" + conn.getResponseCode() + ": " + conn.getResponseMessage();
 		} else {
                     br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
                 }
