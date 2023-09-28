@@ -3001,7 +3001,7 @@ public class ediData {
                 rr = wkfaction_apicall(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
                 lgd[3] = rr.status();
                 lgd[4] = rr.messg();
-                if (! r[0].equals("0")) {
+                if (! rr.status().equals("0")) {
                     logdetail.add(lgd);
                     break forloop;
                 } 
@@ -3011,7 +3011,7 @@ public class ediData {
                 rr = wkfaction_scriptcall(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
                 lgd[3] = rr.status();
                 lgd[4] = rr.messg();
-                if (! r[0].equals("0")) {
+                if (! rr.status().equals("0")) {
                     logdetail.add(lgd);
                     break forloop;
                 } 
