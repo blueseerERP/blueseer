@@ -55,6 +55,7 @@ import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormat;
 import com.blueseer.utl.OVData;
 import static com.blueseer.utl.OVData.AREntry;
+import static com.blueseer.utl.OVData.getCodeValueByCodeKey;
 import static com.blueseer.utl.OVData.getNextNbr;
 import static com.blueseer.vdr.venData.getVendInfo;
 import java.sql.DriverManager;
@@ -1865,6 +1866,14 @@ public class shpData {
        ArrayList<String[]> sac = new ArrayList<String[]>();
        Double matltax = 0.00;
        Double totamt = 0.00;
+       
+       String fieldlabel = "";
+       fieldlabel = getCodeValueByCodeKey("fieldlabel", "materialtax");
+       
+       if (fieldlabel.isBlank()) {
+       fieldlabel = "Material Tax";
+       }
+       
        try{
 
         Connection con = null;
@@ -1928,14 +1937,17 @@ public class shpData {
                                  ") ;");
                  }
                  // now insert matltax if any for summary purposes
+                 if (matltax > 0) {
                  st.executeUpdate(" insert into shs_det (shs_nbr, shs_so, shs_desc, shs_type, shs_amttype, shs_amt ) " +
                                  " values ( "  + "'" + shipper + "'" + "," +
                                  "'" + "" + "'" + "," +
-                                 "'" + getGlobalProgTag("matltax") + "'" + "," +
+                                 "'" + fieldlabel + "'" + "," +
                                  "'" + "tax" + "'" + "," +
                                  "'" + "amount" + "'" + "," +
                                  "'" + currformatDoubleUS(matltax) + "'" + 
                                  ") ;");
+                 }
+                 
              }
 
         }

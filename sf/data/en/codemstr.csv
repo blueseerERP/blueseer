@@ -472,3 +472,4 @@ sys_job_class,com.blueseer.crn.jobWkf,,1
 edimaps,internal,1,1
 sys_smtp,auth,yes,1
 sys_smtp,tls,yes,1
+fieldlabel,materialtax,Material Tax,1
