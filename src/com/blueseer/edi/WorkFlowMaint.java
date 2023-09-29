@@ -99,7 +99,11 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
    javax.swing.table.DefaultTableModel keyvaluemodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
                 "Key", "Value"
-            });
+            }) {
+                public boolean isCellEditable(int row, int col) {
+			return false; 
+	        }
+            };
    
    DefaultListModel actionlistmodel = new DefaultListModel();
                 
@@ -304,6 +308,8 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
         actionlistmodel.removeAllElements();
         actionlist.setModel(actionlistmodel);
         setddactions();
+        tbkvKey.setText("");
+        tbkvValue.setText("");
        isLoad = false;
     }
     
@@ -545,9 +551,9 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddactions.addItem("FileCopy");
         ddactions.addItem("FileMove");
         ddactions.addItem("FileDelete");
-        ddactions.addItem("FileCopyAll");
-        ddactions.addItem("FileMoveAll");
-        ddactions.addItem("FileDeleteAll");
+        ddactions.addItem("FileCopyDir");
+        ddactions.addItem("FileMoveDir");
+        ddactions.addItem("FileDeleteDir");
         ddactions.addItem("FileMap");
         ddactions.addItem("APICall");
         ddactions.addItem("X12DirFilter");
@@ -586,7 +592,7 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
                 x.add(new String[]{"filter", ""});
                 x.add(new String[]{"destination dir", ""});
                 x.add(new String[]{"overwrite", ""}); 
-                kvs.put("FileCopyAll", x);
+                kvs.put("FileCopyDir", x);
             }
             if (i == 4) {
                 ArrayList<String[]> x = new ArrayList<String[]>();
@@ -594,13 +600,13 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
                 x.add(new String[]{"filter", ""});
                 x.add(new String[]{"destination dir", ""});
                 x.add(new String[]{"overwrite", ""}); 
-                kvs.put("FileMoveAll", x);
+                kvs.put("FileMoveDir", x);
             }
             if (i == 5) {
                 ArrayList<String[]> x = new ArrayList<String[]>();
                 x.add(new String[]{"source dir", ""});
                 x.add(new String[]{"days", ""});
-                kvs.put("FileDeleteAll", x);
+                kvs.put("FileDeleteDir", x);
             }
             if (i == 6) {
                 ArrayList<String[]> x = new ArrayList<String[]>();
@@ -720,6 +726,10 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
         jScrollPane1 = new javax.swing.JScrollPane();
         keyvaluetable = new javax.swing.JTable();
         btcommit = new javax.swing.JButton();
+        tbkvKey = new javax.swing.JTextField();
+        tbkvValue = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -950,35 +960,59 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        keyvaluetable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                keyvaluetableMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(keyvaluetable);
 
-        btcommit.setText("Commit Key/Value");
+        btcommit.setText("Update Key/Value");
         btcommit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btcommitActionPerformed(evt);
             }
         });
 
+        jLabel3.setText("Value");
+
+        jLabel4.setText("Key");
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btcommit)))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGap(82, 82, 82)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tbkvKey, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(35, 35, 35)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tbkvValue)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btcommit)
+                        .addGap(8, 8, 8)))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btcommit))
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbkvKey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbkvValue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4)
+                    .addComponent(btcommit))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -1157,14 +1191,17 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_btnewActionPerformed
 
     private void actionlistMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_actionlistMouseClicked
+        tbkvKey.setText("");
+        tbkvValue.setText("");
+        
         if (keyvaluemodel != null && actionlist != null && ! actionlist.isSelectionEmpty()) {
             int x = actionlist.getSelectedIndex();
             currentkvm = x;
             String label = actionlist.getSelectedValue();
-           
+            
             keyvaluemodel.setRowCount(0);
             
-            jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Key/Value Action: " + label));
+         //   jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Key/Value Action: " + label));
             
             /*
             for (Map.Entry<String, ArrayList<String[]>> z : kvm.entrySet()) {
@@ -1180,29 +1217,43 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
                     v[1]
                     });
                 }
+               
             } else {
                 bsmf.MainFrame.show(String.valueOf(x));
             }
+            
         }
     }//GEN-LAST:event_actionlistMouseClicked
 
     private void btcommitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcommitActionPerformed
         ArrayList<String[]> list = new ArrayList<String[]>();
-        boolean proceed = true;
+        
+        
+        if (tbkvValue.getText().length() > 100) {
+                bsmf.MainFrame.show("value cannot exceed 100 chars");
+                return;
+        }
+        
+        
+        int[] rows = keyvaluetable.getSelectedRows();
+        if (rows.length != 1) {
+            bsmf.MainFrame.show(getMessageTag(1095));
+                return;
+        }
+        for (int i : rows) {
+            keyvaluetable.setValueAt(tbkvValue.getText(), i, 1);
+        }
+        
+        
         for (int j = 0; j < keyvaluetable.getRowCount(); j++) {
-            if (keyvaluetable.getValueAt(j, 1).toString().length() > 100) {
-                proceed = false;
-                break;
-            }
+            
             String[] arr = new String[]{keyvaluetable.getValueAt(j, 0).toString(), keyvaluetable.getValueAt(j, 1).toString()};
             list.add(arr);
         }
-        if (proceed) {
+       
         kvm.put(String.valueOf(currentkvm), list);
          bsmf.MainFrame.show("key/values committed");
-        } else {
-         bsmf.MainFrame.show("Value length cannot exceed 100 chars");   
-        }
+        
     }//GEN-LAST:event_btcommitActionPerformed
 
     private void btrunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrunActionPerformed
@@ -1212,6 +1263,16 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
         setPanelComponentState(this, false);
         executeTask(dbaction.run, new String[]{tbkey.getText()});
     }//GEN-LAST:event_btrunActionPerformed
+
+    private void keyvaluetableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_keyvaluetableMouseClicked
+        int row = keyvaluetable.rowAtPoint(evt.getPoint());
+        int col = keyvaluetable.columnAtPoint(evt.getPoint());
+        //   "Line", "Part", "CustPart", "SO", "PO", "Qty", "UOM", "ListPrice", "Discount", "NetPrice", "QtyShip", "Status", "WH", "LOC", "Desc", "Tax"
+        isLoad = true; 
+        tbkvKey.setText(keyvaluetable.getValueAt(row, 0).toString());
+        tbkvValue.setText(keyvaluetable.getValueAt(row, 1).toString());
+        isLoad = false;  
+    }//GEN-LAST:event_keyvaluetableMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1233,6 +1294,8 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JComboBox<String> ddactions;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -1242,5 +1305,7 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JTable keyvaluetable;
     private javax.swing.JTextField tbdesc;
     private javax.swing.JTextField tbkey;
+    private javax.swing.JTextField tbkvKey;
+    private javax.swing.JTextField tbkvValue;
     // End of variables declaration//GEN-END:variables
 }

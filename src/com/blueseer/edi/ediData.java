@@ -3077,7 +3077,7 @@ public class ediData {
                 } 
                 break;     
             
-                case "FileCopyAll" :
+                case "FileCopyDir" :
                 r = wkfaction_filecopyall(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
                 lgd[3] = r[0];
                 lgd[4] = r[1];
@@ -3087,7 +3087,7 @@ public class ediData {
                 } 
                 break; 
                 
-                case "FileMoveAll" :
+                case "FileMoveDir" :
                 r = wkfaction_filemoveall(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
                 lgd[3] = r[0];
                 lgd[4] = r[1];
@@ -3097,7 +3097,7 @@ public class ediData {
                 } 
                 break; 
                 
-                case "FileDeleteAll" :
+                case "FileDeleteDir" :
                 r = wkfaction_filedeleteall(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
                 lgd[3] = r[0];
                 lgd[4] = r[1];
