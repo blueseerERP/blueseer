@@ -363,6 +363,13 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
             ddshipcountry.addItem(OVData.countries[i]);
         }
        
+        ddsite.removeAllItems();
+        ArrayList<String> sites = OVData.getSiteList();
+        for (String code : sites) {
+            ddsite.addItem(code);
+        }
+        ddsite.setSelectedItem(OVData.getDefaultSite());
+       
        ddcarrier.removeAllItems();
         ArrayList myscac = OVData.getfreightlist();   
         for (int i = 0; i < myscac.size(); i++) {
@@ -624,7 +631,7 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
     public vd_mstr createRecord() { 
         vd_mstr x = new vd_mstr(null, 
                 tbkey.getText().toString(),
-                "", // site
+                ddsite.getSelectedItem().toString(), // site
                 tbname.getText(),
                 tbline1.getText(),
                 tbline2.getText(),
@@ -762,6 +769,7 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     public String[] updateForm() {
         tbkey.setText(k.vd_addr());
+        ddsite.setSelectedItem(k.vd_site());
         tbname.setText(k.vd_name());
         tbline1.setText(k.vd_line1());
         tbline2.setText(k.vd_line2());
@@ -1192,6 +1200,8 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel33 = new javax.swing.JLabel();
         cb850 = new javax.swing.JCheckBox();
         ddtaxcode = new javax.swing.JComboBox<>();
+        ddsite = new javax.swing.JComboBox<>();
+        jLabel44 = new javax.swing.JLabel();
         contactPanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         contacttable = new javax.swing.JTable();
@@ -1485,6 +1495,9 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         cb850.setText("Export 850");
 
+        jLabel44.setText("Site");
+        jLabel44.setName("lblsite"); // NOI18N
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -1510,7 +1523,8 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addComponent(jLabel32)
                             .addComponent(jLabel10)
                             .addComponent(jLabel16)
-                            .addComponent(jLabel33))
+                            .addComponent(jLabel33)
+                            .addComponent(jLabel44))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane2)
@@ -1543,13 +1557,20 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
                                     .addComponent(ddterms, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(ddcc, 0, 97, Short.MAX_VALUE)
                                     .addComponent(cb850)
-                                    .addComponent(ddtaxcode, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
+                                    .addComponent(ddtaxcode, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addGap(62, 62, 62))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(15, 15, 15)
+                .addGap(4, 4, 4)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel44))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(tbdatemod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel10)
@@ -2099,6 +2120,7 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JComboBox ddshipcountry;
     private javax.swing.JComboBox ddshipstate;
     private javax.swing.JComboBox<String> ddshiptype;
+    private javax.swing.JComboBox<String> ddsite;
     private javax.swing.JComboBox ddstate;
     private javax.swing.JComboBox<String> ddtaxcode;
     private javax.swing.JComboBox ddterms;
@@ -2140,6 +2162,7 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JLabel jLabel41;
     private javax.swing.JLabel jLabel42;
     private javax.swing.JLabel jLabel43;
+    private javax.swing.JLabel jLabel44;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;

@@ -385,7 +385,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
                               <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="103" groupAlignment="1" attributes="0">
                                   <Component id="jLabel10" alignment="1" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel13" alignment="1" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel16" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -397,6 +397,7 @@
                                   <Component id="jLabel41" alignment="1" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel40" alignment="1" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel42" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel46" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
@@ -411,6 +412,7 @@
                                   <Component id="ddcurr" alignment="0" min="-2" pref="171" max="-2" attributes="0"/>
                                   <Component id="ddlabel" alignment="0" min="-2" pref="171" max="-2" attributes="0"/>
                                   <Component id="tbshpformat" alignment="0" min="-2" pref="171" max="-2" attributes="0"/>
+                                  <Component id="ddsite" alignment="0" min="-2" pref="104" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
@@ -457,7 +459,12 @@
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <EmptySpace min="11" pref="11" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="ddsite" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel46" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="tbdateadded" min="-2" max="-2" attributes="0"/>
                           <Component id="tbdatemod" min="-2" max="-2" attributes="0"/>
@@ -881,6 +888,21 @@
             <Component class="javax.swing.JCheckBox" name="cb810">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Export 810"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="ddsite">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="0"/>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel46">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Site"/>
               </Properties>
             </Component>
           </SubComponents>

@@ -162,8 +162,8 @@ public class venData {
                         + "vd_group, vd_market, vd_buyer, "
                         + "vd_shipvia, vd_terms, vd_misc, vd_price_code, "
                         + "vd_disc_code, vd_tax_code,  "
-                        + "vd_ap_acct, vd_ap_cc, vd_bank, vd_curr, vd_remarks, vd_phone, vd_email, vd_is850export, vd_type ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+                        + "vd_ap_acct, vd_ap_cc, vd_bank, vd_curr, vd_remarks, vd_phone, vd_email, vd_is850export, vd_type, vd_site ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
         String sqlUpdate = "update vd_mstr set " 
                 + " vd_name = ?, vd_line1 = ?, vd_line2 = ?, "
                 + "vd_line3 = ?, vd_city = ?, vd_state = ?, vd_zip = ?, "
@@ -172,7 +172,7 @@ public class venData {
                 + "vd_shipvia = ?, vd_terms = ?, vd_freight_type = ?, vd_price_code = ?, "
                 + "vd_disc_code = ?, vd_tax_code = ?, vd_misc = ?, "
                 + "vd_ap_acct = ?, vd_ap_cc = ?, vd_bank = ?, vd_curr = ?, " 
-                + "vd_remarks = ?, vd_phone = ?, vd_email = ?, vd_is850export = ?, vd_type = ? "
+                + "vd_remarks = ?, vd_phone = ?, vd_email = ?, vd_is850export = ?, vd_type = ?, vd_site = ? "
                 + " where vd_addr = ? ; ";
           ps = con.prepareStatement(sqlSelect);
           ps.setString(1, x.vd_addr);
@@ -210,10 +210,11 @@ public class venData {
             ps.setString(28,x.vd_email);
             ps.setString(29,x.vd_is850export);
             ps.setString(30,x.vd_type);
+            ps.setString(31,x.vd_site);
             rows = ps.executeUpdate();
             } else {
                 if (addupdate) {
-               psu.setString(31, x.vd_addr);
+               psu.setString(32, x.vd_addr);
                 psu.setString(1, x.vd_name);
                 psu.setString(2, x.vd_line1);
                 psu.setString(3, x.vd_line2);
@@ -243,7 +244,8 @@ public class venData {
                 psu.setString(27,x.vd_phone);
                 psu.setString(28,x.vd_email);
                 psu.setString(29,x.vd_is850export);
-                psu.setString(30,x.vd_type); 
+                psu.setString(30,x.vd_type);
+                psu.setString(31,x.vd_site);
                 rows = psu.executeUpdate();  
                 psu.close();
               }
@@ -310,10 +312,10 @@ public class venData {
                 + "vd_shipvia = ?, vd_terms = ?, vd_freight_type = ?, vd_price_code = ?, "
                 + "vd_disc_code = ?, vd_tax_code = ?, vd_misc = ?, "
                 + "vd_ap_acct = ?, vd_ap_cc = ?, vd_bank = ?, vd_curr = ?, " 
-                + "vd_remarks = ?, vd_phone = ?, vd_email = ?, vd_is850export = ?, vd_type = ? "
+                + "vd_remarks = ?, vd_phone = ?, vd_email = ?, vd_is850export = ?, vd_type = ?, vd_site = ? "
                 + " where vd_addr = ? ; ";
         ps = con.prepareStatement(sql);
-        ps.setString(31, x.vd_addr);
+        ps.setString(32, x.vd_addr);
             ps.setString(1, x.vd_name);
             ps.setString(2, x.vd_line1);
             ps.setString(3, x.vd_line2);
@@ -344,6 +346,7 @@ public class venData {
             ps.setString(28,x.vd_email);
             ps.setString(29,x.vd_is850export);
             ps.setString(30,x.vd_type);
+            ps.setString(31,x.vd_site);
             rows = ps.executeUpdate();
         return rows;
     }
