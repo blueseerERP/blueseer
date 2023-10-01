@@ -537,16 +537,16 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbbrokercontact.setText("");
         tbbrokercell.setText("");
         ddratetype.setSelectedIndex(0);
-        tbforate.setText("");
-        tbmileage.setText("");
-        tbdriverrate.setText("");
+        tbforate.setText("0");
+        tbmileage.setText("0");
+        tbdriverrate.setText("0");
         cbstandard.setSelected(false);
-        tbtotweight.setText("");
+        tbtotweight.setText("0");
         dcorddate.setDate(bsmf.MainFrame.now);
         dcconfdate.setDate(bsmf.MainFrame.now);
-        tbcharges.setText("");
+        tbcharges.setText("0");
         tbcharges.setEditable(false);
-        tbcost.setText("");
+        tbcost.setText("0");
         tbcost.setEditable(false);
         
        // tablelist.clear();
@@ -878,17 +878,17 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tbbrokercontact.getText(),
                 tbbrokercell.getText(),
                 ddratetype.getSelectedItem().toString(),
-                tbforate.getText(),
-                tbmileage.getText(),
-                tbdriverrate.getText(),
+                tbforate.getText().isBlank() ? "0" : tbforate.getText(),
+                tbmileage.getText().isBlank() ? "0" : tbmileage.getText(),
+                tbdriverrate.getText().isBlank() ? "0" : tbdriverrate.getText(),
                 String.valueOf(BlueSeerUtils.boolToInt(cbstandard.isSelected())),
-                tbtotweight.getText(),
+                tbtotweight.getText().isBlank() ? "0" : tbtotweight.getText(),
                 BlueSeerUtils.setDateFormat(dcorddate.getDate()).toString(),
                 BlueSeerUtils.setDateFormat(dcconfdate.getDate()).toString(),
                 String.valueOf(BlueSeerUtils.boolToInt(cbhazmat.isSelected())),
                 "0", // expenses
-                tbcharges.getText(),
-                tbcost.getText(),
+                tbcharges.getText().isBlank() ? "0" : tbcharges.getText(),
+                tbcost.getText().isBlank() ? "0" : tbcost.getText(),
                 "", // bol
                 tbremarks.getText(),
                 derived,
@@ -2941,8 +2941,8 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
             ddtimetype2.getSelectedItem().toString(),
             ddtime2.getSelectedItem().toString(),
             ddtimezone.getSelectedItem().toString(),
-            tbstoprate.getText(),
-            tbstopmiles.getText()
+            tbstoprate.getText().isBlank() ? "0" : tbstoprate.getText(),
+            tbstopmiles.getText().isBlank() ? "0" : tbstopmiles.getText()
          };
         kvstop.put(String.valueOf(currentstopline), stoparray);
         

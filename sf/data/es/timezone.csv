@@ -6,7 +6,7 @@ ACWST,Australian Central Western Standard Time (unofficial),UTC+08:45
 ADT,Atlantic Daylight Time,UTC-03
 AEDT,Australian Eastern Daylight Saving Time,UTC+11
 AEST,Australian Eastern Standard Time,UTC+10
-AET (AEST/AEDT),Australian Eastern Time,UTC+10 / UTC+11
+AET,Australian Eastern Time,UTC+10 / UTC+11
 AFT,Afghanistan Time,UTC+04:30
 AKDT,Alaska Daylight Time,UTC-08
 AKST,Alaska Standard Time,UTC-09
@@ -20,15 +20,15 @@ ART,Argentina Time,UTC-03
 AST,Arabia Standard Time,UTC+03
 AST,Atlantic Standard Time,UTC-04
 AWST,Australian Western Standard Time,UTC+08
-AZOST,Azores Summer Time,UTC±00
+AZOST,Azores Summer Time,UTC+/-00
 AZOT,Azores Standard Time,UTC-01
 AZT,Azerbaijan Time,UTC+04
 BNT,Brunei Time,UTC+08
 BIOT,British Indian Ocean Time,UTC+06
 BIT,Baker Island Time,UTC-12
 BOT,Bolivia Time,UTC-04
-BRST,Brasília Summer Time,UTC-02
-BRT,Brasília Time,UTC-03
+BRST,Brasilia Summer Time,UTC-02
+BRT,Brasilia Time,UTC-03
 BST,Bangladesh Standard Time,UTC+06
 BST,Bougainville Standard Time[6],UTC+11
 BST,British Summer Time (British Standard Time from Mar 1968 to Oct 1971),UTC+01
@@ -54,7 +54,7 @@ COT,Colombia Time,UTC-05
 CST,Central Standard Time (North America),UTC-06
 CST,China Standard Time,UTC+08
 CST,Cuba Standard Time,UTC-05
-CT (CST/CDT),Central Time,UTC-06 / UTC-05
+CT,Central Time (CST/CDT),UTC-06 / UTC-05
 CVT,Cape Verde Time,UTC-01
 CWST,Central Western Standard Time (Australia) unofficial,UTC+08:45
 CXT,Christmas Island Time,UTC+07
@@ -69,28 +69,28 @@ ECT,Ecuador Time,UTC-05
 EDT,Eastern Daylight Time (North America),UTC-04
 EEST,Eastern European Summer Time,UTC+03
 EET,Eastern European Time,UTC+02
-EGST,Eastern Greenland Summer Time,UTC±00
+EGST,Eastern Greenland Summer Time,UTC+00
 EGT,Eastern Greenland Time,UTC-01
 EST,Eastern Standard Time (North America),UTC-05
-ET (EST/EDT),Eastern Time (North America),UTC-05 / UTC-04
+ET,Eastern Time (EST/EDT)(North America),UTC-05 / UTC-04
 FET,Further-eastern European Time,UTC+03
 FJT,Fiji Time,UTC+12
 FKST,Falkland Islands Summer Time,UTC-03
 FKT,Falkland Islands Time,UTC-04
 FNT,Fernando de Noronha Time,UTC-02
-GALT,Galápagos Time,UTC-06
+GALT,Galapagos Time,UTC-06
 GAMT,Gambier Islands Time,UTC-09
 GET,Georgia Standard Time,UTC+04
 GFT,French Guiana Time,UTC-03
 GILT,Gilbert Island Time,UTC+12
 GIT,Gambier Island Time,UTC-09
-GMT,Greenwich Mean Time,UTC±00
+GMT,Greenwich Mean Time,UTC+00
 GST,South Georgia and the South Sandwich Islands Time,UTC-02
 GST,Gulf Standard Time,UTC+04
 GYT,Guyana Time,UTC-04
-HDT,Hawaii–Aleutian Daylight Time,UTC-09
-HAEC,Heure Avancée d'Europe Centrale French-language name for CEST,UTC+02
-HST,Hawaii–Aleutian Standard Time,UTC-10
+HDT,Hawaii Aleutian Daylight Time,UTC-09
+HAEC,Heure Avancee d'Europe Centrale French-language name for CEST,UTC+02
+HST,Hawaii Aleutian Standard Time,UTC-10
 HKT,Hong Kong Time,UTC+08
 HMT,Heard and McDonald Islands Time,UTC+05
 HOVST,Hovd Summer Time (not used from 2017-present),UTC+08
@@ -157,7 +157,7 @@ PST,Pacific Standard Time (North America),UTC-08
 PWT,Palau Time[10],UTC+09
 PYST,Paraguay Summer Time[11],UTC-03
 PYT,Paraguay Time[12],UTC-04
-RET,Réunion Time,UTC+04
+RET,Reunion Time,UTC+04
 ROTT,Rothera Research Station Time,UTC-03
 SAKT,Sakhalin Island Time,UTC+11
 SAMT,Samara Time,UTC+04
@@ -185,7 +185,7 @@ TST,Taiwan Standard Time,UTC+08
 TVT,Tuvalu Time,UTC+12
 ULAST,Ulaanbaatar Summer Time,UTC+09
 ULAT,Ulaanbaatar Standard Time,UTC+08
-UTC,Coordinated Universal Time,UTC±00
+UTC,Coordinated Universal Time,UTC+00
 UYST,Uruguay Summer Time,UTC-02
 UYT,Uruguay Standard Time,UTC-03
 UZT,Uzbekistan Time,UTC+05
@@ -198,7 +198,7 @@ WAKT,Wake Island Time,UTC+12
 WAST,West Africa Summer Time,UTC+02
 WAT,West Africa Time,UTC+01
 WEST,Western European Summer Time,UTC+01
-WET,Western European Time,UTC±00
+WET,Western European Time,UTC+00
 WIB,Western Indonesian Time,UTC+07
 WIT,Eastern Indonesian Time,UTC+09
 WITA,Central Indonesia Time,UTC+08

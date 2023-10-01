@@ -1629,7 +1629,7 @@ CREATE TABLE IF NOT EXISTS `cfo_mstr` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `cfo_det` (
   `cfod_nbr` varchar(8) NOT NULL  DEFAULT '',
-  `cfod_revision` int(3) NOT NULL  DEFAULT '',
+  `cfod_revision` int(3) NOT NULL  DEFAULT '0',
   `cfod_stopline` varchar(8) NOT NULL  DEFAULT '',
   `cfod_seq` varchar(8) NOT NULL  DEFAULT '',
   `cfod_type` varchar(20) NOT NULL  DEFAULT '',
@@ -1654,7 +1654,7 @@ CREATE TABLE IF NOT EXISTS `cfo_det` (
   `cfod_ladingqty` decimal(14,5) NOT NULL DEFAULT '0',
   `cfod_hazmat` varchar(50) NOT NULL DEFAULT '',
   `cfod_datetype` varchar(80)  NOT NULL DEFAULT '',
-  `cfod_date` varchar(8)  NOT NULL DEFAULT '',
+  `cfod_date` date DEFAULT NULL,
   `cfod_timetype1` varchar(50)  NOT NULL DEFAULT '',
   `cfod_time1` varchar(8)  NOT NULL DEFAULT '',
   `cfod_timetype2` varchar(50)  NOT NULL DEFAULT '',
@@ -1665,7 +1665,7 @@ CREATE TABLE IF NOT EXISTS `cfo_det` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `cfo_item` (
   `cfoi_nbr` varchar(8) NOT NULL  DEFAULT '',
-  `cfoi_revision` int(3) NOT NULL  DEFAULT '',
+  `cfoi_revision` int(3) NOT NULL  DEFAULT '0',
   `cfoi_stopline` varchar(8) NOT NULL  DEFAULT '',
   `cfoi_itemline` varchar(8) NOT NULL  DEFAULT '',
   `cfoi_item` varchar(50) NOT NULL  DEFAULT '',
@@ -1679,14 +1679,14 @@ CREATE TABLE IF NOT EXISTS `cfo_item` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `cfo_meta` (
   `cfom_id` varchar(8) NOT NULL,
-  `cfom_revision` int(3) NOT NULL  DEFAULT '',
+  `cfom_revision` int(3) NOT NULL  DEFAULT '0',
   `cfom_type` varchar(80) NOT NULL,
   `cfom_key` varchar(80) NOT NULL,
   `cfom_value` varchar(80) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `cfod_meta` (
   `cfodm_id` varchar(8) NOT NULL,
-  `cfodm_revision` int(3) NOT NULL  DEFAULT '',
+  `cfodm_revision` int(3) NOT NULL  DEFAULT '0',
   `cfodm_stopline` varchar(8) NOT NULL,
   `cfodm_type` varchar(80) NOT NULL,
   `cfodm_key` varchar(80) NOT NULL,
@@ -1694,7 +1694,7 @@ CREATE TABLE IF NOT EXISTS `cfod_meta` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `cfoi_meta` (
   `cfoim_id` varchar(8) NOT NULL,
-  `cfoim_revision` int(3) NOT NULL  DEFAULT '',
+  `cfoim_revision` int(3) NOT NULL  DEFAULT '0',
   `cfoim_stopline` varchar(8) NOT NULL,
   `cfoim_itemline` varchar(8) NOT NULL,
   `cfoim_type` varchar(80) NOT NULL,
@@ -2691,7 +2691,7 @@ CREATE TABLE IF NOT EXISTS `makemodel` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `cfo_sos` (
   `cfos_nbr` varchar(8) NOT NULL,
-  `cfos_revision` int(3) NOT NULL  DEFAULT '',
+  `cfos_revision` int(3) NOT NULL  DEFAULT '0',
   `cfos_desc` varchar(80)  NOT NULL DEFAULT '',
   `cfos_type` varchar(20) NOT NULL DEFAULT '',
   `cfos_amttype` varchar(20) NOT NULL DEFAULT '',
@@ -2707,7 +2707,7 @@ CREATE TABLE IF NOT EXISTS `edi_xcode` (
   `edix_value` varchar(80) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `time_zone` (
-  `tz_code` varchar(8) NOT NULL DEFAULT '',
+  `tz_code` varchar(12) NOT NULL DEFAULT '',
   `tz_desc` varchar(200) NOT NULL DEFAULT '',
   `tz_utc` varchar(30) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
