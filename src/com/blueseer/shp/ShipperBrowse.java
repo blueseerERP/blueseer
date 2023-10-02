@@ -389,6 +389,7 @@ public class ShipperBrowse extends javax.swing.JPanel {
         dcto = new com.toedter.calendar.JDateChooser();
         tbcsv = new javax.swing.JButton();
         cbinvoiced = new javax.swing.JCheckBox();
+        btprint = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         tbtotsales = new javax.swing.JLabel();
@@ -499,6 +500,13 @@ public class ShipperBrowse extends javax.swing.JPanel {
         cbinvoiced.setText("Invoiced Only");
         cbinvoiced.setName("cbinvoiceonly"); // NOI18N
 
+        btprint.setText("Print/PDF");
+        btprint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btprintActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -542,13 +550,17 @@ public class ShipperBrowse extends javax.swing.JPanel {
                         .addGap(18, 18, 18)))
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(cbinvoiced)
+                        .addGap(52, 52, 52))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(btRun)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btdetail)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tbcsv))
-                    .addComponent(cbinvoiced))
-                .addContainerGap())
+                        .addComponent(tbcsv)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btprint)
+                        .addContainerGap())))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -563,7 +575,8 @@ public class ShipperBrowse extends javax.swing.JPanel {
                         .addComponent(tbfromshipper, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(tbfromcust, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel5)
-                        .addComponent(tbcsv))
+                        .addComponent(tbcsv)
+                        .addComponent(btprint))
                     .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -850,12 +863,17 @@ public class ShipperBrowse extends javax.swing.JPanel {
         OVData.exportCSV(tablereport);
     }//GEN-LAST:event_tbcsvActionPerformed
 
+    private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
+        OVData.printJTableToJasper("Shipper Report", tablereport, "genericJTableL7.jasper" );
+    }//GEN-LAST:event_btprintActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel EndBal;
     private javax.swing.JLabel EndBal1;
     private javax.swing.JButton btRun;
     private javax.swing.JButton btdetail;
+    private javax.swing.JButton btprint;
     private javax.swing.JCheckBox cbinvoiced;
     private javax.swing.JLabel datelabel;
     private com.toedter.calendar.JDateChooser dcfrom;

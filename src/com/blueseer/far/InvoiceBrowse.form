@@ -202,6 +202,8 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="tbcsv" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
+                      <Component id="btprint" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -219,6 +221,7 @@
                               <Component id="tbfromcust" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="tbcsv" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="btprint" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="dcfrom" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -324,6 +327,14 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tbcsvActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="btprint">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Print/PDF"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btprintActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>

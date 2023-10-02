@@ -16661,10 +16661,14 @@ return mystring;
         }
        
        
-         int nRow = model.getRowCount(), nCol = newmodel.getColumnCount();
-         int offset = model.getColumnCount() - nCol;
-         String[] myarray = new String[nCol];
-         
+        int nRow = model.getRowCount(), nCol = newmodel.getColumnCount();
+        int offset = model.getColumnCount() - nCol;
+        String[] myarray = new String[nCol];
+        
+        if (offset > 2) {
+            offset = 2;
+        }
+        
         for (int i = 0 ; i < nRow ; i++) {
            for (int j = 0 ; j < nCol ; j++) {
                if (tablereport.getValueAt(i,(j + offset)) == null) {
@@ -16693,11 +16697,15 @@ return mystring;
            hm.put("d" + j,  newmodel.getColumnName(j).toString());
         }
         
-        String jasperfile = OVData.getCodeValueByCodeKey("jasper", type);
-        if (jasperfile.isEmpty()) {
-            jasperfile = "genericJTableL11.jasper";
+        String jasperfile = "";
+        if (type.startsWith("genericJTable")) {
+            jasperfile = type;
+        } else {
+          jasperfile = OVData.getCodeValueByCodeKey("jasper", type);
+            if (jasperfile.isEmpty()) {
+                jasperfile = "genericJTableL11.jasper";
+            }
         }
-        
         Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemJasperDirectory()) + jasperfile);
                
         JasperPrint jasperPrint; 
