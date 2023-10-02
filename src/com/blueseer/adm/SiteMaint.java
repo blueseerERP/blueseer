@@ -282,7 +282,13 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerT {
         tb_po_generic.setText("");
         tb_or_generic.setText("");
         tb_pos_generic.setText(""); 
-         
+        
+        tb_or_generic.setBackground(Color.white);
+        tb_iv_generic.setBackground(Color.white);
+        tb_sh_generic.setBackground(Color.white);
+        tb_po_generic.setBackground(Color.white);
+        tb_pos_generic.setBackground(Color.white);
+        
         ddstate.removeAllItems();
         ddstate.addItem("");
         OVData.getCodeMstrKeyList("state").stream().forEach((s) -> ddstate.addItem(s));
@@ -396,66 +402,96 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerT {
         fc = checkLength(f,"site_iv_jasper");
         if (tb_iv_generic.getText().length() > fc || tb_iv_generic.getText().isEmpty()) {
             bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tb_iv_generic.setBackground(Color.yellow);
             tb_iv_generic.requestFocus();
             return false;
+        } else {
+            tb_iv_generic.setBackground(Color.white);
         }
         
         if (! tb_iv_generic.getText().isEmpty() && ! x.toString().equals("delete") && ! ifFileExists(tb_iv_generic.getText())) {
             bsmf.MainFrame.show(getMessageTag(1145, tb_iv_generic.getText()));
+            tb_iv_generic.setBackground(Color.yellow);
             tb_iv_generic.requestFocus();
             return false;
+        } else {
+            tb_iv_generic.setBackground(Color.white);
         }
         
         fc = checkLength(f,"site_sh_jasper");
         if (tb_sh_generic.getText().length() > fc || tb_sh_generic.getText().isEmpty()) {
             bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tb_sh_generic.setBackground(Color.yellow);
             tb_sh_generic.requestFocus();
             return false;
+        } else {
+            tb_sh_generic.setBackground(Color.white);
         }
               
         if (! tb_sh_generic.getText().isEmpty() && ! x.toString().equals("delete") && ! ifFileExists(tb_sh_generic.getText())) {
             bsmf.MainFrame.show(getMessageTag(1145, tb_sh_generic.getText()));
+            tb_sh_generic.setBackground(Color.yellow);
             tb_sh_generic.requestFocus();
             return false;
+        } else {
+            tb_sh_generic.setBackground(Color.white);
         }
         
         fc = checkLength(f,"site_po_jasper");
         if (tb_po_generic.getText().length() > fc || tb_po_generic.getText().isEmpty()) {
             bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tb_po_generic.setBackground(Color.yellow);
             tb_po_generic.requestFocus();
             return false;
+        } else {
+            tb_po_generic.setBackground(Color.white);
         }
              
         if (! tb_po_generic.getText().isEmpty() && ! x.toString().equals("delete") && ! ifFileExists(tb_po_generic.getText())) {
             bsmf.MainFrame.show(getMessageTag(1145, tb_po_generic.getText()));
+            tb_po_generic.setBackground(Color.yellow);
             tb_po_generic.requestFocus();
             return false;
+        } else {
+            tb_po_generic.setBackground(Color.white);
         }
         
         fc = checkLength(f,"site_pos_jasper");
         if (tb_pos_generic.getText().length() > fc || tb_pos_generic.getText().isEmpty()) {
             bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tb_pos_generic.setBackground(Color.yellow);
             tb_pos_generic.requestFocus();
             return false;
+        } else {
+            tb_pos_generic.setBackground(Color.white);
         }
           
         if (! tb_pos_generic.getText().isEmpty() && ! x.toString().equals("delete") && ! ifFileExists(tb_pos_generic.getText())) {
             bsmf.MainFrame.show(getMessageTag(1145, tb_pos_generic.getText()));
+            tb_pos_generic.setBackground(Color.yellow);
             tb_pos_generic.requestFocus();
             return false;
+        } else {
+            tb_pos_generic.setBackground(Color.white);
         }
         
         fc = checkLength(f,"site_or_jasper");
         if (tb_or_generic.getText().length() > fc || tb_or_generic.getText().isEmpty()) {
             bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tb_or_generic.setBackground(Color.yellow);
             tb_or_generic.requestFocus();
             return false;
+        } else {
+            tb_or_generic.setBackground(Color.white);
         }
                
         if (! tb_or_generic.getText().isEmpty() && ! x.toString().equals("delete") && ! ifFileExists(tb_or_generic.getText())) {
             bsmf.MainFrame.show(getMessageTag(1145, tb_or_generic.getText()));
+            tb_or_generic.setBackground(Color.yellow);
             tb_or_generic.requestFocus();
             return false;
+        } else {
+            tb_or_generic.setBackground(Color.white);
         }
                 
                 
