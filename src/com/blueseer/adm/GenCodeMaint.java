@@ -312,13 +312,13 @@ public class GenCodeMaint extends javax.swing.JPanel implements IBlueSeerT    {
     public boolean validateInput(dbaction x) {
         boolean b = true;
                
-                
-                if (x.equals("updateRecord") && cbsystem.isSelected() && ! bsmf.MainFrame.userid.equals("admin")) {
+                if ((x.name().equals("update") || x.name().equals("delete") )&& cbsystem.isSelected() && ! bsmf.MainFrame.userid.equals("admin")) {
                     b = false;
                     bsmf.MainFrame.show(getMessageTag(1113));
                     tbkey.requestFocus();
                     return b;
                 }
+                
                 if (tbkey.getText().isEmpty()) {
                     b = false;
                     bsmf.MainFrame.show(getMessageTag(1024));
