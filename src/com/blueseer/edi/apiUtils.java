@@ -324,8 +324,7 @@ public class apiUtils {
         
         return r;
     }
-    
-    
+       
     public static PrivateKey getPrivateKey(String user)  {
         PrivateKey key = null;
         FileInputStream fis = null;
@@ -1238,13 +1237,6 @@ public class apiUtils {
         ArrayList<String[]> logdet = new ArrayList<String[]>(); 
         Security.addProvider(new BouncyCastleProvider());
         
-        
-        
-     //   Path as2filepath = FileSystems.getDefault().getPath(as2file);
-     //   if (! Files.exists(as2filepath)) {
-     //      return "source file does not exist"; 
-      //  }
-       
        
         // gather pertinent info for this AS2 ID / Partner
         String[] tp = ediData.getAS2Info(as2id);
@@ -1387,16 +1379,6 @@ public class apiUtils {
         MimeMultipart mp = new MimeMultipart();
         String newboundary = getPackagedBoundary(mbp);  
         if (isSignedAndEncrypted) {
-         // mbp.addHeader("Content-Type", "multipart/signed; protocol=\"application/pkcs7-signature\"; boundary=" + "\"" + newboundary + "\"" + "; micalg=sha1");
-         // mbp.addHeader("Content-Disposition", "attachment; filename=smime.p7m");
-           /*
-           mbp2 = encryptDataSMIME(mbp.getInputStream().readAllBytes(), encryptcertificate);
-           Enumeration<?> list = mbp2.getAllHeaders();
-            while (list.hasMoreElements()) {
-                javax.mail.Header head = (javax.mail.Header) list.nextElement();
-                System.out.println(head.getName() + ": " + head.getValue());
-            }
-           */ 
           mp.addBodyPart(mbp);
           mbp2.setContent(mp);
           mbp2.addHeader("Content-Type", "multipart/signed; protocol=\"application/pkcs7-signature\"; boundary=" + "\"" + newboundary + "\"" + "; micalg=sha1");
@@ -1414,17 +1396,7 @@ public class apiUtils {
           
         }
         
-        
-       // BufferedWriter output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path.toFile())));
-       // output.write(new String(Base64.encode(signedAndEncrypteddata)));
-       // output.close();
-        /*
-        Path path = FileSystems.getDefault().getPath("temp" + "/" + "beforefile");
-        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(path.toFile()));
-        bos.write(signedAndEncrypteddata);
-        bos.flush();
-        bos.close();
-        */
+       
         
         URL urlObj = new URL(url);
         RequestBuilder rb = RequestBuilder.post();
@@ -1612,36 +1584,7 @@ public class apiUtils {
         }
         return mp;
     }
-    /*
-    public static MimeMultipart code1000(String sender, String receiver, String subject, String filename, String messageid, String mic) {
-        MimeBodyPart mbp = new MimeBodyPart();
-        MimeMultipart mp = new MimeMultipart();
-        LocalDateTime localDateTime = LocalDateTime.now();
-        String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-        String z = """
-                The message <%s> with subject <%s> has been received.  
-                Message was sent from: <%s>  to:  <%s>
-                Message was received at <%s>
-                Note: The origin and integrity of the message have been verified.
-                """.formatted(filename, subject, sender, receiver, now);
-        try {
-           // mbp.setText(z);
-           MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "processed");
-           ContentType ct = new ContentType(mpInner.getContentType());
-           String boundary = ct.getParameter("boundary");
-            mbp.setContent(mpInner);
-            mbp.addHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
-           //  mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
-            mp.addBodyPart(mbp);
-            
-            
-        } catch (MessagingException ex) {
-            bslog(ex);
-        }
-        
-        return mp;
-    }
-    */
+      
     public static mmpx code1000(String sender, String receiver, String subject, String filename, String messageid, String mic) {
         MimeBodyPart mbp = new MimeBodyPart();
         String boundary = "";
@@ -1671,8 +1614,7 @@ public class apiUtils {
         
         return new mmpx(mp, boundary);
     }
-    
-    
+        
     public static mmpx code2000(String sender, String receiver, String subject, String filename, String messageid, String mic) {
         MimeBodyPart mbp = new MimeBodyPart();
         String boundary = "";
@@ -1698,8 +1640,7 @@ public class apiUtils {
         
         return new mmpx(mp, boundary);
     }
-    
-    
+        
     public static mmpx code2005(String sender, String receiver, String subject, String filename, String messageid, String mic) {
         MimeBodyPart mbp = new MimeBodyPart();
         String boundary = "";
@@ -1860,8 +1801,7 @@ public class apiUtils {
         
         return new mmpx(mp, boundary);
     }
-    
-    
+        
     public static mmpx code3005(String sender, String receiver, String subject, String filename, String messageid, String mic) {
         MimeBodyPart mbp = new MimeBodyPart();
         String boundary = "";
@@ -2012,8 +1952,7 @@ public class apiUtils {
         
         return new mmpx(mp, boundary);
     }
-    
-    
+        
     public static mmpx code9999(String sender, String receiver, String subject, String filename, String messageid, String mic) {
         MimeBodyPart mbp = new MimeBodyPart();
         String boundary = "";
@@ -2041,8 +1980,7 @@ public class apiUtils {
         
         return new mmpx(mp, boundary);
     }
-    
-    
+        
     public static mdn createMDN(String code, String[] e, HashMap<String, String> headers, boolean isDebug) throws IOException, MessagingException {
         mdn x = null;
         MimeBodyPart mbp = new MimeBodyPart();
