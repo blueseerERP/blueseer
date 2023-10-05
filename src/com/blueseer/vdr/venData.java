@@ -1239,7 +1239,7 @@ public class venData {
     }
            
     public static String getVendName(String vend) {
-           String myitem = null;
+           String r = "";
          try{
             
             Connection con = null;
@@ -1253,7 +1253,7 @@ public class venData {
             try{
                 res = st.executeQuery("select vd_name from vd_mstr where vd_addr = " + "'" + vend + "'" + ";" );
                while (res.next()) {
-                myitem = res.getString("vd_name");                    
+                r = res.getString("vd_name");                    
                 }
                
            }
@@ -1272,7 +1272,7 @@ public class venData {
         catch (Exception e){
             MainFrame.bslog(e);
         }
-        return myitem;
+        return r;
         
     }       
          

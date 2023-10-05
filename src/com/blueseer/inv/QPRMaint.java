@@ -661,6 +661,8 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
                     } else {
                         dcclose.setDate(null);
                     }
+                    
+                    lbvendname.setText(res.getString("qual_vend_name"));
                     tbQtyRejected.setText(res.getString("qual_qty_rej"));
                     tbNumSuspectCont.setText(res.getString("qual_qty_susp"));
                     tbTotalQty.setText(res.getString("qual_qty_tot_def"));
@@ -694,10 +696,8 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
                     tbkey.setText(x[0]);
                     // jcbsupervisor_empmast.setSelectedIndex(0);
                 }
-               
                 // set Action if Record found (i > 0)
                 m = setAction(i);
-                
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};  
