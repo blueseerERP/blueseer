@@ -4348,6 +4348,24 @@ public class invData {
         public inv_ctrl(String[] m) {
             this(m, "", "", "", "", "");
         }
-    }     
+    }   
+    
+    public record qual_mstr(String[] m, String qual_id, String qual_site,
+        String qual_userid, String qual_date_crt, String qual_date_upd, String qual_date_cls, String qual_originator, 
+        String qual_vend, String qual_vend_name, String qual_vend_contact, String qual_qpr, String qual_infor,
+        String qual_sendsupp, String qual_sort, String qual_rework, String qual_scrap, String qual_dev, String qual_dev_nbr,
+        String qual_src_line, String qual_line_dept, String qual_src_recv, String qual_src_cust, String qual_src_eng,
+        String qual_src_oth, String qual_src_oth_desc, String qual_int_sup, String qual_ext_sup, String qual_item,
+        String qual_item_desc, String qual_qty_rej, String qual_qty_susp, String qual_qty_tot_def, String qual_desc_iss,
+        String qual_desc_fin_hist, String qual_desc_sqe_comt, String qual_tot_charge, 
+        String qual_dec1, String qual_date1, String qual_int1) {
+        
+        public qual_mstr(String[] m) {
+            this(m, "", "", "", "", "", "", "", "", "", "",
+                    "", "", "", "", "", "", "", "", "", "",
+                    "", "", "", "", "", "", "", "", "", "",
+                    "", "", "", "", "", "", "", "", "");
+        }
+    }
 
 }

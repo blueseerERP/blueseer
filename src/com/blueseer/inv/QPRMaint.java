@@ -34,6 +34,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.inv.invData.qual_mstr;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
@@ -103,7 +104,7 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
             String sqephone = "";
             String sqefax = "";
             String sqeemail = "";
-    
+           public static qual_mstr x = null;
     // global datatablemodel declarations       
 
     public QPRMaint() {
