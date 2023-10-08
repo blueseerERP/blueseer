@@ -554,9 +554,9 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tbline2.getText(),
                 tbline3.getText(),
                 tbcity.getText(),
-                ddstate.getSelectedItem().toString(),
+                (ddstate.getSelectedItem() == null) ? "" : ddstate.getSelectedItem().toString(),
                 tbzip.getText(),
-                ddcountry.getSelectedItem().toString(),
+                (ddcountry.getSelectedItem() == null) ? "" : ddcountry.getSelectedItem().toString(),
                 tbphone.getText(), // phone
                 tbweb.getText(), // web
                 tblogo.getText(),

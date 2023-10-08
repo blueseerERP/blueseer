@@ -413,9 +413,9 @@ public class WareHouseMaint extends javax.swing.JPanel implements IBlueSeerT {
             tbaddr1.getText(),
             tbaddr2.getText(),
             tbcity.getText(),
-            ddstate.getSelectedItem().toString(),
+            (ddstate.getSelectedItem() == null) ? "" : ddstate.getSelectedItem().toString(),
             tbzip.getText(),
-            ddcountry.getSelectedItem().toString()
+            (ddcountry.getSelectedItem() == null) ? "" : ddcountry.getSelectedItem().toString()
         );
         return x;
     }

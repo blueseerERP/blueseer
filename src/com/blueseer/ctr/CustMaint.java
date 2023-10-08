@@ -471,19 +471,20 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
           ddfreightterms.setSelectedIndex(0);   
          }
         
-         if (ddstate.getItemCount() > 0) {
-          ddstate.setSelectedIndex(0);
-         }
-         if (ddcountry.getItemCount() > 0) {
-          ddcountry.setSelectedItem("USA");
-         }
+         ddstate.insertItemAt("", 0);
+         ddstate.setSelectedIndex(0);
          
-         if (ddshipstate.getItemCount() > 0) {
-          ddshipstate.setSelectedIndex(0);
-         }
-         if (ddshipcountry.getItemCount() > 0) {
-          ddshipcountry.setSelectedItem("USA");
-         }
+         ddcountry.insertItemAt("", 0);
+         ddcountry.setSelectedIndex(0);
+         
+         
+         ddshipstate.insertItemAt("", 0);
+         ddshipstate.setSelectedIndex(0);
+         
+         ddshipcountry.insertItemAt("", 0);
+         ddshipcountry.setSelectedIndex(0);
+        
+        
         
         isLoad = false;
     }
@@ -584,9 +585,9 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tbline2.getText(),
                 tbline3.getText(),
                 tbcity.getText(),
-                ddstate.getSelectedItem().toString(),
+                (ddstate.getSelectedItem() == null) ? "" : ddstate.getSelectedItem().toString(),
                 tbzip.getText(),
-                ddcountry.getSelectedItem().toString(),
+                (ddcountry.getSelectedItem() == null) ? "" : ddcountry.getSelectedItem().toString(),
                 tbdateadded.getText(),
                 tbdatemod.getText(),
                 bsmf.MainFrame.userid,
@@ -594,19 +595,19 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tbmarket.getText(),
                 tbcreditlimit.getText(),
                 BlueSeerUtils.boolToString(cbonhold.isSelected()),
-                ddcarrier.getSelectedItem().toString(),
-                ddterms.getSelectedItem().toString(),
-                ddfreightterms.getSelectedItem().toString(),
+                (ddcarrier.getSelectedItem() == null) ? "" : ddcarrier.getSelectedItem().toString(),
+                (ddterms.getSelectedItem() == null) ? "" : ddterms.getSelectedItem().toString(),
+                (ddfreightterms.getSelectedItem() == null) ? "" : ddfreightterms.getSelectedItem().toString(),
                 tbpricecode.getText(),
                 tbdisccode.getText(),
-                ddtax.getSelectedItem().toString(),
+                (ddtax.getSelectedItem() == null) ? "" : ddtax.getSelectedItem().toString(),
                 tbsalesrep.getText(),
                 ddaccount.getSelectedItem().toString(),
                 ddcc.getSelectedItem().toString(),
-                ddbank.getSelectedItem().toString(),
-                ddcurr.getSelectedItem().toString(),
+                (ddbank.getSelectedItem() == null) ? "" : ddbank.getSelectedItem().toString(),
+                (ddcurr.getSelectedItem() == null) ? "" : ddcurr.getSelectedItem().toString(),
                 tbremarks.getText(),
-                ddlabel.getSelectedItem().toString(),
+                (ddlabel.getSelectedItem() == null) ? "" : ddlabel.getSelectedItem().toString(),
                 tbshpformat.getText(),
                 tbinvformat.getText(),
                 tbmainphone.getText(),
@@ -614,7 +615,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
                 BlueSeerUtils.boolToString(cb855.isSelected()),
                 BlueSeerUtils.boolToString(cb856.isSelected()),
                 BlueSeerUtils.boolToString(cb810.isSelected()),
-                ddsite.getSelectedItem().toString()
+                (ddsite.getSelectedItem() == null) ? "" : ddsite.getSelectedItem().toString()
                 );
         return x;
     }
@@ -631,9 +632,9 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tbline2.getText(),
                 tbline3.getText(),
                 tbcity.getText(),
-                ddstate.getSelectedItem().toString(),
+                (ddstate.getSelectedItem() == null) ? "" : ddstate.getSelectedItem().toString(),
                 tbzip.getText(),
-                ddcountry.getSelectedItem().toString()
+                (ddcountry.getSelectedItem() == null) ? "" : ddcountry.getSelectedItem().toString()
                 );
         } else {
         x = new cusData.cms_det(null, 
@@ -644,9 +645,9 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tbshipline2.getText(),
                 tbshipline3.getText(),
                 tbshipcity.getText(),
-                ddshipstate.getSelectedItem().toString(),
+                (ddshipstate.getSelectedItem() == null) ? "" : ddshipstate.getSelectedItem().toString(),
                 tbshipzip.getText(),
-                ddshipcountry.getSelectedItem().toString()
+                (ddshipcountry.getSelectedItem() == null) ? "" : ddshipcountry.getSelectedItem().toString()
                 );
         }
         return x;

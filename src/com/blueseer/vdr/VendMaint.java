@@ -637,9 +637,9 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tbline2.getText(),
                 tbline3.getText(),
                 tbcity.getText(),
-                ddstate.getSelectedItem().toString(),
+                (ddstate.getSelectedItem() == null) ? "" : ddstate.getSelectedItem().toString(),
                 tbzip.getText(),
-                ddcountry.getSelectedItem().toString(),
+                (ddcountry.getSelectedItem() == null) ? "" : ddcountry.getSelectedItem().toString(),
                 tbdateadded.getText(),
                 tbdatemod.getText(),
                 bsmf.MainFrame.userid,
@@ -678,9 +678,9 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tbline2.getText(),
                 tbline3.getText(),
                 tbcity.getText(),
-                ddstate.getSelectedItem().toString(),
+                (ddstate.getSelectedItem() == null) ? "" : ddstate.getSelectedItem().toString(),
                 tbzip.getText(),
-                ddcountry.getSelectedItem().toString(),
+                (ddcountry.getSelectedItem() == null) ? "" : ddcountry.getSelectedItem().toString(),
                 ddshiptype.getSelectedItem().toString() // type
                 );
         } else {
@@ -692,9 +692,9 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tbshipline2.getText(),
                 tbshipline3.getText(),
                 tbshipcity.getText(),
-                ddshipstate.getSelectedItem().toString(),
+                (ddshipstate.getSelectedItem() == null) ? "" : ddshipstate.getSelectedItem().toString(),
                 tbshipzip.getText(),
-                ddshipcountry.getSelectedItem().toString(),
+                (ddshipcountry.getSelectedItem() == null) ? "" : ddshipcountry.getSelectedItem().toString(),
                 ddshiptype.getSelectedItem().toString() // type
                 );
         }

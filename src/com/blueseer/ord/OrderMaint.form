@@ -708,14 +708,15 @@
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="1" attributes="0">
                                   <Component id="jLabel77" alignment="1" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel101" alignment="1" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel110" alignment="1" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel102" alignment="1" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel99" alignment="1" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel111" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel12" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
@@ -725,6 +726,7 @@
                                   <Component id="tbaddr1" alignment="0" min="-2" pref="260" max="-2" attributes="0"/>
                                   <Component id="tbname" alignment="0" min="-2" pref="260" max="-2" attributes="0"/>
                                   <Component id="tbshiptocode" alignment="0" min="-2" pref="109" max="-2" attributes="0"/>
+                                  <Component id="ddcountry" alignment="0" min="-2" pref="93" max="-2" attributes="0"/>
                               </Group>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" attributes="0">
@@ -756,7 +758,7 @@
                               <Component id="btaddshipto" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="179" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -839,7 +841,12 @@
                               </Group>
                           </Group>
                       </Group>
-                      <EmptySpace pref="96" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="ddcountry" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel12" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace pref="68" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -946,6 +953,22 @@
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btaddshiptoActionPerformed"/>
               </Events>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="ddcountry">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="0"/>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel12">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Country"/>
+                <Property name="name" type="java.lang.String" value="lblcountry" noResource="true"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>
