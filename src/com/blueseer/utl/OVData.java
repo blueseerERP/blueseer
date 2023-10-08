@@ -16452,7 +16452,7 @@ return mystring;
                 
                 
                  
-                res = st.executeQuery("select sh_cust, sh_site, sh_type, sh_so, cm_city, cm_state, cm_zip, " +
+                res = st.executeQuery("select sh_cust, sh_site, sh_type, sh_so, cm_city, cm_state, cm_zip, cm_country, cms_country, site_country,  " +
                         " cms_city, cms_state, cms_zip, site_city, site_state, site_zip " +
                         " from ship_mstr " +
                         " inner join cm_mstr on cm_code = sh_cust " +
@@ -16464,9 +16464,9 @@ return mystring;
                           site = res.getString(("sh_site"));
                           shtype = res.getString(("sh_type"));
                           shorder = res.getString(("sh_so"));
-                          site_csz = res.getString(("site_city")) + " " + res.getString(("site_state")) + " " + res.getString(("site_zip"));
-                          bill_csz = res.getString(("cm_city")) + " " + res.getString(("cm_state")) + " " + res.getString(("cm_zip"));
-                          ship_csz = res.getString(("cms_city")) + " " + res.getString(("cms_state")) + " " + res.getString(("cms_zip"));
+                          site_csz = res.getString(("site_city")) + " " + res.getString(("site_state")) + " " + res.getString(("site_zip")) + " " + res.getString(("site_country"));
+                          bill_csz = res.getString(("cm_city")) + " " + res.getString(("cm_state")) + " " + res.getString(("cm_zip")) + " " + res.getString(("cm_country"));
+                          ship_csz = res.getString(("cms_city")) + " " + res.getString(("cms_state")) + " " + res.getString(("cms_zip")) + "  " + res.getString(("cms_country"));
                        }
                 
                 // if Freight type
@@ -16571,7 +16571,7 @@ return mystring;
                  String bill_csz = "";
                  String ship_csz = "";
                  
-                res = st.executeQuery("select sh_id, sh_cust, sh_site, cm_city, cm_state, cm_zip, " +
+                res = st.executeQuery("select sh_id, sh_cust, sh_site, cm_city, cm_state, cm_zip, cm_country, cms_country, site_country, " +
                         " cms_city, cms_state, cms_zip, site_city, site_state, site_zip " +
                         " from ship_mstr " +
                         " inner join ship_det on shd_id = sh_id " +
@@ -16584,9 +16584,9 @@ return mystring;
                           i++;
                           cust = res.getString(("sh_cust"));
                           site = res.getString(("sh_site"));
-                          site_csz = res.getString(("site_city")) + " " + res.getString(("site_state")) + " " + res.getString(("site_zip"));
-                          bill_csz = res.getString(("cm_city")) + " " + res.getString(("cm_state")) + " " + res.getString(("cm_zip"));
-                          ship_csz = res.getString(("cms_city")) + " " + res.getString(("cms_state")) + " " + res.getString(("cms_zip"));
+                          site_csz = res.getString(("site_city")) + " " + res.getString(("site_state")) + " " + res.getString(("site_zip")) + " " + res.getString(("site_country"));
+                          bill_csz = res.getString(("cm_city")) + " " + res.getString(("cm_state")) + " " + res.getString(("cm_zip")) + " " + res.getString(("cm_country"));
+                          ship_csz = res.getString(("cms_city")) + " " + res.getString(("cms_state")) + " " + res.getString(("cms_zip")) + "  " + res.getString(("cms_country"));
                           invoice = res.getString("sh_id");
                           if (i > 1) {
                               break;
@@ -16943,8 +16943,8 @@ return mystring;
                  String bill_csz = "";
                  String ship_csz = "";
                  
-                res = st.executeQuery("select sh_cust, sh_site, cm_city, cm_state, cm_zip, " +
-                        " cms_city, cms_state, cms_zip, site_city, site_state, site_zip " +
+                res = st.executeQuery("select sh_cust, sh_site, cm_city, cm_state, cm_zip, cm_country, " +
+                        " cms_city, cms_state, cms_zip, cms_country, site_city, site_state, site_zip, site_country " +
                         " from ship_mstr " +
                         " inner join cm_mstr on cm_code = sh_cust " +
                         " left outer join cms_det on cms_code = sh_cust and cms_shipto = sh_ship " +
@@ -16953,9 +16953,9 @@ return mystring;
                        while (res.next()) {
                           cust = res.getString(("sh_cust"));
                           site = res.getString(("sh_site"));
-                          site_csz = res.getString(("site_city")) + " " + res.getString(("site_state")) + " " + res.getString(("site_zip"));
-                          bill_csz = res.getString(("cm_city")) + " " + res.getString(("cm_state")) + " " + res.getString(("cm_zip"));
-                          ship_csz = res.getString(("cms_city")) + " " + res.getString(("cms_state")) + " " + res.getString(("cms_zip"));
+                          site_csz = res.getString(("site_city")) + " " + res.getString(("site_state")) + " " + res.getString(("site_zip")) + " " + res.getString(("site_country"));
+                          bill_csz = res.getString(("cm_city")) + " " + res.getString(("cm_state")) + " " + res.getString(("cm_zip")) + " " + res.getString(("cm_country"));
+                          ship_csz = res.getString(("cms_city")) + " " + res.getString(("cms_state")) + " " + res.getString(("cms_zip")) + "  " + res.getString(("cms_country"));
                        }
                 
                 String logo = cusData.getCustLogo(cust);
@@ -17015,7 +17015,7 @@ return mystring;
                  String bill_csz = "";
                  String ship_csz = "";
                  
-                res = st.executeQuery("select sh_id, sh_cust, sh_site, cm_city, cm_state, cm_zip, " +
+                res = st.executeQuery("select sh_id, sh_cust, sh_site, cm_city, cm_state, cm_zip, cm_country, cms_country, site_country, " +
                         " cms_city, cms_state, cms_zip, site_city, site_state, site_zip " +
                         " from ship_mstr " +
                         " inner join ship_det on shd_id = sh_id " +
@@ -17028,9 +17028,9 @@ return mystring;
                           i++;
                           cust = res.getString(("sh_cust"));
                           site = res.getString(("sh_site"));
-                          site_csz = res.getString(("site_city")) + " " + res.getString(("site_state")) + " " + res.getString(("site_zip"));
-                          bill_csz = res.getString(("cm_city")) + " " + res.getString(("cm_state")) + " " + res.getString(("cm_zip"));
-                          ship_csz = res.getString(("cms_city")) + " " + res.getString(("cms_state")) + " " + res.getString(("cms_zip"));
+                          site_csz = res.getString(("site_city")) + " " + res.getString(("site_state")) + " " + res.getString(("site_zip")) + " " + res.getString(("site_country"));
+                          bill_csz = res.getString(("cm_city")) + " " + res.getString(("cm_state")) + " " + res.getString(("cm_zip")) + " " + res.getString(("cm_country"));
+                          ship_csz = res.getString(("cms_city")) + " " + res.getString(("cms_state")) + " " + res.getString(("cms_zip")) + "  " + res.getString(("cms_country"));
                           shipper = res.getString("sh_id");
                           if (i > 1) {
                               break;
@@ -17196,7 +17196,7 @@ return mystring;
                 String ship_csz = "";
                 double taxes = getOrderTotalTax(order);
                 res = st.executeQuery("select so_cust, so_site, " +
-                        " cm_city, cm_state, cm_zip, cms_city, cms_state, cms_zip, site_city, site_state, site_zip " +
+                        " cm_city, cm_state, cm_zip, cm_country, cms_city, cms_state, cms_zip, cms_country, site_city, site_state, site_zip, site_country " +
                         " from so_mstr " +
                         " inner join cm_mstr on cm_code = so_cust " +
                         " left outer join cms_det on cms_code = so_cust and cms_shipto = so_ship " +
@@ -17205,9 +17205,9 @@ return mystring;
                        while (res.next()) {
                           cust = res.getString(("so_cust"));
                           site = res.getString(("so_site"));
-                          site_csz = res.getString(("site_city")) + " " + res.getString(("site_state")) + " " + res.getString(("site_zip"));
-                          bill_csz = res.getString(("cm_city")) + " " + res.getString(("cm_state")) + " " + res.getString(("cm_zip"));
-                          ship_csz = res.getString(("cms_city")) + " " + res.getString(("cms_state")) + " " + res.getString(("cms_zip"));
+                          site_csz = res.getString(("site_city")) + " " + res.getString(("site_state")) + " " + res.getString(("site_zip")) + " " + res.getString(("site_country"));
+                          bill_csz = res.getString(("cm_city")) + " " + res.getString(("cm_state")) + " " + res.getString(("cm_zip")) + " " + res.getString(("cm_country"));
+                          ship_csz = res.getString(("cms_city")) + " " + res.getString(("cms_state")) + " " + res.getString(("cms_zip")) + "  " + res.getString(("cms_country"));
                        }
                 
                 
@@ -17280,7 +17280,8 @@ return mystring;
                 String bill_csz = "";
                 String ship_csz = "";
                 res = st.executeQuery("select sv_cust, sv_site, sv_type, " +
-                        " cm_city, cm_state, cm_zip, cms_city, cms_state, cms_zip, site_city, site_state, site_zip " +
+                        " cm_city, cm_state, cm_zip, cm_country, cms_country, site_country, " +
+                        " cms_city, cms_state, cms_zip, site_city, site_state, site_zip " +
                         " from sv_mstr " +
                         " inner join cm_mstr on cm_code = sv_cust " +
                         " left outer join cms_det on cms_code = sv_cust and cms_shipto = sv_ship " +
@@ -17290,9 +17291,9 @@ return mystring;
                           cust = res.getString("sv_cust");
                           site = res.getString("sv_site");
                           type = res.getString("sv_type");
-                          site_csz = res.getString(("site_city")) + " " + res.getString(("site_state")) + " " + res.getString(("site_zip"));
-                          bill_csz = res.getString(("cm_city")) + " " + res.getString(("cm_state")) + " " + res.getString(("cm_zip"));
-                          ship_csz = res.getString(("cms_city")) + " " + res.getString(("cms_state")) + " " + res.getString(("cms_zip"));
+                          site_csz = res.getString(("site_city")) + " " + res.getString(("site_state")) + " " + res.getString(("site_zip")) + " " + res.getString(("site_country"));
+                          bill_csz = res.getString(("cm_city")) + " " + res.getString(("cm_state")) + " " + res.getString(("cm_zip")) + " " + res.getString(("cm_country"));
+                          ship_csz = res.getString(("cms_city")) + " " + res.getString(("cms_state")) + " " + res.getString(("cms_zip")) + "  " + res.getString(("cms_country"));
                        }
                 
                 

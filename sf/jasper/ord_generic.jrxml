@@ -24,6 +24,7 @@
 	<parameter name="bill_csz" class="java.lang.String"/>
 	<parameter name="ship_csz" class="java.lang.String"/>
 	<parameter name="taxes" class="java.lang.Double"/>
+	<parameter name="ship_country" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select so_nbr, sod_nbr, so_curr, sod_desc, 
 (select case when sum(sos_amt) is null then 0 else sum(sos_amt) end from sos_det 
@@ -147,7 +148,9 @@ inner join site_mstr on site_site = so_site where sod_nbr =  $P{myid}]]>
 				<textFieldExpression><![CDATA[$F{cm_line1}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="21" y="39" width="149" height="17" uuid="86590877-3129-4043-a34e-8fca5e40d2ad"/>
+				<reportElement x="21" y="39" width="149" height="12" uuid="86590877-3129-4043-a34e-8fca5e40d2ad">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -168,7 +171,7 @@ inner join site_mstr on site_site = so_site where sod_nbr =  $P{myid}]]>
 				<textFieldExpression><![CDATA[$F{cms_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="199" y="39" width="188" height="17" uuid="271ba4d0-b5fb-418b-8e7a-f9b2fc19c7e8"/>
+				<reportElement x="199" y="39" width="188" height="11" uuid="271ba4d0-b5fb-418b-8e7a-f9b2fc19c7e8"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
@@ -246,11 +249,15 @@ inner join site_mstr on site_site = so_site where sod_nbr =  $P{myid}]]>
 				<textFieldExpression><![CDATA[$R{jasper.order.lblbillto}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="58" width="54" height="20" uuid="fe9b7d61-e8a7-49fb-896c-eeedd1bf1cc2"/>
+				<reportElement x="0" y="63" width="54" height="15" uuid="fe9b7d61-e8a7-49fb-896c-eeedd1bf1cc2">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
 				<textFieldExpression><![CDATA[$R{jasper.order.lblremarks}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="54" y="59" width="352" height="20" uuid="5c1f22ce-4e0b-41ff-83f6-433702e5c736"/>
+				<reportElement x="54" y="62" width="352" height="15" uuid="5c1f22ce-4e0b-41ff-83f6-433702e5c736">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
 				<textFieldExpression><![CDATA[$F{so_rmks}]]></textFieldExpression>
 			</textField>
 			<textField>
