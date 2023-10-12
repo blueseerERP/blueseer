@@ -851,6 +851,8 @@ try {
     private void tbprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbprintActionPerformed
 
         if (tableorder != null && mymodel.getRowCount() > 0) {
+           OVData.printJTableToJasper("Sales Order Browse Report", tableorder, "genericJTableL10.jasper" );
+            /*
             try {
 
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -866,6 +868,7 @@ try {
             } catch (Exception e) {
                 MainFrame.bslog(e);
             }
+            */
         }
     }//GEN-LAST:event_tbprintActionPerformed
 

@@ -39,23 +39,23 @@ inner join site_mstr on site_site = sh_site where shd_id =  $P{myid}]]>
 	<field name="it_desc" class="java.lang.String"/>
 	<field name="charges" class="java.lang.Double"/>
 	<field name="taxes" class="java.lang.Double"/>
-	<field name="sh_cust" class="java.lang.Object"/>
-	<field name="sh_rmks" class="java.lang.Object"/>
-	<field name="shd_po" class="java.lang.Object"/>
-	<field name="shd_item" class="java.lang.Object"/>
-	<field name="shd_custitem" class="java.lang.Object"/>
+	<field name="sh_cust" class="java.lang.String"/>
+	<field name="sh_rmks" class="java.lang.String"/>
+	<field name="shd_po" class="java.lang.String"/>
+	<field name="shd_item" class="java.lang.String"/>
+	<field name="shd_custitem" class="java.lang.String"/>
 	<field name="shd_qty" class="java.lang.Double"/>
 	<field name="shd_netprice" class="java.lang.Double"/>
 	<field name="shd_listprice" class="java.lang.Double"/>
-	<field name="cm_code" class="java.lang.Object"/>
-	<field name="cm_name" class="java.lang.Object"/>
-	<field name="cm_line1" class="java.lang.Object"/>
-	<field name="cm_line2" class="java.lang.Object"/>
-	<field name="cms_name" class="java.lang.Object"/>
-	<field name="cms_line1" class="java.lang.Object"/>
-	<field name="cms_line2" class="java.lang.Object"/>
-	<field name="site_desc" class="java.lang.Object"/>
-	<field name="site_line1" class="java.lang.Object"/>
+	<field name="cm_code" class="java.lang.String"/>
+	<field name="cm_name" class="java.lang.String"/>
+	<field name="cm_line1" class="java.lang.String"/>
+	<field name="cm_line2" class="java.lang.String"/>
+	<field name="cms_name" class="java.lang.String"/>
+	<field name="cms_line1" class="java.lang.String"/>
+	<field name="cms_line2" class="java.lang.String"/>
+	<field name="site_desc" class="java.lang.String"/>
+	<field name="site_line1" class="java.lang.String"/>
 	<field name="sh_confdate" class="java.lang.String"/>
 	<field name="shd_taxamt" class="java.lang.Double"/>
 	<field name="shd_taxpercent" class="java.lang.Double"/>
