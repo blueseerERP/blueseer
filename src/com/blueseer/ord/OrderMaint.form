@@ -375,7 +375,11 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" attributes="0">
                                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                          <Component id="cbblanket" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Component id="cbblanket" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                              <Component id="cbedi" min="-2" max="-2" attributes="0"/>
+                                          </Group>
                                           <Component id="ddshipvia" max="32767" attributes="0"/>
                                           <Component id="ponbr" alignment="0" min="-2" pref="162" max="-2" attributes="0"/>
                                       </Group>
@@ -437,7 +441,10 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="cbblanket" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                                      <Component id="cbblanket" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cbedi" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                                   <Group type="102" attributes="0">
                                       <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="3" attributes="0">
@@ -677,6 +684,11 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Plan"/>
                 <Property name="name" type="java.lang.String" value="cbplan" noResource="true"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JCheckBox" name="cbedi">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="EDI"/>
               </Properties>
             </Component>
           </SubComponents>

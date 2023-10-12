@@ -424,6 +424,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         cbisallocated.setSelected(false);
         cbconfirm.setSelected(false);
         cbplan.setSelected(true);
+        cbedi.setSelected(false);
         
         listprice.setText("0");
         netprice.setText("0");
@@ -603,6 +604,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         btprintps.setEnabled(false);
         btupdate.setEnabled(false);
         btdelete.setEnabled(false);
+        cbedi.setEnabled(false);
         btnew.setEnabled(false);
         tbkey.setEditable(true);
         tbkey.setForeground(Color.blue);
@@ -660,6 +662,8 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         } else {
                    tbkey.setForeground(Color.red); 
         }
+        
+        cbedi.setEnabled(false);
        
     }
     
@@ -904,7 +908,8 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                  ddtax.getSelectedItem().toString(),
                 String.valueOf(BlueSeerUtils.boolToInt(cbconfirm.isSelected())),
                 String.valueOf(BlueSeerUtils.boolToInt(cbissourced.isSelected())),
-                String.valueOf(BlueSeerUtils.boolToInt(cbplan.isSelected()))
+                String.valueOf(BlueSeerUtils.boolToInt(cbplan.isSelected())),
+                "" // entrytype...blank for manual; 'edi' for EDI entry
                 );
         return x;
     }
@@ -1191,6 +1196,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddcust.setEnabled(false);
         cbissourced.setSelected(BlueSeerUtils.ConvertStringToBool(so.so_issourced()));
         cbconfirm.setSelected(BlueSeerUtils.ConvertStringToBool(so.so_confirm()));
+        cbedi.setSelected((so.so_entrytype().equals("edi") ? true : false));
         cbplan.setSelected(BlueSeerUtils.ConvertStringToBool(so.so_plan()));
         ddstatus.setSelectedItem(so.so_status());
         ddcurr.setSelectedItem(so.so_curr());
@@ -1923,6 +1929,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         cbisallocated = new javax.swing.JCheckBox();
         cbconfirm = new javax.swing.JCheckBox();
         cbplan = new javax.swing.JCheckBox();
+        cbedi = new javax.swing.JCheckBox();
         btdelete = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel11 = new javax.swing.JLabel();
@@ -2192,6 +2199,8 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         cbplan.setText("Plan");
         cbplan.setName("cbplan"); // NOI18N
 
+        cbedi.setText("EDI");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -2210,7 +2219,10 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(cbblanket)
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addComponent(cbblanket)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(cbedi))
                                     .addComponent(ddshipvia, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(ponbr, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(48, 48, 48)
@@ -2256,7 +2268,9 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbblanket)
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(cbblanket)
+                                .addComponent(cbedi))
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGap(40, 40, 40)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -3858,6 +3872,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JButton btupdateitem;
     private javax.swing.JCheckBox cbblanket;
     private javax.swing.JCheckBox cbconfirm;
+    private javax.swing.JCheckBox cbedi;
     private javax.swing.JCheckBox cbisallocated;
     private javax.swing.JCheckBox cbissourced;
     private javax.swing.JCheckBox cbplan;

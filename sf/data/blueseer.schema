@@ -1265,6 +1265,7 @@ CREATE TABLE IF NOT EXISTS `po_mstr` (
   `po_char2` varchar(30)  NOT NULL DEFAULT '',
   `po_char3` varchar(30)  NOT NULL DEFAULT '',
   `po_taxcode` varchar(10)  NOT NULL DEFAULT '',
+  `po_entrytype` varchar(10)  NOT NULL DEFAULT '',
   index cust (`po_vend`),
   index sitestatus (`po_site`, `po_status`),
   index custstatus(`po_vend`, `po_status`),

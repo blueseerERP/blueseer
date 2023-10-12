@@ -3158,7 +3158,8 @@ public class EDI {
                  "", // tax
                 "0", // isSourced
                 "0", // isConfirmed
-                "0" // isPlanned
+                "0", // isPlanned
+                "edi"
                 );
         // detail
         ArrayList<ordData.sod_det> detail = new ArrayList<ordData.sod_det>();
@@ -3184,7 +3185,7 @@ public class EDI {
                 e.podate,
                 e.duedate,   
                 "0", // ship qty
-                "", // status
+                "open", // status
                 "", // wh
                 "", // location
                 "",  // desc
@@ -3560,7 +3561,7 @@ public class EDI {
         
         // get Delimiters from Cust Defaults
         
-        String[] ids = EDData.getEDIXrefOut(billto, "ST");
+        String[] ids = EDData.getEDIXrefOut(billto, "SH");
         messages.add(new String[]{"info","edi_xref: " + ids[0] + "/" + ids[1] + "/" + ids[2] + "/" + ids[3] + "/" + ids[4]});
         
         String[] defaults = EDData.getEDITPDefaults(doctype, EDData.getEDIgsid(), ids[1]  ); //810, ourGS, theirsGS
@@ -3690,7 +3691,7 @@ public class EDI {
         c[20] = "999999";
         
         // get Delimiters from Cust Defaults
-        String[] ids = EDData.getEDIXrefOut(billto, "ST");
+        String[] ids = EDData.getEDIXrefOut(billto, "PR");
         messages.add(new String[]{"info","edi_xref: " + ids[0] + "/" + ids[1] + "/" + ids[2] + "/" + ids[3] + "/" + ids[4]});
         // tpid, gsid, tpaddr, ovaddr, type
         

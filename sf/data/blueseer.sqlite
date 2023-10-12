@@ -1515,7 +1515,8 @@ CREATE TABLE "po_mstr" (
   "po_char1" varchar(30) COLLATE NOCASE DEFAULT '',
   "po_char2" varchar(30) COLLATE NOCASE DEFAULT '',
   "po_char3" varchar(30) COLLATE NOCASE DEFAULT '',
-  "po_taxcode" varchar(10) COLLATE NOCASE DEFAULT ''
+  "po_taxcode" varchar(10) COLLATE NOCASE DEFAULT '',
+  "po_entrytype" varchar(10) COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

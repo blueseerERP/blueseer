@@ -117,8 +117,8 @@ public class ordData {
                         + "so_site, so_curr, so_shipvia, so_wh, so_po, so_due_date, so_ord_date, "
                         + "so_create_date, so_userid, so_status, so_isallocated, "
                         + "so_terms, so_ar_acct, so_ar_cc, so_rmks, so_type, so_taxcode, "
-                        + "so_issourced, so_confirm, so_plan ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+                        + "so_issourced, so_confirm, so_plan, so_entrytype ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.so_nbr);
@@ -148,6 +148,7 @@ public class ordData {
             ps.setString(21, x.so_issourced);
             ps.setString(22, x.so_confirm);
             ps.setString(23, x.so_plan);
+            ps.setString(24, x.so_entrytype);
             rows = ps.executeUpdate();
             } 
             return rows;
@@ -662,7 +663,7 @@ public class ordData {
                     res.getString("so_due_date"), res.getString("so_ord_date"), res.getString("so_create_date"), res.getString("so_userid"), res.getString("so_status"),
                     res.getString("so_isallocated"), res.getString("so_terms"), res.getString("so_ar_acct"), res.getString("so_ar_cc"), 
                     res.getString("so_rmks"), res.getString("so_type"), res.getString("so_taxcode"), res.getString("so_issourced"),
-                    res.getString("so_confirm"), res.getString("so_plan") );
+                    res.getString("so_confirm"), res.getString("so_plan"), res.getString("so_entrytype") );
                     }
                 }
             }
@@ -692,7 +693,7 @@ public class ordData {
                 res.getString("so_due_date"), res.getString("so_ord_date"), res.getString("so_create_date"), res.getString("so_userid"), res.getString("so_status"),
                 res.getString("so_isallocated"), res.getString("so_terms"), res.getString("so_ar_acct"), res.getString("so_ar_cc"), 
                 res.getString("so_rmks"), res.getString("so_type"), res.getString("so_taxcode"), res.getString("so_issourced"),
-                res.getString("so_confirm"), res.getString("so_plan"));
+                res.getString("so_confirm"), res.getString("so_plan"), res.getString("so_entrytype"));
                 }
             }
             return r;
@@ -2220,11 +2221,11 @@ public class ordData {
     String so_curr, String so_shipvia, String so_wh, String so_po, String so_due_date,
     String so_ord_date, String so_create_date, String so_userid, String so_status, String so_isallocated,
     String so_terms, String so_ar_acct, String so_ar_cc, String so_rmks, String so_type, String so_taxcode,
-    String so_issourced, String so_confirm, String so_plan) {
+    String so_issourced, String so_confirm, String so_plan, String so_entrytype) {
         public so_mstr(String[] m) {
             this(m, "", "", "", "", "", "", "", "", "", "",
                     "", "", "", "", "", "", "", "", "", "",
-                    "", "", ""
+                    "", "", "", ""
                     );
         }
     }

@@ -120,8 +120,8 @@ public class purData {
         String sqlInsert = "insert into po_mstr (po_nbr, po_vend, po_site, po_type, " 
                         + " po_curr, po_buyer, po_due_date, "
                         + " po_ord_date, po_userid, po_status,"
-                        + " po_terms, po_ap_acct, po_ap_cc, po_rmks, po_ship, po_taxcode ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+                        + " po_terms, po_ap_acct, po_ap_cc, po_rmks, po_ship, po_taxcode, po_entrytype ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.po_nbr);
@@ -144,6 +144,7 @@ public class purData {
             ps.setString(14, x.po_rmks);
             ps.setString(15, x.po_ship);
             ps.setString(16, x.po_taxcode);
+            ps.setString(17, x.po_entrytype);
             rows = ps.executeUpdate();
             } 
             return rows;
@@ -617,7 +618,7 @@ public class purData {
                         res.getString("po_type"), res.getString("po_curr"), res.getString("po_terms"), 
                         res.getString("po_site"), res.getString("po_buyer"), res.getString("po_ap_acct"), 
                         res.getString("po_ap_cc"), res.getString("po_ship"), res.getString("po_edistatus"),
-                        res.getString("po_confirm"), res.getString("po_taxcode"));
+                        res.getString("po_confirm"), res.getString("po_taxcode"), res.getString("po_entrytype"));
                     }
                 }
             }
@@ -648,7 +649,7 @@ public class purData {
                         res.getString("po_type"), res.getString("po_curr"), res.getString("po_terms"), 
                         res.getString("po_site"), res.getString("po_buyer"), res.getString("po_ap_acct"), 
                         res.getString("po_ap_cc"), res.getString("po_ship"), res.getString("po_edistatus"),
-                        res.getString("po_confirm"), res.getString("po_taxcode"));
+                        res.getString("po_confirm"), res.getString("po_taxcode"), res.getString("po_entrytype"));
                 }
             }
             return r;
@@ -1959,10 +1960,10 @@ public class purData {
      String po_ord_date, String po_due_date, String po_rmks, String po_shipvia,
     String po_status, String po_userid, String po_type, String po_curr,
     String po_terms, String po_site, String po_buyer, String po_ap_acct, String po_ap_cc, 
-    String po_ship, String po_edistatus, String po_confirm, String po_taxcode ) {
+    String po_ship, String po_edistatus, String po_confirm, String po_taxcode, String po_entrytype ) {
         public po_mstr(String[] m) {
             this(m, "", "", "", "", "", "", "", "", "", "",
-                    "", "", "", "", "", "", "", "", ""
+                    "", "", "", "", "", "", "", "", "", ""
                     );
         }
     }
@@ -1971,7 +1972,7 @@ public class purData {
     public record pod_mstr(String[] m, String pod_nbr, String pod_line, String pod_item, String pod_venditem, 
         String pod_ord_qty, String pod_rcvd_qty, String pod_netprice, String pod_disc,
         String pod_listprice, String pod_due_date, String pod_status, String pod_site,
-        String pod_ord_date, String pod_uom, String pod_desc, String pod_ship, String pod_taxcode, String pod_taxamt ) {
+        String pod_ord_date, String pod_uom, String pod_desc, String pod_ship, String pod_taxcode, String pod_taxamt) {
         public pod_mstr(String[] m) {
             this (m, "", "", "", "", "", "", "", "", "", "",
                     "", "", "", "", "", "", "", "");
