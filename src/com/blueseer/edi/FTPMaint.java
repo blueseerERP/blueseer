@@ -23,8 +23,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package com.blueseer.adm;
+package com.blueseer.edi;
 
+import com.blueseer.adm.*;
 import bsmf.MainFrame;
 import com.blueseer.utl.BlueSeerUtils;
 import static bsmf.MainFrame.tags;
@@ -273,13 +274,26 @@ public class FTPMaint extends javax.swing.JPanel implements IBlueSeerT {
         } else {
             return;
         }
-       Component[] components = panel.getComponents();
+        Component[] components = null;
+       if (panel != null) { 
+         components = panel.getComponents();
+       } 
+       if (tabpane != null) { 
+         components = tabpane.getComponents();
+       }
+       if (scrollpane != null) { 
+         components = scrollpane.getComponents();
+       }
+       
        for (Component component : components) {
-           if (component instanceof JPanel) {
+                if (component instanceof JPanel) {
                     if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
                        ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
                     } 
                     setLanguageTags((JPanel) component);
+                }
+                if (component instanceof JTabbedPane) {
+                    setLanguageTags((JTabbedPane) component);
                 }
                 if (component instanceof JLabel ) {
                     if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {

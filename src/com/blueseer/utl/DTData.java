@@ -4812,7 +4812,7 @@ public class DTData {
           
     public static DefaultTableModel getFTPBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("description"), getGlobalColumnTag("ip"), "Login", "Passwd", "CDDir", "InDir", "OutDir", "Delete?"})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("description"), "IP/URL", "Login", "Passwd", "CDDir", "InDir", "OutDir", "Delete?"})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  

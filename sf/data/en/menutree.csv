@@ -39,29 +39,32 @@ Freight,BrokerBrowse,9,JMenuItem,Broker Browse,,1,,1,1
 Freight,CFOControl,10,JMenuItem,Freight Control,,,,1,1
 EDI,EDILoad,1,JMenuItem,EDI Load,,,,1,1
 EDI,EDILog,2,JMenuItem,EDI Log,,,,1,1
-EDI,EDIPartnerMaint,3,JMenuItem,EDI Partner Maintenance,,,,1,1
-EDI,EDIPartnerBrowse,4,JMenuItem,EDI Partner Browse,,1,,1,1
-EDI,EDIPartnerDocMaint,5,JMenuItem,Partner Transaction Maintenance,,,,1,1
-EDI,EDIPartnerDocBrowse,6,JMenuItem,EDI Partner Transaction Browse,,1,,1,1
-EDI,EDIDocumentMaint,7,JMenuItem,Document Recognition Maintenance,,,,1,1
-EDI,EDIXrefMaint,8,JMenuItem,EDI Xref Maintenance,,,,1,1
-EDI,EDIXrefBrowse,9,JMenuItem,EDI Xref Browse,,1,,1,1
-EDI,MapMaint,10,JMenuItem,Map Maintenance,,,,1,1
-EDI,StructMaint,11,JMenuItem,Structure File Maintenance,,,,1,1
-EDI,EDIExport,12,JMenuItem,EDI Export,,,,1,1
-EDI,EDIControl,13,JMenuItem,EDI Control,,,,1,1
-EDI,APIMenu,14,JMenu,API Menu,,,,1,1
-EDI,AS2Menu,15,JMenu,AS2 Menu,,,,1,1
-EDI,WorkFlowMaint,16,JMenuItem,WorkFlow Maintenance,,,,1,1
-EDI,WorkFlowBrowse,17,JMenuItem,WorkFlow Browse,,1,,1,1
-EDI,WorkFlowLog,18,JMenuItem,WorkFlow Log,,1,,1,1
-EDI,EDIUtilities,19,JMenuItem,EDI Utilities,,,,1,1
-APIMenu,APIMaint,1,JMenuItem,API Maintenance,,,,1,1
-APIMenu,APIBrowse,2,JMenuItem,API Browse,,,,1,1
-APIMenu,APILog,3,JMenuItem,API Log,,,,1,1
-AS2Menu,AS2Maint,1,JMenuItem,AS2 Maintenance,,,,1,1
-AS2Menu,AS2Browse,2,JMenuItem,AS2 Browse,,1,,1,1
-AS2Menu,AS2Log,3,JMenuItem,AS2 Log,,,,1,1
+EDI,EDIConfMenu,3,JMenu,EDI Configuration Menu,,,,1,1
+EDI,EDITranMenu,4,JMenu,EDI Translation Menu,,,,1,1
+EDI,EDICommMenu,5,JMenu,EDI Communications Menu,,,,1,1
+EDI,EDIWkflMenu,6,JMenu,EDI WorkFlow Menu,,,,1,1
+EDI,EDIExport,7,JMenuItem,EDI Export,,,,1,1
+EDI,EDIControl,8,JMenuItem,EDI Control,,,,1,1
+EDIConfMenu,EDIPartnerMaint,1,JMenuItem,EDI Partner Maintenance,,,,1,1
+EDIConfMenu,EDIPartnerBrowse,2,JMenuItem,EDI Partner Browse,,1,,1,1
+EDIConfMenu,EDIPartnerDocMaint,3,JMenuItem,Partner Transaction Maintenance,,,,1,1
+EDIConfMenu,EDIPartnerDocBrowse,4,JMenuItem,EDI Partner Transaction Browse,,1,,1,1
+EDIConfMenu,EDIDocumentMaint,5,JMenuItem,Document Recognition Maintenance,,,,1,1
+EDIConfMenu,EDIXrefMaint,6,JMenuItem,EDI Xref Maintenance,,,,1,1
+EDIConfMenu,EDIXrefBrowse,7,JMenuItem,EDI Xref Browse,,1,,1,1
+EDITranMenu,MapMaint,1,JMenuItem,Map Maintenance,,,,1,1
+EDITranMenu,StructMaint,2,JMenuItem,Structure File Maintenance,,,,1,1
+EDIWkflMenu,WorkFlowMaint,1,JMenuItem,WorkFlow Maintenance,,,,1,1
+EDIWkflMenu,WorkFlowBrowse,2,JMenuItem,WorkFlow Browse,,1,,1,1
+EDIWkflMenu,WorkFlowLog,3,JMenuItem,WorkFlow Log,,1,,1,1
+EDIWkflMenu,EDIUtilities,4,JMenuItem,EDI Utilities,,,,1,1
+EDICommMenu,APIMaint,1,JMenuItem,API Maintenance,,,,1,1
+EDICommMenu,APIBrowse,2,JMenuItem,API Browse,,,,1,1
+EDICommMenu,APILog,3,JMenuItem,API Log,,,,1,1
+EDICommMenu,AS2Maint,4,JMenuItem,AS2 Maintenance,,,,1,1
+EDICommMenu,AS2Browse,5,JMenuItem,AS2 Browse,,1,,1,1
+EDICommMenu,AS2Log,6,JMenuItem,AS2 Log,,,,1,1
+EDICommMenu,FTPMaint,7,JMenuItem,FTP/sFTP Maintenance,,,,1,1
 LabelMenu,LabelsContGeneric,1,JMenuItem,Container Labels,,,,1,1
 LabelMenu,AddrLabel,2,JMenuItem,Address Labels,,,,1,1
 LabelMenu,LabelBrowse,3,JMenuItem,Label Browse,,1,,1,1
@@ -280,13 +283,12 @@ Admin,ChangeUserid,16,JMenuItem,Change Userid,,,changeUserID,1,1
 Admin,changeDB,17,JMenuItem,Change IP:DB,,,changeIPandDB,1,1
 Admin,SystemControl,18,JMenuItem,System Control,,,,1,1
 Admin,TreeMaint,19,JMenuItem,Menu Tree Maintenance,,,,1,1
-Admin,FTPMaint,20,JMenuItem,FTP Maintenance,,,,1,1
-Admin,MassLoad,21,JMenuItem,Master Data Import,,,,1,1
-Admin,JasperRptMaint,22,JMenuItem,Jasper Report Maintenance,,,,1,1
-Admin,PKSMaint,23,JMenuItem,PKS Maintenance,,,,1,1
-Admin,PKSBrowse,24,JMenuItem,PKS Browse,,1,,1,1
-Admin,CronMaint,25,JMenuItem,Cron Maintenance,,,,1,1
-Admin,CronBrowse,26,JMenuItem,Cron Browse,,1,,1,1
+Admin,MassLoad,20,JMenuItem,Master Data Import,,,,1,1
+Admin,JasperRptMaint,21,JMenuItem,Jasper Report Maintenance,,,,1,1
+Admin,PKSMaint,22,JMenuItem,PKS Maintenance,,,,1,1
+Admin,PKSBrowse,23,JMenuItem,PKS Browse,,1,,1,1
+Admin,CronMaint,24,JMenuItem,Cron Maintenance,,,,1,1
+Admin,CronBrowse,25,JMenuItem,Cron Browse,,1,,1,1
 Help,About,1,JMenuItem,About,,,,1,1
 Help,License,2,JMenuItem,License,,,,1,1
 Help,Update,3,JMenuItem,Update,,,,1,1

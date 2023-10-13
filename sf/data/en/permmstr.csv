@@ -309,8 +309,10 @@ admin,AS2Log
 admin,PKSMaint
 admin,APIBrowse
 admin,APILog
-admin,APIMenu
-admin,AS2Menu
+admin,EDIConfMenu
+admin,EDICommMenu
+admin,EDITranMenu
+admin,EDIWkflMenu
 admin,AS2Browse
 admin,CronMaint
 admin,CronBrowse

@@ -1,5 +1,9 @@
 Engineering,,,JMenu, 
 EDI,,,JMenu,
+EDICommMenu,,,JMenu,
+EDITranMenu,,,JMenu,
+EDIWkflMenu,,,JMenu,
+EDIConfMenu,,,JMenu,
 Address,,,JMenu, 
 Admin,,,JMenu, 
 Finance,,,JMenu, 
@@ -14,8 +18,6 @@ Freight,,,JMenu,
 CustomerMenu,,,JMenu, 
 CustomerReports,,,JMenu, 
 VendorMenu,,,JMenu, 
-APIMenu,,,JMenu, 
-AS2Menu,,,JMenu, 
 LabelMenu,,,JMenu, 
 RequisitionMenu,,,JMenu, 
 ReqChartsMenu,,,JMenu, 
@@ -294,7 +296,7 @@ POSControlMaint,,com.blueseer.ctr.POSControl,JMenuItem,posc
 POSBrowse,,com.blueseer.ctr.POSBrowse,JMenuItem,posb
 ReqControl,,com.blueseer.pur.ReqControl,JMenuItem,reqc
 ShipperBrowseDet,,com.blueseer.shp.ShipperDetBrowse,JMenuItem,shpbd
-FTPMaint,,com.blueseer.adm.FTPMaint,JMenuItem,ftpm
+FTPMaint,,com.blueseer.edi.FTPMaint,JMenuItem,ftp
 ECNMaint,,com.blueseer.eng.ECNMaint,JMenuItem,ecnm
 ECNBrowse,,com.blueseer.eng.ECNBrowse,JMenuItem,ecnb
 TaskMaint,,com.blueseer.eng.TaskMaint,JMenuItem,tasm
