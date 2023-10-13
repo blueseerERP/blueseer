@@ -1985,7 +1985,7 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
                 File mytemplate = new File("jasper/req_print.jasper");
                 JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
-                JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/b1.pdf");
+             //   JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/b1.pdf");
          
             JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
             jasperViewer.setVisible(true);

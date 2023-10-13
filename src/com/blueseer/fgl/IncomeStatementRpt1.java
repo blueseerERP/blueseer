@@ -968,7 +968,7 @@ try {
                 File mytemplate = new File("jasper/incomestatement.jasper");
                  
                 JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, new JRTableModelDataSource(mytable.getModel()) );
-                JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/is.pdf");
+               // JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/is.pdf");
          
             JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
             jasperViewer.setVisible(true);

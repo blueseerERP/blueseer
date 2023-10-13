@@ -400,7 +400,7 @@ public class BOMBrowse extends javax.swing.JPanel {
                     File mytemplate = new File("jasper/bombrowse.jasper");
 
                     JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, new JRTableModelDataSource(tableorder.getModel()) );
-                    JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/bombrowse.pdf");
+                   //JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/bombrowse.pdf");
 
                     JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
                     jasperViewer.setVisible(true);

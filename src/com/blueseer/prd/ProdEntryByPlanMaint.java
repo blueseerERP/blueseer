@@ -145,7 +145,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
  //   exporter.exportReport();  
          // end code auto sends to printer
      
-                JasperExportManager.exportReportToPdfFile(print,"temp/subjob.pdf");
+             //   JasperExportManager.exportReportToPdfFile(print,"temp/subjob.pdf");
                 JasperViewer jasperViewer = new JasperViewer(print, false);
                 jasperViewer.setVisible(true);
     

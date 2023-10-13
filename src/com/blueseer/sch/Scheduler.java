@@ -572,7 +572,7 @@ public class Scheduler extends javax.swing.JPanel {
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
                 File mytemplate = new File("jasper/jobticketmulti.jasper");
                 JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
-                JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/jobticketmulti.pdf");
+              //  JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/jobticketmulti.pdf");
          
             JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
             jasperViewer.setVisible(true);
@@ -607,7 +607,7 @@ public class Scheduler extends javax.swing.JPanel {
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
                 File mytemplate = new File("jasper/" + jasperfile);
                 JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
-                JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/jobticket.pdf");
+              //  JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/jobticket.pdf");
          
             JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
             jasperViewer.setVisible(true);

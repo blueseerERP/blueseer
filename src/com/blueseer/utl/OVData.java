@@ -16860,7 +16860,7 @@ return mystring;
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
                 Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemJasperDirectory()) + jasperfile);
                 JasperPrint jasperPrint = JasperFillManager.fillReport(template.toString(), hm, new JREmptyDataSource() );
-                JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/itemimage.pdf");
+              //  JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/itemimage.pdf");
                 
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
                                 

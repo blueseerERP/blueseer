@@ -51,6 +51,7 @@
      case when wf_run_hours = 0 then '0' when wf_run_hours = '' then '0' when wf_run_hours is null then '0' else (1 / wf_run_hours) end as runrate,
      case when plan_type = 'DEMD' then so_po else 'N/A' end as custpo,
      case when plan_type = 'DEMD' then so_cust else 'N/A' end as custcode,
+     case when plan_type = 'DEMD' then sod_bom else 'N/A' end as bomcode,
      case when plan_type = 'DEMD' then sod_custitem else 'N/A' end as custitem
 FROM
      plan_mstr
@@ -116,6 +117,7 @@ order by wf_op;]]>
 	<field name="it_desc" class="java.lang.String"/>
 	<field name="it_rev" class="java.lang.String"/>
 	<field name="assert" class="java.lang.String"/>
+	<field name="bomcode" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -156,7 +158,7 @@ order by wf_op;]]>
 		</band>
 	</title>
 	<pageHeader>
-		<band height="114" splitType="Stretch">
+		<band height="112" splitType="Stretch">
 			<line>
 				<reportElement x="0" y="5" width="760" height="1" uuid="560d1dfe-9162-4754-8cd9-0565a997b349"/>
 			</line>
@@ -172,7 +174,10 @@ order by wf_op;]]>
 				<textFieldExpression><![CDATA[$F{plan_nbr}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="61" y="92" width="73" height="17" uuid="86590877-3129-4043-a34e-8fca5e40d2ad"/>
+				<reportElement x="73" y="80" width="73" height="17" uuid="86590877-3129-4043-a34e-8fca5e40d2ad"/>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{it_wf}]]></textFieldExpression>
 			</textField>
 			<textField>
@@ -225,7 +230,7 @@ order by wf_op;]]>
 				<textFieldExpression><![CDATA[$R{jasper.jobticket.lblcustomer}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="19" y="92" width="42" height="17" uuid="e741c66e-0a10-4855-9d84-d9e63b376355"/>
+				<reportElement x="19" y="80" width="42" height="17" uuid="e741c66e-0a10-4855-9d84-d9e63b376355"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
@@ -400,6 +405,20 @@ order by wf_op;]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{jasper.jobticket.lblassert}]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement x="19" y="-17" width="42" height="17" uuid="d58ee586-9b89-4467-9858-4c376dc1b3b7"/>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.jobticket.lblbomcode}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="73" y="-17" width="73" height="17" uuid="35b3855c-0b3f-4d70-9a75-09231a69b4c8"/>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{bomcode}]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>
@@ -434,6 +453,9 @@ order by wf_op;]]>
 				</subreportParameter>
 				<subreportParameter name="qty">
 					<subreportParameterExpression><![CDATA[$F{plan_qty_sched}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="bom">
+					<subreportParameterExpression><![CDATA[$F{bomcode}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "routing.jasper"]]></subreportExpression>

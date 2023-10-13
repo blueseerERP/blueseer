@@ -13,10 +13,11 @@
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<parameter name="qty" class="java.lang.Double"/>
+	<parameter name="bom" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select ps_child, it_desc, ps_qty_per, ps_ref, it_uom from pbm_mstr 
 left outer join item_mstr on it_item = ps_child 
-where ps_parent = $P{part} and ps_op = $P{op};]]>
+where ps_parent = $P{part} and ps_op = $P{op} and ps_bom = $P{bom};]]>
 	</queryString>
 	<field name="ps_child" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="ps_child"/>

@@ -1169,7 +1169,7 @@ try {
                 File mytemplate = new File("jasper/aragingdetail.jasper");
                 
                 JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, new JRTableModelDataSource(tabledetail.getModel()) );
-                JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/araging.pdf");
+               // JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/araging.pdf");
          
             JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
             jasperViewer.setVisible(true);
