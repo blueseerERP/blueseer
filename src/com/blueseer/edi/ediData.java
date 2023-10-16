@@ -2837,8 +2837,8 @@ public class ediData {
     }
     
     public static String[] getKeyStoreByUser(String userid) {
-        String[] x = new String[]{"","","","",""};
-        String sql = "select p.pks_storeuser as storeuser, p.pks_file as storefile, p.pks_storepass as storepass, u.pks_user as user, u.pks_pass as pass from pks_mstr p inner join pks_mstr u on u.pks_parent = p.pks_id where u.pks_id = ?";
+        String[] x = new String[]{"","","","","",""};
+        String sql = "select p.pks_storeuser as storeuser, p.pks_file as storefile, p.pks_storepass as storepass, u.pks_user as user, u.pks_pass as pass, u.pks_standard as standard from pks_mstr p inner join pks_mstr u on u.pks_parent = p.pks_id where u.pks_id = ?";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, userid);
@@ -2849,6 +2849,8 @@ public class ediData {
                x[2] = res.getString("storepass");
                x[3] = res.getString("user");
                x[4] = res.getString("pass");
+               x[5] = res.getString("standard");
+               
                }
             }
         }

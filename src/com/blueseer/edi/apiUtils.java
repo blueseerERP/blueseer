@@ -56,7 +56,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
@@ -65,6 +67,7 @@ import java.net.SocketException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -136,6 +139,11 @@ import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.X500NameBuilder;
 import org.bouncycastle.asn1.x500.style.RFC4519Style;
 import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
+import org.bouncycastle.bcpg.ArmoredOutputStream;
+import org.bouncycastle.bcpg.HashAlgorithmTags;
+import org.bouncycastle.bcpg.SymmetricKeyAlgorithmTags;
+import org.bouncycastle.bcpg.sig.Features;
+import org.bouncycastle.bcpg.sig.KeyFlags;
 import org.bouncycastle.cert.CertIOException;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.jcajce.JcaCertStore;
@@ -161,7 +169,9 @@ import org.bouncycastle.cms.jcajce.JceCMSContentEncryptorBuilder;
 import org.bouncycastle.cms.jcajce.JceKeyTransEnvelopedRecipient;
 import org.bouncycastle.cms.jcajce.JceKeyTransRecipient;
 import org.bouncycastle.cms.jcajce.JceKeyTransRecipientInfoGenerator;
+import org.bouncycastle.crypto.generators.RSAKeyPairGenerator;
 import org.bouncycastle.crypto.params.AsymmetricKeyParameter;
+import org.bouncycastle.crypto.params.RSAKeyGenerationParameters;
 import org.bouncycastle.crypto.util.OpenSSHPrivateKeyUtil;
 import org.bouncycastle.crypto.util.OpenSSHPublicKeyUtil;
 import org.bouncycastle.crypto.util.PrivateKeyFactory;
@@ -170,22 +180,38 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.mail.smime.SMIMEException;
 import org.bouncycastle.mail.smime.SMIMESignedGenerator;
 import org.bouncycastle.openpgp.PGPCompressedData;
+import org.bouncycastle.openpgp.PGPEncryptedData;
 import org.bouncycastle.openpgp.PGPEncryptedDataList;
 import org.bouncycastle.openpgp.PGPException;
+import org.bouncycastle.openpgp.PGPKeyPair;
+import org.bouncycastle.openpgp.PGPKeyRingGenerator;
 import org.bouncycastle.openpgp.PGPLiteralData;
 import org.bouncycastle.openpgp.PGPObjectFactory;
 import org.bouncycastle.openpgp.PGPOnePassSignatureList;
 import org.bouncycastle.openpgp.PGPPBEEncryptedData;
 import org.bouncycastle.openpgp.PGPPrivateKey;
+import org.bouncycastle.openpgp.PGPPublicKey;
 import org.bouncycastle.openpgp.PGPPublicKeyEncryptedData;
+import org.bouncycastle.openpgp.PGPPublicKeyRing;
 import org.bouncycastle.openpgp.PGPSecretKey;
+import org.bouncycastle.openpgp.PGPSecretKeyRing;
 import org.bouncycastle.openpgp.PGPSecretKeyRingCollection;
+import org.bouncycastle.openpgp.PGPSignature;
+import org.bouncycastle.openpgp.PGPSignatureSubpacketGenerator;
 import static org.bouncycastle.openpgp.PGPUtil.getDecoderStream;
 import org.bouncycastle.openpgp.jcajce.JcaPGPObjectFactory;
 import org.bouncycastle.openpgp.operator.PBESecretKeyDecryptor;
+import org.bouncycastle.openpgp.operator.PBESecretKeyEncryptor;
+import org.bouncycastle.openpgp.operator.PGPDigestCalculator;
 import org.bouncycastle.openpgp.operator.PublicKeyDataDecryptorFactory;
 import org.bouncycastle.openpgp.operator.bc.BcKeyFingerprintCalculator;
+import org.bouncycastle.openpgp.operator.bc.BcPBESecretKeyEncryptorBuilder;
+import org.bouncycastle.openpgp.operator.bc.BcPGPContentSignerBuilder;
+import org.bouncycastle.openpgp.operator.bc.BcPGPDigestCalculatorProvider;
+import org.bouncycastle.openpgp.operator.bc.BcPGPKeyPair;
 import org.bouncycastle.openpgp.operator.jcajce.JcaPGPDigestCalculatorProviderBuilder;
+import org.bouncycastle.openpgp.operator.jcajce.JcaPGPKeyConverter;
+import org.bouncycastle.openpgp.operator.jcajce.JcaPGPKeyPair;
 import org.bouncycastle.openpgp.operator.jcajce.JcePBEDataDecryptorFactoryBuilder;
 import org.bouncycastle.openpgp.operator.jcajce.JcePBESecretKeyDecryptorBuilder;
 import org.bouncycastle.openpgp.operator.jcajce.JcePublicKeyDataDecryptorFactoryBuilder;
@@ -329,7 +355,7 @@ public class apiUtils {
         PrivateKey key = null;
         FileInputStream fis = null;
         try {
-            String[] k = getKeyStoreByUser(user); // store, storeuser, storepass, user, pass
+            String[] k = getKeyStoreByUser(user); // store, storeuser, storepass, user, pass, standard
             k[2] = bsmf.MainFrame.PassWord("1", k[2].toCharArray());
             k[4] = bsmf.MainFrame.PassWord("1", k[4].toCharArray());
             char[] keyPassword = k[4].toCharArray();
@@ -366,6 +392,57 @@ public class apiUtils {
         return key;
     }
     
+    public static PGPPrivateKey getPGPPrivateKey(String user)  {
+        PrivateKey key = null;
+        PGPPrivateKey pgpkey = null;
+        FileInputStream fis = null;
+        try {
+            String[] k = getKeyStoreByUser(user); // store, storeuser, storepass, user, pass, standard
+            k[2] = bsmf.MainFrame.PassWord("1", k[2].toCharArray());
+            k[4] = bsmf.MainFrame.PassWord("1", k[4].toCharArray());
+            char[] keyPassword = k[4].toCharArray();
+            KeyStore keystore = KeyStore.getInstance("PKCS12");
+             fis = new FileInputStream(FileSystems.getDefault().getPath(k[0]).toString());
+            keystore.load(fis, k[2].toCharArray());
+            key = (PrivateKey) keystore.getKey(k[3], keyPassword);
+            
+            // for pgp key
+            X509Certificate cert = (X509Certificate) keystore.getCertificate(k[3]); // need to get public key
+            JcaPGPKeyConverter c = new JcaPGPKeyConverter(); // convert from 509 to PGP
+            PGPPublicKey pgppk = c.getPGPPublicKey(PGPPublicKey.RSA_GENERAL, cert.getPublicKey(), new Date());
+            pgpkey = c.getPGPPrivateKey(pgppk, key);
+            
+            
+            
+            //System.out.println("key-->");
+            //System.out.println(key);
+        } catch (KeyStoreException ex) {
+            bslog(ex);
+        } catch (FileNotFoundException ex) {
+            bslog(ex);
+        } catch (IOException ex) {
+            bslog(ex);
+        } catch (NoSuchAlgorithmException ex) {
+            bslog(ex);
+        } catch (CertificateException ex) {
+            bslog(ex);
+        } catch (UnrecoverableKeyException ex) {
+            bslog(ex);
+        } catch (PGPException ex) {
+            bslog(ex);
+        } finally {
+          if (fis != null ) {
+              try {
+                  fis.close();
+              } catch (IOException ex) {
+                  bslog(ex);
+              }
+          }
+          
+        }
+        return pgpkey;
+    }
+    
     
     
     public static PublicKey getPublicKey(String user)  {
@@ -380,7 +457,6 @@ public class apiUtils {
          fis = new FileInputStream(FileSystems.getDefault().getPath(k[0]).toString());
         keystore.load(fis, k[2].toCharArray());
         cert = (X509Certificate) keystore.getCertificate(pks.pks_user());
-        fis.close();
         } catch (KeyStoreException ex) {
             bslog(ex);
         } catch (FileNotFoundException ex) {
@@ -391,11 +467,204 @@ public class apiUtils {
             bslog(ex);
         } catch (CertificateException ex) {
             bslog(ex);
-        } 
+        } finally {
+          if (fis != null ) {
+              try {
+                  fis.close();
+              } catch (IOException ex) {
+                  bslog(ex);
+              }
+          }
+          
+        }
         
         return cert.getPublicKey();
     }
     
+    public static PGPPublicKey getPGPPublicKey(String user)  {
+       
+        PGPPublicKey pgpkey = null;
+        FileInputStream fis = null;
+        try {
+            String[] k = getKeyStoreByUser(user); // store, storeuser, storepass, user, pass, standard
+            k[2] = bsmf.MainFrame.PassWord("1", k[2].toCharArray());
+            k[4] = bsmf.MainFrame.PassWord("1", k[4].toCharArray());
+            char[] keyPassword = k[4].toCharArray();
+            KeyStore keystore = KeyStore.getInstance("PKCS12");
+             fis = new FileInputStream(FileSystems.getDefault().getPath(k[0]).toString());
+            keystore.load(fis, k[2].toCharArray());
+            
+            // for pgp key
+            X509Certificate cert = (X509Certificate) keystore.getCertificate(k[3]); // need to get public key
+            JcaPGPKeyConverter c = new JcaPGPKeyConverter(); // convert from 509 to PGP
+            pgpkey = c.getPGPPublicKey(PGPPublicKey.RSA_GENERAL, cert.getPublicKey(), new Date());
+            
+            //System.out.println("key-->");
+            //System.out.println(key);
+        } catch (KeyStoreException ex) {
+            bslog(ex);
+        } catch (FileNotFoundException ex) {
+            bslog(ex);
+        } catch (IOException ex) {
+            bslog(ex);
+        } catch (NoSuchAlgorithmException ex) {
+            bslog(ex);
+        } catch (CertificateException ex) {
+            bslog(ex);
+        } catch (PGPException ex) {
+            bslog(ex);
+        } finally {
+          if (fis != null ) {
+              try {
+                  fis.close();
+              } catch (IOException ex) {
+                  bslog(ex);
+              }
+          }
+          
+        }
+        return pgpkey;
+    }
+   
+    public static String getAsciiDumpPublicPGPKey(String id) throws Exception {
+        pks_mstr pks = getPksMstr(new String[]{id});
+        String pass = bsmf.MainFrame.PassWord("1", pks.pks_pass().toCharArray());
+        PGPKeyRingGenerator krgen = generateKeyRingGenerator(pks.pks_id(), pass.toCharArray());
+        PGPPublicKeyRing pkr = krgen.generatePublicKeyRing();
+        ByteArrayOutputStream encOut = new ByteArrayOutputStream();
+        OutputStream out = new ArmoredOutputStream(encOut);
+        pkr.encode(out);
+        out.close();
+        String s = new String(encOut.toByteArray(), Charset.defaultCharset());
+        return s;
+        
+    }
+        
+    public static void exportPGPKeyFiles(String id) throws Exception {
+        pks_mstr pks = getPksMstr(new String[]{id});
+        String pass = bsmf.MainFrame.PassWord("1", pks.pks_pass().toCharArray());
+        PGPKeyRingGenerator krgen = generateKeyRingGenerator(pks.pks_id(), pass.toCharArray());
+        PGPPublicKeyRing pkr = krgen.generatePublicKeyRing();
+        BufferedOutputStream pubout = new BufferedOutputStream(new FileOutputStream("c:\\junk\\temp6\\dummy.pkr"));
+        pkr.encode(pubout);
+        pubout.close();        
+        
+         // Generate private key, dump to file.
+        PGPSecretKeyRing skr = krgen.generateSecretKeyRing();
+        BufferedOutputStream secout = new BufferedOutputStream
+            (new FileOutputStream("c:\\junk\\temp6\\dummy.skr"));
+        skr.encode(secout);
+        secout.close();
+        
+        ByteArrayOutputStream encOut = new ByteArrayOutputStream();
+        OutputStream out = new ArmoredOutputStream(encOut);
+        skr.encode(out);
+        out.close();
+        String sout = new String(encOut.toByteArray(), Charset.defaultCharset());
+        
+        try (PrintWriter outFile = new PrintWriter("c:\\junk\\temp6\\ascii.skr")) {
+        outFile.println(sout);
+        }
+        
+        
+    }
+        
+    public final static PGPKeyRingGenerator generateKeyRingGenerator(String id, char[] pass) throws Exception { 
+        return generateKeyRingGenerator(id, pass, 0xc0); 
+    }
+    
+    public final static PGPKeyRingGenerator generateKeyRingGenerator(String id, char[] pass, int s2kcount) throws Exception {
+        // This object generates individual key-pairs.
+        RSAKeyPairGenerator  kpg = new RSAKeyPairGenerator();
+
+        // Boilerplate RSA parameters, no need to change anything
+        // except for the RSA key-size (2048). You can use whatever
+        // key-size makes sense for you -- 4096, etc.
+        kpg.init
+            (new RSAKeyGenerationParameters
+             (BigInteger.valueOf(0x10001),
+              new SecureRandom(), 2048, 12));
+
+        // First create the master (signing) key with the generator.
+        PGPKeyPair rsakp_sign =
+            new BcPGPKeyPair
+            (PGPPublicKey.RSA_SIGN, kpg.generateKeyPair(), new Date());
+        // Then an encryption subkey.
+        PGPKeyPair rsakp_enc =
+            new BcPGPKeyPair
+            (PGPPublicKey.RSA_ENCRYPT, kpg.generateKeyPair(), new Date());
+
+        // Add a self-signature on the id
+        PGPSignatureSubpacketGenerator signhashgen =
+            new PGPSignatureSubpacketGenerator();
+        
+        // Add signed metadata on the signature.
+        // 1) Declare its purpose
+        signhashgen.setKeyFlags
+            (false, KeyFlags.SIGN_DATA|KeyFlags.CERTIFY_OTHER);
+        // 2) Set preferences for secondary crypto algorithms to use
+        //    when sending messages to this key.
+        signhashgen.setPreferredSymmetricAlgorithms
+            (false, new int[] {
+                SymmetricKeyAlgorithmTags.AES_256,
+                SymmetricKeyAlgorithmTags.AES_192,
+                SymmetricKeyAlgorithmTags.AES_128
+            });
+        signhashgen.setPreferredHashAlgorithms
+            (false, new int[] {
+                HashAlgorithmTags.SHA256,
+                HashAlgorithmTags.SHA1,
+                HashAlgorithmTags.SHA384,
+                HashAlgorithmTags.SHA512,
+                HashAlgorithmTags.SHA224,
+            });
+        // 3) Request senders add additional checksums to the
+        //    message (useful when verifying unsigned messages.)
+        signhashgen.setFeature
+            (false, Features.FEATURE_MODIFICATION_DETECTION);
+
+        // Create a signature on the encryption subkey.
+        PGPSignatureSubpacketGenerator enchashgen =
+            new PGPSignatureSubpacketGenerator();
+        // Add metadata to declare its purpose
+        enchashgen.setKeyFlags
+            (false, KeyFlags.ENCRYPT_COMMS|KeyFlags.ENCRYPT_STORAGE);
+
+        // Objects used to encrypt the secret key.
+        PGPDigestCalculator sha1Calc =
+            new BcPGPDigestCalculatorProvider()
+            .get(HashAlgorithmTags.SHA1);
+        PGPDigestCalculator sha256Calc =
+            new BcPGPDigestCalculatorProvider()
+            .get(HashAlgorithmTags.SHA256);
+
+        // bcpg 1.48 exposes this API that includes s2kcount. Earlier
+        // versions use a default of 0x60.
+        PBESecretKeyEncryptor pske =
+            (new BcPBESecretKeyEncryptorBuilder
+             (PGPEncryptedData.AES_256, sha256Calc, s2kcount))
+            .build(pass);
+        
+        // Finally, create the keyring itself. The constructor
+        // takes parameters that allow it to generate the self
+        // signature.
+        PGPKeyRingGenerator keyRingGen =
+            new PGPKeyRingGenerator
+            (PGPSignature.POSITIVE_CERTIFICATION, rsakp_sign,
+             id, sha1Calc, signhashgen.generate(), null,
+             new BcPGPContentSignerBuilder
+             (rsakp_sign.getPublicKey().getAlgorithm(),
+              HashAlgorithmTags.SHA1),
+             pske);
+
+        // Add our encryption subkey, together with its signature.
+        keyRingGen.addSubKey
+            (rsakp_enc, enchashgen.generate(), null);
+        return keyRingGen;
+    }
+   
+        
+        
     public static String getPublicKeyAsOPENSSH(String user)  {
         String s = "";
         X509Certificate cert = null;
@@ -645,7 +914,7 @@ public class apiUtils {
         final KeyPair pair = rsaGen.generateKeyPair();
 
         // --- create the self signed cert
-        Certificate cert = createSelfSigned(sigalgo, pair, years);
+        Certificate cert = createSelfSigned(sigalgo, pair.getPrivate(), pair.getPublic(), years);
 
         // --- create a new pkcs12 key store in memory
         KeyStore pkcs12 = KeyStore.getInstance("PKCS12");
@@ -720,7 +989,7 @@ public class apiUtils {
     }
     
     
-    public static boolean createNewKeyPair(String alias, String userpass, String passphrase, String filename, String algo, String sigalgo, int strength, int years) {
+    public static boolean createNewKeyPair(String standard, String alias, String userpass, String passphrase, String filename, String algo, String sigalgo, int strength, int years) {
         
         Security.addProvider(new BouncyCastleProvider());
         // --- generate a key pair (you did this already it seems)
@@ -730,9 +999,23 @@ public class apiUtils {
         rsaGen.initialize(strength, new SecureRandom());
         
         final KeyPair pair = rsaGen.generateKeyPair();
-
+        
+        Certificate cert = null;
+        
+        // if openPGP then
+        if (standard.equals("openPGP")) { // using a converter to 509 type keys so that we can store it in keystore
+        PGPKeyPair elgKp = new JcaPGPKeyPair(PGPPublicKey.RSA_GENERAL, pair, new Date());
+        
+        JcaPGPKeyConverter c = new JcaPGPKeyConverter();
+        PrivateKey prvkey = c.getPrivateKey(elgKp.getPrivateKey()); 
+        PublicKey pubkey = c.getPublicKey(elgKp.getPublicKey());
+            cert = createSelfSigned(sigalgo, prvkey, pubkey, years);
+        } else {
+            cert = createSelfSigned(sigalgo, pair.getPrivate(), pair.getPublic(), years);
+        }
         // --- create the self signed cert
-        Certificate cert = createSelfSigned(sigalgo, pair, years);
+        
+       
 
         KeyStore keystore = KeyStore.getInstance("PKCS12");
         try (FileInputStream fis = new FileInputStream(FileSystems.getDefault().getPath(filename).toString()))  {
@@ -767,13 +1050,16 @@ public class apiUtils {
         } catch (NoSuchProviderException ex) {
             bslog(ex);
             return false;
+        } catch (PGPException ex) {
+            bslog(ex);
+            return false;
         }
         
         return true;
     }
     
     
-    public static X509Certificate createSelfSigned(String sigalgo, KeyPair pair, int years) throws OperatorCreationException, CertIOException, CertificateException {
+    public static X509Certificate createSelfSigned(String sigalgo, PrivateKey prv, PublicKey pub, int years) throws OperatorCreationException, CertIOException, CertificateException {
         String x = "";
         
         if (sigalgo.equals("SHA-256")) {
@@ -805,11 +1091,13 @@ public class apiUtils {
         builder.addRDN(RFC4519Style.l, siteinfo[5]);  // site city
         builder.addRDN(RFC4519Style.st, siteinfo[6]);  // site state
         
-        ContentSigner contentSigner = new JcaContentSignerBuilder(x).build(pair.getPrivate());
-        JcaX509v3CertificateBuilder certBuilder = new JcaX509v3CertificateBuilder(dnName, certSerialNumber, startDate, endDate, builder.build(), pair.getPublic());
+        ContentSigner contentSigner = new JcaContentSignerBuilder(x).build(prv);
+        JcaX509v3CertificateBuilder certBuilder = new JcaX509v3CertificateBuilder(dnName, certSerialNumber, startDate, endDate, builder.build(), pub);
 
         return new JcaX509CertificateConverter().getCertificate(certBuilder.build(contentSigner));
     }
+    
+    
     
     public static String hashdigest(byte[] indata, String algo) {
         String x;
@@ -926,8 +1214,7 @@ public class apiUtils {
         try {
             pgpSec = new PGPSecretKeyRingCollection(
                     org.bouncycastle.openpgp.PGPUtil.getDecoderStream(keyIn),new BcKeyFingerprintCalculator());
-        
-		PGPSecretKey pgpSecKey = pgpSec.getSecretKey(keyID);
+                            PGPSecretKey pgpSecKey = pgpSec.getSecretKey(keyID);
 		if (pgpSecKey == null) {
 			return null;
 		}
@@ -941,10 +1228,13 @@ public class apiUtils {
                 return pgpkey;
 	}
     
-    public static byte[] decryptPGPData(byte[] encryptedData, String passPhrase, Path keyFilePath) throws IOException, PGPException, NoSuchProviderException {
+    public static byte[] decryptPGPData(byte[] encryptedData, String passPhrase, Path keyFilePath, PGPPrivateKey pgpPrvKey) throws IOException, PGPException, NoSuchProviderException {
         byte[] decryptedData = null;
-        InputStream keyIn = new FileInputStream(keyFilePath.toFile());
-      
+        InputStream keyIn = null;
+        
+        if (keyFilePath != null) {
+           keyIn = new FileInputStream(keyFilePath.toFile());
+        }
         InputStream in = new ByteArrayInputStream(encryptedData);
         Security.addProvider(new BouncyCastleProvider());
         in = org.bouncycastle.openpgp.PGPUtil.getDecoderStream(in);
@@ -961,18 +1251,26 @@ public class apiUtils {
             bslog("failed to create PGPEncryptedDataList...enc is null");
             return null;
         }
-        Iterator<?> it = enc.getEncryptedDataObjects();
+                Iterator<?> it = enc.getEncryptedDataObjects();
 		PGPPrivateKey sKey = null;
 		PGPPublicKeyEncryptedData pbe = null;
-
-		while (sKey == null && it.hasNext()) {
-			pbe = (PGPPublicKeyEncryptedData) it.next();
-			sKey = getPGPSecretKey(keyIn, pbe.getKeyID(), passPhrase.toCharArray()); 
-		}
-                if (sKey == null) {
-			bslog("Secret key for message not found when decrypting PGP with passphrase: " + passPhrase);
-                        return null;
-		}
+              
+                    while (sKey == null && it.hasNext()) {
+                            pbe = (PGPPublicKeyEncryptedData) it.next();
+                            if (pgpPrvKey == null) { // must be external...retrieve private key
+                            sKey = getPGPSecretKey(keyIn, pbe.getKeyID(), passPhrase.toCharArray());
+                            } else {
+                            sKey = pgpPrvKey; // use private key non-external
+                            }
+                    }
+                    
+                    
+                    if (sKey == null) {
+                            bslog("Secret key for message not found when decrypting PGP with passphrase: " + passPhrase);
+                            return null;
+                    }
+               
+                
                 
                 PublicKeyDataDecryptorFactory b = new JcePublicKeyDataDecryptorFactoryBuilder().setProvider("BC").setContentProvider("BC").build(sKey);
 
@@ -1059,24 +1357,7 @@ public class apiUtils {
      pks_mstr pks = getPksMstr(new String[]{keyid}); 
      
      if (pks.pks_standard().equals("openPGP")) {
-         try {
-            Path keyfilepath = FileSystems.getDefault().getPath(pks.pks_file());
-            if (! keyfilepath.toFile().exists()) {
-                r[0] = "1";
-                r[1] = "pgp keyfile path does not exist: " + keyid;
-                return new bsr(r, null);
-            } 
-            String passphrase = bsmf.MainFrame.PassWord("1", pks.pks_pass().toCharArray());
-            
-            encryptedData = apiUtils.decryptPGPData(indata, passphrase, keyfilepath );
-            
-            } catch (PGPException ex) {
-                r[0] = "1";
-                r[1] = ex.getMessage();
-            } catch (NoSuchProviderException ex) {
-                r[0] = "1";
-                r[1] = ex.getMessage();
-            }
+        
      }
      if (pks.pks_standard().equals("X.509")) {
          try {
@@ -1098,17 +1379,28 @@ public class apiUtils {
      byte[] decryptedData = null;
      String[] r = new String[]{"0",""};
      pks_mstr pks = getPksMstr(new String[]{keyid}); 
-     
+     Path keyfilepath = null;
+     PGPPrivateKey pgpPrvKey = null;
      if (pks.pks_standard().equals("openPGP")) {
          try {
-            Path keyfilepath = FileSystems.getDefault().getPath(pks.pks_file());
-            if (! keyfilepath.toFile().exists()) {
+            if (pks.pks_external().equals("1")) { 
+              keyfilepath = FileSystems.getDefault().getPath(pks.pks_file());
+              if (! keyfilepath.toFile().exists()) {
                 r[0] = "1";
                 r[1] = "pgp keyfile path does not exist: " + keyid;
                 return new bsr(r, null);
-            } 
+              }
+            } else {
+              pgpPrvKey = getPGPPrivateKey(keyid);
+              if (pgpPrvKey == null) {
+                r[0] = "1";
+                r[1] = "pgp privateKey is null: " + keyid;
+                return new bsr(r, null);
+              }
+            }
+             
             String passphrase = bsmf.MainFrame.PassWord("1", pks.pks_pass().toCharArray());
-            decryptedData = apiUtils.decryptPGPData(indata, passphrase, keyfilepath );
+            decryptedData = apiUtils.decryptPGPData(indata, passphrase, keyfilepath, pgpPrvKey );
             
             if (decryptedData == null) {
                 r[0] = "1";

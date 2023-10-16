@@ -41,7 +41,11 @@ import com.blueseer.edi.apiUtils;
 import static com.blueseer.edi.apiUtils.createKeyStore;
 import static com.blueseer.edi.apiUtils.createKeyStoreWithNewKeyPair;
 import static com.blueseer.edi.apiUtils.createNewKeyPair;
+import static com.blueseer.edi.apiUtils.exportPGPKeyFiles;
 import static com.blueseer.edi.apiUtils.generateSSHCert;
+import static com.blueseer.edi.apiUtils.getAsciiDumpPublicPGPKey;
+import static com.blueseer.edi.apiUtils.getPGPPrivateKey;
+import static com.blueseer.edi.apiUtils.getPGPPublicKey;
 import static com.blueseer.edi.apiUtils.getPublicKeyAsOPENSSH;
 import static com.blueseer.edi.apiUtils.getPublicKeyAsPEM;
 import com.blueseer.utl.BlueSeerUtils;
@@ -76,11 +80,13 @@ import java.awt.event.MouseEvent;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.nio.file.FileSystems;
@@ -93,6 +99,7 @@ import java.security.cert.CertificateException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
@@ -103,7 +110,10 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 import org.apache.commons.io.Charsets;
+import org.bouncycastle.bcpg.ArmoredOutputStream;
 import org.bouncycastle.cms.CMSException;
+import org.bouncycastle.openpgp.PGPPublicKey;
+import org.bouncycastle.openpgp.PGPPublicKeyRing;
 import org.bouncycastle.util.encoders.Base64;
 
 /**
@@ -429,7 +439,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
          }
      }
      if (ddtype.getSelectedItem().toString().equals("keypair")) {
-         if (! createNewKeyPair(tbuser.getText(), 
+         if (! createNewKeyPair(ddstandard.getSelectedItem().toString(), tbuser.getText(), 
                  String.valueOf(tbpass.getPassword()), 
                  getPKSStorePWD(ddparent.getSelectedItem().toString()), 
                  getPKSStoreFileName(ddparent.getSelectedItem().toString()),
@@ -1023,6 +1033,34 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     private void btpublickeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btpublickeyActionPerformed
             taoutput.setText("");
+            if (ddstandard.getSelectedItem().toString().equals("openPGP")) {
+                /*
+                List<PGPPublicKey> list = new ArrayList<>();
+                list.add(getPGPPublicKey(tbkey.getText()));
+                PGPPublicKeyRing publicRing = new PGPPublicKeyRing(list);
+                ByteArrayOutputStream encOut = new ByteArrayOutputStream();
+                OutputStream out = new ArmoredOutputStream(encOut);
+                try {
+                    publicRing.encode(out);
+                } catch (IOException ex) {
+                    bslog(ex);
+                } finally {
+                    try {
+                        out.close();
+                    } catch (IOException ex) {
+                        bslog(ex);
+                    }
+                }
+                String s = new String(encOut.toByteArray(), Charset.defaultCharset());
+                */
+                String s = "";
+                try {
+                    s = getAsciiDumpPublicPGPKey(tbkey.getText());
+                } catch (Exception ex) {
+                    bslog(ex);
+                }
+                taoutput.append(s);
+            }
             if (ddformat.getSelectedItem().toString().equals(".cer")) {
                 /*
                 taoutput.append("-----BEGIN CERTIFICATE-----\n");
@@ -1097,6 +1135,16 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_ddtypeActionPerformed
 
     private void btexportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btexportActionPerformed
+       
+        if (ddstandard.getSelectedItem().toString().equals("openPGP")) {
+            try {
+                exportPGPKeyFiles(tbkey.getText());
+            } catch (Exception ex) {
+                bslog(ex);
+            }
+            return;
+        }
+        
         StringBuilder s = new StringBuilder();
         try {
          s.append("-----BEGIN CERTIFICATE-----\n");

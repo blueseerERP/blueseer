@@ -637,7 +637,7 @@ public class EDIUtilities extends javax.swing.JPanel {
                 return;
             }
             
-            byte[] outdata = apiUtils.decryptPGPData(indata, text, keyfilepath ); 
+            byte[] outdata = apiUtils.decryptPGPData(indata, text, keyfilepath, null ); 
             if (outdata == null) {
                 bsmf.MainFrame.show("unable to decrypt file");
                 return;
