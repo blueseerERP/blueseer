@@ -1215,13 +1215,13 @@ public class admData {
     }
     
     
-    public static String[] addPksMstr(pks_mstr x) {
+    public static String[] addPksMstr(pks_mstr x, String returned_keyid) {
         String[] m = new String[2];
         String sqlSelect = "SELECT * FROM  pks_mstr where pks_id = ? ";
         String sqlInsert = "insert into pks_mstr (pks_id, pks_desc, pks_type, "
                         + " pks_user, pks_pass, pks_file, pks_storeuser, pks_storepass, " 
-                        + " pks_expire, pks_create, pks_parent, pks_standard, pks_external ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+                        + " pks_expire, pks_create, pks_parent, pks_standard, pks_external, pks_keyid ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.pks_id);
@@ -1241,6 +1241,7 @@ public class admData {
             psi.setString(11, x.pks_parent);
             psi.setString(12, x.pks_standard);
             psi.setString(13, x.pks_external);
+            psi.setString(14, returned_keyid);
             int rows = psi.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
             } else {
@@ -1278,6 +1279,7 @@ public class admData {
         ps.setString(10, x.pks_parent);
         ps.setString(11, x.pks_standard);
         ps.setString(12, x.pks_external);
+       // ps.setString(13, x.pks_keyid);  // do not update keyid...created on fly with 'add'...and cannot be updated
         ps.setString(13, x.pks_id);
         int rows = ps.executeUpdate();
         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
@@ -1329,7 +1331,8 @@ public class admData {
                             res.getString("pks_create"),
                             res.getString("pks_parent"),
                             res.getString("pks_standard"),
-                            res.getString("pks_external")
+                            res.getString("pks_external"),
+                            res.getString("pks_keyid")
                         );
                     }
                 }
@@ -2691,9 +2694,9 @@ public class admData {
             
     public record pks_mstr(String[] m, String pks_id, String pks_desc, String pks_type, 
         String pks_user, String pks_pass, String pks_file, String pks_storeuser, String pks_storepass,
-        String pks_expire, String pks_create, String pks_parent, String pks_standard, String pks_external ) {
+        String pks_expire, String pks_create, String pks_parent, String pks_standard, String pks_external, String pks_keyid ) {
         public pks_mstr(String[] m) {
-            this(m, "", "", "", "", "", "", "", "", "", "", "", "", "");
+            this(m, "", "", "", "", "", "", "", "", "", "", "", "", "", "");
         }
     }
     

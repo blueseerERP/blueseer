@@ -43,9 +43,8 @@ import static com.blueseer.edi.apiUtils.createKeyStoreWithNewKeyPair;
 import static com.blueseer.edi.apiUtils.createNewKeyPair;
 import static com.blueseer.edi.apiUtils.exportPGPKeyFiles;
 import static com.blueseer.edi.apiUtils.generateSSHCert;
+import static com.blueseer.edi.apiUtils.genereatePGPKeyPair;
 import static com.blueseer.edi.apiUtils.getAsciiDumpPublicPGPKey;
-import static com.blueseer.edi.apiUtils.getPGPPrivateKey;
-import static com.blueseer.edi.apiUtils.getPGPPublicKey;
 import static com.blueseer.edi.apiUtils.getPublicKeyAsOPENSSH;
 import static com.blueseer.edi.apiUtils.getPublicKeyAsPEM;
 import com.blueseer.utl.BlueSeerUtils;
@@ -432,6 +431,8 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public String[] addRecord(String[] x) {
+     String returned_keyid = "";
+     
      if (ddtype.getSelectedItem().toString().equals("store")) {
          if (! createKeyStore(String.valueOf(tbstorepass.getPassword()), 
                  tbfile.getText())) {
@@ -439,19 +440,34 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
          }
      }
      if (ddtype.getSelectedItem().toString().equals("keypair")) {
-         if (! createNewKeyPair(ddstandard.getSelectedItem().toString(), tbuser.getText(), 
-                 String.valueOf(tbpass.getPassword()), 
-                 getPKSStorePWD(ddparent.getSelectedItem().toString()), 
-                 getPKSStoreFileName(ddparent.getSelectedItem().toString()),
-                 ddencalgo.getSelectedItem().toString(),
-                 ddsigalgo.getSelectedItem().toString(),
-                 Integer.valueOf(ddstrength.getSelectedItem().toString()),
-                 Integer.valueOf(ddyears.getSelectedItem().toString())
-                 )) {
-             return new String[]{BlueSeerUtils.ErrorBit, "Unable to generate new User / keypair"};
+         if (ddstandard.getSelectedItem().toString().equals("X.509")) {
+            if (! createNewKeyPair(ddstandard.getSelectedItem().toString(), tbuser.getText(), 
+                    String.valueOf(tbpass.getPassword()), 
+                    getPKSStorePWD(ddparent.getSelectedItem().toString()), 
+                    getPKSStoreFileName(ddparent.getSelectedItem().toString()),
+                    ddencalgo.getSelectedItem().toString(),
+                    ddsigalgo.getSelectedItem().toString(),
+                    Integer.valueOf(ddstrength.getSelectedItem().toString()),
+                    Integer.valueOf(ddyears.getSelectedItem().toString())
+                    )) {
+                return new String[]{BlueSeerUtils.ErrorBit, "Unable to generate new User / keypair"};
+            }
+         }
+         if (ddstandard.getSelectedItem().toString().equals("openPGP")) {
+             try {
+                 String r = genereatePGPKeyPair(tbuser.getText(),String.valueOf(tbpass.getPassword()));
+                    if (r.isBlank()) {
+                        return new String[]{BlueSeerUtils.ErrorBit, "Unable to generate PGP User / keypair"};
+                    } else {
+                        returned_keyid = r;
+                    }
+                 } catch (Exception ex) {
+                   bslog(ex);
+                   return new String[]{BlueSeerUtils.ErrorBit, "Unable to generate PGP User / keypair"};
+                 }
          }
      }
-     String[] m = addPksMstr(createRecord()); 
+     String[] m = addPksMstr(createRecord(), returned_keyid); 
          return m;
      }
      
@@ -493,7 +509,8 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                 "", //create
                 ddparent.getSelectedItem().toString(),
                 ddstandard.getSelectedItem().toString(),
-                String.valueOf(BlueSeerUtils.boolToInt(cbexternal.isSelected()))
+                String.valueOf(BlueSeerUtils.boolToInt(cbexternal.isSelected())),
+                "" //  keyID...passed to 'add' as second variable during creation of keypair
                 );
         return x;
     }

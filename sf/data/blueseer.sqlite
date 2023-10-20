@@ -2956,7 +2956,8 @@ CREATE TABLE "pks_mstr" (
   "pks_expire" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
   "pks_create" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
   "pks_standard" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
-  "pks_external" tinyint(1) NOT NULL DEFAULT '0'
+  "pks_external" tinyint(1) NOT NULL DEFAULT '0',
+  "pks_keyid" varchar(100) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 CREATE TABLE "dfs_det" (
   "dfsd_id" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
