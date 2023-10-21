@@ -27,6 +27,7 @@ package com.blueseer.edi;
 
 import static bsmf.MainFrame.bslog;
 import com.blueseer.adm.admData;
+import static com.blueseer.adm.admData.getPKSStoreFileName;
 import static com.blueseer.adm.admData.getPksMstr;
 import com.blueseer.adm.admData.pks_mstr;
 import static com.blueseer.edi.APIMaint.apidm;
@@ -577,15 +578,25 @@ public class apiUtils {
         
     }
     
-    public static String genereatePGPKeyPair(String id, String pass) throws Exception {
-       
+    public static String genereatePGPKeyPair(String id, String pass, String keystoreID) throws Exception {
+        Path filepath_pkr = FileSystems.getDefault().getPath("edi/certs/bsPGPRing.pkr");;
+        Path filepath_skr = FileSystems.getDefault().getPath("edi/certs/bsPGPRing.skr");;
+        if (! keystoreID.isBlank()) {
+            String t = getPKSStoreFileName(keystoreID);
+            if (! t.isBlank()) {
+               filepath_pkr = FileSystems.getDefault().getPath(t + ".pkr"); 
+               filepath_skr = FileSystems.getDefault().getPath(t + ".skr");
+            }            
+        } 
+        if (! filepath_pkr.getParent().toFile().isDirectory()) {
+            return "0"; // bail out
+        }
         // return keyID as String if successfull....else blank string
         PGPKeyRingGenerator krgen = generateKeyRingGenerator(id, pass.toCharArray());
         
         // pub
         PGPPublicKeyRing pkr = krgen.generatePublicKeyRing();
-        Path filepath = FileSystems.getDefault().getPath("edi/certs/bspub.pkr");
-        try (FileOutputStream fos = new FileOutputStream(filepath.toFile(), true)) {
+        try (FileOutputStream fos = new FileOutputStream(filepath_pkr.toFile(), true)) {
             BufferedOutputStream pubout = new BufferedOutputStream(fos);
             pkr.encode(pubout);
             pubout.close();  
@@ -597,8 +608,7 @@ public class apiUtils {
         
         // prv
         PGPSecretKeyRing skr = krgen.generateSecretKeyRing();
-        Path secfilepath = FileSystems.getDefault().getPath("edi/certs/bsprv.skr");
-        try (FileOutputStream fos = new FileOutputStream(secfilepath.toFile(), true)) {
+        try (FileOutputStream fos = new FileOutputStream(filepath_skr.toFile(), true)) {
             BufferedOutputStream pubout = new BufferedOutputStream(fos);
             skr.encode(pubout);
             pubout.close();  
@@ -617,6 +627,7 @@ public class apiUtils {
         skr.encode(secout);
         secout.close();
                 */
+        
         return Long.toHexString(skr.getSecretKey().getKeyID());
     }
     
@@ -1301,10 +1312,19 @@ public class apiUtils {
             PGPSecretKeyRing kRing = rIt.next();
             
             Iterator<PGPSecretKey> kIt = kRing.getSecretKeys();
+            ArrayList<String> al = new ArrayList<String>();
             while (key == null && kIt.hasNext()) {
                 PGPSecretKey k = kIt.next();
-               
-                if (Long.toHexString(k.getKeyID()).equals(pks.pks_keyid().toLowerCase())) {
+                if (k.isMasterKey()) { // get list of users from master key
+                    al.clear();
+                    Iterator<String> users = k.getUserIDs();
+                    while (users.hasNext()) {
+                        al.add(users.next());
+                    }
+                }
+               // System.out.println(Long.toHexString(k.getKeyID()) + "/" + k.isMasterKey() + "/" + k.isPrivateKeyEmpty() + "/" + al.size());
+                if (! k.isMasterKey() && al.contains(pks.pks_user())) {
+               // if (Long.toHexString(k.getKeyID()).equals(pks.pks_keyid().toLowerCase())) {
                     
                    PBESecretKeyDecryptor a = new JcePBESecretKeyDecryptorBuilder(new JcaPGPDigestCalculatorProviderBuilder().setProvider("BC").build()).setProvider("BC").build(pass);
                    prvkey = k.extractPrivateKey(a); 
@@ -1345,12 +1365,21 @@ public class apiUtils {
 
         while (key == null && rIt.hasNext()) {
             PGPPublicKeyRing kRing = rIt.next();
-            
+             
             Iterator<PGPPublicKey> kIt = kRing.getPublicKeys();
+            ArrayList<String> al = new ArrayList<String>();
             while (key == null && kIt.hasNext()) {
                 PGPPublicKey k = kIt.next();
-               
-                if (Long.toHexString(k.getKeyID()).equals(pks.pks_keyid().toLowerCase())) {
+                if (k.isMasterKey()) { // get list of users from master key
+                    al.clear();
+                    Iterator<String> users = k.getUserIDs();
+                    while (users.hasNext()) {
+                        al.add(users.next());
+                    }
+                }
+              //  System.out.println(Long.toHexString(k.getKeyID()) + "/" + k.isMasterKey() + "/" + k.isEncryptionKey() + "/" + al.size());
+                if (k.isEncryptionKey() && al.contains(pks.pks_user())) {
+             //   if (Long.toHexString(k.getKeyID()).equals(pks.pks_keyid().toLowerCase())) {
                     return k;
                 }
                
@@ -1490,7 +1519,8 @@ public class apiUtils {
      
      if (pks.pks_standard().equals("openPGP")) {
         ByteArrayOutputStream encOut = null;
-        Path keyfilepath = FileSystems.getDefault().getPath("edi/certs/bspub.pkr");  
+        String storename = getPKSStoreFileName(pks.pks_parent()) + ".pkr";
+        Path keyfilepath = FileSystems.getDefault().getPath(storename);  
         PGPPublicKey pgpPubKey = getPGPPublicKey(keyfilepath, pks.pks_id()); 
         try {
         PGPEncryptedDataGenerator encGen = new PGPEncryptedDataGenerator(
@@ -1554,7 +1584,8 @@ public class apiUtils {
                 return new bsr(r, null);
               }
             } else {
-              keyfilepath = FileSystems.getDefault().getPath("edi/certs/bsprv.skr");  
+              String storename = getPKSStoreFileName(pks.pks_parent()) + ".skr";
+              keyfilepath = FileSystems.getDefault().getPath(storename); 
               pgpPrvKey = getPGPPrivateKey(keyfilepath, pks.pks_id());
               
               if (pgpPrvKey == null) {
