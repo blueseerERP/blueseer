@@ -25,19 +25,14 @@ p.it_desc,
 c.it_desc as 'child_desc', 
 c.it_code, 
 ic.itc_total,
-ir.itr_mtl_top,
-ir.itr_mtl_low,
-ir.itr_bdn_top,
-ir.itr_lbr_top,
-ir.itr_ovh_top,
-ir.itr_out_top,
-ir.itr_total
+(select sum(itr_mtl_low + itr_mtl_top) from itemr_cost where itr_item = ps_parent and itr_set = 'standard') as 'totmtl',
+(select sum(itr_lbr_low + itr_lbr_top) from itemr_cost where itr_item = ps_parent  and itr_set = 'standard') as 'totlbr',
+(select sum(itr_bdn_low + itr_bdn_top) from itemr_cost where itr_item = ps_parent  and itr_set = 'standard') as 'totbdn'
 from pbm_mstr
 inner join bom_mstr on bom_id = ps_bom and bom_item = ps_parent
 inner join item_mstr p on p.it_item = bom_item 
 inner join item_mstr c on c.it_item = ps_child 
 inner join item_cost ic on ic.itc_item = ps_child and ic.itc_set = 'standard'  
-inner join itemr_cost ir on ir.itr_item = ps_parent and ir.itr_set = 'standard' and ir.itr_routing = p.it_wf  
 where ps_parent  =  $P{myid} and ps_bom = $P{mybom};]]>
 	</queryString>
 	<field name="ps_parent" class="java.lang.String">
@@ -74,13 +69,9 @@ where ps_parent  =  $P{myid} and ps_bom = $P{mybom};]]>
 		<property name="com.jaspersoft.studio.field.tree.path" value="item_mstr"/>
 	</field>
 	<field name="itc_total" class="java.lang.Double"/>
-	<field name="itr_mtl_top" class="java.lang.Double"/>
-	<field name="itr_lbr_top" class="java.lang.Double"/>
-	<field name="itr_bdn_top" class="java.lang.Double"/>
-	<field name="itr_ovh_top" class="java.lang.Double"/>
-	<field name="itr_out_top" class="java.lang.Double"/>
-	<field name="itr_mtl_low" class="java.lang.Double"/>
-	<field name="itr_total" class="java.lang.Double"/>
+	<field name="totmtl" class="java.lang.Double"/>
+	<field name="totlbr" class="java.lang.Double"/>
+	<field name="totbdn" class="java.lang.Double"/>
 	<variable name="mysum" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{ps_qty_per}]]></variableExpression>
 	</variable>
