@@ -16293,7 +16293,7 @@ return mystring;
       }
     
     public static void exportCertToFile(String data, String filename) {
-          FileDialog fDialog;
+        FileDialog fDialog;
                 fDialog = new FileDialog(new Frame(), "Save", FileDialog.SAVE);
                 fDialog.setFile(filename + ".cer");
                 fDialog.setVisible(true);

@@ -97,7 +97,7 @@
                                   <EmptySpace pref="32" max="32767" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Group type="102" attributes="0">
-                                          <Component id="btpublickey" min="-2" max="-2" attributes="0"/>
+                                          <Component id="btviewkey" min="-2" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="btexport" min="-2" max="-2" attributes="0"/>
                                       </Group>
@@ -219,7 +219,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="btexport" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="btpublickey" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btviewkey" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
               </Group>
@@ -383,13 +383,13 @@
             <Property name="text" type="java.lang.String" value="Standard:"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JButton" name="btpublickey">
+        <Component class="javax.swing.JButton" name="btviewkey">
           <Properties>
-            <Property name="text" type="java.lang.String" value="View Public Key"/>
-            <Property name="name" type="java.lang.String" value="btpublickey" noResource="true"/>
+            <Property name="text" type="java.lang.String" value="View Key"/>
+            <Property name="name" type="java.lang.String" value="btviewkey" noResource="true"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btpublickeyActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btviewkeyActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JComboBox" name="ddyears">
@@ -489,10 +489,7 @@
         <Component class="javax.swing.JComboBox" name="ddformat">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="2">
-                <StringItem index="0" value=".cer"/>
-                <StringItem index="1" value="ssh2"/>
-              </StringArray>
+              <StringArray count="0"/>
             </Property>
           </Properties>
           <AuxValues>

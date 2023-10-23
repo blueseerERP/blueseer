@@ -44,7 +44,8 @@ import static com.blueseer.edi.apiUtils.createNewKeyPair;
 import static com.blueseer.edi.apiUtils.exportPGPKeyFiles;
 import static com.blueseer.edi.apiUtils.generateSSHCert;
 import static com.blueseer.edi.apiUtils.genereatePGPKeyPair;
-import static com.blueseer.edi.apiUtils.getAsciiDumpPublicPGPKey;
+import static com.blueseer.edi.apiUtils.getAsciiDumpPGPKey;
+
 import static com.blueseer.edi.apiUtils.getPublicKeyAsOPENSSH;
 import static com.blueseer.edi.apiUtils.getPublicKeyAsPEM;
 import com.blueseer.utl.BlueSeerUtils;
@@ -123,6 +124,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     // global variable declarations
         boolean isLoad = false;
+        boolean isNew = false;
         public static pks_mstr x = null;
     
     
@@ -315,6 +317,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public void setComponentDefaultValues() {
        isLoad = true;
+       isNew = false;
        
         tbkey.setText("");
         tbdesc.setText("");
@@ -350,6 +353,10 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbkey.setEditable(true);
         tbkey.setForeground(Color.blue);
         ddtype.setSelectedIndex(0); // custom override to trigger field enable logic
+        isNew = true;
+        btexport.setEnabled(false);
+        btviewkey.setEnabled(false);
+        ddformat.setEnabled(false);
         if (! x.isEmpty()) {
           tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
           tbkey.setEditable(false);
@@ -359,13 +366,32 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public void setAction(String[] x) {
         String[] m = new String[2];
+        
         if (x[0].equals("0")) {
                    setPanelComponentState(this, true);
                    // override for unique use case of ddtype field inits
+                   
+                    ddformat.setEnabled(false);
+                    btexport.setEnabled(false);
+                    btviewkey.setEnabled(false);
+                   
                    ddtype.setSelectedIndex(ddtype.getSelectedIndex());
                    btadd.setEnabled(false);
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
+                   if (! ddtype.getSelectedItem().toString().equals("store")) {
+                     ddformat.setEnabled(true);
+                     btexport.setEnabled(true);
+                     btviewkey.setEnabled(true); 
+                     ddformat.removeAllItems();
+                     if (ddstandard.getSelectedItem().toString().equals("X.509")) {
+                         ddformat.addItem(".cer");
+                         ddformat.addItem(".ssh2");
+                     } else {
+                         ddformat.addItem("private");
+                         ddformat.addItem("public");
+                     } 
+                   }
         } else {
                    tbkey.setForeground(Color.red); 
         }
@@ -708,7 +734,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
         jScrollPane1 = new javax.swing.JScrollPane();
         taoutput = new javax.swing.JTextArea();
         jLabel9 = new javax.swing.JLabel();
-        btpublickey = new javax.swing.JButton();
+        btviewkey = new javax.swing.JButton();
         ddyears = new javax.swing.JComboBox<>();
         jLabel10 = new javax.swing.JLabel();
         ddstrength = new javax.swing.JComboBox<>();
@@ -820,11 +846,11 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         jLabel9.setText("Standard:");
 
-        btpublickey.setText("View Public Key");
-        btpublickey.setName("btpublickey"); // NOI18N
-        btpublickey.addActionListener(new java.awt.event.ActionListener() {
+        btviewkey.setText("View Key");
+        btviewkey.setName("btviewkey"); // NOI18N
+        btviewkey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btpublickeyActionPerformed(evt);
+                btviewkeyActionPerformed(evt);
             }
         });
 
@@ -851,8 +877,6 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddencalgo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "RSA", "DSA", "ED25519" }));
 
         jLabel12.setText("Encrypt Algorithm");
-
-        ddformat.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { ".cer", "ssh2" }));
 
         cbexternal.setText("External");
 
@@ -910,7 +934,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(btpublickey)
+                                        .addComponent(btviewkey)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(btexport))
                                     .addComponent(ddformat, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1003,7 +1027,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btexport)
-                    .addComponent(btpublickey))
+                    .addComponent(btviewkey))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -1052,51 +1076,27 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
         lookUpFrame();
     }//GEN-LAST:event_btlookupActionPerformed
 
-    private void btpublickeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btpublickeyActionPerformed
+    private void btviewkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btviewkeyActionPerformed
             taoutput.setText("");
             if (ddstandard.getSelectedItem().toString().equals("openPGP")) {
-                /*
-                List<PGPPublicKey> list = new ArrayList<>();
-                list.add(getPGPPublicKey(tbkey.getText()));
-                PGPPublicKeyRing publicRing = new PGPPublicKeyRing(list);
-                ByteArrayOutputStream encOut = new ByteArrayOutputStream();
-                OutputStream out = new ArmoredOutputStream(encOut);
-                try {
-                    publicRing.encode(out);
-                } catch (IOException ex) {
-                    bslog(ex);
-                } finally {
-                    try {
-                        out.close();
-                    } catch (IOException ex) {
-                        bslog(ex);
-                    }
-                }
-                String s = new String(encOut.toByteArray(), Charset.defaultCharset());
-                */
                 String s = "";
                 try {
-                    s = getAsciiDumpPublicPGPKey(tbkey.getText());
+                    s = getAsciiDumpPGPKey(tbkey.getText(),ddformat.getSelectedItem().toString());
                 } catch (Exception ex) {
                     bslog(ex);
                 }
                 taoutput.append(s);
             }
             if (ddformat.getSelectedItem().toString().equals(".cer")) {
-                /*
-                taoutput.append("-----BEGIN CERTIFICATE-----\n");
-                taoutput.append(new String(Base64.encode(apiUtils.getPublicKeyAsCert(tbkey.getText()).getEncoded())).replaceAll("(.{64})", "$1\n"));
-                taoutput.append("\n-----END CERTIFICATE-----\n");
-                */
                 taoutput.append(getPublicKeyAsPEM(tbkey.getText()));
             }
-            if (ddformat.getSelectedItem().toString().equals("ssh2")) {
+            if (ddformat.getSelectedItem().toString().equals(".ssh2")) {
                 taoutput.append(getPublicKeyAsOPENSSH(tbkey.getText()));
             }
-    }//GEN-LAST:event_btpublickeyActionPerformed
+    }//GEN-LAST:event_btviewkeyActionPerformed
 
     private void ddtypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddtypeActionPerformed
-      if (! isLoad) {
+      if (! isLoad || ! isNew) {
         switch (ddtype.getSelectedItem().toString()) {
             case "keypair" :
                 ddyears.setEnabled(true);
@@ -1108,8 +1108,6 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tbfile.setEnabled(false);
                 ddparent.setEnabled(true);
                 ddstandard.setEnabled(true);
-                btexport.setEnabled(true);
-                btpublickey.setEnabled(true);
             break;
             
             case "privatekey" :
@@ -1122,8 +1120,6 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tbfile.setEnabled(true);
                 ddstandard.setEnabled(true);
                 ddparent.setEnabled(false);
-                btexport.setEnabled(true);
-                btpublickey.setEnabled(true);
             break;
             
             case "store" :
@@ -1136,8 +1132,6 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tbfile.setEnabled(true);
                 ddstandard.setEnabled(false);
                 ddparent.setEnabled(false);
-                btexport.setEnabled(false);
-                btpublickey.setEnabled(false);
             break; 
             
             case "publickey" :
@@ -1150,11 +1144,10 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tbfile.setEnabled(true);
                 ddstandard.setEnabled(true);
                 ddparent.setEnabled(false);
-                btexport.setEnabled(false);
-                btpublickey.setEnabled(false);
             break; 
             
             default:
+            break;
         } 
       } 
     }//GEN-LAST:event_ddtypeActionPerformed
@@ -1163,21 +1156,22 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
        
         if (ddstandard.getSelectedItem().toString().equals("openPGP")) {
             try {
-                exportPGPKeyFiles(tbkey.getText());
+                exportPGPKeyFiles(tbkey.getText(), ddformat.getSelectedItem().toString());
             } catch (Exception ex) {
                 bslog(ex);
             }
             return;
         }
-        
-        StringBuilder s = new StringBuilder();
-        try {
-         s.append("-----BEGIN CERTIFICATE-----\n");
-         s.append(new String(Base64.encode(apiUtils.getPublicKeyAsCert(tbkey.getText()).getEncoded())).replaceAll("(.{64})", "$1\n"));
-         s.append("\n-----END CERTIFICATE-----\n");
-        exportCertToFile(s.toString(), tbkey.getText());
-        } catch (CertificateEncodingException ex) {
-                bsmf.MainFrame.show("cannot export PEM formatted public key");
+        if (ddstandard.getSelectedItem().toString().equals("X.509")) {
+            StringBuilder s = new StringBuilder();
+            try {
+             s.append("-----BEGIN CERTIFICATE-----\n");
+             s.append(new String(Base64.encode(apiUtils.getPublicKeyAsCert(tbkey.getText()).getEncoded())).replaceAll("(.{64})", "$1\n"));
+             s.append("\n-----END CERTIFICATE-----\n");
+            exportCertToFile(s.toString(), tbkey.getText());
+            } catch (CertificateEncodingException ex) {
+                    bsmf.MainFrame.show("cannot export PEM formatted public key");
+            }
         }
     }//GEN-LAST:event_btexportActionPerformed
 
@@ -1189,8 +1183,8 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JButton btexport;
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
-    private javax.swing.JButton btpublickey;
     private javax.swing.JButton btupdate;
+    private javax.swing.JButton btviewkey;
     private javax.swing.JCheckBox cbexternal;
     private javax.swing.JComboBox<String> ddencalgo;
     private javax.swing.JComboBox<String> ddformat;

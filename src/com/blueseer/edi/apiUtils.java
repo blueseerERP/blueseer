@@ -44,6 +44,8 @@ import static com.blueseer.utl.EDData.updateAS2LogMDNFile;
 import static com.blueseer.utl.EDData.writeAS2Log;
 import static com.blueseer.utl.EDData.writeAS2LogDetail;
 import com.blueseer.utl.OVData;
+import java.awt.FileDialog;
+import java.awt.Frame;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -54,6 +56,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -534,48 +537,62 @@ public class apiUtils {
     }
     
     // redo or scrap 
-    public static String getAsciiDumpPublicPGPKey(String id) throws Exception {
+    public static String getAsciiDumpPGPKey(String id, String type) throws Exception {
         pks_mstr pks = getPksMstr(new String[]{id});
         String pass = bsmf.MainFrame.PassWord("1", pks.pks_pass().toCharArray());
-        PGPKeyRingGenerator krgen = generateKeyRingGenerator(pks.pks_id(), pass.toCharArray());
-        PGPPublicKeyRing pkr = krgen.generatePublicKeyRing();
+        String s = "";
+        if (type.equals("public")) {
+        String storename = getPKSStoreFileName(pks.pks_parent()) + ".pkr";
+        Path keyfilepath = FileSystems.getDefault().getPath(storename);
+        List<PGPPublicKey> list = getPGPPublicKeyForExport(keyfilepath, id);
+        PGPPublicKeyRing pkr = new PGPPublicKeyRing(list);
         ByteArrayOutputStream encOut = new ByteArrayOutputStream();
         OutputStream out = new ArmoredOutputStream(encOut);
         pkr.encode(out);
         out.close();
-        String s = new String(encOut.toByteArray(), Charset.defaultCharset());
+        s = new String(encOut.toByteArray(), Charset.defaultCharset());
+        
+        } else {
+        String storename = getPKSStoreFileName(pks.pks_parent()) + ".skr";
+        Path keyfilepath = FileSystems.getDefault().getPath(storename);
+        List<PGPSecretKey> list = getPGPPrivateKeyForExport(keyfilepath, id);
+        PGPSecretKeyRing pkr = new PGPSecretKeyRing(list);
+        ByteArrayOutputStream encOut = new ByteArrayOutputStream();
+        OutputStream out = new ArmoredOutputStream(encOut);
+        pkr.encode(out);
+        out.close();
+        s = new String(encOut.toByteArray(), Charset.defaultCharset());  
+        }
+        
+        
         return s;
         
     }
     
     // redo or scrap    
-    public static void exportPGPKeyFiles(String id) throws Exception {
-        pks_mstr pks = getPksMstr(new String[]{id});
-        String pass = bsmf.MainFrame.PassWord("1", pks.pks_pass().toCharArray());
-        PGPKeyRingGenerator krgen = generateKeyRingGenerator(pks.pks_id(), pass.toCharArray());
-        PGPPublicKeyRing pkr = krgen.generatePublicKeyRing();
-        BufferedOutputStream pubout = new BufferedOutputStream(new FileOutputStream("c:\\junk\\temp6\\dummy.pkr"));
-        pkr.encode(pubout);
-        pubout.close();        
-        
-         // Generate private key, dump to file.
-        PGPSecretKeyRing skr = krgen.generateSecretKeyRing();
-        BufferedOutputStream secout = new BufferedOutputStream
-            (new FileOutputStream("c:\\junk\\temp6\\dummy.skr"));
-        skr.encode(secout);
-        secout.close();
-        
-        ByteArrayOutputStream encOut = new ByteArrayOutputStream();
-        OutputStream out = new ArmoredOutputStream(encOut);
-        skr.encode(out);
-        out.close();
-        String sout = new String(encOut.toByteArray(), Charset.defaultCharset());
-        
-        try (PrintWriter outFile = new PrintWriter("c:\\junk\\temp6\\ascii.skr")) {
-        outFile.println(sout);
+    public static void exportPGPKeyFiles(String id, String format) throws Exception {
+        String data = getAsciiDumpPGPKey(id, format);
+        FileDialog fDialog;
+                fDialog = new FileDialog(new Frame(), "Save", FileDialog.SAVE);
+                format = (format.equals("private")) ? ".skr" : ".pkr";
+                fDialog.setFile(id + format);
+                fDialog.setVisible(true);
+                String path = fDialog.getDirectory() + fDialog.getFile();
+                File f = new File(path);
+                BufferedWriter output = null;
+        try {
+            output = new BufferedWriter(new FileWriter(f));
+            output.write(data);
+            
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+              try {  
+                  output.close();
+              } catch (IOException ex) {
+                  ex.printStackTrace();
+              }
         }
-        
-        
     }
     
     public static String genereatePGPKeyPair(String id, String pass, String keystoreID) throws Exception {
@@ -1345,6 +1362,64 @@ public class apiUtils {
       return prvkey;
     }
     
+    public static List<PGPSecretKey> getPGPPrivateKeyForExport(Path keyFilePath, String id) {
+      List<PGPSecretKey> list = new ArrayList<>();
+      PGPSecretKey key = null;
+      PGPPrivateKey prvkey = null;
+      InputStream in = null;
+      char[] pass = null;
+      
+      pks_mstr pks = getPksMstr(new String[]{id});
+      pass = bsmf.MainFrame.PassWord("1", pks.pks_pass().toCharArray()).toCharArray();
+      Security.addProvider(new BouncyCastleProvider());
+      
+      try {
+      if (keyFilePath != null) {
+              in = new FileInputStream(keyFilePath.toFile());
+      }
+      in = org.bouncycastle.openpgp.PGPUtil.getDecoderStream(in);
+      PGPSecretKeyRingCollection pgpSec = new PGPSecretKeyRingCollection(in, new BcKeyFingerprintCalculator());
+      
+      Iterator<PGPSecretKeyRing> rIt = pgpSec.getKeyRings();
+
+        while (key == null && rIt.hasNext()) {
+            PGPSecretKeyRing kRing = rIt.next();
+            
+            Iterator<PGPSecretKey> kIt = kRing.getSecretKeys();
+            ArrayList<String> al = new ArrayList<String>();
+            while (key == null && kIt.hasNext()) {
+                PGPSecretKey k = kIt.next();
+                if (k.isMasterKey()) { // get list of users from master key
+                    al.clear();
+                    Iterator<String> users = k.getUserIDs();
+                    while (users.hasNext()) {
+                        al.add(users.next());
+                    }
+                }
+               // System.out.println(Long.toHexString(k.getKeyID()) + "/" + k.isMasterKey() + "/" + k.isPrivateKeyEmpty() + "/" + al.size());
+                if (al.contains(pks.pks_user())) {
+               // if (Long.toHexString(k.getKeyID()).equals(pks.pks_keyid().toLowerCase())) {
+                    
+                   //PBESecretKeyDecryptor a = new JcePBESecretKeyDecryptorBuilder(new JcaPGPDigestCalculatorProviderBuilder().setProvider("BC").build()).setProvider("BC").build(pass);
+                  // prvkey = k.extractPrivateKey(a); 
+                   list.add(k);
+                   
+                }
+               
+            }
+        }
+      
+      } catch (FileNotFoundException ex) {
+              bslog(ex);
+      } catch (IOException ex) {
+            bslog(ex);
+        } catch (PGPException ex) {
+            bslog(ex);
+        }
+      return list;
+    }
+    
+    
     public static PGPPublicKey getPGPPublicKey(Path keyFilePath, String id) {
       PGPSecretKey key = null;
       InputStream in = null;
@@ -1357,7 +1432,7 @@ public class apiUtils {
       try {
       if (keyFilePath != null) {
               in = new FileInputStream(keyFilePath.toFile());
-      }
+      } 
       in = org.bouncycastle.openpgp.PGPUtil.getDecoderStream(in);
       PGPPublicKeyRingCollection pgpPub = new PGPPublicKeyRingCollection(in, new BcKeyFingerprintCalculator());
      
@@ -1395,6 +1470,59 @@ public class apiUtils {
         }
       return null;
     }
+    
+    public static List<PGPPublicKey> getPGPPublicKeyForExport(Path keyFilePath, String id) {
+      List<PGPPublicKey> list = new ArrayList<>();
+      PGPSecretKey key = null;
+      InputStream in = null;
+      char[] pass = null;
+      
+      pks_mstr pks = getPksMstr(new String[]{id});
+      pass = bsmf.MainFrame.PassWord("1", pks.pks_pass().toCharArray()).toCharArray();
+      Security.addProvider(new BouncyCastleProvider());
+      
+      try {
+      if (keyFilePath != null) {
+              in = new FileInputStream(keyFilePath.toFile());
+      } 
+      in = org.bouncycastle.openpgp.PGPUtil.getDecoderStream(in);
+      PGPPublicKeyRingCollection pgpPub = new PGPPublicKeyRingCollection(in, new BcKeyFingerprintCalculator());
+     
+      Iterator<PGPPublicKeyRing> rIt = pgpPub.getKeyRings();
+
+        while (key == null && rIt.hasNext()) {
+            PGPPublicKeyRing kRing = rIt.next();
+             
+            Iterator<PGPPublicKey> kIt = kRing.getPublicKeys();
+            ArrayList<String> al = new ArrayList<String>();
+            while (key == null && kIt.hasNext()) {
+                PGPPublicKey k = kIt.next();
+                if (k.isMasterKey()) { // get list of users from master key
+                    al.clear();
+                    Iterator<String> users = k.getUserIDs();
+                    while (users.hasNext()) {
+                        al.add(users.next());
+                    }
+                }
+              //  System.out.println(Long.toHexString(k.getKeyID()) + "/" + k.isMasterKey() + "/" + k.isEncryptionKey() + "/" + al.size());
+                if (al.contains(pks.pks_user())) {
+             //   if (Long.toHexString(k.getKeyID()).equals(pks.pks_keyid().toLowerCase())) {
+                    list.add(k);
+                }
+               
+            }
+        }
+      
+      } catch (FileNotFoundException ex) {
+              bslog(ex);
+      } catch (IOException ex) {
+            bslog(ex);
+        } catch (PGPException ex) {
+            bslog(ex);
+        }
+      return list;
+    }
+    
     
     
     public static byte[] decryptPGPData(byte[] encryptedData, String passPhrase, Path keyFilePath, PGPPrivateKey pgpPrvKey) throws PGPException, IOException {
