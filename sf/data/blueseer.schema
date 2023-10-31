@@ -394,7 +394,8 @@ CREATE TABLE IF NOT EXISTS `cpr_mstr` (
   `cpr_userid` varchar(10) NOT NULL  DEFAULT '',
   `cpr_mod_date` date DEFAULT NULL,
   `cpr_disc` decimal(14,5) NOT NULL DEFAULT '0.00000',
-  `cpr_uom` varchar(3) NOT NULL  DEFAULT ''
+  `cpr_uom` varchar(3) NOT NULL  DEFAULT '',
+  `cpr_expire` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `cup_mstr` (
   `cup_cust` varchar(10)  NOT NULL DEFAULT '',
@@ -2306,7 +2307,8 @@ CREATE TABLE IF NOT EXISTS `vpr_mstr` (
   `vpr_userid` varchar(10)  NOT NULL DEFAULT '0',
   `vpr_mod_date` date  DEFAULT NULL,
   `vpr_disc` decimal(14,5)  NOT NULL DEFAULT '0',
-  `vpr_uom` varchar(3)  NOT NULL DEFAULT ''
+  `vpr_uom` varchar(3)  NOT NULL DEFAULT '',
+  `vpr_expire` date  DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `wc_mstr` (
   `wc_cell` varchar(20) NOT NULL,

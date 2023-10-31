@@ -333,7 +333,8 @@ CREATE TABLE "cpr_mstr" (
   "cpr_userid" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
   "cpr_mod_date" date NOT NULL DEFAULT '0000-00-00',
   "cpr_disc" decimal(7,5) NOT NULL DEFAULT '0.00000',
-  "cpr_uom" varchar(3) NOT NULL COLLATE NOCASE DEFAULT '');
+  "cpr_uom" varchar(3) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cpr_expire" date NOT NULL DEFAULT '0000-00-00');
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
@@ -2782,9 +2783,10 @@ CREATE TABLE "vpr_mstr" (
   "vpr_volprice" varchar(500) COLLATE NOCASE DEFAULT '',
   "vpr_price" decimal(14,5) COLLATE NOCASE DEFAULT '',
   "vpr_userid" varchar(10) COLLATE NOCASE DEFAULT '',
-  "vpr_mod_date" date COLLATE NOCASE DEFAULT '',
+  "vpr_mod_date" date DEFAULT '0000-00-00',
   "vpr_disc" decimal(14,5) COLLATE NOCASE DEFAULT '',
-  "vpr_uom" varchar(3) COLLATE NOCASE DEFAULT ''
+  "vpr_uom" varchar(3) COLLATE NOCASE DEFAULT '',
+  "vpr_expire" date DEFAULT '0000-00-00'
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
