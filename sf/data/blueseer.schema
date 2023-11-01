@@ -2715,3 +2715,52 @@ CREATE TABLE IF NOT EXISTS `time_zone` (
   `tz_desc` varchar(200) NOT NULL DEFAULT '',
   `tz_utc` varchar(30) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `quo_mstr` (
+  `quo_nbr` varchar(8) NOT NULL PRIMARY KEY,
+  `quo_cust` varchar(30)  NOT NULL DEFAULT '',
+  `quo_ship` varchar(8) NOT NULL  DEFAULT '',
+  `quo_site` varchar(10) NOT NULL  DEFAULT '',
+  `quo_date` date DEFAULT NULL,
+  `quo_expire` date DEFAULT NULL,
+  `quo_status` varchar(20) NOT NULL  DEFAULT '',
+  `quo_rmks` varchar(200) NOT NULL  DEFAULT '',
+  `quo_ref` varchar(50) NOT NULL  DEFAULT '',
+  `quo_type` varchar(30) NOT NULL  DEFAULT '',
+  `quo_taxcode` varchar(30) NOT NULL  DEFAULT '',
+  `quo_curr` varchar(30) NOT NULL  DEFAULT '',
+  `quo_approved` tinyint(1) NOT NULL  DEFAULT '0',
+  `quo_approver` varchar(50) NOT NULL  DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `quo_det` (
+  `quod_nbr` varchar(8) NOT NULL PRIMARY KEY,
+  `quod_line` int(6)  NOT NULL DEFAULT '0',
+  `quod_item` varchar(100)  NOT NULL DEFAULT '',
+  `quod_isinv` tinyint(1) NOT NULL  DEFAULT '0',
+  `quod_desc` varchar(100)  NOT NULL DEFAULT '',
+  `quod_pricetype` varchar(20)  NOT NULL DEFAULT '',
+  `quod_listprice` decimal(14,5) NOT NULL  DEFAULT '0',
+  `quod_disc` decimal(14,5) NOT NULL  DEFAULT '0',
+  `quod_netprice` decimal(14,5) NOT NULL  DEFAULT '0',
+  `quod_qty` decimal(14,5) NOT NULL  DEFAULT '0',
+  `quod_uom` varchar(3)  NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `quo_voldet` (
+  `quov_nbr` varchar(8) NOT NULL PRIMARY KEY,
+  `quov_line` int(6)  NOT NULL DEFAULT '0',
+  `quov_item` varchar(100)  NOT NULL DEFAULT '',
+  `quov_volqty` decimal(14,5) NOT NULL  DEFAULT '0',
+  `quov_volprice` decimal(14,5) NOT NULL  DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `quo_meta` (
+  `quom_nbr` varchar(8) NOT NULL DEFAULT '',
+  `quom_type` varchar(80) NOT NULL DEFAULT '',
+  `quom_key` varchar(80) NOT NULL DEFAULT '',
+  `quom_value` varchar(80) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `quo_sac` (
+  `quos_nbr` varchar(8) NOT NULL,
+  `quos_desc` varchar(20)  NOT NULL DEFAULT '',
+  `quos_type` varchar(20) NOT NULL DEFAULT '',
+  `quos_amttype` varchar(20) NOT NULL DEFAULT '',
+  `quos_amt` decimal(14,5) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

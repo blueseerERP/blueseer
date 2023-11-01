@@ -3142,7 +3142,7 @@ CREATE TABLE "frt_ctrl" (
   "frtc_varchar" varchar(50) COLLATE NOCASE DEFAULT ''
 );
 CREATE TABLE "makemodel" (
-  "make" varchar(100) NOT NULL DEFAULT '',
+  "make" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
   "model" varchar(100) COLLATE NOCASE DEFAULT ''
 );
 CREATE TABLE "cfo_sos" (
@@ -3167,6 +3167,55 @@ CREATE TABLE "time_zone" (
   "tz_desc" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
   "tz_utc" varchar(30) NOT NULL COLLATE NOCASE DEFAULT ''
 );
+CREATE TABLE "quo_mstr" (
+  "quo_nbr" varchar(8) NOT NULL PRIMARY KEY,
+  "quo_cust" varchar(30)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "quo_ship" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "quo_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "quo_date" date NOT NULL DEFAULT '0000-00-00',
+  "quo_expire" date NOT NULL DEFAULT '0000-00-00',
+  "quo_status" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
+  "quo_rmks" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
+  "quo_ref" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "quo_type" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "quo_taxcode" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "quo_curr" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "quo_approved" tinyint(1) NOT NULL DEFAULT '0',
+  "quo_approver" varchar(50) NOT NULL COLLATE NOCASE DEFAULT ''
+); 
+CREATE TABLE "quo_det" (
+  "quod_nbr" varchar(8) NOT NULL PRIMARY KEY,
+  "quod_line" int(6)  NOT NULL DEFAULT '0',
+  "quod_item" varchar(100)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "quod_isinv" tinyint(1) NOT NULL  DEFAULT '0',
+  "quod_desc" varchar(100)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "quod_pricetype" varchar(20)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "quod_listprice" decimal(14,5) NOT NULL  DEFAULT '0',
+  "quod_disc" decimal(14,5) NOT NULL  DEFAULT '0',
+  "quod_netprice" decimal(14,5) NOT NULL  DEFAULT '0',
+  "quod_qty" decimal(14,5) NOT NULL  DEFAULT '0',
+  "quod_uom" varchar(3)  NOT NULL COLLATE NOCASE DEFAULT ''
+); 
+CREATE TABLE "quo_voldet" (
+  "quov_nbr" varchar(8) NOT NULL PRIMARY KEY,
+  "quov_line" int(6)  NOT NULL DEFAULT '0',
+  "quov_item" varchar(100)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "quov_volqty" decimal(14,5) NOT NULL  DEFAULT '0',
+  "quov_volprice" decimal(14,5) NOT NULL  DEFAULT '0'
+); 
+CREATE TABLE "quo_meta" (
+  "quom_nbr" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "quom_type" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "quom_key" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "quom_value" varchar(80) NOT NULL COLLATE NOCASE DEFAULT ''
+); 
+CREATE TABLE "quo_sac" (
+  "quos_nbr" varchar(8) NOT NULL,
+  "quos_desc" varchar(20)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "quos_type" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
+  "quos_amttype" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
+  "quos_amt" decimal(14,5) NOT NULL DEFAULT '0'
+); 
 
 
 End Transaction;
