@@ -88,15 +88,17 @@ Pedido,OrderMaint,1,JMenuItem,Mantenimiento de pedidos,,,,1,1
 Pedido,OrderBrowse,2,JMenuItem,Buscar pedido,,1,,1,1
 Pedido,ServiceOrderMaint,3,JMenuItem,Mantenimiento de la orden de servicio,,,,1,1
 Pedido,ServiceOrderBrowse,4,JMenuItem,Exploración de órdenes de servicio,,,,1,1
-Pedido,OrderSourceBrowse,5,JMenuItem,Origen del pedido Buscar,,1,,1,1
-Pedido,OrdLineBrowse,6,JMenuItem,Exploración de la línea de pedido,,1,,1,1
-Pedido,SchedOrdBrowse,7,JMenuItem,Exploración de pedidos programados,,1,,1,1
-Pedido,OrdRptPicker,8,JMenuItem,Selector de informes de pedidos,,,,1,1
-Pedido,OrderReports,9,JMenu,Otros informes,,,,1,1
-Pedido,POSMenu,10,JMenu,Menú POS,,,,1,1
-Pedido,DOMenu,11,JMenu,Menú de distribución,,,,1,1
-Pedido,OrderSource,12,JMenuItem,Origen de la orden,,,,1,1
-Pedido,OrderControl,13,JMenuItem,Control de pedidos,,,,1,1
+Pedido,QuoteMaint,5,JMenuItem,Quote Maintenance,,,,0,1
+Pedido,QuoteBrowse,6,JMenuItem,Quote Browse,,,,0,1
+Pedido,OrderSourceBrowse,7,JMenuItem,Origen del pedido Buscar,,1,,1,1
+Pedido,OrdLineBrowse,8,JMenuItem,Exploración de la línea de pedido,,1,,1,1
+Pedido,SchedOrdBrowse,9,JMenuItem,Exploración de pedidos programados,,1,,1,1
+Pedido,OrdRptPicker,10,JMenuItem,Selector de informes de pedidos,,,,1,1
+Pedido,OrderReports,11,JMenu,Otros informes,,,,1,1
+Pedido,POSMenu,12,JMenu,Menú POS,,,,1,1
+Pedido,DOMenu,13,JMenu,Menú de distribución,,,,1,1
+Pedido,OrderSource,14,JMenuItem,Origen de la orden,,,,1,1
+Pedido,OrderControl,15,JMenuItem,Control de pedidos,,,,1,1
 OrderReports,pcOpenOrdersByCust,1,JMenuItem,Órdenes abiertas por cliente por fecha de vencimiento (PieChart),,1,,1,1
 OrderReports,DiscreteOrderPerWeekUnits,2,JMenuItem,Ordenar unidades por semana (gráfico de barras),,1,,1,1
 OrderReports,DiscreteOrderPerWeekDollars,3,JMenuItem,Ordenar ventas por semana (gráfico de barras),,1,,1,1

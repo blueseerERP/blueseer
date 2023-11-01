@@ -324,3 +324,5 @@ admin,DriverBrowse
 admin,BrokerBrowse
 admin,CFOControl
 admin,EDIXrefBrowse
+admin,QuoteMaint
+admin,QuoteBrowse

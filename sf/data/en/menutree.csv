@@ -92,15 +92,17 @@ Order,OrderMaint,1,JMenuItem,Order Maintenance,,,,1,1
 Order,OrderBrowse,2,JMenuItem,Order Browse,,1,,1,1
 Order,ServiceOrderMaint,3,JMenuItem,Service Order Maintenance,,,,1,1
 Order,ServiceOrderBrowse,4,JMenuItem,Service Order Browse,,,,1,1
-Order,OrderSourceBrowse,5,JMenuItem,Order Source Browse,,1,,1,1
-Order,OrdLineBrowse,6,JMenuItem,Order Line Browse,,1,,1,1
-Order,SchedOrdBrowse,7,JMenuItem,Sched Order Browse,,1,,1,1
-Order,OrdRptPicker,8,JMenuItem,Order Report Selector,,,,1,1
-Order,OrderReports,9,JMenu,Other Reports,,,,1,1
-Order,POSMenu,10,JMenu,POS Menu,,,,1,1
-Order,DOMenu,11,JMenu,Distribution Menu,,,,1,1
-Order,OrderSource,12,JMenuItem,Order Source,,,,1,1
-Order,OrderControl,13,JMenuItem,Order Control,,,,1,1
+Order,QuoteMaint,5,JMenuItem,Quote Maintenance,,,,0,1
+Order,QuoteBrowse,6,JMenuItem,Quote Browse,,,,0,1
+Order,OrderSourceBrowse,7,JMenuItem,Order Source Browse,,1,,1,1
+Order,OrdLineBrowse,8,JMenuItem,Order Line Browse,,1,,1,1
+Order,SchedOrdBrowse,9,JMenuItem,Sched Order Browse,,1,,1,1
+Order,OrdRptPicker,10,JMenuItem,Order Report Selector,,,,1,1
+Order,OrderReports,11,JMenu,Other Reports,,,,1,1
+Order,POSMenu,12,JMenu,POS Menu,,,,1,1
+Order,DOMenu,13,JMenu,Distribution Menu,,,,1,1
+Order,OrderSource,14,JMenuItem,Order Source,,,,1,1
+Order,OrderControl,15,JMenuItem,Order Control,,,,1,1
 OrderReports,pcOpenOrdersByCust,1,JMenuItem,Open Orders By Cust By DueDate (PieChart),,1,,1,1
 OrderReports,DiscreteOrderPerWeekUnits,2,JMenuItem,Order Units By Week (BarChart),,1,,1,1
 OrderReports,DiscreteOrderPerWeekDollars,3,JMenuItem,Order Sales By Week (BarChart),,1,,1,1

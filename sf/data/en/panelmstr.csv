@@ -225,3 +225,5 @@ com.blueseer.adm.CronMaint,,1
 com.blueseer.edi.EDIUtilities,,1
 com.blueseer.edi.WorkFlowMaint,,1
 com.blueseer.edi.WorkFlowLog,,1
+com.blueseer.ord.QuoteMaint,,1
+com.blueseer.ord.QuoteBrowse,,1

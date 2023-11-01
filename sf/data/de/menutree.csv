@@ -88,15 +88,17 @@ Befehl,OrderMaint,1,JMenuItem,Auftragspflege,,,,1,1
 Befehl,OrderBrowse,2,JMenuItem,Bestellen Durchsuchen,,1,,1,1
 Befehl,ServiceOrderMaint,3,JMenuItem,Wartung von Serviceaufträgen,,,,1,1
 Befehl,ServiceOrderBrowse,4,JMenuItem,Durchsuchen von Serviceaufträgen,,,,1,1
-Befehl,OrderSourceBrowse,5,JMenuItem,Bestellquelle Durchsuchen,,1,,1,1
-Befehl,OrdLineBrowse,6,JMenuItem,Bestellzeile Durchsuchen,,1,,1,1
-Befehl,SchedOrdBrowse,7,JMenuItem,Geplante Bestellung Durchsuchen,,1,,1,1
-Befehl,OrdRptPicker,8,JMenuItem,Bestellbericht-Selektor,,,,1,1
-Befehl,OrderReports,9,JMenu,Andere Berichte,,,,1,1
-Befehl,POSMenu,10,JMenu,POS-Menü,,,,1,1
-Befehl,DOMenu,11,JMenu,Verteilungsmenü,,,,1,1
-Befehl,OrderSource,12,JMenuItem,Bestellquelle,,,,1,1
-Befehl,OrderControl,13,JMenuItem,Auftragssteuerung,,,,1,1
+Befehl,QuoteMaint,5,JMenuItem,Quote Maintenance,,,,0,1
+Befehl,QuoteBrowse,6,JMenuItem,Quote Browse,,,,0,1
+Befehl,OrderSourceBrowse,7,JMenuItem,Bestellquelle Durchsuchen,,1,,1,1
+Befehl,OrdLineBrowse,8,JMenuItem,Bestellzeile Durchsuchen,,1,,1,1
+Befehl,SchedOrdBrowse,9,JMenuItem,Geplante Bestellung Durchsuchen,,1,,1,1
+Befehl,OrdRptPicker,10,JMenuItem,Bestellbericht-Selektor,,,,1,1
+Befehl,OrderReports,11,JMenu,Andere Berichte,,,,1,1
+Befehl,POSMenu,12,JMenu,POS-Menü,,,,1,1
+Befehl,DOMenu,13,JMenu,Verteilungsmenü,,,,1,1
+Befehl,OrderSource,14,JMenuItem,Bestellquelle,,,,1,1
+Befehl,OrderControl,15,JMenuItem,Auftragssteuerung,,,,1,1
 OrderReports,pcOpenOrdersByCust,1,JMenuItem,Offene Bestellungen nach Kunden bis Fälligkeitsdatum,,1,,1,1
 OrderReports,DiscreteOrderPerWeekUnits,2,JMenuItem,Bestelleinheiten nach Woche (BarChart),,1,,1,1
 OrderReports,DiscreteOrderPerWeekDollars,3,JMenuItem,Bestellumsatz nach Woche (BarChart),,1,,1,1

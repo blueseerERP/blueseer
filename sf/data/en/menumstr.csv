@@ -317,3 +317,5 @@ VehicleBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,vehb
 DriverBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,drvb
 BrokerBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,brkb
 EDIXrefBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,xref
+QuoteMaint,,com.blueseer.ord.QuoteMaint,JMenuItem,quom
+QuoteBrowse,,com.blueseer.ord.QuoteBrowse,JMenuItem,quob

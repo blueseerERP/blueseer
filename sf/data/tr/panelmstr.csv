@@ -3,7 +3,6 @@ com.blueseer.adm.License,,1
 com.blueseer.adm.BackGround,,1
 com.blueseer.adm.DefaultMaint,,1
 com.blueseer.adm.FileOrderLoad,,1
-com.blueseer.adm.FTPMaint,,1
 com.blueseer.adm.GenCodeMaint,,1
 com.blueseer.adm.JasperRptMaint,,1
 com.blueseer.adm.MenuMaint,,1
@@ -59,6 +58,7 @@ com.blueseer.edi.AS2Maint,,1
 com.blueseer.edi.AS2Log,,1
 com.blueseer.edi.APIBrowse,,1
 com.blueseer.edi.APILog,,1
+com.blueseer.edi.FTPMaint,,1
 com.blueseer.eng.ECNBrowse,,1
 com.blueseer.eng.ECNMaint,,1
 com.blueseer.eng.OVDevBrowse,,1
@@ -225,3 +225,5 @@ com.blueseer.adm.CronMaint,,1
 com.blueseer.edi.EDIUtilities,,1
 com.blueseer.edi.WorkFlowMaint,,1
 com.blueseer.edi.WorkFlowLog,,1
+com.blueseer.ord.QuoteMaint,,1
+com.blueseer.ord.QuoteBrowse,,1

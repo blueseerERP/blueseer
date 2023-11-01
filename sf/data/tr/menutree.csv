@@ -88,15 +88,17 @@ Emir,OrderMaint,1,JMenuItem,Sipariş Bakımı,,,,1,1
 Emir,OrderBrowse,2,JMenuItem,Sipariş Gözat,,1,,1,1
 Emir,ServiceOrderMaint,3,JMenuItem,Servis Siparişi Bakımı,,,,1,1
 Emir,ServiceOrderBrowse,4,JMenuItem,Servis Siparişi Gözat,,,,1,1
-Emir,OrderSourceBrowse,5,JMenuItem,Kaynak Araştır,,1,,1,1
-Emir,OrdLineBrowse,6,JMenuItem,Sipariş Hattına Gözat,,1,,1,1
-Emir,SchedOrdBrowse,7,JMenuItem,Planlanmış Sipariş Gözat,,1,,1,1
-Emir,OrdRptPicker,8,JMenuItem,Sipariş Raporu Seçici,,,,1,1
-Emir,OrderReports,9,JMenu,Diğer Raporlar,,,,1,1
-Emir,POSMenu,10,JMenu,POS Menüsü,,,,1,1
-Emir,DOMenu,11,JMenu,Dağıtım Menüsü,,,,1,1
-Emir,OrderSource,12,JMenuItem,Sipariş Kaynağı,,,,1,1
-Emir,OrderControl,13,JMenuItem,Sipariş Kontrolü,,,,1,1
+Emir,QuoteMaint,5,JMenuItem,Quote Maintenance,,,,0,1
+Emir,QuoteBrowse,6,JMenuItem,Quote Browse,,,,0,1
+Emir,OrderSourceBrowse,7,JMenuItem,Kaynak Araştır,,1,,1,1
+Emir,OrdLineBrowse,8,JMenuItem,Sipariş Hattına Gözat,,1,,1,1
+Emir,SchedOrdBrowse,9,JMenuItem,Planlanmış Sipariş Gözat,,1,,1,1
+Emir,OrdRptPicker,10,JMenuItem,Sipariş Raporu Seçici,,,,1,1
+Emir,OrderReports,11,JMenu,Diğer Raporlar,,,,1,1
+Emir,POSMenu,12,JMenu,POS Menüsü,,,,1,1
+Emir,DOMenu,13,JMenu,Dağıtım Menüsü,,,,1,1
+Emir,OrderSource,14,JMenuItem,Sipariş Kaynağı,,,,1,1
+Emir,OrderControl,15,JMenuItem,Sipariş Kontrolü,,,,1,1
 OrderReports,pcOpenOrdersByCust,1,JMenuItem,Vade Tarihine Göre Müşteriye Göre Açık Siparişler (PieChart),,1,,1,1
 OrderReports,DiscreteOrderPerWeekUnits,2,JMenuItem,Haftaya Göre Sipariş Birimleri (BarChart),,1,,1,1
 OrderReports,DiscreteOrderPerWeekDollars,3,JMenuItem,Haftaya Göre Sipariş Satışları (BarChart),,1,,1,1

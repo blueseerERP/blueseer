@@ -305,3 +305,5 @@ WorkFlowMaint,,com.blueseer.edi.WorkFlowMaint,JMenuItem,wkfm
 WorkFlowBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,wkfb
 WorkFlowLog,,com.blueseer.edi.WorkFlowLog,JMenuItem,wkfl
 CFOControl,,com.blueseer.frt.CFOControl,JMenuItem,cfoc
+QuoteMaint,,com.blueseer.ord.QuoteMaint,JMenuItem,quom
+QuoteBrowse,,com.blueseer.ord.QuoteBrowse,JMenuItem,quob
