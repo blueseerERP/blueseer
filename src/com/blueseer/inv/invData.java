@@ -2039,7 +2039,7 @@ public class invData {
                                               " AND cpr_uom = " + "'" + uom + "'" +
                                               " AND cpr_curr = " + "'" + curr + "'" +
                                               " AND cpr_volqty <= " + "'" + qty + "'" +  
-                                              " AND (cpr_expire >= " + "'" + BlueSeerUtils.setDateFormat(now) + "'" + " OR cpr_expire = '0000-00-00' ) " +        
+                                              " AND (cpr_expire >= " + "'" + BlueSeerUtils.setDateFormat(now) + "'" + " OR cpr_expire = null ) " +        
                                               " AND cpr_type = 'VOLUME' "+ " order by cpr_volqty desc;");
                         while (res.next()) {
                            v++;

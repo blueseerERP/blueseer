@@ -155,7 +155,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
                     dditem.setSelectedItem(res.getString("cpr_item"));
                     dduom.setSelectedItem(res.getString("cpr_uom"));
                     ddcurr.setSelectedItem(res.getString("cpr_curr"));
-                    if (res.getString("cpr_expire") == null || res.getString("cpr_expire").isBlank() || res.getString("cpr_expire").equals("0000-00-00")) {
+                    if (res.getString("cpr_expire") == null || res.getString("cpr_expire").isBlank() || res.getString("cpr_expire").equals("null")) {
                         dcexpire.setDate(null);  
                       } else {
                         dcexpire.setDate(bsmf.MainFrame.dfdate.parse(res.getString("cpr_expire")));  
@@ -851,7 +851,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
                 boolean proceed = true;
                 int i = 0;
               String qty = "";
-              String expiredate = "0000-00-00";
+              String expiredate = null;
               if (dcexpire.getDate() != null) {
                   expiredate = BlueSeerUtils.setDateFormat(dcexpire.getDate());
               }
@@ -884,7 +884,8 @@ public class CustPriceMaint extends javax.swing.JPanel {
                }
              
                 if (proceed) {
-                    st.executeUpdate("insert into cpr_mstr "
+                   
+                       st.executeUpdate("insert into cpr_mstr "
                         + "(cpr_cust, cpr_item, cpr_type, cpr_desc, cpr_uom, cpr_curr, "
                         + "cpr_price, cpr_volqty, cpr_expire "
                         + " ) "
@@ -898,7 +899,8 @@ public class CustPriceMaint extends javax.swing.JPanel {
                         + "'" + qty + "'"   + "," 
                         + "'" + expiredate + "'"                                
                         + ")"
-                        + ";");
+                        + ";"); 
+                    
 
                     
         
@@ -1220,7 +1222,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
                 boolean proceed = true;
                 int i = 0;
                 String qty = "";
-                String expiredate = "0000-00-00";
+                String expiredate = null;
                 if (dcexpire.getDate() != null) {
                   expiredate = BlueSeerUtils.setDateFormat(dcexpire.getDate());
                 }
@@ -1231,8 +1233,10 @@ public class CustPriceMaint extends javax.swing.JPanel {
                 }
                 
                 if (proceed) {
+                    
                     if (ddtype.getSelectedItem().toString().equals("LIST")) {
-                    st.executeUpdate("update cpr_mstr "
+                       
+                        st.executeUpdate("update cpr_mstr "
                         + " set cpr_price = " + "'" + tbprice.getText().replace(defaultDecimalSeparator, '.') + "'"
                         + ", cpr_expire = " + "'" + expiredate + "'"
                         + " where cpr_cust = " + "'" + ddcustcode.getSelectedItem() + "'" 
@@ -1240,7 +1244,8 @@ public class CustPriceMaint extends javax.swing.JPanel {
                         + " and cpr_uom = " + "'" + dduom.getSelectedItem().toString() + "'"
                         + " and cpr_curr = " + "'" + ddcurr.getSelectedItem().toString() + "'"        
                         + " and cpr_item = " + "'" + dditem.getSelectedItem().toString() + "'" 
-                        + ";");
+                        + ";");    
+                       
                     } else {
                        st.executeUpdate("update cpr_mstr "
                         + " set cpr_price = " + "'" + tbprice.getText().replace(defaultDecimalSeparator, '.') + "'"
@@ -1253,6 +1258,9 @@ public class CustPriceMaint extends javax.swing.JPanel {
                         + " and cpr_volqty = " + "'" + qty + "'"         
                         + ";"); 
                     }
+                    
+                        
+                    
 
                     bsmf.MainFrame.show(getMessageTag(1008));
                     initvars(null);
