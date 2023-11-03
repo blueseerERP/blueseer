@@ -97,11 +97,11 @@ public class CustPriceRpt extends javax.swing.JPanel {
                         new String[]{
                         getGlobalColumnTag("select"), 
                         getGlobalColumnTag("code"), 
-                        getGlobalColumnTag("description"), 
                         getGlobalColumnTag("type"), 
                         getGlobalColumnTag("item"), 
                         getGlobalColumnTag("uom"), 
                         getGlobalColumnTag("currency"), 
+                        getGlobalColumnTag("qty"),
                         getGlobalColumnTag("price"), 
                         getGlobalColumnTag("discount")})
                         {
@@ -498,7 +498,7 @@ public class CustPriceRpt extends javax.swing.JPanel {
         
         int row = tablereport.rowAtPoint(evt.getPoint());
         int col = tablereport.columnAtPoint(evt.getPoint());
-        String[] myparameter = new String[]{tablereport.getValueAt(row, 1).toString(),tablereport.getValueAt(row, 4).toString(),tablereport.getValueAt(row, 3).toString(),tablereport.getValueAt(row, 5).toString(),tablereport.getValueAt(row, 6).toString()};
+        String[] myparameter = new String[]{tablereport.getValueAt(row, 1).toString(),tablereport.getValueAt(row, 3).toString(),tablereport.getValueAt(row, 2).toString(),tablereport.getValueAt(row, 4).toString(),tablereport.getValueAt(row, 5).toString(),tablereport.getValueAt(row, 6).toString()};
         if ( col == 0) {
               if (! checkperms("CustPriceMaint")) { return; }
            reinitpanels("CustPriceMaint", true, myparameter);
@@ -540,11 +540,11 @@ public class CustPriceRpt extends javax.swing.JPanel {
                             continue;
                         
                     mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("cpr_cust"),
-                        res.getString("cpr_desc"),
                         res.getString("cpr_type"),
                         res.getString("cpr_item"),
                         res.getString("cpr_uom"),
                         res.getString("cpr_curr"),
+                        res.getString("cpr_volqty"),
                         res.getDouble("cpr_price"),
                         res.getString("cpr_disc")
                     });

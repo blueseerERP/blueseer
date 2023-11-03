@@ -1184,7 +1184,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
     public void setPrice() {
          if (dduom.getItemCount() > 0 && ddpart.getItemCount() > 0 && ddvend.getItemCount() > 0 && ! ddcurr.getSelectedItem().toString().isEmpty()) {
                 String[] TypeAndPrice = invData.getItemPrice("v", ddvend.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), 
-                        dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString());
+                        dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString(), qtyshipped.getText());
                 String pricetype = TypeAndPrice[0].toString();
                 double price = bsParseDouble(TypeAndPrice[1]);
              //   
@@ -2834,6 +2834,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
             qtyshipped.setText(x);
             qtyshipped.setBackground(Color.white);
         }
+        
         }
         
     }//GEN-LAST:event_qtyshippedFocusLost

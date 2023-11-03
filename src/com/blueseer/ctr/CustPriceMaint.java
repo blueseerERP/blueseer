@@ -69,6 +69,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
 
     DefaultListModel listmodel = new DefaultListModel();
     DefaultListModel pricelistmodel = new DefaultListModel();
+    boolean isLoad = false;
     
     /**
      * Creates new form CustXrefMaintPanel
@@ -123,7 +124,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
        }
     }
         
-    public void getCustPriceRecord(String cust, String part, String type, String uom, String curr) {
+    public void getCustPriceRecord(String cust, String part, String type, String uom, String curr, String qty) {
         initvars(null);
         try {
             Connection con = null;
@@ -136,22 +137,31 @@ public class CustPriceMaint extends javax.swing.JPanel {
             ResultSet res = null;
             try {
                 int i = 0;
+                
                 res = st.executeQuery("SELECT * FROM  cpr_mstr where " +
                     " cpr_cust = " + "'" + cust + "'" + 
                     " AND cpr_item = " + "'" + part + "'" + 
                     " AND cpr_uom = " + "'" + uom + "'" + 
                     " AND cpr_curr = " + "'" + curr + "'" +         
                     " AND cpr_type = " + "'" + type + "'" +
+                    " AND cpr_volqty = " + "'" + qty + "'" +         
                         ";") ;
+               
                         
                 while (res.next()) {
                     i++;
-                   if (type.equals("LIST")) {
+                   if (type.equals("LIST") || type.equals("VOLUME")) {
                     ddcustcode.setSelectedItem(res.getString("cpr_cust"));
-                    ddpart.setSelectedItem(res.getString("cpr_item"));
+                    dditem.setSelectedItem(res.getString("cpr_item"));
                     dduom.setSelectedItem(res.getString("cpr_uom"));
                     ddcurr.setSelectedItem(res.getString("cpr_curr"));
-                     tbprice.setText(bsformat("s",res.getString("cpr_price").replace('.',defaultDecimalSeparator),"4")); 
+                    if (res.getString("cpr_expire") == null || res.getString("cpr_expire").isBlank() || res.getString("cpr_expire").equals("0000-00-00")) {
+                        dcexpire.setDate(null);  
+                      } else {
+                        dcexpire.setDate(bsmf.MainFrame.dfdate.parse(res.getString("cpr_expire")));  
+                      }
+                     tbprice.setText(bsformat("s",res.getString("cpr_price").replace('.',defaultDecimalSeparator),"4"));
+                     tbqty.setText(bsformat("s",res.getString("cpr_volqty").replace('.',defaultDecimalSeparator),"4"));
                      btUpdate.setEnabled(true);
                      btDelete.setEnabled(true);
                      btAdd.setEnabled(false);
@@ -162,7 +172,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
                       btupdatedisc.setEnabled(true);
                      btdeletedisc.setEnabled(true);
                      btadddisc.setEnabled(false);
-                   }
+                   } 
                    
                 }
                
@@ -191,6 +201,10 @@ public class CustPriceMaint extends javax.swing.JPanel {
     }
     
     public void initvars(String[] arg) {
+        
+        
+        isLoad = true;
+         dcexpire.setDate(null);
          lbldisccode.setVisible(false);
          lbldisccode.setForeground(Color.red);
          disclist.setModel(listmodel);
@@ -199,7 +213,9 @@ public class CustPriceMaint extends javax.swing.JPanel {
          lblpricecode.setForeground(Color.red);
          pricelist.setModel(pricelistmodel);
          
-         
+         tbqty.setEnabled(false);
+         ddtype.setEnabled(true);
+         ddtype.setSelectedIndex(0);
          btUpdate.setEnabled(false);
          btDelete.setEnabled(false);
          btAdd.setEnabled(false);
@@ -211,6 +227,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
         ArrayList pricegroups = OVData.getPriceGroupList();
         ddcustcode.removeAllItems();
         ddcustcode_disc.removeAllItems();
+        
         for (int i = 0; i < pricegroups.size(); i++) {
             ddcustcode.addItem(pricegroups.get(i));
         }
@@ -224,14 +241,19 @@ public class CustPriceMaint extends javax.swing.JPanel {
             ddcustcode_disc.addItem(mycusts.get(i));
         }
         
+        ddcustcode.insertItemAt("", 0);
+        ddcustcode.setSelectedIndex(0);
         
-         dduom.removeAllItems();
+        dduom.removeAllItems();
         ArrayList<String> mylist = OVData.getUOMList();
         for (String code : mylist) {
             dduom.addItem(code);
         }
         
-          ddcurr.removeAllItems();
+        dduom.insertItemAt("", 0);
+        dduom.setSelectedIndex(0);
+        
+        ddcurr.removeAllItems();
         ArrayList<String> mycurr = fglData.getCurrlist();
         for (String code : mycurr) {
             ddcurr.addItem(code);
@@ -239,23 +261,22 @@ public class CustPriceMaint extends javax.swing.JPanel {
         ddcurr.setSelectedItem(OVData.getDefaultCurrency());
         
         ArrayList mypart = invData.getItemMasterAlllist();
-        ddpart.removeAllItems();
+        dditem.removeAllItems();
         for (int i = 0; i < mypart.size(); i++) {
-            ddpart.addItem(mypart.get(i).toString());
+            dditem.addItem(mypart.get(i).toString());
         }
-        
+        dditem.insertItemAt("", 0);
+        dditem.setSelectedIndex(0);
        
-        
+        lbcust.setText("");
+        lbitem.setText("");
+        lblpricecode.setText("");
         tbdisc.setText("");
         tbdisckey.setText("");
+        tbqty.setText("");
         listmodel.removeAllElements();
         pricelistmodel.removeAllElements();;
     
-        
-       
-        java.util.Date now = new java.util.Date();
-        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-      
         
          if (ddcustcode.getItemCount() > 0) {        
          setPriceList();
@@ -265,17 +286,17 @@ public class CustPriceMaint extends javax.swing.JPanel {
          updateDiscList();
          }
         
-        
+        isLoad = false;
           
         if (arg != null && arg.length > 5) {
-            getCustPriceRecord(arg[0], arg[1], arg[2], arg[3], arg[4]);
+            getCustPriceRecord(arg[0], arg[1], arg[2], arg[3], arg[4], arg[5]);
         }
          
     }
     
     public void updateDiscList() {
    
-        
+        if (! isLoad) {
         listmodel.removeAllElements();
         String disccode = "";
         
@@ -332,31 +353,33 @@ public class CustPriceMaint extends javax.swing.JPanel {
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
-    
+        }
     }
     
     public void setData() {
-         
-        if (ddpart.getItemCount() > 0 && ddcustcode.getItemCount() > 0 && dduom.getItemCount() > 0 && ddcurr.getItemCount() > 0) {
-        double myprice = invData.getItemPriceFromCust(ddcustcode.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString());
-        lbitem.setText(invData.getItemDesc(ddpart.getSelectedItem().toString()));
-        if (myprice == 0) {
-            tbprice.setText("0");
-            btAdd.setEnabled(true);
-            btUpdate.setEnabled(false);
-            btDelete.setEnabled(false);
-            tbprice.setBackground(Color.YELLOW);
-        } else {
-            tbprice.setText(bsFormatDouble(myprice,"4"));
-            btAdd.setEnabled(false);
-            btUpdate.setEnabled(false);
-            btDelete.setEnabled(false); 
-            tbprice.setBackground(Color.GREEN);
-        }
+        if (! isLoad) { 
+            if (dditem.getItemCount() > 0 && ddcustcode.getItemCount() > 0 && dduom.getItemCount() > 0 && ddcurr.getItemCount() > 0) {
+            double myprice = invData.getItemPriceFromCust(ddcustcode.getSelectedItem().toString(), dditem.getSelectedItem().toString(), dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString(), ddtype.getSelectedItem().toString(), tbqty.getText());
+            lbitem.setText(invData.getItemDesc(dditem.getSelectedItem().toString()));
+                if (myprice == 0) {
+                    tbprice.setText("0");
+                    btAdd.setEnabled(true);
+                    btUpdate.setEnabled(false);
+                    btDelete.setEnabled(false);
+                    tbprice.setBackground(Color.YELLOW);
+                } else {
+                    tbprice.setText(bsFormatDouble(myprice,"4"));
+                    btAdd.setEnabled(false);
+                    btUpdate.setEnabled(false);
+                    btDelete.setEnabled(false); 
+                    tbprice.setBackground(Color.GREEN);
+                }
+            }
         }
     }
     
      public void setPriceList() {
+        if (! isLoad) {
         pricelistmodel.removeAllElements();
         String pricecode = "";
         try {
@@ -371,13 +394,17 @@ public class CustPriceMaint extends javax.swing.JPanel {
             ResultSet res = null;
             try {
              
-              res = st.executeQuery("select cpr_item, cpr_uom, cpr_curr from cpr_mstr where cpr_cust = " + "'" + 
+              res = st.executeQuery("select cpr_item, cpr_uom, cpr_curr, cpr_volqty, cpr_type from cpr_mstr where cpr_cust = " + "'" + 
                       ddcustcode.getSelectedItem().toString() + "'" +
-                      " and cpr_type = " + "'LIST'" +
-                      ";");
+                      " and cpr_type <> " + "'DISCOUNT'" +
+                      " order by cpr_item;");
                while (res.next()) {
+                      if (res.getString("cpr_type").equals("LIST")) {
                       pricelistmodel.addElement(res.getString("cpr_item") + ":" + res.getString("cpr_uom") + ":" + res.getString("cpr_curr"));
-               }
+                      } else {
+                      pricelistmodel.addElement(res.getString("cpr_item") + ":" + res.getString("cpr_uom") + ":" + res.getString("cpr_curr") + ":" + res.getString("cpr_volqty"));    
+                      }
+                }
                
                // check for price code in cm_mstr
              
@@ -410,6 +437,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
+        }
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -435,13 +463,19 @@ public class CustPriceMaint extends javax.swing.JPanel {
         jScrollPane2 = new javax.swing.JScrollPane();
         pricelist = new javax.swing.JList();
         jLabel4 = new javax.swing.JLabel();
-        ddpart = new javax.swing.JComboBox<>();
+        dditem = new javax.swing.JComboBox<>();
         dduom = new javax.swing.JComboBox<>();
         jLabel6 = new javax.swing.JLabel();
         ddcurr = new javax.swing.JComboBox<>();
         jLabel11 = new javax.swing.JLabel();
         lbitem = new javax.swing.JLabel();
         lbcust = new javax.swing.JLabel();
+        tbqty = new javax.swing.JTextField();
+        lblqty = new javax.swing.JLabel();
+        btclear = new javax.swing.JButton();
+        ddtype = new javax.swing.JComboBox<>();
+        dcexpire = new com.toedter.calendar.JDateChooser();
+        jLabel12 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         tbdisckey = new javax.swing.JTextField();
         ddcustcode_disc = new javax.swing.JComboBox();
@@ -461,9 +495,11 @@ public class CustPriceMaint extends javax.swing.JPanel {
         jLabel1.setText("jLabel1");
 
         setBackground(new java.awt.Color(0, 102, 204));
+        setPreferredSize(new java.awt.Dimension(980, 424));
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("Customer Pricing Maintenance"));
         jPanel3.setName("panelmain"); // NOI18N
+        jPanel3.setPreferredSize(new java.awt.Dimension(950, 500));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("List Price Maintenance"));
         jPanel1.setName("panellist"); // NOI18N
@@ -526,9 +562,9 @@ public class CustPriceMaint extends javax.swing.JPanel {
         jLabel4.setText("Applied");
         jLabel4.setName("lblapplied"); // NOI18N
 
-        ddpart.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                ddpartItemStateChanged(evt);
+        dditem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dditemActionPerformed(evt);
             }
         });
 
@@ -550,50 +586,71 @@ public class CustPriceMaint extends javax.swing.JPanel {
         jLabel11.setText("Currency");
         jLabel11.setName("lblcurrency"); // NOI18N
 
+        lblqty.setText("Quantity");
+        lblqty.setName("lblqty"); // NOI18N
+
+        btclear.setText("Clear");
+        btclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btclearActionPerformed(evt);
+            }
+        });
+
+        ddtype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "LIST", "VOLUME" }));
+        ddtype.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddtypeActionPerformed(evt);
+            }
+        });
+
+        dcexpire.setDateFormatString("yyyy-MM-dd");
+
+        jLabel12.setText("Expire");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(13, 13, 13)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel11)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ddcurr, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(75, 75, 75))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(13, 13, 13)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel5))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblpricecode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(ddpart, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(ddcustcode, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(dduom, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tbprice, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE)))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel11)
+                    .addComponent(jLabel5)
+                    .addComponent(lblqty)
+                    .addComponent(jLabel12)
+                    .addComponent(jLabel4))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btDelete)
-                    .addComponent(btUpdate)
-                    .addComponent(btAdd)
-                    .addComponent(lbitem, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbcust, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                    .addComponent(dcexpire, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblpricecode, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dduom, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(tbprice, javax.swing.GroupLayout.DEFAULT_SIZE, 78, Short.MAX_VALUE)
+                            .addComponent(tbqty))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btAdd)
+                            .addComponent(btUpdate)
+                            .addComponent(btDelete)
+                            .addComponent(btclear)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(dditem, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbitem, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ddcurr, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(ddcustcode, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(lbcust, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 37, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -606,35 +663,47 @@ public class CustPriceMaint extends javax.swing.JPanel {
                     .addComponent(lbcust, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblpricecode, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(jLabel2)
-                        .addComponent(ddpart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(dditem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(lbitem, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(dduom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(5, 5, 5)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ddcurr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel11))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jLabel11)
+                    .addComponent(ddcurr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbprice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
-                .addGap(18, 18, 18)
+                    .addComponent(jLabel5)
+                    .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(dcexpire, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblqty)))
+                    .addComponent(jLabel12))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(btAdd)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btUpdate)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btDelete))
-                    .addComponent(jLabel4)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(btDelete)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btclear))
+                    .addComponent(jLabel4))
+                .addContainerGap(78, Short.MAX_VALUE))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Discount Maintenance"));
@@ -694,7 +763,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(39, Short.MAX_VALUE)
+                .addContainerGap(90, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel7)
                     .addComponent(jLabel9)
@@ -753,13 +822,14 @@ public class CustPriceMaint extends javax.swing.JPanel {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(5, 5, 5)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(5, 5, 5)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 465, Short.MAX_VALUE)
+                .addGap(39, 39, 39))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 392, Short.MAX_VALUE)
+            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 478, Short.MAX_VALUE)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
@@ -780,14 +850,32 @@ public class CustPriceMaint extends javax.swing.JPanel {
             try {
                 boolean proceed = true;
                 int i = 0;
-              
-             
-              res = st.executeQuery("select cpr_item from cpr_mstr where cpr_item = " + "'" + 
-                      ddpart.getSelectedItem().toString() + "'" +
+              String qty = "";
+              String expiredate = "0000-00-00";
+              if (dcexpire.getDate() != null) {
+                  expiredate = BlueSeerUtils.setDateFormat(dcexpire.getDate());
+              }
+              if (ddtype.getSelectedItem().toString().equals("VOLUME")) {
+                  qty = tbqty.getText().replace(defaultDecimalSeparator, '.');
+                  res = st.executeQuery("select cpr_item from cpr_mstr where cpr_item = " + "'" + 
+                      dditem.getSelectedItem().toString() + "'" +
                       " and cpr_cust = " + "'" + ddcustcode.getSelectedItem().toString() + "'" +
                       " and cpr_uom = " + "'" + dduom.getSelectedItem().toString() + "'" +
-                      " and cpr_curr = " + "'" + ddcurr.getSelectedItem().toString() + "'" +        
+                      " and cpr_curr = " + "'" + ddcurr.getSelectedItem().toString() + "'" +  
+                      " and cpr_volqty = " + "'" + qty + "'" +        
+                      " and cpr_type = " + "'" + ddtype.getSelectedItem().toString() + "'" +        
                       ";");
+              }  else {
+                  qty = "0";
+                  res = st.executeQuery("select cpr_item from cpr_mstr where cpr_item = " + "'" + 
+                      dditem.getSelectedItem().toString() + "'" +
+                      " and cpr_cust = " + "'" + ddcustcode.getSelectedItem().toString() + "'" +
+                      " and cpr_uom = " + "'" + dduom.getSelectedItem().toString() + "'" +
+                      " and cpr_curr = " + "'" + ddcurr.getSelectedItem().toString() + "'" +  
+                      " and cpr_type = " + "'" + ddtype.getSelectedItem().toString() + "'" +        
+                      ";");
+              }
+            
                while (res.next()) {
                 i++;
                 if (i == 1) 
@@ -798,15 +886,17 @@ public class CustPriceMaint extends javax.swing.JPanel {
                 if (proceed) {
                     st.executeUpdate("insert into cpr_mstr "
                         + "(cpr_cust, cpr_item, cpr_type, cpr_desc, cpr_uom, cpr_curr, "
-                        + "cpr_price "
+                        + "cpr_price, cpr_volqty, cpr_expire "
                         + " ) "
                         + " values ( " + "'" + ddcustcode.getSelectedItem() + "'" + ","
-                        + "'" + ddpart.getSelectedItem().toString() + "'" + ","
-                        + "'LIST'" + ","
-                        + "'" + ddpart.getSelectedItem().toString() + "'" + ","
+                        + "'" + dditem.getSelectedItem().toString() + "'" + ","
+                        + "'" + ddtype.getSelectedItem().toString() + "'" + ","
+                        + "'" + dditem.getSelectedItem().toString() + "'" + ","
                         + "'" + dduom.getSelectedItem().toString() + "'" + ","
                         + "'" + ddcurr.getSelectedItem().toString() + "'" + ","        
-                        + "'" + tbprice.getText().replace(defaultDecimalSeparator, '.') + "'" 
+                        + "'" + tbprice.getText().replace(defaultDecimalSeparator, '.') + "'" + ","   
+                        + "'" + qty + "'"   + "," 
+                        + "'" + expiredate + "'"                                
                         + ")"
                         + ";");
 
@@ -839,22 +929,26 @@ public class CustPriceMaint extends javax.swing.JPanel {
       //  if (ddpart.getItemCount() > 0) {
       //  ddpart.setSelectedIndex(0);
       //  }
+      
+      if (! isLoad) {
         btAdd.setEnabled(true);
         btUpdate.setEnabled(false);
         btDelete.setEnabled(false);
          if (ddcustcode.getItemCount() != 0) {
               setPriceList();
               setData();
+              lbcust.setText(cusData.getCustName(ddcustcode.getSelectedItem().toString()));
+         /*
          String custcode = OVData.getPriceGroupCodeFromCust(ddcustcode.getSelectedItem().toString());
-         lbcust.setText(cusData.getCustName(ddcustcode.getSelectedItem().toString()));
          if (! custcode.isEmpty()) {
              lblpricecode.setText("Cust belongs to Price Code " + custcode);
              lblpricecode.setVisible(true);
          } else {
              lblpricecode.setVisible(false);
          }
+         */
          }
-              
+      }      
        // ArrayList mylist = OVData.getPartListFromCustCode(ddcustcode.getSelectedItem().toString());
       //      for (int i = 0; i < mylist.size(); i++) {
        //     ddpart.addItem(mylist.get(i));
@@ -870,7 +964,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
            proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         }
         if (proceed) {
-            String[] z = pricelist.getSelectedValue().toString().split(":");
+            String[] z = pricelist.getSelectedValue().toString().split(":",-1);
         try {
 
             Connection con = null;
@@ -881,12 +975,23 @@ public class CustPriceMaint extends javax.swing.JPanel {
             }
             Statement st = con.createStatement();
             try {
-              
-                   int i = st.executeUpdate("delete from cpr_mstr where cpr_cust = " + "'" + ddcustcode.getSelectedItem().toString() + "'" + 
+                   int i = 0;
+                   if (ddtype.getSelectedItem().toString().equals("LIST")) {
+                       i = st.executeUpdate("delete from cpr_mstr where cpr_cust = " + "'" + ddcustcode.getSelectedItem().toString() + "'" + 
                                             " and cpr_item = " + "'" + z[0].toString() + "'" +
                                             " and cpr_uom = " + "'" + z[1].toString() + "'" +
                                             " and cpr_curr = " + "'" + z[2].toString() + "'" +
-                                            " and cpr_type = 'LIST' " + ";");
+                                            " and cpr_type = " + "'" + ddtype.getSelectedItem().toString() + "'" + ";");
+                   } else {
+                        i = st.executeUpdate("delete from cpr_mstr where cpr_cust = " + "'" + ddcustcode.getSelectedItem().toString() + "'" + 
+                                            " and cpr_item = " + "'" + z[0].toString() + "'" +
+                                            " and cpr_uom = " + "'" + z[1].toString() + "'" +
+                                            " and cpr_curr = " + "'" + z[2].toString() + "'" +
+                                            " and cpr_volqty = " + "'" + z[3].toString() + "'" +         
+                                            " and cpr_type = " + "'" + ddtype.getSelectedItem().toString() + "'" + ";");
+                   }
+                   
+                  
                     if (i > 0) {
                     bsmf.MainFrame.show(getMessageTag(1009));
                     initvars(null);
@@ -1114,16 +1219,40 @@ public class CustPriceMaint extends javax.swing.JPanel {
             try {
                 boolean proceed = true;
                 int i = 0;
-             
+                String qty = "";
+                String expiredate = "0000-00-00";
+                if (dcexpire.getDate() != null) {
+                  expiredate = BlueSeerUtils.setDateFormat(dcexpire.getDate());
+                }
+                if (ddtype.getSelectedItem().toString().equals("VOLUME")) {
+                    qty = tbqty.getText().replace(defaultDecimalSeparator, '.');
+                }  else {
+                    qty = "0";
+                }
+                
                 if (proceed) {
+                    if (ddtype.getSelectedItem().toString().equals("LIST")) {
                     st.executeUpdate("update cpr_mstr "
                         + " set cpr_price = " + "'" + tbprice.getText().replace(defaultDecimalSeparator, '.') + "'"
+                        + ", cpr_expire = " + "'" + expiredate + "'"
                         + " where cpr_cust = " + "'" + ddcustcode.getSelectedItem() + "'" 
-                        + " and cpr_type = 'LIST' "        
+                        + " and cpr_type = " + "'" + ddtype.getSelectedItem().toString() + "'"        
                         + " and cpr_uom = " + "'" + dduom.getSelectedItem().toString() + "'"
                         + " and cpr_curr = " + "'" + ddcurr.getSelectedItem().toString() + "'"        
-                        + " and cpr_item = " + "'" + ddpart.getSelectedItem().toString() + "'"  
+                        + " and cpr_item = " + "'" + dditem.getSelectedItem().toString() + "'" 
                         + ";");
+                    } else {
+                       st.executeUpdate("update cpr_mstr "
+                        + " set cpr_price = " + "'" + tbprice.getText().replace(defaultDecimalSeparator, '.') + "'"
+                        + ", cpr_expire = " + "'" + expiredate + "'"        
+                        + " where cpr_cust = " + "'" + ddcustcode.getSelectedItem() + "'" 
+                        + " and cpr_type = " + "'" + ddtype.getSelectedItem().toString() + "'"        
+                        + " and cpr_uom = " + "'" + dduom.getSelectedItem().toString() + "'"
+                        + " and cpr_curr = " + "'" + ddcurr.getSelectedItem().toString() + "'"        
+                        + " and cpr_item = " + "'" + dditem.getSelectedItem().toString() + "'"  
+                        + " and cpr_volqty = " + "'" + qty + "'"         
+                        + ";"); 
+                    }
 
                     bsmf.MainFrame.show(getMessageTag(1008));
                     initvars(null);
@@ -1158,23 +1287,41 @@ public class CustPriceMaint extends javax.swing.JPanel {
             ResultSet res = null;
             try {
                 String[] str = pricelist.getSelectedValue().toString().split(":", -1);
-               res = st.executeQuery("select cpr_price, cpr_item, cpr_uom, cpr_curr from cpr_mstr where cpr_cust = " + "'" + 
+                if (str.length > 3) {
+               res = st.executeQuery("select cpr_price, cpr_item, cpr_uom, cpr_curr, cpr_volqty, cpr_type, cpr_expire from cpr_mstr where cpr_cust = " + "'" + 
+                      ddcustcode.getSelectedItem().toString() + "'" +
+                      " and cpr_type = " + "'VOLUME'" +
+                      " and cpr_item = " + "'" + str[0] + "'" +
+                      " and cpr_uom = " + "'" + str[1] + "'" +
+                      " and cpr_curr = " + "'" + str[2] + "'" +   
+                      " and cpr_volqty = " + "'" + str[3] + "'" +        
+                      ";");
+                } else {
+                 res = st.executeQuery("select cpr_price, cpr_item, cpr_uom, cpr_curr, cpr_volqty, cpr_type, cpr_expire from cpr_mstr where cpr_cust = " + "'" + 
                       ddcustcode.getSelectedItem().toString() + "'" +
                       " and cpr_type = " + "'LIST'" +
                       " and cpr_item = " + "'" + str[0] + "'" +
                       " and cpr_uom = " + "'" + str[1] + "'" +
                       " and cpr_curr = " + "'" + str[2] + "'" +        
-                      ";");
+                      ";");  
+                }
                while (res.next()) {
                       dduom.setSelectedItem(res.getString("cpr_uom"));
                       ddcurr.setSelectedItem(res.getString("cpr_curr"));
-                      ddpart.setSelectedItem(res.getString("cpr_item"));
+                      dditem.setSelectedItem(res.getString("cpr_item"));
+                      ddtype.setSelectedItem(res.getString("cpr_type"));
+                      if (res.getString("cpr_expire") == null || res.getString("cpr_expire").isBlank() || res.getString("cpr_expire").equals("0000-00-00")) {
+                        dcexpire.setDate(null);  
+                      } else {
+                        dcexpire.setDate(bsmf.MainFrame.dfdate.parse(res.getString("cpr_expire")));  
+                      }
                       tbprice.setText(bsformat("s",res.getString("cpr_price").replace('.',defaultDecimalSeparator),"4"));
-                      
+                      tbqty.setText(bsformat("s",res.getString("cpr_volqty").replace('.',defaultDecimalSeparator),"4"));
                }
                btAdd.setEnabled(false);
                btUpdate.setEnabled(true);
                btDelete.setEnabled(true);
+               
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
@@ -1191,10 +1338,6 @@ public class CustPriceMaint extends javax.swing.JPanel {
             MainFrame.bslog(e);
         }
     }//GEN-LAST:event_pricelistMouseClicked
-
-    private void ddpartItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_ddpartItemStateChanged
-        setData();
-    }//GEN-LAST:event_ddpartItemStateChanged
 
     private void dduomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dduomActionPerformed
         setData();
@@ -1223,23 +1366,47 @@ public class CustPriceMaint extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_tbpriceFocusGained
 
+    private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
+        initvars(null);
+    }//GEN-LAST:event_btclearActionPerformed
+
+    private void dditemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dditemActionPerformed
+        setData();
+       
+    }//GEN-LAST:event_dditemActionPerformed
+
+    private void ddtypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddtypeActionPerformed
+        if (ddtype.getSelectedItem().toString().equals("VOLUME")) {
+            tbqty.setEnabled(true);
+           // btAdd.setEnabled(true);
+        } else {
+            tbqty.setEnabled(false);
+           // btAdd.setEnabled(false);
+        }
+        setData();
+    }//GEN-LAST:event_ddtypeActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btAdd;
     private javax.swing.JButton btDelete;
     private javax.swing.JButton btUpdate;
     private javax.swing.JButton btadddisc;
+    private javax.swing.JButton btclear;
     private javax.swing.JButton btdeletedisc;
     private javax.swing.JButton btupdatedisc;
+    private com.toedter.calendar.JDateChooser dcexpire;
     private javax.swing.JComboBox<String> ddcurr;
     private javax.swing.JComboBox ddcustcode;
     private javax.swing.JComboBox ddcustcode_disc;
-    private javax.swing.JComboBox<String> ddpart;
+    private javax.swing.JComboBox<String> dditem;
+    private javax.swing.JComboBox<String> ddtype;
     private javax.swing.JComboBox<String> dduom;
     private javax.swing.JList disclist;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1257,10 +1424,12 @@ public class CustPriceMaint extends javax.swing.JPanel {
     private javax.swing.JLabel lbitem;
     private javax.swing.JLabel lbldisccode;
     private javax.swing.JLabel lblpricecode;
+    private javax.swing.JLabel lblqty;
     private javax.swing.JLabel lbltype;
     private javax.swing.JList pricelist;
     private javax.swing.JTextField tbdisc;
     private javax.swing.JTextField tbdisckey;
     private javax.swing.JTextField tbprice;
+    private javax.swing.JTextField tbqty;
     // End of variables declaration//GEN-END:variables
 }

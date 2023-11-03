@@ -1702,7 +1702,7 @@ public class invData {
 
     }
 
-    public static double getItemPriceFromCust(String cust, String item, String uom, String curr) {
+    public static double getItemPriceFromCust(String cust, String item, String uom, String curr, String pricetype, String qty) {
     double price = 0;
     String pricecode = "";
 
@@ -1727,11 +1727,22 @@ public class invData {
                  cust = pricecode;
              }
 
+            if (pricetype.equals("VOLUME")) {
             res = st.executeQuery("select cpr_price from cpr_mstr where cpr_cust = " + "'" + cust + "'" + 
                                   " AND cpr_item = " + "'" + item + "'" +
                                   " AND cpr_uom = " + "'" + uom + "'" +
                                   " AND cpr_curr = " + "'" + curr + "'" +
-                                  " AND cpr_type = 'LIST' "+ ";");
+                                  " AND cpr_type = " + "'" + pricetype + "'" +
+                                  " AND cpr_volqty = " + "'" + qty + "'"        
+                                  + ";");
+            } else {
+              res = st.executeQuery("select cpr_price from cpr_mstr where cpr_cust = " + "'" + cust + "'" + 
+                                  " AND cpr_item = " + "'" + item + "'" +
+                                  " AND cpr_uom = " + "'" + uom + "'" +
+                                  " AND cpr_curr = " + "'" + curr + "'" +
+                                  " AND cpr_type = " + "'" + pricetype + "'"  
+                                  + ";");  
+            }
            while (res.next()) {
                price = res.getDouble("cpr_price");
 
@@ -1990,7 +2001,7 @@ public class invData {
 
     }
 
-    public static String[] getItemPrice(String type, String entity, String item, String uom, String curr) {
+    public static String[] getItemPrice(String type, String entity, String item, String uom, String curr, String qty) {
 
            // type is either 'c' for customer price or 'v' for vendor price      
 
@@ -1998,7 +2009,8 @@ public class invData {
            String Type = "none";
            String price = "0";
            String pricecode = "";
-
+           java.util.Date now = new java.util.Date();
+           
             try{
                 Connection con = null;
                 if (ds != null) {
@@ -2009,7 +2021,7 @@ public class invData {
                 Statement st = con.createStatement();
                 ResultSet res = null;
                 try{
-                    
+                    int v = 0;
                     // customer based pricing
                     if (type.equals("c")) {
                         res = st.executeQuery("select cm_price_code from cm_mstr where cm_code = " + "'" + entity + "'" + ";");
@@ -2021,16 +2033,34 @@ public class invData {
                              entity = pricecode;
                          }
 
+                        // check for volume pricing first
                         res = st.executeQuery("select cpr_price from cpr_mstr where cpr_cust = " + "'" + entity + "'" + 
                                               " AND cpr_item = " + "'" + item + "'" +
                                               " AND cpr_uom = " + "'" + uom + "'" +
                                               " AND cpr_curr = " + "'" + curr + "'" +
-                                              " AND cpr_type = 'LIST' "+ ";");
-                       while (res.next()) {
+                                              " AND cpr_volqty <= " + "'" + qty + "'" +  
+                                              " AND (cpr_expire >= " + "'" + BlueSeerUtils.setDateFormat(now) + "'" + " OR cpr_expire = '0000-00-00' ) " +        
+                                              " AND cpr_type = 'VOLUME' "+ " order by cpr_volqty desc;");
+                        while (res.next()) {
+                           v++;
                            price = res.getString("cpr_price").replace('.', defaultDecimalSeparator);
                            Type = "cust";
-
+                           break; // break after first record...should be the ideal volume pricing
                         }
+                       
+                       if (v == 0) { // ok now check for list price
+                        res = st.executeQuery("select cpr_price from cpr_mstr where cpr_cust = " + "'" + entity + "'" + 
+                                              " AND cpr_item = " + "'" + item + "'" +
+                                              " AND cpr_uom = " + "'" + uom + "'" +
+                                              " AND cpr_curr = " + "'" + curr + "'" +
+                                              " AND (cpr_expire >= " + "'" + BlueSeerUtils.setDateFormat(now) + "'" + "  OR cpr_expire = '0000-00-00' ) " +         
+                                              " AND cpr_type = 'LIST' "+ ";");
+                        while (res.next()) {
+                           price = res.getString("cpr_price").replace('.', defaultDecimalSeparator);
+                           Type = "cust";
+                        }   
+                       }
+                       
                     }
 
                     // vendor based pricing

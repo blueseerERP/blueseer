@@ -112,7 +112,7 @@ public class GenericCSVi {
                   e.get(i).setDetItem(i,part);
                   uom = OVData.getUOMByItem(part);
                   e.get(i).setDetUOM(i,uom); 
-                listprice = invData.getItemPriceFromCust(billto, part, uom, cusData.getCustCurrency(billto));
+                listprice = invData.getItemPriceFromCust(billto, part, uom, cusData.getCustCurrency(billto),"LIST","0");
                   e.get(i).setDetListPrice(i,df.format(listprice));
                 discount = invData.getItemDiscFromCust(billto);
                   e.get(i).setDetDisc(i,df.format(discount));
@@ -133,7 +133,7 @@ public class GenericCSVi {
                   e.get(i).setDetItem(i,part);
                   uom = OVData.getUOMByItem(part);
                   e.get(i).setDetUOM(i,uom); 
-                listprice = invData.getItemPriceFromCust(billto, part, uom, cusData.getCustCurrency(billto));
+                listprice = invData.getItemPriceFromCust(billto, part, uom, cusData.getCustCurrency(billto),"LIST","0");
                   e.get(i).setDetListPrice(i,df.format(listprice));
                 discount = invData.getItemDiscFromCust(billto);
                   e.get(i).setDetDisc(i,df.format(discount));
