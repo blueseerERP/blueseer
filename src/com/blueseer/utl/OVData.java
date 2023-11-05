@@ -2231,14 +2231,16 @@ public class OVData {
                     if (rec.isBlank() || rec.trim().startsWith("#")) {
                         continue;
                     }
-                    if (rec.trim().startsWith("select")) {
+                    if (rec.toLowerCase().trim().startsWith("select") || 
+                            rec.toLowerCase().trim().startsWith("show") || 
+                            rec.toLowerCase().trim().startsWith("describe")) {
                     res = st.executeQuery(rec);
                     ResultSetMetaData meta = res.getMetaData();
                     
                     int colCount = meta.getColumnCount();
                         while (res.next()) {
                             StringBuilder sb = new StringBuilder();
-                            sb.append("sqlres:  ");
+                           // sb.append("sqlres:,");
                             for (int col=1; col <= colCount; col++) {
                                 Object value = res.getObject(col);
                                 if (value != null) 

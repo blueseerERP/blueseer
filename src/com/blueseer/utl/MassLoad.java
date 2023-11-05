@@ -205,6 +205,7 @@ public class MassLoad extends javax.swing.JPanel {
         tacomments.setText("");
         tbdelimiter.setText(":");
         cbignoreheader.setSelected(false);
+        paneloutput.setVisible(false);
        isLoad = false;
        
     }
@@ -266,6 +267,7 @@ public class MassLoad extends javax.swing.JPanel {
     
     public void initvars(String[] arg) {
       setComponentDefaultValues();
+      
       if (! ddtable.getItemAt(0).equals("")) {
           ddtable.insertItemAt("", 0);
       }  
@@ -2815,6 +2817,7 @@ public class MassLoad extends javax.swing.JPanel {
     }
     
     public String[] runsql() {
+        taoutput.setText("");
         String[] m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1065)};
         ArrayList<String> list = new ArrayList<String>();
         String[] lines = tacomments.getText().split("\n",-1);
@@ -2829,10 +2832,10 @@ public class MassLoad extends javax.swing.JPanel {
             tacomments.append("\n");
         }
         ArrayList<String> x = OVData.runSQLCode(list);
-        tacomments.append("\n");   
+        paneloutput.setVisible(true);
         if(! x.isEmpty()) { 
             for (String r : x) {
-                tacomments.append(r);
+                taoutput.append(r);
             }
            }
            
@@ -3061,8 +3064,6 @@ public class MassLoad extends javax.swing.JPanel {
         btupload = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         ddtable = new javax.swing.JComboBox();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tacomments = new javax.swing.JTextArea();
         btdescribe = new javax.swing.JButton();
         cboverride = new javax.swing.JCheckBox();
         bttestdata = new javax.swing.JButton();
@@ -3070,6 +3071,14 @@ public class MassLoad extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         cbignoreheader = new javax.swing.JCheckBox();
         btrunsql = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        panelcomments = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tacomments = new javax.swing.JTextArea();
+        paneloutput = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        taoutput = new javax.swing.JTextArea();
+        btclear = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -3092,10 +3101,6 @@ public class MassLoad extends javax.swing.JPanel {
                 ddtableActionPerformed(evt);
             }
         });
-
-        tacomments.setColumns(20);
-        tacomments.setRows(5);
-        jScrollPane1.setViewportView(tacomments);
 
         btdescribe.setText("Define");
         btdescribe.setName("btdefine"); // NOI18N
@@ -3128,6 +3133,63 @@ public class MassLoad extends javax.swing.JPanel {
             }
         });
 
+        jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
+
+        tacomments.setColumns(20);
+        tacomments.setRows(5);
+        jScrollPane1.setViewportView(tacomments);
+
+        javax.swing.GroupLayout panelcommentsLayout = new javax.swing.GroupLayout(panelcomments);
+        panelcomments.setLayout(panelcommentsLayout);
+        panelcommentsLayout.setHorizontalGroup(
+            panelcommentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelcommentsLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 446, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        panelcommentsLayout.setVerticalGroup(
+            panelcommentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelcommentsLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 389, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jPanel2.add(panelcomments);
+
+        paneloutput.setPreferredSize(new java.awt.Dimension(466, 411));
+
+        taoutput.setColumns(20);
+        taoutput.setRows(5);
+        jScrollPane2.setViewportView(taoutput);
+
+        javax.swing.GroupLayout paneloutputLayout = new javax.swing.GroupLayout(paneloutput);
+        paneloutput.setLayout(paneloutputLayout);
+        paneloutputLayout.setHorizontalGroup(
+            paneloutputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(paneloutputLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 446, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        paneloutputLayout.setVerticalGroup(
+            paneloutputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(paneloutputLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 389, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jPanel2.add(paneloutput);
+
+        btclear.setText("Clear");
+        btclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btclearActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -3144,15 +3206,11 @@ public class MassLoad extends javax.swing.JPanel {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(cboverride)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(tbdelimiter, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(77, 77, 77)
-                                .addComponent(btdescribe)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btupload))
-                            .addComponent(jScrollPane1)
+                                .addGap(77, 77, 77))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(cbignoreheader)
@@ -3160,7 +3218,14 @@ public class MassLoad extends javax.swing.JPanel {
                                         .addComponent(bttestdata)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(btrunsql)))
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(btdescribe)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btupload))
+                            .addComponent(btclear)))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -3171,7 +3236,7 @@ public class MassLoad extends javax.swing.JPanel {
                     .addComponent(ddtable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btupload)
@@ -3179,8 +3244,10 @@ public class MassLoad extends javax.swing.JPanel {
                     .addComponent(cboverride)
                     .addComponent(tbdelimiter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cbignoreheader)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbignoreheader)
+                    .addComponent(btclear))
                 .addGap(9, 9, 9)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(bttestdata)
@@ -3226,7 +3293,16 @@ public class MassLoad extends javax.swing.JPanel {
         executeTask("", null, "runsql");
     }//GEN-LAST:event_btrunsqlActionPerformed
 
+    private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
+        if (ddtable.getSelectedItem() != null && ! ddtable.getSelectedItem().toString().equals("SQL Code")) {
+         tacomments.setText("");
+        }
+        taoutput.setText("");
+        paneloutput.setVisible(false);
+    }//GEN-LAST:event_btclearActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btclear;
     private javax.swing.JButton btdescribe;
     private javax.swing.JButton btrunsql;
     private javax.swing.JButton bttestdata;
@@ -3238,8 +3314,13 @@ public class MassLoad extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JPanel panelcomments;
+    private javax.swing.JPanel paneloutput;
     private javax.swing.JTextArea tacomments;
+    private javax.swing.JTextArea taoutput;
     private javax.swing.JTextField tbdelimiter;
     // End of variables declaration//GEN-END:variables
 }
