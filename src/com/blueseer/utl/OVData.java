@@ -9601,16 +9601,12 @@ return outvalue;
          try{
             
         Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
         if (ds != null) {
           con = ds.getConnection();
         } else {
           con = DriverManager.getConnection(url + db, user, pass);  
         }
+        
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
