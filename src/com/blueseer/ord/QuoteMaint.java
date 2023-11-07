@@ -69,9 +69,18 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import com.blueseer.ctr.cusData;
+import static com.blueseer.ord.ordData.addQuoteTransaction;
+import static com.blueseer.ord.ordData.deleteQuoteMstr;
+import static com.blueseer.ord.ordData.getQuoteDet;
+import static com.blueseer.ord.ordData.getQuoteLines;
+import static com.blueseer.ord.ordData.getQuoteMstr;
+import com.blueseer.ord.ordData.quo_det;
+import com.blueseer.ord.ordData.quo_mstr;
+import static com.blueseer.ord.ordData.updateQuoteTransaction;
 import java.awt.Color;
 import java.awt.Component;
 import java.sql.Connection;
+import java.text.ParseException;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -93,32 +102,25 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                 
                  // global variable declarations
                 boolean isLoad = false;
-                String terms = "";
-                String apacct = "";
-                String apcc = "";
-                String apbank = "";
-                String apcurr = "";
-                String basecurr = "";
                 double actamt = 0.00;
-                double control = 0.00;
-                double rcvamt = 0.00;
-                int voucherline = 0;
+                int quoteline = 0;
+                public static quo_mstr x = null;
+                public static ArrayList<quo_det> quodetlist = null;
+                
                
     
     // global datatablemodel declarations       
                 
                 
-                 javax.swing.table.DefaultTableModel expensemodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                 javax.swing.table.DefaultTableModel detailmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                getGlobalColumnTag("po"), 
+                getGlobalColumnTag("id"), 
                 getGlobalColumnTag("line"), 
                 getGlobalColumnTag("item"), 
                 getGlobalColumnTag("qty"),
-                getGlobalColumnTag("price"),
-                getGlobalColumnTag("receiver"), 
-                getGlobalColumnTag("line"),
-                getGlobalColumnTag("account"),
-                getGlobalColumnTag("costcenter")
+                getGlobalColumnTag("listprice"),
+                getGlobalColumnTag("disc"),
+                getGlobalColumnTag("netprice")
             });
                 
     /**
@@ -181,9 +183,8 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
             BlueSeerUtils.endTask(message);
            if (this.type.equals("delete")) {
              initvars(null);  
-           } else if (this.type.equals("get") && message[0].equals("1")) {
-             tbkey.requestFocus();
-           } else if (this.type.equals("get") && message[0].equals("0")) {
+           } else if (this.type.equals("get")) {
+             updateForm();
              tbkey.requestFocus();
            } else {
              initvars(null);  
@@ -314,16 +315,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         isLoad = true;
         tbkey.setText("");
       
-         terms = "";
-         apacct = "";
-         apcc = "";
-         apbank = "";
-         apcurr = "";
-         actamt = 0.00;
-         control = 0.00;
-         rcvamt = 0.00;
         
-        basecurr = OVData.getDefaultCurrency();
          
         lbvendor.setText("");
         lbmessage.setText("");
@@ -338,17 +330,39 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbactualamt.setBackground(Color.white);
         tbactualamt.setEditable(false);
        
-        expensemodel.setRowCount(0);
-        expensedet.setModel(expensemodel);
+        detailmodel.setRowCount(0);
+        detailtable.setModel(detailmodel);
         
        
         
         java.util.Date now = new java.util.Date();
-       // dcquoteexpire.setDate(now);
-       // dcpricingexpire.setDate(now);
+        dcquoteexpire.setDate(null);
+        dcpricingexpire.setDate(null);
         
        
-        
+       dddisccode.removeAllItems();
+        ArrayList<String> dc = cusData.getdisclist();
+        for (int i = 0; i < dc.size(); i++) {
+            dddisccode.addItem(dc.get(i)); 
+        }
+        dddisccode.insertItemAt("", 0);
+        dddisccode.setSelectedIndex(0);
+       
+        ddtaxcode.removeAllItems();
+        ArrayList<String> tc = OVData.gettaxcodelist();
+        for (int i = 0; i < tc.size(); i++) {
+            ddtaxcode.addItem(tc.get(i)); 
+        }
+        ddtaxcode.insertItemAt("", 0);
+        ddtaxcode.setSelectedIndex(0);
+       
+        ddpricegroup.removeAllItems();
+        ArrayList<String> pg = OVData.getPriceGroupList();
+        for (int i = 0; i < pg.size(); i++) {
+            ddpricegroup.addItem(pg.get(i)); 
+        }
+        ddpricegroup.insertItemAt("", 0);
+        ddpricegroup.setSelectedIndex(0);
         
         ddcust.removeAllItems();
         ArrayList c = cusData.getcustmstrlist();
@@ -389,7 +403,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                    btadd.setEnabled(false);
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
-                   tbactualamt.setText(currformatDouble(actamt));
+                   tbactualamt.setText(String.valueOf(actamt));
                    lbmessage.setText(getMessageTag(1170));
         } else {
                    tbkey.setForeground(Color.red); 
@@ -410,7 +424,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                 
                 if (ddcust.getSelectedItem() == null || ddcust.getSelectedItem().toString().isEmpty()) {
                     b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024, "Vendor"));
+                    bsmf.MainFrame.show(getMessageTag(1024, "Customer"));
                     return b;
                 }
                 
@@ -419,36 +433,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                     bsmf.MainFrame.show(getMessageTag(1024, "Site"));
                     return b;
                 }
-                
-                if ( OVData.isGLPeriodClosed(dfdate.format(dcquoteexpire.getDate()))) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1035));
-                    return b;
-                }
-                
-                 if (apbank.isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024, "bank"));
-                    return b;
-                }
-                if (apcc.isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024, "CC"));
-                    return b;
-                }
-                if (apacct.isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024, "APAccount"));
-                    return b;
-                }
-                 if ( actamt == 0.00 ) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1036));
-                    return b;
-                }
-                
-                
-                
+               
                
         return b;
     }
@@ -472,145 +457,160 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     
     public String[] addRecord(String[] x) {
-     String[] m = VouchAndPayTransaction(OVData.getNextNbr("batch"), "AP-Expense", createDetRecord(), createRecord(), false);
+     String[] m = addQuoteTransaction(createDetRecord(), createRecord());
      return m;
      }
      
     public String[] updateRecord(String[] x) {
-     String[] m = new String[2];
-     m = new String[]{BlueSeerUtils.ErrorBit, "This update functionality is not implemented at this time"};
+     // first delete any sod_det line records that have been
+        // disposed from the current orddet table
+        ArrayList<String> lines = new ArrayList<String>();
+        ArrayList<String> badlines = new ArrayList<String>();
+        boolean goodLine = false;
+        lines = getQuoteLines(tbkey.getText());
+       for (String line : lines) {
+          goodLine = false;
+          for (int j = 0; j < detailtable.getRowCount(); j++) {
+             if (detailtable.getValueAt(j, 1).toString().equals(line)) {
+                 goodLine = true;
+             }
+          }
+          if (! goodLine) {
+              badlines.add(line);
+          }
+        }   
+     String[] m = updateQuoteTransaction(tbkey.getText(), badlines, createDetRecord(), createRecord());
      return m;
      }
      
     public String[] deleteRecord(String[] x) {
      String[] m = new String[2];
-        m = new String[]{BlueSeerUtils.ErrorBit, "This delete functionality is not implemented at this time"};
-     return m;
+        boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
+        if (proceed) {
+         m = deleteQuoteMstr(createRecord()); 
+         initvars(null);
+        } else {
+           m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
+        }
+         return m;
      }
       
-    public String[] getRecord(String[] x) {
-       String[] m = new String[2];
-       
-        try {
-
-            Connection con = null;
-            if (ds != null) {
-            con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                int i = 0;
-                actamt = 0.00;
-                res = st.executeQuery("select * from ap_mstr where ap_nbr = " + "'" + x[0] + "'" + ";");
-                while (res.next()) {
-                  i++;
-                     tbkey.setText(res.getString("ap_nbr"));
-                     dcquoteexpire.setDate(bsmf.MainFrame.dfdate.parse(res.getString("ap_effdate")));
-                     
-                     ddcust.setSelectedItem(res.getString("ap_vend"));
-                     ddsite.setSelectedItem(res.getString("ap_site"));
-                }
-                
-                res = st.executeQuery("select * from vod_mstr where vod_id = " + "'" + x[0] + "'" + ";");
-                while (res.next()) {
-                //  "PO", "Line", "Part", "Qty", "Price", "RecvID", "RecvLine", "Acct", "CC"
-                     expensemodel.addRow(new Object[] { res.getString("vod_id"),
-                                              res.getString("vod_rvdline"),
-                                              res.getString("vod_item"),
-                                              res.getString("vod_qty").replace('.',defaultDecimalSeparator),
-                                              res.getString("vod_voprice").replace('.',defaultDecimalSeparator),
-                                              res.getString("vod_rvdid"),
-                                              res.getString("vod_rvdline"),
-                                              res.getString("vod_expense_acct"),
-                                              res.getString("vod_expense_cc")
-                                              });
-                 
-                  
-                  actamt += res.getDouble("vod_voprice");
-               
-                }
-               
-                if (i > 0)
-                m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
+    public String[] getRecord(String[] key) {
+       x = getQuoteMstr(key); 
+       // now detail
+        detailmodel.setRowCount(0);
+        quodetlist = getQuoteDet(key[0]); 
+        for (quo_det d : quodetlist) {
+            detailmodel.addRow(new Object[]{d.quod_nbr(), 
+                d.quod_line(), 
+                d.quod_item(), 
+                d.quod_qty(), 
+                d.quod_listprice(), 
+                d.quod_disc(), 
+                d.quod_netprice()
+                 });
         }
-      return m;
+       // getTasks(ddtask.getSelectedItem().toString());
+        setAction(x.m());
+        return x.m();
     }
     
-    public ap_mstr createRecord() {
-        ap_mstr x = new ap_mstr(null, 
-                "", //ap_id
-                ddcust.getSelectedItem().toString(), // ap_vend, 
-                tbkey.getText(), // ap_nbr
-                currformatDouble(actamt).replace(defaultDecimalSeparator, '.'), // ap_amt
-                currformatDouble(actamt).replace(defaultDecimalSeparator, '.'), // ap_base_amt
-                setDateFormat(dcquoteexpire.getDate()), // ap_effdate
-                setDateFormat(dcquoteexpire.getDate()), // ap_entdate
-                setDateFormat(dcquoteexpire.getDate()), // ap_duedate        
-                "V", // ap_type
-                tbref.getText(), //ap_rmks
-                tbref.getText(), //ap_ref
-                terms, //ap_terms
-                apacct, //ap_acct
-                apcc, //ap_cc
-                "0", //ap_applied
-                "o", //ap_status
-                apbank, //ap_bank
-                apcurr, //ap_curr
-                basecurr, //ap_base_curr
-                tbkey.getText(), //ap_check // in this case voucher number is reference field
-                "0", //ap_batch
-                ddsite.getSelectedItem().toString(), //ap_site
-                "Expense"
+    public quo_mstr createRecord() {
+        java.util.Date now = new java.util.Date();
+        quo_mstr x = new quo_mstr(null, 
+                tbkey.getText(), 
+                ddcust.getSelectedItem().toString(),
+                "", // ship
+                ddsite.getSelectedItem().toString(),
+                setDateFormat(now),
+                setDateFormat(dcquoteexpire.getDate()),
+                setDateFormat(dcpricingexpire.getDate()),
+                ddstatus.getSelectedItem().toString(),
+                tarmks.getText(),
+                tbref.getText(),
+                ddquotetype.getSelectedItem().toString(),
+                ddtaxcode.getSelectedItem().toString(),
+                dddisccode.getSelectedItem().toString(),
+                ddpricegroup.getSelectedItem().toString(),
+                "", //curr
+                "", // approved
+                "", // approver
+                "" //varchar
                 ); 
         return x;  
     }
     
-    public ArrayList<vod_mstr> createDetRecord() {
-        ArrayList<vod_mstr> list = new ArrayList<vod_mstr>();
-         for (int j = 0; j < expensedet.getRowCount(); j++) {
-             vod_mstr x = new vod_mstr(null, 
-                tbkey.getText(),
-                expensedet.getValueAt(j, 5).toString(),
-                expensedet.getValueAt(j, 6).toString(),
-                expensedet.getValueAt(j, 2).toString(),
-                expensedet.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.'),
-                expensedet.getValueAt(j, 4).toString().replace(defaultDecimalSeparator, '.'),
-                dfdate.format(dcquoteexpire.getDate()),
-                ddcust.getSelectedItem().toString(),
-                tbref.getText(), 
-                expensedet.getValueAt(j, 7).toString(),
-                expensedet.getValueAt(j, 8).toString()
+    public ArrayList<quo_det> createDetRecord() {
+        ArrayList<quo_det> list = new ArrayList<quo_det>();
+         for (int j = 0; j < detailtable.getRowCount(); j++) {
+             quo_det x = new quo_det(null, 
+                detailtable.getValueAt(j, 0).toString(), // key
+                detailtable.getValueAt(j, 1).toString(), // line
+                detailtable.getValueAt(j, 2).toString(), // item
+                "", // isinventory
+                "", // item desc
+                "", // price type
+                detailtable.getValueAt(j, 4).toString().replace(defaultDecimalSeparator, '.'), // list price
+                detailtable.getValueAt(j, 5).toString().replace(defaultDecimalSeparator, '.'), // disc
+                detailtable.getValueAt(j, 6).toString().replace(defaultDecimalSeparator, '.'), // netprice
+                detailtable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.'), // qty
+                "" // uom
                 );
         list.add(x);
          }
         return list;   
     }
     
-    
+    public void lookUpFrameItemDesc() {
+        
+        luinput.removeActionListener(lual);
+        lual = new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        if (lurb1.isSelected()) {  
+         luModel = DTData.getItemDescBrowse(luinput.getText(), "it_item");
+        } else {
+         luModel = DTData.getItemDescBrowse(luinput.getText(), "it_desc");   
+        }
+        luTable.setModel(luModel);
+        luTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (luModel.getRowCount() < 1) {
+            ludialog.setTitle(getMessageTag(1001));
+        } else {
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
+        }
+        }
+        };
+        luinput.addActionListener(lual);
+        
+        luTable.removeMouseListener(luml);
+        luml = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0) {
+                ludialog.dispose();
+                tbitemservice.setText(target.getValueAt(row,1).toString());
+                }
+            }
+        };
+        luTable.addMouseListener(luml);
+      
+        callDialog(getClassLabelTag("lblitem", this.getClass().getSimpleName()), getGlobalColumnTag("description")); 
+        
+        
+        
+    }
+
     public void lookUpFrame() {
         
         luinput.removeActionListener(lual);
         lual = new ActionListener() {
         public void actionPerformed(ActionEvent event) {
         if (lurb1.isSelected()) {  
-         luModel = DTData.getExpenseBrowseUtil(luinput.getText(),0, "ap_nbr");
+         luModel = DTData.getQuoteBrowseUtil(luinput.getText(),0, "quo_nbr"); 
         } else {
-         luModel = DTData.getExpenseBrowseUtil(luinput.getText(),0, "ap_vend");   
+         luModel = DTData.getQuoteBrowseUtil(luinput.getText(),0, "quo_cust");    
         }
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
@@ -637,11 +637,48 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         };
         luTable.addMouseListener(luml);
       
-        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), getClassLabelTag("vendor", this.getClass().getSimpleName())); 
+        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), getClassLabelTag("customer", this.getClass().getSimpleName())); 
         
         
     }
 
+    public void updateForm() throws ParseException {
+        tbkey.setText(x.quo_nbr());
+        ddcust.setSelectedItem(x.quo_cust());
+        ddsite.setSelectedItem(x.quo_site());
+        ddstatus.setSelectedItem(x.quo_status());
+        ddquotetype.setSelectedItem(x.quo_type());
+        ddpricegroup.setSelectedItem(x.quo_groupcode());
+        dddisccode.setSelectedItem(x.quo_disccode());
+        dcquoteexpire.setDate(BlueSeerUtils.parseDate(x.quo_expire()));
+        dcpricingexpire.setDate(BlueSeerUtils.parseDate(x.quo_priceexpire()));
+        ddtaxcode.setSelectedItem(x.quo_taxcode());
+        tarmks.setText(x.quo_rmks());
+        tbref.setText(x.quo_ref());
+        if (x.quo_type().equals("volume")) {
+        cbvolume.setSelected(true);
+        } else {
+         cbvolume.setSelected(false);   
+        }
+        setAction(x.m()); 
+        
+         // now detail
+        
+        detailmodel.setRowCount(0);
+        for (quo_det quod : quodetlist) {
+                    detailmodel.addRow(new Object[]{
+                      quod.quod_nbr(),   
+                      quod.quod_line(), 
+                      quod.quod_item(),
+                      quod.quod_qty(),
+                      quod.quod_listprice(),
+                      quod.quod_disc(),
+                      quod.quod_netprice()
+                  });
+                }
+        
+    }
+    
     
     // additional functions
     public void setvendorvariables(String vendor) {
@@ -662,11 +699,6 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                 res = st.executeQuery("select vd_name, vd_curr, vd_ap_acct, vd_ap_cc, vd_terms, vd_bank from vd_mstr where vd_addr = " + "'" + vendor + "'" + ";");
                 while (res.next()) {
                     i++;
-                   apacct = res.getString("vd_ap_acct");
-                   apcc = res.getString("vd_ap_cc");
-                   apcurr = res.getString("vd_curr");
-                   terms = res.getString("vd_terms");
-                   apbank = res.getString("vd_bank");
                    lbvendor.setText(res.getString("vd_name"));
                    
                 }
@@ -710,7 +742,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         btadditem = new javax.swing.JButton();
         btadd = new javax.swing.JButton();
         jScrollPane7 = new javax.swing.JScrollPane();
-        expensedet = new javax.swing.JTable();
+        detailtable = new javax.swing.JTable();
         ddcust = new javax.swing.JComboBox();
         btdeleteitem = new javax.swing.JButton();
         dcquoteexpire = new com.toedter.calendar.JDateChooser();
@@ -753,6 +785,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel13 = new javax.swing.JLabel();
         cbvolume = new javax.swing.JCheckBox();
         lblitemdesc = new javax.swing.JLabel();
+        btLookUpItemDesc = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -794,7 +827,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
-        expensedet.setModel(new javax.swing.table.DefaultTableModel(
+        detailtable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -805,7 +838,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane7.setViewportView(expensedet);
+        jScrollPane7.setViewportView(detailtable);
 
         ddcust.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -894,9 +927,9 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         tarmks.setRows(5);
         jScrollPane1.setViewportView(tarmks);
 
-        ddquotetype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Discrete", "Volume" }));
+        ddquotetype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "discrete", "volume" }));
 
-        ddstatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        ddstatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "pending", "closed", "expired", "void" }));
 
         jLabel2.setText("Status");
 
@@ -907,9 +940,19 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         btdelete.setText("Delete");
         btdelete.setName("btdelete"); // NOI18N
+        btdelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btdeleteActionPerformed(evt);
+            }
+        });
 
         btupdate.setText("Update");
         btupdate.setName("btupdate"); // NOI18N
+        btupdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btupdateActionPerformed(evt);
+            }
+        });
 
         jLabel9.setText("Price Group");
 
@@ -921,6 +964,13 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel13.setName("lbltotaldisc"); // NOI18N
 
         cbvolume.setText("Volume Based");
+
+        btLookUpItemDesc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
+        btLookUpItemDesc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btLookUpItemDescActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -945,6 +995,8 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 594, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(tbitemservice, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btLookUpItemDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(lblitemdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -1061,11 +1113,11 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(dcpricingexpire, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(ddquotetype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel1))))
+                                .addComponent(jLabel1)
+                                .addComponent(jLabel3))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -1086,10 +1138,15 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbvolume)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbitemservice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5)
-                    .addComponent(lblitemdesc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblitemdesc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(tbitemservice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel5))
+                            .addComponent(btLookUpItemDesc))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btadditem)
@@ -1117,7 +1174,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
-        newAction("voucher"); 
+        newAction("quote"); 
     }//GEN-LAST:event_btnewActionPerformed
 
     private void btadditemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadditemActionPerformed
@@ -1127,17 +1184,16 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
       //  Matcher m = p.matcher(tbprice.getText());
        // receiverdet  "Part", "PO", "line", "Qty",  listprice, disc, netprice, loc, serial, lot, recvID, recvLine
        // voucherdet   "PO", "Line", "Part", "Qty", "Price", "RecvID", "RecvLine", "Acct", "CC"
-            voucherline++;
+            quoteline++;
             actamt += bsParseDouble(tbqty.getText()) * bsParseDouble(tbprice.getText());
-            expensemodel.addRow(new Object[] { tbkey.getText(), voucherline,
-                                                  tbitemservice.getText(),
-                                                  tbqty.getText(),
-                                                  tbprice.getText(),
-                                                  "expense",
-                                                  voucherline,
-                                                  "",
-                                                  ""
-                                                  });
+            detailmodel.addRow(new Object[] { tbkey.getText(), 
+                                                quoteline,
+                                                tbitemservice.getText(),
+                                                tbqty.getText(),
+                                                tbprice.getText(),
+                                                "", // disc
+                                                tbprice.getText()
+                                                });
        
         tbitemservice.setText("");
         tbqty.setText("");
@@ -1164,12 +1220,12 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_ddcustActionPerformed
 
     private void btdeleteitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteitemActionPerformed
-        int[] rows = expensedet.getSelectedRows();
+        int[] rows = detailtable.getSelectedRows();
         for (int i : rows) {
             bsmf.MainFrame.show(getMessageTag(1031, String.valueOf(i)));
-             actamt -= bsParseDouble(expensedet.getModel().getValueAt(i,3).toString()) * bsParseDouble(expensedet.getModel().getValueAt(i,4).toString());
-            ((javax.swing.table.DefaultTableModel) expensedet.getModel()).removeRow(i);
-           voucherline--;
+             actamt -= bsParseDouble(detailtable.getModel().getValueAt(i,3).toString()) * bsParseDouble(detailtable.getModel().getValueAt(i,4).toString());
+            ((javax.swing.table.DefaultTableModel) detailtable.getModel()).removeRow(i);
+           quoteline--;
         }
         tbactualamt.setText(currformatDouble(actamt));
     }//GEN-LAST:event_btdeleteitemActionPerformed
@@ -1230,7 +1286,28 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         lookUpFrame();
     }//GEN-LAST:event_btlookupActionPerformed
 
+    private void btLookUpItemDescActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLookUpItemDescActionPerformed
+        lookUpFrameItemDesc();
+    }//GEN-LAST:event_btLookUpItemDescActionPerformed
+
+    private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
+         if (! validateInput(dbaction.update)) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask(dbaction.update, new String[]{tbkey.getText()});
+    }//GEN-LAST:event_btupdateActionPerformed
+
+    private void btdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteActionPerformed
+          if (! validateInput(dbaction.delete)) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask(dbaction.delete, new String[]{tbkey.getText()});  
+    }//GEN-LAST:event_btdeleteActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btLookUpItemDesc;
     private javax.swing.JButton btadd;
     private javax.swing.JButton btadditem;
     private javax.swing.JButton btclear;
@@ -1250,7 +1327,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JComboBox ddsite;
     private javax.swing.JComboBox<String> ddstatus;
     private javax.swing.JComboBox<String> ddtaxcode;
-    private javax.swing.JTable expensedet;
+    private javax.swing.JTable detailtable;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

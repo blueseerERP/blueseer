@@ -2722,14 +2722,18 @@ CREATE TABLE IF NOT EXISTS `quo_mstr` (
   `quo_site` varchar(10) NOT NULL  DEFAULT '',
   `quo_date` date DEFAULT NULL,
   `quo_expire` date DEFAULT NULL,
+  `quo_priceexpire` date DEFAULT NULL,
   `quo_status` varchar(20) NOT NULL  DEFAULT '',
   `quo_rmks` varchar(200) NOT NULL  DEFAULT '',
   `quo_ref` varchar(50) NOT NULL  DEFAULT '',
   `quo_type` varchar(30) NOT NULL  DEFAULT '',
   `quo_taxcode` varchar(30) NOT NULL  DEFAULT '',
+  `quo_disccode` varchar(30) NOT NULL  DEFAULT '',
+  `quo_groupcode` varchar(30) NOT NULL  DEFAULT '',
   `quo_curr` varchar(30) NOT NULL  DEFAULT '',
   `quo_approved` tinyint(1) NOT NULL  DEFAULT '0',
-  `quo_approver` varchar(50) NOT NULL  DEFAULT ''
+  `quo_approver` varchar(50) NOT NULL  DEFAULT '',
+  `quo_varchar` varchar(80) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `quo_det` (
   `quod_nbr` varchar(8) NOT NULL PRIMARY KEY,

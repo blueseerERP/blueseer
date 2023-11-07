@@ -1180,7 +1180,7 @@ public class BlueSeerUtils {
     public static Date parseDate(String indate) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date r = null;
-        if (indate != null && ! indate.isEmpty() && ! indate.equals("0000-00-00")) {
+        if (indate != null && ! indate.isEmpty() && ! indate.equals("0000-00-00") && ! indate.equals("null")) {
             try {
                 r = sdf.parse(indate);
             } catch (ParseException ex) {

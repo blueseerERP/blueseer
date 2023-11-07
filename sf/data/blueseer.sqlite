@@ -3174,14 +3174,18 @@ CREATE TABLE "quo_mstr" (
   "quo_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
   "quo_date" date NOT NULL DEFAULT '0000-00-00',
   "quo_expire" date NOT NULL DEFAULT '0000-00-00',
+  "quo_priceexpire" date NOT NULL DEFAULT '0000-00-00',
   "quo_status" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
   "quo_rmks" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
   "quo_ref" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
   "quo_type" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "quo_taxcode" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "quo_disccode" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "quo_groupcode" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "quo_curr" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "quo_approved" tinyint(1) NOT NULL DEFAULT '0',
-  "quo_approver" varchar(50) NOT NULL COLLATE NOCASE DEFAULT ''
+  "quo_approver" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "quo_varchar" varchar(80) NOT NULL COLLATE NOCASE DEFAULT ''
 ); 
 CREATE TABLE "quo_det" (
   "quod_nbr" varchar(8) NOT NULL PRIMARY KEY,

@@ -1568,6 +1568,479 @@ public class ordData {
     }
     
     
+    public static String[] addQuoteTransaction(ArrayList<quo_det> qod, quo_mstr qo) {
+        String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            if (ds != null) {
+              bscon = ds.getConnection();
+            } else {
+              bscon = DriverManager.getConnection(url + db, user, pass);  
+            }
+            bscon.setAutoCommit(false);
+            _addQuoteMstr(qo, bscon, ps, res);  
+            for (quo_det z : qod) {
+                _addQuoteDet(z, bscon, ps, res);
+            }
+            
+            bscon.commit();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    public static String[] updateQuoteTransaction(String x, ArrayList<String> lines, ArrayList<quo_det> qod, quo_mstr qo) {
+        String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            if (ds != null) {
+              bscon = ds.getConnection();
+            } else {
+              bscon = DriverManager.getConnection(url + db, user, pass);  
+            }
+            bscon.setAutoCommit(false);
+            for (String line : lines) {
+               _deleteQuoteLines(x, line, bscon, ps);  // discard unwanted lines
+             }
+            for (quo_det z : qod) {
+                if (qo.quo_status.equals(getGlobalProgTag("closed"))) {
+                    continue;
+                }
+                _updateQuoteDet(z, qo, bscon, ps, res);
+            }
+             _updateQuoteMstr(qo, bscon, ps);  
+            bscon.commit();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+        
+    private static int _addQuoteMstr(quo_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from quo_mstr where quo_nbr = ?";
+        String sqlInsert = "insert into quo_mstr (quo_nbr, quo_cust, quo_ship," +
+            "quo_site,  quo_date,  quo_expire,  quo_priceexpire,  quo_status, " +
+            "quo_rmks,  quo_ref,  quo_type,  quo_taxcode,  quo_disccode," +
+            "quo_groupcode,  quo_curr,  quo_approved,  quo_approver,  quo_varchar ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+       
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x.quo_nbr);
+          res = ps.executeQuery();
+          ps = con.prepareStatement(sqlInsert);
+            if (! res.isBeforeFirst()) {
+            ps.setString(1, x.quo_nbr);
+            ps.setString(2, x.quo_cust);
+            ps.setString(3, x.quo_ship);
+            ps.setString(4, x.quo_site);
+            ps.setString(5, x.quo_date);
+            ps.setString(6, x.quo_expire);
+            ps.setString(7, x.quo_priceexpire);
+            ps.setString(8, x.quo_status);
+            ps.setString(9, x.quo_rmks);
+            ps.setString(10, x.quo_ref);
+            ps.setString(11, x.quo_type);
+            ps.setString(12, x.quo_taxcode);
+            ps.setString(13, x.quo_disccode);
+            ps.setString(14, x.quo_groupcode);
+            ps.setString(15, x.quo_curr);
+            ps.setString(16, x.quo_approved);
+            ps.setString(17, x.quo_approver);
+            ps.setString(18, x.quo_varchar);
+            rows = ps.executeUpdate();
+            } 
+            return rows;
+    }
+    
+    private static int _updateQuoteMstr(quo_mstr x, Connection con, PreparedStatement ps) throws SQLException {
+        int rows = 0;
+        String sql = "update quo_mstr set quo_cust = ?, quo_ship = ?, " +
+                "quo_site = ?, quo_date = ?, quo_expire = ?, quo_priceexpire = ?, quo_status = ?, quo_rmks = ?, " +
+                "quo_ref = ?, quo_type = ?, quo_taxcode = ?, quo_disccode = ?, " +
+                " quo_groupcode = ?, quo_curr = ?, quo_approved = ?, " +
+                " quo_approver = ?, quo_varchar = ? " +
+                 " where quo_nbr = ? ; ";
+	ps = con.prepareStatement(sql) ;
+            ps.setString(18, x.quo_nbr);
+            ps.setString(1, x.quo_cust);
+            ps.setString(2, x.quo_ship);
+            ps.setString(3, x.quo_site);
+            ps.setString(4, x.quo_date);
+            ps.setString(5, x.quo_expire);
+            ps.setString(6, x.quo_priceexpire);
+            ps.setString(7, x.quo_status);
+            ps.setString(8, x.quo_rmks);
+            ps.setString(9, x.quo_ref);
+            ps.setString(10, x.quo_type);
+            ps.setString(11, x.quo_taxcode);
+            ps.setString(12, x.quo_disccode);
+            ps.setString(13, x.quo_groupcode);
+            ps.setString(14, x.quo_curr);
+            ps.setString(15, x.quo_approved);
+            ps.setString(16, x.quo_approver);
+            ps.setString(17, x.quo_varchar);
+            rows = ps.executeUpdate();
+        return rows;
+    }
+    
+    private static int _addQuoteDet(quo_det x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from quo_det where quod_nbr = ? and quod_line = ?";
+        String sqlInsert = "insert into quo_det (quod_nbr, quod_line, quod_item," +
+                "quod_isinv,  quod_desc,  quod_pricetype,  quod_listprice,  quod_disc, " +
+                "quod_netprice,  quod_qty,  quod_uom ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?); "; 
+       
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x.quod_nbr);
+          ps.setString(2, x.quod_line);
+          res = ps.executeQuery();
+          ps = con.prepareStatement(sqlInsert);  
+            if (! res.isBeforeFirst()) {
+            ps.setString(1, x.quod_nbr);
+            ps.setString(2, x.quod_line);
+            ps.setString(3, x.quod_item);
+            ps.setString(4, x.quod_isinv);
+            ps.setString(5, x.quod_desc);
+            ps.setString(6, x.quod_pricetype);
+            ps.setString(7, x.quod_listprice);
+            ps.setString(8, x.quod_disc);
+            ps.setString(9, x.quod_netprice);
+            ps.setString(10, x.quod_qty);
+            ps.setString(11, x.quod_uom);
+            rows = ps.executeUpdate();
+            } 
+            return rows;
+    }
+    
+    private static int _updateQuoteDet(quo_det x, quo_mstr z, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from quo_det where quod_nbr = ? and quod_line = ?";
+        String sqlUpdate = "update quo_det set quod_item = ?, quod_isinv = ?, " +
+                "quod_desc = ?, quod_pricetype = ?, quod_listprice = ?, quod_disc = ?, " +
+                " quod_netprice = ?, quod_qty = ?, quod_uom = ? " +
+                 " where quod_nbr = ? and quod_line = ? ; ";
+        String sqlInsert = "insert into quo_det (quod_nbr, quod_line, quod_item," +
+                "quod_isinv,  quod_desc,  quod_pricetype,  quod_listprice,  quod_disc, " +
+                "quod_netprice,  quod_qty,  quod_uom ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?); "; 
+        ps = con.prepareStatement(sqlSelect); 
+        ps.setString(1, x.quod_nbr);
+        ps.setString(2, x.quod_line);
+        res = ps.executeQuery();
+        if (! res.isBeforeFirst()) {  // insert
+	 ps = con.prepareStatement(sqlInsert) ;
+            ps.setString(1, x.quod_nbr);
+            ps.setString(2, x.quod_line);
+            ps.setString(3, x.quod_item);
+            ps.setString(4, x.quod_isinv);
+            ps.setString(5, x.quod_desc);
+            ps.setString(6, x.quod_pricetype);
+            ps.setString(7, x.quod_listprice);
+            ps.setString(8, x.quod_disc);
+            ps.setString(9, x.quod_netprice);
+            ps.setString(10, x.quod_qty);
+            ps.setString(11, x.quod_uom); 
+            rows = ps.executeUpdate();
+        } else {    // update
+         ps = con.prepareStatement(sqlUpdate) ;
+            ps.setString(10, x.quod_nbr);
+            ps.setString(11, x.quod_line);
+            ps.setString(1, x.quod_item);
+            ps.setString(2, x.quod_isinv);
+            ps.setString(3, x.quod_desc);
+            ps.setString(4, x.quod_pricetype);
+            ps.setString(5, x.quod_listprice);
+            ps.setString(6, x.quod_disc);
+            ps.setString(7, x.quod_netprice);
+            ps.setString(8, x.quod_qty);
+            ps.setString(9, x.quod_uom); 
+            rows = ps.executeUpdate();
+        }
+            
+        return rows;
+    }
+    
+    public static String[] deleteQuoteLines(String x, ArrayList<String> lines) {
+        String[] m = new String[2];
+        if (x == null) {
+            return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
+        }
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+             for (String line : lines) {
+               _deleteQuoteLines(x, line, con, ps);  // add cms_det
+             }
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (con != null) {
+                try {
+                    con.setAutoCommit(true);
+                    con.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    private static void _deleteQuoteLines(String x, String line, Connection con, PreparedStatement ps) throws SQLException { 
+        
+        String sql = "delete from quo_det where quod_nbr = ? and quod_line = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x);
+        ps.setString(2, line);
+        ps.executeUpdate();
+    }
+    
+    public static String[] deleteQuoteMstr(quo_mstr x) {
+        String[] m = new String[2];
+        if (x == null) {
+            return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
+        }
+        Connection con = null;
+        try { 
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            _deleteQuoteMstr(x, con);  // add cms_det
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
+        } finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    private static void _deleteQuoteMstr(quo_mstr x, Connection con) throws SQLException { 
+        PreparedStatement ps = null; 
+        String sql = "delete from quo_mstr where quo_nbr = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x.quo_nbr);
+        ps.executeUpdate();
+        sql = "delete from quo_det where quod_nbr = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x.quo_nbr);
+        ps.executeUpdate();
+        ps.close();
+    }
+    
+    public static quo_mstr getQuoteMstr(String[] x) {
+        quo_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from quo_mstr where quo_nbr = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new quo_mstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new quo_mstr(m, 
+                            res.getString("quo_nbr"), 
+                            res.getString("quo_cust"),    
+                            res.getString("quo_ship"),
+                            res.getString("quo_site"),
+                            res.getString("quo_date"),
+                            res.getString("quo_expire"),  
+                            res.getString("quo_priceexpire"),
+                            res.getString("quo_status"),  
+                            res.getString("quo_rmks"),
+                            res.getString("quo_ref"),
+                            res.getString("quo_type"),
+                            res.getString("quo_taxcode"),
+                            res.getString("quo_disccode"),
+                            res.getString("quo_groupcode"),
+                            res.getString("quo_curr"),
+                            res.getString("quo_approved"),
+                            res.getString("quo_approver"),
+                            res.getString("quo_varchar")    
+                        );
+                    }
+                }
+            } 
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new quo_mstr(m);
+        }
+        return r;
+    }
+   
+    public static ArrayList<quo_det> getQuoteDet(String code) {
+        quo_det r = null;
+        String[] m = new String[2];
+        ArrayList<quo_det> list = new ArrayList<quo_det>();
+        String sql = "select * from quo_det where quod_nbr = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, code);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new quo_det(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new quo_det(m, res.getString("quod_nbr"), 
+                                res.getString("quod_line"), 
+                                res.getString("quod_item"), 
+                                res.getString("quod_isinv"), 
+                                res.getString("quod_desc"),
+                                res.getString("quod_pricetype"), 
+                                res.getString("quod_listprice"),
+                                res.getString("quod_disc"),
+                                res.getString("quod_netprice"),
+                                res.getString("quod_qty"),
+                                res.getString("quod_uom"));
+                        list.add(r);
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new quo_det(m);
+               list.add(r);
+        }
+        return list;
+    }
+   
+    
+    public static ArrayList<String> getQuoteLines(String nbr) {
+        ArrayList<String> lines = new ArrayList<String>();
+        try{
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+           res = st.executeQuery("SELECT quod_line from quo_det " +
+                   " where quod_nbr = " + "'" + nbr + "'" + ";");
+                        while (res.next()) {
+                          lines.add(res.getString("quod_line"));
+                        }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+        return lines;
+    }
+    
     
     // miscellaneous SQL queries
     
@@ -2317,5 +2790,27 @@ public class ordData {
             this (m, "", "", "", "", "", "", "", "");
         }
     }
+    
+    public record quo_mstr(String[] m, String quo_nbr, String quo_cust, String quo_ship,
+        String quo_site, String quo_date, String quo_expire, String quo_priceexpire, String quo_status, 
+        String quo_rmks, String quo_ref, String quo_type, String quo_taxcode, String quo_disccode,
+        String quo_groupcode, String quo_curr, String quo_approved, String quo_approver, String quo_varchar 
+        )  {
+        public quo_mstr(String[] m) {
+            this (m, "", "", "", "", "", "", "", "", "", "",
+                     "", "", "", "", "", "", "", "");
+        }
+    }
+    
 
+    public record quo_det(String[] m, String quod_nbr, String quod_line, String quod_item,
+        String quod_isinv, String quod_desc, String quod_pricetype, String quod_listprice, String quod_disc, 
+        String quod_netprice, String quod_qty, String quod_uom 
+        )  {
+        public quo_det(String[] m) {
+            this (m, "", "", "", "", "", "", "", "", "", "",
+                     "");
+        }
+    }
+    
 }

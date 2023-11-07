@@ -155,23 +155,19 @@ public class CustPriceMaint extends javax.swing.JPanel {
                     dditem.setSelectedItem(res.getString("cpr_item"));
                     dduom.setSelectedItem(res.getString("cpr_uom"));
                     ddcurr.setSelectedItem(res.getString("cpr_curr"));
-                    if (res.getString("cpr_expire") == null || res.getString("cpr_expire").isBlank() || res.getString("cpr_expire").equals("null")) {
-                        dcexpire.setDate(null);  
-                      } else {
-                        dcexpire.setDate(bsmf.MainFrame.dfdate.parse(res.getString("cpr_expire")));  
-                      }
-                     tbprice.setText(bsformat("s",res.getString("cpr_price").replace('.',defaultDecimalSeparator),"4"));
-                     tbqty.setText(bsformat("s",res.getString("cpr_volqty").replace('.',defaultDecimalSeparator),"4"));
-                     btUpdate.setEnabled(true);
-                     btDelete.setEnabled(true);
-                     btAdd.setEnabled(false);
+                    dcexpire.setDate(BlueSeerUtils.parseDate(res.getString("cpr_expire"))); 
+                    tbprice.setText(bsformat("s",res.getString("cpr_price").replace('.',defaultDecimalSeparator),"4"));
+                    tbqty.setText(bsformat("s",res.getString("cpr_volqty").replace('.',defaultDecimalSeparator),"4"));
+                    btUpdate.setEnabled(true);
+                    btDelete.setEnabled(true);
+                    btAdd.setEnabled(false);
                    } else {
-                      ddcustcode_disc.setSelectedItem(res.getString("cpr_cust"));
-                     tbdisckey.setText(res.getString("cpr_item"));
-                     tbdisc.setText(bsformat("s",res.getString("cpr_disc").replace('.',defaultDecimalSeparator),"4")); 
-                      btupdatedisc.setEnabled(true);
-                     btdeletedisc.setEnabled(true);
-                     btadddisc.setEnabled(false);
+                    ddcustcode_disc.setSelectedItem(res.getString("cpr_cust"));
+                    tbdisckey.setText(res.getString("cpr_item"));
+                    tbdisc.setText(bsformat("s",res.getString("cpr_disc").replace('.',defaultDecimalSeparator),"4")); 
+                    btupdatedisc.setEnabled(true);
+                    btdeletedisc.setEnabled(true);
+                    btadddisc.setEnabled(false);
                    } 
                    
                 }
@@ -1318,11 +1314,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
                       ddcurr.setSelectedItem(res.getString("cpr_curr"));
                       dditem.setSelectedItem(res.getString("cpr_item"));
                       ddtype.setSelectedItem(res.getString("cpr_type"));
-                      if (res.getString("cpr_expire") == null || res.getString("cpr_expire").isBlank() || res.getString("cpr_expire").equals("0000-00-00")) {
-                        dcexpire.setDate(null);  
-                      } else {
-                        dcexpire.setDate(bsmf.MainFrame.dfdate.parse(res.getString("cpr_expire")));  
-                      }
+                      dcexpire.setDate(BlueSeerUtils.parseDate(res.getString("cpr_expire"))); 
                       tbprice.setText(bsformat("s",res.getString("cpr_price").replace('.',defaultDecimalSeparator),"4"));
                       tbqty.setText(bsformat("s",res.getString("cpr_volqty").replace('.',defaultDecimalSeparator),"4"));
                }

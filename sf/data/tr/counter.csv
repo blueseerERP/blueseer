@@ -42,3 +42,4 @@ payroll,payroll transaction number range,,30000,99999,30000
 driver,driver transaction number range,,100,99999,100
 vehicle,vehicle transaction number range,,200,99999,200
 broker,broker transaction number range,,500,99999,500
+quote,quote transaction number range,,7000,99999,7000

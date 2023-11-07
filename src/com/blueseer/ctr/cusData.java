@@ -1960,6 +1960,49 @@ public class cusData {
         
     }
     
+    public static ArrayList getdisclist() {
+       ArrayList myarray = new ArrayList();
+        try{
+            
+            Connection con = null;
+        if (ds != null) {
+        con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                
+                java.util.Date now = new java.util.Date();
+                res = st.executeQuery("select cpr_item from cpr_mstr " +
+                      " where cpr_cust = '' and cpr_type = 'DISCOUNT' " + 
+                      " AND (cpr_expire = null OR cpr_expire >= " + "'" + BlueSeerUtils.setDateFormat(now) + "'" + ") " +
+                      ";");
+               while (res.next()) {
+                    myarray.add(res.getString("cpr_item"));
+                }
+           }
+            catch (SQLException s){
+                 bsmf.MainFrame.show("SQL cannot get disc price list");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myarray;
+        
+    }
+    
+    
     public static ArrayList getcustmstrlistBetween(String from, String to) {
         ArrayList myarray = new ArrayList();
         try {

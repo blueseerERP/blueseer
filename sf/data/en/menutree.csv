@@ -92,8 +92,8 @@ Order,OrderMaint,1,JMenuItem,Order Maintenance,,,,1,1
 Order,OrderBrowse,2,JMenuItem,Order Browse,,1,,1,1
 Order,ServiceOrderMaint,3,JMenuItem,Service Order Maintenance,,,,1,1
 Order,ServiceOrderBrowse,4,JMenuItem,Service Order Browse,,,,1,1
-Order,QuoteMaint,5,JMenuItem,Quote Maintenance,,,,0,1
-Order,QuoteBrowse,6,JMenuItem,Quote Browse,,,,0,1
+Order,QuoteMaint,5,JMenuItem,Quote Maintenance,,,,1,1
+Order,QuoteBrowse,6,JMenuItem,Quote Browse,,,,1,1
 Order,OrderSourceBrowse,7,JMenuItem,Order Source Browse,,1,,1,1
 Order,OrdLineBrowse,8,JMenuItem,Order Line Browse,,1,,1,1
 Order,SchedOrdBrowse,9,JMenuItem,Sched Order Browse,,1,,1,1
