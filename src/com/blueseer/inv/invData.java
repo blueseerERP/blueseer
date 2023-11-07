@@ -2053,7 +2053,7 @@ public class invData {
                                               " AND cpr_item = " + "'" + item + "'" +
                                               " AND cpr_uom = " + "'" + uom + "'" +
                                               " AND cpr_curr = " + "'" + curr + "'" +
-                                              " AND (cpr_expire >= " + "'" + BlueSeerUtils.setDateFormat(now) + "'" + "  OR cpr_expire = '0000-00-00' ) " +         
+                                              " AND (cpr_expire >= " + "'" + BlueSeerUtils.setDateFormat(now) + "'" + "  OR cpr_expire = null ) " +         
                                               " AND cpr_type = 'LIST' "+ ";");
                         while (res.next()) {
                            price = res.getString("cpr_price").replace('.', defaultDecimalSeparator);
