@@ -30,7 +30,7 @@
 (select case when sum(quos_amt) is null then 0 else sum(quos_amt) end from quo_sac 
 	where quos_nbr = $P{myid} and quos_amttype = 'amount' and quos_type <> 'tax' and quos_type <> 'passive' and quos_type <> 'shipping BIL' and quos_type <> 'shipping PPD'
 ) as charges, 
-quo_cust, quo_date, quo_expire,  quo_rmks, quod_line, quod_item, quod_qty, 
+quo_cust, quo_date, quo_expire,  quo_priceexpire, quo_rmks, quo_ref, quo_type, quo_terms, quod_line, quod_item, quod_qty, quod_uom,
 quod_netprice, quod_listprice, cm_code, cm_name, cm_line1, cm_line2,  
 cms_name, cms_line1, cms_line2,  site_desc, site_line1 
 from quo_det  
@@ -62,6 +62,11 @@ inner join site_mstr on site_site =quo_site where quod_nbr =  $P{myid}]]>
 	<field name="site_line1" class="java.lang.String"/>
 	<field name="quo_expire" class="java.lang.String"/>
 	<field name="quod_disc" class="java.lang.Double"/>
+	<field name="quod_uom" class="java.lang.String"/>
+	<field name="quo_priceexpire" class="java.lang.String"/>
+	<field name="quo_ref" class="java.lang.String"/>
+	<field name="quo_type" class="java.lang.String"/>
+	<field name="quo_terms" class="java.lang.String"/>
 	<variable name="mysum" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{quod_qty}]]></variableExpression>
 	</variable>
@@ -167,11 +172,11 @@ inner join site_mstr on site_site =quo_site where quod_nbr =  $P{myid}]]>
 				<textFieldExpression><![CDATA[$F{quo_nbr}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="79" width="42" height="11" uuid="16d7d1d5-83f1-44dc-9731-1e0b064cb1c9"/>
+				<reportElement x="0" y="79" width="100" height="11" uuid="16d7d1d5-83f1-44dc-9731-1e0b064cb1c9"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{jasper.quote.lblcarrier}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{jasper.quote.lblcurrency}]]></textFieldExpression>
 			</textField>
 			<rectangle>
 				<reportElement x="109" y="79" width="109" height="30" uuid="583ab691-ae2e-4d6f-a2f9-67fdda8d408d"/>
@@ -186,32 +191,32 @@ inner join site_mstr on site_site =quo_site where quod_nbr =  $P{myid}]]>
 				<reportElement x="436" y="79" width="119" height="30" uuid="7f25945d-ab08-4b5f-a20d-63a887879f9d"/>
 			</rectangle>
 			<textField>
-				<reportElement x="109" y="79" width="40" height="11" uuid="955941f2-6e81-49f7-abad-6c70ae9c736f"/>
+				<reportElement x="109" y="79" width="99" height="11" uuid="955941f2-6e81-49f7-abad-6c70ae9c736f"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{jasper.quote.lblreference}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="218" y="79" width="63" height="11" uuid="25f7971b-ff7a-48f8-85e9-80813dbc243f"/>
+				<reportElement x="218" y="79" width="102" height="11" uuid="25f7971b-ff7a-48f8-85e9-80813dbc243f"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{jasper.quote.lblfreight}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{jasper.quote.lblterms}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="327" y="79" width="40" height="11" uuid="54cb06ad-707f-4435-959c-a7d2062efca5"/>
+				<reportElement x="327" y="79" width="103" height="11" uuid="54cb06ad-707f-4435-959c-a7d2062efca5"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{jasper.quote.lblbol}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{jasper.quote.lbltype}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="438" y="79" width="40" height="11" uuid="ced11d37-8b9f-4628-97ca-ac956e5d8cb9"/>
+				<reportElement x="438" y="79" width="102" height="11" uuid="ced11d37-8b9f-4628-97ca-ac956e5d8cb9"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{jasper.quote.lblmisc}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{jasper.quote.lblpriceexpire}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="44" y="3" width="124" height="17" uuid="7f96ddbc-e93b-48d6-bf59-0c83dd6c298a"/>
@@ -245,6 +250,26 @@ inner join site_mstr on site_site =quo_site where quod_nbr =  $P{myid}]]>
 				<reportElement x="489" y="56" width="76" height="19" uuid="3ae84711-7768-4a61-9cad-a536dd170f23"/>
 				<textFieldExpression><![CDATA[$F{quo_expire}]]></textFieldExpression>
 			</textField>
+			<textField pattern="###0.#####">
+				<reportElement x="448" y="90" width="72" height="16" uuid="b10789b4-e3c3-4405-967b-8acde579132e"/>
+				<textFieldExpression><![CDATA[$F{quo_priceexpire}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.#####">
+				<reportElement x="120" y="90" width="72" height="16" uuid="86c52769-0dde-4433-a8af-8c89e5e63b74"/>
+				<textFieldExpression><![CDATA[$F{quo_ref}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.#####">
+				<reportElement x="10" y="90" width="72" height="16" uuid="7ba0af20-9ba3-4b50-8547-807482dce42f"/>
+				<textFieldExpression><![CDATA[$F{quo_curr}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.#####">
+				<reportElement x="340" y="90" width="72" height="16" uuid="e5aab0c4-2e47-4a2a-8b5b-2d9b26558830"/>
+				<textFieldExpression><![CDATA[$F{quo_type}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.#####">
+				<reportElement x="230" y="90" width="72" height="16" uuid="bfb740a3-4c89-49e7-87cf-6aa00e1e6568"/>
+				<textFieldExpression><![CDATA[$F{quo_terms}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
@@ -267,7 +292,7 @@ inner join site_mstr on site_site =quo_site where quod_nbr =  $P{myid}]]>
 				<textFieldExpression><![CDATA[$R{jasper.quote.lbldesc}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="290" y="0" width="72" height="20" uuid="8d4c65b7-0b44-42d7-9bbd-219bc6092d5c"/>
+				<reportElement x="289" y="0" width="72" height="20" uuid="8d4c65b7-0b44-42d7-9bbd-219bc6092d5c"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
@@ -294,6 +319,13 @@ inner join site_mstr on site_site =quo_site where quod_nbr =  $P{myid}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{jasper.quote.lbldisc}]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement x="250" y="0" width="39" height="20" uuid="ac56c759-1637-47fe-b1a9-4ccc49fd6695"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.quote.lbluom}]]></textFieldExpression>
+			</textField>
 		</band>
 	</columnHeader>
 	<detail>
@@ -303,7 +335,7 @@ inner join site_mstr on site_site =quo_site where quod_nbr =  $P{myid}]]>
 				<textFieldExpression><![CDATA[$F{quod_item}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0.#####">
-				<reportElement x="293" y="0" width="46" height="16" uuid="32390b0a-6d5c-4fae-8870-72c4e68a5f90"/>
+				<reportElement x="289" y="0" width="72" height="16" uuid="32390b0a-6d5c-4fae-8870-72c4e68a5f90"/>
 				<textFieldExpression><![CDATA[$F{quod_qty}]]></textFieldExpression>
 			</textField>
 			<textField>
@@ -324,6 +356,10 @@ inner join site_mstr on site_site =quo_site where quod_nbr =  $P{myid}]]>
 				<reportElement x="436" y="0" width="53" height="16" uuid="22086fe6-4cb1-40cc-a0bd-389ae084f7f1"/>
 				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[$F{quod_disc}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.#####">
+				<reportElement x="250" y="0" width="40" height="16" uuid="dcb1f4ca-e990-413c-aa54-4c9213be7175"/>
+				<textFieldExpression><![CDATA[$F{quod_uom}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

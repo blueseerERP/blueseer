@@ -3185,7 +3185,8 @@ CREATE TABLE "quo_mstr" (
   "quo_curr" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "quo_approved" tinyint(1) NOT NULL DEFAULT '0',
   "quo_approver" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
-  "quo_varchar" varchar(80) NOT NULL COLLATE NOCASE DEFAULT ''
+  "quo_varchar" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "quo_terms" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
 ); 
 CREATE TABLE "quo_det" (
   "quod_nbr" varchar(8) NOT NULL,

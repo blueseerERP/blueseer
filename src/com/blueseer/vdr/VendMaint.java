@@ -377,7 +377,7 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
         
        ddterms.removeAllItems();
-        ArrayList custterms = cusData.getcusttermslist();
+        ArrayList custterms = cusData.gettermsmstrlist();
         for (int i = 0; i < custterms.size(); i++) {
             ddterms.addItem(custterms.get(i));
         }

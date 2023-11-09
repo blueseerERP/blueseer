@@ -1687,8 +1687,8 @@ public class ordData {
         String sqlInsert = "insert into quo_mstr (quo_nbr, quo_cust, quo_ship," +
             "quo_site,  quo_date,  quo_expire,  quo_priceexpire,  quo_status, " +
             "quo_rmks,  quo_ref,  quo_type,  quo_taxcode,  quo_disccode," +
-            "quo_groupcode,  quo_curr,  quo_approved,  quo_approver,  quo_varchar ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+            "quo_groupcode,  quo_curr,  quo_approved,  quo_approver,  quo_varchar, quo_terms ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.quo_nbr);
@@ -1713,6 +1713,7 @@ public class ordData {
             ps.setString(16, x.quo_approved);
             ps.setString(17, x.quo_approver);
             ps.setString(18, x.quo_varchar);
+            ps.setString(19, x.quo_terms);
             rows = ps.executeUpdate();
             } 
             return rows;
@@ -1724,10 +1725,10 @@ public class ordData {
                 "quo_site = ?, quo_date = ?, quo_expire = ?, quo_priceexpire = ?, quo_status = ?, quo_rmks = ?, " +
                 "quo_ref = ?, quo_type = ?, quo_taxcode = ?, quo_disccode = ?, " +
                 " quo_groupcode = ?, quo_curr = ?, quo_approved = ?, " +
-                " quo_approver = ?, quo_varchar = ? " +
+                " quo_approver = ?, quo_varchar = ?, quo_terms = ? " +
                  " where quo_nbr = ? ; ";
 	ps = con.prepareStatement(sql) ;
-            ps.setString(18, x.quo_nbr);
+            ps.setString(19, x.quo_nbr);
             ps.setString(1, x.quo_cust);
             ps.setString(2, x.quo_ship);
             ps.setString(3, x.quo_site);
@@ -1745,6 +1746,7 @@ public class ordData {
             ps.setString(15, x.quo_approved);
             ps.setString(16, x.quo_approver);
             ps.setString(17, x.quo_varchar);
+            ps.setString(18, x.quo_terms);
             rows = ps.executeUpdate();
         return rows;
     }
@@ -1958,7 +1960,8 @@ public class ordData {
                             res.getString("quo_curr"),
                             res.getString("quo_approved"),
                             res.getString("quo_approver"),
-                            res.getString("quo_varchar")    
+                            res.getString("quo_varchar"),
+                            res.getString("quo_terms")
                         );
                     }
                 }
@@ -2794,11 +2797,11 @@ public class ordData {
     public record quo_mstr(String[] m, String quo_nbr, String quo_cust, String quo_ship,
         String quo_site, String quo_date, String quo_expire, String quo_priceexpire, String quo_status, 
         String quo_rmks, String quo_ref, String quo_type, String quo_taxcode, String quo_disccode,
-        String quo_groupcode, String quo_curr, String quo_approved, String quo_approver, String quo_varchar 
-        )  {
+        String quo_groupcode, String quo_curr, String quo_approved, String quo_approver, String quo_varchar, 
+        String quo_terms )  {
         public quo_mstr(String[] m) {
             this (m, "", "", "", "", "", "", "", "", "", "",
-                     "", "", "", "", "", "", "", "");
+                     "", "", "", "", "", "", "", "", "");
         }
     }
     

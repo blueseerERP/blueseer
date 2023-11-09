@@ -2002,6 +2002,46 @@ public class cusData {
         
     }
     
+    public static ArrayList gettermsmstrlist() {
+       ArrayList myarray = new ArrayList();
+        try{
+            
+            Connection con = null;
+        if (ds != null) {
+        con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                
+
+                res = st.executeQuery("select cut_code from cust_term order by cut_code ;");
+               while (res.next()) {
+                    myarray.add(res.getString("cut_code"));
+                }
+               
+           }
+            catch (SQLException s){
+                 bsmf.MainFrame.show("SQL cannot get Cust list");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myarray;
+        
+    }
+    
     
     public static ArrayList getcustmstrlistBetween(String from, String to) {
         ArrayList myarray = new ArrayList();
@@ -2154,46 +2194,7 @@ public class cusData {
         return mystring;
 
     }
-     
-    public static ArrayList getcusttermslist() {
-        ArrayList myarray = new ArrayList();
-        try {
-            
-            Connection con = null;
-        if (ds != null) {
-        con = ds.getConnection();
-        } else {
-          con = DriverManager.getConnection(url + db, user, pass);  
-        }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-
-                res = st.executeQuery("select cut_code from cust_term order by cut_code ;");
-                while (res.next()) {
-                    myarray.add(res.getString("cut_code"));
-
-                }
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show("SQL cannot get Terms Master");
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                    con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-        return myarray;
-
-    }
-
+        
     public static String getCustAltItem(String cust, String part) {
    String mystring = "";
     try{
