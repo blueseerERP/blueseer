@@ -35,7 +35,7 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Ship Browse"/>
+            <TitledBorder title="Quote Browse"/>
           </Border>
         </Property>
         <Property name="name" type="java.lang.String" value="panelmain" noResource="true"/>
@@ -180,8 +180,8 @@
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="tbtoshipper" alignment="1" min="-2" pref="100" max="-2" attributes="0"/>
-                                  <Component id="tbfromshipper" min="-2" pref="100" max="-2" attributes="0"/>
+                                  <Component id="tbtonbr" alignment="1" min="-2" pref="100" max="-2" attributes="0"/>
+                                  <Component id="tbfromnbr" min="-2" pref="100" max="-2" attributes="0"/>
                               </Group>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" alignment="1" attributes="0">
@@ -203,7 +203,7 @@
                       </Group>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="cbinvoiced" min="-2" max="-2" attributes="0"/>
+                              <Component id="cbactive" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="52" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
@@ -230,7 +230,7 @@
                               <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="btRun" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="btdetail" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="tbfromshipper" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="tbfromnbr" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="tbfromcust" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="tbcsv" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -243,10 +243,10 @@
                           <Group type="103" groupAlignment="1" attributes="0">
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="tbtoshipper" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="tbtonbr" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="tbtocust" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cbinvoiced" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cbactive" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Component id="dcto" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -292,21 +292,21 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>
-                <Property name="text" type="java.lang.String" value="To Shipper:"/>
+                <Property name="text" type="java.lang.String" value="To Quote:"/>
                 <Property name="name" type="java.lang.String" value="lbltoshipper" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel2">
               <Properties>
-                <Property name="text" type="java.lang.String" value="From Shipper:"/>
+                <Property name="text" type="java.lang.String" value="From Quote:"/>
                 <Property name="name" type="java.lang.String" value="lblfromshipper" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="datelabel">
             </Component>
-            <Component class="javax.swing.JTextField" name="tbfromshipper">
+            <Component class="javax.swing.JTextField" name="tbfromnbr">
             </Component>
-            <Component class="javax.swing.JTextField" name="tbtoshipper">
+            <Component class="javax.swing.JTextField" name="tbtonbr">
             </Component>
             <Component class="javax.swing.JTextField" name="tbfromcust">
             </Component>
@@ -343,9 +343,9 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tbcsvActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JCheckBox" name="cbinvoiced">
+            <Component class="javax.swing.JCheckBox" name="cbactive">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Invoiced Only"/>
+                <Property name="text" type="java.lang.String" value="Active Only"/>
                 <Property name="name" type="java.lang.String" value="cbinvoiceonly" noResource="true"/>
               </Properties>
             </Component>

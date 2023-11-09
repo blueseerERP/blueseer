@@ -125,7 +125,11 @@
                                   <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="tbprice" min="-2" pref="68" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="328" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="54" max="-2" attributes="0"/>
+                                  <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="dduom" min="-2" pref="84" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="146" max="-2" attributes="0"/>
                                   <Component id="btadditem" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="btdeleteitem" min="-2" max="-2" attributes="0"/>
@@ -143,7 +147,9 @@
                               <Component id="jLabel28" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="tbactualamt" min="-2" pref="93" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="121" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
+                              <Component id="btprintquote" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="btupdate" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="btdelete" min="-2" max="-2" attributes="0"/>
@@ -254,6 +260,8 @@
                       <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="tbprice" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="dduom" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel14" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jScrollPane7" min="-2" pref="141" max="-2" attributes="0"/>
@@ -267,6 +275,7 @@
                       <Component id="btupdate" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="tbtotdisc" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel13" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btprintquote" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
               </Group>
@@ -297,7 +306,7 @@
         <Component class="javax.swing.JLabel" name="jLabel36">
           <Properties>
             <Property name="text" type="java.lang.String" value="Customer"/>
-            <Property name="name" type="java.lang.String" value="vendor" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="lblcust" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btadditem">
@@ -366,7 +375,7 @@
         <Component class="javax.swing.JLabel" name="jLabel35">
           <Properties>
             <Property name="text" type="java.lang.String" value="Quote Expire Date"/>
-            <Property name="name" type="java.lang.String" value="btdate" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="lblexpiredate" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbactualamt">
@@ -428,7 +437,7 @@
         <Component class="javax.swing.JLabel" name="jLabel10">
           <Properties>
             <Property name="text" type="java.lang.String" value="Site"/>
-            <Property name="name" type="java.lang.String" value="site" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="lblsite" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lbvendor">
@@ -436,7 +445,7 @@
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
             <Property name="text" type="java.lang.String" value="Type"/>
-            <Property name="name" type="java.lang.String" value="checknbr" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="lbltype" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lbmessage">
@@ -516,6 +525,7 @@
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
             <Property name="text" type="java.lang.String" value="Status"/>
+            <Property name="name" type="java.lang.String" value="lblstatus" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbref">
@@ -523,6 +533,7 @@
         <Component class="javax.swing.JLabel" name="jLabel8">
           <Properties>
             <Property name="text" type="java.lang.String" value="Reference"/>
+            <Property name="name" type="java.lang.String" value="lblref" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btcommit">
@@ -562,6 +573,7 @@
         <Component class="javax.swing.JLabel" name="jLabel9">
           <Properties>
             <Property name="text" type="java.lang.String" value="Price Group"/>
+            <Property name="name" type="java.lang.String" value="lblpricegroup" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="dddisccode">
@@ -577,6 +589,7 @@
         <Component class="javax.swing.JLabel" name="jLabel11">
           <Properties>
             <Property name="text" type="java.lang.String" value="Discount Code"/>
+            <Property name="name" type="java.lang.String" value="lbldiscode" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="ddtaxcode">
@@ -592,6 +605,7 @@
         <Component class="javax.swing.JLabel" name="jLabel12">
           <Properties>
             <Property name="text" type="java.lang.String" value="Tax Code"/>
+            <Property name="name" type="java.lang.String" value="lbltaxcode" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbtotdisc">
@@ -605,6 +619,7 @@
         <Component class="javax.swing.JCheckBox" name="cbvolume">
           <Properties>
             <Property name="text" type="java.lang.String" value="Volume Based"/>
+            <Property name="name" type="java.lang.String" value="cbvolume" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblitemdesc">
@@ -618,6 +633,30 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btLookUpItemDescActionPerformed"/>
           </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btprintquote">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Print Quote"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btprintquoteActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="dduom">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="0"/>
+            </Property>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel14">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="UOM"/>
+            <Property name="name" type="java.lang.String" value="lbluom" noResource="true"/>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>

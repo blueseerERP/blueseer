@@ -16454,7 +16454,89 @@ return mystring;
             MainFrame.bslog(e);
         } 
     }      
-       
+    
+    public static void printQuote(String nbr) {
+        try{
+             
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+                ResultSet res = null;
+            try {
+                
+               
+                String cust = ""; 
+                String site = ""; 
+                String type = "";
+                String site_csz = "";
+                String bill_csz = "";
+                String ship_csz = "";
+                res = st.executeQuery("select quo_cust, quo_site, quo_type, " +
+                        " cm_city, cm_state, cm_zip, cm_country, cms_country, site_country, " +
+                        " cms_city, cms_state, cms_zip, site_city, site_state, site_zip " +
+                        " from quo_mstr " +
+                        " inner join cm_mstr on cm_code = quo_cust " +
+                        " left outer join cms_det on cms_code = quo_cust and cms_shipto = quo_ship " +
+                        " inner join site_mstr on site_site = quo_site " +
+                        " where quo_nbr = " + "'" + nbr + "'" + ";");
+                       while (res.next()) {
+                          cust = res.getString("quo_cust");
+                          site = res.getString("quo_site");
+                          type = res.getString("quo_type");
+                          site_csz = res.getString(("site_city")) + " " + res.getString(("site_state")) + " " + res.getString(("site_zip")) + " " + res.getString(("site_country"));
+                          bill_csz = res.getString(("cm_city")) + " " + res.getString(("cm_state")) + " " + res.getString(("cm_zip")) + " " + res.getString(("cm_country"));
+                          ship_csz = res.getString(("cms_city")) + " " + res.getString(("cms_state")) + " " + res.getString(("cms_zip")) + "  " + res.getString(("cms_country"));
+                       }
+                
+                
+                
+                String logo = "";
+                logo = cusData.getCustLogo(cust);
+                if (logo.isEmpty()) {
+                    logo = OVData.getSiteLogo(site);
+                }
+               
+               String jasperfile = "quote_generic.jasper";
+               
+               Path imagepath = FileSystems.getDefault().getPath(cleanDirString(getSystemImageDirectory()) + logo);
+                HashMap hm = new HashMap();
+                hm.put("REPORT_TITLE", "QUOTE");
+                hm.put("myid",  nbr);
+                hm.put("site_csz", site_csz);
+                hm.put("bill_csz", bill_csz);
+                hm.put("ship_csz", ship_csz);
+                hm.put("imagepath", imagepath.toString());
+                hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
+               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
+               // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
+                Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemJasperDirectory()) + jasperfile);
+                JasperPrint jasperPrint = JasperFillManager.fillReport(template.toString(), hm, con );
+                
+                JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+                jasperViewer.setVisible(true);
+                jasperViewer.setFitPageZoomRatio();
+                
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+            if (res != null) {
+                res.close();
+            }
+            if (st != null) {
+                st.close();
+            }
+            con.close();
+        }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+    }    
+    
+    
     public static void printInvoice(String invoice, boolean display) {
         
         

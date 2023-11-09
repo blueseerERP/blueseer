@@ -88,8 +88,8 @@ Vânzări,OrderMaint,1,JMenuItem,Întreținerea comenzii,,,,1,1
 Vânzări,OrderBrowse,2,JMenuItem,Comanda Răsfoiește,,1,,1,1
 Vânzări,ServiceOrderMaint,3,JMenuItem,Întreținerea comenzilor de service,,,,1,1
 Vânzări,ServiceOrderBrowse,4,JMenuItem,Răsfoire comanda de servicii,,,,1,1
-Vânzări,QuoteMaint,5,JMenuItem,Quote Maintenance,,,,0,1
-Vânzări,QuoteBrowse,6,JMenuItem,Quote Browse,,,,0,1
+Vânzări,QuoteMaint,5,JMenuItem,Quote Maintenance,,,,1,1
+Vânzări,QuoteBrowse,6,JMenuItem,Quote Browse,,,,1,1
 Vânzări,OrderSourceBrowse,7,JMenuItem,Răsfoire sursă de comandă,,1,,1,1
 Vânzări,OrdLineBrowse,8,JMenuItem,Răsfoire în linia de comandă,,1,,1,1
 Vânzări,SchedOrdBrowse,9,JMenuItem,Răsfoire comanda programată,,1,,1,1

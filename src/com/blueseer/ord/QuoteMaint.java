@@ -81,6 +81,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.sql.Connection;
 import java.text.ParseException;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -120,7 +122,8 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                 getGlobalColumnTag("qty"),
                 getGlobalColumnTag("listprice"),
                 getGlobalColumnTag("disc"),
-                getGlobalColumnTag("netprice")
+                getGlobalColumnTag("netprice"),
+                getGlobalColumnTag("uom")
             });
                 
     /**
@@ -379,6 +382,14 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
         ddsite.setSelectedItem(OVData.getDefaultSite());
       
+        dduom.removeAllItems();
+        ArrayList<String> u = OVData.getUOMList();
+        for (int i = 0; i < u.size(); i++) {
+            dduom.addItem(u.get(i));
+        }
+        dduom.insertItemAt("", 0);
+        dduom.setSelectedIndex(0);
+        
        isLoad = false;
     }
     
@@ -507,7 +518,8 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                 d.quod_qty(), 
                 d.quod_listprice(), 
                 d.quod_disc(), 
-                d.quod_netprice()
+                d.quod_netprice(),
+                d.quod_uom()
                  });
         }
        // getTasks(ddtask.getSelectedItem().toString());
@@ -596,7 +608,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         };
         luTable.addMouseListener(luml);
       
-        callDialog(getClassLabelTag("lblitem", this.getClass().getSimpleName()), getGlobalColumnTag("description")); 
+        callDialog(getGlobalColumnTag("item"), getGlobalColumnTag("description")); 
         
         
         
@@ -637,7 +649,8 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         };
         luTable.addMouseListener(luml);
       
-        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), getClassLabelTag("customer", this.getClass().getSimpleName())); 
+        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), 
+                getClassLabelTag("lblcust", this.getClass().getSimpleName())); 
         
         
     }
@@ -673,7 +686,8 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                       quod.quod_qty(),
                       quod.quod_listprice(),
                       quod.quod_disc(),
-                      quod.quod_netprice()
+                      quod.quod_netprice(),
+                      quod.quod_uom()
                   });
                 }
         
@@ -786,6 +800,9 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         cbvolume = new javax.swing.JCheckBox();
         lblitemdesc = new javax.swing.JLabel();
         btLookUpItemDesc = new javax.swing.JButton();
+        btprintquote = new javax.swing.JButton();
+        dduom = new javax.swing.JComboBox<>();
+        jLabel14 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -809,7 +826,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         jLabel36.setText("Customer");
-        jLabel36.setName("vendor"); // NOI18N
+        jLabel36.setName("lblcust"); // NOI18N
 
         btadditem.setText("Add Item");
         btadditem.setName("btadditem"); // NOI18N
@@ -857,7 +874,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         dcquoteexpire.setDateFormatString("yyyy-MM-dd");
 
         jLabel35.setText("Quote Expire Date");
-        jLabel35.setName("btdate"); // NOI18N
+        jLabel35.setName("lblexpiredate"); // NOI18N
 
         jLabel28.setText("Total Amount");
         jLabel28.setName("lbltotalamt"); // NOI18N
@@ -899,10 +916,10 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         jLabel10.setText("Site");
-        jLabel10.setName("site"); // NOI18N
+        jLabel10.setName("lblsite"); // NOI18N
 
         jLabel1.setText("Type");
-        jLabel1.setName("checknbr"); // NOI18N
+        jLabel1.setName("lbltype"); // NOI18N
 
         btclear.setText("Clear");
         btclear.setName("btclear"); // NOI18N
@@ -932,8 +949,10 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddstatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "pending", "closed", "expired", "void" }));
 
         jLabel2.setText("Status");
+        jLabel2.setName("lblstatus"); // NOI18N
 
         jLabel8.setText("Reference");
+        jLabel8.setName("lblref"); // NOI18N
 
         btcommit.setText("Commit");
         btcommit.setName("btcommit"); // NOI18N
@@ -955,15 +974,19 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         jLabel9.setText("Price Group");
+        jLabel9.setName("lblpricegroup"); // NOI18N
 
         jLabel11.setText("Discount Code");
+        jLabel11.setName("lbldiscode"); // NOI18N
 
         jLabel12.setText("Tax Code");
+        jLabel12.setName("lbltaxcode"); // NOI18N
 
         jLabel13.setText("Total Discount");
         jLabel13.setName("lbltotaldisc"); // NOI18N
 
         cbvolume.setText("Volume Based");
+        cbvolume.setName("cbvolume"); // NOI18N
 
         btLookUpItemDesc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
         btLookUpItemDesc.addActionListener(new java.awt.event.ActionListener() {
@@ -971,6 +994,16 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                 btLookUpItemDescActionPerformed(evt);
             }
         });
+
+        btprintquote.setText("Print Quote");
+        btprintquote.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btprintquoteActionPerformed(evt);
+            }
+        });
+
+        jLabel14.setText("UOM");
+        jLabel14.setName("lbluom"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -1055,7 +1088,11 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                                 .addComponent(jLabel6)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(tbprice, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(328, 328, 328)
+                                .addGap(54, 54, 54)
+                                .addComponent(jLabel14)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(dduom, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(146, 146, 146)
                                 .addComponent(btadditem)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btdeleteitem))))
@@ -1070,7 +1107,9 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addComponent(jLabel28)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(tbactualamt, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(121, 121, 121)
+                            .addGap(42, 42, 42)
+                            .addComponent(btprintquote)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(btupdate)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(btdelete)
@@ -1154,7 +1193,9 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7)
                     .addComponent(tbprice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6))
+                    .addComponent(jLabel6)
+                    .addComponent(dduom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel14))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1166,7 +1207,8 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(btdelete)
                     .addComponent(btupdate)
                     .addComponent(tbtotdisc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel13))
+                    .addComponent(jLabel13)
+                    .addComponent(btprintquote))
                 .addGap(18, 18, 18))
         );
 
@@ -1192,7 +1234,8 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                                                 tbqty.getText(),
                                                 tbprice.getText(),
                                                 "", // disc
-                                                tbprice.getText()
+                                                tbprice.getText(),
+                                                dduom.getSelectedItem().toString()
                                                 });
        
         tbitemservice.setText("");
@@ -1306,6 +1349,10 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         executeTask(dbaction.delete, new String[]{tbkey.getText()});  
     }//GEN-LAST:event_btdeleteActionPerformed
 
+    private void btprintquoteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintquoteActionPerformed
+        OVData.printQuote(tbkey.getText()); 
+    }//GEN-LAST:event_btprintquoteActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btLookUpItemDesc;
     private javax.swing.JButton btadd;
@@ -1316,6 +1363,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JButton btdeleteitem;
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
+    private javax.swing.JButton btprintquote;
     private javax.swing.JButton btupdate;
     private javax.swing.JCheckBox cbvolume;
     private com.toedter.calendar.JDateChooser dcpricingexpire;
@@ -1327,12 +1375,14 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JComboBox ddsite;
     private javax.swing.JComboBox<String> ddstatus;
     private javax.swing.JComboBox<String> ddtaxcode;
+    private javax.swing.JComboBox<String> dduom;
     private javax.swing.JTable detailtable;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel28;

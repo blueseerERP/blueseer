@@ -88,8 +88,8 @@ Ordre,OrderMaint,1,JMenuItem,Maintenance des ordres,,,,1,1
 Ordre,OrderBrowse,2,JMenuItem,Parcourir la commande,,1,,1,1
 Ordre,ServiceOrderMaint,3,JMenuItem,Maintenance des ordres de service,,,,1,1
 Ordre,ServiceOrderBrowse,4,JMenuItem,Parcourir la commande de service,,,,1,1
-Ordre,QuoteMaint,5,JMenuItem,Quote Maintenance,,,,0,1
-Ordre,QuoteBrowse,6,JMenuItem,Quote Browse,,,,0,1
+Ordre,QuoteMaint,5,JMenuItem,Quote Maintenance,,,,1,1
+Ordre,QuoteBrowse,6,JMenuItem,Quote Browse,,,,1,1
 Ordre,OrderSourceBrowse,7,JMenuItem,Parcourir la source de la commande,,1,,1,1
 Ordre,OrdLineBrowse,8,JMenuItem,Parcourir la ligne de commande,,1,,1,1
 Ordre,SchedOrdBrowse,9,JMenuItem,Parcourir la commande planifiée,,1,,1,1

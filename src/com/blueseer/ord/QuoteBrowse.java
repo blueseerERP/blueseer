@@ -101,10 +101,10 @@ public class QuoteBrowse extends javax.swing.JPanel {
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{getGlobalColumnTag("select"), 
                             getGlobalColumnTag("detail"), 
-                            getGlobalColumnTag("shipper"), 
+                            getGlobalColumnTag("number"), 
                             getGlobalColumnTag("customer"), 
-                            getGlobalColumnTag("shipdate"), 
-                            getGlobalColumnTag("invdate"), 
+                            getGlobalColumnTag("date"), 
+                            getGlobalColumnTag("expire"), 
                             getGlobalColumnTag("status"), 
                             getGlobalColumnTag("qty"), 
                             getGlobalColumnTag("amount")})
@@ -118,14 +118,13 @@ public class QuoteBrowse extends javax.swing.JPanel {
                         };
                 
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{getGlobalColumnTag("shipper"), 
+                        new String[]{getGlobalColumnTag("number"), 
+                            getGlobalColumnTag("line"),
                             getGlobalColumnTag("item"), 
-                            getGlobalColumnTag("custitem"), 
-                            getGlobalColumnTag("order"), 
-                            getGlobalColumnTag("line"), 
-                            getGlobalColumnTag("po"), 
-                            getGlobalColumnTag("qty"), 
-                            getGlobalColumnTag("price")});
+                            getGlobalColumnTag("listprice"), 
+                            getGlobalColumnTag("disc"), 
+                            getGlobalColumnTag("netprice"),
+                            getGlobalColumnTag("qty")});
     
      class ButtonRenderer extends JButton implements TableCellRenderer {
 
@@ -267,7 +266,7 @@ public class QuoteBrowse extends javax.swing.JPanel {
        }
     }
     
-    public void getdetail(String shipper) {
+    public void getdetail(String nbr) {
       
          modeldetail.setNumRows(0);
          double totalsales = 0;
@@ -286,20 +285,19 @@ public class QuoteBrowse extends javax.swing.JPanel {
                 
                 int i = 0;
                 String blanket = "";
-                res = st.executeQuery("select shd_id, shd_soline, shd_item, shd_custitem, shd_so, shd_po, shd_qty, shd_netprice from ship_det " +
-                        " where shd_id = " + "'" + shipper + "'" +  ";");
+                res = st.executeQuery("select quod_nbr, quod_line, quod_item, quod_listprice, quod_disc, quod_netprice, quod_qty from quo_det " +
+                        " where quod_nbr = " + "'" + nbr + "'" +  ";");
                 while (res.next()) {
-                    totalsales = totalsales + (res.getDouble("shd_qty") * res.getDouble("shd_netprice"));
-                    totalqty = totalqty + res.getDouble("shd_qty");
+                    totalsales = totalsales + (res.getDouble("quod_qty") * res.getDouble("quod_netprice"));
+                    totalqty = totalqty + res.getDouble("quod_qty");
                    modeldetail.addRow(new Object[]{ 
-                      res.getString("shd_id"), 
-                      res.getString("shd_item"),
-                      res.getString("shd_custitem"),
-                      res.getString("shd_so"),
-                      res.getString("shd_soline"), 
-                      res.getString("shd_po"),
-                      res.getString("shd_qty"),
-                      currformatDouble(res.getDouble("shd_netprice"))
+                      res.getString("quod_nbr"), 
+                      res.getString("quod_line"),
+                      res.getString("quod_item"),
+                      currformatDouble(res.getDouble("quod_listprice")),
+                      res.getString("quod_disc"), 
+                      currformatDouble(res.getDouble("quod_netprice")),
+                      res.getString("quod_qty")
                    });
                 }
                
@@ -339,8 +337,10 @@ public class QuoteBrowse extends javax.swing.JPanel {
         
         tabledetail.setModel(modeldetail);
         tabledetail.getTableHeader().setReorderingAllowed(false);
-        tabledetail.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
-               
+        tabledetail.getColumnModel().getColumn(3).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+        tabledetail.getColumnModel().getColumn(5).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+           
+        
         tablereport.setModel(mymodel);
         tablereport.getTableHeader().setReorderingAllowed(false);
         tablereport.getColumnModel().getColumn(8).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
@@ -380,8 +380,8 @@ public class QuoteBrowse extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         datelabel = new javax.swing.JLabel();
-        tbfromshipper = new javax.swing.JTextField();
-        tbtoshipper = new javax.swing.JTextField();
+        tbfromnbr = new javax.swing.JTextField();
+        tbtonbr = new javax.swing.JTextField();
         tbfromcust = new javax.swing.JTextField();
         tbtocust = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
@@ -389,7 +389,7 @@ public class QuoteBrowse extends javax.swing.JPanel {
         dcfrom = new com.toedter.calendar.JDateChooser();
         dcto = new com.toedter.calendar.JDateChooser();
         tbcsv = new javax.swing.JButton();
-        cbinvoiced = new javax.swing.JCheckBox();
+        cbactive = new javax.swing.JCheckBox();
         btprint = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
@@ -403,7 +403,7 @@ public class QuoteBrowse extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Ship Browse"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Quote Browse"));
         jPanel1.setName("panelmain"); // NOI18N
 
         tablepanel.setLayout(new javax.swing.BoxLayout(tablepanel, javax.swing.BoxLayout.LINE_AXIS));
@@ -474,10 +474,10 @@ public class QuoteBrowse extends javax.swing.JPanel {
         jLabel1.setText("From Billto:");
         jLabel1.setName("lblfromcust"); // NOI18N
 
-        jLabel3.setText("To Shipper:");
+        jLabel3.setText("To Quote:");
         jLabel3.setName("lbltoshipper"); // NOI18N
 
-        jLabel2.setText("From Shipper:");
+        jLabel2.setText("From Quote:");
         jLabel2.setName("lblfromshipper"); // NOI18N
 
         jLabel5.setText("From Date:");
@@ -498,8 +498,8 @@ public class QuoteBrowse extends javax.swing.JPanel {
             }
         });
 
-        cbinvoiced.setText("Invoiced Only");
-        cbinvoiced.setName("cbinvoiceonly"); // NOI18N
+        cbactive.setText("Active Only");
+        cbactive.setName("cbinvoiceonly"); // NOI18N
 
         btprint.setText("Print/PDF");
         btprint.addActionListener(new java.awt.event.ActionListener() {
@@ -535,8 +535,8 @@ public class QuoteBrowse extends javax.swing.JPanel {
                                 .addComponent(jLabel3)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(tbtoshipper, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbfromshipper, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(tbtonbr, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbfromnbr, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -551,7 +551,7 @@ public class QuoteBrowse extends javax.swing.JPanel {
                         .addGap(18, 18, 18)))
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(cbinvoiced)
+                        .addComponent(cbactive)
                         .addGap(52, 52, 52))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(btRun)
@@ -573,7 +573,7 @@ public class QuoteBrowse extends javax.swing.JPanel {
                         .addComponent(jLabel2)
                         .addComponent(btRun)
                         .addComponent(btdetail)
-                        .addComponent(tbfromshipper, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tbfromnbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(tbfromcust, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel5)
                         .addComponent(tbcsv)
@@ -584,10 +584,10 @@ public class QuoteBrowse extends javax.swing.JPanel {
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
-                            .addComponent(tbtoshipper, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbtonbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tbtocust, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel4)
-                            .addComponent(cbinvoiced))
+                            .addComponent(cbactive))
                         .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -723,18 +723,18 @@ public class QuoteBrowse extends javax.swing.JPanel {
             
                 // String site = ddsite.getSelectedItem().toString(); 
                                   
-                 String shipperfrom = tbfromshipper.getText();
-                 String shipperto = tbtoshipper.getText();
+                 String nbrfrom = tbfromnbr.getText();
+                 String nbrto = tbtonbr.getText();
                  String custto = tbtocust.getText();
                  String custfrom = tbfromcust.getText();
                  String status = "";
                 
                  
-                 if (shipperfrom.isEmpty()) {
-                     shipperfrom = "0";
+                 if (nbrfrom.isEmpty()) {
+                     nbrfrom = "0";
                  }
-                 if (shipperto.isEmpty()) {
-                     shipperto = "ZZZZZZZZ";
+                 if (nbrto.isEmpty()) {
+                     nbrto = "ZZZZZZZZ";
                  }
                  if (custfrom.isEmpty()) {
                      custfrom = "0";
@@ -754,43 +754,39 @@ public class QuoteBrowse extends javax.swing.JPanel {
                  }
                 
                       //must be type balance sheet
-                 if (cbinvoiced.isSelected()) {
-                  res = st.executeQuery("select sh_id, sh_status, sh_cust, sh_shipdate, sh_confdate, sum(shd_qty) as 'qty', sum(shd_qty * shd_netprice) as 'price' from ship_mstr " +
-                        " inner join ship_det on shd_id = sh_id where " +
-                        " sh_id >= " + "'" + shipperfrom + "'" + " AND " +
-                        " sh_id <= " + "'" + shipperto + "'" + " AND " +
-                        " sh_shipdate >= " + "'" + fromdate + "'" + " AND " +
-                        " sh_shipdate <= " + "'" + todate + "'" + " AND " +
-                        " sh_cust >= " + "'" + custfrom + "'" + " AND " +
-                        " sh_cust <= " + "'" + custto + "'" + " AND " +
-                        " sh_status = '1' " +
-                        " group by sh_id, sh_status, sh_cust, sh_shipdate, sh_confdate;");
+                 if (cbactive.isSelected()) {
+                  res = st.executeQuery("select quo_nbr, quo_status, quo_cust, quo_date, quo_expire, sum(quod_qty) as 'qty', sum(quod_qty * quod_netprice) as 'price' from quo_mstr " +
+                        " inner join quo_det on quod_nbr = quo_nbr where " +
+                        " quo_nbr >= " + "'" + nbrfrom + "'" + " AND " +
+                        " quo_nbr <= " + "'" + nbrto + "'" + " AND " +
+                        " quo_date >= " + "'" + fromdate + "'" + " AND " +
+                        " quo_date <= " + "'" + todate + "'" + " AND " +
+                        " quo_cust >= " + "'" + custfrom + "'" + " AND " +
+                        " quo_cust <= " + "'" + custto + "'" + " AND " +
+                        " quo_status <> 'closed' " +
+                        " group by quo_nbr, quo_status, quo_cust, quo_date, quo_expire;");
                  } else {
-                   res = st.executeQuery("select sh_id, sh_status, sh_cust, sh_shipdate, sh_confdate, sum(shd_qty) as 'qty', sum(shd_qty * shd_netprice) as 'price' from ship_mstr " +
-                        " inner join ship_det on shd_id = sh_id where " +
-                        " sh_id >= " + "'" + shipperfrom + "'" + " AND " +
-                        " sh_id <= " + "'" + shipperto + "'" + " AND " +
-                        " sh_shipdate >= " + "'" + fromdate + "'" + " AND " +
-                        " sh_shipdate <= " + "'" + todate + "'" + " AND " +
-                        " sh_cust >= " + "'" + custfrom + "'" + " AND " +
-                        " sh_cust <= " + "'" + custto + "'"  +
-                        " group by sh_id, sh_status, sh_cust, sh_shipdate, sh_confdate;");  
+                    res = st.executeQuery("select quo_nbr, quo_status, quo_cust, quo_date, quo_expire, sum(quod_qty) as 'qty', sum(quod_qty * quod_netprice) as 'price' from quo_mstr " +
+                        " inner join quo_det on quod_nbr = quo_nbr where " +
+                        " quo_nbr >= " + "'" + nbrfrom + "'" + " AND " +
+                        " quo_nbr <= " + "'" + nbrto + "'" + " AND " +
+                        " quo_date >= " + "'" + fromdate + "'" + " AND " +
+                        " quo_date <= " + "'" + todate + "'" + " AND " +
+                        " quo_cust >= " + "'" + custfrom + "'" + " AND " +
+                        " quo_cust <= " + "'" + custto + "'" + 
+                        " group by quo_nbr, quo_status, quo_cust, quo_date, quo_expire;"); 
                  }
                 
                        while (res.next()) {
-                           if (res.getString("sh_status").equals("1"))
-                               status = "Confirmed";
-                           else
-                               status = "Not Confirmed";
                          totsales = totsales + res.getDouble("price");
                          totqty = totqty + res.getDouble("qty");
                          
                          mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, BlueSeerUtils.clickbasket, 
-                               res.getString("sh_id"),
-                                res.getString("sh_cust"),
-                                BlueSeerUtils.xNull(res.getString("sh_shipdate")),
-                                BlueSeerUtils.xNull(res.getString("sh_confdate")),
-                                status,
+                               res.getString("quo_nbr"),
+                                res.getString("quo_cust"),
+                                BlueSeerUtils.xNull(res.getString("quo_date")),
+                                BlueSeerUtils.xNull(res.getString("quo_expire")),
+                                res.getString("quo_status"),
                                 res.getString("qty"),
                                 currformatDouble(res.getDouble("price"))
                             });
@@ -835,28 +831,15 @@ public class QuoteBrowse extends javax.swing.JPanel {
                 detailpanel.setVisible(true);
         }
         if ( col == 0) {
-                String mypanel = "ShipMaint";
+                String mypanel = "QuoteMaint";
                if (! checkperms(mypanel)) { return; }
                String[] args = new String[]{tablereport.getValueAt(row, 2).toString()};
                reinitpanels(mypanel, true, args);
         }
         if (col == 10) {
-            OVData.printInvoice(tablereport.getValueAt(row, 2).toString(), true); 
+            OVData.printQuote(tablereport.getValueAt(row, 2).toString());  
         }
-        if (col == 11) {
-            if (sending) {
-                return;
-            }
-            String[] x = OVData.isSMTPServer();
-            if (x[0].equals("0")) {
-               // tablereport.setEnabled(false);
-                tablereport.getModel().setValueAt(BlueSeerUtils.clicklock,row,11);
-                sending = true; 
-                executeTask(tablereport.getValueAt(row, 2).toString(), row, tablereport.getValueAt(row, 3).toString());
-            } else {
-                bsmf.MainFrame.show(x[1]);
-            }
-        }
+       
     }//GEN-LAST:event_tablereportMouseClicked
 
     private void tbcsvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbcsvActionPerformed
@@ -865,7 +848,7 @@ public class QuoteBrowse extends javax.swing.JPanel {
     }//GEN-LAST:event_tbcsvActionPerformed
 
     private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
-        OVData.printJTableToJasper("Shipper Report", tablereport, "genericJTableL7.jasper" );
+        OVData.printJTableToJasper("Quote Report", tablereport, "genericJTableL7.jasper" );
     }//GEN-LAST:event_btprintActionPerformed
 
 
@@ -875,7 +858,7 @@ public class QuoteBrowse extends javax.swing.JPanel {
     private javax.swing.JButton btRun;
     private javax.swing.JButton btdetail;
     private javax.swing.JButton btprint;
-    private javax.swing.JCheckBox cbinvoiced;
+    private javax.swing.JCheckBox cbactive;
     private javax.swing.JLabel datelabel;
     private com.toedter.calendar.JDateChooser dcfrom;
     private com.toedter.calendar.JDateChooser dcto;
@@ -901,9 +884,9 @@ public class QuoteBrowse extends javax.swing.JPanel {
     private javax.swing.JLabel tbdetqty;
     private javax.swing.JLabel tbdetsales;
     private javax.swing.JTextField tbfromcust;
-    private javax.swing.JTextField tbfromshipper;
+    private javax.swing.JTextField tbfromnbr;
     private javax.swing.JTextField tbtocust;
-    private javax.swing.JTextField tbtoshipper;
+    private javax.swing.JTextField tbtonbr;
     private javax.swing.JLabel tbtotqty;
     private javax.swing.JLabel tbtotsales;
     // End of variables declaration//GEN-END:variables

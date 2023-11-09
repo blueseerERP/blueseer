@@ -88,8 +88,8 @@ Befehl,OrderMaint,1,JMenuItem,Auftragspflege,,,,1,1
 Befehl,OrderBrowse,2,JMenuItem,Bestellen Durchsuchen,,1,,1,1
 Befehl,ServiceOrderMaint,3,JMenuItem,Wartung von Serviceaufträgen,,,,1,1
 Befehl,ServiceOrderBrowse,4,JMenuItem,Durchsuchen von Serviceaufträgen,,,,1,1
-Befehl,QuoteMaint,5,JMenuItem,Quote Maintenance,,,,0,1
-Befehl,QuoteBrowse,6,JMenuItem,Quote Browse,,,,0,1
+Befehl,QuoteMaint,5,JMenuItem,Quote Maintenance,,,,1,1
+Befehl,QuoteBrowse,6,JMenuItem,Quote Browse,,,,1,1
 Befehl,OrderSourceBrowse,7,JMenuItem,Bestellquelle Durchsuchen,,1,,1,1
 Befehl,OrdLineBrowse,8,JMenuItem,Bestellzeile Durchsuchen,,1,,1,1
 Befehl,SchedOrdBrowse,9,JMenuItem,Geplante Bestellung Durchsuchen,,1,,1,1

@@ -5007,7 +5007,7 @@ public class DTData {
      
     public static DefaultTableModel getQuoteBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("cust")})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("key"), getGlobalColumnTag("customer")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  

@@ -898,7 +898,7 @@ public class Scheduler extends javax.swing.JPanel {
         // reset calendar to current date clicked
         cal.setTime(jc.getDate());
         String x = "";
-        int sum = 0;
+        double sum = 0.00;
         boolean isFull = false;
         ArrayList<String[]> list = getSummaryByDate(firstday,lastday); // returns date,cell,sum
         
@@ -913,7 +913,7 @@ public class Scheduler extends javax.swing.JPanel {
             if (ddcellchoice.getSelectedItem().toString().equals("ALL")) {
             for (String[] k : list) {
                 if (k[0].equals(x)) {
-                    sum += Integer.valueOf(k[2]);
+                    sum += Double.valueOf(k[2]);
                 }
             }
                 if (sum >= sumOfAllCells) {
@@ -931,7 +931,7 @@ public class Scheduler extends javax.swing.JPanel {
             } else {
                for (String[] k : list) {
                 if (k[0].equals(x) && k[1].equals(ddcellchoice.getSelectedItem().toString())) {
-                    sum += Integer.valueOf(k[2]);
+                    sum += Double.valueOf(k[2]);
                 }
             }
             //   bsmf.MainFrame.show(thisCell + "/" + sum + "/" + thisCellCapacity);

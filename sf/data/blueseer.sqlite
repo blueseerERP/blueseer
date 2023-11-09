@@ -3188,7 +3188,7 @@ CREATE TABLE "quo_mstr" (
   "quo_varchar" varchar(80) NOT NULL COLLATE NOCASE DEFAULT ''
 ); 
 CREATE TABLE "quo_det" (
-  "quod_nbr" varchar(8) NOT NULL PRIMARY KEY,
+  "quod_nbr" varchar(8) NOT NULL,
   "quod_line" int(6)  NOT NULL DEFAULT '0',
   "quod_item" varchar(100)  NOT NULL COLLATE NOCASE DEFAULT '',
   "quod_isinv" tinyint(1) NOT NULL  DEFAULT '0',
@@ -3201,7 +3201,7 @@ CREATE TABLE "quo_det" (
   "quod_uom" varchar(3)  NOT NULL COLLATE NOCASE DEFAULT ''
 ); 
 CREATE TABLE "quo_voldet" (
-  "quov_nbr" varchar(8) NOT NULL PRIMARY KEY,
+  "quov_nbr" varchar(8) NOT NULL,
   "quov_line" int(6)  NOT NULL DEFAULT '0',
   "quov_item" varchar(100)  NOT NULL COLLATE NOCASE DEFAULT '',
   "quov_volqty" decimal(14,5) NOT NULL  DEFAULT '0',

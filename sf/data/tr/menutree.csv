@@ -88,8 +88,8 @@ Emir,OrderMaint,1,JMenuItem,Sipariş Bakımı,,,,1,1
 Emir,OrderBrowse,2,JMenuItem,Sipariş Gözat,,1,,1,1
 Emir,ServiceOrderMaint,3,JMenuItem,Servis Siparişi Bakımı,,,,1,1
 Emir,ServiceOrderBrowse,4,JMenuItem,Servis Siparişi Gözat,,,,1,1
-Emir,QuoteMaint,5,JMenuItem,Quote Maintenance,,,,0,1
-Emir,QuoteBrowse,6,JMenuItem,Quote Browse,,,,0,1
+Emir,QuoteMaint,5,JMenuItem,Quote Maintenance,,,,1,1
+Emir,QuoteBrowse,6,JMenuItem,Quote Browse,,,,1,1
 Emir,OrderSourceBrowse,7,JMenuItem,Kaynak Araştır,,1,,1,1
 Emir,OrdLineBrowse,8,JMenuItem,Sipariş Hattına Gözat,,1,,1,1
 Emir,SchedOrdBrowse,9,JMenuItem,Planlanmış Sipariş Gözat,,1,,1,1

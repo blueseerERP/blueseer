@@ -51,12 +51,13 @@
      case when wf_run_hours = 0 then '0' when wf_run_hours = '' then '0' when wf_run_hours is null then '0' else (1 / wf_run_hours) end as runrate,
      case when plan_type = 'DEMD' then so_po else 'N/A' end as custpo,
      case when plan_type = 'DEMD' then so_cust else 'N/A' end as custcode,
-     case when plan_type = 'DEMD' then sod_bom else 'N/A' end as bomcode,
+     case when plan_type = 'DEMD' then sod_bom else bom_id end as bomcode,
      case when plan_type = 'DEMD' then sod_custitem else 'N/A' end as custitem
 FROM
      plan_mstr
 inner join item_mstr on it_item = plan_item
 left outer join wf_mstr on wf_id = it_wf 
+left outer join bom_mstr on bom_item = plan_item and bom_primary = '1' and bom_enabled = '1'
 left outer join so_mstr on so_nbr = plan_order
 left outer join sod_det on sod_nbr = so_nbr and
                                             sod_item = plan_item and
@@ -181,7 +182,7 @@ order by wf_op;]]>
 				<textFieldExpression><![CDATA[$F{it_wf}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="223" y="6" width="47" height="14" uuid="603b2d1f-617d-495f-ba17-31d9df1cc15a"/>
+				<reportElement x="204" y="6" width="47" height="14" uuid="603b2d1f-617d-495f-ba17-31d9df1cc15a"/>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
@@ -216,14 +217,14 @@ order by wf_op;]]>
 				<textFieldExpression><![CDATA[$F{plan_qty_sched}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="223" y="45" width="47" height="18" uuid="04f25bcd-8f7c-425a-a8ae-99866cceb95d"/>
+				<reportElement x="204" y="45" width="76" height="18" uuid="04f25bcd-8f7c-425a-a8ae-99866cceb95d"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{jasper.jobticket.lblcustitem}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="223" y="67" width="47" height="18" uuid="bb8956f2-7e19-44c8-a9f7-473c00f426f6"/>
+				<reportElement x="204" y="67" width="76" height="18" uuid="bb8956f2-7e19-44c8-a9f7-473c00f426f6"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
@@ -296,7 +297,7 @@ order by wf_op;]]>
 				<textFieldExpression><![CDATA[$F{plan_date_sched}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="223" y="89" width="47" height="18" uuid="a68e8836-95c5-4c86-99a9-dad61c49bf39"/>
+				<reportElement x="204" y="89" width="76" height="18" uuid="a68e8836-95c5-4c86-99a9-dad61c49bf39"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
@@ -323,7 +324,7 @@ order by wf_op;]]>
 				<textFieldExpression><![CDATA[$F{plan_type}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="223" y="25" width="47" height="18" uuid="db741a12-65cb-40e9-96dc-ce95914e976b"/>
+				<reportElement x="204" y="25" width="76" height="18" uuid="db741a12-65cb-40e9-96dc-ce95914e976b"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
