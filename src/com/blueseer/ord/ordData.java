@@ -1638,7 +1638,7 @@ public class ordData {
                _deleteQuoteLines(x, line, bscon, ps);  // discard unwanted lines
              }
             for (quo_det z : qod) {
-                if (qo.quo_status.equals(getGlobalProgTag("closed"))) {
+                if (qo.quo_status().equals(getGlobalProgTag("closed"))) {
                     continue;
                 }
                 _updateQuoteDet(z, qo, bscon, ps, res);

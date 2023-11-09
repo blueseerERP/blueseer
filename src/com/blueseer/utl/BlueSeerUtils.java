@@ -1213,7 +1213,18 @@ public class BlueSeerUtils {
            return sdf.format(date);
        }
     }
-            
+     
+    public static String setDateFormatNull(Date date) {
+       String mydate = null;
+       SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+       if (date == null) {
+           return mydate;
+       } else {
+           return sdf.format(date);
+       }
+    }
+    
+    
     public static boolean isValidDateStr(String date) {
     try {
       SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

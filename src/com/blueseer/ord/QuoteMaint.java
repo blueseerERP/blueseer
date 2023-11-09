@@ -77,6 +77,7 @@ import static com.blueseer.ord.ordData.getQuoteMstr;
 import com.blueseer.ord.ordData.quo_det;
 import com.blueseer.ord.ordData.quo_mstr;
 import static com.blueseer.ord.ordData.updateQuoteTransaction;
+import static com.blueseer.utl.BlueSeerUtils.setDateFormatNull;
 import java.awt.Color;
 import java.awt.Component;
 import java.sql.Connection;
@@ -119,9 +120,10 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                 getGlobalColumnTag("id"), 
                 getGlobalColumnTag("line"), 
                 getGlobalColumnTag("item"), 
+                getGlobalColumnTag("description"),
                 getGlobalColumnTag("qty"),
                 getGlobalColumnTag("listprice"),
-                getGlobalColumnTag("disc"),
+                getGlobalColumnTag("discount"),
                 getGlobalColumnTag("netprice"),
                 getGlobalColumnTag("uom")
             });
@@ -327,6 +329,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         tarmks.setText("");
         tbref.setText("");
         tbitemservice.setText("");
+        lblitemdesc.setText("");
         tbqty.setText("");
         tbprice.setText("");
         tbactualamt.setText("0");
@@ -414,8 +417,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                    btadd.setEnabled(false);
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
-                   tbactualamt.setText(String.valueOf(actamt));
-                   lbmessage.setText(getMessageTag(1170));
+                   //lbmessage.setText(getMessageTag(1170));
         } else {
                    tbkey.setForeground(Color.red); 
         }
@@ -508,23 +510,8 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
       
     public String[] getRecord(String[] key) {
        x = getQuoteMstr(key); 
-       // now detail
-        detailmodel.setRowCount(0);
-        quodetlist = getQuoteDet(key[0]); 
-        for (quo_det d : quodetlist) {
-            detailmodel.addRow(new Object[]{d.quod_nbr(), 
-                d.quod_line(), 
-                d.quod_item(), 
-                d.quod_qty(), 
-                d.quod_listprice(), 
-                d.quod_disc(), 
-                d.quod_netprice(),
-                d.quod_uom()
-                 });
-        }
-       // getTasks(ddtask.getSelectedItem().toString());
-        setAction(x.m());
-        return x.m();
+       quodetlist = getQuoteDet(key[0]);
+       return x.m();
     }
     
     public quo_mstr createRecord() {
@@ -535,8 +522,8 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                 "", // ship
                 ddsite.getSelectedItem().toString(),
                 setDateFormat(now),
-                setDateFormat(dcquoteexpire.getDate()),
-                setDateFormat(dcpricingexpire.getDate()),
+                setDateFormatNull(dcquoteexpire.getDate()),
+                setDateFormatNull(dcpricingexpire.getDate()),
                 ddstatus.getSelectedItem().toString(),
                 tarmks.getText(),
                 tbref.getText(),
@@ -545,7 +532,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                 dddisccode.getSelectedItem().toString(),
                 ddpricegroup.getSelectedItem().toString(),
                 "", //curr
-                "", // approved
+                "0", // approved
                 "", // approver
                 "" //varchar
                 ); 
@@ -559,14 +546,14 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                 detailtable.getValueAt(j, 0).toString(), // key
                 detailtable.getValueAt(j, 1).toString(), // line
                 detailtable.getValueAt(j, 2).toString(), // item
-                "", // isinventory
-                "", // item desc
+                BlueSeerUtils.boolToString(OVData.isValidItem(detailtable.getValueAt(j, 2).toString())), // isinventory
+                detailtable.getValueAt(j, 3).toString(), // item desc
                 "", // price type
-                detailtable.getValueAt(j, 4).toString().replace(defaultDecimalSeparator, '.'), // list price
-                detailtable.getValueAt(j, 5).toString().replace(defaultDecimalSeparator, '.'), // disc
-                detailtable.getValueAt(j, 6).toString().replace(defaultDecimalSeparator, '.'), // netprice
-                detailtable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.'), // qty
-                "" // uom
+                detailtable.getValueAt(j, 5).toString().replace(defaultDecimalSeparator, '.'), // list price
+                detailtable.getValueAt(j, 6).toString().replace(defaultDecimalSeparator, '.'), // disc
+                detailtable.getValueAt(j, 7).toString().replace(defaultDecimalSeparator, '.'), // netprice
+                detailtable.getValueAt(j, 4).toString().replace(defaultDecimalSeparator, '.'), // qty
+                detailtable.getValueAt(j, 8).toString().replace(defaultDecimalSeparator, '.')  // uom
                 );
         list.add(x);
          }
@@ -603,6 +590,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                 if ( column == 0) {
                 ludialog.dispose();
                 tbitemservice.setText(target.getValueAt(row,1).toString());
+                lblitemdesc.setText(target.getValueAt(row,2).toString());
                 }
             }
         };
@@ -683,13 +671,18 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                       quod.quod_nbr(),   
                       quod.quod_line(), 
                       quod.quod_item(),
+                      quod.quod_desc(),
                       quod.quod_qty(),
                       quod.quod_listprice(),
                       quod.quod_disc(),
                       quod.quod_netprice(),
                       quod.quod_uom()
                   });
-                }
+                
+        }
+        quoteline = detailmodel.getRowCount();
+        
+        setPrice();
         
     }
     
@@ -734,7 +727,16 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
     }
       
-   
+    public void setPrice() {
+        actamt = 0;
+        for (int j = 0; j < detailtable.getRowCount(); j++) {
+            actamt += bsParseDouble(detailtable.getValueAt(j, 7).toString().replace(defaultDecimalSeparator, '.')) * 
+                    bsParseDouble(detailtable.getValueAt(j, 4).toString().replace(defaultDecimalSeparator, '.'));
+        }
+        
+        tbactualamt.setText(currformatDouble(actamt));
+        
+    }
 
      
       
@@ -1231,18 +1233,21 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
             detailmodel.addRow(new Object[] { tbkey.getText(), 
                                                 quoteline,
                                                 tbitemservice.getText(),
+                                                lblitemdesc.getText(),
                                                 tbqty.getText(),
                                                 tbprice.getText(),
-                                                "", // disc
+                                                "0", // disc
                                                 tbprice.getText(),
                                                 dduom.getSelectedItem().toString()
                                                 });
        
         tbitemservice.setText("");
+        lblitemdesc.setText("");
         tbqty.setText("");
         tbprice.setText("");
+        dduom.setSelectedIndex(0);
         tbitemservice.requestFocus();
-        tbactualamt.setText(currformatDouble(actamt));
+        setPrice();
         
         
         
@@ -1270,7 +1275,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
             ((javax.swing.table.DefaultTableModel) detailtable.getModel()).removeRow(i);
            quoteline--;
         }
-        tbactualamt.setText(currformatDouble(actamt));
+        setPrice();
     }//GEN-LAST:event_btdeleteitemActionPerformed
 
     private void ddsiteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddsiteActionPerformed
