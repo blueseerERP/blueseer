@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="223" pageHeight="28" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="223" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" whenResourceMissingType="Empty" uuid="078cf306-3884-4a22-bf78-2e22eac8a13d">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="myid" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select quos_desc, case when quos_amttype = 'percent' and quos_type <> 'tax' 
+then (myamt * -1 * (quos_amt / 100.0)) 
+when quos_amttype = 'percent' and quos_type = 'tax' 
+then (myamt * (quos_amt / 100.0)) 
+else quos_amt end as 'amt' 
+from quo_sac, (select quod_nbr, sum(quod_qty * quod_listprice) as 'myamt' from quo_det
+	group by quod_nbr
+) sub where sub.quod_nbr = quos_nbr and quos_nbr = $P{myid}]]>
+	</queryString>
+	<field name="quos_desc" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="amt" class="java.lang.Double"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="14" splitType="Immediate">
+			<textField>
+				<reportElement x="0" y="0" width="100" height="14" uuid="cb969a1e-09e6-420f-8401-dd62a22754a8"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{quos_desc}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="100" y="0" width="123" height="14" uuid="17207d79-bb71-4245-a361-297ab29d6bd1"/>
+				<textElement textAlignment="Right">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{amt}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -1568,7 +1568,7 @@ public class ordData {
     }
     
     
-    public static String[] addQuoteTransaction(ArrayList<quo_det> qod, quo_mstr qo) {
+    public static String[] addQuoteTransaction(ArrayList<quo_det> qod, quo_mstr qo, ArrayList<quo_sac> qsac) {
         String[] m = new String[2];
         Connection bscon = null;
         PreparedStatement ps = null;
@@ -1583,6 +1583,11 @@ public class ordData {
             _addQuoteMstr(qo, bscon, ps, res);  
             for (quo_det z : qod) {
                 _addQuoteDet(z, bscon, ps, res);
+            }
+            if (qsac != null) {
+                for (quo_sac z : qsac) {
+                    _addQuoteSAC(z, bscon, ps, res);
+                }
             }
             
             bscon.commit();
@@ -1622,7 +1627,7 @@ public class ordData {
     return m;
     }
     
-    public static String[] updateQuoteTransaction(String x, ArrayList<String> lines, ArrayList<quo_det> qod, quo_mstr qo) {
+    public static String[] updateQuoteTransaction(String x, ArrayList<String> lines, ArrayList<quo_det> qod, quo_mstr qo, ArrayList<quo_sac> qsac) {
         String[] m = new String[2];
         Connection bscon = null;
         PreparedStatement ps = null;
@@ -1642,6 +1647,10 @@ public class ordData {
                     continue;
                 }
                 _updateQuoteDet(z, qo, bscon, ps, res);
+            }
+            _deleteQuoteSAC(qo.quo_nbr, bscon);
+            for (quo_sac z : qsac) {
+                _addQuoteSAC(z, bscon, ps, res);
             }
              _updateQuoteMstr(qo, bscon, ps);  
             bscon.commit();
@@ -1829,6 +1838,39 @@ public class ordData {
         return rows;
     }
     
+    private static int _addQuoteSAC(quo_sac x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from quo_sac where quos_nbr = ? and quos_desc = ?";
+        String sqlInsert = "insert into quo_sac (quos_nbr, quos_desc, quos_type, " 
+                        + "quos_amttype, quos_amt ) "
+                        + " values (?,?,?,?,?); "; 
+       
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x.quos_nbr);
+          ps.setString(2, x.quos_desc);
+          res = ps.executeQuery();
+          ps = con.prepareStatement(sqlInsert); 
+            if (! res.isBeforeFirst()) {
+            ps.setString(1, x.quos_nbr);
+            ps.setString(2, x.quos_desc);
+            ps.setString(3, x.quos_type);
+            ps.setString(4, x.quos_amttype);
+            ps.setString(5, x.quos_amt);
+            rows = ps.executeUpdate();
+            } 
+            return rows;
+    }
+    
+    private static void _deleteQuoteSAC(String x, Connection con) throws SQLException { 
+        PreparedStatement ps = null; 
+        String sql = "delete from quo_sac where quos_nbr = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x);
+        ps.executeUpdate();
+        ps.close();
+    }
+    
+    
     public static String[] deleteQuoteLines(String x, ArrayList<String> lines) {
         String[] m = new String[2];
         if (x == null) {
@@ -1925,6 +1967,10 @@ public class ordData {
         ps = con.prepareStatement(sql);
         ps.setString(1, x.quo_nbr);
         ps.executeUpdate();
+        sql = "delete from quo_sac where quos_nbr = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x.quo_nbr);
+        ps.executeUpdate();
         ps.close();
     }
     
@@ -2008,6 +2054,39 @@ public class ordData {
 	       MainFrame.bslog(s);  
                m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
                r = new quo_det(m);
+               list.add(r);
+        }
+        return list;
+    }
+   
+    public static ArrayList<quo_sac> getQuoteSAC(String code) {
+        quo_sac r = null;
+        String[] m = new String[2];
+        ArrayList<quo_sac> list = new ArrayList<quo_sac>();
+        String sql = "select * from quo_sac where quos_nbr = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, code);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new quo_sac(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new quo_sac(m, res.getString("quos_nbr"), 
+                                res.getString("quos_desc"), 
+                                res.getString("quos_type"), 
+                                res.getString("quos_amttype"), 
+                                res.getString("quos_amt"));
+                        list.add(r);
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new quo_sac(m);
                list.add(r);
         }
         return list;
@@ -2805,7 +2884,15 @@ public class ordData {
         }
     }
     
-
+    public record quo_sac(String[] m, String quos_nbr, String quos_desc, String quos_type,
+        String quos_amttype, String quos_amt 
+        )  {
+        public quo_sac(String[] m) {
+            this (m, "", "", "", "", "");
+        }
+    }
+    
+    
     public record quo_det(String[] m, String quod_nbr, String quod_line, String quod_item,
         String quod_isinv, String quod_desc, String quod_pricetype, String quod_listprice, String quod_disc, 
         String quod_netprice, String quod_qty, String quod_uom 
