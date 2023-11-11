@@ -495,14 +495,14 @@ public class DeptMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     public void updateForm() {
         tbkey.setText(x.dept_id());
-        tbdesc.setText(x.dept_id());
-        tbcopacct.setText(x.dept_id());
-        tblbracct.setText(x.dept_id());
-        tbbdnacct.setText(x.dept_id());
-        tblbrusageacct.setText(x.dept_id());
-        tblbrrateacct.setText(x.dept_id());
-        tbbdnusageacct.setText(x.dept_id());
-        tbbdnrateacct.setText(x.dept_id());
+        tbdesc.setText(x.dept_desc());
+        tbcopacct.setText(x.dept_cop_acct());
+        tblbracct.setText(x.dept_lbr_acct());
+        tbbdnacct.setText(x.dept_bdn_acct());
+        tblbrusageacct.setText(x.dept_lbr_usg_acct());
+        tblbrrateacct.setText(x.dept_lbr_rate_acct());
+        tbbdnusageacct.setText(x.dept_bdn_usg_acct());
+        tbbdnrateacct.setText(x.dept_bdn_rate_acct());
         setAction(x.m()); 
     }
     
