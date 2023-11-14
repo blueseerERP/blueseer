@@ -3219,7 +3219,8 @@ CREATE TABLE "quo_sac" (
   "quos_desc" varchar(20)  NOT NULL COLLATE NOCASE DEFAULT '',
   "quos_type" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
   "quos_amttype" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
-  "quos_amt" decimal(14,5) NOT NULL DEFAULT '0'
+  "quos_amt" decimal(14,5) NOT NULL DEFAULT '0',
+  "quos_appcode" varchar(30) NOT NULL COLLATE NOCASE DEFAULT ''
 ); 
 
 

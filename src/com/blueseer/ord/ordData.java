@@ -1842,8 +1842,8 @@ public class ordData {
         int rows = 0;
         String sqlSelect = "select * from quo_sac where quos_nbr = ? and quos_desc = ?";
         String sqlInsert = "insert into quo_sac (quos_nbr, quos_desc, quos_type, " 
-                        + "quos_amttype, quos_amt ) "
-                        + " values (?,?,?,?,?); "; 
+                        + "quos_amttype, quos_amt, quos_appcode ) "
+                        + " values (?,?,?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.quos_nbr);
@@ -1856,6 +1856,7 @@ public class ordData {
             ps.setString(3, x.quos_type);
             ps.setString(4, x.quos_amttype);
             ps.setString(5, x.quos_amt);
+            ps.setString(6, x.quos_appcode);
             rows = ps.executeUpdate();
             } 
             return rows;
@@ -2078,7 +2079,8 @@ public class ordData {
                                 res.getString("quos_desc"), 
                                 res.getString("quos_type"), 
                                 res.getString("quos_amttype"), 
-                                res.getString("quos_amt"));
+                                res.getString("quos_amt"),
+                                res.getString("quos_appcode"));
                         list.add(r);
                     }
                 }
@@ -2765,6 +2767,34 @@ public class ordData {
 
 }
 
+    public static void updateQuoteStatus(String nbr, String status) {
+       try{
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+        Statement st = con.createStatement();
+        try{
+           st.executeUpdate(
+                 " update quo_mstr set quo_status = " + "'" + status + "'" +
+                 " where quo_nbr = " + "'" + nbr + "'" + ";" );
+        }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+            if (st != null) {
+                st.close();
+            }
+            con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    }
+    
     public record salesOrder(String[] m, so_mstr so, ArrayList<sod_det> sod,
         ArrayList<sos_det> sos, ArrayList<sod_tax> sodtax, ArrayList<so_tax> sotax) {
         public salesOrder(String[] m) {
@@ -2885,10 +2915,10 @@ public class ordData {
     }
     
     public record quo_sac(String[] m, String quos_nbr, String quos_desc, String quos_type,
-        String quos_amttype, String quos_amt 
+        String quos_amttype, String quos_amt, String quos_appcode 
         )  {
         public quo_sac(String[] m) {
-            this (m, "", "", "", "", "");
+            this (m, "", "", "", "", "", "");
         }
     }
     

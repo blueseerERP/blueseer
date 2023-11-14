@@ -69,8 +69,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import com.blueseer.ctr.cusData;
+import com.blueseer.inv.invData;
+import static com.blueseer.inv.invData.getItemQOHTotal;
+import static com.blueseer.ord.ordData.addOrderTransaction;
 import static com.blueseer.ord.ordData.addQuoteTransaction;
 import static com.blueseer.ord.ordData.deleteQuoteMstr;
+import static com.blueseer.ord.ordData.getOrderItemAllocatedQty;
 import static com.blueseer.ord.ordData.getQuoteDet;
 import static com.blueseer.ord.ordData.getQuoteLines;
 import static com.blueseer.ord.ordData.getQuoteMstr;
@@ -78,12 +82,16 @@ import static com.blueseer.ord.ordData.getQuoteSAC;
 import com.blueseer.ord.ordData.quo_det;
 import com.blueseer.ord.ordData.quo_mstr;
 import com.blueseer.ord.ordData.quo_sac;
+import com.blueseer.ord.ordData.sod_det;
 import static com.blueseer.ord.ordData.updateQuoteTransaction;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormatNull;
 import java.awt.Color;
 import java.awt.Component;
 import java.sql.Connection;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -137,8 +145,9 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
             new String[]{
                 getGlobalColumnTag("type"), 
                 getGlobalColumnTag("description"), 
-                getGlobalColumnTag("value"), 
-                getGlobalColumnTag("amount")
+                getGlobalColumnTag("amounttype"), 
+                getGlobalColumnTag("amount"),
+                getGlobalColumnTag("code")
             });
                 
     /**
@@ -204,6 +213,10 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
            } else if (this.type.equals("get")) {
              updateForm();
              tbkey.requestFocus();
+           } else if (this.type.equals("add") && message[0].equals("0")) {
+             initvars(key);
+           } else if (this.type.equals("update") && message[0].equals("0")) {
+             initvars(key); 
            } else {
              initvars(null);  
            }
@@ -462,9 +475,20 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                    btadd.setEnabled(false);
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
-                   //lbmessage.setText(getMessageTag(1170));
+                   btadd.setEnabled(false);
+                   if (ddstatus.getSelectedItem().toString().compareTo(getGlobalProgTag("closed")) == 0) {
+                             lbmessage.setText(getMessageTag(1097));
+                             lbmessage.setForeground(Color.blue);
+                             btnew.setEnabled(true);
+                             btlookup.setEnabled(true);
+                             btclear.setEnabled(true);
+                             btprintquote.setEnabled(true);
+                             btupdate.setEnabled(false);
+                             btdelete.setEnabled(false);
+                             btcommit.setEnabled(false);
+                   } 
         } else {
-                   tbkey.setForeground(Color.red); 
+           tbkey.setForeground(Color.red); 
         }
        
     }
@@ -614,12 +638,115 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                 sactable.getValueAt(j, 1).toString(),
                 sactable.getValueAt(j, 0).toString(),
                 sactable.getValueAt(j, 2).toString(),
-                sactable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.'));     
+                sactable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.'),
+                sactable.getValueAt(j, 4).toString());     
                 list.add(x);
          }
         return list;
     }
     
+    public String[] createSO() {
+        java.util.Date now = new java.util.Date();
+        String key = String.valueOf(OVData.getNextNbr("order"));
+        ordData.so_mstr so = new ordData.so_mstr(null, 
+                 key,
+                 ddcust.getSelectedItem().toString(),
+                 ddcust.getSelectedItem().toString(),
+                 ddsite.getSelectedItem().toString(),
+                 ddcurr.getSelectedItem().toString(),   
+                 "", // shipvia
+                 "", // wh
+                 tbkey.getText().toString(), // PO ...to be changed manually
+                 bsmf.MainFrame.dfdate.format(now).toString(), // due date ...to be changed manually
+                 bsmf.MainFrame.dfdate.format(now).toString(), // order date
+                 bsmf.MainFrame.dfdate.format(now), // create date
+                 bsmf.MainFrame.userid,
+                 "pending", // status
+                 "",   // order level allocation status c,p 
+                 ddterms.getSelectedItem().toString(),
+                 cusData.getCustSalesAcct(ddcust.getSelectedItem().toString()),
+                 cusData.getCustSalesCC(ddcust.getSelectedItem().toString()),
+                 tarmks.getText(),
+                 "DISCRETE",
+                 ddtaxcode.getSelectedItem().toString(),
+                "0", // confirmed
+                "1", // is sourced
+                "1", // is planned
+                "" // entrytype...blank for manual; 'edi' for EDI entry
+                );
+        
+        // now detail
+        // first check and see if any percent based discounts ...to be assigned at detail level of order
+        double detaildisc = 0.00;
+        double netprice = 0.00;
+        for (int j = 0; j < sactable.getRowCount(); j++) {
+               if (sactable.getValueAt(j, 0).toString().equals("discount") && sactable.getValueAt(j, 2).toString().equals("percent")) {
+                   detaildisc += Double.valueOf(sactable.getValueAt(j, 3).toString());
+               }
+        }
+        
+        // now add SOD_DETs
+        ArrayList<sod_det> list = new ArrayList<sod_det>();
+         
+            for (int j = 0; j < detailtable.getRowCount(); j++) {
+                netprice = Double.valueOf(detailtable.getValueAt(j, 5).toString()) - ((detaildisc / 100) * Double.valueOf(detailtable.getValueAt(j, 5).toString()));
+                sod_det x = new sod_det(null, 
+                key,
+                detailtable.getValueAt(j, 1).toString(), // line
+                detailtable.getValueAt(j, 2).toString(), // item
+                "", //custitem
+                tbkey.getText(), // po
+                detailtable.getValueAt(j, 4).toString().replace(defaultDecimalSeparator, '.'), // qty
+                detailtable.getValueAt(j, 8).toString(), //uom
+                "0", // allocation value
+                detailtable.getValueAt(j, 5).toString().replace(defaultDecimalSeparator, '.'), // listprice
+                String.valueOf(detaildisc), //disc
+                String.valueOf(netprice).replace(defaultDecimalSeparator, '.'), //netprice
+                bsmf.MainFrame.dfdate.format(now).toString(),
+                bsmf.MainFrame.dfdate.format(now).toString(),   
+                "0", //shipqty
+                "open", // status
+                "", //warehouse
+                "", //loc
+                detailtable.getValueAt(j, 3).toString(),  //itemdesc
+                "0",  //taxamt
+                ddsite.getSelectedItem().toString(),  
+                "", // bomcode
+                "" // shipcode
+                );  
+                list.add(x);
+            }    
+            
+            // now discount, charge, and tax
+            ArrayList<ordData.sos_det> listsac = new ArrayList<ordData.sos_det>();
+            ArrayList<ordData.so_tax> listtax = new ArrayList<ordData.so_tax>();
+            
+            for (int j = 0; j < sactable.getRowCount(); j++) {
+               
+                ordData.sos_det x = new ordData.sos_det(null, key,
+                sactable.getValueAt(j, 1).toString(),
+                sactable.getValueAt(j, 0).toString(),
+                sactable.getValueAt(j, 2).toString(),
+                sactable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.'));     
+                listsac.add(x); 
+                
+              if (sactable.getValueAt(j, 0).toString().equals("tax")) {
+                ordData.so_tax z = new ordData.so_tax(null, key,
+                sactable.getValueAt(j, 1).toString(), // desc
+                sactable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.'), // percent
+                sactable.getValueAt(j, 2).toString()); // amount type
+                listtax.add(z);   
+               }
+            }
+            
+            // add Sales Order
+            String[] m = addOrderTransaction(list, so, listtax, null, listsac);
+            if (m[0].equals("0")) {
+                m[1] = key;
+            }
+            return m;
+        
+    }
     
     public void lookUpFrameItemDesc() {
         
@@ -652,6 +779,13 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                 ludialog.dispose();
                 tbitemservice.setText(target.getValueAt(row,1).toString());
                 lblitemdesc.setText(target.getValueAt(row,2).toString());
+                String custgroup = ddcust.getSelectedItem().toString();
+                if (ddpricegroup.getSelectedItem() != null && ! ddpricegroup.getSelectedItem().toString().isBlank()) {
+                    custgroup = ddpricegroup.getSelectedItem().toString();
+                }
+                String[] descprice = invData.getItemPrice("c", custgroup, target.getValueAt(row,1).toString(), 
+                        "EA", ddcurr.getSelectedItem().toString(), "1");
+                tbprice.setText(descprice[1]);
                 }
             }
         };
@@ -705,6 +839,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
 
     public void updateForm() throws ParseException {
+        isLoad = true;
         tbkey.setText(x.quo_nbr());
         ddcust.setSelectedItem(x.quo_cust());
         ddsite.setSelectedItem(x.quo_site());
@@ -752,12 +887,16 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                           sos.quos_type(), 
                           sos.quos_desc(),
                           sos.quos_amttype(),
-                          sos.quos_amt()});
+                          sos.quos_amt(),
+                          sos.quos_appcode()});
             }
         }
         
         
         summarize();
+        
+        
+        isLoad = false;
         
     }
     
@@ -808,25 +947,44 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         double totalcharges = 0.00;
         double totaldiscounts = 0.00;
         double totaltaxes = 0.00;
-      
-      for (int j = 0; j < sactable.getRowCount(); j++) {
-          if (sactable.getValueAt(j, 0).equals("charge")) {   
-          totalcharges += Double.valueOf(sactable.getValueAt(j, 3).toString());
-          }
-          if (sactable.getValueAt(j, 0).equals("discount")) {   
-          totaldiscounts += Double.valueOf(sactable.getValueAt(j, 3).toString());
-          }
-          if (sactable.getValueAt(j, 0).equals("tax")) {   
-          totaltaxes += Double.valueOf(sactable.getValueAt(j, 3).toString());
-          }
-      }  
-      
+        
       
         for (int j = 0; j < detailtable.getRowCount(); j++) {
             actamt += bsParseDouble(detailtable.getValueAt(j, 7).toString().replace(defaultDecimalSeparator, '.')) * 
                     bsParseDouble(detailtable.getValueAt(j, 4).toString().replace(defaultDecimalSeparator, '.'));
         }
-        actamt += totalcharges + totaldiscounts + totaltaxes;
+        
+      for (int j = 0; j < sactable.getRowCount(); j++) {
+          if (sactable.getValueAt(j, 0).equals("charge")) {   
+               if (sactable.getValueAt(j, 2).toString().equals("percent")) {
+                 totalcharges +=  actamt * (Double.valueOf(sactable.getValueAt(j, 3).toString()) / 100);
+              } else {
+                 totalcharges += Double.valueOf(sactable.getValueAt(j, 3).toString());
+              }
+          }
+          if (sactable.getValueAt(j, 0).equals("discount")) {   
+              if (sactable.getValueAt(j, 2).toString().equals("percent")) {
+                 totaldiscounts +=  -1 * (actamt * (Double.valueOf(sactable.getValueAt(j, 3).toString()) / 100));
+              } else {
+                  totaldiscounts += Double.valueOf(sactable.getValueAt(j, 3).toString());
+              }
+          }
+      }  
+      actamt += totalcharges + totaldiscounts;
+      
+      // now do taxes....tax percent over total NET price...price - discounts + charges
+      for (int j = 0; j < sactable.getRowCount(); j++) {
+          if (sactable.getValueAt(j, 0).equals("tax")) {   
+              if (sactable.getValueAt(j, 2).toString().equals("percent")) {
+                 totaltaxes +=  actamt * (Double.valueOf(sactable.getValueAt(j, 3).toString()) / 100);
+              } else {
+                  totaltaxes += Double.valueOf(sactable.getValueAt(j, 3).toString());
+              }          
+          }
+      }
+      actamt += totaltaxes;
+        
+        
         
         tbtottax.setText(currformatDouble(totaltaxes));
         tbtotdisc.setText(currformatDouble(totaldiscounts));
@@ -1097,11 +1255,29 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
+        ddpricegroup.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddpricegroupActionPerformed(evt);
+            }
+        });
+
         jLabel9.setText("Price Group");
         jLabel9.setName("lblpricegroup"); // NOI18N
 
+        dddisccode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                dddisccodeActionPerformed(evt);
+            }
+        });
+
         jLabel11.setText("Discount Code");
         jLabel11.setName("lbldiscode"); // NOI18N
+
+        ddtaxcode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddtaxcodeActionPerformed(evt);
+            }
+        });
 
         jLabel12.setText("Tax Code");
         jLabel12.setName("lbltaxcode"); // NOI18N
@@ -1158,7 +1334,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addComponent(jLabel7)
                             .addComponent(jLabel15))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 594, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanelMainLayout.createSequentialGroup()
                                 .addComponent(tbitemservice, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1203,7 +1379,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                                     .addComponent(ddstatus, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(ddquotetype, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(ddsite, javax.swing.GroupLayout.Alignment.LEADING, 0, 121, Short.MAX_VALUE))
-                                .addGap(17, 17, 17)
+                                .addGap(33, 33, 33)
                                 .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel35, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -1211,20 +1387,23 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                                     .addComponent(jLabel16, javax.swing.GroupLayout.Alignment.TRAILING))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(dcquoteexpire, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(dcpricingexpire, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(ddcurr, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 146, Short.MAX_VALUE)
-                                .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(ddpricegroup, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(dddisccode, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(ddtaxcode, 0, 103, Short.MAX_VALUE)))))
+                                    .addComponent(ddcurr, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanelMainLayout.createSequentialGroup()
+                                        .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(dcquoteexpire, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(dcpricingexpire, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(ddpricegroup, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(dddisccode, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(ddtaxcode, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(15, 15, 15))))))
                     .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(jPanelMainLayout.createSequentialGroup()
                             .addComponent(btcommit)
@@ -1249,7 +1428,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(btadd))
                         .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 775, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 2, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanelMainLayout.setVerticalGroup(
             jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1599,7 +1778,18 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_btprintquoteActionPerformed
 
     private void btcommitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcommitActionPerformed
-        // TODO add your handling code here:
+        String[] m = new String[]{"","",""};
+        if (ddquotetype.getSelectedItem().equals("discrete")) {
+            m = createSO();
+            if (m[0].equals("0")) {
+            bsmf.MainFrame.show("Quote has been converted to Order: " + m[1]);
+            ordData.updateQuoteStatus(tbkey.getText(), "closed");
+            initvars(new String[]{tbkey.getText()});
+            } else {
+                bsmf.MainFrame.show("Problem converting quote to order");
+            }
+        } 
+        
     }//GEN-LAST:event_btcommitActionPerformed
 
     private void btsacaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btsacaddActionPerformed
@@ -1629,7 +1819,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
 
         if (proceed) {
-            sacmodel.addRow(new Object[]{ ddsactype.getSelectedItem().toString(), tbsacdesc.getText(), ddsacamttype.getSelectedItem().toString(), String.valueOf(amount)});
+            sacmodel.addRow(new Object[]{ ddsactype.getSelectedItem().toString(), tbsacdesc.getText(), ddsacamttype.getSelectedItem().toString(), String.valueOf(amount), "discrete"});
         }
         summarize();
 
@@ -1638,8 +1828,10 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
     private void btsacdeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btsacdeleteActionPerformed
         int[] rows = sactable.getSelectedRows();
         for (int i : rows) {
+            if (! sactable.getValueAt(i, 4).toString().equals("auto")) {
             bsmf.MainFrame.show(getMessageTag(1031,String.valueOf(i)));
             ((javax.swing.table.DefaultTableModel) sactable.getModel()).removeRow(i);
+            }
         }
         summarize();
     }//GEN-LAST:event_btsacdeleteActionPerformed
@@ -1651,6 +1843,84 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
             percentlabel.setText("amount");
         }
     }//GEN-LAST:event_ddsacamttypeActionPerformed
+
+    private void ddtaxcodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddtaxcodeActionPerformed
+        
+        if (! isLoad && ddtaxcode.getSelectedItem() != null ) {
+            
+            // if blank code...remove from sactable and resummarize...then return;
+            if (ddtaxcode.getSelectedItem().toString().isBlank()) {
+                for (int j = 0; j < sactable.getRowCount(); j++) {
+                if (sactable.getValueAt(j, 0).toString().equals("tax") && sactable.getValueAt(j, 4).toString().equals("auto"))
+                   ((javax.swing.table.DefaultTableModel) sactable.getModel()).removeRow(j); 
+                }
+                summarize();
+                return;
+            }
+            
+            
+            String desc = "";
+            String amttype = "";
+            double amount = 0.00;
+            ArrayList<String[]> headertax = OVData.getTaxPercentElementsApplicableByTaxCode(ddtaxcode.getSelectedItem().toString());
+            
+            // remove all 'tax' records and refresh
+            for (int j = 0; j < sactable.getRowCount(); j++) {
+                if (sactable.getValueAt(j, 0).toString().equals("tax") && sactable.getValueAt(j, 4).toString().equals("auto"))
+               ((javax.swing.table.DefaultTableModel) sactable.getModel()).removeRow(j); 
+            }
+            //refresh tax records
+            for (String[] t : headertax) {
+            sacmodel.addRow(new Object[]{ "tax", t[0], "percent", t[1], "auto"});
+            }
+            
+            summarize();
+            
+        }
+    }//GEN-LAST:event_ddtaxcodeActionPerformed
+
+    private void ddpricegroupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddpricegroupActionPerformed
+        if (! isLoad && ddpricegroup.getSelectedItem() != null && ! ddpricegroup.getSelectedItem().toString().isBlank()) {
+           
+            for (int j = 0; j < detailtable.getRowCount(); j++) { 
+            String[] descprice = invData.getItemPrice("c", ddpricegroup.getSelectedItem().toString(), detailtable.getValueAt(j,2).toString(), 
+            detailtable.getValueAt(j,8).toString(), ddcurr.getSelectedItem().toString(), "1");
+            
+            detailtable.setValueAt(Double.valueOf(descprice[1]), j, 5);
+            detailtable.setValueAt(Double.valueOf(descprice[1]), j, 7);
+            }
+            
+            summarize();
+            
+        }
+    }//GEN-LAST:event_ddpricegroupActionPerformed
+
+    private void dddisccodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dddisccodeActionPerformed
+         if (! isLoad && dddisccode.getSelectedItem() != null ) {
+            
+            // if blank code...remove from sactable and resummarize...then return;
+            if (dddisccode.getSelectedItem().toString().isBlank()) {
+                for (int j = 0; j < sactable.getRowCount(); j++) {
+                if (sactable.getValueAt(j, 0) != null && sactable.getValueAt(j, 4) != null && sactable.getValueAt(j, 0).toString().equals("discount") && sactable.getValueAt(j, 4).toString().equals("auto"))
+                   ((javax.swing.table.DefaultTableModel) sactable.getModel()).removeRow(j); 
+                }
+                summarize();
+                return;
+            }
+             // get generic discount key...regardless of cust code
+             ArrayList<String[]> headerdisc = cusData.getDiscountByKey("", dddisccode.getSelectedItem().toString());
+            
+            for (int j = 0; j < sactable.getRowCount(); j++) {
+                if (sactable.getValueAt(j, 0) != null && sactable.getValueAt(j, 4) != null && sactable.getValueAt(j, 0).toString().equals("discount") && sactable.getValueAt(j, 4).toString().equals("auto"))
+               ((javax.swing.table.DefaultTableModel) sactable.getModel()).removeRow(j); 
+            }
+            for (String[] t : headerdisc) {
+            sacmodel.addRow(new Object[]{ "discount", t[0], "percent", t[1], "auto"});
+            }
+            
+            summarize();
+         }
+    }//GEN-LAST:event_dddisccodeActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btLookUpItemDesc;

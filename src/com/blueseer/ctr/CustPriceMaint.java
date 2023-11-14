@@ -165,6 +165,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
                     ddcustcode_disc.setSelectedItem(res.getString("cpr_cust"));
                     tbdisckey.setText(res.getString("cpr_item"));
                     tbdisc.setText(bsformat("s",res.getString("cpr_disc").replace('.',defaultDecimalSeparator),"4")); 
+                    dcexpiredisc.setDate(BlueSeerUtils.parseDate(res.getString("cpr_expire")));
                     btupdatedisc.setEnabled(true);
                     btdeletedisc.setEnabled(true);
                     btadddisc.setEnabled(false);
@@ -201,6 +202,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
         
         isLoad = true;
          dcexpire.setDate(null);
+         dcexpiredisc.setDate(null);
          lbldisccode.setVisible(false);
          lbldisccode.setForeground(Color.red);
          disclist.setModel(listmodel);
@@ -239,6 +241,9 @@ public class CustPriceMaint extends javax.swing.JPanel {
         
         ddcustcode.insertItemAt("", 0);
         ddcustcode.setSelectedIndex(0);
+        
+        ddcustcode_disc.insertItemAt("", 0);
+        ddcustcode_disc.setSelectedIndex(0);
         
         dduom.removeAllItems();
         ArrayList<String> mylist = OVData.getUOMList();
@@ -487,6 +492,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
         btupdatedisc = new javax.swing.JButton();
         btdeletedisc = new javax.swing.JButton();
         lbldisccode = new javax.swing.JLabel();
+        dcexpiredisc = new com.toedter.calendar.JDateChooser();
 
         jLabel1.setText("jLabel1");
 
@@ -754,6 +760,8 @@ public class CustPriceMaint extends javax.swing.JPanel {
             }
         });
 
+        dcexpiredisc.setDateFormatString("yyyy-MM-dd");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -767,6 +775,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
                     .addComponent(jLabel10))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(dcexpiredisc, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(lbldisccode, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -799,17 +808,22 @@ public class CustPriceMaint extends javax.swing.JPanel {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbdisc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(dcexpiredisc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel10)
                     .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(1, 1, 1)
                         .addComponent(btadddisc)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btupdatedisc)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btdeletedisc)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(btdeletedisc))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel10)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(149, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -1048,15 +1062,20 @@ public class CustPriceMaint extends javax.swing.JPanel {
                }
              
                 if (proceed) {
+                    String expiredate = null;
+                    if (dcexpiredisc.getDate() != null) {
+                        expiredate = BlueSeerUtils.setDateFormat(dcexpiredisc.getDate());
+                    }
                     st.executeUpdate("insert into cpr_mstr "
                         + "(cpr_cust, cpr_item, cpr_type, cpr_desc, "
-                        + " cpr_disc "
+                        + " cpr_disc, cpr_expire "
                         + " ) "
                         + " values ( " + "'" + ddcustcode_disc.getSelectedItem() + "'" + ","
                         + "'" + tbdisckey.getText().toString() + "'" + ","
                         + "'DISCOUNT'" + ","
                         + "'" + tbdisckey.getText().toString() + "'" + ","
-                        + "'" + tbdisc.getText().replace(defaultDecimalSeparator, '.') + "'" 
+                        + "'" + tbdisc.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "'" + expiredate + "'"         
                         + ")"
                         + ";");
 
@@ -1139,8 +1158,13 @@ public class CustPriceMaint extends javax.swing.JPanel {
             try {
                 boolean proceed = true;
                 if (proceed) {
+                    String expiredate = null;
+                    if (dcexpiredisc.getDate() != null) {
+                      expiredate = BlueSeerUtils.setDateFormat(dcexpire.getDate());
+                    }
                     st.executeUpdate("update cpr_mstr "
-                        + " set cpr_disc = " + "'" + tbdisc.getText().replace(defaultDecimalSeparator, '.') + "'"
+                        + " set cpr_disc = " + "'" + tbdisc.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + " cpr_expire = " + "'" + expiredate + "'" 
                         + " where cpr_cust = " + "'" + ddcustcode_disc.getSelectedItem() + "'" 
                         + " and cpr_type = 'DISCOUNT' "        
                         + " and cpr_item = " + "'" + disclist.getSelectedValue().toString() + "'"  
@@ -1178,14 +1202,15 @@ public class CustPriceMaint extends javax.swing.JPanel {
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
-                  res = st.executeQuery("select cpr_disc, cpr_item from cpr_mstr where cpr_cust = " + "'" + 
-                      ddcustcode_disc.getSelectedItem().toString() + "'" +
-                      " and cpr_type = " + "'DISCOUNT'" +
+                  res = st.executeQuery("select cpr_disc, cpr_item, cpr_expire from cpr_mstr where " +
+                      " cpr_cust = " + "'" + ddcustcode_disc.getSelectedItem().toString() + "'" +
+                      " and cpr_type = 'DISCOUNT'" +
                       " and cpr_item = " + "'" + disclist.getSelectedValue().toString() + "'" +
                       ";");
                while (res.next()) {
                       tbdisc.setText(bsformat("s",res.getString("cpr_disc").replace('.', defaultDecimalSeparator),"4"));
                       tbdisckey.setText(res.getString("cpr_item"));
+                      dcexpiredisc.setDate(BlueSeerUtils.parseDate(res.getString("cpr_expire"))); 
                }
             } catch (SQLException s) {
                 MainFrame.bslog(s);
@@ -1396,6 +1421,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
     private javax.swing.JButton btdeletedisc;
     private javax.swing.JButton btupdatedisc;
     private com.toedter.calendar.JDateChooser dcexpire;
+    private com.toedter.calendar.JDateChooser dcexpiredisc;
     private javax.swing.JComboBox<String> ddcurr;
     private javax.swing.JComboBox ddcustcode;
     private javax.swing.JComboBox ddcustcode_disc;

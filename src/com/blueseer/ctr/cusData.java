@@ -1976,7 +1976,7 @@ public class cusData {
                 
                 java.util.Date now = new java.util.Date();
                 res = st.executeQuery("select cpr_item from cpr_mstr " +
-                      " where cpr_cust = '' and cpr_type = 'DISCOUNT' " + 
+                      " where cpr_type = 'DISCOUNT' " + 
                       " AND (cpr_expire = null OR cpr_expire >= " + "'" + BlueSeerUtils.setDateFormat(now) + "'" + ") " +
                       ";");
                while (res.next()) {
@@ -2001,6 +2001,50 @@ public class cusData {
         return myarray;
         
     }
+    
+    public static ArrayList<String[]> getDiscountByKey(String cust, String key) {
+       ArrayList<String[]> myarray = new ArrayList<String[]>();
+        try{
+            
+            Connection con = null;
+        if (ds != null) {
+        con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                
+                java.util.Date now = new java.util.Date();
+                res = st.executeQuery("select cpr_desc, cpr_disc from cpr_mstr " +
+                      " where cpr_type = 'DISCOUNT' " + 
+                      " AND cpr_cust = " + "'" + cust + "'"  +
+                      " AND cpr_item = " + "'" + key + "'"  +
+                      ";");
+               while (res.next()) {
+                    myarray.add(new String[]{res.getString("cpr_desc"), res.getString("cpr_disc")});
+                }
+           }
+            catch (SQLException s){
+                 bsmf.MainFrame.show("SQL cannot get disc price list");
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myarray;
+        
+    }
+    
     
     public static ArrayList gettermsmstrlist() {
        ArrayList myarray = new ArrayList();

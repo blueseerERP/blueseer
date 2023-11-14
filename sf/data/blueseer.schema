@@ -2767,5 +2767,6 @@ CREATE TABLE IF NOT EXISTS `quo_sac` (
   `quos_desc` varchar(20)  NOT NULL DEFAULT '',
   `quos_type` varchar(20) NOT NULL DEFAULT '',
   `quos_amttype` varchar(20) NOT NULL DEFAULT '',
-  `quos_amt` decimal(14,5) NOT NULL DEFAULT '0'
+  `quos_amt` decimal(14,5) NOT NULL DEFAULT '0',
+  `quos_appcode` varchar(30) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
