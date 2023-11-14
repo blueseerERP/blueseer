@@ -351,6 +351,12 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                        ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
                     } 
                 }
+                if (component instanceof JScrollPane) {
+                    if (tags.containsKey(this.getClass().getSimpleName() + ".scrollpane." + component.getName())) {
+                       ((JScrollPane) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".scrollpane." + component.getName())));
+                    } 
+                }
+                
        }
     }
     
@@ -1142,6 +1148,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         jScrollPane7.setBorder(javax.swing.BorderFactory.createTitledBorder("Item Table"));
+        jScrollPane7.setName("paneldetail"); // NOI18N
 
         detailtable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {

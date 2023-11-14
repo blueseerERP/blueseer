@@ -344,6 +344,7 @@
                 <TitledBorder title="Item Table"/>
               </Border>
             </Property>
+            <Property name="name" type="java.lang.String" value="paneldetail" noResource="true"/>
           </Properties>
           <AuxValues>
             <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
