@@ -73,13 +73,12 @@
                                       <Group type="102" alignment="0" attributes="0">
                                           <Component id="ddcust" min="-2" pref="119" max="-2" attributes="0"/>
                                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                          <Component id="lbvendor" min="-2" pref="205" max="-2" attributes="0"/>
+                                          <Component id="lbcustomer" min="-2" pref="205" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="lbmessage" min="-2" pref="374" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="cbvolume" alignment="0" min="-2" max="-2" attributes="0"/>
                               <Group type="102" attributes="0">
                                   <Component id="tbqty" min="-2" pref="68" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
@@ -188,7 +187,7 @@
                                   <Component id="ddcust" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel36" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="lbvendor" min="-2" pref="28" max="-2" attributes="0"/>
+                              <Component id="lbcustomer" min="-2" pref="28" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <Component id="lbmessage" max="32767" attributes="0"/>
@@ -247,9 +246,7 @@
                       <Component id="jScrollPane1" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="cbvolume" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="lblitemdesc" alignment="0" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
@@ -341,6 +338,13 @@
           </Events>
         </Component>
         <Container class="javax.swing.JScrollPane" name="jScrollPane7">
+          <Properties>
+            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+              <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                <TitledBorder title="Item Table"/>
+              </Border>
+            </Property>
+          </Properties>
           <AuxValues>
             <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
           </AuxValues>
@@ -453,7 +457,7 @@
             <Property name="name" type="java.lang.String" value="lblsite" noResource="true"/>
           </Properties>
         </Component>
-        <Component class="javax.swing.JLabel" name="lbvendor">
+        <Component class="javax.swing.JLabel" name="lbcustomer">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
@@ -639,12 +643,6 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Discounts"/>
             <Property name="name" type="java.lang.String" value="lbltotaldisc" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JCheckBox" name="cbvolume">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Volume Based"/>
-            <Property name="name" type="java.lang.String" value="cbvolume" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblitemdesc">

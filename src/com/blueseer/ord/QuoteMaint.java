@@ -107,6 +107,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.SwingWorker;
+import javax.swing.event.TableModelEvent;
 
 
 /**
@@ -149,7 +150,19 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                 getGlobalColumnTag("amount"),
                 getGlobalColumnTag("code")
             });
-                
+       
+    javax.swing.event.TableModelListener ml = new javax.swing.event.TableModelListener() {
+                    @Override
+                    public void tableChanged(TableModelEvent tme) {
+                        if (tme.getType() == TableModelEvent.UPDATE && (tme.getColumn() == 5 )) {
+                            summarize();
+                        }
+                        // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    }
+                };
+                 
+                 
+                 
     /**
      * Creates new form ShipMaintPanel
      */
@@ -351,7 +364,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         jTabbedPane1.add("SAC/Tax", jPanelCharges);
         
          
-        lbvendor.setText("");
+        lbcustomer.setText("");
         lbmessage.setText("");
         lbmessage.setForeground(Color.blue);
         
@@ -369,6 +382,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbsacamt.setText("0");
         
         detailmodel.setRowCount(0);
+        detailmodel.addTableModelListener(ml);
         detailtable.setModel(detailmodel);
         detailtable.getTableHeader().setReorderingAllowed(false);
         
@@ -476,6 +490,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
                    btadd.setEnabled(false);
+                   lbcustomer.setText(cusData.getCustName(ddcust.getSelectedItem().toString()));
                    if (ddstatus.getSelectedItem().toString().compareTo(getGlobalProgTag("closed")) == 0) {
                              lbmessage.setText(getMessageTag(1097));
                              lbmessage.setForeground(Color.blue);
@@ -854,12 +869,8 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddcurr.setSelectedItem(x.quo_curr());
         tarmks.setText(x.quo_rmks());
         tbref.setText(x.quo_ref());
-        if (x.quo_type().equals("volume")) {
-        cbvolume.setSelected(true);
-        } else {
-         cbvolume.setSelected(false);   
-        }
-        setAction(x.m()); 
+        
+        
         
          // now detail
         
@@ -876,9 +887,9 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                       quod.quod_netprice(),
                       quod.quod_uom()
                   });
-                
+            quoteline =   Integer.valueOf(quod.quod_line());  
         }
-        quoteline = detailmodel.getRowCount();
+       
         
         // summary charges and discounts
         if (saclist != null) {
@@ -895,6 +906,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         summarize();
         
+        setAction(x.m()); 
         
         isLoad = false;
         
@@ -902,7 +914,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     
     // additional functions
-    public void setvendorvariables(String vendor) {
+    public void setcustomervariables(String cust) {
         
         try {
      
@@ -917,10 +929,11 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
             int d = 0;
             String uniqpo = null;
             try {
-                res = st.executeQuery("select vd_name, vd_curr, vd_ap_acct, vd_ap_cc, vd_terms, vd_bank from vd_mstr where vd_addr = " + "'" + vendor + "'" + ";");
+                res = st.executeQuery("select cm_name, cm_curr, cm_ar_acct, cm_ar_cc, cm_terms, cm_bank from cm_mstr where cm_code = " + "'" + cust + "'" + ";");
                 while (res.next()) {
                     i++;
-                   lbvendor.setText(res.getString("vd_name"));
+                   lbcustomer.setText(res.getString("cm_name"));
+                   ddterms.setSelectedItem(res.getString("cm_terms"));
                    
                 }
 
@@ -947,10 +960,10 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         double totalcharges = 0.00;
         double totaldiscounts = 0.00;
         double totaltaxes = 0.00;
-        
+        double detaildisc = 0.00;
       
         for (int j = 0; j < detailtable.getRowCount(); j++) {
-            actamt += bsParseDouble(detailtable.getValueAt(j, 7).toString().replace(defaultDecimalSeparator, '.')) * 
+            actamt += bsParseDouble(detailtable.getValueAt(j, 5).toString().replace(defaultDecimalSeparator, '.')) * 
                     bsParseDouble(detailtable.getValueAt(j, 4).toString().replace(defaultDecimalSeparator, '.'));
         }
         
@@ -965,6 +978,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
           if (sactable.getValueAt(j, 0).equals("discount")) {   
               if (sactable.getValueAt(j, 2).toString().equals("percent")) {
                  totaldiscounts +=  -1 * (actamt * (Double.valueOf(sactable.getValueAt(j, 3).toString()) / 100));
+                 detaildisc += Double.valueOf(sactable.getValueAt(j, 3).toString());
               } else {
                   totaldiscounts += Double.valueOf(sactable.getValueAt(j, 3).toString());
               }
@@ -983,7 +997,14 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
           }
       }
       actamt += totaltaxes;
-        
+       
+      // reassign net price in detail table
+      double netprice = 0.00;
+      for (int j = 0; j < detailtable.getRowCount(); j++) {
+      netprice = Double.valueOf(detailtable.getValueAt(j, 5).toString()) - ((detaildisc / 100) * Double.valueOf(detailtable.getValueAt(j, 5).toString()));
+      detailtable.setValueAt(String.valueOf(detaildisc), j, 6);
+      detailtable.setValueAt(currformatDouble(netprice), j, 7);
+      }
         
         
         tbtottax.setText(currformatDouble(totaltaxes));
@@ -1029,7 +1050,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel7 = new javax.swing.JLabel();
         ddsite = new javax.swing.JComboBox();
         jLabel10 = new javax.swing.JLabel();
-        lbvendor = new javax.swing.JLabel();
+        lbcustomer = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         lbmessage = new javax.swing.JLabel();
         btclear = new javax.swing.JButton();
@@ -1054,7 +1075,6 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel12 = new javax.swing.JLabel();
         tbtotdisc = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
-        cbvolume = new javax.swing.JCheckBox();
         lblitemdesc = new javax.swing.JLabel();
         btLookUpItemDesc = new javax.swing.JButton();
         btprintquote = new javax.swing.JButton();
@@ -1120,6 +1140,8 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                 btaddActionPerformed(evt);
             }
         });
+
+        jScrollPane7.setBorder(javax.swing.BorderFactory.createTitledBorder("Item Table"));
 
         detailtable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -1285,9 +1307,6 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel13.setText("Discounts");
         jLabel13.setName("lbltotaldisc"); // NOI18N
 
-        cbvolume.setText("Volume Based");
-        cbvolume.setName("cbvolume"); // NOI18N
-
         btLookUpItemDesc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
         btLookUpItemDesc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1355,10 +1374,9 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                                     .addGroup(jPanelMainLayout.createSequentialGroup()
                                         .addComponent(ddcust, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(lbvendor, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(lbcustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(lbmessage, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(cbvolume)
                             .addGroup(jPanelMainLayout.createSequentialGroup()
                                 .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(48, 48, 48)
@@ -1448,7 +1466,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(ddcust, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel36))
-                            .addComponent(lbvendor, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(lbcustomer, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(lbmessage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1492,8 +1510,6 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbvolume)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblitemdesc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1682,8 +1698,8 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     private void ddcustActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddcustActionPerformed
        if ( ddcust.getSelectedItem() != null && ! ddcust.getSelectedItem().toString().isEmpty()  && ! isLoad) {
-            setvendorvariables(ddcust.getSelectedItem().toString());
-        } // ddvend
+            setcustomervariables(ddcust.getSelectedItem().toString());
+        } 
     }//GEN-LAST:event_ddcustActionPerformed
 
     private void btdeleteitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteitemActionPerformed
@@ -1783,7 +1799,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
             m = createSO();
             if (m[0].equals("0")) {
             bsmf.MainFrame.show("Quote has been converted to Order: " + m[1]);
-            ordData.updateQuoteStatus(tbkey.getText(), "closed");
+            ordData.updateQuoteStatus(tbkey.getText(), "closed", m[1]);
             initvars(new String[]{tbkey.getText()});
             } else {
                 bsmf.MainFrame.show("Problem converting quote to order");
@@ -1936,7 +1952,6 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JButton btsacadd;
     private javax.swing.JButton btsacdelete;
     private javax.swing.JButton btupdate;
-    private javax.swing.JCheckBox cbvolume;
     private com.toedter.calendar.JDateChooser dcpricingexpire;
     private com.toedter.calendar.JDateChooser dcquoteexpire;
     private javax.swing.JComboBox<String> ddcurr;
@@ -1982,9 +1997,9 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JLabel lbcustomer;
     private javax.swing.JLabel lblitemdesc;
     private javax.swing.JLabel lbmessage;
-    private javax.swing.JLabel lbvendor;
     private javax.swing.JLabel percentlabel;
     private javax.swing.JTable sactable;
     private javax.swing.JTextArea tarmks;

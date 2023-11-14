@@ -2025,7 +2025,7 @@ public class ordData {
         quo_det r = null;
         String[] m = new String[2];
         ArrayList<quo_det> list = new ArrayList<quo_det>();
-        String sql = "select * from quo_det where quod_nbr = ? ;";
+        String sql = "select * from quo_det where quod_nbr = ? order by quod_line ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, code);
@@ -2109,7 +2109,7 @@ public class ordData {
             ResultSet res = null;
 
            res = st.executeQuery("SELECT quod_line from quo_det " +
-                   " where quod_nbr = " + "'" + nbr + "'" + ";");
+                   " where quod_nbr = " + "'" + nbr + "'" + " order by quod_line;");
                         while (res.next()) {
                           lines.add(res.getString("quod_line"));
                         }
@@ -2767,7 +2767,7 @@ public class ordData {
 
 }
 
-    public static void updateQuoteStatus(String nbr, String status) {
+    public static void updateQuoteStatus(String nbr, String status, String ref) {
        try{
         Connection con = null;
             if (ds != null) {
@@ -2778,7 +2778,8 @@ public class ordData {
         Statement st = con.createStatement();
         try{
            st.executeUpdate(
-                 " update quo_mstr set quo_status = " + "'" + status + "'" +
+                 " update quo_mstr set quo_status = " + "'" + status + "'" + "," +
+                 " quo_ref = " + "'" + ref + "'" +
                  " where quo_nbr = " + "'" + nbr + "'" + ";" );
         }
         catch (SQLException s){
