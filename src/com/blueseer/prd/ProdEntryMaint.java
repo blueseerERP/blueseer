@@ -181,8 +181,7 @@ public class ProdEntryMaint extends javax.swing.JPanel {
        
         tbuser.setText(bsmf.MainFrame.userid);
         tbuser.setEnabled(false);
-        tbsite.setText(OVData.getDefaultSite());
-        tbsite.setEnabled(false);
+        
         java.util.Date now = new java.util.Date();
         dcdate.setDate(now);
         ddop.removeAllItems();
@@ -191,6 +190,15 @@ public class ProdEntryMaint extends javax.swing.JPanel {
         tbserialno.setText("");
         tbqty.setText("");
         ddbom.removeAllItems();
+        
+        ArrayList<String> sites = OVData.getSiteList();
+        ddsite.removeAllItems();
+        for (String code : sites) {
+            ddsite.addItem(code);
+        }
+        ddsite.setSelectedItem(OVData.getDefaultSite());
+        
+        
     }
    
     public void lookUpFrameItemDesc() {
@@ -199,9 +207,9 @@ public class ProdEntryMaint extends javax.swing.JPanel {
         lual = new ActionListener() {
         public void actionPerformed(ActionEvent event) {
         if (lurb1.isSelected()) {  
-         luModel = DTData.getItemDescBrowse(luinput.getText(), "it_item");
+         luModel = DTData.getItemDescBrowseBySite(luinput.getText(), "it_item", ddsite.getSelectedItem().toString());
         } else {
-         luModel = DTData.getItemDescBrowse(luinput.getText(), "it_desc");   
+         luModel = DTData.getItemDescBrowseBySite(luinput.getText(), "it_desc", ddsite.getSelectedItem().toString());   
         }
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
@@ -254,7 +262,6 @@ public class ProdEntryMaint extends javax.swing.JPanel {
         jLabel9 = new javax.swing.JLabel();
         btsubmit = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        tbsite = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         ddop = new javax.swing.JComboBox();
@@ -272,6 +279,7 @@ public class ProdEntryMaint extends javax.swing.JPanel {
         ddbom = new javax.swing.JComboBox<>();
         jLabel7 = new javax.swing.JLabel();
         btgenerate = new javax.swing.JButton();
+        ddsite = new javax.swing.JComboBox<>();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -380,12 +388,13 @@ public class ProdEntryMaint extends javax.swing.JPanel {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(btsubmit)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(tbuser, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(dcexpire, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(dcdate, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(tbsite, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(ddsite, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(tbuser, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE))))
                         .addContainerGap(69, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
@@ -399,8 +408,8 @@ public class ProdEntryMaint extends javax.swing.JPanel {
                             .addComponent(jLabel1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tbsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2))
+                            .addComponent(jLabel2)
+                            .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(dcdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -499,7 +508,7 @@ public class ProdEntryMaint extends javax.swing.JPanel {
                 loc, 
                 tbserialno.getText(), 
                 tbreference.getText(),
-                tbsite.getText(),
+                ddsite.getSelectedItem().toString(),
                 tbuser.getText(),
                 prodline,
                 "",  // cell 
@@ -550,6 +559,7 @@ public class ProdEntryMaint extends javax.swing.JPanel {
     private com.toedter.calendar.JDateChooser dcexpire;
     private javax.swing.JComboBox<String> ddbom;
     private javax.swing.JComboBox ddop;
+    private javax.swing.JComboBox<String> ddsite;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
@@ -566,7 +576,6 @@ public class ProdEntryMaint extends javax.swing.JPanel {
     private javax.swing.JTextField tbqty;
     private javax.swing.JTextField tbreference;
     private javax.swing.JTextField tbserialno;
-    private javax.swing.JTextField tbsite;
     private javax.swing.JTextField tbuser;
     // End of variables declaration//GEN-END:variables
 }
