@@ -59,9 +59,9 @@ import javax.swing.JOptionPane;
  */
 public class invData {
     
-    public static boolean addItemMasterMass(ArrayList<String> list) {
+    public static boolean addItemMasterMass(ArrayList<String> list, String delim) {
         boolean r = false;
-        String[] ld = null;
+        String[] ld = new String[29];
         Connection con = null;
         try { 
             if (ds != null) {
@@ -69,40 +69,41 @@ public class invData {
             } else {
               con = DriverManager.getConnection(url + db, user, pass);  
             }
-    
+            
             for (String rec : list) {
-                ld = rec.split(":", -1);
-                item_mstr x = new item_mstr(null, ld[0],
-                ld[1].toUpperCase(),
-                bsformat("i", ld[7], "").replace(defaultDecimalSeparator, '.'),
-                bsformat("d", ld[8], "5").replace(defaultDecimalSeparator, '.'),
-                bsformat("d", ld[9], "5").replace(defaultDecimalSeparator, '.'),
-                bsformat("d", ld[11], "5").replace(defaultDecimalSeparator, '.'),
-                bsformat("d", ld[12], "5").replace(defaultDecimalSeparator, '.'),
-                bsformat("d", ld[10], "5").replace(defaultDecimalSeparator, '.'),
-                ld[3],
-                ld[13],
-                ld[14],
-                ld[4],
-                ld[15],
-                ld[16],
-                ld[17],
-                ld[6],
-                ld[5],        
-                ld[2],
-                ld[18],
-                "ACTIVE",
-                ld[19],
-                bsformat("d", ld[20], "2").replace(defaultDecimalSeparator, '.'),
-                bsformat("d", ld[21], "2").replace(defaultDecimalSeparator, '.'),
+                ld = rec.split(delim, -1);
+                item_mstr x = new item_mstr(null, 
+                ld[0], // item
+                ld[1].toUpperCase(), //desc
+                bsformat("i", ld[8], "").replace(defaultDecimalSeparator, '.'), // lotsize
+                bsformat("d", ld[2], "5").replace(defaultDecimalSeparator, '.'), // selling price
+                bsformat("d", ld[9], "5").replace(defaultDecimalSeparator, '.'), // purch price
+                bsformat("d", ld[11], "5").replace(defaultDecimalSeparator, '.'), // ovh cost
+                bsformat("d", ld[12], "5").replace(defaultDecimalSeparator, '.'), // out cost
+                bsformat("d", ld[10], "5").replace(defaultDecimalSeparator, '.'), // matl cost
+                (ld[4].isBlank()) ? "A" : ld[4],
+                ld[13], // type
+                ld[14], // group
+                (ld[5].isBlank()) ? "9999" : ld[5], // prodline
+                ld[15], // drawing
+                ld[16], // rev
+                ld[17], // custrev
+                ld[7], // wh
+                ld[6],      // loc  
+                (ld[3].isBlank()) ? OVData.getDefaultSite() : ld[3], //site
+                ld[18], // comments
+                "ACTIVE", // status
+                (ld[19].isBlank()) ? "EA" : ld[19], // uom
+                bsformat("d", ld[20], "2").replace(defaultDecimalSeparator, '.'), //net wt
+                bsformat("d", ld[21], "2").replace(defaultDecimalSeparator, '.'), //ship wt
                 "", //default cont
                 "0", // default cont qty
-                bsformat("d", ld[22], "0").replace(defaultDecimalSeparator, '.'),
-                bsformat("d", ld[23], "0").replace(defaultDecimalSeparator, '.'),
-                bsformat("d", ld[24], "0").replace(defaultDecimalSeparator, '.'),
-                ld[25],
-                ld[26],
-                ld[27],
+                bsformat("d", ld[22], "0").replace(defaultDecimalSeparator, '.'), // lead
+                bsformat("d", ld[23], "0").replace(defaultDecimalSeparator, '.'), //safety stock
+                bsformat("d", ld[24], "0").replace(defaultDecimalSeparator, '.'), // minordqty
+                (ld[25].isBlank()) ? "0" : ld[25], //mrp
+                (ld[26].isBlank()) ? "0" : ld[26], //sched
+                (ld[27].isBlank()) ? "0" : ld[27], //plan
                 ld[28], // routing
                 "", // tax
                 bsmf.MainFrame.dfdate.format(new Date()),

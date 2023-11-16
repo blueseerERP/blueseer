@@ -315,8 +315,8 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerT {
         tb_iv_generic.setText("inv_generic.jasper");
         tb_sh_generic.setText("ps_generic.jasper");
         tb_po_generic.setText("po_generic.jasper");
-        tb_or_generic.setText("pos_receipt.jasper");
-        tb_pos_generic.setText("ord_generic.jasper");
+        tb_or_generic.setText("ord_generic.jasper");
+        tb_pos_generic.setText("pos_receipt.jasper");
         tblogo.setText("bs.png");
         if (! x.isEmpty()) {
           tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  

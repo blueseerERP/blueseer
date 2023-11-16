@@ -1860,6 +1860,16 @@ public class BlueSeerUtils {
       return (! dir.endsWith("/") || ! dir.endsWith("\\")) ? dir + "/" : dir ;
     }
    
+     public static String padString(String s, String c, int count) {
+         
+         StringBuilder sb = new StringBuilder();
+         sb.append(s);
+         for (int j = 0; j < count; j++) {
+             sb.append(c);
+         }
+         return sb.toString();
+     }
+     
      public static String asciivalues(int t) {
          String r = "";
          if (t == 0) {

@@ -34,6 +34,7 @@ import static com.blueseer.inv.invData.addItemMasterMass;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.padString;
 import static com.blueseer.utl.OVData.createTestDataPO;
 import static com.blueseer.utl.OVData.createTestDataSO;
 import static com.blueseer.utl.OVData.createTestDataTC;
@@ -279,13 +280,13 @@ public class MassLoad extends javax.swing.JPanel {
         ArrayList<String> list = new ArrayList<String>();
         list.add("it_item,s,36,mandatory,unvalidated");
         list.add("it_desc,s,100,optional,unvalidated");
+        list.add("it_sell_price,d,14,optional,unvalidated");
         list.add("it_site,s,10,mandatory,validated");
         list.add("it_code,s,10,mandatory,validated (P or M or A)");
         list.add("it_prodline,s,4,mandatory,validated");
         list.add("it_loc,s,20,optional,validated");
         list.add("it_wh,s,20,optional,validated");
         list.add("it_lotsize,i,11,optional,unvalidated");
-        list.add("it_sell_price,d,14,optional,unvalidated");
         list.add("it_pur_price,d,14,optional,unvalidated");
         list.add("it_mtl_cost,d,14,optional,unvalidated");
         list.add("it_ovh_cost,d,14,optional,unvalidated");
@@ -312,7 +313,8 @@ public class MassLoad extends javax.swing.JPanel {
     public boolean checkItemMaster(String[] rs, int i, ArrayList<String> list) {
         boolean proceed = true;
         
-        if (rs.length != list.size()) {
+        if (rs.length != list.size() && ! cboverride.isSelected()) {  // special case for 3 fields
+                  
                    tacomments.append("line " + i + " does not have correct number of fields. " + String.valueOf(rs.length) + "\n" );
                    proceed = false;
         }
@@ -333,7 +335,7 @@ public class MassLoad extends javax.swing.JPanel {
                     tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field must be of type integer" + "\n" );
                        proceed = false;
                 }
-                if (ld[1].compareTo("b") == 0 && ! BlueSeerUtils.isParsableToInt(rs[j])) {
+                if (ld[1].compareTo("b") == 0 && ! BlueSeerUtils.isParsableToInt(rs[j]) && ! cboverride.isSelected()) {
                     tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " must be integer 1 or 0...(true or false)" + "\n" );
                        proceed = false;
                 }
@@ -362,7 +364,7 @@ public class MassLoad extends javax.swing.JPanel {
                        proceed = false;
                 }
                 if (ld[0].compareTo("it_code") == 0) {
-                    if (rs[j].toUpperCase().compareTo("M") != 0 && rs[j].toUpperCase().compareTo("P") != 0 && rs[j].toUpperCase().compareTo("A") != 0) {
+                    if (! rs[j].toUpperCase().equals("M") && ! rs[j].toUpperCase().equals("P") && ! rs[j].toUpperCase().equals("A") && ! cboverride.isSelected()) {
                     tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " it_code must be either M or P or A " + "\n" );
                        proceed = false;
                     }
@@ -395,6 +397,13 @@ public class MassLoad extends javax.swing.JPanel {
                     i++;
                     continue;
                 } 
+                // custom code for item master 3 column data file...padd with extra blank fields
+                long count = line.chars().filter(ch -> ch == tbdelimiter.getText().trim().charAt(0)).count();
+                if (count < 28) {
+                    long diff = 28 - count;
+                    line = padString(line, tbdelimiter.getText().trim(), (int) diff);
+                }
+                
                 list.add(line);
                String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                if (ddtable.getSelectedItem().toString().compareTo("Item Master") == 0) {
@@ -412,7 +421,7 @@ public class MassLoad extends javax.swing.JPanel {
                     i--; // reduce line count by 1 if ignore header
                    } 
                    ArrayList<String> newlist = cleanList(list, checklist, tbdelimiter.getText().trim());
-                   if(! addItemMasterMass(newlist)) {
+                   if(! addItemMasterMass(newlist, tbdelimiter.getText().trim())) {
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151, String.valueOf(i))};
                    } else {
                        m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 

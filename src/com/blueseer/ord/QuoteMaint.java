@@ -784,7 +784,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                   "0" + ":" +
                   detailtable.getValueAt(j, 8).toString() + ":" +
                   ddcurr.getSelectedItem().toString() + ":" +
-                  setDateFormat(dcpricingexpire.getDate()) ; 
+                  setDateFormatNull(dcpricingexpire.getDate()) ; 
                 list.add(s);
             }    
         return list;
