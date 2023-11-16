@@ -1507,7 +1507,7 @@ public class MassLoad extends javax.swing.JPanel {
                  if (cbignoreheader.isSelected()) {
                     i--; // reduce line count by 1 if ignore header
                    } 
-                   if(! OVData.addCustPriceList(list, tbdelimiter.getText().trim()))
+                   if(OVData.addCustPriceList(list, tbdelimiter.getText().trim()))
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151,String.valueOf(i))};
                    } else {
                   m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 

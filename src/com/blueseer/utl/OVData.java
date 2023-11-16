@@ -5149,7 +5149,7 @@ public class OVData {
      
     
     public static boolean addCustPriceList(ArrayList<String> list, String delim) {
-                  boolean myreturn = false;
+                  boolean myreturn = true;
                   try {
             
             Connection con = null;
@@ -5179,11 +5179,15 @@ public class OVData {
                         expiredate = ld[10];
                     }
                    
+                   
                    res =  st.executeQuery("select cpr_item from cpr_mstr where " +
                                     " cpr_cust = " + "'" + ld[0] + "'" +
                                     " and cpr_uom = " + "'" + ld[8] + "'" +
-                                    " and cpr_curr = " + "'" + ld[9] + "'" +        
+                                    " and cpr_curr = " + "'" + ld[9] + "'" +  
+                                    " and cpr_type = " + "'" + ld[3] + "'" +  
+                                    " and cpr_volqty = " + "'" + ld[5] + "'" +        
                                     " and cpr_item = " + "'" + ld[1] + "'" + ";");
+                  
                     int j = 0;
                     while (res.next()) {
                         j++;
@@ -5212,8 +5216,7 @@ public class OVData {
                    } else {
                      st.executeUpdate(" update cpr_mstr " 
                       + "set " +
-                        " cpr_price = " + "'" + ld[4] + "'" + "," +        
-                        " cpr_volqty = " + "'" + ld[5] + "'" + "," +
+                        " cpr_price = " + "'" + ld[4] + "'" + "," +   
                         " cpr_volprice = " + "'" + ld[6] + "'" + "," +
                         " cpr_disc = " + "'" + ld[7] + "'" + "," + 
                         " cpr_expire = " + "'" + expiredate + "'" + "," +        
@@ -5221,7 +5224,9 @@ public class OVData {
                         " cpr_mod_date = " + "'" + BlueSeerUtils.setDateFormat(new java.util.Date()) + "'" +        
                         " where cpr_cust = " + "'" + ld[0] + "'" +
                         " and cpr_uom = " + "'" + ld[8] + "'" +
-                        " and cpr_curr = " + "'" + ld[9] + "'" +        
+                        " and cpr_curr = " + "'" + ld[9] + "'" +    
+                        " and cpr_type = " + "'" + ld[3] + "'" +  
+                        " and cpr_volqty = " + "'" + ld[5] + "'" +        
                         " and cpr_item = " + "'" + ld[1] + "'" + ";");
                     }
                 }    
@@ -5229,7 +5234,7 @@ public class OVData {
             catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-                myreturn = true;
+                myreturn = false;
             } finally {
                if (res != null) res.close();
                if (st != null) st.close();
@@ -5239,7 +5244,7 @@ public class OVData {
             MainFrame.bslog(e);
         }  
                   return myreturn;
-             } 
+    } 
               
     public static boolean addVendPriceList(ArrayList<String> list, String delim) {
                    boolean myreturn = false;

@@ -87,6 +87,7 @@ import static com.blueseer.ord.ordData.updateQuoteTransaction;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormatNull;
+import static com.blueseer.utl.OVData.addCustPriceList;
 import java.awt.Color;
 import java.awt.Component;
 import java.sql.Connection;
@@ -767,6 +768,26 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
             return m;
         
+    }
+    
+    public ArrayList<String> createVolumePricing() {
+        ArrayList<String> list = new ArrayList<String>();
+        String s = "";
+        for (int j = 0; j < detailtable.getRowCount(); j++) {
+                s = ddcust.getSelectedItem().toString() + ":" +
+                  detailtable.getValueAt(j, 2).toString() + ":" +
+                  detailtable.getValueAt(j, 3).toString() + ":" +
+                  "VOLUME" + ":" +
+                  detailtable.getValueAt(j, 5).toString() + ":" +
+                  detailtable.getValueAt(j, 4).toString() + ":" +
+                  detailtable.getValueAt(j, 5).toString() + ":" +
+                  "0" + ":" +
+                  detailtable.getValueAt(j, 8).toString() + ":" +
+                  ddcurr.getSelectedItem().toString() + ":" +
+                  setDateFormat(dcpricingexpire.getDate()) ; 
+                list.add(s);
+            }    
+        return list;
     }
     
     public void lookUpFrameItemDesc() {
@@ -1811,7 +1832,16 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
             } else {
                 bsmf.MainFrame.show("Problem converting quote to order");
             }
-        } 
+        } else {
+            // volume pricing additions to cpr_mstr table
+            if (addCustPriceList(createVolumePricing(), ":")) {
+             bsmf.MainFrame.show("Volume pricing has been committed to pricing tables ");  
+             ordData.updateQuoteStatus(tbkey.getText(), "closed", m[1]);
+             initvars(new String[]{tbkey.getText()});
+            } else {
+             bsmf.MainFrame.show("Problem committing records to pricing tables");   
+            }
+        }
         
     }//GEN-LAST:event_btcommitActionPerformed
 
