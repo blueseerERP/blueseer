@@ -101,6 +101,7 @@ public class CustPriceRpt extends javax.swing.JPanel {
                         getGlobalColumnTag("item"), 
                         getGlobalColumnTag("uom"), 
                         getGlobalColumnTag("currency"), 
+                        getGlobalColumnTag("expiredate"),
                         getGlobalColumnTag("qty"),
                         getGlobalColumnTag("price"), 
                         getGlobalColumnTag("discount")})
@@ -267,7 +268,7 @@ public class CustPriceRpt extends javax.swing.JPanel {
          mymodel.setRowCount(0);
          tablereport.setModel(mymodel);
          tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-         tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+         tablereport.getColumnModel().getColumn(8).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
          
     }
     
@@ -498,7 +499,7 @@ public class CustPriceRpt extends javax.swing.JPanel {
         
         int row = tablereport.rowAtPoint(evt.getPoint());
         int col = tablereport.columnAtPoint(evt.getPoint());
-        String[] myparameter = new String[]{tablereport.getValueAt(row, 1).toString(),tablereport.getValueAt(row, 3).toString(),tablereport.getValueAt(row, 2).toString(),tablereport.getValueAt(row, 4).toString(),tablereport.getValueAt(row, 5).toString(),tablereport.getValueAt(row, 6).toString()};
+        String[] myparameter = new String[]{tablereport.getValueAt(row, 1).toString(),tablereport.getValueAt(row, 3).toString(),tablereport.getValueAt(row, 2).toString(),tablereport.getValueAt(row, 4).toString(),tablereport.getValueAt(row, 5).toString(),tablereport.getValueAt(row, 7).toString()};
         if ( col == 0) {
               if (! checkperms("CustPriceMaint")) { return; }
            reinitpanels("CustPriceMaint", true, myparameter);
@@ -521,6 +522,7 @@ public class CustPriceRpt extends javax.swing.JPanel {
             }
             Statement st = con.createStatement();
             ResultSet res = null;
+            String expire = "";
             try {
                 int i = 0;
                 if (rbpart.isSelected()) {
@@ -531,6 +533,7 @@ public class CustPriceRpt extends javax.swing.JPanel {
                     " cpr_cust like " + "'" + "%" + tbtext.getText().toString() + "%' order by cpr_cust, cpr_item ;") ;
                 }
 
+                
                 while (res.next()) {
                     i++;
                         if (! cbdiscounts.isSelected() && res.getString("cpr_type").equals("DISCOUNT") )
@@ -539,11 +542,18 @@ public class CustPriceRpt extends javax.swing.JPanel {
                         if (! cbpricelist.isSelected() && res.getString("cpr_type").equals("LIST") )
                             continue;
                         
+                      if (res.getString("cpr_expire") == null || res.getString("cpr_expire").equals("null") ) {
+                        expire = "";  
+                      } else {
+                        expire = res.getString("cpr_expire");  
+                      }    
+                        
                     mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("cpr_cust"),
                         res.getString("cpr_type"),
                         res.getString("cpr_item"),
                         res.getString("cpr_uom"),
                         res.getString("cpr_curr"),
+                        expire, 
                         res.getString("cpr_volqty"),
                         res.getDouble("cpr_price"),
                         res.getString("cpr_disc")

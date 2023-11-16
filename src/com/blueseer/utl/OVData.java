@@ -5168,9 +5168,17 @@ public class OVData {
                                
                 // now loop through comma delimited list and insert into item master table
                 // skip if already in table.....keys are cust (cup_cust) and custitem (cup_citem)
+                String expiredate = null;
                 for (String rec : list) {
-                    ld = rec.split(delim, -1);
-                    
+                   ld = rec.split(delim, -1);
+                   
+                   
+                    if (ld[10].isBlank()) {
+                        expiredate = null;
+                    } else {
+                        expiredate = ld[10];
+                    }
+                   
                    res =  st.executeQuery("select cpr_item from cpr_mstr where " +
                                     " cpr_cust = " + "'" + ld[0] + "'" +
                                     " and cpr_uom = " + "'" + ld[8] + "'" +
@@ -5184,7 +5192,7 @@ public class OVData {
                     
                     if (j == 0) {
                     st.executeUpdate(" insert into cpr_mstr " 
-                      + "(cpr_cust, cpr_item, cpr_desc, cpr_type, cpr_price, cpr_volqty, cpr_volprice, cpr_disc, cpr_uom, cpr_curr, cpr_userid, cpr_mod_date ) "
+                      + "(cpr_cust, cpr_item, cpr_desc, cpr_type, cpr_price, cpr_volqty, cpr_volprice, cpr_disc, cpr_uom, cpr_curr, cpr_userid, cpr_mod_date, cpr_expire ) "
                    + " values ( " + 
                     "'" +  ld[0] + "'" + "," + 
                     "'" +  ld[1] + "'" + "," +
@@ -5197,7 +5205,8 @@ public class OVData {
                             "'" +  ld[8] + "'" + "," +     
                             "'" +  ld[9] + "'" + "," +        
                             "'" +  bsmf.MainFrame.userid + "'" + "," +
-                            "'" +  BlueSeerUtils.setDateFormat(new java.util.Date()) + "'" +
+                            "'" +  BlueSeerUtils.setDateFormat(new java.util.Date()) + "'" + "," +
+                            "'" +  expiredate + "'" +      
                             " );"
                            );     
                    } else {
@@ -5206,7 +5215,8 @@ public class OVData {
                         " cpr_price = " + "'" + ld[4] + "'" + "," +        
                         " cpr_volqty = " + "'" + ld[5] + "'" + "," +
                         " cpr_volprice = " + "'" + ld[6] + "'" + "," +
-                        " cpr_disc = " + "'" + ld[7] + "'" + "," +        
+                        " cpr_disc = " + "'" + ld[7] + "'" + "," + 
+                        " cpr_expire = " + "'" + expiredate + "'" + "," +        
                         " cpr_userid = " + "'" + bsmf.MainFrame.userid + "'" + "," +  
                         " cpr_mod_date = " + "'" + BlueSeerUtils.setDateFormat(new java.util.Date()) + "'" +        
                         " where cpr_cust = " + "'" + ld[0] + "'" +

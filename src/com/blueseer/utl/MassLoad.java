@@ -1417,6 +1417,7 @@ public class MassLoad extends javax.swing.JPanel {
         list.add("cpr_disc,d,12,optional,unvalidated");
         list.add("cpr_uom,s,3,mandatory,unvalidated");
         list.add("cpr_curr,s,3,mandatory,unvalidated");
+        list.add("cpr_expire,dt,10,optional,unvalidated");
         return list;
     }
     
@@ -1451,6 +1452,10 @@ public class MassLoad extends javax.swing.JPanel {
                 }
                 if (ld[1].compareTo("d") == 0 && ! BlueSeerUtils.isParsableToDouble(rs[j])) {
                     tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field must be of type double" + "\n" );
+                       proceed = false;
+                }
+                if (ld[1].compareTo("dt") == 0 && ! rs[j].isBlank() && ! BlueSeerUtils.isValidDateStr(rs[j])) {
+                    tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field must be either blank or valid date format yyyy-mm-dd " + "\n" );
                        proceed = false;
                 }
                 if (ld[0].compareTo("cpr_cust") == 0 && ! OVData.isValidCustomer(rs[j])) {

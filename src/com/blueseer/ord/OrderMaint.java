@@ -653,6 +653,11 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                               btprintps.setEnabled(false);
                     }
                     
+                    if (ddstatus.getSelectedItem().toString().equals(getGlobalProgTag("hold"))) {
+                      ddstatus.setBackground(Color.red); 
+                    }
+           
+                    
                     if (cbblanket.isSelected())
                     jPanelSched.setVisible(true);
                     else
@@ -2149,6 +2154,12 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel90.setText("ShipVia");
         jLabel90.setName("lblshipvia"); // NOI18N
 
+        ddstatus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddstatusActionPerformed(evt);
+            }
+        });
+
         jLabel83.setText("PO Number");
         jLabel83.setName("lblponbr"); // NOI18N
 
@@ -2292,19 +2303,17 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel92)
-                                    .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel81))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(ddstatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel85)))
+                                    .addComponent(jLabel85)
+                                    .addComponent(jLabel87)))
                             .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel81)
-                                    .addComponent(duedate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(duedate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(11, 11, 11)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel87)
-                                    .addComponent(orddate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(orddate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -3700,6 +3709,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     private void btinvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btinvoiceActionPerformed
         
+        if (! ddstatus.getSelectedItem().toString().equals(getGlobalProgTag("hold"))) {
         // check for multiple ship destinations...autoinvoicing requires single destination orders
         Set<String> shiptos = new LinkedHashSet<String>();
         for (int j = 0; j < orddet.getRowCount(); j++) {
@@ -3716,6 +3726,9 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
          } else {
            executeTask(dbaction.get, new String[]{tbkey.getText()});
          }
+        } else {
+          bsmf.MainFrame.show(getMessageTag(1184));  
+        }
     }//GEN-LAST:event_btinvoiceActionPerformed
 
     private void btprintorderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintorderActionPerformed
@@ -3857,6 +3870,16 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
            itemshipaddrlbl.setText(addr[1] + "..." + addr[2] + "..." + addr[5] + ", " + addr[6] + " " + addr[7]);
        }
     }//GEN-LAST:event_dditemshipActionPerformed
+
+    private void ddstatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddstatusActionPerformed
+        if (! isLoad && ddstatus.getSelectedItem() != null) {
+            if (ddstatus.getSelectedItem().toString().equals(getGlobalProgTag("hold"))) {
+                ddstatus.setBackground(Color.red); 
+            } else {
+                ddstatus.setBackground(null);  
+            }
+        }
+    }//GEN-LAST:event_ddstatusActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btLookUpBillTo;

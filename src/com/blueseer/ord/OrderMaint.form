@@ -465,23 +465,19 @@
                                       <Group type="103" groupAlignment="3" attributes="0">
                                           <Component id="jLabel92" alignment="3" min="-2" max="-2" attributes="0"/>
                                           <Component id="ddsite" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jLabel81" alignment="3" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                       <Group type="103" groupAlignment="3" attributes="0">
                                           <Component id="ddstatus" alignment="3" min="-2" max="-2" attributes="0"/>
                                           <Component id="jLabel85" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jLabel87" alignment="3" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                                   <Group type="102" alignment="0" attributes="0">
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="jLabel81" alignment="0" min="-2" max="-2" attributes="0"/>
-                                          <Component id="duedate" min="-2" max="-2" attributes="0"/>
-                                      </Group>
+                                      <Component id="duedate" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="jLabel87" min="-2" max="-2" attributes="0"/>
-                                          <Component id="orddate" min="-2" max="-2" attributes="0"/>
-                                      </Group>
+                                      <Component id="orddate" min="-2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
@@ -557,6 +553,9 @@
                   <StringArray count="0"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ddstatusActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel83">
               <Properties>

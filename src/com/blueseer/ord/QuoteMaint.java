@@ -682,7 +682,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                  bsmf.MainFrame.dfdate.format(now).toString(), // order date
                  bsmf.MainFrame.dfdate.format(now), // create date
                  bsmf.MainFrame.userid,
-                 "pending", // status
+                 "hold", // status
                  "",   // order level allocation status c,p 
                  ddterms.getSelectedItem().toString(),
                  cusData.getCustSalesAcct(ddcust.getSelectedItem().toString()),
@@ -1252,7 +1252,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         ddquotetype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "discrete", "volume" }));
 
-        ddstatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "pending", "closed", "expired", "void" }));
+        ddstatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "open", "closed", "void" }));
 
         jLabel2.setText("Status");
         jLabel2.setName("lblstatus"); // NOI18N
