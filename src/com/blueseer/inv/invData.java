@@ -113,7 +113,7 @@ public class invData {
                 );
                 item_cost y = new item_cost(null, 
                     ld[0], 
-                    ld[2], 
+                    ld[3], 
                     "standard",
                     String.valueOf((bsParseDouble(ld[10]) + bsParseDouble(ld[11]) + bsParseDouble(ld[12]))),
                     ld[10], 
