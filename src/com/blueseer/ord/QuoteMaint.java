@@ -36,6 +36,7 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.adm.admData;
+import static com.blueseer.adm.admData.addChangeLog;
 import static com.blueseer.adm.admData.addCodeMstr;
 import static com.blueseer.fap.fapData.VouchAndPayTransaction;
 import com.blueseer.fap.fapData.ap_mstr;
@@ -84,8 +85,11 @@ import com.blueseer.ord.ordData.quo_mstr;
 import com.blueseer.ord.ordData.quo_sac;
 import com.blueseer.ord.ordData.sod_det;
 import static com.blueseer.ord.ordData.updateQuoteTransaction;
+import static com.blueseer.utl.BlueSeerUtils.callChangeDialog;
+import static com.blueseer.utl.BlueSeerUtils.clog;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.logChange;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormatNull;
 import static com.blueseer.utl.OVData.addCustPriceList;
 import java.awt.Color;
@@ -583,7 +587,69 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
               badlines.add(line);
           }
         }   
-     String[] m = updateQuoteTransaction(tbkey.getText(), badlines, createDetRecord(), createRecord(), createSACRecord());
+       quo_mstr _x = this.x;
+       quo_mstr _y = createRecord();
+       
+       ArrayList<quo_det> _c = this.quodetlist;
+       ArrayList<quo_det> _d = createDetRecord();
+       
+     String[] m = updateQuoteTransaction(tbkey.getText(), badlines, _d, _y, createSACRecord());
+     
+     // change log check
+     if (m[0].equals("0")) {
+       ArrayList<admData.change_log> c = logChange(tbkey.getText(), this.getClass().getSimpleName(),_x,_y);
+       if (! c.isEmpty()) {
+           addChangeLog(c);
+       } 
+       // detail change
+       if (_d.size() > _c.size()) { // added item
+           boolean z = false;
+           for (quo_det q1 : _d) {
+            for (quo_det q2 : _c) {
+                if (q2.quod_line().equals(q1.quod_line())) {
+                    z = true;
+                    break;
+                }
+            } 
+            if (! z) {
+                c.add(clog(tbkey.getText(), q1.getClass().getSimpleName(), this.getClass().getSimpleName(), "added line/item", "", q1.quod_line() + "/" + q1.quod_item()));
+                addChangeLog(c);
+            }
+            z = false;
+           }
+             
+       }
+       if (_c.size() > _d.size()) { // removed item
+           boolean z = false;
+           for (quo_det q1 : _c) {
+            for (quo_det q2 : _d) {
+                if (q2.quod_line().equals(q1.quod_line())) {
+                    z = true;
+                    break;
+                }
+            } 
+            if (! z) {
+                c.add(clog(tbkey.getText(), q1.getClass().getSimpleName(), this.getClass().getSimpleName(), "removed line/item", q1.quod_line() + "/" + q1.quod_item(), ""));
+                addChangeLog(c);
+            }
+            z = false;
+           }
+       }
+       // changed item
+       for (quo_det q1 : _c) {
+        for (quo_det q2 : _d) { 
+            if (q2.quod_line().equals(q1.quod_line())) {
+                c = logChange(tbkey.getText(), this.getClass().getSimpleName(),q1,q2);
+                if (! c.isEmpty()) {
+                    addChangeLog(c);
+                }
+                break;
+            }
+        }
+       }
+       
+     }
+     
      return m;
      }
      
@@ -1113,6 +1179,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel16 = new javax.swing.JLabel();
         tbtottax = new javax.swing.JTextField();
         jLabel17 = new javax.swing.JLabel();
+        btchangelog = new javax.swing.JButton();
         jPanelCharges = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         sactable = new javax.swing.JTable();
@@ -1361,6 +1428,13 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel17.setText("Taxes");
         jLabel17.setName("lbltottaxes"); // NOI18N
 
+        btchangelog.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/change.png"))); // NOI18N
+        btchangelog.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btchangelogActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelMainLayout = new javax.swing.GroupLayout(jPanelMain);
         jPanelMain.setLayout(jPanelMainLayout);
         jPanelMainLayout.setHorizontalGroup(
@@ -1395,7 +1469,9 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                                         .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(13, 13, 13)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btchangelog, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(btnew)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(btclear))
@@ -1488,7 +1564,8 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                                 .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel24)
                                 .addComponent(btclear))
-                            .addComponent(btlookup))
+                            .addComponent(btlookup)
+                            .addComponent(btchangelog))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -1734,7 +1811,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         int[] rows = detailtable.getSelectedRows();
         for (int i : rows) {
             bsmf.MainFrame.show(getMessageTag(1031, String.valueOf(i)));
-             actamt -= bsParseDouble(detailtable.getModel().getValueAt(i,3).toString()) * bsParseDouble(detailtable.getModel().getValueAt(i,4).toString());
+             actamt -= bsParseDouble(detailtable.getModel().getValueAt(i,4).toString()) * bsParseDouble(detailtable.getModel().getValueAt(i,7).toString());
             ((javax.swing.table.DefaultTableModel) detailtable.getModel()).removeRow(i);
            quoteline--;
         }
@@ -1975,10 +2052,15 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
          }
     }//GEN-LAST:event_dddisccodeActionPerformed
 
+    private void btchangelogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btchangelogActionPerformed
+        callChangeDialog(tbkey.getText(), this.getClass().getSimpleName());
+    }//GEN-LAST:event_btchangelogActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btLookUpItemDesc;
     private javax.swing.JButton btadd;
     private javax.swing.JButton btadditem;
+    private javax.swing.JButton btchangelog;
     private javax.swing.JButton btclear;
     private javax.swing.JButton btcommit;
     private javax.swing.JButton btdelete;
