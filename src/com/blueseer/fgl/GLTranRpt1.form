@@ -67,10 +67,12 @@
                           <Component id="btRun" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="btcsv" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="tbprint" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Component id="ddacctto" min="-2" pref="132" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="631" max="32767" attributes="0"/>
+                  <EmptySpace pref="574" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
                           <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
@@ -107,15 +109,18 @@
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="1" attributes="0">
                               <Group type="103" alignment="1" groupAlignment="3" attributes="0">
-                                  <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="btRun" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="ddacctfrom" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="ddsite" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="btcsv" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="tbprint" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="labelcount" alignment="1" min="-2" pref="20" max="-2" attributes="0"/>
+                              <Group type="103" alignment="1" groupAlignment="3" attributes="0">
+                                  <Component id="labelcount" alignment="3" min="-2" pref="20" max="-2" attributes="0"/>
+                                  <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -193,6 +198,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel7">
           <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" value="Count"/>
             <Property name="name" type="java.lang.String" value="lblcount" noResource="true"/>
           </Properties>
@@ -207,6 +213,7 @@
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel9">
           <Properties>
+            <Property name="horizontalAlignment" type="int" value="4"/>
             <Property name="text" type="java.lang.String" value="Sum"/>
             <Property name="name" type="java.lang.String" value="lblsum" noResource="true"/>
           </Properties>
@@ -257,6 +264,15 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btcsvActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="tbprint">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="PDF"/>
+            <Property name="name" type="java.lang.String" value="btpdf" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tbprintActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

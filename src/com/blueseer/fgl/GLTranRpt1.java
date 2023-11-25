@@ -94,20 +94,19 @@ import javax.swing.JTabbedPane;
 public class GLTranRpt1 extends javax.swing.JPanel {
  
      MyTableModel mymodel = new GLTranRpt1.MyTableModel(new Object[][]{},
-                        new String[]{getGlobalColumnTag("id"), 
-                            getGlobalColumnTag("document"),
-                            getGlobalColumnTag("reference"), 
-                            getGlobalColumnTag("effectivedate"), 
-                            getGlobalColumnTag("date"), 
-                            getGlobalColumnTag("description"), 
+                        new String[]{getGlobalColumnTag("id"),
                             getGlobalColumnTag("site"), 
-                            getGlobalColumnTag("type"), 
                             getGlobalColumnTag("account"),
-                            getGlobalColumnTag("costcenter"), getGlobalColumnTag("amount")})
+                            getGlobalColumnTag("description"),
+                            getGlobalColumnTag("costcenter"),
+                            getGlobalColumnTag("effectivedate"),
+                            getGlobalColumnTag("type"),
+                            getGlobalColumnTag("reference"),
+                            getGlobalColumnTag("amount")})
              {
                       @Override  
                       public Class getColumnClass(int col) {  
-                        if ( col == 10)       
+                        if ( col == 8)       
                         return Double.class;
                         else if (col == 0) return Integer.class;
                         else return String.class;  //other columns accept String values  
@@ -286,6 +285,7 @@ public class GLTranRpt1 extends javax.swing.JPanel {
         ddsite = new javax.swing.JComboBox();
         jLabel6 = new javax.swing.JLabel();
         btcsv = new javax.swing.JButton();
+        tbprint = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -325,12 +325,14 @@ public class GLTranRpt1 extends javax.swing.JPanel {
 
         labelcount.setText("0");
 
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel7.setText("Count");
         jLabel7.setName("lblcount"); // NOI18N
 
         labeldollar.setBackground(new java.awt.Color(195, 129, 129));
         labeldollar.setText("0");
 
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel9.setText("Sum");
         jLabel9.setName("lblsum"); // NOI18N
 
@@ -348,6 +350,14 @@ public class GLTranRpt1 extends javax.swing.JPanel {
         btcsv.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btcsvActionPerformed(evt);
+            }
+        });
+
+        tbprint.setText("PDF");
+        tbprint.setName("btpdf"); // NOI18N
+        tbprint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbprintActionPerformed(evt);
             }
         });
 
@@ -379,9 +389,11 @@ public class GLTranRpt1 extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btRun)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btcsv))
+                        .addComponent(btcsv)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tbprint))
                     .addComponent(ddacctto, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 631, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 574, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel7)
@@ -410,14 +422,16 @@ public class GLTranRpt1 extends javax.swing.JPanel {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel7)
                                 .addComponent(btRun)
                                 .addComponent(ddacctfrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel4)
                                 .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel6)
-                                .addComponent(btcsv))
-                            .addComponent(labelcount, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(btcsv)
+                                .addComponent(tbprint))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(labelcount, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel7)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(labeldollar, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -463,7 +477,7 @@ try {
                
                 tablereport.setModel(mymodel);
                // tableorder.getColumnModel().getColumn(0).setCellRenderer(new OrderReport1.SomeRenderer());  
-                tablereport.getColumnModel().getColumn(10).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+                tablereport.getColumnModel().getColumn(8).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
                 Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
                  
              
@@ -471,6 +485,7 @@ try {
 
                      
                  res = st.executeQuery("SELECT * from gl_hist " +
+                        " inner join ac_mstr on ac_id = glh_acct " +
                         " where glh_effdate >= " + "'" + dfdate.format(dcFrom.getDate())  + "'" + 
                         " AND glh_effdate <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
                          " AND glh_acct >= " + "'" + ddacctfrom.getSelectedItem().toString() + "'" +
@@ -486,15 +501,13 @@ try {
                     i++;
                         mymodel.addRow(new Object[]{
                                 res.getInt("glh_id"),
-                                res.getString("glh_doc"),
-                                res.getString("glh_ref"),
-                                res.getString("glh_effdate"),
-                                res.getString("glh_entdate"),
-                                res.getString("glh_desc"),
                                 res.getString("glh_site"),
-                                res.getString("glh_type"),
                                 res.getString("glh_acct"),
+                                res.getString("ac_desc"),
                                 res.getString("glh_cc"),
+                                res.getString("glh_effdate"),
+                                res.getString("glh_type"),
+                                res.getString("glh_ref"),
                                 res.getDouble("glh_base_amt")
                             });
                 }
@@ -524,6 +537,30 @@ try {
         OVData.exportCSV(tablereport);
     }//GEN-LAST:event_btcsvActionPerformed
 
+    private void tbprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbprintActionPerformed
+
+        if (tablereport != null && mymodel.getRowCount() > 0) {
+            OVData.printJTableToJasper("Ledger Transaction Report", tablereport, "genericJTableL9.jasper" );
+            /*
+            try {
+
+                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                HashMap hm = new HashMap();
+                hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
+                File mytemplate = new File("jasper/orderbrowsesumary.jasper");
+
+                JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, new JRTableModelDataSource(tableorder.getModel()) );
+                JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/ordbrowse.pdf");
+
+                JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+                jasperViewer.setVisible(true);
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            }
+            */
+        }
+    }//GEN-LAST:event_tbprintActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btRun;
@@ -545,5 +582,6 @@ try {
     private javax.swing.JLabel labelcount;
     private javax.swing.JLabel labeldollar;
     private javax.swing.JTable tablereport;
+    private javax.swing.JButton tbprint;
     // End of variables declaration//GEN-END:variables
 }
