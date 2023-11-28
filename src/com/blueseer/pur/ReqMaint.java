@@ -51,6 +51,7 @@ import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.lurb2;
+import static com.blueseer.utl.BlueSeerUtils.lurb3;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
 import com.blueseer.utl.OVData;
@@ -379,7 +380,7 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
         ddsite.setSelectedItem(OVData.getDefaultSite());
         
         ddvend.removeAllItems();
-        ArrayList myvends = venData.getVendNameList();
+        ArrayList myvends = venData.getVendMstrList();
         for (int i = 0; i < myvends.size(); i++) {
          ddvend.addItem(myvends.get(i));
         }
@@ -433,7 +434,6 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
         btnew.setEnabled(false);
         tbkey.setForeground(Color.blue);
         tbrequestor.setEnabled(false);
-        tbvendcode.setEnabled(false);
         if (! x.isEmpty()) {
           tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
           tbkey.setEditable(false);
@@ -450,7 +450,6 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
                    tbrequestor.setEnabled(false);
-                   tbvendcode.setEnabled(false);
                    
                    if (tbstatus.getText().compareTo(getGlobalProgTag("approved")) == 0 ) {
                          tbstatus.setForeground(Color.green);
@@ -527,7 +526,7 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
                         + " values ( " + "'" + tbkey.getText() + "'" + ","
                         + "'" + tbrequestor.getText() + "'" + ","
                         + "'" + dfdate.format(caldate.getDate()) + "'" + ","
-                        + "'" + tbvendcode.getText() + "'" + ","
+                        + "'" + ddvend.getSelectedItem().toString() + "'" + ","
                         + "'" + ddtype.getSelectedItem().toString() + "'" + ","
                         + "'" + dddept.getSelectedItem().toString() + "'" + ","
                         + "'" + tbamt.getText() + "'" + ","
@@ -537,7 +536,7 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
                             + "''" + ","
                         + "'" + status + "'"  + ","
                         + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                        + "'" + ddvend.getSelectedItem().toString() + "'"
+                        + "'" + lbvend.getText() + "'"
                         + ")"
                         + ";");
                     
@@ -719,8 +718,8 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
                 
                  st.executeUpdate("update req_mstr set " + 
                        " req_desc = " + "'" + tbdesc.getText() + "'" + "," +
-                       " req_vend = " + "'" + ddvend.getSelectedItem() + "'" + "," +
-                       " req_vendnbr = " + "'" + tbvendcode.getText() + "'" + "," +        
+                       " req_vend = " + "'" + lbvend.getText() + "'" + "," +
+                       " req_vendnbr = " + "'" + ddvend.getSelectedItem().toString() + "'" + "," +        
                        " req_type = " + "'" + ddtype.getSelectedItem().toString() + "'" + "," +
                        " req_dept = " + "'" + dddept.getSelectedItem().toString() + "'" + "," +
                        " req_amt = " + "'" + tbamt.getText() + "'" + "," +
@@ -798,8 +797,8 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
                 while (res.next()) {
                     i++;
                     tbdesc.setText(res.getString("req_desc"));
-                    ddvend.setSelectedItem(res.getString("req_vend"));
-                    tbvendcode.setText(res.getString("req_vendnbr"));
+                    lbvend.setText(res.getString("req_vend"));
+                    ddvend.setSelectedItem(res.getString("req_vendnbr"));
                     ddtype.setSelectedItem(res.getString("req_type"));
                     dddept.setSelectedItem(res.getString("req_dept"));
                     tbrequestor.setText(res.getString("req_name"));
@@ -923,7 +922,55 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
         
         callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), 
                 getClassLabelTag("lblreqby", this.getClass().getSimpleName()),
-                getClassLabelTag("lblvend", this.getClass().getSimpleName())); 
+                getClassLabelTag("lblvendor", this.getClass().getSimpleName())); 
+        
+    }
+
+    public void lookUpFrameVendor() {
+        
+        luinput.removeActionListener(lual);
+        lual = new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+       
+            if (lurb1.isSelected()) {  
+             luModel = DTData.getVendBrowseUtil(luinput.getText(),0, "vd_addr");
+            } else if (lurb2.isSelected()) {
+             luModel = DTData.getVendBrowseUtil(luinput.getText(),0, "vd_name");   
+            } else {
+             luModel = DTData.getVendBrowseUtil(luinput.getText(),0, "vd_zip");   
+            }
+        
+        luTable.setModel(luModel);
+        luTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (luModel.getRowCount() < 1) {
+            ludialog.setTitle(getMessageTag(1001));
+        } else {
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
+        }
+        }
+        };
+        luinput.addActionListener(lual);
+        
+        luTable.removeMouseListener(luml);
+        luml = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0) {
+                    ludialog.dispose();
+                    ddvend.setSelectedItem(target.getValueAt(row,1).toString());
+                }
+            }
+        };
+        luTable.addMouseListener(luml);
+         
+        callDialog(getGlobalColumnTag("id"), 
+                getGlobalColumnTag("name"),
+                getGlobalColumnTag("addr1"),
+                getGlobalColumnTag("zip")); 
+        
+        
         
     }
 
@@ -1293,10 +1340,10 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
-                tbvendcode.setText("");
-                res = st.executeQuery("select vd_addr from vd_mstr where vd_name = " + "'" + ddvend.getSelectedItem().toString() + "'" + ";");
+                lbvend.setText("");
+                res = st.executeQuery("select vd_name from vd_mstr where vd_addr = " + "'" + ddvend.getSelectedItem().toString() + "'" + ";");
                 while (res.next()) {
-                    tbvendcode.setText(res.getString("vd_addr"));
+                    lbvend.setText(res.getString("vd_name"));
                 }
             } catch (SQLException s) {
                 MainFrame.bslog(s);
@@ -1348,7 +1395,6 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
         jScrollPane1 = new javax.swing.JScrollPane();
         tbdesc = new javax.swing.JTextArea();
         jLabel10 = new javax.swing.JLabel();
-        tbvendcode = new javax.swing.JTextField();
         btprint = new javax.swing.JButton();
         approverPanel = new javax.swing.JScrollPane();
         approverTable = new javax.swing.JTable();
@@ -1377,8 +1423,9 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
         tbstatus = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         btdelete = new javax.swing.JButton();
-        jLabel12 = new javax.swing.JLabel();
         btlookup = new javax.swing.JButton();
+        btlookupVendor = new javax.swing.JButton();
+        lbvend = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -1411,19 +1458,14 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
         jLabel5.setText("Total:");
         jLabel5.setName("lbltotal"); // NOI18N
 
-        ddvend.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                ddvendItemStateChanged(evt);
-            }
-        });
         ddvend.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ddvendActionPerformed(evt);
             }
         });
 
-        jLabel6.setText("VendName:");
-        jLabel6.setName("lblvendname"); // NOI18N
+        jLabel6.setText("Vendor:");
+        jLabel6.setName("lblvendor"); // NOI18N
 
         jLabel7.setText("Dept:");
         jLabel7.setName("lbldept"); // NOI18N
@@ -1689,13 +1731,17 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
         btdelete.setText("Delete");
         btdelete.setName("btdelete"); // NOI18N
 
-        jLabel12.setText("VendCode:");
-        jLabel12.setName("lblvend"); // NOI18N
-
         btlookup.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/lookup.png"))); // NOI18N
         btlookup.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btlookupActionPerformed(evt);
+            }
+        });
+
+        btlookupVendor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
+        btlookupVendor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btlookupVendorActionPerformed(evt);
             }
         });
 
@@ -1709,14 +1755,14 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(3, 3, 3)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel2)
                                     .addComponent(jLabel1)
                                     .addComponent(jLabel3)
                                     .addComponent(jLabel6)
                                     .addComponent(jLabel7)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel12))
+                                    .addComponent(jLabel4))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -1731,10 +1777,8 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
                                                 .addComponent(btnew)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(btclear))
-                                            .addComponent(ddvend, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(dddept, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(tbvendcode, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
+                                            .addComponent(dddept, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                             .addComponent(jLabel10)
                                             .addComponent(jLabel18))
@@ -1745,7 +1789,14 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
                                         .addComponent(jLabel9)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(tbstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(34, 34, 34)))
+                                        .addGap(34, 34, 34))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(ddvend, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btlookupVendor, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lbvend, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(59, 59, 59)))
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1801,15 +1852,19 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
                             .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tbvendcode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel12))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(ddvend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(ddvend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel6))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(tbstatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel9)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(btlookupVendor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lbvend, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(dddept, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1817,12 +1872,7 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(caldate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel4)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(tbstatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel9)))))
+                                    .addComponent(jLabel4)))))
                     .addComponent(jScrollPane1))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1917,50 +1967,11 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
 
     private void ddvendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddvendActionPerformed
         if (! isLoad) {
-         if (ddvend.getItemCount() > 0) {
+         if (ddvend.getItemCount() > 0 && ddvend.getSelectedItem() != null && ! ddvend.getSelectedItem().toString().isBlank()) {
             vendChangeEvent(ddvend.getSelectedItem().toString());
          } // if ddvend has a list
         }
     }//GEN-LAST:event_ddvendActionPerformed
-
-    private void ddvendItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_ddvendItemStateChanged
-        if(evt.getStateChange() == ItemEvent.SELECTED)
-    {
-       try {
-
-           Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-              
-                res = st.executeQuery("select vd_addr from vd_mstr where vd_name = " + "'" + ddvend.getSelectedItem().toString().replace("'", "") + "'"  + ";");
-                while (res.next()) {
-                tbvendcode.setText(res.getString("vd_addr"));
-                    
-                }
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-    }
-    }//GEN-LAST:event_ddvendItemStateChanged
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
           if (! validateInput("updateRecord")) {
@@ -2047,6 +2058,10 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
     private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
         lookUpFrame();
     }//GEN-LAST:event_btlookupActionPerformed
+
+    private void btlookupVendorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupVendorActionPerformed
+        lookUpFrameVendor();
+    }//GEN-LAST:event_btlookupVendorActionPerformed
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -2058,6 +2073,7 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btdelitem;
     private javax.swing.JButton btlookup;
+    private javax.swing.JButton btlookupVendor;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btprint;
     private javax.swing.JButton btupdate;
@@ -2070,7 +2086,6 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
@@ -2090,6 +2105,7 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JLabel lbvend;
     private javax.swing.JCheckBox override;
     private javax.swing.JTextField tbAR;
     private javax.swing.JTextField tbacct;
@@ -2103,6 +2119,5 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JTextField tbqty;
     private javax.swing.JTextField tbrequestor;
     private javax.swing.JTextField tbstatus;
-    private javax.swing.JTextField tbvendcode;
     // End of variables declaration//GEN-END:variables
 }

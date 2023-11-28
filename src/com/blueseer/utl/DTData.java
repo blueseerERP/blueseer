@@ -6329,7 +6329,7 @@ public class DTData {
     public static DefaultTableModel getReqBrowseUtil(String str, int state, String myfield) {
            
            javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("requestor"), getGlobalColumnTag("date"), getGlobalColumnTag("po"), getGlobalColumnTag("vendor"), getGlobalColumnTag("amount"), getGlobalColumnTag("status")}) 
+                        new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("requestor"), getGlobalColumnTag("date"), getGlobalColumnTag("po"), getGlobalColumnTag("name"), getGlobalColumnTag("amount"), getGlobalColumnTag("status")}) 
                     {
                       @Override  
                       public Class getColumnClass(int col) {  
