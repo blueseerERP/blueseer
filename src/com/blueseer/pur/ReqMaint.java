@@ -397,6 +397,8 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
         for (int i = 0; i < mytype.size(); i++) {
             ddtype.addItem(mytype.get(i));
         }  
+        ddtype.insertItemAt("", 0);
+        ddtype.setSelectedIndex(0);
           
         isLoad = false;
         
@@ -526,8 +528,8 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
                         + "'" + tbrequestor.getText() + "'" + ","
                         + "'" + dfdate.format(caldate.getDate()) + "'" + ","
                         + "'" + tbvendcode.getText() + "'" + ","
-                        + "'" + ddtype.getSelectedItem() + "'" + ","
-                        + "'" + dddept.getSelectedItem() + "'" + ","
+                        + "'" + ddtype.getSelectedItem().toString() + "'" + ","
+                        + "'" + dddept.getSelectedItem().toString() + "'" + ","
                         + "'" + tbamt.getText() + "'" + ","
                         + "'" + rmks + "'" + ","
                             + "''" + ","
@@ -705,7 +707,8 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
           if (admin.compareTo(bsmf.MainFrame.userid) == 0) {
               isadmin = true;
           }  
-        }
+       }
+       
        for (int i = 0; i < reqtask.getRowCount(); i++) {
            if (reqtask.getValueAt(i, 2).toString().compareTo("approved") == 0) 
              proceed = false;
@@ -718,8 +721,8 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
                        " req_desc = " + "'" + tbdesc.getText() + "'" + "," +
                        " req_vend = " + "'" + ddvend.getSelectedItem() + "'" + "," +
                        " req_vendnbr = " + "'" + tbvendcode.getText() + "'" + "," +        
-                       " req_type = " + "'" + ddtype.getSelectedItem() + "'" + "," +
-                       " req_dept = " + "'" + dddept.getSelectedItem() + "'" + "," +
+                       " req_type = " + "'" + ddtype.getSelectedItem().toString() + "'" + "," +
+                       " req_dept = " + "'" + dddept.getSelectedItem().toString() + "'" + "," +
                        " req_amt = " + "'" + tbamt.getText() + "'" + "," +
                        " req_acct = " + "'" + tbacct.getText() + "'" + "," +
                        " req_cc = " + "'" + "" + "'" + "," +
@@ -919,8 +922,8 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
       
         
         callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), 
-                getClassLabelTag("lblrequestor", this.getClass().getSimpleName()),
-                getClassLabelTag("lblvendor", this.getClass().getSimpleName())); 
+                getClassLabelTag("lblreqby", this.getClass().getSimpleName()),
+                getClassLabelTag("lblvend", this.getClass().getSimpleName())); 
         
     }
 
@@ -1978,9 +1981,9 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
             }
             
                 HashMap hm = new HashMap();
-                hm.put("REPORT_TITLE", "SHIPPER");
+                hm.put("REPORT_TITLE", "REQUISITION");
                 hm.put("myid",  tbkey.getText().toString());
-                hm.put("imagepath", "images/avmlogo.png");
+                hm.put("imagepath", "images/bs.png");
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
                 File mytemplate = new File("jasper/req_print.jasper");
@@ -2028,7 +2031,7 @@ public class ReqMaint extends javax.swing.JPanel implements IBlueSeer {
         int col = approverTable.columnAtPoint(evt.getPoint());
         if ( col == 0) {
             if (approverTable.getModel().getValueAt(row, 2).toString().compareTo("pending") == 0) {
-               if (approverTable.getModel().getValueAt(row, 1).toString().compareTo(bsmf.MainFrame.userid) == 0) {
+               if ((approverTable.getModel().getValueAt(row, 1).toString().compareTo(bsmf.MainFrame.userid) == 0) || bsmf.MainFrame.userid.equals("admin") ) {
                 approvereq(tbkey.getText(), approverTable.getValueAt(row, 3).toString());
                } else {
                 bsmf.MainFrame.show(getMessageTag(1112));  
