@@ -279,11 +279,11 @@ public class MassLoad extends javax.swing.JPanel {
     public ArrayList<String> defineItemMaster() {
         ArrayList<String> list = new ArrayList<String>();
         list.add("it_item,s,36,mandatory,unvalidated");
-        list.add("it_desc,s,100,optional,unvalidated");
+        list.add("it_desc,s,100,mandatory,unvalidated");
         list.add("it_sell_price,d,14,optional,unvalidated");
-        list.add("it_site,s,10,mandatory,validated");
-        list.add("it_code,s,10,mandatory,validated (P or M or A)");
-        list.add("it_prodline,s,4,mandatory,validated");
+        list.add("it_site,s,10,optional,validated");
+        list.add("it_code,s,10,optional,validated (P or M or A)");
+        list.add("it_prodline,s,4,optional,validated");
         list.add("it_loc,s,20,optional,validated");
         list.add("it_wh,s,20,optional,validated");
         list.add("it_lotsize,i,11,optional,unvalidated");
@@ -297,15 +297,15 @@ public class MassLoad extends javax.swing.JPanel {
         list.add("it_rev,s,30,optional,unvalidated");
         list.add("it_custrev,s,30,optional,unvalidated");
         list.add("it_comments,s,500,optional,unvalidated");
-        list.add("it_uom,s,10,mandatory,validated");
+        list.add("it_uom,s,10,optional,validated");
         list.add("it_net_wt,d,10,optional,unvalidated");
         list.add("it_ship_wt,d,10,optional,unvalidated");
         list.add("it_leadtime,i,11,optional,unvalidated");
         list.add("it_safestock,d,8,optional,unvalidated");
         list.add("it_minordqty,d,8,optional,unvalidated");
-        list.add("it_mrp,b,5,mandatory,validated (1 or 0)");
-        list.add("it_sched,b,5,mandatory,validated (1 or 0)");
-        list.add("it_plan,b,5,mandatory,validated (1 or 0)");
+        list.add("it_mrp,b,5,optional,validated (1 or 0)");
+        list.add("it_sched,b,5,optional,validated (1 or 0)");
+        list.add("it_plan,b,5,optional,validated (1 or 0)");
         list.add("it_wf,s,30,optional,validated");
         return list;
     }
@@ -1418,9 +1418,9 @@ public class MassLoad extends javax.swing.JPanel {
         ArrayList<String> list = new ArrayList<String>();
         list.add("cpr_cust,s,10,mandatory,validated");
         list.add("cpr_item,s,36,mandatory,validated");
-        list.add("cpr_desc,s,50,optional,unvalidated");
+        list.add("cpr_desc,s,50,mandatory,unvalidated");
         list.add("cpr_type,s,20,mandatory,validated");
-        list.add("cpr_price,d,12,optional,unvalidated");
+        list.add("cpr_price,d,12,mandatory,unvalidated");
         list.add("cpr_volqty,d,12,optional,unvalidated");
         list.add("cpr_volprice,d,12,optional,unvalidated");
         list.add("cpr_disc,d,12,optional,unvalidated");
@@ -1774,32 +1774,32 @@ public class MassLoad extends javax.swing.JPanel {
     public ArrayList<String> defineCustMstr() {
         ArrayList<String> list = new ArrayList<String>();
         list.add("cm_code,s,10,mandatory,unvalidated");
-        list.add("cm_site,s,10,optional,unvalidated");
-        list.add("cm_name,s,50,optional,unvalidated");
-        list.add("cm_line1,s,50,optional,unvalidated");
-        list.add("cm_line2,s,50,optional,unvalidated");
-        list.add("cm_line3,s,50,optional,unvalidated");
-        list.add("cm_city,s,50,optional,unvalidated");
+        list.add("cm_name,s,50,mandatory,unvalidated");
+        list.add("cm_line1,s,50,mandatory,unvalidated");
+        list.add("cm_line2,s,50,mandatory,unvalidated");
+        list.add("cm_line3,s,50,mandatory,unvalidated");
+        list.add("cm_city,s,50,mandatory,unvalidated");
         list.add("cm_state,s,30,mandatory,validated");
-        list.add("cm_zip,s,10,optional,unvalidated");
+        list.add("cm_zip,s,10,mandatory,unvalidated");
         list.add("cm_country,s,50,mandatory,validated");
+        list.add("cm_site,s,10,optional,validated");
         list.add("cm_group,s,50,optional,unvalidated");
         list.add("cm_market,s,50,optional,unvalidated");
         list.add("cm_creditlimit,i,8,optional,validated");
         list.add("cm_onhold,i,1,optional,validated");
         list.add("cm_carrier,s,50,optional,unvalidated");
-        list.add("cm_terms,s,30,mandatory,validated");
+        list.add("cm_terms,s,30,optional,validated");
         list.add("cm_freight_type,s,30,optional,unvalidated");
         list.add("cm_price_code,s,10,optional,unvalidated");
         list.add("cm_disc_code,s,10,optional,unvalidated");
         list.add("cm_tax_code,s,10,optional,unvalidated");
         list.add("cm_salesperson,s,50,optional,unvalidated");
-        list.add("cm_ar_acct,s,10,mandatory,validated");
-        list.add("cm_ar_cc,s,4,mandatory,validated");
+        list.add("cm_ar_acct,s,10,optional,validated");
+        list.add("cm_ar_cc,s,4,optional,validated");
         list.add("cm_remarks,s,500,optional,unvalidated");
         list.add("cm_misc1,s,100,optional,unvalidated");
-        list.add("cm_bank,s,10,mandatory,validated");
-        list.add("cm_curr,s,3,mandatory,validated");
+        list.add("cm_bank,s,10,optional,validated");
+        list.add("cm_curr,s,3,optional,validated");
         list.add("cm_logo,s,100,optional,unvalidated");
         list.add("cm_ps_jasper,s,100,optional,unvalidated");
         list.add("cm_iv_jasper,s,100,optional,unvalidated");
@@ -1844,23 +1844,23 @@ public class MassLoad extends javax.swing.JPanel {
                     tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " field must be of type double" + "\n" );
                        proceed = false;
                 }
-                if (ld[0].compareTo("cm_terms") == 0 && ! OVData.isValidTerms(rs[j])) {
+                if (ld[0].compareTo("cm_terms") == 0 && ! OVData.isValidTerms(rs[j]) && ! cboverride.isSelected()) {
                     tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " must be valid Terms Code" + "\n" );
                        proceed = false;
                 }
-                if (ld[0].compareTo("cm_ar_acct") == 0 && ! OVData.isValidGLAcct(rs[j])) {
+                if (ld[0].compareTo("cm_ar_acct") == 0 && ! OVData.isValidGLAcct(rs[j]) && ! cboverride.isSelected()) {
                     tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " must be valid Account" + "\n" );
                        proceed = false;
                 }
-                if (ld[0].compareTo("cm_ar_cc") == 0 && ! OVData.isValidGLcc(rs[j])) {
+                if (ld[0].compareTo("cm_ar_cc") == 0 && ! OVData.isValidGLcc(rs[j]) && ! cboverride.isSelected()) {
                     tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " must be valid CC" + "\n" );
                        proceed = false;
                 }
-                if (ld[0].compareTo("cm_bank") == 0 && ! OVData.isValidBank(rs[j])) {
+                if (ld[0].compareTo("cm_bank") == 0 && ! OVData.isValidBank(rs[j]) && ! cboverride.isSelected()) {
                     tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " must be valid Bank" + "\n" );
                        proceed = false;
                 }
-                if (ld[0].compareTo("cm_curr") == 0 && ! OVData.isValidCurrency(rs[j])) {
+                if (ld[0].compareTo("cm_curr") == 0 && ! OVData.isValidCurrency(rs[j]) && ! cboverride.isSelected()) {
                     tacomments.append("line:field " + i + ":" + j + " " + String.valueOf(rs[j]) + " must be valid Currency" + "\n" );
                        proceed = false;
                 }
@@ -1893,6 +1893,12 @@ public class MassLoad extends javax.swing.JPanel {
                     i++;
                     continue;
                 } 
+                // custom code for smaller data file...padd with extra blank fields
+                long count = line.chars().filter(ch -> ch == tbdelimiter.getText().trim().charAt(0)).count();
+                if (count < 35) {
+                    long diff = 35 - count;
+                    line = padString(line, tbdelimiter.getText().trim(), (int) diff);
+                }
                 list.add(line);
                String[] recs = line.split(tbdelimiter.getText().trim(), -1);
                temp = checkCustMstr(recs, i, checklist);
@@ -1908,7 +1914,7 @@ public class MassLoad extends javax.swing.JPanel {
                     i--; // reduce line count by 1 if ignore header
                    } 
                  ArrayList<String> newlist = cleanList(list, checklist, tbdelimiter.getText().trim());
-                   if(! addCustMstrMass(newlist)) {
+                   if(! addCustMstrMass(newlist, tbdelimiter.getText().trim())) {
                        m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1151, String.valueOf(i))};
                    } else {
                        m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1150)}; 
@@ -1924,13 +1930,13 @@ public class MassLoad extends javax.swing.JPanel {
         ArrayList<String> list = new ArrayList<String>();
         list.add("cms_code,s,10,mandatory,validated");
         list.add("cms_shipto,s,10,mandatory,unvalidated");
-        list.add("cms_name,s,50,optional,unvalidated");
-        list.add("cms_line1,s,50,optional,unvalidated");
-        list.add("cms_line2,s,50,optional,unvalidated");
-        list.add("cms_line3,s,50,optional,unvalidated");
-        list.add("cms_city,s,50,optional,unvalidated");
+        list.add("cms_name,s,50,mandatory,unvalidated");
+        list.add("cms_line1,s,50,mandatory,unvalidated");
+        list.add("cms_line2,s,50,mandatory,unvalidated");
+        list.add("cms_line3,s,50,mandatory,unvalidated");
+        list.add("cms_city,s,50,mandatory,unvalidated");
         list.add("cms_state,s,30,mandatory,validated");
-        list.add("cms_zip,s,10,optional,unvalidated");
+        list.add("cms_zip,s,10,mandatory,unvalidated");
         list.add("cms_country,s,50,mandatory,validated");
         list.add("cms_plantcode,s,30,optional,unvalidated");
         list.add("cms_contact,s,50,optional,unvalidated");

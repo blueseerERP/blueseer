@@ -76,13 +76,13 @@ public class invData {
                 ld[0], // item
                 ld[1].toUpperCase(), //desc
                 bsformat("i", ld[8], "").replace(defaultDecimalSeparator, '.'), // lotsize
-                bsformat("d", ld[2], "5").replace(defaultDecimalSeparator, '.'), // selling price
+                bsformat("d", (ld[2].isBlank()) ? "0" : ld[2], "5").replace(defaultDecimalSeparator, '.'), // selling price
                 bsformat("d", ld[9], "5").replace(defaultDecimalSeparator, '.'), // purch price
                 bsformat("d", ld[11], "5").replace(defaultDecimalSeparator, '.'), // ovh cost
                 bsformat("d", ld[12], "5").replace(defaultDecimalSeparator, '.'), // out cost
                 bsformat("d", ld[10], "5").replace(defaultDecimalSeparator, '.'), // matl cost
                 (ld[4].isBlank()) ? "A" : ld[4],
-                ld[13], // type
+                (ld[13].isBlank()) ? "ASSET" : ld[13], // type
                 ld[14], // group
                 (ld[5].isBlank()) ? "9999" : ld[5], // prodline
                 ld[15], // drawing
