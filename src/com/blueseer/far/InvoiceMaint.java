@@ -549,16 +549,16 @@ public class InvoiceMaint extends javax.swing.JPanel {
             int i = 0;
             try {
                 
-                 // rules:  if posted to gl_hist, you cannot undo
+                // rules:  if payment already applied, you cannot undo
                  int c = 0;
-                  res = st.executeQuery("select * from gl_hist where glh_type = 'ISS-SALES' and glh_ref = " + "'" + x[0] + "'" + ";");
+                  res = st.executeQuery("select ard_id from ard_mstr inner join ar_mstr on ar_nbr = ard_id and ar_type = 'P' where ard_ref = " + "'" + x[0] + "'" + ";");
                 while (res.next()) {
                       c++;
                 }
+
                 if (c > 0) {
-                  m = new String[]{BlueSeerUtils.ErrorBit, "Transaction already posted to Ledger, unable to void"};   
+                  m = new String[]{BlueSeerUtils.ErrorBit, "Payment already applied, unable to void"};   
                 } else {
-                   
                    // restore the original order
                    String _order = "";
                    String _line = "";
@@ -620,11 +620,15 @@ public class InvoiceMaint extends javax.swing.JPanel {
                    // delete gl_tran
                    i = st.executeUpdate("delete from gl_tran where glt_type = 'ISS-SALES' and glt_ref = " + "'" + x[0] + "'" + ";");
                    
-                }
+                   // delete from gl_hist
+                   i = st.executeUpdate("delete from gl_hist where glh_type = 'ISS-SALES' and glh_ref = " + "'" + x[0] + "'" + ";");
+                           
                    
-                    if (i > 0  & c == 0) {
+                    // need to bundle above actions into one transaction
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-                    }
+                    
+                }       
+                    
             } catch (SQLException s) {
                  MainFrame.bslog(s); 
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordSQLError};  

@@ -1103,8 +1103,8 @@ public class fglData {
               con = DriverManager.getConnection(url + db, user, pass);  
             }
             String sqlInsert = "insert into gl_tran "
-                            + "( glt_acct, glt_cc, glt_effdate, glt_amt, glt_base_amt, glt_curr, glt_base_curr, glt_ref, glt_site, glt_type, glt_desc, glt_doc ) " +
-                              " values (?,?,?,?,?,?,?,?,?,?,?,?) ";   
+                            + "( glt_acct, glt_cc, glt_effdate, glt_amt, glt_base_amt, glt_curr, glt_base_curr, glt_ref, glt_site, glt_type, glt_desc, glt_doc, glt_entdate ) " +
+                              " values (?,?,?,?,?,?,?,?,?,?,?,?,?) ";   
             PreparedStatement ps = con.prepareStatement(sqlInsert); 
             try {
                 ps.setString(1, acct_cr);
@@ -1119,6 +1119,7 @@ public class fglData {
                 ps.setString(10, type);
                 ps.setString(11, desc);
                 ps.setString(12, doc);
+                ps.setString(13, BlueSeerUtils.setDateFormatNull(new java.util.Date()));
                 ps.executeUpdate();
 
                 ps.setString(1, acct_dr);
@@ -1133,6 +1134,7 @@ public class fglData {
                 ps.setString(10, type);
                 ps.setString(11, desc);
                 ps.setString(12, doc);
+                ps.setString(13, BlueSeerUtils.setDateFormatNull(new java.util.Date()));
                 ps.executeUpdate();
 
                 ps.close();
@@ -1184,8 +1186,8 @@ public class fglData {
           
        if ( amt != 0 && ! acct_cr.isBlank() && ! acct_dr.isBlank()) {
         String sqlInsert = "insert into gl_tran "
-                        + "( glt_acct, glt_cc, glt_effdate, glt_amt, glt_base_amt, glt_curr, glt_base_curr, glt_ref, glt_site, glt_type, glt_desc, glt_doc ) " +
-                          " values (?,?,?,?,?,?,?,?,?,?,?,?) ";   
+                        + "( glt_acct, glt_cc, glt_effdate, glt_amt, glt_base_amt, glt_curr, glt_base_curr, glt_ref, glt_site, glt_type, glt_desc, glt_doc, glt_entdate ) " +
+                          " values (?,?,?,?,?,?,?,?,?,?,?,?,?) ";   
         PreparedStatement ps = bscon.prepareStatement(sqlInsert);  
             ps.setString(1, acct_cr);
             ps.setString(2, cc_cr);
@@ -1199,6 +1201,7 @@ public class fglData {
             ps.setString(10, type);
             ps.setString(11, desc);
             ps.setString(12, doc);
+            ps.setString(13, BlueSeerUtils.setDateFormatNull(new java.util.Date()));
             ps.executeUpdate();
             
             ps.setString(1, acct_dr);
@@ -1213,6 +1216,7 @@ public class fglData {
             ps.setString(10, type);
             ps.setString(11, desc);
             ps.setString(12, doc);
+            ps.setString(13, BlueSeerUtils.setDateFormatNull(new java.util.Date()));
             ps.executeUpdate();
        
             ps.close();

@@ -96,6 +96,7 @@ public class InvoiceBrowse extends javax.swing.JPanel {
  
     boolean sending = false;
     
+   
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{getGlobalColumnTag("select"), 
                             getGlobalColumnTag("detail"), 
