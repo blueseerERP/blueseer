@@ -18276,7 +18276,7 @@ MainFrame.bslog(e);
                     + ")"
                     + ";");
 
-                 fglData.glEntryFromVoucher(nbr, effdate);
+                 fglData._glEntryFromVoucher(nbr, effdate, con, false);
 
 
 

@@ -35,6 +35,7 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.fgl.fglData;
+import static com.blueseer.fgl.fglData.AcctBalEntry;
 import com.blueseer.ord.ordData;
 import com.blueseer.shp.shpData;
 import com.blueseer.utl.BlueSeerUtils;
@@ -555,7 +556,8 @@ public class InvoiceMaint extends javax.swing.JPanel {
                 while (res.next()) {
                       c++;
                 }
-
+                
+                
                 if (c > 0) {
                   m = new String[]{BlueSeerUtils.ErrorBit, "Payment already applied, unable to void"};   
                 } else {
@@ -617,12 +619,39 @@ public class InvoiceMaint extends javax.swing.JPanel {
                    // delete ar_mstr
                    i = st.executeUpdate("delete from ar_mstr where ar_nbr = " + "'" + x[0] + "'" + ";");
                    
+                   // now determine if still in gl_tran or in gl_hist
+                   int glt = 0;
+                   ArrayList<String[]> glvals_hist = new ArrayList<String[]>();
+                    res = st.executeQuery("select * from gl_tran where glt_type = 'ISS-SALES' and glt_ref = " + "'" + x[0] + "'" + ";");
+                    while (res.next()) {
+                          glt++;
+                    }
+                    if (glt == 0) {
+                            res = st.executeQuery("select * from gl_hist where glh_type = 'ISS-SALES' and glh_ref = " + "'" + x[0] + "'" + ";");
+                            while (res.next()) {
+                                  glvals_hist.add(new String[]{
+                                    res.getString("glh_site"),
+                                    res.getString("glh_acct"),
+                                    res.getString("glh_cc"),
+                                    res.getString("glh_amt"),
+                                    res.getString("glh_effdate")});
+                            }
+                    }
+                    
                    // delete gl_tran
+                   if (glt > 0) {
                    i = st.executeUpdate("delete from gl_tran where glt_type = 'ISS-SALES' and glt_ref = " + "'" + x[0] + "'" + ";");
+                   }
                    
-                   // delete from gl_hist
-                   i = st.executeUpdate("delete from gl_hist where glh_type = 'ISS-SALES' and glh_ref = " + "'" + x[0] + "'" + ";");
-                           
+                   // delete from gl_hist as well as rebalance the acb_mstr
+                   if (! glvals_hist.isEmpty()) {
+                      for (String[] s : glvals_hist) {
+                          double d = (-1 * Double.valueOf(s[3])); // reverse amt entry
+                          AcctBalEntry(s[0], s[1], s[2], d, s[4]);
+                      }
+                      i = st.executeUpdate("delete from gl_hist where glh_type = 'ISS-SALES' and glh_ref = " + "'" + x[0] + "'" + ";");
+                   }
+                  
                    
                     // need to bundle above actions into one transaction
                     m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
