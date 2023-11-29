@@ -883,8 +883,8 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tbdriverrate.getText().isBlank() ? "0" : tbdriverrate.getText(),
                 String.valueOf(BlueSeerUtils.boolToInt(cbstandard.isSelected())),
                 tbtotweight.getText().isBlank() ? "0" : tbtotweight.getText(),
-                BlueSeerUtils.setDateFormat(dcorddate.getDate()).toString(),
-                BlueSeerUtils.setDateFormat(dcconfdate.getDate()).toString(),
+                BlueSeerUtils.setDateFormatNull(dcorddate.getDate()).toString(),
+                BlueSeerUtils.setDateFormatNull(dcconfdate.getDate()).toString(),
                 String.valueOf(BlueSeerUtils.boolToInt(cbhazmat.isSelected())),
                 "0", // expenses
                 tbcharges.getText().isBlank() ? "0" : tbcharges.getText(),

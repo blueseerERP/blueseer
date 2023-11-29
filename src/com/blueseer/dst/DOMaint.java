@@ -503,8 +503,8 @@ public class DOMaint extends javax.swing.JPanel implements IBlueSeerT {
                 "DO", // type
                 ddwhfrom.getSelectedItem().toString(),
                 ddwhto.getSelectedItem().toString(),
-                BlueSeerUtils.setDateFormat(dcshipdate.getDate()),
-                BlueSeerUtils.setDateFormat(dcrecvdate.getDate()), 
+                BlueSeerUtils.setDateFormatNull(dcshipdate.getDate()),
+                BlueSeerUtils.setDateFormatNull(dcrecvdate.getDate()), 
                 ddstatus.getSelectedItem().toString(),
                 "", //ref
                 remarks.getText(),

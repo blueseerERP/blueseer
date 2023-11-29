@@ -55,6 +55,7 @@ import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormat;
+import static com.blueseer.utl.BlueSeerUtils.setDateFormatNull;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeerT;
 import java.sql.DriverManager;
@@ -620,7 +621,7 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
                                               });
                  
                   
-                  actamt += res.getDouble("vod_voprice");
+                  actamt += (res.getDouble("vod_qty") * res.getDouble("vod_voprice"));
                
                 }
                
@@ -650,9 +651,9 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tbkey.getText(), // ap_nbr
                 currformatDouble(actamt).replace(defaultDecimalSeparator, '.'), // ap_amt
                 currformatDouble(actamt).replace(defaultDecimalSeparator, '.'), // ap_base_amt
-                setDateFormat(dcdate.getDate()), // ap_effdate
-                setDateFormat(dcdate.getDate()), // ap_entdate
-                setDateFormat(OVData.getDueDateFromTerms(dcdate.getDate(), terms)), // ap_duedate         
+                setDateFormatNull(dcdate.getDate()), // ap_effdate
+                setDateFormatNull(dcdate.getDate()), // ap_entdate
+                setDateFormatNull(OVData.getDueDateFromTerms(dcdate.getDate(), terms)), // ap_duedate         
                 "V", // ap_type
                 tbrmks.getText(), //ap_rmks
                 tbinvoice.getText(), //ap_ref

@@ -55,6 +55,7 @@ import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormat;
+import static com.blueseer.utl.BlueSeerUtils.setDateFormatNull;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeerT;
 import com.blueseer.utl.OVData;
@@ -578,9 +579,9 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tbkey.getText(), // ap_nbr
                 currformatDouble(actamt).replace(defaultDecimalSeparator, '.'), // ap_amt
                 currformatDouble(actamt).replace(defaultDecimalSeparator, '.'), // ap_base_amt
-                setDateFormat(dcdate.getDate()), // ap_effdate
-                setDateFormat(dcdate.getDate()), // ap_entdate
-                setDateFormat(dcdate.getDate()), // ap_duedate        
+                setDateFormatNull(dcdate.getDate()), // ap_effdate
+                setDateFormatNull(dcdate.getDate()), // ap_entdate
+                setDateFormatNull(dcdate.getDate()), // ap_duedate        
                 "V", // ap_type
                 tbrmks.getText(), //ap_rmks
                 tbcheck.getText(), //ap_ref

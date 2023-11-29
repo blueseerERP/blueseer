@@ -53,6 +53,7 @@ import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormat;
+import static com.blueseer.utl.BlueSeerUtils.setDateFormatNull;
 import com.blueseer.utl.OVData;
 import static com.blueseer.utl.OVData.AREntry;
 import static com.blueseer.utl.OVData.getCodeValueByCodeKey;
@@ -1231,8 +1232,8 @@ public class shpData {
                         String.valueOf(voucher), // ap_nbr
                         currformatDouble(Double.valueOf(s[4])).replace(defaultDecimalSeparator, '.'), // ap_amt
                         currformatDouble(Double.valueOf(s[4])).replace(defaultDecimalSeparator, '.'), // ap_base_amt
-                        setDateFormat(effdate), // ap_effdate, ship_date
-                        setDateFormat(effdate), // ap_entdate, ship_date
+                        setDateFormatNull(effdate), // ap_effdate, ship_date
+                        setDateFormatNull(effdate), // ap_entdate, ship_date
                         strduedate, // ap_duedate         
                         "V", // ap_type
                         s[2] + "/" + shipper, //ap_rmks
@@ -1258,7 +1259,7 @@ public class shpData {
                         s[2], // item
                         "1", // qty
                         currformatDouble(Double.valueOf(s[4])).replace(defaultDecimalSeparator, '.'), //amt
-                        setDateFormat(effdate), // date
+                        setDateFormatNull(effdate), // date
                         si[8], // vendor
                         "", // ap_check 
                         defaultshippingacct,
@@ -2089,10 +2090,10 @@ public class shpData {
             java.util.Date now = new java.util.Date();
 
             // initialize ord and due date if blank
-            if (orddate.isEmpty() || orddate == null) {
+            if (orddate == null || orddate.isEmpty()) {
                 orddate = dfdate.format(now);
             }
-            if (shipdate.isEmpty() || shipdate == null) {
+            if (shipdate == null || shipdate.isEmpty()) {
                 shipdate = dfdate.format(now);
             }
 

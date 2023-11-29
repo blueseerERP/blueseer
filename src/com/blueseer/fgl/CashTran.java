@@ -49,6 +49,7 @@ import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormat;
+import static com.blueseer.utl.BlueSeerUtils.setDateFormatNull;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.OVData;
 import java.sql.DriverManager;
@@ -1020,9 +1021,9 @@ public class CashTran extends javax.swing.JPanel {
                 tbKeyExpense.getText(), // ap_nbr
                 currformatDouble(bsParseDouble(tbexpensetotal.getText())).replace(defaultDecimalSeparator, '.'), // ap_amt
                 currformatDouble(bsParseDouble(tbexpensetotal.getText())).replace(defaultDecimalSeparator, '.'), // ap_base_amt
-                setDateFormat(dcdateExpense.getDate()), // ap_effdate
-                setDateFormat(dcdateExpense.getDate()), // ap_entdate
-                setDateFormat(dcdateExpense.getDate()), // ap_duedate        
+                setDateFormatNull(dcdateExpense.getDate()), // ap_effdate
+                setDateFormatNull(dcdateExpense.getDate()), // ap_entdate
+                setDateFormatNull(dcdateExpense.getDate()), // ap_duedate        
                 "V", // ap_type
                 tbrmks.getText(), //ap_rmks
                 tbexpensePO.getText(), //ap_ref

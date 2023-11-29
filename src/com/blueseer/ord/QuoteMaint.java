@@ -679,7 +679,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                 ddcust.getSelectedItem().toString(),
                 "", // ship
                 ddsite.getSelectedItem().toString(),
-                setDateFormat(now),
+                setDateFormatNull(now),
                 setDateFormatNull(dcquoteexpire.getDate()),
                 setDateFormatNull(dcpricingexpire.getDate()),
                 ddstatus.getSelectedItem().toString(),

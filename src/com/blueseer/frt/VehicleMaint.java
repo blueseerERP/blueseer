@@ -463,22 +463,22 @@ public class VehicleMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public veh_mstr createRecord() { 
-        String servicedate = "0000-00-00";
-        String tagexpiredate = "0000-00-00";
-        String odometerdate = "0000-00-00";
-        String inspectiondate = "0000-00-00";
+        String servicedate = null;
+        String tagexpiredate = null;
+        String odometerdate = null;
+        String inspectiondate = null;
         
         if (dcservice.getDate() != null) {
-            servicedate = BlueSeerUtils.setDateFormat(dcservice.getDate());
+            servicedate = BlueSeerUtils.setDateFormatNull(dcservice.getDate());
         }
         if (dctagdate.getDate() != null) {
-            tagexpiredate = BlueSeerUtils.setDateFormat(dctagdate.getDate());
+            tagexpiredate = BlueSeerUtils.setDateFormatNull(dctagdate.getDate());
         }
         if (dcodometer.getDate() != null) {
-            odometerdate = BlueSeerUtils.setDateFormat(dcodometer.getDate());
+            odometerdate = BlueSeerUtils.setDateFormatNull(dcodometer.getDate());
         }
         if (dcinspection.getDate() != null) {
-            inspectiondate = BlueSeerUtils.setDateFormat(dcinspection.getDate());
+            inspectiondate = BlueSeerUtils.setDateFormatNull(dcinspection.getDate());
         }
         
         veh_mstr x = new veh_mstr(null, 

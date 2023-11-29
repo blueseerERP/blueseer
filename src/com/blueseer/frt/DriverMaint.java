@@ -484,22 +484,22 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public drv_mstr createRecord() { 
-        String hiredate = "0000-00-00";
-        String termdate = "0000-00-00";
-        String licensedate = "0000-00-00";
-        String insurancedate = "0000-00-00";
+        String hiredate = null;
+        String termdate = null;
+        String licensedate = null;
+        String insurancedate = null;
         
         if (dclicenseexpiredate.getDate() != null) {
-            licensedate = BlueSeerUtils.setDateFormat(dclicenseexpiredate.getDate());
+            licensedate = BlueSeerUtils.setDateFormatNull(dclicenseexpiredate.getDate());
         }
         if (dchiredate.getDate() != null) {
-            hiredate = BlueSeerUtils.setDateFormat(dchiredate.getDate());
+            hiredate = BlueSeerUtils.setDateFormatNull(dchiredate.getDate());
         }
         if (dctermdate.getDate() != null) {
-            termdate = BlueSeerUtils.setDateFormat(dctermdate.getDate());
+            termdate = BlueSeerUtils.setDateFormatNull(dctermdate.getDate());
         }
         if (dcinsuranceexpiredate.getDate() != null) {
-            insurancedate = BlueSeerUtils.setDateFormat(dcinsuranceexpiredate.getDate());
+            insurancedate = BlueSeerUtils.setDateFormatNull(dcinsuranceexpiredate.getDate());
         }
         
         drv_mstr x = new drv_mstr(null, 

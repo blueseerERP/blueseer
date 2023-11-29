@@ -823,7 +823,7 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 ddengineer.getSelectedItem().toString(),
                 ddtask.getSelectedItem().toString(),
                 ddstatus.getSelectedItem().toString(),
-                BlueSeerUtils.setDateFormat(dctargetdate.getDate()),
+                BlueSeerUtils.setDateFormatNull(dctargetdate.getDate()),
                 tbdatecreate.getText(),
                 "",
                 tbdrawing.getText(),

@@ -749,8 +749,8 @@ public class CusRptPicker extends javax.swing.JPanel {
             // colect variables from input
             String from = tbkey1.getText();
             String to = tbkey2.getText();
-            String fromdate = BlueSeerUtils.setDateFormat(dcdate1.getDate());
-            String todate = BlueSeerUtils.setDateFormat(dcdate2.getDate());
+            String fromdate = BlueSeerUtils.setDateFormatNull(dcdate1.getDate());
+            String todate = BlueSeerUtils.setDateFormatNull(dcdate2.getDate());
             // cleanup variables
             if (from.isEmpty()) {
                   from = bsmf.MainFrame.lownbr;
@@ -758,10 +758,10 @@ public class CusRptPicker extends javax.swing.JPanel {
             if (to.isEmpty()) {
                   to = bsmf.MainFrame.hinbr;
             }
-            if (fromdate.isEmpty()) {
+            if (fromdate == null || fromdate.isEmpty()) {
                   fromdate = bsmf.MainFrame.lowdate;
             }
-            if (todate.isEmpty()) {
+            if (todate == null || todate.isEmpty()) {
                   todate = bsmf.MainFrame.hidate;
             }
             

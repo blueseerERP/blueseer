@@ -42,6 +42,7 @@ import static com.blueseer.utl.BlueSeerUtils.currformatDoubleUS;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormat;
+import static com.blueseer.utl.BlueSeerUtils.setDateFormatNull;
 import com.blueseer.utl.OVData;
 import com.blueseer.vdr.venData;
 import java.sql.Connection;
@@ -97,9 +98,9 @@ public class fapData {
                 String.valueOf(checknbr), // ap_nbr
                 currformat(s[3]), // ap_amt
                 currformat(s[4]), // ap_base_amt,  String ap_entdate, String ap_duedate,
-                setDateFormat(effdate), // ap_effdate
-                setDateFormat(now), // ap_entdate
-                setDateFormat(now), // ap_duedate        
+                setDateFormatNull(effdate), // ap_effdate
+                setDateFormatNull(now), // ap_entdate
+                setDateFormatNull(now), // ap_duedate        
                 "C", // ap_type
                 "", //ap_rmks
                 "", //ap_ref
@@ -481,8 +482,8 @@ public class fapData {
                 String.valueOf(checknbr), // ap_nbr
                 currformat(s[3]), // ap_amt
                 currformat(s[4]), // ap_base_amt,  String ap_entdate, String ap_duedate,
-                setDateFormat(effdate), // ap_effdate
-                setDateFormat(now), // ap_entdate
+                setDateFormatNull(effdate), // ap_effdate
+                setDateFormatNull(now), // ap_entdate
                 "", // ap_duedate        
                 "E", // ap_type
                 "", //ap_rmks
