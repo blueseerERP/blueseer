@@ -607,9 +607,9 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }
    
     public emp_mstr createRecord() { 
-        String shiredate = "0000-00-00";
-        String sdobdate = "0000-00-00";
-        String stermdate = "0000-00-00";
+        String shiredate = null;
+        String sdobdate = null;
+        String stermdate = null;
         String rate = "0.00";
         String vacdays = "0";
         String vactaken = "0";
@@ -621,13 +621,13 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT  {
         rate = tbrate.getText().isBlank() ? "0" : tbrate.getText();
         
         if (hiredate.getDate() != null) {
-            shiredate = BlueSeerUtils.setDateFormat(hiredate.getDate());
+            shiredate = BlueSeerUtils.setDateFormatNull(hiredate.getDate());
         }
         if (dcdob.getDate() != null) {
-            sdobdate = BlueSeerUtils.setDateFormat(dcdob.getDate());
+            sdobdate = BlueSeerUtils.setDateFormatNull(dcdob.getDate());
         }
         if (termdate.getDate() != null) {
-            stermdate = BlueSeerUtils.setDateFormat(termdate.getDate());
+            stermdate = BlueSeerUtils.setDateFormatNull(termdate.getDate());
         }
         
         emp_mstr x = new emp_mstr(null, 

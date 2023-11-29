@@ -569,6 +569,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
                   baseamt = OVData.getExchangeBaseValue(basecurr, ddcurr.getSelectedItem().toString(), actamt);
                 } 
         ar_mstr x = new ar_mstr(null, 
+                null, // ar_id auto-generated
                 tbkey.getText(),
                 ddcust.getSelectedItem().toString(),
                 currformatDouble(actamt).replace(defaultDecimalSeparator, '.'),
@@ -585,7 +586,19 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
                 arcc,
                 "c",
                 arbank,
-                ddsite.getSelectedItem().toString()
+                ddsite.getSelectedItem().toString(),
+                "", //ar_amt_tax
+                "", //ar_base_amt_tax
+                "", //ar_amt_disc
+                "", //ar_base_amt_disc
+                "", //ar_open_amt
+                "", //ar_applied
+                "", //ar_terms
+                "", //ar_tax_code
+                BlueSeerUtils.setDateFormatNull(null), //ar_invdate
+                BlueSeerUtils.setDateFormatNull(null), //ar_duedate
+                BlueSeerUtils.setDateFormatNull(null), //ar_discdate
+                "0" //ar_reverse
                 );
         return x;
     }

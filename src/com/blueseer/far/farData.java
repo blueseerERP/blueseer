@@ -102,8 +102,11 @@ public class farData {
         String sqlInsert = "insert into ar_mstr (ar_nbr, ar_cust, ar_amt, ar_base_amt, ar_type, "
                         + " ar_curr, ar_base_curr, ar_ref, ar_rmks, "
                         + "ar_entdate, ar_effdate, ar_paiddate, ar_acct, ar_cc, "
-                        + "ar_status, ar_bank, ar_site ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+                        + "ar_status, ar_bank, ar_site, "
+                        + "ar_amt_tax, ar_base_amt_tax, ar_amt_disc, ar_base_amt_disc, " 
+                        + "ar_open_amt, ar_applied, ar_terms, ar_tax_code, " 
+                        + " ar_invdate,  ar_duedate,  ar_discdate,  ar_reverse ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.ar_nbr);
@@ -127,6 +130,18 @@ public class farData {
             ps.setString(15, x.ar_status);
             ps.setString(16, x.ar_bank);
             ps.setString(17, x.ar_site);
+            ps.setString(18, x.ar_amt_tax);
+            ps.setString(19, x.ar_base_amt_tax);
+            ps.setString(20, x.ar_amt_disc);
+            ps.setString(21, x.ar_base_amt_disc);
+            ps.setString(22, x.ar_open_amt);
+            ps.setString(23, x.ar_applied);
+            ps.setString(24, x.ar_terms);
+            ps.setString(25, x.ar_tax_code);
+            ps.setString(26, x.ar_invdate);
+            ps.setString(27, x.ar_duedate);
+            ps.setString(28, x.ar_discdate);
+            ps.setString(29, x.ar_reverse);
             rows = ps.executeUpdate();
             } 
             return rows;
@@ -285,12 +300,16 @@ public class farData {
                 } else {
                     while(res.next()) {
                         m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                        r = new ar_mstr(m, res.getString("ar_nbr"), res.getString("ar_cust"),
+                        r = new ar_mstr(m, res.getString("ar_id"), res.getString("ar_nbr"), res.getString("ar_cust"),
                                 res.getString("ar_amt"), res.getString("ar_base_amt"), res.getString("ar_type"),
                                 res.getString("ar_curr"), res.getString("ar_base_curr"), res.getString("ar_ref"),
                                 res.getString("ar_rmks"), res.getString("ar_entdate"), res.getString("ar_effdate"),
                                 res.getString("ar_paiddate"), res.getString("ar_acct"), res.getString("ar_cc"),
-                                res.getString("ar_status"), res.getString("ar_bank"), res.getString("ar_site"));
+                                res.getString("ar_status"), res.getString("ar_bank"), res.getString("ar_site"),
+                                res.getString("ar_amt_tax"), res.getString("ar_base_amt_tax"), res.getString("ar_amt_disc"),
+                                res.getString("ar_base_amt_disc"), res.getString("ar_open_amt"), res.getString("ar_applied"),
+                                res.getString("ar_terms"), res.getString("ar_tax_code"), res.getString("ar_invdate"), 
+                                res.getString("ar_duedate"), res.getString("ar_discdate"), res.getString("ar_reverse"));
                     }
                 }
             }
@@ -315,12 +334,16 @@ public class farData {
             } else {
                 while(res.next()) {
                     m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                    r = new ar_mstr(m, res.getString("ar_nbr"), res.getString("ar_cust"),
+                    r = new ar_mstr(m, res.getString("ar_id"), res.getString("ar_nbr"), res.getString("ar_cust"),
                                 res.getString("ar_amt"), res.getString("ar_base_amt"), res.getString("ar_type"),
                                 res.getString("ar_curr"), res.getString("ar_base_curr"), res.getString("ar_ref"),
                                 res.getString("ar_rmks"), res.getString("ar_entdate"), res.getString("ar_effdate"),
                                 res.getString("ar_paiddate"), res.getString("ar_acct"), res.getString("ar_cc"),
-                                res.getString("ar_status"), res.getString("ar_bank"), res.getString("ar_site"));
+                                res.getString("ar_status"), res.getString("ar_bank"), res.getString("ar_site"),
+                                res.getString("ar_amt_tax"), res.getString("ar_base_amt_tax"), res.getString("ar_amt_disc"),
+                                res.getString("ar_base_amt_disc"), res.getString("ar_open_amt"), res.getString("ar_applied"),
+                                res.getString("ar_terms"), res.getString("ar_tax_code"), res.getString("ar_invdate"), 
+                                res.getString("ar_duedate"), res.getString("ar_discdate"), res.getString("ar_reverse"));
                 }
             }
             return r;
@@ -523,13 +546,17 @@ public class farData {
         }
     }
     
-    public record ar_mstr(String[] m, String ar_nbr, String ar_cust, String ar_amt, String ar_base_amt, 
+    public record ar_mstr(String[] m, String ar_id, String ar_nbr, String ar_cust, String ar_amt, String ar_base_amt, 
         String ar_type, String ar_curr, String ar_base_curr, String ar_ref, String ar_rmks,
         String ar_entdate, String ar_effdate, String ar_paiddate, String ar_acct, String ar_cc,
-        String ar_status, String ar_bank, String ar_site) {
+        String ar_status, String ar_bank, String ar_site, 
+        String ar_amt_tax, String ar_base_amt_tax, String ar_amt_disc, String ar_base_amt_disc, 
+        String ar_open_amt, String ar_applied, String ar_terms, String ar_tax_code,
+        String ar_invdate, String ar_duedate, String ar_discdate, String ar_reverse) {
         public ar_mstr(String[] m) {
             this(m, "", "", "", "", "", "", "", "", "", "",
-                    "", "", "", "", "", "", "" );
+                    "", "", "", "", "", "", "", "", "", "",
+                    "", "", "", "", "", "", "", "", "", "");
         }
     }
     

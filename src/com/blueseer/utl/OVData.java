@@ -14817,7 +14817,8 @@ return mystring;
                     }
                     if (type.equals("I")) {
                          st.executeUpdate("insert into ar_mstr "
-                        + "(ar_cust, ar_nbr, ar_amt, ar_base_amt, ar_curr, ar_base_curr, ar_amt_tax, ar_base_amt_tax, ar_open_amt, ar_type, ar_ref, ar_rmks, "
+                        + "(ar_cust, ar_nbr, ar_amt, ar_base_amt, ar_curr, ar_base_curr, " 
+                        + " ar_amt_tax, ar_base_amt_tax, ar_open_amt, ar_type, ar_ref, ar_rmks, "
                         + "ar_entdate, ar_effdate, ar_duedate, ar_acct, ar_cc, "
                         + "ar_terms, ar_tax_code, ar_bank, ar_site, ar_status) "
                         + " values ( " + "'" + cust + "'" + ","
