@@ -85,6 +85,7 @@ import com.blueseer.ord.ordData.quo_mstr;
 import com.blueseer.ord.ordData.quo_sac;
 import com.blueseer.ord.ordData.sod_det;
 import static com.blueseer.ord.ordData.updateQuoteTransaction;
+import static com.blueseer.utl.BlueSeerUtils.bsNumber;
 import static com.blueseer.utl.BlueSeerUtils.callChangeDialog;
 import static com.blueseer.utl.BlueSeerUtils.clog;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
@@ -1095,7 +1096,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
       double netprice = 0.00;
       for (int j = 0; j < detailtable.getRowCount(); j++) {
       netprice = Double.valueOf(detailtable.getValueAt(j, 5).toString()) - ((detaildisc / 100) * Double.valueOf(detailtable.getValueAt(j, 5).toString()));
-      detailtable.setValueAt(String.valueOf(detaildisc), j, 6);
+      detailtable.setValueAt(bsNumber(detaildisc), j, 6);
       detailtable.setValueAt(currformatDouble(netprice), j, 7);
       }
         

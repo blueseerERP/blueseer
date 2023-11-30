@@ -104,7 +104,7 @@ public class QuoteBrowse extends javax.swing.JPanel {
                             getGlobalColumnTag("number"), 
                             getGlobalColumnTag("customer"), 
                             getGlobalColumnTag("date"), 
-                            getGlobalColumnTag("expire"), 
+                            getGlobalColumnTag("expiredate"), 
                             getGlobalColumnTag("status"), 
                             getGlobalColumnTag("qty"), 
                             getGlobalColumnTag("amount")})
@@ -122,7 +122,7 @@ public class QuoteBrowse extends javax.swing.JPanel {
                             getGlobalColumnTag("line"),
                             getGlobalColumnTag("item"), 
                             getGlobalColumnTag("listprice"), 
-                            getGlobalColumnTag("disc"), 
+                            getGlobalColumnTag("discount"), 
                             getGlobalColumnTag("netprice"),
                             getGlobalColumnTag("qty")});
     
