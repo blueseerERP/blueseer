@@ -962,7 +962,7 @@ CREATE TABLE IF NOT EXISTS `in_mstr` (
   `in_wh` varchar(10)  NOT NULL DEFAULT '',
   `in_site` varchar(10)  NOT NULL DEFAULT '',
   `in_serial` varchar(20)  NOT NULL DEFAULT '',
-  `in_expire` varchar(10)  NOT NULL DEFAULT '',
+  `in_expire` date DEFAULT NULL,
   `in_userid` varchar(8)  NOT NULL DEFAULT '',
   `in_prog` varchar(30)  NOT NULL DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `inv_ctrl` (
@@ -1036,7 +1036,7 @@ CREATE TABLE IF NOT EXISTS `item_mstr` (
   `it_createdate` date DEFAULT NULL,
   `it_cont` varchar(30) NOT NULL DEFAULT '',
   `it_contqty` int(8) NOT NULL DEFAULT '0',
-  `it_expire` varchar(10) NOT NULL DEFAULT '',
+  `it_expire` date DEFAULT NULL,
   `it_expiredays` int(4) NOT NULL DEFAULT '0', 
   `it_phantom` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -1388,9 +1388,9 @@ CREATE TABLE IF NOT EXISTS `qual_mstr` (
   `qual_id` int(4) NOT NULL,
   `qual_site` varchar(30)  NOT NULL DEFAULT '',
   `qual_userid` varchar(30)  NOT NULL DEFAULT '',
-  `qual_date_crt` varchar(10)  NOT NULL DEFAULT '',
-  `qual_date_upd` varchar(10)  NOT NULL DEFAULT '',
-  `qual_date_cls` varchar(10)  NOT NULL DEFAULT '',
+  `qual_date_crt` date DEFAULT NULL,
+  `qual_date_upd` date DEFAULT NULL,
+  `qual_date_cls` date DEFAULT NULL,
   `qual_originator` varchar(30)  NOT NULL DEFAULT '',
   `qual_vend` varchar(30)  NOT NULL DEFAULT '',
   `qual_vend_name` varchar(30)  NOT NULL DEFAULT '',
@@ -1614,8 +1614,8 @@ CREATE TABLE IF NOT EXISTS `cfo_mstr` (
   `cfo_driverrate` decimal(14,5) NOT NULL DEFAULT '0',
   `cfo_driverstd` tinyint(1) NOT NULL  DEFAULT '0',
   `cfo_weight` decimal(14,2) NOT NULL DEFAULT '0',
-  `cfo_orddate` varchar(10) NOT NULL  DEFAULT '',
-  `cfo_confdate` varchar(10) NOT NULL  DEFAULT '',
+  `cfo_orddate` date DEFAULT NULL,
+  `cfo_confdate` date DEFAULT NULL,
   `cfo_ishazmat` tinyint(1) NOT NULL  DEFAULT '0',
   `cfo_miscexpense` decimal(14,2) NOT NULL DEFAULT '0',
   `cfo_misccharges` decimal(14,2) NOT NULL DEFAULT '0',
@@ -1864,12 +1864,12 @@ CREATE TABLE IF NOT EXISTS `or_mstr` (
   `or_ship` varchar(20) NOT NULL  DEFAULT '',
   `or_site` varchar(20) NOT NULL  DEFAULT '',
   `or_createdvia` varchar(100) NOT NULL  DEFAULT '',
-  `or_create_date` varchar(30)  DEFAULT NULL,
-  `or_create_date_gmt` varchar(30)  DEFAULT NULL,
-  `or_mod_date` varchar(30)  DEFAULT NULL,
-  `or_mod_date_gmt` varchar(30)  DEFAULT NULL,
-  `or_ship_date` varchar(30)  DEFAULT NULL,
-  `or_ship_date_gmt` varchar(30)  DEFAULT NULL,
+  `or_create_date` date DEFAULT NULL,
+  `or_create_date_gmt` varchar(30) DEFAULT '',
+  `or_mod_date` date DEFAULT NULL,
+  `or_mod_date_gmt` varchar(30) DEFAULT '',
+  `or_ship_date` date DEFAULT NULL,
+  `or_ship_date_gmt` varchar(30) DEFAULT '',
   `or_status` varchar(30)  NOT NULL DEFAULT '',
   `or_shipmethod` varchar(30)  NOT NULL DEFAULT '',
   `or_shipservice` varchar(30)  NOT NULL DEFAULT '',
@@ -2158,7 +2158,7 @@ CREATE TABLE IF NOT EXISTS `tran_mstr` (
   `tr_op` varchar(4)  NOT NULL DEFAULT '',
   `tr_loc` varchar(30)  NOT NULL DEFAULT '',
   `tr_wh` varchar(30)  NOT NULL DEFAULT '',
-  `tr_expire` varchar(10)  NOT NULL DEFAULT '',
+  `tr_expire` date DEFAULT NULL,
   `tr_cc` varchar(10)  NOT NULL DEFAULT '',
   `tr_wc` varchar(10)  NOT NULL DEFAULT '',
   `tr_wf` varchar(10)  NOT NULL DEFAULT '',
@@ -2538,7 +2538,7 @@ CREATE TABLE `dfs_det` (
   `dfsd_min` int(5) NOT NULL DEFAULT '0',
   `dfsd_max` int(5) NOT NULL DEFAULT '0',
   `dfsd_align` varchar(1) NOT NULL DEFAULT '',
-  `dfsd_status` varchar(1) NOT NULL DEFAULT '',
+  `dfsd_status` varchar(5) NOT NULL DEFAULT '',
   `dfsd_type` varchar(1) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `wkf_mstr` (
@@ -2595,13 +2595,13 @@ CREATE TABLE IF NOT EXISTS `veh_mstr` (
   `veh_year` varchar(4) NOT NULL DEFAULT '',
   `veh_vin` varchar(80) NOT NULL DEFAULT '',
   `veh_rmks` varchar(200) NOT NULL DEFAULT '',
-  `veh_servicedate` varchar(8) NOT NULL DEFAULT '',
+  `veh_servicedate` date DEFAULT NULL,
   `veh_servicefreqdays` int(8) NOT NULL DEFAULT '0',
   `veh_servicefreqmiles` int(8) NOT NULL DEFAULT '0',
   `veh_odometer` int(7) NOT NULL DEFAULT '0',
-  `veh_odometerdate` varchar(8) NOT NULL DEFAULT '',
+  `veh_odometerdate` date DEFAULT NULL,
   `veh_regnbr` varchar(20) NOT NULL DEFAULT '',
-  `veh_regdate` varchar(8) NOT NULL DEFAULT '',
+  `veh_regdate` date DEFAULT NULL,
   `veh_regtax` decimal(14,2) NOT NULL DEFAULT '0',
   `veh_regstate` varchar(20) NOT NULL DEFAULT '',
   `veh_weight` int(7) NOT NULL DEFAULT '0',
@@ -2610,7 +2610,7 @@ CREATE TABLE IF NOT EXISTS `veh_mstr` (
   `veh_misc1` varchar(50) NOT NULL DEFAULT '',
   `veh_misc2` varchar(50) NOT NULL DEFAULT '',
   `veh_misc3` varchar(50) NOT NULL DEFAULT '',
-  `veh_inspectdate` varchar(8) NOT NULL DEFAULT ''
+  `veh_inspectdate` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `veh_meta` (
   `vehm_id` varchar(30) NOT NULL DEFAULT '',
@@ -2637,16 +2637,16 @@ CREATE TABLE IF NOT EXISTS `drv_mstr` (
   `drv_terms` varchar(30)  NOT NULL DEFAULT '', 
   `drv_certificate` varchar(30)  NOT NULL DEFAULT '', 
   `drv_licensenbr` varchar(20)  NOT NULL DEFAULT '', 
-  `drv_licenseexpire` varchar(8)  NOT NULL DEFAULT '', 
+  `drv_licenseexpire` date DEFAULT NULL,
   `drv_insurancenbr` varchar(80)  NOT NULL DEFAULT '', 
-  `drv_insuranceexpire` varchar(8)  NOT NULL DEFAULT '', 
+  `drv_insuranceexpire` date DEFAULT NULL,
   `drv_insurancecarrier` varchar(80)  NOT NULL DEFAULT '', 
   `drv_dhmiles` int(12)  NOT NULL DEFAULT '0', 
   `drv_rmks` varchar(200)  NOT NULL DEFAULT '',
   `drv_payrate` decimal(12,5)  NOT NULL DEFAULT '0',
   `drv_paytype` varchar(12)  NOT NULL DEFAULT '', 
-  `drv_hiredate` varchar(8)  NOT NULL DEFAULT '', 
-  `drv_termdate` varchar(8)  NOT NULL DEFAULT ''
+  `drv_hiredate` date DEFAULT NULL,
+  `drv_termdate` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `drv_meta` (
   `drvm_id` varchar(30) NOT NULL DEFAULT '',

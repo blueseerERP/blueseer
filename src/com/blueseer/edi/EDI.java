@@ -3332,12 +3332,12 @@ public class EDI {
                 ratetype, // rate type 
                 BlueSeerUtils.currformatDoubleUS(rate), // rate
                 String.valueOf(miles), // miles
-                "", // driver rate
+                "0", // driver rate
                 "0", // driver standard toggle
                 e.getWeight(), // weight
                 BlueSeerUtils.convertDateFormat("yyyyMMdd", BlueSeerUtils.now().substring(0,8)),
-                "", // confirm date
-                e.getHazmat(), // is hazmat
+                null, // confirm date
+                (e.getHazmat().isBlank() ? "0" : e.getHazmat()), // is hazmat
                 "0", // expenses
                 "0", // charges
                 BlueSeerUtils.currformatDoubleUS(amt), // total cost
@@ -3384,19 +3384,19 @@ public class EDI {
                 e.getDetRemarks(j), // remarks
                 e.getDetRef(j), // reference
                 "", // ordnum
-                e.getDetWeight(j).replace(defaultDecimalSeparator, '.'), // weight
-                e.getDetBoxes(j).replace(defaultDecimalSeparator, '.'), // pallets
-                e.getDetUnits(j).replace(defaultDecimalSeparator, '.'), // quantity
+                (e.getDetWeight(j).isBlank() ? "0" : e.getDetWeight(j).replace(defaultDecimalSeparator, '.') ), // weight
+                (e.getDetBoxes(j).isBlank() ? "0" : e.getDetBoxes(j).replace(defaultDecimalSeparator, '.') ), // pallets
+                (e.getDetUnits(j).isBlank() ? "0" : e.getDetUnits(j).replace(defaultDecimalSeparator, '.') ), // quantity
                 "0", // hazmat
                 e.getDetDateType(j), // datetype
-                e.getDetDate(j), // date
+                (e.getDetDate(j).isBlank() ? null : e.getDetDate(j)), // date
                 e.getDetTimeType1(j),// timetype1
                 e.getDetTime1(j), // time
                 e.getDetTimeType1(j), // timetype2
                 e.getDetTimeType2(j), // time2
                 e.getDetTimeZone(j), // timezone
-                e.getDetRate(j), // rate 
-                e.getDetMiles(j) // miles
+                (e.getDetRate(j).isBlank() ? "0" : e.getDetRate(j).replace(defaultDecimalSeparator, '.') ), // rate 
+                (e.getDetMiles(j).isBlank() ? "0" : e.getDetMiles(j).replace(defaultDecimalSeparator, '.')) // miles
                 );  
                 list.add(y);
                } // for each det

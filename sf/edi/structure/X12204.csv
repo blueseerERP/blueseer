@@ -191,7 +191,7 @@ G62,S5,1,no,no,e02,Date,8,8,-,X,F
 G62,S5,1,no,no,e03,Time Qualifier,1,2,-,X,F
 G62,S5,1,no,no,e04,Time,4,8,-,X,F
 G62,S5,1,no,no,e05,Time Code,2,2,-,O,F
-AT8,S5,1,no,yes,landmark,Shipment Weight, Packaging and Quantity Data,3,3,-,O,F
+AT8,S5,1,no,yes,landmark,Shipment Weight Packaging and Quantity Data,3,3,-,O,F
 AT8,S5,1,no,no,e01,Weight Qualifier,1,2,-,X,F
 AT8,S5,1,no,no,e02,Weight Unit Code,1,1,-,X,F
 AT8,S5,1,no,no,e03,Weight,1,10,-,X,F
@@ -267,7 +267,7 @@ G61,S5:N1,1,no,no,e03,Communication Number Qualifier,2,2,-,X,F
 G61,S5:N1,1,no,no,e04,Communication Number,1,256,-,X,F
 G61,S5:N1,1,no,no,e05,Contact Inquiry Reference,1,20,-,O,F
 N1,,,,,groupend,,,,,,F
-L5,S5,99999,yes,yes,landmark,Description, Marks and Numbers,2,2,-,O,F
+L5,S5,99999,yes,yes,landmark,Description Marks and Numbers,2,2,-,O,F
 L5,S5,1,no,no,e01,Lading Line Item Number,1,3,-,O,F
 L5,S5,1,no,no,e02,Lading Description,1,50,-,O,F
 L5,S5,1,no,no,e03,Commodity Code,1,30,-,X,F
@@ -278,7 +278,7 @@ L5,S5,1,no,no,e07,Marks and Numbers Qualifier,1,2,-,O,F
 L5,S5,1,no,no,e08,Commodity Code Qualifier,1,1,-,X,F
 L5,S5,1,no,no,e09,Commodity Code,1,30,-,X,F
 L5,S5,1,no,no,e10,Compartment ID Code,1,1,-,O,F
-AT8,S5:L5,1,no,yes,landmark,Shipment Weight, Packaging and Quantity Data,3,3,-,O,F
+AT8,S5:L5,1,no,yes,landmark,Shipment Weight Packaging and Quantity Data,3,3,-,O,F
 AT8,S5:L5,1,no,no,e01,Weight Qualifier,1,2,-,X,F
 AT8,S5:L5,1,no,no,e02,Weight Unit Code,1,1,-,X,F
 AT8,S5:L5,1,no,no,e03,Weight,1,10,-,X,F
@@ -453,7 +453,7 @@ LAD,S5:G61:OID,1,no,no,e11,Product/Service ID Qualifier,2,2,-,X,F
 LAD,S5:G61:OID,1,no,no,e12,Product/Service ID,1,48,-,X,F
 LAD,S5:G61:OID,1,no,no,e13,Lading Description,1,50,-,O,F
 LAD,S5:G61:OID,1,no,no,e14,Lading Value,2,9,-,O,F
-L5,S5:G61:OID,99999,yes,yes,landmark,Description, Marks and Numbers,2,2,-,O,F
+L5,S5:G61:OID,99999,yes,yes,landmark,Description Marks and Numbers,2,2,-,O,F
 L5,S5:G61:OID,1,no,no,e01,Lading Line Item Number,1,3,-,O,F
 L5,S5:G61:OID,1,no,no,e02,Lading Description,1,50,-,O,F
 L5,S5:G61:OID,1,no,no,e03,Commodity Code,1,30,-,X,F
@@ -464,7 +464,7 @@ L5,S5:G61:OID,1,no,no,e07,Marks and Numbers Qualifier,1,2,-,O,F
 L5,S5:G61:OID,1,no,no,e08,Commodity Code Qualifier,1,1,-,X,F
 L5,S5:G61:OID,1,no,no,e09,Commodity Code,1,30,-,X,F
 L5,S5:G61:OID,1,no,no,e10,Compartment ID Code,1,1,-,O,F
-AT8,S5:G61:OID:L5,1,no,yes,landmark,Shipment Weight, Packaging and Quantity Data,3,3,-,O,F
+AT8,S5:G61:OID:L5,1,no,yes,landmark,Shipment Weight Packaging and Quantity Data,3,3,-,O,F
 AT8,S5:G61:OID:L5,1,no,no,e01,Weight Qualifier,1,2,-,X,F
 AT8,S5:G61:OID:L5,1,no,no,e02,Weight Unit Code,1,1,-,X,F
 AT8,S5:G61:OID:L5,1,no,no,e03,Weight,1,10,-,X,F
