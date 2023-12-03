@@ -27,6 +27,7 @@ package com.blueseer.frt;
 
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.bslog;
 import com.blueseer.utl.OVData;
 import com.blueseer.edi.EDILogBrowse;
 import static bsmf.MainFrame.checkperms;
@@ -159,6 +160,7 @@ import jcifs.smb.NtlmPasswordAuthentication;
 import jcifs.smb.SmbException;
 import jcifs.smb.SmbFile;
 import jcifs.smb.SmbFileInputStream;
+import net.sf.jasperreports.engine.JRException;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -2995,7 +2997,13 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
-       OVData.printPurchaseOrder(tbkey.getText(), false);
+        try {
+            OVData.printCFO(tbkey.getText());
+        } catch (SQLException ex) {
+            bslog(ex);
+        } catch (JRException ex) {
+            bslog(ex);
+        }
     }//GEN-LAST:event_btprintActionPerformed
 
     private void orddetMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_orddetMouseClicked

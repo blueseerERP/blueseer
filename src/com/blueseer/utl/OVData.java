@@ -177,7 +177,7 @@ import org.json.JSONObject;
  */
 public class OVData { 
     
-   public static String minor = "16";
+   public static String minor = "17";
     
    public static String[] states = {"AB","AL","AK","AZ","AR","BC","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","MB","ME","MD","MA","MI","MN","MS","MO","MT","NE","NL","NV","NH","NJ","NL","NM","NY","NC","ND","NS","OH","OK","ON","OR","PA","PE","QC","RI","SC","SD","SE","TN","TX","UT","VT","VA","WA","WV","WI","WY" };
    public static String[] countries = {"Afghanistan","Albania","Algeria","Andorra","Angola","Antigua & Deps","Argentina","Armenia","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bhutan","Bolivia","Bosnia Herzegovina","Botswana","Brazil","Brunei","Bulgaria","Burkina","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Central African Rep","Chad","Chile","China","Colombia","Comoros","Congo","Congo {Democratic Rep}","Costa Rica","Croatia","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","East Timor","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Ethiopia","Fiji","Finland","France","Gabon","Gambia","Georgia","Germany","Ghana","Greece","Grenada","Guatemala","Guinea","Guinea-Bissau","Guyana","Haiti","Honduras","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland {Republic}","Israel","Italy","Ivory Coast","Jamaica","Japan","Jordan","Kazakhstan","Kenya","Kiribati","Korea North","Korea South","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique","Myanmar, {Burma}","Namibia","Nauru","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria","Norway","Oman","Pakistan","Palau","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Qatar","Romania","Russian Federation","Rwanda","St Kitts & Nevis","St Lucia","Saint Vincent & the Grenadines","Samoa","San Marino","Sao Tome & Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","Spain","Sri Lanka","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Togo","Tonga","Trinidad & Tobago","Tunisia","Turkey","Turkmenistan","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom", "USA","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Yemen","Zambia","Zimbabwe" }; 
@@ -6061,7 +6061,7 @@ public class OVData {
                         + " po_terms, po_ap_acct, po_ap_cc, po_rmks ) "
                     + " values ( " + 
                     "'" +  String.valueOf(indexnbr) + "'" + "," + 
-                    "'" +  "cash" + "'" + "," +
+                    "'" +  "ACME" + "'" + "," +
                     "'" +  "1000" + "'" + "," +  
                     "'" +  "site" + "'" + "," + 
                     "'" +  "99999" + "'" + "," +        
@@ -17650,6 +17650,84 @@ MainFrame.bslog(e);
                 hm.put("REPORT_TITLE", "QPR");
                 hm.put("myid",  id);
                 hm.put("imagepath", imagepath.toString());
+                hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
+               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
+               // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
+                Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemJasperDirectory()) + jasperfile);
+                JasperPrint jasperPrint = JasperFillManager.fillReport(template.toString(), hm, con );
+                
+                JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+                jasperViewer.setVisible(true);
+                jasperViewer.setFitPageZoomRatio();
+                
+          
+    }    
+    
+    public static void printCFO(String id) throws SQLException, JRException {
+       
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+               
+            String cust = "";
+            String site = "";
+            String site_csz = "";
+            String bill_csz = "";
+            
+            String deliverydate = "";
+            String weight = "";
+            String miles = "";
+               
+                res = st.executeQuery("select cfo_cust, cfo_site, " +
+                        " site_city, site_state, site_zip, site_country, cm_city, cm_state, cm_zip, cm_country " +
+                        " from cfo_mstr " +
+                        " inner join cm_mstr on cm_code = cfo_cust " +
+                        " inner join site_mstr on site_site = cfo_site " +
+                        " where cfo_nbr = " + "'" + id + "'" + ";");
+                       while (res.next()) {
+                          cust = res.getString(("cfo_cust"));
+                          site = res.getString(("cfo_site"));
+                          site_csz = res.getString(("site_city")) + " " + res.getString(("site_state")) + " " + res.getString(("site_zip")) + " " + res.getString(("site_country"));
+                          bill_csz = res.getString(("cm_city")) + " " + res.getString(("cm_state")) + " " + res.getString(("cm_zip")) + " " + res.getString(("cm_country"));
+                          
+                       }
+                
+                
+                    res = st.executeQuery("select cfod_date from cfo_det " +
+                            " where cfod_nbr = " + "'" + id + "'" + 
+                            " and cfod_type = 'Unload Complete' " + ";"); 
+                    while (res.next()) {
+                        deliverydate = res.getString(("cfod_date"));
+                    }
+                    res = st.executeQuery("select cfo_mileage, cfo_weight from cfo_mstr " +
+                            " where cfo_nbr = " + "'" + id + "'"  + ";"); 
+                    while (res.next()) {
+                        miles = res.getString(("cfo_mileage"));
+                        weight = res.getString(("cfo_weight"));
+                    }
+               
+            
+            
+                String logo = "";
+                logo = OVData.getSiteLogo(OVData.getDefaultSite());
+                String jasperfile = "";
+                jasperfile = "ord_freight.jasper";
+               
+                Path imagepath = FileSystems.getDefault().getPath(cleanDirString(getSystemImageDirectory()) + logo);
+                HashMap hm = new HashMap();
+                hm.put("REPORT_TITLE", "FREIGHT ORDER");
+                hm.put("myid",  id);
+                hm.put("imagepath", imagepath.toString());
+                hm.put("deliverydate", deliverydate);
+                hm.put("miles", miles);
+                hm.put("weight", weight);
+                hm.put("site_csz", site_csz);
+                hm.put("bill_csz", bill_csz);
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
