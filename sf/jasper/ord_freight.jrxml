@@ -264,7 +264,7 @@ where cfod_nbr =  $P{myid}]]>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{jasper.frtorder.lblitem}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{jasper.frtorder.lblstopnbr}]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement x="0" y="19" width="555" height="1" uuid="c9e36006-c5df-41ef-96b1-529b4e6ddb52"/>
@@ -274,7 +274,7 @@ where cfod_nbr =  $P{myid}]]>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{jasper.frtorder.lbldesc}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{jasper.frtorder.lblstoptype}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="165" y="0" width="363" height="20" uuid="cce099f1-590a-4911-a1a7-1d5e05e7770c"/>

@@ -70,6 +70,7 @@ import static com.blueseer.utl.BlueSeerUtils.bsParseDoubleUS;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import static com.blueseer.utl.BlueSeerUtils.clog;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDoubleUS;
 import static com.blueseer.utl.BlueSeerUtils.currformatUS;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
@@ -1099,6 +1100,10 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbcost.setText(x.cfo_cost());
         ddsite.setSelectedItem(x.cfo_site());
         
+        if (ddcust.getSelectedItem() != null && ! ddcust.getSelectedItem().toString().isBlank()) {
+            clientChangeEvent(ddcust.getSelectedItem().toString());
+        }
+        
         // now detail
         kvstop.clear();
         for (cfo_det cfod : cfodetlist) {
@@ -1272,7 +1277,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
       for (int j = 0; j < sactable.getRowCount(); j++) {
              totalcharges += Double.valueOf(sactable.getValueAt(j, 3).toString()); 
       }  
-      tbcharges.setText(String.valueOf(totalcharges));
+      tbcharges.setText(currformatDouble(totalcharges));
       
       
       for (Map.Entry<String, ArrayList<String[]>> z : itemmap.entrySet()) { 
@@ -1297,7 +1302,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbtotweight.setText(String.valueOf(weight));
       }
       if (cbderivedrate.isSelected()) {
-        tbforate.setText(String.valueOf(rate));
+        tbforate.setText(currformatDouble(rate));
       }
       if (cbderivedmiles.isSelected()) {
         tbmileage.setText(String.valueOf(miles));
@@ -1314,7 +1319,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                 dol = (Double.valueOf(tbforate.getText()) * miles) + Double.valueOf(tbcharges.getText());
             }
       } 
-      tbcost.setText(String.valueOf(dol));
+      tbcost.setText(currformatDouble(dol));
       
     }
     
@@ -1482,8 +1487,9 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public void clientChangeEvent(String mykey) {
-       ddshipto.removeAllItems();     
+            
        if (! isLoad && ddcust.getSelectedItem() != null && ! ddcust.getSelectedItem().toString().isEmpty() ) {
+           ddshipto.removeAllItems();
            lbclientname.setText(cusData.getCustName(ddcust.getSelectedItem().toString()));
            ArrayList<String> list = cusData.getcustshipmstrlist(ddcust.getSelectedItem().toString());
             for (String s : list) {
@@ -3233,6 +3239,8 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                 ddtime1.setSelectedItem(v[26]);
                 ddtimetype2.setSelectedItem(v[27]);
                 ddtime2.setSelectedItem(v[28]);
+                tbstoprate.setText(v[30]);
+                tbstopmiles.setText(v[31]);
           setStopState(true); 
           
           lblstop.setText("Stop: " + stopnumber);
@@ -3460,6 +3468,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         } else {
             tbforate.setEnabled(true);
         }
+        summarize();
     }//GEN-LAST:event_cbderivedrateActionPerformed
 
     private void cbderivedmilesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbderivedmilesActionPerformed
@@ -3468,6 +3477,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         } else {
             tbmileage.setEnabled(true);
         }
+        summarize();
     }//GEN-LAST:event_cbderivedmilesActionPerformed
 
     private void btsacaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btsacaddActionPerformed
