@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="600" pageHeight="56" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="600" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" whenResourceMissingType="Empty" uuid="078cf306-3884-4a22-bf78-2e22eac8a13d">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="myid" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="stopline" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select cfod_rmks, cfod_revision, cfod_datetype, cfod_date, 
+case when cfod_timetype1 = '' then 'Time1' else cfod_timetype1 end  as cfod_timetype1, 
+case when cfod_timetype2 = '' then 'Time2' else cfod_timetype2 end  as cfod_timetype2, 
+case when cfod_time1 = '' then 'None Specified' else cfod_time1 end  as cfod_time1,
+case when cfod_time2 = '' then 'None Specified' else cfod_time2 end  as cfod_time2,  
+cfod_phone, cfod_email, cfod_contact
+from cfo_det
+where  cfod_nbr = $P{myid} and cfod_stopline = $P{stopline}]]>
+	</queryString>
+	<field name="cfod_rmks" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cfod_datetype" class="java.lang.String"/>
+	<field name="cfod_date" class="java.lang.String"/>
+	<field name="cfod_timetype1" class="java.lang.String"/>
+	<field name="cfod_time1" class="java.lang.String"/>
+	<field name="cfod_revision" class="java.lang.String"/>
+	<field name="cfod_phone" class="java.lang.String"/>
+	<field name="cfod_email" class="java.lang.String"/>
+	<field name="cfod_contact" class="java.lang.String"/>
+	<field name="cfod_timetype2" class="java.lang.String"/>
+	<field name="cfod_time2" class="java.lang.String"/>
+	<background>
+		<band height="3" splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="56" splitType="Immediate">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField>
+				<reportElement x="0" y="0" width="600" height="14" uuid="cb969a1e-09e6-420f-8401-dd62a22754a8"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Remarks: " + $F{cfod_rmks}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="0" y="14" width="500" height="14" uuid="17207d79-bb71-4245-a361-297ab29d6bd1"/>
+				<textElement textAlignment="Left">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cfod_datetype} + " : "  + $F{cfod_date}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="0" y="42" width="500" height="14" uuid="59382768-c0e8-4c1c-9842-042b42452d9a"/>
+				<textElement textAlignment="Left">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Contact:  " + $F{cfod_phone}   +   "    " + $F{cfod_contact}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="0" y="28" width="500" height="14" uuid="3fd1edb5-80f2-47c1-b655-58cbf0bc6fee"/>
+				<textElement textAlignment="Left">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cfod_timetype1} + " : "  + $F{cfod_time1}  + "        "  + $F{cfod_timetype2} + " : "  + $F{cfod_time2}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

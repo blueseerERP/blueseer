@@ -286,7 +286,7 @@ where cfod_nbr =  $P{myid}]]>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="21" splitType="Stretch">
+		<band height="17" splitType="Stretch">
 			<textField>
 				<reportElement x="0" y="0" width="90" height="16" uuid="978682a3-4259-41c3-adae-54872ecfe90a"/>
 				<textElement>
@@ -302,14 +302,27 @@ where cfod_nbr =  $P{myid}]]>
 				<textFieldExpression><![CDATA[$F{cfod_type}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="165" y="2" width="400" height="16" uuid="8cace766-0971-473d-a938-0366a8c5aca6"/>
+				<reportElement x="165" y="1" width="400" height="16" uuid="8cace766-0971-473d-a938-0366a8c5aca6"/>
 				<textElement>
 					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA["address: " + $F{cfod_name} + " " + $F{cfod_line1} + " " + $F{cfod_city} + " " + $F{cfod_state} + " " + $F{cfod_zip}]]></textFieldExpression>
 			</textField>
 		</band>
-		<band height="25"/>
+		<band height="40">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<subreport>
+				<reportElement x="40" y="-1" width="507" height="23" uuid="7dd56504-b98a-4c3e-b16f-8c1b11914251"/>
+				<subreportParameter name="myid">
+					<subreportParameterExpression><![CDATA[$F{cfo_nbr}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="stopline">
+					<subreportParameterExpression><![CDATA[$F{cfod_stopline}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "ord_freight_detail.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
 	</detail>
 	<pageFooter>
 		<band height="28" splitType="Stretch"/>
