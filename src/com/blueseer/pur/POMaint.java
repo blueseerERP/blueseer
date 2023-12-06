@@ -79,6 +79,7 @@ import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.lurb2;
+import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import static com.blueseer.utl.BlueSeerUtils.priceformat;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeerT;
@@ -1102,7 +1103,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddtype.setSelectedItem(po.po_type());
         ddtax.setSelectedItem(po.po_taxcode());
         remarks.setText(po.po_rmks());
-        duedate.setDate(bsmf.MainFrame.dfdate.parse(po.po_due_date()));
+        duedate.setDate(parseDate(po.po_due_date()));
         blanket = po.po_type();
         cbconfirm.setSelected(BlueSeerUtils.ConvertStringToBool(po.po_confirm()));
         cbedi.setSelected((po.po_entrytype().equals("edi") ? true : false));

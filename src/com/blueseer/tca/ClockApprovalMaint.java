@@ -35,6 +35,7 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import com.blueseer.utl.OVData;
 import java.awt.Component;
 import java.sql.Connection;
@@ -144,8 +145,8 @@ public class ClockApprovalMaint extends javax.swing.JPanel {
             tbrecid.setText(res.getString("t.recid"));
             lblemployee.setText(res.getString("t.emp_nbr") + "  " + res.getString("e.emp_fname") + 
                                "  " + res.getString("e.emp_lname"));
-            dcindate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("t.indate")));
-            dcoutdate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("t.outdate")));
+            dcindate.setDate(parseDate(res.getString("t.indate")));
+            dcoutdate.setDate(parseDate(res.getString("t.outdate")));
             tbintime.setText(res.getString("t.intime"));
             tbintimeadj.setText(res.getString("t.intime_adj"));
             tbouttime.setText(res.getString("t.outtime"));

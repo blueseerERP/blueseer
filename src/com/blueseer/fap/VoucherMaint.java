@@ -54,6 +54,7 @@ import static com.blueseer.utl.BlueSeerUtils.ludialog;
 import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormat;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormatNull;
 import com.blueseer.utl.DTData;
@@ -582,7 +583,7 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
                 while (res.next()) {
                   i++;
                      tbkey.setText(res.getString("ap_nbr"));
-                     dcdate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("ap_effdate")));
+                     dcdate.setDate(parseDate(res.getString("ap_effdate")));
                      tbinvoice.setText(res.getString("ap_ref"));
                      tbrmks.setText(res.getString("ap_rmks"));
                      ddvend.setSelectedItem(res.getString("ap_vend"));

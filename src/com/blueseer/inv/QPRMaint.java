@@ -47,6 +47,7 @@ import static com.blueseer.utl.BlueSeerUtils.ludialog;
 import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
 import com.blueseer.vdr.venData;
@@ -655,10 +656,10 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
                 res = st.executeQuery("select * from qual_mstr where qual_id = " + "'" + x[0] + "'");
                 while (res.next()) {
                     i++;
-                    dccreate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("qual_date_crt")));
-                    dcupdate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("qual_date_upd")));
+                    dccreate.setDate(parseDate(res.getString("qual_date_crt")));
+                    dcupdate.setDate(parseDate(res.getString("qual_date_upd")));
                     if (! res.getString("qual_date_cls").isEmpty()) {
-                    dcclose.setDate(bsmf.MainFrame.dfdate.parse(res.getString("qual_date_cls")));
+                    dcclose.setDate(parseDate(res.getString("qual_date_cls")));
                     } else {
                         dcclose.setDate(null);
                     }

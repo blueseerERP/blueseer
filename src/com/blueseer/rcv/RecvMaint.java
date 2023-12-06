@@ -62,6 +62,7 @@ import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.lurb2;
 import static com.blueseer.utl.BlueSeerUtils.lurb3;
+import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import com.blueseer.utl.DTData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -766,7 +767,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         myrecvdetmodel.setRowCount(0);
         ddvend.setSelectedItem(rv.rv_vend());
-        dcdate.setDate(bsmf.MainFrame.dfdate.parse(rv.rv_recvdate()));
+        dcdate.setDate(parseDate(rv.rv_recvdate()));
         tbpackingslip.setText(rv.rv_packingslip());
         tbkey.setText(rv.rv_id());
         

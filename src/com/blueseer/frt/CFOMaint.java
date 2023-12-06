@@ -86,6 +86,7 @@ import static com.blueseer.utl.BlueSeerUtils.ludialog;
 import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.EDData;
 import static com.blueseer.utl.EDData.hasEDIXref;
@@ -1361,7 +1362,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
                     tbaddr1.setText(res.getString("cms_line1"));
                     tbaddr2.setText(res.getString("cms_line2"));
                     tbcity.setText(res.getString("cms_city"));
-                    dcdate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("sh_shipdate")));
+                    dcdate.setDate(parseDate(res.getString("sh_shipdate")));
                     tbzip.setText(res.getString("cms_zip"));
                     ddstate.setSelectedItem(res.getString("cms_state"));
                  

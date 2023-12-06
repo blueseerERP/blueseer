@@ -54,6 +54,7 @@ import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import com.blueseer.utl.IBlueSeer;
 import java.sql.Connection;
 import javax.swing.BorderFactory;
@@ -590,8 +591,8 @@ public class TrainingMaint extends javax.swing.JPanel implements IBlueSeer {
                       tblocation.setText(res.getString("location"));
                       tbhours.setText(res.getString("hours"));
                       comments.setText(res.getString("comments"));
-                      startdate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("startdate")));
-                      enddate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("enddate")));
+                      startdate.setDate(parseDate(res.getString("startdate")));
+                      enddate.setDate(parseDate(res.getString("enddate")));
                       trid = x[0];
                       empmodel.addRow(new Object[]{res.getInt("empid"), res.getString("emp_lname"), res.getString("emp_fname")}); 
                     }

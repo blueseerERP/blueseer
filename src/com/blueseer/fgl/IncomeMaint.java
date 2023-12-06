@@ -48,6 +48,7 @@ import static com.blueseer.utl.BlueSeerUtils.ludialog;
 import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
 import com.blueseer.utl.OVData;
@@ -593,7 +594,7 @@ public class IncomeMaint extends javax.swing.JPanel implements IBlueSeer {
                      
                      ddacct.setSelectedItem(res.getString("glt_acct"));
                      tbkey.setText(res.getString("glt_ref"));
-                     dcdate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("glt_effdate")));
+                     dcdate.setDate(parseDate(res.getString("glt_effdate")));
                      tbrmks.setText(res.getString("glt_desc"));
                      ddsite.setSelectedItem(res.getString("glt_site"));
                      

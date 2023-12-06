@@ -75,6 +75,7 @@ import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.lurb2;
+import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import static com.blueseer.utl.BlueSeerUtils.priceformat;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeerT;
@@ -1214,8 +1215,8 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         ponbr.setText(so.so_po());
         remarks.setText(so.so_rmks());
         tbhdrwh.setText(so.so_wh());
-        duedate.setDate(bsmf.MainFrame.dfdate.parse(so.so_due_date()));
-        orddate.setDate(bsmf.MainFrame.dfdate.parse(so.so_ord_date()));
+        duedate.setDate(parseDate(so.so_due_date()));
+        orddate.setDate(parseDate(so.so_ord_date()));
 
         if (so.so_isallocated().equals("c")) {
             cbisallocated.setSelected(true);

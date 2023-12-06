@@ -57,6 +57,7 @@ import static com.blueseer.utl.BlueSeerUtils.ludialog;
 import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import com.blueseer.utl.DTData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -672,7 +673,7 @@ public class ShipperMaint extends javax.swing.JPanel {
                     tbpallets.setText(res.getString("sh_pallets"));
                     tbremarks.setText(res.getString("sh_rmks"));
                    // ddpo.setSelectedItem(res.getString("sh_po"));
-                    dcshipdate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("sh_shipdate")));
+                    dcshipdate.setDate(parseDate(res.getString("sh_shipdate")));
                     ddshipvia.setSelectedItem(res.getString("sh_shipvia"));
                     ddsite.setSelectedItem(res.getString("sh_site"));
                     ddshipfrom.setSelectedItem(res.getString("sh_shipfrom"));

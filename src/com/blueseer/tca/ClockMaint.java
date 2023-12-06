@@ -36,6 +36,7 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import java.awt.Color;
 import java.awt.Component;
 import java.sql.Connection;
@@ -199,8 +200,8 @@ public class ClockMaint extends javax.swing.JPanel {
             } else {
             lblemployee.setText(res.getString("t_emp_nbr") + "  " + res.getString("emp_fname") + 
                                "  " + res.getString("emp_lname"));
-            dcindate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("indate")));
-            dcoutdate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("outdate")));
+            dcindate.setDate(parseDate(res.getString("indate")));
+            dcoutdate.setDate(parseDate(res.getString("outdate")));
             tbintime.setText(res.getString("intime"));
             tbintimeadj.setText(res.getString("intime_adj"));
             tbouttime.setText(res.getString("outtime"));

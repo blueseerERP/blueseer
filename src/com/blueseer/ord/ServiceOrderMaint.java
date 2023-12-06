@@ -543,8 +543,8 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
                     ddtype.setSelectedItem(res.getString("sv_type"));
                     ddstatus.setSelectedItem(res.getString("sv_status"));
                     ddcrew.setSelectedItem(res.getString("sv_crew"));
-                    duedate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("sv_due_date")));
-                    createdate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("sv_create_date")));
+                    duedate.setDate(BlueSeerUtils.parseDate(res.getString("sv_due_date")));
+                    createdate.setDate(BlueSeerUtils.parseDate(res.getString("sv_create_date")));
                 }
                
                 

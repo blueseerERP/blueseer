@@ -53,6 +53,7 @@ import static com.blueseer.utl.BlueSeerUtils.ludialog;
 import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import com.blueseer.utl.DTData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -742,8 +743,8 @@ public class InvoiceMaint extends javax.swing.JPanel {
                     tbuserid.setText(res.getString("sh_userid"));
                     tbremarks.setText(res.getString("sh_rmks"));
                    // ddpo.setSelectedItem(res.getString("sh_po"));
-                    dcshipdate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("sh_shipdate")));
-                    dcinvduedate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("ar_duedate")));
+                    dcshipdate.setDate(parseDate(res.getString("sh_shipdate")));
+                    dcinvduedate.setDate(parseDate(res.getString("ar_duedate")));
                     tbterms.setText(res.getString("ar_terms"));
                     tbtaxcode.setText(res.getString("ar_tax_code"));
                     tbaramt.setText(bsFormatDouble(res.getDouble("ar_amt")));

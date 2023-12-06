@@ -58,6 +58,7 @@ import static com.blueseer.utl.BlueSeerUtils.ludialog;
 import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
 import com.blueseer.utl.OVData;
@@ -548,7 +549,7 @@ public class ShipperMaintSerial extends javax.swing.JPanel implements IBlueSeer 
                 while (res.next()) {
                   i++;
                      tbkey.setText(res.getString("sh_id"));
-                     dcdate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("sh_shipdate")));
+                     dcdate.setDate(parseDate(res.getString("sh_shipdate")));
                      tbref.setText(res.getString("sh_ref"));
                      tbrmks.setText(res.getString("sh_rmks"));
                      ddcust.setSelectedItem(res.getString("sh_cust"));

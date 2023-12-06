@@ -53,6 +53,7 @@ import static com.blueseer.utl.BlueSeerUtils.ludialog;
 import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
 import com.blueseer.utl.OVData;
@@ -520,7 +521,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
                   // "Reference", "AmountToApply", "TaxAmount", "Curr"
                   i++;
                      tbkey.setText(res.getString("ar_nbr"));
-                     dcdate.setDate(bsmf.MainFrame.dfdate.parse(res.getString("ar_effdate")));
+                     dcdate.setDate(parseDate(res.getString("ar_effdate")));
                      tbcheck.setText(res.getString("ar_ref"));
                      tbrmks.setText(res.getString("ar_rmks"));
                      ddcust.setSelectedItem(res.getString("ar_cust"));
