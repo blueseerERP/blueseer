@@ -37,6 +37,7 @@ import com.blueseer.ctr.cusData;
 import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
+import static com.blueseer.utl.OVData.checkForCustomPath;
 import static com.blueseer.utl.OVData.getSystemLabelDirectory;
 import java.awt.Component;
 import java.awt.print.PrinterJob;
@@ -388,8 +389,8 @@ String sitecitystatezip = "";
             }
 
             try {
-            Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemLabelDirectory()) + "address.prn");
-            
+            Path template = checkForCustomPath(getSystemLabelDirectory(), "address.prn");
+             
             BufferedReader fsr = new BufferedReader(new FileReader(template.toFile()));
             String line = "";
             String concatline = "";

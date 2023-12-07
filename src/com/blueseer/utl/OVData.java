@@ -119,7 +119,9 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.PreparedStatement;
 import java.sql.ResultSetMetaData;
 import java.time.LocalDate;
@@ -16461,7 +16463,7 @@ return mystring;
                 // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                 // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
               //  File mytemplate = new File(getSystemJasperDirectory() + "/" + jasperfile);
-                Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemJasperDirectory()) + jasperfile);
+                Path template = checkForCustomPath(getSystemJasperDirectory(), jasperfile);
                 JasperPrint jasperPrint = JasperFillManager.fillReport(template.toString(), hm, con );
                 //JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/posprt.pdf");
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
@@ -16529,7 +16531,7 @@ return mystring;
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
-                Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemJasperDirectory()) + jasperfile);
+                Path template = checkForCustomPath(getSystemJasperDirectory(), jasperfile);
                 JasperPrint jasperPrint = JasperFillManager.fillReport(template.toString(), hm, con );
                 
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
@@ -16654,17 +16656,16 @@ return mystring;
                 hm.put("ship_csz", ship_csz);
                 hm.put("imagepath", imagepath.toString());
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
-               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
-               // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
-                Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemJasperDirectory()) + jasperfile);
+               
+                Path template = checkForCustomPath(getSystemJasperDirectory(), jasperfile);
                 JasperPrint jasperPrint = JasperFillManager.fillReport(template.toString(), hm, con );
-               // JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/ivprt.pdf");
-                
                 if (display) {
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
                 jasperViewer.setVisible(true);
                 jasperViewer.setFitPageZoomRatio();
                 }
+                
+                
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
@@ -16755,7 +16756,7 @@ return mystring;
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
-               Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemJasperDirectory()) + jasperfile);
+               Path template = checkForCustomPath(getSystemJasperDirectory(), jasperfile);
                JasperPrint jasperPrint = JasperFillManager.fillReport(template.toString(), hm, con );
                
               //  JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/ivprt.pdf");
@@ -16913,7 +16914,7 @@ return mystring;
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
-                Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemJasperDirectory()) + jasperfile);
+                Path template = checkForCustomPath(getSystemJasperDirectory(), jasperfile);
                 JasperPrint jasperPrint = JasperFillManager.fillReport(template.toString(), hm, con );
               //  JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/ivprt.pdf");
                 
@@ -16950,7 +16951,7 @@ return mystring;
                
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
-                Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemJasperDirectory()) + jasperfile);
+                Path template = checkForCustomPath(getSystemJasperDirectory(), jasperfile);
                 JasperPrint jasperPrint = JasperFillManager.fillReport(template.toString(), hm, con );
                // JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/chkrun.pdf");
                 
@@ -16992,7 +16993,7 @@ return mystring;
                
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
-                Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemJasperDirectory()) + jasperfile);
+                Path template = checkForCustomPath(getSystemJasperDirectory(), jasperfile);
                 JasperPrint jasperPrint = JasperFillManager.fillReport(template.toString(), hm, new JREmptyDataSource() );
               //  JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/itemimage.pdf");
                 
@@ -17113,7 +17114,7 @@ return mystring;
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
-                Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemJasperDirectory()) + jasperfile);
+                Path template = checkForCustomPath(getSystemJasperDirectory(), jasperfile);
                 JasperPrint jasperPrint = JasperFillManager.fillReport(template.toString(), hm, con );
                // JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/shprt.pdf");
          
@@ -17193,7 +17194,7 @@ return mystring;
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
-                Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemJasperDirectory()) + jasperfile);
+                Path template = checkForCustomPath(getSystemJasperDirectory(), jasperfile);
                 JasperPrint jasperPrint = JasperFillManager.fillReport(template.toString(), hm, con );
                // JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/shprt.pdf");
          
@@ -17285,7 +17286,7 @@ return mystring;
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
-                Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemJasperDirectory()) + jasperfile);
+                Path template = checkForCustomPath(getSystemJasperDirectory(), jasperfile);
                 JasperPrint jasperPrint = JasperFillManager.fillReport(template.toString(), hm, con );
                 //JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/poprt.pdf");
          
@@ -17370,7 +17371,7 @@ return mystring;
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
-                Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemJasperDirectory()) + jasperfile);
+                Path template = checkForCustomPath(getSystemJasperDirectory(), jasperfile);
                 JasperPrint jasperPrint = JasperFillManager.fillReport(template.toString(), hm, con );
                 
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
@@ -17455,7 +17456,7 @@ return mystring;
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
-                Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemJasperDirectory()) + jasperfile);
+                Path template = checkForCustomPath(getSystemJasperDirectory(), jasperfile);
                 JasperPrint jasperPrint = JasperFillManager.fillReport(template.toString(), hm, con );
                 
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
@@ -17506,7 +17507,7 @@ return mystring;
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
-                Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemJasperDirectory()) + jasperfile);
+                Path template = checkForCustomPath(getSystemJasperDirectory(), jasperfile);
                 JasperPrint jasperPrint = JasperFillManager.fillReport(template.toString(), hm, con );
                 
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
@@ -17540,8 +17541,8 @@ return mystring;
             prt[1] = "9100";
         }
         
-        Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemLabelDirectory()) + "item.prn");
-               
+        
+        Path template = checkForCustomPath(getSystemLabelDirectory(), "item.prn");       
                 
         BufferedReader fsr = new BufferedReader(new FileReader(template.toFile()));
         String line = "";
@@ -20474,6 +20475,13 @@ return mylist;
         
         
     }
-     
+   
+    public static Path checkForCustomPath(String dir, String jasperfile) {
+        Path path = FileSystems.getDefault().getPath(cleanDirString(dir) + "custom/" + jasperfile); 
+        if (! Files.exists(path)) {
+          path = FileSystems.getDefault().getPath(cleanDirString(dir) + jasperfile);   
+        }        
+        return (Files.exists(path)) ? path : null;
+    }
    
 }

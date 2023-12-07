@@ -40,6 +40,7 @@ import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormat;
 import com.blueseer.utl.OVData;
+import static com.blueseer.utl.OVData.checkForCustomPath;
 import static com.blueseer.utl.OVData.getSystemLabelDirectory;
 import java.awt.Color;
 import java.awt.Component;
@@ -574,7 +575,8 @@ String shipcountry = "";
 String cust = cusData.getCustFromOrder(tbordnbr.getText());
 String label = cusData.getCustLabel(cust);
 label = label + ".prn";
-Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemLabelDirectory()) + label);
+//Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemLabelDirectory()) + label);
+Path template = checkForCustomPath(getSystemLabelDirectory(), label);
 File f = template.toFile();
 if(f.exists() && !f.isDirectory()) { 
     
