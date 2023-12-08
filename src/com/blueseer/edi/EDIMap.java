@@ -2625,6 +2625,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                     System.out.println(z.getKey() + " / " + k.getKey() + " / " + k.getValue());
                     }
             }
+            /*
             System.out.println("OSF output:");
             for (Map.Entry<String, ArrayList<String[]>> osf : OSF.entrySet()) {
                 ArrayList<String[]> osfarray = osf.getValue();
@@ -2632,6 +2633,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                     System.out.println("osf key: " + osf.getKey() + "   osf value: " + String.join(",", osfx)); 
                 }
             }
+            */
         }
             
             ObjectMapper mapper = new ObjectMapper();
@@ -2691,6 +2693,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
 		int actual = CountOMDTrial(mykey);  // get actual loopcount  
 		int maxallowed = CountLMLoopsOFS(mykey); 
                 int limit = 0;
+              //  System.out.println("HERE 0x:  " + mykey+ "/" + actual + "/" + maxallowed + "/" + limit + "/" + j );
                 if (actual >= maxallowed) {
                     limit = maxallowed;
                 } else {
@@ -2706,16 +2709,19 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                 
                 for (int k = 1; k <= limit; k++) {
                   if (isLooper(mykey)) {
+                   //   System.out.println("HERE: " + mykey + " is a looper"); 
                       j = k;
                   }
                   childNode = doc.createElement(tag);
+               //   System.out.println("HERE 1x:  " + mykey + "/" + actual + "/" + maxallowed + "/" + limit + "/" + j );
                   overlayData(childNode, ptag, doc, osf, j, MD);
                   ele.appendChild(childNode);
                   
               //  if (childNode != null && ! exclude.contains(childNode.getNodeName())) {
                 if (childNode != null) {
                // System.out.println("HERE: " + tag + "/" + limit + "/" + k + "/" + j + "/" + mykey + "/" + level);
-                createXML(childNode, ptag, level + 1, doc, exclude,osf, MD, k);
+            //   System.out.println("HERE: Calling createXML with " + childNode.getTagName() + " and k value = " + k + " and j value = " + j);  
+               createXML(childNode, ptag, level + 1, doc, exclude, osf, MD, j);
                 }
                 
                 } // for limit
@@ -2818,7 +2824,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                           } else {
                               v = "";
                           }
-                     //   System.out.println("HERE 2: " + tag + "/" + thiskey + "/" + ele.getNodeName() + "/" +  parentChildKey + "/" + x[5] + "/" + v);
+                        System.out.println("HERE 2: " + tag + "/" + thiskey + "/" + ele.getNodeName() + "/" +  parentChildKey + "/" + k + "/" + x[5] + "/" + v);
                         if (x.length > 10 && x[11].toUpperCase().equals("A")) {
                             prefix = Character.toString(prefixI++) + prefixtag; // crappy way to preserver order in attributes...prefix removed with regex
                           ele.setAttribute(prefix + x[5].toString(),v);	// set attribute of parent node  
