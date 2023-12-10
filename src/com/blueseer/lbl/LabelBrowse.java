@@ -653,7 +653,7 @@ try {
                   tablelabel.getColumnModel().getColumn(0).setCellRenderer(new LabelBrowse.ButtonRenderer());
                   tablelabel.getColumnModel().getColumn(0).setMaxWidth(100);
                 // TableColumnModel tcm = tablescrap.getColumnModel();
-               // tcm.getColumn(3).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());  
+               // tcm.getColumn(3).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));  
                 
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
 

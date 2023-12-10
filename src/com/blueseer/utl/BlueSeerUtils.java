@@ -935,10 +935,13 @@ public class BlueSeerUtils {
     }
     
     public static Locale getCurrencyLocale(String currency) {
-        Locale locale = Locale.getDefault();
+        Locale locale = null;
         Currency c = Currency.getInstance(currency);
-        if (! currency.equals("USD")) {
-            locale = bsmf.MainFrame.currencymap.get(c);
+        if (! currency.isBlank()) {
+        locale = bsmf.MainFrame.currencymap.get(c);
+        }
+        if (locale == null || currency.equals("USD")) { // had to add USD override...currencymap was pulling locale with US prepended to $ sign
+           locale = Locale.getDefault(); 
         }
         return locale;
     }
@@ -1366,6 +1369,10 @@ public class BlueSeerUtils {
           return new NumberRenderer( NumberFormat.getCurrencyInstance());
         }
         
+        public static NumberRenderer getCurrencyRenderer(Locale locale)
+	{
+          return new NumberRenderer( NumberFormat.getCurrencyInstance(locale));
+        }
 
 	/*
 	 *  Use the default integer formatter for the default locale

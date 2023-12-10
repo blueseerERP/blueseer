@@ -409,8 +409,8 @@ public class RetailReorderRpt extends javax.swing.JPanel {
         tabledemand.getColumnModel().getColumn(0).setMaxWidth(100);
         tablereplenish.getColumnModel().getColumn(0).setMaxWidth(100);
          
-     //   tablesummary.getColumnModel().getColumn(3).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
-     //   tablesummary.getColumnModel().getColumn(4).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+     //   tablesummary.getColumnModel().getColumn(3).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
+     //   tablesummary.getColumnModel().getColumn(4).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
         
         tablesummary.getTableHeader().setReorderingAllowed(false);
          
@@ -726,7 +726,7 @@ public class RetailReorderRpt extends javax.swing.JPanel {
                 summarymodel.setNumRows(0);
                
                // tableorder.getColumnModel().getColumn(0).setCellRenderer(new OrderReport1.SomeRenderer());  
-              //  tableorder.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+              //  tableorder.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
           //     tablesummary.getColumnModel().getColumn(12).setCellRenderer(BlueSeerUtils.NumberRenderer.getPercentRenderer());
                 Enumeration<TableColumn> en = tablesummary.getColumnModel().getColumns();
                  while (en.hasMoreElements()) {

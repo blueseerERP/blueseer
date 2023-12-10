@@ -180,7 +180,7 @@ public class DOBrowse extends javax.swing.JPanel {
                
               
                 tabledetail.setModel(modeldetail);
-                 //tabledetail.getColumnModel().getColumn(2).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+                 //tabledetail.getColumnModel().getColumn(2).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
                 this.repaint();
 
             } catch (SQLException s) {

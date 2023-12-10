@@ -279,7 +279,7 @@ public class ARTranRpt extends javax.swing.JPanel {
          modeldetail.setNumRows(0);
          double total = 0;
         
-          tabledetail.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+          tabledetail.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
         
           
         
@@ -704,9 +704,9 @@ try {
              //    }
                //   tablesummary.getColumnModel().getColumn(0).setCellRenderer(new ARTranRpt1.ButtonRenderer());
                   tablesummary.getColumnModel().getColumn(0).setMaxWidth(100);
-                  tablesummary.getColumnModel().getColumn(9).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
-                  tablesummary.getColumnModel().getColumn(10).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
-                  tablesummary.getColumnModel().getColumn(11).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+                  tablesummary.getColumnModel().getColumn(9).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
+                  tablesummary.getColumnModel().getColumn(10).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
+                  tablesummary.getColumnModel().getColumn(11).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
                
                 
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");

@@ -509,7 +509,7 @@ public class ExpenseBrowse extends javax.swing.JPanel {
                    
                  mymodel.setNumRows(0);
                 tablereport.setModel(mymodel);
-                tablereport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+                tablereport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
                  
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
 

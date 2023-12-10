@@ -232,7 +232,7 @@ public class ComponentDemandBrowse extends javax.swing.JPanel {
                
               lblqtylines.setText(currformatDouble(totqty));
                 tabledetail.setModel(modeldetail);
-                 tabledetail.getColumnModel().getColumn(2).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+                 tabledetail.getColumnModel().getColumn(2).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
                 this.repaint();
 
             } catch (SQLException s) {
@@ -571,7 +571,7 @@ public class ComponentDemandBrowse extends javax.swing.JPanel {
                      }
                      tc.setCellRenderer(new ComponentDemandBrowse.SomeRenderer());
                  }
-                // tablereport.getColumnModel().getColumn(8).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+                // tablereport.getColumnModel().getColumn(8).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
             double qtyper = 0; 
             for (String p : set) {
               qtyper = invData.getBOMComponentRecursive(p, dditem.getSelectedItem().toString(), OVData.getDefaultBomID(p));     

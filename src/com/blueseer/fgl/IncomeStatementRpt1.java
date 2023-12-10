@@ -219,7 +219,7 @@ public class IncomeStatementRpt1 extends javax.swing.JPanel {
     public void initvars(String[] arg) {
         mymodel.setRowCount(0);
         
-        mytable.getColumnModel().getColumn(2).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+        mytable.getColumnModel().getColumn(2).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
         
         java.util.Date now = new java.util.Date();
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -445,7 +445,7 @@ try {
                    
                
                 mytable.setModel(mymodel);
-                mytable.getColumnModel().getColumn(2).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+                mytable.getColumnModel().getColumn(2).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
              
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
 

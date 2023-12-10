@@ -341,7 +341,7 @@ try {
                             getGlobalColumnTag("amount")});
                 tablescrap.setModel(mymodel);
                 TableColumnModel tcm = tablescrap.getColumnModel();
-                tcm.getColumn(2).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+                tcm.getColumn(2).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
                
                  DateFormat dfdate = new SimpleDateFormat("yyyy");
                  java.util.Date now = new java.util.Date();

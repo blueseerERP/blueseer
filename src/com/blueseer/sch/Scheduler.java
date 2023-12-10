@@ -1475,7 +1475,7 @@ public class Scheduler extends javax.swing.JPanel {
                 //          ReportPanel.TableReport.getColumn("CallID").setCellEditor(
                     //       new ButtonEditor(new JCheckBox()));
 
-                // tcm.getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+                // tcm.getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
 
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
 

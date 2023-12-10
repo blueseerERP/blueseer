@@ -119,18 +119,18 @@ public int[] mywidth;
         if (arg[0].equals("ReqPendingApproval")) {
              mymodel = DTData.getReqByApprover(bsmf.MainFrame.userid);
              TableReport.setModel(mymodel);
-             TableReport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+             TableReport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
         }
          if (arg[0].equals("ReqBrowseAll")) {
              mymodel = DTData.getReqAll();
              TableReport.setModel(mymodel);
-             TableReport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+             TableReport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
         }
        
         if (arg[0].equals("ReqPendRpt1")) {
              mymodel = DTData.getReqPending();
               TableReport.setModel(mymodel);
-             TableReport.getColumnModel().getColumn(5).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+             TableReport.getColumnModel().getColumn(5).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
         }
         if (arg[0].equals("SchemaBrowse")) {
              mymodel = DTData.getDBSchema();
@@ -153,7 +153,7 @@ public int[] mywidth;
         if (arg[0].equals("ReqApprovedBrowse")) {
              mymodel = DTData.getReqApproved();
               TableReport.setModel(mymodel);
-             TableReport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+             TableReport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
         }
         if (arg[0].equals("PlantDirectoryMenu")) {
              mymodel = DTData.getPlantDirectory();
@@ -168,8 +168,8 @@ public int[] mywidth;
         if (arg[0].equals("ItemBrowse")) {
              mymodel = DTData.getItemBrowse(); 
              TableReport.setModel(mymodel);
-             TableReport.getColumnModel().getColumn(9).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
-             TableReport.getColumnModel().getColumn(10).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+             TableReport.getColumnModel().getColumn(9).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
+             TableReport.getColumnModel().getColumn(10).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
         }
         if (arg[0].equals("ItemRoutingRpt")) {
              mymodel = DTData.getItemRoutingAll();
@@ -262,7 +262,7 @@ public int[] mywidth;
         if (arg[0].equals("UnPostedTransRpt")) {
              mymodel = DTData.getUnPostedGLTrans();
               TableReport.setModel(mymodel);
-              TableReport.getColumnModel().getColumn(10).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+              TableReport.getColumnModel().getColumn(10).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
         }
         if (arg[0].equals("CalendarBrowse")) {
              mymodel = DTData.getGLCalendar();

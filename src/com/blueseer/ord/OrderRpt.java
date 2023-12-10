@@ -63,6 +63,7 @@ import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.sql.Connection;
 import java.util.Calendar;
 import java.util.Enumeration;
+import java.util.Locale;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -85,7 +86,7 @@ import net.sf.jasperreports.view.JasperViewer;
 public class OrderRpt extends javax.swing.JPanel {
  
      public Map<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
-     
+     public String defcurr;
                           
      
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
@@ -152,24 +153,15 @@ public class OrderRpt extends javax.swing.JPanel {
 
         Component c = super.getTableCellRendererComponent(table,
                 value, isSelected, hasFocus, row, column);
-      /*  
-        String status = (String)table.getModel().getValueAt(table.convertRowIndexToModel(row), 11);  // 8 = status column
         
-         if ("error".equals(status)) {
-            c.setBackground(Color.red);
-            c.setForeground(Color.WHITE);
-        } else if ("closed".equals(status)) {
-            c.setBackground(Color.blue);
-            c.setForeground(Color.WHITE);
-        } else if ("backorder".equals(status)) {
-            c.setBackground(Color.yellow);
-            c.setForeground(Color.BLACK);
+        String currency = (String)table.getModel().getValueAt(table.convertRowIndexToModel(row), 10);  // 8 = status column
+        if (! currency.equals(defcurr)) {
+            table.getColumnModel().getColumn(9).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(currency)));
+        } else {
+            table.getColumnModel().getColumn(9).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(defcurr)));
         }
-        else {
-            c.setBackground(table.getBackground());
-            c.setForeground(table.getForeground());
-        }         
-        */
+       
+        
         //c.setBackground(row % 2 == 0 ? Color.LIGHT_GRAY : Color.WHITE);
       // c.setBackground(row % 2 == 0 ? Color.GREEN : Color.LIGHT_GRAY);
       // c.setBackground(row % 3 == 0 ? new Color(245,245,220) : Color.LIGHT_GRAY);
@@ -227,7 +219,7 @@ public class OrderRpt extends javax.swing.JPanel {
                
                 labeldettotal.setText(currformatDouble(qty));
                 tabledetail.setModel(modeldetail);
-                tabledetail.getColumnModel().getColumn(2).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+                tabledetail.getColumnModel().getColumn(2).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
                 this.repaint();
 
             } catch (SQLException s) {
@@ -318,6 +310,8 @@ public class OrderRpt extends javax.swing.JPanel {
         
         btdetail.setEnabled(false);
         detailpanel.setVisible(false);
+        
+        defcurr = OVData.getDefaultCurrency();
         
         ddsite.removeAllItems();
         ArrayList sites = OVData.getSiteList();
@@ -732,8 +726,9 @@ try {
                 tableorder.setModel(mymodel);
                 tableorder.getColumnModel().getColumn(0).setMaxWidth(100);
                 tableorder.getColumnModel().getColumn(1).setMaxWidth(100);  
-                 
-                  Enumeration<TableColumn> en = tableorder.getColumnModel().getColumns();
+                tableorder.getColumnModel().getColumn(9).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency()))); 
+                
+                Enumeration<TableColumn> en = tableorder.getColumnModel().getColumns();
                  while (en.hasMoreElements()) {
                      TableColumn tc = en.nextElement();
                      if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) {
@@ -741,7 +736,8 @@ try {
                      }
                      tc.setCellRenderer(new OrderRpt.SomeRenderer());
                  }
-                 tableorder.getColumnModel().getColumn(9).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+             
+                 
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
              
                  if (dddatetype.getSelectedItem().toString().equals("create")) {

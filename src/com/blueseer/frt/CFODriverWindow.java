@@ -219,7 +219,7 @@ public class CFODriverWindow extends javax.swing.JPanel {
                
               
                 tabledetail.setModel(modeldriver);
-              //   tabledetail.getColumnModel().getColumn(2).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+              //   tabledetail.getColumnModel().getColumn(2).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
                 this.repaint();
 
             } catch (SQLException s) {
@@ -760,7 +760,7 @@ try {
                      }
                      tc.setCellRenderer(new CFODriverWindow.SomeRenderer());
                  }
-                 tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+                 tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
               
              if (! ddstatus.getSelectedItem().toString().isBlank()) {    
              

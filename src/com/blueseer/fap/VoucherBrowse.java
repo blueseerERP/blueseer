@@ -229,7 +229,7 @@ public class VoucherBrowse extends javax.swing.JPanel {
                
               
                 tabledetail.setModel(modeldetail);
-                 tabledetail.getColumnModel().getColumn(5).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+                 tabledetail.getColumnModel().getColumn(5).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
                 this.repaint();
 
             } catch (SQLException s) {
@@ -615,7 +615,7 @@ public class VoucherBrowse extends javax.swing.JPanel {
         
               tablereport.setModel(mymodel);
               tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-               //  tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+               //  tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
             
             Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
                  while (en.hasMoreElements()) {
@@ -625,7 +625,7 @@ public class VoucherBrowse extends javax.swing.JPanel {
                      }
                      tc.setCellRenderer(new VoucherBrowse.SomeRenderer());
                  }
-            tablereport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+            tablereport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
            
             
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");

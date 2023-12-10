@@ -194,7 +194,7 @@ public class GLTranMaint extends javax.swing.JPanel {
         type = ""; 
        transtable.setModel(transmodel);
        transmodel.setNumRows(0);
-       transtable.getColumnModel().getColumn(4).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+       transtable.getColumnModel().getColumn(4).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
        ddsite.removeAllItems();
         ArrayList sites = OVData.getSiteList();
         for (Object site : sites) {

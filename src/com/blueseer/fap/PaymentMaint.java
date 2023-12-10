@@ -594,7 +594,7 @@ try {
        
        
                TableColumnModel tcm = mytable.getColumnModel();
-               tcm.getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());  
+               tcm.getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));  
             
                
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");

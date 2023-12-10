@@ -451,7 +451,7 @@ public class BOMBrowse extends javax.swing.JPanel {
 
                 tableorder.setModel(mymodel);
                 // tableorder.getColumnModel().getColumn(0).setCellRenderer(new OrderReport1.SomeRenderer());
-                //  tableorder.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+                //  tableorder.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
                 Enumeration<TableColumn> en = tableorder.getColumnModel().getColumns();
                 while (en.hasMoreElements()) {
                     TableColumn tc = en.nextElement();
@@ -461,7 +461,7 @@ public class BOMBrowse extends javax.swing.JPanel {
                     tc.setCellRenderer(new BOMBrowse.SomeRenderer());
                 }
                 // TableColumnModel tcm = tablescrap.getColumnModel();
-                // tcm.getColumn(3).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+                // tcm.getColumn(3).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
 
                 //   tableorder.getColumnModel().getColumn(0).setCellRenderer(new OrderReport1.ButtonRenderer());
                 tableorder.getColumnModel().getColumn(0).setMaxWidth(100);

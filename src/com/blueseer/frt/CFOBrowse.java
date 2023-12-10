@@ -219,7 +219,7 @@ public class CFOBrowse extends javax.swing.JPanel {
                
               
                 tabledetail.setModel(modeldetail);
-              //   tabledetail.getColumnModel().getColumn(2).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+              //   tabledetail.getColumnModel().getColumn(2).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
                 this.repaint();
 
             } catch (SQLException s) {
@@ -718,7 +718,7 @@ try {
                      }
                      tc.setCellRenderer(new CFOBrowse.SomeRenderer());
                  }
-                 tablereport.getColumnModel().getColumn(10).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer());
+                 tablereport.getColumnModel().getColumn(10).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
               
              if (! ddstatus.getSelectedItem().toString().isBlank()) {    
              
