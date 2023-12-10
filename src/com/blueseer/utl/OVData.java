@@ -16459,6 +16459,7 @@ return mystring;
                 hm.put("myid",  nbr);
                 hm.put("mysite",  site);
                 hm.put("imagepath", imagepath.toString());
+                hm.put("REPORT_LOCALE", BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency()));
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                 // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                 // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
@@ -16490,10 +16491,11 @@ return mystring;
                 String cust = ""; 
                 String site = ""; 
                 String type = "";
+                String currency = "";
                 String site_csz = "";
                 String bill_csz = "";
                 String ship_csz = "";
-                res = st.executeQuery("select quo_cust, quo_site, quo_type, " +
+                res = st.executeQuery("select quo_cust, quo_site, quo_type, quo_curr, " +
                         " cm_city, cm_state, cm_zip, cm_country, cms_country, site_country, " +
                         " cms_city, cms_state, cms_zip, site_city, site_state, site_zip " +
                         " from quo_mstr " +
@@ -16505,6 +16507,7 @@ return mystring;
                           cust = res.getString("quo_cust");
                           site = res.getString("quo_site");
                           type = res.getString("quo_type");
+                          currency = res.getString("quo_curr");
                           site_csz = res.getString(("site_city")) + " " + res.getString(("site_state")) + " " + res.getString(("site_zip")) + " " + res.getString(("site_country"));
                           bill_csz = res.getString(("cm_city")) + " " + res.getString(("cm_state")) + " " + res.getString(("cm_zip")) + " " + res.getString(("cm_country"));
                           ship_csz = res.getString(("cms_city")) + " " + res.getString(("cms_state")) + " " + res.getString(("cms_zip")) + "  " + res.getString(("cms_country"));
@@ -16528,6 +16531,7 @@ return mystring;
                 hm.put("bill_csz", bill_csz);
                 hm.put("ship_csz", ship_csz);
                 hm.put("imagepath", imagepath.toString());
+                hm.put("REPORT_LOCALE", BlueSeerUtils.getCurrencyLocale(currency));
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
@@ -16573,6 +16577,7 @@ return mystring;
                
                  String cust = ""; 
                  String site = ""; 
+                 String currency = "";
                  String shtype = "S";
                  String shorder = "";
                  String site_csz = "";
@@ -16588,7 +16593,7 @@ return mystring;
                 
                 
                  
-                res = st.executeQuery("select sh_cust, sh_site, sh_type, sh_so, cm_city, cm_state, cm_zip, cm_country, cms_country, site_country,  " +
+                res = st.executeQuery("select sh_cust, sh_site, sh_curr, sh_type, sh_so, cm_city, cm_state, cm_zip, cm_country, cms_country, site_country,  " +
                         " cms_city, cms_state, cms_zip, site_city, site_state, site_zip " +
                         " from ship_mstr " +
                         " inner join cm_mstr on cm_code = sh_cust " +
@@ -16600,6 +16605,7 @@ return mystring;
                           site = res.getString(("sh_site"));
                           shtype = res.getString(("sh_type"));
                           shorder = res.getString(("sh_so"));
+                          currency = res.getString(("sh_curr"));
                           site_csz = res.getString(("site_city")) + " " + res.getString(("site_state")) + " " + res.getString(("site_zip")) + " " + res.getString(("site_country"));
                           bill_csz = res.getString(("cm_city")) + " " + res.getString(("cm_state")) + " " + res.getString(("cm_zip")) + " " + res.getString(("cm_country"));
                           ship_csz = res.getString(("cms_city")) + " " + res.getString(("cms_state")) + " " + res.getString(("cms_zip")) + "  " + res.getString(("cms_country"));
@@ -16655,6 +16661,7 @@ return mystring;
                 hm.put("bill_csz", bill_csz);
                 hm.put("ship_csz", ship_csz);
                 hm.put("imagepath", imagepath.toString());
+                hm.put("REPORT_LOCALE", BlueSeerUtils.getCurrencyLocale(currency));
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                
                 Path template = checkForCustomPath(getSystemJasperDirectory(), jasperfile);
@@ -16700,13 +16707,13 @@ return mystring;
                  String cust = ""; 
                  String site = ""; 
                  String invoice = "";
-               
+                 String currency = "";
                  
                  String site_csz = "";
                  String bill_csz = "";
                  String ship_csz = "";
                  
-                res = st.executeQuery("select sh_id, sh_cust, sh_site, cm_city, cm_state, cm_zip, cm_country, cms_country, site_country, " +
+                res = st.executeQuery("select sh_id, sh_cust, sh_curr, sh_site, cm_city, cm_state, cm_zip, cm_country, cms_country, site_country, " +
                         " cms_city, cms_state, cms_zip, site_city, site_state, site_zip " +
                         " from ship_mstr " +
                         " inner join ship_det on shd_id = sh_id " +
@@ -16719,6 +16726,7 @@ return mystring;
                           i++;
                           cust = res.getString(("sh_cust"));
                           site = res.getString(("sh_site"));
+                          currency = res.getString(("sh_curr"));
                           site_csz = res.getString(("site_city")) + " " + res.getString(("site_state")) + " " + res.getString(("site_zip")) + " " + res.getString(("site_country"));
                           bill_csz = res.getString(("cm_city")) + " " + res.getString(("cm_state")) + " " + res.getString(("cm_zip")) + " " + res.getString(("cm_country"));
                           ship_csz = res.getString(("cms_city")) + " " + res.getString(("cms_state")) + " " + res.getString(("cms_zip")) + "  " + res.getString(("cms_country"));
@@ -16753,6 +16761,7 @@ return mystring;
                 hm.put("bill_csz", bill_csz);
                 hm.put("ship_csz", ship_csz);
                 hm.put("imagepath", imagepath.toString());
+                hm.put("REPORT_LOCALE", BlueSeerUtils.getCurrencyLocale(currency));
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
@@ -17232,13 +17241,14 @@ return mystring;
                 
                 String vend = "";
                 String site = "";
+                String currency = "";
                 String site_csz = "";
                 String vend_csz = "";
                 String ship_csz = "";
                 String shipname = "";
                 String shipline1 = "";
                 double taxes = getPOTotalTax(po);
-                res = st.executeQuery("select po_vend, po_site, " +
+                res = st.executeQuery("select po_vend, po_site, po_curr, " +
                         " vd_city, vd_state, vd_zip, site_desc, site_line1, site_city, site_state, site_zip, " +
                         " vds_name, vds_line1, vds_city, vds_state, vds_zip " + 
                         " from po_mstr " +
@@ -17247,8 +17257,9 @@ return mystring;
                         " inner join site_mstr on site_site = po_site " +
                         " where po_nbr = " + "'" + po + "'" + ";");
                        while (res.next()) {
-                          vend = res.getString(("po_vend"));
-                          site = res.getString(("po_site"));
+                          vend = res.getString("po_vend");
+                          site = res.getString("po_site");
+                          currency = res.getString("po_curr");
                           site_csz = res.getString(("site_city")) + " " + res.getString(("site_state")) + " " + res.getString(("site_zip"));
                           vend_csz = res.getString(("vd_city")) + " " + res.getString(("vd_state")) + " " + res.getString(("vd_zip"));
                           if (res.getString("vds_city") == null || res.getString("vds_city").equals("NULL") || res.getString("vds_city").isBlank() ) {
@@ -17283,6 +17294,7 @@ return mystring;
                 hm.put("shipline1", shipline1);
                 hm.put("imagepath", imagepath.toString());
                 hm.put("taxes", taxes);
+                hm.put("REPORT_LOCALE", BlueSeerUtils.getCurrencyLocale(currency));
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
@@ -17326,11 +17338,12 @@ return mystring;
                
                 String cust = ""; 
                 String site = ""; 
+                String currency = "";
                 String site_csz = "";
                 String bill_csz = "";
                 String ship_csz = "";
                 double taxes = getOrderTotalTax(order);
-                res = st.executeQuery("select so_cust, so_site, " +
+                res = st.executeQuery("select so_cust, so_site, so_curr, " +
                         " cm_city, cm_state, cm_zip, cm_country, cms_city, cms_state, cms_zip, cms_country, site_city, site_state, site_zip, site_country " +
                         " from so_mstr " +
                         " inner join cm_mstr on cm_code = so_cust " +
@@ -17340,6 +17353,7 @@ return mystring;
                        while (res.next()) {
                           cust = res.getString(("so_cust"));
                           site = res.getString(("so_site"));
+                          currency = res.getString("so_curr");
                           site_csz = res.getString(("site_city")) + " " + res.getString(("site_state")) + " " + res.getString(("site_zip")) + " " + res.getString(("site_country"));
                           bill_csz = res.getString(("cm_city")) + " " + res.getString(("cm_state")) + " " + res.getString(("cm_zip")) + " " + res.getString(("cm_country"));
                           ship_csz = res.getString(("cms_city")) + " " + res.getString(("cms_state")) + " " + res.getString(("cms_zip")) + "  " + res.getString(("cms_country"));
@@ -17368,6 +17382,7 @@ return mystring;
                 hm.put("ship_csz", ship_csz);
                 hm.put("imagepath", imagepath.toString());
                 hm.put("taxes", taxes);
+                hm.put("REPORT_LOCALE", BlueSeerUtils.getCurrencyLocale(currency));
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
@@ -17410,11 +17425,12 @@ return mystring;
                
                  String cust = ""; 
                 String site = ""; 
+                String currency = "";
                 String type = "";
                 String site_csz = "";
                 String bill_csz = "";
                 String ship_csz = "";
-                res = st.executeQuery("select sv_cust, sv_site, sv_type, " +
+                res = st.executeQuery("select sv_cust, sv_site, sv_type, sv_curr, " +
                         " cm_city, cm_state, cm_zip, cm_country, cms_country, site_country, " +
                         " cms_city, cms_state, cms_zip, site_city, site_state, site_zip " +
                         " from sv_mstr " +
@@ -17426,6 +17442,7 @@ return mystring;
                           cust = res.getString("sv_cust");
                           site = res.getString("sv_site");
                           type = res.getString("sv_type");
+                          currency = res.getString("sv_curr");
                           site_csz = res.getString(("site_city")) + " " + res.getString(("site_state")) + " " + res.getString(("site_zip")) + " " + res.getString(("site_country"));
                           bill_csz = res.getString(("cm_city")) + " " + res.getString(("cm_state")) + " " + res.getString(("cm_zip")) + " " + res.getString(("cm_country"));
                           ship_csz = res.getString(("cms_city")) + " " + res.getString(("cms_state")) + " " + res.getString(("cms_zip")) + "  " + res.getString(("cms_country"));
@@ -17453,6 +17470,7 @@ return mystring;
                 hm.put("bill_csz", bill_csz);
                 hm.put("ship_csz", ship_csz);
                 hm.put("imagepath", imagepath.toString());
+                hm.put("REPORT_LOCALE", BlueSeerUtils.getCurrencyLocale(currency));
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);

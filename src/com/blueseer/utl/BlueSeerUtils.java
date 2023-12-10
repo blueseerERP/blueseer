@@ -910,14 +910,37 @@ public class BlueSeerUtils {
     
     public static String currformatDoubleWithSymbol(double invalue, String currency) {
         String x = "";
-        String pattern = "¤0.00";
-       // DecimalFormat df = new DecimalFormat("#0.00###", new DecimalFormatSymbols(Locale.getDefault())); 
+        String pattern = "#0.00###";
         Currency c = Currency.getInstance(currency);
-        NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.getDefault());
-        nf.setCurrency(c);
-       // nf.applyPattern(pattern);
-        x = nf.format(invalue);
+        String symbol = "$";
+        if (! currency.equals("USD")) {
+            symbol = c.getSymbol(bsmf.MainFrame.currencymap.get(c));
+        }
+        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());
+        df.applyPattern(pattern);
+       
+        x = symbol + df.format(invalue);
+        
         return x;
+    }
+    
+    
+    public static String getCurrencySymbol(String currency) {
+        String symbol = "$";
+        Currency c = Currency.getInstance(currency);
+        if (! currency.equals("USD")) {
+            symbol = c.getSymbol(bsmf.MainFrame.currencymap.get(c));
+        }
+        return symbol;
+    }
+    
+    public static Locale getCurrencyLocale(String currency) {
+        Locale locale = Locale.getDefault();
+        Currency c = Currency.getInstance(currency);
+        if (! currency.equals("USD")) {
+            locale = bsmf.MainFrame.currencymap.get(c);
+        }
+        return locale;
     }
     
     
@@ -1340,9 +1363,9 @@ public class BlueSeerUtils {
 	 */
 	public static NumberRenderer getCurrencyRenderer()
 	{
-         
           return new NumberRenderer( NumberFormat.getCurrencyInstance());
         }
+        
 
 	/*
 	 *  Use the default integer formatter for the default locale

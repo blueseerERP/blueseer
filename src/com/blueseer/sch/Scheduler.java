@@ -1008,6 +1008,7 @@ public class Scheduler extends javax.swing.JPanel {
         tableavailable = new javax.swing.JTable();
 
         setBackground(new java.awt.Color(0, 102, 204));
+        setPreferredSize(new java.awt.Dimension(1211, 744));
         setLayout(new java.awt.BorderLayout());
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Scheduler"));
@@ -1235,7 +1236,11 @@ public class Scheduler extends javax.swing.JPanel {
                 .addGap(172, 172, 172))
         );
 
-        mytable.setAutoCreateRowSorter(true);
+        PanelReport.setPreferredSize(new java.awt.Dimension(609, 402));
+        PanelReport.setLayout(new java.awt.BorderLayout());
+
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(452, 401));
+
         mytable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -1254,16 +1259,7 @@ public class Scheduler extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(mytable);
 
-        javax.swing.GroupLayout PanelReportLayout = new javax.swing.GroupLayout(PanelReport);
-        PanelReport.setLayout(PanelReportLayout);
-        PanelReportLayout.setHorizontalGroup(
-            PanelReportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 609, Short.MAX_VALUE)
-        );
-        PanelReportLayout.setVerticalGroup(
-            PanelReportLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1)
-        );
+        PanelReport.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
         jScrollPane2.setBorder(javax.swing.BorderFactory.createTitledBorder("Scheduled On This Date"));
 
@@ -1301,7 +1297,7 @@ public class Scheduler extends javax.swing.JPanel {
         PanelDetail.setLayout(PanelDetailLayout);
         PanelDetailLayout.setHorizontalGroup(
             PanelDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
             .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
         PanelDetailLayout.setVerticalGroup(
@@ -1319,16 +1315,16 @@ public class Scheduler extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(PanelReport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(PanelReport, javax.swing.GroupLayout.DEFAULT_SIZE, 565, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(PanelDetail, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
             .addComponent(PanelReport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(PanelDetail, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(PanelDetail, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
 
         add(jPanel2, java.awt.BorderLayout.CENTER);
@@ -1580,7 +1576,8 @@ public class Scheduler extends javax.swing.JPanel {
         int count = 0;
         SimpleDateFormat dtf = new SimpleDateFormat("yyyy-MM-dd");
         // clean out the unchecked rows
-
+//Double.valueOf(tableavailable.getModel().getValueAt(table.convertRowIndexToModel(row), 3).toString());  // 7 = status column
+             
         for (int i = 0 ; i < mymodel.getRowCount(); i++) {
 
             if (! mymodel.getValueAt(i, 12).equals(getGlobalProgTag("open")) && ! mymodel.getValueAt(i, 12).equals(getGlobalProgTag("closed")) && ! mymodel.getValueAt(i, 12).equals(getGlobalProgTag("void"))) {

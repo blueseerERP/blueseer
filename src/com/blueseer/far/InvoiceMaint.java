@@ -42,6 +42,7 @@ import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.currformatDoubleWithSymbol;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
@@ -872,7 +873,8 @@ public class InvoiceMaint extends javax.swing.JPanel {
             if (sactable.getValueAt(j,2).toString().equals("charge") || sactable.getValueAt(j,2).toString().equals("shipping ADD"))
             dol += bsParseDouble(sactable.getValueAt(j,4).toString());
         }
-         tbtotdollars.setText(bsFormatDouble(dol));
+        // tbtotdollars.setText(bsFormatDouble(dol));
+         tbtotdollars.setText(currformatDoubleWithSymbol(dol, ddcurr.getSelectedItem().toString()));
     }
      
     public void retotal() {

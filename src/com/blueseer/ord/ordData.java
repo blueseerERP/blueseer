@@ -1055,8 +1055,8 @@ public class ordData {
         int rows = 0;
         String sqlSelect = "select * from sv_mstr where sv_nbr = ?";
         String sqlInsert = "insert into sv_mstr (sv_nbr, sv_cust, sv_ship, sv_site, " +
-                          " sv_po, sv_due_date, sv_create_date, sv_type, sv_status, sv_rmks  ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?); "; 
+                          " sv_po, sv_due_date, sv_create_date, sv_type, sv_status, sv_rmks, sv_curr  ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.sv_nbr);
@@ -1073,6 +1073,7 @@ public class ordData {
             ps.setString(8, x.sv_type);
             ps.setString(9, x.sv_status);
             ps.setString(10, x.sv_rmks);
+            ps.setString(11, x.sv_curr);
             rows = ps.executeUpdate();
             } 
             return rows;
