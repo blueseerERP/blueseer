@@ -1261,7 +1261,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                       sod.sod_bom(),
                       sod.sod_ship()
                   });
-                    if (! sod.sod_status().equals("open")) {
+                    if (! sod.sod_status().equals(getGlobalProgTag("open"))) {
                         canInvoice = false;
                     }
                 }

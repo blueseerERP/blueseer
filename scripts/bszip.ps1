@@ -53,7 +53,7 @@ compress-archive -force -path $patchdir -destinationpath $wip\$patchzip
 cp $wip\$patchzip $wip\$patchmain
 rmdir $patchdir -force -recurse
 
-$myzip = "blueseer.mysql.win.v" + $version + ".zip"
+$myzip = "blueseer.server.mysql.win.v" + $version + ".zip"
 rm $wip\$myzip
 compress-archive -path ..\sf\zebra -destinationpath $wip\$myzip
 compress-archive -update -path ..\sf\conf,..\sf\logs,..\sf\patches,..\sf\temp,..\sf\custom,..\sf\jasper,..\sf\data,..\sf\edi,..\sf\images -destinationpath $wip\$myzip
