@@ -120,6 +120,9 @@ public class Scheduler extends javax.swing.JPanel {
                {
                    @Override
                 public void setValueAt(Object aValue, int row, int column) {
+                    if (mymodel.getRowCount() < 1) {
+                        return;
+                    }
                     super.setValueAt(aValue, row, column);
                     if (column == 5) {
                        // String value = aValue == null ? null : aValue.toString();
@@ -620,9 +623,8 @@ public class Scheduler extends javax.swing.JPanel {
         
     }
     
-    public void postcommit() {
-        java.util.Date now = new java.util.Date();
-         
+    public void postcommit(int count) {
+         /*
          Calendar calfrom = Calendar.getInstance();
          calfrom.add(Calendar.DATE, -7);
          dcfrom.setDate(calfrom.getTime());
@@ -631,20 +633,17 @@ public class Scheduler extends javax.swing.JPanel {
          Calendar calto = Calendar.getInstance();
          calto.add(Calendar.DATE, 14);
          dcto.setDate(calto.getTime());
-         
+         */
         
          frompart.setText("");
          topart.setText("");
          
          
-         mymodel.setRowCount(0);
-         mytable.setModel(mymodel);
-          
-          
-          
-             
          
-         
+        // mytable.setModel(mymodel);
+          
+          
+         bsmf.MainFrame.show(getMessageTag(1121, String.valueOf(count)));
     }
     
     public void initvars(String[] arg) {
@@ -1241,6 +1240,7 @@ public class Scheduler extends javax.swing.JPanel {
 
         jScrollPane1.setPreferredSize(new java.awt.Dimension(452, 401));
 
+        mytable.setAutoCreateRowSorter(true);
         mytable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -1406,15 +1406,15 @@ public class Scheduler extends javax.swing.JPanel {
                 if (frompart.getText().isEmpty()) {
                     fpart = bsmf.MainFrame.lowchar;
                 } else {
-                    fpart = frompart.getText();
+                    fpart = frompart.getText().replace("'", "");
                 }
                 if (topart.getText().isEmpty()) {
                     tpart = bsmf.MainFrame.hichar;
                 } else {
-                    tpart = topart.getText();
+                    tpart = topart.getText().replace("'", "");
                 }
                
-
+                
                 //  ScrapReportPanel.MyTableModel mymodel = new ScrapReportPanel.MyTableModel(new Object[][]{},
                     //         new String[]{"Acct", "Description", "Amt"});
                 // tablescrap.setModel(mymodel);
@@ -1579,7 +1579,6 @@ public class Scheduler extends javax.swing.JPanel {
 //Double.valueOf(tableavailable.getModel().getValueAt(table.convertRowIndexToModel(row), 3).toString());  // 7 = status column
              
         for (int i = 0 ; i < mymodel.getRowCount(); i++) {
-
             if (! mymodel.getValueAt(i, 12).equals(getGlobalProgTag("open")) && ! mymodel.getValueAt(i, 12).equals(getGlobalProgTag("closed")) && ! mymodel.getValueAt(i, 12).equals(getGlobalProgTag("void"))) {
                 bsmf.MainFrame.show(getMessageTag(1124));
                 commit = false;
@@ -1588,36 +1587,31 @@ public class Scheduler extends javax.swing.JPanel {
         }
 
         if (commit) {
-            // remove rows that are already scheduled 'true'
+            ArrayList<String[]> list = new ArrayList<String[]>();
             for (int i = 0 ; i < mymodel.getRowCount(); i++) {
                 if ( (boolean) mymodel.getValueAt(i, 4) == true ) {
-                    //    bsmf.MainFrame.show("yep1:" + mymodel.getValueAt(i, 0).toString());
-                    mymodel.removeRow(i);
-                    i--;
-
+                    continue;
                 }
-            }
-
-            // now remove rows that have blank cell and QtySched
-            for (int i = 0 ; i < mymodel.getRowCount(); i++) {
-                if ( mymodel.getValueAt(i, 5).toString().isEmpty() || 
-                        mymodel.getValueAt(i, 5).toString() == null || 
+                if (    mymodel.getValueAt(i, 5).toString().isEmpty() || 
+                        mymodel.getValueAt(i, 5) == null || 
                         mymodel.getValueAt(i, 6).toString().isEmpty() || 
-                        mymodel.getValueAt(i, 6).toString() == null ||
+                        mymodel.getValueAt(i, 6) == null ||
                         mymodel.getValueAt(i, 6).toString().equals("0") ) {
-                    //    bsmf.MainFrame.show("yep2:" + mymodel.getValueAt(i, 0).toString());
-                    mymodel.removeRow(i);
-                    i--;
-
+                  continue;  
                 }
+                list.add(new String[]{mymodel.getValueAt(i, 0).toString(),
+                    mymodel.getValueAt(i, 5).toString(),
+                    mymodel.getValueAt(i, 6).toString(),
+                    mymodel.getValueAt(i, 12).toString()});
             }
-
-            // all that should be left are lines to be scheduled
-            if (mytable.getRowCount() > 0) {
-                count = OVData.CommitSchedules(mytable, dtf.format(jc.getDate()) );
+            
+            mymodel.setRowCount(0);
+         
+            if (list.size() > 0) {
+                count = OVData.CommitSchedules(list, dtf.format(jc.getDate()) ); 
             }
-            postcommit();
-            bsmf.MainFrame.show(getMessageTag(1121, String.valueOf(count)));
+            postcommit(count);
+            
         }
     }//GEN-LAST:event_btcommitActionPerformed
 

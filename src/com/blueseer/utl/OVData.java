@@ -13510,13 +13510,8 @@ return mystring;
 
     /* start of production scheduling */
 
-    public static int CommitSchedules(JTable mytable, String datesched) {
+    public static int CommitSchedules(ArrayList<String[]> list, String datesched) {
         int count = 0;
-        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-        java.util.Date now = new java.util.Date();
-
-
-
         try {
 
         Connection con = null;
@@ -13529,21 +13524,22 @@ return mystring;
         try {
             
 
-            for (int i = 0 ; i < mytable.getRowCount(); i++) {
+          //  for (int i = 0 ; i < mytable.getRowCount(); i++) {
+            for (String s[] : list) {
                 count++;
 
-                String status = mytable.getValueAt(i,12).toString();
+                String status = s[3];
                  if (status.equals(getGlobalProgTag("open"))) { status = "0"; }
                  if (status.equals(getGlobalProgTag("closed"))) { status = "1"; }
                  if (status.equals(getGlobalProgTag("void"))) { status = "-1"; }
 
             st.executeUpdate(" update plan_mstr " +
-                   " set plan_cell = "  + "'" + mytable.getValueAt(i,5).toString() + "'" + ","
-                   + " plan_qty_sched = " + "'" + mytable.getValueAt(i,6).toString() + "'" + ","
+                   " set plan_cell = "  + "'" + s[1] + "'" + ","
+                   + " plan_qty_sched = " + "'" + s[2] + "'" + ","
                     + " plan_status = " + "'" + status + "'" + ","
                     + " plan_is_sched = '1' " + ","
                     + " plan_date_sched = " + "'" + datesched + "'" 
-                    + " where plan_nbr = " + "'" + mytable.getValueAt(i,0) + "'" + ";" );
+                    + " where plan_nbr = " + "'" + s[0] + "'" + ";" );
        }      
           } catch (SQLException s) {
            MainFrame.bslog(s);
