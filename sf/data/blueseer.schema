@@ -1279,7 +1279,7 @@ CREATE TABLE IF NOT EXISTS `po_meta` (
   `pom_amttype` varchar(20) NOT NULL DEFAULT '',
   `pom_amt` decimal(14,2) NOT NULL DEFAULT '0',
   `pom_key` varchar(50) NOT NULL DEFAULT '',
-  `pom_value` varchar(50) NOT NULL DEFAULT '')
+  `pom_value` varchar(200) NOT NULL DEFAULT '')
 ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `po_tax` (
   `pot_nbr` varchar(8) NOT NULL,
@@ -1901,7 +1901,7 @@ CREATE TABLE IF NOT EXISTS `or_meta` (
   `or_bsid` varchar(30) NOT NULL DEFAULT '',
   `or_type` varchar(80) NOT NULL DEFAULT '',
   `or_key` varchar(80) NOT NULL DEFAULT '',
-  `or_value` varchar(80) NOT NULL DEFAULT ''
+  `or_value` varchar(200) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `or_tran` (
   `ort_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -1950,7 +1950,7 @@ CREATE TABLE IF NOT EXISTS `ord_meta` (
   `ordm_bsline` varchar(30) NOT NULL DEFAULT '',
   `ordm_type` varchar(80) NOT NULL DEFAULT '',
   `ordm_key` varchar(80) NOT NULL DEFAULT '',
-  `ordm_value` varchar(80) NOT NULL DEFAULT ''
+  `ordm_value` varchar(200) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `so_mstr` (
   `so_nbr` varchar(8) NOT NULL PRIMARY KEY,
@@ -2579,7 +2579,7 @@ CREATE TABLE IF NOT EXISTS `as2_meta` (
   `as2m_id` varchar(30) NOT NULL DEFAULT '',
   `as2m_type` varchar(80) NOT NULL DEFAULT '',
   `as2m_key` varchar(80) NOT NULL DEFAULT '',
-  `as2m_value` varchar(80) NOT NULL DEFAULT ''
+  `as2m_value` varchar(200) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `veh_mstr` (
   `veh_id` varchar(30) NOT NULL DEFAULT '',
@@ -2760,7 +2760,7 @@ CREATE TABLE IF NOT EXISTS `quo_meta` (
   `quom_nbr` varchar(8) NOT NULL DEFAULT '',
   `quom_type` varchar(80) NOT NULL DEFAULT '',
   `quom_key` varchar(80) NOT NULL DEFAULT '',
-  `quom_value` varchar(80) NOT NULL DEFAULT ''
+  `quom_value` varchar(200) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `quo_sac` (
   `quos_nbr` varchar(8) NOT NULL,
@@ -2769,4 +2769,40 @@ CREATE TABLE IF NOT EXISTS `quo_sac` (
   `quos_amttype` varchar(20) NOT NULL DEFAULT '',
   `quos_amt` decimal(14,5) NOT NULL DEFAULT '0',
   `quos_appcode` varchar(30) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `so_meta` (
+  `som_id` varchar(30) NOT NULL DEFAULT '',
+  `som_type` varchar(80) NOT NULL DEFAULT '',
+  `som_key` varchar(80) NOT NULL DEFAULT '',
+  `som_value` varchar(200) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `sh_meta` (
+  `shm_id` varchar(30) NOT NULL DEFAULT '',
+  `shm_type` varchar(80) NOT NULL DEFAULT '',
+  `shm_key` varchar(80) NOT NULL DEFAULT '',
+  `shm_value` varchar(200) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `sys_meta` (
+  `sysm_id` varchar(30) NOT NULL DEFAULT '',
+  `sysm_type` varchar(80) NOT NULL DEFAULT '',
+  `sysm_key` varchar(80) NOT NULL DEFAULT '',
+  `sysm_value` varchar(200) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `hr_meta` (
+  `hrm_id` varchar(30) NOT NULL DEFAULT '',
+  `hrm_type` varchar(80) NOT NULL DEFAULT '',
+  `hrm_key` varchar(80) NOT NULL DEFAULT '',
+  `hrm_value` varchar(200) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `it_meta` (
+  `itm_id` varchar(30) NOT NULL DEFAULT '',
+  `itm_type` varchar(80) NOT NULL DEFAULT '',
+  `itm_key` varchar(80) NOT NULL DEFAULT '',
+  `itm_value` varchar(200) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `fin_meta` (
+  `finm_id` varchar(30) NOT NULL DEFAULT '',
+  `finm_type` varchar(80) NOT NULL DEFAULT '',
+  `finm_key` varchar(80) NOT NULL DEFAULT '',
+  `finm_value` varchar(200) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

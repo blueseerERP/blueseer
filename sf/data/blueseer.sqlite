@@ -3222,6 +3222,42 @@ CREATE TABLE "quo_sac" (
   "quos_amt" decimal(14,5) NOT NULL DEFAULT '0',
   "quos_appcode" varchar(30) NOT NULL COLLATE NOCASE DEFAULT ''
 ); 
+CREATE TABLE "so_meta" (
+  "som_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "som_type" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "som_key" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "som_value" varchar(200) NOT NULL COLLATE NOCASE DEFAULT ''
+); 
+CREATE TABLE "sh_meta" (
+  "shm_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "shm_type" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "shm_key" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "shm_value" varchar(200) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+CREATE TABLE "sys_meta" (
+  "sysm_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "sysm_type" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "sysm_key" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "sysm_value" varchar(200) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+CREATE TABLE "hr_meta" (
+  "hrm_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "hrm_type" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "hrm_key" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "hrm_value" varchar(200) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+CREATE TABLE "it_meta" (
+  "itm_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "itm_type" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "itm_key" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "itm_value" varchar(200) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+CREATE TABLE "fin_meta" (
+  "finm_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "finm_type" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "finm_key" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "finm_value" varchar(200) NOT NULL COLLATE NOCASE DEFAULT ''
+);
 
 
 End Transaction;
