@@ -7585,7 +7585,7 @@ catch (Exception e){
 return myreturn;
 
 }
-
+        
     public static String getSystemTempDirectory() {
  String myreturn = "";
  try{
@@ -20498,4 +20498,98 @@ return mylist;
         return (Files.exists(path)) ? path : null;
     }
    
+    public static ArrayList getSysMetaData(String id, String type, String key) {
+           ArrayList myarray = new ArrayList();
+         try{
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                res = st.executeQuery("select sysm_value from sys_meta where " +
+                        " sysm_id = " + "'" + id + "'" + " AND " +
+                        " sysm_type = " + "'" + type + "'" + " AND " +
+                        " sysm_key = " + "'" + key + "'" +
+                        " order by sysm_value;" );
+               while (res.next()) {
+                myarray.add(res.getString("sysm_value"));                    
+                }
+               
+           }
+            catch (SQLException s){
+                MainFrame.bslog(s);
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myarray;
+        
+    }   
+    
+    public static boolean addSysMetaData(String id, String type, String key, String value) {
+        boolean x = false;
+        try {
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                int i = 0;
+                res = st.executeQuery("SELECT sysm_value FROM sys_meta where sysm_id = " + "'" + id + "'"
+                        + " AND sysm_type = " + "'" + type + "'"
+                        + " AND sysm_key = " + "'" + key + "'"   
+                        + " AND sysm_value = " + "'" + value + "'"        
+                        + " ;");
+                while (res.next()) {
+                    i++;
+                }
+
+                if (i == 0) {
+                    st.executeUpdate("insert into sys_meta (sysm_id, sysm_type, sysm_key, sysm_value) values ( "
+                            + "'" + id + "'" + ","
+                            + "'" + type + "'" + ","
+                            + "'" + key + "'" + ","
+                            + "'" + value + "'" + ")"
+                            + ";");
+                    x = true;
+                }
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return x;
+    }
+
+    
 }
