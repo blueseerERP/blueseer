@@ -1168,10 +1168,13 @@ CREATE TABLE IF NOT EXISTS `pbm_mstr` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `perm_mstr` (
   `perm_user` varchar(30) NOT NULL  DEFAULT '',
-  `perm_menu` varchar(60) NOT NULL  DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `perm_menu` varchar(60) NOT NULL  DEFAULT '',
+  `perm_readonly` tinyint(1) NOT NULL  DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `permw_mstr` (
   `permw_user` varchar(30) NOT NULL  DEFAULT '',
-  `permw_menu` varchar(60) NOT NULL  DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `permw_menu` varchar(60) NOT NULL  DEFAULT '') 
+ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `pl_mstr` (
   `pl_line` varchar(4) NOT NULL  DEFAULT '',
   `pl_desc` varchar(50)  NOT NULL DEFAULT '',

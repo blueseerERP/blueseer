@@ -61,6 +61,7 @@ Source: "C:\bs\blueseer\sf\data\ro\bsdb.db"; components: romanian; DestDir: "{ap
 Source: "C:\bs\blueseer\dist\*"; DestDir: "{app}\dist"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\bs\blueseer\sf\temp\*"; DestDir: "{app}\temp"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\bs\blueseer\sf\logs\*"; DestDir: "{app}\logs"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\bs\blueseer\sf\attachments\*"; DestDir: "{app}\attachments"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\bs\blueseer\sf\conf\*"; DestDir: "{app}\conf"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\bs\blueseer\sf\custom\*"; DestDir: "{app}\custom"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\bs\blueseer\sf\patches\*"; DestDir: "{app}\patches"; Flags: ignoreversion recursesubdirs createallsubdirs

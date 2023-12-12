@@ -107,7 +107,7 @@ public class invData {
                 ld[28], // routing
                 "", // tax
                 bsmf.MainFrame.dfdate.format(new Date()),
-                "", // expire date
+                null, // expire date
                 "0", // expire days
                 "0" // phantom boolean
                 );

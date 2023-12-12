@@ -53,7 +53,6 @@ load data local infile 'profilemstr.csv' replace into table pay_profile fields t
 load data local infile 'profiledet.csv' replace into table pay_profdet fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'permmstr.csv' replace into table perm_mstr fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'usrmstr.csv' replace into table user_mstr fields terminated by ',' ignore 0 Lines; show errors; 
-load data local infile 'permwmstr.csv' replace into table permw_mstr fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'mockmstr.csv' replace into table mock_mstr fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'timeclock.csv' replace into table time_clock fields terminated by ',' ignore 0 Lines; show errors;
 load data local infile 'structmstr.csv' replace into table dfs_mstr fields terminated by ',' ignore 0 Lines; show errors; 
@@ -66,3 +65,4 @@ load data local infile 'apidet.csv' replace into table api_det fields terminated
 load data local infile 'edixcode.csv' replace into table edi_xcode fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'cfoctrl.csv' replace into table frt_ctrl fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'timezone.csv' replace into table time_zone fields terminated by ',' ignore 0 Lines; show errors;
+load data local infile 'sysmeta.csv' replace into table sys_meta fields terminated by ',' ignore 0 Lines; show errors;

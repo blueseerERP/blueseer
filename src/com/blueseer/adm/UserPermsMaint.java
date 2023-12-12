@@ -32,6 +32,7 @@ import com.blueseer.utl.OVData;
 import java.awt.Component;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -46,6 +47,8 @@ import javax.swing.JTabbedPane;
  */
 public class UserPermsMaint extends javax.swing.JPanel {
 
+    DefaultListModel listmodel = new DefaultListModel();
+    
     /**
      * Creates new form MenuCopyPerms
      */
@@ -98,10 +101,12 @@ public class UserPermsMaint extends javax.swing.JPanel {
        }
     }
     
-    public void initvars(String[] arg)
-    {
+    public void initvars(String[] arg) {
         tausers.setText("");
-        tamenus.setText("");
+        
+        listmodel.removeAllElements();
+        menulist.setModel(listmodel);
+        
          fromuser.removeAllItems();
         touser.removeAllItems();
         ArrayList users = OVData.getusermstrlist();
@@ -140,6 +145,21 @@ public class UserPermsMaint extends javax.swing.JPanel {
             ddmenuuser.addItem(menus.get(i));
         }
     }
+    
+    public void getMenuOfUser(String user) {
+        listmodel.removeAllElements();
+        ArrayList<String[]> mymenus = OVData.getMenusOfUsersListArray(user);
+        String value = "";
+        for (String[] menu : mymenus) {
+            if (menu[1].equals("1")) {
+                    value = menu[0] + " - ReadOnly"; 
+            } else {
+                value = menu[0];
+            }
+            listmodel.addElement(value);
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -162,6 +182,7 @@ public class UserPermsMaint extends javax.swing.JPanel {
         btmenuuserunassign = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        cbreadonly = new javax.swing.JCheckBox();
         jPanel1 = new javax.swing.JPanel();
         fromuser = new javax.swing.JComboBox();
         touser = new javax.swing.JComboBox();
@@ -170,9 +191,9 @@ public class UserPermsMaint extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
         ddzuser = new javax.swing.JComboBox();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        tamenus = new javax.swing.JTextArea();
         btgetmenus = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        menulist = new javax.swing.JList<>();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -245,6 +266,8 @@ public class UserPermsMaint extends javax.swing.JPanel {
         jLabel4.setText("User");
         jLabel4.setName("lbluser"); // NOI18N
 
+        cbreadonly.setText("ReadOnly");
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -252,7 +275,7 @@ public class UserPermsMaint extends javax.swing.JPanel {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap(128, Short.MAX_VALUE)
                         .addComponent(btmenuuserunassign)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btusermenuassign))
@@ -263,8 +286,9 @@ public class UserPermsMaint extends javax.swing.JPanel {
                             .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(dduserapplied, javax.swing.GroupLayout.Alignment.TRAILING, 0, 201, Short.MAX_VALUE)
-                            .addComponent(ddmenuuser, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(cbreadonly)
+                            .addComponent(dduserapplied, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ddmenuuser, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -278,11 +302,13 @@ public class UserPermsMaint extends javax.swing.JPanel {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(dduserapplied, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
-                .addGap(12, 12, 12)
+                .addGap(5, 5, 5)
+                .addComponent(cbreadonly)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btusermenuassign)
                     .addComponent(btmenuuserunassign))
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Copy All User Permissions"));
@@ -307,18 +333,18 @@ public class UserPermsMaint extends javax.swing.JPanel {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(32, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btCopy, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btCopy)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel1)
                             .addComponent(jLabel2))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(fromuser, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(touser, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap())
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(touser, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(fromuser, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(27, 27, 27))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -339,10 +365,6 @@ public class UserPermsMaint extends javax.swing.JPanel {
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Menus Assigned to this User"));
         jPanel6.setName("paneltouser"); // NOI18N
 
-        tamenus.setColumns(20);
-        tamenus.setRows(5);
-        jScrollPane2.setViewportView(tamenus);
-
         btgetmenus.setText("Get");
         btgetmenus.setName("btview"); // NOI18N
         btgetmenus.addActionListener(new java.awt.event.ActionListener() {
@@ -351,6 +373,13 @@ public class UserPermsMaint extends javax.swing.JPanel {
             }
         });
 
+        menulist.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                menulistMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(menulist);
+
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
@@ -358,12 +387,11 @@ public class UserPermsMaint extends javax.swing.JPanel {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3)
                     .addComponent(ddzuser, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btgetmenus, javax.swing.GroupLayout.Alignment.TRAILING))))
+                        .addComponent(btgetmenus)))
                 .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
@@ -373,8 +401,8 @@ public class UserPermsMaint extends javax.swing.JPanel {
                 .addComponent(ddzuser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btgetmenus)
-                .addGap(7, 7, 7)
-                .addComponent(jScrollPane2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3)
                 .addContainerGap())
         );
 
@@ -430,8 +458,8 @@ public class UserPermsMaint extends javax.swing.JPanel {
         if (dduserapplied.getSelectedItem().toString().equals("ALL")) {
         OVData.addMenuToAllUsers(ddmenuuser.getSelectedItem().toString());
         } else {
-        String myreturn = OVData.addMenuToUser(ddmenuuser.getSelectedItem().toString(), dduserapplied.getSelectedItem().toString());
-        if (myreturn.equals("0")) {
+        String myreturn = OVData.addMenuToUser(ddmenuuser.getSelectedItem().toString(), dduserapplied.getSelectedItem().toString(), cbreadonly.isSelected());
+        if (myreturn.equals("0")) { 
             bsmf.MainFrame.show(getMessageTag(1065));
         }
         if (myreturn.equals("1")) {
@@ -441,6 +469,11 @@ public class UserPermsMaint extends javax.swing.JPanel {
             bsmf.MainFrame.show(getMessageTag(1012));
         }
         }
+        
+        if (ddzuser.getSelectedItem() != null && ! ddzuser.getSelectedItem().toString().isBlank()) {
+            getMenuOfUser(ddzuser.getSelectedItem().toString());
+        }
+        
     }//GEN-LAST:event_btusermenuassignActionPerformed
 
     private void btmenuuserunassignActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btmenuuserunassignActionPerformed
@@ -458,16 +491,27 @@ public class UserPermsMaint extends javax.swing.JPanel {
             bsmf.MainFrame.show(getMessageTag(1012));
         }
         }
+        if (ddzuser.getSelectedItem() != null && ! ddzuser.getSelectedItem().toString().isBlank()) {
+            getMenuOfUser(ddzuser.getSelectedItem().toString());
+        }
     }//GEN-LAST:event_btmenuuserunassignActionPerformed
 
     private void btgetmenusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btgetmenusActionPerformed
-        tamenus.setText("");
-        ArrayList<String> mymenus = OVData.getMenusOfUsersList(ddzuser.getSelectedItem().toString());
-        for (String menu : mymenus) {
-            tamenus.append(menu);
-            tamenus.append("\n");
-        }
+        getMenuOfUser(ddzuser.getSelectedItem().toString());
     }//GEN-LAST:event_btgetmenusActionPerformed
+
+    private void menulistMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menulistMouseClicked
+       if (! menulist.isSelectionEmpty()) {
+           String[] x = menulist.getSelectedValue().toString().split(" - ",-1);
+           ddmenuuser.setSelectedItem(x[0]);
+           dduserapplied.setSelectedItem(ddzuser.getSelectedItem().toString());
+           if (x.length > 1 && x[1].equals("ReadOnly")) {
+               cbreadonly.setSelected(true);
+           } else {
+               cbreadonly.setSelected(false);
+           }
+       }
+    }//GEN-LAST:event_menulistMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -476,6 +520,7 @@ public class UserPermsMaint extends javax.swing.JPanel {
     private javax.swing.JButton btgetusers;
     private javax.swing.JButton btmenuuserunassign;
     private javax.swing.JButton btusermenuassign;
+    private javax.swing.JCheckBox cbreadonly;
     private javax.swing.JComboBox ddmenucheck;
     private javax.swing.JComboBox ddmenuuser;
     private javax.swing.JComboBox dduserapplied;
@@ -491,8 +536,8 @@ public class UserPermsMaint extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextArea tamenus;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JList<String> menulist;
     private javax.swing.JTextArea tausers;
     private javax.swing.JComboBox touser;
     // End of variables declaration//GEN-END:variables

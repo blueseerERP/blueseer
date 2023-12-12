@@ -1,0 +1,7 @@
+system,sysdir,attachment_directory,attachments
+system,sysdir,temp_directory,temp
+system,sysdir,log_directory,logs
+system,sysdir,image_directory,images
+system,sysdir,jasper_directory,jasper
+system,sysdir,label_directory,zebra
+system,sysdir,edi_directory,edi

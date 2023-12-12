@@ -57,7 +57,7 @@ import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import com.blueseer.utl.DTData;
-import static com.blueseer.utl.OVData.getSystemTempDirectory;
+import static com.blueseer.utl.OVData.getSystemAttachmentDirectory;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -994,7 +994,7 @@ public class InvoiceMaint extends javax.swing.JPanel {
         File file = new File(filename);
         try {
           // file = getfile("Open File", filename);  
-          Path filepath = FileSystems.getDefault().getPath(cleanDirString(OVData.getSystemTempDirectory()) + filename);
+          Path filepath = FileSystems.getDefault().getPath(cleanDirString(OVData.getSystemAttachmentDirectory()) + filename);
           if (! Files.exists(filepath)) {
             bsmf.MainFrame.show("file does not exist at path: " + filepath.toString());
           } else {
@@ -1683,7 +1683,7 @@ public class InvoiceMaint extends javax.swing.JPanel {
                 // String suffix = FilenameUtils.getExtension(file.getName());
                 boolean x = OVData.addSysMetaData(tbkey.getText(), "invoice", "attachments", Sourcefile);
                 if (x) {
-                    Files.copy(file.toPath(), new File(cleanDirString(getSystemTempDirectory()) + Sourcefile).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    Files.copy(file.toPath(), new File(cleanDirString(getSystemAttachmentDirectory()) + Sourcefile).toPath(), StandardCopyOption.REPLACE_EXISTING);
                     bsmf.MainFrame.show(getMessageTag(1007));
                 } else {
                    bsmf.MainFrame.show(getMessageTag(1011)); 
@@ -1721,7 +1721,7 @@ public class InvoiceMaint extends javax.swing.JPanel {
                         + "sysm_value = " + "'" + filename + "'"
                         + " ;");
                     if (i > 0) {
-                        Path filepath = FileSystems.getDefault().getPath(cleanDirString(OVData.getSystemTempDirectory()) + filename);
+                        Path filepath = FileSystems.getDefault().getPath(cleanDirString(OVData.getSystemAttachmentDirectory()) + filename);
                         java.nio.file.Files.deleteIfExists(filepath);
                     }
                     getAttachments(tbkey.getText());

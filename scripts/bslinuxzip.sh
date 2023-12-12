@@ -10,6 +10,7 @@ zip -u ../scripts/$bszip zebra/*
 zip -u ../scripts/$bszip patches/*
 zip -u ../scripts/$bszip temp/*
 zip -u ../scripts/$bszip logs/*
+zip -u ../scripts/$bszip attachments/*
 zip -u ../scripts/$bszip conf/*
 zip -u ../scripts/$bszip custom/*
 zip -r ../scripts/$bszip data/*
