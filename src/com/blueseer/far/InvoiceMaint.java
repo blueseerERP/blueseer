@@ -57,6 +57,7 @@ import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import com.blueseer.utl.DTData;
+import static com.blueseer.utl.OVData.canUpdate;
 import static com.blueseer.utl.OVData.getSystemAttachmentDirectory;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -444,6 +445,12 @@ public class InvoiceMaint extends javax.swing.JPanel {
     }
     
     public boolean validateInput(String x) {
+        
+        if (! canUpdate(this.getClass().getSimpleName())) {
+            bsmf.MainFrame.show(getMessageTag(1185));
+            return false;
+        }
+        
         boolean b = true;
                 
                  if (tbkey.getText().isEmpty()) {

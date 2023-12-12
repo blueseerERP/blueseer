@@ -55,6 +55,7 @@ import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeerT;
+import static com.blueseer.utl.OVData.canUpdate;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -334,6 +335,12 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     @Override
     public boolean validateInput(BlueSeerUtils.dbaction x) {
+        
+        if (! canUpdate(this.getClass().getSimpleName())) {
+            bsmf.MainFrame.show(getMessageTag(1185));
+            return false;
+        }
+        
         Map<String,Integer> f = OVData.getTableInfo("cust_term");
         int fc;
         

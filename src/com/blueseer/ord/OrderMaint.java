@@ -79,6 +79,7 @@ import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import static com.blueseer.utl.BlueSeerUtils.priceformat;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeerT;
+import static com.blueseer.utl.OVData.canUpdate;
 import static com.blueseer.utl.OVData.isVoucherShippingSO;
 
 import java.awt.Color;
@@ -674,6 +675,11 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public boolean validateInput(dbaction x) {
+        
+        if (! canUpdate(this.getClass().getSimpleName())) {
+            bsmf.MainFrame.show(getMessageTag(1185));
+            return false;
+        }
         
         Map<String,Integer> f = OVData.getTableInfo("so_mstr");
         int fc;
@@ -3709,6 +3715,11 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_jTabbedPane1StateChanged
 
     private void btinvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btinvoiceActionPerformed
+        
+        if (! canUpdate(this.getClass().getSimpleName())) {
+            bsmf.MainFrame.show(getMessageTag(1185));
+            return;
+        }
         
         if (! ddstatus.getSelectedItem().toString().equals(getGlobalProgTag("hold"))) {
         // check for multiple ship destinations...autoinvoicing requires single destination orders

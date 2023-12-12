@@ -36,6 +36,7 @@ import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.IBlueSeerc;
 import com.blueseer.utl.OVData;
+import static com.blueseer.utl.OVData.canUpdate;
 import java.awt.Component;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -187,7 +188,12 @@ public class DefaultMaint extends javax.swing.JPanel implements IBlueSeerc {
     
     public boolean validateInput(dbaction x) {
         boolean b = true;
-                                
+        
+        if (! canUpdate(this.getClass().getSimpleName())) {
+            bsmf.MainFrame.show(getMessageTag(1185));
+            return false;
+        }
+        
                 if (tbsite.getText().isEmpty()) {
                     b = false;
                     bsmf.MainFrame.show(getMessageTag(1024));

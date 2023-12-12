@@ -83,6 +83,7 @@ import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import static com.blueseer.utl.BlueSeerUtils.priceformat;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeerT;
+import static com.blueseer.utl.OVData.canUpdate;
 import java.awt.Color;
 import java.awt.Component;
 import java.sql.DriverManager;
@@ -810,6 +811,11 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public boolean validateInput(dbaction x) {
        
+        if (! canUpdate(this.getClass().getSimpleName())) {
+            bsmf.MainFrame.show(getMessageTag(1185));
+            return false;
+        }
+        
         Map<String,Integer> f = OVData.getTableInfo("po_mstr");
         int fc;        
         fc = checkLength(f,"po_nbr");

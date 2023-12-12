@@ -63,6 +63,7 @@ import static com.blueseer.utl.BlueSeerUtils.lurb3;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeerT;
 import com.blueseer.utl.OVData;
+import static com.blueseer.utl.OVData.canUpdate;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -667,6 +668,11 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public boolean validateInput(dbaction action) {
+        
+        if (! canUpdate(this.getClass().getSimpleName())) {
+            bsmf.MainFrame.show(getMessageTag(1185));
+            return false;
+        }
         
         Map<String,Integer> f = OVData.getTableInfo("cm_mstr");
         int fc;

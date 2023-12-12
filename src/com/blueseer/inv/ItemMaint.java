@@ -61,6 +61,7 @@ import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeerT;
+import static com.blueseer.utl.OVData.canUpdate;
 import static com.blueseer.utl.OVData.printImageJasper;
 import static com.blueseer.utl.OVData.showPDFusingIcePDF;
 import java.awt.Color;
@@ -480,6 +481,10 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }
     
     public boolean validateInput(dbaction x) {
+        if (! canUpdate(this.getClass().getSimpleName())) {
+            bsmf.MainFrame.show(getMessageTag(1185));
+            return false;
+        }
         Map<String,Integer> f = OVData.getTableInfo("item_mstr");
         int fc;
 

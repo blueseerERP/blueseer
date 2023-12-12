@@ -80,6 +80,7 @@ import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.lurb2;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeerT;
+import static com.blueseer.utl.OVData.canUpdate;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -509,6 +510,11 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }
         
     public boolean validateInput(dbaction x) {
+        
+        if (! canUpdate(this.getClass().getSimpleName())) {
+            bsmf.MainFrame.show(getMessageTag(1185));
+            return false;
+        }
         
          Map<String,Integer> f = OVData.getTableInfo("emp_mstr");
         int fc;
