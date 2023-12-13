@@ -421,6 +421,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         jTabbedPane1.setEnabledAt(1, false);
         jTabbedPane1.setEnabledAt(2, false);
         
+        
         tbkey.setText("");
         tbkey.setEditable(true);
         tbkey.setForeground(Color.black);

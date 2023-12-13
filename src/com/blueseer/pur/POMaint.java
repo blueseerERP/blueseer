@@ -393,6 +393,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         jTabbedPane1.setEnabledAt(1, false);
         jTabbedPane1.setEnabledAt(0, true);
         
+        
         attachmentmodel.setNumRows(0);
         tableattachment.setModel(attachmentmodel);
         tableattachment.getTableHeader().setReorderingAllowed(false);
