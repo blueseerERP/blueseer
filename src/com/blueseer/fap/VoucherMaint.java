@@ -42,6 +42,7 @@ import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
@@ -59,6 +60,8 @@ import static com.blueseer.utl.BlueSeerUtils.setDateFormat;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormatNull;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeerT;
+import static com.blueseer.utl.OVData.canUpdate;
+import static com.blueseer.utl.OVData.getSystemAttachmentDirectory;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -73,10 +76,20 @@ import java.awt.event.MouseEvent;
 import com.blueseer.vdr.venData;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
+import java.util.Date;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -106,6 +119,22 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
                 int voucherline = 0;
                 String curr = "";
                 String basecurr = "";
+                String lastfcdir = "";
+             
+             javax.swing.table.DefaultTableModel attachmentmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                        new String[]{getGlobalColumnTag("select"), 
+                getGlobalColumnTag("filename")})
+            {
+              @Override  
+              public Class getColumnClass(int col) {  
+                if (col == 0)       
+                    return ImageIcon.class; 
+                else return String.class;  //other columns accept String values  
+              }  
+            };
+                
+        
+                
                 
                  javax.swing.table.DefaultTableModel receivermodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
@@ -161,6 +190,16 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         
        isLoad = true; 
+       
+       jTabbedPane1.removeAll();
+       jTabbedPane1.add("Main", jPanel1);
+       jTabbedPane1.add("Attachments", panelAttachment);
+       
+       attachmentmodel.setNumRows(0);
+        tableattachment.setModel(attachmentmodel);
+        tableattachment.getTableHeader().setReorderingAllowed(false);
+        tableattachment.getColumnModel().getColumn(0).setMaxWidth(100);
+       
        java.util.Date now = new java.util.Date();
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
@@ -296,6 +335,12 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public boolean validateInput(BlueSeerUtils.dbaction x) {
+       
+        if (! canUpdate(this.getClass().getSimpleName())) {
+            bsmf.MainFrame.show(getMessageTag(1185));
+            return false;
+        }
+        
         boolean b = true;
                 
                 
@@ -626,6 +671,8 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
                
                 }
                
+                getAttachments(tbkey.getText());
+                
                 if (i > 0)
                 m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
                 setAction(m);
@@ -738,6 +785,36 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     
     // misc functions
+    public void getAttachments(String id) {
+        attachmentmodel.setNumRows(0);
+        ArrayList<String> list = OVData.getSysMetaData(id, "voucher", "attachments");
+        for (String file : list) {
+        attachmentmodel.addRow(new Object[]{BlueSeerUtils.clickflag,  
+                               file
+            });
+        }
+    }
+    
+    public void openFile(String filename) {
+        if (! Desktop.isDesktopSupported()) {
+        return;
+        } 
+        Desktop desktop = Desktop.getDesktop();
+        File file = new File(filename);
+        try {
+          // file = getfile("Open File", filename);  
+          Path filepath = FileSystems.getDefault().getPath(cleanDirString(OVData.getSystemAttachmentDirectory()) + filename);
+          if (! Files.exists(filepath)) {
+            bsmf.MainFrame.show("file does not exist at path: " + filepath.toString());
+          } else {
+            desktop.open(filepath.toFile());
+          }
+        } catch (IOException e) {
+          bsmf.MainFrame.show("unable to open file with native file type application");
+        }
+    }
+    
+    
     public void reinitreceivervariables(String myreceiver) {
        
         tbkey.setText(myreceiver);
@@ -1064,8 +1141,7 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbactualamt.setText(currformatDouble(actamt));
         
     }
-    
-      
+          
     public void setType(String type) {
           if (type.equals("Receipt")) {
               ddpo.setEnabled(true);
@@ -1083,7 +1159,8 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
               tbprice.setEnabled(true);
           }
       }
-      
+    
+    
  
     /**
      * This method is called from within the constructor to initialize the form.
@@ -1094,6 +1171,8 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        fc = new javax.swing.JFileChooser();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         tbkey = new javax.swing.JTextField();
         jLabel24 = new javax.swing.JLabel();
@@ -1148,8 +1227,15 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel11 = new javax.swing.JLabel();
         tbcheck = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
+        panelAttachment = new javax.swing.JPanel();
+        labelmessage = new javax.swing.JLabel();
+        btaddattachment = new javax.swing.JButton();
+        btdeleteattachment = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tableattachment = new javax.swing.JTable();
 
         setBackground(new java.awt.Color(0, 102, 204));
+        add(jTabbedPane1);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Voucher Maintenance"));
         jPanel1.setName("panelmain"); // NOI18N
@@ -1557,8 +1643,8 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(tbrecvamt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane8, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btdeleteitem)
                     .addComponent(btadditem)
@@ -1586,6 +1672,77 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
         );
 
         add(jPanel1);
+
+        panelAttachment.setBorder(javax.swing.BorderFactory.createTitledBorder("Attachment Panel"));
+        panelAttachment.setName("panelAttachment"); // NOI18N
+        panelAttachment.setPreferredSize(new java.awt.Dimension(974, 560));
+
+        btaddattachment.setText("Add Attachment");
+        btaddattachment.setName("btaddattachment"); // NOI18N
+        btaddattachment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btaddattachmentActionPerformed(evt);
+            }
+        });
+
+        btdeleteattachment.setText("Delete Attachment");
+        btdeleteattachment.setName("btdeleteattachment"); // NOI18N
+        btdeleteattachment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btdeleteattachmentActionPerformed(evt);
+            }
+        });
+
+        tableattachment.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        tableattachment.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableattachmentMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(tableattachment);
+
+        javax.swing.GroupLayout panelAttachmentLayout = new javax.swing.GroupLayout(panelAttachment);
+        panelAttachment.setLayout(panelAttachmentLayout);
+        panelAttachmentLayout.setHorizontalGroup(
+            panelAttachmentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelAttachmentLayout.createSequentialGroup()
+                .addGroup(panelAttachmentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelAttachmentLayout.createSequentialGroup()
+                        .addComponent(btaddattachment)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btdeleteattachment)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 446, Short.MAX_VALUE)
+                        .addComponent(labelmessage, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelAttachmentLayout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        panelAttachmentLayout.setVerticalGroup(
+            panelAttachmentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelAttachmentLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelAttachmentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelmessage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(panelAttachmentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btaddattachment)
+                        .addComponent(btdeleteattachment)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(157, 157, 157))
+        );
+
+        add(panelAttachment);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
@@ -1918,11 +2075,102 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
     }//GEN-LAST:event_tbcontrolamtFocusGained
 
+    private void btaddattachmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddattachmentActionPerformed
+
+        DateFormat dfdate = new SimpleDateFormat("yyyyMMddHHmmss");
+        Date now = new Date();
+        File file = null;
+
+        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+        if (! lastfcdir.isBlank()) {
+            fc.setCurrentDirectory(FileSystems.getDefault().getPath(lastfcdir).toFile());
+        }
+
+        int returnVal = fc.showOpenDialog(this);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            try {
+                file = fc.getSelectedFile();
+                String Sourcefile = file.getName();
+                lastfcdir = file.getParent();
+                // String suffix = FilenameUtils.getExtension(file.getName());
+                boolean x = OVData.addSysMetaData(tbkey.getText(), "voucher", "attachments", Sourcefile);
+                if (x) {
+                    Files.copy(file.toPath(), new File(cleanDirString(getSystemAttachmentDirectory()) + Sourcefile).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    bsmf.MainFrame.show(getMessageTag(1007));
+                } else {
+                    bsmf.MainFrame.show(getMessageTag(1011));
+                }
+
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        getAttachments(tbkey.getText());
+    }//GEN-LAST:event_btaddattachmentActionPerformed
+
+    private void btdeleteattachmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteattachmentActionPerformed
+        boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
+
+        int[] rows = tableattachment.getSelectedRows();
+        String filename = null;
+        for (int i : rows) {
+            filename = tableattachment.getValueAt(i, 1).toString();
+        }
+
+        if (proceed) {
+            try {
+
+                Connection con = DriverManager.getConnection(url + db, user, pass);
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                try {
+
+                    int i = st.executeUpdate("delete from sys_meta where sysm_id = " + "'" + tbkey.getText() + "'"
+                        + " AND sysm_type = 'voucher' AND sysm_key = 'attachments' AND "
+                        + "sysm_value = " + "'" + filename + "'"
+                        + " ;");
+                    if (i > 0) {
+                        Path filepath = FileSystems.getDefault().getPath(cleanDirString(OVData.getSystemAttachmentDirectory()) + filename);
+                        java.nio.file.Files.deleteIfExists(filepath);
+                    }
+                    getAttachments(tbkey.getText());
+                } catch (SQLException s) {
+                    MainFrame.bslog(s);
+                    bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+                } finally {
+                    if (res != null) {
+                        res.close();
+                    }
+                    if (st != null) {
+                        st.close();
+                    }
+                    con.close();
+                }
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            }
+        }
+    }//GEN-LAST:event_btdeleteattachmentActionPerformed
+
+    private void tableattachmentMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableattachmentMouseClicked
+        int row = tableattachment.rowAtPoint(evt.getPoint());
+        int col = tableattachment.columnAtPoint(evt.getPoint());
+        if ( col == 0 && tableattachment.getValueAt(row, 1) != null) {
+            openFile(tableattachment.getValueAt(row, 1).toString());
+        }
+    }//GEN-LAST:event_tableattachmentMouseClicked
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btaddall;
+    private javax.swing.JButton btaddattachment;
     private javax.swing.JButton btadditem;
     private javax.swing.JButton btclear;
+    private javax.swing.JButton btdeleteattachment;
     private javax.swing.JButton btdeleteitem;
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
@@ -1936,6 +2184,7 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JComboBox<String> ddstatus;
     private javax.swing.JComboBox ddtype;
     private javax.swing.JComboBox ddvend;
+    private javax.swing.JFileChooser fc;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1955,13 +2204,18 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JLabel labelmessage;
     private javax.swing.JLabel lbacct;
     private javax.swing.JLabel lblreceiver;
     private javax.swing.JLabel lblstatus;
     private javax.swing.JLabel lbvendor;
+    private javax.swing.JPanel panelAttachment;
     private javax.swing.JTable receiverdet;
+    private javax.swing.JTable tableattachment;
     private javax.swing.JTextField tbactualamt;
     private javax.swing.JTextField tbcheck;
     private javax.swing.JTextField tbcontrolamt;
