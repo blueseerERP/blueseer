@@ -107,8 +107,7 @@ public class InvoiceMaint extends javax.swing.JPanel {
                 boolean isLoad = false;
                 int ordercount = 0;
                 String status = "";
-                String lastfcdir = "";
-             
+               
             
                 
       // global datatablemodel declarations     
@@ -137,7 +136,7 @@ public class InvoiceMaint extends javax.swing.JPanel {
     
     javax.swing.table.DefaultTableModel attachmentmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{getGlobalColumnTag("select"), 
-                getGlobalColumnTag("filename")})
+                getGlobalColumnTag("file")})
             {
               @Override  
               public Class getColumnClass(int col) {  
@@ -385,9 +384,9 @@ public class InvoiceMaint extends javax.swing.JPanel {
         ddsite.setSelectedItem(OVData.getDefaultSite());
         
         attachmentmodel.setNumRows(0);
-        tablereport.setModel(attachmentmodel);
-        tablereport.getTableHeader().setReorderingAllowed(false);
-        tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+        tableattachment.setModel(attachmentmodel);
+        tableattachment.getTableHeader().setReorderingAllowed(false);
+        tableattachment.getColumnModel().getColumn(0).setMaxWidth(100);
         
         
         tabledetail.setModel(myshipdetmodel);
@@ -878,20 +877,21 @@ public class InvoiceMaint extends javax.swing.JPanel {
         
     }
 
-    
-  
-    
-    
-    // custom funcs
     public void getAttachments(String id) {
         attachmentmodel.setNumRows(0);
-        ArrayList<String> list = OVData.getSysMetaData(id, "invoice", "attachments");
+        ArrayList<String> list = OVData.getSysMetaData(id, this.getClass().getSimpleName(), "attachments");
         for (String file : list) {
         attachmentmodel.addRow(new Object[]{BlueSeerUtils.clickflag,  
                                file
             });
         }
     }
+    
+    
+  
+    
+    
+    // custom funcs
     
     public Integer getmaxline() {
         int max = 0;
@@ -968,50 +968,8 @@ public class InvoiceMaint extends javax.swing.JPanel {
         }
     }  
     
-    public File getfile(String title) {
         
-        File file = null;
-        JFileChooser jfc = new JFileChooser(FileSystems.getDefault().getPath("edi").toFile());
-        jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        jfc.setDialogTitle(title);
-        int returnVal = jfc.showOpenDialog(this);
-       
-
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            try {
-            file = jfc.getSelectedFile();
-            String SourceDir = file.getAbsolutePath();
-            file = new File(SourceDir);
-               if (! file.exists()) {
-                 return null;
-               }
-            }
-            catch (Exception ex) {
-            ex.printStackTrace();
-            }
-        } 
-        return file;
-    }
-    
-    public void openFile(String filename) {
-        if (! Desktop.isDesktopSupported()) {
-        return;
-        } 
-        Desktop desktop = Desktop.getDesktop();
-        File file = new File(filename);
-        try {
-          // file = getfile("Open File", filename);  
-          Path filepath = FileSystems.getDefault().getPath(cleanDirString(OVData.getSystemAttachmentDirectory()) + filename);
-          if (! Files.exists(filepath)) {
-            bsmf.MainFrame.show("file does not exist at path: " + filepath.toString());
-          } else {
-            desktop.open(filepath.toFile());
-          }
-        } catch (IOException e) {
-          bsmf.MainFrame.show("unable to open file with native file type application");
-        }
-    }
-    
+   
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -1024,7 +982,6 @@ public class InvoiceMaint extends javax.swing.JPanel {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         jLabel5 = new javax.swing.JLabel();
-        fc = new javax.swing.JFileChooser();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         panelMain = new javax.swing.JPanel();
         tbkey = new javax.swing.JTextField();
@@ -1098,7 +1055,7 @@ public class InvoiceMaint extends javax.swing.JPanel {
         btaddattachment = new javax.swing.JButton();
         btdeleteattachment = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        tablereport = new javax.swing.JTable();
+        tableattachment = new javax.swing.JTable();
 
         jLabel5.setText("jLabel5");
 
@@ -1582,7 +1539,7 @@ public class InvoiceMaint extends javax.swing.JPanel {
             }
         });
 
-        tablereport.setModel(new javax.swing.table.DefaultTableModel(
+        tableattachment.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -1593,12 +1550,12 @@ public class InvoiceMaint extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        tablereport.addMouseListener(new java.awt.event.MouseAdapter() {
+        tableattachment.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tablereportMouseClicked(evt);
+                tableattachmentMouseClicked(evt);
             }
         });
-        jScrollPane2.setViewportView(tablereport);
+        jScrollPane2.setViewportView(tableattachment);
 
         javax.swing.GroupLayout panelAttachmentLayout = new javax.swing.GroupLayout(panelAttachment);
         panelAttachment.setLayout(panelAttachmentLayout);
@@ -1669,94 +1626,30 @@ public class InvoiceMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_btlookupActionPerformed
 
     private void btaddattachmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddattachmentActionPerformed
-
-        DateFormat dfdate = new SimpleDateFormat("yyyyMMddHHmmss");
-        Date now = new Date();
-        File file = null;
-
-        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-
-        if (! lastfcdir.isBlank()) {
-            fc.setCurrentDirectory(FileSystems.getDefault().getPath(lastfcdir).toFile());
-        }
-
-        int returnVal = fc.showOpenDialog(this);
-
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            try {
-                file = fc.getSelectedFile();
-                String Sourcefile = file.getName();
-                lastfcdir = file.getParent();
-                // String suffix = FilenameUtils.getExtension(file.getName());
-                boolean x = OVData.addSysMetaData(tbkey.getText(), "invoice", "attachments", Sourcefile);
-                if (x) {
-                    Files.copy(file.toPath(), new File(cleanDirString(getSystemAttachmentDirectory()) + Sourcefile).toPath(), StandardCopyOption.REPLACE_EXISTING);
-                    bsmf.MainFrame.show(getMessageTag(1007));
-                } else {
-                   bsmf.MainFrame.show(getMessageTag(1011)); 
-                }
-                
-                }
-                catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-        
-        getAttachments(tbkey.getText());
-
+        OVData.addFileAttachment(tbkey.getText(), this.getClass().getSimpleName(), this ); 
+        getAttachments(tbkey.getText()); 
     }//GEN-LAST:event_btaddattachmentActionPerformed
 
     private void btdeleteattachmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteattachmentActionPerformed
         boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
-
-        int[] rows = tablereport.getSelectedRows();
-        String filename = null;
-        for (int i : rows) {
-            filename = tablereport.getValueAt(i, 1).toString();
-        }
-
         if (proceed) {
-            try {
-
-                Connection con = DriverManager.getConnection(url + db, user, pass);
-                Statement st = con.createStatement();
-                ResultSet res = null;
-                try {
-
-                    int i = st.executeUpdate("delete from sys_meta where sysm_id = " + "'" + tbkey.getText() + "'"
-                        + " AND sysm_type = 'invoice' AND sysm_key = 'attachments' AND " 
-                        + "sysm_value = " + "'" + filename + "'"
-                        + " ;");
-                    if (i > 0) {
-                        Path filepath = FileSystems.getDefault().getPath(cleanDirString(OVData.getSystemAttachmentDirectory()) + filename);
-                        java.nio.file.Files.deleteIfExists(filepath);
-                    }
-                    getAttachments(tbkey.getText());
-                } catch (SQLException s) {
-                    MainFrame.bslog(s);
-                    bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-                } finally {
-                    if (res != null) {
-                        res.close();
-                    }
-                    if (st != null) {
-                        st.close();
-                    }
-                    con.close();
-                }
-            } catch (Exception e) {
-                MainFrame.bslog(e);
+            int[] rows = tableattachment.getSelectedRows();
+            String filename = null;
+            for (int i : rows) {
+                filename = tableattachment.getValueAt(i, 1).toString();
             }
+            OVData.deleteFileAttachment(tbkey.getText(),this.getClass().getSimpleName(),filename);
+            getAttachments(tbkey.getText());
         }
     }//GEN-LAST:event_btdeleteattachmentActionPerformed
 
-    private void tablereportMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablereportMouseClicked
-         int row = tablereport.rowAtPoint(evt.getPoint());
-        int col = tablereport.columnAtPoint(evt.getPoint());
+    private void tableattachmentMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableattachmentMouseClicked
+         int row = tableattachment.rowAtPoint(evt.getPoint());
+        int col = tableattachment.columnAtPoint(evt.getPoint());
         if ( col == 0) {
-                openFile(tablereport.getValueAt(row, 1).toString());
+            OVData.openFileAttachment(tbkey.getText(), this.getClass().getSimpleName(), tableattachment.getValueAt(row, 1).toString());
         }
-    }//GEN-LAST:event_tablereportMouseClicked
+    }//GEN-LAST:event_tableattachmentMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btPrintInv;
@@ -1775,7 +1668,6 @@ public class InvoiceMaint extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> ddcurr;
     private javax.swing.JComboBox ddshipvia;
     private javax.swing.JComboBox ddsite;
-    private javax.swing.JFileChooser fc;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1814,8 +1706,8 @@ public class InvoiceMaint extends javax.swing.JPanel {
     private javax.swing.JPanel panelAttachment;
     private javax.swing.JPanel panelMain;
     private javax.swing.JTable sactable;
+    private javax.swing.JTable tableattachment;
     private javax.swing.JTable tabledetail;
-    private javax.swing.JTable tablereport;
     private javax.swing.JTextField tbaracct;
     private javax.swing.JTextField tbaramt;
     private javax.swing.JTextField tbarcc;

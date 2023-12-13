@@ -63,6 +63,8 @@ import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.vdr.venData;
+import java.awt.Component;
+import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -122,6 +124,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.PreparedStatement;
 import java.sql.ResultSetMetaData;
 import java.time.LocalDate;
@@ -143,6 +146,7 @@ import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.standard.Copies;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
@@ -179,7 +183,7 @@ import org.json.JSONObject;
  */
 public class OVData { 
     
-   public static String minor = "21";
+   public static String minor = "22";
     
    public static String[] states = {"AB","AL","AK","AZ","AR","BC","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","MB","ME","MD","MA","MI","MN","MS","MO","MT","NE","NL","NV","NH","NJ","NL","NM","NY","NC","ND","NS","OH","OK","ON","OR","PA","PE","QC","RI","SC","SD","SE","TN","TX","UT","VT","VA","WA","WV","WI","WY" };
    public static String[] countries = {"Afghanistan","Albania","Algeria","Andorra","Angola","Antigua & Deps","Argentina","Armenia","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bhutan","Bolivia","Bosnia Herzegovina","Botswana","Brazil","Brunei","Bulgaria","Burkina","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Central African Rep","Chad","Chile","China","Colombia","Comoros","Congo","Congo {Democratic Rep}","Costa Rica","Croatia","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","East Timor","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Ethiopia","Fiji","Finland","France","Gabon","Gambia","Georgia","Germany","Ghana","Greece","Grenada","Guatemala","Guinea","Guinea-Bissau","Guyana","Haiti","Honduras","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland {Republic}","Israel","Italy","Ivory Coast","Jamaica","Japan","Jordan","Kazakhstan","Kenya","Kiribati","Korea North","Korea South","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique","Myanmar, {Burma}","Namibia","Nauru","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria","Norway","Oman","Pakistan","Palau","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Qatar","Romania","Russian Federation","Rwanda","St Kitts & Nevis","St Lucia","Saint Vincent & the Grenadines","Samoa","San Marino","Sao Tome & Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","Spain","Sri Lanka","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Togo","Tonga","Trinidad & Tobago","Tunisia","Turkey","Turkmenistan","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom", "USA","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Yemen","Zambia","Zimbabwe" }; 
@@ -20714,5 +20718,90 @@ return mylist;
 
 }
 
+    public static void openFileAttachment(String key, String systype, String filename) {
+        if (! Desktop.isDesktopSupported()) {
+        return;
+        } 
+        Desktop desktop = Desktop.getDesktop();
+        File file = new File(filename);
+        try {
+          // file = getfile("Open File", filename);  
+          Path filepath = FileSystems.getDefault().getPath(cleanDirString(OVData.getSystemAttachmentDirectory()) + systype + "_" + key + "_" +filename);
+          if (! Files.exists(filepath)) {
+            bsmf.MainFrame.show("file does not exist at path: " + filepath.toString());
+          } else {
+            desktop.open(filepath.toFile());
+          }
+        } catch (IOException e) {
+          bsmf.MainFrame.show("unable to open file with native file type application");
+        }
+    }
+    
+    public static File addFileAttachment(String key, String systype, Component thiscomp ) {
+        
+        File file = null;
+        JFileChooser jfc = new JFileChooser();
+        jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        jfc.setDialogTitle("Choose file to be checked into attachments directory: ");
+        int returnVal = jfc.showOpenDialog(thiscomp);
+        
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            try {
+            file = jfc.getSelectedFile();
+            if (! file.exists()) {
+             return null;
+            }
+            
+            String Sourcefile = file.getName();
+            boolean x = OVData.addSysMetaData(key, systype, "attachments", Sourcefile);
+            if (x) {
+                Files.copy(file.toPath(), new File(cleanDirString(getSystemAttachmentDirectory()) + systype + "_" + key + "_" + Sourcefile).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                bsmf.MainFrame.show(getMessageTag(1007));
+            } else {
+                bsmf.MainFrame.show(getMessageTag(1011));
+            }   
+            }
+            catch (Exception ex) {
+            ex.printStackTrace();
+            }
+        } 
+        return file;
+    }
+    
+    public static void deleteFileAttachment(String key, String systype, String filename) {
+        try {
+
+                Connection con = DriverManager.getConnection(url + db, user, pass);
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                try {
+
+                    int i = st.executeUpdate("delete from sys_meta where sysm_id = " + "'" + key + "'"
+                        + " AND sysm_type = " + "'" + systype + "'" + " AND sysm_key = 'attachments' AND " 
+                        + "sysm_value = " + "'" + filename + "'"
+                        + " ;");
+                    if (i > 0) {
+                        Path filepath = FileSystems.getDefault().getPath(cleanDirString(OVData.getSystemAttachmentDirectory()) + systype + "_" + key + "_" + filename);
+                        java.nio.file.Files.deleteIfExists(filepath);
+                    }
+                    
+                } catch (SQLException s) {
+                    MainFrame.bslog(s);
+                    bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+                } finally {
+                    if (res != null) {
+                        res.close();
+                    }
+                    if (st != null) {
+                        st.close();
+                    }
+                    con.close();
+                }
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            }
+    }
+        
     
 }
