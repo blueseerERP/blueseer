@@ -31,10 +31,25 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.luModel;
+import static com.blueseer.utl.BlueSeerUtils.luTable;
+import static com.blueseer.utl.BlueSeerUtils.lual;
+import static com.blueseer.utl.BlueSeerUtils.ludialog;
+import static com.blueseer.utl.BlueSeerUtils.luinput;
+import static com.blueseer.utl.BlueSeerUtils.luml;
+import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import com.blueseer.utl.DTData;
 import com.blueseer.utl.OVData;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -52,6 +67,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 
 /**
  *
@@ -184,7 +200,7 @@ public class LocationTransfer extends javax.swing.JPanel {
        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
         dcdate.setDate(now);
        
-        tbpart.setText("");
+        tbitem.setText("");
         tbqty.setText("");
         tbrmks.setText("");
         
@@ -222,6 +238,49 @@ public class LocationTransfer extends javax.swing.JPanel {
         
         
     }
+   
+    public void lookUpFrameItemDesc() {
+        
+        luinput.removeActionListener(lual);
+        lual = new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        if (lurb1.isSelected()) {  
+         luModel = DTData.getItemDescBrowseBySite(luinput.getText(), "it_item", OVData.getDefaultSite());
+        } else {
+         luModel = DTData.getItemDescBrowseBySite(luinput.getText(), "it_desc", OVData.getDefaultSite());   
+        }
+        luTable.setModel(luModel);
+        luTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (luModel.getRowCount() < 1) {
+            ludialog.setTitle(getMessageTag(1001));
+        } else {
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
+        }
+        }
+        };
+        luinput.addActionListener(lual);
+        
+        luTable.removeMouseListener(luml);
+        luml = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0) {
+                ludialog.dispose();
+                tbitem.setText(target.getValueAt(row,1).toString());
+                }
+            }
+        };
+        luTable.addMouseListener(luml);
+      
+        callDialog(getClassLabelTag("lblitem", this.getClass().getSimpleName()), getGlobalColumnTag("description")); 
+        
+        
+        
+    }
+
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -247,7 +306,7 @@ public class LocationTransfer extends javax.swing.JPanel {
         jLabel9 = new javax.swing.JLabel();
         ddwhto = new javax.swing.JComboBox<>();
         jLabel11 = new javax.swing.JLabel();
-        tbpart = new javax.swing.JTextField();
+        tbitem = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         tbserial = new javax.swing.JTextField();
@@ -262,6 +321,7 @@ public class LocationTransfer extends javax.swing.JPanel {
         tablelocqty = new javax.swing.JTable();
         dcexpire = new com.toedter.calendar.JDateChooser();
         jLabel12 = new javax.swing.JLabel();
+        btLookUpItemDesc = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -292,9 +352,9 @@ public class LocationTransfer extends javax.swing.JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel7)
                     .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(ddsitefrom, 0, 118, Short.MAX_VALUE)
@@ -393,9 +453,9 @@ public class LocationTransfer extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        tbpart.addFocusListener(new java.awt.event.FocusAdapter() {
+        tbitem.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
-                tbpartFocusLost(evt);
+                tbitemFocusLost(evt);
             }
         });
 
@@ -405,7 +465,7 @@ public class LocationTransfer extends javax.swing.JPanel {
         jLabel3.setText("EffectiveDate:");
         jLabel3.setName("lbleffdate"); // NOI18N
 
-        jLabel1.setText("Part:");
+        jLabel1.setText("Item:");
         jLabel1.setName("lblitem"); // NOI18N
 
         jLabel5.setText("Serial");
@@ -442,6 +502,13 @@ public class LocationTransfer extends javax.swing.JPanel {
         jLabel12.setText("Expire");
         jLabel12.setName("lblexpiredate"); // NOI18N
 
+        btLookUpItemDesc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
+        btLookUpItemDesc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btLookUpItemDescActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -463,7 +530,10 @@ public class LocationTransfer extends javax.swing.JPanel {
                             .addComponent(tbrmks, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(dcdate, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tbserial, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbpart, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addComponent(tbitem, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btLookUpItemDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(dcexpire, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
@@ -481,9 +551,11 @@ public class LocationTransfer extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tbpart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1))
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(tbitem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel1))
+                            .addComponent(btLookUpItemDesc))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -562,14 +634,14 @@ public class LocationTransfer extends javax.swing.JPanel {
             return;
         }
         
-        if (! OVData.isValidItem(tbpart.getText())) {
+        if (! OVData.isValidItem(tbitem.getText())) {
             proceed = false;
             bsmf.MainFrame.show(getMessageTag(1021));
-            tbpart.requestFocus();
+            tbitem.requestFocus();
             return;
         }
         
-        if (qty > invData.getItemQtyByWarehouseAndLocation(tbpart.getText(), sitefrom, whfrom, locfrom) ) {
+        if (qty > invData.getItemQtyByWarehouseAndLocation(tbitem.getText(), sitefrom, whfrom, locfrom) ) {
             proceed = false;
             bsmf.MainFrame.show(getMessageTag(1074));
             tbqty.requestFocus();
@@ -583,7 +655,7 @@ public class LocationTransfer extends javax.swing.JPanel {
 
             // do the transaction
             OVData.TRHistIssDiscrete(dcdate.getDate(), 
-                  tbpart.getText(), 
+                  tbitem.getText(), 
                   qty.intValue(),
                       op,
                   "LOC-TRNF", 
@@ -611,12 +683,12 @@ public class LocationTransfer extends javax.swing.JPanel {
                 );
             
         // do the 'to' side
-       rtn = OVData.UpdateInventoryDiscrete(tbpart.getText(), siteto, ddlocto.getSelectedItem().toString(), whto, tbserial.getText(), expire, qty);
+       rtn = OVData.UpdateInventoryDiscrete(tbitem.getText(), siteto, ddlocto.getSelectedItem().toString(), whto, tbserial.getText(), expire, qty);
       
        // now do the 'from' side
        if (! rtn) {
        qty = -1 * qty;
-       rtn = OVData.UpdateInventoryDiscrete(tbpart.getText(), sitefrom, ddlocfrom.getSelectedItem().toString(), whfrom, tbserial.getText(), expire, qty);
+       rtn = OVData.UpdateInventoryDiscrete(tbitem.getText(), sitefrom, ddlocfrom.getSelectedItem().toString(), whfrom, tbserial.getText(), expire, qty);
        }
        
       
@@ -632,15 +704,19 @@ public class LocationTransfer extends javax.swing.JPanel {
         
     }//GEN-LAST:event_bttransferActionPerformed
 
-    private void tbpartFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbpartFocusLost
-        if (! OVData.isValidItem(tbpart.getText())) {
-            bsmf.MainFrame.show("invalid item");
-            tbpart.requestFocus();
-            return;
-        } else {
-        getlocqty(tbpart.getText());
+    private void tbitemFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbitemFocusLost
+       
+        if (! tbitem.getText().isEmpty()) {
+            if (! OVData.isValidItem(tbitem.getText())) {
+                bsmf.MainFrame.show(getMessageTag(1021, tbitem.getText()));
+                tbitem.setBackground(Color.yellow);
+                tbitem.requestFocus();
+            } else {
+              tbitem.setBackground(Color.white);
+              getlocqty(tbitem.getText());
+             }
         }
-    }//GEN-LAST:event_tbpartFocusLost
+    }//GEN-LAST:event_tbitemFocusLost
 
     private void ddwhfromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddwhfromActionPerformed
         if (ddwhfrom.getSelectedItem() != null) {
@@ -662,8 +738,13 @@ public class LocationTransfer extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_ddwhtoActionPerformed
 
+    private void btLookUpItemDescActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLookUpItemDescActionPerformed
+        lookUpFrameItemDesc();
+    }//GEN-LAST:event_btLookUpItemDescActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btLookUpItemDesc;
     private javax.swing.JButton bttransfer;
     private com.toedter.calendar.JDateChooser dcdate;
     private com.toedter.calendar.JDateChooser dcexpire;
@@ -691,7 +772,7 @@ public class LocationTransfer extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tablelocqty;
-    private javax.swing.JTextField tbpart;
+    private javax.swing.JTextField tbitem;
     private javax.swing.JTextField tbqty;
     private javax.swing.JTextField tbrmks;
     private javax.swing.JTextField tbserial;

@@ -52,6 +52,7 @@ import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
 import com.blueseer.utl.OVData;
+import static com.blueseer.utl.OVData.canUpdate;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -413,6 +414,10 @@ public class IncomeMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public boolean validateInput(String x) {
+        if (! canUpdate(this.getClass().getName())) {
+            bsmf.MainFrame.show(getMessageTag(1185));
+            return false;
+        }
         boolean b = true;
                 
                 

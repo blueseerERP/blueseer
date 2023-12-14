@@ -60,6 +60,7 @@ import static com.blueseer.utl.BlueSeerUtils.setDateFormatNull;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeerT;
 import com.blueseer.utl.OVData;
+import static com.blueseer.utl.OVData.canUpdate;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -419,6 +420,11 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public boolean validateInput(dbaction x) {
+        if (! canUpdate(this.getClass().getName())) {
+            bsmf.MainFrame.show(getMessageTag(1185));
+            return false;
+        }
+        
         boolean b = true;
                 
                 

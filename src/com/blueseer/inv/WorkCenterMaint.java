@@ -57,6 +57,7 @@ import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
 import com.blueseer.utl.IBlueSeerT;
+import static com.blueseer.utl.OVData.canUpdate;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -329,7 +330,10 @@ public class WorkCenterMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public boolean validateInput(dbaction x) {
-       
+       if (! canUpdate(this.getClass().getName())) {
+            bsmf.MainFrame.show(getMessageTag(1185));
+            return false;
+        }
         
         Map<String,Integer> f = OVData.getTableInfo("wc_mstr");
         int fc;

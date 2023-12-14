@@ -39,6 +39,7 @@ import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.IBlueSeer;
 import com.blueseer.utl.OVData;
+import static com.blueseer.utl.OVData.canUpdate;
 import java.awt.Color;
 import java.awt.Component;
 import java.sql.Connection;
@@ -277,6 +278,11 @@ public class UOMConvMaint extends javax.swing.JPanel    {
     }
     
     public boolean validateInput(String x) {
+        if (! canUpdate(this.getClass().getName())) {
+            bsmf.MainFrame.show(getMessageTag(1185));
+            return false;
+        }
+        
         boolean b = true;
                
                 

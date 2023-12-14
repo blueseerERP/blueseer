@@ -20739,6 +20739,11 @@ return mylist;
     
     public static File addFileAttachment(String key, String systype, Component thiscomp ) {
         
+        if (key == null || key.isBlank()) {
+            bsmf.MainFrame.show(getMessageTag(1024, "Key Number"));
+            return null;
+        }
+        
         File file = null;
         JFileChooser jfc = new JFileChooser();
         jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);

@@ -61,6 +61,7 @@ import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
+import static com.blueseer.utl.OVData.canUpdate;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -956,7 +957,13 @@ public class CostRollMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_jTree1ValueChanged
 
     private void btrollActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrollActionPerformed
-       try {
+       
+        if (! canUpdate(this.getClass().getName())) {
+            bsmf.MainFrame.show(getMessageTag(1185));
+            return;
+        }
+        
+        try {
 
             Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
