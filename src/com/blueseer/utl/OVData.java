@@ -20680,7 +20680,7 @@ return mylist;
         return x;
     }
 
-    public static boolean canUpdate(String menu) {
+    public static boolean canUpdate(String panelClassName) {
     boolean myreturn = false;
     try{
 
@@ -20694,8 +20694,8 @@ return mylist;
             ResultSet res = null;
             try {
 
-            res = st.executeQuery("select perm_readonly from perm_mstr where perm_user = " + "'" + bsmf.MainFrame.userid + "'" + 
-                    " AND perm_menu = " + "'" + menu + "'" +
+            res = st.executeQuery("select perm_readonly from perm_mstr inner join menu_mstr on menu_id = perm_menu where perm_user = " + "'" + bsmf.MainFrame.userid + "'" + 
+                    " AND menu_panel = " + "'" + panelClassName + "'" +
                     ";");
            while (res.next()) {
                if (res.getString("perm_readonly").equals("0")) {

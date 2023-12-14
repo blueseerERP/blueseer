@@ -336,7 +336,7 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
     @Override
     public boolean validateInput(BlueSeerUtils.dbaction x) {
         
-        if (! canUpdate(this.getClass().getSimpleName())) {
+        if (! canUpdate(this.getClass().getName())) {
             bsmf.MainFrame.show(getMessageTag(1185));
             return false;
         }

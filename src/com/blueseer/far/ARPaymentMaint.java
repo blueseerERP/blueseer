@@ -588,12 +588,12 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
                 "c",
                 arbank,
                 ddsite.getSelectedItem().toString(),
-                "", //ar_amt_tax
-                "", //ar_base_amt_tax
-                "", //ar_amt_disc
-                "", //ar_base_amt_disc
-                "", //ar_open_amt
-                "", //ar_applied
+                "0", //ar_amt_tax
+                "0", //ar_base_amt_tax
+                "0", //ar_amt_disc
+                "0", //ar_base_amt_disc
+                "0", //ar_open_amt
+                "0", //ar_applied
                 "", //ar_terms
                 "", //ar_tax_code
                 BlueSeerUtils.setDateFormatNull(null), //ar_invdate

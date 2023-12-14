@@ -690,7 +690,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public boolean validateInput(dbaction action) {
         
-        if (! canUpdate(this.getClass().getSimpleName())) {
+        if (! canUpdate(this.getClass().getName())) {
             bsmf.MainFrame.show(getMessageTag(1185));
             return false;
         }

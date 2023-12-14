@@ -189,7 +189,7 @@ public class DefaultMaint extends javax.swing.JPanel implements IBlueSeerc {
     public boolean validateInput(dbaction x) {
         boolean b = true;
         
-        if (! canUpdate(this.getClass().getSimpleName())) {
+        if (! canUpdate(this.getClass().getName())) {
             bsmf.MainFrame.show(getMessageTag(1185));
             return false;
         }

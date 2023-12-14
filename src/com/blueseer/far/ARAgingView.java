@@ -429,7 +429,7 @@ public class ARAgingView extends javax.swing.JPanel {
                 String blanket = "";
                 double dol = 0.00;
                 int qty = 0;
-                
+                if (bsmf.MainFrame.dbtype.equals("sqlite")) {
                  res = st.executeQuery("SELECT a.ar_cust, b.ar_duedate as 'b.ar_duedate', a.ar_nbr, a.ar_ref, ard_ref, a.ar_type, a.ar_effdate, a.ar_amt, ard_amt " +
                         " FROM  ar_mstr a " +
                         " inner join ard_mstr on ard_id = a.ar_nbr " +
@@ -438,7 +438,16 @@ public class ARAgingView extends javax.swing.JPanel {
                         " AND a.ar_type = 'P' " +
                         " AND a.ar_effdate >= date() - date(date(), '-90 day') " +
                          " order by a.ar_effdate desc ;");        
-                 
+                } else {
+                   res = st.executeQuery("SELECT a.ar_cust, b.ar_duedate as 'b.ar_duedate', a.ar_nbr, a.ar_ref, ard_ref, a.ar_type, a.ar_effdate, a.ar_amt, ard_amt " +
+                        " FROM  ar_mstr a " +
+                        " inner join ard_mstr on ard_id = a.ar_nbr " +
+                        " inner join ar_mstr b on b.ar_nbr = ard_ref and b.ar_type = 'I' " +
+                        " where a.ar_cust = " + "'" + cust + "'" + 
+                        " AND a.ar_type = 'P' " +
+                        " AND a.ar_effdate >= curdate() - interval 90 day " +
+                         " order by a.ar_effdate desc ;");    
+                }
                 String ponbr = ""; 
                 while (res.next()) {
                     dol = dol + (res.getDouble("ar_amt"));
@@ -1157,7 +1166,7 @@ try {
     }//GEN-LAST:event_btcsvActionPerformed
 
     private void btpdfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btpdfActionPerformed
-           if (tabledetail != null && modeldetail.getRowCount() > 0) {
+        if (tabledetail != null && modeldetail.getRowCount() > 0) {
         try {
                 HashMap hm = new HashMap();
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);

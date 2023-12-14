@@ -696,7 +696,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public boolean validateInput(dbaction x) {
         
-        if (! canUpdate(this.getClass().getSimpleName())) {
+        if (! canUpdate(this.getClass().getName())) {
             bsmf.MainFrame.show(getMessageTag(1185));
             return false;
         }
@@ -3824,7 +3824,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     private void btinvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btinvoiceActionPerformed
         
-        if (! canUpdate(this.getClass().getSimpleName())) {
+        if (! canUpdate(this.getClass().getName())) {
             bsmf.MainFrame.show(getMessageTag(1185));
             return;
         }
