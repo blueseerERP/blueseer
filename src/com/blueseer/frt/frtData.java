@@ -2268,6 +2268,34 @@ public class frtData {
              return r;
     }
     
+    public static void updateCFORejection(String nbr, String code) {
+       try{
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+        Statement st = con.createStatement();
+        try{
+           st.executeUpdate(
+                 " update cfo_mstr set cfo_edireason = " + "'" + code + "'" + 
+                 " where cfo_nbr = " + "'" + nbr + "'" + ";" );
+        }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+            if (st != null) {
+                st.close();
+            }
+            con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    }
+    
     
     public record car_mstr (String[] m, String car_id, String car_desc, String car_apply,
         String car_scac, String car_name, String car_line1, String car_line2, String car_city,

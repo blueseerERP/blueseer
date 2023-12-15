@@ -9173,6 +9173,25 @@ return mymodel;
         return mymodel;
     }
     
+    public static DefaultTableModel getFreightRejectionCodeDT() {
+        javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                      new String[]{getGlobalColumnTag("code"), getGlobalColumnTag("description")})
+                {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        return String.class;  //other columns accept String values  
+                      }  
+                        }; 
+                        mymodel.addRow(new Object[] {"CPT","Capacity Type"});
+                        mymodel.addRow(new Object[] {"CPU","Capacity Unavailable"});
+                        mymodel.addRow(new Object[] {"EQT","Equipment Type"});
+                        mymodel.addRow(new Object[] {"EQU","Equipment Unavailable"});
+                        mymodel.addRow(new Object[] {"LNH","Length of Haul"});
+                        mymodel.addRow(new Object[] {"PRM","Permits"});
+                        mymodel.addRow(new Object[] {"WGT","Weight"});
+                    
+        return mymodel;
+    }
     
     
     

@@ -284,7 +284,7 @@ public class BlueSeerUtils {
     
     public static void callDialog() {
         
-         if (ludialog != null) {
+        if (ludialog != null) {
             ludialog.dispose();
         }
         /* 

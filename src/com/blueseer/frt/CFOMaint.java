@@ -60,6 +60,7 @@ import static com.blueseer.frt.frtData.getCFOLines;
 import static com.blueseer.frt.frtData.getCFOMstr;
 import static com.blueseer.frt.frtData.getCFORevisions;
 import static com.blueseer.frt.frtData.getDriverPhone;
+import static com.blueseer.frt.frtData.updateCFORejection;
 import static com.blueseer.frt.frtData.updateCFOTransaction;
 import com.blueseer.shp.shpData;
 import static com.blueseer.shp.shpData.confirmShipperTransaction;
@@ -95,6 +96,10 @@ import static com.blueseer.utl.OVData.isValidShipper;
 import static com.blueseer.utl.OVData.updateFreightOrderStatus;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -136,6 +141,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -174,7 +180,8 @@ import org.xml.sax.SAXException;
 public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     // global variable declarations
-    public String globalstatus = "pending";
+    public boolean receipt990 = false;
+    public String rejectioncode = "";
     public boolean lock_ddshipper = false;
     public int currentstopline = 0;
     boolean isLoad = false;
@@ -186,7 +193,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
     public static ArrayList<cfo_item> cfoitemlist = null;
     public static LinkedHashMap<String, String[]> kvstop = new  LinkedHashMap<String, String[]>();
     public static LinkedHashMap<String, ArrayList<String[]>> itemmap = new  LinkedHashMap<String, ArrayList<String[]>>();
-     public static LinkedHashMap<String, String> stk = new  LinkedHashMap<String, String>();
+    public static LinkedHashMap<String, String> stk = new  LinkedHashMap<String, String>();
     
                 
     // global datatablemodel declarations       
@@ -489,7 +496,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public void setComponentDefaultValues() {
        isLoad = true;
-       
+              
        kvstop.clear();
        itemmap.clear();
        
@@ -809,7 +816,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
      
     public String[] updateRecord(String[] x) {
       String[] m = new String[2];
-     // disposed from the current orddet table
+           
         ArrayList<String> lines = new ArrayList<String>();
         ArrayList<String> badlines = new ArrayList<String>();
         boolean goodLine = false;
@@ -829,7 +836,17 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
      
        m = updateCFOTransaction(tbkey.getText(), ddrevision.getSelectedItem().toString(), badlines, createDetRecord(), createRecord(), createItemRecord(), createSOSRecord());
      
-     
+        if (m[0].equals("0") && receipt990) {
+               if (ddorderstatus.getSelectedItem().equals("declined")) {
+                if (! rejectioncode.isBlank()) {
+                    updateCFORejection(tbkey.getText(),rejectioncode);
+                }
+               }
+               Create990(tbkey.getText());
+               receipt990 = false;
+        }
+       
+        
         // change log check
        if (m[0].equals("0")) {
            cfo_mstr _x = this.x;
@@ -1056,6 +1073,61 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         
     }
 
+    public void lookUpFrameRejection() {
+        luTable.removeMouseListener(luml);
+        rejectioncode = "";
+        luml = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0 || column == 1) {
+                ludialog.dispose();
+                rejectioncode = (target.getValueAt(row,0).toString());
+                }
+            }
+        };
+        luTable.addMouseListener(luml);
+        luModel = DTData.getFreightRejectionCodeDT();
+        luTable.setModel(luModel);
+        
+        if (ludialog != null) {
+            ludialog.dispose();
+        }
+        /* 
+        if (luModel != null && luModel.getRowCount() > 0) {
+        luModel.setRowCount(0);
+        luModel.setColumnCount(0);
+        }
+        */
+        luTable.setPreferredScrollableViewportSize(new Dimension(300,200));
+        JScrollPane scrollPane = new JScrollPane(luTable);
+       
+        ludialog = new JDialog();
+        ludialog.setTitle("Choose Decline Option:");
+        ludialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
+      
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(2,2,2,2);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        panel.add( scrollPane, gbc );
+        
+        ludialog.add(panel);
+        
+        ludialog.pack();
+        ludialog.setLocationRelativeTo( null );
+        ludialog.setResizable(false);
+        ludialog.setVisible(true);
+        
+        
+    }
+   
+    
     public void updateForm() throws ParseException {
         isLoad = true;
         
@@ -1889,7 +1961,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         cbhazmat.setText("Hazmat");
 
-        ddorderstatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "pending", "scheduled", "delivered", "declined", "cancelled", "closed" }));
+        ddorderstatus.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "pending", "accepted", "scheduled", "delivered", "declined", "cancelled", "closed" }));
         ddorderstatus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ddorderstatusActionPerformed(evt);
@@ -3644,11 +3716,14 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         if (! isLoad) {
             if (cbedi.isSelected() && hasEDIXref(ddcust.getSelectedItem().toString(),"GF")) {
                 if (ddorderstatus.getSelectedItem().toString().equals("scheduled") ||
-                    ddorderstatus.getSelectedItem().toString().equals("declined") ||
-                    ddorderstatus.getSelectedItem().toString().equals("cancelled")) {
+                    ddorderstatus.getSelectedItem().toString().equals("accepted") ||    
+                    ddorderstatus.getSelectedItem().toString().equals("declined")) {
                     boolean proceed = bsmf.MainFrame.warn(getMessageTag(1183));
                     if (proceed) {
-                       Create990(tbkey.getText());
+                        receipt990 = true;
+                        if (ddorderstatus.getSelectedItem().toString().equals("declined")) {
+                        lookUpFrameRejection();
+                        }
                     }
                 }
             }
