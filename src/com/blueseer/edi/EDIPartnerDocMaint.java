@@ -150,7 +150,11 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                    dddoc.setEnabled(false);
                    tbrcvgs.setEnabled(false);
                    tbsndgs.setEnabled(false);
+                   btcopy.setEnabled(true);
+                } else {
+                    btcopy.setEnabled(false);
                 }
+                
             } catch (SQLException s) {
                 MainFrame.bslog(s);
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
@@ -319,6 +323,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         cbfa.setEnabled(false);
         ddattributekey.setEnabled(false);
         tbattributevalue.setEnabled(false);
+        btcopy.setEnabled(false);
     }
     
     public void setLanguageTags(Object myobj) {
@@ -535,6 +540,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         ddkey = new javax.swing.JComboBox<>();
         btclear = new javax.swing.JButton();
         lblpartner = new javax.swing.JLabel();
+        btcopy = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         ddoutdoctype = new javax.swing.JComboBox<>();
@@ -683,6 +689,13 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
             }
         });
 
+        btcopy.setText("Copy");
+        btcopy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btcopyActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -708,14 +721,6 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(dddoc, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(28, 28, 28)
-                        .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(9, 9, 9)
-                        .addComponent(btnew)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btclear))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tbrcvisa, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tbrcvgs, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -729,8 +734,22 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(ddkey, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(lblpartner, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addContainerGap())
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(dddoc, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(28, 28, 28)
+                                .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(9, 9, 9)
+                                .addComponent(btnew)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btclear)
+                                .addGap(0, 10, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btcopy)
+                                .addContainerGap())))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -749,8 +768,9 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
-                    .addComponent(dddoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(12, 12, 12)
+                    .addComponent(dddoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btcopy))
+                .addGap(11, 11, 11)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(tbrcvisa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1604,7 +1624,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
 
     private void ddkeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddkeyActionPerformed
         
-        if (! isLoad && ddkey.getSelectedItem() != null) {
+        if (! isLoad && ddkey.getSelectedItem() != null && ! ddkey.getSelectedItem().toString().isBlank()) {
         lblpartner.setText(getEDIPartnerDesc(ddkey.getSelectedItem().toString()));
         }
         
@@ -1618,11 +1638,26 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
        lookUpFrameASCIISub();
     }//GEN-LAST:event_btlookupSubElementActionPerformed
 
+    private void btcopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcopyActionPerformed
+            if (! isLoad) {
+            ddkey.setSelectedIndex(0);
+            ddkey.setBackground(Color.yellow);
+            //bsmf.MainFrame.show("choose new parent key and adjust ISA/GS IDs accordingly");
+            ddkey.requestFocus();
+            btadd.setEnabled(true);
+            ddkey.setEnabled(true);
+            tbrcvgs.setEnabled(true);
+            tbsndgs.setEnabled(true);
+            }
+        
+    }//GEN-LAST:event_btcopyActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btaddattribute;
     private javax.swing.JButton btclear;
+    private javax.swing.JButton btcopy;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btdeleteattribute;
     private javax.swing.JButton btlookup;
