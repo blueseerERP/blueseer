@@ -58,6 +58,7 @@ import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeerT;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -653,7 +654,6 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         if (value.isBlank()) {
             ArrayList<String[]> list = apidm.get(tabledetail.getValueAt(i, 0).toString());
             if (list != null) {
-                value = "?";
                 for (String[] s : list) {
                     value = value + s[0] + "=" + s[1] + "&";
                 }
@@ -662,6 +662,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 }
             }
         }
+        value = "?" + value;
         
         
         if (tbport.getText().isBlank()) {  
@@ -1029,7 +1030,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel2.setText("Sequence");
         jLabel2.setName("lblsequence"); // NOI18N
 
-        ddverb.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "GET", "PUT", "POST", "DELETE", "NONE" }));
+        ddverb.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "NONE", "GET", "PUT", "POST", "DELETE" }));
 
         jLabel3.setText("Method");
         jLabel3.setName("lblmethod"); // NOI18N
@@ -1379,17 +1380,18 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         String method = "";
         String verb = "";
         String value = "";
+        String type = "";
         HttpURLConnection conn = null;
         for (int i : rows) {
             k++;
             method = tabledetail.getValueAt(i, 0).toString();
             verb = tabledetail.getValueAt(i, 1).toString();
+            type = tabledetail.getValueAt(i, 2).toString();
             value = tabledetail.getValueAt(i, 4).toString();
             
             if (value.isBlank()) {
                 ArrayList<String[]> list = apidm.get(tabledetail.getValueAt(i, 0).toString());
                 if (list != null) {
-                    value = "?";
                     for (String[] s : list) {
                         value = value + s[0] + "=" + s[1] + "&";
                     }
@@ -1398,6 +1400,8 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                     }
                 }
             }
+            
+            value = "?" + value;
             
             if (k > 0) {
                 break;
@@ -1450,16 +1454,29 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 path = FileSystems.getDefault().getPath("edi/api/in" + "/" + "api." + tbkey.getText() + "." + String.valueOf(filenumber) + ".txt"); 
                 outputfile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path.toFile())));
             }
-            String output;
             if (br != null) {
+                String output;
+                StringBuilder sb = new StringBuilder();
                 while ((output = br.readLine()) != null) {
-                        taoutput.append(output + "\n");
-                        if (cbfile.isSelected() && outputfile != null) {
-                         outputfile.write(output);
-                        }
+                    sb.append(output);
+                }
+                if (type.equals("json")) { // prettify JSON output
+                    ObjectMapper mapper = new ObjectMapper();
+                    Object json = mapper.readValue(sb.toString(), Object.class);
+                    taoutput.append(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json));
+                    if (cbfile.isSelected() && outputfile != null) {
+                       outputfile.write(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json));
+                    }
+                } else {
+                    taoutput.append(sb.toString());
+                    if (cbfile.isSelected() && outputfile != null) {
+                       outputfile.write(sb.toString());
+                    }
                 }
                 br.close();
             }
+            
+           
             if (outputfile != null) {
                 outputfile.close(); 
             }
@@ -1530,7 +1547,6 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             tabledetail.setValueAt(tbsourcedir.getText(), i, 5);
             tabledetail.setValueAt(tbdestdir.getText(), i, 6);
             tabledetail.setValueAt(ConvertBoolToYesNo(cbenabled.isSelected()), i, 7);
-
         }
     }//GEN-LAST:event_btupdatemethodActionPerformed
 

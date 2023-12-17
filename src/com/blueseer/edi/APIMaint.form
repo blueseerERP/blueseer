@@ -589,11 +589,11 @@
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="5">
-                <StringItem index="0" value="GET"/>
-                <StringItem index="1" value="PUT"/>
-                <StringItem index="2" value="POST"/>
-                <StringItem index="3" value="DELETE"/>
-                <StringItem index="4" value="NONE"/>
+                <StringItem index="0" value="NONE"/>
+                <StringItem index="1" value="GET"/>
+                <StringItem index="2" value="PUT"/>
+                <StringItem index="3" value="POST"/>
+                <StringItem index="4" value="DELETE"/>
               </StringArray>
             </Property>
           </Properties>
