@@ -73,7 +73,9 @@
                   <Component id="btRun" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="btcsv" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="642" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="tbprint" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="564" max="32767" attributes="0"/>
                   <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="labelcount" min="-2" pref="83" max="-2" attributes="0"/>
@@ -105,6 +107,7 @@
                                   <Component id="ddsite" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="btcsv" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="tbprint" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Group type="103" alignment="1" groupAlignment="3" attributes="0">
                                   <Component id="labelcount" alignment="3" min="-2" pref="20" max="-2" attributes="0"/>
@@ -260,6 +263,15 @@
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
+        </Component>
+        <Component class="javax.swing.JButton" name="tbprint">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="PDF"/>
+            <Property name="name" type="java.lang.String" value="btpdf" noResource="true"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tbprintActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
