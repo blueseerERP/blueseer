@@ -2160,6 +2160,43 @@ public class invData {
 
     }
     
+    public static double getItemPurchPrice(String item) {
+       double price = 0;
+     try{
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+            ResultSet res = null;
+        try{
+            res = st.executeQuery("select it_pur_price from item_mstr where it_item = " + "'" + item + "'" + ";" );
+           while (res.next()) {
+            price = res.getDouble("it_pur_price");                    
+            }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return price;
+
+    }
+    
+    
     public static ArrayList getItemMaintInit() {
                ArrayList myarray = new ArrayList();
              try{

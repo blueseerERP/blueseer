@@ -408,7 +408,7 @@ public class InventoryMaint extends javax.swing.JPanel {
 
         dcdate.setDateFormatString("yyyy-MM-dd");
 
-        ddtype.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "issue", "receipt" }));
+        ddtype.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "receipt", "issue" }));
         ddtype.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 ddtypeItemStateChanged(evt);
@@ -659,7 +659,11 @@ public class InventoryMaint extends javax.swing.JPanel {
         }
         
         // get cost
+        String itemtype = invData.getItemCode(tbpart.getText());
         double cost = invData.getItemCost(tbpart.getText(), "standard", site);
+        if (cost == 0 && itemtype.equals("A")) {
+            cost = invData.getItemPurchPrice(tbpart.getText());
+        }
         
         // lets get the productline of the part being adjusted
         String prodline = OVData.getProdLineFromItem(tbpart.getText());
