@@ -463,19 +463,10 @@
                               <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel15" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel21" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                      <Component id="tbmethod" max="32767" attributes="0"/>
-                                      <Component id="tbkvpair" alignment="1" pref="221" max="32767" attributes="0"/>
-                                  </Group>
-                                  <EmptySpace min="-2" pref="182" max="-2" attributes="0"/>
-                                  <Component id="cbfile" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="btrun" min="-2" max="-2" attributes="0"/>
-                              </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="cbenabled" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -496,19 +487,30 @@
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="btupdatemethod" min="-2" max="-2" attributes="0"/>
                               </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                      <Component id="tburlstring" alignment="0" max="32767" attributes="0"/>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                              <Component id="tbmethod" max="32767" attributes="0"/>
+                                              <Component id="tbkvpair" alignment="1" pref="221" max="32767" attributes="0"/>
+                                          </Group>
+                                          <EmptySpace min="-2" pref="182" max="-2" attributes="0"/>
+                                          <Component id="cbfile" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="btrun" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="btupdateurl" min="-2" pref="28" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
-                          <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
                       </Group>
                       <Component id="jScrollPane1" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jScrollPane2" max="32767" attributes="0"/>
+                  <Component id="jScrollPane2" pref="296" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-              </Group>
-              <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="lblurl" min="-2" pref="887" max="-2" attributes="0"/>
-                  <EmptySpace pref="20" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -516,7 +518,13 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="lblurl" min="-2" pref="15" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="tburlstring" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel21" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Component id="btupdateurl" min="-2" max="-2" attributes="0"/>
+                  </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="jScrollPane2" max="32767" attributes="0"/>
@@ -571,7 +579,7 @@
                               <Component id="btdeletemethod" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
-                          <Component id="jScrollPane1" pref="119" max="32767" attributes="0"/>
+                          <Component id="jScrollPane1" pref="109" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
@@ -873,7 +881,23 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btrunActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JLabel" name="lblurl">
+        <Component class="javax.swing.JTextField" name="tburlstring">
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel21">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="URL Result"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btupdateurl">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/images/change.png"/>
+            </Property>
+            <Property name="toolTipText" type="java.lang.String" value="Update Row"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btupdateurlActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
