@@ -540,8 +540,8 @@ try {
 
     private void tbprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbprintActionPerformed
 
-        if (tableorder != null && mymodel.getRowCount() > 0) {
-            OVData.printJTableToJasper("Sales Order Browse Report", tableorder, "genericJTableL9.jasper" );
+        if (tablereport != null && mymodel.getRowCount() > 0) {
+            OVData.printJTableToJasper("Item Browse Report", tablereport, "genericJTableL8.jasper" );
         }
     }//GEN-LAST:event_tbprintActionPerformed
 
