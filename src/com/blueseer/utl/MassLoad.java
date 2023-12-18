@@ -204,7 +204,7 @@ public class MassLoad extends javax.swing.JPanel {
        isLoad = true;
         btrunsql.setVisible(false);
         tacomments.setText("");
-        tbdelimiter.setText(":");
+        tbdelimiter.setText(",");
         cbignoreheader.setSelected(false);
         paneloutput.setVisible(false);
        isLoad = false;
