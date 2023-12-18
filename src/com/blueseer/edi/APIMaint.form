@@ -886,6 +886,7 @@
         <Component class="javax.swing.JLabel" name="jLabel21">
           <Properties>
             <Property name="text" type="java.lang.String" value="URL Result"/>
+            <Property name="name" type="java.lang.String" value="lblresult" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btupdateurl">

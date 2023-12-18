@@ -383,6 +383,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         btdeleteparam.setEnabled(false);
         tbkey.setEditable(true);
         tbkey.setForeground(Color.blue);
+        tburlstring.setEnabled(false);
         if (! x.isEmpty()) {
           tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
           tbkey.setEditable(false);
@@ -1187,6 +1188,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         jLabel21.setText("URL Result");
+        jLabel21.setName("lblresult"); // NOI18N
 
         btupdateurl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/change.png"))); // NOI18N
         btupdateurl.setToolTipText("Update Row");
