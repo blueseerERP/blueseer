@@ -293,6 +293,7 @@ public class ItemBrowse extends javax.swing.JPanel {
         btcsv = new javax.swing.JButton();
         ddfromitem = new javax.swing.JComboBox<>();
         ddtoitem = new javax.swing.JComboBox<>();
+        btprint = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -358,6 +359,14 @@ public class ItemBrowse extends javax.swing.JPanel {
             }
         });
 
+        btprint.setText("PDF");
+        btprint.setName("btpdf"); // NOI18N
+        btprint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btprintActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -387,7 +396,9 @@ public class ItemBrowse extends javax.swing.JPanel {
                 .addComponent(btRun)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btcsv)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 642, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btprint)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 564, Short.MAX_VALUE)
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(labelcount, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -414,7 +425,8 @@ public class ItemBrowse extends javax.swing.JPanel {
                                 .addComponent(jLabel4)
                                 .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel6)
-                                .addComponent(btcsv))
+                                .addComponent(btcsv)
+                                .addComponent(btprint))
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(labelcount, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel7)))
@@ -526,10 +538,18 @@ try {
         }
     }//GEN-LAST:event_tablereportMouseClicked
 
+    private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
+
+        if (tablereport != null && mymodel.getRowCount() > 0) {
+            OVData.printJTableToJasper("Sales Order Browse Report", tablereport, "genericJTableL9.jasper" );
+        }
+    }//GEN-LAST:event_btprintActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btRun;
     private javax.swing.JButton btcsv;
+    private javax.swing.JButton btprint;
     private javax.swing.JComboBox ddfromclass;
     private javax.swing.JComboBox<String> ddfromitem;
     private javax.swing.JComboBox ddsite;
