@@ -72,4 +72,15 @@ given the menu/class management and
 permissions functionality that's built into the BlueSeer framework.
 </br>
 
+# Contributing
 
+Here's a simple guide to contribute to the BlueSeer project:
+    
+1. Fork the project
+2. Create your feature branch (`git checkout -b feature/some-feature`)
+3. Make your changes
+4. Commit your changes (`git commit -m 'Implement an amazing feature.'`)
+5. Push to the branch (`git push origin feature/some-feature`)
+6. Open a pull request
+
+</br>
