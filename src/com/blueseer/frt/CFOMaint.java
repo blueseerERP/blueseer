@@ -780,7 +780,15 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
             bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
             tbkey.requestFocus();
             return false;
-        }     
+        } 
+        
+        fc = checkLength(f,"cfo_cust");
+        if (ddcust.getSelectedItem().toString().length() > fc || ddcust.getSelectedItem().toString().isBlank()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            ddcust.requestFocus();
+            return false;
+        } 
+       
          
         fc = checkLength(f,"cfo_rmks");
         if (tbremarks.getText().length() > fc ) {
@@ -788,6 +796,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
             tbremarks.requestFocus();
             return false;
         } 
+        
                
         return true;
     }
@@ -1198,6 +1207,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         // now detail
         kvstop.clear();
+        myorddetmodel.setRowCount(0);
         for (cfo_det cfod : cfodetlist) {
             // det table first
             myorddetmodel.addRow(new Object[]{
@@ -3260,18 +3270,28 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         shpData.addShipperTransaction(shd, sh);
        // shpData.updateShipperSAC(String.valueOf(shipperid));
         
-        String[] message = confirmShipperTransaction("freight", String.valueOf(shipperid), now);
+        String[] m = confirmShipperTransaction("freight", String.valueOf(shipperid), now);
         updateFreightOrderStatus(tbkey.getText(),"closed");
         bsmf.MainFrame.show("committed freight order to invoice number: " + String.valueOf(shipperid));
+         if (m[0].equals("1")) { // if error
+           bsmf.MainFrame.show(m[1]);
+         } else {
+           executeTask(dbaction.get, new String[]{tbkey.getText()});
+         }
         } else {
             for (int j = 0; j < orddet.getRowCount(); j++) {
                 if (orddet.getValueAt(j, 1).toString().equals("Load")) {
                     continue;
                 }
                 if (! orddet.getValueAt(j, 8).toString().isBlank()) {
-                String[] message = confirmShipperTransaction("order", orddet.getValueAt(j, 8).toString(), now);
+                String[] m = confirmShipperTransaction("order", orddet.getValueAt(j, 8).toString(), now);
                 updateFreightOrderStatus(tbkey.getText(),"closed");
-                bsmf.MainFrame.show("committed shipper: " + orddet.getValueAt(j, 8).toString());
+                  bsmf.MainFrame.show("committed shipper: " + orddet.getValueAt(j, 8).toString());
+                  if (m[0].equals("1")) { // if error
+                    bsmf.MainFrame.show(m[1]);
+                  } else {
+                    executeTask(dbaction.get, new String[]{tbkey.getText()});
+                  }
                 }
             } 
         }

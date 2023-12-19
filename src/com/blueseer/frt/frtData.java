@@ -1879,7 +1879,7 @@ public class frtData {
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
-        if (! x[1].isBlank()) {
+        if (x.length > 1 && ! x[1].isBlank()) {
         ps.setString(2, x[1]);
         }
              try (ResultSet res = ps.executeQuery();) {
