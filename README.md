@@ -73,7 +73,10 @@ permissions functionality that's built into the BlueSeer framework.
 </br>
 
 <h1>Build/Compile Instructions</h1>
+</br>
+
 <h2>Using Apache Netbeans</h2>
+
 To use Netbeans, you will first need to download the Netbeans IDE (version 12 or higher). Once you have Netbeans installed, the following steps can be used to compile BlueSeer and bring up a test instance of the application :
 1. Download the blueseer source from github. You can either 'git clone https://github.com/BlueSeerERP/blueseer.git' or download the zipped version of Blueseer from github.com/BlueseerERP and extract the contents into a directory called 'blueseer').
 2. Open a command prompt and cd to the install directory 'blueseer/test'. This will be your working/testing directory
