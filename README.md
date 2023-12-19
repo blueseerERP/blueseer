@@ -76,11 +76,12 @@ permissions functionality that's built into the BlueSeer framework.
 
 Here's a simple guide to contribute to the BlueSeer project:
     
-1. Clone the project
-2. Create a unique branch (`git checkout -b mybranch/mycode_change`)
-3. Make your changes
-4. Commit your changes (`git commit -m 'mycode with enhancement/fix/feature.'`)
-5. Push to the branch (`git push origin mybranch/mycode_change`)
-6. Open a pull request
+1. Fork the project
+2. `git clone` your new fork to local client
+3. Create a unique branch (`git checkout -b mybranch/mycode_change`)
+4. Make your changes
+5. Commit your changes (`git commit -m 'mycode with enhancement/fix/feature.'`)
+6. Push to the branch (`git push origin mybranch/mycode_change`)
+7. Open a pull request
 
 </br>
