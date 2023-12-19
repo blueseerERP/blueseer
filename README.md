@@ -45,7 +45,7 @@ BlueSeer provides modules for the following generic set of business concepts :
 * Materials Resource Planning (MRP)
 * Human Resources (HR)
 
-<h2>Technology</h2>
+<h1>Technology</h1>
 BlueSeer ERP is written entirely in Java.  The application is a non-web based
 desktop application that relies heavily on the Java Swing widget
 toolkit/library.  There are currently two database engines available for
@@ -72,15 +72,15 @@ given the menu/class management and
 permissions functionality that's built into the BlueSeer framework.
 </br>
 
-# Contributing
+<h1>Contributing</h1>
 
 Here's a simple guide to contribute to the BlueSeer project:
     
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/some-feature`)
+1. Clone the project
+2. Create a unique branch (`git checkout -b mybranch/mycode_change`)
 3. Make your changes
-4. Commit your changes (`git commit -m 'Implement an amazing feature.'`)
-5. Push to the branch (`git push origin feature/some-feature`)
+4. Commit your changes (`git commit -m 'mycode with enhancement/fix/feature.'`)
+5. Push to the branch (`git push origin mybranch/mycode_change`)
 6. Open a pull request
 
 </br>
