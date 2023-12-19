@@ -31,6 +31,10 @@ if exist logs rmdir logs
 mkdir logs
 if exist images rmdir images
 mkdir images
+if exist zebra rmdir zebra
+mkdir zebra
+if exist attachments rmdir attachments
+mkdir attachments
 if exist ..\.patch copy ..\.patch %~dp0\
 if exist ..\sf\data\en copy ..\sf\data\en\* %~dp0\data\
 if exist ..\sf\edi xcopy ..\sf\edi %~dp0\edi /s /e /y
@@ -38,7 +42,9 @@ if exist ..\sf\jasper xcopy ..\sf\jasper %~dp0\jasper /s /e /y
 if exist ..\sf\conf xcopy ..\sf\conf %~dp0\conf /s /e /y
 if exist ..\sf\logs xcopy ..\sf\logs %~dp0\logs /s /e /y
 if exist ..\sf\images xcopy ..\sf\images %~dp0\images /s /e /y
-if exist ..\sf\data\bsdbdev.db copy ..\sf\data\bsdbdev.db %~dp0\data\bsdb.db
+if exist ..\sf\zebra xcopy ..\sf\zebra %~dp0\zebra /s /e /y
+if exist ..\sf\attachments xcopy ..\sf\attachments %~dp0\attachments /s /e /y
+if exist ..\sf\data\en\bsdb.db copy ..\sf\data\en\bsdb.db %~dp0\data\bsdb.db
 
 
 @echo ""

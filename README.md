@@ -72,6 +72,18 @@ given the menu/class management and
 permissions functionality that's built into the BlueSeer framework.
 </br>
 
+<h1>Build/Compile Instructions</h1>
+<h2>Using Apache Netbeans</h2>
+To use Netbeans, you will first need to download the Netbeans IDE (version 12 or higher). Once you have Netbeans installed, the following steps can be used to compile BlueSeer and bring up a test instance of the application :
+1. Download the blueseer source from github. You can either 'git clone https://github.com/BlueSeerERP/blueseer.git' or download the zipped version of Blueseer from github.com/BlueseerERP and extract the contents into a directory called 'blueseer').
+2. Open a command prompt and cd to the install directory 'blueseer/test'. This will be your working/testing directory
+3. Type './refresh.bat' or ('./refresh.sh' for linux) to establish a test instance of the blueseer application along with the bs.cfg file and database instance
+4. Start Netbeans and choose 'Open Project' to open the blueseer project files.
+5. Right click on the blueseer project and go to Project Properties
+6. Click on the 'run' portion of the properties and set the working directory to the 'test' directory where the instance config files and data directories are located.
+7. You should now be able to build and run the application. The default login credentials are 'admin' and 'admin' respectively.
+</br>
+
 <h1>Contributing</h1>
 
 Here's a simple guide to contribute to the BlueSeer project:
