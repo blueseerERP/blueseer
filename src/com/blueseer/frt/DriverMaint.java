@@ -525,9 +525,9 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tbinsurancenumber.getText(),
                 insurancedate,
                 tbinsurancecarrier.getText(),
-                tbdhmiles.getText(),
+                (tbdhmiles.getText().isBlank()) ? "0" : tbdhmiles.getText(),
                 tarmks.getText(),
-                tbrate.getText(), 
+                (tbrate.getText().isBlank()) ? "0" : tbrate.getText(), 
                 ddratetype.getSelectedItem().toString(),
                 hiredate,
                 termdate

@@ -493,7 +493,7 @@ public class BrokerMaint extends javax.swing.JPanel implements IBlueSeerT {
                 ddacct.getSelectedItem().toString(),
                 ddcc.getSelectedItem().toString(),
                 tbbrokerlicense.getText(),
-                "", // payrate
+                "0", // payrate
                 "", // paytype
                 ddterms.getSelectedItem().toString(),
                 ddbank.getSelectedItem().toString(),
