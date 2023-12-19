@@ -1,9 +1,15 @@
 build
+nbbuild
 build.xml
 dist
+nbdist
 jre8
 jre11
 jre16
 jre17
 nbproject/private
 !scripts/build.xml
+**/nbproject/private/
+**/nbproject/Makefile-*.mk
+**/nbproject/Package-*.bash
+.nb-gradle/
