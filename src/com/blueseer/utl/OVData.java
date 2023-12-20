@@ -16357,6 +16357,7 @@ return mystring;
       
     public static boolean isValidPrinter(String printer) {
           boolean myreturn = false;
+           
          try{
             
             Connection con = null;
@@ -16365,23 +16366,22 @@ return mystring;
             } else {
               con = DriverManager.getConnection(url + db, user, pass);  
             }
+            
+            
             try{
                 Statement st = con.createStatement();
                 ResultSet res = null;
-
                 res = st.executeQuery("select prt_ip from prt_mstr where  " +
-                        " prt_id = " + "'" + printer + "'" + " ;");
+                        " prt_id = " + "'" + printer.trim() + "'" + " ;");
                while (res.next()) {
                 myreturn = true;               
                 }
                
-           }
-            catch (SQLException s){
+           } catch (SQLException s){
                 MainFrame.bslog(s);
             }
             con.close();
-        }
-        catch (Exception e){
+        } catch (Exception e){
             MainFrame.bslog(e);
         }
         return myreturn;

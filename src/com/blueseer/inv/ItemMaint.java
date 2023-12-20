@@ -2667,6 +2667,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
     private void btprintlabelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintlabelActionPerformed
         String printer = OVData.getDefaultLabelPrinter();
+        
         if (OVData.isValidPrinter(printer)) {
             try {
                 OVData.printLabelItem(tbkey.getText(), printer);
