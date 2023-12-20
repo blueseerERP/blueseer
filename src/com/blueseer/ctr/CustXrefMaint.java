@@ -467,7 +467,7 @@ public class CustXrefMaint extends javax.swing.JPanel implements IBlueSeerT {
                 custitem2.getText(),
                 upcnbr.getText(),
                 bsmf.MainFrame.userid,
-                "", // cup_ts
+                null, // cup_ts
                 misc.getText(),
                 skunbr.getText()
                 );

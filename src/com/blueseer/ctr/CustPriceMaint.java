@@ -863,7 +863,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
               String qty = "";
               String expiredate = null;
               if (dcexpire.getDate() != null) {
-                  expiredate = BlueSeerUtils.setDateFormat(dcexpire.getDate());
+                  expiredate = "'" + BlueSeerUtils.setDateFormatNull(dcexpire.getDate()) + "'";
               }
               if (ddtype.getSelectedItem().toString().equals("VOLUME")) {
                   qty = tbqty.getText().replace(defaultDecimalSeparator, '.');
@@ -906,8 +906,8 @@ public class CustPriceMaint extends javax.swing.JPanel {
                         + "'" + dduom.getSelectedItem().toString() + "'" + ","
                         + "'" + ddcurr.getSelectedItem().toString() + "'" + ","        
                         + "'" + tbprice.getText().replace(defaultDecimalSeparator, '.') + "'" + ","   
-                        + "'" + qty + "'"   + "," 
-                        + "'" + expiredate + "'"                                
+                        + "'" + qty + "'" + "," 
+                        + expiredate                             
                         + ")"
                         + ";"); 
                     
@@ -1064,7 +1064,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
                 if (proceed) {
                     String expiredate = null;
                     if (dcexpiredisc.getDate() != null) {
-                        expiredate = BlueSeerUtils.setDateFormat(dcexpiredisc.getDate());
+                        expiredate = "'" + BlueSeerUtils.setDateFormat(dcexpiredisc.getDate()) + "'";
                     }
                     st.executeUpdate("insert into cpr_mstr "
                         + "(cpr_cust, cpr_item, cpr_type, cpr_desc, "
@@ -1075,7 +1075,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
                         + "'DISCOUNT'" + ","
                         + "'" + tbdisckey.getText().toString() + "'" + ","
                         + "'" + tbdisc.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
-                        + "'" + expiredate + "'"         
+                        + expiredate         
                         + ")"
                         + ";");
 
@@ -1160,11 +1160,11 @@ public class CustPriceMaint extends javax.swing.JPanel {
                 if (proceed) {
                     String expiredate = null;
                     if (dcexpiredisc.getDate() != null) {
-                      expiredate = BlueSeerUtils.setDateFormat(dcexpire.getDate());
+                      expiredate = "'" + BlueSeerUtils.setDateFormat(dcexpire.getDate()) + "'";
                     }
                     st.executeUpdate("update cpr_mstr "
                         + " set cpr_disc = " + "'" + tbdisc.getText().replace(defaultDecimalSeparator, '.') + "'" + ","
-                        + " cpr_expire = " + "'" + expiredate + "'" 
+                        + " cpr_expire = " + expiredate
                         + " where cpr_cust = " + "'" + ddcustcode_disc.getSelectedItem() + "'" 
                         + " and cpr_type = 'DISCOUNT' "        
                         + " and cpr_item = " + "'" + disclist.getSelectedValue().toString() + "'"  
@@ -1245,7 +1245,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
                 String qty = "";
                 String expiredate = null;
                 if (dcexpire.getDate() != null) {
-                  expiredate = BlueSeerUtils.setDateFormat(dcexpire.getDate());
+                  expiredate = "'" + BlueSeerUtils.setDateFormatNull(dcexpire.getDate()) + "'";
                 }
                 if (ddtype.getSelectedItem().toString().equals("VOLUME")) {
                     qty = tbqty.getText().replace(defaultDecimalSeparator, '.');
@@ -1259,7 +1259,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
                        
                         st.executeUpdate("update cpr_mstr "
                         + " set cpr_price = " + "'" + tbprice.getText().replace(defaultDecimalSeparator, '.') + "'"
-                        + ", cpr_expire = " + "'" + expiredate + "'"
+                        + ", cpr_expire = " + expiredate 
                         + " where cpr_cust = " + "'" + ddcustcode.getSelectedItem() + "'" 
                         + " and cpr_type = " + "'" + ddtype.getSelectedItem().toString() + "'"        
                         + " and cpr_uom = " + "'" + dduom.getSelectedItem().toString() + "'"
@@ -1270,7 +1270,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
                     } else {
                        st.executeUpdate("update cpr_mstr "
                         + " set cpr_price = " + "'" + tbprice.getText().replace(defaultDecimalSeparator, '.') + "'"
-                        + ", cpr_expire = " + "'" + expiredate + "'"        
+                        + ", cpr_expire = " + expiredate        
                         + " where cpr_cust = " + "'" + ddcustcode.getSelectedItem() + "'" 
                         + " and cpr_type = " + "'" + ddtype.getSelectedItem().toString() + "'"        
                         + " and cpr_uom = " + "'" + dduom.getSelectedItem().toString() + "'"

@@ -1164,6 +1164,12 @@ public class BlueSeerUtils {
        return returnstring;
    }
       
+    public static String xZero(String mystring) {
+       String returnstring = (mystring.isBlank()) ? "0" : mystring;
+       return returnstring;
+   }
+    
+    
     public static String convertToX(boolean i) {
         String mystring = null;
         if (i) {

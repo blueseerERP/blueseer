@@ -71,6 +71,7 @@ import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -459,6 +460,7 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
      try {
 
             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            Date now = new Date();
             Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
             ResultSet res = null;
@@ -487,9 +489,9 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
                         + " values ( " + "'" + tbkey.getText().toString() + "'" + ","
                         + "'" + ddsite.getSelectedItem().toString() + "'" + ","
                         + "'" + tbOriginator.getText() + "'" + ","        
-                        + "'" + dfdate.format(dccreate.getDate()) + "'" + ","
-                        + "'" + dfdate.format(dccreate.getDate()) + "'" + ","
-                        + "'" + "" + "'" + "," // close date
+                        + "'" + dfdate.format(now) + "'" + ","
+                        + "'" + dfdate.format(now) + "'" + ","
+                        + null + "," // close date
                         + "'" + tbOriginator.getText() + "'" + ","
                         + "'" + ddvend.getSelectedItem().toString() + "'" + ","
                         + "'" + lbvendname.getText().replace("'", "''") + "'" + ","
@@ -549,19 +551,20 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
      
      try {
             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            Date now = new Date();
             boolean proceed = true;
             Connection con = DriverManager.getConnection(url + db, user, pass);
             Statement st = con.createStatement();
-            String closedate = "";
+            String closedate = null;
             if (dcclose.getDate() != null) {
-                closedate = dfdate.format(dcclose.getDate());
+                closedate = "'" + dfdate.format(dcclose.getDate()) + "'";
             }
             try {
                     st.executeUpdate("update qual_mstr "
                         + "set qual_qpr = " + "'" + BlueSeerUtils.boolToInt(cbQPR.isSelected()) + "'" + ","
                         + "qual_infor = " + "'" + BlueSeerUtils.boolToInt(cbInforOnly.isSelected()) + "'" + ","
-                        + "qual_date_upd = " + "'" + dfdate.format(dcupdate.getDate()) + "'" + ","
-                        + "qual_date_cls = " + "'" + closedate + "'" + ","
+                        + "qual_date_upd = " + "'" + dfdate.format(now) + "'" + ","
+                        + "qual_date_cls = " + closedate + ","
                         + "qual_sendsupp = " + "'" + BlueSeerUtils.boolToInt(cbSendSupp.isSelected()) + "'" + ","
                         + "qual_sort = " + "'" + BlueSeerUtils.boolToInt(cbSort.isSelected()) + "'" + ","
                         + "qual_rework = " + "'" + BlueSeerUtils.boolToInt(cbRework.isSelected()) + "'" + ","
@@ -658,7 +661,7 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
                     i++;
                     dccreate.setDate(parseDate(res.getString("qual_date_crt")));
                     dcupdate.setDate(parseDate(res.getString("qual_date_upd")));
-                    if (! res.getString("qual_date_cls").isEmpty()) {
+                    if (res.getString("qual_date_cls") != null && ! res.getString("qual_date_cls").isEmpty()) {
                     dcclose.setDate(parseDate(res.getString("qual_date_cls")));
                     } else {
                         dcclose.setDate(null);

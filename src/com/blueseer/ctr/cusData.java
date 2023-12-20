@@ -1256,8 +1256,8 @@ public class cusData {
         String[] m = new String[2];
         String sqlSelect = "SELECT * FROM  cup_mstr where cup_citem = ? and cup_cust = ?";
         String sqlInsert = "insert into cup_mstr (cup_cust, cup_item, cup_citem, cup_citem2, " +
-         "cup_upc, cup_userid, cup_ts, cup_misc, cup_sku) " 
-                        + " values (?,?,?,?,?,?,?,?,?); "; 
+         "cup_upc, cup_userid, cup_misc, cup_sku) " 
+                        + " values (?,?,?,?,?,?,?,?); "; 
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.cup_citem);
@@ -1271,9 +1271,8 @@ public class cusData {
             psi.setString(4, x.cup_citem2);
             psi.setString(5, x.cup_upc);
             psi.setString(6, x.cup_userid);
-            psi.setString(7, x.cup_ts);
-            psi.setString(8, x.cup_misc);
-            psi.setString(9, x.cup_sku);
+            psi.setString(7, x.cup_misc);
+            psi.setString(8, x.cup_sku);
             int rows = psi.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
             } else {
@@ -1294,10 +1293,10 @@ public class cusData {
         String[] m = new String[2];
         String sqlSelect = "SELECT * FROM  cup_mstr where cup_citem = ? and cup_cust = ?";
         String sqlInsert = "insert into cup_mstr (cup_cust, cup_item, cup_citem, cup_citem2, " +
-         "cup_upc, cup_userid, cup_ts, cup_misc, cup_sku) " 
-                        + " values (?,?,?,?,?,?,?,?,?); "; 
+         "cup_upc, cup_userid, cup_misc, cup_sku) " 
+                        + " values (?,?,?,?,?,?,?,?); "; 
         String sqlUpdate = "update cup_mstr set cup_item = ?, cup_citem2 = ?, cup_upc = ?, " +
-                " cup_userid = ?, cup_ts = ?, cup_misc = ?, cup_sku = ?  " +   
+                " cup_userid = ?, cup_misc = ?, cup_sku = ?  " +   
                           " where cup_citem = ? and cup_cust = ? ; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
@@ -1313,9 +1312,8 @@ public class cusData {
             psi.setString(4, x.cup_citem2);
             psi.setString(5, x.cup_upc);
             psi.setString(6, x.cup_userid);
-            psi.setString(7, x.cup_ts);
-            psi.setString(8, x.cup_misc);
-            psi.setString(9, x.cup_sku); 
+            psi.setString(7, x.cup_misc);
+            psi.setString(8, x.cup_sku); 
             int rows = psi.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
             } else {
@@ -1323,11 +1321,10 @@ public class cusData {
             psu.setString(2, x.cup_citem2);
             psu.setString(3, x.cup_upc);
             psu.setString(4, x.cup_userid);
-            psu.setString(5, x.cup_ts);
-            psu.setString(6, x.cup_misc);
-            psu.setString(7, x.cup_sku);
-            psu.setString(8, x.cup_citem);
-            psu.setString(9, x.cup_cust);
+            psu.setString(5, x.cup_misc);
+            psu.setString(6, x.cup_sku);
+            psu.setString(7, x.cup_citem);
+            psu.setString(8, x.cup_cust);
             int rows = psu.executeUpdate();    
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};    
             }
@@ -1345,7 +1342,7 @@ public class cusData {
     public static String[] updateCupMstr(cup_mstr x) {
         String[] m = new String[2];
         String sql = "update cup_mstr set cup_item = ?, cup_citem2 = ?, cup_upc = ?, " +
-                " cup_userid = ?, cup_ts = ?, cup_misc = ?, cup_sku = ?  " +   
+                " cup_userid = ?, cup_misc = ?, cup_sku = ?  " +   
                           " where cup_citem = ? and cup_cust = ? ; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql)) {
@@ -1353,11 +1350,10 @@ public class cusData {
         ps.setString(2, x.cup_citem2);
         ps.setString(3, x.cup_upc);
         ps.setString(4, x.cup_userid);
-        ps.setString(5, x.cup_ts);
-        ps.setString(6, x.cup_misc);
-        ps.setString(7, x.cup_sku);
-        ps.setString(8, x.cup_citem);
-        ps.setString(9, x.cup_cust);
+        ps.setString(5, x.cup_misc);
+        ps.setString(6, x.cup_sku);
+        ps.setString(7, x.cup_citem);
+        ps.setString(8, x.cup_cust);
         int rows = ps.executeUpdate();
         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
         } catch (SQLException s) {

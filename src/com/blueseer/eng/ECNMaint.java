@@ -825,7 +825,7 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 ddstatus.getSelectedItem().toString(),
                 BlueSeerUtils.setDateFormatNull(dctargetdate.getDate()),
                 tbdatecreate.getText(),
-                "",
+                null,
                 tbdrawing.getText(),
                 ddpart.getSelectedItem().toString(),
                 tbrev.getText(),
@@ -843,8 +843,8 @@ public class ECNMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 tasktable.getValueAt(j, 0).toString(),
                 tasktable.getValueAt(j, 1).toString(),
                 tasktable.getValueAt(j, 2).toString(),
-                tasktable.getValueAt(j, 3).toString(),
-                tasktable.getValueAt(j, 4).toString(), 
+                (tasktable.getValueAt(j, 3) == null || tasktable.getValueAt(j, 3).toString().isBlank()) ? null : tasktable.getValueAt(j, 3).toString(),
+                (tasktable.getValueAt(j, 4) == null || tasktable.getValueAt(j, 4).toString().isBlank()) ? null : tasktable.getValueAt(j, 4).toString(), 
                 tasktable.getValueAt(j, 5).toString(), 
                 "" // notes...this is ignored in add/update...another mechanism updates the notes field
                 );

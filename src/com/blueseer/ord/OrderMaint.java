@@ -77,6 +77,7 @@ import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.lurb2;
 import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import static com.blueseer.utl.BlueSeerUtils.priceformat;
+import static com.blueseer.utl.BlueSeerUtils.xZero;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeerT;
 import static com.blueseer.utl.OVData.canUpdate;
@@ -978,20 +979,20 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                 orddet.getValueAt(j, 1).toString(),
                 orddet.getValueAt(j, 2).toString(),
                 orddet.getValueAt(j, 4).toString(),
-                orddet.getValueAt(j, 5).toString().replace(defaultDecimalSeparator, '.'),
+                xZero(orddet.getValueAt(j, 5).toString()).replace(defaultDecimalSeparator, '.'),
                 orddet.getValueAt(j, 6).toString(),
                 String.valueOf(allocationvalue),
-                orddet.getValueAt(j, 7).toString().replace(defaultDecimalSeparator, '.'),
-                orddet.getValueAt(j, 8).toString().replace(defaultDecimalSeparator, '.'),
-                orddet.getValueAt(j, 9).toString().replace(defaultDecimalSeparator, '.'),
+                xZero(orddet.getValueAt(j, 7).toString()).replace(defaultDecimalSeparator, '.'),
+                xZero(orddet.getValueAt(j, 8).toString()).replace(defaultDecimalSeparator, '.'),
+                xZero(orddet.getValueAt(j, 9).toString()).replace(defaultDecimalSeparator, '.'),
                 bsmf.MainFrame.dfdate.format(orddate.getDate()).toString(),
                 bsmf.MainFrame.dfdate.format(duedate.getDate()).toString(),   
-                orddet.getValueAt(j, 10).toString().replace(defaultDecimalSeparator, '.'),
+                xZero(orddet.getValueAt(j, 10).toString()).replace(defaultDecimalSeparator, '.'),
                 orddet.getValueAt(j, 11).toString(),
                 orddet.getValueAt(j, 12).toString(),
                 orddet.getValueAt(j, 13).toString(),
                 orddet.getValueAt(j, 14).toString(),  
-                orddet.getValueAt(j, 15).toString().replace(defaultDecimalSeparator, '.'), 
+                xZero(orddet.getValueAt(j, 15).toString()).replace(defaultDecimalSeparator, '.'), 
                 ddsite.getSelectedItem().toString(),  
                 orddet.getValueAt(j, 16).toString(),
                 orddet.getValueAt(j, 17).toString()
@@ -1016,7 +1017,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                 sactable.getValueAt(j, 1).toString(),
                 sactable.getValueAt(j, 0).toString(),
                 sactable.getValueAt(j, 2).toString(),
-                sactable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.'));     
+                xZero(sactable.getValueAt(j, 3).toString()).replace(defaultDecimalSeparator, '.'));     
                 list.add(x);
          }
        
@@ -1029,8 +1030,8 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
           for (String[] s : headertax) {
               so_tax x = new so_tax(null, tbkey.getText().toString(),
                 s[0].toString(),
-                s[1].toString().replace(defaultDecimalSeparator, '.'),
-                s[2].toString()); 
+                xZero(s[1]).replace(defaultDecimalSeparator, '.'),
+                xZero(s[2]));   
                 list.add(x);
           }
          }
@@ -1043,10 +1044,10 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
              if (linetax.containsKey(orddet.getValueAt(j,0))) {
                   for (String[] s : (ArrayList<String[]>)linetax.get(orddet.getValueAt(j,0))) {
                       sod_tax x = new sod_tax(null, tbkey.getText().toString(),
-                        orddet.getValueAt(j, 0).toString(),
-                        s[0].toString(),
-                        s[1].toString().replace(defaultDecimalSeparator, '.'),
-                        s[2].toString());     
+                        xZero(orddet.getValueAt(j, 0).toString()),
+                        s[0],
+                        xZero(s[1]).replace(defaultDecimalSeparator, '.'),
+                        xZero(s[2]));     
                         list.add(x);
                   }
             }

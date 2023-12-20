@@ -2973,6 +2973,8 @@ public class MassLoad extends javax.swing.JPanel {
     public String[] loadTestData() throws InterruptedException {
         
         // set ddtable to index 0 for testdata
+        tacomments.append("Setting default delimiter to ':' " );
+        tbdelimiter.setText(":");
         ddtable.setSelectedIndex(0);
         String[] m = new String[2];
            // String filename = "c:\\bs\\blueseer\\sf\\data\\sampledir\\workcenter.txt";
@@ -3067,6 +3069,8 @@ public class MassLoad extends javax.swing.JPanel {
             tacomments.append("Rolling Cost for: " + p + " \n");
           }
        
+        tbdelimiter.setText(",");  
+          
         return m;
     }
     

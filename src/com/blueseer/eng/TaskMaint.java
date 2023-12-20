@@ -47,6 +47,7 @@ import static com.blueseer.eng.engData.getTaskSequences;
 import com.blueseer.eng.engData.task_det;
 import com.blueseer.eng.engData.task_mstr;
 import static com.blueseer.eng.engData.updateTaskTransaction;
+import static com.blueseer.utl.BlueSeerUtils.ConvertTrueFalseToStringInt;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
@@ -451,7 +452,7 @@ public class TaskMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tbkey.getText(),
                 tabletasks.getValueAt(j, 0).toString(),
                 tabletasks.getValueAt(j, 1).toString(),
-                tabletasks.getValueAt(j, 2).toString(),
+                ConvertTrueFalseToStringInt(tabletasks.getValueAt(j, 2).toString()),
                 tabletasks.getValueAt(j, 3).toString()
                 );
         list.add(x);

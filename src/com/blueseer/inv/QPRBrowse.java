@@ -238,14 +238,14 @@ public class QPRBrowse extends javax.swing.JPanel {
         for (Object vend : vends) {
             ddvendfrom.addItem(vend);
         }
+        ddvendfrom.insertItemAt("", 0);
+        ddvendfrom.setSelectedIndex(0);
+        
         ddvendto.removeAllItems();
         for (Object vend : vends) {
             ddvendto.addItem(vend);
         }
         
-        
-         if (ddvendfrom.getItemCount() > 0)
-        ddvendfrom.setSelectedIndex(0);
         
         if (ddvendto.getItemCount() > 0)
         ddvendto.setSelectedIndex(ddvendto.getItemCount() - 1);
