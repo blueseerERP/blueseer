@@ -1383,10 +1383,11 @@ CREATE TABLE IF NOT EXISTS `pos_mstr` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `prt_mstr` (
   `prt_id` varchar(10) NOT NULL  DEFAULT '',
-  `prt_type` varchar(10) NOT NULL  DEFAULT '',
-  `prt_desc` varchar(50) NOT NULL  DEFAULT '',
-  `prt_ip` varchar(15) NOT NULL  DEFAULT '',
-  `prt_port` varchar(10) NOT NULL  DEFAULT '') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `prt_type` varchar(50) NOT NULL  DEFAULT '',
+  `prt_desc` varchar(80) NOT NULL  DEFAULT '',
+  `prt_ip` varchar(80) NOT NULL  DEFAULT '',
+  `prt_port` varchar(10) NOT NULL  DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `qual_mstr` (
   `qual_id` int(4) NOT NULL,
   `qual_site` varchar(30)  NOT NULL DEFAULT '',
