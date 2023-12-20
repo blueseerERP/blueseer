@@ -1,4 +1,4 @@
-﻿CustomerMenu,CustMaint,1,JMenuItem,Întreținere client,,,,1,1
+CustomerMenu,CustMaint,1,JMenuItem,Întreținere client,,,,1,1
 CustomerMenu,CustReport1,2,JMenuItem,Răsfoire client,,1,,1,1
 CustomerMenu,CustXrefMaint,3,JMenuItem,Menținere Xref client,,,,1,1
 CustomerMenu,CustXrefBrowse,4,JMenuItem,Răsfoire xref client,,,,1,1

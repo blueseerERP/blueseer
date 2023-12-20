@@ -676,9 +676,9 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }
     
     public item_mstr createRecord() { 
-        String expire = "";
+        String expire = null;
         if (dcexpire.getDate() != null) {
-            expire = bsmf.MainFrame.dfdate.format(dcexpire.getDate());
+            expire = "'" + BlueSeerUtils.setDateFormatNull(dcexpire.getDate()) + "'";
         }
         item_mstr x = new item_mstr(null, tbkey.getText().toString(),
                 tbdesc.getText().toUpperCase(),
