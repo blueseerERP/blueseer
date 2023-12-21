@@ -36,14 +36,29 @@ import static bsmf.MainFrame.user;
 import com.blueseer.ctr.cusData;
 import static com.blueseer.lbl.lblData.addLabelMstr;
 import com.blueseer.lbl.lblData.label_mstr;
+import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.luModel;
+import static com.blueseer.utl.BlueSeerUtils.luTable;
+import static com.blueseer.utl.BlueSeerUtils.lual;
+import static com.blueseer.utl.BlueSeerUtils.ludialog;
+import static com.blueseer.utl.BlueSeerUtils.luinput;
+import static com.blueseer.utl.BlueSeerUtils.luml;
+import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormat;
+import com.blueseer.utl.DTData;
 import com.blueseer.utl.OVData;
 import static com.blueseer.utl.OVData.checkForCustomPath;
 import static com.blueseer.utl.OVData.getSystemLabelDirectory;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.print.PrinterJob;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -85,6 +100,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 
 /**
  *
@@ -324,6 +340,53 @@ String shipcountry = "";
         
     }
     
+    public void lookUpFrameOrderLine() {
+        
+        luinput.removeActionListener(lual);
+        lual = new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+         
+        if (lurb1.isSelected()) {  
+         luModel = DTData.getOrderBrowseUtil(luinput.getText(), 0, "so_nbr" );
+        } else {
+         luModel = DTData.getOrderBrowseUtil(luinput.getText(), 0, "so_cust" );
+        }    
+        
+         
+        luTable.setModel(luModel);
+        luTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (luModel.getRowCount() < 1) {
+            ludialog.setTitle(getMessageTag(1001));
+        } else {
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
+        }
+        }
+        };
+        luinput.addActionListener(lual);
+        
+        luTable.removeMouseListener(luml);
+        luml = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0) {
+                ludialog.dispose();
+                tbordnbr.setText(target.getValueAt(row,1).toString());
+                //tbline.setText(target.getValueAt(row,2).toString());
+                }
+            }
+        };
+        luTable.addMouseListener(luml);
+      
+        
+        callDialog(getGlobalColumnTag("order"), 
+                getGlobalColumnTag("customer"));
+        
+        
+    }
+
+    
     public label_mstr createRecord() { 
         java.util.Date now = new java.util.Date();
         DateFormat dfdate = new SimpleDateFormat("MM/dd/yyyy");
@@ -390,6 +453,7 @@ String shipcountry = "";
         tblot = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
+        btlookupOrderLine = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -428,6 +492,13 @@ String shipcountry = "";
         jLabel9.setText("Lot");
         jLabel9.setName("lbllot"); // NOI18N
 
+        btlookupOrderLine.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
+        btlookupOrderLine.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btlookupOrderLineActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -455,19 +526,25 @@ String shipcountry = "";
                             .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(ddprinter, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbordnbr, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tbline, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tblblqty, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(3, 3, 3)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(tbordnbr, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btlookupOrderLine, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap(47, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(tbordnbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel3)
+                        .addComponent(tbordnbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btlookupOrderLine))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbline, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -574,6 +651,8 @@ String shipcountry = "";
 
 String cust = cusData.getCustFromOrder(tbordnbr.getText());
 String label = cusData.getCustLabel(cust);
+
+label  = (label.isBlank()) ? "generic" : label; 
 label = label + ".prn";
 //Path template = FileSystems.getDefault().getPath(cleanDirString(getSystemLabelDirectory()) + label);
 Path template = checkForCustomPath(getSystemLabelDirectory(), label);
@@ -634,8 +713,13 @@ MainFrame.bslog(e);
 }
     }//GEN-LAST:event_btprintActionPerformed
 
+    private void btlookupOrderLineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupOrderLineActionPerformed
+        lookUpFrameOrderLine();
+    }//GEN-LAST:event_btlookupOrderLineActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btlookupOrderLine;
     private javax.swing.JButton btprint;
     private javax.swing.JComboBox ddprinter;
     private javax.swing.JLabel jLabel2;

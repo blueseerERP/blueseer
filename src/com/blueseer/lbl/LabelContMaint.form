@@ -59,11 +59,16 @@
                               <Component id="tbqty" alignment="0" min="-2" pref="63" max="-2" attributes="0"/>
                               <Component id="tbref" alignment="0" min="-2" pref="139" max="-2" attributes="0"/>
                               <Component id="ddprinter" alignment="0" min="-2" pref="136" max="-2" attributes="0"/>
-                              <Component id="tbordnbr" alignment="0" min="-2" pref="114" max="-2" attributes="0"/>
                               <Component id="tbline" alignment="0" min="-2" pref="64" max="-2" attributes="0"/>
                               <Component id="tblblqty" alignment="0" min="-2" pref="63" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
+                          <EmptySpace min="3" max="32767" attributes="0"/>
+                      </Group>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="tbordnbr" min="-2" pref="114" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="btlookupOrderLine" min="-2" pref="25" max="-2" attributes="0"/>
+                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace pref="47" max="32767" attributes="0"/>
@@ -74,9 +79,12 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="tbordnbr" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tbordnbr" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Component id="btlookupOrderLine" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -203,6 +211,16 @@
             <Property name="text" type="java.lang.String" value="Lot"/>
             <Property name="name" type="java.lang.String" value="lbllot" noResource="true"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btlookupOrderLine">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/images/find.png"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btlookupOrderLineActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
