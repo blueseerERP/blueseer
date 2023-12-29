@@ -106,6 +106,7 @@ public class GLTranMaint extends javax.swing.JPanel {
     
     double positiveamt = 0;
     String type = "";
+    boolean isLoad = false;
     
     public static javax.swing.table.DefaultTableModel lookUpModel = null;
                 public static JTable lookUpTable = new JTable();
@@ -179,6 +180,7 @@ public class GLTranMaint extends javax.swing.JPanel {
 
     
     public void clearAll() {
+        isLoad = true;
         java.util.Date now = new java.util.Date();
        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
        effdate.setDate(now);
@@ -203,11 +205,14 @@ public class GLTranMaint extends javax.swing.JPanel {
         ddsite.setSelectedItem(OVData.getDefaultSite());
         
         ddacct.removeAllItems();
-        ArrayList myacct = fglData.getGLAcctList();
+        ddacct2.removeAllItems();
+        ArrayList<String> myacct = fglData.getGLAcctList();
         for (int i = 0; i < myacct.size(); i++) {
             ddacct.addItem(myacct.get(i));
+            ddacct2.addItem(myacct.get(i));
         }
             ddacct.setSelectedIndex(0);
+            ddacct2.setSelectedIndex(0);
         
         ddcc.removeAllItems();
         ArrayList cc = fglData.getGLCCList();
@@ -225,11 +230,16 @@ public class GLTranMaint extends javax.swing.JPanel {
         
        ddsite.setSelectedItem(OVData.getDefaultSite());
        tbuserid.setText(bsmf.MainFrame.userid);
+       isLoad = false;
+       
     }
     
     public void enableAll() {
-        btnew.setEnabled(true);
+       isLoad = true;
+       btnew.setEnabled(true);
        btlookup.setEnabled(true);
+       btLookUpAccount.setEnabled(true);
+       btLookUpAccount2.setEnabled(true);
        btdeleteALL.setEnabled(true);
        btsubmit.setEnabled(true);
         btadd.setEnabled(true);
@@ -239,18 +249,23 @@ public class GLTranMaint extends javax.swing.JPanel {
        ddsite.setEnabled(true);
        ddcurr.setEnabled(true);
        ddacct.setEnabled(true);
+       ddacct2.setEnabled(true);
        ddcc.setEnabled(true);
        tbamt.setEnabled(true);
        tbdesc.setEnabled(true);
        effdate.setEnabled(true);
        transtable.setEnabled(true);
        tbcontrolamt.setEnabled(true);
+       isLoad = false;
       
     }
     
     public void disableAll() {
-         btnew.setEnabled(false);
+       isLoad = true;
+       btnew.setEnabled(false);
        btlookup.setEnabled(false);
+       btLookUpAccount.setEnabled(false);
+       btLookUpAccount2.setEnabled(false);
        btdeleteALL.setEnabled(false);
        btsubmit.setEnabled(false);
         btadd.setEnabled(false);
@@ -263,12 +278,14 @@ public class GLTranMaint extends javax.swing.JPanel {
        ddsite.setEnabled(false);
        ddcurr.setEnabled(false);
        ddacct.setEnabled(false);
+       ddacct2.setEnabled(false);
        ddcc.setEnabled(false);
        tbamt.setEnabled(false);
        tbdesc.setEnabled(false);
        effdate.setEnabled(false);
        transtable.setEnabled(false);
        tbcontrolamt.setEnabled(false);
+       isLoad = false;
        
     }
     
@@ -394,7 +411,7 @@ public class GLTranMaint extends javax.swing.JPanel {
             
     }
     
-    public static void lookUpFrameAcctDesc() {
+    public static void lookUpFrameAcctDesc(String box) {
         if (dialog != null) {
             dialog.dispose();
         }
@@ -427,7 +444,7 @@ public class GLTranMaint extends javax.swing.JPanel {
         });
         
        
-        lookUpTable.setPreferredScrollableViewportSize(new Dimension(400,100));
+        lookUpTable.setPreferredScrollableViewportSize(new Dimension(500,100));
         JScrollPane scrollPane = new JScrollPane(lookUpTable);
         mllu = new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
@@ -435,7 +452,11 @@ public class GLTranMaint extends javax.swing.JPanel {
                 int row = target.getSelectedRow();
                 int column = target.getSelectedColumn();
                 if ( column == 0) {
-                ddacct.setSelectedItem(target.getValueAt(row,1).toString());
+                if (box.equals("1")) {    
+                  ddacct.setSelectedItem(target.getValueAt(row,1).toString());
+                } else {
+                  ddacct2.setSelectedItem(target.getValueAt(row,1).toString());   
+                }
                 dialog.dispose();
                 }
             }
@@ -487,6 +508,7 @@ public class GLTranMaint extends javax.swing.JPanel {
         
         dialog.pack();
         dialog.setLocationRelativeTo( null );
+        dialog.setResizable(false);
         dialog.setVisible(true);
     }
 
@@ -562,7 +584,7 @@ public class GLTranMaint extends javax.swing.JPanel {
         btadd = new javax.swing.JButton();
         btdelete = new javax.swing.JButton();
         jLabel48 = new javax.swing.JLabel();
-        jLabel49 = new javax.swing.JLabel();
+        lbacct1 = new javax.swing.JLabel();
         tbdesc = new javax.swing.JTextField();
         jLabel51 = new javax.swing.JLabel();
         tbamt = new javax.swing.JTextField();
@@ -582,6 +604,11 @@ public class GLTranMaint extends javax.swing.JPanel {
         lbccname = new javax.swing.JLabel();
         btLookUpAccount = new javax.swing.JButton();
         btlookup = new javax.swing.JButton();
+        ddacct2 = new javax.swing.JComboBox<>();
+        btLookUpAccount2 = new javax.swing.JButton();
+        lbacctname2 = new javax.swing.JLabel();
+        lbacct2 = new javax.swing.JLabel();
+        btclear = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -678,8 +705,8 @@ public class GLTranMaint extends javax.swing.JPanel {
         jLabel48.setText("cc");
         jLabel48.setName("lblcc"); // NOI18N
 
-        jLabel49.setText("Acct");
-        jLabel49.setName("lblacct"); // NOI18N
+        lbacct1.setText("Acct");
+        lbacct1.setName("lblacct"); // NOI18N
 
         tbdesc.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -707,7 +734,12 @@ public class GLTranMaint extends javax.swing.JPanel {
         jLabel3.setText("Currency");
         jLabel3.setName("lblcurrency"); // NOI18N
 
-        ddtype.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "standard", "reversing" }));
+        ddtype.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "simple", "custom" }));
+        ddtype.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddtypeActionPerformed(evt);
+            }
+        });
 
         jLabel4.setText("Total:");
         jLabel4.setName("lbltotalamt"); // NOI18N
@@ -752,6 +784,28 @@ public class GLTranMaint extends javax.swing.JPanel {
             }
         });
 
+        ddacct2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddacct2ActionPerformed(evt);
+            }
+        });
+
+        btLookUpAccount2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
+        btLookUpAccount2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btLookUpAccount2ActionPerformed(evt);
+            }
+        });
+
+        lbacct2.setText("Acct2");
+
+        btclear.setText("Clear");
+        btclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btclearActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -762,10 +816,11 @@ public class GLTranMaint extends javax.swing.JPanel {
                     .addComponent(jLabel46, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel49, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lbacct1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel48, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel52, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(jLabel52, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lbacct2, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -791,45 +846,58 @@ public class GLTranMaint extends javax.swing.JPanel {
                             .addComponent(effdate, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(ddacct, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btLookUpAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(ddacct2, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(ddacct, javax.swing.GroupLayout.Alignment.LEADING, 0, 138, Short.MAX_VALUE))
                             .addComponent(ddcc, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbccname, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lbacctname, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(lbccname, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btLookUpAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btLookUpAccount2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(lbacctname, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
+                                    .addComponent(lbacctname2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
                 .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(202, 202, 202)
-                        .addComponent(btnew))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(91, 91, 91)
-                        .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(160, 160, 160)
-                        .addComponent(jLabel4)
-                        .addGap(7, 7, 7)
-                        .addComponent(labeltotal, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(197, 197, 197)
-                        .addComponent(btsubmit)
-                        .addGap(12, 12, 12)
-                        .addComponent(btdeleteALL))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(397, 397, 397)
-                        .addComponent(jLabel51)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tbamt, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btadd)
-                        .addGap(12, 12, 12)
-                        .addComponent(btdelete))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollPane1)))
+                        .addComponent(jScrollPane1))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(160, 160, 160)
+                                .addComponent(jLabel4)
+                                .addGap(7, 7, 7)
+                                .addComponent(labeltotal, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(197, 197, 197)
+                                .addComponent(btsubmit)
+                                .addGap(12, 12, 12)
+                                .addComponent(btdeleteALL))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(391, 391, 391)
+                                .addComponent(jLabel51)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tbamt, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btadd)
+                                .addGap(12, 12, 12)
+                                .addComponent(btdelete))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(202, 202, 202)
+                                        .addComponent(btnew))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(91, 91, 91)
+                                        .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btclear)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(6, 6, 6))
         );
         jPanel1Layout.setVerticalGroup(
@@ -848,7 +916,9 @@ public class GLTranMaint extends javax.swing.JPanel {
                                     .addComponent(jLabel5)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(31, 31, 31)
-                                .addComponent(btnew))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(btnew)
+                                    .addComponent(btclear)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(61, 61, 61)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -886,19 +956,27 @@ public class GLTranMaint extends javax.swing.JPanel {
                     .addComponent(btLookUpAccount)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(ddacct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel49))
+                        .addComponent(lbacct1))
                     .addComponent(lbacctname, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(10, 10, 10)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(lbacctname2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGap(1, 1, 1)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(ddacct2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lbacct2))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(14, 14, 14)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(ddcc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel48))
-                        .addGap(7, 7, 7))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbccname, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                        .addGap(1, 1, 1)
+                        .addComponent(btLookUpAccount2)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(ddcc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel48))
+                    .addComponent(lbccname, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(1, 1, 1)
@@ -911,8 +989,8 @@ public class GLTranMaint extends javax.swing.JPanel {
                         .addComponent(jLabel51))
                     .addComponent(btdelete))
                 .addGap(13, 13, 13)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(12, 12, 12)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(5, 5, 5)
@@ -1154,13 +1232,31 @@ public class GLTranMaint extends javax.swing.JPanel {
         }
         
         
-       
+       if (ddtype.getSelectedItem().toString().equals("simple")) {
+           // add double entry...ddacct is credit (-) ddacct2 is debit (+)
             transmodel.addRow(new Object[]{transmodel.getRowCount() + 1,
+                ddacct.getSelectedItem().toString(),
+                ddcc.getSelectedItem().toString(),
+                tbdesc.getText(),
+                "-" + tbamt.getText()
+            });
+            transmodel.addRow(new Object[]{transmodel.getRowCount() + 1,
+                ddacct2.getSelectedItem().toString(),
+                ddcc.getSelectedItem().toString(),
+                tbdesc.getText(),
+                tbamt.getText()
+            });
+        } else {
+           // allow custom entry...sign is determined by entry in amount field
+           transmodel.addRow(new Object[]{transmodel.getRowCount() + 1,
                 ddacct.getSelectedItem().toString(),
                 ddcc.getSelectedItem().toString(),
                 tbdesc.getText(),
                 tbamt.getText()
             });
+       }   
+            
+            
             tallyamount();
             clearinput();
        
@@ -1185,8 +1281,8 @@ public class GLTranMaint extends javax.swing.JPanel {
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
         clearAll();
         enableAll();
-        
-       if (ddtype.getSelectedItem().toString().equals("standard")) {
+        ddtype.setSelectedIndex(0);
+       if (! ddtype.getSelectedItem().toString().equals("reversing")) {
        type = "JL";
        tbref.setText(fglData.setGLRecNbr("JL"));
        } else {
@@ -1202,10 +1298,8 @@ public class GLTranMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_btnewActionPerformed
 
     private void ddacctActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddacctActionPerformed
-        if (ddacct.getSelectedItem() != null )
+        if (! isLoad && ddacct.getSelectedItem() != null ) {
         try {
-            
-        
             Connection con = null;
             if (ds != null) {
             con = ds.getConnection();
@@ -1233,6 +1327,7 @@ public class GLTranMaint extends javax.swing.JPanel {
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
+        }
         }
     }//GEN-LAST:event_ddacctActionPerformed
 
@@ -1307,16 +1402,80 @@ public class GLTranMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_tbdescFocusLost
 
     private void btLookUpAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLookUpAccountActionPerformed
-        lookUpFrameAcctDesc();
+        lookUpFrameAcctDesc("1");
     }//GEN-LAST:event_btLookUpAccountActionPerformed
 
     private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
         lookUpFrame();
     }//GEN-LAST:event_btlookupActionPerformed
 
+    private void btLookUpAccount2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLookUpAccount2ActionPerformed
+        lookUpFrameAcctDesc("2");
+    }//GEN-LAST:event_btLookUpAccount2ActionPerformed
+
+    private void ddtypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddtypeActionPerformed
+       if (! isLoad) {
+        if (ddtype.getSelectedItem().toString().equals("simple")) {
+            lbacct1.setText("Credit Account (-)");
+            lbacct2.setText("Debit Account (+)");
+            ddacct2.setEnabled(true);
+            btLookUpAccount2.setEnabled(true);
+        } else {
+            lbacct1.setText("General Account");
+            lbacct2.setText("N/A");
+            ddacct2.setEnabled(false);
+            btLookUpAccount2.setEnabled(false);
+        }
+       }
+    }//GEN-LAST:event_ddtypeActionPerformed
+
+    private void ddacct2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddacct2ActionPerformed
+         if (! isLoad && ddacct2.getSelectedItem() != null ) {
+        try {
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                res = st.executeQuery("select ac_desc from ac_mstr where ac_id = " + "'" + ddacct2.getSelectedItem().toString() + "'" + ";");
+                while (res.next()) {
+                    lbacctname2.setText(res.getString("ac_desc"));
+                }
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        }
+    }//GEN-LAST:event_ddacct2ActionPerformed
+
+    private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
+        clearAll();
+       disableAll();
+       
+       btnew.setEnabled(true);
+       btlookup.setEnabled(true);
+    }//GEN-LAST:event_btclearActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btLookUpAccount;
+    private javax.swing.JButton btLookUpAccount2;
     private javax.swing.JButton btadd;
+    private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btdeleteALL;
     private javax.swing.JButton btlookup;
@@ -1324,6 +1483,7 @@ public class GLTranMaint extends javax.swing.JPanel {
     private javax.swing.JButton btsubmit;
     private javax.swing.JTextField dateentered;
     private static javax.swing.JComboBox ddacct;
+    private static javax.swing.JComboBox<String> ddacct2;
     private javax.swing.JComboBox ddcc;
     private javax.swing.JComboBox ddcurr;
     private javax.swing.JComboBox ddsite;
@@ -1336,7 +1496,6 @@ public class GLTranMaint extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel46;
     private javax.swing.JLabel jLabel47;
     private javax.swing.JLabel jLabel48;
-    private javax.swing.JLabel jLabel49;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel50;
     private javax.swing.JLabel jLabel51;
@@ -1344,7 +1503,10 @@ public class GLTranMaint extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel labeltotal;
+    private javax.swing.JLabel lbacct1;
+    private javax.swing.JLabel lbacct2;
     private javax.swing.JLabel lbacctname;
+    private javax.swing.JLabel lbacctname2;
     private javax.swing.JLabel lbccname;
     private javax.swing.JTextField tbamt;
     private javax.swing.JTextField tbcontrolamt;
