@@ -194,9 +194,12 @@ public class GLTranMaint extends javax.swing.JPanel {
        tbdesc.setBackground(Color.white);
        labeltotal.setText("0.00");
         type = ""; 
-       transtable.setModel(transmodel);
+       
+        transtable.setModel(transmodel);
        transmodel.setNumRows(0);
        transtable.getColumnModel().getColumn(4).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
+       transtable.getTableHeader().setReorderingAllowed(false);
+       
        ddsite.removeAllItems();
         ArrayList sites = OVData.getSiteList();
         for (Object site : sites) {
@@ -289,6 +292,66 @@ public class GLTranMaint extends javax.swing.JPanel {
        
     }
     
+    public void getGLTranHist(String docid) {
+        try {
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                int i = 0;
+                res = st.executeQuery("SELECT * " +
+                        " FROM  gl_hist where glh_doc = " + "'" + docid + "'" +
+                        "  ;");
+                
+                while (res.next()) {
+                    i++;
+                    tbref.setText(res.getString("glh_ref"));
+                    dateentered.setText(res.getString("glh_entdate"));
+                    
+                    transmodel.addRow(new Object[]{transmodel.getRowCount() + 1,
+                    res.getString("glh_acct"),
+                    res.getString("glh_cc"),
+                    res.getString("glh_desc"),
+                    currformat(res.getString("glh_amt")),
+                    res.getString("glh_doc"),
+                    res.getString("glh_ref"),
+                    res.getString("glh_type")
+                    });
+                }
+                
+                if (i > 0) {
+                    
+                    transtable.setModel(transmodel);
+                    tallyamount();
+                    clearinput();
+                    disableAll();
+                    btdeleteALL.setEnabled(true);
+                    transtable.setEnabled(true);
+                    btnew.setEnabled(true);
+                    btlookup.setEnabled(true);
+                }
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+    }
+    
     public void getGLTran(String docid) {
         try {
             Connection con = null;
@@ -301,7 +364,7 @@ public class GLTranMaint extends javax.swing.JPanel {
             ResultSet res = null;
             try {
                 int i = 0;
-                res = st.executeQuery("SELECT glt_id, glt_ref, glt_acct, glt_cc, glt_site, glt_effdate, glt_entdate, glt_desc, glt_amt, glt_userid, glt_type, glt_doc " +
+                res = st.executeQuery("SELECT * " +
                         " FROM  gl_tran where glt_doc = " + "'" + docid + "'" +
                         "  ;");
                 
@@ -348,6 +411,7 @@ public class GLTranMaint extends javax.swing.JPanel {
             MainFrame.bslog(e);
         }
     }
+    
     
     public void setLanguageTags(Object myobj) {
       // lblaccount.setText(labels.getString("LedgerAcctMstrPanel.labels.lblaccount"));
@@ -404,8 +468,12 @@ public class GLTranMaint extends javax.swing.JPanel {
        btnew.setEnabled(true);
        btlookup.setEnabled(true);
        
-        if (arg != null && arg.length > 0) {
-             getGLTran(arg[0]);
+        if (arg != null && arg.length > 1) {
+             if (arg[1].equals("gl_tran")) {
+              getGLTran(arg[0]);
+             } else {
+              getGLTranHist(arg[0]);    
+             }
          }
         
             
@@ -526,6 +594,7 @@ public class GLTranMaint extends javax.swing.JPanel {
         }
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        luTable.getColumnModel().getColumn(5).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
         if (luModel.getRowCount() < 1) {
             ludialog.setTitle(getMessageTag(1001));
         } else {
@@ -543,7 +612,7 @@ public class GLTranMaint extends javax.swing.JPanel {
                 int column = target.getSelectedColumn();
                 if ( column == 0) {
                 ludialog.dispose();
-                initvars(new String[]{target.getValueAt(row,2).toString(), target.getValueAt(row,1).toString()});
+                initvars(new String[]{target.getValueAt(row,2).toString(), "gl_tran"});
                 }
             }
         };

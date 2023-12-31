@@ -79,6 +79,7 @@ import java.sql.Connection;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -94,7 +95,9 @@ import javax.swing.JTabbedPane;
 public class GLTranRpt1 extends javax.swing.JPanel {
  
      MyTableModel mymodel = new GLTranRpt1.MyTableModel(new Object[][]{},
-                        new String[]{getGlobalColumnTag("id"),
+                        new String[]{
+                            getGlobalColumnTag("select"),
+                            getGlobalColumnTag("id"),
                             getGlobalColumnTag("site"), 
                             getGlobalColumnTag("account"),
                             getGlobalColumnTag("description"),
@@ -106,9 +109,9 @@ public class GLTranRpt1 extends javax.swing.JPanel {
              {
                       @Override  
                       public Class getColumnClass(int col) {  
-                        if ( col == 8)       
+                        if ( col == 9)       
                         return Double.class;
-                        else if (col == 0) return Integer.class;
+                        else if (col == 0) return ImageIcon.class;
                         else return String.class;  //other columns accept String values  
                       }  
                         };
@@ -321,6 +324,11 @@ public class GLTranRpt1 extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tablereport.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablereportMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tablereport);
 
         labelcount.setText("0");
@@ -477,7 +485,7 @@ try {
                
                 tablereport.setModel(mymodel);
                // tableorder.getColumnModel().getColumn(0).setCellRenderer(new OrderReport1.SomeRenderer());  
-                tablereport.getColumnModel().getColumn(8).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
+                tablereport.getColumnModel().getColumn(9).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
                 Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
                  
              
@@ -500,7 +508,8 @@ try {
                  
                     i++;
                         mymodel.addRow(new Object[]{
-                                res.getInt("glh_id"),
+                                BlueSeerUtils.clickflag,
+                                res.getString("glh_doc"),
                                 res.getString("glh_site"),
                                 res.getString("glh_acct"),
                                 res.getString("ac_desc"),
@@ -560,6 +569,18 @@ try {
             */
         }
     }//GEN-LAST:event_tbprintActionPerformed
+
+    private void tablereportMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablereportMouseClicked
+       int row = tablereport.rowAtPoint(evt.getPoint());
+        int col = tablereport.columnAtPoint(evt.getPoint());
+        if ( col == 0) {
+                String mypanel = "GLTranMaint";
+               if (! checkperms(mypanel)) { return; }
+               String[] args = new String[]{tablereport.getValueAt(row, 1).toString(), "gl_hist"};
+               reinitpanels(mypanel, true, args);
+              
+        }
+    }//GEN-LAST:event_tablereportMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

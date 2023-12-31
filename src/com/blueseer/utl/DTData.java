@@ -566,12 +566,14 @@ public class DTData {
     
     public static DefaultTableModel getGLTranBrowseUtil2( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("number"), getGlobalColumnTag("account"), getGlobalColumnTag("date"), getGlobalColumnTag("type")})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("id"), getGlobalColumnTag("number"), getGlobalColumnTag("account"), getGlobalColumnTag("date"), getGlobalColumnTag("amount")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
                         if (col == 0)       
                             return ImageIcon.class;  
+                        else if (col == 5) 
+                            return Double.class;
                         else return String.class;  //other columns accept String values  
                       }  
                         }; 
@@ -588,17 +590,17 @@ public class DTData {
             ResultSet res = null;
             try{
                 if (state == 1) { // begins
-                    res = st.executeQuery("SELECT glt_id, glt_ref, glt_acct, glt_cc, glt_site, glt_effdate, glt_type, glt_doc  " +
+                    res = st.executeQuery("SELECT glt_id, glt_ref, glt_acct, glt_cc, glt_site, glt_effdate, glt_type, glt_doc, glt_amt  " +
                         " FROM  gl_tran where " + myfield + " like " + "'" + str + "%'" +
                         " order by glt_id desc ;");
                 }
                 if (state == 2) { // ends
-                    res = st.executeQuery("SELECT glt_id, glt_ref, glt_acct, glt_cc, glt_site, glt_effdate, glt_type, glt_doc   " +
+                    res = st.executeQuery("SELECT glt_id, glt_ref, glt_acct, glt_cc, glt_site, glt_effdate, glt_type, glt_doc, glt_amt   " +
                         " FROM  gl_tran where " + myfield + " like " + "'%" + str + "'" +
                         " order by glt_id desc ;");
                 }
                  if (state == 0) { // match
-                    res = st.executeQuery("SELECT glt_id, glt_ref, glt_acct, glt_cc, glt_site, glt_effdate, glt_type, glt_doc " +
+                    res = st.executeQuery("SELECT glt_id, glt_ref, glt_acct, glt_cc, glt_site, glt_effdate, glt_type, glt_doc, glt_amt " +
                         " FROM  gl_tran where " + myfield + " like " + "'%" + str + "%'" +
                         " order by glt_id desc ;");
                  }
@@ -607,8 +609,7 @@ public class DTData {
                                    res.getString("glt_doc"),
                                    res.getString("glt_acct"),
                                    res.getString("glt_effdate"),
-                                   res.getString("glt_type"),
-                                   res.getString("glt_ref")
+                                   res.getDouble("glt_amt")
                         });
                     }
            }
