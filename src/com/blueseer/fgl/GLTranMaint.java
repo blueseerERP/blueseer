@@ -734,14 +734,14 @@ public class GLTranMaint extends javax.swing.JPanel {
         jLabel3.setText("Currency");
         jLabel3.setName("lblcurrency"); // NOI18N
 
-        ddtype.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "simple", "custom" }));
+        ddtype.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "simple", "custom", "reversing" }));
         ddtype.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ddtypeActionPerformed(evt);
             }
         });
 
-        jLabel4.setText("Total:");
+        jLabel4.setText("Entries Summed:");
         jLabel4.setName("lbltotalamt"); // NOI18N
 
         ddacct.addActionListener(new java.awt.event.ActionListener() {
@@ -1022,14 +1022,14 @@ public class GLTranMaint extends javax.swing.JPanel {
                 String nextstartdate = "";
                 Double amt = 0.00;
                 
-                if (  Double.compare(bsParseDouble(tbcontrolamt.getText()), positiveamt) != 0 ) {
+                if (! ddtype.getSelectedItem().toString().equals("simple") &&  Double.compare(bsParseDouble(tbcontrolamt.getText()), positiveamt) != 0 ) {
                     proceed = false;
                     String s_positiveamt = bsFormatDouble(positiveamt);
                     bsmf.MainFrame.show(getMessageTag(1039, currformat(tbcontrolamt.getText()) + "/" + s_positiveamt));
                     return;
                 }
                 
-                if (bsParseDouble(labeltotal.getText().toString()) != 0) {
+                if (! ddtype.getSelectedItem().toString().equals("simple") && bsParseDouble(labeltotal.getText().toString()) != 0) {
                     proceed = false;
                     bsmf.MainFrame.show(getMessageTag(1040));
                     return;
@@ -1078,10 +1078,17 @@ public class GLTranMaint extends javax.swing.JPanel {
                 
                 String curr = OVData.getDefaultCurrency();
                 String basecurr = curr;
+                String desc = "";
                 
                 if (proceed) {
                     for (int i = 0; i < transtable.getRowCount(); i++) {
                         amt = bsParseDouble(transtable.getValueAt(i, 4).toString());
+                        
+                        if (transtable.getValueAt(i, 3).toString().length() > 30) {
+                          desc = transtable.getValueAt(i, 3).toString().substring(0,30);
+                        } else {
+                          desc = transtable.getValueAt(i, 3).toString();  
+                        }
                         
                         st.executeUpdate("insert into gl_tran "
                         + "(glt_line, glt_acct, glt_cc, glt_effdate, glt_amt, glt_base_amt, glt_curr, glt_base_curr, glt_ref, glt_doc, glt_site, glt_type, glt_desc, glt_userid, glt_entdate )"
@@ -1094,11 +1101,11 @@ public class GLTranMaint extends javax.swing.JPanel {
                         + "'" + transtable.getValueAt(i, 4).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
                         + "'" + curr + "'" + ","
                         + "'" + basecurr + "'" + ","        
-                        + "'" + tbcontrolamt.getText() + "'" + ","
-                        + "'" + tbref.getText() + "'" + ","
+                        + "'" + tbref.getText() + "'" + "," // ref
+                        + "'" + tbref.getText() + "'" + ","  // doc
                         + "'" + ddsite.getSelectedItem().toString() + "'" + ","
                         + "'" + type + "'" + ","
-                        + "'" + transtable.getValueAt(i, 3).toString() + "'" + ","
+                        + "'" + desc + "'" + ","
                         + "'" + tbuserid.getText() + "'" + ","
                          + "'" + dateentered.getText() + "'"
                                 + ")"
@@ -1281,7 +1288,8 @@ public class GLTranMaint extends javax.swing.JPanel {
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
         clearAll();
         enableAll();
-        ddtype.setSelectedIndex(0);
+        /*
+        
        if (! ddtype.getSelectedItem().toString().equals("reversing")) {
        type = "JL";
        tbref.setText(fglData.setGLRecNbr("JL"));
@@ -1289,7 +1297,8 @@ public class GLTranMaint extends javax.swing.JPanel {
        type = "RV";
        tbref.setText(fglData.setGLRecNbr("RV"));    
        }
-       
+       */
+       ddtype.setSelectedIndex(0);
        tbref.setEnabled(false);
        tbuserid.setEnabled(false);
        dateentered.setEnabled(false);
@@ -1393,14 +1402,6 @@ public class GLTranMaint extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_tbcontrolamtFocusLost
 
-    private void tbdescFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbdescFocusLost
-       if (tbdesc.getText().isEmpty()) {
-           tbdesc.setBackground(Color.yellow);
-       } else {
-           tbdesc.setBackground(Color.white);
-       }
-    }//GEN-LAST:event_tbdescFocusLost
-
     private void btLookUpAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLookUpAccountActionPerformed
         lookUpFrameAcctDesc("1");
     }//GEN-LAST:event_btLookUpAccountActionPerformed
@@ -1416,13 +1417,27 @@ public class GLTranMaint extends javax.swing.JPanel {
     private void ddtypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddtypeActionPerformed
        if (! isLoad) {
         if (ddtype.getSelectedItem().toString().equals("simple")) {
+            type = "JL";
+            tbref.setText(fglData.setGLRecNbr("JL"));
             lbacct1.setText("Credit Account (-)");
             lbacct2.setText("Debit Account (+)");
+            tbcontrolamt.setEnabled(false);
             ddacct2.setEnabled(true);
             btLookUpAccount2.setEnabled(true);
-        } else {
+        } else if (ddtype.getSelectedItem().toString().equals("custom")) {
+            type = "JL";
+            tbref.setText(fglData.setGLRecNbr("JL"));
             lbacct1.setText("General Account");
             lbacct2.setText("N/A");
+            tbcontrolamt.setEnabled(true);
+            ddacct2.setEnabled(false);
+            btLookUpAccount2.setEnabled(false);
+        } else { // reversing
+            type = "RV";
+            tbref.setText(fglData.setGLRecNbr("RV"));    
+            lbacct1.setText("General Account");
+            lbacct2.setText("N/A");
+            tbcontrolamt.setEnabled(true);
             ddacct2.setEnabled(false);
             btLookUpAccount2.setEnabled(false);
         }
@@ -1470,6 +1485,12 @@ public class GLTranMaint extends javax.swing.JPanel {
        btnew.setEnabled(true);
        btlookup.setEnabled(true);
     }//GEN-LAST:event_btclearActionPerformed
+
+    private void tbdescFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbdescFocusLost
+       if (! tbdesc.getText().isBlank()) {
+           tbdesc.setBackground(Color.white);
+       }
+    }//GEN-LAST:event_tbdescFocusLost
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btLookUpAccount;
