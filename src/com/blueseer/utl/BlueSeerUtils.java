@@ -331,6 +331,7 @@ public class BlueSeerUtils {
         luinput.setText("");
         
         luTable.setPreferredScrollableViewportSize(new Dimension(500,200));
+        luTable.getTableHeader().setReorderingAllowed(false);
         JScrollPane scrollPane = new JScrollPane(luTable);
         JPanel rbpanel = new JPanel();
         lubg = new ButtonGroup();
@@ -387,6 +388,7 @@ public class BlueSeerUtils {
         }
         luinput.setText("");
         luTable.setPreferredScrollableViewportSize(new Dimension(500,200));
+        luTable.getTableHeader().setReorderingAllowed(false);
         JScrollPane scrollPane = new JScrollPane(luTable);
         JPanel rbpanel = new JPanel();
         lubg = new ButtonGroup();
@@ -448,6 +450,7 @@ public class BlueSeerUtils {
         }
         luinput.setText("");
         luTable.setPreferredScrollableViewportSize(new Dimension(500,200));
+        luTable.getTableHeader().setReorderingAllowed(false);
         JScrollPane scrollPane = new JScrollPane(luTable);
         JPanel rbpanel = new JPanel();
         
@@ -517,6 +520,7 @@ public class BlueSeerUtils {
         }
         luinput.setText("");
         luTable.setPreferredScrollableViewportSize(new Dimension(500,200));
+        luTable.getTableHeader().setReorderingAllowed(false);
         JScrollPane scrollPane = new JScrollPane(luTable);
         JPanel rbpanel = new JPanel();
         
@@ -592,6 +596,7 @@ public class BlueSeerUtils {
         }
         luinput.setText("");
         luTable.setPreferredScrollableViewportSize(new Dimension(500,200));
+        luTable.getTableHeader().setReorderingAllowed(false);
         JScrollPane scrollPane = new JScrollPane(luTable);
         JPanel rbpanel = new JPanel();
         
