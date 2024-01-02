@@ -105,7 +105,7 @@ public class YearEndClose extends javax.swing.JPanel {
     }
     
     
-    public void initvars(String args) {
+    public void initvars(String[] arg) {
         
            tbbefore.setText("");
            tbincome.setText("");
