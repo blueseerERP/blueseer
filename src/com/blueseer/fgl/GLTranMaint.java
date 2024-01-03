@@ -144,12 +144,14 @@ public class GLTranMaint extends javax.swing.JPanel {
     
     public void clearinput() {
        ddacct.setSelectedIndex(0);
+       ddacct2.setSelectedIndex(0);
        ddcc.setSelectedIndex(0);
-        tbdesc.setText("");
+       // tbdesc.setText("");
         tbamt.setText("");
         ddacct.requestFocus();
     }
-           class SomeRenderer extends DefaultTableCellRenderer {
+    
+    class SomeRenderer extends DefaultTableCellRenderer {
         
     public Component getTableCellRendererComponent(JTable table,
             Object value, boolean isSelected, boolean hasFocus, int row,
@@ -192,6 +194,7 @@ public class GLTranMaint extends javax.swing.JPanel {
        tbcontrolamt.setBackground(Color.white);
        tbamt.setBackground(Color.white);
        tbdesc.setBackground(Color.white);
+       tbdesc.setText("");
        labeltotal.setText("0.00");
         type = ""; 
        
