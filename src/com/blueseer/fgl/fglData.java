@@ -5260,6 +5260,34 @@ return myarray;
     }
    }
 
+    public static int clearGLEntries() {
+        int rows = 0;
+        String sql = "delete from gl_tran;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        rows = ps.executeUpdate();
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+        }
+        
+        sql = "delete from gl_hist; ";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        rows += ps.executeUpdate();
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+        }
+        
+        sql = "delete from acb_mstr; ";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.executeUpdate(); // not added to row count
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+        }
+        
+        return rows;
+    }
     
     public record AcctMstr(String[] m, String id, String desc, String type, String currency, String cbdisplay) {
         public AcctMstr(String[] m) {

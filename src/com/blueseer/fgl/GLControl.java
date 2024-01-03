@@ -32,6 +32,7 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static com.blueseer.fgl.fglData.addUpdateGLCtrl;
+import static com.blueseer.fgl.fglData.clearGLEntries;
 import static com.blueseer.fgl.fglData.getGLCtrl;
 import com.blueseer.fgl.fglData.gl_ctrl;
 import com.blueseer.utl.BlueSeerUtils;
@@ -306,6 +307,7 @@ public class GLControl extends javax.swing.JPanel implements IBlueSeerc {
         tbforeignreal = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         cbautopost = new javax.swing.JCheckBox();
+        btcleargl = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -340,6 +342,14 @@ public class GLControl extends javax.swing.JPanel implements IBlueSeerc {
         cbautopost.setText("Auto Post?");
         cbautopost.setName("cbautopost"); // NOI18N
 
+        btcleargl.setText("Clear GL Entries");
+        btcleargl.setName("btcleargl"); // NOI18N
+        btcleargl.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btclearglActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -348,7 +358,7 @@ public class GLControl extends javax.swing.JPanel implements IBlueSeerc {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(cbautopost)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -361,10 +371,15 @@ public class GLControl extends javax.swing.JPanel implements IBlueSeerc {
                                 .addComponent(tbbsfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jLabel4)
-                                .addComponent(jLabel5)
-                                .addComponent(jLabel6))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jLabel4)
+                                        .addComponent(jLabel5)
+                                        .addComponent(jLabel6))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                    .addComponent(btcleargl)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(tbisto, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
                                 .addComponent(btupdate, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -402,7 +417,9 @@ public class GLControl extends javax.swing.JPanel implements IBlueSeerc {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cbautopost)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
-                .addComponent(btupdate))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btupdate)
+                    .addComponent(btcleargl)))
         );
 
         add(jPanel1);
@@ -415,8 +432,16 @@ public class GLControl extends javax.swing.JPanel implements IBlueSeerc {
         executeTask(dbaction.update, null);
     }//GEN-LAST:event_btupdateActionPerformed
 
+    private void btclearglActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearglActionPerformed
+        if (bsmf.MainFrame.warn(getMessageTag(1178))) {
+            int i = clearGLEntries();
+            bsmf.MainFrame.show("cleared GL entry count: " + i);
+        }
+    }//GEN-LAST:event_btclearglActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btcleargl;
     private javax.swing.JButton btupdate;
     private javax.swing.JCheckBox cbautopost;
     private javax.swing.JLabel jLabel1;
