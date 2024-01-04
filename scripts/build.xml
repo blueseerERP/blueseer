@@ -115,6 +115,16 @@
 	    <jvmarg value="-Djava.util.logging.config.file=bslogging.properties"/>
         </java>
 </target>
+<target name="test">
+    <path id="runtime.path">
+	    <fileset dir="../dist" includes="*.jar"/>
+    </path>
+    <echo>running target test ....${test.dir}</echo>
+    <java classname="utilities.bsTestRunner" jvm="${java17}" fork="true" classpathref="run.classpath" dir="${test.dir}">
+	    <arg value="-debug"/> 
+	    <jvmarg value="-Djava.util.logging.config.file=bslogging.properties"/>
+        </java>
+</target>
 <target name="run17">
     <path id="runtime.path">
 	    <fileset dir="." includes="*.properties"/>
