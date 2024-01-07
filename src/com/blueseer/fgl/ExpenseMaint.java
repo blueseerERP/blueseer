@@ -447,7 +447,13 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
                     return b;
                 }
                 
-                if ( OVData.isGLPeriodClosed(dfdate.format(dcdate.getDate()))) {
+                if (dcdate.getDate() == null) {
+                    b = false;
+                    bsmf.MainFrame.show(getMessageTag(1024, "Date"));
+                    return b;
+                }
+                
+                if (dcdate.getDate() != null && OVData.isGLPeriodClosed(dfdate.format(dcdate.getDate()))) {
                     b = false;
                     bsmf.MainFrame.show(getMessageTag(1035));
                     return b;
