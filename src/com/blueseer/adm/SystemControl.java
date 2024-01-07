@@ -483,6 +483,11 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
                             rblocal.setSelected(true);
                         }
                     }
+                    res = st.executeQuery("SELECT *  FROM  sys_meta where sysm_id = 'system' and " +
+                            " sysm_type = 'sysdir' AND sysm_key = 'attachment_directory';");
+                    while (res.next()) {
+                        tbattachdir.setText(res.getString("sysm_value"));
+                    }
                
                   tblocale.setText(Locale.getDefault().toString());
                     
