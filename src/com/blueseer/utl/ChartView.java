@@ -73,6 +73,8 @@ import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getTitleTag;
 import static com.blueseer.utl.ReportPanel.TableReport;
 import java.awt.Component;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Currency;
@@ -114,6 +116,9 @@ public class ChartView extends javax.swing.JPanel {
  Currency currency = Currency.getInstance(Locale.getDefault());
  String symbol = currency.getSymbol(Locale.getDefault());
  String chartfilepath = OVData.getSystemTempDirectory() + "/" + "chart.jpg";
+ 
+ BufferedImage myimage = null;
+ 
     /**
      * Creates new form CCChartView
      */
@@ -233,7 +238,8 @@ public class ChartView extends javax.swing.JPanel {
      
      
     public void cleanUpOldChartFile() {
-          File f = new File(chartfilepath);
+        myimage = null;
+        File f = new File(chartfilepath);
         if(f.exists()) { 
             f.delete();
         }
@@ -1062,14 +1068,20 @@ public class ChartView extends javax.swing.JPanel {
     
     
     try {
-    ChartUtilities.saveChartAsJPEG(new File(chartfilepath), chart, jPanel2.getWidth(), this.getHeight() - 150);
+    ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
+    ChartUtilities.writeChartAsJPEG(baos, chart, jPanel2.getWidth(), this.getHeight() - 150);
+    ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+    myimage = ImageIO.read(bais);
+    ImageIcon myicon = new ImageIcon(myimage);
+    myicon.getImage().flush();   
+    chartlabel.setIcon(myicon);
+    bais.close();
+    baos.close();
     } catch (IOException e) {
     MainFrame.bslog(e);
     }
     
-    ImageIcon myicon = new ImageIcon(chartfilepath);
-    myicon.getImage().flush();   
-    chartlabel.setIcon(myicon);
+    
     
     this.repaint();
           } catch (SQLException s) {
@@ -2606,27 +2618,26 @@ public class ChartView extends javax.swing.JPanel {
          Logger.getLogger(ScrapChartView.class.getName()).log(Level.SEVERE, null, ex);
      }
      */
-        
+        /*
         BufferedImage image = null;
         try {
         image = ImageIO.read(new File(bsmf.MainFrame.temp + "/" + "chart.jpg"));
         } catch (IOException e) {
         }
-        
-          PrinterJob printJob = PrinterJob.getPrinterJob();
-        printJob.setPrintable(new ImagePrintable(printJob, image));
-        PrintRequestAttributeSet aset = new HashPrintRequestAttributeSet();
-        aset.add(OrientationRequested.LANDSCAPE);
-        if (printJob.printDialog()) {
-            try {
-                
-                printJob.print(aset);
-            } catch (PrinterException prt) {
-                prt.printStackTrace();
+        */
+        if (myimage != null) {
+            PrinterJob printJob = PrinterJob.getPrinterJob();
+            printJob.setPrintable(new ImagePrintable(printJob, myimage));
+            PrintRequestAttributeSet aset = new HashPrintRequestAttributeSet();
+            aset.add(OrientationRequested.LANDSCAPE);
+            if (printJob.printDialog()) {
+                try {
+                    printJob.print(aset);
+                } catch (PrinterException prt) {
+                    prt.printStackTrace();
+                }
             }
         }
-        
-        
     }//GEN-LAST:event_btprintActionPerformed
 
 
