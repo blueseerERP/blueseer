@@ -22,6 +22,7 @@
 	<parameter name="taxes" class="java.lang.Double"/>
 	<parameter name="shipname" class="java.lang.String"/>
 	<parameter name="shipline1" class="java.lang.String"/>
+	<parameter name="tac" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select po_nbr, it_desc,
 (select case when sum(pom_amt) is null then 0 else sum(pom_amt) end from po_meta 
@@ -376,9 +377,9 @@ inner join site_mstr on site_site = po_site where pod_nbr =  $P{myid};]]>
 		<band height="5" splitType="Stretch"/>
 	</pageFooter>
 	<lastPageFooter>
-		<band height="98" splitType="Stretch">
+		<band height="151" splitType="Stretch">
 			<textField>
-				<reportElement x="19" y="8" width="209" height="20" uuid="b52b5abc-3057-4cf4-a3bd-2fd587288ada"/>
+				<reportElement x="11" y="1" width="209" height="20" uuid="b52b5abc-3057-4cf4-a3bd-2fd587288ada"/>
 				<textElement>
 					<font size="14"/>
 				</textElement>
@@ -409,6 +410,13 @@ inner join site_mstr on site_site = po_site where pod_nbr =  $P{myid};]]>
 			<textField>
 				<reportElement x="341" y="78" width="100" height="20" uuid="75420708-223f-413e-a2e9-a678700b2a45"/>
 				<textFieldExpression><![CDATA[$R{jasper.po.lblnetamount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="10" y="25" width="317" height="126" isPrintWhenDetailOverflows="true" uuid="8f185390-6d57-4424-899a-e5114ad307d5"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{tac}]]></textFieldExpression>
 			</textField>
 		</band>
 	</lastPageFooter>
