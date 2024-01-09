@@ -95,7 +95,11 @@
                       <Component id="btChart" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="btprint" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="36" max="32767" attributes="0"/>
+                      <EmptySpace pref="50" max="32767" attributes="0"/>
+                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="ddlimit" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -107,6 +111,8 @@
                           <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                               <Component id="btChart" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="btprint" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="ddlimit" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="dcFrom" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="dcTo" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -158,6 +164,26 @@
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btprintActionPerformed"/>
               </Events>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="ddlimit">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="4">
+                    <StringItem index="0" value="3"/>
+                    <StringItem index="1" value="5"/>
+                    <StringItem index="2" value="10"/>
+                    <StringItem index="3" value="25"/>
+                  </StringArray>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel1">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Limit"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>
