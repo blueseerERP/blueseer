@@ -25,6 +25,7 @@
 	<parameter name="ship_csz" class="java.lang.String"/>
 	<parameter name="taxes" class="java.lang.Double"/>
 	<parameter name="ship_country" class="java.lang.String"/>
+	<parameter name="tac" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select quo_nbr, quod_nbr, quo_curr, quod_desc, quod_disc,
 (select case when sum(quos_amt) is null then 0 else sum(quos_amt) end from quo_sac 
@@ -355,7 +356,7 @@ inner join site_mstr on site_site =quo_site where quod_nbr =  $P{myid}]]>
 		<band height="28" splitType="Stretch"/>
 	</pageFooter>
 	<lastPageFooter>
-		<band height="98" splitType="Stretch">
+		<band height="151" splitType="Stretch">
 			<textField>
 				<reportElement x="19" y="0" width="151" height="20" uuid="5f94c566-99bc-4527-8721-c34a6ae85156"/>
 				<textElement>
@@ -388,6 +389,13 @@ inner join site_mstr on site_site =quo_site where quod_nbr =  $P{myid}]]>
 			<textField>
 				<reportElement x="344" y="78" width="100" height="20" uuid="811834f6-d14f-48bb-bf9f-6ec299e0d5b0"/>
 				<textFieldExpression><![CDATA[$R{jasper.quote.lblnettotal} + " (" + $F{quo_curr} + "):"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="10" y="25" width="317" height="126" isPrintWhenDetailOverflows="true" uuid="26dcee5c-8929-4069-bfc1-89c225dac553"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{tac}]]></textFieldExpression>
 			</textField>
 		</band>
 	</lastPageFooter>

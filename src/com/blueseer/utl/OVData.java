@@ -16598,7 +16598,12 @@ return mystring;
                           ship_csz = res.getString(("cms_city")) + " " + res.getString(("cms_state")) + " " + res.getString(("cms_zip")) + "  " + res.getString(("cms_country"));
                        }
                 
-                
+                // terms and conditions file
+                 String tac_str = "";
+                 if (Files.exists(FileSystems.getDefault().getPath("conf/tac.txt"))) {
+                   byte[] tac = Files.readAllBytes(FileSystems.getDefault().getPath("conf/tac.txt"));
+                   tac_str = new String(tac);
+                 }
                 
                 String logo = "";
                 logo = cusData.getCustLogo(cust);
@@ -16615,6 +16620,7 @@ return mystring;
                 hm.put("site_csz", site_csz);
                 hm.put("bill_csz", bill_csz);
                 hm.put("ship_csz", ship_csz);
+                hm.put("tac", tac_str);
                 hm.put("imagepath", imagepath.toString());
                 hm.put("REPORT_LOCALE", BlueSeerUtils.getCurrencyLocale(currency));
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
@@ -17388,7 +17394,7 @@ return mystring;
                 hm.put("taxes", taxes);
                 hm.put("REPORT_LOCALE", BlueSeerUtils.getCurrencyLocale(currency));
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
-                hm.put("tac", new String(tac_str));
+                hm.put("tac", tac_str);
                // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
                // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
                 Path template = checkForCustomPath(getSystemJasperDirectory(), jasperfile);
@@ -17541,7 +17547,12 @@ return mystring;
                           ship_csz = res.getString(("cms_city")) + " " + res.getString(("cms_state")) + " " + res.getString(("cms_zip")) + "  " + res.getString(("cms_country"));
                        }
                 
-                
+                // terms and conditions file
+                 String tac_str = "";
+                 if (Files.exists(FileSystems.getDefault().getPath("conf/tac.txt"))) {
+                   byte[] tac = Files.readAllBytes(FileSystems.getDefault().getPath("conf/tac.txt"));
+                   tac_str = new String(tac);
+                 }
                 
                 String logo = "";
                 logo = cusData.getCustLogo(cust);
@@ -17562,6 +17573,7 @@ return mystring;
                 hm.put("site_csz", site_csz);
                 hm.put("bill_csz", bill_csz);
                 hm.put("ship_csz", ship_csz);
+                hm.put("tac", tac_str);
                 hm.put("imagepath", imagepath.toString());
                 hm.put("REPORT_LOCALE", BlueSeerUtils.getCurrencyLocale(currency));
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
