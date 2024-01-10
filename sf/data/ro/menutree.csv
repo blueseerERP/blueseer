@@ -136,6 +136,7 @@ LedgerReportsMenu,LedgerBalanceExport,7,JMenuItem,Vizualizare/Exportare sold con
 LedgerReportsMenu,IncomeStatement1,8,JMenuItem,Adeverinta de venit,,1,,1,1
 LedgerReportsMenu,IncomeStatementYear,9,JMenuItem,Declarație de venit (an),,1,,1,1
 LedgerReportsMenu,ReconAccount,10,JMenuItem,Reconcilierea contului,,1,,1,1
+LedgerReportsMenu,ChartMain,11,JMenuItem,Chart Reporting,,1,,1,1
 Finanţe,PostGLTrans,3,JMenuItem,Postați tranzacții,,,,1,1
 Finanţe,GLTranMaint,4,JMenuItem,GL Tranzacție întreținere,,,,1,1
 Finanţe,ExpenseMaint,5,JMenuItem,Întreținerea cheltuielilor,,,,1,1

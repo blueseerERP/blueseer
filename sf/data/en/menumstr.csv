@@ -257,8 +257,6 @@ ClockCode66Browse,,com.blueseer.utl.ReportPanel,JMenuItem,cl66
 OEEEntry,,com.blueseer.prd.OEEEntryMaint,JMenuItem,oeee
 DemdToPlan,,com.blueseer.sch.DemdToPlanMaint,JMenuItem,dm2pl
 ProdDetRpt,,com.blueseer.prd.ProdDetRpt,JMenuItem,prdr1
-ProdByWeekFGUnits,,com.blueseer.utl.ChartView,JMenuItem,prdr2
-ProdByWeekFGDollars,,com.blueseer.utl.ChartView,JMenuItem,prdr3
 DiscreteOrderPerWeekUnits,,com.blueseer.utl.ChartView,JMenuItem,orc1
 DiscreteOrderPerWeekDollars,,com.blueseer.utl.ChartView,JMenuItem,orc2
 ARPaymentBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,arpb
@@ -281,6 +279,7 @@ ProdEntryMaint,,com.blueseer.prd.ProdEntryMaint,JMenuItem,prod
 piechart_salesbycust,,com.blueseer.utl.ChartView,JMenuItem,sales1
 piechart_custAR,,com.blueseer.utl.ChartView,JMenuItem,sales2
 piechart_profitandloss,,com.blueseer.utl.ChartView,JMenuItem,palc
+ChartMain,,com.blueseer.utl.ChartMain,JMenuItem,chart
 pcOpenOrdersByCust,Open Orders By Customer,com.blueseer.utl.ChartView,JMenuItem,orc3
 ExpenseMaint,,com.blueseer.fgl.ExpenseMaint,JMenuItem,expm
 ExpenseBrowse,,com.blueseer.fgl.ExpenseBrowse,JMenuItem,expb
@@ -319,3 +318,12 @@ BrokerBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,brkb
 EDIXrefBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,xref
 QuoteMaint,,com.blueseer.ord.QuoteMaint,JMenuItem,quom
 QuoteBrowse,,com.blueseer.ord.QuoteBrowse,JMenuItem,quob
+chart_production,,com.blueseer.utl.ChartMain,JMenuItem,chpr
+chart_sales,,com.blueseer.utl.ChartMain,JMenuItem,chsa
+chart_finance,,com.blueseer.utl.ChartMain,JMenuItem,chfi
+chart_order,,com.blueseer.utl.ChartMain,JMenuItem,chor
+chart_purchasing,,com.blueseer.utl.ChartMain,JMenuItem,chpu
+chart_requisition,,com.blueseer.utl.ChartMain,JMenuItem,chrq
+chart_clock,,com.blueseer.utl.ChartMain,JMenuItem,chck
+chart_scrap,,com.blueseer.utl.ChartMain,JMenuItem,chsp
+chart_shipping,,com.blueseer.utl.ChartMain,JMenuItem,chsh

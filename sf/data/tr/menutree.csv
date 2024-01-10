@@ -136,6 +136,7 @@ LedgerReportsMenu,LedgerBalanceExport,7,JMenuItem,Defter Bakiyesi Görünümü/D
 LedgerReportsMenu,IncomeStatement1,8,JMenuItem,Gelir Tablosu,,1,,1,1
 LedgerReportsMenu,IncomeStatementYear,9,JMenuItem,Gelir Tablosu(Yıl),,1,,1,1
 LedgerReportsMenu,ReconAccount,10,JMenuItem,Hesap mutabakatı,,1,,1,1
+LedgerReportsMenu,ChartMain,11,JMenuItem,Chart Reporting,,1,,1,1
 Finans,PostGLTrans,3,JMenuItem,İşlem Sonrası,,,,1,1
 Finans,GLTranMaint,4,JMenuItem,GL İşlem Bakımı,,,,1,1
 Finans,ExpenseMaint,5,JMenuItem,Masraf Bakımı,,,,1,1

@@ -80,6 +80,7 @@ import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Currency;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.Locale;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -111,19 +112,20 @@ import org.jfree.data.general.DefaultPieDataset;
  *
  * @author vaughnte
  */
-public class ChartView extends javax.swing.JPanel {
+public class ChartMain extends javax.swing.JPanel {
  String whichreport = "";
  String curr = OVData.getDefaultCurrency();
  Currency currency = Currency.getInstance(Locale.getDefault());
  String symbol = currency.getSymbol(Locale.getDefault());
  String chartfilepath = OVData.getSystemTempDirectory() + "/" + "chart.jpg";
+ ArrayList<String> ml = new ArrayList<String>();
  
  BufferedImage myimage = null;
  
     /**
      * Creates new form CCChartView
      */
-    public ChartView() {
+    public ChartMain() {
         initComponents();
     }
 
@@ -131,8 +133,93 @@ public class ChartView extends javax.swing.JPanel {
         setLanguageTags(this);
         ChartPanel.setVisible(false);
         CodePanel.setVisible(false);
-        whichreport = rpt[0];
-        mainPanel.setBorder(BorderFactory.createTitledBorder(whichreport));
+        mainPanel.setBorder(BorderFactory.createTitledBorder(rpt[0]));
+        
+        ml.clear();
+        
+        if (rpt[0].equals("chart_scrap")) {
+        ml.add("Scrap -- per week");
+        ml.add("Scrap -- quantity by code");
+        ml.add("Scrap -- dollars by code");
+        ml.add("Scrap -- quantity by item");
+        ml.add("Scrap -- dollars by item");
+        ml.add("Scrap -- quantity by department");
+        ml.add("Scrap -- dollars by department");
+        }
+        
+        if (rpt[0].equals("chart_clock")) {
+        ml.add("Clock -- by department");
+        ml.add("Clock -- by code");
+        ml.add("Clock -- by employee");
+        ml.add("Clock -- by week");        
+        }
+        
+        if (rpt[0].equals("chart_requisition")) {
+        ml.add("Requisition -- amount by account");
+        ml.add("Requisition -- amount by department");
+        ml.add("Requisition -- frequency per userid");
+        }
+        
+        if (rpt[0].equals("chart_shipping")) {
+        ml.add("Shipping -- units per week");
+        ml.add("Shipping -- dollars per week");
+        }
+        
+        if (rpt[0].equals("chart_production")) {
+        ml.add("Production -- total units per week");
+        ml.add("Production -- total cost per week");
+        }
+        if (rpt[0].equals("chart_sales")) {
+        ml.add("Sales -- total sales by date");
+        ml.add("Sales -- current accounts receivable");
+        }
+        
+        if (rpt[0].equals("chart_finance")) {
+        ml.add("Finance -- income versus expense");
+        ml.add("Finance -- expense by account");
+        ml.add("Finance -- income by account");
+        }
+        if (rpt[0].equals("chart_order")) {
+        ml.add("Order -- open orders");
+        ml.add("Order -- orders per week total units");
+        ml.add("Order -- orders per week total dollars");
+        }
+        if (rpt[0].equals("ChartMain")) {
+        ml.add("Clock -- by department");
+        ml.add("Clock -- by code");
+        ml.add("Clock -- by employee");
+        ml.add("Clock -- by week");   
+        ml.add("Finance -- income versus expense");
+        ml.add("Finance -- expense by account");
+        ml.add("Finance -- income by account");
+        ml.add("Order -- open orders");
+        ml.add("Order -- orders per week total units");
+        ml.add("Order -- orders per week total dollars");
+        ml.add("Production -- total units per week");
+        ml.add("Production -- total cost per week");
+        ml.add("Requisition -- amount by account");
+        ml.add("Requisition -- amount by department");
+        ml.add("Requisition -- frequency per userid");
+        ml.add("Sales -- total sales by date");
+        ml.add("Sales -- current accounts receivable");
+        ml.add("Scrap -- per week");
+        ml.add("Scrap -- quantity by code");
+        ml.add("Scrap -- dollars by code");
+        ml.add("Scrap -- quantity by item");
+        ml.add("Scrap -- dollars by item");
+        ml.add("Scrap -- quantity by department");
+        ml.add("Scrap -- dollars by department");
+        ml.add("Shipping -- units per week");
+        ml.add("Shipping -- dollars per week");
+        
+        
+        }
+        
+        ddreport.removeAllItems();
+        for (String key : ml) {
+         ddreport.addItem(key);
+        }
+        
         
          int year = Calendar.getInstance().get(Calendar.YEAR);
                 Calendar cal = Calendar.getInstance();
@@ -149,14 +236,6 @@ public class ChartView extends javax.swing.JPanel {
                 
                 dcFrom.setDate(start);
                 dcTo.setDate(end);
-        
-        
-        
-        
-        
-       
-        
-        
     }
     
     public void setLanguageTags(Object myobj) {
@@ -256,6 +335,7 @@ public class ChartView extends javax.swing.JPanel {
     public void piechart_expensebyaccount() {
          try {
          cleanUpOldChartFile();
+         ChartPanel.setVisible(true);
             Connection con = null;
         if (ds != null) {
           con = ds.getConnection();
@@ -270,20 +350,31 @@ public class ChartView extends javax.swing.JPanel {
                         " where glh_effdate >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
                         " AND glh_effdate <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
                         " AND ac_type = 'E' " +
-                        " group by glh_acct, ac_desc order by sum desc limit 10  ;");
+                        " group by glh_acct, ac_desc order by sum desc;");
              
                 DefaultPieDataset dataset = new DefaultPieDataset();
                
                 String acct = "";
+                double total = 0.00;
+                double displayed = 0.00;
+                int i = 0;
                 while (res.next()) {
+                    i++;
                     if (res.getString("glh_acct") == null || res.getString("glh_acct").isEmpty()) {
                       acct = "Unassigned";
                     } else {
                       acct = res.getString("ac_desc");   
                     }
+                    total += res.getDouble("sum");
                     Double amt = res.getDouble("sum");
-                   
-                  dataset.setValue(acct, amt);
+                    if (i <= Integer.valueOf(ddlimit.getSelectedItem().toString())) {
+                       displayed += res.getDouble("sum"); 
+                       dataset.setValue(acct, amt);
+                    }
+                }
+                // other
+                if (total > displayed) {
+                    dataset.setValue("other", (total - displayed));
                 }
                 JFreeChart chart = ChartFactory.createPieChart(getTitleTag(5000), dataset, true, true, false);
                 PiePlot plot = (PiePlot) chart.getPlot();
@@ -319,6 +410,7 @@ public class ChartView extends javax.swing.JPanel {
     public void piechart_incomebyaccountcc() {
          try {
          cleanUpOldChartFile();
+         ChartPanel.setVisible(true);
             Connection con = null;
         if (ds != null) {
           con = ds.getConnection();
@@ -333,21 +425,41 @@ public class ChartView extends javax.swing.JPanel {
                         " where glh_effdate >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
                         " AND glh_effdate <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
                         " AND ac_type = 'I' " +
-                        " group by glh_acct, glh_cc order by sum desc limit 10  ;");
+                        " group by glh_acct, glh_cc order by sum desc;");
              
                 DefaultPieDataset dataset = new DefaultPieDataset();
                
                 String acct = "";
+                double total = 0.00;
+                double abssum = 0.00;
+                double displayed = 0.00;
+                int i = 0;
                 while (res.next()) {
+                    i++;
+                    if (res.getDouble("sum") < 0) {
+                        abssum = -1 * res.getDouble("sum");
+                    } else {
+                        abssum = res.getDouble("sum");
+                    }
+                    
                     if (res.getString("glh_acct") == null || res.getString("glh_acct").isEmpty()) {
                       acct = "Unassigned";
                     } else {
                       acct = res.getString("glh_acct") + "-" + res.getString("glh_cc");   
                     }
-                    Double amt = -1 * res.getDouble("sum");
-                   
-                  dataset.setValue(acct, amt);
+                    total += abssum;
+                    Double amt = abssum;
+                    if (i <= Integer.valueOf(ddlimit.getSelectedItem().toString())) {
+                       displayed += abssum; 
+                       dataset.setValue(acct, amt);
+                    }
                 }
+                
+                // other
+                if (total > displayed) {
+                    dataset.setValue("other", (total - displayed));
+                }
+                
                 JFreeChart chart = ChartFactory.createPieChart(getTitleTag(5001), dataset, true, true, false);
                 PiePlot plot = (PiePlot) chart.getPlot();
                PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(("{1} ({2})"), NumberFormat.getCurrencyInstance(), new DecimalFormat("0.00%"));
@@ -654,7 +766,6 @@ public class ChartView extends javax.swing.JPanel {
     try {
             cleanUpOldChartFile();
             ChartPanel.setVisible(true);
-            CodePanel.setVisible(true);
             Connection con = null;
             if (ds != null) {
               con = ds.getConnection();
@@ -971,7 +1082,7 @@ public class ChartView extends javax.swing.JPanel {
                  p.setRenderer(renderer);
                 try {
                     ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
-                    ChartUtilities.writeChartAsJPEG(baos, chart, jPanel2.getWidth(), this.getHeight() - 150);
+                    ChartUtilities.writeChartAsJPEG(baos, chart, ChartPanel.getWidth(), this.getHeight() - 150);
                     ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
                     myimage = ImageIO.read(bais);
                     ImageIcon myicon = new ImageIcon(myimage);
@@ -1046,22 +1157,21 @@ public class ChartView extends javax.swing.JPanel {
             
     JFreeChart chart = ChartFactory.createPieChart(getTitleTag(5008) + " -- Total: " + currformatDoubleWithSymbol(total,curr), dataset, true, true, false);
     PiePlot plot = (PiePlot) chart.getPlot();
-   PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(("{1} ({2})"), NumberFormat.getCurrencyInstance(), new DecimalFormat("0.00%"));
+    PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(("{1} ({2})"), NumberFormat.getCurrencyInstance(), new DecimalFormat("0.00%"));
     plot.setLabelGenerator(gen);
-
-                    try {
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
-                    ChartUtilities.writeChartAsJPEG(baos, chart, jPanel2.getWidth(), this.getHeight() - 150);
-                    ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-                    myimage = ImageIO.read(bais);
-                    ImageIcon myicon = new ImageIcon(myimage);
-                    myicon.getImage().flush();   
-                    chartlabel.setIcon(myicon);
-                    bais.close();
-                    baos.close();
-                    } catch (IOException e) {
-                    MainFrame.bslog(e);
-                    }
+            try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
+            ChartUtilities.writeChartAsJPEG(baos, chart, jPanel2.getWidth(), this.getHeight() - 150);
+            ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+            myimage = ImageIO.read(bais);
+            ImageIcon myicon = new ImageIcon(myimage);
+            myicon.getImage().flush();   
+            chartlabel.setIcon(myicon);
+            bais.close();
+            baos.close();
+            } catch (IOException e) {
+            MainFrame.bslog(e);
+            }
           } catch (SQLException s) {
            MainFrame.bslog(s);
         } finally {
@@ -2309,6 +2419,8 @@ public class ChartView extends javax.swing.JPanel {
         btprint = new javax.swing.JButton();
         ddlimit = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
+        ddreport = new javax.swing.JComboBox<>();
+        cbcodes = new javax.swing.JCheckBox();
         jPanel2 = new javax.swing.JPanel();
         ChartPanel = new javax.swing.JPanel();
         chartlabel = new javax.swing.JLabel();
@@ -2355,28 +2467,39 @@ public class ChartView extends javax.swing.JPanel {
 
         jLabel1.setText("Limit");
 
+        cbcodes.setText("codes");
+        cbcodes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbcodesActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(ddreport, javax.swing.GroupLayout.PREFERRED_SIZE, 311, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, Short.MAX_VALUE)
                 .addComponent(jLabel2)
-                .addGap(18, 18, 18)
-                .addComponent(dcFrom, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(dcFrom, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel3)
-                .addGap(29, 29, 29)
-                .addComponent(dcTo, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(dcTo, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btChart)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btprint)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ddlimit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbcodes)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2387,11 +2510,15 @@ public class ChartView extends javax.swing.JPanel {
                         .addComponent(btChart)
                         .addComponent(btprint)
                         .addComponent(ddlimit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel1))
-                    .addComponent(dcFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(dcTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3))
+                        .addComponent(jLabel1)
+                        .addComponent(cbcodes))
+                    .addComponent(ddreport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jLabel3)
+                        .addComponent(dcTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jLabel2)
+                        .addComponent(dcFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
@@ -2402,7 +2529,7 @@ public class ChartView extends javax.swing.JPanel {
         ChartPanelLayout.setHorizontalGroup(
             ChartPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(ChartPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(398, Short.MAX_VALUE)
                 .addComponent(chartlabel))
         );
         ChartPanelLayout.setVerticalGroup(
@@ -2426,13 +2553,13 @@ public class ChartView extends javax.swing.JPanel {
             .addGroup(CodePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(398, Short.MAX_VALUE))
         );
         CodePanelLayout.setVerticalGroup(
             CodePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(CodePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 354, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -2447,8 +2574,8 @@ public class ChartView extends javax.swing.JPanel {
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 225, Short.MAX_VALUE))
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
         mainPanelLayout.setVerticalGroup(
@@ -2467,6 +2594,7 @@ public class ChartView extends javax.swing.JPanel {
     private void btChartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btChartActionPerformed
         
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        whichreport = ddreport.getSelectedItem().toString();
         
         if (dcTo.getDate() == null || dcFrom.getDate() == null) {
                 bsmf.MainFrame.show("Must choose a date for both From and To");
@@ -2482,46 +2610,44 @@ public class ChartView extends javax.swing.JPanel {
         for (int i = 0; i < weekcodes.size(); i++) {
           weeknumbers += (weekcodes.get(i)) + "\n";
         }
-        
-        
+               
         if (whichreport.equals("")) {
             bsmf.MainFrame.show("whichreport is empty");
         }
         
        
-         if (whichreport.equals("ReqAmtByAcctChart")) {
+         if (whichreport.equals("Requisition -- amount by account")) {
             ReqDollarsByAcct();
         }
         
-        if (whichreport.equals("ReqAmtByDeptChart")) {
+        if (whichreport.equals("Requisition -- amount by department")) {
             ReqDollarsByDept();
         }
         
-        if (whichreport.equals("ReqFreqByUserChart")) {
+        if (whichreport.equals("Requisition -- frequency per userid")) {
             ReqDollarsByUser();
         }
         
         
-         if (whichreport.equals("ShipPerWeekUnitsChart")) {
+         if (whichreport.equals("Shipping -- units per week")) {
             ShipPerWeekUnitsChart();
             tacodes.setText(weeknumbers);
             CodePanel.setVisible(true);
         } // if whichreport
         
-        if (whichreport.equals("ShipPerWeekDollarsChart")) {
+        if (whichreport.equals("Shipping -- dollars per week")) {
             ShipPerWeekDollarsChart();
             tacodes.setText(weeknumbers);
             CodePanel.setVisible(true);
         } // if whichreport
         
-          if (whichreport.equals("ProdByWeekFGUnits")) {
-            
+          if (whichreport.equals("Production -- total units per week")) {
             ProdByWeekFGUnits();
             tacodes.setText(weeknumbers);
             CodePanel.setVisible(true);
         } // if whichreport
         
-        if (whichreport.equals("ProdByWeekFGDollars")) {
+        if (whichreport.equals("Production -- total cost per week")) {
             
             ProdByWeekFGDollars();
             tacodes.setText(weeknumbers);
@@ -2530,17 +2656,17 @@ public class ChartView extends javax.swing.JPanel {
         
        
         
-        if (whichreport.equals("DiscreteOrderPerWeekUnits")) {
+        if (whichreport.equals("Order -- orders per week total units")) {
             DiscreteOrderPerWeekUnits();
             tacodes.setText(weeknumbers);
             CodePanel.setVisible(true);
         } // if whichreport
         
-        if (whichreport.equals("pcOpenOrdersByCust")) {
+        if (whichreport.equals("Order -- open orders")) {
             pcOpenOrdersByCust();
         } // if whichreport
         
-        if (whichreport.equals("DiscreteOrderPerWeekDollars")) {
+        if (whichreport.equals("Order -- orders per week total dollars")) {
             DiscreteOrderPerWeekDollars();
             tacodes.setText(weeknumbers);
             CodePanel.setVisible(true);
@@ -2555,26 +2681,26 @@ public class ChartView extends javax.swing.JPanel {
             RWPartAccumQty();
         }
         
-        if (whichreport.equals("piechart_salesbycust")) {
+        if (whichreport.equals("Sales -- total sales by date")) {
             piechart_salesbycust();
         }
         
-        if (whichreport.equals("piechart_profitandloss")) {
+        if (whichreport.equals("Finance -- income versus expense")) {
             piechart_profitandloss();
         }
         
-        if (whichreport.equals("piechart_expensebyaccount")) {
+        if (whichreport.equals("Finance -- expense by account")) {
             piechart_expensebyaccount();
         }
-        if (whichreport.equals("piechart_incomebyaccountcc")) {
+        if (whichreport.equals("Finance -- income by account")) {
             piechart_incomebyaccountcc();
         }
         
-        if (whichreport.equals("piechart_custAR")) {
+        if (whichreport.equals("Sales -- current accounts receivable")) {
             piechart_custAR();
         }
         
-         if (whichreport.equals("ClockChartByDept")) {
+         if (whichreport.equals("Clock -- by department")) {
             ClockChartByDept();
             tacodes.setText("");
             ArrayList codes = OVData.getdeptanddesclist();
@@ -2587,7 +2713,7 @@ public class ChartView extends javax.swing.JPanel {
             CodePanel.setVisible(true);
         } // if whichreport
         
-        if (whichreport.equals("ClockChartByCode")) {
+        if (whichreport.equals("Clock -- by code")) {
             ClockChartByCode();
             tacodes.setText("");
             ArrayList codes = OVData.getClockCodesAndDesc();
@@ -2600,7 +2726,7 @@ public class ChartView extends javax.swing.JPanel {
             CodePanel.setVisible(true);
         } // if whichreport
         
-         if (whichreport.equals("ClockChartByEmp")) {
+         if (whichreport.equals("Clock -- by employee")) {
             ClockChartByEmp();
             tacodes.setText("");
             ArrayList codes = OVData.getEmployeeIDAndName();
@@ -2614,7 +2740,7 @@ public class ChartView extends javax.swing.JPanel {
         } // if whichreport
         
         
-       if (whichreport.equals("ClockChartByWeek")) {
+       if (whichreport.equals("Clock -- by week")) {
             HoursPerWeek();
             tacodes.setText(weeknumbers);
             CodePanel.setVisible(true);
@@ -2623,13 +2749,13 @@ public class ChartView extends javax.swing.JPanel {
         
        
         
-        if (whichreport.equals("ScrapPerWeek")) {
+        if (whichreport.equals("Scrap -- per week")) {
             ScrapPerWeek();
             tacodes.setText(weeknumbers);
             CodePanel.setVisible(true);
         } // if whichreport
         
-         if (whichreport.equals("ScrapChartQtyByCode")) {
+         if (whichreport.equals("Scrap -- quantity by code")) {
             CodesAccumQty();
             tacodes.setText("");
             ArrayList<String[]> codes = OVData.getCodeAndValueMstr("Scrap");
@@ -2642,7 +2768,7 @@ public class ChartView extends javax.swing.JPanel {
             CodePanel.setVisible(true);
         } // if whichreport
          
-          if (whichreport.equals("ScrapChartDolByCode")) {
+          if (whichreport.equals("Scrap -- dollars by code")) {
             CodesAccumDollar();
             tacodes.setText("");
             ArrayList<String[]> codes = OVData.getCodeAndValueMstr("Scrap"); 
@@ -2655,17 +2781,17 @@ public class ChartView extends javax.swing.JPanel {
             CodePanel.setVisible(true);
         } 
         
-        if (whichreport.equals("ScrapChartQtyByPart")) {
+        if (whichreport.equals("Scrap -- quantity by item")) {
             PartAccumQty();
         }
         
        
         
-        if (whichreport.equals("ScrapChartDolByPart")) {
+        if (whichreport.equals("Scrap -- dollars by item")) {
             PartAccumDollar();
         }
         
-        if (whichreport.equals("ScrapChartQtyByDept")) {
+        if (whichreport.equals("Scrap -- quantity by department")) {
             DeptAccumQty();
         
             tacodes.setText("");
@@ -2678,7 +2804,7 @@ public class ChartView extends javax.swing.JPanel {
         
             CodePanel.setVisible(true);
         } 
-        if (whichreport.equals("ScrapChartDolByDept")) {
+        if (whichreport.equals("Scrap -- dollars by department")) {
             DeptAccumDollar();
         
             tacodes.setText("");
@@ -2729,16 +2855,26 @@ public class ChartView extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btprintActionPerformed
 
+    private void cbcodesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbcodesActionPerformed
+        if (cbcodes.isSelected()) {
+            CodePanel.setVisible(true);
+        } else {
+            CodePanel.setVisible(false);
+        }
+    }//GEN-LAST:event_cbcodesActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel ChartPanel;
     private javax.swing.JPanel CodePanel;
     private javax.swing.JButton btChart;
     private javax.swing.JButton btprint;
+    private javax.swing.JCheckBox cbcodes;
     private javax.swing.JLabel chartlabel;
     private com.toedter.calendar.JDateChooser dcFrom;
     private com.toedter.calendar.JDateChooser dcTo;
     private javax.swing.JComboBox<String> ddlimit;
+    private javax.swing.JComboBox<String> ddreport;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

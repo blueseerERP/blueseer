@@ -135,7 +135,8 @@ LedgerReportsMenu,GLTranRpt1,6,JMenuItem,Ledger-Transaktionsbericht,,1,,1,1
 LedgerReportsMenu,LedgerBalanceExport,7,JMenuItem,Ansicht/Export des Sachkontosaldos,,,,1,1
 LedgerReportsMenu,IncomeStatement1,8,JMenuItem,Gewinn- und Verlustrechnung,,1,,1,1
 LedgerReportsMenu,IncomeStatementYear,9,JMenuItem,Gewinn- und Verlustrechnung (Jahr),,1,,1,1
-LedgerReportsMenu,ReconAccount,10,JMenuItem,Kontenabstimmung,,1,,1,1
+LedgerReportsMenu,ReconAccount,10,JMenuItem,Account Reconciliation,,1,,1,1
+LedgerReportsMenu,ChartMain,11,JMenuItem,Chart Reporting,,1,,1,1
 Finanzen,PostGLTrans,3,JMenuItem,Transaktionen buchen,,,,1,1
 Finanzen,GLTranMaint,4,JMenuItem,GL-Transaktionspflege,,,,1,1
 Finanzen,ExpenseMaint,5,JMenuItem,Kostenerhaltung,,,,1,1

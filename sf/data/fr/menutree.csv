@@ -136,6 +136,7 @@ LedgerReportsMenu,LedgerBalanceExport,7,JMenuItem,Afficher/exporter le solde du 
 LedgerReportsMenu,IncomeStatement1,8,JMenuItem,releve de revenue,,1,,1,1
 LedgerReportsMenu,IncomeStatementYear,9,JMenuItem,Compte de résultat (année),,1,,1,1
 LedgerReportsMenu,ReconAccount,10,JMenuItem,Rapprochement des comptes,,1,,1,1
+LedgerReportsMenu,ChartMain,11,JMenuItem,Chart Reporting,,1,,1,1
 Finance,PostGLTrans,3,JMenuItem,Publier des transactions,,,,1,1
 Finance,GLTranMaint,4,JMenuItem,Gestion des transactions GL,,,,1,1
 Finance,ExpenseMaint,5,JMenuItem,Maintenance des dépenses,,,,1,1

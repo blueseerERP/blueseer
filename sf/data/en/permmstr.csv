@@ -326,3 +326,13 @@ admin,CFOControl,0
 admin,EDIXrefBrowse,0
 admin,QuoteMaint,0
 admin,QuoteBrowse,0
+admin,ChartMain,0
+admin,chart_finance,0
+admin,chart_sales,0
+admin,chart_production,0
+admin,chart_order,0
+admin,chart_purchasing,0
+admin,chart_requisition,0
+admin,chart_clock,0
+admin,chart_scrap,0
+admin,chart_shipping,0

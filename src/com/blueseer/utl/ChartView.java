@@ -2321,9 +2321,11 @@ public class ChartView extends javax.swing.JPanel {
         jScrollPane1.setViewportView(jTextArea1);
 
         setBackground(new java.awt.Color(0, 102, 204));
+        setPreferredSize(new java.awt.Dimension(979, 481));
 
         mainPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Chart View"));
         mainPanel.setName("panelmain"); // NOI18N
+        mainPanel.setPreferredSize(new java.awt.Dimension(969, 471));
 
         jLabel2.setText("From Date");
         jLabel2.setName("lblfromdate"); // NOI18N
@@ -2372,7 +2374,7 @@ public class ChartView extends javax.swing.JPanel {
                 .addComponent(btChart)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btprint)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ddlimit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2447,7 +2449,7 @@ public class ChartView extends javax.swing.JPanel {
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 225, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );

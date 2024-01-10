@@ -17,8 +17,7 @@ Address,TermsMaint,7,JMenuItem,Terms Maintenance,,,,1,1
 Address,TermsBrowse,8,JMenuItem,Terms Browse,,1,,1,1
 Address,TaxMaint,9,JMenuItem,Tax Maintenance,,,,1,1
 Address,TaxBrowse,10,JMenuItem,Tax Browse,,1,,1,1
-CustomerReports,piechart_salesbycust,1,JMenuItem,Sales By Customer (PieChart),,1,,1,1
-CustomerReports,piechart_custAR,2,JMenuItem,Receivables By Customer (PieChart),,1,,1,1
+CustomerReports,chart_sales,1,JMenuItem,Chart Reporting,,1,,1,1
 VendorMenu,VendMaint,1,JMenuItem,Vendor Maintenance,,,,1,1
 VendorMenu,VendBrowse,2,JMenuItem,Vendor Browse,,1,,1,1
 VendorMenu,VendXrefMaint,3,JMenuItem,Vendor Xref Maintenance,,,,1,1
@@ -85,9 +84,7 @@ RequisitionMenu,ApprovedReqBrowse,3,JMenuItem,Approved Requisitions,,1,,1,1
 RequisitionMenu,ReqPendingApproval,4,JMenuItem,Pending By Approver,,1,,1,1
 RequisitionMenu,ReqByUserRpt,6,JMenuItem,Requistions By User,,1,,1,1
 RequisitionMenu,ReqChartsMenu,7,JMenu,Chart Menu,,,,1,1
-ReqChartsMenu,ReqAmtByDeptChart,1,JMenuItem,Dollars By Dept,,1,,1,1
-ReqChartsMenu,ReqFreqByUserChart,2,JMenuItem,Requisitions by User,,1,,1,1
-ReqChartsMenu,ReqAmtByAcctChart,3,JMenuItem,Dollars By Acct,,1,,1,1
+ReqChartsMenu,chart_requisition,1,JMenuItem,Chart Reporting,,1,,1,1
 Order,OrderMaint,1,JMenuItem,Order Maintenance,,,,1,1
 Order,OrderBrowse,2,JMenuItem,Order Browse,,1,,1,1
 Order,ServiceOrderMaint,3,JMenuItem,Service Order Maintenance,,,,1,1
@@ -103,9 +100,7 @@ Order,POSMenu,12,JMenu,POS Menu,,,,1,1
 Order,DOMenu,13,JMenu,Distribution Menu,,,,1,1
 Order,OrderSource,14,JMenuItem,Order Source,,,,1,1
 Order,OrderControl,15,JMenuItem,Order Control,,,,1,1
-OrderReports,pcOpenOrdersByCust,1,JMenuItem,Open Orders By Cust By DueDate (PieChart),,1,,1,1
-OrderReports,DiscreteOrderPerWeekUnits,2,JMenuItem,Order Units By Week (BarChart),,1,,1,1
-OrderReports,DiscreteOrderPerWeekDollars,3,JMenuItem,Order Sales By Week (BarChart),,1,,1,1
+OrderReports,chart_order,1,JMenuItem,Chart Reporting,,1,,1,1
 Shipping,ShipMaint,1,JMenuItem,Shipper Maintenance,,,,1,1
 Shipping,ShipMaintSerial,2,JMenuItem,Shipper Maintenance (Serialized),,,,1,1
 Shipping,ShipperBrowse,3,JMenuItem,Shipper Browse ,,1,,1,1
@@ -115,7 +110,7 @@ Shipping,ShipUnconfirm,6,JMenuItem,Shipper UnConfirm,,,,1,1
 Shipping,ShpRptPicker,7,JMenuItem,Shipping Report Selector,,,,1,1
 Shipping,ShipReports,8,JMenu,Other Reports,,,,1,1
 Shipping,ShipperControl,9,JMenuItem,Shipper Control,,,,1,1
-ShipReports,ShipPerWeekDollarsChart,1,JMenuItem,Shipment Dollars Per Week (BarChart),,1,,1,1
+ShipReports,chart_shipping,1,JMenuItem,Chart Reporting,,1,,1,1
 Finance,LedgerSetupMenu,1,JMenu,Ledger Setup,,,,1,1
 LedgerSetupMenu,AcctMaint,1,JMenuItem,Account Maintenance,,,,1,1
 LedgerSetupMenu,AcctBrowse,2,JMenuItem,Account Browse,,1,,1,1
@@ -140,7 +135,7 @@ LedgerReportsMenu,LedgerBalanceExport,7,JMenuItem,Ledger Balance View/Export,,,,
 LedgerReportsMenu,IncomeStatement1,8,JMenuItem,Income Statement,,1,,1,1
 LedgerReportsMenu,IncomeStatementYear,9,JMenuItem,Income Statement(Year),,1,,1,1
 LedgerReportsMenu,ReconAccount,10,JMenuItem,Account Reconciliation,,1,,1,1
-LedgerReportsMenu,piechart_profitandloss,11,JMenuItem,Profit and Loss (PieChart),,1,,1,1
+LedgerReportsMenu,ChartMain,11,JMenuItem,Chart Reporting,,1,,1,1
 Finance,PostGLTrans,3,JMenuItem,Post Transactions,,,,1,1
 Finance,GLTranMaint,4,JMenuItem,GL Transaction Maintenance,,,,1,1
 Finance,ExpenseMaint,5,JMenuItem,Expense Maintenance,,,,1,1
@@ -213,18 +208,10 @@ ProductionMenu,ProdEntryByPlan,2,JMenuItem,Production Entry By Plan,,,,1,1
 ProductionMenu,OEEEntry,3,JMenuItem,OEE Entry,,,,1,1
 ProductionMenu,ProductionReports,4,JMenu,Production Reports,,,,1,1
 ProductionReports,ProdDetRpt,1,JMenuItem,Production Report Detail,,1,,1,1
-ProductionReports,ProdByWeekFGUnits,2,JMenuItem,Weekly FG Production Units (BarChart),,1,,1,1
-ProductionReports,ProdByWeekFGDollars,3,JMenuItem,Weekly FG Production Dollars (BarChart),,1,,1,1
+ProductionReports,chart_production,2,JMenuItem,Chart Reporting,,1,,1,1
 ScrapMenu,ScrapEntry,1,JMenuItem,Scrap Entry,,,,1,1
 ScrapMenu,ScrapReports,2,JMenu,Scrap Reports,,,,1,1
-ScrapReports,ScrapRpt1,1,JMenuItem,Scrap Report,,1,,1,1
-ScrapReports,ScrapChartQtyByCode,2,JMenuItem,Scrap Qty By Code (BarChart),,1,,1,1
-ScrapReports,ScrapChartQtyByPart,3,JMenuItem,Scrap Qty By Part (BarChart),,1,,1,1
-ScrapReports,ScrapChartQtyByDept,4,JMenuItem,Scrap Qty By Dept (BarChart),,1,,1,1
-ScrapReports,ScrapChartDolByCode,5,JMenuItem,Scrap Dollars By Code (BarChart),,1,,1,1
-ScrapReports,ScrapChartDolByPart,6,JMenuItem,Scrap Dollars By Part (BarChart),,1,,1,1
-ScrapReports,ScrapChartDolByDept,7,JMenuItem,Scrap Dollars By Dept (BarChart),,1,,1,1
-ScrapReports,ScrapPerWeek,8,JMenuItem,Scrap Per Week (BarChart),,1,,1,1
+ScrapReports,chart_scrap,1,JMenuItem,Chart Reporting,,1,,1,1
 ScheduleMenu,Scheduler,1,JMenuItem,Scheduler,,,,1,1
 ScheduleMenu,SchRptPicker,2,JMenuItem,Schedule Report Selector,,1,,1,1
 ScheduleMenu,ProdSchedRpt1,3,JMenuItem,Scheduled Plan Report,,1,,1,1
@@ -262,10 +249,7 @@ TCAdminMenu,ClockControl,6,JMenuItem,Clock Control,,,,1,1
 TimeClockMenu,TCReportsMenu,3,JMenu,Reports,,,,1,1
 TCReportsMenu,ClockDetailRpt,1,JMenuItem,Clock Detail Report,,1,,1,1
 TCReportsMenu,ClockCode66Browse,2,JMenuItem,Code 66 Report,,1,,1,1
-TCReportsMenu,ClockChartByDept,3,JMenuItem,Hours By Dept (Chart),,1,,1,1
-TCReportsMenu,ClockChartByCode,4,JMenuItem,Hours By Code (Chart),,1,,1,1
-TCReportsMenu,ClockChartByEmp,5,JMenuItem,Hours By Employee (Chart),,1,,1,1
-TCReportsMenu,ClockChartByWeek,6,JMenuItem,Total Hours By Week (Chart),,1,,1,1
+TCReportsMenu,chart_clock,3,JMenuItem,Chart Reporting,,1,,1,1
 Admin,DefaultMaint,1,JMenuItem,Default Maintenance,,,,1,1
 Admin,SiteMaint,2,JMenuItem,Site Maintenance,,,,1,1
 Admin,SiteBrowse,3,JMenuItem,Site Browse,,1,,1,1
