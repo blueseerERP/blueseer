@@ -74,6 +74,7 @@ import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getTitleTag;
 import static com.blueseer.utl.ReportPanel.TableReport;
 import java.awt.Component;
+import java.awt.Image;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.text.DecimalFormatSymbols;
@@ -83,6 +84,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -119,7 +121,7 @@ public class ChartMain extends javax.swing.JPanel {
  String symbol = currency.getSymbol(Locale.getDefault());
  String chartfilepath = OVData.getSystemTempDirectory() + "/" + "chart.jpg";
  ArrayList<String> ml = new ArrayList<String>();
- 
+ LinkedHashMap<String,String> lhm = new LinkedHashMap<String,String>();
  BufferedImage myimage = null;
  
     /**
@@ -186,31 +188,57 @@ public class ChartMain extends javax.swing.JPanel {
         }
         if (rpt[0].equals("ChartMain")) {
         ml.add("Clock -- by department");
+        lhm.put("Clock -- by department", "1");
         ml.add("Clock -- by code");
+        lhm.put("Clock -- by code", "1");
         ml.add("Clock -- by employee");
+        lhm.put("Clock -- by employee", "1");
         ml.add("Clock -- by week");   
+        lhm.put("Clock -- by week", "1");
         ml.add("Finance -- income versus expense");
+        lhm.put("Finance -- income versus expense", "0");
         ml.add("Finance -- expense by account");
+        lhm.put("Finance -- expense by account", "0");
         ml.add("Finance -- income by account");
+        lhm.put("Finance -- income by account", "0");
         ml.add("Order -- open orders");
+        lhm.put("Order -- open orders", "0");
         ml.add("Order -- orders per week total units");
+        lhm.put("Order -- orders per week total units", "1");
         ml.add("Order -- orders per week total dollars");
+        lhm.put("Order -- orders per week total dollars", "1");
         ml.add("Production -- total units per week");
+        lhm.put("Production -- total units per week", "1");
         ml.add("Production -- total cost per week");
+        lhm.put("Production -- total cost per week", "1");
         ml.add("Requisition -- amount by account");
+        lhm.put("Requisition -- amount by account", "1");
         ml.add("Requisition -- amount by department");
+        lhm.put("Requisition -- amount by department", "1");
         ml.add("Requisition -- frequency per userid");
+        lhm.put("Requisition -- frequency per userid", "1");
         ml.add("Sales -- total sales by date");
+        lhm.put("Sales -- total sales by date", "1");
         ml.add("Sales -- current accounts receivable");
+        lhm.put("Sales -- current accounts receivable", "1");
         ml.add("Scrap -- per week");
+        lhm.put("Scrap -- per week", "1");
         ml.add("Scrap -- quantity by code");
+        lhm.put("Scrap -- quantity by code", "1");
         ml.add("Scrap -- dollars by code");
+        lhm.put("Scrap -- dollars by code", "1");
         ml.add("Scrap -- quantity by item");
+        lhm.put("Scrap -- quantity by item", "1");
         ml.add("Scrap -- dollars by item");
+        lhm.put("Scrap -- dollars by item", "1");
         ml.add("Scrap -- quantity by department");
+        lhm.put("Scrap -- quantity by department", "1");
         ml.add("Scrap -- dollars by department");
+        lhm.put("Scrap -- dollars by department", "1");
         ml.add("Shipping -- units per week");
+        lhm.put("Shipping -- units per week", "1");
         ml.add("Shipping -- dollars per week");
+        lhm.put("Shipping -- dollars per week", "1");
         
         
         }
@@ -563,12 +591,9 @@ public class ChartMain extends javax.swing.JPanel {
     
      // shipments
     public void ShipPerWeekDollarsChart() {
-        
-       
         try {
                 cleanUpOldChartFile();
                 ChartPanel.setVisible(true);
-                CodePanel.setVisible(true);
                 Connection con = null;
                 if (ds != null) {
                   con = ds.getConnection();
@@ -577,17 +602,14 @@ public class ChartMain extends javax.swing.JPanel {
                 }
                 Statement st = con.createStatement();
                 ResultSet res = null;
-                int qty = 0;
-                double dol = 0;
+                DefaultCategoryDataset dataset = new DefaultCategoryDataset();
                 try {
-                    
                     DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                  
                     int days = (int)( (dcTo.getDate().getTime() - dcFrom.getDate().getTime()) / (1000 * 60 * 60 * 24) );
                     if (bsmf.MainFrame.dbtype.equals("sqlite")) {
                    res = st.executeQuery(" select c.myweek as 'myweek', sum(shd_qty * shd_netprice) as 'sum' from ( select boo.mydate, strftime('%W',mydate) as 'myweek' " +
                                          " from (select date(julianday( " + "'" + dfdate.format(dcFrom.getDate()) + "' )" +
-                                         ", '-3 days', '+' || mock_nbr || ' days') as mydate " +
+                                         ", '0 days', '+' || mock_nbr || ' days') as mydate " +
                                          " from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by myweek) as c " +
                                          " left outer join ship_det on strftime('%W',shd_date) = c.myweek " +
                                          " and shd_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
@@ -604,37 +626,11 @@ public class ChartMain extends javax.swing.JPanel {
                                          //" where mock_nbr <= 10 " +
                                          " group by c.myweek;");
                     }
-                    DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-                    int i = 0;
-                    int start = 0;
-                    int last = 0;
-                    int curr = 0;
-                    int diff = 0;
+                    
                     
                     while (res.next()) {
-                     i++;
-                     if (i == 1) {
-                       last = res.getInt("myweek");
-                       curr = res.getInt("myweek");
-                     } else {
-                       curr = res.getInt("myweek");
-                     }
-                     
-                     diff = curr - last;
-                     
-                     dol = res.getDouble("sum");         
-                     
-                     if (diff > 1) {
-                         for (int j = 1; j < diff; j++) {
-                            dataset.setValue(0, "Sum", String.valueOf(last + 1)); 
-                         }
-                         dataset.setValue(dol, "Sum", String.valueOf(curr));
-                     } else {
-                         dataset.setValue(dol, "Sum", String.valueOf(curr));
-                     }
-                       
-                     last = curr;
-                    }
+                    dataset.setValue(res.getDouble("sum"), "Sum", res.getString("myweek"));
+                }
                     
                     JFreeChart chart = ChartFactory.createBarChart(getTitleTag(5002), getGlobalColumnTag("week"), getGlobalColumnTag("totalsales") + " " + symbol, dataset, PlotOrientation.VERTICAL, true, true, false);
                     CategoryItemRenderer renderer = new CustomRenderer();
@@ -679,7 +675,6 @@ public class ChartMain extends javax.swing.JPanel {
         try {
                 cleanUpOldChartFile();
                 ChartPanel.setVisible(true);
-                CodePanel.setVisible(true);
                 Connection con = null;
                 if (ds != null) {
                   con = ds.getConnection();
@@ -697,13 +692,13 @@ public class ChartMain extends javax.swing.JPanel {
                     if (bsmf.MainFrame.dbtype.equals("sqlite")) {
                       res = st.executeQuery(" select c.myweek as 'myweek', sum(shd_qty) as 'sum' from ( select boo.mydate, strftime('%W',mydate) as 'myweek' " +
                          " from (select date(julianday( " + "'" + dfdate.format(dcFrom.getDate()) + "' )" +
-                         ", '-3 days', '+' || mock_nbr || ' days') as mydate " +
+                         ", '0 days', '+' || mock_nbr || ' days') as mydate " +
                          " from mock_mstr where mock_nbr <= " + "'" + days + "'" + " ) as boo group by myweek) as c " +
                          " left outer join ship_det on strftime('%W',shd_date) = c.myweek " +
                          " and shd_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
                          " and shd_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
                          //" where mock_nbr <= 10 " +
-                         " group by c.myweek;");   
+                         " group by c.myweek;"); 
                     } else {
                      res = st.executeQuery(" select c.myweek as 'myweek', sum(shd_qty) as 'sum' from ( select boo.mydate, week(mydate) as 'myweek' " +
                         " from (select date_add( " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
@@ -848,7 +843,6 @@ public class ChartMain extends javax.swing.JPanel {
 
             cleanUpOldChartFile();
             ChartPanel.setVisible(true);
-            CodePanel.setVisible(true);
             Connection con = null;
             if (ds != null) {
               con = ds.getConnection();
@@ -934,12 +928,9 @@ public class ChartMain extends javax.swing.JPanel {
       
      // order
     public void DiscreteOrderPerWeekUnits() {
-    
     try {
-
             cleanUpOldChartFile();
             ChartPanel.setVisible(true);
-            CodePanel.setVisible(true);
             Connection con = null;
             if (ds != null) {
               con = ds.getConnection();
@@ -948,13 +939,12 @@ public class ChartMain extends javax.swing.JPanel {
             }
             Statement st = con.createStatement();
                 ResultSet res = null;
-            int qty = 0;
-            double dol = 0;
               DefaultCategoryDataset dataset = new DefaultCategoryDataset();
             try {
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 ArrayList mylist = OVData.getWeekNbrByFromDateToDate(dfdate.format(dcFrom.getDate()), dfdate.format(dcTo.getDate()));
                 ArrayList newlist = new ArrayList();
+                
                 int days = (int)( (dcTo.getDate().getTime() - dcFrom.getDate().getTime()) / (1000 * 60 * 60 * 24) );
                 if (bsmf.MainFrame.dbtype.equals("sqlite")) {
 
@@ -1023,10 +1013,9 @@ public class ChartMain extends javax.swing.JPanel {
     public void DiscreteOrderPerWeekDollars() {
     
         try {
-
             cleanUpOldChartFile();
             ChartPanel.setVisible(true);
-            CodePanel.setVisible(true);
+            //CodePanel.setVisible(true);
             Connection con = null;
             if (ds != null) {
               con = ds.getConnection();
@@ -1082,7 +1071,7 @@ public class ChartMain extends javax.swing.JPanel {
                  p.setRenderer(renderer);
                 try {
                     ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
-                    ChartUtilities.writeChartAsJPEG(baos, chart, ChartPanel.getWidth(), this.getHeight() - 150);
+                    ChartUtilities.writeChartAsJPEG(baos, chart, jPanel2.getWidth(), this.getHeight() - 150);
                     ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
                     myimage = ImageIO.read(bais);
                     ImageIcon myicon = new ImageIcon(myimage);
@@ -1354,6 +1343,7 @@ public class ChartMain extends javax.swing.JPanel {
     public void ClockChartByDept() {
     try {
         cleanUpOldChartFile();
+        ChartPanel.setVisible(true);
             Connection con = null;
             if (ds != null) {
               con = ds.getConnection();
@@ -1393,15 +1383,18 @@ public class ChartMain extends javax.swing.JPanel {
 
                  p.setRenderer(renderer);
                 try {
-                    ChartUtilities.saveChartAsJPEG(new File(bsmf.MainFrame.temp + "/" + "chart.jpg"), chart, 900, this.getHeight()/2);
-                } catch (IOException e) {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
+                    ChartUtilities.writeChartAsJPEG(baos, chart, jPanel2.getWidth(), this.getHeight() - 150);
+                    ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+                    myimage = ImageIO.read(bais);
+                    ImageIcon myicon = new ImageIcon(myimage);
+                    myicon.getImage().flush();   
+                    chartlabel.setIcon(myicon);
+                    bais.close();
+                    baos.close();
+                    } catch (IOException e) {
                     MainFrame.bslog(e);
-                }
-                ImageIcon myicon = new ImageIcon(bsmf.MainFrame.temp + "/" + "chart.jpg");
-                myicon.getImage().flush();
-                this.chartlabel.setIcon(myicon);
-                ChartPanel.setVisible(true);
-                this.repaint();
+                    }
             } catch (SQLException s) {
                 MainFrame.bslog(s);
             } finally {
@@ -1417,6 +1410,7 @@ public class ChartMain extends javax.swing.JPanel {
     public void ClockChartByCode() {
     try {
         cleanUpOldChartFile();
+        ChartPanel.setVisible(true);
             Connection con = null;
             if (ds != null) {
               con = ds.getConnection();
@@ -1453,15 +1447,18 @@ public class ChartMain extends javax.swing.JPanel {
 
                  p.setRenderer(renderer);
                 try {
-                    ChartUtilities.saveChartAsJPEG(new File(bsmf.MainFrame.temp + "/" + "chart.jpg"), chart, 900, this.getHeight()/2);
-                } catch (IOException e) {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
+                    ChartUtilities.writeChartAsJPEG(baos, chart, jPanel2.getWidth(), this.getHeight() - 150);
+                    ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+                    myimage = ImageIO.read(bais);
+                    ImageIcon myicon = new ImageIcon(myimage);
+                    myicon.getImage().flush();   
+                    chartlabel.setIcon(myicon);
+                    bais.close();
+                    baos.close();
+                    } catch (IOException e) {
                     MainFrame.bslog(e);
-                }
-                ImageIcon myicon = new ImageIcon(bsmf.MainFrame.temp + "/" + "chart.jpg");
-                myicon.getImage().flush();
-                this.chartlabel.setIcon(myicon);
-                ChartPanel.setVisible(true);
-                this.repaint();
+                    }
             } catch (SQLException s) {
                MainFrame.bslog(s);
             } finally {
@@ -1477,6 +1474,7 @@ public class ChartMain extends javax.swing.JPanel {
     public void ClockChartByEmp() {
     try { 
         cleanUpOldChartFile();
+        ChartPanel.setVisible(true);
             Connection con = null;
             if (ds != null) {
               con = ds.getConnection();
@@ -1513,15 +1511,18 @@ public class ChartMain extends javax.swing.JPanel {
 
                  p.setRenderer(renderer);
                 try {
-                    ChartUtilities.saveChartAsJPEG(new File(bsmf.MainFrame.temp + "/" + "chart.jpg"), chart, 900, this.getHeight()/2);
-                } catch (IOException e) {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
+                    ChartUtilities.writeChartAsJPEG(baos, chart, jPanel2.getWidth(), this.getHeight() - 150);
+                    ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+                    myimage = ImageIO.read(bais);
+                    ImageIcon myicon = new ImageIcon(myimage);
+                    myicon.getImage().flush();   
+                    chartlabel.setIcon(myicon);
+                    bais.close();
+                    baos.close();
+                    } catch (IOException e) {
                     MainFrame.bslog(e);
-                }
-                ImageIcon myicon = new ImageIcon(bsmf.MainFrame.temp + "/" + "chart.jpg");
-                myicon.getImage().flush();
-                this.chartlabel.setIcon(myicon);
-                ChartPanel.setVisible(true);
-                this.repaint();
+                    }
             } catch (SQLException s) {
                 MainFrame.bslog(s);
             } finally {
@@ -1537,6 +1538,7 @@ public class ChartMain extends javax.swing.JPanel {
     public void HoursPerWeek() {
     try {
         cleanUpOldChartFile();
+        ChartPanel.setVisible(true);
             Connection con = null;
             if (ds != null) {
               con = ds.getConnection();
@@ -1591,16 +1593,18 @@ public class ChartMain extends javax.swing.JPanel {
 
                  p.setRenderer(renderer);
                 try {
-                    ChartUtilities.saveChartAsJPEG(new File(bsmf.MainFrame.temp + "/" + "chart.jpg"), chart, 900, this.getHeight()/2);
-                } catch (IOException e) {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
+                    ChartUtilities.writeChartAsJPEG(baos, chart, jPanel2.getWidth(), this.getHeight() - 150);
+                    ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+                    myimage = ImageIO.read(bais);
+                    ImageIcon myicon = new ImageIcon(myimage);
+                    myicon.getImage().flush();   
+                    chartlabel.setIcon(myicon);
+                    bais.close();
+                    baos.close();
+                    } catch (IOException e) {
                     MainFrame.bslog(e);
-                }
-                ImageIcon myicon = new ImageIcon(bsmf.MainFrame.temp + "/" + "chart.jpg");
-                myicon.getImage().flush();
-
-                this.chartlabel.setIcon(myicon);
-                ChartPanel.setVisible(true);
-                this.repaint();
+                    }
             } catch (SQLException s) {
                 MainFrame.bslog(s);
             } finally {
@@ -1618,6 +1622,7 @@ public class ChartMain extends javax.swing.JPanel {
     public void ReqDollarsByAcct() {
       try {
       cleanUpOldChartFile();
+      ChartPanel.setVisible(true);
         Connection con = null;
         if (ds != null) {
           con = ds.getConnection();
@@ -1655,16 +1660,19 @@ public class ChartMain extends javax.swing.JPanel {
    PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(("{1} ({2})"), NumberFormat.getCurrencyInstance(), new DecimalFormat("0.00%"));
     plot.setLabelGenerator(gen);
 
-    try {
-    ChartUtilities.saveChartAsJPEG(new File(chartfilepath), chart, 900, this.getHeight()/2);
-    } catch (IOException e) {
-    MainFrame.bslog(e);
-    }
-    ImageIcon myicon = new ImageIcon(chartfilepath);
-    myicon.getImage().flush();   
-    this.chartlabel.setIcon(myicon);
-    ChartPanel.setVisible(true);
-    this.repaint();
+                    try {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
+                    ChartUtilities.writeChartAsJPEG(baos, chart, jPanel2.getWidth(), this.getHeight() - 150);
+                    ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+                    myimage = ImageIO.read(bais);
+                    ImageIcon myicon = new ImageIcon(myimage);
+                    myicon.getImage().flush();   
+                    chartlabel.setIcon(myicon);
+                    bais.close();
+                    baos.close();
+                    } catch (IOException e) {
+                    MainFrame.bslog(e);
+                    }
 
           } catch (SQLException s) {
               MainFrame.bslog(s);
@@ -1681,6 +1689,7 @@ public class ChartMain extends javax.swing.JPanel {
     public void ReqDollarsByDept() {
       try {
     cleanUpOldChartFile();
+    ChartPanel.setVisible(true);
         Class.forName(driver).newInstance();
         Connection con = null;
         if (ds != null) {
@@ -1719,16 +1728,19 @@ public class ChartMain extends javax.swing.JPanel {
    PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(("{1} ({2})"), NumberFormat.getCurrencyInstance(), new DecimalFormat("0.00%"));
     plot.setLabelGenerator(gen);
 
-    try {
-    ChartUtilities.saveChartAsJPEG(new File(chartfilepath), chart, 900, this.getHeight()/2);
-    } catch (IOException e) {
-    MainFrame.bslog(e);
-    }
-    ImageIcon myicon = new ImageIcon(chartfilepath);
-    myicon.getImage().flush();   
-    this.chartlabel.setIcon(myicon);
-    ChartPanel.setVisible(true);
-    this.repaint();
+            try {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
+                    ChartUtilities.writeChartAsJPEG(baos, chart, jPanel2.getWidth(), this.getHeight() - 150);
+                    ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+                    myimage = ImageIO.read(bais);
+                    ImageIcon myicon = new ImageIcon(myimage);
+                    myicon.getImage().flush();   
+                    chartlabel.setIcon(myicon);
+                    bais.close();
+                    baos.close();
+                    } catch (IOException e) {
+                    MainFrame.bslog(e);
+                    }
 
           } catch (SQLException s) {
              MainFrame.bslog(s);
@@ -1745,6 +1757,7 @@ public class ChartMain extends javax.swing.JPanel {
     public void ReqDollarsByUser() {
       try {
         cleanUpOldChartFile();
+        ChartPanel.setVisible(true);
         Class.forName(driver).newInstance();
         Connection con = null;
         if (ds != null) {
@@ -1781,16 +1794,19 @@ public class ChartMain extends javax.swing.JPanel {
    PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(("{1} ({2})"), NumberFormat.getCurrencyInstance(), new DecimalFormat("0.00%"));
     plot.setLabelGenerator(gen);
 
-    try {
-    ChartUtilities.saveChartAsJPEG(new File(chartfilepath), chart, 900, this.getHeight()/2);
-    } catch (IOException e) {
-    MainFrame.bslog(e);
-    }
-    ImageIcon myicon = new ImageIcon(chartfilepath);
-    myicon.getImage().flush();   
-    this.chartlabel.setIcon(myicon);
-    ChartPanel.setVisible(true);
-    this.repaint();
+                try {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
+                    ChartUtilities.writeChartAsJPEG(baos, chart, jPanel2.getWidth(), this.getHeight() - 150);
+                    ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+                    myimage = ImageIO.read(bais);
+                    ImageIcon myicon = new ImageIcon(myimage);
+                    myicon.getImage().flush();   
+                    chartlabel.setIcon(myicon);
+                    bais.close();
+                    baos.close();
+                    } catch (IOException e) {
+                    MainFrame.bslog(e);
+                    }
 
           } catch (SQLException s) {
               MainFrame.bslog(s);
@@ -1809,6 +1825,7 @@ public class ChartMain extends javax.swing.JPanel {
     public void ScrapPerWeek() {
     try { 
             cleanUpOldChartFile();
+            ChartPanel.setVisible(true);
             Connection con = null;
             if (ds != null) {
               con = ds.getConnection();
@@ -1858,15 +1875,18 @@ public class ChartMain extends javax.swing.JPanel {
 
                  p.setRenderer(renderer);
                 try {
-                    ChartUtilities.saveChartAsJPEG(new File(bsmf.MainFrame.temp + "/" + "chart.jpg"), chart, 900, this.getHeight()/2);
-                } catch (IOException e) {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
+                    ChartUtilities.writeChartAsJPEG(baos, chart, jPanel2.getWidth(), this.getHeight() - 150);
+                    ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+                    myimage = ImageIO.read(bais);
+                    ImageIcon myicon = new ImageIcon(myimage);
+                    myicon.getImage().flush();   
+                    chartlabel.setIcon(myicon);
+                    bais.close();
+                    baos.close();
+                    } catch (IOException e) {
                     MainFrame.bslog(e);
-                }
-                ImageIcon myicon = new ImageIcon(bsmf.MainFrame.temp + "/" + "chart.jpg");
-                myicon.getImage().flush();
-                this.chartlabel.setIcon(myicon);
-                ChartPanel.setVisible(true);
-                this.repaint();
+                    }
             } catch (SQLException s) {
                 MainFrame.bslog(s);
             } finally {
@@ -1882,6 +1902,7 @@ public class ChartMain extends javax.swing.JPanel {
     public void CodesAccumQty() {
     try {
             cleanUpOldChartFile();
+            ChartPanel.setVisible(true);
             Connection con = null;
             if (ds != null) {
               con = ds.getConnection();
@@ -1919,15 +1940,18 @@ public class ChartMain extends javax.swing.JPanel {
 
                  p.setRenderer(renderer);
                 try {
-                    ChartUtilities.saveChartAsJPEG(new File(chartfilepath), chart, 900, this.getHeight()/2);
-                } catch (IOException e) {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
+                    ChartUtilities.writeChartAsJPEG(baos, chart, jPanel2.getWidth(), this.getHeight() - 150);
+                    ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+                    myimage = ImageIO.read(bais);
+                    ImageIcon myicon = new ImageIcon(myimage);
+                    myicon.getImage().flush();   
+                    chartlabel.setIcon(myicon);
+                    bais.close();
+                    baos.close();
+                    } catch (IOException e) {
                     MainFrame.bslog(e);
-                }
-                ImageIcon myicon = new ImageIcon(chartfilepath);
-                myicon.getImage().flush();
-                this.chartlabel.setIcon(myicon);
-                ChartPanel.setVisible(true);
-                this.repaint();
+                    }
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
@@ -1945,6 +1969,7 @@ public class ChartMain extends javax.swing.JPanel {
     try {
 
             cleanUpOldChartFile();
+            ChartPanel.setVisible(true);
             Connection con = null;
             if (ds != null) {
               con = ds.getConnection();
@@ -1982,16 +2007,18 @@ public class ChartMain extends javax.swing.JPanel {
 
                  p.setRenderer(renderer);
                 try {
-                    ChartUtilities.saveChartAsJPEG(new File(chartfilepath), chart, 900, this.getHeight()/2);
-                } catch (IOException e) {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
+                    ChartUtilities.writeChartAsJPEG(baos, chart, jPanel2.getWidth(), this.getHeight() - 150);
+                    ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+                    myimage = ImageIO.read(bais);
+                    ImageIcon myicon = new ImageIcon(myimage);
+                    myicon.getImage().flush();   
+                    chartlabel.setIcon(myicon);
+                    bais.close();
+                    baos.close();
+                    } catch (IOException e) {
                     MainFrame.bslog(e);
-                }
-                ImageIcon myicon = new ImageIcon(chartfilepath);
-                myicon.getImage().flush();
-
-                this.chartlabel.setIcon(myicon);
-                ChartPanel.setVisible(true);
-                this.repaint();
+                    }
 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
@@ -2009,6 +2036,7 @@ public class ChartMain extends javax.swing.JPanel {
     try {
 
             cleanUpOldChartFile();
+            ChartPanel.setVisible(true);
             Connection con = null;
             if (ds != null) {
               con = ds.getConnection();
@@ -2046,15 +2074,18 @@ public class ChartMain extends javax.swing.JPanel {
 
                  p.setRenderer(renderer);
                 try {
-                    ChartUtilities.saveChartAsJPEG(new File(chartfilepath), chart, 900, this.getHeight()/2);
-                } catch (IOException e) {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
+                    ChartUtilities.writeChartAsJPEG(baos, chart, jPanel2.getWidth(), this.getHeight() - 150);
+                    ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+                    myimage = ImageIO.read(bais);
+                    ImageIcon myicon = new ImageIcon(myimage);
+                    myicon.getImage().flush();   
+                    chartlabel.setIcon(myicon);
+                    bais.close();
+                    baos.close();
+                    } catch (IOException e) {
                     MainFrame.bslog(e);
-                }
-                ImageIcon myicon = new ImageIcon(chartfilepath);
-                myicon.getImage().flush();
-                this.chartlabel.setIcon(myicon);
-                ChartPanel.setVisible(true);
-                this.repaint();
+                    }
             } catch (SQLException s) {
                 MainFrame.bslog(s);
             } finally {
@@ -2071,6 +2102,7 @@ public class ChartMain extends javax.swing.JPanel {
     try {
 
             cleanUpOldChartFile();
+            ChartPanel.setVisible(true);
             Connection con = null;
             if (ds != null) {
               con = ds.getConnection();
@@ -2110,15 +2142,18 @@ public class ChartMain extends javax.swing.JPanel {
 
                  p.setRenderer(renderer);
                 try {
-                    ChartUtilities.saveChartAsJPEG(new File(chartfilepath), chart, 900, this.getHeight()/2);
-                } catch (IOException e) {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
+                    ChartUtilities.writeChartAsJPEG(baos, chart, jPanel2.getWidth(), this.getHeight() - 150);
+                    ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+                    myimage = ImageIO.read(bais);
+                    ImageIcon myicon = new ImageIcon(myimage);
+                    myicon.getImage().flush();   
+                    chartlabel.setIcon(myicon);
+                    bais.close();
+                    baos.close();
+                    } catch (IOException e) {
                     MainFrame.bslog(e);
-                }
-                ImageIcon myicon = new ImageIcon(chartfilepath);
-                myicon.getImage().flush();
-                this.chartlabel.setIcon(myicon);
-                ChartPanel.setVisible(true);
-                this.repaint();
+                    }
             } catch (SQLException s) {
                 MainFrame.bslog(s);
             } finally {
@@ -2135,6 +2170,7 @@ public class ChartMain extends javax.swing.JPanel {
     try {
 
             cleanUpOldChartFile();
+            ChartPanel.setVisible(true);
             Connection con = null;
             if (ds != null) {
               con = ds.getConnection();
@@ -2174,15 +2210,18 @@ public class ChartMain extends javax.swing.JPanel {
 
                  p.setRenderer(renderer);
                 try {
-                    ChartUtilities.saveChartAsJPEG(new File(chartfilepath), chart, 900, this.getHeight()/2);
-                } catch (IOException e) {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
+                    ChartUtilities.writeChartAsJPEG(baos, chart, jPanel2.getWidth(), this.getHeight() - 150);
+                    ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+                    myimage = ImageIO.read(bais);
+                    ImageIcon myicon = new ImageIcon(myimage);
+                    myicon.getImage().flush();   
+                    chartlabel.setIcon(myicon);
+                    bais.close();
+                    baos.close();
+                    } catch (IOException e) {
                     MainFrame.bslog(e);
-                }
-                ImageIcon myicon = new ImageIcon(chartfilepath);
-                myicon.getImage().flush();
-                this.chartlabel.setIcon(myicon);
-                ChartPanel.setVisible(true);
-                this.repaint();
+                    }
             } catch (SQLException s) {
                 MainFrame.bslog(s);
             } finally {
@@ -2199,6 +2238,7 @@ public class ChartMain extends javax.swing.JPanel {
     try {
 
             cleanUpOldChartFile();
+            ChartPanel.setVisible(true);
             Connection con = null;
             if (ds != null) {
               con = ds.getConnection();
@@ -2238,15 +2278,18 @@ public class ChartMain extends javax.swing.JPanel {
 
                  p.setRenderer(renderer);
                 try {
-                    ChartUtilities.saveChartAsJPEG(new File(chartfilepath), chart, 900, this.getHeight()/2);
-                } catch (IOException e) {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
+                    ChartUtilities.writeChartAsJPEG(baos, chart, jPanel2.getWidth(), this.getHeight() - 150);
+                    ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+                    myimage = ImageIO.read(bais);
+                    ImageIcon myicon = new ImageIcon(myimage);
+                    myicon.getImage().flush();   
+                    chartlabel.setIcon(myicon);
+                    bais.close();
+                    baos.close();
+                    } catch (IOException e) {
                     MainFrame.bslog(e);
-                }
-                ImageIcon myicon = new ImageIcon(chartfilepath);
-                myicon.getImage().flush();
-                this.chartlabel.setIcon(myicon);
-                ChartPanel.setVisible(true);
-                this.repaint();
+                    }
             } catch (SQLException s) {
                 MainFrame.bslog(s);
             } finally {
@@ -2263,6 +2306,7 @@ public class ChartMain extends javax.swing.JPanel {
     try {
 
           cleanUpOldChartFile();
+          ChartPanel.setVisible(true);
             Connection con = null;
             if (ds != null) {
               con = ds.getConnection();
@@ -2301,15 +2345,18 @@ public class ChartMain extends javax.swing.JPanel {
 
                  p.setRenderer(renderer);
                 try {
-                    ChartUtilities.saveChartAsJPEG(new File(chartfilepath), chart, 900, this.getHeight()/2);
-                } catch (IOException e) {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
+                    ChartUtilities.writeChartAsJPEG(baos, chart, jPanel2.getWidth(), this.getHeight() - 150);
+                    ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+                    myimage = ImageIO.read(bais);
+                    ImageIcon myicon = new ImageIcon(myimage);
+                    myicon.getImage().flush();   
+                    chartlabel.setIcon(myicon);
+                    bais.close();
+                    baos.close();
+                    } catch (IOException e) {
                     MainFrame.bslog(e);
-                }
-                ImageIcon myicon = new ImageIcon(chartfilepath);
-                myicon.getImage().flush();
-                this.chartlabel.setIcon(myicon);
-                ChartPanel.setVisible(true);
-                this.repaint();
+                    }
             } catch (SQLException s) {
                 MainFrame.bslog(s);
             } finally {
@@ -2522,25 +2569,25 @@ public class ChartMain extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
+        jPanel2.setPreferredSize(new java.awt.Dimension(900, 376));
         jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
+
+        ChartPanel.setPreferredSize(new java.awt.Dimension(450, 376));
 
         javax.swing.GroupLayout ChartPanelLayout = new javax.swing.GroupLayout(ChartPanel);
         ChartPanel.setLayout(ChartPanelLayout);
         ChartPanelLayout.setHorizontalGroup(
             ChartPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(ChartPanelLayout.createSequentialGroup()
-                .addContainerGap(398, Short.MAX_VALUE)
-                .addComponent(chartlabel))
+            .addComponent(chartlabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 485, Short.MAX_VALUE)
         );
         ChartPanelLayout.setVerticalGroup(
             ChartPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(ChartPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(chartlabel)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(chartlabel, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
         );
 
         jPanel2.add(ChartPanel);
+
+        CodePanel.setPreferredSize(new java.awt.Dimension(450, 376));
 
         tacodes.setColumns(20);
         tacodes.setRows(5);
@@ -2552,14 +2599,13 @@ public class ChartMain extends javax.swing.JPanel {
             CodePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(CodePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(398, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 466, Short.MAX_VALUE)
+                .addContainerGap())
         );
         CodePanelLayout.setVerticalGroup(
             CodePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(CodePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 354, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, CodePanelLayout.createSequentialGroup()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -2632,26 +2678,26 @@ public class ChartMain extends javax.swing.JPanel {
          if (whichreport.equals("Shipping -- units per week")) {
             ShipPerWeekUnitsChart();
             tacodes.setText(weeknumbers);
-            CodePanel.setVisible(true);
+        //    CodePanel.setVisible(true);
         } // if whichreport
         
         if (whichreport.equals("Shipping -- dollars per week")) {
             ShipPerWeekDollarsChart();
             tacodes.setText(weeknumbers);
-            CodePanel.setVisible(true);
+         //   CodePanel.setVisible(true);
         } // if whichreport
         
           if (whichreport.equals("Production -- total units per week")) {
             ProdByWeekFGUnits();
             tacodes.setText(weeknumbers);
-            CodePanel.setVisible(true);
+        //    CodePanel.setVisible(true);
         } // if whichreport
         
         if (whichreport.equals("Production -- total cost per week")) {
             
             ProdByWeekFGDollars();
             tacodes.setText(weeknumbers);
-            CodePanel.setVisible(true);
+         //   CodePanel.setVisible(true);
         } // if whichreport
         
        
@@ -2659,7 +2705,7 @@ public class ChartMain extends javax.swing.JPanel {
         if (whichreport.equals("Order -- orders per week total units")) {
             DiscreteOrderPerWeekUnits();
             tacodes.setText(weeknumbers);
-            CodePanel.setVisible(true);
+          //  CodePanel.setVisible(true);
         } // if whichreport
         
         if (whichreport.equals("Order -- open orders")) {
@@ -2669,7 +2715,7 @@ public class ChartMain extends javax.swing.JPanel {
         if (whichreport.equals("Order -- orders per week total dollars")) {
             DiscreteOrderPerWeekDollars();
             tacodes.setText(weeknumbers);
-            CodePanel.setVisible(true);
+           // CodePanel.setVisible(true);
         } // if whichreport
         
        
@@ -2710,7 +2756,7 @@ public class ChartMain extends javax.swing.JPanel {
                 str += (codes.get(i)) + "\n";
             }
             tacodes.setText(str);
-            CodePanel.setVisible(true);
+           // CodePanel.setVisible(true);
         } // if whichreport
         
         if (whichreport.equals("Clock -- by code")) {
@@ -2723,7 +2769,7 @@ public class ChartMain extends javax.swing.JPanel {
                 str += (element[0] + " = " + element[1]) + "\n";
             }
             tacodes.setText(str);
-            CodePanel.setVisible(true);
+          //  CodePanel.setVisible(true);
         } // if whichreport
         
          if (whichreport.equals("Clock -- by employee")) {
@@ -2736,14 +2782,14 @@ public class ChartMain extends javax.swing.JPanel {
                 str += (element[0] + " = " + element[1]) + "\n";
             }
             tacodes.setText(str);
-            CodePanel.setVisible(true);
+         //   CodePanel.setVisible(true);
         } // if whichreport
         
         
        if (whichreport.equals("Clock -- by week")) {
             HoursPerWeek();
             tacodes.setText(weeknumbers);
-            CodePanel.setVisible(true);
+          //  CodePanel.setVisible(true);
         } // if whichreport
    
         
@@ -2752,7 +2798,7 @@ public class ChartMain extends javax.swing.JPanel {
         if (whichreport.equals("Scrap -- per week")) {
             ScrapPerWeek();
             tacodes.setText(weeknumbers);
-            CodePanel.setVisible(true);
+           // CodePanel.setVisible(true);
         } // if whichreport
         
          if (whichreport.equals("Scrap -- quantity by code")) {
@@ -2765,7 +2811,7 @@ public class ChartMain extends javax.swing.JPanel {
               str += (c[0] + " = " + c[1]) + "\n";
             }
             tacodes.setText(str);
-            CodePanel.setVisible(true);
+           // CodePanel.setVisible(true);
         } // if whichreport
          
           if (whichreport.equals("Scrap -- dollars by code")) {
@@ -2778,7 +2824,7 @@ public class ChartMain extends javax.swing.JPanel {
               str += (c[0] + " = " + c[1]) + "\n";
             }
             tacodes.setText(str);
-            CodePanel.setVisible(true);
+         //   CodePanel.setVisible(true);
         } 
         
         if (whichreport.equals("Scrap -- quantity by item")) {
@@ -2802,7 +2848,7 @@ public class ChartMain extends javax.swing.JPanel {
             }
             tacodes.setText(str);
         
-            CodePanel.setVisible(true);
+          //  CodePanel.setVisible(true);
         } 
         if (whichreport.equals("Scrap -- dollars by department")) {
             DeptAccumDollar();
@@ -2815,7 +2861,7 @@ public class ChartMain extends javax.swing.JPanel {
             }
             tacodes.setText(str);
         
-            CodePanel.setVisible(true);
+         //   CodePanel.setVisible(true);
         } 
         
         
@@ -2856,10 +2902,27 @@ public class ChartMain extends javax.swing.JPanel {
     }//GEN-LAST:event_btprintActionPerformed
 
     private void cbcodesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbcodesActionPerformed
-        if (cbcodes.isSelected()) {
-            CodePanel.setVisible(true);
-        } else {
-            CodePanel.setVisible(false);
+        if (chartlabel.getIcon() != null && lhm.get(ddreport.getSelectedItem().toString()).equals("1")) {
+            if (cbcodes.isSelected()) {
+                CodePanel.setVisible(true);
+                ImageIcon myicon = (ImageIcon) chartlabel.getIcon();
+                Image image = myicon.getImage(); // transform it 
+                Image newimg = image.getScaledInstance(jPanel2.getWidth() / 2, this.getHeight() - 150,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+                ImageIcon imageIcon = new ImageIcon(newimg);
+                imageIcon.getImage().flush();
+                chartlabel.setIcon(imageIcon); 
+                this.repaint();
+            } else {  
+                CodePanel.setVisible(false);
+                Icon icon = chartlabel.getIcon();
+                 ImageIcon myicon = (ImageIcon) chartlabel.getIcon();
+                Image image = myicon.getImage(); // transform it 
+                Image newimg = image.getScaledInstance(jPanel2.getWidth(), this.getHeight() - 150,  java.awt.Image.SCALE_REPLICATE); // scale it the smooth way  
+                ImageIcon imageIcon = new ImageIcon(newimg);
+                imageIcon.getImage().flush();
+                chartlabel.setIcon(imageIcon);
+                this.repaint();
+            }
         }
     }//GEN-LAST:event_cbcodesActionPerformed
 
