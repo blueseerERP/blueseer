@@ -602,10 +602,10 @@ public class OrderRpt extends javax.swing.JPanel {
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(dddatetype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel2))
+                    .addComponent(tbrmks, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(tbpo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel7)
-                        .addComponent(tbrmks, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel10)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -777,7 +777,7 @@ try {
                         " AND so_cust <= " + "'" + tocust + "'" + 
                         " AND so_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + 
                         " AND so_type = 'DISCRETE' " +
-                         " group by so_nbr, so_rmks, so_cust, so_curr, so_po, so_ord_date, so_due_date, so_status order by so_nbr desc ;"); 
+                         " group by so_nbr, so_rmks, so_cust, so_curr, so_po, so_ord_date, so_due_date, so_status order by so_nbr asc ;"); 
                  } else if (dddatetype.getSelectedItem().toString().equals("due")) {
                         res = st.executeQuery("SELECT so_nbr, so_rmks, so_cust, so_curr, so_po, so_ord_date, so_due_date, so_status, " +
                         " sum(sod_ord_qty) as totqty, sum(sod_ord_qty * sod_netprice) as totdol, " +
@@ -793,7 +793,7 @@ try {
                         " AND so_cust <= " + "'" + tocust + "'" + 
                         " AND so_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + 
                         " AND so_type = 'DISCRETE' " +
-                         " group by so_nbr, so_rmks, so_cust, so_curr, so_po, so_ord_date, so_due_date, so_status order by so_nbr desc ;");
+                         " group by so_nbr, so_rmks, so_cust, so_curr, so_po, so_ord_date, so_due_date, so_status order by so_nbr asc ;");
                  } else {
                         res = st.executeQuery("SELECT so_nbr, so_rmks, so_cust, so_curr, so_po, so_ord_date, so_due_date, so_status, " +
                         " sum(sod_ord_qty) as totqty, sum(sod_ord_qty * sod_netprice) as totdol, " +
@@ -809,7 +809,7 @@ try {
                         " AND so_cust <= " + "'" + tocust + "'" + 
                         " AND so_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + 
                         " AND so_type = 'DISCRETE' " +
-                         " group by so_nbr, so_rmks, so_cust, so_curr, so_po, so_ord_date, so_due_date, so_status order by so_nbr desc ;");
+                         " group by so_nbr, so_rmks, so_cust, so_curr, so_po, so_ord_date, so_due_date, so_status order by so_nbr asc ;");
                  }
                 
                   

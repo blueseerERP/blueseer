@@ -43,6 +43,7 @@ import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import static com.blueseer.utl.BlueSeerUtils.clog;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.logChange;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
@@ -68,6 +69,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Map;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -89,7 +91,20 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
                 boolean isLoad = false;
                 public static drv_mstr x = null;
     // global datatablemodel declarations       
-   
+   javax.swing.table.DefaultTableModel attachmentmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                        new String[]{getGlobalColumnTag("select"), 
+                getGlobalColumnTag("file")})
+            {
+              @Override  
+              public Class getColumnClass(int col) {  
+                if (col == 0)       
+                    return ImageIcon.class; 
+                else return String.class;  //other columns accept String values  
+              }  
+            };
+                
+                
+                
     public DriverMaint() {
         initComponents();
         setLanguageTags(this);
@@ -274,6 +289,16 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public void setComponentDefaultValues() {
        isLoad = true;
+       
+       jTabbedPane1.removeAll();
+        jTabbedPane1.add("Main", panelMain);
+        jTabbedPane1.add("Attachments", panelAttachment);
+        
+        attachmentmodel.setNumRows(0);
+        tableattachment.setModel(attachmentmodel);
+        tableattachment.getTableHeader().setReorderingAllowed(false);
+        tableattachment.getColumnModel().getColumn(0).setMaxWidth(100);
+       
        
        String  now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
        int year = Integer.valueOf(now.substring(0,4));
@@ -607,6 +632,15 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
         setAction(x.m());
     }
     
+    public void getAttachments(String id) {
+        attachmentmodel.setNumRows(0);
+        ArrayList<String> list = OVData.getSysMetaData(id, this.getClass().getSimpleName(), "attachments");
+        for (String file : list) {
+        attachmentmodel.addRow(new Object[]{BlueSeerUtils.clickflag,  
+                               file
+            });
+        }
+    }
      
     
     /**
@@ -618,7 +652,8 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        panelMain = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         btnew = new javax.swing.JButton();
         btdelete = new javax.swing.JButton();
@@ -686,11 +721,18 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel6 = new javax.swing.JLabel();
         ddcc = new javax.swing.JComboBox<>();
         jLabel20 = new javax.swing.JLabel();
+        panelAttachment = new javax.swing.JPanel();
+        labelmessage = new javax.swing.JLabel();
+        btaddattachment = new javax.swing.JButton();
+        btdeleteattachment = new javax.swing.JButton();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        tableattachment = new javax.swing.JTable();
 
         setBackground(new java.awt.Color(0, 102, 204));
+        add(jTabbedPane1);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Driver Maintenance"));
-        jPanel1.setName("panelmain"); // NOI18N
+        panelMain.setBorder(javax.swing.BorderFactory.createTitledBorder("Driver Maintenance"));
+        panelMain.setName("panelmain"); // NOI18N
 
         jLabel1.setText("Code:");
         jLabel1.setName("lblid"); // NOI18N
@@ -1085,15 +1127,19 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(jLabel14))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel17)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel17)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout panelMainLayout = new javax.swing.GroupLayout(panelMain);
+        panelMain.setLayout(panelMainLayout);
+        panelMainLayout.setHorizontalGroup(
+            panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelMainLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btadd)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1101,7 +1147,7 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btupdate)
                 .addGap(36, 36, 36))
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(panelMainLayout.createSequentialGroup()
                 .addGap(47, 47, 47)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1115,25 +1161,25 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btclear)
                 .addContainerGap(339, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(panelMainLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(panelMainLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelMainLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        panelMainLayout.setVerticalGroup(
+            panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelMainLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(btnew)
                         .addComponent(jLabel1)
@@ -1147,14 +1193,85 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btadd)
                     .addComponent(btdelete)
                     .addComponent(btupdate))
                 .addGap(20, 20, 20))
         );
 
-        add(jPanel1);
+        add(panelMain);
+
+        panelAttachment.setBorder(javax.swing.BorderFactory.createTitledBorder("Attachment Panel"));
+        panelAttachment.setName("panelAttachment"); // NOI18N
+        panelAttachment.setPreferredSize(new java.awt.Dimension(974, 560));
+
+        btaddattachment.setText("Add Attachment");
+        btaddattachment.setName("btaddattachment"); // NOI18N
+        btaddattachment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btaddattachmentActionPerformed(evt);
+            }
+        });
+
+        btdeleteattachment.setText("Delete Attachment");
+        btdeleteattachment.setName("btdeleteattachment"); // NOI18N
+        btdeleteattachment.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btdeleteattachmentActionPerformed(evt);
+            }
+        });
+
+        tableattachment.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        tableattachment.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableattachmentMouseClicked(evt);
+            }
+        });
+        jScrollPane4.setViewportView(tableattachment);
+
+        javax.swing.GroupLayout panelAttachmentLayout = new javax.swing.GroupLayout(panelAttachment);
+        panelAttachment.setLayout(panelAttachmentLayout);
+        panelAttachmentLayout.setHorizontalGroup(
+            panelAttachmentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelAttachmentLayout.createSequentialGroup()
+                .addGroup(panelAttachmentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelAttachmentLayout.createSequentialGroup()
+                        .addComponent(btaddattachment)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btdeleteattachment)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 446, Short.MAX_VALUE)
+                        .addComponent(labelmessage, javax.swing.GroupLayout.PREFERRED_SIZE, 266, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelAttachmentLayout.createSequentialGroup()
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        panelAttachmentLayout.setVerticalGroup(
+            panelAttachmentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelAttachmentLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelAttachmentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelmessage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(panelAttachmentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btaddattachment)
+                        .addComponent(btdeleteattachment)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(157, 157, 157))
+        );
+
+        add(panelAttachment);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
@@ -1214,12 +1331,40 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
     }//GEN-LAST:event_tbrateFocusLost
 
+    private void btaddattachmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddattachmentActionPerformed
+        OVData.addFileAttachment(tbkey.getText(), this.getClass().getSimpleName(), this );
+        getAttachments(tbkey.getText());
+    }//GEN-LAST:event_btaddattachmentActionPerformed
+
+    private void btdeleteattachmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteattachmentActionPerformed
+        boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
+        if (proceed) {
+            int[] rows = tableattachment.getSelectedRows();
+            String filename = null;
+            for (int i : rows) {
+                filename = tableattachment.getValueAt(i, 1).toString();
+            }
+            OVData.deleteFileAttachment(tbkey.getText(),this.getClass().getSimpleName(),filename);
+            getAttachments(tbkey.getText());
+        }
+    }//GEN-LAST:event_btdeleteattachmentActionPerformed
+
+    private void tableattachmentMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableattachmentMouseClicked
+        int row = tableattachment.rowAtPoint(evt.getPoint());
+        int col = tableattachment.columnAtPoint(evt.getPoint());
+        if ( col == 0) {
+            OVData.openFileAttachment(tbkey.getText(), this.getClass().getSimpleName(), tableattachment.getValueAt(row, 1).toString());
+        }
+    }//GEN-LAST:event_tableattachmentMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
+    private javax.swing.JButton btaddattachment;
     private javax.swing.JButton btchangelog;
     private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
+    private javax.swing.JButton btdeleteattachment;
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
@@ -1264,11 +1409,16 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JLabel labelmessage;
+    private javax.swing.JPanel panelAttachment;
+    private javax.swing.JPanel panelMain;
+    private javax.swing.JTable tableattachment;
     private javax.swing.JTextArea tarmks;
     private javax.swing.JTextField tbcertificate;
     private javax.swing.JTextField tbcity;

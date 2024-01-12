@@ -183,7 +183,7 @@ import org.json.JSONObject;
  */
 public class OVData { 
     
-   public static String minor = "25";
+   public static String minor = "26";
     
    public static String[] states = {"AB","AL","AK","AZ","AR","BC","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","MB","ME","MD","MA","MI","MN","MS","MO","MT","NE","NL","NV","NH","NJ","NL","NM","NY","NC","ND","NS","OH","OK","ON","OR","PA","PE","QC","RI","SC","SD","SE","TN","TX","UT","VT","VA","WA","WV","WI","WY" };
    public static String[] countries = {"Afghanistan","Albania","Algeria","Andorra","Angola","Antigua & Deps","Argentina","Armenia","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bhutan","Bolivia","Bosnia Herzegovina","Botswana","Brazil","Brunei","Bulgaria","Burkina","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Central African Rep","Chad","Chile","China","Colombia","Comoros","Congo","Congo {Democratic Rep}","Costa Rica","Croatia","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","East Timor","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Ethiopia","Fiji","Finland","France","Gabon","Gambia","Georgia","Germany","Ghana","Greece","Grenada","Guatemala","Guinea","Guinea-Bissau","Guyana","Haiti","Honduras","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland {Republic}","Israel","Italy","Ivory Coast","Jamaica","Japan","Jordan","Kazakhstan","Kenya","Kiribati","Korea North","Korea South","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique","Myanmar, {Burma}","Namibia","Nauru","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria","Norway","Oman","Pakistan","Palau","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Qatar","Romania","Russian Federation","Rwanda","St Kitts & Nevis","St Lucia","Saint Vincent & the Grenadines","Samoa","San Marino","Sao Tome & Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","Spain","Sri Lanka","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Togo","Tonga","Trinidad & Tobago","Tunisia","Turkey","Turkmenistan","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom", "USA","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Yemen","Zambia","Zimbabwe" }; 
@@ -5233,7 +5233,7 @@ public class OVData {
                     if (ld[10].isBlank()) {
                         expiredate = null;
                     } else {
-                        expiredate = ld[10];
+                        expiredate = "'" + ld[10] + "'";
                     }
                    
                    
@@ -5267,7 +5267,7 @@ public class OVData {
                             "'" +  ld[9] + "'" + "," +        
                             "'" +  bsmf.MainFrame.userid + "'" + "," +
                             "'" +  BlueSeerUtils.setDateFormat(new java.util.Date()) + "'" + "," +
-                            "'" +  expiredate + "'" +      
+                            expiredate +      
                             " );"
                            );     
                    } else {
@@ -13042,7 +13042,7 @@ return mystring;
     public static boolean UpdateInventoryDiscrete(String item, String site, String loc, String wh, String serial, String expire, Double qty) {
           boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
     try{
-
+    
         Connection con = null;
             if (ds != null) {
               con = ds.getConnection();
@@ -13068,10 +13068,14 @@ return mystring;
                 return false;
             }
 
+            if (expire.isBlank()) {
+                expire = null;
+            }
+            
             // check for serialized inventory flag...if not...prevent serial from entry into in_mstr
             if (! OVData.isInvCtrlSerialize()) {
                 serial = "";
-                expire = "";
+                expire = null;
             }
 
                     double sum = 0.00;
@@ -13093,6 +13097,7 @@ return mystring;
                     }
                     nres.close();
 
+                   
 
                     if (z == 0) {
                      sum = qty;
@@ -13104,7 +13109,7 @@ return mystring;
                             + "'" + loc + "'" + ","
                             + "'" + wh + "'" + ","
                             + "'" + serial + "'" + ","
-                            + "'" + expire + "'" + ","        
+                            + expire + ","        
                             + "'" + sum + "'" + ","
                             + "'" + mydate + "'"
                             + ")"
@@ -13294,11 +13299,11 @@ return mystring;
                 String wh = "";
                 String site = "";
                 String serial = "";
-                String expire = "";
+                String expire = null;
                 double sum = 0;
                 int i = 0;
 
-
+                
 
                   res = st.executeQuery("select sh_site, shd_item, shd_qty, shd_loc, shd_wh, shd_uom, shd_serial " +
                           " from ship_det inner join ship_mstr on sh_id = shd_id  " +
@@ -13319,7 +13324,7 @@ return mystring;
                     // check for serialized inventory flag...if not...prevent serial from entry into in_mstr
                     if (! OVData.isInvCtrlSerialize()) {
                         serial = "";
-                        expire = "";
+                        expire = null;
                     }
 
                     // reverse quantity
@@ -13375,7 +13380,7 @@ return mystring;
                             + "'" + loc + "'" + ","
                             + "'" + wh + "'" + ","
                             + "'" + serial + "'" + ","
-                            + "'" + expire + "'" + ","        
+                            + expire + ","        
                             + "'" + sum + "'" + ","
                             + "'" + mydate + "'"
                             + ")"
@@ -13470,7 +13475,9 @@ return mystring;
                     // check for serialized inventory flag...if not...prevent serial from entry into in_mstr
                     if (! OVData.isInvCtrlSerialize()) {
                         serial = "";
-                        expire = "";
+                        expire = null;
+                    } else {
+                        expire = "'" + expire + "'";
                     }
                     
                     // check if in_mstr record exists for this part,loc,site combo
@@ -14061,7 +14068,7 @@ return mystring;
                 String _packcell = "";
                 String _packdate = "";
                 String _assydate = "";
-                String _expiredate = "";
+                String _expiredate = null;
                 String _program = "";
                 String _bom = "";
                 
@@ -14088,7 +14095,7 @@ return mystring;
               _packcell = mytable.getValueAt(i, 13).toString();
                _packdate = mytable.getValueAt(i, 14).toString();
                _assydate = mytable.getValueAt(i, 15).toString();
-               _expiredate = mytable.getValueAt(i, 16).toString();
+               _expiredate = (mytable.getValueAt(i, 16).toString() != null && mytable.getValueAt(i, 16).toString().isBlank()) ? null : "'" + mytable.getValueAt(i, 16).toString() + "'";
                _program = mytable.getValueAt(i,17).toString();
                _bom = mytable.getValueAt(i,19).toString();
                // defaults to baseqty
@@ -14127,8 +14134,6 @@ return mystring;
                   /* let's first load the tran_hist */
                   
                   
-                  
-                  
                   // if lastop convert type to RCT-FG else leave type as iss-wip
                  if (islastop) {
                      temptype = "RCT-FG";
@@ -14158,7 +14163,7 @@ return mystring;
                         + "'" + _userid + "'" + ","
                         + "'" + _prodline + "'" + ","
                         + "'0'" + ","
-                        + "'" + _expiredate + "'" + ","
+                        +  _expiredate +  ","
                         + "'" + _assycell + "'" + ","
                         + "'" + _remarks + "'" + ","
                         + "'" + _packcell + "'" + ","
@@ -14189,7 +14194,7 @@ return mystring;
                         + "'" + _userid + "'" + ","
                         + "'" + _prodline + "'" + ","
                         + "'0'" + ","
-                        + "'" + _expiredate + "'" + ","
+                        + _expiredate + ","
                         + "'" + _assycell + "'" + ","         
                         + "'" + _remarks + "'" + ","
                         + "'" + _packcell + "'" + ","
@@ -14383,7 +14388,8 @@ return mystring;
             }
             Statement st = con.createStatement();
             try{
-                
+            
+                expire = (expire != null && expire.isBlank()) ? null : "'" + expire + "'";
                 
                 // NOTE:  all inventory transactions done at base uom level
                 
@@ -14420,7 +14426,7 @@ return mystring;
                                 + "'" + program + "'" + ","
                                 + "'" + loc + "'" + ","
                                 + "'" + wh + "'" + ","
-                                + "'" + expire + "'" + ","        
+                                + expire + ","        
                                 + "'" + order + "'" + ","
                                 + "'" + line + "'" + ","
                                 + "'" + po + "'" + ","

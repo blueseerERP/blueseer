@@ -597,7 +597,7 @@ public class ShipperMaintSerial extends javax.swing.JPanel implements IBlueSeer 
     public shpData.ship_mstr createRecord() {
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
        
-               
+        
         shpData.ship_mstr x = new shpData.ship_mstr(null, 
                 tbkey.getText(),
                 ddcust.getSelectedItem().toString(),
@@ -606,7 +606,7 @@ public class ShipperMaintSerial extends javax.swing.JPanel implements IBlueSeer 
                 "0", // boxes
                 "", // shipvia  
                 dfdate.format(dcdate.getDate()),
-                "", // po date
+                null, // po date
                 tbref.getText().replace("'", ""),
                 "", // po number
                 tbrmks.getText(),
@@ -637,7 +637,7 @@ public class ShipperMaintSerial extends javax.swing.JPanel implements IBlueSeer 
                 shipdet.getValueAt(j, 1).toString(), // item
                 shipdet.getValueAt(j, 1).toString(), // custimtem
                 "",  // order
-                "", //soline    
+                String.valueOf(j + 1), //soline    
                 dfdate.format(dcdate.getDate()),
                 "", // po
                 shipdet.getValueAt(j, 6).toString().replace(defaultDecimalSeparator, '.'), // qty
