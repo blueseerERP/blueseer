@@ -13508,7 +13508,7 @@ return mystring;
                             + "'" + loc + "'" + ","
                             + "'" + wh + "'" + ","
                             + "'" + serial + "'" + ","
-                            + "'" + expire + "'" + ","        
+                            + expire + ","        
                             + "'" + sum + "'" + ","
                             + "'" + mydate + "'"
                             + ")"
@@ -17346,8 +17346,8 @@ return mystring;
                 String shipline1 = "";
                 double taxes = getPOTotalTax(po);
                 res = st.executeQuery("select po_vend, po_site, po_curr, " +
-                        " vd_city, vd_state, vd_zip, site_desc, site_line1, site_city, site_state, site_zip, " +
-                        " vds_name, vds_line1, vds_city, vds_state, vds_zip " + 
+                        " vd_city, vd_state, vd_zip, vd_country, site_desc, site_line1, site_city, site_state, site_zip, site_country, " +
+                        " vds_name, vds_line1, vds_city, vds_state, vds_zip, vds_country " + 
                         " from po_mstr " +
                         " inner join vd_mstr on vd_addr = po_vend " +
                         " left outer join vds_det on vds_code = po_vend and vds_shipto = po_ship " +
@@ -17357,14 +17357,14 @@ return mystring;
                           vend = res.getString("po_vend");
                           site = res.getString("po_site");
                           currency = res.getString("po_curr");
-                          site_csz = res.getString(("site_city")) + " " + res.getString(("site_state")) + " " + res.getString(("site_zip"));
-                          vend_csz = res.getString(("vd_city")) + " " + res.getString(("vd_state")) + " " + res.getString(("vd_zip"));
+                          site_csz = res.getString("site_city") + " " + res.getString("site_state") + " " + res.getString("site_zip") + " " + res.getString("site_country");
+                          vend_csz = res.getString("vd_city") + " " + res.getString("vd_state") + " " + res.getString("vd_zip") + " " + res.getString("vd_country");
                           if (res.getString("vds_city") == null || res.getString("vds_city").equals("NULL") || res.getString("vds_city").isBlank() ) {
                              ship_csz = site_csz; 
                              shipname = res.getString("site_desc");
                              shipline1 = res.getString("site_line1");
                           } else {
-                             ship_csz = res.getString(("vds_city")) + " " + res.getString(("vds_state")) + " " + res.getString(("vds_zip")); 
+                             ship_csz = res.getString(("vds_city")) + " " + res.getString(("vds_state")) + " " + res.getString(("vds_zip")) + " " + res.getString(("vds_country")); 
                              shipname = res.getString("vds_name");
                              shipline1 = res.getString("vds_line1");
                           }

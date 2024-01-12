@@ -2930,6 +2930,7 @@ public class ShipperMaint extends javax.swing.JPanel {
         
                 tabledetail.setValueAt(tbqty.getText(), i, 5);
                 tabledetail.setValueAt(dduom.getSelectedItem().toString(), i, 17);
+                tabledetail.setValueAt(tbserial.getText(), i, 14);
                 tabledetail.setValueAt(tbprice.getText(), i, 6);
                 tabledetail.setValueAt(tbdesc.getText(), i, 7);
                 tabledetail.setValueAt(ddwh.getSelectedItem().toString(), i, 8);
