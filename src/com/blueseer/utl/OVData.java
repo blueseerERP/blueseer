@@ -13068,7 +13068,7 @@ return mystring;
                 return false;
             }
 
-            if (expire.isBlank()) {
+            if (expire != null && expire.isBlank()) {
                 expire = null;
             }
             
