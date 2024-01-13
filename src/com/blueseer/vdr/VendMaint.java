@@ -375,11 +375,10 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
         
     
-       if (ddcountry.getItemCount() == 0)
-       for (int i = 0; i < OVData.countries.length; i++) {
-            ddcountry.addItem(OVData.countries[i]);
-            ddshipcountry.addItem(OVData.countries[i]);
-        }
+        ddcountry.removeAllItems();
+        ddcountry.addItem("");
+        OVData.getCodeMstrKeyList("country").stream().forEach((s) -> ddcountry.addItem(s));  
+        ddcountry.setSelectedIndex(0);
        
         ddsite.removeAllItems();
         ArrayList<String> sites = OVData.getSiteList();
@@ -440,8 +439,6 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddcarrier.setSelectedIndex(0);
         if (ddterms.getItemCount() > 0)
         ddterms.setSelectedIndex(0);
-        if (ddcountry.getItemCount() > 0)
-        ddcountry.setSelectedItem("USA");
         if (ddstate.getItemCount() > 0)
         ddstate.setSelectedIndex(0);
         
@@ -1389,9 +1386,9 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGap(1, 1, 1)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(tbmainphone)
-                            .addComponent(ddcountry, 0, 254, Short.MAX_VALUE)
-                            .addComponent(tbmainemail))))
+                            .addComponent(tbmainphone, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
+                            .addComponent(tbmainemail)
+                            .addComponent(ddcountry, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(

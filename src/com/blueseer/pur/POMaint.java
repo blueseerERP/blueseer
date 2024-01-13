@@ -1362,11 +1362,10 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
            ddshipstate.setSelectedIndex(0); 
         }
        
-       if (ddshipcountry.getItemCount() == 0)
-       for (int i = 0; i < OVData.countries.length; i++) {
-            ddshipcountry.addItem(OVData.countries[i]);
-        }
-       ddshipcountry.setSelectedItem("USA");
+       ddshipcountry.removeAllItems();
+       ddshipcountry.addItem("");
+       OVData.getCodeMstrKeyList("country").stream().forEach((s) -> ddshipcountry.addItem(s));  
+       ddshipcountry.setSelectedIndex(0);
        
      }
     
