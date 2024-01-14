@@ -123,6 +123,7 @@ public class ChartMain extends javax.swing.JPanel {
  ArrayList<String> ml = new ArrayList<String>();
  LinkedHashMap<String,String> lhm = new LinkedHashMap<String,String>();
  BufferedImage myimage = null;
+ boolean isLoad = false;
  
     /**
      * Creates new form CCChartView
@@ -2638,9 +2639,11 @@ public class ChartMain extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btChartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btChartActionPerformed
-        
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
         whichreport = ddreport.getSelectedItem().toString();
+        isLoad = true;
+         cbcodes.setSelected(false);
+        isLoad = false;
         
         if (dcTo.getDate() == null || dcFrom.getDate() == null) {
                 bsmf.MainFrame.show("Must choose a date for both From and To");
@@ -2905,19 +2908,14 @@ public class ChartMain extends javax.swing.JPanel {
         if (chartlabel.getIcon() != null && lhm.get(ddreport.getSelectedItem().toString()).equals("1")) {
             if (cbcodes.isSelected()) {
                 CodePanel.setVisible(true);
-                ImageIcon myicon = (ImageIcon) chartlabel.getIcon();
-                Image image = myicon.getImage(); // transform it 
-                Image newimg = image.getScaledInstance(jPanel2.getWidth() / 2, this.getHeight() - 150,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+                Image newimg = myimage.getScaledInstance(jPanel2.getWidth() / 2, this.getHeight() - 150,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
                 ImageIcon imageIcon = new ImageIcon(newimg);
                 imageIcon.getImage().flush();
                 chartlabel.setIcon(imageIcon); 
                 this.repaint();
             } else {  
                 CodePanel.setVisible(false);
-                Icon icon = chartlabel.getIcon();
-                 ImageIcon myicon = (ImageIcon) chartlabel.getIcon();
-                Image image = myicon.getImage(); // transform it 
-                Image newimg = image.getScaledInstance(jPanel2.getWidth(), this.getHeight() - 150,  java.awt.Image.SCALE_REPLICATE); // scale it the smooth way  
+                Image newimg = myimage.getScaledInstance(jPanel2.getWidth(), this.getHeight() - 150,  java.awt.Image.SCALE_REPLICATE); // scale it the smooth way  
                 ImageIcon imageIcon = new ImageIcon(newimg);
                 imageIcon.getImage().flush();
                 chartlabel.setIcon(imageIcon);
