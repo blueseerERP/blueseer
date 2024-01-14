@@ -16608,7 +16608,7 @@ return mystring;
                  String tac_str = "";
                  if (Files.exists(FileSystems.getDefault().getPath("conf/tac.txt"))) {
                    byte[] tac = Files.readAllBytes(FileSystems.getDefault().getPath("conf/tac.txt"));
-                   tac_str = new String(tac);
+                   tac_str = new String(tac, StandardCharsets.UTF_8);
                  }
                 
                 String logo = "";
@@ -17377,7 +17377,7 @@ return mystring;
                  String tac_str = "";
                  if (Files.exists(FileSystems.getDefault().getPath("conf/tac.txt"))) {
                    byte[] tac = Files.readAllBytes(FileSystems.getDefault().getPath("conf/tac.txt"));
-                   tac_str = new String(tac);
+                   tac_str = new String(tac, StandardCharsets.UTF_8);
                  }
             
                 
@@ -17557,7 +17557,7 @@ return mystring;
                  String tac_str = "";
                  if (Files.exists(FileSystems.getDefault().getPath("conf/tac.txt"))) {
                    byte[] tac = Files.readAllBytes(FileSystems.getDefault().getPath("conf/tac.txt"));
-                   tac_str = new String(tac);
+                   tac_str = new String(tac, StandardCharsets.UTF_8);
                  }
                 
                 String logo = "";
