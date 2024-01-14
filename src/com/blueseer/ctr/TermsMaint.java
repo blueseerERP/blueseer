@@ -279,9 +279,9 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
        
         tbkey.setText("");
         tbdesc.setText("");
-        duedays.setText("");
-        discduedays.setText("");
-        discpercent.setText("");
+        duedays.setText("0");
+        discduedays.setText("0");
+        discpercent.setText("0");
         
         cbsystemcode.setSelected(false);
         cbmfi.setSelected(false);
