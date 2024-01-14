@@ -27,7 +27,6 @@ SOFTWARE.
 package com.blueseer.ctr;
 
 import bsmf.MainFrame;
-import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.tags;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
@@ -296,8 +295,6 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
             ddmfiday.addItem(String.valueOf(i));
         }
         ddmfiday.setSelectedIndex(0);
-        //YearMonth yearMonthObject = YearMonth.of(1999, 2);
-        //int daysInMonth = yearMonthObject.lengthOfMonth(); //28  
         
        isLoad = false;
     }
@@ -530,49 +527,6 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         
     }
-
-    // remove this when new changeLog is effective
-    public ArrayList<change_log> oldlogChangeExperimental(cust_term x)  {
-        Field[] fs = x.getClass().getDeclaredFields();
-        for (Field f : fs) {
-            f.setAccessible(true);
-            try {
-                System.out.println("Name: " + f.getName() + " Value: " + f.get(x));
-            } catch (IllegalArgumentException | IllegalAccessException ex) {
-                bslog(ex);
-            } 
-        }
-                   
-        ArrayList<change_log> c = new ArrayList<change_log>();
-        
-        if (! tbdesc.getText().equals(x.cut_desc())) {
-          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), tags.getString(this.getClass().getSimpleName() +".label." + tbdesc.getName()), x.cut_desc(), tbdesc.getText())); 
-        }
-        if (! duedays.getText().equals(x.cut_days())) {
-          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), tags.getString(this.getClass().getSimpleName() +".label." + duedays.getName()), x.cut_days(), duedays.getText())); 
-        }
-        if (! discduedays.getText().equals(x.cut_discdays())) {
-          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), tags.getString(this.getClass().getSimpleName() +".label." + discduedays.getName()), x.cut_discdays(), discduedays.getText())); 
-        }
-        if (! discpercent.getText().equals(x.cut_discpercent())) {
-          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), tags.getString(this.getClass().getSimpleName() +".label." + discpercent.getName()), x.cut_discpercent(), discpercent.getText())); 
-        }
-        if (! ddmfimonth.getSelectedItem().toString().equals(x.cut_mfimonth())) {
-          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), tags.getString(this.getClass().getSimpleName() +".label." + ddmfimonth.getName()), x.cut_mfimonth(), ddmfimonth.getSelectedItem().toString())); 
-        }
-        if (! ddmfiday.getSelectedItem().toString().equals(x.cut_mfiday())) {
-          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), tags.getString(this.getClass().getSimpleName() +".label." + ddmfiday.getName()), x.cut_mfiday(), ddmfiday.getSelectedItem().toString())); 
-        }
-        if (! String.valueOf(BlueSeerUtils.boolToInt(cbsystemcode.isSelected())).equals(x.cut_syscode())) {
-          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), tags.getString(this.getClass().getSimpleName() +".label." + cbsystemcode.getName()), x.cut_syscode(), String.valueOf(BlueSeerUtils.boolToInt(cbsystemcode.isSelected())))); 
-        } 
-        if (! String.valueOf(BlueSeerUtils.boolToInt(cbmfi.isSelected())).equals(x.cut_mfi())) {
-          c.add(clog(tbkey.getText(), x.getClass().getSimpleName(), this.getClass().getSimpleName(), tags.getString(this.getClass().getSimpleName() +".label." + cbmfi.getName()), x.cut_mfi(), String.valueOf(BlueSeerUtils.boolToInt(cbmfi.isSelected())))); 
-        } 
-                
-        return c;
-    }
-  
     
      
     /**
