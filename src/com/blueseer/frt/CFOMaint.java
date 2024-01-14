@@ -797,6 +797,10 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
             return false;
         } 
         
+        if (orddet.getRowCount() == 0) {
+            bsmf.MainFrame.show(getMessageTag(1187));
+            return false;
+        }
                
         return true;
     }
