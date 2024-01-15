@@ -2905,7 +2905,7 @@ public class ChartMain extends javax.swing.JPanel {
     }//GEN-LAST:event_btprintActionPerformed
 
     private void cbcodesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbcodesActionPerformed
-        if (chartlabel.getIcon() != null && lhm.get(ddreport.getSelectedItem().toString()).equals("1")) {
+        if (chartlabel.getIcon() != null && lhm.get(ddreport.getSelectedItem().toString()) != null && lhm.get(ddreport.getSelectedItem().toString()).equals("1")) {
             if (cbcodes.isSelected()) {
                 CodePanel.setVisible(true);
                 Image newimg = myimage.getScaledInstance(jPanel2.getWidth() / 2, this.getHeight() - 150,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
