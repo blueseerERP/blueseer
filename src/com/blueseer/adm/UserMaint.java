@@ -34,6 +34,7 @@ import static com.blueseer.adm.admData.updateUserMstr;
 import com.blueseer.adm.admData.user_mstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -54,6 +55,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -310,32 +312,73 @@ public class UserMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public boolean validateInput(dbaction x) {
-        boolean b = true;
-                if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    ddsite.requestFocus();
-                    return b;
-                }
                 
-                if (tbkey.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbkey.requestFocus();
-                    return b;
-                }
-                
-                if (tbpassword.getPassword().toString().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbpassword.requestFocus();
-                    return b;
-                }
-                
-                
-                
+        Map<String,Integer> f = OVData.getTableInfo("user_mstr");
+        int fc;
+        
+        fc = checkLength(f,"user_id");        
+        if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) { 
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbkey.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"user_passwd");        
+        if (tbpassword.getText().length() > fc || tbpassword.getText().isEmpty()) { 
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbpassword.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"user_lname");        
+        if (tbUMLastName.getText().length() > fc) { 
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbUMLastName.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"user_fname");        
+        if (tbUMFirstName.getText().length() > fc) { 
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbUMFirstName.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"user_phone");        
+        if (tbphone.getText().length() > fc) { 
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbphone.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"user_email");        
+        if (tbemail.getText().length() > fc) { 
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbemail.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"user_cell");        
+        if (tbcell.getText().length() > fc) { 
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbcell.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"user_rmks");        
+        if (tarmks.getText().length() > fc) { 
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tarmks.requestFocus();
+            return false;
+        }
+        
+        if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1024));
+            ddsite.requestFocus();
+            return false;
+        }       
                
-        return b;
+        return true;
     }
     
     public void initvars(String[] arg) {
