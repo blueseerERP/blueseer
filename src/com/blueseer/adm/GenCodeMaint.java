@@ -34,6 +34,7 @@ import static com.blueseer.adm.admData.getCodeMstr;
 import static com.blueseer.adm.admData.updateCodeMstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -54,6 +55,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -310,30 +312,39 @@ public class GenCodeMaint extends javax.swing.JPanel implements IBlueSeerT    {
     }
     
     public boolean validateInput(dbaction x) {
-        boolean b = true;
+        
+         Map<String,Integer> f = OVData.getTableInfo("code_mstr");
+        int fc;
                
-                if ((x.name().equals("update") || x.name().equals("delete") )&& cbsystem.isSelected() && ! bsmf.MainFrame.userid.equals("admin")) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1113));
-                    tbkey.requestFocus();
-                    return b;
-                }
-                
-                if (tbkey.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbkey.requestFocus();
-                    return b;
-                }
-                
-                if (tbkey2.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbkey2.requestFocus();
-                    return b;
-                }
+        fc = checkLength(f,"code_code");        
+        if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) { 
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbkey.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"code_key");        
+        if (tbkey2.getText().length() > fc || tbkey2.getText().isEmpty()) { 
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbkey2.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"code_value");
+        if (tbvalue.getText().length() > fc) { 
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbvalue.requestFocus();
+            return false;
+        }
+        
+        if ((x.name().equals("update") || x.name().equals("delete") )&& cbsystem.isSelected() && ! bsmf.MainFrame.userid.equals("admin")) {
+            bsmf.MainFrame.show(getMessageTag(1113));
+            tbkey.requestFocus();
+            return false;
+        }
                
-        return b;
+               
+        return true;
     }
     
     public void initvars(String[] arg) {
