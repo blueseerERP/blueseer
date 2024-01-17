@@ -32,12 +32,14 @@ import static com.blueseer.adm.admData.addUpdateOVMstr;
 import static com.blueseer.adm.admData.getOVMstr;
 import com.blueseer.adm.admData.ov_mstr;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.IBlueSeerc;
 import com.blueseer.utl.OVData;
 import static com.blueseer.utl.OVData.canUpdate;
 import java.awt.Component;
+import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -187,28 +189,82 @@ public class DefaultMaint extends javax.swing.JPanel implements IBlueSeerc {
     
     
     public boolean validateInput(dbaction x) {
-        boolean b = true;
+        
         
         if (! canUpdate(this.getClass().getName())) {
             bsmf.MainFrame.show(getMessageTag(1185));
             return false;
         }
         
-                if (tbsite.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbsite.requestFocus();
-                    return b;
-                }
-                if (! OVData.isValidSite(tbsite.getText())) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1026));
-                    tbsite.requestFocus();
-                    return b;
-                }
-                
+        Map<String,Integer> f = OVData.getTableInfo("ov_mstr");
+        int fc;
+        fc = checkLength(f,"ov_site");        
+        if (tbsite.getText().length() > fc || tbsite.getText().isEmpty()) { 
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbsite.requestFocus();
+            return false;
+        }
+        
                
-        return b;
+        fc = checkLength(f,"ov_currency");        
+        if (tbcurrency.getText().length() > fc || tbcurrency.getText().isEmpty()) { 
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbcurrency.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"ov_cc");
+        if (tbcc.getText().length() > fc || tbcc.getText().isEmpty()) { 
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbcc.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"ov_wh");
+        if (tbwh.getText().length() > fc || tbwh.getText().isEmpty()) { 
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbwh.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"ov_labelprinter");
+        if (tblabelprinter.getText().length() > fc) { 
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tblabelprinter.requestFocus();
+            return false;
+        }
+        
+        if (! OVData.isValidSite(tbsite.getText())) {
+            bsmf.MainFrame.show(getMessageTag(1026));
+            tbsite.requestFocus();
+            return false;
+        }
+        
+        if (! OVData.isValidCurrency(tbcurrency.getText())) {
+            bsmf.MainFrame.show(getMessageTag(1026));
+            tbcurrency.requestFocus();
+            return false;
+        }
+        
+        if (! OVData.isValidWarehouse(tbwh.getText())) {
+            bsmf.MainFrame.show(getMessageTag(1026));
+            tbwh.requestFocus();
+            return false;
+        }
+             
+        if (! OVData.isCostCenterValid(tbcc.getText())) {
+            bsmf.MainFrame.show(getMessageTag(1026));
+            tbcc.requestFocus();
+            return false;
+        }
+        
+        if (! OVData.isValidPrinter(tblabelprinter.getText())) {
+            bsmf.MainFrame.show(getMessageTag(1026));
+            tblabelprinter.requestFocus();
+            return false;
+        }
+               
+        return true;
     }
     
     public void initvars(String[] arg) {
