@@ -364,7 +364,14 @@ public class WorkCenterMaint extends javax.swing.JPanel implements IBlueSeerT {
             bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
             tbdesc.requestFocus();
             return false;
-        }    
+        }   
+        
+        fc = checkLength(f,"wc_remarks");
+        if (tarmks.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tarmks.requestFocus();
+            return false;
+        }   
                
         return true;
     }
