@@ -1269,7 +1269,7 @@ public class EDI {
     // type = filetype, doctype
     String[] filenamesplit = null;
         
-    if (cbuf == null || cbuf.length < 4) {
+    if (cbuf == null || cbuf.length < 15) {
             return type;
     }
     
