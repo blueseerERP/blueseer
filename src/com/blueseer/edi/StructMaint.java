@@ -1364,6 +1364,18 @@ public class StructMaint extends javax.swing.JPanel  {
                 } else {
                     v11 = arr[11];
                 }
+                if (arr[3].equals("1")) {
+                    arr[3] = "YES";
+                } 
+                if (arr[3].equals("0")) {
+                    arr[3] = "NO";
+                }
+                if (arr[4].equals("1")) {
+                    arr[4] = "YES";
+                } 
+                if (arr[4].equals("0")) {
+                    arr[4] = "NO";
+                }
                 detailmodel.addRow(new Object[]{
                     arr[0],
                     arr[1],

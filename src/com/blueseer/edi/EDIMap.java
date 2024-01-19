@@ -2567,7 +2567,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         Document doc = docBuilder.newDocument();
         
         Element rootElement = doc.createElement(getRootOFS());
-     //   System.out.println("HERE root is: " + rootElement.getNodeName());
+       // System.out.println("HERE root is: " + rootElement.getNodeName());
         if (GlobalDebug) {
             System.out.println("OMD output:");
             for (Map.Entry<String, HashMap<String,String>> z : MD.entrySet()) {
@@ -2584,9 +2584,12 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                 }
             }
         }
+        
+        
         // set Attributes if exist of root Element
         overlayData(rootElement, "", doc, OSF, 1, MD);
         
+                
         createXML(rootElement, "", 0, doc, exclude, OSF, MD, 0);
         
         doc.appendChild(rootElement);
@@ -2824,7 +2827,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                           } else {
                               v = "";
                           }
-                        System.out.println("HERE 2: " + tag + "/" + thiskey + "/" + ele.getNodeName() + "/" +  parentChildKey + "/" + k + "/" + x[5] + "/" + v);
+                    //    System.out.println("HERE OUTPUT: " + tag + "/" + thiskey + "/" + ele.getNodeName() + "/" +  parentChildKey + "/" + k + "/" + x[5] + "/" + v);
                         if (x.length > 10 && x[11].toUpperCase().equals("A")) {
                             prefix = Character.toString(prefixI++) + prefixtag; // crappy way to preserver order in attributes...prefix removed with regex
                           ele.setAttribute(prefix + x[5].toString(),v);	// set attribute of parent node  
