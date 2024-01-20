@@ -37,6 +37,7 @@ freighteqptype,Stretch RGN,Stretch RGN Gooseneck trailer,1
 freighteqptype,Lowboy,Lowboy double drop trailer,1
 freighteqptype,Reefer,Refrigerated trailer,1
 freighteqptype,Specialized,Specialized trailer,1
+edidoctype,generic,Generic Document Type,1
 edidoctype,850csv,CSV Order,1
 edidoctype,856csv,CSV Shipping Notice,1
 edidoctype,810csv,CSV Invoice,1
