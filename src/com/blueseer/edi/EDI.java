@@ -50,9 +50,11 @@ import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
 import static com.blueseer.utl.BlueSeerUtils.getEDIClassLoader;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.EDData.getBSDocTypeFromStds;
+import static com.blueseer.utl.EDData.getDFSFileType;
 import static com.blueseer.utl.EDData.getEDIDocTypeFromBSDoc;
 import static com.blueseer.utl.EDData.getEDIFFDocType;
 import static com.blueseer.utl.EDData.getEDIFFSubType;
+import static com.blueseer.utl.EDData.getEDIFileTypeDocType;
 import com.blueseer.utl.OVData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -1471,18 +1473,25 @@ public class EDI {
         // now get highest match count entry...if tie...first record in order wins
         int t = 0;
         String v = "";
-        String vdoctype = "";
+        String[] vtype = new String[]{"",""};
         for (Map.Entry<String, Integer> z : matches.entrySet()) {
             match = true;
             if (z.getValue() > t) {
                 t = z.getValue();
                 v = z.getKey();
-                vdoctype = getEDIFFDocType(z.getKey());
+                vtype = getEDIFileTypeDocType(z.getKey());
+                if (GlobalDebug && type[0].isBlank()) {
+                  System.out.println("Matching -->  recogid: " + z.getKey() + " structure: " + vtype[0] + " doctype:" + vtype[1] );  
+                }
             }
         }
         
         // assign type with highest match
-        type[1] = v;
+        String[] dfs = getDFSFileType(vtype[0]);
+        type[0] = dfs[4];
+        type[1] = v;        
+        
+        /*
         if (vdoctype.contains("xml")) {
          type[0] = "XML";   
         } else if (vdoctype.contains("csv")) {
@@ -1490,7 +1499,7 @@ public class EDI {
         } else {
          type[0] = "FF";   
         }
-        
+        */
         if (match) {
             return type; // break out
         }
@@ -1637,7 +1646,13 @@ public class EDI {
             System.out.println("here:" + t[0] + "/" + t[1] + "/" + t[2] + "/" + t[3] + "/" + t[4] + "/" + t[5] + "/" + t[6]);
         }
         */
+        
         x[0] = getEDIFFDocType(c[1]); //overriding original recognition record edd_id with type; further overriden with tag below as necessary
+        
+        if (GlobalDebug) {
+            System.out.println("getFileInfo: x[0] / c[1] override value: " + x[0] + "/" + c[1]);
+        }
+        
         for (String s : docs) {
             i++;
             for (String[] t : tags ) {

@@ -689,6 +689,43 @@ public class EDData {
           return x;
        }
     
+    public static String[] getEDIFileTypeDocType(String id) {
+             String[] x = new String[2];
+            try{
+            Class.forName(driver);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                
+                   
+                      res = st.executeQuery("select edd_type, edd_subtype from edi_doc  " +
+                              " where edd_id = " + "'" + id + "'" + 
+                              ";");
+                    while (res.next()) {
+                       x[0] = res.getString("edd_subtype"); // filetype
+                       x[1] = res.getString("edd_type"); // doctype
+                    }
+           } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+          return x;
+       }
+    
     
         /** Returns 21 element Array with Customer (billto) specific EDI setup information
          * 
@@ -1044,6 +1081,94 @@ public class EDData {
             MainFrame.bslog(e);
         }
         return mystring;
+        
+    }
+    
+    public static String[] getDFSFileType(String id) {
+       String[] r = new String[7];
+       //dfs_id,dfs_desc,dfs_version,dfs_doctype,dfs_filetype,dfs_delimiter,dfs_misc
+       try{
+            Class.forName(driver);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                
+
+                res = st.executeQuery("select * from dfs_mstr where dfs_id = " + "'" + id + "'" + ";");
+               while (res.next()) {
+                   r[0] = res.getString("dfs_id");
+                   r[1] = res.getString("dfs_desc");
+                   r[2] = res.getString("dfs_version");
+                   r[3] = res.getString("dfs_doctype");
+                   r[4] = res.getString("dfs_filetype");
+                   r[5] = res.getString("dfs_delimiter");
+                   r[6] = res.getString("dfs_misc");
+                }
+               
+           }
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return r;
+        
+    }
+    
+    public static String[] getDFSInfoFromDocRecon(String id) {
+       String[] r = new String[7];
+       //dfs_id,dfs_desc,dfs_version,dfs_doctype,dfs_filetype,dfs_delimiter,dfs_misc
+       try{
+            Class.forName(driver);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                
+
+                res = st.executeQuery("select * from dfs_mstr " + 
+                        " inner join edi_doc on edd_subtype = dfs_id " +
+                        " where edd_id = " + "'" + id + "'" + ";");
+               while (res.next()) {
+                   r[0] = res.getString("dfs_id");
+                   r[1] = res.getString("dfs_desc");
+                   r[2] = res.getString("dfs_version");
+                   r[3] = res.getString("dfs_doctype");
+                   r[4] = res.getString("dfs_filetype");
+                   r[5] = res.getString("dfs_delimiter");
+                   r[6] = res.getString("dfs_misc");
+                }
+               
+           }
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return r;
         
     }
     
