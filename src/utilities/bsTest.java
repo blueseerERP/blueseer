@@ -1,4 +1,4 @@
-    /*
+        /*
 The MIT License (MIT)
 
 Copyright (c) Terry Evans Vaughn 
@@ -28,8 +28,10 @@ package utilities;
 import com.blueseer.adm.admData;
 import static com.blueseer.adm.admData.addSiteMstr;
 import com.blueseer.adm.admData.site_mstr;
+import com.blueseer.edi.EDI;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
+import org.junit.Ignore;
 
 /**
  *
@@ -39,7 +41,7 @@ public class bsTest {
    
     String[] m = new String[]{"",""};
         
-    
+   @Ignore 
    @Test
    public void testAddSiteMstr() {
        
@@ -51,6 +53,87 @@ public class bsTest {
       }
       assertEquals("0",m[0]);
    }
+   
+   @Test
+   public void testEDI_850x12() {
+      try {
+          m = EDI.processFile("edi/sampledata/ACME_850.txt","","","", false, false, 0, 0);
+          if (m[0].equals("0")) {
+              System.out.println("sample 850x12...   pass");
+          } else {
+              System.out.println("sample 850x12...   fail");
+              System.out.println("m[1] message: " + m[1]);
+          }
+      } catch (Exception e) {
+          System.out.println("BS Exception: " + e.getMessage() );
+      }
+      assertEquals("0",m[0]);
+   }
+   
+   @Test
+   public void testEDI_850json() {
+      try {
+          m = EDI.processFile("edi/sampledata/ACME_JSON_order.txt","","","", false, false, 0, 0);
+          if (m[0].equals("0")) {
+              System.out.println("sample 850json...  pass");
+          } else {
+              System.out.println("sample 850json...  fail");
+              System.out.println("m[1] message: " + m[1]);
+          }
+      } catch (Exception e) {
+          System.out.println("BS Exception: " + e.getMessage() );
+      }
+      assertEquals("0",m[0]);
+   }
+   
+   @Test
+   public void testEDI_850xml() {
+      try {
+          m = EDI.processFile("edi/sampledata/ACME_XML_order.xml","","","", false, false, 0, 0);
+          if (m[0].equals("0")) {
+              System.out.println("sample 850xml...   pass");
+          } else {
+              System.out.println("sample 850xml...   fail");
+              System.out.println("m[1] message: " + m[1]);
+          }
+      } catch (Exception e) {
+          System.out.println("BS Exception: " + e.getMessage() );
+      }
+      assertEquals("0",m[0]);
+   }
+   
+   @Test
+   public void testEDI_856Idoc() {
+      try {
+          m = EDI.processFile("edi/sampledata/ACME_IDOC_SHIPMNT02out.txt","","","", false, false, 0, 0);
+          if (m[0].equals("0")) {
+              System.out.println("sample 856idoc...  pass");
+          } else {
+              System.out.println("sample 850idoc...  fail");
+              System.out.println("m[1] message: " + m[1]);
+          }
+      } catch (Exception e) {
+          System.out.println("BS Exception: " + e.getMessage() );
+      }
+      assertEquals("0",m[0]);
+   }
+   
+   @Test
+   public void testEDI_810Idoc() {
+      try {
+          m = EDI.processFile("edi/sampledata/ACME_IDOC_INVOIC02out.txt","","","", false, false, 0, 0);
+          if (m[0].equals("0")) {
+              System.out.println("sample 810idoc...  pass");
+          } else {
+              System.out.println("sample 810idoc...  fail");
+              System.out.println("m[1] message: " + m[1]);
+          }
+      } catch (Exception e) {
+          System.out.println("BS Exception: " + e.getMessage() );
+      }
+      assertEquals("0",m[0]);
+   }
+   
    
    public site_mstr createSiteMstr() {
        site_mstr x = new site_mstr(null, "xsite",

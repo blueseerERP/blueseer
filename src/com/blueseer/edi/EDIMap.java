@@ -3730,7 +3730,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
     public static String getInput(Integer gloop, String segment, String elementName) {
          String x = "";
          int elementNbr = 0;
-         if (inputfiletype.equals("X12") || inputfiletype.equals("UNE") || inputfiletype.equals("FF")) {
+         if (inputfiletype.equals("X12") || inputfiletype.equals("UNE") || inputfiletype.equals("FF") || inputfiletype.equals("XML")) {
              elementNbr = getElementNumber(segment, elementName);
              if (elementNbr == 0) {
               return x;
@@ -3743,8 +3743,8 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         // segment = ":" + segment; // preprend blank
          for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
              String[] v = z.getKey().split("\\+");
-             
-            if (inputfiletype.equals("X12") || inputfiletype.equals("UNE") || inputfiletype.equals("FF")) {
+            
+            if (inputfiletype.equals("X12") || inputfiletype.equals("UNE") || inputfiletype.equals("FF") || inputfiletype.equals("XML")) {
                     if (v[0].equals(segment) && v[1].equals(String.valueOf(gloop))) {
                         k = z.getValue();
                     }
@@ -3754,6 +3754,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                     k = z.getValue();
                 }
             }
+            
              
          }
          
