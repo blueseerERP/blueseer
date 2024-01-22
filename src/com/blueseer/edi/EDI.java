@@ -1441,10 +1441,10 @@ public class EDI {
             matchcount = 0;
             for (String[] r : v) {
                 rulecount++;
-
+            /*
              if (GlobalDebug)   
              System.out.println("getEDIType: FF/CSV rules: " + key + "/" + r[0] + "/" + r[1] + "/" + r[2] + "/" + r[3] + "/" + r[4]);
-
+            */
               if (r[4].equals("fixed")) {             
                 if (Integer.valueOf(r[0]) == k) { // row check
                     if (((Integer.valueOf(r[1]) - 1) + Integer.valueOf(r[2])) > s.length()) {
@@ -1488,8 +1488,8 @@ public class EDI {
         
         // assign type with highest match
         String[] dfs = getDFSFileType(vtype[0]);
-        type[0] = dfs[4];
-        type[1] = v;        
+        type[0] = dfs[4]; // filetype
+        type[1] = v;      //doctype
         
         /*
         if (vdoctype.contains("xml")) {
@@ -1636,16 +1636,13 @@ public class EDI {
     }
     
     public static String[] getFileInfo(ArrayList<String> docs, String[] c, ArrayList<String[]> tags) {
+        // only used for FF and CSV file types
+        
         // hm is list of variables and coordinates to find variables (f,m) r,c,l
         // f = fixed, m = regex, r = row, c = column, l = length
         String[] x = new String[]{"","","",""}; // doctype, rcvid, parentpartner, sndid
         int i = 0;
-        /*
-        for (String[] t : tags ) {
-        edid_tag,edid_rectype,edid_valuetype,edid_row,edid_col,edid_length,edid_regex,edid_value
-            System.out.println("here:" + t[0] + "/" + t[1] + "/" + t[2] + "/" + t[3] + "/" + t[4] + "/" + t[5] + "/" + t[6]);
-        }
-        */
+       
         
         x[0] = getEDIFFDocType(c[1]); //overriding original recognition record edd_id with type; further overriden with tag below as necessary
         
