@@ -1676,8 +1676,9 @@ public class InvRptPicker extends javax.swing.JPanel {
     }//GEN-LAST:event_tablereportMouseClicked
 
     private void btcsvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcsvActionPerformed
-        if (tablereport != null)
+        if (ddreport.getSelectedItem() != null && ! ddreport.getSelectedItem().toString().isBlank() && tablereport != null) {
         OVData.exportCSV(tablereport);
+        }
     }//GEN-LAST:event_btcsvActionPerformed
 
     private void ddreportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddreportActionPerformed
@@ -1709,7 +1710,9 @@ public class InvRptPicker extends javax.swing.JPanel {
     }//GEN-LAST:event_ddreportActionPerformed
 
     private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
+        if (ddreport.getSelectedItem() != null && ! ddreport.getSelectedItem().toString().isBlank() && tablereport != null) {
         OVData.printJTableToJasper(ddreport.getSelectedItem().toString(), tablereport, jaspermap.get(ddreport.getSelectedItem().toString()) );
+        }
     }//GEN-LAST:event_btprintActionPerformed
 
 
