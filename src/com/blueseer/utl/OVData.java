@@ -5971,9 +5971,9 @@ public class OVData {
                 int j = 0;
                 int indexnbr = OVData.getNextNbr("order", 366); // one more than the max ...when <= ...else the max
                 for (int i = 0; i <= 365; i++) {
-                    if ((i % 7) == 0) {
-                      sduedate = duedate[i / 7].format(DateTimeFormatter.ofPattern("yyyy-MM-dd")); 
-                    } 
+                    if ((i % 7) == 0) { // changed to only 1 per week...faster load time 20240122 TEV
+                    sduedate = duedate[i / 7].format(DateTimeFormatter.ofPattern("yyyy-MM-dd")); 
+                    
                     custpos = (int) (Math.random() * (5 - 0)) + 0;
                     j = 0;
                      
@@ -6040,6 +6040,7 @@ public class OVData {
                 } // for each sales order det random z
                 } // if j == 0
                     indexnbr++;  // next order number
+                    } 
                 } // for each sales order 
              
                
@@ -6100,7 +6101,7 @@ public class OVData {
                 for (int i = 0; i <= 365; i++) {
                     if ((i % 7) == 0) {
                       sduedate = duedate[i / 7].format(DateTimeFormatter.ofPattern("yyyy-MM-dd")); 
-                    } 
+                     
                     j = 0;
                     
                     res =  st.executeQuery("select po_nbr from po_mstr where " +
@@ -6175,7 +6176,8 @@ public class OVData {
                    );    
                 } // for each purchase order det random z
                 } // j == 0
-                indexnbr++;    
+                indexnbr++;   
+                } // once a week /7
                 } // for each purchase order 
               
              
