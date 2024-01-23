@@ -31,9 +31,11 @@ if "%computername%" == "CLTSLCDXM0G2" (
 @echo "work around for group policy bs"
 c:\NGCSof~1\sqlite\sqlite3.exe bsdb.db <..\blueseer.sqlite
 c:\NGCSof~1\sqlite\sqlite3.exe bsdb.db <..\sq.txt
+echo update ov_mstr set ov_currency = 'USD'; |c:\NGCSof~1\sqlite\sqlite3.exe bsdb.db
 ) else (
 sqlite3.exe bsdb.db <..\blueseer.sqlite
 sqlite3.exe bsdb.db <..\sq.txt
+echo update ov_mstr set ov_currency = 'USD'; |sqlite3.exe bsdb.db
 )
 
 copy bsdb.db ..\
