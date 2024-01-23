@@ -119,13 +119,45 @@ public class bsTest {
    }
    
    @Test
-   public void testEDI_810Idoc() {
+   public void testEDI_850Idoc() {
       try {
           m = EDI.processFile("edi/sampledata/ACME_IDOC_INVOIC02out.txt","","","", false, false, 0, 0);
           if (m[0].equals("0")) {
               System.out.println("sample 810idoc...  pass");
           } else {
               System.out.println("sample 810idoc...  fail");
+              System.out.println("m[1] message: " + m[1]);
+          }
+      } catch (Exception e) {
+          System.out.println("BS Exception: " + e.getMessage() );
+      }
+      assertEquals("0",m[0]);
+   }
+   
+   @Test
+   public void testEDI_850csv() {
+      try {
+          m = EDI.processFile("edi/sampledata/ACME_CSV_order.csv","","","", false, false, 0, 0);
+          if (m[0].equals("0")) {
+              System.out.println("sample 850csv...   pass");
+          } else {
+              System.out.println("sample 850csv...   fail");
+              System.out.println("m[1] message: " + m[1]);
+          }
+      } catch (Exception e) {
+          System.out.println("BS Exception: " + e.getMessage() );
+      }
+      assertEquals("0",m[0]);
+   }
+   
+   @Test
+   public void testEDI_850une() {
+      try {
+          m = EDI.processFile("edi/sampledata/ACME_EDIFACT_ORDERS.txt","","","", false, false, 0, 0);
+          if (m[0].equals("0")) {
+              System.out.println("sample 850une...   pass");
+          } else {
+              System.out.println("sample 850une...   fail");
               System.out.println("m[1] message: " + m[1]);
           }
       } catch (Exception e) {

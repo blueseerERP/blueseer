@@ -62,10 +62,10 @@ public class bsTestRunner {
                 }
             }
         }
-      String s = (8286 == x) ? "pass" : "fail";
+      String s = (16895 == x) ? "pass" : "fail";
       System.out.println("Overall Testing Success: " + result.wasSuccessful());
       System.out.println("output file count: " + cnt);
       System.out.println("output file size sum: " + x);
-      System.out.println("cumalative file size match: " + s);
+      System.out.println("cumalative file size match (16895): " + s);
    }
 }
