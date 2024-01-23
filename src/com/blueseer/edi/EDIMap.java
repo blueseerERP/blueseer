@@ -3493,7 +3493,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
     public static String getInput(String segment, String elementName) {
          String x = "";
          int elementNbr = 0;
-         if (inputfiletype.equals("X12") || inputfiletype.equals("UNE") || inputfiletype.equals("FF")) {
+         if (inputfiletype.equals("X12") || inputfiletype.equals("UNE") || inputfiletype.equals("FF") || inputfiletype.equals("XML")) {
              elementNbr = getElementNumber(segment, elementName);
              if (elementNbr == 0) {
               return x;
@@ -3507,7 +3507,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             // segment = ":" + segment; // preprend blank
              for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
                 String[] v = z.getKey().split("\\+");
-                if (inputfiletype.equals("X12") || inputfiletype.equals("UNE") || inputfiletype.equals("FF")) {
+                if (inputfiletype.equals("X12") || inputfiletype.equals("UNE") || inputfiletype.equals("FF") || inputfiletype.equals("XML")) {
                     if (v[0].equals(segment)) {
                         k = z.getValue();
                     }
@@ -3804,10 +3804,17 @@ public abstract class EDIMap {  // took out the implements EDIMapi
     public static String getInput(Integer gloop, String segment, String qual, String elementName) {
          String x = "";
          String[] k = null;
-         int elementNbr = getElementNumber(segment, elementName); 
-         if (elementNbr == 0) {
-             return x;
+         int elementNbr = 0;
+         if (inputfiletype.equals("X12") || inputfiletype.equals("UNE") || inputfiletype.equals("FF") || inputfiletype.equals("XML")) {
+             elementNbr = getElementNumber(segment, elementName);
+             if (elementNbr == 0) {
+              return x;
+             }
          }
+         
+         // get count of tags in segment... for json/xml usage
+         String[] j = segment.split(":",-1);
+         
          String[] q = qual.split(":",-1);
          int qualNbr = getElementNumber(segment,q[0]);
          if (qualNbr == 0) {
@@ -3823,6 +3830,25 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                      k = t;
                  } 
              }
+             
+             if (inputfiletype.equals("X12") || inputfiletype.equals("UNE") || inputfiletype.equals("FF") || inputfiletype.equals("XML")) {
+                    if (v[0].equals(segment) && v[1].equals(String.valueOf(gloop))) {
+                        t = z.getValue();
+                        if ( (t != null) && (t.length >= qualNbr) && (t[qualNbr].equals(q[1].toUpperCase())) ) {
+                            k = t;
+                        } 
+                    }
+            } else {
+                String[] vsub = v[1].split(",",-1);
+                if (v[0].equals(segment + ":" + elementName) && vsub.length >= j.length && vsub[j.length-1].equals(String.valueOf(gloop))) {
+                    t = z.getValue();
+                        if ( (t != null) && (t.length >= qualNbr) && (t[qualNbr].equals(q[1].toUpperCase())) ) {
+                            k = t;
+                        } 
+                }
+            }
+             
+             
          }
          if (k != null && k.length > elementNbr && k[elementNbr] != null) {
           x =  k[elementNbr].trim();

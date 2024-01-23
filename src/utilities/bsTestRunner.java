@@ -25,8 +25,10 @@ SOFTWARE.
  */
 package utilities;
 import static bsmf.MainFrame.tags;
+import java.io.File;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import static org.junit.Assert.assertEquals;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
@@ -37,15 +39,33 @@ import org.junit.runner.notification.Failure;
 public class bsTestRunner {
     public static void main(String[] args) {
       
-      bsmf.MainFrame.setConfig();  
-      tags = ResourceBundle.getBundle("resources.bs", Locale.getDefault());
+        bsmf.MainFrame.setConfig();  
+        tags = ResourceBundle.getBundle("resources.bs", Locale.getDefault());
       
-      Result result = JUnitCore.runClasses(bsTest.class);
+       // long z = System.currentTimeMillis() - ((long)daysBack * 24L * 60L * 60L * 1000L);
+        long z = System.currentTimeMillis();
+        long x = 0;
+        Result result = JUnitCore.runClasses(bsTest.class);
 		
-      for (Failure failure : result.getFailures()) {
+        for (Failure failure : result.getFailures()) {
          System.out.println(failure.toString());
-      }
-		
+        }
+      
+        File folder = new File("edi/out");
+        File[] listOfFiles = folder.listFiles();
+        int cnt = 0;
+        for (int i = 0; i < listOfFiles.length; i++) {
+            if (listOfFiles[i].isFile()) {
+                if (listOfFiles[i].getParentFile().canWrite() && listOfFiles[i].lastModified() > z) {
+                x += listOfFiles[i].length();
+                cnt++;
+                }
+            }
+        }
+      String s = (8286 == x) ? "pass" : "fail";
       System.out.println("Overall Testing Success: " + result.wasSuccessful());
+      System.out.println("output file count: " + cnt);
+      System.out.println("output file size sum: " + x);
+      System.out.println("cumalative file size match: " + s);
    }
 }
