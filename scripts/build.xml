@@ -49,8 +49,8 @@
         <javac executable="${javac17}" fork="yes" srcdir="${src.dir}" destdir="${build.dir}" classpathref="build.classpath" includeantruntime="false" debug="true">
         </javac>
     </target>
-    <target name="compile" depends="clean, makedir">
-        <javac  srcdir="${src.dir}" destdir="${build.dir}" classpathref="build.classpath" includeantruntime="false" debug="true">
+    <target name="compile23" depends="clean, makedir">
+        <javac executable="${javac23}" fork="yes" srcdir="${src.dir}" destdir="${build.dir}" classpathref="build.classpath" includeantruntime="false" debug="true">
         </javac>
     </target>
     <target name="compilelinux" depends="clean, makedir">
@@ -60,7 +60,7 @@
 
 
     <!--Creates the deployable jar file  -->
-    <target name="jar" depends="compile">
+    <target name="jar" depends="compile17">
         <jar destfile="${dist.dir}\blueseer.jar" basedir="${build.dir}">
 		<fileset dir="${src.dir}" includes="images/**/*.png,images/**/*.gif,resources/**/*.properties" />
 		<!--	<fileset dir="${lib.dir}" includes="**/*.jar"/> -->
@@ -158,13 +158,13 @@
  </target>
 
 
-    <target name="main" depends="compile, jar">
+    <target name="main" depends="compile17, jar">
         <description>Main target</description>
     </target>
     <target name="mainl" depends="compilelinux, jar">
         <description>Main target</description>
     </target>
-    <target name="main17" depends="compile17, jar">
+    <target name="main23" depends="compile23, jar">
         <description>Main target</description>
     </target>
 
