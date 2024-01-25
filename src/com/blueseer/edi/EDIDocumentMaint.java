@@ -297,7 +297,6 @@ public class EDIDocumentMaint extends javax.swing.JPanel  {
            tbcolumn.setText("");
            tblength.setText("");
            tbvalue.setText("");
-           tbtag.setText("");
            tbxpath.setText("");
            tbregex.setText("");
            tbeledelimiter.setText("");
@@ -305,6 +304,13 @@ public class EDIDocumentMaint extends javax.swing.JPanel  {
            tblandmark.setText("");
            tbpriority.setText("");
            cbenableddet.setSelected(false);
+           
+        ddtag.removeAllItems();
+        ddtag.addItem("");
+        ddtag.addItem("senderid");
+        ddtag.addItem("receiverid");
+        ddtag.setSelectedIndex(0);
+           
        dddoc.removeAllItems();
         ArrayList<String> mylist = OVData.getCodeMstrKeyList("edidoctype");
         for (int i = 0; i < mylist.size(); i++) {
@@ -868,12 +874,12 @@ public class EDIDocumentMaint extends javax.swing.JPanel  {
         tbregex = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
         tbvalue = new javax.swing.JTextField();
-        tbtag = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
         btupdateelement = new javax.swing.JButton();
         tbxpath = new javax.swing.JTextField();
         jLabel17 = new javax.swing.JLabel();
+        ddtag = new javax.swing.JComboBox<>();
         jPanel3 = new javax.swing.JPanel();
         btnew = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
@@ -1032,10 +1038,10 @@ public class EDIDocumentMaint extends javax.swing.JPanel  {
                             .addComponent(jLabel15, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel16, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tbregex, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbvalue, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbtag, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(tbregex, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
+                            .addComponent(tbvalue, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE)
+                            .addComponent(ddtag, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(tbxpath)
@@ -1079,9 +1085,9 @@ public class EDIDocumentMaint extends javax.swing.JPanel  {
                             .addComponent(jLabel11)
                             .addComponent(tblength, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel13)
-                            .addComponent(tbtag, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel16)
-                            .addComponent(btupdateelement))))
+                            .addComponent(btupdateelement)
+                            .addComponent(ddtag, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbenableddet)
@@ -1357,7 +1363,7 @@ public class EDIDocumentMaint extends javax.swing.JPanel  {
             ddvaluetype.getSelectedItem().toString(), 
             tbrow.getText(), tbcolumn.getText(), 
             tblength.getText(), tbregex.getText(),
-            tbvalue.getText(), tbtag.getText(), tbxpath.getText(),
+            tbvalue.getText(), ddtag.getSelectedItem().toString(), tbxpath.getText(),
             String.valueOf(cbenableddet.isSelected()) });
     }//GEN-LAST:event_btaddelementActionPerformed
 
@@ -1431,7 +1437,7 @@ public class EDIDocumentMaint extends javax.swing.JPanel  {
                 tablerole.setValueAt(tblength.getText(), i, 5);
                 tablerole.setValueAt(tbregex.getText(), i, 6);
                 tablerole.setValueAt(tbvalue.getText(), i, 7);
-                tablerole.setValueAt(tbtag.getText(), i, 8);
+                tablerole.setValueAt(ddtag.getSelectedItem().toString(), i, 8);
                 tablerole.setValueAt(tbxpath.getText(), i, 9);
                 tablerole.setValueAt(String.valueOf(cbenableddet.isSelected()), i, 10);
                 ddrole.requestFocus();
@@ -1453,7 +1459,7 @@ public class EDIDocumentMaint extends javax.swing.JPanel  {
         tblength.setText(tablerole.getValueAt(row, 5).toString());
         tbregex.setText(tablerole.getValueAt(row, 6).toString());
         tbvalue.setText(tablerole.getValueAt(row, 7).toString());
-        tbtag.setText(tablerole.getValueAt(row, 8).toString());
+        ddtag.setSelectedItem(tablerole.getValueAt(row, 8).toString());
         tbxpath.setText(tablerole.getValueAt(row, 9).toString());
         cbenableddet.setSelected(ConvertTrueFalseToBoolean(tablerole.getValueAt(row, 10).toString()));
        
@@ -1496,6 +1502,7 @@ public class EDIDocumentMaint extends javax.swing.JPanel  {
     private javax.swing.JComboBox<String> ddrectype;
     private javax.swing.JComboBox<String> ddrole;
     private javax.swing.JComboBox<String> ddstruct;
+    private javax.swing.JComboBox<String> ddtag;
     private javax.swing.JComboBox<String> ddvaluetype;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -1530,7 +1537,6 @@ public class EDIDocumentMaint extends javax.swing.JPanel  {
     private javax.swing.JTextField tbregex;
     private javax.swing.JTextField tbrow;
     private javax.swing.JTextField tbsegdelimiter;
-    private javax.swing.JTextField tbtag;
     private javax.swing.JTextField tbvalue;
     private javax.swing.JTextField tbxpath;
     // End of variables declaration//GEN-END:variables

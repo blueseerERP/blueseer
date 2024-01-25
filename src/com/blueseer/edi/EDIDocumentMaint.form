@@ -136,10 +136,10 @@
                                   <Component id="jLabel16" alignment="1" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="tbregex" alignment="0" min="-2" pref="121" max="-2" attributes="0"/>
-                                  <Component id="tbvalue" alignment="0" min="-2" pref="121" max="-2" attributes="0"/>
-                                  <Component id="tbtag" alignment="0" min="-2" pref="121" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="tbregex" alignment="0" pref="121" max="32767" attributes="0"/>
+                                  <Component id="tbvalue" alignment="0" pref="121" max="32767" attributes="0"/>
+                                  <Component id="ddtag" alignment="0" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace pref="32" max="32767" attributes="0"/>
                           </Group>
@@ -193,9 +193,9 @@
                                   <Component id="jLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="tblength" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel13" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="tbtag" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel16" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="btupdateelement" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="ddtag" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -355,8 +355,6 @@
             </Component>
             <Component class="javax.swing.JTextField" name="tbvalue">
             </Component>
-            <Component class="javax.swing.JTextField" name="tbtag">
-            </Component>
             <Component class="javax.swing.JLabel" name="jLabel15">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Value"/>
@@ -383,6 +381,16 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="xpath"/>
               </Properties>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="ddtag">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="0"/>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
             </Component>
           </SubComponents>
         </Container>
