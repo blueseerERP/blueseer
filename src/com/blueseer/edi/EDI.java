@@ -1672,7 +1672,7 @@ public class EDI {
                     }
                     
                 }
-                if (t[0].toLowerCase().equals("rcvid")) {
+                if (t[0].toLowerCase().equals("receiverid")) {
                     if (t[2].toLowerCase().equals("constant")) {
                         x[1] = t[7];
                     } else {
@@ -1691,7 +1691,7 @@ public class EDI {
                     }
                     
                 }
-                 if (t[0].toLowerCase().equals("sndid")) {
+                 if (t[0].toLowerCase().equals("senderid")) {
                     if (t[2].toLowerCase().equals("constant")) {
                         x[3] = t[7];
                     } else {
@@ -1803,7 +1803,7 @@ public class EDI {
                         }
                     }
                 }
-                if (t[0].toLowerCase().equals("rcvid")) {
+                if (t[0].toLowerCase().equals("receiverid")) {
                     if (t[2].toLowerCase().equals("constant")) {
                         x[1] = t[7];
                     } else {                        
@@ -1825,7 +1825,7 @@ public class EDI {
                         }
                     }
                 }
-                 if (t[0].toLowerCase().equals("sndid")) {
+                 if (t[0].toLowerCase().equals("senderid")) {
                     if (t[2].toLowerCase().equals("constant")) {
                         x[3] = t[7];
                     } else {
