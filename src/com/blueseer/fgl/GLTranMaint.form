@@ -571,7 +571,8 @@
         </Component>
         <Component class="javax.swing.JLabel" name="lbacct2">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Acct2"/>
+            <Property name="text" type="java.lang.String" value="Acct"/>
+            <Property name="name" type="java.lang.String" value="lblacct" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btclear">

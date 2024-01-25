@@ -869,7 +869,8 @@ public class GLTranMaint extends javax.swing.JPanel {
             }
         });
 
-        lbacct2.setText("Acct2");
+        lbacct2.setText("Acct");
+        lbacct2.setName("lblacct"); // NOI18N
 
         btclear.setText("Clear");
         btclear.addActionListener(new java.awt.event.ActionListener() {
