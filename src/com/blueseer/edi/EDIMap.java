@@ -2015,14 +2015,21 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             counter = 0;
                 
                 
-                System.out.println("PARENT: " + node.getNodeName() + "/" + node.getNodeType() + "  " + node.hasChildNodes() + "/" + node.hasAttributes());
+                System.out.println("PARENT: " + node.getNodeName() + "/" + node.getNodeType() + "  " + node.hasChildNodes() + "/" + node.hasAttributes() + "/" + node.getFirstChild() + "/" + node.getLastChild());
                          
             	NodeList childnodes = node.getChildNodes();
                 int ck = 0;
+                boolean childempty = false;
             	for (int j = 0; j < childnodes.getLength(); j++) {
+                        childempty = false;
             		Node child = childnodes.item(j);
-                        System.out.println("CHILD: " + child.getNodeName() + "/" + child.getNodeType() + "  " + child.hasChildNodes() + "/" + child.hasAttributes());
+                        System.out.println("CHILD: " + child.getNodeName() + "/" + child.getNodeType() + "  " + child.hasChildNodes() + "/" + child.hasAttributes() + "/" + child.getFirstChild() + "/" + child.getLastChild());
                  
+                        if (child.getNodeType() == 1 && child.getFirstChild().getNodeValue().isBlank() ) {
+                          System.out.println("CHILD EMPTY: " + child.getNodeName());  
+                          childempty = true;
+                        }
+                        
                      if (ppath.length() > 10) {
                          parent = ppath.substring(10,ppath.length() - 1);  
                       } else {
@@ -2074,7 +2081,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                             
                             ck++;
                             
-                            if (! uniques.contains(node.getNodeName()+parent+child.getNodeName())) {
+                            if (! uniques.contains(node.getNodeName()+parent+child.getNodeName()) && ! childempty ) {
                             String b[] = new String[]{node.getNodeName(),parent,"0","no","no",child.getNodeName(),child.getNodeName(),"0","100","-","O","F"};
                             newresult.add(b);
                             uniques.add(node.getNodeName()+parent+child.getNodeName());
