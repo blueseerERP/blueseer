@@ -1,0 +1,20 @@
+test:
+     [echo] running target test ....C:\bs\wip\test
+     [java] sample 850csv...   pass
+     [java] sample 850une...   pass
+     [java] sample 850x12...   pass
+     [java] sample 850xml...   pass
+     [java] sample 810idoc...  pass
+     [java] sample 850json...  pass
+     [java] sample 856idoc...  pass
+     [java] 810idoc.100045.txt   size--> 662
+     [java] 850csv.100043.txt   size--> 437
+     [java] 850json.100046.txt   size--> 533
+     [java] 850une0000005.txt   size--> 8172
+     [java] 850x120000007.txt   size--> 5900
+     [java] 850xml.100044.txt   size--> 528
+     [java] 856idoc.100047.txt   size--> 674
+     [java] Overall Testing Success: true
+     [java] output file count: 7
+     [java] output file size sum: 16906
+     [java] cumalative file size match (16906): pass

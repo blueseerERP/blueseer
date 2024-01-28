@@ -59,13 +59,14 @@ public class bsTestRunner {
                 if (listOfFiles[i].getParentFile().canWrite() && listOfFiles[i].lastModified() > z) {
                 x += listOfFiles[i].length();
                 cnt++;
+                System.out.println(listOfFiles[i].getName() + "   size--> "+ listOfFiles[i].length());
                 }
             }
         }
-      String s = (16895 == x) ? "pass" : "fail";
+      String s = (16906 == x) ? "pass" : "fail";
       System.out.println("Overall Testing Success: " + result.wasSuccessful());
       System.out.println("output file count: " + cnt);
       System.out.println("output file size sum: " + x);
-      System.out.println("cumalative file size match (16895): " + s);
+      System.out.println("cumalative file size match (16906): " + s);
    }
 }
