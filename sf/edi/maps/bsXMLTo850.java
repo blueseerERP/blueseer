@@ -2,19 +2,20 @@
 //debuginput(mappedInput);
 mapSegment("BEG","e01","00");
 mapSegment("BEG","e02","NE");
-mapSegment("BEG","e03",getInput("order:header",1));
-mapSegment("BEG","e05",getInput("order:header",2).replace("-",""));
+mapSegment("BEG","e03",getInput("order:header","purchaseordernumber"));
+mapSegment("BEG","e05",getInput("order:header","orderdate").replace("-",""));
 commitSegment("BEG");
 
 mapSegment("REF","e01","VN");
-mapSegment("REF","e02",getInput("order:header",6));
+mapSegment("REF","e02",getInput("order:header","senderid"));
 commitSegment("REF");
 
 mapSegment("REF","e01","XX");
-mapSegment("REF","e02",getInput("order:header",1));
+mapSegment("REF","e02",getInput("order:header","doctype"));
 commitSegment("REF");
 
-int addrcount = getGroupCount("order:address");
+
+int addrcount = getLoopCount("order:address",2);
 for (int i = 1; i <= addrcount; i++) {
 if (getInput(i,"order:address","type").equals("shipto")) {
 mapSegment("N1","e01","ST");
@@ -44,7 +45,7 @@ commitSegment("N4");
 }
 }
 
-int itemcount = getGroupCount("order:detail:item");
+int itemcount = getLoopCount("order:detail:item",2);
 for (int i = 1; i <= itemcount; i++) {
 mapSegment("PO1","e01",getInput(i, "order:detail:item","line"));
 mapSegment("PO1","e02",getInput(i, "order:detail:item","quantity"));

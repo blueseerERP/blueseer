@@ -1449,7 +1449,8 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             }
         } else if (c[28].toUpperCase().equals("XML")) {   
             try {
-                dataAsArrays = xmlToSegments(data.get(0), ISF);
+               //dataAsArrays = xmlToSegments(data.get(0), ISF);
+               return mappedData = xmlToSegments(data.get(0),ISF);
             } catch (IOException ex) {
                 edilog(ex);
             }
@@ -1825,9 +1826,11 @@ public abstract class EDIMap {  // took out the implements EDIMapi
 	}
 
     
-    public static List<String[]> xmlToSegments(String xml, ArrayList<String[]> isf) throws IOException {
+    public static LinkedHashMap<String, String[]> xmlToSegments(String xml, ArrayList<String[]> isf) throws IOException {
         ArrayList<String[]> result = new ArrayList<String[]>();
         LinkedHashMap<String,ArrayList<String>> lhm = new LinkedHashMap<String,ArrayList<String>>();
+        LinkedHashMap<String,String[]> lhmnew = new LinkedHashMap<String,String[]>();
+        LinkedHashMap<String,Integer> arraycounter = new LinkedHashMap<String,Integer>();
         String lhmkey = "";
         DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder;
@@ -1929,19 +1932,25 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         }
         
 	    for (Map.Entry<String, ArrayList<String>> val : lhm.entrySet()) {
-	    	/*
+                
                 if (val.getValue() != null) {
-                for (String g : val.getValue()) {
-                    System.out.println("HERE XXX: " + " key: " + val.getKey() + " value: " + g);
+                    
+                    String key = val.getKey().split(",")[1] + ":" + val.getKey().split(",")[0];
+                    if (! arraycounter.containsKey(key)) {
+                        arraycounter.put(key, 1);
+                    } else {
+                        arraycounter.replace(key, arraycounter.get(key) + 1);
+                    }
+                    
+                    for (String sv : val.getValue()) {
+                        String k = val.getKey().split(",")[1] + ":" + val.getKey().split(",")[0] + ":" + sv.split("=")[0] + "+1,1," + String.valueOf(arraycounter.get(key));
+                        String[] v = new String[]{sv.split("=")[1]};
+                        lhmnew.put(k, v);
+                      // System.out.println("HEREprint: " + k + " / " + v[0]);
+                 
+                    }
                 }
-                } else {
-                   System.out.println("HERE XXX: " + " key: " + val.getKey() + " value: is fing NULL"); 
-                }
-                */
                 /*
-                String[] j = new String[val.getValue().size() + 1];
-	    	j[0] = val.getKey().split(",")[0];
-                */
                 String[] t = getFieldsFromStructure(val.getKey().split(",")[0], val.getKey().split(",")[1], isf);
                 String[] td = new String[t.length + 1];
                 td[0] = val.getKey().split(",")[0];
@@ -1955,25 +1964,148 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                                 td[k + 1] = val.getValue().get(m).split("=")[1];
                                 break;
                             }
-
                         }
                     }
                 }
-                
-                /*
-	    	for (int k = 1; k < val.getValue().size() + 1; k++) {
-	    		j[k] = val.getValue().get(k - 1);
-	    	}
-	    	result.add(j);
-                System.out.println("HERE: " + String.join(",", j) + "/" + val.getKey());
-                */
                 result.add(td);
-              //  System.out.println("HEREprint: " + String.join(",", td) + "/" + val.getKey());
+                */
+            //  System.out.println("HEREprint: " + String.join(",", td) + "/" + val.getKey());
 	    }
         
-		return result;
+		//return result;
+                return lhmnew;
 	}
    
+    public static LinkedHashMap<String, String[]> xmlToSegments_bkup(String xml, ArrayList<String[]> isf) throws IOException {
+        ArrayList<String[]> result = new ArrayList<String[]>();
+        LinkedHashMap<String,ArrayList<String>> lhm = new LinkedHashMap<String,ArrayList<String>>();
+        LinkedHashMap<String,String[]> lhmnew = new LinkedHashMap<String,String[]>();
+        String lhmkey = "";
+        DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder docBuilder;
+        Document document = null;
+        InputStream is = new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8));
+        try {
+            docBuilder = docBuilderFactory.newDocumentBuilder();
+            document = docBuilder.parse(is);
+        } catch (ParserConfigurationException ex) {
+            edilog(ex);
+        } catch (SAXException ex) {
+            edilog(ex);
+        }
+        
+        int counter = 0;
+        String root = "";
+        String parent = "";
+        LinkedHashMap<String, String> plhm = new LinkedHashMap<String, String>();
+        NodeList nodeList = document.getElementsByTagName("*");
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node node = nodeList.item(i);
+            if (node.getParentNode().getNodeName().equals("#document")) {
+                root = node.getNodeName();
+            }
+            
+            String ppath = "";
+            Node pnode = node.getParentNode();
+            while (pnode != null) {
+            ppath = pnode.getNodeName() + ':' + ppath;
+            pnode = pnode.getParentNode();
+            }
+            
+            Node nextnode = null;
+            counter = 0;
+            if (node.getNodeType() == Node.ELEMENT_NODE) {            	
+            	NodeList childnodes = node.getChildNodes();
+            	for (int j = 0; j < childnodes.getLength(); j++) {
+            		Node child = childnodes.item(j);
+                        if (ppath.length() > 10) {
+                         parent = ppath.substring(10,ppath.length() - 1);  
+                        } else {
+                         parent = ppath.substring(10); 
+                        }
+                        lhmkey = node.getNodeName() + "," + parent + "," + node.hashCode();
+                      //  System.out.println("here: init" + lhmkey);
+                        if (! lhm.containsKey(lhmkey)) {
+            				lhm.put(lhmkey, null);
+                        }
+                        // get attributes of parent node on first iteration of child nodes
+                        if (j == 0 && node.hasAttributes()) {
+                            ArrayList<String> xx = lhm.get(lhmkey);
+                                if (xx != null) {
+                                    for (int a = 0; a < node.getAttributes().getLength(); a++){
+                                      Attr attr = (Attr) node.getAttributes().item(a);
+                                      xx.add(attr.getNodeName() + "=" + attr.getNodeValue());
+                                    }
+                                    lhm.put(lhmkey, xx);
+                                } else {
+                                    ArrayList<String> al = new ArrayList<String>();
+                                    for (int a = 0; a < node.getAttributes().getLength(); a++){
+                                      Attr attr = (Attr) node.getAttributes().item(a);
+                                      al.add(attr.getNodeName() + "=" + attr.getNodeValue());
+                                    }
+                                    lhm.put(lhmkey, al);
+                                }
+                            
+                        }
+                        
+                        // now process child tag if leaf (no children)
+                        if (child.getNodeType() == Node.ELEMENT_NODE && child.getChildNodes().getLength() == 1) {
+            			
+            			ArrayList<String> temp = lhm.get(lhmkey);
+                                if (temp != null) {
+                                      temp.add(child.getNodeName() + "=" + child.getTextContent()); // add child node value
+                                      // get attributes of child node
+                                      if (child.hasAttributes()) {
+                                            for (int a = 0; a < child.getAttributes().getLength(); a++){
+                                               Attr attr = (Attr) child.getAttributes().item(a);
+                                               temp.add(attr.getNodeName() + "=" + attr.getNodeValue());
+                                            }
+                                      }
+                                      lhm.put(lhmkey, temp);
+                                } else {
+                                      ArrayList<String> al = new ArrayList<String>();
+                                      al.add(child.getNodeName() + "=" + child.getTextContent());
+                                      // get attributes of child node
+                                      if (child.hasAttributes()) {
+                                            for (int a = 0; a < child.getAttributes().getLength(); a++){
+                                               Attr attr = (Attr) child.getAttributes().item(a);
+                                               al.add(attr.getNodeName() + "=" + attr.getNodeValue());
+                                            }
+                                      }
+                                      lhm.put(lhmkey, al);
+                                }	
+            	     }
+            	}
+            	
+            }
+        }
+        
+	    for (Map.Entry<String, ArrayList<String>> val : lhm.entrySet()) {
+                String[] t = getFieldsFromStructure(val.getKey().split(",")[0], val.getKey().split(",")[1], isf);
+                String[] td = new String[t.length + 1];
+                td[0] = val.getKey().split(",")[0];
+                for (int k = 0; k < t.length; k++) {
+                  //  System.out.println("HERE size: " + t.length + "/" + val.getValue().size());
+                    if (val.getValue() != null) {
+                        for (int m = 0; m < val.getValue().size(); m++) {
+                            if (t[k].equals(val.getValue().get(m).split("=")[0])) {
+                               // System.out.println("HERE Loop: " + t[0] + "/" +  val.getKey() + "/" + k + "/" +  t[k] + "/" + val.getValue().get(m));
+
+                                td[k + 1] = val.getValue().get(m).split("=")[1];
+                                break;
+                            }
+                        }
+                    }
+                }
+               // mappedData.put(parenthead + x[0] + "+" + groupcount.get(groupparent) + "+" + loop , x);
+                result.add(td);
+              System.out.println("HEREprint: " + String.join(",", td) + "/" + val.getKey());
+	    }
+        
+		return lhmnew;
+	}
+   
+    
     public static List<String[]> xmlTagsToSegments(String xml) throws IOException {
         ArrayList<String[]> result = new ArrayList<String[]>();
         ArrayList<String[]> newresult = new ArrayList<String[]>();
@@ -2215,7 +2347,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                     } else {
                         key = keyx[0];
                     }
-                    
+                    System.out.println("mapInput (orig loop): " + "key: " + z.getKey() + " / value: " + String.join(",",z.getValue()));
                     int i = 0;
                     String fieldname = "";
                     for (String s : z.getValue()) {
@@ -2227,7 +2359,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                              fieldname = "unknown";
                          }
                      }
-                     System.out.println("mapInput: " + z.getKey() + " " + fieldname +  " / Field: " + i + " value: " + s);   
+                     System.out.println("mapInput (field loop): " + z.getKey() + " " + fieldname +  " / Field: " + i + " value: " + s);   
                      i++;
                     }
             }
@@ -3494,13 +3626,13 @@ public abstract class EDIMap {  // took out the implements EDIMapi
      }
         
     @EDI.AnnoDoc(desc = {"method reads value from source at segment and element (by name).",
-                        "NOTE: JSON compatible ",
+                        "NOTE: JSON, XML compatible ",
                         "Example:  getInput(\"BEG\",\"fieldname\") returns: specific field of BEG segment"},
             params = {"String segment","String ElementName"}) 
     public static String getInput(String segment, String elementName) {
          String x = "";
          int elementNbr = 0;
-         if (inputfiletype.equals("X12") || inputfiletype.equals("UNE") || inputfiletype.equals("FF") || inputfiletype.equals("XML")) {
+         if (inputfiletype.equals("X12") || inputfiletype.equals("UNE") || inputfiletype.equals("FF")) {
              elementNbr = getElementNumber(segment, elementName);
              if (elementNbr == 0) {
               return x;
@@ -3514,7 +3646,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             // segment = ":" + segment; // preprend blank
              for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
                 String[] v = z.getKey().split("\\+");
-                if (inputfiletype.equals("X12") || inputfiletype.equals("UNE") || inputfiletype.equals("FF") || inputfiletype.equals("XML")) {
+                if (inputfiletype.equals("X12") || inputfiletype.equals("UNE") || inputfiletype.equals("FF")) {
                     if (v[0].equals(segment)) {
                         k = z.getValue();
                     }
@@ -3730,14 +3862,14 @@ public abstract class EDIMap {  // took out the implements EDIMapi
     
     
     @EDI.AnnoDoc(desc = {"method reads value from source at segment and element (by fieldname) for a Group/Loop Segment.",
-                      "NOTE: JSON compatible ",
+                      "NOTE: JSON, XML compatible ",
                       "Note:  this is typically used in a looping construct in conjunction with getGroupCount() or getLoopCount()",  
                       "Example:  getInput(i,\"E2EDP01\",\"belnr\") returns: fieldname 'belnr' of idoc segment ED2EDP01 in loop index 'i' "},
             params = {"Integer LoopIndex", "String segment", "String ElementName"})  
     public static String getInput(Integer gloop, String segment, String elementName) {
          String x = "";
          int elementNbr = 0;
-         if (inputfiletype.equals("X12") || inputfiletype.equals("UNE") || inputfiletype.equals("FF") || inputfiletype.equals("XML")) {
+         if (inputfiletype.equals("X12") || inputfiletype.equals("UNE") || inputfiletype.equals("FF")) {
              elementNbr = getElementNumber(segment, elementName);
              if (elementNbr == 0) {
               return x;
@@ -3751,13 +3883,16 @@ public abstract class EDIMap {  // took out the implements EDIMapi
          for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
              String[] v = z.getKey().split("\\+");
             
-            if (inputfiletype.equals("X12") || inputfiletype.equals("UNE") || inputfiletype.equals("FF") || inputfiletype.equals("XML")) {
+            if (inputfiletype.equals("X12") || inputfiletype.equals("UNE") || inputfiletype.equals("FF")) {
                     if (v[0].equals(segment) && v[1].equals(String.valueOf(gloop))) {
                         k = z.getValue();
                     }
             } else {
                 String[] vsub = v[1].split(",",-1);
-                if (v[0].equals(segment + ":" + elementName) && vsub.length >= j.length && vsub[j.length-1].equals(String.valueOf(gloop))) {
+                // this needs to be revisited... vsub[j.length-1] only works for variable loop counts...not implemented yet
+                // hardcode to third ,,, value...which will be element 2
+               // if (v[0].equals(segment + ":" + elementName) && vsub.length >= j.length && vsub[j.length-1].equals(String.valueOf(gloop))) {
+                if (v[0].equals(segment + ":" + elementName) && vsub.length >= j.length && vsub[2].equals(String.valueOf(gloop))) {
                     k = z.getValue();
                 }
             }
@@ -3770,7 +3905,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
          }
          
          if (GlobalDebug)
-         System.out.println("getInput:" + segment + "/" + elementName + "/" + elementNbr + ": " + x);
+         System.out.println("getInput (i): " + String.valueOf(gloop) + "->"  + segment + "/" + elementName + "/" + elementNbr + ": " + x);
          
          return x;
      }
@@ -4020,7 +4155,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
      }
     
       @EDI.AnnoDoc(desc = {"method retrieves the loop count of a parent:tag segment...used in json and xml inbound",
-                     "NOTE: JSON compatible ",
+                     "NOTE: JSON, XML compatible ",
                      "NOTE: tag/position format:  A:B:C+1,1,1+ ...x,x,x is 'positional loop count' of A or B or C ",
                      "NOTE: The keys are defined as unique identifier tags for each occurence of the repeating segment.",
                      "Example:  getLoopCount(\"GPARENT:PARENT:CHILD:\", pos) returns: last count of tag position subelement(tag+,,,+) "},
