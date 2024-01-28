@@ -2015,7 +2015,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             counter = 0;
                 
                 
-                System.out.println("PARENT: " + node.getNodeName() + "/" + node.getNodeType() + "  " + node.hasChildNodes() + "/" + node.hasAttributes() + "/" + node.getFirstChild() + "/" + node.getLastChild());
+             //   System.out.println("PARENT: " + node.getNodeName() + "/" + node.getNodeType() + "  " + node.hasChildNodes() + "/" + node.hasAttributes() + "/" + node.getFirstChild() + "/" + node.getLastChild());
                          
             	NodeList childnodes = node.getChildNodes();
                 int ck = 0;
@@ -2023,10 +2023,10 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             	for (int j = 0; j < childnodes.getLength(); j++) {
                         childempty = false;
             		Node child = childnodes.item(j);
-                        System.out.println("CHILD: " + child.getNodeName() + "/" + child.getNodeType() + "  " + child.hasChildNodes() + "/" + child.hasAttributes() + "/" + child.getFirstChild() + "/" + child.getLastChild());
+                     //   System.out.println("CHILD: " + child.getNodeName() + "/" + child.getNodeType() + "  " + child.hasChildNodes() + "/" + child.hasAttributes() + "/" + child.getFirstChild() + "/" + child.getLastChild());
                  
                         if (child.getNodeType() == 1 && child.getFirstChild().getNodeValue().isBlank() ) {
-                          System.out.println("CHILD EMPTY: " + child.getNodeName());  
+                      //    System.out.println("CHILD EMPTY: " + child.getNodeName());  
                           childempty = true;
                         }
                         
@@ -2045,7 +2045,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                         if (child.getNodeType() == Node.ELEMENT_NODE ) {
             
                             if (ck == 0 && ! uniques.contains(node.getNodeName()+parent+"landmark")) {
-                             String b[] = new String[]{node.getNodeName(),parent,"1","no","yes","landmark","landmark","0","100","-","M","N"};
+                             String b[] = new String[]{node.getNodeName(),parent,"100","no","yes","landmark","landmark","0","100","-","M","N"};
                              newresult.add(b); 
                              uniques.add(node.getNodeName()+parent+"landmark");
                             } 
