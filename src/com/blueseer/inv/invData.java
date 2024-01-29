@@ -1612,7 +1612,80 @@ public class invData {
         return r;
     }
     
-    
+    public static String[] inventoryAdjustmentTransaction(String x) {
+        String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+           
+            if (ds != null) {
+              bscon = ds.getConnection();
+            } else {
+              bscon = DriverManager.getConnection(url + db, user, pass);  
+            }
+            bscon.setAutoCommit(false);
+            /*
+            AREntry("I", shipper, effdate, bscon);  
+          
+            if (! type.equals("freight")) {
+            _addTranMstrShipper(shipper, effdate, bscon);
+            _updateInventoryFromShipper(shipper, bscon);
+            }
+            
+            fglData._glEntryFromShipper(shipper, effdate, bscon);
+            
+            _updateShipperStatus(shipper, effdate, bscon); 
+            if (type.equals("order")) {
+            _updateOrderFromShipper(shipper, bscon); 
+            }
+            if (type.equals("serviceorder")) {
+            _updateServiceOrderFromShipper(shipper, bscon); 
+            }
+            // if type.equals("cash")....no order to update
+            
+            if (OVData.isVoucherShippingSO()) {
+            _processShipperVouchers(shipper, effdate, bscon);
+            }
+            
+            */
+            
+            bscon.commit();
+            m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1125)};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
     
     
    
@@ -4436,4 +4509,24 @@ public class invData {
         }
     }
 
+    public record tran_mstr(String[] m, String tr_id, String tr_site, String tr_item, String tr_qty,
+        String tr_ent_date, String tr_eff_date, String tr_userid, String tr_ref, String tr_addrcode,
+        String tr_type, String tr_datetime, String tr_rmks, String tr_nbr, String tr_misc1, 
+        String tr_lot, String tr_serial, String tr_program,
+        String tr_amt, String tr_mtl, String tr_lbr, String tr_bdn, String tr_ovh, String tr_out,
+        String tr_batch, String tr_op, String tr_loc, String tr_wh, String tr_expire,
+        String tr_cc, String tr_wc, String tr_wf, String tr_prodline, String tr_timestamp, 
+        String tr_actcell, String tr_export, String tr_order, String tr_line, String tr_po, String tr_price,
+        String tr_cost, String tr_acct, String tr_terms, String tr_pack, String tr_curr, 
+        String tr_pack_date, String tr_assy_date, String tr_uom, String tr_base_qty, String tr_bom) {
+        public tran_mstr(String[] m) {
+            this(m, "", "", "", "", "", "", "", "", "", "",
+                    "", "", "", "", "", "", "", "", "", "",
+                    "", "", "", "", "", "", "", "", "", "",
+                    "", "", "", "", "", "", "", "", "", "",
+                    "", "", "", "", "", "", "", "", "");
+        }
+    }
+
+    
 }
