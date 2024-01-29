@@ -457,12 +457,12 @@ public class shpData {
     }
     
     private static void _deleteShipperLines(String x, String line, Connection con) throws SQLException { 
-        PreparedStatement ps = null; 
         String sql = "delete from ship_det where shd_id = ? and shd_line = ?; ";
-        ps = con.prepareStatement(sql);
+        PreparedStatement ps = con.prepareStatement(sql);
         ps.setString(1, x);
         ps.setString(2, line);
         ps.executeUpdate();
+        ps.close();
     }
     
     
