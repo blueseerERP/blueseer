@@ -4528,5 +4528,13 @@ public class invData {
         }
     }
 
+    public record in_mstr(String[] m, String in_item, String in_qoh, String in_date, 
+        String in_loc, String in_wh, String in_site, 
+        String in_serial, String in_expire, String in_userid, String in_prog) {
+        public in_mstr(String[] m) {
+            this(m, "", "", "", "", "", "", "", "", "", "");
+        }
+    }
+
     
 }
