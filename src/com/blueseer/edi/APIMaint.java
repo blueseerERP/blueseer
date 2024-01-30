@@ -346,8 +346,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         jTabbedPane1.removeAll();
         jTabbedPane1.add("Main", panelMain);
-        jTabbedPane1.add("Detail", panelDetail);
-      //  jTabbedPane1.add("Load", jPanelLoad);
+        jTabbedPane1.add("Output", panelOutput);
         
         tbkey.setText("");
         detailmodel.setRowCount(0);
@@ -701,7 +700,6 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
         panelMain = new javax.swing.JPanel();
-        btupdate = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         btnew = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
@@ -726,34 +724,34 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel17 = new javax.swing.JLabel();
         ddclass = new javax.swing.JComboBox<>();
         jLabel16 = new javax.swing.JLabel();
-        btadd = new javax.swing.JButton();
-        btdelete = new javax.swing.JButton();
-        jPanel4 = new javax.swing.JPanel();
         cboutputencryption = new javax.swing.JCheckBox();
         cboutputsign = new javax.swing.JCheckBox();
         tbcert = new javax.swing.JTextField();
         jLabel18 = new javax.swing.JLabel();
-        panelDetail = new javax.swing.JPanel();
+        jLabel21 = new javax.swing.JLabel();
+        tburlstring = new javax.swing.JTextField();
+        btupdateurl = new javax.swing.JButton();
+        cbfile = new javax.swing.JCheckBox();
+        btrun = new javax.swing.JButton();
+        btdelete = new javax.swing.JButton();
+        btupdate = new javax.swing.JButton();
+        btadd = new javax.swing.JButton();
+        jPanel4 = new javax.swing.JPanel();
+        tbsourcedir = new javax.swing.JTextField();
+        tbdestdir = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         ddverb = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tabledetail = new javax.swing.JTable();
-        tbsequence = new javax.swing.JTextField();
-        cbenabled = new javax.swing.JCheckBox();
-        btdeletemethod = new javax.swing.JButton();
-        tbmethod = new javax.swing.JTextField();
-        btaddmethod = new javax.swing.JButton();
-        jLabel4 = new javax.swing.JLabel();
-        tbkvpair = new javax.swing.JTextField();
-        jLabel12 = new javax.swing.JLabel();
-        tbsourcedir = new javax.swing.JTextField();
-        tbdestdir = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         ddtype = new javax.swing.JComboBox<>();
         jLabel15 = new javax.swing.JLabel();
-        btupdatemethod = new javax.swing.JButton();
+        tbsequence = new javax.swing.JTextField();
+        cbenabled = new javax.swing.JCheckBox();
+        tbmethod = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        tbkvpair = new javax.swing.JTextField();
+        jLabel12 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         btdeleteparam = new javax.swing.JButton();
         btaddparam = new javax.swing.JButton();
@@ -763,27 +761,21 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbattributekey = new javax.swing.JTextField();
         jLabel19 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
+        btupdateparam = new javax.swing.JButton();
+        btadddetail = new javax.swing.JButton();
+        btdeletedetail = new javax.swing.JButton();
+        btupdatedetail = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tabledetail = new javax.swing.JTable();
+        panelOutput = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         taoutput = new javax.swing.JTextArea();
-        cbfile = new javax.swing.JCheckBox();
-        btrun = new javax.swing.JButton();
-        tburlstring = new javax.swing.JTextField();
-        jLabel21 = new javax.swing.JLabel();
-        btupdateurl = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
         add(jTabbedPane1);
 
         panelMain.setBorder(javax.swing.BorderFactory.createTitledBorder("API Maintenance"));
         panelMain.setName("panelmain"); // NOI18N
-
-        btupdate.setText("Update");
-        btupdate.setName("btupdate"); // NOI18N
-        btupdate.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btupdateActionPerformed(evt);
-            }
-        });
 
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder("API Header Maintenance"));
         jPanel3.setName("panelmaster"); // NOI18N
@@ -850,19 +842,69 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel16.setText("Class");
         jLabel16.setName("lblclass"); // NOI18N
 
+        cboutputencryption.setText("Output Encryption");
+
+        cboutputsign.setText("Output Sign");
+
+        jLabel18.setText("Cert");
+
+        jLabel21.setText("URL Result");
+        jLabel21.setName("lblresult"); // NOI18N
+
+        btupdateurl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/change.png"))); // NOI18N
+        btupdateurl.setToolTipText("URL Override");
+        btupdateurl.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btupdateurlActionPerformed(evt);
+            }
+        });
+
+        cbfile.setText("File");
+
+        btrun.setText("Run");
+        btrun.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btrunActionPerformed(evt);
+            }
+        });
+
+        btdelete.setText("Delete");
+        btdelete.setName("btdelete"); // NOI18N
+        btdelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btdeleteActionPerformed(evt);
+            }
+        });
+
+        btupdate.setText("Update");
+        btupdate.setName("btupdate"); // NOI18N
+        btupdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btupdateActionPerformed(evt);
+            }
+        });
+
+        btadd.setText("Add");
+        btadd.setName("btadd"); // NOI18N
+        btadd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btaddActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(10, 10, 10)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGap(3, 3, 3)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel11)
+                    .addComponent(jLabel21))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
@@ -875,42 +917,75 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                                 .addComponent(btnew)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btclear))
-                            .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(tburlstring, javax.swing.GroupLayout.PREFERRED_SIZE, 497, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btupdateurl, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(79, 79, 79)
+                        .addComponent(btrun)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cbfile)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tburl, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(jPanel3Layout.createSequentialGroup()
+                            .addComponent(tbapikey, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 309, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(tbpath, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jLabel17))
-                                .addGroup(jPanel3Layout.createSequentialGroup()
-                                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(tbapikey, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(tbuser, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGap(103, 103, 103)
-                                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jLabel16)
-                                        .addComponent(jLabel1)
-                                        .addComponent(jLabel8)))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(tburl, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel17)
+                                    .addComponent(jLabel16)
+                                    .addComponent(jLabel1))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(tbport, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(ddclass, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(ddprotocol, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addGap(38, 38, 38)
+                        .addComponent(jLabel18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(tbpass, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tbport, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(212, 319, Short.MAX_VALUE))
+                                    .addComponent(cboutputencryption, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addComponent(cboutputsign)
+                                        .addGap(0, 0, Short.MAX_VALUE)))
+                                .addGap(18, 18, 18)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(tbuser, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tbpass, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(44, 44, 44))
                             .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(ddclass, javax.swing.GroupLayout.Alignment.LEADING, 0, 100, Short.MAX_VALUE)
-                                    .addComponent(ddprotocol, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGap(0, 0, Short.MAX_VALUE))))))
+                                .addComponent(tbcert, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btdelete)
+                                .addGap(6, 6, 6)
+                                .addComponent(btupdate)
+                                .addGap(6, 6, 6)
+                                .addComponent(btadd)
+                                .addGap(21, 21, 21))))))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(tburlstring, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel21))
+                    .addComponent(btupdateurl)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btrun)
+                        .addComponent(cbfile)))
+                .addGap(1, 1, 1)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel5)
@@ -919,124 +994,65 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addComponent(btnew)
                         .addComponent(btclear))
                     .addComponent(btlookup))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel6)
-                    .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tburl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7)
-                    .addComponent(tbport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbpath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9)
-                    .addComponent(ddprotocol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel17))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbuser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel10)
-                    .addComponent(ddclass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel16))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbapikey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel11)
-                    .addComponent(tbpass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btdelete)
+                            .addComponent(btupdate)
+                            .addComponent(btadd))
+                        .addContainerGap())
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGap(1, 1, 1)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(jLabel6)
+                                            .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(tburl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel7))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(tbpath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel9)))
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(tbport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel1))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(ddprotocol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel17))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                            .addComponent(ddclass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel16))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(tbapikey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel11)))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(cboutputencryption)
+                                    .addComponent(tbuser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel10))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(cboutputsign)
+                                    .addComponent(tbpass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel8))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(tbcert, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel18))))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
-
-        btadd.setText("Add");
-        btadd.setName("btadd"); // NOI18N
-        btadd.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btaddActionPerformed(evt);
-            }
-        });
-
-        btdelete.setText("Delete");
-        btdelete.setName("btdelete"); // NOI18N
-        btdelete.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btdeleteActionPerformed(evt);
-            }
-        });
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Cert Details"));
-
-        cboutputencryption.setText("Output Encryption");
-
-        cboutputsign.setText("Output Sign");
-
-        jLabel18.setText("Cert");
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addComponent(jLabel18)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(cboutputsign)
-                    .addComponent(cboutputencryption, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(tbcert))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(cboutputencryption)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cboutputsign)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbcert, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel18))
-                .addContainerGap(100, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout panelMainLayout = new javax.swing.GroupLayout(panelMain);
-        panelMain.setLayout(panelMainLayout);
-        panelMainLayout.setHorizontalGroup(
-            panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelMainLayout.createSequentialGroup()
-                .addGap(383, 383, 383)
-                .addComponent(btdelete)
-                .addGap(6, 6, 6)
-                .addComponent(btupdate)
-                .addGap(6, 6, 6)
-                .addComponent(btadd)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(panelMainLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        panelMainLayout.setVerticalGroup(
-            panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelMainLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btdelete)
-                    .addComponent(btupdate)
-                    .addComponent(btadd)))
-        );
-
-        add(panelMain);
-
-        panelDetail.setBorder(javax.swing.BorderFactory.createTitledBorder("API Methods Detail"));
-        panelDetail.setName("paneldetail"); // NOI18N
-        panelDetail.setPreferredSize(new java.awt.Dimension(929, 477));
 
         jLabel2.setText("Sequence");
         jLabel2.setName("lblsequence"); // NOI18N
@@ -1045,49 +1061,6 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         jLabel3.setText("Method");
         jLabel3.setName("lblmethod"); // NOI18N
-
-        tabledetail.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        tabledetail.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tabledetailMouseClicked(evt);
-            }
-        });
-        jScrollPane1.setViewportView(tabledetail);
-
-        cbenabled.setText("Enabled?");
-        cbenabled.setName("cbenabled"); // NOI18N
-
-        btdeletemethod.setText("Delete Method");
-        btdeletemethod.setName("btdeletemethod"); // NOI18N
-        btdeletemethod.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btdeletemethodActionPerformed(evt);
-            }
-        });
-
-        btaddmethod.setText("Add Method");
-        btaddmethod.setName("btaddmethod"); // NOI18N
-        btaddmethod.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btaddmethodActionPerformed(evt);
-            }
-        });
-
-        jLabel4.setText("Verb");
-        jLabel4.setName("lblverb"); // NOI18N
-
-        jLabel12.setText("QueryParam");
-        jLabel12.setName("lblkvpair"); // NOI18N
 
         jLabel13.setText("SourceDir");
         jLabel13.setName("lblsourcedir"); // NOI18N
@@ -1100,13 +1073,14 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel15.setText("Type");
         jLabel15.setName("lbltype"); // NOI18N
 
-        btupdatemethod.setText("Update Method");
-        btupdatemethod.setName("btupdatemethod"); // NOI18N
-        btupdatemethod.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btupdatemethodActionPerformed(evt);
-            }
-        });
+        cbenabled.setText("Enabled?");
+        cbenabled.setName("cbenabled"); // NOI18N
+
+        jLabel4.setText("Verb");
+        jLabel4.setName("lblverb"); // NOI18N
+
+        jLabel12.setText("QueryParam");
+        jLabel12.setName("lblkvpair"); // NOI18N
 
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Parameters"));
 
@@ -1124,11 +1098,24 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
+        listkv.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                listkvMouseClicked(evt);
+            }
+        });
         jScrollPane3.setViewportView(listkv);
 
         jLabel19.setText("Key");
 
         jLabel20.setText("Value");
+
+        btupdateparam.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/change.png"))); // NOI18N
+        btupdateparam.setToolTipText("Update Element");
+        btupdateparam.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btupdateparamActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -1137,6 +1124,9 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btupdateparam, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btdeleteparam, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btaddparam, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -1166,150 +1156,184 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(tbattributevalue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel20))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btaddparam, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btdeleteparam, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(btaddparam, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btdeleteparam, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btupdateparam, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE)
                 .addContainerGap())
         );
+
+        btadddetail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/add.png"))); // NOI18N
+        btadddetail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btadddetailActionPerformed(evt);
+            }
+        });
+
+        btdeletedetail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/delete.png"))); // NOI18N
+        btdeletedetail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btdeletedetailActionPerformed(evt);
+            }
+        });
+
+        btupdatedetail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/change.png"))); // NOI18N
+        btupdatedetail.setToolTipText("Update Row");
+        btupdatedetail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btupdatedetailActionPerformed(evt);
+            }
+        });
+
+        tabledetail.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        tabledetail.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tabledetailMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tabledetail);
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel12)
+                    .addComponent(jLabel13)
+                    .addComponent(jLabel14)
+                    .addComponent(jLabel15)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cbenabled)
+                    .addComponent(tbsequence, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ddverb, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbdestdir, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbsourcedir, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(tbmethod)
+                        .addComponent(tbkvpair, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(btadddetail, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(4, 4, 4)
+                        .addComponent(btdeletedetail, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(4, 4, 4)
+                        .addComponent(btupdatedetail, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 371, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tbmethod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbenabled)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(ddverb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tbkvpair, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel12))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tbsourcedir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel13))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tbdestdir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel14))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel15))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tbsequence, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btadddetail, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btdeletedetail, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btupdatedetail, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout panelMainLayout = new javax.swing.GroupLayout(panelMain);
+        panelMain.setLayout(panelMainLayout);
+        panelMainLayout.setHorizontalGroup(
+            panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(panelMainLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        panelMainLayout.setVerticalGroup(
+            panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelMainLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        add(panelMain);
 
         taoutput.setColumns(20);
         taoutput.setRows(5);
         taoutput.setBorder(javax.swing.BorderFactory.createTitledBorder("Text"));
         jScrollPane2.setViewportView(taoutput);
 
-        cbfile.setText("File");
-
-        btrun.setText("Run");
-        btrun.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btrunActionPerformed(evt);
-            }
-        });
-
-        jLabel21.setText("URL Result");
-        jLabel21.setName("lblresult"); // NOI18N
-
-        btupdateurl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/change.png"))); // NOI18N
-        btupdateurl.setToolTipText("Update Row");
-        btupdateurl.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btupdateurlActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout panelDetailLayout = new javax.swing.GroupLayout(panelDetail);
-        panelDetail.setLayout(panelDetailLayout);
-        panelDetailLayout.setHorizontalGroup(
-            panelDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelDetailLayout.createSequentialGroup()
-                .addGroup(panelDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(panelDetailLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(panelDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel12)
-                            .addComponent(jLabel13)
-                            .addComponent(jLabel14)
-                            .addComponent(jLabel15)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel21))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelDetailLayout.createSequentialGroup()
-                                .addGroup(panelDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(cbenabled)
-                                    .addComponent(tbsequence, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(ddverb, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tbdestdir, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tbsourcedir, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(14, 14, 14)
-                                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(panelDetailLayout.createSequentialGroup()
-                                .addGap(139, 139, 139)
-                                .addComponent(btdeletemethod)
-                                .addGap(14, 14, 14)
-                                .addComponent(btaddmethod)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btupdatemethod))
-                            .addGroup(panelDetailLayout.createSequentialGroup()
-                                .addGroup(panelDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(tburlstring, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelDetailLayout.createSequentialGroup()
-                                        .addGroup(panelDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(tbmethod)
-                                            .addComponent(tbkvpair, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE))
-                                        .addGap(182, 182, 182)
-                                        .addComponent(cbfile)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btrun)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btupdateurl, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addComponent(jScrollPane1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE)
-                .addContainerGap())
+        javax.swing.GroupLayout panelOutputLayout = new javax.swing.GroupLayout(panelOutput);
+        panelOutput.setLayout(panelOutputLayout);
+        panelOutputLayout.setHorizontalGroup(
+            panelOutputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 553, Short.MAX_VALUE)
+            .addGroup(panelOutputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelOutputLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 533, Short.MAX_VALUE)
+                    .addContainerGap()))
         );
-        panelDetailLayout.setVerticalGroup(
-            panelDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelDetailLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panelDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(panelDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(tburlstring, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel21))
-                    .addComponent(btupdateurl))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2)
-                    .addGroup(panelDetailLayout.createSequentialGroup()
-                        .addGroup(panelDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tbmethod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3)
-                            .addComponent(btrun)
-                            .addComponent(cbfile))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelDetailLayout.createSequentialGroup()
-                                .addComponent(cbenabled)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(panelDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(ddverb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel4))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(panelDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(tbkvpair, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel12))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(panelDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(tbsourcedir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel13))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(panelDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(tbdestdir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel14))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(panelDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel15))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(panelDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(tbsequence, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel2)))
-                            .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelDetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btaddmethod)
-                            .addComponent(btupdatemethod)
-                            .addComponent(btdeletemethod))
-                        .addGap(8, 8, 8)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE))))
+        panelOutputLayout.setVerticalGroup(
+            panelOutputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 373, Short.MAX_VALUE)
+            .addGroup(panelOutputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelOutputLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 351, Short.MAX_VALUE)
+                    .addContainerGap()))
         );
 
-        add(panelDetail);
+        add(panelOutput);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
@@ -1323,47 +1347,6 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
             newAction("task");
     }//GEN-LAST:event_btnewActionPerformed
-
-    private void btaddmethodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddmethodActionPerformed
-            
-        if (! isAPIMethodUnique(tbkey.getText(), tbmethod.getText())) {
-           bsmf.MainFrame.show("Method name must be unique for this API...already committed to DB");
-           tbmethod.requestFocus();
-           return;
-        }
-        for (int j = 0; j < tabledetail.getRowCount(); j++) {
-             if (tabledetail.getValueAt(j, 0).toString().toLowerCase().equals(tbmethod.getText().toLowerCase())) {
-                 bsmf.MainFrame.show("Method name must be unique for this API...already in table");
-                 tbmethod.requestFocus();
-                 return;
-             }
-        }
-        
-            detailmodel.addRow(new Object[]{tbmethod.getText(), 
-            ddverb.getSelectedItem().toString(),
-            ddtype.getSelectedItem().toString(),
-            tbsequence.getText(),
-            tbkvpair.getText(),
-            tbsourcedir.getText(),
-            tbdestdir.getText(),
-            cbenabled.isSelected()});
-            
-            // now clear detail fields
-            tbmethod.setText("");
-            tbsequence.setText("");
-            tbkvpair.setText("");
-            tbsourcedir.setText("");
-            tbdestdir.setText("");
-    }//GEN-LAST:event_btaddmethodActionPerformed
-
-    private void btdeletemethodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeletemethodActionPerformed
-       int[] rows = tabledetail.getSelectedRows();
-        for (int i : rows) {
-            bsmf.MainFrame.show(getMessageTag(1031,String.valueOf(i)));
-            ((javax.swing.table.DefaultTableModel) tabledetail.getModel()).removeRow(i);
-            
-        }
-    }//GEN-LAST:event_btdeletemethodActionPerformed
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
        if (! validateInput(dbaction.add)) {
@@ -1395,6 +1378,9 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_btlookupActionPerformed
 
     private void btrunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrunActionPerformed
+        
+        jTabbedPane1.setSelectedIndex(1);
+        
         int[] rows = tabledetail.getSelectedRows();
        // taoutput.removeAll();
         taoutput.setText("");
@@ -1469,11 +1455,13 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                     ObjectMapper mapper = new ObjectMapper();
                     Object json = mapper.readValue(sb.toString(), Object.class);
                     taoutput.append(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json));
+                    taoutput.setCaretPosition(0);
                     if (cbfile.isSelected() && outputfile != null) {
                        outputfile.write(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json));
                     }
                 } else {
                     taoutput.append(sb.toString());
+                    taoutput.setCaretPosition(0);
                     if (cbfile.isSelected() && outputfile != null) {
                        outputfile.write(sb.toString());
                     }
@@ -1501,6 +1489,8 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 conn.disconnect();
                }
             }
+        
+        
     }//GEN-LAST:event_btrunActionPerformed
 
     private void tabledetailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabledetailMouseClicked
@@ -1537,24 +1527,6 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         btrun.setEnabled(true);
         isLoad = false;
     }//GEN-LAST:event_tabledetailMouseClicked
-
-    private void btupdatemethodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdatemethodActionPerformed
-        int[] rows = tabledetail.getSelectedRows();
-        if (rows.length != 1) {
-            bsmf.MainFrame.show(getMessageTag(1095));
-            return;
-        }
-        for (int i : rows) {
-            tabledetail.setValueAt(tbmethod.getText(), i, 0);
-            tabledetail.setValueAt(ddverb.getSelectedItem().toString(), i, 1);
-            tabledetail.setValueAt(ddtype.getSelectedItem().toString(), i, 2);
-            tabledetail.setValueAt(tbsequence.getText(), i, 3);
-            tabledetail.setValueAt(tbkvpair.getText(), i, 4);
-            tabledetail.setValueAt(tbsourcedir.getText(), i, 5);
-            tabledetail.setValueAt(tbdestdir.getText(), i, 6);
-            tabledetail.setValueAt(ConvertBoolToYesNo(cbenabled.isSelected()), i, 7);
-        }
-    }//GEN-LAST:event_btupdatemethodActionPerformed
 
     private void btdeleteparamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteparamActionPerformed
         boolean proceed = true;
@@ -1604,20 +1576,102 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
        tburlstring.setEnabled(true);
     }//GEN-LAST:event_btupdateurlActionPerformed
 
+    private void listkvMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listkvMouseClicked
+        int index = listkv.locationToIndex(evt.getPoint());
+          if (index >= 0) {
+            String[] s = listkv.getModel().getElementAt(index).split("=");
+            tbattributekey.setText(s[0]);
+            tbattributevalue.setText(s[1]);
+          }
+    }//GEN-LAST:event_listkvMouseClicked
+
+    private void btupdateparamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateparamActionPerformed
+        int index = listkv.getSelectedIndex();
+        kvmodel.setElementAt(tbattributekey.getText() + "=" + tbattributevalue.getText(), index);
+        ArrayList<String[]> list = new ArrayList<String[]>();
+        if (apidm.containsKey(tbmethod.getText())) {
+            list = apidm.get(tbmethod.getText());
+            list.set(index, new String[]{tbattributekey.getText(), tbattributevalue.getText()});
+            ArrayList<String[]> newlist = list;
+            apidm.put(tbmethod.getText(), newlist);
+        } 
+        tbattributekey.setText("");
+        tbattributevalue.setText("");
+    }//GEN-LAST:event_btupdateparamActionPerformed
+
+    private void btadddetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadddetailActionPerformed
+        if (! isAPIMethodUnique(tbkey.getText(), tbmethod.getText())) {
+           bsmf.MainFrame.show("Method name must be unique for this API...already committed to DB");
+           tbmethod.requestFocus();
+           return;
+        }
+        for (int j = 0; j < tabledetail.getRowCount(); j++) {
+             if (tabledetail.getValueAt(j, 0).toString().toLowerCase().equals(tbmethod.getText().toLowerCase())) {
+                 bsmf.MainFrame.show("Method name must be unique for this API...already in table");
+                 tbmethod.requestFocus();
+                 return;
+             }
+        }
+        
+            detailmodel.addRow(new Object[]{tbmethod.getText(), 
+            ddverb.getSelectedItem().toString(),
+            ddtype.getSelectedItem().toString(),
+            tbsequence.getText(),
+            tbkvpair.getText(),
+            tbsourcedir.getText(),
+            tbdestdir.getText(),
+            cbenabled.isSelected()});
+            
+            // now clear detail fields
+            tbmethod.setText("");
+            tbsequence.setText("");
+            tbkvpair.setText("");
+            tbsourcedir.setText("");
+            tbdestdir.setText("");
+    }//GEN-LAST:event_btadddetailActionPerformed
+
+    private void btdeletedetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeletedetailActionPerformed
+        int[] rows = tabledetail.getSelectedRows();
+        for (int i : rows) {
+            bsmf.MainFrame.show(getMessageTag(1031,String.valueOf(i)));
+            ((javax.swing.table.DefaultTableModel) tabledetail.getModel()).removeRow(i);
+            
+        }
+    }//GEN-LAST:event_btdeletedetailActionPerformed
+
+    private void btupdatedetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdatedetailActionPerformed
+        int[] rows = tabledetail.getSelectedRows();
+        if (rows.length != 1) {
+            bsmf.MainFrame.show(getMessageTag(1095));
+            return;
+        }
+        for (int i : rows) {
+            tabledetail.setValueAt(tbmethod.getText(), i, 0);
+            tabledetail.setValueAt(ddverb.getSelectedItem().toString(), i, 1);
+            tabledetail.setValueAt(ddtype.getSelectedItem().toString(), i, 2);
+            tabledetail.setValueAt(tbsequence.getText(), i, 3);
+            tabledetail.setValueAt(tbkvpair.getText(), i, 4);
+            tabledetail.setValueAt(tbsourcedir.getText(), i, 5);
+            tabledetail.setValueAt(tbdestdir.getText(), i, 6);
+            tabledetail.setValueAt(ConvertBoolToYesNo(cbenabled.isSelected()), i, 7);
+        }
+    }//GEN-LAST:event_btupdatedetailActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
-    private javax.swing.JButton btaddmethod;
+    private javax.swing.JButton btadddetail;
     private javax.swing.JButton btaddparam;
     private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
-    private javax.swing.JButton btdeletemethod;
+    private javax.swing.JButton btdeletedetail;
     private javax.swing.JButton btdeleteparam;
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btrun;
     private javax.swing.JButton btupdate;
-    private javax.swing.JButton btupdatemethod;
+    private javax.swing.JButton btupdatedetail;
+    private javax.swing.JButton btupdateparam;
     private javax.swing.JButton btupdateurl;
     private javax.swing.JCheckBox cbenabled;
     private javax.swing.JCheckBox cbfile;
@@ -1656,8 +1710,8 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JList<String> listkv;
-    private javax.swing.JPanel panelDetail;
     private javax.swing.JPanel panelMain;
+    private javax.swing.JPanel panelOutput;
     private javax.swing.JTable tabledetail;
     private javax.swing.JTextArea taoutput;
     private javax.swing.JTextField tbapikey;
