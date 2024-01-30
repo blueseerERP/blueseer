@@ -69,6 +69,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -682,7 +683,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         if (verb.equals("NONE")) {
             urlstring = ddprotocol.getSelectedItem().toString() + "://" + tburl.getText() + port + tbpath.getText() + value;
         } else {
-            urlstring = ddprotocol.getSelectedItem().toString() + "://" + tburl.getText() + port + tbpath.getText() + verb.toLowerCase() ;
+            urlstring = ddprotocol.getSelectedItem().toString() + "://" + tburl.getText() + port + tbpath.getText();
         }
         tburlstring.setText(urlstring);
     }
@@ -1406,6 +1407,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         int i = tabledetail.getSelectedRow();
         String type = tabledetail.getValueAt(i, 2).toString();
         String verb = tabledetail.getValueAt(i, 1).toString();
+        String method = tabledetail.getValueAt(i, 0).toString();
         HttpURLConnection conn = null;
        
         try {
@@ -1413,14 +1415,36 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             URL url = new URL(tburlstring.getText());
 
             conn = (HttpURLConnection) url.openConnection();
-            if (! verb.equals("NONE")) {
-            conn.setRequestMethod(verb);
-            }
-            conn.setRequestProperty("Accept", "application/json");
+           // conn.setRequestProperty("Accept", "application/json");
             
             if (! tbapikey.getText().isBlank()) {
             conn.setRequestProperty("Authorization",tbapikey.getText());
             }
+            
+            if (! verb.equals("NONE")) {
+                
+                conn.setDoOutput(true);
+                conn.setRequestMethod(verb);
+               
+                ArrayList<apid_meta> headertags = getAPIDMeta(tbkey.getText());
+                for (apid_meta am : headertags) {
+                        if (am.apidm_method().equals(method)) {
+                        System.out.println(am.apidm_key() + "=" + am.apidm_value());
+                        conn.setRequestProperty(am.apidm_key(),am.apidm_value());
+                        }
+                }
+                // if posting data...add file
+                if (! tbsourcedir.getText().isBlank()) {
+                    DataOutputStream dos = new DataOutputStream( conn.getOutputStream());
+                    Path sourcepath = FileSystems.getDefault().getPath(tbsourcedir.getText());
+                    dos.write(Files.readAllBytes(sourcepath));
+                    dos.flush();
+                    dos.close();
+                }
+            
+            
+            }
+            
             
             BufferedReader br = null;
             if (conn.getResponseCode() != 200) {

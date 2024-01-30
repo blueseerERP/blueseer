@@ -5,3 +5,4 @@
 990,test store data,,fakestoreapi.com,,/products,,,,http,HTTP,0,0,
 888,IP - Geographic info api,,ipinfo.io,,,,,,https,HTTPS,0,0,
 777,restcountries.com,,restcountries.com,,/v3.1/all,,,,https,HTTPS,0,0,
+555,api.edination.com,,api.edination.com,,/v2/x12/read,,,,https,HTTPS,0,0,
