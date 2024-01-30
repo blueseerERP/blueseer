@@ -1421,11 +1421,9 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             conn.setRequestProperty("Authorization",tbapikey.getText());
             }
             
-            if (! verb.equals("NONE")) {
-                
+            if (verb.equals("POST") || verb.equals("PUT")) {
                 conn.setDoOutput(true);
                 conn.setRequestMethod(verb);
-               
                 ArrayList<apid_meta> headertags = getAPIDMeta(tbkey.getText());
                 for (apid_meta am : headertags) {
                         if (am.apidm_method().equals(method)) {
@@ -1441,8 +1439,6 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                     dos.flush();
                     dos.close();
                 }
-            
-            
             }
             
             
