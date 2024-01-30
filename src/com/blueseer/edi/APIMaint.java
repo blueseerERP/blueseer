@@ -121,6 +121,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import javax.swing.DefaultListModel;
+import javax.swing.table.TableColumnModel;
 
 
 import org.bouncycastle.util.Store;
@@ -139,7 +140,8 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 public static api_mstr x = null;
                 public static ArrayList<apid_meta> apidmlist = null;
                 public static LinkedHashMap<String, ArrayList<String[]>> apidm = new  LinkedHashMap<String, ArrayList<String[]>>();
-    // global datatablemodel declarations   
+                boolean hasInit = false;
+     // global datatablemodel declarations   
      javax.swing.table.DefaultTableModel detailmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
                 getGlobalColumnTag("method"), 
@@ -351,6 +353,17 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbkey.setText("");
         detailmodel.setRowCount(0);
         tabledetail.setModel(detailmodel);
+        
+        if (! hasInit) {
+            TableColumnModel tcm = tabledetail.getColumnModel();
+        tcm.removeColumn(tcm.getColumn(2));
+        tcm.removeColumn(tcm.getColumn(2));
+        tcm.removeColumn(tcm.getColumn(2));
+        tcm.removeColumn(tcm.getColumn(2));
+        tcm.removeColumn(tcm.getColumn(2));
+        hasInit = true;
+        }
+        
         tbkey.setText("");
         tbdesc.setText("");
         tburl.setText("");
@@ -464,7 +477,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
        for (String method : methods) {
           goodMethod = false;
           for (int j = 0; j < tabledetail.getRowCount(); j++) {
-             if (tabledetail.getValueAt(j, 0).toString().toLowerCase().equals(method.toLowerCase())) {
+             if (tabledetail.getModel().getValueAt(j, 0).toString().toLowerCase().equals(method.toLowerCase())) {
                  goodMethod = true;
              }
           }
@@ -521,16 +534,16 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
          for (int j = 0; j < tabledetail.getRowCount(); j++) {
              api_det x = new api_det(null, 
                 tbkey.getText(),
-                tabledetail.getValueAt(j, 0).toString(),
-                tabledetail.getValueAt(j, 3).toString(),
-                tabledetail.getValueAt(j, 1).toString(),
-                tabledetail.getValueAt(j, 2).toString(),
+                tabledetail.getModel().getValueAt(j, 0).toString(),
+                tabledetail.getModel().getValueAt(j, 3).toString(),
+                tabledetail.getModel().getValueAt(j, 1).toString(),
+                tabledetail.getModel().getValueAt(j, 2).toString(),
                 tbpath.getText(),
                 "", // key not used
-                tabledetail.getValueAt(j, 4).toString(),
-                tabledetail.getValueAt(j, 5).toString(),
-                tabledetail.getValueAt(j, 6).toString(),
-                String.valueOf(BlueSeerUtils.boolToInt(Boolean.valueOf(tabledetail.getValueAt(j, 7).toString())))
+                tabledetail.getModel().getValueAt(j, 4).toString(),
+                tabledetail.getModel().getValueAt(j, 5).toString(),
+                tabledetail.getModel().getValueAt(j, 6).toString(),
+                String.valueOf(BlueSeerUtils.boolToInt(Boolean.valueOf(tabledetail.getModel().getValueAt(j, 7).toString())))
                 );
        
         list.add(x);
@@ -542,12 +555,12 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         ArrayList<apid_meta> list = new ArrayList<apid_meta>();
          for (int j = 0; j < tabledetail.getRowCount(); j++) {
              for (Map.Entry<String, ArrayList<String[]>> z : apidm.entrySet()) {
-    		 if (z.getKey().equals(tabledetail.getValueAt(j, 0).toString())) {
+    		 if (z.getKey().equals(tabledetail.getModel().getValueAt(j, 0).toString())) {
     			 ArrayList<String[]> k = z.getValue();
     			 for (String[] g : k) {
                                 apid_meta x = new apid_meta(null, 
                                 tbkey.getText(),
-                                tabledetail.getValueAt(j, 0).toString(),
+                                tabledetail.getModel().getValueAt(j, 0).toString(),
                                 g[0],
                                 g[1]); 
                             list.add(x);
@@ -647,15 +660,15 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     public void setURL() {
         tburlstring.setText("");
         int i = tabledetail.getSelectedRow();
-        String method = tabledetail.getValueAt(i, 0).toString();
-        String verb = tabledetail.getValueAt(i, 1).toString();
-        String value = tabledetail.getValueAt(i, 4).toString();
+        String method = tabledetail.getModel().getValueAt(i, 0).toString();
+        String verb = tabledetail.getModel().getValueAt(i, 1).toString();
+        String value = tabledetail.getModel().getValueAt(i, 4).toString();
         String urlstring = "";
         String port = "";
            
             
         if (value.isBlank()) {
-            ArrayList<String[]> list = apidm.get(tabledetail.getValueAt(i, 0).toString());
+            ArrayList<String[]> list = apidm.get(tabledetail.getModel().getValueAt(i, 0).toString());
             if (list != null) {
                 for (String[] s : list) {
                     value = value + s[0] + "=" + s[1] + "&";
@@ -1391,9 +1404,9 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         
        
         int i = tabledetail.getSelectedRow();
-        String type = tabledetail.getValueAt(i, 2).toString();
-        String verb = tabledetail.getValueAt(i, 1).toString();
-        String method = tabledetail.getValueAt(i, 0).toString();
+        String type = tabledetail.getModel().getValueAt(i, 2).toString();
+        String verb = tabledetail.getModel().getValueAt(i, 1).toString();
+        String method = tabledetail.getModel().getValueAt(i, 0).toString();
         HttpURLConnection conn = null;
        
         try {
@@ -1413,7 +1426,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 ArrayList<apid_meta> headertags = getAPIDMeta(tbkey.getText());
                 for (apid_meta am : headertags) {
                         if (am.apidm_method().equals(method)) {
-                        System.out.println(am.apidm_key() + "=" + am.apidm_value());
+                       // System.out.println(am.apidm_key() + "=" + am.apidm_value());
                         conn.setRequestProperty(am.apidm_key(),am.apidm_value());
                         }
                 }
@@ -1501,19 +1514,19 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         btaddparam.setEnabled(true);
         btdeleteparam.setEnabled(true);
         
-        ddverb.setSelectedItem(tabledetail.getValueAt(row, 1).toString());
-        tbmethod.setText(tabledetail.getValueAt(row, 0).toString());
-        ddtype.setSelectedItem(tabledetail.getValueAt(row, 2).toString());
-        tbsequence.setText(tabledetail.getValueAt(row, 3).toString());
-        tbkvpair.setText(tabledetail.getValueAt(row, 4).toString());
-        tbsourcedir.setText(tabledetail.getValueAt(row, 5).toString());
-        tbdestdir.setText(tabledetail.getValueAt(row, 6).toString());
-        cbenabled.setSelected(bsmf.MainFrame.ConvertStringToBool(tabledetail.getValueAt(row, 7).toString()));
+        ddverb.setSelectedItem(tabledetail.getModel().getValueAt(row, 1).toString());
+        tbmethod.setText(tabledetail.getModel().getValueAt(row, 0).toString());
+        ddtype.setSelectedItem(tabledetail.getModel().getValueAt(row, 2).toString());
+        tbsequence.setText(tabledetail.getModel().getValueAt(row, 3).toString());
+        tbkvpair.setText(tabledetail.getModel().getValueAt(row, 4).toString());
+        tbsourcedir.setText(tabledetail.getModel().getValueAt(row, 5).toString());
+        tbdestdir.setText(tabledetail.getModel().getValueAt(row, 6).toString());
+        cbenabled.setSelected(bsmf.MainFrame.ConvertStringToBool(tabledetail.getModel().getValueAt(row, 7).toString()));
         
         kvmodel.removeAllElements();
        
         
-        ArrayList<String[]> x = apidm.get(tabledetail.getValueAt(row, 0).toString());
+        ArrayList<String[]> x = apidm.get(tabledetail.getModel().getValueAt(row, 0).toString());
         int i = 0;
         if (x != null) {
             for (String[] xs : x) {
@@ -1606,7 +1619,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
            return;
         }
         for (int j = 0; j < tabledetail.getRowCount(); j++) {
-             if (tabledetail.getValueAt(j, 0).toString().toLowerCase().equals(tbmethod.getText().toLowerCase())) {
+             if (tabledetail.getModel().getValueAt(j, 0).toString().toLowerCase().equals(tbmethod.getText().toLowerCase())) {
                  bsmf.MainFrame.show("Method name must be unique for this API...already in table");
                  tbmethod.requestFocus();
                  return;
