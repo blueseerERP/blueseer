@@ -33,6 +33,9 @@ import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.fgl.fglData;
+import com.blueseer.fgl.fglData.gl_tran;
+import com.blueseer.fgl.fglData.gl_verb;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsformat;
@@ -1612,7 +1615,7 @@ public class invData {
         return r;
     }
     
-    public static String[] inventoryAdjustmentTransaction(String x) {
+    public static String[] inventoryAdjustmentTransaction(tran_mstr tm, in_mstr im, gl_verb gv) {
         String[] m = new String[2];
         Connection bscon = null;
         PreparedStatement ps = null;
@@ -1625,6 +1628,13 @@ public class invData {
               bscon = DriverManager.getConnection(url + db, user, pass);  
             }
             bscon.setAutoCommit(false);
+            
+            /* do _addTranMstr */
+            /* do _addInMstr */
+            
+            /* do glEntryXP */
+            fglData.glEntryXP(bscon, gv.glv_acct_cr(), gv.glv_cc_cr(), gv.glv_acct_dr(), gv.glv_cc_dr(), gv.glv_date(), gv.glv_amt(), gv.glv_baseamt(), gv.glv_curr(), gv.glv_basecurr(), gv.glv_ref(), gv.glv_site(), gv.glv_type(), gv.glv_desc(), gv.glv_doc());
+            
             /*
             AREntry("I", shipper, effdate, bscon);  
           

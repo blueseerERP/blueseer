@@ -5346,6 +5346,27 @@ return myarray;
         }
     }
     
+    public record gl_tran(String[] m, String glt_id, String glt_ref, String glt_effdate,
+        String glt_entdate, String glt_ts, String glt_acct, String glt_cc,
+        String glt_amt, String glt_base_amt, String glt_site, String glt_doc,
+        String glt_line, String glt_type, String glt_curr, String glt_base_curr,
+        String glt_desc, String glt_userid) {
+        public gl_tran(String[] m) {
+            this(m, "", "", "", "", "", "", "", "", "", "",
+                    "", "", "", "", "", "", "");
+        }
+    }
+    
+    public record gl_verb(String[] m, String glv_acct_cr, String glv_cc_cr, 
+        String glv_acct_dr, String glv_cc_dr, String glv_date,
+        Double glv_amt, Double glv_baseamt, String glv_curr, String glv_basecurr,
+        String glv_ref, String glv_type, String glv_site, String glv_desc, String glv_doc) {
+        public gl_verb(String[] m) {
+            this(m, "", "", "", "", "", 0.00, 0.00, "", "", "",
+                    "", "", "", "");
+        }
+    }
+    
 }
 
 
