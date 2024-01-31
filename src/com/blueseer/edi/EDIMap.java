@@ -185,10 +185,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
     
     public record stackGHP(Stack<String> s, int i) {
     }
-     
-     
-    public static LinkedHashMap<String, HashMap<Integer,String[]>> mISF = new LinkedHashMap<String, HashMap<Integer,String[]>>();
-
+       
     public static LinkedHashMap<String, Integer> commitCounter = new LinkedHashMap<String, Integer>();
     public static LinkedHashMap<String, Integer> commitLoopCounter = new LinkedHashMap<String, Integer>();
     
@@ -1029,27 +1026,13 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             }
                         
             if (! line.isEmpty()) {
-            String[] t = line.split(",",-1);
-                 if (i == 0) { lastkey = t[0];}
-            if (GlobalDebug && t.length < 11) {
-            System.out.println("readISF: line " + i + " delimited count is less than 11 " + t.length);
-            }
-
-            list.add(t);
-
-            i++;
-                if (! t[0].equals(lastkey)) {
-                    LinkedHashMap<Integer, String[]> w = z;
-                    mISF.put(t[0], w);
-                    z = new LinkedHashMap<Integer, String[]>();
-                    i = 0;
-                    z.put(i, t);
-
-                } else {
-                    z.put(i, t);
-                    mISF.put(t[0], z);
+                String[] t = line.split(",",-1);
+                
+                if (GlobalDebug && t.length < 11) {
+                 System.out.println("readISF: line " + i + " delimited count is less than 11 " + t.length);
                 }
-            lastkey = t[0];
+            
+                list.add(t);
             } 
         }
         ISF = list;
@@ -2340,37 +2323,8 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         if (GlobalDebug) {
             for (Map.Entry<String, String[]> z : mappedData.entrySet()) {
                     String value = String.join(",", z.getValue());
-                    String[] keyx = z.getKey().split("\\+", -1);
-                    String key = "";
-                    if (keyx[0].contains(":")) {
-                        key = keyx[0].substring(1);
-                    } else {
-                        key = keyx[0];
-                    }
-                    System.out.println("mapInput (orig loop): " + "key: " + z.getKey() + " / value: " + String.join(",",z.getValue()));
-                    int i = 0;
-                    String fieldname = "";
-                    for (String s : z.getValue()) {
-                     if (mISF.get(key) != null && mISF.get(key).get(i) != null) {
-                         String[] j = mISF.get(key).get(i);
-                         if (j != null && j.length > 4) {
-                             fieldname = j[5];
-                         } else {
-                             fieldname = "unknown";
-                         }
-                     }
-                     System.out.println("mapInput (field loop): " + z.getKey() + " " + fieldname +  " / Field: " + i + " value: " + s);   
-                     i++;
-                    }
+                    System.out.println("mappedData: " + "mappedDatakey: " + z.getKey()  + " / value: " + String.join(",",z.getValue()));
             }
-            /*
-            for (Map.Entry<String, HashMap<Integer,String[]>> y : mISF.entrySet()) {
-                HashMap<Integer, String[]> w = y.getValue();
-                for (Map.Entry<Integer, String[]> k : w.entrySet()) {
-                  System.out.println("Extra: " + y.getKey() + " / " + k.getKey() + " / " + k.getValue()[5]);  
-                }
-            }
-            */
         }
     }
     
