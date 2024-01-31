@@ -103,7 +103,13 @@ public class APAgingView extends javax.swing.JPanel {
                         if (col == 0  )       
                             return ImageIcon.class;  
                         else return String.class;  //other columns accept String values  
-                      }  
+                      }
+                      @Override
+                      public boolean isCellEditable(int row, int column) {
+                            return false;
+                            //Only the first column
+                            // return column == 1;
+                      }
                         };
     
     MyTableModel2 modeldetail = new APAgingView.MyTableModel2(new Object[][]{},

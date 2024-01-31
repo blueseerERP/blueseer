@@ -113,7 +113,15 @@ public class OrderRpt extends javax.swing.JPanel {
                         else if (col == 8 || col == 9) 
                             return Double.class;
                         else return String.class;  //other columns accept String values  
-                      }  
+                      }
+                      
+                      @Override
+                      public boolean isCellEditable(int row, int column) {
+                            return false;
+                            //Only the first column
+                            // return column == 1;
+                      }
+                      
                         };
     
                 

@@ -128,7 +128,14 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
                         if (col == 0  || col == 1 || col == 10 )       
                             return ImageIcon.class;  
                         else return String.class;  //other columns accept String values  
-                      }  
+                      }
+                      
+                      @Override
+                      public boolean isCellEditable(int row, int column) {
+                            return false;
+                            //Only the first column
+                            // return column == 1;
+                      }
                         };
                 
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},

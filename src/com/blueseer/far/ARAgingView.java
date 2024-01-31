@@ -117,7 +117,14 @@ public class ARAgingView extends javax.swing.JPanel {
                         else if (col == 3 || col == 4 || col == 5 || col == 6 || col == 7)
                             return Double.class;
                         else return String.class;  //other columns accept String values  
-                      }  
+                      } 
+                      @Override
+                      public boolean isCellEditable(int row, int column) {
+                            return false;
+                            //Only the first column
+                            // return column == 1;
+                      }
+                      
                         };
     
     MyTableModel2 modeldetail = new ARAgingView.MyTableModel2(new Object[][]{},
