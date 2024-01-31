@@ -1065,7 +1065,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Cert Details"));
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Methods"));
 
         jLabel2.setText("Sequence");
         jLabel2.setName("lblsequence"); // NOI18N
