@@ -667,7 +667,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         String port = "";
            
             
-        if (value.isBlank()) {
+        if (value.isBlank() && ! verb.equals("POST") && ! verb.equals("PUT")) {
             ArrayList<String[]> list = apidm.get(tabledetail.getModel().getValueAt(i, 0).toString());
             if (list != null) {
                 for (String[] s : list) {
@@ -678,12 +678,14 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 }
             }
         }
-        
+        /*
         if (! tbapikey.getText().isBlank()) {
             value = value + "api_key=" + tbapikey.getText();
         }
-        
+        */
+        if (! value.isBlank() && ! verb.equals("GET")) {
         value = "?" + value;
+        }
         
         
         if (tbport.getText().isBlank()) {  
@@ -692,11 +694,9 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
            port = ":" + tbport.getText();
         }
 
-        if (verb.equals("NONE")) {
-            urlstring = ddprotocol.getSelectedItem().toString() + "://" + tburl.getText() + port + tbpath.getText() + value;
-        } else {
-            urlstring = ddprotocol.getSelectedItem().toString() + "://" + tburl.getText() + port + tbpath.getText();
-        }
+       
+        urlstring = ddprotocol.getSelectedItem().toString() + "://" + tburl.getText() + port + tbpath.getText() + value;
+       
         tburlstring.setText(urlstring);
     }
    
@@ -1659,14 +1659,14 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             return;
         }
         for (int i : rows) {
-            tabledetail.setValueAt(tbmethod.getText(), i, 0);
-            tabledetail.setValueAt(ddverb.getSelectedItem().toString(), i, 1);
-            tabledetail.setValueAt(ddtype.getSelectedItem().toString(), i, 2);
-            tabledetail.setValueAt(tbsequence.getText(), i, 3);
-            tabledetail.setValueAt(tbkvpair.getText(), i, 4);
-            tabledetail.setValueAt(tbsourcedir.getText(), i, 5);
-            tabledetail.setValueAt(tbdestdir.getText(), i, 6);
-            tabledetail.setValueAt(ConvertBoolToYesNo(cbenabled.isSelected()), i, 7);
+            tabledetail.getModel().setValueAt(tbmethod.getText(), i, 0);
+            tabledetail.getModel().setValueAt(ddverb.getSelectedItem().toString(), i, 1);
+            tabledetail.getModel().setValueAt(ddtype.getSelectedItem().toString(), i, 2);
+            tabledetail.getModel().setValueAt(tbsequence.getText(), i, 3);
+            tabledetail.getModel().setValueAt(tbkvpair.getText(), i, 4);
+            tabledetail.getModel().setValueAt(tbsourcedir.getText(), i, 5);
+            tabledetail.getModel().setValueAt(tbdestdir.getText(), i, 6);
+            tabledetail.getModel().setValueAt(ConvertBoolToYesNo(cbenabled.isSelected()), i, 7);
         }
     }//GEN-LAST:event_btupdatedetailActionPerformed
 
