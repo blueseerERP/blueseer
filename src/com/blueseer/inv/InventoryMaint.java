@@ -34,8 +34,10 @@ import static bsmf.MainFrame.user;
 import com.blueseer.fgl.fglData;
 import com.blueseer.fgl.fglData.gl_verb;
 import static com.blueseer.fgl.fglData.setGLRecNbr;
+import static com.blueseer.inv.invData.getItemMstr;
 import com.blueseer.inv.invData.in_mstr;
 import static com.blueseer.inv.invData.inventoryAdjustmentTransaction;
+import com.blueseer.inv.invData.item_mstr;
 import com.blueseer.inv.invData.tran_mstr;
 
 import com.blueseer.utl.BlueSeerUtils;
@@ -148,57 +150,26 @@ public class InventoryMaint extends javax.swing.JPanel {
     }
     
     
-    public void getiteminfo(String parentpart) {
-        try {
-            Connection con = DriverManager.getConnection(url + db, user, pass);
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                int i = 0;
-
-               res = st.executeQuery("SELECT it_loc, it_site, it_wh  " +
-                        " FROM  item_mstr  " +
-                        " where it_item = " + "'" + parentpart.toString() + "'" + 
-                        " ;");
-
-                while (res.next()) {
-                    i++;
-                   ddsite.setSelectedItem(res.getString("it_site"));
-                   ddloc.setSelectedItem(res.getString("it_loc"));
-                   ddwh.setSelectedItem(res.getString("it_wh"));
-              
-                }
-                
-            } catch (SQLException s) {
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-                 MainFrame.bslog(s);
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+    public void getiteminfo(String item) {
+        
+        item_mstr im = getItemMstr(new String[]{item});
+        ddsite.setSelectedItem(im.it_site());
+        ddloc.setSelectedItem(im.it_loc());
+        ddwh.setSelectedItem(im.it_wh());
              
-             
-         }
+    }
     
     public void clearVariables() {
         java.util.Date now = new java.util.Date();
        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
         dcdate.setDate(now);
         dcexpire.setDate(null);
-        tbpart.setText("");
+        tbitem.setText("");
         tbqty.setText("");
         tbref.setText("");
         tbrmks.setText("");
         tblotserial.setText("");
-        tbpart.setBackground(Color.white);
+        tbitem.setBackground(Color.white);
         tbqty.setBackground(Color.white);
         ddwh.setSelectedIndex(0);
         ddloc.setSelectedIndex(0);
@@ -279,7 +250,7 @@ public class InventoryMaint extends javax.swing.JPanel {
                 int column = target.getSelectedColumn();
                 if ( column == 0) {
                 ludialog.dispose();
-                tbpart.setText(target.getValueAt(row,1).toString());
+                tbitem.setText(target.getValueAt(row,1).toString());
                 }
             }
         };
@@ -346,7 +317,7 @@ public class InventoryMaint extends javax.swing.JPanel {
 
         jPanel1 = new javax.swing.JPanel();
         tbrmks = new javax.swing.JTextField();
-        tbpart = new javax.swing.JTextField();
+        tbitem = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         lblcc = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
@@ -381,9 +352,9 @@ public class InventoryMaint extends javax.swing.JPanel {
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Inventory Adjustment (Issue / Receipt)"));
         jPanel1.setName("panelmain"); // NOI18N
 
-        tbpart.addFocusListener(new java.awt.event.FocusAdapter() {
+        tbitem.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
-                tbpartFocusLost(evt);
+                tbitemFocusLost(evt);
             }
         });
 
@@ -509,7 +480,7 @@ public class InventoryMaint extends javax.swing.JPanel {
                             .addComponent(ddcc, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(ddacct, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(ddtype, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbpart, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tbitem, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(ddsite, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(ddloc, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(tbqty, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -536,7 +507,7 @@ public class InventoryMaint extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(tbpart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(tbitem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel2))
                             .addComponent(btLookUpItemDesc))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -625,10 +596,10 @@ public class InventoryMaint extends javax.swing.JPanel {
         site = ddsite.getSelectedItem().toString();
         
         
-        if (tbpart.getText().isEmpty()) {
-            tbpart.setBackground(Color.yellow);
-            bsmf.MainFrame.show(getMessageTag(1024, tbpart.getName()));
-            tbpart.requestFocus();
+        if (tbitem.getText().isEmpty()) {
+            tbitem.setBackground(Color.yellow);
+            bsmf.MainFrame.show(getMessageTag(1024, tbitem.getName()));
+            tbitem.requestFocus();
             return;
         }
         
@@ -658,25 +629,25 @@ public class InventoryMaint extends javax.swing.JPanel {
         
         
         // check if item exists
-        if (! OVData.isValidItem(tbpart.getText())) {
+        if (! OVData.isValidItem(tbitem.getText())) {
             proceed = false;
-            bsmf.MainFrame.show(getMessageTag(1026, tbpart.getText()));
+            bsmf.MainFrame.show(getMessageTag(1026, tbitem.getText()));
             return;
         }
         
         // get cost
-        String itemtype = invData.getItemCode(tbpart.getText());
-        double cost = invData.getItemCost(tbpart.getText(), "standard", site);
+        String itemtype = invData.getItemCode(tbitem.getText());
+        double cost = invData.getItemCost(tbitem.getText(), "standard", site);
         if (cost == 0 && itemtype.equals("A")) {
-            cost = invData.getItemPurchPrice(tbpart.getText());
+            cost = invData.getItemPurchPrice(tbitem.getText());
         }
         
         // lets get the productline of the part being adjusted
-        String prodline = OVData.getProdLineFromItem(tbpart.getText());
+        String prodline = OVData.getProdLineFromItem(tbitem.getText());
         
         if ( prodline == null || prodline.isEmpty() ) {
             proceed = false;
-            bsmf.MainFrame.show(getMessageTag(1066, tbpart.getText()));
+            bsmf.MainFrame.show(getMessageTag(1066, tbitem.getText()));
             return;
         }
         
@@ -708,7 +679,7 @@ public class InventoryMaint extends javax.swing.JPanel {
         tran_mstr tm = new tran_mstr(null,
                 "", // id
                 site, // site
-                tbpart.getText(),
+                tbitem.getText(),
                 qty,
                 dfdate.format(today), //entdate
                 dfdate.format(dcdate.getDate()), //effdate
@@ -759,7 +730,7 @@ public class InventoryMaint extends javax.swing.JPanel {
         
         
         in_mstr in = new in_mstr(null,
-                tbpart.getText(),
+                tbitem.getText(),
                 String.valueOf(qty),
                 null, // date
                 loc,
@@ -819,18 +790,18 @@ public class InventoryMaint extends javax.swing.JPanel {
         
     }//GEN-LAST:event_btaddActionPerformed
 
-    private void tbpartFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbpartFocusLost
-        if (! tbpart.getText().isEmpty()) {
-            if (! OVData.isValidItem(tbpart.getText())) {
-                bsmf.MainFrame.show(getMessageTag(1021, tbpart.getText()));
-                tbpart.setBackground(Color.yellow);
-                tbpart.requestFocus();
+    private void tbitemFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbitemFocusLost
+        if (! tbitem.getText().isEmpty()) {
+            if (! OVData.isValidItem(tbitem.getText())) {
+                bsmf.MainFrame.show(getMessageTag(1021, tbitem.getText()));
+                tbitem.setBackground(Color.yellow);
+                tbitem.requestFocus();
             } else {
-              tbpart.setBackground(Color.white);
-              getiteminfo(tbpart.getText());   
+              tbitem.setBackground(Color.white);
+              getiteminfo(tbitem.getText());   
              }
         }
-    }//GEN-LAST:event_tbpartFocusLost
+    }//GEN-LAST:event_tbitemFocusLost
 
     private void ddtypeItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_ddtypeItemStateChanged
         if (ddtype.getSelectedItem().toString().equals("issue")) {
@@ -906,8 +877,8 @@ public class InventoryMaint extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblacct;
     private javax.swing.JLabel lblcc;
+    private static javax.swing.JTextField tbitem;
     private javax.swing.JTextField tblotserial;
-    private static javax.swing.JTextField tbpart;
     private javax.swing.JTextField tbqty;
     private javax.swing.JTextField tbref;
     private javax.swing.JTextField tbrmks;

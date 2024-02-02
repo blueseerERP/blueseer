@@ -6312,9 +6312,7 @@ public class OVData {
         }  
                   return myreturn;
              } 
-   
-        
-              
+                   
                
     public static void wip_to_fg(String item, String site, Double cost, String date, String ref, String type, String desc, String gldoc) {
         try{
@@ -7880,7 +7878,6 @@ return myreturn;
 
 }   
   
-    
     public static String getDefaultSite() {
            String myitem = null;
          try{
