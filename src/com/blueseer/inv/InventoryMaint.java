@@ -25,13 +25,8 @@ SOFTWARE.
  */
 package com.blueseer.inv;
 
-import bsmf.MainFrame;
-import static bsmf.MainFrame.db;
-import static bsmf.MainFrame.pass;
+
 import static bsmf.MainFrame.tags;
-import static bsmf.MainFrame.url;
-import static bsmf.MainFrame.user;
-import com.blueseer.fgl.fglData;
 import com.blueseer.fgl.fglData.gl_verb;
 import static com.blueseer.fgl.fglData.setGLRecNbr;
 import static com.blueseer.inv.invData.getItemMstr;
@@ -39,7 +34,6 @@ import com.blueseer.inv.invData.in_mstr;
 import static com.blueseer.inv.invData.inventoryAdjustmentTransaction;
 import com.blueseer.inv.invData.item_mstr;
 import com.blueseer.inv.invData.tran_mstr;
-
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
@@ -61,11 +55,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
