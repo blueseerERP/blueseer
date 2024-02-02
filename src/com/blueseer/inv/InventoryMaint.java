@@ -88,14 +88,16 @@ import javax.swing.JTable;
  */
 public class InventoryMaint extends javax.swing.JPanel {
 
-        public static javax.swing.table.DefaultTableModel lookUpModel = null;
-        public static JTable lookUpTable = new JTable();
-        public static MouseListener mllu = null;
-        public static JDialog dialog = new JDialog();
-        
-        public static ButtonGroup bg = null;
-        public static JRadioButton rb1 = null;
-        public static JRadioButton rb2 = null;
+    // global variable declarations
+    boolean isLoad = false;
+    public static javax.swing.table.DefaultTableModel lookUpModel = null;
+    public static JTable lookUpTable = new JTable();
+    public static MouseListener mllu = null;
+    public static JDialog dialog = new JDialog();
+
+    public static ButtonGroup bg = null;
+    public static JRadioButton rb1 = null;
+    public static JRadioButton rb2 = null;
     
     /**
      * Creates new form InventoryMiscPanel
@@ -177,48 +179,61 @@ public class InventoryMaint extends javax.swing.JPanel {
     }
     
     public void initvars(String[] arg) {
+        isLoad = true;
+        
+        ArrayList<String[]> initDataSets = invData.getInvMaintInit();
+        String defaultsite = "";
         
         ddtype.requestFocus();
         
-        ArrayList<String> wh = OVData.getWareHouseList(); 
-        ddwh.removeAllItems();
-        for (String code : wh) {
-            ddwh.addItem(code);
-        }
-        ddwh.insertItemAt("", 0);
-        
-       
-         ArrayList<String> mylist;
-        ddloc.removeAllItems();
-        if (ddwh.getSelectedItem() != null) {        
-         mylist = OVData.getLocationListByWarehouse(ddwh.getSelectedItem().toString());
-         for (String code : mylist) {
-            ddloc.addItem(code);
-         }
-        }
-        ddloc.insertItemAt("", 0);
-        
-        
-        
-        ArrayList<String> sites = OVData.getSiteList();
         ddsite.removeAllItems();
-        for (String code : sites) {
-            ddsite.addItem(code);
-        }
-        
-        ArrayList<String> accts = fglData.getGLAcctList();;
+        ddwh.removeAllItems();
+        ddloc.removeAllItems();
         ddacct.removeAllItems();
-        for (String code : accts) {
-            ddacct.addItem(code);
+        ddcc.removeAllItems();
+        
+        ArrayList<String> wh = OVData.getWareHouseList(); 
+        for (String[] s : initDataSets) {
+            if (s[0].equals("accounts")) {
+              ddacct.addItem(s[1]); 
+            }
+            
+            if (s[0].equals("depts")) {
+              ddcc.addItem(s[1]); 
+            }
+            
+            if (s[0].equals("warehouses")) {
+              ddwh.addItem(s[1]); 
+            }
+            
+            if (s[0].equals("locations")) {
+              ddloc.addItem(s[1]); 
+            }
+          
+            if (s[0].equals("site")) {
+              defaultsite = s[1]; 
+            }
+            if (s[0].equals("sites")) {
+              ddsite.addItem(s[1]); 
+            }
+            
         }
         
-        ArrayList<String> ccs = fglData.getGLCCList();
-        ddcc.removeAllItems();
-        for (String code : ccs) {
-            ddcc.addItem(code);
-        }
+         ddsite.setSelectedItem(defaultsite);
+         
+         if (ddacct.getItemCount() > 0) {
+          ddacct.setSelectedIndex(0);
+         }
+         
+         if (ddcc.getItemCount() > 0) {
+          ddcc.setSelectedIndex(0);
+         }
+        
+         ddwh.insertItemAt("", 0);
+         ddloc.insertItemAt("", 0);
         
         clearVariables();
+        isLoad = false;
     }
     
     public void lookUpFrameItemDesc() {
@@ -776,12 +791,10 @@ public class InventoryMaint extends javax.swing.JPanel {
                 
         String[] m = inventoryAdjustmentTransaction(tm, in, gv);
         
+        BlueSeerUtils.message(m);
         if (m[0].equals("0")) {
-            bsmf.MainFrame.show(getMessageTag(1065));
             clearVariables();
-        } else {
-            bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-        }
+        } 
         
         } // proceed
         

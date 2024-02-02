@@ -1817,6 +1817,92 @@ public class invData {
    
 
     /* misc functions */
+    public static ArrayList<String[]> getInvMaintInit() {
+        String defaultsite = "";
+        ArrayList<String[]> lines = new ArrayList<String[]>();
+        try{
+        Connection con = null;
+        if (ds != null) {
+        con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+        // allocate, custitemonly, site, currency, sites, currencies, uoms, 
+        // states, warehouses, locations, customers, taxcodes, carriers, statuses    
+            res = st.executeQuery("select site_site from site_mstr;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "sites";
+               s[1] = res.getString("site_site");
+               lines.add(s);
+            }
+            
+            res = st.executeQuery("select ov_site, ov_currency from ov_mstr;" );
+            while (res.next()) {
+               String[] s = new String[2];
+               s[0] = "currency";
+               s[1] = res.getString("ov_currency");
+               lines.add(s);
+               s = new String[2];
+               s[0] = "site";
+               s[1] = res.getString("ov_site");
+               lines.add(s);
+               defaultsite = s[1];
+            }
+            
+            res = st.executeQuery("select ac_id from ac_mstr order by ac_id;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "accounts";
+               s[1] = res.getString("ac_id");
+               lines.add(s);
+            }
+            
+            res = st.executeQuery("select dept_id from dept_mstr order by dept_id ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "depts";
+               s[1] = res.getString("dept_id");
+               lines.add(s);
+            }
+          
+            
+            res = st.executeQuery("select wh_id from wh_mstr order by wh_id;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "warehouses";
+               s[1] = res.getString("wh_id");
+               lines.add(s);
+            }
+            
+            res = st.executeQuery("select loc_loc from loc_mstr order by loc_loc;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "locations";
+               s[1] = res.getString("loc_loc");
+               lines.add(s);
+            }
+            
+            
+        }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+        return lines;
+    }
+    
+    
      public static void updateCurrentItemCost(String item) {
         calcCost cur = new calcCost();
         ArrayList<Double> costlist = cur.getTotalCost(item, OVData.getDefaultBomID(item) );
