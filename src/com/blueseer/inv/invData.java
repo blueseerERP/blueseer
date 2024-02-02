@@ -48,8 +48,10 @@ import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -1615,11 +1617,149 @@ public class invData {
         return r;
     }
     
-    public static String[] inventoryAdjustmentTransaction(tran_mstr tm, in_mstr im, gl_verb gv) {
+    private static int _addTranMstr(tran_mstr x, Connection con) throws SQLException {
+        int rows = 0;
+        String sqlInsert = "insert into tran_mstr (tr_site, tr_item, tr_qty," +
+                "tr_ent_date, tr_eff_date, tr_userid, tr_ref, tr_addrcode," +
+                "tr_type, tr_datetime, tr_rmks, tr_nbr, tr_misc1," +
+                "tr_lot, tr_serial, tr_program," +
+                "tr_amt, tr_mtl, tr_lbr, tr_bdn, tr_ovh, tr_out," +
+                "tr_batch, tr_op, tr_loc, tr_wh, tr_expire," +
+                "tr_cc, tr_wc, tr_wf, tr_prodline, " +
+                "tr_actcell, tr_export, tr_order, tr_line, tr_po, tr_price," +
+                "tr_cost, tr_acct, tr_terms, tr_pack, tr_curr, " +
+                "tr_pack_date, tr_assy_date, tr_uom, tr_base_qty, tr_bom)" +
+               " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+          // tr_id and tr_timestamp are db assigned         
+        try (PreparedStatement psi = con.prepareStatement(sqlInsert)) {
+            psi.setString(1, x.tr_site);
+            psi.setString(2, x.tr_item);
+            psi.setDouble(3, x.tr_qty);
+            psi.setString(4, x.tr_ent_date);
+            psi.setString(5, x.tr_eff_date);
+            psi.setString(6, x.tr_userid);
+            psi.setString(7, x.tr_ref);
+            psi.setString(8, x.tr_addrcode);
+            psi.setString(9, x.tr_type);
+            psi.setString(10, x.tr_datetime);
+            psi.setString(11, x.tr_rmks);
+            psi.setString(12, x.tr_nbr);
+            psi.setString(13, x.tr_misc1);
+            psi.setString(14, x.tr_lot);
+            psi.setString(15, x.tr_serial);
+            psi.setString(16, x.tr_program);
+            psi.setDouble(17, x.tr_amt);
+            psi.setDouble(18, x.tr_mtl);
+            psi.setDouble(19, x.tr_lbr);
+            psi.setDouble(20, x.tr_bdn);
+            psi.setDouble(21, x.tr_ovh);
+            psi.setDouble(22, x.tr_out);
+            psi.setString(23, x.tr_batch);
+            psi.setString(24, x.tr_op);
+            psi.setString(25, x.tr_loc);
+            psi.setString(26, x.tr_wh);
+            psi.setString(27, x.tr_expire);
+            psi.setString(28, x.tr_cc);
+            psi.setString(29, x.tr_wc);
+            psi.setString(30, x.tr_wf);
+            psi.setString(31, x.tr_prodline);
+            psi.setString(32, x.tr_actcell);
+            psi.setInt(33, x.tr_export);
+            psi.setString(34, x.tr_order);
+            psi.setInt(35, x.tr_line);
+            psi.setString(36, x.tr_po);
+            psi.setDouble(37, x.tr_price);
+            psi.setDouble(38, x.tr_cost);
+            psi.setString(39, x.tr_acct);
+            psi.setString(40, x.tr_terms);
+            psi.setString(41, x.tr_pack);
+            psi.setString(42, x.tr_curr);
+            psi.setString(43, x.tr_pack_date);
+            psi.setString(44, x.tr_assy_date);
+            psi.setString(45, x.tr_uom);
+            psi.setDouble(46, x.tr_base_qty);
+            psi.setString(47, x.tr_bom);
+            rows = psi.executeUpdate();
+        }
+        return rows;
+    }
+    
+    private static int _addUpdateInMstr(in_mstr in, boolean isInventorySerialized, Connection con) throws SQLException {
+          int rows = 0; 
+          String expire = in.in_expire();
+          String serial = in.in_serial();
+          if (! isInventorySerialized) {
+                serial = "";
+                expire = null;
+            }
+            java.util.Date now = new java.util.Date();
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+            String mydate = dfdate.format(now);
+
+            double sum = 0.00;    
+            
+            String sqlSelect = "select in_qoh from in_mstr where in_item = ? and in_loc = ? and in_wh = ? and in_site = ? and in_serial = ?";
+            String sqlInsert = "insert into in_mstr (in_item, in_loc, in_wh, in_site, in_serial, in_expire, in_qoh, in_date) " 
+                             + " values (?,?,?,?,?,?,?,?); ";
+            String sqlUpdate = "update in_mstr set in_qoh = ?, in_date = ? where " 
+                             + " in_item = ? and in_loc = ? and in_wh = ? and in_site = ? and in_serial = ? ; "; 
+            
+            PreparedStatement ps = con.prepareStatement(sqlSelect);
+            ps.setString(1, in.in_item);
+            ps.setString(2, in.in_loc);
+            ps.setString(3, in.in_wh);
+            ps.setString(4, in.in_site);
+            ps.setString(5, serial);
+            try (ResultSet res = ps.executeQuery();
+                PreparedStatement psi = con.prepareStatement(sqlInsert);
+                PreparedStatement psu = con.prepareStatement(sqlUpdate);) {  
+                int z = 0;
+                double qoh = 0.00;
+                while (res.next()) {
+                    z++;
+                    qoh = bsParseDouble(res.getString("in_qoh"));
+                }
+                    res.close();
+
+                    if (z == 0) {
+                    sum = Double.valueOf(in.in_qoh());
+                    psi.setString(1, in.in_item);
+                    psi.setString(2, in.in_loc);
+                    psi.setString(3, in.in_wh);
+                    psi.setString(4, in.in_site);
+                    psi.setString(5, serial);
+                    psi.setString(6, expire);
+                    psi.setDouble(7, sum);
+                    psi.setString(8, mydate);
+                    rows = psi.executeUpdate();
+                    }  else {
+                    sum = qoh + Double.valueOf(in.in_qoh());
+                    psu.setDouble(1, sum);
+                    psu.setString(2, mydate);
+                    psu.setString(3, in.in_item);
+                    psu.setString(4, in.in_loc);
+                    psu.setString(5, in.in_wh);
+                    psu.setString(6, in.in_site);
+                    psu.setString(7, serial);
+                    rows = psu.executeUpdate();
+                    }
+    }
+    return rows;
+    }
+    
+    public static String[] inventoryAdjustmentTransaction(tran_mstr tm, in_mstr in, gl_verb gv) {
         String[] m = new String[2];
         Connection bscon = null;
         PreparedStatement ps = null;
         ResultSet res = null;
+        boolean isInventorySerialized = (OVData.isInvCtrlSerialize()) ? true : false;
+        
+        // Skip item code "S" when adjusting inventory -- service item
+        if (invData.getItemCode(in.in_item()).equals("S")) {  
+            return new String[]{"1", "non-inventory item"}; 
+        }
+        
         try { 
            
             if (ds != null) {
@@ -1630,36 +1770,12 @@ public class invData {
             bscon.setAutoCommit(false);
             
             /* do _addTranMstr */
+            _addTranMstr(tm, bscon);
             /* do _addInMstr */
-            
+            _addUpdateInMstr(in, isInventorySerialized, bscon);
             /* do glEntryXP */
             fglData.glEntryXP(bscon, gv.glv_acct_cr(), gv.glv_cc_cr(), gv.glv_acct_dr(), gv.glv_cc_dr(), gv.glv_date(), gv.glv_amt(), gv.glv_baseamt(), gv.glv_curr(), gv.glv_basecurr(), gv.glv_ref(), gv.glv_site(), gv.glv_type(), gv.glv_desc(), gv.glv_doc());
-            
-            /*
-            AREntry("I", shipper, effdate, bscon);  
-          
-            if (! type.equals("freight")) {
-            _addTranMstrShipper(shipper, effdate, bscon);
-            _updateInventoryFromShipper(shipper, bscon);
-            }
-            
-            fglData._glEntryFromShipper(shipper, effdate, bscon);
-            
-            _updateShipperStatus(shipper, effdate, bscon); 
-            if (type.equals("order")) {
-            _updateOrderFromShipper(shipper, bscon); 
-            }
-            if (type.equals("serviceorder")) {
-            _updateServiceOrderFromShipper(shipper, bscon); 
-            }
-            // if type.equals("cash")....no order to update
-            
-            if (OVData.isVoucherShippingSO()) {
-            _processShipperVouchers(shipper, effdate, bscon);
-            }
-            
-            */
-            
+                        
             bscon.commit();
             m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1125)};
         } catch (SQLException s) {
@@ -4519,22 +4635,22 @@ public class invData {
         }
     }
 
-    public record tran_mstr(String[] m, String tr_id, String tr_site, String tr_item, String tr_qty,
+    public record tran_mstr(String[] m, String tr_id, String tr_site, String tr_item, double tr_qty,
         String tr_ent_date, String tr_eff_date, String tr_userid, String tr_ref, String tr_addrcode,
         String tr_type, String tr_datetime, String tr_rmks, String tr_nbr, String tr_misc1, 
         String tr_lot, String tr_serial, String tr_program,
-        String tr_amt, String tr_mtl, String tr_lbr, String tr_bdn, String tr_ovh, String tr_out,
+        double tr_amt, double tr_mtl, double tr_lbr, double tr_bdn, double tr_ovh, double tr_out,
         String tr_batch, String tr_op, String tr_loc, String tr_wh, String tr_expire,
         String tr_cc, String tr_wc, String tr_wf, String tr_prodline, String tr_timestamp, 
-        String tr_actcell, String tr_export, String tr_order, String tr_line, String tr_po, String tr_price,
-        String tr_cost, String tr_acct, String tr_terms, String tr_pack, String tr_curr, 
-        String tr_pack_date, String tr_assy_date, String tr_uom, String tr_base_qty, String tr_bom) {
+        String tr_actcell, int tr_export, String tr_order, int tr_line, String tr_po, double tr_price,
+        double tr_cost, String tr_acct, String tr_terms, String tr_pack, String tr_curr, 
+        String tr_pack_date, String tr_assy_date, String tr_uom, double tr_base_qty, String tr_bom) {
         public tran_mstr(String[] m) {
-            this(m, "", "", "", "", "", "", "", "", "", "",
-                    "", "", "", "", "", "", "", "", "", "",
-                    "", "", "", "", "", "", "", "", "", "",
-                    "", "", "", "", "", "", "", "", "", "",
-                    "", "", "", "", "", "", "", "", "");
+            this(m, "", "", "", 0, "", "", "", "", "", "",
+                    "", "", "", "", "", "", "", 0, 0, 0,
+                    0, 0, 0, "", "", "", "", "", "", "",
+                    "", "", "", "", 0, "", 0, "", 0, 0,  
+                    "", "", "", "", "", "", "", 0, "");
         }
     }
 

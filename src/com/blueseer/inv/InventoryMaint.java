@@ -32,7 +32,11 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.fgl.fglData;
+import com.blueseer.fgl.fglData.gl_verb;
 import static com.blueseer.fgl.fglData.setGLRecNbr;
+import com.blueseer.inv.invData.in_mstr;
+import static com.blueseer.inv.invData.inventoryAdjustmentTransaction;
+import com.blueseer.inv.invData.tran_mstr;
 
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
@@ -63,6 +67,7 @@ import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -597,6 +602,7 @@ public class InventoryMaint extends javax.swing.JPanel {
         double totalcost = 0.00;
         
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        Date today = new Date();
         String loc = "";
         String wh = "";
         String acct = "";
@@ -692,37 +698,114 @@ public class InventoryMaint extends javax.swing.JPanel {
                     bsmf.MainFrame.show(getMessageTag(1035));
                     return;
         }
-        String expire = "";
+        String expire = null;
         if (dcexpire.getDate() != null) {
             expire = dfdate.format(dcexpire.getDate());
         }
         
+               
         if (proceed) {
-        // now lets do the tran_hist write
-           isError = OVData.TRHistIssDiscrete(dcdate.getDate(), tbpart.getText(), qty, op, type, 0.00, cost, 
-                site, loc, wh, expire,
-                "", "", "", 0, "", "", tblotserial.getText(), tbrmks.getText(), tbref.getText(), 
-                acct, cc, "", tblotserial.getText(), "InventoryMaint", bsmf.MainFrame.userid);
+        tran_mstr tm = new tran_mstr(null,
+                "", // id
+                site, // site
+                tbpart.getText(),
+                qty,
+                dfdate.format(today), //entdate
+                dfdate.format(dcdate.getDate()), //effdate
+                bsmf.MainFrame.userid, //userid
+                tbref.getText(), //ref
+                "", //addrcode
+                type, //type
+                null, //datetime
+                tbrmks.getText(), //remarks
+                "", //tr_nbr
+                "", //misc1
+                tblotserial.getText(), //lot
+                tblotserial.getText(), //serial
+                "InventoryMaint", //program
+                0, //amt
+                0, //mtl
+                0, //lbr
+                0, //bdn
+                0, //ovh
+                0, //out
+                "", //batch
+                op, //op
+                loc, //loc
+                wh, //wh
+                expire, //expire
+                cc, //cc
+                "", //wc
+                "", //wf
+                "", //prodline
+                "0", //timestamp ; db assigned
+                "", //cell
+                0, //export
+                "", //order
+                0, //line
+                "", //po
+                0.00, //price
+                cost, //cost
+                acct, //acct
+                "", //terms
+                "", //pack
+                "", //curr
+                null, //packdate
+                null, //assydate
+                "", //uom
+                qty, //baseqty
+                "" //bom
+        );
         
-        if (! isError) {
-            isError = OVData.UpdateInventoryDiscrete(tbpart.getText(), site, loc, wh, tblotserial.getText(), expire, Double.valueOf(qty)); 
-        } else {
-            bsmf.MainFrame.show(getMessageTag(1010, "TRHistIssDiscrete"));
-        }
         
-       
-        if (! isError) {
-            if (ddtype.getSelectedItem().toString().equals("issue")) {
-                fglData.glEntry(invacct, prodline, acct, cc,  
-                        dfdate.format(dcdate.getDate()), (cost * Double.valueOf(tbqty.getText())), (cost * Double.valueOf(tbqty.getText())), basecurr, basecurr, tbref.getText() , site, type, tbrmks.getText(), gldoc);
-            } else {
-                fglData.glEntry(ddacct.getSelectedItem().toString(), ddcc.getSelectedItem().toString(), invacct, prodline, 
-                        dfdate.format(dcdate.getDate()), (cost * Double.valueOf(tbqty.getText())), (cost * Double.valueOf(tbqty.getText())), basecurr, basecurr, tbref.getText() , site, type, tbrmks.getText(), gldoc);
-            }
+        in_mstr in = new in_mstr(null,
+                tbpart.getText(),
+                String.valueOf(qty),
+                null, // date
+                loc,
+                wh,
+                site,
+                tblotserial.getText(),
+                expire,
+                bsmf.MainFrame.userid,
+                "InventoryMaint"
+        );
+        
+        String acct_cr = "";
+        String cc_cr = "";
+        String acct_dr = "";
+        String cc_dr = "";
+        if (ddtype.getSelectedItem().toString().equals("issue")) {
+            acct_cr = invacct;
+            cc_cr = prodline;
+            acct_dr = acct;
+            cc_dr = cc;
         } else {
-          bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));  
+            acct_cr = ddacct.getSelectedItem().toString();
+            cc_cr = ddcc.getSelectedItem().toString();
+            acct_dr = invacct;
+            cc_dr = prodline;
         }
-        if (! isError) {
+            gl_verb gv = new gl_verb(null,
+                    invacct, 
+                    prodline, 
+                    acct, 
+                    cc,  
+                    dfdate.format(dcdate.getDate()), 
+                    (cost * Double.valueOf(tbqty.getText())),  
+                    (cost * Double.valueOf(tbqty.getText())),  
+                    basecurr, 
+                    basecurr, 
+                    tbref.getText() , 
+                    type,
+                    site, 
+                    tbrmks.getText(), 
+                    gldoc
+            );
+                
+        String[] m = inventoryAdjustmentTransaction(tm, in, gv);
+        
+        if (m[0].equals("0")) {
             bsmf.MainFrame.show(getMessageTag(1065));
             clearVariables();
         } else {
