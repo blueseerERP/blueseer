@@ -279,6 +279,7 @@ public class ProdCodeMaint extends javax.swing.JPanel implements IBlueSeerT {
         
     public void setComponentDefaultValues() {
        isLoad = true;
+       tbkey.setBackground(Color.white);
         tbkey.setText("");
          tbdesc.setText("");
          tbinvacct.setText("");
@@ -318,6 +319,7 @@ public class ProdCodeMaint extends javax.swing.JPanel implements IBlueSeerT {
         BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
         btupdate.setEnabled(false);
         btdelete.setEnabled(false);
+        btcopy.setEnabled(false);
         btnew.setEnabled(false);
         tbkey.setEditable(true);
         tbkey.setForeground(Color.blue);
@@ -335,8 +337,10 @@ public class ProdCodeMaint extends javax.swing.JPanel implements IBlueSeerT {
                    btadd.setEnabled(false);
                    tbkey.setEditable(false);
                    tbkey.setForeground(Color.blue);
+                   btcopy.setEnabled(true);
         } else {
                    tbkey.setForeground(Color.red); 
+                   btcopy.setEnabled(false);
         }
     }
     
@@ -723,6 +727,7 @@ public class ProdCodeMaint extends javax.swing.JPanel implements IBlueSeerT {
         btdelete = new javax.swing.JButton();
         btclear = new javax.swing.JButton();
         btlookup = new javax.swing.JButton();
+        btcopy = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -869,6 +874,13 @@ public class ProdCodeMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
+        btcopy.setText("Copy");
+        btcopy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btcopyActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -981,9 +993,10 @@ public class ProdCodeMaint extends javax.swing.JPanel implements IBlueSeerT {
                                     .addComponent(tboutratevaracct, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(tbtbd, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(29, 29, 29)
+                                .addComponent(btcopy)
+                                .addGap(35, 35, 35)
                                 .addComponent(jLabel67)
-                                .addGap(9, 9, 9)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -998,7 +1011,8 @@ public class ProdCodeMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel66)
                         .addComponent(btnew)
-                        .addComponent(btclear))
+                        .addComponent(btclear)
+                        .addComponent(btcopy))
                     .addComponent(btlookup))
                 .addGap(20, 20, 20)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1144,10 +1158,26 @@ public class ProdCodeMaint extends javax.swing.JPanel implements IBlueSeerT {
         lookUpFrame();
     }//GEN-LAST:event_btlookupActionPerformed
 
+    private void btcopyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcopyActionPerformed
+         if (! isLoad) {
+            tbkey.setText("");
+            tbkey.setBackground(Color.yellow);
+            //bsmf.MainFrame.show("choose new parent key and adjust ISA/GS IDs accordingly");
+            tbkey.requestFocus();
+            btadd.setEnabled(true);
+            tbkey.setEnabled(true);
+            tbkey.setEditable(true);
+            btdelete.setEnabled(false);
+            btupdate.setEnabled(false);
+            btcopy.setEnabled(false);
+            }
+    }//GEN-LAST:event_btcopyActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btclear;
+    private javax.swing.JButton btcopy;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;

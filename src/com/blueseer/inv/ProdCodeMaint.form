@@ -161,10 +161,11 @@
                                       <Component id="tbtbd" alignment="0" min="-2" pref="113" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
+                              <Group type="102" attributes="0">
+                                  <Component id="btcopy" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
                                   <Component id="jLabel67" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="tbdesc" min="-2" pref="203" max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -186,6 +187,7 @@
                           <Component id="jLabel66" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnew" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btclear" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btcopy" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Component id="btlookup" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -602,6 +604,14 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btlookupActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btcopy">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Copy"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btcopyActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
