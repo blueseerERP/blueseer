@@ -309,6 +309,7 @@ public class OrderRpt extends javax.swing.JPanel {
          cbclose.setSelected(true);
         cbbackorder.setSelected(true);
          cberror.setSelected(true);
+         cbblanket.setSelected(true);
         
         mymodel.setNumRows(0);
         modeldetail.setNumRows(0);
@@ -383,6 +384,7 @@ public class OrderRpt extends javax.swing.JPanel {
         jLabel7 = new javax.swing.JLabel();
         tbrmks = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
+        cbblanket = new javax.swing.JCheckBox();
         jPanel3 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         labelcount = new javax.swing.JLabel();
@@ -515,6 +517,8 @@ public class OrderRpt extends javax.swing.JPanel {
 
         jLabel10.setText("Remarks");
 
+        cbblanket.setText("Blanket");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -529,7 +533,7 @@ public class OrderRpt extends javax.swing.JPanel {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(dcTo, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
+                            .addComponent(dcTo, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
                             .addComponent(dcFrom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -553,30 +557,29 @@ public class OrderRpt extends javax.swing.JPanel {
                         .addComponent(cbclose)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbbackorder)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(cberror))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cberror)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbblanket))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(33, 33, 33)
-                                .addComponent(jLabel5)
-                                .addGap(4, 4, 4)
-                                .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btRun)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tbprint)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btcsv)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btdetail))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel10)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tbrmks, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addGap(33, 33, 33)
+                        .addComponent(jLabel5)
+                        .addGap(4, 4, 4)
+                        .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btRun)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tbprint)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btcsv)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btdetail))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tbrmks, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -603,7 +606,8 @@ public class OrderRpt extends javax.swing.JPanel {
                         .addComponent(cbclose)
                         .addComponent(cbopen)
                         .addComponent(cbbackorder)
-                        .addComponent(cberror))
+                        .addComponent(cberror)
+                        .addComponent(cbblanket))
                     .addComponent(dcTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -771,7 +775,7 @@ try {
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
              
                  if (dddatetype.getSelectedItem().toString().equals("create")) {
-                    res = st.executeQuery("SELECT so_nbr, so_rmks, so_cust, so_curr, so_po, so_ord_date, so_due_date, so_status, " +
+                    res = st.executeQuery("SELECT so_nbr, so_rmks, so_type, so_cust, so_curr, so_po, so_ord_date, so_due_date, so_status, " +
                         " sum(sod_ord_qty) as totqty, sum(sod_ord_qty * sod_netprice) as totdol, " +
                         " sum(sod_taxamt) as matltax, " +
                         " (select sum(case when sos_type = 'discount' and sos_amttype = 'percent' then sos_amt else '0' end) from sos_det where sos_nbr = so_nbr) as 'discountpercent', " +
@@ -784,10 +788,9 @@ try {
                         " AND so_cust >= " + "'" + fromcust + "'" + 
                         " AND so_cust <= " + "'" + tocust + "'" + 
                         " AND so_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + 
-                        " AND so_type = 'DISCRETE' " +
                          " group by so_nbr, so_rmks, so_cust, so_curr, so_po, so_ord_date, so_due_date, so_status order by so_nbr asc ;"); 
                  } else if (dddatetype.getSelectedItem().toString().equals("due")) {
-                        res = st.executeQuery("SELECT so_nbr, so_rmks, so_cust, so_curr, so_po, so_ord_date, so_due_date, so_status, " +
+                        res = st.executeQuery("SELECT so_nbr, so_rmks, so_type, so_cust, so_curr, so_po, so_ord_date, so_due_date, so_status, " +
                         " sum(sod_ord_qty) as totqty, sum(sod_ord_qty * sod_netprice) as totdol, " +
                         " sum(sod_taxamt) as matltax, " +
                         " (select sum(case when sos_type = 'discount' and sos_amttype = 'percent' then sos_amt else '0' end) from sos_det where sos_nbr = so_nbr) as 'discountpercent', " +
@@ -800,10 +803,9 @@ try {
                         " AND so_cust >= " + "'" + fromcust + "'" + 
                         " AND so_cust <= " + "'" + tocust + "'" + 
                         " AND so_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + 
-                        " AND so_type = 'DISCRETE' " +
                          " group by so_nbr, so_rmks, so_cust, so_curr, so_po, so_ord_date, so_due_date, so_status order by so_nbr asc ;");
                  } else {
-                        res = st.executeQuery("SELECT so_nbr, so_rmks, so_cust, so_curr, so_po, so_ord_date, so_due_date, so_status, " +
+                        res = st.executeQuery("SELECT so_nbr, so_rmks, so_type, so_cust, so_curr, so_po, so_ord_date, so_due_date, so_status, " +
                         " sum(sod_ord_qty) as totqty, sum(sod_ord_qty * sod_netprice) as totdol, " +
                         " sum(sod_taxamt) as matltax, " +
                         " (select sum(case when sos_type = 'discount' and sos_amttype = 'percent' then sos_amt else '0' end) from sos_det where sos_nbr = so_nbr) as 'discountpercent', " +
@@ -816,7 +818,6 @@ try {
                         " AND so_cust >= " + "'" + fromcust + "'" + 
                         " AND so_cust <= " + "'" + tocust + "'" + 
                         " AND so_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + 
-                        " AND so_type = 'DISCRETE' " +
                          " group by so_nbr, so_rmks, so_cust, so_curr, so_po, so_ord_date, so_due_date, so_status order by so_nbr asc ;");
                  }
                 
@@ -843,7 +844,9 @@ try {
                     if (! cbbackorder.isSelected() && res.getString("so_status").equals("backorder"))
                         continue;
                     if (! cberror.isSelected() && res.getString("so_status").equals("error"))
-                        continue;                       
+                        continue;    
+                    if (! cbblanket.isSelected() && res.getString("so_type").equals("BLANKET"))
+                        continue; 
 
                     if (res.getDouble("discountpercent") != 0) {
                       disc = res.getDouble("totdol") * (res.getDouble("discountpercent") / 100.0);
@@ -965,6 +968,7 @@ try {
     private javax.swing.JButton btcsv;
     private javax.swing.JButton btdetail;
     private javax.swing.JCheckBox cbbackorder;
+    private javax.swing.JCheckBox cbblanket;
     private javax.swing.JCheckBox cbclose;
     private javax.swing.JCheckBox cberror;
     private javax.swing.JCheckBox cbopen;
