@@ -425,7 +425,7 @@ public class ShipperMaint extends javax.swing.JPanel {
          btadd.setEnabled(true);
          btPrintShp.setEnabled(false);
          btPrintInv.setEnabled(false);
-         btconfirm.setEnabled(false);
+         btcommit.setEnabled(false);
          
          lblstatus.setText("");
         
@@ -737,7 +737,7 @@ public class ShipperMaint extends javax.swing.JPanel {
                 if (status.equals("1")) {
                     btadd.setEnabled(false);
                     btedit.setEnabled(false);
-                    btconfirm.setEnabled(false);
+                    btcommit.setEnabled(false);
                     lblstatus.setText(getMessageTag(1148));
                     lblstatus.setForeground(Color.blue);
                     btPrintShp.setEnabled(true);
@@ -747,7 +747,7 @@ public class ShipperMaint extends javax.swing.JPanel {
                     btadd.setEnabled(false);
                     btedit.setEnabled(true);
                      if (OVData.isConfirmInShipMaint()) {
-                        btconfirm.setEnabled(true);
+                        btcommit.setEnabled(true);
                     }
                     lblstatus.setText(getMessageTag(1149));
                     lblstatus.setForeground(Color.red);
@@ -1551,7 +1551,7 @@ public class ShipperMaint extends javax.swing.JPanel {
         lbbilltoname = new javax.swing.JLabel();
         lbladdr = new javax.swing.JLabel();
         lblstatus = new javax.swing.JLabel();
-        btconfirm = new javax.swing.JButton();
+        btcommit = new javax.swing.JButton();
         rborder = new javax.swing.JRadioButton();
         rbnonorder = new javax.swing.JRadioButton();
         btclear = new javax.swing.JButton();
@@ -1883,11 +1883,11 @@ public class ShipperMaint extends javax.swing.JPanel {
 
         lblstatus.setBorder(javax.swing.BorderFactory.createTitledBorder("Status"));
 
-        btconfirm.setText("Confirm");
-        btconfirm.setName("btconfirm"); // NOI18N
-        btconfirm.addActionListener(new java.awt.event.ActionListener() {
+        btcommit.setText("Commit");
+        btcommit.setName("btcommit"); // NOI18N
+        btcommit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btconfirmActionPerformed(evt);
+                btcommitActionPerformed(evt);
             }
         });
 
@@ -1952,7 +1952,9 @@ public class ShipperMaint extends javax.swing.JPanel {
                 .addComponent(lblstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                 .addGroup(panelMainLayout.createSequentialGroup()
-                    .addContainerGap()
+                    .addGap(21, 21, 21)
+                    .addComponent(btcommit)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                     .addComponent(btPrintInv)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(btPrintShp)
@@ -1960,8 +1962,7 @@ public class ShipperMaint extends javax.swing.JPanel {
                     .addComponent(btadd)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(btedit)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(btconfirm))
+                    .addContainerGap())
                 .addComponent(HeaderPanel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(panelMainLayout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)
@@ -2000,7 +2001,7 @@ public class ShipperMaint extends javax.swing.JPanel {
                     .addComponent(btedit)
                     .addComponent(btPrintShp)
                     .addComponent(btPrintInv)
-                    .addComponent(btconfirm)))
+                    .addComponent(btcommit)))
         );
 
         add(panelMain);
@@ -2321,7 +2322,7 @@ public class ShipperMaint extends javax.swing.JPanel {
                         .addComponent(btdelitem)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btupdateitem))
-                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 239, Short.MAX_VALUE))
+                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE))
                 .addGap(23, 23, 23))
         );
 
@@ -2747,11 +2748,11 @@ public class ShipperMaint extends javax.swing.JPanel {
         setShipperByShipTo(ddshipto.getSelectedItem().toString());
     }//GEN-LAST:event_btshiptoActionPerformed
 
-    private void btconfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btconfirmActionPerformed
+    private void btcommitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcommitActionPerformed
         String[] message = confirmShipperTransaction("order", tbshipper.getText(), dcshipdate.getDate());
         bsmf.MainFrame.show(message[1]);
         initvars(new String[]{tbshipper.getText()});
-    }//GEN-LAST:event_btconfirmActionPerformed
+    }//GEN-LAST:event_btcommitActionPerformed
 
     private void ddorderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddorderActionPerformed
               if (ddorder.getItemCount() > 0 && ! isLoad) {
@@ -2987,7 +2988,7 @@ public class ShipperMaint extends javax.swing.JPanel {
     private javax.swing.JButton btaddattachment;
     private javax.swing.JButton btadditem;
     private javax.swing.JButton btclear;
-    private javax.swing.JButton btconfirm;
+    private javax.swing.JButton btcommit;
     private javax.swing.JButton btdeleteattachment;
     private javax.swing.JButton btdelitem;
     private javax.swing.JButton btedit;
