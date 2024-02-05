@@ -16558,6 +16558,9 @@ return mystring;
                 JasperPrint jasperPrint = JasperFillManager.fillReport(template.toString(), hm, con );
                 //JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/posprt.pdf");
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+                jasperViewer.setTitle("Viewer");
+                jasperViewer.setIconImage(null);
+                jasperViewer.setFitPageZoomRatio();
                 jasperViewer.setVisible(true);
             } catch (Exception e) {
             MainFrame.bslog(e);
@@ -16636,6 +16639,8 @@ return mystring;
                 
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
                 jasperViewer.setVisible(true);
+                jasperViewer.setTitle("Viewer");
+                jasperViewer.setIconImage(null);
                 jasperViewer.setFitPageZoomRatio();
                 
             } catch (SQLException s) {
@@ -16765,7 +16770,10 @@ return mystring;
                 if (display) {
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
                 jasperViewer.setVisible(true);
+                jasperViewer.setTitle("Viewer");
+                jasperViewer.setIconImage(null);
                 jasperViewer.setFitPageZoomRatio();
+                
                 }
                 
                 
@@ -16868,6 +16876,8 @@ return mystring;
                 
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
                 jasperViewer.setVisible(true);
+                jasperViewer.setTitle("Viewer");
+                jasperViewer.setIconImage(null);
                 jasperViewer.setFitPageZoomRatio();
                 
             } catch (SQLException s) {
@@ -16953,7 +16963,9 @@ return mystring;
          jasperPrint = JasperFillManager.fillReport(template.toString(), hm, new JRTableModelDataSource(newmodel) );
          JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
            jasperViewer.setVisible(true);
-           jasperViewer.setFitPageZoomRatio();
+                jasperViewer.setTitle("Viewer");
+                jasperViewer.setIconImage(null);
+                jasperViewer.setFitPageZoomRatio();
            //  JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/ivprt.pdf");
        } catch (JRException ex) {
            MainFrame.bslog(ex);
@@ -17025,6 +17037,8 @@ return mystring;
                 
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
                 jasperViewer.setVisible(true);
+                jasperViewer.setTitle("Viewer");
+                jasperViewer.setIconImage(null);
                 jasperViewer.setFitPageZoomRatio();
                 
             } catch (SQLException s) {
@@ -17062,6 +17076,8 @@ return mystring;
                 
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
                 jasperViewer.setVisible(true);
+                jasperViewer.setTitle("Viewer");
+                jasperViewer.setIconImage(null);
                 jasperViewer.setFitPageZoomRatio();
                
             } catch (Exception s) {
@@ -17105,6 +17121,8 @@ return mystring;
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
                                 
                 jasperViewer.setVisible(true);
+                jasperViewer.setTitle("Viewer");
+                jasperViewer.setIconImage(null);
                 jasperViewer.setFitPageZoomRatio();
                
             } catch (Exception s) {
@@ -17225,6 +17243,9 @@ return mystring;
          
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
                 jasperViewer.setVisible(true);
+                jasperViewer.setTitle("Viewer");
+                jasperViewer.setIconImage(null);
+                jasperViewer.setFitPageZoomRatio();
                 con.close();
                 
             } catch (SQLException s) {
@@ -17305,6 +17326,9 @@ return mystring;
          
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
                 jasperViewer.setVisible(true);
+                jasperViewer.setTitle("Viewer");
+                jasperViewer.setIconImage(null);
+                jasperViewer.setFitPageZoomRatio();
                                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
@@ -17408,6 +17432,9 @@ return mystring;
          
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
                 jasperViewer.setVisible(true);
+                jasperViewer.setTitle("Viewer");
+                jasperViewer.setIconImage(null);
+                jasperViewer.setFitPageZoomRatio();
                 
                 
             } catch (SQLException s) {
@@ -17495,6 +17522,8 @@ return mystring;
                 
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
                 jasperViewer.setVisible(true);
+                jasperViewer.setTitle("Viewer");
+                jasperViewer.setIconImage(null);
                 jasperViewer.setFitPageZoomRatio();
                 
             } catch (SQLException s) {
@@ -17589,6 +17618,8 @@ return mystring;
                 
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
                 jasperViewer.setVisible(true);
+                jasperViewer.setTitle("Viewer");
+                jasperViewer.setIconImage(null);
                 jasperViewer.setFitPageZoomRatio();
                 
             } catch (SQLException s) {
@@ -17640,6 +17671,8 @@ return mystring;
                 
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
                 jasperViewer.setVisible(true);
+                jasperViewer.setTitle("Viewer");
+                jasperViewer.setIconImage(null);
                 jasperViewer.setFitPageZoomRatio();
                 
             } catch (Exception s) {
@@ -17787,6 +17820,8 @@ MainFrame.bslog(e);
                 
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
                 jasperViewer.setVisible(true);
+                jasperViewer.setTitle("Viewer");
+                jasperViewer.setIconImage(null);
                 jasperViewer.setFitPageZoomRatio();
                 
           
@@ -17865,6 +17900,8 @@ MainFrame.bslog(e);
                 
                 JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
                 jasperViewer.setVisible(true);
+                jasperViewer.setTitle("Viewer");
+                jasperViewer.setIconImage(null);
                 jasperViewer.setFitPageZoomRatio();
                 
           
