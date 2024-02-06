@@ -2749,7 +2749,9 @@ public class ShipperMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_bteditActionPerformed
 
     private void btshiptoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btshiptoActionPerformed
-        setShipperByShipTo(ddshipto.getSelectedItem().toString());
+        if (ddshipto.getSelectedItem() != null && ! ddshipto.getSelectedItem().toString().isBlank()) {
+          setShipperByShipTo(ddshipto.getSelectedItem().toString());
+        }
     }//GEN-LAST:event_btshiptoActionPerformed
 
     private void btcommitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcommitActionPerformed
