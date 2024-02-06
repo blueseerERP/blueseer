@@ -45,6 +45,7 @@ import static com.blueseer.edi.ediData.isAPIMethodUnique;
 import static com.blueseer.edi.ediData.updateAPITransaction;
 import static com.blueseer.utl.BlueSeerUtils.ConvertBoolToYesNo;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
@@ -420,26 +421,64 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public boolean validateInput(dbaction x) {
-        boolean b = true;
+           
+        Map<String,Integer> f = OVData.getTableInfo("api_mstr");
+        
+        int fc = checkLength(f,"api_id");
+        if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbkey.requestFocus();
+            return false;
+        }  
+        
+        fc = checkLength(f,"api_desc");
+        if (tbdesc.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbdesc.requestFocus();
+            return false;
+        } 
+        
+        fc = checkLength(f,"api_url");
+        if (tburl.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tburl.requestFocus();
+            return false;
+        }
+        fc = checkLength(f,"api_port");
+        if (tbport.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbport.requestFocus();
+            return false;
+        }
+        fc = checkLength(f,"api_path");
+        if (tbpath.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbpath.requestFocus();
+            return false;
+        }
+        fc = checkLength(f,"api_user");
+        if (tbuser.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbuser.requestFocus();
+            return false;
+        }
+        fc = checkLength(f,"api_pass");
+        if (tbpass.getPassword().length > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbpass.requestFocus();
+            return false;
+        }
+        fc = checkLength(f,"api_key");
+        if (tbapikey.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tbapikey.requestFocus();
+            return false;
+        }
+                
+                
+                
                
-                if (tbkey.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbkey.requestFocus();
-                    return b;
-                }
-                
-                if (tbdesc.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024));
-                    tbdesc.requestFocus();
-                    return b;
-                }
-                
-                
-                
-               
-        return b;
+        return true;
     }
     
     public void initvars(String[] arg) {
