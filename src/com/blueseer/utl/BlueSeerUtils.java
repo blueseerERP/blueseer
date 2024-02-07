@@ -752,7 +752,6 @@ public class BlueSeerUtils {
     public static String bsformat(String type, String invalue, String precision) {
         String pattern = "";
         String outvalue = "";
-        
         if (invalue.isEmpty() && type.equals("")) {
            return "0";
         }
@@ -762,7 +761,7 @@ public class BlueSeerUtils {
         if (invalue.isEmpty() && type.equals("i")) {
            return "0";
         }
-        if (defaultDecimalSeparator == ',' && invalue.contains(".")) {
+        if (defaultDecimalSeparator == ',' && invalue.contains(".")) { // int 1643 is arabic decimal point ...or \u066B
             return "error";
         }
         if (invalue.isEmpty() && type.equals("d")) {
@@ -781,9 +780,11 @@ public class BlueSeerUtils {
         } else {
          pattern = "#0.00";    
         }
-       
-        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());    
-        df.applyPattern(pattern);
+        
+       // invalue = invalue.replace(',', '\u066B'); ...need to convert if keyboard is US...otherwise if keyboard is 'ar' then no need to convert
+        
+        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());
+        
         try {   
             outvalue = df.format(df.parse(invalue));
         } catch (ParseException ex) {
