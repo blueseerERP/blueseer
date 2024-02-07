@@ -791,7 +791,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         double netprice = 0.00;
         for (int j = 0; j < sactable.getRowCount(); j++) {
                if (sactable.getValueAt(j, 0).toString().equals("discount") && sactable.getValueAt(j, 2).toString().equals("percent")) {
-                   detaildisc += Double.valueOf(sactable.getValueAt(j, 3).toString());
+                   detaildisc += bsParseDouble(sactable.getValueAt(j, 3).toString());
                }
         }
         
@@ -799,7 +799,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         ArrayList<sod_det> list = new ArrayList<sod_det>();
          
             for (int j = 0; j < detailtable.getRowCount(); j++) {
-                netprice = Double.valueOf(detailtable.getValueAt(j, 5).toString()) - ((detaildisc / 100) * Double.valueOf(detailtable.getValueAt(j, 5).toString()));
+                netprice = bsParseDouble(detailtable.getValueAt(j, 5).toString()) - ((detaildisc / 100) * bsParseDouble(detailtable.getValueAt(j, 5).toString()));
                 sod_det x = new sod_det(null, 
                 key,
                 detailtable.getValueAt(j, 1).toString(), // line
@@ -1095,17 +1095,17 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
       for (int j = 0; j < sactable.getRowCount(); j++) {
           if (sactable.getValueAt(j, 0).equals("charge")) {   
                if (sactable.getValueAt(j, 2).toString().equals("percent")) {
-                 totalcharges +=  actamt * (Double.valueOf(sactable.getValueAt(j, 3).toString()) / 100);
+                 totalcharges +=  actamt * (bsParseDouble(sactable.getValueAt(j, 3).toString()) / 100);
               } else {
-                 totalcharges += Double.valueOf(sactable.getValueAt(j, 3).toString());
+                 totalcharges += bsParseDouble(sactable.getValueAt(j, 3).toString());
               }
           }
           if (sactable.getValueAt(j, 0).equals("discount")) {   
               if (sactable.getValueAt(j, 2).toString().equals("percent")) {
-                 totaldiscounts +=  -1 * (actamt * (Double.valueOf(sactable.getValueAt(j, 3).toString()) / 100));
-                 detaildisc += Double.valueOf(sactable.getValueAt(j, 3).toString());
+                 totaldiscounts +=  -1 * (actamt * (bsParseDouble(sactable.getValueAt(j, 3).toString()) / 100));
+                 detaildisc += bsParseDouble(sactable.getValueAt(j, 3).toString());
               } else {
-                  totaldiscounts += Double.valueOf(sactable.getValueAt(j, 3).toString());
+                  totaldiscounts += bsParseDouble(sactable.getValueAt(j, 3).toString());
               }
           }
       }  
@@ -1115,9 +1115,9 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
       for (int j = 0; j < sactable.getRowCount(); j++) {
           if (sactable.getValueAt(j, 0).equals("tax")) {   
               if (sactable.getValueAt(j, 2).toString().equals("percent")) {
-                 totaltaxes +=  actamt * (Double.valueOf(sactable.getValueAt(j, 3).toString()) / 100);
+                 totaltaxes +=  actamt * (bsParseDouble(sactable.getValueAt(j, 3).toString()) / 100);
               } else {
-                  totaltaxes += Double.valueOf(sactable.getValueAt(j, 3).toString());
+                  totaltaxes += bsParseDouble(sactable.getValueAt(j, 3).toString());
               }          
           }
       }
@@ -1126,7 +1126,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
       // reassign net price in detail table
       double netprice = 0.00;
       for (int j = 0; j < detailtable.getRowCount(); j++) {
-      netprice = Double.valueOf(detailtable.getValueAt(j, 5).toString()) - ((detaildisc / 100) * Double.valueOf(detailtable.getValueAt(j, 5).toString()));
+      netprice = bsParseDouble(detailtable.getValueAt(j, 5).toString()) - ((detaildisc / 100) * bsParseDouble(detailtable.getValueAt(j, 5).toString()));
       detailtable.setValueAt(bsNumber(detaildisc), j, 6);
       detailtable.setValueAt(currformatDouble(netprice), j, 7);
       }
@@ -2125,8 +2125,8 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
             String[] descprice = invData.getItemPrice("c", ddpricegroup.getSelectedItem().toString(), detailtable.getValueAt(j,2).toString(), 
             detailtable.getValueAt(j,8).toString(), ddcurr.getSelectedItem().toString(), "1");
             
-            detailtable.setValueAt(Double.valueOf(descprice[1]), j, 5);
-            detailtable.setValueAt(Double.valueOf(descprice[1]), j, 7);
+            detailtable.setValueAt(bsParseDouble(descprice[1]), j, 5);
+            detailtable.setValueAt(bsParseDouble(descprice[1]), j, 7);
             }
             
             summarize();
