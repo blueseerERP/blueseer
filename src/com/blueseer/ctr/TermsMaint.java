@@ -38,6 +38,10 @@ import static com.blueseer.ctr.cusData.deleteTermsMstr;
 import static com.blueseer.ctr.cusData.getTermsMstr;
 import static com.blueseer.ctr.cusData.getTermsUsage;
 import static com.blueseer.ctr.cusData.updateTermsMstr;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatInt;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.callChangeDialog;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
@@ -372,8 +376,8 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
             discduedays.requestFocus();
             return false;
         }
-
-        if (! BlueSeerUtils.isParsableToInt(discpercent.getText())) {
+        
+        if (! BlueSeerUtils.isParsableToDouble(discpercent.getText())) {
             bsmf.MainFrame.show(getMessageTag(1028));
             discpercent.requestFocus();
             return false;
@@ -462,9 +466,9 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
     public cust_term createRecord() { 
         cust_term x = new cust_term(null, tbkey.getText().toString(),
                 tbdesc.getText().toUpperCase(),
-                duedays.getText(),
-                discduedays.getText(),
-                discpercent.getText(),
+                bsParseInt(duedays.getText()),  
+                bsParseInt(discduedays.getText()),
+                bsParseDouble(discpercent.getText()),
                 String.valueOf(BlueSeerUtils.boolToInt(cbsystemcode.isSelected())),
                 String.valueOf(BlueSeerUtils.boolToInt(cbmfi.isSelected())),
                 ddmfimonth.getSelectedItem().toString(),
@@ -476,14 +480,15 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
     public String[] updateForm() {
         tbkey.setText(x.cut_code());
         tbdesc.setText(x.cut_desc());
-        duedays.setText(x.cut_days());
-        discduedays.setText(x.cut_discdays());
-        discpercent.setText(x.cut_discpercent());
+        duedays.setText(bsFormatInt(x.cut_days()));
+        discduedays.setText(bsFormatInt(x.cut_discdays()));
+        discpercent.setText(bsFormatDouble(x.cut_discpercent()));
         cbsystemcode.setSelected(BlueSeerUtils.ConvertStringToBool(x.cut_syscode()));   
         cbmfi.setSelected(BlueSeerUtils.ConvertStringToBool(x.cut_mfi())); 
         ddmfimonth.setSelectedItem(x.cut_mfimonth());
         ddmfiday.setSelectedItem(x.cut_mfiday());
         setAction(x.m());
+        
         return x.m();  
     }
     
@@ -607,16 +612,31 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         duedays.setName("lblduedays"); // NOI18N
+        duedays.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                duedaysFocusLost(evt);
+            }
+        });
 
         jLabel3.setText("Due Days:");
         jLabel3.setName("lblduedays"); // NOI18N
 
         discduedays.setName("lbldiscduedays"); // NOI18N
+        discduedays.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                discduedaysFocusLost(evt);
+            }
+        });
 
         jLabel4.setText("Disc Due Days:");
         jLabel4.setName("lbldiscduedays"); // NOI18N
 
         discpercent.setName("lbldiscpercent"); // NOI18N
+        discpercent.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                discpercentFocusLost(evt);
+            }
+        });
 
         jLabel5.setText("Disc Percent%");
         jLabel5.setName("lbldiscpercent"); // NOI18N
@@ -809,6 +829,45 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
     private void btchangelogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btchangelogActionPerformed
         callChangeDialog(tbkey.getText(), this.getClass().getSimpleName());
     }//GEN-LAST:event_btchangelogActionPerformed
+
+    private void duedaysFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_duedaysFocusLost
+        String x = BlueSeerUtils.bsformat("", duedays.getText(), "0");
+        if (x.equals("error")) {
+            duedays.setText("");
+            duedays.setBackground(Color.yellow);
+            bsmf.MainFrame.show(getMessageTag(1000));
+            duedays.requestFocus();
+        } else {
+            duedays.setText(x);
+            duedays.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_duedaysFocusLost
+
+    private void discduedaysFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_discduedaysFocusLost
+        String x = BlueSeerUtils.bsformat("", discduedays.getText(), "0");
+        if (x.equals("error")) {
+            discduedays.setText("");
+            discduedays.setBackground(Color.yellow);
+            bsmf.MainFrame.show(getMessageTag(1000));
+            discduedays.requestFocus();
+        } else {
+            discduedays.setText(x);
+            discduedays.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_discduedaysFocusLost
+
+    private void discpercentFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_discpercentFocusLost
+        String x = BlueSeerUtils.bsformat("", discpercent.getText(), "2");
+        if (x.equals("error")) {
+            discpercent.setText("");
+            discpercent.setBackground(Color.yellow);
+            bsmf.MainFrame.show(getMessageTag(1000));
+            discpercent.requestFocus();
+        } else {
+            discpercent.setText(x);
+            discpercent.setBackground(Color.white);
+        }
+    }//GEN-LAST:event_discpercentFocusLost
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

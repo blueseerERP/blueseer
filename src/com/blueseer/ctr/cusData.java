@@ -565,9 +565,9 @@ public class cusData {
             if (! res.isBeforeFirst()) {
             psi.setString(1, x.cut_code);
             psi.setString(2, x.cut_desc);
-            psi.setString(3, x.cut_days);
-            psi.setString(4, x.cut_discdays);
-            psi.setString(5, x.cut_discpercent);
+            psi.setInt(3, x.cut_days);
+            psi.setInt(4, x.cut_discdays);
+            psi.setDouble(5, x.cut_discpercent);
             psi.setString(6, x.cut_mfi);
             psi.setString(7, x.cut_mfimonth);
             psi.setString(8, x.cut_mfiday);
@@ -591,9 +591,9 @@ public class cusData {
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql)) {
         ps.setString(1, x.cut_desc);
-        ps.setString(2, x.cut_days);
-        ps.setString(3, x.cut_discdays);
-        ps.setString(4, x.cut_discpercent);
+        ps.setInt(2, x.cut_days);
+        ps.setInt(3, x.cut_discdays);
+        ps.setDouble(4, x.cut_discpercent);
         ps.setString(5, x.cut_mfi);
         ps.setString(6, x.cut_mfimonth);
         ps.setString(7, x.cut_mfiday);
@@ -638,9 +638,9 @@ public class cusData {
                         m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
                         r = new cust_term(m, res.getString("cut_code"), 
                             res.getString("cut_desc"),
-                            res.getString("cut_days"),
-                            res.getString("cut_discdays"),
-                            res.getString("cut_discpercent"),
+                            res.getInt("cut_days"),
+                            res.getInt("cut_discdays"),
+                            res.getDouble("cut_discpercent"),
                             res.getString("cut_syscode"),
                             res.getString("cut_mfi"),
                             res.getString("cut_mfimonth"),
@@ -2663,11 +2663,11 @@ public class cusData {
     }
     
     
-    public record cust_term(String[] m, String cut_code, String cut_desc, String cut_days, 
-        String cut_discdays, String cut_discpercent, String cut_syscode, String cut_mfi,
+    public record cust_term(String[] m, String cut_code, String cut_desc, int cut_days, 
+        int cut_discdays, double cut_discpercent, String cut_syscode, String cut_mfi,
         String cut_mfimonth, String cut_mfiday) {
         public cust_term(String[] m) {
-            this(m,"","","","","","","","","");
+            this(m,"","",0,0,0.00,"","","","");
         }
     } 
   

@@ -701,6 +701,23 @@ public class BlueSeerUtils {
         return z;
     }
     
+    public static int bsParseInt(String x) {
+        // always returns . decimal based double
+        int z = 0;
+        if (! x.isEmpty()) {
+        NumberFormat nf = NumberFormat.getInstance(Locale.getDefault());
+        
+        Number number = 0;
+                    try {
+                        number = nf.parse(x.trim());
+                    } catch (ParseException ex) {
+                        bsmf.MainFrame.show(getMessageTag(1017) + "/" + x);
+                    }
+             z =  number.intValue();
+        }
+        return z;
+    }
+    
     
     public static String bsFormatDouble(double invalue, String precision) {
         String pattern = "";
@@ -739,6 +756,16 @@ public class BlueSeerUtils {
         outvalue = df.format(invalue); 
         return outvalue;
     }
+    
+    public static String bsFormatInt(int invalue) {
+        String outvalue = "";
+        String pattern = "#"; 
+        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());    
+        df.applyPattern(pattern);
+        outvalue = df.format(invalue); 
+        return outvalue;
+    }
+    
     
     public static String bsFormatDouble5(double invalue) {
         String outvalue = "";
@@ -782,7 +809,10 @@ public class BlueSeerUtils {
         }
         
        // invalue = invalue.replace(',', '\u066B'); ...need to convert if keyboard is US...otherwise if keyboard is 'ar' then no need to convert
-        
+        if (Locale.getDefault().getLanguage().equals("ar") && invalue.contains(".")) {
+            invalue = invalue.replace('.', '\u066B');
+        } 
+       
         DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());
         
         try {   
@@ -1204,9 +1234,13 @@ public class BlueSeerUtils {
     
     public static boolean isParsableToDouble(String i) {
         try {
-            Double.parseDouble(i);
+           // Double.parseDouble(i);
+            DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());
+            df.parse(i);
             return true;
         } catch (NumberFormatException nfe) {
+            return false;
+        } catch (ParseException ex) {
             return false;
         }
     }

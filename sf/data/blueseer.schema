@@ -421,7 +421,7 @@ CREATE TABLE IF NOT EXISTS `cust_term` (
   `cut_desc` varchar(100) NOT NULL  DEFAULT '',
   `cut_days` int(11) NOT NULL DEFAULT '0',
   `cut_discdays` int(11) NOT NULL DEFAULT '0',
-  `cut_discpercent` int(11) NOT NULL DEFAULT '0',
+  `cut_discpercent` decimal(14,5) NOT NULL DEFAULT '0',
   `cut_discstart` int(11) NOT NULL DEFAULT '0',
   `cut_duestart` int(11) NOT NULL DEFAULT '0',
   `cut_syscode` tinyint(1) NOT NULL DEFAULT '0',
