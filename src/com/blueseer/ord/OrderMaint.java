@@ -1328,7 +1328,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         setAction(so.m()); 
         btinvoice.setEnabled(canInvoice);
-        
+              
         so = null;
         sodlist = null;
         soslist = null;

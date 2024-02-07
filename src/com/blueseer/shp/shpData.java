@@ -1125,12 +1125,14 @@ public class shpData {
               double total = 0;
               String status = "";
               for (int j = 0; j < line.size(); j++) {
+                 // bsmf.MainFrame.show(qty.get(j).toString() + " / " + shippedqty.get(j).toString() + " / " + ordqty.get(j).toString());
                   total = bsParseDouble(qty.get(j).toString()) + bsParseDouble(shippedqty.get(j).toString());
                   if (total >= bsParseDouble(ordqty.get(j).toString())) {
                       status = getGlobalProgTag("closed");
                   } else {
                       status = linestatus.get(j).toString();
                   }
+                  
                   st.executeUpdate("update sod_det set sod_shipped_qty = " + "'" + total + "'" + ", sod_status = " + "'" + status + "'" + 
                            " where sod_nbr = " + "'" + ordernbr.get(j).toString() + "'" +
                            " and sod_line = " + "'" + line.get(j).toString() + "'" +
