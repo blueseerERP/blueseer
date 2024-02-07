@@ -62,6 +62,7 @@ import com.blueseer.utl.IBlueSeerT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.ComponentOrientation;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -119,6 +120,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import javax.swing.DefaultListModel;
@@ -137,6 +139,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     // global variable declarations
                 boolean isLoad = false;
+                Locale locale = Locale.getDefault();
                 public static Store certs = null;
                 public static api_mstr x = null;
                 public static ArrayList<apid_meta> apidmlist = null;
@@ -310,6 +313,9 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
        Component[] components = panel.getComponents();
        for (Component component : components) {
+           if (locale.getLanguage().equals("ar")) {
+            component.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+           }
            if (component instanceof JPanel) {
                     if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
                        ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
@@ -319,11 +325,13 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 if (component instanceof JLabel ) {
                     if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
                        ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                       
                     }
                 }
                 if (component instanceof JButton ) {
                     if (tags.containsKey("global.button." + component.getName())) {
                        ((JButton) component).setText(tags.getString("global.button." + component.getName()));
+                    
                     }
                 }
                 if (component instanceof JCheckBox) {
@@ -902,7 +910,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         jLabel18.setText("Content");
 
-        jLabel21.setText("URL Result");
+        jLabel21.setText("URL result");
         jLabel21.setName("lblresult"); // NOI18N
 
         btupdateurl.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/gear.png"))); // NOI18N
