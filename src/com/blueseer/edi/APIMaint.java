@@ -313,9 +313,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
        Component[] components = panel.getComponents();
        for (Component component : components) {
-           if (locale.getLanguage().equals("ar")) {
-            component.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-           }
+           
            if (component instanceof JPanel) {
                     if (tags.containsKey(this.getClass().getSimpleName() + ".panel." + component.getName())) {
                        ((JPanel) component).setBorder(BorderFactory.createTitledBorder(tags.getString(this.getClass().getSimpleName() +".panel." + component.getName())));
@@ -325,23 +323,33 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 if (component instanceof JLabel ) {
                     if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
                        ((JLabel) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
-                       
+                       if (locale.getLanguage().equals("ar")) {
+                        component.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+                       }
                     }
                 }
                 if (component instanceof JButton ) {
                     if (tags.containsKey("global.button." + component.getName())) {
                        ((JButton) component).setText(tags.getString("global.button." + component.getName()));
-                    
+                       if (locale.getLanguage().equals("ar")) {
+                        component.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+                       }
                     }
                 }
                 if (component instanceof JCheckBox) {
                     if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
                        ((JCheckBox) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                       if (locale.getLanguage().equals("ar")) {
+                        component.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+                       }
                     } 
                 }
                 if (component instanceof JRadioButton) {
                     if (tags.containsKey(this.getClass().getSimpleName() + ".label." + component.getName())) {
                        ((JRadioButton) component).setText(tags.getString(this.getClass().getSimpleName() +".label." + component.getName()));
+                       if (locale.getLanguage().equals("ar")) {
+                        component.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+                       }
                     } 
                 }
        }

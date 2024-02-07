@@ -854,7 +854,7 @@ public class shpData {
                     x[9] = res.getString("it_code");
                     x[10] = res.getString("it_phantom");
                     x[11] = res.getString("shd_bom");
-                    baseqty = OVData.getUOMBaseQty(x[0], x[5], x[2], Double.valueOf(x[1]));
+                    baseqty = OVData.getUOMBaseQty(x[0], x[5], x[2], bsParseDouble(x[1]));
                     x[12] = String.valueOf(baseqty);
                     if (x[3].isEmpty()) {x[3] = x[7];} // if no loc in shipper...use item default loc
                     if (x[4].isEmpty()) {x[4] = x[8];} // if no wh in shipper...use item default wh
