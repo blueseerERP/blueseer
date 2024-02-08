@@ -64,10 +64,10 @@ import java.util.Map;
  */
 public class fglData {
   
-    public static String[] addGL(gl_verb x) {
+    public static String[] addGL(gl_pair x) {
         String[] m;
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());) {
-             glEntryXPv2(con, x);
+             glEntryXPpair(con, x);
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
         } catch (SQLException s) {
 	       MainFrame.bslog(s);
@@ -75,7 +75,80 @@ public class fglData {
         }
         return m;
     }
+    
+    public static String[] addGL(ArrayList<gl_tran> x) {
+        String[] m;
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());) {
+            for (gl_tran gt : x) {
+                _glTranAdd(con, gt);
+            } 
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static String[] addGL(gl_tran x) {
+        String[] m;
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());) {
+            _glTranAdd(con, x);
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    
+    private static void _glTranAdd(Connection bscon, gl_tran gv) throws SQLException {
         
+          String ref =  (gv.glt_ref().length() > 20) ? gv.glt_ref().substring(0,20) : gv.glt_ref();
+          String desc = (gv.glt_desc().length() > 30) ? gv.glt_desc().substring(0,30) : gv.glt_desc();
+         
+          
+       if ( gv.glt_amt() != 0 && ! gv.glt_acct().isBlank()) {
+        String sqlInsert = "insert into gl_tran "
+                        + "( glt_acct, glt_cc, glt_effdate, glt_amt, glt_base_amt, glt_curr, glt_base_curr, glt_ref, glt_site, glt_type, glt_desc, glt_doc, glt_entdate ) " +
+                          " values (?,?,?,?,?,?,?,?,?,?,?,?,?) ";   
+        PreparedStatement ps = bscon.prepareStatement(sqlInsert);  
+            ps.setString(1, gv.glt_acct());
+            ps.setString(2, gv.glt_cc());
+            ps.setString(3, gv.glt_effdate());
+            ps.setString(4, currformatDoubleUS(-1 * gv.glt_amt()));
+            ps.setString(5, currformatDoubleUS(-1 * gv.glt_base_amt()));
+            ps.setString(6, gv.glt_curr());
+            ps.setString(7, gv.glt_base_curr());
+            ps.setString(8, ref);
+            ps.setString(9, gv.glt_site());
+            ps.setString(10, gv.glt_type());
+            ps.setString(11, desc);
+            ps.setString(12, gv.glt_doc());
+            ps.setString(13, BlueSeerUtils.setDateFormatNull(new java.util.Date()));
+            ps.executeUpdate();
+            ps.close();
+       
+       } // if amount does not equal 0
+      }
+    
+    public static String[] deleteGL(String x) {
+     String[] m = new String[2];
+        String sql = "delete from gl_tran where glt_ref = ?; ";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x);
+        int rows = ps.executeUpdate();
+        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    
     public static String[] addAcctMstr(AcctMstr x) {
         String[] m = new String[2];
         String sqlSelect = "select * from ac_mstr where ac_id = ?";
@@ -1235,7 +1308,7 @@ public class fglData {
        } // if amount does not equal 0
       }
      
-    public static void glEntryXPv2(Connection bscon, gl_verb gv) throws SQLException {
+    public static void glEntryXPpair(Connection bscon, gl_pair gv) throws SQLException {
           
            /* any amount = 0 passed to this method will be ignored */
            /* record entry requires a non-blank acct_cr and acct_dr
@@ -5419,11 +5492,11 @@ return myarray;
         }
     }
     
-    public record gl_verb(String[] m, String glv_acct_cr, String glv_cc_cr, 
+    public record gl_pair(String[] m, String glv_acct_cr, String glv_cc_cr, 
         String glv_acct_dr, String glv_cc_dr, String glv_date,
         Double glv_amt, Double glv_baseamt, String glv_curr, String glv_basecurr,
         String glv_ref, String glv_type, String glv_site, String glv_desc, String glv_doc) {
-        public gl_verb(String[] m) {
+        public gl_pair(String[] m) {
             this(m, "", "", "", "", "", 0.00, 0.00, "", "", "",
                     "", "", "", "");
         }

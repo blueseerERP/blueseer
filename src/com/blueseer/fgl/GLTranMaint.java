@@ -53,9 +53,14 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.fgl.fglData.addGL;
+import static com.blueseer.fgl.fglData.deleteGL;
+import com.blueseer.fgl.fglData.gl_tran;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatInt;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import static com.blueseer.utl.BlueSeerUtils.currformat;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalLabelTag;
@@ -69,6 +74,7 @@ import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.lurb2;
 import com.blueseer.utl.DTData;
+import static com.blueseer.utl.OVData.canUpdate;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -81,6 +87,7 @@ import java.awt.event.MouseListener;
 import java.sql.Connection;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -93,6 +100,8 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.JViewport;
+import javax.swing.SwingWorker;
 
 /**
  *
@@ -462,7 +471,222 @@ public class GLTranMaint extends javax.swing.JPanel {
        }
     }
     
+     // functions implemented
     
+    public void executeTask(BlueSeerUtils.dbaction x, String[] y) { 
+      
+        class Task extends SwingWorker<String[], Void> {
+       
+          String type = "";
+          String[] key = null;
+          
+          public Task(BlueSeerUtils.dbaction type, String[] key) { 
+              this.type = type.name();
+              this.key = key;
+          } 
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
+            
+             switch(this.type) {
+                case "add":
+                    message = addRecord(key);
+                    break;
+                case "delete":
+                    message = deleteRecord(key);    
+                    break;
+                default:
+                    message = new String[]{"1", "unknown action"};
+            }
+            
+            return message;
+        }
+ 
+        
+       public void done() {
+            try {
+            String[] message = get();
+            BlueSeerUtils.endTask(message);
+            initvars(null);
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x, y); 
+       z.execute(); 
+       
+    }
+   
+    public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        JScrollPane scrollpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else if (myobj instanceof JScrollPane) {
+           scrollpane = (JScrollPane) myobj;    
+        } else {
+            return;
+        }
+        
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                if (component instanceof JLabel || component instanceof JTable ) {
+                    continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                if (component instanceof JScrollPane) {
+                    setPanelComponentState((JScrollPane) component, b);
+                }
+                
+                component.setEnabled(b);
+            }
+        }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    
+                    component.setEnabled(b);
+                    
+                }
+            }
+            if (scrollpane != null) {
+                scrollpane.setEnabled(b);
+                JViewport viewport = scrollpane.getViewport();
+                Component[] componentspane = viewport.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    component.setEnabled(b);
+                }
+            }
+    } 
+    
+    public boolean validateInput(BlueSeerUtils.dbaction x) {
+               
+        Map<String,Integer> f = OVData.getTableInfo("gl_tran");
+        int fc;
+        
+        fc = checkLength(f,"glt_ref");        
+        if (tbref.getText().length() > fc || tbref.getText().isEmpty()) { 
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbref.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"glt_site");
+        if (ddsite.getSelectedItem() == null || ddsite.getSelectedItem().toString().length() > fc) { 
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            ddsite.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"glt_curr");
+        if (ddcurr.getSelectedItem() == null || ddcurr.getSelectedItem().toString().length() > fc) { 
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            ddcurr.requestFocus();
+            return false;
+        }
+               
+        if (! ddtype.getSelectedItem().toString().equals("simple") &&  Double.compare(bsParseDouble(tbcontrolamt.getText()), positiveamt) != 0 ) {
+            String s_positiveamt = bsFormatDouble(positiveamt);
+            bsmf.MainFrame.show(getMessageTag(1039, currformat(tbcontrolamt.getText()) + "/" + s_positiveamt));
+            return false;
+        }
+
+        if (! ddtype.getSelectedItem().toString().equals("simple") && bsParseDouble(labeltotal.getText().toString()) != 0) {
+            bsmf.MainFrame.show(getMessageTag(1040));
+            return false;
+        } 
+        
+        String[] caldate = fglData.getGLCalForDate(BlueSeerUtils.bsdate.format(effdate.getDate()));
+        if (caldate == null || caldate[0].isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1038));
+            return false;
+        }
+
+        if ( OVData.isGLPeriodClosed(BlueSeerUtils.bsdate.format(effdate.getDate()))) {
+            bsmf.MainFrame.show(getMessageTag(1035));
+            return false;
+        }
+                    
+        // if reversing...check and make sure next immediate period is open
+        String nextstartdate = "";
+        if (! caldate[0].isEmpty() && type.equals("RV")) {
+            int nextperiod = Integer.valueOf(caldate[1]) + 1;
+            int thisyear = Integer.valueOf(caldate[0]);
+              if (nextperiod > 12) {
+                  thisyear++;
+                  nextperiod = 1;
+              }
+              ArrayList<String> nextcal = fglData.getGLCalByYearAndPeriod(String.valueOf(thisyear), String.valueOf(nextperiod));
+              if (nextcal.isEmpty()) {
+               bsmf.MainFrame.show(getMessageTag(1042));
+               return false;
+              }
+              if (! nextcal.isEmpty() && nextcal.get(4).toString().equals("closed")) {
+               bsmf.MainFrame.show(getMessageTag(1041));
+               return false;
+              }
+              nextstartdate = String.valueOf(nextcal.get(2));
+        }
+
+        if (type.equals("RV") && nextstartdate.isEmpty()) {
+             bsmf.MainFrame.show(getMessageTag(1043));
+             return false;
+        }
+        
+       
+               
+        return true;
+    }
+    
+    
+    public String[] addRecord(String[] x) {
+     String[] m = addGL(createRecord());
+         return m;
+     }
+        
+    public String[] deleteRecord(String[] x) {
+        String[] m = new String[2];
+        boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
+        if (proceed) {
+         m = deleteGL(tbref.getText()); 
+         initvars(null);
+        } else {
+           m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
+        }
+       
+        
+        return m;  
+     }
+        
     public void initvars(String[] arg) {
        
        clearAll();
@@ -477,9 +701,76 @@ public class GLTranMaint extends javax.swing.JPanel {
              } else {
               getGLTranHist(arg[0]);    
              }
-         }
+         }  
+    }
+    
+    public ArrayList<gl_tran> createRecord() {
+        ArrayList<gl_tran> glv = new ArrayList<gl_tran>();
+        String curr = OVData.getDefaultCurrency();
+        String basecurr = curr;
+        double amt = 0.00;
+        // for reversing type
+        String[] caldate = fglData.getGLCalForDate(BlueSeerUtils.bsdate.format(effdate.getDate()));
+        String nextstartdate = "";
+        if (! caldate[0].isEmpty() && type.equals("RV")) {
+            int nextperiod = Integer.valueOf(caldate[1]) + 1;
+            int thisyear = Integer.valueOf(caldate[0]);
+              if (nextperiod > 12) {
+                  thisyear++;
+                  nextperiod = 1;
+              }
+              ArrayList<String> nextcal = fglData.getGLCalByYearAndPeriod(String.valueOf(thisyear), String.valueOf(nextperiod));
+              nextstartdate = String.valueOf(nextcal.get(2));
+        }
         
-            
+        for (int i = 0; i < transtable.getRowCount(); i++) {
+            amt = bsParseDouble(transtable.getValueAt(i, 4).toString());
+            gl_tran gv = new gl_tran(null,
+                    "", // id DB assigned
+                    tbref.getText(), // ref
+                    BlueSeerUtils.bsdate.format(effdate.getDate()), // effdate
+                    dateentered.getText(), // entdate
+                    "0", // timestamp DB assigned
+                    transtable.getValueAt(i, 1).toString(), // acct
+                    transtable.getValueAt(i, 2).toString(), // cc
+                    bsParseDouble(transtable.getValueAt(i, 4).toString().replace(defaultDecimalSeparator, '.')), //amt
+                    bsParseDouble(transtable.getValueAt(i, 4).toString().replace(defaultDecimalSeparator, '.')), // baseamt
+                    ddsite.getSelectedItem().toString(), //site 
+                    tbref.getText(), // doc
+                    transtable.getValueAt(i, 0).toString(), // line
+                    type, // type
+                    curr, // currency
+                    basecurr, // base currency
+                    transtable.getValueAt(i, 3).toString(), // desc
+                    tbuserid.getText() // userid
+            );
+        glv.add(gv);
+        
+        if (type.equals("RV")) {
+            gl_tran gr = new gl_tran(null,
+                    "", // id DB assigned
+                    tbref.getText(), // ref
+                    nextstartdate, // effdate
+                    dateentered.getText(), // entdate
+                    "0", // timestamp DB assigned
+                    transtable.getValueAt(i, 1).toString(), // acct
+                    transtable.getValueAt(i, 2).toString(), // cc
+                    -1 * bsParseDouble(transtable.getValueAt(i, 4).toString().replace(defaultDecimalSeparator, '.')), //amt
+                    -1 * bsParseDouble(transtable.getValueAt(i, 4).toString().replace(defaultDecimalSeparator, '.')), // baseamt
+                    ddsite.getSelectedItem().toString(), //site 
+                    tbref.getText(), // doc
+                    transtable.getValueAt(i, 0).toString(), // line
+                    type, // type
+                    curr, // currency
+                    basecurr, // base currency
+                    transtable.getValueAt(i, 3).toString(), // desc
+                    tbuserid.getText() // userid
+            );
+        glv.add(gr);
+        }
+        
+        }
+        return glv;
     }
     
     public static void lookUpFrameAcctDesc(String box) {
@@ -629,6 +920,8 @@ public class GLTranMaint extends javax.swing.JPanel {
         
     }
 
+   
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -1079,157 +1372,11 @@ public class GLTranMaint extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btsubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btsubmitActionPerformed
-        try {
-            
-            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-            Connection con = null;
-            if (ds != null) {
-            con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                boolean proceed = true;
-                String nextstartdate = "";
-                Double amt = 0.00;
-                
-                if (! ddtype.getSelectedItem().toString().equals("simple") &&  Double.compare(bsParseDouble(tbcontrolamt.getText()), positiveamt) != 0 ) {
-                    proceed = false;
-                    String s_positiveamt = bsFormatDouble(positiveamt);
-                    bsmf.MainFrame.show(getMessageTag(1039, currformat(tbcontrolamt.getText()) + "/" + s_positiveamt));
-                    return;
-                }
-                
-                if (! ddtype.getSelectedItem().toString().equals("simple") && bsParseDouble(labeltotal.getText().toString()) != 0) {
-                    proceed = false;
-                    bsmf.MainFrame.show(getMessageTag(1040));
-                    return;
-                }
-                   
-                String[] caldate = fglData.getGLCalForDate(dfdate.format(effdate.getDate()));
-                if (caldate == null || caldate[0].isEmpty()) {
-                    proceed = false;
-                    bsmf.MainFrame.show(getMessageTag(1038));
-                    return;
-                }
-                
-                if ( OVData.isGLPeriodClosed(dfdate.format(effdate.getDate()))) {
-                    proceed = false;
-                    bsmf.MainFrame.show(getMessageTag(1035));
-                    return;
-                }
-                    
-                // if reversing...check and make sure next immediate period is open
-                if (! caldate[0].isEmpty() && type.equals("RV")) {
-                    int nextperiod = Integer.valueOf(caldate[1]) + 1;
-                    int thisyear = Integer.valueOf(caldate[0]);
-                      if (nextperiod > 12) {
-                          thisyear++;
-                          nextperiod = 1;
-                      }
-                      ArrayList<String> nextcal = fglData.getGLCalByYearAndPeriod(String.valueOf(thisyear), String.valueOf(nextperiod));
-                      if (nextcal.isEmpty()) {
-                       proceed = false;
-                       bsmf.MainFrame.show(getMessageTag(1042));
-                       return;
-                      }
-                      if (! nextcal.isEmpty() && nextcal.get(4).toString().equals("closed")) {
-                       proceed = false;
-                       bsmf.MainFrame.show(getMessageTag(1041));
-                       return;
-                      }
-                      nextstartdate = String.valueOf(nextcal.get(2));
-                }
-                
-                if (type.equals("RV") && nextstartdate.isEmpty()) {
-                     proceed = false;
-                     bsmf.MainFrame.show(getMessageTag(1043));
-                     return;
-                }
-                
-                String curr = OVData.getDefaultCurrency();
-                String basecurr = curr;
-                String desc = "";
-                
-                if (proceed) {
-                    for (int i = 0; i < transtable.getRowCount(); i++) {
-                        amt = bsParseDouble(transtable.getValueAt(i, 4).toString());
-                        
-                        if (transtable.getValueAt(i, 3).toString().length() > 30) {
-                          desc = transtable.getValueAt(i, 3).toString().substring(0,30);
-                        } else {
-                          desc = transtable.getValueAt(i, 3).toString();  
-                        }
-                        
-                        st.executeUpdate("insert into gl_tran "
-                        + "(glt_line, glt_acct, glt_cc, glt_effdate, glt_amt, glt_base_amt, glt_curr, glt_base_curr, glt_ref, glt_doc, glt_site, glt_type, glt_desc, glt_userid, glt_entdate )"
-                        + " values ( " 
-                        + "'" + transtable.getValueAt(i, 0).toString() + "'" + ","
-                        + "'" + transtable.getValueAt(i, 1).toString() + "'" + ","
-                        + "'" + transtable.getValueAt(i, 2).toString() + "'" + ","
-                        + "'" + dfdate.format(effdate.getDate()) + "'" + ","
-                        + "'" + transtable.getValueAt(i, 4).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                        + "'" + transtable.getValueAt(i, 4).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                        + "'" + curr + "'" + ","
-                        + "'" + basecurr + "'" + ","        
-                        + "'" + tbref.getText() + "'" + "," // ref
-                        + "'" + tbref.getText() + "'" + ","  // doc
-                        + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                        + "'" + type + "'" + ","
-                        + "'" + desc + "'" + ","
-                        + "'" + tbuserid.getText() + "'" + ","
-                         + "'" + dateentered.getText() + "'"
-                                + ")"
-                        + ";" );
-                        
-                        //if reversing...add entries to next immediate period start date
-                        if (type.equals("RV")) {
-                            st.executeUpdate("insert into gl_tran "
-                        + "(glt_line, glt_acct, glt_cc, glt_effdate, glt_amt, glt_base_amt, glt_curr, glt_base_curr, glt_ref, glt_doc, glt_site, glt_type, glt_desc, glt_userid, glt_entdate )"
-                        + " values ( " 
-                        + "'" + transtable.getValueAt(i, 0).toString() + "'" + ","
-                        + "'" + transtable.getValueAt(i, 1).toString() + "'" + ","
-                        + "'" + transtable.getValueAt(i, 2).toString() + "'" + ","
-                        + "'" + nextstartdate + "'" + ","
-                        + "'" + String.valueOf(-1 * amt).replace(defaultDecimalSeparator, '.') + "'" + ","
-                        + "'" + String.valueOf(-1 * amt).replace(defaultDecimalSeparator, '.') + "'" + ","
-                        + "'" + curr + "'" + ","
-                        + "'" + basecurr + "'" + ","         
-                        + "'" + tbcontrolamt.getText() + "'" + ","
-                        + "'" + tbref.getText() + "'" + ","
-                        + "'" + ddsite.getSelectedItem().toString() + "'" + ","
-                        + "'" + type + "'" + ","
-                        + "'" + transtable.getValueAt(i, 3).toString() + "'" + ","
-                        + "'" + tbuserid.getText() + "'" + ","
-                         + "'" + dateentered.getText() + "'"
-                                + ")"
-                        + ";" );
-                        }
-                            
-                        
-                    }
-                    bsmf.MainFrame.show(getMessageTag(1007));
-                    initvars(null);
-                    // btQualProbAdd.setEnabled(false);
-                } // if proceed
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-           
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+        if (! validateInput(BlueSeerUtils.dbaction.add)) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask(BlueSeerUtils.dbaction.add, new String[]{tbref.getText()});
     }//GEN-LAST:event_btsubmitActionPerformed
 
     private void btdeleteALLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteALLActionPerformed

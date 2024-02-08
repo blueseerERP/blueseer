@@ -27,7 +27,7 @@ package com.blueseer.inv;
 
 
 import static bsmf.MainFrame.tags;
-import com.blueseer.fgl.fglData.gl_verb;
+import com.blueseer.fgl.fglData.gl_pair;
 import static com.blueseer.fgl.fglData.setGLRecNbr;
 import static com.blueseer.inv.invData.getItemMstr;
 import com.blueseer.inv.invData.in_mstr;
@@ -761,7 +761,7 @@ public class InventoryMaint extends javax.swing.JPanel {
             acct_dr = invacct;
             cc_dr = prodline;
         }
-            gl_verb gv = new gl_verb(null,
+            gl_pair gv = new gl_pair(null,
                     invacct, 
                     prodline, 
                     acct, 

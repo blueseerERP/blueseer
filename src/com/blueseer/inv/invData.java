@@ -34,7 +34,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.fgl.fglData;
-import com.blueseer.fgl.fglData.gl_verb;
+import com.blueseer.fgl.fglData.gl_pair;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsformat;
@@ -1747,7 +1747,7 @@ public class invData {
     return rows;
     }
     
-    public static String[] inventoryAdjustmentTransaction(tran_mstr tm, in_mstr in, gl_verb gv) {
+    public static String[] inventoryAdjustmentTransaction(tran_mstr tm, in_mstr in, gl_pair gv) {
         String[] m = new String[2];
         Connection bscon = null;
         PreparedStatement ps = null;
@@ -1773,7 +1773,7 @@ public class invData {
             /* do _addInMstr */
             _addUpdateInMstr(in, isInventorySerialized, bscon);
             /* do glEntryXPv2 */
-            fglData.glEntryXPv2(bscon, gv);
+            fglData.glEntryXPpair(bscon, gv);
                         
             bscon.commit();
             m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1125)};
