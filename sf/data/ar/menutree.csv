@@ -1,309 +1,310 @@
-CustomerMenu,CustMaint,1,JMenuItem,Customer Maintenance,,,,1,1
-CustomerMenu,CustReport1,2,JMenuItem,Customer Browse,,1,,1,1
-CustomerMenu,CustXrefMaint,3,JMenuItem,Customer Xref Maint,,,,1,1
-CustomerMenu,CustXrefBrowse,4,JMenuItem,Customer Xref Browse,,,,1,1
-CustomerMenu,CustPriceMaint,5,JMenuItem,Customer Price Maintenance,,,,1,1
-CustomerMenu,CustPriceReport,6,JMenuItem,Customer Price Browse,,,,1,1
-CustomerMenu,CusRptPicker,7,JMenuItem,Customer Report Selector,,,,1,1
-CustomerMenu,CustomerReports,8,JMenu,Other Customer Reports,,,,1,1
-CustomerMenu,CustControl,9,JMenuItem,Customer Control,,,,1,1
-عنوان,CustomerMenu,1,JMenu,Customer Menu,,,,1,1
-عنوان,VendorMenu,2,JMenu,Vendor Menu,,,,1,1
-عنوان,EDIMenu,3,JMenu,EDI Menu,,,,1,1
-عنوان,LabelMenu,4,JMenu,Label Menu,,,,1,1
-عنوان,CarrierMaint,5,JMenuItem,Carrier Maintenance,,,,1,1
-عنوان,CarrierBrowse,6,JMenuItem,Carrier Browse,,1,,1,1
-عنوان,TermsMaint,7,JMenuItem,Terms Maintenance,,,,1,1
-عنوان,TermsBrowse,8,JMenuItem,Terms Browse,,1,,1,1
-عنوان,TaxMaint,9,JMenuItem,Tax Maintenance,,,,1,1
-عنوان,TaxBrowse,10,JMenuItem,Tax Browse,,1,,1,1
-CustomerReports,chart_sales,1,JMenuItem,Chart Reporting,,1,,1,1
-VendorMenu,VendMaint,1,JMenuItem,Vendor Maintenance,,,,1,1
-VendorMenu,VendBrowse,2,JMenuItem,Vendor Browse,,1,,1,1
-VendorMenu,VendXrefMaint,3,JMenuItem,Vendor Xref Maintenance,,,,1,1
-VendorMenu,VendXrefRpt1,4,JMenuItem,Vendor Xref Browse,,,,1,1
-VendorMenu,VendPriceMaint,5,JMenuItem,Vendor Price Maintenance,,,,1,1
-VendorMenu,VendPriceRpt1,6,JMenuItem,Vendor Price Browse,,,,1,1
-VendorMenu,VenRptPicker,7,JMenuItem,Vendor Report Selector,,,,1,1
-VendorMenu,VendControl,8,JMenuItem,Vendor Control,,,,1,1
-شاحنة,CFOMaint,1,JMenuItem,Freight Order Maintenance,,,,1,1
-شاحنة,CFOBrowse,2,JMenuItem,Freight Order Report,,,,1,1
-شاحنة,CFODriverWindow,3,JMenuItem,Order/Driver Schedule,,,,1,1
-شاحنة,VehicleMaint,4,JMenuItem,Vehicle Management,,,,1,1
-شاحنة,VehicleBrowse,5,JMenuItem,Vehicle Browse,,1,,1,1
-شاحنة,DriverMaint,6,JMenuItem,Driver Management,,,,1,1
-شاحنة,DriverBrowse,7,JMenuItem,Driver Browse,,1,,1,1
-شاحنة,BrokerMaint,8,JMenuItem,Broker Management,,,,1,1
-شاحنة,BrokerBrowse,9,JMenuItem,Broker Browse,,1,,1,1
-شاحنة,CFOControl,10,JMenuItem,Freight Control,,,,1,1
-EDI,EDILoad,1,JMenuItem,EDI Load,,,,1,1
-EDI,EDILog,2,JMenuItem,EDI Log,,,,1,1
-EDI,EDIConfMenu,3,JMenu,EDI Configuration Menu,,,,1,1
-EDI,EDITranMenu,4,JMenu,EDI Translation Menu,,,,1,1
-EDI,EDICommMenu,5,JMenu,EDI Communications Menu,,,,1,1
-EDI,EDIWkflMenu,6,JMenu,EDI WorkFlow Menu,,,,1,1
-EDI,EDIExport,7,JMenuItem,EDI Export,,,,1,1
-EDI,EDIControl,8,JMenuItem,EDI Control,,,,1,1
-EDIConfMenu,EDIPartnerMaint,1,JMenuItem,EDI Partner Maintenance,,,,1,1
-EDIConfMenu,EDIPartnerBrowse,2,JMenuItem,EDI Partner Browse,,1,,1,1
-EDIConfMenu,EDIPartnerDocMaint,3,JMenuItem,Partner Transaction Maintenance,,,,1,1
-EDIConfMenu,EDIPartnerDocBrowse,4,JMenuItem,EDI Partner Transaction Browse,,1,,1,1
-EDIConfMenu,EDIDocumentMaint,5,JMenuItem,Document Recognition Maintenance,,,,1,1
-EDIConfMenu,EDIXrefMaint,6,JMenuItem,EDI Xref Maintenance,,,,1,1
-EDIConfMenu,EDIXrefBrowse,7,JMenuItem,EDI Xref Browse,,1,,1,1
-EDITranMenu,MapMaint,1,JMenuItem,Map Maintenance,,,,1,1
-EDITranMenu,StructMaint,2,JMenuItem,Structure File Maintenance,,,,1,1
-EDIWkflMenu,WorkFlowMaint,1,JMenuItem,WorkFlow Maintenance,,,,1,1
-EDIWkflMenu,WorkFlowBrowse,2,JMenuItem,WorkFlow Browse,,1,,1,1
-EDIWkflMenu,WorkFlowLog,3,JMenuItem,WorkFlow Log,,1,,1,1
-EDIWkflMenu,EDIUtilities,4,JMenuItem,EDI Utilities,,,,1,1
-EDICommMenu,APIMaint,1,JMenuItem,API Maintenance,,,,1,1
-EDICommMenu,APIBrowse,2,JMenuItem,API Browse,,,,1,1
-EDICommMenu,APILog,3,JMenuItem,API Log,,,,1,1
-EDICommMenu,AS2Maint,4,JMenuItem,AS2 Maintenance,,,,1,1
-EDICommMenu,AS2Browse,5,JMenuItem,AS2 Browse,,1,,1,1
-EDICommMenu,AS2Log,6,JMenuItem,AS2 Log,,,,1,1
-EDICommMenu,FTPMaint,7,JMenuItem,FTP/sFTP Maintenance,,,,1,1
-LabelMenu,LabelsContGeneric,1,JMenuItem,Container Labels,,,,1,1
-LabelMenu,AddrLabel,2,JMenuItem,Address Labels,,,,1,1
-LabelMenu,LabelBrowse,3,JMenuItem,Label Browse,,1,,1,1
-LabelMenu,LabelFileMaint,4,JMenuItem,Label File Maintenance,,,,1,1
-LabelMenu,LabelFileBrowse,5,JMenuItem,Label File Browse,,1,,1,1
-شراء,POMaintMenu,1,JMenuItem,Purchase Order Maintenance,,,,1,1
-شراء,POBrowse,2,JMenuItem,Purchase Order Browse,,1,,1,1
-شراء,ReceiverMaintMenu,3,JMenuItem,Receiver Maintenance,,,,1,1
-شراء,RecvBrowse,4,JMenuItem,Receiver Browse,,1,,1,1
-شراء,RecvByPOBrowse,5,JMenuItem,Receiver By PO Browse,,1,,1,1
-شراء,PurRptPicker,6,JMenuItem,Purchasing Report Selector,,1,,1,1
-شراء,RequisitionMenu,7,JMenu,Requisition Menu,,,,1,1
-شراء,POControl,8,JMenuItem,PO Control,,1,,1,1
-RequisitionMenu,ReqMaint,1,JMenuItem,Requisition Maintenance,,,,1,1
-RequisitionMenu,ReqBrowseAll,2,JMenuItem,Requisition Browse,,1,,1,1
-RequisitionMenu,PendReqRpt1,5,JMenuItem,Pending Requisitions,,1,,1,1
-RequisitionMenu,ApprovedReqBrowse,3,JMenuItem,Approved Requisitions,,1,,1,1
-RequisitionMenu,ReqPendingApproval,4,JMenuItem,Pending By Approver,,1,,1,1
-RequisitionMenu,ReqByUserRpt,6,JMenuItem,Requistions By User,,1,,1,1
-RequisitionMenu,ReqChartsMenu,7,JMenu,Chart Menu,,,,1,1
-ReqChartsMenu,chart_requisition,1,JMenuItem,Chart Reporting,,1,,1,1
-طلب,OrderMaint,1,JMenuItem,Order Maintenance,,,,1,1
-طلب,OrderBrowse,2,JMenuItem,Order Browse,,1,,1,1
-طلب,ServiceOrderMaint,3,JMenuItem,Service Order Maintenance,,,,1,1
-طلب,ServiceOrderBrowse,4,JMenuItem,Service Order Browse,,,,1,1
-طلب,QuoteMaint,5,JMenuItem,Quote Maintenance,,,,1,1
-طلب,QuoteBrowse,6,JMenuItem,Quote Browse,,,,1,1
-طلب,OrderSourceBrowse,7,JMenuItem,Order Source Browse,,1,,1,1
-طلب,OrdLineBrowse,8,JMenuItem,Order Line Browse,,1,,1,1
-طلب,SchedOrdBrowse,9,JMenuItem,Sched Order Browse,,1,,1,1
-طلب,OrdRptPicker,10,JMenuItem,Order Report Selector,,,,1,1
-طلب,OrderReports,11,JMenu,Other Reports,,,,1,1
-طلب,POSMenu,12,JMenu,POS Menu,,,,1,1
-طلب,DOMenu,13,JMenu,Distribution Menu,,,,1,1
-طلب,OrderSource,14,JMenuItem,Order Source,,,,1,1
-طلب,OrderControl,15,JMenuItem,Order Control,,,,1,1
-طلبReports,chart_order,1,JMenuItem,Chart Reporting,,1,,1,1
-شحن,ShipMaint,1,JMenuItem,Shipper Maintenance,,,,1,1
-شحن,ShipMaintSerial,2,JMenuItem,Shipper Maintenance (Serialized),,,,1,1
-شحن,ShipperBrowse,3,JMenuItem,Shipper Browse ,,1,,1,1
-شحن,ShipperBrowseDet,4,JMenuItem,Shipper Detail Browse,,1,,1,1
-شحن,ShipConfirm,5,JMenuItem,Shipper Confirm,,,,1,1
-شحن,ShipUnconfirm,6,JMenuItem,Shipper UnConfirm,,,,1,1
-شحن,ShpRptPicker,7,JMenuItem,Shipping Report Selector,,,,1,1
-شحن,ShipReports,8,JMenu,Other Reports,,,,1,1
-شحن,ShipperControl,9,JMenuItem,Shipper Control,,,,1,1
-ShipReports,chart_shipping,1,JMenuItem,Chart Reporting,,1,,1,1
-تمويل,LedgerSetupMenu,1,JMenu,Ledger Setup,,,,1,1
-LedgerSetupMenu,AcctMaint,1,JMenuItem,Account Maintenance,,,,1,1
-LedgerSetupMenu,AcctBrowse,2,JMenuItem,Account Browse,,1,,1,1
-LedgerSetupMenu,DeptMaint,3,JMenuItem,Dept/CC Maintenance,,,,1,1
-LedgerSetupMenu,DeptBrowse,4,JMenuItem,Dept/CC Browse,,1,,1,1
-LedgerSetupMenu,GLCalMaint,5,JMenuItem,Ledger Calendar,,,,1,1
-LedgerSetupMenu,CalendarBrowse,6,JMenuItem,Ledger Calendar Browse,,1,,1,1
-LedgerSetupMenu,BankMaint,7,JMenuItem,Bank Maintenance,,,,1,1
-LedgerSetupMenu,BankBrowse,8,JMenuItem,Bank Browse,,1,,1,1
-LedgerSetupMenu,CurrencyMaint,9,JMenuItem,Currency Maintenance,,,,1,1
-LedgerSetupMenu,ExchangeMaint,10,JMenuItem,Exchange Rate Maintenance,,,,1,1
-LedgerSetupMenu,GLControl,11,JMenuItem,GL Control,,,,1,1
-LedgerSetupMenu,GLIncStmtDef,12,JMenuItem,Income Statement Definition,,,,1,1
-تمويل,LedgerReportsMenu,2,JMenu,Ledger Reports,,,,1,1
-LedgerReportsMenu,GLAcctBalSummaryByPeriod,1,JMenuItem,Account Balance Report,,,,1,1
-LedgerReportsMenu,TrialBalanceRpt,2,JMenuItem,Trial Balance Report,,,,1,1
-LedgerReportsMenu,GLAcctBalSummaryByYear,3,JMenuItem,Account Activity (Year),,,,1,1
-LedgerReportsMenu,AcctBalSumYTD,4,JMenuItem,Account Balance YTD,,,,1,1
-LedgerReportsMenu,UnPostedTransRpt,5,JMenuItem,Unposted Transactions,,1,,1,1
-LedgerReportsMenu,GLTranRpt1,6,JMenuItem,Ledger Transaction Report,,1,,1,1
-LedgerReportsMenu,LedgerBalanceExport,7,JMenuItem,Ledger Balance View/Export,,,,1,1
-LedgerReportsMenu,IncomeStatement1,8,JMenuItem,Income Statement,,1,,1,1
-LedgerReportsMenu,IncomeStatementYear,9,JMenuItem,Income Statement(Year),,1,,1,1
-LedgerReportsMenu,ReconAccount,10,JMenuItem,Account Reconciliation,,1,,1,1
-LedgerReportsMenu,ChartMain,11,JMenuItem,Chart Reporting,,1,,1,1
-تمويل,PostGLTrans,3,JMenuItem,Post Transactions,,,,1,1
-تمويل,GLTranMaint,4,JMenuItem,GL Transaction Maintenance,,,,1,1
-تمويل,ExpenseMaint,5,JMenuItem,Expense Maintenance,,,,1,1
-تمويل,ExpenseBrowse,6,JMenuItem,Expense Browse,,,,1,1
-تمويل,IncomeMaint,7,JMenuItem,Income Maintenance,,,,1,1
-تمويل,ARMenu,8,JMenu,Accounts Receivable Menu,,,,1,1
-تمويل,APMenu,9,JMenu,Accounts Payable Menu,,,,1,1
-تمويل,CashTransactionMenu,10,JMenu,Quick Cash Menu,,,,1,1
-تمويل,PayRollMenu,11,JMenu,Payroll Menu,,,,1,1
-ARMenu,ARPaymentMaint,1,JMenuItem,Payment Maintenance,,,,1,1
-ARMenu,ARPaymentBrowse,2,JMenuItem,Payment Browse,,1,,1,1
-ARMenu,ARMemoMaint,3,JMenuItem,Memo Maintenance,,,,1,1
-ARMenu,ARAgingView,4,JMenuItem,AR Aging View,,,,1,1
-ARMenu,ARTranRpt1,5,JMenuItem,AR Transacation Report,,1,,1,1
-ARMenu,InvoiceMaint,6,JMenuItem,Invoice View / Maintenance,,,,1,1
-ARMenu,InvoiceBrowse,7,JMenuItem,Invoice Browse ,,1,,1,1
-ARMenu,ARRptPicker,8,JMenuItem,AR Report Selector,,1,,1,1
-ARMenu,ARControl,9,JMenuItem,AR Control,,,,1,1
-PayRollMenu,PayRollMaint,1,JMenuItem,Payroll Maintenance,,,,1,1
-PayRollMenu,PayRollBrowse,2,JMenuItem,PayRoll Browse,,1,,1,1
-PayRollMenu,PayProfileMaint,3,JMenuItem,Pay Profile Maintenance,,,,1,1
-PayRollMenu,PayProfileBrowse,4,JMenuItem,Pay Profile Browse,,1,,1,1
-PayRollMenu,PayControl,5,JMenuItem,PayRoll Control,,1,,1,1
-CashTransactionMenu,CashTran,1,JMenuItem,Quick Cash Transaction,,,,1,1
-CashTransactionMenu,CashTranBrowse,2,JMenuItem,Quick Cash Browse,,,,1,1
-APMenu,VouchMaintPanel,1,JMenuItem,Voucher Maintenance,,,,1,1
-APMenu,VoucherBrowse,2,JMenuItem,Voucher Browse,,,,1,1
-APMenu,PaymentMaint,3,JMenuItem,Payment Maintenance,,,,1,1
-APMenu,APAgingView,4,JMenuItem,AP Aging View,,,,1,1
-APMenu,APRptPicker,5,JMenuItem,AP Report Selector,,,,1,1
-APMenu,APControl,6,JMenuItem,AP Control,,,,1,1
-جرد,ProdCodeMaint,1,JMenuItem,Product Code Maintenance,,,,1,1
-جرد,ProdCodeBrowse,2,JMenuItem,Product Code Browse,,1,,1,1
-جرد,WareHouseMaint,3,JMenuItem,Warehouse Maintenance,,,,1,1
-جرد,WareHouseBrowse,4,JMenuItem,Warehouse Browse,,1,,1,1
-جرد,LocationMaint,5,JMenuItem,Location Maintenance,,,,1,1
-جرد,LocationBrowse,6,JMenuItem,Location Browse,,1,,1,1
-جرد,ItemMenu,7,JMenu,Item Menu,,,,1,1
-جرد,RoutingMenu,8,JMenu,Routing Menu,,,,1,1
-جرد,BOMMenu,9,JMenu,BOM Menu,,,,1,1
-جرد,ProductionMenu,10,JMenu,Production Menu,,,,1,1
-جرد,ScrapMenu,11,JMenu,Scrap Menu,,,,1,1
-جرد,InvAdjustmentsMenu,12,JMenu,Inventory Adjustments Menu,,,,1,1
-جرد,ScheduleMenu,13,JMenu,Schedule Menu,,,,1,1
-جرد,MRPMenu,14,JMenu,MRP Menu,,,,1,1
-جرد,InvRptPicker,15,JMenuItem,Inventory Report Selector,,1,,1,1
-جرد,InventoryReportsMenu,16,JMenu,Inventory Misc Reports,,,,1,1
-جرد,InventoryCtrl,17,JMenuItem,Inventory Control,,,,1,1
-InvAdjustmentsMenu,LocationTransfer,1,JMenuItem,Location Transfer,,,,1,1
-InvAdjustmentsMenu,InventoryAdjustment,2,JMenuItem,Inventory Adjustment,,,,1,1
-جردReportsMenu,TransBrowse,1,JMenuItem,Transaction Browse,,1,,1,1
-ItemMenu,ItemMaint,1,JMenuItem,Item Maintenance,,,,1,1
-ItemMenu,ItemBrowse,2,JMenuItem,Item Browse,,1,,1,1
-ItemMenu,UOMMaint,3,JMenuItem,UOM Maintenance,,,,1,1
-ItemMenu,UOMConvMaint,4,JMenuItem,UOM Conversion Maintenance,,,,1,1
-ItemMenu,CostRoll,5,JMenuItem,Cost Maintenance,,,,1,1
-ItemMenu,CostRollRange,6,JMenuItem,Cost Roll By Range,,,,1,1
-ItemMenu,CostReports,7,JMenu,Cost Reports,,,,1,1
-RoutingMenu,WorkCellMaint,1,JMenuItem,Work Cell Maintenance,,,,1,1
-RoutingMenu,WorkCellBrowse,2,JMenuItem,Work Cell Browse,,1,,1,1
-RoutingMenu,RoutingMaint,3,JMenuItem,Routing Maintenance,,,,1,1
-RoutingMenu,RoutingBrowse,4,JMenuItem,Routing Browse,,1,,1,1
-RoutingMenu,ItemRoutingRpt,5,JMenuItem,Item Routing Report,,,,1,1
-BOMMenu,BOMMaint,1,JMenuItem,BOM Maintenance,,,,1,1
-BOMMenu,BOMBrowse,2,JMenuItem,BOM Browse,,1,,1,1
-BOMMenu,BOMTree,3,JMenuItem,BOM Tree,,,,1,1
-BOMMenu,WhereUsedUtility,4,JMenuItem,Where Used Utility,,,,1,1
-ProductionMenu,ProdEntryMaint,1,JMenuItem,Production Entry,,,,1,1
-ProductionMenu,ProdEntryByPlan,2,JMenuItem,Production Entry By Plan,,,,1,1
-ProductionMenu,OEEEntry,3,JMenuItem,OEE Entry,,,,1,1
-ProductionMenu,ProductionReports,4,JMenu,Production Reports,,,,1,1
-ProductionReports,ProdDetRpt,1,JMenuItem,Production Report Detail,,1,,1,1
-ProductionReports,chart_production,2,JMenuItem,Chart Reporting,,1,,1,1
-ScrapMenu,ScrapEntry,1,JMenuItem,Scrap Entry,,,,1,1
-ScrapMenu,ScrapReports,2,JMenu,Scrap Reports,,,,1,1
-ScrapReports,chart_scrap,1,JMenuItem,Chart Reporting,,1,,1,1
-ScheduleMenu,Scheduler,1,JMenuItem,Scheduler,,,,1,1
-ScheduleMenu,SchRptPicker,2,JMenuItem,Schedule Report Selector,,1,,1,1
-ScheduleMenu,ProdSchedRpt1,3,JMenuItem,Scheduled Plan Report,,1,,1,1
-ScheduleMenu,PlanMiscMaint,4,JMenuItem,Misc Plan Maintenance,,,,1,1
-ScheduleMenu,ForecastMaint,5,JMenuItem,Forecast Maintenance,,,,1,1
-ScheduleMenu,ForecastBrowse,6,JMenuItem,Forecast Browse,,1,,1,1
-ScheduleMenu,forecast13weeks,7,JMenuItem,Forecast View 13 Weeks,,1,,1,1
-ScheduleMenu,FcstToPlan,8,JMenuItem,Forecast To Plan Sync,,,,1,1
-ScheduleMenu,DemdToPlan,9,JMenuItem,Demand To Plan Sync,,,,1,1
-MRPMenu,ItemLevelCalculate,1,JMenuItem,MRP Regenerate,,,,1,1
-MRPMenu,MRPBrowse,2,JMenuItem,MRP Browse,,1,,1,1
-MRPMenu,ProjectionBrowse,3,JMenuItem,Projection Browse,,1,,1,1
-MRPMenu,ComponentDemandBrowse,4,JMenuItem,Component Demand Browse,,1,,1,1
-MRPMenu,RetailReorderRpt,5,JMenuItem,Retail Replenishment Report,,1,,1,1
-CostReports,noStdCostBrowse,1,JMenuItem,Item Without Std Cost,,1,,1,1
-جودة,QPRMaint,1,JMenuItem,QPR Maintenance,,,,1,1
-جودة,QPRBrowse,2,JMenuItem,QPR Browse,,1,,1,1
-HR,EmployeeMaster,1,JMenuItem,Employee Maintenance,,,,1,1
-HR,EmpBrowse,2,JMenuItem,Employee Browse,,1,,1,1
-HR,HRRptPicker,3,JMenuItem,HR Report Selector,,1,,1,1
-HR,ShiftMaintenance,4,JMenuItem,Shift Maintenance,,,,1,1
-HR,ShiftBrowse,5,JMenuItem,Shift Browse,,1,,1,1
-HR,HRTrainingMenu,6,JMenu,Training Menu,,,,1,1
-HR,TimeClockMenu,7,JMenu,Time Clock Menu,,,,1,1
-HRTrainingMenu,TrainingMaint,1,JMenuItem,Training Maintenance,,,,1,1
-HRTrainingMenu,TrainingRpt1,2,JMenuItem,Training Report,,1,,1,1
+﻿Column1,Column2,Column3,Column4,Column5,Column6,Column7,Column8,Column9,Column10
+CustomerMenu,CustMaint,1,JMenuItem,صيانة العملاء,,,,1,1
+CustomerMenu,CustReport1,2,JMenuItem,تصفح العملاء,,1,,1,1
+CustomerMenu,CustXrefMaint,3,JMenuItem,صيانة Xref للعميل,,,,1,1
+CustomerMenu,CustXrefBrowse,4,JMenuItem,تصفح Xref الخاص بالعميل,,,,1,1
+CustomerMenu,CustPriceMaint,5,JMenuItem,صيانة أسعار العملاء,,,,1,1
+CustomerMenu,CustPriceReport,6,JMenuItem,تصفح أسعار العملاء,,,,1,1
+CustomerMenu,CusRptPicker,7,JMenuItem,محدد تقرير العملاء,,,,1,1
+CustomerMenu,CustomerReports,8,JMenu,تقارير العملاء الأخرى,,,,1,1
+CustomerMenu,CustControl,9,JMenuItem,مراقبة العملاء,,,,1,1
+عنوان,CustomerMenu,1,JMenu,قائمة العملاء,,,,1,1
+عنوان,VendorMenu,2,JMenu,قائمة البائعين,,,,1,1
+عنوان,EDIMenu,3,JMenu,قائمة إيدي,,,,1,1
+عنوان,LabelMenu,4,JMenu,قائمة التسمية,,,,1,1
+عنوان,CarrierMaint,5,JMenuItem,صيانة الناقل,,,,1,1
+عنوان,CarrierBrowse,6,JMenuItem,تصفح الناقل,,1,,1,1
+عنوان,TermsMaint,7,JMenuItem,شروط الصيانة,,,,1,1
+عنوان,TermsBrowse,8,JMenuItem,تصفح الشروط,,1,,1,1
+عنوان,TaxMaint,9,JMenuItem,صيانة الضرائب,,,,1,1
+عنوان,TaxBrowse,10,JMenuItem,تصفح الضرائب,,1,,1,1
+CustomerReports,chart_sales,1,JMenuItem,تقارير الرسم البياني,,1,,1,1
+VendorMenu,VendMaint,1,JMenuItem,صيانة البائع,,,,1,1
+VendorMenu,VendBrowse,2,JMenuItem,تصفح البائع,,1,,1,1
+VendorMenu,VendXrefMaint,3,JMenuItem,صيانة البائع Xref,,,,1,1
+VendorMenu,VendXrefRpt1,4,JMenuItem,تصفح البائع Xref,,,,1,1
+VendorMenu,VendPriceMaint,5,JMenuItem,صيانة سعر البائع,,,,1,1
+VendorMenu,VendPriceRpt1,6,JMenuItem,تصفح أسعار البائع,,,,1,1
+VendorMenu,VenRptPicker,7,JMenuItem,محدد تقرير البائع,,,,1,1
+VendorMenu,VendControl,8,JMenuItem,مراقبة البائع,,,,1,1
+شاحنة,CFOMaint,1,JMenuItem,صيانة طلب الشحن,,,,1,1
+شاحنة,CFOBrowse,2,JMenuItem,تقرير طلب الشحن,,,,1,1
+شاحنة,CFODriverWindow,3,JMenuItem,جدول الطلب/السائق,,,,1,1
+شاحنة,VehicleMaint,4,JMenuItem,إدارة المركبات,,,,1,1
+شاحنة,VehicleBrowse,5,JMenuItem,تصفح المركبات,,1,,1,1
+شاحنة,DriverMaint,6,JMenuItem,إدارة السائق,,,,1,1
+شاحنة,DriverBrowse,7,JMenuItem,تصفح برنامج التشغيل,,1,,1,1
+شاحنة,BrokerMaint,8,JMenuItem,إدارة الوسيط,,,,1,1
+شاحنة,BrokerBrowse,9,JMenuItem,تصفح الوسيط,,1,,1,1
+شاحنة,CFOControl,10,JMenuItem,مراقبة الشحن,,,,1,1
+EDI,EDILoad,1,JMenuItem,تحميل EDI,,,,1,1
+EDI,EDILog,2,JMenuItem,سجل التبادل الإلكتروني للبيانات (EDI).,,,,1,1
+EDI,EDIConfMenu,3,JMenu,قائمة تكوين EDI,,,,1,1
+EDI,EDITranMenu,4,JMenu,قائمة ترجمة EDI,,,,1,1
+EDI,EDICommMenu,5,JMenu,قائمة اتصالات EDI,,,,1,1
+EDI,EDIWkflMenu,6,JMenu,قائمة سير عمل EDI,,,,1,1
+EDI,EDIExport,7,JMenuItem,تصدير EDI,,,,1,1
+EDI,EDIControl,8,JMenuItem,التحكم في التبادل الإلكتروني للبيانات (EDI).,,,,1,1
+EDIConfMenu,EDIPartnerMaint,1,JMenuItem,صيانة شريك EDI,,,,1,1
+EDIConfMenu,EDIPartnerBrowse,2,JMenuItem,تصفح شركاء EDI,,1,,1,1
+EDIConfMenu,EDIPartnerDocMaint,3,JMenuItem,صيانة معاملات الشركاء,,,,1,1
+EDIConfMenu,EDIPartnerDocBrowse,4,JMenuItem,تصفح معاملات شريك EDI,,1,,1,1
+EDIConfMenu,EDIDocumentMaint,5,JMenuItem,صيانة التعرف على المستندات,,,,1,1
+EDIConfMenu,EDIXrefMaint,6,JMenuItem,صيانة EDI Xref,,,,1,1
+EDIConfMenu,EDIXrefBrowse,7,JMenuItem,تصفح EDI Xref,,1,,1,1
+EDITranMenu,MapMaint,1,JMenuItem,صيانة الخريطة,,,,1,1
+EDITranMenu,StructMaint,2,JMenuItem,صيانة ملف الهيكل,,,,1,1
+EDIWkflMenu,WorkFlowMaint,1,JMenuItem,صيانة سير العمل,,,,1,1
+EDIWkflMenu,WorkFlowBrowse,2,JMenuItem,تصفح سير العمل,,1,,1,1
+EDIWkflMenu,WorkFlowLog,3,JMenuItem,سجل سير العمل,,1,,1,1
+EDIWkflMenu,EDIUtilities,4,JMenuItem,المرافق تبادل البيانات الإلكترونية,,,,1,1
+EDICommMenu,APIMaint,1,JMenuItem,صيانة واجهة برمجة التطبيقات,,,,1,1
+EDICommMenu,APIBrowse,2,JMenuItem,تصفح واجهة برمجة التطبيقات,,,,1,1
+EDICommMenu,APILog,3,JMenuItem,سجل واجهة برمجة التطبيقات,,,,1,1
+EDICommMenu,AS2Maint,4,JMenuItem,صيانة AS2,,,,1,1
+EDICommMenu,AS2Browse,5,JMenuItem,تصفح AS2,,1,,1,1
+EDICommMenu,AS2Log,6,JMenuItem,سجل AS2,,,,1,1
+EDICommMenu,FTPMaint,7,JMenuItem,صيانة FTP/sFTP,,,,1,1
+LabelMenu,LabelsContGeneric,1,JMenuItem,تسميات الحاويات,,,,1,1
+LabelMenu,AddrLabel,2,JMenuItem,تسميات العناوين,,,,1,1
+LabelMenu,LabelBrowse,3,JMenuItem,تصفح التسمية,,1,,1,1
+LabelMenu,LabelFileMaint,4,JMenuItem,صيانة ملف التسمية,,,,1,1
+LabelMenu,LabelFileBrowse,5,JMenuItem,تصفح ملف التسمية,,1,,1,1
+شراء,POMaintMenu,1,JMenuItem,صيانة أمر الشراء,,,,1,1
+شراء,POBrowse,2,JMenuItem,تصفح أمر الشراء,,1,,1,1
+شراء,ReceiverMaintMenu,3,JMenuItem,صيانة الرسيفر,,,,1,1
+شراء,RecvBrowse,4,JMenuItem,تصفح جهاز الاستقبال,,1,,1,1
+شراء,RecvByPOBrowse,5,JMenuItem,المتلقي عن طريق PO تصفح,,1,,1,1
+شراء,PurRptPicker,6,JMenuItem,محدد تقرير الشراء,,1,,1,1
+شراء,RequisitionMenu,7,JMenu,قائمة الطلبات,,,,1,1
+شراء,POControl,8,JMenuItem,التحكم في أمر الشراء,,1,,1,1
+RequisitionMenu,ReqMaint,1,JMenuItem,صيانة الطلبات,,,,1,1
+RequisitionMenu,ReqBrowseAll,2,JMenuItem,تصفح الطلب,,1,,1,1
+RequisitionMenu,PendReqRpt1,5,JMenuItem,الطلبات المعلقة,,1,,1,1
+RequisitionMenu,ApprovedReqBrowse,3,JMenuItem,الطلبات المعتمدة,,1,,1,1
+RequisitionMenu,ReqPendingApproval,4,JMenuItem,في انتظار الموافقة من قبل,,1,,1,1
+RequisitionMenu,ReqByUserRpt,6,JMenuItem,الطلبات من قبل المستخدم,,1,,1,1
+RequisitionMenu,ReqChartsMenu,7,JMenu,قائمة الرسم البياني,,,,1,1
+ReqChartsMenu,chart_requisition,1,JMenuItem,تقارير الرسم البياني,,1,,1,1
+طلب,OrderMaint,1,JMenuItem,صيانة الطلب,,,,1,1
+طلب,OrderBrowse,2,JMenuItem,تصفح النظام,,1,,1,1
+طلب,ServiceOrderMaint,3,JMenuItem,صيانة أمر الخدمة,,,,1,1
+طلب,ServiceOrderBrowse,4,JMenuItem,تصفح طلب الخدمة,,,,1,1
+طلب,QuoteMaint,5,JMenuItem,صيانة الاقتباس,,,,1,1
+طلب,QuoteBrowse,6,JMenuItem,تصفح الاقتباس,,,,1,1
+طلب,OrderSourceBrowse,7,JMenuItem,تصفح مصدر الطلب,,1,,1,1
+طلب,OrdLineBrowse,8,JMenuItem,تصفح خط الطلب,,1,,1,1
+طلب,SchedOrdBrowse,9,JMenuItem,تصفح الطلب المجدول,,1,,1,1
+طلب,OrdRptPicker,10,JMenuItem,محدد تقرير الطلب,,,,1,1
+طلب,OrderReports,11,JMenu,تقارير أخرى,,,,1,1
+طلب,POSMenu,12,JMenu,قائمة نقاط البيع,,,,1,1
+طلب,DOMenu,13,JMenu,قائمة التوزيع,,,,1,1
+طلب,OrderSource,14,JMenuItem,مصدر الطلب,,,,1,1
+طلب,OrderControl,15,JMenuItem,مراقبة الطلب,,,,1,1
+طلبReports,chart_order,1,JMenuItem,تقارير الرسم البياني,,1,,1,1
+شحن,ShipMaint,1,JMenuItem,صيانة الشاحن,,,,1,1
+شحن,ShipMaintSerial,2,JMenuItem,صيانة الشاحن (متسلسلة),,,,1,1
+شحن,ShipperBrowse,3,JMenuItem,تصفح الشاحن,,1,,1,1
+شحن,ShipperBrowseDet,4,JMenuItem,تصفح تفاصيل الشاحن,,1,,1,1
+شحن,ShipConfirm,5,JMenuItem,تأكيد الشاحن,,,,1,1
+شحن,ShipUnconfirm,6,JMenuItem,إلغاء تأكيد الشاحن,,,,1,1
+شحن,ShpRptPicker,7,JMenuItem,محدد تقرير الشحن,,,,1,1
+شحن,ShipReports,8,JMenu,تقارير أخرى,,,,1,1
+شحن,ShipperControl,9,JMenuItem,مراقبة الشاحن,,,,1,1
+ShipReports,chart_shipping,1,JMenuItem,تقارير الرسم البياني,,1,,1,1
+تمويل,LedgerSetupMenu,1,JMenu,إعداد دفتر الأستاذ,,,,1,1
+LedgerSetupMenu,AcctMaint,1,JMenuItem,صيانة الحساب,,,,1,1
+LedgerSetupMenu,AcctBrowse,2,JMenuItem,تصفح الحساب,,1,,1,1
+LedgerSetupMenu,DeptMaint,3,JMenuItem,صيانة القسم/CC,,,,1,1
+LedgerSetupMenu,DeptBrowse,4,JMenuItem,تصفح قسم/CC,,1,,1,1
+LedgerSetupMenu,GLCalMaint,5,JMenuItem,تقويم دفتر الأستاذ,,,,1,1
+LedgerSetupMenu,CalendarBrowse,6,JMenuItem,تصفح تقويم دفتر الأستاذ,,1,,1,1
+LedgerSetupMenu,BankMaint,7,JMenuItem,صيانة البنك,,,,1,1
+LedgerSetupMenu,BankBrowse,8,JMenuItem,تصفح البنك,,1,,1,1
+LedgerSetupMenu,CurrencyMaint,9,JMenuItem,صيانة العملة,,,,1,1
+LedgerSetupMenu,ExchangeMaint,10,JMenuItem,صيانة سعر الصرف,,,,1,1
+LedgerSetupMenu,GLControl,11,JMenuItem,التحكم جي إل,,,,1,1
+LedgerSetupMenu,GLIncStmtDef,12,JMenuItem,تعريف بيان الدخل,,,,1,1
+تمويل,LedgerReportsMenu,2,JMenu,تقارير دفتر الأستاذ,,,,1,1
+LedgerReportsMenu,GLAcctBalSummaryByPeriod,1,JMenuItem,تقرير رصيد الحساب,,,,1,1
+LedgerReportsMenu,TrialBalanceRpt,2,JMenuItem,تقرير ميزان المراجعة,,,,1,1
+LedgerReportsMenu,GLAcctBalSummaryByYear,3,JMenuItem,نشاط الحساب (السنة),,,,1,1
+LedgerReportsMenu,AcctBalSumYTD,4,JMenuItem,رصيد الحساب حتى تاريخه,,,,1,1
+LedgerReportsMenu,UnPostedTransRpt,5,JMenuItem,المعاملات غير المنشورة,,1,,1,1
+LedgerReportsMenu,GLTranRpt1,6,JMenuItem,تقرير المعاملات دفتر الأستاذ,,1,,1,1
+LedgerReportsMenu,LedgerBalanceExport,7,JMenuItem,عرض/تصدير رصيد دفتر الأستاذ,,,,1,1
+LedgerReportsMenu,IncomeStatement1,8,JMenuItem,قوائم الدخل,,1,,1,1
+LedgerReportsMenu,IncomeStatementYear,9,JMenuItem,بيان الدخل (السنة),,1,,1,1
+LedgerReportsMenu,ReconAccount,10,JMenuItem,تسوية الحساب,,1,,1,1
+LedgerReportsMenu,ChartMain,11,JMenuItem,تقارير الرسم البياني,,1,,1,1
+تمويل,PostGLTrans,3,JMenuItem,ما بعد المعاملات,,,,1,1
+تمويل,GLTranMaint,4,JMenuItem,صيانة المعاملات GL,,,,1,1
+تمويل,ExpenseMaint,5,JMenuItem,صيانة النفقات,,,,1,1
+تمويل,ExpenseBrowse,6,JMenuItem,تصفح النفقات,,,,1,1
+تمويل,IncomeMaint,7,JMenuItem,صيانة الدخل,,,,1,1
+تمويل,ARMenu,8,JMenu,قائمة حسابات القبض,,,,1,1
+تمويل,APMenu,9,JMenu,قائمة الحسابات الدائنة,,,,1,1
+تمويل,CashTransactionMenu,10,JMenu,قائمة النقد السريع,,,,1,1
+تمويل,PayRollMenu,11,JMenu,قائمة الرواتب,,,,1,1
+ARMenu,ARPaymentMaint,1,JMenuItem,صيانة الدفع,,,,1,1
+ARMenu,ARPaymentBrowse,2,JMenuItem,تصفح الدفع,,1,,1,1
+ARMenu,ARMemoMaint,3,JMenuItem,صيانة المذكرة,,,,1,1
+ARMenu,ARAgingView,4,JMenuItem,عرض الشيخوخة AR,,,,1,1
+ARMenu,ARTranRpt1,5,JMenuItem,تقرير المعاملات AR,,1,,1,1
+ARMenu,InvoiceMaint,6,JMenuItem,عرض الفاتورة / الصيانة,,,,1,1
+ARMenu,InvoiceBrowse,7,JMenuItem,تصفح الفاتورة,,1,,1,1
+ARMenu,ARRptPicker,8,JMenuItem,محدد تقرير AR,,1,,1,1
+ARMenu,ARControl,9,JMenuItem,التحكم بالواقع المعزز,,,,1,1
+PayRollMenu,PayRollMaint,1,JMenuItem,صيانة الرواتب,,,,1,1
+PayRollMenu,PayRollBrowse,2,JMenuItem,تصفح كشوف المرتبات,,1,,1,1
+PayRollMenu,PayProfileMaint,3,JMenuItem,دفع صيانة الملف الشخصي,,,,1,1
+PayRollMenu,PayProfileBrowse,4,JMenuItem,تصفح الملف الشخصي للدفع,,1,,1,1
+PayRollMenu,PayControl,5,JMenuItem,التحكم في الرواتب,,1,,1,1
+CashTransactionMenu,CashTran,1,JMenuItem,المعاملات النقدية السريعة,,,,1,1
+CashTransactionMenu,CashTranBrowse,2,JMenuItem,تصفح النقدية السريعة,,,,1,1
+APMenu,VouchMaintPanel,1,JMenuItem,صيانة القسيمة,,,,1,1
+APMenu,VoucherBrowse,2,JMenuItem,تصفح القسيمة,,,,1,1
+APMenu,PaymentMaint,3,JMenuItem,صيانة الدفع,,,,1,1
+APMenu,APAgingView,4,JMenuItem,عرض شيخوخة AP,,,,1,1
+APMenu,APRptPicker,5,JMenuItem,محدد تقرير AP,,,,1,1
+APMenu,APControl,6,JMenuItem,التحكم في AP,,,,1,1
+جرد,ProdCodeMaint,1,JMenuItem,صيانة رمز المنتج,,,,1,1
+جرد,ProdCodeBrowse,2,JMenuItem,تصفح رمز المنتج,,1,,1,1
+جرد,WareHouseMaint,3,JMenuItem,صيانة المستودعات,,,,1,1
+جرد,WareHouseBrowse,4,JMenuItem,تصفح المستودعات,,1,,1,1
+جرد,LocationMaint,5,JMenuItem,صيانة الموقع,,,,1,1
+جرد,LocationBrowse,6,JMenuItem,تصفح الموقع,,1,,1,1
+جرد,ItemMenu,7,JMenu,قائمة العنصر,,,,1,1
+جرد,RoutingMenu,8,JMenu,قائمة التوجيه,,,,1,1
+جرد,BOMMenu,9,JMenu,قائمة BOM,,,,1,1
+جرد,ProductionMenu,10,JMenu,قائمة الإنتاج,,,,1,1
+جرد,ScrapMenu,11,JMenu,قائمة الخردة,,,,1,1
+جرد,InvAdjustmentsMenu,12,JMenu,قائمة تعديلات المخزون,,,,1,1
+جرد,ScheduleMenu,13,JMenu,قائمة الجدول الزمني,,,,1,1
+جرد,MRPMenu,14,JMenu,قائمة MRP,,,,1,1
+جرد,InvRptPicker,15,JMenuItem,محدد تقرير المخزون,,1,,1,1
+جرد,InventoryReportsMenu,16,JMenu,تقارير متنوعة للمخزون,,,,1,1
+جرد,InventoryCtrl,17,JMenuItem,مراقبة المخزون,,,,1,1
+InvAdjustmentsMenu,LocationTransfer,1,JMenuItem,نقل الموقع,,,,1,1
+InvAdjustmentsMenu,InventoryAdjustment,2,JMenuItem,ضبط المخزون,,,,1,1
+جردReportsMenu,TransBrowse,1,JMenuItem,تصفح المعاملات,,1,,1,1
+ItemMenu,ItemMaint,1,JMenuItem,صيانة السلعة,,,,1,1
+ItemMenu,ItemBrowse,2,JMenuItem,تصفح العنصر,,1,,1,1
+ItemMenu,UOMMaint,3,JMenuItem,صيانة UOM,,,,1,1
+ItemMenu,UOMConvMaint,4,JMenuItem,صيانة تحويل UOM,,,,1,1
+ItemMenu,CostRoll,5,JMenuItem,صيانة التكلفة,,,,1,1
+ItemMenu,CostRollRange,6,JMenuItem,لفة التكلفة حسب النطاق,,,,1,1
+ItemMenu,CostReports,7,JMenu,تقارير التكلفة,,,,1,1
+RoutingMenu,WorkCellMaint,1,JMenuItem,صيانة خلية العمل,,,,1,1
+RoutingMenu,WorkCellBrowse,2,JMenuItem,تصفح خلية العمل,,1,,1,1
+RoutingMenu,RoutingMaint,3,JMenuItem,صيانة التوجيه,,,,1,1
+RoutingMenu,RoutingBrowse,4,JMenuItem,تصفح التوجيه,,1,,1,1
+RoutingMenu,ItemRoutingRpt,5,JMenuItem,تقرير توجيه العنصر,,,,1,1
+BOMMenu,BOMMaint,1,JMenuItem,صيانة بوم,,,,1,1
+BOMMenu,BOMBrowse,2,JMenuItem,تصفح BOM,,1,,1,1
+BOMMenu,BOMTree,3,JMenuItem,شجرة بوم,,,,1,1
+BOMMenu,WhereUsedUtility,4,JMenuItem,حيث تستخدم الأداة المساعدة,,,,1,1
+ProductionMenu,ProdEntryMaint,1,JMenuItem,دخول الإنتاج,,,,1,1
+ProductionMenu,ProdEntryByPlan,2,JMenuItem,إدخال الإنتاج حسب الخطة,,,,1,1
+ProductionMenu,OEEEntry,3,JMenuItem,دخول OEE,,,,1,1
+ProductionMenu,ProductionReports,4,JMenu,تقارير الإنتاج,,,,1,1
+ProductionReports,ProdDetRpt,1,JMenuItem,تفاصيل تقرير الإنتاج,,1,,1,1
+ProductionReports,chart_production,2,JMenuItem,تقارير الرسم البياني,,1,,1,1
+ScrapMenu,ScrapEntry,1,JMenuItem,دخول الخردة,,,,1,1
+ScrapMenu,ScrapReports,2,JMenu,تقارير الخردة,,,,1,1
+ScrapReports,chart_scrap,1,JMenuItem,تقارير الرسم البياني,,1,,1,1
+ScheduleMenu,Scheduler,1,JMenuItem,مجدول,,,,1,1
+ScheduleMenu,SchRptPicker,2,JMenuItem,جدولة محدد التقرير,,1,,1,1
+ScheduleMenu,ProdSchedRpt1,3,JMenuItem,تقرير الخطة المجدولة,,1,,1,1
+ScheduleMenu,PlanMiscMaint,4,JMenuItem,صيانة خطة متنوعة,,,,1,1
+ScheduleMenu,ForecastMaint,5,JMenuItem,صيانة التوقعات,,,,1,1
+ScheduleMenu,ForecastBrowse,6,JMenuItem,تصفح التوقعات,,1,,1,1
+ScheduleMenu,forecast13weeks,7,JMenuItem,عرض التوقعات 13 أسبوعا,,1,,1,1
+ScheduleMenu,FcstToPlan,8,JMenuItem,توقعات لتخطيط المزامنة,,,,1,1
+ScheduleMenu,DemdToPlan,9,JMenuItem,الطلب على خطة المزامنة,,,,1,1
+MRPMenu,ItemLevelCalculate,1,JMenuItem,تجديد MRP,,,,1,1
+MRPMenu,MRPBrowse,2,JMenuItem,تصفح MRP,,1,,1,1
+MRPMenu,ProjectionBrowse,3,JMenuItem,تصفح الإسقاط,,1,,1,1
+MRPMenu,ComponentDemandBrowse,4,JMenuItem,تصفح الطلب على المكونات,,1,,1,1
+MRPMenu,RetailReorderRpt,5,JMenuItem,تقرير تجديد التجزئة,,1,,1,1
+CostReports,noStdCostBrowse,1,JMenuItem,العنصر بدون تكلفة قياسية,,1,,1,1
+جودة,QPRMaint,1,JMenuItem,صيانة نادي كوينز بارك رينجرز,,,,1,1
+جودة,QPRBrowse,2,JMenuItem,تصفح نادي كوينز بارك رينجرز,,1,,1,1
+HR,EmployeeMaster,1,JMenuItem,صيانة الموظفين,,,,1,1
+HR,EmpBrowse,2,JMenuItem,تصفح الموظف,,1,,1,1
+HR,HRRptPicker,3,JMenuItem,محدد تقرير الموارد البشرية,,1,,1,1
+HR,ShiftMaintenance,4,JMenuItem,صيانة التحول,,,,1,1
+HR,ShiftBrowse,5,JMenuItem,تصفح التحول,,1,,1,1
+HR,HRTrainingMenu,6,JMenu,قائمة التدريب,,,,1,1
+HR,TimeClockMenu,7,JMenu,قائمة الساعة الزمنية,,,,1,1
+HRTrainingMenu,TrainingMaint,1,JMenuItem,صيانة التدريب,,,,1,1
+HRTrainingMenu,TrainingRpt1,2,JMenuItem,تقرير التدريب,,1,,1,1
 TimeClockMenu,TimeClockEntry,1,JMenuItem,TimeClock,,,,1,1
-TimeClockMenu,TCAdminMenu,2,JMenu,Administration,,,,1,1
-TCAdminMenu,ClockApprovalMaint,1,JMenuItem,Supervisor Approval,,,,1,1
-TCAdminMenu,ClockAutoMaint,2,JMenuItem,Auto Clock Maintenance,,,,1,1
-TCAdminMenu,TimeClockAdjust,3,JMenuItem,Clock Record Maintenance,,,,1,1
-TCAdminMenu,ClockCodeMaint,4,JMenuItem,Clock Code Maintenance,,,,1,1
-TCAdminMenu,ClockCodeBrowse,5,JMenuItem,Clock Code Browse,,1,,1,1
-TCAdminMenu,ClockControl,6,JMenuItem,Clock Control,,,,1,1
-TimeClockMenu,TCReportsMenu,3,JMenu,Reports,,,,1,1
-TCReportsMenu,ClockDetailRpt,1,JMenuItem,Clock Detail Report,,1,,1,1
-TCReportsMenu,ClockCode66Browse,2,JMenuItem,Code 66 Report,,1,,1,1
-TCReportsMenu,chart_clock,3,JMenuItem,Chart Reporting,,1,,1,1
-مسؤل,DefaultMaint,1,JMenuItem,Default Maintenance,,,,1,1
-مسؤل,SiteMaint,2,JMenuItem,Site Maintenance,,,,1,1
-مسؤل,SiteBrowse,3,JMenuItem,Site Browse,,1,,1,1
-مسؤل,UserMaint,4,JMenuItem,User Maintenance,,,,1,1
-مسؤل,UserPermsMaint,5,JMenuItem,User Perms Maintenance,,,,1,1
-مسؤل,UserBrowse,6,JMenuItem,User Browse,,1,,1,1
-مسؤل,PanelMaint,7,JMenuItem,Class Register,,,,1,1
-مسؤل,PanelBrowse,8,JMenuItem,Class Browse,,1,,1,1
-مسؤل,MenuMaint,9,JMenuItem,Menu Maintenance,,,,1,1
-مسؤل,MenuBrowse,10,JMenuItem,Menu Browse,,1,,1,1
-مسؤل,GenericCodeMaint,11,JMenuItem,Generic Code Maintenance,,,,1,1
-مسؤل,GenCodeBrowse,12,JMenuItem,Generic Code Browse,,1,,1,1
-مسؤل,KeyMaint,13,JMenuItem,Key Maintenance,,,,1,1
-مسؤل,PrinterMaint,14,JMenuItem,Printer Maintenance,,,,1,1
-مسؤل,PrinterBrowse,15,JMenuItem,Printer Browse,,1,,1,1
-مسؤل,ChangeUserid,16,JMenuItem,Change Userid,,,changeUserID,1,1
-مسؤل,changeDB,17,JMenuItem,Change IP:DB,,,changeIPandDB,1,1
-مسؤل,SystemControl,18,JMenuItem,System Control,,,,1,1
-مسؤل,TreeMaint,19,JMenuItem,Menu Tree Maintenance,,,,1,1
-مسؤل,MassLoad,20,JMenuItem,Master Data Import,,,,1,1
-مسؤل,JasperRptMaint,21,JMenuItem,Jasper Report Maintenance,,,,1,1
-مسؤل,PKSMaint,22,JMenuItem,PKS Maintenance,,,,1,1
-مسؤل,PKSBrowse,23,JMenuItem,PKS Browse,,1,,1,1
-مسؤل,CronMaint,24,JMenuItem,Cron Maintenance,,,,1,1
-مسؤل,CronBrowse,25,JMenuItem,Cron Browse,,1,,1,1
-يساعد,About,1,JMenuItem,About,,,,1,1
-يساعد,License,2,JMenuItem,License,,,,1,1
-يساعد,Update,3,JMenuItem,Update,,,,1,1
-يساعد,PlantDirectoryMenu,4,JMenuItem,Plant Directory,,1,,1,1
-يساعد,menuscreen,5,JMenuItem,Screen Resolution,,,getScreenSize,1,1
-يساعد,NavCodeBrowse,6,JMenuItem,NAVCode List,,1,,1,1
-يساعد,SchemaBrowse,7,JMenuItem,Schema,,1,,1,1
+TimeClockMenu,TCAdminMenu,2,JMenu,إدارة,,,,1,1
+TCAdminMenu,ClockApprovalMaint,1,JMenuItem,موافقة المشرف,,,,1,1
+TCAdminMenu,ClockAutoMaint,2,JMenuItem,صيانة الساعة التلقائية,,,,1,1
+TCAdminMenu,TimeClockAdjust,3,JMenuItem,صيانة سجل الساعة,,,,1,1
+TCAdminMenu,ClockCodeMaint,4,JMenuItem,صيانة رمز الساعة,,,,1,1
+TCAdminMenu,ClockCodeBrowse,5,JMenuItem,تصفح رمز الساعة,,1,,1,1
+TCAdminMenu,ClockControl,6,JMenuItem,التحكم بالساعة,,,,1,1
+TimeClockMenu,TCReportsMenu,3,JMenu,التقارير,,,,1,1
+TCReportsMenu,ClockDetailRpt,1,JMenuItem,تقرير تفاصيل الساعة,,1,,1,1
+TCReportsMenu,ClockCode66Browse,2,JMenuItem,تقرير الكود 66,,1,,1,1
+TCReportsMenu,chart_clock,3,JMenuItem,تقارير الرسم البياني,,1,,1,1
+مسؤل,DefaultMaint,1,JMenuItem,الصيانة الافتراضية,,,,1,1
+مسؤل,SiteMaint,2,JMenuItem,صيانة الموقع,,,,1,1
+مسؤل,SiteBrowse,3,JMenuItem,تصفح الموقع,,1,,1,1
+مسؤل,UserMaint,4,JMenuItem,صيانة المستخدم,,,,1,1
+مسؤل,UserPermsMaint,5,JMenuItem,صيانة تصاريح المستخدم,,,,1,1
+مسؤل,UserBrowse,6,JMenuItem,تصفح المستخدم,,1,,1,1
+مسؤل,PanelMaint,7,JMenuItem,سجل الفصل,,,,1,1
+مسؤل,PanelBrowse,8,JMenuItem,تصفح الصف,,1,,1,1
+مسؤل,MenuMaint,9,JMenuItem,صيانة القائمة,,,,1,1
+مسؤل,MenuBrowse,10,JMenuItem,تصفح القائمة,,1,,1,1
+مسؤل,GenericCodeMaint,11,JMenuItem,صيانة الكود العام,,,,1,1
+مسؤل,GenCodeBrowse,12,JMenuItem,تصفح الكود العام,,1,,1,1
+مسؤل,KeyMaint,13,JMenuItem,صيانة المفاتيح,,,,1,1
+مسؤل,PrinterMaint,14,JMenuItem,صيانة الطابعة,,,,1,1
+مسؤل,PrinterBrowse,15,JMenuItem,تصفح الطابعة,,1,,1,1
+مسؤل,ChangeUserid,16,JMenuItem,تغيير معرف المستخدم,,,changeUserID,1,1
+مسؤل,changeDB,17,JMenuItem,تغيير IP:DB,,,changeIPandDB,1,1
+مسؤل,SystemControl,18,JMenuItem,نظام مراقبة,,,,1,1
+مسؤل,TreeMaint,19,JMenuItem,صيانة شجرة القائمة,,,,1,1
+مسؤل,MassLoad,20,JMenuItem,استيراد البيانات الرئيسية,,,,1,1
+مسؤل,JasperRptMaint,21,JMenuItem,صيانة تقرير جاسبر,,,,1,1
+مسؤل,PKSMaint,22,JMenuItem,صيانة بي كي اس,,,,1,1
+مسؤل,PKSBrowse,23,JMenuItem,تصفح PKS,,1,,1,1
+مسؤل,CronMaint,24,JMenuItem,صيانة كرون,,,,1,1
+مسؤل,CronBrowse,25,JMenuItem,تصفح كرون,,1,,1,1
+يساعد,About,1,JMenuItem,عن,,,,1,1
+يساعد,License,2,JMenuItem,رخصة,,,,1,1
+يساعد,Update,3,JMenuItem,تحديث,,,,1,1
+يساعد,PlantDirectoryMenu,4,JMenuItem,دليل النباتات,,1,,1,1
+يساعد,menuscreen,5,JMenuItem,دقة الشاشة,,,getScreenSize,1,1
+يساعد,NavCodeBrowse,6,JMenuItem,قائمة رمز NAV,,1,,1,1
+يساعد,SchemaBrowse,7,JMenuItem,مخطط,,1,,1,1
 يساعد,BrowseUtil,8,JMenuItem,,,1,,1,1
-يساعد,SysInfo,9,JMenuItem,SysInfo,,1,,1,1
-root,EDI,1,JMenu,EDI,,,,1,1
-root,عنوان,2,JMenu,Address,,,,1,1
-root,شراء,3,JMenu,Purchasing,,,,1,1
-root,طلب,4,JMenu,Order,,,,1,1
-root,شحن,5,JMenu,Shipping,,,,1,1
-root,تمويل,6,JMenu,Finance,,,,1,1
-root,جرد,7,JMenu,Inventory,,,,1,1
-root,هندسة,8,JMenu,Engineering,,,,1,1
-root,جودة,9,JMenu,Quality,,,,1,1
-root,شاحنة,10,JMenu,Freight,,,,1,1
-root,HR,11,JMenu,HR,,,,1,1
-root,مسؤل,12,JMenu,Admin,,,,1,1
-root,يساعد,13,JMenu,Help,,,,1,1
-POSMenu,POSMaint,1,JMenuItem,POS Entry,,,,1,1
-POSMenu,POSControlMaint,3,JMenuItem,POS Control,,,,1,1
-POSMenu,POSBrowse,2,JMenuItem,POS Browse,,1,,1,1
-DOMenu,DOMaint,1,JMenuItem,Dist Order Maintenance,,,,1,1
-DOMenu,DOBrowse,2,JMenuItem,Dist Order Browse,,,,1,1
-RequisitionMenu,ReqControl,8,JMenuItem,Req Control,,,,1,1
-هندسة,ECNMaint,1,JMenuItem,ECN Maintenance,,,,1,1
-هندسة,ECNBrowse,2,JMenuItem,ECN Browse,,1,,1,1
-هندسة,TaskMaint,3,JMenuItem,Task Maintenance,,,,1,1
-هندسة,TaskBrowse,4,JMenuItem,Task Browse,,1,,1,1
+يساعد,SysInfo,9,JMenuItem,معلومات النظام,,1,,1,1
+root,EDI,1,JMenu,التبادل الإلكتروني للبيانات,,,,1,1
+root,عنوان,2,JMenu,عنوان,,,,1,1
+root,شراء,3,JMenu,شراء,,,,1,1
+root,طلب,4,JMenu,طلب,,,,1,1
+root,شحن,5,JMenu,شحن,,,,1,1
+root,تمويل,6,JMenu,تمويل,,,,1,1
+root,جرد,7,JMenu,جرد,,,,1,1
+root,هندسة,8,JMenu,هندسة,,,,1,1
+root,جودة,9,JMenu,جودة,,,,1,1
+root,شاحنة,10,JMenu,شحن,,,,1,1
+root,HR,11,JMenu,الموارد البشرية,,,,1,1
+root,مسؤل,12,JMenu,مسؤل,,,,1,1
+root,يساعد,13,JMenu,يساعد,,,,1,1
+POSMenu,POSMaint,1,JMenuItem,دخول نقاط البيع,,,,1,1
+POSMenu,POSControlMaint,3,JMenuItem,مراقبة نقاط البيع,,,,1,1
+POSMenu,POSBrowse,2,JMenuItem,تصفح نقاط البيع,,1,,1,1
+DOMenu,DOMaint,1,JMenuItem,صيانة ترتيب المقاطعة,,,,1,1
+DOMenu,DOBrowse,2,JMenuItem,تصفح ترتيب التوزيع,,,,1,1
+RequisitionMenu,ReqControl,8,JMenuItem,التحكم في المتطلبات,,,,1,1
+هندسة,ECNMaint,1,JMenuItem,صيانة ECN,,,,1,1
+هندسة,ECNBrowse,2,JMenuItem,تصفح ECN,,1,,1,1
+هندسة,TaskMaint,3,JMenuItem,صيانة المهام,,,,1,1
+هندسة,TaskBrowse,4,JMenuItem,تصفح المهام,,1,,1,1

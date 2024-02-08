@@ -3543,7 +3543,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
         
        
-        if (! qtyshipped.getText().isEmpty()) {
+        if (ddpart.getSelectedItem() != null && ! qtyshipped.getText().isEmpty()) {
                if (bsParseDouble(qtyshipped.getText()) > invData.getItemQtyByWarehouseAndLocation(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), ddwh.getSelectedItem().toString(), ddloc.getSelectedItem().toString())) {
                    lbqtyavailable.setBackground(Color.red);
                } else {
