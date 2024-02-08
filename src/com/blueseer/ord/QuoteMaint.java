@@ -85,7 +85,10 @@ import com.blueseer.ord.ordData.quo_mstr;
 import com.blueseer.ord.ordData.quo_sac;
 import com.blueseer.ord.ordData.sod_det;
 import static com.blueseer.ord.ordData.updateQuoteTransaction;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatInt;
 import static com.blueseer.utl.BlueSeerUtils.bsNumber;
+import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.callChangeDialog;
 import static com.blueseer.utl.BlueSeerUtils.clog;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
@@ -627,7 +630,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
            boolean z = false;
            for (quo_det q1 : _d) {
             for (quo_det q2 : _c) {
-                if (q2.quod_line().equals(q1.quod_line())) {
+                if (q2.quod_line() == q1.quod_line()) {
                     z = true;
                     break;
                 }
@@ -644,7 +647,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
            boolean z = false;
            for (quo_det q1 : _c) {
             for (quo_det q2 : _d) {
-                if (q2.quod_line().equals(q1.quod_line())) {
+                if (q2.quod_line() == q1.quod_line()) {
                     z = true;
                     break;
                 }
@@ -659,7 +662,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
        // changed item
        for (quo_det q1 : _c) {
         for (quo_det q2 : _d) { 
-            if (q2.quod_line().equals(q1.quod_line())) {
+            if (q2.quod_line() == q1.quod_line()) {
                 c = logChange(tbkey.getText(), this.getClass().getSimpleName(),q1,q2);
                 if (! c.isEmpty()) {
                     addChangeLog(c);
@@ -725,15 +728,15 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
          for (int j = 0; j < detailtable.getRowCount(); j++) {
              quo_det x = new quo_det(null, 
                 detailtable.getValueAt(j, 0).toString(), // key
-                detailtable.getValueAt(j, 1).toString(), // line
+                bsParseInt(detailtable.getValueAt(j, 1).toString()), // line
                 detailtable.getValueAt(j, 2).toString(), // item
                 BlueSeerUtils.boolToString(OVData.isValidItem(detailtable.getValueAt(j, 2).toString())), // isinventory
                 detailtable.getValueAt(j, 3).toString(), // item desc
                 "", // price type
-                detailtable.getValueAt(j, 5).toString().replace(defaultDecimalSeparator, '.'), // list price
-                detailtable.getValueAt(j, 6).toString().replace(defaultDecimalSeparator, '.'), // disc
-                detailtable.getValueAt(j, 7).toString().replace(defaultDecimalSeparator, '.'), // netprice
-                detailtable.getValueAt(j, 4).toString().replace(defaultDecimalSeparator, '.'), // qty
+                bsParseDouble(detailtable.getValueAt(j, 5).toString().replace(defaultDecimalSeparator, '.')), // list price
+                bsParseDouble(detailtable.getValueAt(j, 6).toString().replace(defaultDecimalSeparator, '.')), // disc
+                bsParseDouble(detailtable.getValueAt(j, 7).toString().replace(defaultDecimalSeparator, '.')), // netprice
+                bsParseDouble(detailtable.getValueAt(j, 4).toString().replace(defaultDecimalSeparator, '.')), // qty
                 detailtable.getValueAt(j, 8).toString().replace(defaultDecimalSeparator, '.')  // uom
                 );
         list.add(x);
@@ -748,7 +751,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                 sactable.getValueAt(j, 1).toString(),
                 sactable.getValueAt(j, 0).toString(),
                 sactable.getValueAt(j, 2).toString(),
-                sactable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.'),
+                bsParseDouble(sactable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.')),
                 sactable.getValueAt(j, 4).toString());     
                 list.add(x);
          }
@@ -993,13 +996,13 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         for (quo_det quod : quodetlist) {
                     detailmodel.addRow(new Object[]{
                       quod.quod_nbr(),   
-                      quod.quod_line(), 
+                      bsFormatInt(quod.quod_line()), 
                       quod.quod_item(),
                       quod.quod_desc(),
-                      quod.quod_qty(),
-                      quod.quod_listprice(),
-                      quod.quod_disc(),
-                      quod.quod_netprice(),
+                      bsFormatDouble(quod.quod_qty()),
+                      bsFormatDouble(quod.quod_listprice()),
+                      bsFormatDouble(quod.quod_disc()),
+                      bsFormatDouble(quod.quod_netprice()),
                       quod.quod_uom()
                   });
             quoteline =   Integer.valueOf(quod.quod_line());  

@@ -1771,20 +1771,20 @@ public class ordData {
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.quod_nbr);
-          ps.setString(2, x.quod_line);
+          ps.setInt(2, x.quod_line);
           res = ps.executeQuery();
           ps = con.prepareStatement(sqlInsert);  
             if (! res.isBeforeFirst()) {
             ps.setString(1, x.quod_nbr);
-            ps.setString(2, x.quod_line);
+            ps.setInt(2, x.quod_line);
             ps.setString(3, x.quod_item);
             ps.setString(4, x.quod_isinv);
             ps.setString(5, x.quod_desc);
             ps.setString(6, x.quod_pricetype);
-            ps.setString(7, x.quod_listprice);
-            ps.setString(8, x.quod_disc);
-            ps.setString(9, x.quod_netprice);
-            ps.setString(10, x.quod_qty);
+            ps.setDouble(7, x.quod_listprice);
+            ps.setDouble(8, x.quod_disc);
+            ps.setDouble(9, x.quod_netprice);
+            ps.setDouble(10, x.quod_qty);
             ps.setString(11, x.quod_uom);
             rows = ps.executeUpdate();
             } 
@@ -1804,34 +1804,34 @@ public class ordData {
                         + " values (?,?,?,?,?,?,?,?,?,?,?); "; 
         ps = con.prepareStatement(sqlSelect); 
         ps.setString(1, x.quod_nbr);
-        ps.setString(2, x.quod_line);
+        ps.setInt(2, x.quod_line);
         res = ps.executeQuery();
         if (! res.isBeforeFirst()) {  // insert
 	 ps = con.prepareStatement(sqlInsert) ;
             ps.setString(1, x.quod_nbr);
-            ps.setString(2, x.quod_line);
+            ps.setInt(2, x.quod_line);
             ps.setString(3, x.quod_item);
             ps.setString(4, x.quod_isinv);
             ps.setString(5, x.quod_desc);
             ps.setString(6, x.quod_pricetype);
-            ps.setString(7, x.quod_listprice);
-            ps.setString(8, x.quod_disc);
-            ps.setString(9, x.quod_netprice);
-            ps.setString(10, x.quod_qty);
+            ps.setDouble(7, x.quod_listprice);
+            ps.setDouble(8, x.quod_disc);
+            ps.setDouble(9, x.quod_netprice);
+            ps.setDouble(10, x.quod_qty);
             ps.setString(11, x.quod_uom); 
             rows = ps.executeUpdate();
         } else {    // update
          ps = con.prepareStatement(sqlUpdate) ;
             ps.setString(10, x.quod_nbr);
-            ps.setString(11, x.quod_line);
+            ps.setInt(11, x.quod_line);
             ps.setString(1, x.quod_item);
             ps.setString(2, x.quod_isinv);
             ps.setString(3, x.quod_desc);
             ps.setString(4, x.quod_pricetype);
-            ps.setString(5, x.quod_listprice);
-            ps.setString(6, x.quod_disc);
-            ps.setString(7, x.quod_netprice);
-            ps.setString(8, x.quod_qty);
+            ps.setDouble(5, x.quod_listprice);
+            ps.setDouble(6, x.quod_disc);
+            ps.setDouble(7, x.quod_netprice);
+            ps.setDouble(8, x.quod_qty);
             ps.setString(9, x.quod_uom); 
             rows = ps.executeUpdate();
         }
@@ -1856,7 +1856,7 @@ public class ordData {
             ps.setString(2, x.quos_desc);
             ps.setString(3, x.quos_type);
             ps.setString(4, x.quos_amttype);
-            ps.setString(5, x.quos_amt);
+            ps.setDouble(5, x.quos_amt);
             ps.setString(6, x.quos_appcode);
             rows = ps.executeUpdate();
             } 
@@ -2038,15 +2038,15 @@ public class ordData {
                     while(res.next()) {
                         m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
                         r = new quo_det(m, res.getString("quod_nbr"), 
-                                res.getString("quod_line"), 
+                                res.getInt("quod_line"), 
                                 res.getString("quod_item"), 
                                 res.getString("quod_isinv"), 
                                 res.getString("quod_desc"),
                                 res.getString("quod_pricetype"), 
-                                res.getString("quod_listprice"),
-                                res.getString("quod_disc"),
-                                res.getString("quod_netprice"),
-                                res.getString("quod_qty"),
+                                res.getDouble("quod_listprice"),
+                                res.getDouble("quod_disc"),
+                                res.getDouble("quod_netprice"),
+                                res.getDouble("quod_qty"),
                                 res.getString("quod_uom"));
                         list.add(r);
                     }
@@ -2080,7 +2080,7 @@ public class ordData {
                                 res.getString("quos_desc"), 
                                 res.getString("quos_type"), 
                                 res.getString("quos_amttype"), 
-                                res.getString("quos_amt"),
+                                res.getDouble("quos_amt"),
                                 res.getString("quos_appcode"));
                         list.add(r);
                     }
@@ -2917,20 +2917,20 @@ public class ordData {
     }
     
     public record quo_sac(String[] m, String quos_nbr, String quos_desc, String quos_type,
-        String quos_amttype, String quos_amt, String quos_appcode 
+        String quos_amttype, double quos_amt, String quos_appcode 
         )  {
         public quo_sac(String[] m) {
-            this (m, "", "", "", "", "", "");
+            this (m, "", "", "", "", 0.00, "");
         }
     }
     
     
-    public record quo_det(String[] m, String quod_nbr, String quod_line, String quod_item,
-        String quod_isinv, String quod_desc, String quod_pricetype, String quod_listprice, String quod_disc, 
-        String quod_netprice, String quod_qty, String quod_uom 
+    public record quo_det(String[] m, String quod_nbr, int quod_line, String quod_item,
+        String quod_isinv, String quod_desc, String quod_pricetype, double quod_listprice, double quod_disc, 
+        double quod_netprice, double quod_qty, String quod_uom 
         )  {
         public quo_det(String[] m) {
-            this (m, "", "", "", "", "", "", "", "", "", "",
+            this (m, "", 0, "", "", "", "", 0.00, 0.00, 0.00, 0.00,
                      "");
         }
     }

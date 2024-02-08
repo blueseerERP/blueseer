@@ -674,6 +674,10 @@ public class BlueSeerUtils {
         
         if (! x.isEmpty()) {
         NumberFormat nf = NumberFormat.getInstance(Locale.getDefault());
+        // invalue = invalue.replace(',', '\u066B'); ...need to convert if keyboard is US...otherwise if keyboard is 'ar' then no need to convert
+        if (Locale.getDefault().getLanguage().equals("ar") && x.contains(".")) {
+            x = x.replace('.', '\u066B');
+        } 
         
         Number number = 0.00;
                     try {
