@@ -63,6 +63,7 @@ import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import static com.blueseer.utl.BlueSeerUtils.currformat;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
@@ -131,7 +132,14 @@ public class GLTranMaint extends javax.swing.JPanel {
            DefaultTableCellRenderer tableRender = new DefaultTableCellRenderer();
     javax.swing.table.DefaultTableModel transmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "Line", "Acct", "CC", "Desc", "Amt", "Number", "Reference", "Type"
+                getGlobalColumnTag("line"), 
+                getGlobalColumnTag("account"), 
+                getGlobalColumnTag("costcenter"),
+                getGlobalColumnTag("description"),
+                getGlobalColumnTag("amount"), 
+                getGlobalColumnTag("number"),
+                getGlobalColumnTag("reference"),
+                getGlobalColumnTag("type")
             })    {
     @Override
     public boolean isCellEditable(int row, int column) {
@@ -1168,6 +1176,7 @@ public class GLTranMaint extends javax.swing.JPanel {
         lbacct2.setName("lblacct"); // NOI18N
 
         btclear.setText("Clear");
+        btclear.setName("btclear"); // NOI18N
         btclear.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btclearActionPerformed(evt);
