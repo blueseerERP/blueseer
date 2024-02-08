@@ -120,7 +120,7 @@ public class BlueSeerUtils {
    
     
     public static DateFormat mysqlDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-    public static DateFormat bsdate = new SimpleDateFormat("yyyy-MM-dd");
+    public static DateFormat bsdate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
     public static ImageIcon clickchange = new ImageIcon(BlueSeerUtils.class.getResource("/images/change.png")); 
     public static ImageIcon clickflag = new ImageIcon(BlueSeerUtils.class.getResource("/images/flag.png")); 
     public static ImageIcon clickbasket = new ImageIcon(BlueSeerUtils.class.getResource("/images/basket.png")); 
@@ -678,6 +678,9 @@ public class BlueSeerUtils {
         if (Locale.getDefault().getLanguage().equals("ar") && x.contains(".")) {
             x = x.replace('.', '\u066B');
         } 
+        if (Locale.getDefault().getLanguage().equals("ar") && x.startsWith("-")) {
+            x = x.substring(1) + "-";
+        }
         
         Number number = 0.00;
                     try {
@@ -1260,7 +1263,7 @@ public class BlueSeerUtils {
     
     
     public static Date parseDate(String indate) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         Date r = null;
         if (indate != null && ! indate.isEmpty() && ! indate.equals("0000-00-00") && ! indate.equals("null")) {
             try {
@@ -1273,7 +1276,7 @@ public class BlueSeerUtils {
     }
     
     public static Date parseDate(String indate, String format) {
-        SimpleDateFormat sdf = new SimpleDateFormat(format);  // "yyyy-MM-dd"
+        SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.getDefault());  // "yyyy-MM-dd"
         Date r = null;
         if (indate != null && ! indate.isEmpty()) {
             try {
@@ -1284,7 +1287,17 @@ public class BlueSeerUtils {
         }
         return r;
     }
-        
+   
+    public static String setDateDB(Date date) {
+       String mydate = null;
+       SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", new Locale("en-US"));
+       if (date == null) {
+           return mydate;
+       } else {
+           return sdf.format(date);
+       }
+    }
+    
     
     public static String setDateFormat(Date date) {
        String mydate = "";
@@ -1667,7 +1680,7 @@ public class BlueSeerUtils {
      public static String getMessageTag(int key, String thisclass) {
          String tag = "";
           if (tags != null && tags.containsKey("global.message." + key)) {
-              tag = MessageFormat.format(tags.getString("global.message." + key).replace("'", "''"), thisclass);
+              tag = String.valueOf(key) + ": " + MessageFormat.format(tags.getString("global.message." + key).replace("'", "''"), thisclass);
           }
          return tag;
      }
@@ -1675,7 +1688,7 @@ public class BlueSeerUtils {
      public static String getMessageTag(int key) {
          String tag = "";
           if (tags != null && tags.containsKey("global.message." + key)) {
-            tag = tags.getString("global.message." + key);
+            tag = String.valueOf(key) + ": " + tags.getString("global.message." + key);
           }
          return tag;
      }

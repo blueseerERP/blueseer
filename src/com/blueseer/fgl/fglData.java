@@ -42,6 +42,7 @@ import static com.blueseer.utl.BlueSeerUtils.bsParseDoubleUS;
 import static com.blueseer.utl.BlueSeerUtils.currformatDoubleUS;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import com.blueseer.utl.OVData;
 import static java.lang.Math.abs;
 import java.sql.DriverManager;
@@ -126,7 +127,7 @@ public class fglData {
             ps.setString(10, gv.glt_type());
             ps.setString(11, desc);
             ps.setString(12, gv.glt_doc());
-            ps.setString(13, BlueSeerUtils.setDateFormatNull(new java.util.Date()));
+            ps.setString(13, setDateDB(new java.util.Date()));
             ps.executeUpdate();
             ps.close();
        
@@ -3574,9 +3575,7 @@ public class fglData {
             try {
 
             res = st.executeQuery("select * from gl_cal where glc_start <= " +
-                    "'" + EffDate.toString() + "'" + 
-                    " AND glc_end >= " +
-                    "'" + EffDate.toString() + "'" + ";");
+                    "'" + EffDate + "'" + " AND glc_end >= " + "'" + EffDate + "'" + ";");
            while (res.next()) {
                 x[0] = res.getString("glc_year");
                 x[1] = res.getString("glc_per");

@@ -73,6 +73,8 @@ import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.lurb2;
+import static com.blueseer.utl.BlueSeerUtils.parseDate;
+import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import com.blueseer.utl.DTData;
 import static com.blueseer.utl.OVData.canUpdate;
 import java.awt.Dimension;
@@ -625,13 +627,13 @@ public class GLTranMaint extends javax.swing.JPanel {
             return false;
         } 
         
-        String[] caldate = fglData.getGLCalForDate(BlueSeerUtils.bsdate.format(effdate.getDate()));
+        String[] caldate = fglData.getGLCalForDate(setDateDB(effdate.getDate()));
         if (caldate == null || caldate[0].isEmpty()) {
             bsmf.MainFrame.show(getMessageTag(1038));
             return false;
         }
 
-        if ( OVData.isGLPeriodClosed(BlueSeerUtils.bsdate.format(effdate.getDate()))) {
+        if ( OVData.isGLPeriodClosed(setDateDB(effdate.getDate()))) {
             bsmf.MainFrame.show(getMessageTag(1035));
             return false;
         }
@@ -728,8 +730,8 @@ public class GLTranMaint extends javax.swing.JPanel {
             gl_tran gv = new gl_tran(null,
                     "", // id DB assigned
                     tbref.getText(), // ref
-                    BlueSeerUtils.bsdate.format(effdate.getDate()), // effdate
-                    dateentered.getText(), // entdate
+                    setDateDB(effdate.getDate()), // effdate
+                    setDateDB(parseDate(dateentered.getText())), // entdate
                     "0", // timestamp DB assigned
                     transtable.getValueAt(i, 1).toString(), // acct
                     transtable.getValueAt(i, 2).toString(), // cc
@@ -1245,7 +1247,7 @@ public class GLTranMaint extends javax.swing.JPanel {
                                 .addGap(12, 12, 12)
                                 .addComponent(btdeleteALL))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(391, 391, 391)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel51)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(tbamt, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
