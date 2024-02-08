@@ -64,7 +64,18 @@ import java.util.Map;
  */
 public class fglData {
   
-    
+    public static String[] addGL(gl_verb x) {
+        String[] m;
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());) {
+             glEntryXPv2(con, x);
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+        
     public static String[] addAcctMstr(AcctMstr x) {
         String[] m = new String[2];
         String sqlSelect = "select * from ac_mstr where ac_id = ?";
@@ -1223,7 +1234,58 @@ public class fglData {
        
        } // if amount does not equal 0
       }
-      
+     
+    public static void glEntryXPv2(Connection bscon, gl_verb gv) throws SQLException {
+          
+           /* any amount = 0 passed to this method will be ignored */
+           /* record entry requires a non-blank acct_cr and acct_dr
+           /* amount passed here will be rounded to 2 decimal places with DecimalFormat func */
+           
+          
+          String ref =  (gv.glv_ref().length() > 20) ? gv.glv_ref().substring(0,20) : gv.glv_ref();
+          String desc = (gv.glv_desc().length() > 30) ? gv.glv_desc().substring(0,30) : gv.glv_desc();
+         
+          
+       if ( gv.glv_amt() != 0 && ! gv.glv_acct_cr().isBlank() && ! gv.glv_acct_dr().isBlank()) {
+        String sqlInsert = "insert into gl_tran "
+                        + "( glt_acct, glt_cc, glt_effdate, glt_amt, glt_base_amt, glt_curr, glt_base_curr, glt_ref, glt_site, glt_type, glt_desc, glt_doc, glt_entdate ) " +
+                          " values (?,?,?,?,?,?,?,?,?,?,?,?,?) ";   
+        PreparedStatement ps = bscon.prepareStatement(sqlInsert);  
+            ps.setString(1, gv.glv_acct_cr());
+            ps.setString(2, gv.glv_cc_cr());
+            ps.setString(3, gv.glv_date());
+            ps.setString(4, currformatDoubleUS(-1 * gv.glv_amt()));
+            ps.setString(5, currformatDoubleUS(-1 * gv.glv_baseamt()));
+            ps.setString(6, gv.glv_curr());
+            ps.setString(7, gv.glv_basecurr());
+            ps.setString(8, ref);
+            ps.setString(9, gv.glv_site());
+            ps.setString(10, gv.glv_type());
+            ps.setString(11, desc);
+            ps.setString(12, gv.glv_doc());
+            ps.setString(13, BlueSeerUtils.setDateFormatNull(new java.util.Date()));
+            ps.executeUpdate();
+            
+            ps.setString(1, gv.glv_acct_dr());
+            ps.setString(2, gv.glv_cc_dr());
+            ps.setString(3, gv.glv_date());
+            ps.setString(4, currformatDoubleUS(gv.glv_amt()));
+            ps.setString(5, currformatDoubleUS(gv.glv_baseamt()));
+            ps.setString(6, gv.glv_curr());
+            ps.setString(7, gv.glv_basecurr());
+            ps.setString(8, ref);
+            ps.setString(9, gv.glv_site());
+            ps.setString(10, gv.glv_type());
+            ps.setString(11, desc);
+            ps.setString(12, gv.glv_doc());
+            ps.setString(13, BlueSeerUtils.setDateFormatNull(new java.util.Date()));
+            ps.executeUpdate();
+       
+            ps.close();
+       
+       } // if amount does not equal 0
+      }
+    
     
     public static boolean _glEntryFromVoucher(String voucher, Date effdate, Connection bscon, boolean Void) throws SQLException {
                 boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
@@ -5348,11 +5410,11 @@ return myarray;
     
     public record gl_tran(String[] m, String glt_id, String glt_ref, String glt_effdate,
         String glt_entdate, String glt_ts, String glt_acct, String glt_cc,
-        String glt_amt, String glt_base_amt, String glt_site, String glt_doc,
+        double glt_amt, double glt_base_amt, String glt_site, String glt_doc,
         String glt_line, String glt_type, String glt_curr, String glt_base_curr,
         String glt_desc, String glt_userid) {
         public gl_tran(String[] m) {
-            this(m, "", "", "", "", "", "", "", "", "", "",
+            this(m, "", "", "", "", "", "", "", 0.00, 0.00, "",
                     "", "", "", "", "", "", "");
         }
     }

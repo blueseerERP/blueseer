@@ -34,7 +34,6 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.fgl.fglData;
-import com.blueseer.fgl.fglData.gl_tran;
 import com.blueseer.fgl.fglData.gl_verb;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
@@ -1773,8 +1772,8 @@ public class invData {
             _addTranMstr(tm, bscon);
             /* do _addInMstr */
             _addUpdateInMstr(in, isInventorySerialized, bscon);
-            /* do glEntryXP */
-            fglData.glEntryXP(bscon, gv.glv_acct_cr(), gv.glv_cc_cr(), gv.glv_acct_dr(), gv.glv_cc_dr(), gv.glv_date(), gv.glv_amt(), gv.glv_baseamt(), gv.glv_curr(), gv.glv_basecurr(), gv.glv_ref(), gv.glv_site(), gv.glv_type(), gv.glv_desc(), gv.glv_doc());
+            /* do glEntryXPv2 */
+            fglData.glEntryXPv2(bscon, gv);
                         
             bscon.commit();
             m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1125)};
