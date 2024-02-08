@@ -508,6 +508,11 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         setComponentDefaultValues();
         BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
         btnew.setEnabled(false);
+        btcommit.setEnabled(false);
+        btprintquote.setEnabled(false);
+        btupdate.setEnabled(false);
+        btdelete.setEnabled(false);
+        btnew.setEnabled(false);
         tbkey.setEditable(true);
         tbkey.setForeground(Color.blue);
         if (! x.isEmpty()) {
