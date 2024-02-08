@@ -1680,8 +1680,9 @@ public class BlueSeerUtils {
     
      public static String getMessageTag(int key, String thisclass) {
          String tag = "";
-          if (tags != null && tags.containsKey("global.message." + key)) {
-              tag = String.valueOf(key) + ": " + MessageFormat.format(tags.getString("global.message." + key).replace("'", "''"), thisclass);
+          if (tags != null && tags.containsKey("global.message." + key)) {              
+              tag = MessageFormat.format(tags.getString("global.message." + key).replace("'", "''"), thisclass);
+              tag = (Locale.getDefault().getLanguage().equals("en")) ? tag : String.valueOf(key) + ": " + tag;
           }
          return tag;
      }
@@ -1689,7 +1690,8 @@ public class BlueSeerUtils {
      public static String getMessageTag(int key) {
          String tag = "";
           if (tags != null && tags.containsKey("global.message." + key)) {
-            tag = String.valueOf(key) + ": " + tags.getString("global.message." + key);
+            tag = tags.getString("global.message." + key);
+            tag = (Locale.getDefault().getLanguage().equals("en")) ? tag : String.valueOf(key) + ": " + tag;
           }
          return tag;
      }
@@ -1724,7 +1726,7 @@ public class BlueSeerUtils {
            bsmf.MainFrame.messagelabel.setForeground(Color.RED);  
            return;
          }
-         bsmf.MainFrame.messagelabel.setText(message[1]);
+          bsmf.MainFrame.messagelabel.setText(message[1]);   
          if (message[0].equals("1")) {
             bsmf.MainFrame.messagelabel.setForeground(Color.RED); 
          } else if (message[0].equals("2")) {
