@@ -95,6 +95,7 @@ import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.logChange;
+import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormatNull;
 import static com.blueseer.utl.OVData.addCustPriceList;
 import java.awt.Color;
@@ -709,9 +710,9 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                 ddcust.getSelectedItem().toString(),
                 "", // ship
                 ddsite.getSelectedItem().toString(),
-                setDateFormatNull(now),
-                setDateFormatNull(dcquoteexpire.getDate()),
-                setDateFormatNull(dcpricingexpire.getDate()),
+                setDateDB(now),
+                setDateDB(dcquoteexpire.getDate()),
+                setDateDB(dcpricingexpire.getDate()),
                 ddstatus.getSelectedItem().toString(),
                 tarmks.getText(),
                 tbref.getText(),
@@ -880,7 +881,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                   "0" + ":" +
                   detailtable.getValueAt(j, 8).toString() + ":" +
                   ddcurr.getSelectedItem().toString() + ":" +
-                  setDateFormatNull(dcpricingexpire.getDate()) ; 
+                  setDateDB(dcpricingexpire.getDate()); 
                 list.add(s);
             }    
         return list;

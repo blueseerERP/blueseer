@@ -674,9 +674,8 @@ public class BlueSeerUtils {
         
         if (! x.isEmpty()) {
         NumberFormat nf = NumberFormat.getInstance(Locale.getDefault());
-        // invalue = invalue.replace(',', '\u066B'); ...need to convert if keyboard is US...otherwise if keyboard is 'ar' then no need to convert
-        if (Locale.getDefault().getLanguage().equals("ar") && x.contains(".")) {
-            x = x.replace('.', '\u066B');
+        if (Locale.getDefault().getLanguage().equals("ar") && x.contains(".")) { // if AR locale and US keyboard "." then change decimal separator
+            x = x.replace('.', '\u066B'); 
         } 
         if (Locale.getDefault().getLanguage().equals("ar") && x.startsWith("-")) {
             x = x.substring(1) + "-";
@@ -814,11 +813,13 @@ public class BlueSeerUtils {
         } else {
          pattern = "#0.00";    
         }
-        
-       // invalue = invalue.replace(',', '\u066B'); ...need to convert if keyboard is US...otherwise if keyboard is 'ar' then no need to convert
-        if (Locale.getDefault().getLanguage().equals("ar") && invalue.contains(".")) {
-            invalue = invalue.replace('.', '\u066B');
+       
+        if (Locale.getDefault().getLanguage().equals("ar") && invalue.contains(".")) { // if AR locale and US keyboard "." then change decimal separator
+            invalue = invalue.replace('.', '\u066B'); 
         } 
+        if (Locale.getDefault().getLanguage().equals("ar") && invalue.startsWith("-")) {
+            invalue = invalue.substring(1) + "-";
+        }
        
         DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());
         
