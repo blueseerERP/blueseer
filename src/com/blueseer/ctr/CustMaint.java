@@ -348,6 +348,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbsalesrep.setText("");
         tbmainphone.setText("");
         tbmainemail.setText("");
+        tbtaxid.setText("");
         
         java.util.Date now = new java.util.Date();
         DateFormat dtf = new SimpleDateFormat("yyyy-MM-dd");
@@ -637,7 +638,8 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
                 BlueSeerUtils.boolToString(cb855.isSelected()),
                 BlueSeerUtils.boolToString(cb856.isSelected()),
                 BlueSeerUtils.boolToString(cb810.isSelected()),
-                (ddsite.getSelectedItem() == null) ? "" : ddsite.getSelectedItem().toString()
+                (ddsite.getSelectedItem() == null) ? "" : ddsite.getSelectedItem().toString(),
+                tbtaxid.getText()
                 );
         return x;
     }
@@ -964,6 +966,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
         cb855.setSelected(BlueSeerUtils.ConvertStringToBool(k.cm_is855export()));
         cb856.setSelected(BlueSeerUtils.ConvertStringToBool(k.cm_is856export()));
         cb810.setSelected(BlueSeerUtils.ConvertStringToBool(k.cm_is810export()));
+        tbtaxid.setText(k.cm_misc1());
         contactmodel.setRowCount(0);
         clearShipTo();
         clearContacts();
@@ -1199,6 +1202,8 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
         cb810 = new javax.swing.JCheckBox();
         ddsite = new javax.swing.JComboBox<>();
         jLabel46 = new javax.swing.JLabel();
+        tbtaxid = new javax.swing.JTextField();
+        jLabel47 = new javax.swing.JLabel();
         shiptoPanel = new javax.swing.JPanel();
         jLabel30 = new javax.swing.JLabel();
         jLabel31 = new javax.swing.JLabel();
@@ -1551,6 +1556,9 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         jLabel46.setText("Site");
 
+        jLabel47.setText("TaxID");
+        jLabel47.setName("lbltaxid"); // NOI18N
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -1571,20 +1579,22 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addComponent(jLabel41)
                             .addComponent(jLabel40)
                             .addComponent(jLabel42)
-                            .addComponent(jLabel46))
+                            .addComponent(jLabel46)
+                            .addComponent(jLabel47))
                         .addGap(4, 4, 4)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(tbtaxid)
                             .addComponent(tbdateadded, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbgroup, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ddcarrier, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbpricecode, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbsalesrep, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ddaccount, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ddcc, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ddbank, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ddcurr, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ddlabel, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbshpformat, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbgroup, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
+                            .addComponent(ddcarrier, 0, 171, Short.MAX_VALUE)
+                            .addComponent(tbpricecode, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
+                            .addComponent(tbsalesrep, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
+                            .addComponent(ddaccount, 0, 171, Short.MAX_VALUE)
+                            .addComponent(ddcc, 0, 171, Short.MAX_VALUE)
+                            .addComponent(ddbank, 0, 171, Short.MAX_VALUE)
+                            .addComponent(ddcurr, 0, 171, Short.MAX_VALUE)
+                            .addComponent(ddlabel, 0, 171, Short.MAX_VALUE)
+                            .addComponent(tbshpformat, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
                             .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(4, 4, 4)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1596,7 +1606,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addComponent(jLabel18, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel20, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel43, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(4, 4, 4)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tbdatemod, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tbmarket, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1736,9 +1746,16 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addGap(1, 1, 1)
                         .addComponent(tbshpformat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(cb856))
-                .addGap(5, 5, 5)
-                .addComponent(cb810)
-                .addGap(2, 2, 2)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(5, 5, 5)
+                        .addComponent(cb810))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tbtaxid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel47))))
+                .addGap(3, 3, 3)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(cbshipto)
                     .addComponent(btdelete)
@@ -2383,6 +2400,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JLabel jLabel44;
     private javax.swing.JLabel jLabel45;
     private javax.swing.JLabel jLabel46;
+    private javax.swing.JLabel jLabel47;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -2429,6 +2447,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JTextField tbshipname;
     private javax.swing.JTextField tbshipzip;
     private javax.swing.JTextField tbshpformat;
+    private javax.swing.JTextField tbtaxid;
     private javax.swing.JTextField tbzip;
     // End of variables declaration//GEN-END:variables
 }
