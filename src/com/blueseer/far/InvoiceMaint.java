@@ -1702,7 +1702,7 @@ public class InvoiceMaint extends javax.swing.JPanel {
          StringBuilder sb = new StringBuilder();
          // headers
          String colHeaders = "custcode,shipcode,ordernumber,ponumber,podate,shipdate,remarks,reference,shipvia,grossweight,netweight,trailernumber,mfgsite,currency,shipfrom," +
-                 "billtoname,billtoaddr,billtocity,billtostate,billtozip,billtocountry," +
+                 "taxid,billtoname,billtoaddr,billtocity,billtostate,billtozip,billtocountry," +
                  "shiptoname,shiptoaddr,shiptocity,shiptostate,shiptozip,shiptocountry," +
                  "itemnumber,custitem,shipqty,po,cumalativeqty,listprice,netprice,itemreference,skunumber,itemdescription";
          sb.append(colHeaders).append("\n");

@@ -1694,7 +1694,7 @@ public class shpData {
 
     public static String[] getShipperHeader(String shipper) {
 
-          String[] H = new String[27];
+          String[] H = new String[28];
     try{
 
         Connection con = null;
@@ -1733,18 +1733,21 @@ public class shpData {
                     H[12] = res.getString("sh_site");
                     H[13] = res.getString("sh_curr");
                     H[14] = res.getString("sh_shipfrom");
-                    H[15] = res.getString("cm_name");
-                    H[16] = res.getString("cm_line1");
-                    H[17] = res.getString("cm_city");
-                    H[18] = res.getString("cm_state");
-                    H[19] = res.getString("cm_zip");
-                    H[20] = res.getString("cm_country");
-                    H[21] = res.getString("cms_name");
-                    H[22] = res.getString("cms_line1");
-                    H[23] = res.getString("cms_city");
-                    H[24] = res.getString("cms_state");
-                    H[25] = res.getString("cms_zip");
-                    H[26] = res.getString("cms_country");
+                    H[15] = res.getString("cm_misc1");
+                    H[16] = res.getString("cm_name");
+                    H[17] = res.getString("cm_line1");
+                    H[18] = res.getString("cm_city");
+                    H[19] = res.getString("cm_state");
+                    H[20] = res.getString("cm_zip");
+                    H[21] = res.getString("cm_country");
+                    H[22] = res.getString("cms_name");
+                    H[23] = res.getString("cms_line1");
+                    H[24] = res.getString("cms_city");
+                    H[25] = res.getString("cms_state");
+                    H[26] = res.getString("cms_zip");
+                    H[27] = res.getString("cms_country");
+                    
+                    
 
                 }
        }

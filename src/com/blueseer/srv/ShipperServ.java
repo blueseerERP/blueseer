@@ -223,7 +223,7 @@ public static String getInvoiceJSON(String id) {
                     }
                     
                 res = st.executeQuery("select cm_code as 'BillToCode', cm_name as 'BillToName', cm_line1 as 'BillToAddr1',  " +
-                " cm_city as 'BillToCity', cm_state as 'BillToState', cm_zip as 'BillToZip', cm_country as 'BillToCountry' " +
+                " cm_city as 'BillToCity', cm_state as 'BillToState', cm_zip as 'BillToZip', cm_country as 'BillToCountry', cm_misc1 as 'TaxID' " +
                 " from cm_mstr inner join ship_mstr on sh_cust = cm_code " +
                 " where sh_id = " + "'" + id + "'" + ";");
                 rsmd = res.getMetaData(); 
@@ -367,7 +367,8 @@ public static String getInvoiceXML(String id) {
                             res.getString("cm_city"),
                             res.getString("cm_state"),
                             res.getString("cm_zip"),   
-                            res.getString("cm_country"));
+                            res.getString("cm_country"),
+                            res.getString("cm_misc1"));
 
                     }
                    if (z > 0) {
@@ -534,7 +535,7 @@ public static class  InvoiceXML {
     
      public static Document createBillto(Document doc, String code, String name, 
             String line1, String line2, String line3, String city, String state, 
-            String zip, String country ) {
+            String zip, String country, String taxid ) {
         
         Element addr = doc.createElement("address");
         addr.setAttribute("type", "billto");
@@ -571,6 +572,10 @@ public static class  InvoiceXML {
        Element addrcountry = doc.createElement("addresscountry");
                         addrcountry.appendChild(doc.createTextNode(BlueSeerUtils.xNull(country)));
        addr.appendChild(addrcountry);
+       
+       Element addrtaxid = doc.createElement("addresstaxid");
+                        addrtaxid.appendChild(doc.createTextNode(BlueSeerUtils.xNull(taxid)));
+       addr.appendChild(addrtaxid);
        
         return doc;
     }
