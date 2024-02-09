@@ -364,7 +364,7 @@
                                           <Component id="tbpricecode" alignment="0" max="32767" attributes="0"/>
                                           <Component id="tbsalesrep" alignment="0" max="32767" attributes="0"/>
                                           <Component id="ddaccount" alignment="1" pref="120" max="32767" attributes="0"/>
-                                          <Component id="tbmisc" alignment="0" max="32767" attributes="0"/>
+                                          <Component id="tbtaxid" alignment="0" max="32767" attributes="0"/>
                                           <Component id="tbdateadded" alignment="0" max="32767" attributes="0"/>
                                           <Component id="tbgroup" alignment="0" max="32767" attributes="0"/>
                                           <Component id="ddbank" alignment="0" max="32767" attributes="0"/>
@@ -488,14 +488,15 @@
                               </Group>
                               <EmptySpace max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="tbmisc" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="tbtaxid" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel32" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
+                      <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jScrollPane2" min="-2" pref="68" max="-2" attributes="0"/>
                           <Component id="jLabel29" min="-2" max="-2" attributes="0"/>
-                          <Component id="jScrollPane2" min="-2" pref="76" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -671,12 +672,12 @@
                 <Property name="name" type="java.lang.String" value="lblpricecode" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="tbmisc">
+            <Component class="javax.swing.JTextField" name="tbtaxid">
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel32">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Misc"/>
-                <Property name="name" type="java.lang.String" value="lblmisc" noResource="true"/>
+                <Property name="text" type="java.lang.String" value="TaxID"/>
+                <Property name="name" type="java.lang.String" value="lbltaxid" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="btadd">
