@@ -1694,7 +1694,7 @@ public class shpData {
 
     public static String[] getShipperHeader(String shipper) {
 
-          String[] H = new String[15];
+          String[] H = new String[27];
     try{
 
         Connection con = null;
@@ -1713,7 +1713,10 @@ public class shpData {
             String mydate = dfdate.format(now);
 
 
-                res = st.executeQuery("select * from ship_mstr where sh_id = " + "'" + shipper + "'" +";");
+                res = st.executeQuery("select * from ship_mstr " +
+                        " inner join cm_mstr on cm_code = sh_cust " +
+                        " inner join cms_det on cms_det.cms_shipto = sh_ship and cms_det.cms_code = sh_cust " +
+                        " where sh_id = " + "'" + shipper + "'" +";");
                 while (res.next()) {
                     H[0] = res.getString("sh_cust");
                     H[1] = res.getString("sh_ship");
@@ -1730,6 +1733,18 @@ public class shpData {
                     H[12] = res.getString("sh_site");
                     H[13] = res.getString("sh_curr");
                     H[14] = res.getString("sh_shipfrom");
+                    H[15] = res.getString("cm_name");
+                    H[16] = res.getString("cm_line1");
+                    H[17] = res.getString("cm_city");
+                    H[18] = res.getString("cm_state");
+                    H[19] = res.getString("cm_zip");
+                    H[20] = res.getString("cm_country");
+                    H[21] = res.getString("cms_name");
+                    H[22] = res.getString("cms_line1");
+                    H[23] = res.getString("cms_city");
+                    H[24] = res.getString("cms_state");
+                    H[25] = res.getString("cms_zip");
+                    H[26] = res.getString("cms_country");
 
                 }
        }

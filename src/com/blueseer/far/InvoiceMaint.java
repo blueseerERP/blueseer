@@ -27,6 +27,7 @@ package com.blueseer.far;
 
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
@@ -38,6 +39,11 @@ import com.blueseer.fgl.fglData;
 import static com.blueseer.fgl.fglData.AcctBalEntry;
 import com.blueseer.ord.ordData;
 import com.blueseer.shp.shpData;
+import static com.blueseer.shp.shpData.getShipperHeader;
+import static com.blueseer.shp.shpData.getShipperLines;
+import static com.blueseer.srv.SalesOrdServ.getSalesOrderJSON;
+import static com.blueseer.srv.ShipperServ.getInvoiceJSON;
+import static com.blueseer.srv.ShipperServ.getInvoiceXML;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
@@ -73,8 +79,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -1050,6 +1060,8 @@ public class InvoiceMaint extends javax.swing.JPanel {
         sactable = new javax.swing.JTable();
         lbmessage = new javax.swing.JLabel();
         btlookup = new javax.swing.JButton();
+        ddexport = new javax.swing.JComboBox<>();
+        btexport = new javax.swing.JButton();
         panelAttachment = new javax.swing.JPanel();
         labelmessage = new javax.swing.JLabel();
         btaddattachment = new javax.swing.JButton();
@@ -1439,6 +1451,15 @@ public class InvoiceMaint extends javax.swing.JPanel {
             }
         });
 
+        ddexport.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "csv", "json", "xml" }));
+
+        btexport.setText("Export");
+        btexport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btexportActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelMainLayout = new javax.swing.GroupLayout(panelMain);
         panelMain.setLayout(panelMainLayout);
         panelMainLayout.setHorizontalGroup(
@@ -1455,8 +1476,12 @@ public class InvoiceMaint extends javax.swing.JPanel {
                         .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(24, 24, 24)
                         .addComponent(btclear)
-                        .addGap(78, 78, 78)
-                        .addComponent(lbmessage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(26, 26, 26)
+                        .addComponent(ddexport, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btexport)
+                        .addGap(18, 22, Short.MAX_VALUE)
+                        .addComponent(lbmessage, javax.swing.GroupLayout.PREFERRED_SIZE, 484, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelMainLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(btPrintInv)
@@ -1492,7 +1517,10 @@ public class InvoiceMaint extends javax.swing.JPanel {
                             .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel24))
-                            .addComponent(btclear)
+                            .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(btclear)
+                                .addComponent(ddexport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btexport))
                             .addComponent(btlookup))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
                     .addGroup(panelMainLayout.createSequentialGroup()
@@ -1651,12 +1679,77 @@ public class InvoiceMaint extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_tableattachmentMouseClicked
 
+    private void btexportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btexportActionPerformed
+        
+        if (tbkey.getText() == null || tbkey.getText().isBlank()) {
+            return;
+        }
+        Path path = FileSystems.getDefault().getPath(OVData.getSystemTempDirectory() + "/" + "invoice." + tbkey.getText() + "." + ddexport.getSelectedItem().toString());
+       
+      
+        BufferedWriter output;
+        String filecontent = "";
+        
+        if (ddexport.getSelectedItem().toString().equals("json")) {
+        filecontent = getInvoiceJSON(tbkey.getText());
+        }
+        if (ddexport.getSelectedItem().toString().equals("xml")) {
+        filecontent = getInvoiceXML(tbkey.getText());
+        }
+        if (ddexport.getSelectedItem().toString().equals("csv")) {
+         String[] H = getShipperHeader(tbkey.getText());
+         ArrayList<String[]> D = getShipperLines(tbkey.getText());
+         StringBuilder sb = new StringBuilder();
+         // headers
+         String colHeaders = "custcode,shipcode,ordernumber,ponumber,podate,shipdate,remarks,reference,shipvia,grossweight,netweight,trailernumber,mfgsite,currency,shipfrom," +
+                 "billtoname,billtoaddr,billtocity,billtostate,billtozip,billtocountry," +
+                 "shiptoname,shiptoaddr,shiptocity,shiptostate,shiptozip,shiptocountry," +
+                 "itemnumber,custitem,shipqty,po,cumalativeqty,listprice,netprice,itemreference,skunumber,itemdescription";
+         sb.append(colHeaders).append("\n");
+         
+         //remove data commas
+         for (int i = 0; i < H.length; i++) {
+             H[i] = H[i].replace(",", "");
+         }
+         
+         for (String[] detail : D) {
+             sb.append(String.join(",", H));
+             sb.append(",");
+             //remove data commas in detail
+             for (int i = 0; i < detail.length; i++) {
+                detail[i] = detail[i].replace(",", "");
+             }
+             sb.append(String.join(",", detail));
+             sb.append("\n");
+         }
+         filecontent = sb.toString();
+        }
+        
+        if (filecontent.isBlank()) {
+            bsmf.MainFrame.show("file content is blank");
+            return;
+        }
+        try {
+            output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path.toFile(),false)));
+            output.write(filecontent);
+            output.close();  
+            if (Files.exists(path)) {
+                bsmf.MainFrame.show("file exported to: " + path.toString());
+            }
+        } catch (FileNotFoundException ex) {
+            bslog(ex);
+        } catch (IOException ex) {
+            bslog(ex);
+        }
+    }//GEN-LAST:event_btexportActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btPrintInv;
     private javax.swing.JButton btPrintShp;
     private javax.swing.JButton btaddattachment;
     private javax.swing.JButton btclear;
     private javax.swing.JButton btdeleteattachment;
+    private javax.swing.JButton btexport;
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btupdate;
     private javax.swing.JButton btvoid;
@@ -1666,6 +1759,7 @@ public class InvoiceMaint extends javax.swing.JPanel {
     private com.toedter.calendar.JDateChooser dcinvduedate;
     private com.toedter.calendar.JDateChooser dcshipdate;
     private javax.swing.JComboBox<String> ddcurr;
+    private javax.swing.JComboBox<String> ddexport;
     private javax.swing.JComboBox ddshipvia;
     private javax.swing.JComboBox ddsite;
     private javax.swing.JLabel jLabel1;
