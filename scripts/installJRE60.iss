@@ -38,6 +38,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Components]
 Name: "english"; Description: "English"; Flags: exclusive
+Name: "arabic"; Description: "Arabic (preview)"; Flags: exclusive
 Name: "french"; Description: "French"; Flags: exclusive
 Name: "german"; Description: "German"; Flags: exclusive
 Name: "romanian"; Description: "Romanian"; Flags: exclusive
@@ -80,6 +81,10 @@ Source: "C:\java\jre17\*"; DestDir: "{app}\jre17"; Flags: ignoreversion recurses
 Name: "{commonprograms}\{#MyAppName}";  components: english; Filename: "{app}\sclnk.vbs"; WorkingDir: "{app}"; Parameters: "" ; Tasks: desktopicon ; IconFilename: "{app}\images\bs.ico"
 Name: "{commondesktop}\{#MyAppName}";  components: english; Filename: "{app}\sclnk.vbs"; WorkingDir: "{app}"; Parameters: "" ; Tasks: desktopicon ; IconFilename: "{app}\images\bs.ico"
 
+;arabic
+Name: "{commonprograms}\{#MyAppName}"; components: arabic; Filename: "{app}\jre17\bin\javaw.exe"; WorkingDir: "{app}"; Parameters: "-Djava.util.logging.config.file=bslogging.properties -Duser.language=ar -Duser.country=SA -cp dist/* bsmf.MainFrame" ; Tasks: desktopicon ; IconFilename: "{app}\images\bs.ico"
+Name: "{commondesktop}\{#MyAppName}";  components: french; Filename: "{app}\jre17\bin\javaw.exe"; WorkingDir: "{app}"; Parameters: "-Djava.util.logging.config.file=bslogging.properties -Duser.language=ar -Duser.country=SA -cp dist/* bsmf.MainFrame" ; Tasks: desktopicon ; IconFilename: "{app}\images\bs.ico"
+
 ;french
 Name: "{commonprograms}\{#MyAppName}"; components: french; Filename: "{app}\jre17\bin\javaw.exe"; WorkingDir: "{app}"; Parameters: "-Djava.util.logging.config.file=bslogging.properties -Duser.language=fr -Duser.country=FR -cp dist/* bsmf.MainFrame" ; Tasks: desktopicon ; IconFilename: "{app}\images\bs.ico"
 Name: "{commondesktop}\{#MyAppName}";  components: french; Filename: "{app}\jre17\bin\javaw.exe"; WorkingDir: "{app}"; Parameters: "-Djava.util.logging.config.file=bslogging.properties -Duser.language=fr -Duser.country=FR -cp dist/* bsmf.MainFrame" ; Tasks: desktopicon ; IconFilename: "{app}\images\bs.ico"
@@ -116,6 +121,7 @@ begin
   SetArrayLength(lines, 2);
   mylang := 'LANGUAGE=en';
   mycountry := 'COUNTRY=US';
+  if IsComponentSelected('arabic') then begin mylang := 'LANGUAGE=ar'; mycountry := 'COUNTRY=SA'; end;
   if IsComponentSelected('french') then begin mylang := 'LANGUAGE=fr'; mycountry := 'COUNTRY=FR'; end;
   if IsComponentSelected('spanish') then begin mylang := 'LANGUAGE=es'; mycountry := 'COUNTRY=ES'; end;
   if IsComponentSelected('turkish') then begin mylang := 'LANGUAGE=tr'; mycountry := 'COUNTRY=TR'; end;
