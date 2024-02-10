@@ -118,8 +118,8 @@ public class fglData {
             ps.setString(1, gv.glt_acct());
             ps.setString(2, gv.glt_cc());
             ps.setString(3, gv.glt_effdate());
-            ps.setString(4, currformatDoubleUS(-1 * gv.glt_amt()));
-            ps.setString(5, currformatDoubleUS(-1 * gv.glt_base_amt()));
+            ps.setString(4, currformatDoubleUS(gv.glt_amt()));
+            ps.setString(5, currformatDoubleUS(gv.glt_base_amt()));
             ps.setString(6, gv.glt_curr());
             ps.setString(7, gv.glt_base_curr());
             ps.setString(8, ref);
