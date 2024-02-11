@@ -501,6 +501,13 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddsactype.addItem("tax");
         ddsactype.setSelectedIndex(0);
         
+        //open, closed, void
+        ddstatus.removeAllItems();
+        ddstatus.addItem(getGlobalProgTag("open"));
+        ddstatus.addItem(getGlobalProgTag("closed"));
+        ddstatus.addItem(getGlobalProgTag("void"));
+        
+        
        isLoad = false;
     }
     
@@ -609,7 +616,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
        for (String line : lines) {
           goodLine = false;
           for (int j = 0; j < detailtable.getRowCount(); j++) {
-             if (detailtable.getValueAt(j, 1).toString().equals(line)) {
+             if (bsParseInt(detailtable.getValueAt(j, 1).toString()) == Integer.valueOf(line)) {
                  goodLine = true;
              }
           }
@@ -1387,7 +1394,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         ddquotetype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "discrete", "volume" }));
 
-        ddstatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "open", "closed", "void" }));
+        ddstatus.setToolTipText("");
 
         jLabel2.setText("Status");
         jLabel2.setName("lblstatus"); // NOI18N

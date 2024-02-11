@@ -69,8 +69,11 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatDoubleZ;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormat;
@@ -304,10 +307,10 @@ public class QuoteBrowse extends javax.swing.JPanel {
                       res.getString("quod_nbr"), 
                       res.getString("quod_line"),
                       res.getString("quod_item"),
-                      currformatDouble(res.getDouble("quod_listprice")),
-                      res.getString("quod_disc"), 
-                      currformatDouble(res.getDouble("quod_netprice")),
-                      res.getString("quod_qty")
+                      bsFormatDouble(res.getDouble("quod_listprice")),
+                      bsFormatDouble(res.getDouble("quod_disc")), 
+                      bsFormatDouble(res.getDouble("quod_netprice")),
+                      bsFormatDoubleZ(res.getDouble("quod_qty"))
                    });
                 }
                
@@ -773,7 +776,7 @@ public class QuoteBrowse extends javax.swing.JPanel {
                         " quo_date <= " + "'" + todate + "'" + " AND " +
                         " quo_cust >= " + "'" + custfrom + "'" + " AND " +
                         " quo_cust <= " + "'" + custto + "'" + " AND " +
-                        " quo_status <> 'closed' " +
+                        " quo_status <> " + "'" + getGlobalProgTag("closed") + "'" +
                         " group by quo_nbr, quo_status, quo_cust, quo_date, quo_expire;");
                  } else {
                     res = st.executeQuery("select quo_nbr, quo_status, quo_cust, quo_date, quo_expire, sum(quod_qty) as 'qty', sum(quod_qty * quod_netprice) as 'price' from quo_mstr " +
@@ -797,8 +800,8 @@ public class QuoteBrowse extends javax.swing.JPanel {
                                 setDateFormat(parseDate(res.getString("quo_date"))),
                                 setDateFormat(parseDate(res.getString("quo_expire"))),
                                 res.getString("quo_status"),
-                                res.getString("qty"),
-                                currformatDouble(res.getDouble("price"))
+                                bsFormatDoubleZ(res.getDouble("qty")),
+                                bsFormatDouble(res.getDouble("price"))
                             });
                                 
                        }

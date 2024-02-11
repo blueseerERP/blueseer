@@ -763,6 +763,16 @@ public class BlueSeerUtils {
         return outvalue;
     }
     
+    public static String bsFormatDoubleZ(double invalue) {
+        String outvalue = "";
+        String pattern = "#0.##"; 
+        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());    
+        df.applyPattern(pattern);
+        outvalue = df.format(invalue); 
+        return outvalue;
+    }
+    
+    
     public static String bsFormatInt(int invalue) {
         String outvalue = "";
         String pattern = "#"; 
