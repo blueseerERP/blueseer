@@ -1,7 +1,7 @@
-Logo and Trademark Policy
+<h2>Logo and Trademark Policy</h2>
 The brand name BlueSeer and the logo are trademarks of BlueSeer LLC
 
-Introduction
+<h2>Introduction</h2>
 BlueSeer LLC owns and oversees the trademarks for the BlueSeer name and logos. We have developed this trademark usage policy with the following goals in mind:
 
 We’d like to make it easy for anyone to use the BlueSeer name or logo for community-oriented efforts that help spread and improve BlueSeer.
