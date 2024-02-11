@@ -98,5 +98,13 @@ Here's a simple guide to contribute to the BlueSeer project:
 5. Commit your changes (`git commit -m 'mycode with enhancement/fix/feature.'`)
 6. Push to the branch (`git push origin mybranch/mycode_change`)
 7. Open a pull request
-
 </br>
+
+<h1>License</h1>
+
+MIT License (see [license.txt](license.txt))
+
+
+<h1>Logo and Trademark Policy</h1>
+
+Please read our [Logo and Trademark Policy](TRADEMARK_POLICY.md).
