@@ -102,7 +102,7 @@ Here's a simple guide to contribute to the BlueSeer project:
 
 <h1>License</h1>
 
-MIT License (see [license.txt](license.txt))
+MIT License (see [license.txt](LICENSE))
 
 
 <h1>Logo and Trademark Policy</h1>
