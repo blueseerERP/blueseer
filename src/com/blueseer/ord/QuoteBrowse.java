@@ -72,6 +72,9 @@ import static bsmf.MainFrame.user;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.parseDate;
+import static com.blueseer.utl.BlueSeerUtils.setDateFormat;
+import static com.blueseer.utl.BlueSeerUtils.setDateFormatNull;
 import java.sql.Connection;
 import java.text.DecimalFormatSymbols;
 import java.util.HashMap;
@@ -791,8 +794,8 @@ public class QuoteBrowse extends javax.swing.JPanel {
                          mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, BlueSeerUtils.clickbasket, 
                                res.getString("quo_nbr"),
                                 res.getString("quo_cust"),
-                                BlueSeerUtils.xNull(res.getString("quo_date")),
-                                BlueSeerUtils.xNull(res.getString("quo_expire")),
+                                setDateFormat(parseDate(res.getString("quo_date"))),
+                                setDateFormat(parseDate(res.getString("quo_expire"))),
                                 res.getString("quo_status"),
                                 res.getString("qty"),
                                 currformatDouble(res.getDouble("price"))
