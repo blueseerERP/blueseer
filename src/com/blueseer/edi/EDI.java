@@ -46,6 +46,7 @@ import com.blueseer.pur.purData;
 import com.blueseer.shp.shpData;
 import com.blueseer.utl.EDData;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
 import static com.blueseer.utl.BlueSeerUtils.getEDIClassLoader;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
@@ -3184,24 +3185,24 @@ public class EDI {
            }
         ordData.sod_det sod = new ordData.sod_det(null, 
                 String.valueOf(sonbr),
-                String.valueOf(j + 1),
+                j + 1,
                 e.getDetItem(j), 
                 e.getDetCustItem(j), 
                 e.po,
-                e.getDetQty(j).replace(defaultDecimalSeparator, '.'),
+                bsParseDouble(e.getDetQty(j).replace(defaultDecimalSeparator, '.')),
                 uom,
-                "", // allocation value
-                e.getDetListPrice(j).replace(defaultDecimalSeparator, '.'),
-                e.getDetDisc(j).replace(defaultDecimalSeparator, '.'),
-                e.getDetNetPrice(j).replace(defaultDecimalSeparator, '.'),
+                0, // allocation value
+                bsParseDouble(e.getDetListPrice(j).replace(defaultDecimalSeparator, '.')),
+                bsParseDouble(e.getDetDisc(j).replace(defaultDecimalSeparator, '.')),
+                bsParseDouble(e.getDetNetPrice(j).replace(defaultDecimalSeparator, '.')),
                 e.podate,
                 e.duedate,   
-                "0", // ship qty
+                0, // ship qty
                 "open", // status
                 "", // wh
                 "", // location
                 "",  // desc
-                "", // tax 
+                0, // tax 
                 site,  
                 "", // bom
                 shipto

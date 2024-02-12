@@ -47,6 +47,7 @@ import com.blueseer.ord.ordData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDoubleUS;
+import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDoubleUS;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
@@ -100,8 +101,8 @@ public class shpData {
             ps.setString(1, x.sh_id);
             ps.setString(2, x.sh_cust);
             ps.setString(3, x.sh_ship);
-            ps.setString(4, x.sh_pallets);
-            ps.setString(5, x.sh_boxes);
+            ps.setInt(4, x.sh_pallets);
+            ps.setInt(5, x.sh_boxes);
             ps.setString(6, x.sh_shipvia);
             ps.setString(7, x.sh_shipdate);
             ps.setString(8, x.sh_po_date);
@@ -133,27 +134,27 @@ public class shpData {
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.shd_id);
-          ps.setString(2, x.shd_line);
+          ps.setInt(2, x.shd_line);
           res = ps.executeQuery();
           ps = con.prepareStatement(sqlInsert);  
             if (! res.isBeforeFirst()) {
             ps.setString(1, x.shd_id);
-            ps.setString(2, x.shd_line);
+            ps.setInt(2, x.shd_line);
             ps.setString(3, x.shd_item);
             ps.setString(4, x.shd_so);
-            ps.setString(5, x.shd_soline);
+            ps.setInt(5, x.shd_soline);
             ps.setString(6, x.shd_date);
             ps.setString(7, x.shd_po);
-            ps.setString(8, x.shd_qty);
+            ps.setDouble(8, x.shd_qty);
             ps.setString(9, x.shd_curr);
             ps.setString(10, x.shd_uom);
-            ps.setString(11, x.shd_netprice);
-            ps.setString(12, x.shd_disc);
-            ps.setString(13, x.shd_listprice);
+            ps.setDouble(11, x.shd_netprice);
+            ps.setDouble(12, x.shd_disc);
+            ps.setDouble(13, x.shd_listprice);
             ps.setString(14, x.shd_desc);
             ps.setString(15, x.shd_wh);
             ps.setString(16, x.shd_loc);
-            ps.setString(17, x.shd_taxamt);
+            ps.setDouble(17, x.shd_taxamt);
             ps.setString(18, x.shd_cont);
             ps.setString(19, x.shd_serial);
             ps.setString(20, x.shd_site);
@@ -327,8 +328,8 @@ public class shpData {
             ps.setString(2, x.sh_ref);
             ps.setString(3, x.sh_rmks);
             ps.setString(4, x.sh_shipvia);
-            ps.setString(5, x.sh_pallets);
-            ps.setString(6, x.sh_boxes);
+            ps.setInt(5, x.sh_pallets);
+            ps.setInt(6, x.sh_boxes);
             rows = ps.executeUpdate();
         return rows;
     }
@@ -349,25 +350,25 @@ public class shpData {
                         + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); ";
         ps = con.prepareStatement(sqlSelect); 
         ps.setString(1, x.shd_id);
-        ps.setString(2, x.shd_line);
+        ps.setInt(2, x.shd_line);
         res = ps.executeQuery();
         if (! res.isBeforeFirst()) {  // insert
 	 ps = con.prepareStatement(sqlInsert) ;
             ps.setString(1, x.shd_id);
-            ps.setString(2, x.shd_line);
+            ps.setInt(2, x.shd_line);
             ps.setString(3, x.shd_item);
             ps.setString(4, x.shd_so);
-            ps.setString(5, x.shd_soline);
+            ps.setInt(5, x.shd_soline);
             ps.setString(6, x.shd_date);
             ps.setString(7, x.shd_po);
-            ps.setString(8, x.shd_qty);
-            ps.setString(9, x.shd_netprice);
-            ps.setString(10, x.shd_disc);
-            ps.setString(11, x.shd_listprice);
+            ps.setDouble(8, x.shd_qty);
+            ps.setDouble(9, x.shd_netprice);
+            ps.setDouble(10, x.shd_disc);
+            ps.setDouble(11, x.shd_listprice);
             ps.setString(12, x.shd_desc);
             ps.setString(13, x.shd_wh);
             ps.setString(14, x.shd_loc);
-            ps.setString(15, x.shd_taxamt);
+            ps.setDouble(15, x.shd_taxamt);
             ps.setString(16, x.shd_cont);
             ps.setString(17, x.shd_serial);
             ps.setString(18, x.shd_site); 
@@ -376,20 +377,20 @@ public class shpData {
         } else {    // update
          ps = con.prepareStatement(sqlUpdate) ;
             ps.setString(18, x.shd_id);
-            ps.setString(19, x.shd_line);
+            ps.setInt(19, x.shd_line);
             ps.setString(1, x.shd_item);
             ps.setString(2, x.shd_so);
-            ps.setString(3, x.shd_soline);
+            ps.setInt(3, x.shd_soline);
             ps.setString(4, x.shd_date);
             ps.setString(5, x.shd_po);
-            ps.setString(6, x.shd_qty);
-            ps.setString(7, x.shd_netprice);
-            ps.setString(8, x.shd_disc);
-            ps.setString(9, x.shd_listprice);
+            ps.setDouble(6, x.shd_qty);
+            ps.setDouble(7, x.shd_netprice);
+            ps.setDouble(8, x.shd_disc);
+            ps.setDouble(9, x.shd_listprice);
             ps.setString(10, x.shd_desc);
             ps.setString(11, x.shd_wh);
             ps.setString(12, x.shd_loc);
-            ps.setString(13, x.shd_taxamt);
+            ps.setDouble(13, x.shd_taxamt);
             ps.setString(14, x.shd_cont);
             ps.setString(15, x.shd_serial);
             ps.setString(16, x.shd_site); 
@@ -495,8 +496,8 @@ public class shpData {
                 nbr,
                 billto,
                 shipto,
-                "0", // pallets
-                "0",  // boxes
+                0, // pallets
+                0,  // boxes
                 carrier,  
                 shipdate,
                 orddate,
@@ -525,23 +526,23 @@ public class shpData {
             // service order field order:  line, item, type, desc, order, qty, price, uom
             ship_det x = new ship_det(null,
                   shippernbr,
-                  d[0], //shline
+                  bsParseInt(d[0]), //shline
                   d[1], //item
                   d[2], //custitem
                   d[3], // so
-                  d[0], // soline = shline  
+                  bsParseInt(d[0]), // soline = shline  
                   shipdate, //shipdate
                   d[4], // po
-                  d[5].replace(defaultDecimalSeparator, '.'), // qty
+                  bsParseDouble(d[5].replace(defaultDecimalSeparator, '.')), // qty
                   d[6], // uom
                   "", // currency  
-                  d[9].replace(defaultDecimalSeparator, '.'), // netprice
-                  d[8].replace(defaultDecimalSeparator, '.'), // disc
-                  d[7].replace(defaultDecimalSeparator, '.'), // listprice
+                  bsParseDouble(d[9].replace(defaultDecimalSeparator, '.')), // netprice
+                  bsParseDouble(d[8].replace(defaultDecimalSeparator, '.')), // disc
+                  bsParseDouble(d[7].replace(defaultDecimalSeparator, '.')), // listprice
                   d[14], // desc
                   d[12], // wh
                   d[13], // loc
-                  d[15].replace(defaultDecimalSeparator, '.'), // taxamt
+                  bsParseDouble(d[15].replace(defaultDecimalSeparator, '.')), // taxamt
                   "", // cont
                   "", // ref
                   "", // serial
@@ -559,23 +560,23 @@ public class shpData {
               // service order field order:  line, item, type, desc, order, qty, price, uom
             ship_det x = new ship_det(null,
                   shippernbr,
-                  d[0], //shline
+                  bsParseInt(d[0]), //shline
                   d[1], //item
                   d[1], //custitem
                   d[4], // so
-                  d[0], // soline = shline  
+                  bsParseInt(d[0]), // soline = shline  
                   shipdate, //shipdate
                   d[4], // po
-                  d[5].replace(defaultDecimalSeparator, '.'), // qty
+                  bsParseDouble(d[5].replace(defaultDecimalSeparator, '.')), // qty
                   d[7], // uom
                   "", // currency  
-                  d[6].replace(defaultDecimalSeparator, '.'), // netprice
-                  "0", // disc
-                  d[6].replace(defaultDecimalSeparator, '.'), // listprice
+                  bsParseDouble(d[6].replace(defaultDecimalSeparator, '.')), // netprice
+                  0, // disc
+                  bsParseDouble(d[6].replace(defaultDecimalSeparator, '.')), // listprice
                   d[3], // desc
                   "", // wh
                   "", // loc
-                  "0", // taxamt
+                  0, // taxamt
                   "", // cont
                   "", // ref
                   "", // serial
@@ -593,23 +594,23 @@ public class shpData {
             // Freight field order:  "Line", "Item", "FO", "CUSTFO", "NetPrice", "TAXAMT"
             ship_det x = new ship_det(null,
                   shippernbr,
-                  d[0], // shline
+                  bsParseInt(d[0]), // shline
                   d[1], //item
                   "", //custitem
                   d[2], // fo
-                  d[0], // foline = shline  
+                  bsParseInt(d[0]), // foline = shline  
                   confdate, //confdate
                   d[3], // po
-                  "1", // qty
+                  1, // qty
                   "EA", // uom
                   "", // currency
-                  d[4].replace(defaultDecimalSeparator, '.'), // netprice
-                  "0", // disc
-                  d[4].replace(defaultDecimalSeparator, '.'), // listprice
+                  bsParseDouble(d[4].replace(defaultDecimalSeparator, '.')), // netprice
+                  0, // disc
+                  bsParseDouble(d[4].replace(defaultDecimalSeparator, '.')), // listprice
                   "", // desc
                   "", // wh
                   "", // loc
-                  d[5].replace(defaultDecimalSeparator, '.'), // taxamt
+                  bsParseDouble(d[5].replace(defaultDecimalSeparator, '.')), // taxamt
                   "", // cont
                   "", // ref
                   "", // serial
@@ -2556,26 +2557,26 @@ public class shpData {
   }
 
     
-    public record ship_mstr(String[] m, String sh_id, String sh_cust, String sh_ship, String sh_pallets, 
-        String sh_boxes, String sh_shipvia, String sh_shipdate, String sh_po_date,
+    public record ship_mstr(String[] m, String sh_id, String sh_cust, String sh_ship, int sh_pallets, 
+        int sh_boxes, String sh_shipvia, String sh_shipdate, String sh_po_date,
         String sh_ref, String sh_po, String sh_rmks, String sh_userid, String sh_site,
         String sh_curr, String sh_wh, String sh_cust_terms, String sh_taxcode,
         String sh_ar_acct, String sh_ar_cc, String sh_type, String sh_so, String sh_shipfrom ) {
          public ship_mstr(String[] m) {
-            this(m, "", "", "", "", "", "", "", "", "", "",
+            this(m, "", "", "", 0, 0, "", "", "", "", "",
                     "", "", "", "", "", "", "", "", "", "",
                     "", "" );
         }
     }
    
-    public record ship_det(String[] m, String shd_id, String shd_line, String shd_item, String shd_custitem, String shd_so,
-        String shd_soline, String shd_date, String shd_po, String shd_qty, String shd_uom, String shd_curr,
-        String shd_netprice, String shd_disc, String shd_listprice, String shd_desc, 
-        String shd_wh, String shd_loc, String shd_taxamt, String shd_cont, String shd_ref,
+    public record ship_det(String[] m, String shd_id, int shd_line, String shd_item, String shd_custitem, String shd_so,
+        int shd_soline, String shd_date, String shd_po, double shd_qty, String shd_uom, String shd_curr,
+        double shd_netprice, double shd_disc, double shd_listprice, String shd_desc, 
+        String shd_wh, String shd_loc, double shd_taxamt, String shd_cont, String shd_ref,
         String shd_serial, String shd_site, String shd_bom) {
         public ship_det(String[] m) {
-            this(m, "", "", "", "", "", "", "", "", "", "",
-                    "", "", "", "", "", "", "", "", "", "",
+            this(m, "", 0, "", "", "", 0, "", "", 0, "",
+                    "", 0, 0, 0, "", "", "", 0, "", "",
                     "", "", ""
             );
         }

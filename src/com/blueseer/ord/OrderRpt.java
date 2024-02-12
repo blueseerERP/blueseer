@@ -59,7 +59,9 @@ import static com.blueseer.utl.BlueSeerUtils.bsNumber;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import java.sql.Connection;
 import java.util.Calendar;
 import java.util.Enumeration;
@@ -512,12 +514,16 @@ public class OrderRpt extends javax.swing.JPanel {
         dddatetype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "create", "due", "order" }));
 
         jLabel2.setText("Date Type");
+        jLabel2.setName("lbldatetype"); // NOI18N
 
         jLabel7.setText("PO Number");
+        jLabel7.setName("lblponumber"); // NOI18N
 
         jLabel10.setText("Remarks");
+        jLabel10.setName("lblremarks"); // NOI18N
 
         cbblanket.setText("Blanket");
+        cbblanket.setName("cbblanket"); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -533,7 +539,7 @@ public class OrderRpt extends javax.swing.JPanel {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(dcTo, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
+                            .addComponent(dcTo, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
                             .addComponent(dcFrom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -579,7 +585,7 @@ public class OrderRpt extends javax.swing.JPanel {
                         .addComponent(jLabel10)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(tbrmks, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(10, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -783,8 +789,8 @@ try {
                         " (select sum(case when sos_type = 'tax' and sos_amttype = 'percent' then sos_amt end) from sos_det where sos_nbr = so_nbr)as 'taxpercent', " +
                         " (select sum(case when sos_type = 'tax' and sos_amttype = 'amount' then sos_amt end) from sos_det where sos_nbr = so_nbr) as 'taxcharge' " +
                         " FROM  so_mstr left outer join sod_det on sod_nbr = so_nbr " +
-                        " where so_create_date >= " + "'" + dfdate.format(dcFrom.getDate())  + "'" + 
-                        " AND so_create_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" + 
+                        " where so_create_date >= " + "'" + setDateDB(dcFrom.getDate())  + "'" + 
+                        " AND so_create_date <= " + "'" + setDateDB(dcTo.getDate()) + "'" + 
                         " AND so_cust >= " + "'" + fromcust + "'" + 
                         " AND so_cust <= " + "'" + tocust + "'" + 
                         " AND so_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + 
@@ -798,8 +804,8 @@ try {
                         " (select sum(case when sos_type = 'tax' and sos_amttype = 'percent' then sos_amt end) from sos_det where sos_nbr = so_nbr)as 'taxpercent', " +
                         " (select sum(case when sos_type = 'tax' and sos_amttype = 'amount' then sos_amt end) from sos_det where sos_nbr = so_nbr) as 'taxcharge' " +
                         " FROM  so_mstr left outer join sod_det on sod_nbr = so_nbr " +
-                        " where so_due_date >= " + "'" + dfdate.format(dcFrom.getDate())  + "'" + 
-                        " AND so_due_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" + 
+                        " where so_due_date >= " + "'" + setDateDB(dcFrom.getDate())  + "'" + 
+                        " AND so_due_date <= " + "'" + setDateDB(dcTo.getDate()) + "'" + 
                         " AND so_cust >= " + "'" + fromcust + "'" + 
                         " AND so_cust <= " + "'" + tocust + "'" + 
                         " AND so_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + 
@@ -813,8 +819,8 @@ try {
                         " (select sum(case when sos_type = 'tax' and sos_amttype = 'percent' then sos_amt end) from sos_det where sos_nbr = so_nbr)as 'taxpercent', " +
                         " (select sum(case when sos_type = 'tax' and sos_amttype = 'amount' then sos_amt end) from sos_det where sos_nbr = so_nbr) as 'taxcharge' " +
                         " FROM  so_mstr left outer join sod_det on sod_nbr = so_nbr " +
-                        " where so_ord_date >= " + "'" + dfdate.format(dcFrom.getDate())  + "'" + 
-                        " AND so_ord_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" + 
+                        " where so_ord_date >= " + "'" + setDateDB(dcFrom.getDate())  + "'" + 
+                        " AND so_ord_date <= " + "'" + setDateDB(dcTo.getDate()) + "'" + 
                         " AND so_cust >= " + "'" + fromcust + "'" + 
                         " AND so_cust <= " + "'" + tocust + "'" + 
                         " AND so_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + 
@@ -837,15 +843,15 @@ try {
                         continue;
                     }
                   
-                    if (! cbopen.isSelected() && res.getString("so_status").equals("open"))
+                    if (! cbopen.isSelected() && res.getString("so_status").equals(getGlobalProgTag("open")))
                         continue;
-                    if (! cbclose.isSelected() && res.getString("so_status").equals("closed"))
+                    if (! cbclose.isSelected() && res.getString("so_status").equals(getGlobalProgTag("closed")))
                         continue;
-                    if (! cbbackorder.isSelected() && res.getString("so_status").equals("backorder"))
+                    if (! cbbackorder.isSelected() && res.getString("so_status").equals(getGlobalProgTag("backorder")))
                         continue;
-                    if (! cberror.isSelected() && res.getString("so_status").equals("error"))
+                    if (! cberror.isSelected() && res.getString("so_status").equals(getGlobalProgTag("error")))
                         continue;    
-                    if (! cbblanket.isSelected() && res.getString("so_type").equals("BLANKET"))
+                    if (! cbblanket.isSelected() && res.getString("so_type").equals(getGlobalProgTag("blanket")))
                         continue; 
 
                     if (res.getDouble("discountpercent") != 0) {

@@ -45,6 +45,7 @@ import static com.blueseer.shp.shpData.addShipperTransaction;
 import static com.blueseer.shp.shpData.confirmShipperTransaction;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
@@ -59,6 +60,7 @@ import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.parseDate;
+import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
 import com.blueseer.utl.OVData;
@@ -602,10 +604,10 @@ public class ShipperMaintSerial extends javax.swing.JPanel implements IBlueSeer 
                 tbkey.getText(),
                 ddcust.getSelectedItem().toString(),
                 ddship.getSelectedItem().toString(),
-                "0", // pallets
-                "0", // boxes
+                0, // pallets
+                0, // boxes
                 "", // shipvia  
-                dfdate.format(dcdate.getDate()),
+                setDateDB(dcdate.getDate()),
                 null, // po date
                 tbref.getText().replace("'", ""),
                 "", // po number
@@ -633,23 +635,23 @@ public class ShipperMaintSerial extends javax.swing.JPanel implements IBlueSeer 
         for (int j = 0; j < shipdet.getRowCount(); j++) { 
             shpData.ship_det x = new shpData.ship_det(null, 
                 tbkey.getText(), // shipper
-                shipdet.getValueAt(j, 0).toString(), //shline
+                bsParseInt(shipdet.getValueAt(j, 0).toString()), //shline
                 shipdet.getValueAt(j, 1).toString(), // item
                 shipdet.getValueAt(j, 1).toString(), // custimtem
                 "",  // order
-                String.valueOf(j + 1), //soline    
-                dfdate.format(dcdate.getDate()),
+                bsParseInt(String.valueOf(j + 1)), //soline    
+                setDateDB(dcdate.getDate()),
                 "", // po
-                shipdet.getValueAt(j, 6).toString().replace(defaultDecimalSeparator, '.'), // qty
+                bsParseDouble(shipdet.getValueAt(j, 6).toString().replace(defaultDecimalSeparator, '.')), // qty
                 shipdet.getValueAt(j, 7).toString(), //uom
                 curr, //currency
-                shipdet.getValueAt(j, 8).toString().replace(defaultDecimalSeparator, '.'), // net price
-                "0", // disc
-                shipdet.getValueAt(j, 8).toString().replace(defaultDecimalSeparator, '.'), // list price
+                bsParseDouble(shipdet.getValueAt(j, 8).toString().replace(defaultDecimalSeparator, '.')), // net price
+                0, // disc
+                bsParseDouble(shipdet.getValueAt(j, 8).toString().replace(defaultDecimalSeparator, '.')), // list price
                 shipdet.getValueAt(j, 2).toString(), // desc
                 shipdet.getValueAt(j, 4).toString(), // wh
                 shipdet.getValueAt(j, 5).toString(), // loc
-                "0", // taxamt
+                0, // taxamt
                 "0", // cont
                 "", // ref
                 shipdet.getValueAt(j, 3).toString(), // serial   

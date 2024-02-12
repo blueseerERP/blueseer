@@ -782,10 +782,10 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                  ddcurr.getSelectedItem().toString(),   
                  "", // shipvia
                  "", // wh
-                 tbkey.getText().toString(), // PO ...to be changed manually
-                 bsmf.MainFrame.dfdate.format(now).toString(), // due date ...to be changed manually
-                 bsmf.MainFrame.dfdate.format(now).toString(), // order date
-                 bsmf.MainFrame.dfdate.format(now), // create date
+                 tbkey.getText(), // PO ...to be changed manually
+                 setDateDB(now), // due date ...to be changed manually
+                 setDateDB(now), // order date
+                 setDateDB(now), // create date
                  bsmf.MainFrame.userid,
                  "hold", // status
                  "",   // order level allocation status c,p 
@@ -818,24 +818,24 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                 netprice = bsParseDouble(detailtable.getValueAt(j, 5).toString()) - ((detaildisc / 100) * bsParseDouble(detailtable.getValueAt(j, 5).toString()));
                 sod_det x = new sod_det(null, 
                 key,
-                detailtable.getValueAt(j, 1).toString(), // line
+                bsParseInt(detailtable.getValueAt(j, 1).toString()), // line
                 detailtable.getValueAt(j, 2).toString(), // item
                 "", //custitem
                 tbkey.getText(), // po
-                detailtable.getValueAt(j, 4).toString().replace(defaultDecimalSeparator, '.'), // qty
+                bsParseDouble(detailtable.getValueAt(j, 4).toString().replace(defaultDecimalSeparator, '.')), // qty
                 detailtable.getValueAt(j, 8).toString(), //uom
-                "0", // allocation value
-                detailtable.getValueAt(j, 5).toString().replace(defaultDecimalSeparator, '.'), // listprice
-                String.valueOf(detaildisc), //disc
-                String.valueOf(netprice).replace(defaultDecimalSeparator, '.'), //netprice
-                bsmf.MainFrame.dfdate.format(now).toString(),
-                bsmf.MainFrame.dfdate.format(now).toString(),   
-                "0", //shipqty
+                0, // allocation value
+                bsParseDouble(detailtable.getValueAt(j, 5).toString().replace(defaultDecimalSeparator, '.')), // listprice
+                detaildisc, //disc
+                bsParseDouble(String.valueOf(netprice).replace(defaultDecimalSeparator, '.')), //netprice
+                setDateDB(now),
+                setDateDB(now),   
+                0, //shipqty
                 "open", // status
                 "", //warehouse
                 "", //loc
                 detailtable.getValueAt(j, 3).toString(),  //itemdesc
-                "0",  //taxamt
+                0,  //taxamt
                 ddsite.getSelectedItem().toString(),  
                 "", // bomcode
                 "" // shipcode
@@ -853,13 +853,13 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                 sactable.getValueAt(j, 1).toString(),
                 sactable.getValueAt(j, 0).toString(),
                 sactable.getValueAt(j, 2).toString(),
-                sactable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.'));     
+                bsParseDouble(sactable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.')));     
                 listsac.add(x); 
                 
               if (sactable.getValueAt(j, 0).toString().equals("tax")) {
                 ordData.so_tax z = new ordData.so_tax(null, key,
                 sactable.getValueAt(j, 1).toString(), // desc
-                sactable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.'), // percent
+                bsParseDouble(sactable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.')), // percent
                 sactable.getValueAt(j, 2).toString()); // amount type
                 listtax.add(z);   
                }

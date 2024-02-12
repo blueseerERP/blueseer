@@ -58,6 +58,7 @@ import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsNumber;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDoubleUS;
+import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
@@ -77,6 +78,7 @@ import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.lurb2;
 import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import static com.blueseer.utl.BlueSeerUtils.priceformat;
+import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import static com.blueseer.utl.BlueSeerUtils.xZero;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeerT;
@@ -928,9 +930,9 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                  ddshipvia.getSelectedItem().toString(),
                  uniqwh,
                  ponbr.getText(),
-                 bsmf.MainFrame.dfdate.format(duedate.getDate()).toString(),
-                 bsmf.MainFrame.dfdate.format(orddate.getDate()).toString(),
-                 bsmf.MainFrame.dfdate.format(new Date()),
+                 setDateDB(duedate.getDate()),
+                 setDateDB(orddate.getDate()),
+                 setDateDB(new Date()),
                  bsmf.MainFrame.userid,
                  ddstatus.getSelectedItem().toString(),
                  allocationStatus,   // order level allocation status (global variable) set by createDetRecord 
@@ -950,7 +952,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
    
     public ArrayList<sod_det> createDetRecord() {
         ArrayList<sod_det> list = new ArrayList<sod_det>();
-        
+       
             double invqty = 0;
             double allqty = 0;
             double qohunall = 0;
@@ -975,24 +977,24 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                             
                 sod_det x = new sod_det(null, 
                 tbkey.getText().toString(),
-                orddet.getValueAt(j, 0).toString(),
+                bsParseInt(orddet.getValueAt(j, 0).toString()),
                 orddet.getValueAt(j, 1).toString(),
                 orddet.getValueAt(j, 2).toString(),
                 orddet.getValueAt(j, 4).toString(),
-                xZero(orddet.getValueAt(j, 5).toString()).replace(defaultDecimalSeparator, '.'),
+                bsParseDouble(xZero(orddet.getValueAt(j, 5).toString()).replace(defaultDecimalSeparator, '.')),
                 orddet.getValueAt(j, 6).toString(),
-                String.valueOf(allocationvalue),
-                xZero(orddet.getValueAt(j, 7).toString()).replace(defaultDecimalSeparator, '.'),
-                xZero(orddet.getValueAt(j, 8).toString()).replace(defaultDecimalSeparator, '.'),
-                xZero(orddet.getValueAt(j, 9).toString()).replace(defaultDecimalSeparator, '.'),
-                bsmf.MainFrame.dfdate.format(orddate.getDate()).toString(),
-                bsmf.MainFrame.dfdate.format(duedate.getDate()).toString(),   
-                xZero(orddet.getValueAt(j, 10).toString()).replace(defaultDecimalSeparator, '.'),
+                allocationvalue,
+                bsParseDouble(xZero(orddet.getValueAt(j, 7).toString()).replace(defaultDecimalSeparator, '.')),
+                bsParseDouble(xZero(orddet.getValueAt(j, 8).toString()).replace(defaultDecimalSeparator, '.')),
+                bsParseDouble(xZero(orddet.getValueAt(j, 9).toString()).replace(defaultDecimalSeparator, '.')),
+                setDateDB(orddate.getDate()),
+                setDateDB(duedate.getDate()),   
+                bsParseDouble(xZero(orddet.getValueAt(j, 10).toString()).replace(defaultDecimalSeparator, '.')),
                 orddet.getValueAt(j, 11).toString(),
                 orddet.getValueAt(j, 12).toString(),
                 orddet.getValueAt(j, 13).toString(),
                 orddet.getValueAt(j, 14).toString(),  
-                xZero(orddet.getValueAt(j, 15).toString()).replace(defaultDecimalSeparator, '.'), 
+                bsParseDouble(xZero(orddet.getValueAt(j, 15).toString()).replace(defaultDecimalSeparator, '.')), 
                 ddsite.getSelectedItem().toString(),  
                 orddet.getValueAt(j, 16).toString(),
                 orddet.getValueAt(j, 17).toString()
@@ -1017,7 +1019,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                 sactable.getValueAt(j, 1).toString(),
                 sactable.getValueAt(j, 0).toString(),
                 sactable.getValueAt(j, 2).toString(),
-                xZero(sactable.getValueAt(j, 3).toString()).replace(defaultDecimalSeparator, '.'));     
+                bsParseDouble(xZero(sactable.getValueAt(j, 3).toString()).replace(defaultDecimalSeparator, '.')));     
                 list.add(x);
          }
        
@@ -1030,7 +1032,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
           for (String[] s : headertax) {
               so_tax x = new so_tax(null, tbkey.getText().toString(),
                 s[0].toString(),
-                xZero(s[1]).replace(defaultDecimalSeparator, '.'),
+                bsParseDouble(xZero(s[1]).replace(defaultDecimalSeparator, '.')),
                 xZero(s[2]));   
                 list.add(x);
           }
@@ -1046,7 +1048,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                       sod_tax x = new sod_tax(null, tbkey.getText().toString(),
                         xZero(orddet.getValueAt(j, 0).toString()),
                         s[0],
-                        xZero(s[1]).replace(defaultDecimalSeparator, '.'),
+                        bsParseDouble(xZero(s[1]).replace(defaultDecimalSeparator, '.')),
                         xZero(s[2]));     
                         list.add(x);
                   }
@@ -1277,9 +1279,9 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                       sod.sod_po(), 
                       bsNumber(sod.sod_ord_qty()), 
                       sod.sod_uom(), 
-                      priceformat(sod.sod_listprice()),
-                      priceformat(sod.sod_disc()), 
-                      priceformat(sod.sod_netprice()), 
+                      bsFormatDouble(sod.sod_listprice()),
+                      bsFormatDouble(sod.sod_disc()), 
+                      bsFormatDouble(sod.sod_netprice()), 
                       bsNumber(sod.sod_shipped_qty()), 
                       sod.sod_status(),
                       sod.sod_wh(), 
@@ -1358,15 +1360,15 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                               tbkey.getText(),
                               ponbr.getText().replace("'", ""),  // po
                               ponbr.getText().replace("'", ""),  // ref
-                              dfdate.format(duedate.getDate()).toString(),
-                              dfdate.format(orddate.getDate()).toString(),
+                              setDateDB(duedate.getDate()),
+                              setDateDB(orddate.getDate()),
                               remarks.getText().replace("'", ""),
                               ddshipvia.getSelectedItem().toString(),
                               "S", 
                               ddtax.getSelectedItem().toString(),
                               ddsite.getSelectedItem().toString()); 
         ArrayList<String[]> detail = tableToArrayList();
-        ArrayList<shpData.ship_det> shd = shpData.createShipDetJRT(detail, String.valueOf(shipperid), dfdate.format(orddate.getDate()).toString(), ddsite.getSelectedItem().toString());
+        ArrayList<shpData.ship_det> shd = shpData.createShipDetJRT(detail, String.valueOf(shipperid), setDateDB(orddate.getDate()), ddsite.getSelectedItem().toString());
         shpData.addShipperTransaction(shd, sh);
         shpData.updateShipperSAC(String.valueOf(shipperid));
         // now confirm shipment

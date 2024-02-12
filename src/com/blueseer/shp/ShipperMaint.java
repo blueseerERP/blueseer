@@ -45,6 +45,7 @@ import com.blueseer.shp.shpData.ship_mstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
@@ -58,6 +59,7 @@ import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.parseDate;
+import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import com.blueseer.utl.DTData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -1421,8 +1423,8 @@ public class ShipperMaint extends javax.swing.JPanel {
         String uniqwh = getUniqueWH();
         String uniqpo = getUniquePO();
         
-        String pallets = tbpallets.getText().isBlank() ? "0" : tbpallets.getText();
-        String boxes = tbboxes.getText().isBlank() ? "0" : tbboxes.getText();
+        int pallets = tbpallets.getText().isBlank() ? 0 : bsParseInt(tbpallets.getText());
+        int boxes = tbboxes.getText().isBlank() ? 0 : bsParseInt(tbboxes.getText());
               
         
         ship_mstr x = new ship_mstr(null, 
@@ -1432,7 +1434,7 @@ public class ShipperMaint extends javax.swing.JPanel {
                 pallets,
                 boxes,
                 ddshipvia.getSelectedItem().toString(),  
-                dfdate.format(dcshipdate.getDate()),
+                setDateDB(dcshipdate.getDate()),
                 podate,
                 tbref.getText().replace("'", ""),
                 uniqpo,
@@ -1461,23 +1463,23 @@ public class ShipperMaint extends javax.swing.JPanel {
         for (int j = 0; j < tabledetail.getRowCount(); j++) { 
             ship_det x = new ship_det(null, 
                 tbshipper.getText(), // shipper
-                tabledetail.getValueAt(j, 0).toString(), //shline
+                bsParseInt(tabledetail.getValueAt(j, 0).toString()), //shline
                 tabledetail.getValueAt(j, 1).toString(), // item
                 tabledetail.getValueAt(j, 1).toString(), // custimtem
                 tabledetail.getValueAt(j, 2).toString(),  // order
-                tabledetail.getValueAt(j, 3).toString(), //soline    
-                dfdate.format(dcshipdate.getDate()),
+                bsParseInt(tabledetail.getValueAt(j, 3).toString()), //soline    
+                setDateDB(dcshipdate.getDate()),
                 tabledetail.getValueAt(j, 4).toString(),
-                tabledetail.getValueAt(j, 5).toString().replace(defaultDecimalSeparator, '.'), // qty
+                bsParseDouble(tabledetail.getValueAt(j, 5).toString().replace(defaultDecimalSeparator, '.')), // qty
                 "", //uom
                 "", //currency
-                tabledetail.getValueAt(j, 6).toString().replace(defaultDecimalSeparator, '.'), // netprice
-                tabledetail.getValueAt(j, 10).toString().replace(defaultDecimalSeparator, '.'), // disc
-                tabledetail.getValueAt(j, 11).toString().replace(defaultDecimalSeparator, '.'), // listprice
+                bsParseDouble(tabledetail.getValueAt(j, 6).toString().replace(defaultDecimalSeparator, '.')), // netprice
+                bsParseDouble(tabledetail.getValueAt(j, 10).toString().replace(defaultDecimalSeparator, '.')), // disc
+                bsParseDouble(tabledetail.getValueAt(j, 11).toString().replace(defaultDecimalSeparator, '.')), // listprice
                 tabledetail.getValueAt(j, 7).toString(), // desc
                 tabledetail.getValueAt(j, 8).toString(), // wh
                 tabledetail.getValueAt(j, 9).toString(), // loc
-                tabledetail.getValueAt(j, 12).toString().replace(defaultDecimalSeparator, '.'), // taxamt
+                bsParseDouble(tabledetail.getValueAt(j, 12).toString().replace(defaultDecimalSeparator, '.')), // taxamt
                 tabledetail.getValueAt(j, 13).toString(), // cont
                 "", // ref
                 tabledetail.getValueAt(j, 14).toString(),  // serial   

@@ -196,7 +196,7 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="dcTo" pref="119" max="32767" attributes="0"/>
+                                  <Component id="dcTo" pref="115" max="32767" attributes="0"/>
                                   <Component id="dcFrom" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
@@ -252,7 +252,7 @@
                               <Component id="tbrmks" min="-2" pref="154" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="10" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -445,6 +445,7 @@
             <Component class="javax.swing.JLabel" name="jLabel2">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Date Type"/>
+                <Property name="name" type="java.lang.String" value="lbldatetype" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tbpo">
@@ -452,6 +453,7 @@
             <Component class="javax.swing.JLabel" name="jLabel7">
               <Properties>
                 <Property name="text" type="java.lang.String" value="PO Number"/>
+                <Property name="name" type="java.lang.String" value="lblponumber" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tbrmks">
@@ -459,11 +461,13 @@
             <Component class="javax.swing.JLabel" name="jLabel10">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Remarks"/>
+                <Property name="name" type="java.lang.String" value="lblremarks" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JCheckBox" name="cbblanket">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Blanket"/>
+                <Property name="name" type="java.lang.String" value="cbblanket" noResource="true"/>
               </Properties>
             </Component>
           </SubComponents>
