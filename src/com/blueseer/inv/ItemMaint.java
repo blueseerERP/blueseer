@@ -42,6 +42,8 @@ import static com.blueseer.inv.invData.deleteItemMstr;
 import static com.blueseer.inv.invData.getItemMstr;
 import static com.blueseer.inv.invData.updateCurrentItemCost;
 import static com.blueseer.inv.invData.updateItemMstr;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatDoubleZ;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatInt;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsformat;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
@@ -50,6 +52,7 @@ import static com.blueseer.utl.BlueSeerUtils.currformat;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getDateDB;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
@@ -59,6 +62,7 @@ import static com.blueseer.utl.BlueSeerUtils.ludialog;
 import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import static com.blueseer.utl.BlueSeerUtils.setDateFormat;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeerT;
 import static com.blueseer.utl.OVData.canUpdate;
@@ -859,9 +863,9 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
                     i++;
                     transmodel.addRow(new Object[]{
                                 res.getString("tr_type"),
-                                res.getString("tr_eff_date"),
-                                res.getInt("tr_id"),
-                                res.getDouble("tr_base_qty")
+                                getDateDB(res.getString("tr_eff_date")),
+                                bsFormatInt(res.getInt("tr_id")),
+                                bsFormatDoubleZ(res.getDouble("tr_base_qty"))
                             });
               
                 }
@@ -920,13 +924,13 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
                                 res.getString("in_site"),
                                 res.getString("in_loc"),
                                 res.getString("in_wh"),
-                                res.getDouble("in_qoh"),
+                                bsFormatDoubleZ(res.getDouble("in_qoh")),
                                 res.getString("in_serial"),
-                                res.getString("in_date")
+                                getDateDB(res.getString("in_date"))
                             });
               
                 }
-                tbqtyoh.setText(String.valueOf(tot));
+                tbqtyoh.setText(bsFormatDoubleZ(tot));
             } catch (SQLException s) {
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
                 MainFrame.bslog(s);

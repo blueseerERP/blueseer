@@ -53,6 +53,7 @@ import static com.blueseer.utl.BlueSeerUtils.currformatDoubleUS;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.parseDate;
+import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormat;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormatNull;
 import com.blueseer.utl.OVData;
@@ -692,7 +693,7 @@ public class shpData {
     public static void _updateShipperStatus(String shipper, Date effdate, Connection bscon) throws SQLException {
         Statement st = bscon.createStatement();
         st.executeUpdate(
-             " update ship_mstr set sh_status = '1', sh_confdate = " + "'" + BlueSeerUtils.setDateFormat(effdate) + "'" +
+             " update ship_mstr set sh_status = '1', sh_confdate = " + "'" + setDateDB(effdate) + "'" +
              " where sh_id = " + "'" + shipper + "'" + ";" );
         st.close();
    }
@@ -820,8 +821,7 @@ public class shpData {
             ResultSet res;
 
            java.util.Date now = new java.util.Date();
-            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-            String mydate = dfdate.format(now);
+           
                 String item = "";
                 double qty = 0;
                 String uom = "";
@@ -903,7 +903,7 @@ public class shpData {
                     double qoh = 0.00;
                   
                     if (! serialized) {  // if not serialized
-                    OVData._updateNonSerializedInventory(bscon, item, site, wh, loc, (-1 * lineqty), mydate);
+                    OVData._updateNonSerializedInventory(bscon, item, site, wh, loc, (-1 * lineqty), setDateDB(now));
                    } else if (serialized && ! serial.isEmpty()) {
                     res = st.executeQuery("select in_qoh, in_serial from in_mstr where "
                             + " in_item = " + "'" + item + "'" 
@@ -927,7 +927,7 @@ public class shpData {
                       } else {
                           st2.executeUpdate("update in_mstr "
                             + " set in_qoh = " + "'" + diff + "'" + "," +
-                              " in_date = " + "'" + mydate + "'"
+                              " in_date = " + "'" + setDateDB(now) + "'"
                             + " where in_item = " + "'" + item + "'" 
                             + " and in_loc = " + "'" + loc + "'"
                             + " and in_wh = " + "'" + wh + "'"
@@ -969,7 +969,7 @@ public class shpData {
                             sum = Double.valueOf(s[1]) - remaining;
                             st2.executeUpdate("update in_mstr "
                             + " set in_qoh = " + "'" + sum + "'" + "," +
-                              " in_date = " + "'" + mydate + "'"
+                              " in_date = " + "'" + setDateDB(now) + "'"
                             + " where in_item = " + "'" + item + "'" 
                             + " and in_loc = " + "'" + loc + "'"
                             + " and in_wh = " + "'" + wh + "'"
@@ -982,7 +982,7 @@ public class shpData {
                     }
                     if (remaining > 0) {
                         // no inventory to remove
-                        OVData._updateNonSerializedInventory(bscon, item, site, wh, loc, (-1 * remaining), mydate);
+                        OVData._updateNonSerializedInventory(bscon, item, site, wh, loc, (-1 * remaining), setDateDB(now));
                     }
                    } //  serialized logic
                 } // for each ship_det
@@ -995,8 +995,7 @@ public class shpData {
         Statement st2 = bscon.createStatement();
         ResultSet res;
         java.util.Date now = new java.util.Date();
-        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-        String mydate = dfdate.format(now);
+        
                 
         String cust = "";
         String ref = "";
@@ -1058,8 +1057,8 @@ public class shpData {
                     + "'" + qty + "'" + ","
                     + "'" + baseqty + "'" + ","
                     + "'" + uom + "'" + ","        
-                    + "'" + mydate + "'" + ","
-                    + "'" + dfdate.format(effdate) + "'" + ","
+                    + "'" + setDateDB(now) + "'" + ","
+                    + "'" + setDateDB(effdate) + "'" + ","
                     + "'" + bsmf.MainFrame.userid + "'" + ","
                     + "'" + ref + "'" + ","
                     + "'" + cust + "'" + ","
@@ -1211,9 +1210,9 @@ public class shpData {
          // addr, acct, cc, currency, bank, terms, site
         String[] v = getVendInfo(si[8]);
         Date duedate = OVData.getDueDateFromTerms(parseDate(si[5]), v[5]);
-        String strduedate = setDateFormat(effdate); // as default...in case no duedate terms
+        String strduedate = setDateDB(effdate); // as default...in case no duedate terms
         if (duedate != null) {
-            strduedate = setDateFormat(duedate);
+            strduedate = setDateDB(duedate);
         }
         String defaultsalescc = OVData.getDefaultSalesCC(); // sales cc
         String defaultshippingacct = OVData.getDefaultShippingAcct(); // shipping acct 
@@ -1235,8 +1234,8 @@ public class shpData {
                         String.valueOf(voucher), // ap_nbr
                         currformatDouble(Double.valueOf(s[4])).replace(defaultDecimalSeparator, '.'), // ap_amt
                         currformatDouble(Double.valueOf(s[4])).replace(defaultDecimalSeparator, '.'), // ap_base_amt
-                        setDateFormatNull(effdate), // ap_effdate, ship_date
-                        setDateFormatNull(effdate), // ap_entdate, ship_date
+                        setDateDB(effdate), // ap_effdate, ship_date
+                        setDateDB(effdate), // ap_entdate, ship_date
                         strduedate, // ap_duedate         
                         "V", // ap_type
                         s[2] + "/" + shipper, //ap_rmks
@@ -1262,7 +1261,7 @@ public class shpData {
                         s[2], // item
                         "1", // qty
                         currformatDouble(Double.valueOf(s[4])).replace(defaultDecimalSeparator, '.'), //amt
-                        setDateFormatNull(effdate), // date
+                        setDateDB(effdate), // date
                         si[8], // vendor
                         "", // ap_check 
                         defaultshippingacct,

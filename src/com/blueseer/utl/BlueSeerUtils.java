@@ -1299,6 +1299,20 @@ public class BlueSeerUtils {
         return r;
     }
    
+    public static String getDateDB(String indate) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String r = "";
+        if (indate != null && ! indate.isEmpty() && ! indate.equals("0000-00-00") && ! indate.equals("null")) {
+            try {
+                r = sdf.format(sdf.parse(indate));
+            } catch (ParseException ex) {
+                bsmf.MainFrame.show("getDateDB Exception");
+            }
+        }
+        return r;
+    }
+    
+    
     public static String setDateDB(Date date) {
        String mydate = null;
        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", new Locale("en-US"));
