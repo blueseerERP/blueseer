@@ -37,6 +37,7 @@ import com.blueseer.fgl.fglData;
 import com.blueseer.fgl.fglData.gl_pair;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.bsformat;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.formatUS;
@@ -81,12 +82,12 @@ public class invData {
                 item_mstr x = new item_mstr(null, 
                 ld[0], // item
                 ld[1].toUpperCase(), //desc
-                formatUSZ(ld[8]).replace(defaultDecimalSeparator, '.'), // lotsize
-                formatUS(ld[2]).replace(defaultDecimalSeparator, '.'), // selling price
-                formatUS(ld[9]).replace(defaultDecimalSeparator, '.'), // purch price
-                formatUS(ld[11]).replace(defaultDecimalSeparator, '.'), // ovh cost
-                formatUS(ld[12]).replace(defaultDecimalSeparator, '.'), // out cost
-                formatUS(ld[10]).replace(defaultDecimalSeparator, '.'), // matl cost
+                bsParseInt(ld[8]), // lotsize
+                bsParseDouble(ld[2]), // selling price
+                bsParseDouble(ld[9]), // purch price
+                bsParseDouble(ld[11]), // ovh cost
+                bsParseDouble(ld[12]), // out cost
+                bsParseDouble(ld[10]), // matl cost
                 (ld[4].isBlank()) ? "A" : ld[4],
                 (ld[13].isBlank()) ? "ASSET" : ld[13], // type
                 ld[14], // group
@@ -100,13 +101,13 @@ public class invData {
                 ld[18], // comments
                 "ACTIVE", // status
                 (ld[19].isBlank()) ? "EA" : ld[19], // uom
-                formatUSZ(ld[20]).replace(defaultDecimalSeparator, '.'), //net wt
-                formatUSZ(ld[21]).replace(defaultDecimalSeparator, '.'), //ship wt
+                bsParseDouble(ld[20]), //net wt
+                bsParseDouble(ld[21]), //ship wt
                 "", //default cont
-                "0", // default cont qty
-                formatUSZ(ld[22]).replace(defaultDecimalSeparator, '.'), // lead
-                formatUSZ(ld[23]).replace(defaultDecimalSeparator, '.'), //safety stock
-                formatUSZ(ld[24]).replace(defaultDecimalSeparator, '.'), // minordqty
+                0, // default cont qty
+                bsParseInt(ld[22]), // lead
+                bsParseDouble(ld[23]), //safety stock
+                bsParseDouble(ld[24]), // minordqty
                 (ld[25].isBlank()) ? "0" : ld[25], //mrp
                 (ld[26].isBlank()) ? "0" : ld[26], //sched
                 (ld[27].isBlank()) ? "0" : ld[27], //plan
@@ -114,7 +115,7 @@ public class invData {
                 "", // tax
                 bsmf.MainFrame.dfdate.format(new Date()),
                 null, // expire date
-                "0", // expire days
+                0, // expire days
                 "0" // phantom boolean
                 );
                 item_cost y = new item_cost(null, 
@@ -202,12 +203,12 @@ public class invData {
             if (! res.isBeforeFirst()) {
             psi.setString(1, x.it_item);
             psi.setString(2, x.it_desc);
-            psi.setString(3, x.it_lotsize);
-            psi.setString(4, x.it_sell_price);
-            psi.setString(5, x.it_pur_price);
-            psi.setString(6, x.it_ovh_cost);
-            psi.setString(7, x.it_out_cost);
-            psi.setString(8, x.it_mtl_cost);
+            psi.setInt(3, x.it_lotsize);
+            psi.setDouble(4, x.it_sell_price);
+            psi.setDouble(5, x.it_pur_price);
+            psi.setDouble(6, x.it_ovh_cost);
+            psi.setDouble(7, x.it_out_cost);
+            psi.setDouble(8, x.it_mtl_cost);
             psi.setString(9, x.it_code);
             psi.setString(10, x.it_type);
             psi.setString(11, x.it_group);
@@ -221,13 +222,13 @@ public class invData {
             psi.setString(19, x.it_comments);
             psi.setString(20, x.it_status);
             psi.setString(21, x.it_uom);
-            psi.setString(22, x.it_net_wt);
-            psi.setString(23, x.it_ship_wt);
+            psi.setDouble(22, x.it_net_wt);
+            psi.setDouble(23, x.it_ship_wt);
             psi.setString(24, x.it_cont);
-            psi.setString(25, x.it_contqty);
-            psi.setString(26, x.it_leadtime);
-            psi.setString(27, x.it_safestock);
-            psi.setString(28, x.it_minordqty);
+            psi.setInt(25, x.it_contqty);
+            psi.setInt(26, x.it_leadtime);
+            psi.setDouble(27, x.it_safestock);
+            psi.setDouble(28, x.it_minordqty);
             psi.setString(29, x.it_mrp);
             psi.setString(30, x.it_sched);
             psi.setString(31, x.it_plan);
@@ -235,19 +236,19 @@ public class invData {
             psi.setString(33, x.it_taxcode);
             psi.setString(34, x.it_createdate);
             psi.setString(35, x.it_expire);
-            psi.setString(36, x.it_expiredays);
+            psi.setInt(36, x.it_expiredays);
             psi.setString(37, x.it_phantom);
             rows = psi.executeUpdate();
             } else {
                 if (addupdate) {
                   psu.setString(37, x.it_item);
             psu.setString(1, x.it_desc);
-            psu.setString(2, x.it_lotsize);
-            psu.setString(3, x.it_sell_price);
-            psu.setString(4, x.it_pur_price);
-            psu.setString(5, x.it_ovh_cost);
-            psu.setString(6, x.it_out_cost);
-            psu.setString(7, x.it_mtl_cost);
+            psu.setInt(2, x.it_lotsize);
+            psu.setDouble(3, x.it_sell_price);
+            psu.setDouble(4, x.it_pur_price);
+            psu.setDouble(5, x.it_ovh_cost);
+            psu.setDouble(6, x.it_out_cost);
+            psu.setDouble(7, x.it_mtl_cost);
             psu.setString(8, x.it_code);
             psu.setString(9, x.it_type);
             psu.setString(10, x.it_group);
@@ -261,13 +262,13 @@ public class invData {
             psu.setString(18, x.it_comments);
             psu.setString(19, x.it_status);
             psu.setString(20, x.it_uom);
-            psu.setString(21, x.it_net_wt);
-            psu.setString(22, x.it_ship_wt);
+            psu.setDouble(21, x.it_net_wt);
+            psu.setDouble(22, x.it_ship_wt);
             psu.setString(23, x.it_cont);
-            psu.setString(24, x.it_contqty);
-            psu.setString(25, x.it_leadtime);
-            psu.setString(26, x.it_safestock);
-            psu.setString(27, x.it_minordqty);
+            psu.setInt(24, x.it_contqty);
+            psu.setInt(25, x.it_leadtime);
+            psu.setDouble(26, x.it_safestock);
+            psu.setDouble(27, x.it_minordqty);
             psu.setString(28, x.it_mrp);
             psu.setString(29, x.it_sched);
             psu.setString(30, x.it_plan);
@@ -275,7 +276,7 @@ public class invData {
             psu.setString(32, x.it_taxcode);
             psu.setString(33, x.it_createdate);
             psu.setString(34, x.it_expire);
-            psu.setString(35, x.it_expiredays);
+            psu.setInt(35, x.it_expiredays);
             psu.setString(36, x.it_phantom);
             rows = psu.executeUpdate();
                 }
@@ -398,12 +399,12 @@ public class invData {
         PreparedStatement psu = con.prepareStatement(sql);
             psu.setString(37, x.it_item);
             psu.setString(1, x.it_desc);
-            psu.setString(2, x.it_lotsize);
-            psu.setString(3, x.it_sell_price);
-            psu.setString(4, x.it_pur_price);
-            psu.setString(5, x.it_ovh_cost);
-            psu.setString(6, x.it_out_cost);
-            psu.setString(7, x.it_mtl_cost);
+            psu.setInt(2, x.it_lotsize);
+            psu.setDouble(3, x.it_sell_price);
+            psu.setDouble(4, x.it_pur_price);
+            psu.setDouble(5, x.it_ovh_cost);
+            psu.setDouble(6, x.it_out_cost);
+            psu.setDouble(7, x.it_mtl_cost);
             psu.setString(8, x.it_code);
             psu.setString(9, x.it_type);
             psu.setString(10, x.it_group);
@@ -417,13 +418,13 @@ public class invData {
             psu.setString(18, x.it_comments);
             psu.setString(19, x.it_status);
             psu.setString(20, x.it_uom);
-            psu.setString(21, x.it_net_wt);
-            psu.setString(22, x.it_ship_wt);
+            psu.setDouble(21, x.it_net_wt);
+            psu.setDouble(22, x.it_ship_wt);
             psu.setString(23, x.it_cont);
-            psu.setString(24, x.it_contqty);
-            psu.setString(25, x.it_leadtime);
-            psu.setString(26, x.it_safestock);
-            psu.setString(27, x.it_minordqty);
+            psu.setInt(24, x.it_contqty);
+            psu.setInt(25, x.it_leadtime);
+            psu.setDouble(26, x.it_safestock);
+            psu.setDouble(27, x.it_minordqty);
             psu.setString(28, x.it_mrp);
             psu.setString(29, x.it_sched);
             psu.setString(30, x.it_plan);
@@ -431,7 +432,7 @@ public class invData {
             psu.setString(32, x.it_taxcode);
             psu.setString(33, x.it_createdate);
             psu.setString(34, x.it_expire);
-            psu.setString(35, x.it_expiredays);
+            psu.setInt(35, x.it_expiredays);
             psu.setString(36, x.it_phantom);
             rows = psu.executeUpdate();
             psu.close();
@@ -522,14 +523,14 @@ public class invData {
                 } else {
                     while(res.next()) {
                         m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                        r = new item_mstr(m, res.getString("it_item"), res.getString("it_desc"), res.getString("it_lotsize"),
-                    res.getString("it_sell_price").replace('.',defaultDecimalSeparator), res.getString("it_pur_price").replace('.',defaultDecimalSeparator), res.getString("it_ovh_cost").replace('.',defaultDecimalSeparator), res.getString("it_out_cost").replace('.',defaultDecimalSeparator),
-                    res.getString("it_mtl_cost").replace('.',defaultDecimalSeparator), res.getString("it_code"), res.getString("it_type"), res.getString("it_group"),
+                        r = new item_mstr(m, res.getString("it_item"), res.getString("it_desc"), res.getInt("it_lotsize"),
+                    res.getDouble("it_sell_price"), res.getDouble("it_pur_price"), res.getDouble("it_ovh_cost"), res.getDouble("it_out_cost"),
+                    res.getDouble("it_mtl_cost"), res.getString("it_code"), res.getString("it_type"), res.getString("it_group"),
                     res.getString("it_prodline"), res.getString("it_drawing"), res.getString("it_rev"), res.getString("it_custrev"), res.getString("it_wh"),
                     res.getString("it_loc"), res.getString("it_site"), res.getString("it_comments"), res.getString("it_status"), res.getString("it_uom"),
-                    res.getString("it_net_wt").replace('.',defaultDecimalSeparator), res.getString("it_ship_wt").replace('.',defaultDecimalSeparator), res.getString("it_cont"), res.getString("it_contqty").replace('.',defaultDecimalSeparator), 
-                    res.getString("it_leadtime").replace('.',defaultDecimalSeparator), res.getString("it_safestock").replace('.',defaultDecimalSeparator), res.getString("it_minordqty").replace('.',defaultDecimalSeparator), res.getString("it_mrp"), 
-                    res.getString("it_sched"), res.getString("it_plan"), res.getString("it_wf"), res.getString("it_taxcode"), res.getString("it_createdate"), res.getString("it_expire"), res.getString("it_expiredays"), res.getString("it_phantom")
+                    res.getDouble("it_net_wt"), res.getDouble("it_ship_wt"), res.getString("it_cont"), res.getInt("it_contqty"), 
+                    res.getInt("it_leadtime"), res.getDouble("it_safestock"), res.getDouble("it_minordqty"), res.getString("it_mrp"), 
+                    res.getString("it_sched"), res.getString("it_plan"), res.getString("it_wf"), res.getString("it_taxcode"), res.getString("it_createdate"), res.getString("it_expire"), res.getInt("it_expiredays"), res.getString("it_phantom")
         );
                     }
                 }
@@ -4591,20 +4592,20 @@ public class invData {
     
     
                
-    public record item_mstr(String[] m, String it_item, String it_desc, String it_lotsize,
-        String it_sell_price, String it_pur_price, String it_ovh_cost, String it_out_cost,
-        String it_mtl_cost, String it_code, String it_type, String it_group,
+    public record item_mstr(String[] m, String it_item, String it_desc, int it_lotsize,
+        double it_sell_price, double it_pur_price, double it_ovh_cost, double it_out_cost,
+        double it_mtl_cost, String it_code, String it_type, String it_group,
         String it_prodline, String it_drawing, String it_rev, String it_custrev, String it_wh,
         String it_loc, String it_site, String it_comments, String it_status, String it_uom, 
-        String it_net_wt, String it_ship_wt, String it_cont, String it_contqty,
-        String it_leadtime, String it_safestock, String it_minordqty, String it_mrp,
+        double it_net_wt, double it_ship_wt, String it_cont, int it_contqty,
+        int it_leadtime, double it_safestock, double it_minordqty, String it_mrp,
         String it_sched, String it_plan, String it_wf, String it_taxcode, String it_createdate,
-        String it_expire, String it_expiredays, String it_phantom) {
+        String it_expire, int it_expiredays, String it_phantom) {
         public item_mstr(String[] m) {
-            this(m, "", "", "", "", "", "", "", "", "", "",
+            this(m, "", "", 0, 0, 0, 0, 0, 0, "", "",
                     "", "", "", "", "", "", "", "", "", "",
-                    "", "", "", "", "", "", "", "", "", "",
-                    "", "", "", "", "", "", "");
+                    "", 0, 0, "", 0, 0, 0, 0, "", "",
+                    "", "", "", "", "", 0, "");
         }
     }
     

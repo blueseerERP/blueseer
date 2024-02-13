@@ -42,9 +42,11 @@ import static com.blueseer.inv.invData.deleteItemMstr;
 import static com.blueseer.inv.invData.getItemMstr;
 import static com.blueseer.inv.invData.updateCurrentItemCost;
 import static com.blueseer.inv.invData.updateItemMstr;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDoubleZ;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatInt;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.bsformat;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
@@ -686,12 +688,12 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
         }
         item_mstr x = new item_mstr(null, tbkey.getText().toString(),
                 tbdesc.getText().toUpperCase(),
-                bsformat("i", tblotsize.getText(), "").replace(defaultDecimalSeparator, '.'),
-                bsformat("d", tbsellprice.getText(), "5").replace(defaultDecimalSeparator, '.'),
-                bsformat("d", tbpurchprice.getText(), "5").replace(defaultDecimalSeparator, '.'),
-                bsformat("d", tbovhcost.getText(), "5").replace(defaultDecimalSeparator, '.'),
-                bsformat("d", tboutcost.getText(), "5").replace(defaultDecimalSeparator, '.'),
-                bsformat("d", tbmtlcost.getText(), "5").replace(defaultDecimalSeparator, '.'),
+                bsParseInt(tblotsize.getText()),
+                bsParseDouble(tbsellprice.getText()),
+                bsParseDouble(tbpurchprice.getText()),
+                bsParseDouble(tbovhcost.getText()),
+                bsParseDouble(tboutcost.getText()),
+                bsParseDouble(tbmtlcost.getText()),
                 ddcode.getSelectedItem().toString(),
                 ddtype.getSelectedItem().toString(),
                 tbgroup.getText(),
@@ -705,13 +707,13 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 comments.getText(),
                 ddstatus.getSelectedItem().toString(),
                 dduom.getSelectedItem().toString(),
-                bsformat("d", tbnetwt.getText(), "2").replace(defaultDecimalSeparator, '.'),
-                bsformat("d", tbshipwt.getText(), "2").replace(defaultDecimalSeparator, '.'),
+                bsParseDouble(tbnetwt.getText()),
+                bsParseDouble(tbshipwt.getText()),
                 tbdefaultcont.getText(),
-                bsformat("d", tbcontqty.getText(), "0").replace(defaultDecimalSeparator, '.'),
-                bsformat("d", tbleadtime.getText(), "0").replace(defaultDecimalSeparator, '.'),
-                bsformat("d", tbsafestock.getText(), "0").replace(defaultDecimalSeparator, '.'),
-                bsformat("d", tbminordqty.getText(), "0").replace(defaultDecimalSeparator, '.'),
+                bsParseInt(tbcontqty.getText()),
+                bsParseInt(tbleadtime.getText()),
+                bsParseDouble(tbsafestock.getText()),
+                bsParseDouble(tbminordqty.getText()),
                 BlueSeerUtils.boolToString(cbmrp.isSelected()),
                 BlueSeerUtils.boolToString(cbschedule.isSelected()),
                 BlueSeerUtils.boolToString(cbplan.isSelected()),
@@ -719,7 +721,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 ddtax.getSelectedItem().toString(),
                 bsmf.MainFrame.dfdate.format(new Date()),
                 expire,
-                bsformat("d", tbexpiredays.getText(), "0").replace(defaultDecimalSeparator, '.'),
+                bsParseInt(tbexpiredays.getText()),
                 BlueSeerUtils.boolToString(cbphantom.isSelected())
                 );
         return x;
@@ -784,24 +786,24 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
         revlevel.setText(x.it_rev());
         custrevlevel.setText(x.it_custrev()); 
         tbdefaultcont.setText(x.it_cont());
-        tbcontqty.setText(x.it_contqty());
-        tbshipwt.setText(x.it_ship_wt());
-        tbnetwt.setText(x.it_net_wt());
-        ddsite.setSelectedItem(x.it_site());
-        tbminordqty.setText(x.it_minordqty());
-        tbsafestock.setText(x.it_safestock());
-        tbleadtime.setText(x.it_leadtime());
+        tbcontqty.setText(bsFormatInt(x.it_contqty()));
+        tbshipwt.setText(bsFormatDoubleZ(x.it_ship_wt()));
+        tbnetwt.setText(bsFormatDoubleZ(x.it_net_wt()));
+        ddsite.setSelectedItem((x.it_site()));
+        tbminordqty.setText(bsFormatDoubleZ(x.it_minordqty()));
+        tbsafestock.setText(bsFormatDoubleZ(x.it_safestock()));
+        tbleadtime.setText(bsFormatInt(x.it_leadtime()));
         cbmrp.setSelected(BlueSeerUtils.ConvertStringToBool(x.it_mrp()));
         cbplan.setSelected(BlueSeerUtils.ConvertStringToBool(x.it_plan()));
         cbschedule.setSelected(BlueSeerUtils.ConvertStringToBool(x.it_sched())); 
         cbphantom.setSelected(BlueSeerUtils.ConvertStringToBool(x.it_phantom())); 
-        tblotsize.setText(x.it_lotsize());
-        tbsellprice.setText(currformat(x.it_sell_price()));
-        tbpurchprice.setText(currformat(x.it_pur_price()));
-        tbmtlcost.setText(currformat(x.it_mtl_cost()));
-        tbovhcost.setText(currformat(x.it_ovh_cost()));
-        tboutcost.setText(currformat(x.it_out_cost()));
-        tbexpiredays.setText(x.it_expiredays());
+        tblotsize.setText(bsFormatInt(x.it_lotsize()));
+        tbsellprice.setText(bsFormatDouble(x.it_sell_price()));
+        tbpurchprice.setText(bsFormatDouble(x.it_pur_price()));
+        tbmtlcost.setText(bsFormatDouble(x.it_mtl_cost()));
+        tbovhcost.setText(bsFormatDouble(x.it_ovh_cost()));
+        tboutcost.setText(bsFormatDouble(x.it_out_cost()));
+        tbexpiredays.setText(bsFormatInt(x.it_expiredays()));
         dcexpire.setDate(BlueSeerUtils.parseDate(x.it_expire()));
         bind_tree_op(x.it_item());                    
         getrecenttrans(x.it_item());                    
