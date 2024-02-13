@@ -61,6 +61,7 @@ import static com.blueseer.utl.OVData.AREntry;
 import static com.blueseer.utl.OVData.getCodeValueByCodeKey;
 import static com.blueseer.utl.OVData.getNextNbr;
 import static com.blueseer.vdr.venData.getVendInfo;
+import static java.lang.Double.parseDouble;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -534,16 +535,16 @@ public class shpData {
                   bsParseInt(d[0]), // soline = shline  
                   shipdate, //shipdate
                   d[4], // po
-                  bsParseDouble(d[5].replace(defaultDecimalSeparator, '.')), // qty
+                  bsParseDouble(d[5]), // qty
                   d[6], // uom
                   "", // currency  
-                  bsParseDouble(d[9].replace(defaultDecimalSeparator, '.')), // netprice
-                  bsParseDouble(d[8].replace(defaultDecimalSeparator, '.')), // disc
-                  bsParseDouble(d[7].replace(defaultDecimalSeparator, '.')), // listprice
+                  bsParseDouble(d[9]), // netprice
+                  bsParseDouble(d[8]), // disc
+                  bsParseDouble(d[7]), // listprice
                   d[14], // desc
                   d[12], // wh
                   d[13], // loc
-                  bsParseDouble(d[15].replace(defaultDecimalSeparator, '.')), // taxamt
+                  bsParseDouble(d[15]), // taxamt
                   "", // cont
                   "", // ref
                   "", // serial
@@ -568,12 +569,12 @@ public class shpData {
                   bsParseInt(d[0]), // soline = shline  
                   shipdate, //shipdate
                   d[4], // po
-                  bsParseDouble(d[5].replace(defaultDecimalSeparator, '.')), // qty
+                  bsParseDouble(d[5]), // qty
                   d[7], // uom
                   "", // currency  
-                  bsParseDouble(d[6].replace(defaultDecimalSeparator, '.')), // netprice
+                  bsParseDouble(d[6]), // netprice
                   0, // disc
-                  bsParseDouble(d[6].replace(defaultDecimalSeparator, '.')), // listprice
+                  bsParseDouble(d[6]), // listprice
                   d[3], // desc
                   "", // wh
                   "", // loc
@@ -605,13 +606,13 @@ public class shpData {
                   1, // qty
                   "EA", // uom
                   "", // currency
-                  bsParseDouble(d[4].replace(defaultDecimalSeparator, '.')), // netprice
+                  bsParseDouble(d[4]), // netprice
                   0, // disc
-                  bsParseDouble(d[4].replace(defaultDecimalSeparator, '.')), // listprice
+                  bsParseDouble(d[4]), // listprice
                   "", // desc
                   "", // wh
                   "", // loc
-                  bsParseDouble(d[5].replace(defaultDecimalSeparator, '.')), // taxamt
+                  bsParseDouble(d[5]), // taxamt
                   "", // cont
                   "", // ref
                   "", // serial
@@ -1232,8 +1233,8 @@ public class shpData {
                         "", //ap_id
                         si[8], // ap_vend, // shipvia carrier 
                         String.valueOf(voucher), // ap_nbr
-                        currformatDouble(Double.valueOf(s[4])).replace(defaultDecimalSeparator, '.'), // ap_amt
-                        currformatDouble(Double.valueOf(s[4])).replace(defaultDecimalSeparator, '.'), // ap_base_amt
+                        parseDouble(s[4]), // ap_amt
+                        parseDouble(s[4]), // ap_base_amt
                         setDateDB(effdate), // ap_effdate, ship_date
                         setDateDB(effdate), // ap_entdate, ship_date
                         strduedate, // ap_duedate         
@@ -1257,10 +1258,10 @@ public class shpData {
                         fapData.vod_mstr y = new fapData.vod_mstr(null, 
                         String.valueOf(voucher),
                         shipper, // receiver
-                        "1", // line
+                        1, // line
                         s[2], // item
-                        "1", // qty
-                        currformatDouble(Double.valueOf(s[4])).replace(defaultDecimalSeparator, '.'), //amt
+                        1, // qty
+                        parseDouble(s[4]), //amt
                         setDateDB(effdate), // date
                         si[8], // vendor
                         "", // ap_check 

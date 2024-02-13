@@ -46,6 +46,9 @@ import com.blueseer.rcv.rcvData.recv_det;
 import com.blueseer.rcv.rcvData.recv_mstr;
 import static com.blueseer.rcv.rcvData.updateReceiverTransaction;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
@@ -64,6 +67,7 @@ import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.lurb2;
 import static com.blueseer.utl.BlueSeerUtils.lurb3;
 import static com.blueseer.utl.BlueSeerUtils.parseDate;
+import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import com.blueseer.utl.DTData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -662,14 +666,14 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
             recv_det x = new recv_det(null, 
                 tbkey.getText(), // shipper
                 rvdet.getValueAt(j, 2).toString(), // po
-                rvdet.getValueAt(j, 3).toString(), // poline
+                bsParseInt(rvdet.getValueAt(j, 3).toString()), // poline
                 tbpackingslip.getText(), // packingslip
                 rvdet.getValueAt(j, 1).toString(), // item
-                rvdet.getValueAt(j, 4).toString().replace(defaultDecimalSeparator, '.'),  // qty
-                dfdate.format(dcdate.getDate()),
-                rvdet.getValueAt(j, 6).toString().replace(defaultDecimalSeparator, '.'),
-                rvdet.getValueAt(j, 8).toString().replace(defaultDecimalSeparator, '.'),
-                rvdet.getValueAt(j, 7).toString().replace(defaultDecimalSeparator, '.'),  
+                bsParseDouble(rvdet.getValueAt(j, 4).toString()),  // qty
+                setDateDB(dcdate.getDate()),
+                bsParseDouble(rvdet.getValueAt(j, 6).toString()),
+                bsParseDouble(rvdet.getValueAt(j, 8).toString()),
+                bsParseDouble(rvdet.getValueAt(j, 7).toString()),  
                 rvdet.getValueAt(j, 12).toString(), // lot
                 rvdet.getValueAt(j, 10).toString(), // wh
                 rvdet.getValueAt(j, 11).toString(), // serial
@@ -677,9 +681,9 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
                 "", // jobnbr
                 ddsite.getSelectedItem().toString(),
                 "", // status
-                rvdet.getValueAt(j, 0).toString(), // rline
-                "", // voqty
-                rvdet.getValueAt(j, 13).toString().replace(defaultDecimalSeparator, '.'), // cost
+                bsParseInt(rvdet.getValueAt(j, 0).toString()), // rline
+                0, // voqty
+                bsParseDouble(rvdet.getValueAt(j, 13).toString()), // cost
                 rvdet.getValueAt(j, 5).toString() // uom    
                 );
         list.add(x);
@@ -811,9 +815,17 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         for (recv_det rvd : rvdlist) {
             myrecvdetmodel.addRow(new Object[]{rvd.rvd_rline(), rvd.rvd_item(), rvd.rvd_po(), 
-                rvd.rvd_poline(), rvd.rvd_qty().replace('.', defaultDecimalSeparator), rvd.rvd_uom(), rvd.rvd_listprice().replace('.', defaultDecimalSeparator),
-                rvd.rvd_disc().replace('.', defaultDecimalSeparator), rvd.rvd_netprice().replace('.', defaultDecimalSeparator), rvd.rvd_loc(), rvd.rvd_wh(),
-                rvd.rvd_serial(), rvd.rvd_lot(), rvd.rvd_cost().replace('.', defaultDecimalSeparator)});
+                rvd.rvd_poline(), 
+                bsFormatDouble(rvd.rvd_qty()), 
+                rvd.rvd_uom(), 
+                bsFormatDouble(rvd.rvd_listprice()),
+                bsFormatDouble(rvd.rvd_disc()), 
+                bsFormatDouble(rvd.rvd_netprice()), 
+                rvd.rvd_loc(), 
+                rvd.rvd_wh(),
+                rvd.rvd_serial(), 
+                rvd.rvd_lot(), 
+                bsFormatDouble(rvd.rvd_cost())});
         }
         
         getAttachments(tbkey.getText());

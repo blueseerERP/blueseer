@@ -115,8 +115,8 @@ public class farData {
             if (! res.isBeforeFirst()) {
             ps.setString(1, x.ar_nbr);
             ps.setString(2, x.ar_cust);
-            ps.setString(3, x.ar_amt);
-            ps.setString(4, x.ar_base_amt);
+            ps.setDouble(3, x.ar_amt);
+            ps.setDouble(4, x.ar_base_amt);
             ps.setString(5, x.ar_type);
             ps.setString(6, x.ar_curr);
             ps.setString(7, x.ar_base_curr);
@@ -130,11 +130,11 @@ public class farData {
             ps.setString(15, x.ar_status);
             ps.setString(16, x.ar_bank);
             ps.setString(17, x.ar_site);
-            ps.setString(18, x.ar_amt_tax);
-            ps.setString(19, x.ar_base_amt_tax);
-            ps.setString(20, x.ar_amt_disc);
-            ps.setString(21, x.ar_base_amt_disc);
-            ps.setString(22, x.ar_open_amt);
+            ps.setDouble(18, x.ar_amt_tax);
+            ps.setDouble(19, x.ar_base_amt_tax);
+            ps.setDouble(20, x.ar_amt_disc);
+            ps.setDouble(21, x.ar_base_amt_disc);
+            ps.setDouble(22, x.ar_open_amt);
             ps.setString(23, x.ar_applied);
             ps.setString(24, x.ar_terms);
             ps.setString(25, x.ar_tax_code);
@@ -157,19 +157,19 @@ public class farData {
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.ard_id);
-          ps.setString(2, x.ard_line);
+          ps.setInt(2, x.ard_line);
           res = ps.executeQuery();
           ps = con.prepareStatement(sqlInsert);  
             if (! res.isBeforeFirst()) {
             ps.setString(1, x.ard_id);
-            ps.setString(2, x.ard_line);
+            ps.setInt(2, x.ard_line);
             ps.setString(3, x.ard_cust);
             ps.setString(4, x.ard_ref);
             ps.setString(5, x.ard_date);
-            ps.setString(6, x.ard_amt);
-            ps.setString(7, x.ard_amt_tax);
-            ps.setString(8, x.ard_base_amt);
-            ps.setString(9, x.ard_base_amt_tax);
+            ps.setDouble(6, x.ard_amt);
+            ps.setDouble(7, x.ard_amt_tax);
+            ps.setDouble(8, x.ard_base_amt);
+            ps.setDouble(9, x.ard_base_amt_tax);
             ps.setString(10, x.ard_curr);
             ps.setString(11, x.ard_base_curr);
             ps.setString(12, x.ard_acct);
@@ -301,13 +301,13 @@ public class farData {
                     while(res.next()) {
                         m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
                         r = new ar_mstr(m, res.getString("ar_id"), res.getString("ar_nbr"), res.getString("ar_cust"),
-                                res.getString("ar_amt"), res.getString("ar_base_amt"), res.getString("ar_type"),
+                                res.getDouble("ar_amt"), res.getDouble("ar_base_amt"), res.getString("ar_type"),
                                 res.getString("ar_curr"), res.getString("ar_base_curr"), res.getString("ar_ref"),
                                 res.getString("ar_rmks"), res.getString("ar_entdate"), res.getString("ar_effdate"),
                                 res.getString("ar_paiddate"), res.getString("ar_acct"), res.getString("ar_cc"),
                                 res.getString("ar_status"), res.getString("ar_bank"), res.getString("ar_site"),
-                                res.getString("ar_amt_tax"), res.getString("ar_base_amt_tax"), res.getString("ar_amt_disc"),
-                                res.getString("ar_base_amt_disc"), res.getString("ar_open_amt"), res.getString("ar_applied"),
+                                res.getDouble("ar_amt_tax"), res.getDouble("ar_base_amt_tax"), res.getDouble("ar_amt_disc"),
+                                res.getDouble("ar_base_amt_disc"), res.getDouble("ar_open_amt"), res.getString("ar_applied"),
                                 res.getString("ar_terms"), res.getString("ar_tax_code"), res.getString("ar_invdate"), 
                                 res.getString("ar_duedate"), res.getString("ar_discdate"), res.getString("ar_reverse"));
                     }
@@ -335,13 +335,13 @@ public class farData {
                 while(res.next()) {
                     m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
                     r = new ar_mstr(m, res.getString("ar_id"), res.getString("ar_nbr"), res.getString("ar_cust"),
-                                res.getString("ar_amt"), res.getString("ar_base_amt"), res.getString("ar_type"),
+                                res.getDouble("ar_amt"), res.getDouble("ar_base_amt"), res.getString("ar_type"),
                                 res.getString("ar_curr"), res.getString("ar_base_curr"), res.getString("ar_ref"),
                                 res.getString("ar_rmks"), res.getString("ar_entdate"), res.getString("ar_effdate"),
                                 res.getString("ar_paiddate"), res.getString("ar_acct"), res.getString("ar_cc"),
                                 res.getString("ar_status"), res.getString("ar_bank"), res.getString("ar_site"),
-                                res.getString("ar_amt_tax"), res.getString("ar_base_amt_tax"), res.getString("ar_amt_disc"),
-                                res.getString("ar_base_amt_disc"), res.getString("ar_open_amt"), res.getString("ar_applied"),
+                                res.getDouble("ar_amt_tax"), res.getDouble("ar_base_amt_tax"), res.getDouble("ar_amt_disc"),
+                                res.getDouble("ar_base_amt_disc"), res.getDouble("ar_open_amt"), res.getString("ar_applied"),
                                 res.getString("ar_terms"), res.getString("ar_tax_code"), res.getString("ar_invdate"), 
                                 res.getString("ar_duedate"), res.getString("ar_discdate"), res.getString("ar_reverse"));
                 }
@@ -361,9 +361,9 @@ public class farData {
              try (ResultSet res = ps.executeQuery();) {
                     while(res.next()) {
                     m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                    r = new ard_mstr(m, res.getString("ard_id"), res.getString("ard_line"), res.getString("ard_cust"),
-                    res.getString("ard_ref"), res.getString("ard_date"), res.getString("ard_amt"), 
-                    res.getString("ard_amt_tax"), res.getString("ard_base_amt"),res.getString("ard_base_amt_tax"), 
+                    r = new ard_mstr(m, res.getString("ard_id"), res.getInt("ard_line"), res.getString("ard_cust"),
+                    res.getString("ard_ref"), res.getString("ard_date"), res.getDouble("ard_amt"), 
+                    res.getDouble("ard_amt_tax"), res.getDouble("ard_base_amt"),res.getDouble("ard_base_amt_tax"), 
                     res.getString("ard_curr"), res.getString("ard_base_curr"), res.getString("ard_acct"), 
                     res.getString("ard_cc") );
                     list.add(r);
@@ -390,9 +390,9 @@ public class farData {
             } else {
                 while(res.next()) {
                     m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                    r = new ard_mstr(m, res.getString("ard_id"), res.getString("ard_line"), res.getString("ard_cust"),
-                    res.getString("ard_ref"), res.getString("ard_date"), res.getString("ard_amt"), 
-                    res.getString("ard_amt_tax"), res.getString("ard_base_amt"),res.getString("ard_base_amt_tax"), 
+                    r = new ard_mstr(m, res.getString("ard_id"), res.getInt("ard_line"), res.getString("ard_cust"),
+                    res.getString("ard_ref"), res.getString("ard_date"), res.getDouble("ard_amt"), 
+                    res.getDouble("ard_amt_tax"), res.getDouble("ard_base_amt"),res.getDouble("ard_base_amt_tax"), 
                     res.getString("ard_curr"), res.getString("ard_base_curr"), res.getString("ard_acct"), 
                     res.getString("ard_cc") );
                     list.add(r);
@@ -546,26 +546,26 @@ public class farData {
         }
     }
     
-    public record ar_mstr(String[] m, String ar_id, String ar_nbr, String ar_cust, String ar_amt, String ar_base_amt, 
+    public record ar_mstr(String[] m, String ar_id, String ar_nbr, String ar_cust, double ar_amt, double ar_base_amt, 
         String ar_type, String ar_curr, String ar_base_curr, String ar_ref, String ar_rmks,
         String ar_entdate, String ar_effdate, String ar_paiddate, String ar_acct, String ar_cc,
         String ar_status, String ar_bank, String ar_site, 
-        String ar_amt_tax, String ar_base_amt_tax, String ar_amt_disc, String ar_base_amt_disc, 
-        String ar_open_amt, String ar_applied, String ar_terms, String ar_tax_code,
+        double ar_amt_tax, double ar_base_amt_tax, double ar_amt_disc, double ar_base_amt_disc, 
+        double ar_open_amt, String ar_applied, String ar_terms, String ar_tax_code,
         String ar_invdate, String ar_duedate, String ar_discdate, String ar_reverse) {
         public ar_mstr(String[] m) {
-            this(m, "", "", "", "", "", "", "", "", "", "",
-                    "", "", "", "", "", "", "", "", "", "",
-                    "", "", "", "", "", "", "", "", "", "");
+            this(m, "", "", "", 0, 0, "", "", "", "", "",
+                    "", "", "", "", "", "", "", "", 0, 0,
+                    0, 0, 0, "", "", "", "", "", "", "");
         }
     }
     
-    public record ard_mstr(String[] m, String ard_id, String ard_line, String ard_cust, String ard_ref, 
-        String ard_date, String ard_amt, String ard_amt_tax, 
-        String ard_base_amt, String ard_base_amt_tax, String ard_curr, String ard_base_curr, 
+    public record ard_mstr(String[] m, String ard_id, int ard_line, String ard_cust, String ard_ref, 
+        String ard_date, double ard_amt, double ard_amt_tax, 
+        double ard_base_amt, double ard_base_amt_tax, String ard_curr, String ard_base_curr, 
         String ard_acct, String ard_cc) {
         public ard_mstr(String[] m) {
-            this(m, "", "", "", "", "", "", "", "", "", "",
+            this(m, "", 0, "", "", "", 0, 0, 0, 0, "",
                     "", "", "" );
         }
     }

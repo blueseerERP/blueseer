@@ -86,25 +86,25 @@ public class rcvData {
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.rvd_id);
-          ps.setString(2, x.rvd_rline);
+          ps.setInt(2, x.rvd_rline);
           res = ps.executeQuery();
           ps = con.prepareStatement(sqlInsert);  
             if (! res.isBeforeFirst()) {
             ps.setString(1, x.rvd_id);
-            ps.setString(2, x.rvd_rline);
+            ps.setInt(2, x.rvd_rline);
             ps.setString(3, x.rvd_item);
             ps.setString(4, x.rvd_po);
-            ps.setString(5, x.rvd_poline);
-            ps.setString(6, x.rvd_qty);
+            ps.setInt(5, x.rvd_poline);
+            ps.setDouble(6, x.rvd_qty);
             ps.setString(7, x.rvd_uom);
-            ps.setString(8, x.rvd_listprice);
-            ps.setString(9, x.rvd_disc);
-            ps.setString(10, x.rvd_netprice);
+            ps.setDouble(8, x.rvd_listprice);
+            ps.setDouble(9, x.rvd_disc);
+            ps.setDouble(10, x.rvd_netprice);
             ps.setString(11, x.rvd_loc);
             ps.setString(12, x.rvd_wh);
             ps.setString(13, x.rvd_serial);
             ps.setString(14, x.rvd_lot);
-            ps.setString(15, x.rvd_cost);
+            ps.setDouble(15, x.rvd_cost);
             ps.setString(16, x.rvd_site);
             ps.setString(17, x.rvd_packingslip);
             ps.setString(18, x.rvd_date);
@@ -196,25 +196,25 @@ public class rcvData {
                         + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); ";
         ps = con.prepareStatement(sqlSelect); 
         ps.setString(1, x.rvd_id);
-        ps.setString(2, x.rvd_rline);
+        ps.setInt(2, x.rvd_rline);
         res = ps.executeQuery();
         if (! res.isBeforeFirst()) {  // insert
 	 ps = con.prepareStatement(sqlInsert) ;
             ps.setString(17, x.rvd_id);
-            ps.setString(18, x.rvd_rline);
+            ps.setInt(18, x.rvd_rline);
             ps.setString(1, x.rvd_item);
             ps.setString(2, x.rvd_po);
-            ps.setString(3, x.rvd_poline);
-            ps.setString(4, x.rvd_qty);
+            ps.setInt(3, x.rvd_poline);
+            ps.setDouble(4, x.rvd_qty);
             ps.setString(5, x.rvd_uom);
-            ps.setString(6, x.rvd_listprice);
-            ps.setString(7, x.rvd_disc);
-            ps.setString(8, x.rvd_netprice);
+            ps.setDouble(6, x.rvd_listprice);
+            ps.setDouble(7, x.rvd_disc);
+            ps.setDouble(8, x.rvd_netprice);
             ps.setString(9, x.rvd_loc);
             ps.setString(10, x.rvd_wh);
             ps.setString(11, x.rvd_serial);
             ps.setString(12, x.rvd_lot);
-            ps.setString(13, x.rvd_cost);
+            ps.setDouble(13, x.rvd_cost);
             ps.setString(14, x.rvd_site);
             ps.setString(15, x.rvd_packingslip);
             ps.setString(16, x.rvd_date); 
@@ -222,20 +222,20 @@ public class rcvData {
         } else {    // update
          ps = con.prepareStatement(sqlUpdate) ;
             ps.setString(1, x.rvd_id);
-            ps.setString(2, x.rvd_rline);
+            ps.setInt(2, x.rvd_rline);
             ps.setString(3, x.rvd_item);
             ps.setString(4, x.rvd_po);
-            ps.setString(5, x.rvd_poline);
-            ps.setString(6, x.rvd_qty);
+            ps.setInt(5, x.rvd_poline);
+            ps.setDouble(6, x.rvd_qty);
             ps.setString(7, x.rvd_uom);
-            ps.setString(8, x.rvd_listprice);
-            ps.setString(9, x.rvd_disc);
-            ps.setString(10, x.rvd_netprice);
+            ps.setDouble(8, x.rvd_listprice);
+            ps.setDouble(9, x.rvd_disc);
+            ps.setDouble(10, x.rvd_netprice);
             ps.setString(11, x.rvd_loc);
             ps.setString(12, x.rvd_wh);
             ps.setString(13, x.rvd_serial);
             ps.setString(14, x.rvd_lot);
-            ps.setString(15, x.rvd_cost);
+            ps.setDouble(15, x.rvd_cost);
             ps.setString(16, x.rvd_site);
             ps.setString(17, x.rvd_packingslip);
             ps.setString(18, x.rvd_date); 
@@ -399,11 +399,11 @@ public class rcvData {
             } else {
                 while(res.next()) {
                     m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                    r = new recv_det(m, res.getString("rvd_id"), res.getString("rvd_po"), res.getString("rvd_poline"),
-                    res.getString("rvd_packingslip"), res.getString("rvd_item"), res.getString("rvd_qty"), res.getString("rvd_date"), res.getString("rvd_listprice"),
-                    res.getString("rvd_netprice"), res.getString("rvd_disc"), res.getString("rvd_lot"), res.getString("rvd_wh"), res.getString("rvd_serial"),
+                    r = new recv_det(m, res.getString("rvd_id"), res.getString("rvd_po"), res.getInt("rvd_poline"),
+                    res.getString("rvd_packingslip"), res.getString("rvd_item"), res.getDouble("rvd_qty"), res.getString("rvd_date"), res.getDouble("rvd_listprice"),
+                    res.getDouble("rvd_netprice"), res.getDouble("rvd_disc"), res.getString("rvd_lot"), res.getString("rvd_wh"), res.getString("rvd_serial"),
                     res.getString("rvd_loc"), res.getString("rvd_jobnbr"), res.getString("rvd_site"), res.getString("rvd_status"), 
-                    res.getString("rvd_rline"), res.getString("rvd_voqty"), res.getString("rvd_cost"), res.getString("rvd_uom") );
+                    res.getInt("rvd_rline"), res.getDouble("rvd_voqty"), res.getDouble("rvd_cost"), res.getString("rvd_uom") );
                     list.add(r);
                     }
             }
@@ -597,15 +597,15 @@ public class rcvData {
         }
     }
    
-    public record recv_det(String[] m, String rvd_id, String rvd_po, String rvd_poline, 
-        String rvd_packingslip, String rvd_item, String rvd_qty, 
-        String rvd_date, String rvd_listprice, String rvd_netprice, String rvd_disc, 
+    public record recv_det(String[] m, String rvd_id, String rvd_po, int rvd_poline, 
+        String rvd_packingslip, String rvd_item, double rvd_qty, 
+        String rvd_date, double rvd_listprice, double rvd_netprice, double rvd_disc, 
         String rvd_lot, String rvd_wh, String rvd_serial, String rvd_loc,
-        String rvd_jobnbr, String rvd_site, String rvd_status, String rvd_rline, 
-        String rvd_voqty, String rvd_cost, String rvd_uom ) {
+        String rvd_jobnbr, String rvd_site, String rvd_status, int rvd_rline, 
+        double rvd_voqty, double rvd_cost, String rvd_uom ) {
          public recv_det(String[] m) {
-            this(m, "", "", "", "", "", "", "", "", "", "",
-                    "", "", "", "", "", "", "", "", "", "",
+            this(m, "", "", 0, "", "", 0, "", 0, 0, 0,
+                    "", "", "", "", "", "", "", 0, 0, 0,
                     ""
                     );
         }

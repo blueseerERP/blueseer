@@ -685,7 +685,8 @@ public class BlueSeerUtils {
                     try {
                         number = nf.parse(x.trim());
                     } catch (ParseException ex) {
-                        bsmf.MainFrame.show(getMessageTag(1017) + "/" + x);
+                        bsmf.MainFrame.show(getMessageTag(1017) + "/d  " + x);
+                        ex.printStackTrace();
                     }
              z =  number.doubleValue();
         }
@@ -717,7 +718,7 @@ public class BlueSeerUtils {
                     try {
                         number = nf.parse(x.trim());
                     } catch (ParseException ex) {
-                        bsmf.MainFrame.show(getMessageTag(1017) + "/" + x);
+                        bsmf.MainFrame.show(getMessageTag(1017) + "/ " + x);
                     }
              z =  number.intValue();
         }
@@ -765,7 +766,7 @@ public class BlueSeerUtils {
     
     public static String bsFormatDoubleZ(double invalue) {
         String outvalue = "";
-        String pattern = "#0.##"; 
+        String pattern = "#0.#####"; 
         DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());    
         df.applyPattern(pattern);
         outvalue = df.format(invalue); 
@@ -792,6 +793,8 @@ public class BlueSeerUtils {
         return outvalue;
     }
     
+    
+    
     public static String bsformat(String type, String invalue, String precision) {
         String pattern = "";
         String outvalue = "";
@@ -803,9 +806,6 @@ public class BlueSeerUtils {
         }
         if (invalue.isEmpty() && type.equals("i")) {
            return "0";
-        }
-        if (defaultDecimalSeparator == ',' && invalue.contains(".")) { // int 1643 is arabic decimal point ...or \u066B
-            return "error";
         }
         if (invalue.isEmpty() && type.equals("d")) {
            invalue = "0"; // for use down below
@@ -1006,8 +1006,23 @@ public class BlueSeerUtils {
         return locale;
     }
     
-    
-    public static String currformatUS(String invalue) {
+    public static String formatUSZ(String invalue) {
+        // invalue will come over as a . decimal regardless of Locale
+        String x = "0";
+        String pattern = "#0.#####";
+        if (! invalue.isEmpty()) {
+        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.US);
+        df.applyPattern(pattern);
+        try {   
+            x = df.format(df.parse(invalue));
+        } catch (ParseException ex) {
+            bslog(ex);
+        }
+        }
+        return x;
+    }
+        
+    public static String formatUS(String invalue) {
         // invalue will come over as a . decimal regardless of Locale
         String x = "0";
         String pattern = "#0.00###";

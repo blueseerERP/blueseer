@@ -35,6 +35,7 @@ import static com.blueseer.inv.invData.inventoryAdjustmentTransaction;
 import com.blueseer.inv.invData.item_mstr;
 import com.blueseer.inv.invData.tran_mstr;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
@@ -608,7 +609,7 @@ public class InventoryMaint extends javax.swing.JPanel {
         }
         
         if (! tbqty.getText().isEmpty()) {
-            qty = Double.valueOf(tbqty.getText());
+            qty = bsParseDouble(tbqty.getText());
         } else {
             tbqty.setBackground(Color.yellow);
             bsmf.MainFrame.show(getMessageTag(1036));
@@ -735,7 +736,7 @@ public class InventoryMaint extends javax.swing.JPanel {
         
         in_mstr in = new in_mstr(null,
                 tbitem.getText(),
-                String.valueOf(qty),
+                qty,
                 null, // date
                 loc,
                 wh,
@@ -767,8 +768,8 @@ public class InventoryMaint extends javax.swing.JPanel {
                     acct, 
                     cc,  
                     dfdate.format(dcdate.getDate()), 
-                    (cost * Double.valueOf(tbqty.getText())),  
-                    (cost * Double.valueOf(tbqty.getText())),  
+                    (cost * bsParseDouble(tbqty.getText())),  
+                    (cost * bsParseDouble(tbqty.getText())),  
                     basecurr, 
                     basecurr, 
                     tbref.getText() , 

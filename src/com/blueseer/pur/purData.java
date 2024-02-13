@@ -330,47 +330,47 @@ public class purData {
                         + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
         ps = con.prepareStatement(sqlSelect); 
         ps.setString(1, x.pod_nbr);
-        ps.setString(2, x.pod_line);
+        ps.setInt(2, x.pod_line);
         res = ps.executeQuery();
         if (! res.isBeforeFirst()) {  // insert
 	 ps = con.prepareStatement(sqlInsert) ;
             ps.setString(1, x.pod_nbr);
-            ps.setString(2, x.pod_line);
+            ps.setInt(2, x.pod_line);
             ps.setString(3, x.pod_item);
             ps.setString(4, x.pod_venditem);
-            ps.setString(5, x.pod_ord_qty);
+            ps.setDouble(5, x.pod_ord_qty);
             ps.setString(6, x.pod_uom);
-            ps.setString(7, x.pod_listprice);
-            ps.setString(8, x.pod_disc);
-            ps.setString(9, x.pod_netprice);
+            ps.setDouble(7, x.pod_listprice);
+            ps.setDouble(8, x.pod_disc);
+            ps.setDouble(9, x.pod_netprice);
             ps.setString(10, x.pod_ord_date);
             ps.setString(11, x.pod_due_date);
-            ps.setString(12, x.pod_rcvd_qty);
+            ps.setDouble(12, x.pod_rcvd_qty);
             ps.setString(13, x.pod_status);
             ps.setString(14, x.pod_site);
             ps.setString(15, x.pod_desc);
             ps.setString(16, x.pod_ship);
             ps.setString(17, x.pod_taxcode);
-            ps.setString(18, x.pod_taxamt);
+            ps.setDouble(18, x.pod_taxamt);
             rows = ps.executeUpdate();
         } else {    // update
          ps = con.prepareStatement(sqlUpdate) ;
             ps.setString(15, x.pod_nbr);
-            ps.setString(16, x.pod_line);
+            ps.setInt(16, x.pod_line);
             ps.setString(1, x.pod_item);
             ps.setString(2, x.pod_venditem);
-            ps.setString(3, x.pod_ord_qty);
+            ps.setDouble(3, x.pod_ord_qty);
             ps.setString(4, x.pod_uom);
-            ps.setString(5, x.pod_listprice);
-            ps.setString(6, x.pod_disc);
-            ps.setString(7, x.pod_netprice);
+            ps.setDouble(5, x.pod_listprice);
+            ps.setDouble(6, x.pod_disc);
+            ps.setDouble(7, x.pod_netprice);
             ps.setString(8, x.pod_due_date);
             ps.setString(9, x.pod_status);
             ps.setString(10, x.pod_site);
             ps.setString(11, x.pod_desc);
             ps.setString(12, x.pod_ship);
             ps.setString(13, x.pod_taxcode);
-            ps.setString(14, x.pod_taxamt);
+            ps.setDouble(14, x.pod_taxamt);
             rows = ps.executeUpdate();
         }
             
@@ -666,12 +666,12 @@ public class purData {
              try (ResultSet res = ps.executeQuery();) {
                     while(res.next()) {
                     m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                    r = new pod_mstr(m, res.getString("pod_nbr"), res.getString("pod_line"), res.getString("pod_item"),
-                    res.getString("pod_venditem"), res.getString("pod_ord_qty"), res.getString("pod_rcvd_qty"), 
-                    res.getString("pod_netprice"), res.getString("pod_disc"),res.getString("pod_listprice"), 
+                    r = new pod_mstr(m, res.getString("pod_nbr"), res.getInt("pod_line"), res.getString("pod_item"),
+                    res.getString("pod_venditem"), res.getDouble("pod_ord_qty"), res.getDouble("pod_rcvd_qty"), 
+                    res.getDouble("pod_netprice"), res.getDouble("pod_disc"),res.getDouble("pod_listprice"), 
                     res.getString("pod_due_date"), res.getString("pod_status"), res.getString("pod_site"), 
                     res.getString("pod_ord_date"), res.getString("pod_uom"), res.getString("pod_desc"),
-                    res.getString("pod_ship"), res.getString("pod_taxcode"), res.getString("pod_taxamt") );
+                    res.getString("pod_ship"), res.getString("pod_taxcode"), res.getDouble("pod_taxamt") );
                     list.add(r);
                     }
                 
@@ -696,12 +696,12 @@ public class purData {
             } else {
                 while(res.next()) {
                     m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                    r = new pod_mstr(m, res.getString("pod_nbr"), res.getString("pod_line"), res.getString("pod_item"),
-                    res.getString("pod_venditem"), res.getString("pod_ord_qty"), res.getString("pod_rcvd_qty"), 
-                    res.getString("pod_netprice"), res.getString("pod_disc"),res.getString("pod_listprice"), 
+                    r = new pod_mstr(m, res.getString("pod_nbr"), res.getInt("pod_line"), res.getString("pod_item"),
+                    res.getString("pod_venditem"), res.getDouble("pod_ord_qty"), res.getDouble("pod_rcvd_qty"), 
+                    res.getDouble("pod_netprice"), res.getDouble("pod_disc"),res.getDouble("pod_listprice"), 
                     res.getString("pod_due_date"), res.getString("pod_status"), res.getString("pod_site"), 
                     res.getString("pod_ord_date"), res.getString("pod_uom"), res.getString("pod_desc"),
-                    res.getString("pod_ship"), res.getString("pod_taxcode"), res.getString("pod_taxamt") );
+                    res.getString("pod_ship"), res.getString("pod_taxcode"), res.getDouble("pod_taxamt") );
                     list.add(r);
                     }
             }
@@ -719,22 +719,22 @@ public class purData {
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.pod_nbr);
-          ps.setString(2, x.pod_line);
+          ps.setInt(2, x.pod_line);
           res = ps.executeQuery();
           ps = con.prepareStatement(sqlInsert);  
             if (! res.isBeforeFirst()) {
             ps.setString(1, x.pod_nbr);
-            ps.setString(2, x.pod_line);
+            ps.setInt(2, x.pod_line);
             ps.setString(3, x.pod_item);
             ps.setString(4, x.pod_venditem);
-            ps.setString(5, x.pod_ord_qty);
+            ps.setDouble(5, x.pod_ord_qty);
             ps.setString(6, x.pod_uom);
-            ps.setString(7, x.pod_listprice);
-            ps.setString(8, x.pod_disc);
-            ps.setString(9, x.pod_netprice);
+            ps.setDouble(7, x.pod_listprice);
+            ps.setDouble(8, x.pod_disc);
+            ps.setDouble(9, x.pod_netprice);
             ps.setString(10, x.pod_ord_date);
             ps.setString(11, x.pod_due_date);
-            ps.setString(12, x.pod_rcvd_qty);
+            ps.setDouble(12, x.pod_rcvd_qty);
             ps.setString(13, x.pod_status);
             ps.setString(14, x.pod_site); 
             ps.setString(15, x.pod_desc);
@@ -1161,7 +1161,7 @@ public class purData {
                 } else {
                     while(res.next()) {
                         m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                        r = new po_tax(m, res.getString("pot_nbr"), res.getString("pot_desc"), res.getString("pot_percent"),
+                        r = new po_tax(m, res.getString("pot_nbr"), res.getString("pot_desc"), res.getDouble("pot_percent"),
                     res.getString("pot_type"));
                     }
                 }
@@ -1188,7 +1188,7 @@ public class purData {
             } else {
                 while(res.next()) {
                     m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                     r = new po_tax(m, res.getString("pot_nbr"), res.getString("pot_desc"), res.getString("pot_percent"),
+                     r = new po_tax(m, res.getString("pot_nbr"), res.getString("pot_desc"), res.getDouble("pot_percent"),
                     res.getString("pot_type"));
                     list.add(r);
                 }
@@ -1208,7 +1208,7 @@ public class purData {
                     while(res.next()) {
                     m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
                     r = new pod_tax(m, res.getString("podt_nbr"), res.getString("podt_line"), res.getString("podt_desc"),
-                    res.getString("podt_percent"), res.getString("podt_type") );
+                    res.getDouble("podt_percent"), res.getString("podt_type") );
                     list.add(r);
                     }
             }
@@ -1233,7 +1233,7 @@ public class purData {
                 while(res.next()) {
                     m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
                     r = new pod_tax(m, res.getString("podt_nbr"), res.getString("podt_line"), res.getString("podt_desc"),
-                    res.getString("podt_percent"), res.getString("podt_type") );
+                    res.getDouble("podt_percent"), res.getString("podt_type") );
                     list.add(r);
                 }
             }
@@ -1255,7 +1255,7 @@ public class purData {
             ps.setString(1, x.podt_nbr);
             ps.setString(2, x.podt_line);
             ps.setString(3, x.podt_desc);
-            ps.setString(4, x.podt_percent);
+            ps.setDouble(4, x.podt_percent);
             ps.setString(5, x.podt_type);
             rows = ps.executeUpdate();
             } 
@@ -1276,7 +1276,7 @@ public class purData {
             if (! res.isBeforeFirst()) {
             ps.setString(1, x.pot_nbr);
             ps.setString(2, x.pot_desc);
-            ps.setString(3, x.pot_percent);
+            ps.setDouble(3, x.pot_percent);
             ps.setString(4, x.pot_type);
             rows = ps.executeUpdate();
             } 
@@ -1969,13 +1969,13 @@ public class purData {
     }
     
                               
-    public record pod_mstr(String[] m, String pod_nbr, String pod_line, String pod_item, String pod_venditem, 
-        String pod_ord_qty, String pod_rcvd_qty, String pod_netprice, String pod_disc,
-        String pod_listprice, String pod_due_date, String pod_status, String pod_site,
-        String pod_ord_date, String pod_uom, String pod_desc, String pod_ship, String pod_taxcode, String pod_taxamt) {
+    public record pod_mstr(String[] m, String pod_nbr, int pod_line, String pod_item, String pod_venditem, 
+        double pod_ord_qty, double pod_rcvd_qty, double pod_netprice, double pod_disc,
+        double pod_listprice, String pod_due_date, String pod_status, String pod_site,
+        String pod_ord_date, String pod_uom, String pod_desc, String pod_ship, String pod_taxcode, double pod_taxamt) {
         public pod_mstr(String[] m) {
-            this (m, "", "", "", "", "", "", "", "", "", "",
-                    "", "", "", "", "", "", "", "");
+            this (m, "", 0, "", "", 0, 0, 0, 0, 0, "",
+                    "", "", "", "", "", "", "", 0);
         }
     }
     
@@ -2001,17 +2001,17 @@ public class purData {
         }
     } 
     
-     public record po_tax(String[] m, String pot_nbr, String pot_desc, String pot_percent, String pot_type ) {
+     public record po_tax(String[] m, String pot_nbr, String pot_desc, double pot_percent, String pot_type ) {
         public po_tax(String[] m) {
-            this (m, "", "", "", "");
+            this (m, "", "", 0, "");
         }
     }
     
    
      public record pod_tax(String[] m, String podt_nbr, String podt_line, String podt_desc, 
-        String podt_percent, String podt_type ) {
+        double podt_percent, String podt_type ) {
         public pod_tax(String[] m) {
-            this (m, "", "", "", "", "");
+            this (m, "", "", "", 0, "");
         }
     }
     

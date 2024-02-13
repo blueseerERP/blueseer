@@ -59,8 +59,10 @@ import com.blueseer.pur.purData.purchaseOrder;
 import static com.blueseer.pur.purData.updatePOAddr;
 import static com.blueseer.pur.purData.updatePOTransaction;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatDoubleZ;
 import static com.blueseer.utl.BlueSeerUtils.bsNumber;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.bsdate;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
@@ -81,6 +83,7 @@ import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.lurb2;
 import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import static com.blueseer.utl.BlueSeerUtils.priceformat;
+import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeerT;
 import static com.blueseer.utl.OVData.canUpdate;
@@ -705,8 +708,8 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
         po_mstr x = new po_mstr(null, tbkey.getText().toString(),
                         ddvend.getSelectedItem().toString(),
-                bsdate.format(orddate.getDate()).toString(),
-                bsdate.format(duedate.getDate()).toString(),
+                setDateDB(orddate.getDate()).toString(),
+                setDateDB(duedate.getDate()).toString(),
                 remarks.getText(),
                 ddshipvia.getSelectedItem().toString(), // shipvia
                 ddstatus.getSelectedItem().toString(),
@@ -731,23 +734,23 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         ArrayList<pod_mstr> list = new ArrayList<pod_mstr>();
          for (int j = 0; j < orddet.getRowCount(); j++) {
              pod_mstr x = new pod_mstr(null, tbkey.getText().toString(),
-                orddet.getValueAt(j, 0).toString(),
+                bsParseInt(orddet.getValueAt(j, 0).toString()),
                 orddet.getValueAt(j, 1).toString(),
                 orddet.getValueAt(j, 3).toString(),
-                orddet.getValueAt(j, 5).toString().replace(defaultDecimalSeparator, '.'), // qty
-                "0", // rcvd qty        
-                orddet.getValueAt(j, 9).toString().replace(defaultDecimalSeparator, '.'), // netprice
-                orddet.getValueAt(j, 8).toString().replace(defaultDecimalSeparator, '.'), // disc
-                orddet.getValueAt(j, 7).toString().replace(defaultDecimalSeparator, '.'), // listprice
-                bsdate.format(duedate.getDate()).toString(),
+                bsParseDouble(orddet.getValueAt(j, 5).toString()), // qty
+                0, // rcvd qty        
+                bsParseDouble(orddet.getValueAt(j, 9).toString()), // netprice
+                bsParseDouble(orddet.getValueAt(j, 8).toString()), // disc
+                bsParseDouble(orddet.getValueAt(j, 7).toString()), // listprice
+                setDateDB(duedate.getDate()),
                 orddet.getValueAt(j, 11).toString(),
                 ddsite.getSelectedItem().toString(),
-                bsdate.format(orddate.getDate()).toString(),
+                setDateDB(orddate.getDate()),
                 orddet.getValueAt(j, 6).toString(),
                 orddet.getValueAt(j, 2).toString(),
                 orddet.getValueAt(j, 12).toString(),
                 "", //taxcode
-                "0"  // taxamt
+                0  // taxamt
                 );
         list.add(x);
          }
@@ -787,7 +790,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
                 sactable.getValueAt(j, 1).toString(),
                 sactable.getValueAt(j, 0).toString(),
                 sactable.getValueAt(j, 2).toString(),
-                sactable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.'),
+                sactable.getValueAt(j, 3).toString(),
                 "", // pom key 
                 ""  // pom value
              );     
@@ -803,7 +806,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
           for (String[] s : headertax) {
               po_tax x = new po_tax(null, tbkey.getText().toString(),
                 s[0].toString(),
-                s[1].toString().replace(defaultDecimalSeparator, '.'),
+                bsParseDouble(s[1].toString()),
                 s[2].toString()); 
                 list.add(x);
           }
@@ -819,7 +822,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
                       pod_tax x = new pod_tax(null, tbkey.getText().toString(),
                         orddet.getValueAt(j, 0).toString(),
                         s[0].toString(),
-                        s[1].toString().replace(defaultDecimalSeparator, '.'),
+                        bsParseDouble(s[1].toString()),
                         s[2].toString());     
                         list.add(x);
                   }
@@ -1148,12 +1151,12 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
                       pod.pod_desc(), 
                       pod.pod_venditem(), 
                       pod.pod_nbr(), 
-                      bsNumber(pod.pod_ord_qty()), 
+                      bsFormatDoubleZ(pod.pod_ord_qty()), 
                       pod.pod_uom(), 
-                      priceformat(pod.pod_listprice()),
-                      priceformat(pod.pod_disc()),
-                      priceformat(pod.pod_netprice()),
-                      bsNumber(pod.pod_rcvd_qty()),  
+                      bsFormatDouble(pod.pod_listprice()),
+                      bsFormatDouble(pod.pod_disc()),
+                      bsFormatDouble(pod.pod_netprice()),
+                      bsFormatDoubleZ(pod.pod_rcvd_qty()),  
                       pod.pod_status(),
                       pod.pod_ship()});
         }

@@ -41,6 +41,7 @@ import com.blueseer.fap.fapData.ap_mstr;
 import com.blueseer.fap.fapData.vod_mstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
@@ -55,6 +56,7 @@ import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.parseDate;
+import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormat;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormatNull;
 import com.blueseer.utl.DTData;
@@ -590,11 +592,11 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
                 "", //ap_id
                 ddvend.getSelectedItem().toString(), // ap_vend, 
                 tbkey.getText(), // ap_nbr
-                currformatDouble(actamt).replace(defaultDecimalSeparator, '.'), // ap_amt
-                currformatDouble(actamt).replace(defaultDecimalSeparator, '.'), // ap_base_amt
-                setDateFormatNull(dcdate.getDate()), // ap_effdate
-                setDateFormatNull(dcdate.getDate()), // ap_entdate
-                setDateFormatNull(dcdate.getDate()), // ap_duedate        
+                actamt, // ap_amt
+                actamt, // ap_base_amt
+                setDateDB(dcdate.getDate()), // ap_effdate
+                setDateDB(dcdate.getDate()), // ap_entdate
+                setDateDB(dcdate.getDate()), // ap_duedate        
                 "V", // ap_type
                 tbrmks.getText(), //ap_rmks
                 tbcheck.getText(), //ap_ref
@@ -620,10 +622,10 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
              vod_mstr x = new vod_mstr(null, 
                 tbkey.getText(),
                 expensedet.getValueAt(j, 5).toString(),
-                expensedet.getValueAt(j, 6).toString(),
+                bsParseInt(expensedet.getValueAt(j, 6).toString()),
                 expensedet.getValueAt(j, 2).toString(),
-                expensedet.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.'),
-                expensedet.getValueAt(j, 4).toString().replace(defaultDecimalSeparator, '.'),
+                bsParseDouble(expensedet.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.')),
+                bsParseDouble(expensedet.getValueAt(j, 4).toString().replace(defaultDecimalSeparator, '.')),
                 dfdate.format(dcdate.getDate()),
                 ddvend.getSelectedItem().toString(),
                 tbcheck.getText(), 

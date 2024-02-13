@@ -39,6 +39,8 @@ import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsformat;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
+import static com.blueseer.utl.BlueSeerUtils.formatUS;
+import static com.blueseer.utl.BlueSeerUtils.formatUSZ;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
 import java.sql.DriverManager;
@@ -79,12 +81,12 @@ public class invData {
                 item_mstr x = new item_mstr(null, 
                 ld[0], // item
                 ld[1].toUpperCase(), //desc
-                bsformat("i", ld[8], "").replace(defaultDecimalSeparator, '.'), // lotsize
-                bsformat("d", (ld[2].isBlank()) ? "0" : ld[2], "5").replace(defaultDecimalSeparator, '.'), // selling price
-                bsformat("d", ld[9], "5").replace(defaultDecimalSeparator, '.'), // purch price
-                bsformat("d", ld[11], "5").replace(defaultDecimalSeparator, '.'), // ovh cost
-                bsformat("d", ld[12], "5").replace(defaultDecimalSeparator, '.'), // out cost
-                bsformat("d", ld[10], "5").replace(defaultDecimalSeparator, '.'), // matl cost
+                formatUSZ(ld[8]).replace(defaultDecimalSeparator, '.'), // lotsize
+                formatUS(ld[2]).replace(defaultDecimalSeparator, '.'), // selling price
+                formatUS(ld[9]).replace(defaultDecimalSeparator, '.'), // purch price
+                formatUS(ld[11]).replace(defaultDecimalSeparator, '.'), // ovh cost
+                formatUS(ld[12]).replace(defaultDecimalSeparator, '.'), // out cost
+                formatUS(ld[10]).replace(defaultDecimalSeparator, '.'), // matl cost
                 (ld[4].isBlank()) ? "A" : ld[4],
                 (ld[13].isBlank()) ? "ASSET" : ld[13], // type
                 ld[14], // group
@@ -98,13 +100,13 @@ public class invData {
                 ld[18], // comments
                 "ACTIVE", // status
                 (ld[19].isBlank()) ? "EA" : ld[19], // uom
-                bsformat("d", ld[20], "2").replace(defaultDecimalSeparator, '.'), //net wt
-                bsformat("d", ld[21], "2").replace(defaultDecimalSeparator, '.'), //ship wt
+                formatUSZ(ld[20]).replace(defaultDecimalSeparator, '.'), //net wt
+                formatUSZ(ld[21]).replace(defaultDecimalSeparator, '.'), //ship wt
                 "", //default cont
                 "0", // default cont qty
-                bsformat("d", ld[22], "0").replace(defaultDecimalSeparator, '.'), // lead
-                bsformat("d", ld[23], "0").replace(defaultDecimalSeparator, '.'), //safety stock
-                bsformat("d", ld[24], "0").replace(defaultDecimalSeparator, '.'), // minordqty
+                formatUSZ(ld[22]).replace(defaultDecimalSeparator, '.'), // lead
+                formatUSZ(ld[23]).replace(defaultDecimalSeparator, '.'), //safety stock
+                formatUSZ(ld[24]).replace(defaultDecimalSeparator, '.'), // minordqty
                 (ld[25].isBlank()) ? "0" : ld[25], //mrp
                 (ld[26].isBlank()) ? "0" : ld[26], //sched
                 (ld[27].isBlank()) ? "0" : ld[27], //plan
@@ -4739,11 +4741,11 @@ public class invData {
         }
     }
 
-    public record in_mstr(String[] m, String in_item, String in_qoh, String in_date, 
+    public record in_mstr(String[] m, String in_item, double in_qoh, String in_date, 
         String in_loc, String in_wh, String in_site, 
         String in_serial, String in_expire, String in_userid, String in_prog) {
         public in_mstr(String[] m) {
-            this(m, "", "", "", "", "", "", "", "", "", "");
+            this(m, "", 0, "", "", "", "", "", "", "", "");
         }
     }
 

@@ -41,6 +41,7 @@ import com.blueseer.fgl.fglData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
@@ -56,6 +57,7 @@ import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.parseDate;
+import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormat;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormatNull;
 import com.blueseer.utl.DTData;
@@ -696,11 +698,11 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
                 "", //ap_id
                 ddvend.getSelectedItem().toString(), // ap_vend, 
                 tbkey.getText(), // ap_nbr
-                currformatDouble(actamt).replace(defaultDecimalSeparator, '.'), // ap_amt
-                currformatDouble(actamt).replace(defaultDecimalSeparator, '.'), // ap_base_amt
-                setDateFormatNull(dcdate.getDate()), // ap_effdate
-                setDateFormatNull(dcdate.getDate()), // ap_entdate
-                setDateFormatNull(OVData.getDueDateFromTerms(dcdate.getDate(), terms)), // ap_duedate         
+                actamt, // ap_amt
+                actamt, // ap_base_amt
+                setDateDB(dcdate.getDate()), // ap_effdate
+                setDateDB(dcdate.getDate()), // ap_entdate
+                setDateDB(OVData.getDueDateFromTerms(dcdate.getDate(), terms)), // ap_duedate         
                 "V", // ap_type
                 tbrmks.getText(), //ap_rmks
                 tbinvoice.getText(), //ap_ref
@@ -725,11 +727,11 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
              fapData.vod_mstr x = new fapData.vod_mstr(null, 
                 tbkey.getText(),
                 voucherdet.getValueAt(j, 5).toString(),
-                voucherdet.getValueAt(j, 6).toString(),
+                bsParseInt(voucherdet.getValueAt(j, 6).toString()),
                 voucherdet.getValueAt(j, 2).toString(),
-                voucherdet.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.'),
-                voucherdet.getValueAt(j, 4).toString().replace(defaultDecimalSeparator, '.'),
-                dfdate.format(dcdate.getDate()),
+                bsParseDouble(voucherdet.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.')),
+                bsParseDouble(voucherdet.getValueAt(j, 4).toString().replace(defaultDecimalSeparator, '.')),
+                setDateDB(dcdate.getDate()),
                 ddvend.getSelectedItem().toString(),
                 tbinvoice.getText(), // ap_check 
                 voucherdet.getValueAt(j, 7).toString(),

@@ -71,6 +71,7 @@ import static com.blueseer.utl.BlueSeerUtils.ludialog;
 import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeerT;
 import java.awt.event.ActionEvent;
@@ -542,32 +543,32 @@ public class ARMemoMaint extends javax.swing.JPanel implements IBlueSeerT {
                 null, // ar_id auto-generated
                 tbkey.getText(),
                 ddcust.getSelectedItem().toString(),
-                currformatDouble(actamt).replace(defaultDecimalSeparator, '.'),
-                currformatDouble(baseamt).replace(defaultDecimalSeparator, '.'),
+                actamt,
+                baseamt,
                 ddtype.getSelectedItem().toString().substring(0,1),
                 ddcurr.getSelectedItem().toString(),
                 basecurr,
                 tbref.getText(),
                 tbrmks.getText(),
-                BlueSeerUtils.setDateFormatNull(now),
-                BlueSeerUtils.setDateFormatNull(dcdate.getDate()),
-                BlueSeerUtils.setDateFormatNull(now),
+                setDateDB(now),
+                setDateDB(dcdate.getDate()),
+                setDateDB(now),
                 tbhdracct.getText(),
                 tbhdrcc.getText(),
                 "c",
                 arbank,
                 ddsite.getSelectedItem().toString(),
-                "", //ar_amt_tax
-                "", //ar_base_amt_tax
-                "", //ar_amt_disc
-                "", //ar_base_amt_disc
-                "", //ar_open_amt
-                "", //ar_applied
+                0, //ar_amt_tax
+                0, //ar_base_amt_tax
+                0, //ar_amt_disc
+                0, //ar_base_amt_disc
+                0, //ar_open_amt
+                "0", //ar_applied
                 "", //ar_terms
                 "", //ar_tax_code
-                BlueSeerUtils.setDateFormatNull(null), //ar_invdate
-                BlueSeerUtils.setDateFormatNull(null), //ar_duedate
-                BlueSeerUtils.setDateFormatNull(null), //ar_discdate
+                setDateDB(null), //ar_invdate
+                setDateDB(null), //ar_duedate
+                setDateDB(null), //ar_discdate
                 "0" //ar_reverse
                 );
         return x;
@@ -591,14 +592,14 @@ public class ARMemoMaint extends javax.swing.JPanel implements IBlueSeerT {
                          }
                         farData.ard_mstr x = new farData.ard_mstr(null,  
                             tbkey.getText(), 
-                            String.valueOf(j + 1),    
+                            (j + 1),    
                             ddcust.getSelectedItem().toString(),
                             tbref.getText(),
                             BlueSeerUtils.setDateFormatNull(dcdate.getDate()),
-                            currformatDouble(amt_d).replace(defaultDecimalSeparator, '.'),
-                            currformatDouble(taxamt_d).replace(defaultDecimalSeparator, '.'),
-                            currformatDouble(baseamt_d).replace(defaultDecimalSeparator, '.'),     
-                            currformatDouble(basetaxamt_d).replace(defaultDecimalSeparator, '.'),
+                            amt_d,
+                            taxamt_d,
+                            baseamt_d,     
+                            basetaxamt_d,
                             ddcurr.getSelectedItem().toString(),
                             basecurr,
                             ardet.getValueAt(j, 1).toString(),

@@ -41,6 +41,7 @@ import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDoubleUS;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.parseDate;
+import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormat;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormatNull;
 import com.blueseer.utl.OVData;
@@ -83,7 +84,7 @@ public class fapData {
                 mytable.getValueAt(i,2).toString(),
                 mytable.getValueAt(i,3).toString(),
                 String.valueOf(checknbr),  // check nbr 
-                bsFormatDouble(bsParseDouble(mytable.getValueAt(i, 6).toString())).replace(defaultDecimalSeparator, '.')
+                bsParseDouble(mytable.getValueAt(i, 6).toString().replace(defaultDecimalSeparator, '.'))
                 );
                 _addAPDMstr(x, bscon, ps, res);  
             }
@@ -96,8 +97,8 @@ public class fapData {
                 "", //ap_id
                 s[0], // ap_vend, 
                 String.valueOf(checknbr), // ap_nbr
-                currformat(s[3]), // ap_amt
-                currformat(s[4]), // ap_base_amt,  String ap_entdate, String ap_duedate,
+                bsParseDouble(s[3]), // ap_amt
+                bsParseDouble(s[4]), // ap_base_amt,  String ap_entdate, String ap_duedate,
                 setDateFormatNull(effdate), // ap_effdate
                 setDateFormatNull(now), // ap_entdate
                 setDateFormatNull(now), // ap_duedate        
@@ -469,7 +470,7 @@ public class fapData {
                 voucher,
                 invoice,
                 "",  // check nbr ...blank in this case
-                bsFormatDouble(amount).replace(defaultDecimalSeparator, '.')
+                amount
                 );
                 _addAPDMstr(z, bscon, ps, res);  
           
@@ -480,10 +481,10 @@ public class fapData {
                 "", //ap_id
                 s[0], // ap_vend, 
                 String.valueOf(checknbr), // ap_nbr
-                currformat(s[3]), // ap_amt
-                currformat(s[4]), // ap_base_amt,  String ap_entdate, String ap_duedate,
-                setDateFormatNull(effdate), // ap_effdate
-                setDateFormatNull(now), // ap_entdate
+                bsParseDouble(s[3]), // ap_amt
+                bsParseDouble(s[4]), // ap_base_amt,  String ap_entdate, String ap_duedate,
+                setDateDB(effdate), // ap_effdate
+                setDateDB(now), // ap_entdate
                 "", // ap_duedate        
                 "E", // ap_type
                 "", //ap_rmks
@@ -579,7 +580,7 @@ public class fapData {
             ps.setString(3, x.apd_nbr);
             ps.setString(4, x.apd_ref);
             ps.setString(5, x.apd_check);
-            ps.setString(6, x.apd_voamt);
+            ps.setDouble(6, x.apd_voamt);
             rows = ps.executeUpdate();
             } 
             return rows;
@@ -595,16 +596,16 @@ public class fapData {
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.vod_id);
           ps.setString(2, x.vod_rvdid);
-          ps.setString(3, x.vod_rvdline);
+          ps.setInt(3, x.vod_rvdline);
           res = ps.executeQuery();
           ps = con.prepareStatement(sqlInsert);
             if (! res.isBeforeFirst()) {
             ps.setString(1, x.vod_id);
             ps.setString(2, x.vod_rvdid);
-            ps.setString(3, x.vod_rvdline);
+            ps.setInt(3, x.vod_rvdline);
             ps.setString(4, x.vod_item);
-            ps.setString(5, x.vod_qty);
-            ps.setString(6, x.vod_voprice);
+            ps.setDouble(5, x.vod_qty);
+            ps.setDouble(6, x.vod_voprice);
             ps.setString(7, x.vod_date);
             ps.setString(8, x.vod_vend);
             ps.setString(9, x.vod_invoice);
@@ -635,8 +636,8 @@ public class fapData {
             if (! res.isBeforeFirst()) {
             ps.setString(1, x.ap_vend);
             ps.setString(2, x.ap_nbr);
-            ps.setString(3, x.ap_amt);
-            ps.setString(4, x.ap_base_amt);
+            ps.setDouble(3, x.ap_amt);
+            ps.setDouble(4, x.ap_base_amt);
             ps.setString(5, x.ap_effdate);
             ps.setString(6, x.ap_entdate);
             ps.setString(7, x.ap_duedate);
@@ -985,29 +986,29 @@ public class fapData {
     
     
     public record ap_mstr(String[] m, String ap_id, String ap_vend, String ap_nbr, 
-        String ap_amt, String ap_base_amt, String ap_effdate, String ap_entdate, String ap_duedate,
+        double ap_amt, double ap_base_amt, String ap_effdate, String ap_entdate, String ap_duedate,
         String ap_type, String ap_rmks, String ap_ref, String ap_terms, String ap_acct,
         String ap_cc, String ap_applied, String ap_status, String ap_bank, String ap_curr,
         String ap_base_curr, String ap_check, String ap_batch, String ap_site, String ap_subtype) {
         public ap_mstr(String[]m) {
-            this(m, "", "", "", "", "", "", "", "", "", "", 
+            this(m, "", "", "", 0, 0, "", "", "", "", "", 
                     "", "", "", "", "", "", "", "", "", "",
                     "", "", "");
         }
     }
     
     public record apd_mstr(String[] m, String apd_batch, String apd_vend, String apd_nbr, 
-        String apd_ref, String apd_check, String apd_voamt) {
+        String apd_ref, String apd_check, double apd_voamt) {
         public apd_mstr(String[]m) {
-            this(m, "", "", "", "", "", "");
+            this(m, "", "", "", "", "", 0);
         }
     }
     
-    public record vod_mstr(String[] m, String vod_id, String vod_rvdid, String vod_rvdline, 
-        String vod_item, String vod_qty, String vod_voprice, String vod_date, String vod_vend,
+    public record vod_mstr(String[] m, String vod_id, String vod_rvdid, int vod_rvdline, 
+        String vod_item, double vod_qty, double vod_voprice, String vod_date, String vod_vend,
         String vod_invoice, String vod_expense_acct, String vod_expense_cc) {
         public vod_mstr(String[]m) {
-            this(m, "", "", "", "", "", "", "", "", "", "",
+            this(m, "", "", 0, "", 0, 0, "", "", "", "",
                     "" );
         }
     }

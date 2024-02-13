@@ -58,7 +58,7 @@ import static com.blueseer.utl.BlueSeerUtils.bsParseDoubleUS;
 import static com.blueseer.utl.BlueSeerUtils.bsformat;
 import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
 import static com.blueseer.utl.BlueSeerUtils.currformatDoubleUS;
-import static com.blueseer.utl.BlueSeerUtils.currformatUS;
+import static com.blueseer.utl.BlueSeerUtils.formatUS;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -18433,8 +18433,8 @@ MainFrame.bslog(e);
                         + "'" + voucherdet.getValueAt(j, 0).toString() + "'" + ","
                         + "'" + voucherdet.getValueAt(j, 1).toString() + "'" + ","
                         + "'" + voucherdet.getValueAt(j, 2).toString() + "'" + ","
-                        + "'" + currformatUS(voucherdet.getValueAt(j, 3).toString()) + "'" + ","
-                        + "'" + currformatUS(voucherdet.getValueAt(j, 4).toString()) + "'" + ","
+                        + "'" + formatUS(voucherdet.getValueAt(j, 3).toString()) + "'" + ","
+                        + "'" + formatUS(voucherdet.getValueAt(j, 4).toString()) + "'" + ","
                         + "'" + setDateDB(effdate) + "'" + ","
                         + "'" + invoice + "'" + ","
                         + "'" + apacct + "'" + ","

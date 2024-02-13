@@ -44,10 +44,12 @@ import com.blueseer.shp.shpData;
 import static com.blueseer.shp.shpData.confirmShipperTransaction;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.currformat;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormat;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormatNull;
 import com.blueseer.utl.DTData;
@@ -1019,11 +1021,11 @@ public class CashTran extends javax.swing.JPanel {
                 "", //ap_id
                 ddentityExpense.getSelectedItem().toString(), // ap_vend, 
                 tbKeyExpense.getText(), // ap_nbr
-                currformatDouble(bsParseDouble(tbexpensetotal.getText())).replace(defaultDecimalSeparator, '.'), // ap_amt
-                currformatDouble(bsParseDouble(tbexpensetotal.getText())).replace(defaultDecimalSeparator, '.'), // ap_base_amt
-                setDateFormatNull(dcdateExpense.getDate()), // ap_effdate
-                setDateFormatNull(dcdateExpense.getDate()), // ap_entdate
-                setDateFormatNull(dcdateExpense.getDate()), // ap_duedate        
+                bsParseDouble(tbexpensetotal.getText()), // ap_amt
+                bsParseDouble(tbexpensetotal.getText()), // ap_base_amt
+                setDateDB(dcdateExpense.getDate()), // ap_effdate
+                setDateDB(dcdateExpense.getDate()), // ap_entdate
+                setDateDB(dcdateExpense.getDate()), // ap_duedate        
                 "V", // ap_type
                 tbrmks.getText(), //ap_rmks
                 tbexpensePO.getText(), //ap_ref
@@ -1045,10 +1047,10 @@ public class CashTran extends javax.swing.JPanel {
              fapData.vod_mstr y = new fapData.vod_mstr(null, 
                 tbKeyExpense.getText(),
                 "expense",
-                expenseTable.getValueAt(j, 0).toString(),
+                bsParseInt(expenseTable.getValueAt(j, 0).toString()),
                 expenseTable.getValueAt(j, 1).toString(),
-                expenseTable.getValueAt(j, 2).toString().replace(defaultDecimalSeparator, '.'),
-                expenseTable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.'),
+                bsParseDouble(expenseTable.getValueAt(j, 2).toString().replace(defaultDecimalSeparator, '.')),
+                bsParseDouble(expenseTable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.')),
                 dfdate.format(dcdateExpense.getDate()),
                 ddentityExpense.getSelectedItem().toString(),
                 tbKeyExpense.getText(), 

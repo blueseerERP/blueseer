@@ -981,20 +981,20 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                 orddet.getValueAt(j, 1).toString(),
                 orddet.getValueAt(j, 2).toString(),
                 orddet.getValueAt(j, 4).toString(),
-                bsParseDouble(xZero(orddet.getValueAt(j, 5).toString()).replace(defaultDecimalSeparator, '.')),
+                bsParseDouble(xZero(orddet.getValueAt(j, 5).toString())), // qty
                 orddet.getValueAt(j, 6).toString(),
                 allocationvalue,
-                bsParseDouble(xZero(orddet.getValueAt(j, 7).toString()).replace(defaultDecimalSeparator, '.')),
-                bsParseDouble(xZero(orddet.getValueAt(j, 8).toString()).replace(defaultDecimalSeparator, '.')),
-                bsParseDouble(xZero(orddet.getValueAt(j, 9).toString()).replace(defaultDecimalSeparator, '.')),
+                bsParseDouble(xZero(orddet.getValueAt(j, 7).toString())), // list
+                bsParseDouble(xZero(orddet.getValueAt(j, 8).toString())), // disc
+                bsParseDouble(xZero(orddet.getValueAt(j, 9).toString())), // net
                 setDateDB(orddate.getDate()),
                 setDateDB(duedate.getDate()),   
-                bsParseDouble(xZero(orddet.getValueAt(j, 10).toString()).replace(defaultDecimalSeparator, '.')),
+                bsParseDouble(xZero(orddet.getValueAt(j, 10).toString())),
                 orddet.getValueAt(j, 11).toString(),
                 orddet.getValueAt(j, 12).toString(),
                 orddet.getValueAt(j, 13).toString(),
                 orddet.getValueAt(j, 14).toString(),  
-                bsParseDouble(xZero(orddet.getValueAt(j, 15).toString()).replace(defaultDecimalSeparator, '.')), 
+                bsParseDouble(xZero(orddet.getValueAt(j, 15).toString())), 
                 ddsite.getSelectedItem().toString(),  
                 orddet.getValueAt(j, 16).toString(),
                 orddet.getValueAt(j, 17).toString()
@@ -1019,7 +1019,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                 sactable.getValueAt(j, 1).toString(),
                 sactable.getValueAt(j, 0).toString(),
                 sactable.getValueAt(j, 2).toString(),
-                bsParseDouble(xZero(sactable.getValueAt(j, 3).toString()).replace(defaultDecimalSeparator, '.')));     
+                bsParseDouble(xZero(sactable.getValueAt(j, 3).toString())));     
                 list.add(x);
          }
        
@@ -1032,7 +1032,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
           for (String[] s : headertax) {
               so_tax x = new so_tax(null, tbkey.getText().toString(),
                 s[0].toString(),
-                bsParseDouble(xZero(s[1]).replace(defaultDecimalSeparator, '.')),
+                bsParseDouble(xZero(s[1])),
                 xZero(s[2]));   
                 list.add(x);
           }
@@ -1048,7 +1048,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                       sod_tax x = new sod_tax(null, tbkey.getText().toString(),
                         xZero(orddet.getValueAt(j, 0).toString()),
                         s[0],
-                        bsParseDouble(xZero(s[1]).replace(defaultDecimalSeparator, '.')),
+                        bsParseDouble(xZero(s[1])),
                         xZero(s[2]));     
                         list.add(x);
                   }
@@ -1700,9 +1700,9 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                 if (TypeAndPrice[0] != null)
                 pricetype = TypeAndPrice[0];
                 
-                if (TypeAndPrice[1] != null)
-                price = bsParseDouble(TypeAndPrice[1]);
-                
+                if (TypeAndPrice[1] != null) {
+                    price = bsParseDouble(TypeAndPrice[1]);
+                }
                 listprice.setText(bsFormatDouble(price));
                 if (pricetype.equals("cust")) {
                     listprice.setBackground(Color.green);
@@ -1779,6 +1779,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         double matltax = 0;
         double totaltax = 0;
         
+        
          for (int j = 0; j < orddet.getRowCount(); j++) {
              dol = dol + ( bsParseDouble(orddet.getValueAt(j, 5).toString()) * bsParseDouble(orddet.getValueAt(j, 9).toString()) );  
              matltax += bsParseDouble(orddet.getValueAt(j, 15).toString()); // now get material tax at the line level
@@ -1790,9 +1791,11 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
             if (sactable.getValueAt(j,0).toString().equals("passive")) { // skip passive (info only)
             continue;
             } 
+            
             if (! sactable.getValueAt(j,0).toString().equals("tax") &&
                     ! sactable.getValueAt(j,0).toString().equals("shipping PPD") &&
                     ! sactable.getValueAt(j,0).toString().equals("shipping BIL") && ! sactable.getValueAt(j,2).toString().equals("percent") ) {
+            
             dol += bsParseDouble(sactable.getValueAt(j,3).toString());  // add charges to total net charge
             }
             if (sactable.getValueAt(j,0).toString().equals("tax") && sactable.getValueAt(j,2).toString().equals("percent")) {
@@ -3532,6 +3535,10 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     private void qtyshippedFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_qtyshippedFocusLost
        
+        if (isLoad) {
+            return;
+        }
+        
         String x = BlueSeerUtils.bsformat("", qtyshipped.getText(), "5");
         if (x.equals("error")) {
             qtyshipped.setText("");
@@ -3555,6 +3562,11 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_qtyshippedFocusLost
 
     private void listpriceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_listpriceFocusLost
+       
+        if (isLoad) {
+            return;
+        }
+        
         if (! listprice.getText().isEmpty()) {
         String x = BlueSeerUtils.bsformat("", listprice.getText(), "4");
         if (x.equals("error")) {
@@ -3571,6 +3583,11 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_listpriceFocusLost
 
     private void discountFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_discountFocusLost
+        
+        if (isLoad) {
+            return;
+        }
+        
         if (! discount.getText().isEmpty()) {
         String x = BlueSeerUtils.bsformat("", discount.getText(), "4");
         if (x.equals("error")) {
@@ -3609,7 +3626,9 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_ddwhActionPerformed
 
     private void dduomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dduomActionPerformed
-            setPrice();
+        if (! isLoad) {
+             setPrice();
+        }    
     }//GEN-LAST:event_dduomActionPerformed
 
     private void ddlocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddlocActionPerformed
