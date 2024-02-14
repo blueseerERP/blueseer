@@ -64,6 +64,7 @@ import static com.blueseer.utl.BlueSeerUtils.ludialog;
 import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormat;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeerT;
@@ -684,7 +685,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
     public item_mstr createRecord() { 
         String expire = null;
         if (dcexpire.getDate() != null) {
-            expire = BlueSeerUtils.setDateFormatNull(dcexpire.getDate());
+            expire = setDateDB(dcexpire.getDate());
         }
         item_mstr x = new item_mstr(null, tbkey.getText().toString(),
                 tbdesc.getText().toUpperCase(),
