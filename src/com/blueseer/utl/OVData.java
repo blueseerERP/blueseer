@@ -4804,7 +4804,7 @@ public class OVData {
             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
             Date now = new Date();
               
-            String[] calarray = fglData.getGLCalForDate(dfdate.format(now));
+            String[] calarray = fglData.getGLCalForDate(now);
                     
                   try {
             

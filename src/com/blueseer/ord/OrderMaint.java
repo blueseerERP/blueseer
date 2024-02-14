@@ -2797,7 +2797,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         jLabel9.setText("Description");
-        jLabel9.setName("lbldescription"); // NOI18N
+        jLabel9.setName("lbldesc"); // NOI18N
 
         btLookUpCustItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
         btLookUpCustItem.addActionListener(new java.awt.event.ActionListener() {

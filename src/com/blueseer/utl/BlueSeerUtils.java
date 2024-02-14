@@ -783,6 +783,15 @@ public class BlueSeerUtils {
         return outvalue;
     }
     
+    public static String bsFormatIntUS(int invalue) {
+        String outvalue = "";
+        String pattern = "#"; 
+        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.US);    
+        df.applyPattern(pattern);
+        outvalue = df.format(invalue); 
+        return outvalue;
+    }
+    
     
     public static String bsFormatDouble5(double invalue) {
         String outvalue = "";

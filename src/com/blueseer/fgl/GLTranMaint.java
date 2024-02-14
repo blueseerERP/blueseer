@@ -635,7 +635,7 @@ public class GLTranMaint extends javax.swing.JPanel {
             return false;
         } 
         
-        String[] caldate = fglData.getGLCalForDate(setDateDB(effdate.getDate()));
+        String[] caldate = fglData.getGLCalForDate(effdate.getDate());
         if (caldate == null || caldate[0].isEmpty()) {
             bsmf.MainFrame.show(getMessageTag(1038));
             return false;
@@ -720,7 +720,7 @@ public class GLTranMaint extends javax.swing.JPanel {
         String basecurr = curr;
         double amt = 0.00;
         // for reversing type
-        String[] caldate = fglData.getGLCalForDate(BlueSeerUtils.bsdate.format(effdate.getDate()));
+        String[] caldate = fglData.getGLCalForDate(effdate.getDate());
         String nextstartdate = "";
         if (! caldate[0].isEmpty() && type.equals("RV")) {
             int nextperiod = Integer.valueOf(caldate[1]) + 1;

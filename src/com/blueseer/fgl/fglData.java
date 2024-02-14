@@ -38,6 +38,7 @@ import static com.blueseer.far.farData.getARTaxMaterialOnly;
 import com.blueseer.shp.shpData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatIntUS;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDoubleUS;
 import static com.blueseer.utl.BlueSeerUtils.currformatDoubleUS;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
@@ -3553,7 +3554,7 @@ public class fglData {
 
 }
 
-    public static String[] getGLCalForDate(String EffDate) {
+    public static String[] getGLCalForDate(Date EffDate) {
           // function returns a String array
           // first element = year  
           // second element = period 
@@ -3575,7 +3576,7 @@ public class fglData {
             try {
 
             res = st.executeQuery("select * from gl_cal where glc_start <= " +
-                    "'" + EffDate + "'" + " AND glc_end >= " + "'" + EffDate + "'" + ";");
+                    "'" + setDateDB(EffDate) + "'" + " AND glc_end >= " + "'" + setDateDB(EffDate) + "'" + ";");
            while (res.next()) {
                 x[0] = res.getString("glc_year");
                 x[1] = res.getString("glc_per");
@@ -3650,7 +3651,7 @@ public class fglData {
 
 }
 
-    public static ArrayList getGLCalForPeriod(String year, String per) {
+    public static ArrayList getGLCalForPeriod(int year, int per) {
           // function returns a 2 items from the gl_cal record where a period matches
           // first element = startdate
           // second element = enddate
@@ -3669,9 +3670,9 @@ public class fglData {
             try {
 
             res = st.executeQuery("select * from gl_cal where glc_per = " +
-                    "'" + per.toString() + "'" + 
+                    "'" + bsFormatIntUS(per) + "'" + 
                     " AND glc_year = " +
-                    "'" + year.toString() + "'" + ";");
+                    "'" + bsFormatIntUS(year) + "'" + ";");
            while (res.next()) {
                   myarray.add(res.getString("glc_start"));
                    myarray.add(res.getString("glc_end"));
@@ -3989,7 +3990,7 @@ public class fglData {
     int period = Integer.valueOf(indate.substring(5,7));
     int prioryear = year - 1;
 
-    ArrayList<java.sql.Date> actdatearray = getGLCalForPeriod(String.valueOf(year), String.valueOf(period));  
+    ArrayList<java.sql.Date> actdatearray = getGLCalForPeriod(year, period);  
             String datestart = String.valueOf(actdatearray.get(0));
             String dateend = String.valueOf(actdatearray.get(1));
 
@@ -4455,7 +4456,7 @@ public class fglData {
           java.util.Date now = new java.util.Date();
           DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
           ArrayList<String> mylist = new ArrayList<String>();   
-          String[] fromdatearray = fglData.getGLCalForDate(dfdate.format(now));
+          String[] fromdatearray = fglData.getGLCalForDate(now);
 
           int current_year = Integer.valueOf(fromdatearray[0].toString());
           int current_period = Integer.valueOf(fromdatearray[1].toString());
@@ -4590,7 +4591,7 @@ public class fglData {
           java.util.Date now = new java.util.Date();
           DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
           ArrayList<String> mylist = new ArrayList<String>();   
-          String[] fromdatearray = fglData.getGLCalForDate(dfdate.format(now));
+          String[] fromdatearray = fglData.getGLCalForDate(now);
           int current_year = Integer.valueOf(fromdatearray[0].toString());
           int current_period = Integer.valueOf(fromdatearray[1].toString());
           try {
@@ -4727,7 +4728,7 @@ public class fglData {
           java.util.Date now = new java.util.Date();
           DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
           ArrayList<String> mylist = new ArrayList<String>();   
-          String[] fromdatearray = fglData.getGLCalForDate(dfdate.format(now));
+          String[] fromdatearray = fglData.getGLCalForDate(now);
           int current_year = Integer.valueOf(fromdatearray[0].toString());
           int current_period = Integer.valueOf(fromdatearray[1].toString());
           try {
@@ -4837,7 +4838,7 @@ public class fglData {
           java.util.Date now = new java.util.Date();
           DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
           ArrayList<String> mylist = new ArrayList<String>();   
-          String[] fromdatearray = fglData.getGLCalForDate(dfdate.format(now));
+          String[] fromdatearray = fglData.getGLCalForDate(now);
           int current_year = Integer.valueOf(fromdatearray[0].toString());
           int current_period = Integer.valueOf(fromdatearray[1].toString());
           try {

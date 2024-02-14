@@ -278,7 +278,7 @@ where shd_id =  $P{myid}]]>
 			</textField>
 			<textField>
 				<reportElement x="489" y="37" width="76" height="19" uuid="401309e3-7352-4427-8461-a60a49ce6eaa"/>
-				<textFieldExpression><![CDATA[$F{sh_confdate}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new java.text.SimpleDateFormat("yyyy-MM-dd", $P{REPORT_LOCALE}).format(new java.text.SimpleDateFormat("yyyy-MM-dd").parse($F{sh_confdate}))]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="437" y="90" width="110" height="20" uuid="9b894070-83ea-4531-b608-e3bb34be614e"/>

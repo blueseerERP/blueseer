@@ -104,43 +104,38 @@
                           <Component id="jScrollPane1" max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" attributes="0">
+                          <EmptySpace min="160" pref="160" max="-2" attributes="0"/>
+                          <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="7" pref="7" max="-2" attributes="0"/>
+                          <Component id="labeltotal" min="-2" pref="101" max="-2" attributes="0"/>
+                          <EmptySpace min="197" pref="197" max="-2" attributes="0"/>
+                          <Component id="btsubmit" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="12" pref="12" max="-2" attributes="0"/>
+                          <Component id="btdeleteALL" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" attributes="0">
+                          <EmptySpace max="32767" attributes="0"/>
+                          <Component id="jLabel51" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="tbamt" min="-2" pref="89" max="-2" attributes="0"/>
+                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                          <Component id="btadd" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace min="12" pref="12" max="-2" attributes="0"/>
+                          <Component id="btdelete" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <EmptySpace min="160" pref="160" max="-2" attributes="0"/>
-                                  <Component id="jLabel4" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="7" pref="7" max="-2" attributes="0"/>
-                                  <Component id="labeltotal" min="-2" pref="101" max="-2" attributes="0"/>
-                                  <EmptySpace min="197" pref="197" max="-2" attributes="0"/>
-                                  <Component id="btsubmit" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="12" pref="12" max="-2" attributes="0"/>
-                                  <Component id="btdeleteALL" min="-2" max="-2" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <EmptySpace min="202" pref="202" max="-2" attributes="0"/>
+                                  <Component id="btnew" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <Group type="102" attributes="0">
-                                  <EmptySpace max="32767" attributes="0"/>
-                                  <Component id="jLabel51" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="tbamt" min="-2" pref="89" max="-2" attributes="0"/>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="btadd" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace min="12" pref="12" max="-2" attributes="0"/>
-                                  <Component id="btdelete" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <EmptySpace min="202" pref="202" max="-2" attributes="0"/>
-                                          <Component id="btnew" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <EmptySpace min="91" pref="91" max="-2" attributes="0"/>
-                                          <Component id="ddtype" min="-2" pref="104" max="-2" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="btclear" min="-2" max="-2" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <EmptySpace min="91" pref="91" max="-2" attributes="0"/>
+                                  <Component id="ddtype" min="-2" pref="104" max="-2" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="btclear" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
