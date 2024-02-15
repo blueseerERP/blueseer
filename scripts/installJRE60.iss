@@ -38,7 +38,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Components]
 Name: "english"; Description: "English"; Flags: exclusive
-Name: "arabic"; Description: "Arabic (preview)"; Flags: exclusive
+Name: "arabic"; Description: "Arabic"; Flags: exclusive
 Name: "french"; Description: "French"; Flags: exclusive
 Name: "german"; Description: "German"; Flags: exclusive
 Name: "romanian"; Description: "Romanian"; Flags: exclusive
