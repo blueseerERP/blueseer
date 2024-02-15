@@ -585,7 +585,7 @@ public class fapData {
             return rows;
     }
     
-    private static int _addVODMstr(vod_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+    public static int _addVODMstr(vod_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
         String sqlSelect = "select * from vod_mstr where vod_id = ? and vod_rvdid = ? and vod_rvdline = ?";
         String sqlInsert = "insert into vod_mstr (vod_id, vod_rvdid, vod_rvdline, vod_item, vod_qty, vod_voprice, vod_date, vod_vend," +
@@ -616,7 +616,7 @@ public class fapData {
     }
     
     
-    private static int _addAPMstr(ap_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+    public static int _addAPMstr(ap_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
         String sqlSelect = "select * from ap_mstr where ap_batch = ? and ap_nbr = ? and ap_type = ?";
         String sqlInsert = "insert into ap_mstr (ap_vend, ap_nbr, " +

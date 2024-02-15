@@ -32,6 +32,11 @@ import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.fap.fapData;
+import static com.blueseer.fap.fapData._addAPMstr;
+import static com.blueseer.fap.fapData._addVODMstr;
+import com.blueseer.fap.fapData.ap_mstr;
+import com.blueseer.fap.fapData.vod_mstr;
 import com.blueseer.fgl.fglData;
 import static com.blueseer.fgl.fglData._glEntryFromReceiver;
 import com.blueseer.inv.invData;
@@ -128,7 +133,8 @@ public class rcvData {
             return rows;
     }
    
-    public static String[] addReceiverTransaction(ArrayList<recv_det> rvd, recv_mstr rv) {
+    public static String[] addReceiverTransaction(ArrayList<recv_det> rvd, recv_mstr rv, ap_mstr ap, ArrayList<vod_mstr> vod) {
+        // if auto-vouchering....ap and vod should not be null...otherwise pass null,null as 3rd,4th parameter
         String[] m = new String[2];
         Connection bscon = null;
         PreparedStatement ps = null;
@@ -157,6 +163,20 @@ public class rcvData {
             
             // update PO
             _updatePOFromReceiver(rv.rv_id(),bscon);
+            
+            // if auto-vouchering....ap and vod should not be null...otherwise pass null,null to method
+            if (ap != null && vod != null) {
+                 _addAPMstr(ap, bscon, ps, res);  
+                for (vod_mstr z : vod) {
+                    _addVODMstr(z, bscon, ps, res);
+                }
+            
+                if (ap.ap_subtype().equals("Receipt")) {
+                fglData._glEntryFromVoucher(ap, bscon, false); 
+                } else {
+                fglData._glEntryFromVoucherExpense(ap.ap_nbr(), parseDate(ap.ap_effdate()), bscon, false);    
+                }
+            }
             
             bscon.commit();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
@@ -194,60 +214,7 @@ public class rcvData {
         }
     return m;
     }
-    
-    public static String[] addVoucherTransaction(String type, String shipper, Date effdate) {
-        String[] m = new String[2];
-        Connection bscon = null;
-        PreparedStatement ps = null;
-        ResultSet res = null;
-        try { 
-           
-            if (ds != null) {
-              bscon = ds.getConnection();
-            } else {
-              bscon = DriverManager.getConnection(url + db, user, pass);  
-            }
-            bscon.setAutoCommit(false);
-            
-            // add detailed transactions
-            
-            bscon.commit();
-            m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1125)};
-        } catch (SQLException s) {
-             MainFrame.bslog(s);
-             try {
-                 bscon.rollback();
-                 m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};
-             } catch (SQLException rb) {
-                 MainFrame.bslog(rb);
-             }
-        } finally {
-            if (res != null) {
-                try {
-                    res.close();
-                } catch (SQLException ex) {
-                    MainFrame.bslog(ex);
-                }
-            }
-            if (ps != null) {
-                try {
-                    ps.close();
-                } catch (SQLException ex) {
-                    MainFrame.bslog(ex);
-                }
-            }
-            if (bscon != null) {
-                try {
-                    bscon.setAutoCommit(true);
-                    bscon.close();
-                } catch (SQLException ex) {
-                    MainFrame.bslog(ex);
-                }
-            }
-        }
-    return m;
-    }
-    
+        
     public static void _addTranMstrReceiver(recv_mstr rv, ArrayList<recv_det> rvd, Connection bscon) throws SQLException {
        
         double baseqty = 0.00;

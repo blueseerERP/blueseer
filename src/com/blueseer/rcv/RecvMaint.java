@@ -372,6 +372,8 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
         tableattachment.getTableHeader().setReorderingAllowed(false);
         tableattachment.getColumnModel().getColumn(0).setMaxWidth(100);
         
+        lblmessage.setText("");
+        lblmessage.setForeground(Color.black);
         
         rvdet.setModel(myrecvdetmodel);
         rvdet.getTableHeader().setReorderingAllowed(false);
@@ -495,7 +497,18 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
                    setPanelComponentState(this, true);
                    btadd.setEnabled(false);
                    tbkey.setEditable(false);
+                   cbautovoucher.setSelected(false);
+                   cbautovoucher.setEnabled(false);
                    tbkey.setForeground(Color.blue);
+                   
+                   if (rv.rv_status().equals("1")) {
+                       btadd.setEnabled(false);
+                       btupdate.setEnabled(false);
+                       btdelete.setEnabled(false);
+                       lblmessage.setText("Receiver has been vouchered and cannot be updated");
+                       lblmessage.setForeground(Color.blue);
+                   }
+                   
         } else {
            m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};  
                    tbkey.setForeground(Color.red); 
@@ -529,42 +542,20 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     public String[] addRecord(String[] x) {
      String[] m = new String[2];
-     String[] mm = new String[2];
-     boolean error = false;
      
-     m = addReceiverTransaction(createDetRecord(), createRecord());
-     /* update PO from receiver */
-    // purData.updatePOFromReceiver(tbkey.getText());
-
-    /* create tran_mstr records */
-      //  if (! error)
-      //  error = OVData.TRHistRctPurch(tbkey.getText(), dcdate.getDate());
-
-        /* adjust inventory */
-       // if (! error)
-      //  error = OVData.UpdateInventoryFromReceiver(tbkey.getText());
-
-        /* create gl_tran records */
-       // if (! error)
-       // error = fglData.glEntryFromReceiver(tbkey.getText(), dcdate.getDate());
-     
-        
-    /* create auto-voucher from temptable if autovoucher is on */
-    if (m[0].equals("0") && cbautovoucher.isSelected()) {
+     if (cbautovoucher.isSelected()) {
       String vonbr = String.valueOf(OVData.getNextNbr("voucher")); 
       String[] vendinfo = getVendInfo(ddvend.getSelectedItem().toString());
       ArrayList<vod_mstr> vodlist = createVodMstr(vonbr, vendinfo);
       ap_mstr ap = createAPMstr(vonbr, vendinfo);
-      mm = VoucherTransaction("Receipt", vodlist, ap, false);
-      if (mm[0].equals("0")) {
-          updateReceivers(vodlist, "Receipt");
-      }
-    }
-    
-    if (mm[0].equals("1")) {
-        m = mm;
-    }
-    
+        m = addReceiverTransaction(createDetRecord(), createRecord(), ap, vodlist);
+        if (m[0].equals("0")) {
+            updateReceivers(vodlist, ap.ap_subtype());
+        }
+     } else {
+        m = addReceiverTransaction(createDetRecord(), createRecord(), null, null);  
+     }
+     
     return m;
     }
     
@@ -1017,6 +1008,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel2 = new javax.swing.JLabel();
         btgenerate = new javax.swing.JButton();
         lblitem = new javax.swing.JLabel();
+        lblmessage = new javax.swing.JLabel();
         panelAttachment = new javax.swing.JPanel();
         labelmessage = new javax.swing.JLabel();
         btaddattachment = new javax.swing.JButton();
@@ -1218,6 +1210,8 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
+        lblmessage.setName("lblmessage"); // NOI18N
+
         javax.swing.GroupLayout panelMainLayout = new javax.swing.GroupLayout(panelMain);
         panelMain.setLayout(panelMainLayout);
         panelMainLayout.setHorizontalGroup(
@@ -1239,27 +1233,9 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addComponent(jLabel42, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel32, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel43, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panelMainLayout.createSequentialGroup()
-                                .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(panelMainLayout.createSequentialGroup()
-                                        .addGap(334, 334, 334)
-                                        .addComponent(cbautovoucher))
-                                    .addGroup(panelMainLayout.createSequentialGroup()
-                                        .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(ddsite, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addGroup(panelMainLayout.createSequentialGroup()
-                                                .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(7, 7, 7)))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btnew)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btclear)))
-                                .addGap(23, 189, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelMainLayout.createSequentialGroup()
                                 .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addGroup(panelMainLayout.createSequentialGroup()
                                         .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1321,23 +1297,39 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
                                             .addComponent(tbpackingslip, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(dcdate, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
                                             .addComponent(tbqty)
-                                            .addComponent(dcexpire, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE))))
-                                .addGap(78, 78, 78))))
+                                            .addComponent(dcexpire, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, panelMainLayout.createSequentialGroup()
+                                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btnew)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(btclear)
+                                        .addGap(30, 30, 30)
+                                        .addComponent(lblmessage, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 0, Short.MAX_VALUE)))
+                                .addGap(78, 78, 78))
+                            .addGroup(panelMainLayout.createSequentialGroup()
+                                .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelMainLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelMainLayout.createSequentialGroup()
+                                .addComponent(btadditem)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btdeleteitem)
+                                .addContainerGap())
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelMainLayout.createSequentialGroup()
+                                .addComponent(cbautovoucher)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(btdelete)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btupdate)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btadd)
-                                .addGap(23, 23, 23))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelMainLayout.createSequentialGroup()
-                                .addComponent(btadditem)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btdeleteitem)
-                                .addContainerGap())))))
+                                .addGap(23, 23, 23))))))
         );
         panelMainLayout.setVerticalGroup(
             panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1345,13 +1337,13 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addContainerGap()
                 .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnew)
-                        .addComponent(cbautovoucher)
-                        .addComponent(btclear))
-                    .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel24))
-                    .addComponent(btlookup))
+                    .addComponent(btlookup)
+                    .addComponent(lblmessage, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnew)
+                        .addComponent(btclear)))
                 .addGap(8, 8, 8)
                 .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1456,7 +1448,8 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btadd)
                     .addComponent(btupdate)
-                    .addComponent(btdelete))
+                    .addComponent(btdelete)
+                    .addComponent(cbautovoucher))
                 .addContainerGap())
         );
 
@@ -1890,6 +1883,10 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel labelmessage;
     private javax.swing.JLabel lblitem;
+    private javax.swing.JLabel lblmessage;
+    private javax.swing.JLabel lblstatus;
+    private javax.swing.JLabel lblstatus1;
+    private javax.swing.JLabel lblstatus2;
     private javax.swing.JLabel lblvendpart;
     private javax.swing.JLabel lbvendor;
     private javax.swing.JTextField orddate;
