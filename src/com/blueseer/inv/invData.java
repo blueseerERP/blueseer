@@ -43,6 +43,7 @@ import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.formatUS;
 import static com.blueseer.utl.BlueSeerUtils.formatUSZ;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import com.blueseer.utl.OVData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -1696,8 +1697,7 @@ public class invData {
             }
             java.util.Date now = new java.util.Date();
             DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-            DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
-            String mydate = dfdate.format(now);
+            String mydate = setDateDB(now);
 
             double sum = 0.00;    
             
