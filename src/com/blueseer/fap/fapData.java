@@ -385,9 +385,9 @@ public class fapData {
             } 
             
             if (ctype.equals("Receipt")) {
-            fglData._glEntryFromVoucher(ap.ap_nbr, parseDate(ap.ap_effdate), bscon, Void); 
+            fglData._glEntryFromVoucher(ap, bscon, Void); 
             } else {
-            fglData._glEntryFromVoucherExpense(ap.ap_nbr, parseDate(ap.ap_effdate), bscon, Void);    
+            fglData._glEntryFromVoucherExpense(ap.ap_nbr(), parseDate(ap.ap_effdate()), bscon, Void);    
             }
             // now commit
             bscon.commit();
@@ -426,9 +426,9 @@ public class fapData {
         }
     return m;
     }
-    
-    public static String[] _VoucherTransaction(int batchid, String ctype, Connection bscon, ArrayList<vod_mstr> vod, ap_mstr ap, boolean Void) throws SQLException {
-        String[] m = new String[2];
+     
+     public static String[] _VoucherTransaction(int batchid, String ctype, Connection bscon, ArrayList<vod_mstr> vod, ap_mstr ap, boolean Void) throws SQLException {
+          String[] m = new String[2];
         PreparedStatement ps = null;
         ResultSet res = null;
         java.util.Date now = new java.util.Date();
@@ -439,14 +439,13 @@ public class fapData {
                 }
             } 
             if (ctype.equals("Receipt")) {
-            fglData._glEntryFromVoucher(ap.ap_nbr, parseDate(ap.ap_effdate), bscon, Void); 
+            fglData._glEntryFromVoucher(ap, bscon, Void); 
             } else {
             fglData._glEntryFromVoucherExpense(ap.ap_nbr, parseDate(ap.ap_effdate), bscon, Void);    
             }
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
-    return m;
-    }
-    
+        return m;
+     }
     
     public static String[] APExpense(int batchid, String basecurr, Date effdate, int checknbr, String voucher, String invoice, String vend, Double amount, String ctype) {
         String[] m = new String[2];

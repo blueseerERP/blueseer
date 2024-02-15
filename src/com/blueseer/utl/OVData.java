@@ -18223,7 +18223,7 @@ MainFrame.bslog(e);
         return m;
         
     }
-
+/*
     public static String CreateVoucher(JTable voucherdet, String site, String vend, String invoice, Date effdate, String remarks ) {
       String messg = "";
       String nbr = String.valueOf(OVData.getNextNbr("voucher"));
@@ -18405,7 +18405,8 @@ MainFrame.bslog(e);
     }
       return messg;
   } 
-
+ 
+    */
     
     public static String[] CreateSalesOrderByJSON(String jsonString) {
       String[] x = new String[]{"","",""};

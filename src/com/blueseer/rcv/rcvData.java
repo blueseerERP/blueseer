@@ -195,7 +195,7 @@ public class rcvData {
     return m;
     }
     
-    public static String[] confirmReceiverTransaction(String type, String shipper, Date effdate) {
+    public static String[] addVoucherTransaction(String type, String shipper, Date effdate) {
         String[] m = new String[2];
         Connection bscon = null;
         PreparedStatement ps = null;

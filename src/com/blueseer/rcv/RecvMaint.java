@@ -35,8 +35,13 @@ import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.fap.fapData;
+import static com.blueseer.fap.fapData.VoucherTransaction;
+import com.blueseer.fap.fapData.ap_mstr;
+import com.blueseer.fap.fapData.vod_mstr;
 import com.blueseer.fgl.fglData;
 import com.blueseer.pur.purData;
+import static com.blueseer.pur.purData.updateReceivers;
 import com.blueseer.rcv.rcvData.Receiver;
 import static com.blueseer.rcv.rcvData.addReceiverTransaction;
 import static com.blueseer.rcv.rcvData.getReceiverLines;
@@ -87,6 +92,7 @@ import com.blueseer.utl.IBlueSeer;
 import com.blueseer.utl.IBlueSeerT;
 import static com.blueseer.utl.OVData.getSystemAttachmentDirectory;
 import com.blueseer.vdr.venData;
+import static com.blueseer.vdr.venData.getVendInfo;
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -120,9 +126,6 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     // global variable declarations
                 boolean isLoad = false;
-                String terms = "";
-                String apacct = "";
-                String apcc = "";
                 public static recv_mstr rv = null;
                 public static ArrayList<recv_det> rvdlist = null;
                
@@ -526,7 +529,9 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     public String[] addRecord(String[] x) {
      String[] m = new String[2];
+     String[] mm = new String[2];
      boolean error = false;
+     
      m = addReceiverTransaction(createDetRecord(), createRecord());
      /* update PO from receiver */
     // purData.updatePOFromReceiver(tbkey.getText());
@@ -545,19 +550,27 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
      
         
     /* create auto-voucher from temptable if autovoucher is on */
-    if (cbautovoucher.isSelected()) {
-    String messg = OVData.CreateVoucher(createVoucherTable(), ddsite.getSelectedItem().toString(), ddvend.getSelectedItem().toString(), tbpackingslip.getText(), dcdate.getDate(), tbserial.getText()); 
-     if (! messg.isEmpty()) {
-         m = new String[] {"1",getMessageTag(1010,"CreateVoucher")};
-     } else {
-         m = new String[] {"0",getMessageTag(1125)};
-     }
+    if (m[0].equals("0") && cbautovoucher.isSelected()) {
+      String vonbr = String.valueOf(OVData.getNextNbr("voucher")); 
+      String[] vendinfo = getVendInfo(ddvend.getSelectedItem().toString());
+      ArrayList<vod_mstr> vodlist = createVodMstr(vonbr, vendinfo);
+      ap_mstr ap = createAPMstr(vonbr, vendinfo);
+      mm = VoucherTransaction("Receipt", vodlist, ap, false);
+      if (mm[0].equals("0")) {
+          updateReceivers(vodlist, "Receipt");
+      }
     }
+    
+    if (mm[0].equals("1")) {
+        m = mm;
+    }
+    
     return m;
     }
     
     public String[] updateRecord(String[] x) {
      String[] m = new String[2];
+     String[] vendinfo = getVendInfo(ddvend.getSelectedItem().toString());
      if (isReceived(tbkey.getText())) { 
          return new String[] {"1",getMessageTag(1152)};
      }
@@ -639,6 +652,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public recv_mstr createRecord() {
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        String[] v = getVendInfo(ddvend.getSelectedItem().toString());
         recv_mstr x = new recv_mstr(null, 
                 tbkey.getText(),
                 ddvend.getSelectedItem().toString(),
@@ -646,9 +660,9 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
                 "", // status
                 tbpackingslip.getText(),
                 bsmf.MainFrame.userid.toString(),
-                apacct,
-                apcc,
-                terms,
+                v[1],
+                v[2],
+                v[5],
                 ddsite.getSelectedItem().toString(),
                 "", // confdate
                 "", // ref
@@ -849,49 +863,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
    
     
     // additional functions
-    public void setvendorvariables(String vendor) {
-        
-        try {
      
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            int i = 0;
-            int d = 0;
-            String uniqpo = null;
-            try {
-
-                // here we define apacct as the 'unvouchered receipt' account to be credited (-)...we debit the account once vouchered and credit APTRADE 
-                res = st.executeQuery("select vd_terms, poc_rcpt_acct, poc_rcpt_cc from vd_mstr inner join po_ctrl where vd_addr = " + "'" + vendor + "'" + ";");
-                while (res.next()) {
-                    i++;
-                   apacct = res.getString("poc_rcpt_acct");
-                   apcc = res.getString("poc_rcpt_cc");
-                   terms = res.getString("vd_terms");
-                }
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-    }
-      
     public Integer getmaxline() {
         int max = 0;
         int current = 0;
@@ -921,6 +893,61 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
         return temptable;
     }
    
+    public fapData.ap_mstr createAPMstr(String vonbr, String[] v) {
+        int batchid = OVData.getNextNbr("batch");
+        double actamt = 0.00;
+        for (int j = 0; j < rvdet.getRowCount(); j++) {
+        actamt += bsParseDouble(rvdet.getModel().getValueAt(j,4).toString()) * bsParseDouble(rvdet.getModel().getValueAt(j,8).toString());
+        }
+        
+        fapData.ap_mstr x = new fapData.ap_mstr(null, 
+                "", //ap_id
+                ddvend.getSelectedItem().toString(), // ap_vend, 
+                vonbr, // ap_nbr
+                actamt, // ap_amt
+                actamt, // ap_base_amt
+                setDateDB(dcdate.getDate()), // ap_effdate
+                setDateDB(dcdate.getDate()), // ap_entdate
+                setDateDB(OVData.getDueDateFromTerms(dcdate.getDate(), v[5])), // ap_duedate         
+                "V", // ap_type
+                "auto-voucher", //ap_rmks
+                tbkey.getText(), //ap_ref
+                v[5], //ap_terms
+                v[1], //ap_acct
+                v[2], //ap_cc
+                "0", //ap_applied
+                "o", //ap_status
+                v[4], //ap_bank
+                v[3], //ap_curr
+                OVData.getDefaultCurrency(), //ap_base_curr
+                vonbr, //ap_check // in this case voucher number is reference field
+                String.valueOf(batchid), //ap_batch
+                ddsite.getSelectedItem().toString(), //ap_site
+                "Receipt"); 
+        return x;  
+    }
+    
+    public ArrayList<fapData.vod_mstr> createVodMstr(String vodnbr, String[] v) {
+        ArrayList<fapData.vod_mstr> list = new ArrayList<fapData.vod_mstr>();
+         for (int j = 0; j < rvdet.getRowCount(); j++) {
+             fapData.vod_mstr x = new fapData.vod_mstr(null, 
+                vodnbr,
+                tbkey.getText(),
+                bsParseInt(rvdet.getValueAt(j, 0).toString()),
+                rvdet.getValueAt(j, 1).toString(),
+                bsParseDouble(rvdet.getValueAt(j, 4).toString()),
+                bsParseDouble(rvdet.getValueAt(j, 8).toString()),
+                setDateDB(dcdate.getDate()),
+                ddvend.getSelectedItem().toString(),
+                tbpackingslip.getText(), // ap_check 
+                v[1],
+                v[2]
+                );
+        list.add(x);
+         }
+        return list;   
+    }
+     
     
  /**
      * This method is called from within the constructor to initialize the form.

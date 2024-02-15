@@ -36,8 +36,10 @@ import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.fap.fapData.vod_mstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.sql.DriverManager;
@@ -2085,7 +2087,78 @@ public class purData {
 
     }
     
-
+    public static void updateReceivers(ArrayList<vod_mstr> vodlist, String ctype) { 
+        
+        try {
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            double amt = 0;
+            try {
+                for (vod_mstr vod : vodlist) {
+                amt = vod.vod_qty();   
+                double voqty = 0;
+                double rvqty = 0;
+                double rvdvoqty = 0;
+                String status = "0";
+                
+                res = st.executeQuery("select rvd_voqty, rvd_qty from recv_det " 
+                         + " where rvd_id = " + "'" + vod.vod_rvdid() + "'"
+                        + " AND rvd_rline = " + "'" + vod.vod_rvdline() + "'"
+                        );
+                while (res.next()) {
+                    voqty = res.getDouble("rvd_voqty");
+                    rvqty = res.getDouble("rvd_qty");
+                    if ((voqty + amt) >= rvqty) {
+                        status = "1";
+                    }     
+                }
+                res.close();        
+                        
+                   rvdvoqty = voqty + amt;
+                   
+                        if (ctype.equals("Receipt")) {
+                           if (bsmf.MainFrame.dbtype.equals("sqlite")) { 
+                            st.executeUpdate("update recv_det  "
+                            + " set rvd_voqty =  " + "'" + currformatDouble(rvdvoqty).replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + " rvd_status = " + "'" + status + "'"
+                            + " where rvd_id = " + "'" + vod.vod_rvdid() + "'"
+                            + " AND rvd_rline = " + "'" + vod.vod_rvdline() + "'"
+                            );
+                           } else {
+                            st.executeUpdate("update recv_det as r1 inner join recv_det as r2 "
+                            + " set r1.rvd_voqty = r2.rvd_voqty + " +  "'" + currformatDouble(amt).replace(defaultDecimalSeparator, '.') + "'" + ","
+                            + " r1.rvd_status = case when r1.rvd_qty <= ( r2.rvd_voqty + " + "'" + currformatDouble(amt).replace(defaultDecimalSeparator, '.') + "'" +  ") then '1' else '0' end " 
+                            + " where r1.rvd_id = " + "'" + vod.vod_rvdid() + "'"
+                            + " AND r1.rvd_rline = " + "'" + vod.vod_rvdline() + "'"
+                            + " AND r2.rvd_id = " + "'" + vod.vod_rvdid() + "'"
+                            + " AND r2.rvd_rline = " + "'" + vod.vod_rvdline() + "'"
+                            );   
+                           }
+                        }
+                     }
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+    }
+    
     
     public record purchaseOrder(String[] m, po_mstr po, po_addr poa, ArrayList<pod_mstr> pod, ArrayList<po_meta> pom, ArrayList<pod_tax> podtax, ArrayList<po_tax> potax) {
         public purchaseOrder(String[] m) {

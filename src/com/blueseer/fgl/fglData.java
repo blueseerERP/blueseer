@@ -34,6 +34,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.ctr.cusData;
+import com.blueseer.fap.fapData.ap_mstr;
 import static com.blueseer.far.farData.getARTaxMaterialOnly;
 import static com.blueseer.pur.purData.getPOCurrency;
 import com.blueseer.rcv.rcvData.recv_det;
@@ -1273,7 +1274,6 @@ public class fglData {
           }
          
           String rndamt = "";
-          
        if ( amt != 0 && ! acct_cr.isBlank() && ! acct_dr.isBlank()) {
         String sqlInsert = "insert into gl_tran "
                         + "( glt_acct, glt_cc, glt_effdate, glt_amt, glt_base_amt, glt_curr, glt_base_curr, glt_ref, glt_site, glt_type, glt_desc, glt_doc, glt_entdate ) " +
@@ -1366,7 +1366,7 @@ public class fglData {
       }
     
     
-    public static boolean _glEntryFromVoucher(String voucher, Date effdate, Connection bscon, boolean Void) throws SQLException {
+    public static boolean _glEntryFromVoucher(ap_mstr ap, Connection bscon, boolean Void) throws SQLException {
                 boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
        
           
@@ -1400,36 +1400,34 @@ public class fglData {
                     // set parent GL doc number
                     String gldoc = fglData.setGLRecNbr("AP");
                    
-                       res = st.executeQuery("select ap_amt, ap_base_amt, ap_curr, ap_base_curr, ap_ref, ap_site, ap_acct, ap_cc, ap_vend, poc_rcpt_cc, poc_rcpt_acct from ap_mstr " +
-                               " inner join po_ctrl where ap_type = 'V' and ap_nbr = " + "'" + voucher + "'" +";");
-                   
+                    res = st.executeQuery("select * from po_ctrl;");
                     while (res.next()) {
                      // credit vendor AP Acct (AP Voucher) and debit unvouchered receipts (po_rcpts acct)
-                        acct_cr.add(res.getString("ap_acct"));
+                    acct_cr.add(ap.ap_acct());
                     acct_dr.add(res.getString("poc_rcpt_acct"));
-                    cc_cr.add(res.getString("ap_cc"));
+                    cc_cr.add(ap.ap_cc());
                     cc_dr.add(res.getString("poc_rcpt_cc"));
                     if (Void) {
-                    cost.add(-1 * res.getDouble("ap_amt"));
-                    basecost.add(-1 * res.getDouble("ap_base_amt"));
+                    cost.add(-1 * ap.ap_amt());
+                    basecost.add(-1 * ap.ap_base_amt());
                     } else {
-                    cost.add(res.getDouble("ap_amt"));
-                    basecost.add(res.getDouble("ap_base_amt"));   
+                    cost.add(ap.ap_amt());
+                    basecost.add(ap.ap_base_amt());   
                     }
-                    curr.add(res.getString("ap_curr"));
-                    basecurr.add(res.getString("ap_base_curr"));
-                    site.add(res.getString("ap_site"));
-                    ref.add(res.getString("ap_site"));
+                    curr.add(ap.ap_curr());
+                    basecurr.add(ap.ap_base_curr());
+                    site.add(ap.ap_site());
+                    ref.add(ap.ap_ref());
                     doc.add(gldoc);
                     type.add(thistype);
-                    desc.add(res.getString("ap_ref"));     
+                    desc.add(ap.ap_rmks());     
           
                     // need to do discounts ..credit sales, debit disc, debit AR (-$4.00, $.02, $3.98)
                     }
                     res.close();
                     st.close();
                       for (int j = 0; j < acct_cr.size(); j++) {
-                      glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), setDateDB(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
+                      glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), setDateDB(parseDate(ap.ap_effdate())), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
                     }
           
         return myerror;
@@ -2523,7 +2521,6 @@ public class fglData {
                        " inner join item_cost on itc_item = it_item and itc_set = 'standard' where it_item = " + "'" + z.rvd_item() + "'" + ";"
                         );
                     while (nres.next()) {
-                     
                     thiscost = nres.getDouble("itc_mtl_top") + nres.getDouble("itc_mtl_low");
                     costtot = thiscost * z.rvd_qty();
                     variance = thiscost - z.rvd_netprice();
