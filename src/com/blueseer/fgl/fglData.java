@@ -35,6 +35,9 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.ctr.cusData;
 import static com.blueseer.far.farData.getARTaxMaterialOnly;
+import static com.blueseer.pur.purData.getPOCurrency;
+import com.blueseer.rcv.rcvData.recv_det;
+import com.blueseer.rcv.rcvData.recv_mstr;
 import com.blueseer.shp.shpData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
@@ -43,6 +46,7 @@ import static com.blueseer.utl.BlueSeerUtils.bsParseDoubleUS;
 import static com.blueseer.utl.BlueSeerUtils.currformatDoubleUS;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import com.blueseer.utl.OVData;
 import static java.lang.Math.abs;
@@ -2456,7 +2460,141 @@ public class fglData {
         return myerror;
         
          }
-       
+    
+    public static void _glEntryFromReceiver(recv_mstr rv, ArrayList<recv_det> rvd, Connection bscon) throws SQLException {
+        
+            Statement st = bscon.createStatement();
+            Statement st2 = bscon.createStatement();
+            ResultSet res = null;
+            ResultSet nres = null;
+                
+               java.util.Date now = new java.util.Date();
+               Date effdate = parseDate(rv.rv_recvdate());
+                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+                String mydate = dfdate.format(now);
+                
+                // added SQLITE adjustment here...create arraylist of entries for glentry instead of inline
+                    ArrayList acct_cr = new ArrayList();
+                    ArrayList ref =  new ArrayList();
+                    ArrayList doc =  new ArrayList();
+                    ArrayList desc =   new ArrayList();
+                    ArrayList type =   new ArrayList();
+                    ArrayList cc_cr =   new ArrayList();
+                    ArrayList acct_dr =   new ArrayList();
+                    ArrayList cc_dr =   new ArrayList();
+                    ArrayList site =   new ArrayList();
+                    ArrayList cost =  new ArrayList();   
+                    ArrayList basecost =  new ArrayList();
+                    ArrayList currarray =  new ArrayList();
+                    ArrayList basecurrarray =  new ArrayList();
+                   
+                   
+                    String thistype = "RCT-PURCH";
+                    String gldoc = fglData.setGLRecNbr("AP");
+                
+                    String unvouchacct = "";
+                    String unvouchcc = "";
+                   
+                    
+                    String curr = getPOCurrency(rvd.get(0).rvd_po());
+                    String basecurr = OVData.getDefaultCurrency();
+                   
+                    double thiscost = 0;
+                    double costtot = 0;
+                    double variance = 0;
+                    double variancetot = 0;
+                    
+                   
+                    res = st.executeQuery("select poc_rcpt_acct, poc_rcpt_cc from po_ctrl;");
+                    while (res.next()) {
+                        unvouchacct = res.getString("poc_rcpt_acct");
+                        unvouchcc = res.getString("poc_rcpt_cc"); // not used at this time
+                    }
+                    res.close();
+                    
+                    for (recv_det z : rvd) { 
+                        nres = st2.executeQuery("select  itc_total, pl_po_rcpt, pl_po_ovh, pl_line, pl_inventory, pl_po_pricevar, " +
+                       " pl_cogs_mtl, pl_cogs_lbr, pl_cogs_bdn, pl_cogs_ovh, pl_cogs_out, pl_sales, itc_total, " +
+                       " itc_mtl_top, itc_mtl_low, itc_lbr_top, itc_lbr_low, itc_bdn_top, itc_bdn_low, " +
+                       " itc_ovh_top, itc_ovh_low, itc_out_top, itc_out_low, itc_bdn_top, itc_bdn_low " +
+                       " from item_mstr  " + 
+                       " inner join pl_mstr on pl_line = it_prodline " +
+                       " inner join item_cost on itc_item = it_item and itc_set = 'standard' where it_item = " + "'" + z.rvd_item() + "'" + ";"
+                        );
+                    while (nres.next()) {
+                     
+                    thiscost = nres.getDouble("itc_mtl_top") + nres.getDouble("itc_mtl_low");
+                    costtot = thiscost * z.rvd_qty();
+                    variance = thiscost - z.rvd_netprice();
+                      if (! curr.toUpperCase().equals(basecurr.toUpperCase())) {
+                          variance = thiscost - (OVData.getExchangeBaseValue(basecurr, curr, z.rvd_netprice()));
+                      }
+                    variancetot = variance * z.rvd_qty();
+                     
+                        // material cost
+                    acct_cr.add(unvouchacct);
+                    acct_dr.add(nres.getString("pl_inventory"));
+                    cc_cr.add(nres.getString("pl_line"));
+                    cc_dr.add(nres.getString("pl_line"));
+                    cost.add(costtot);
+                    basecost.add(costtot);
+                    site.add(rv.rv_site());
+                    currarray.add(curr);
+                    basecurrarray.add(basecurr);
+                    ref.add(rv.rv_id());
+                    type.add(thistype);
+                    desc.add("Receipts"); 
+                    doc.add(gldoc);
+          
+                   
+          
+                    // ppv 
+                    acct_cr.add(nres.getString("pl_po_pricevar"));
+                    acct_dr.add(unvouchacct);
+                    cc_cr.add(nres.getString("pl_line"));
+                    cc_dr.add(nres.getString("pl_line"));
+                    cost.add(variancetot);
+                    basecost.add(variancetot);
+                    site.add(rv.rv_site());
+                    currarray.add(curr);
+                    basecurrarray.add(basecurr);
+                    ref.add(rv.rv_id());
+                    type.add(thistype);
+                    desc.add("Receipts"); 
+                    doc.add(gldoc);
+          
+                    // overhead cost
+                    acct_cr.add(unvouchacct);
+                    acct_dr.add(nres.getString("pl_po_ovh"));
+                    cc_cr.add(nres.getString("pl_line"));
+                    cc_dr.add(nres.getString("pl_line"));
+                    cost.add(((nres.getDouble("itc_ovh_top") + nres.getDouble("itc_ovh_low")) * z.rvd_qty()));
+                    basecost.add(((nres.getDouble("itc_ovh_top") + nres.getDouble("itc_ovh_low")) * z.rvd_qty()));
+                    site.add(rv.rv_site());
+                    currarray.add(curr);
+                    basecurrarray.add(basecurr);
+                    ref.add(rv.rv_id());
+                    type.add(thistype);
+                    desc.add("Receipts"); 
+                    doc.add(gldoc);
+          
+               
+          
+                    // need to do discounts ..credit sales, debit disc, debit AR (-$4.00, $.02, $3.98)
+                    }
+                    nres.close();
+                  }  // for each rvd
+                    for (int j = 0; j < acct_cr.size(); j++) {
+                      glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), setDateDB(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), currarray.get(j).toString(), basecurrarray.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
+                    }
+            
+            st.close();
+            st2.close();
+                    
+    }
+    
+    
     public static void _glEntryFromShipper(String shipper, Date effdate, Connection bscon) throws SQLException {
         
             Statement st = bscon.createStatement();

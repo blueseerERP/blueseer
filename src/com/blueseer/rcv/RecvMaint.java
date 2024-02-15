@@ -529,19 +529,19 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
      boolean error = false;
      m = addReceiverTransaction(createDetRecord(), createRecord());
      /* update PO from receiver */
-     purData.updatePOFromReceiver(tbkey.getText());
+    // purData.updatePOFromReceiver(tbkey.getText());
 
     /* create tran_mstr records */
-        if (! error)
-        error = OVData.TRHistRctPurch(tbkey.getText(), dcdate.getDate());
+      //  if (! error)
+      //  error = OVData.TRHistRctPurch(tbkey.getText(), dcdate.getDate());
 
         /* adjust inventory */
-        if (! error)
-        error = OVData.UpdateInventoryFromReceiver(tbkey.getText());
+       // if (! error)
+      //  error = OVData.UpdateInventoryFromReceiver(tbkey.getText());
 
         /* create gl_tran records */
-        if (! error)
-        error = fglData.glEntryFromReceiver(tbkey.getText(), dcdate.getDate());
+       // if (! error)
+       // error = fglData.glEntryFromReceiver(tbkey.getText(), dcdate.getDate());
      
         
     /* create auto-voucher from temptable if autovoucher is on */
@@ -642,7 +642,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
         recv_mstr x = new recv_mstr(null, 
                 tbkey.getText(),
                 ddvend.getSelectedItem().toString(),
-                dfdate.format(dcdate.getDate()),
+                setDateDB(dcdate.getDate()),
                 "", // status
                 tbpackingslip.getText(),
                 bsmf.MainFrame.userid.toString(),

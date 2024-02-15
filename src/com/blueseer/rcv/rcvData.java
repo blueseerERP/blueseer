@@ -32,14 +32,29 @@ import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.fgl.fglData;
+import static com.blueseer.fgl.fglData._glEntryFromReceiver;
+import com.blueseer.inv.invData;
+import static com.blueseer.inv.invData._addTranMstr;
+import static com.blueseer.inv.invData._addUpdateInMstr;
+import static com.blueseer.pur.purData._updatePOFromReceiver;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.getDateDB;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.parseDate;
+import static com.blueseer.utl.BlueSeerUtils.setDateDB;
+import com.blueseer.utl.OVData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  *
@@ -130,7 +145,19 @@ public class rcvData {
             for (recv_det z : rvd) {
                 _addRecvDet(z, bscon, ps, res);
             }
+            
+            // tran_mstr
+            _addTranMstrReceiver(rv,rvd,bscon);
            
+            // inventory
+            _updateInventoryFromReceiver(rv,rvd,bscon);
+            
+            // GL
+            _glEntryFromReceiver(rv,rvd,bscon); 
+            
+            // update PO
+            _updatePOFromReceiver(rv.rv_id(),bscon);
+            
             bscon.commit();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
         } catch (SQLException s) {
@@ -167,6 +194,161 @@ public class rcvData {
         }
     return m;
     }
+    
+    public static String[] confirmReceiverTransaction(String type, String shipper, Date effdate) {
+        String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+           
+            if (ds != null) {
+              bscon = ds.getConnection();
+            } else {
+              bscon = DriverManager.getConnection(url + db, user, pass);  
+            }
+            bscon.setAutoCommit(false);
+            
+            // add detailed transactions
+            
+            bscon.commit();
+            m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1125)};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    public static void _addTranMstrReceiver(recv_mstr rv, ArrayList<recv_det> rvd, Connection bscon) throws SQLException {
+       
+        double baseqty = 0.00;
+        
+        for (recv_det z : rvd) {
+        
+            baseqty = OVData.getUOMBaseQty(z.rvd_item(), rv.rv_site(), z.rvd_uom(), z.rvd_qty());
+            
+        invData.tran_mstr tm = new invData.tran_mstr(null,
+                "", // id
+                rv.rv_id(), // site
+                z.rvd_item(),
+                z.rvd_qty(),
+                setDateDB(new java.util.Date()), //entdate
+                setDateDB(parseDate(rv.rv_recvdate())), //effdate
+                rv.rv_userid(), //userid
+                rv.rv_ref(), //ref
+                rv.rv_vend(), //addrcode
+                "RCT-PURCH", //type
+                null, //datetime
+                rv.rv_rmks(), //remarks
+                rv.rv_id(), //tr_nbr
+                "", //misc1
+                z.rvd_lot(), //lot
+                z.rvd_serial(), //serial
+                "RecvMaint", //program
+                0, //amt
+                0, //mtl
+                0, //lbr
+                0, //bdn
+                0, //ovh
+                0, //out
+                "", //batch
+                "", //op
+                z.rvd_loc(), //loc
+                z.rvd_wh(), //wh
+                null, //expire
+                rv.rv_ap_cc(), //cc
+                "", //wc
+                "", //wf
+                "", //prodline
+                "0", //timestamp ; db assigned
+                "", //cell
+                0, //export
+                z.rvd_po(), //order
+                z.rvd_rline(), //line
+                "", //po
+                z.rvd_netprice(), //price
+                z.rvd_cost(), //cost
+                rv.rv_ap_acct(), //acct
+                "", //terms
+                "", //pack
+                "", //curr
+                null, //packdate
+                null, //assydate
+                z.rvd_uom(), //uom
+                baseqty, //baseqty
+                "" //bom
+        );
+       
+        _addTranMstr(tm, bscon); 
+        
+        } // rvd loop                 
+    }
+
+    public static void _updateInventoryFromReceiver(recv_mstr rv, ArrayList<recv_det> rvd, Connection bscon) throws SQLException {
+       boolean isInventorySerialized = (OVData.isInvCtrlSerialize()) ? true : false;
+        
+        Date expire = new java.util.Date();
+        double baseqty = 0.00;
+        String serial;
+
+        for (recv_det z : rvd) {
+
+            baseqty = OVData.getUOMBaseQty(z.rvd_item(), rv.rv_site(), z.rvd_uom(), z.rvd_qty());
+            serial = z.rvd_serial();
+                    
+                    // check for serialized inventory flag...if not...prevent serial from entry into in_mstr
+                    if (! OVData.isInvCtrlSerialize()) {
+                        serial = "";
+                        expire = null;
+                    } 
+
+                    invData.in_mstr in = new invData.in_mstr(null,
+                        z.rvd_item(),
+                        baseqty,
+                        null, // date
+                        z.rvd_loc(),
+                        z.rvd_wh(),
+                        rv.rv_site(),
+                        z.rvd_serial(),
+                        setDateDB(expire),
+                        rv.rv_userid(),
+                        "" // prog
+                    );
+                    
+                    _addUpdateInMstr(in, isInventorySerialized, bscon);
+                }
+     
+     }
+    
     
     private static int _updateRecvMstr(recv_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;

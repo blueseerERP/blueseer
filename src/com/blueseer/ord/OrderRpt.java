@@ -58,6 +58,7 @@ import com.blueseer.ctr.cusData;
 import static com.blueseer.utl.BlueSeerUtils.bsNumber;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
+import static com.blueseer.utl.BlueSeerUtils.getDateDB;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -882,8 +883,8 @@ try {
                                 res.getString("so_cust"),
                                 res.getString("so_po"),
                                 res.getString("so_rmks"),
-                                res.getString("so_ord_date"),
-                                res.getString("so_due_date"),
+                                getDateDB(res.getString("so_ord_date")),
+                                getDateDB(res.getString("so_due_date")),
                                 bsNumber(res.getDouble("totqty")),
                                 bsParseDouble(currformatDouble(total)),
                                 res.getString("so_curr"),

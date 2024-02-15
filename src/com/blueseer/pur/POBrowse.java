@@ -56,6 +56,7 @@ import static bsmf.MainFrame.user;
 import static com.blueseer.utl.BlueSeerUtils.bsNumber;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
+import static com.blueseer.utl.BlueSeerUtils.getDateDB;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.vdr.venData;
@@ -741,7 +742,7 @@ try {
                     mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, BlueSeerUtils.clickbasket, res.getString("po_nbr"),
                                 res.getString("po_vend"),
                                 res.getString("vd_name"),
-                                res.getString("po_ord_date"),
+                                getDateDB(res.getString("po_ord_date")),
                                 res.getString("po_type"),
                                 res.getString("po_status"),
                                 bsParseDouble(currformatDouble(total))

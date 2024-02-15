@@ -1619,7 +1619,7 @@ public class invData {
         return r;
     }
     
-    private static int _addTranMstr(tran_mstr x, Connection con) throws SQLException {
+    public static int _addTranMstr(tran_mstr x, Connection con) throws SQLException {
         int rows = 0;
         String sqlInsert = "insert into tran_mstr (tr_site, tr_item, tr_qty," +
                 "tr_ent_date, tr_eff_date, tr_userid, tr_ref, tr_addrcode," +
@@ -1686,7 +1686,7 @@ public class invData {
         return rows;
     }
     
-    private static int _addUpdateInMstr(in_mstr in, boolean isInventorySerialized, Connection con) throws SQLException {
+    public static int _addUpdateInMstr(in_mstr in, boolean isInventorySerialized, Connection con) throws SQLException {
           int rows = 0; 
           String expire = in.in_expire();
           String serial = in.in_serial();
