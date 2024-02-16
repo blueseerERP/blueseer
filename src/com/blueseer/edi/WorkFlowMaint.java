@@ -563,6 +563,8 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddactions.addItem("ScriptCall");
         ddactions.addItem("Decrypt");
         ddactions.addItem("Encrypt");
+        ddactions.addItem("DecryptFile");
+        ddactions.addItem("EncryptFile");
         ddactions.addItem("FileMatchMove");
         
         for (int i = 0; i < ddactions.getItemCount(); i++) {
@@ -678,6 +680,20 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
                 kvs.put("Encrypt", x);
             }
             if (i == 15) {
+                ArrayList<String[]> x = new ArrayList<String[]>();
+                x.add(new String[]{"key id", ""});
+                x.add(new String[]{"source file", ""});
+                x.add(new String[]{"overwrite", ""});
+                kvs.put("DecryptFile", x);
+            }
+            if (i == 16) {
+                ArrayList<String[]> x = new ArrayList<String[]>();
+                x.add(new String[]{"key id", ""});
+                x.add(new String[]{"source file", ""});
+                x.add(new String[]{"overwrite", ""});
+                kvs.put("EncryptFile", x);
+            }
+            if (i == 17) {
                 ArrayList<String[]> x = new ArrayList<String[]>();
                 x.add(new String[]{"source dir", ""});
                 x.add(new String[]{"filter", ""});

@@ -2981,7 +2981,7 @@ public class ediData {
                 break;   
               
             case "Encrypt" :
-                r = wkfaction_encrypt(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
+                r = wkfaction_encryptDir(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
                 lgd[3] = r[0];
                 lgd[4] = r[1];
                 if (! r[0].equals("0")) {
@@ -2991,7 +2991,7 @@ public class ediData {
                 break; 
                 
             case "Decrypt" :
-                r = wkfaction_decrypt(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
+                r = wkfaction_decryptDir(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
                 lgd[3] = r[0];
                 lgd[4] = r[1];
                 if (! r[0].equals("0")) {
@@ -2999,7 +2999,27 @@ public class ediData {
                     break forloop;
                 } 
                 break;     
-              
+            
+            case "EncryptFile" :
+                r = wkfaction_encryptFile(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
+                lgd[3] = r[0];
+                lgd[4] = r[1];
+                if (! r[0].equals("0")) {
+                    logdetail.add(lgd);
+                    break forloop;
+                } 
+                break; 
+            
+            case "DecryptFile" :
+                r = wkfaction_decryptFile(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
+                lgd[3] = r[0];
+                lgd[4] = r[1];
+                if (! r[0].equals("0")) {
+                    logdetail.add(lgd);
+                    break forloop;
+                } 
+                break;      
+                
             case "APICall" :
                 rr = wkfaction_apicall(wkd, getWkfdMeta(wkd.wkfd_id(), wkd.wkfd_line()));
                 lgd[3] = rr.status();
@@ -3855,7 +3875,7 @@ public class ediData {
         }
     }
     
-    public static String[] wkfaction_encrypt(wkf_det wkfd, ArrayList<wkfd_meta> list) {
+    public static String[] wkfaction_encryptDir(wkf_det wkfd, ArrayList<wkfd_meta> list) {
          String[] r = new String[]{"0",""};
         
         String keyid = "";
@@ -3924,7 +3944,71 @@ public class ediData {
         return r;
     }
     
-    public static String[] wkfaction_decrypt(wkf_det wkfd, ArrayList<wkfd_meta> list) {
+    public static String[] wkfaction_encryptFile(wkf_det wkfd, ArrayList<wkfd_meta> list) {
+         String[] r = new String[]{"0",""};
+        
+        String keyid = "";
+        boolean overwrite = false;
+        String source = "";
+        
+        for (wkfd_meta m : list) {
+            if (m.wkfdm_key().equals("key id") && ! m.wkfdm_value.isBlank()) {
+                keyid = m.wkfdm_value();
+            }
+            if (m.wkfdm_key().equals("source file") && ! m.wkfdm_value.isBlank()) {
+                source = m.wkfdm_value();
+            }
+            if (m.wkfdm_key().equals("overwrite") && ! m.wkfdm_value.isBlank()) {
+                overwrite = ConvertStringToBool(m.wkfdm_value());
+            }
+        }
+        
+        if (! isValidKeyID(keyid)) {
+            r[0] = "1";
+            r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "unknown PKS key id: " + keyid;
+            return r;  
+        }
+        
+        Path sourcepath = FileSystems.getDefault().getPath(source);
+        
+        if (! Files.exists(sourcepath) || Files.isDirectory(sourcepath)) {
+           r[0] = "1";
+           r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "invalid source file " + source; 
+           return r;
+        }
+            
+        Path dparent = sourcepath.getParent();
+        Path outpath = FileSystems.getDefault().getPath(dparent + "/" + sourcepath.getFileName() + ".enc");
+        
+            try {
+                int f = 0;
+               
+                byte[] indata = Files.readAllBytes(sourcepath);
+                BlueSeerUtils.bsr x = apiUtils.encryptFile(indata, keyid);
+                if (x.data() != null) {
+                    BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(outpath.toFile()));
+                    bos.write(x.data());
+                    bos.flush();
+                    bos.close();
+                    
+                    if (overwrite && Files.exists(outpath)) {
+                        Files.move(outpath, sourcepath, StandardCopyOption.REPLACE_EXISTING); 
+                    }
+                    
+                } else {
+                    return x.m();   
+                }
+                
+                r[1] = "encrypting  file " + " from " + sourcepath + " to " + outpath + " with overwrite = " + String.valueOf(overwrite);
+            } catch (IOException ex) {  
+                    r[0] = "1";
+                    r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + ex.getMessage();
+            }  
+        
+        return r;
+    }
+        
+    public static String[] wkfaction_decryptDir(wkf_det wkfd, ArrayList<wkfd_meta> list) {
         String[] r = new String[]{"0",""};
         
         String keyid = "";
@@ -3993,6 +4077,71 @@ public class ediData {
         
         return r;
     }
+    
+    public static String[] wkfaction_decryptFile(wkf_det wkfd, ArrayList<wkfd_meta> list) {
+         String[] r = new String[]{"0",""};
+        
+        String keyid = "";
+        boolean overwrite = false;
+        String source = "";
+        
+        for (wkfd_meta m : list) {
+            if (m.wkfdm_key().equals("key id") && ! m.wkfdm_value.isBlank()) {
+                keyid = m.wkfdm_value();
+            }
+            if (m.wkfdm_key().equals("source file") && ! m.wkfdm_value.isBlank()) {
+                source = m.wkfdm_value();
+            }
+            if (m.wkfdm_key().equals("overwrite") && ! m.wkfdm_value.isBlank()) {
+                overwrite = ConvertStringToBool(m.wkfdm_value());
+            }
+        }
+        
+        if (! isValidKeyID(keyid)) {
+            r[0] = "1";
+            r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "unknown PKS key id: " + keyid;
+            return r;  
+        }
+        
+        Path sourcepath = FileSystems.getDefault().getPath(source);
+        
+        if (! Files.exists(sourcepath) || Files.isDirectory(sourcepath)) {
+           r[0] = "1";
+           r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + "invalid source file " + source; 
+           return r;
+        }
+            
+        Path dparent = sourcepath.getParent();
+        Path outpath = FileSystems.getDefault().getPath(dparent + "/" + sourcepath.getFileName() + ".dec");
+        
+            try {
+                int f = 0;
+               
+                byte[] indata = Files.readAllBytes(sourcepath);
+                BlueSeerUtils.bsr x = apiUtils.decryptFile(indata, keyid);
+                if (x.data() != null) {
+                    BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(outpath.toFile()));
+                    bos.write(x.data());
+                    bos.flush();
+                    bos.close();
+                    
+                    if (overwrite && Files.exists(outpath)) {
+                        Files.move(outpath, sourcepath, StandardCopyOption.REPLACE_EXISTING); 
+                    }
+                    
+                } else {
+                    return x.m();   
+                }
+                
+                r[1] = "decrypting file " + " from " + sourcepath + " to " + outpath + " with overwrite = " + String.valueOf(overwrite);
+            } catch (IOException ex) {  
+                    r[0] = "1";
+                    r[1] = "ERROR WorkFlowID: " + wkfd.wkfd_id + " action: " + wkfd.wkfd_action + "->"  + ex.getMessage();
+            }  
+        
+        return r;
+    }
+    
     
     public static String[] wkfaction_filematchmove(wkf_det wkfd, ArrayList<wkfd_meta> list) {
         String[] r = new String[]{"0",""};
