@@ -69,7 +69,10 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.bsNumber;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
+import static com.blueseer.utl.BlueSeerUtils.getDateDB;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.vdr.venData;
@@ -188,10 +191,10 @@ public class RecvBrowse extends javax.swing.JPanel {
                        res.getString("rvd_poline"),
                        res.getString("rvd_item"),
                        res.getString("rvd_packingslip"),
-                       res.getString("rvd_date"),
-                       currformatDouble(res.getDouble("rvd_netprice")),
-                      res.getInt("rvd_qty"), 
-                      res.getInt("rvd_voqty")});
+                       getDateDB(res.getString("rvd_date")),
+                       bsParseDouble(currformatDouble(res.getDouble("rvd_netprice"))),
+                      bsNumber(res.getInt("rvd_qty")), 
+                      bsNumber(res.getInt("rvd_voqty"))});
                 }
                
               
@@ -585,7 +588,7 @@ try {
                         res.getString("rv_id"),
                         res.getString("rv_vend"),
                         res.getString("rv_packingslip"),
-                        res.getString("rv_recvdate"),
+                        getDateDB(res.getString("rv_recvdate")),
                         res.getString("rv_status"),
                         res.getString("rv_ref"),
                         res.getString("rv_rmks")

@@ -223,8 +223,8 @@ public class OrderRpt extends javax.swing.JPanel {
                       res.getString("sod_nbr"), 
                        res.getString("sod_item"),
                        bsParseDouble(currformatDouble(res.getDouble("sod_netprice"))),
-                      res.getInt("sod_ord_qty"), 
-                      res.getInt("sod_shipped_qty"), 
+                      bsNumber(res.getInt("sod_ord_qty")), 
+                      bsNumber(res.getInt("sod_shipped_qty")), 
                       res.getString("sod_status")});
                 }
                
