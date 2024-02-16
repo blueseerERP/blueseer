@@ -264,7 +264,7 @@ inner join site_mstr on site_site = po_site where pod_nbr =  $P{myid};]]>
 			</textField>
 			<textField>
 				<reportElement x="491" y="59" width="66" height="19" uuid="57c76ca7-a73d-4bdf-86d8-2a0669315244"/>
-				<textFieldExpression><![CDATA[$F{po_due_date}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[new java.text.SimpleDateFormat("yyyy-MM-dd", $P{REPORT_LOCALE}).format(new java.text.SimpleDateFormat("yyyy-MM-dd").parse($F{po_due_date}))]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="221" y="90" width="106" height="19" uuid="9ec258ef-fc80-4d55-a720-71ba4bd37762"/>
