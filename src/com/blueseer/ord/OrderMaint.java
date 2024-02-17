@@ -56,6 +56,7 @@ import static com.blueseer.shp.shpData.confirmShipperTransaction;
 import com.blueseer.shp.shpData.ship_mstr;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsNumber;
+import static com.blueseer.utl.BlueSeerUtils.bsNumberToUS;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
@@ -922,7 +923,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
                 
         so_mstr x = new so_mstr(null, 
-                 tbkey.getText(),
+                 bsNumberToUS(tbkey.getText()),
                  ddcust.getSelectedItem().toString(),
                  ddship.getSelectedItem().toString(),
                  ddsite.getSelectedItem().toString(),
@@ -976,7 +977,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                  }
                             
                 sod_det x = new sod_det(null, 
-                tbkey.getText(),
+                bsNumberToUS(tbkey.getText()),
                 bsParseInt(orddet.getValueAt(j, 0).toString()),
                 orddet.getValueAt(j, 1).toString(),
                 orddet.getValueAt(j, 2).toString(),
@@ -1015,7 +1016,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     public ArrayList<sos_det> createSOSRecord() {
          ArrayList<sos_det> list = new ArrayList<sos_det>();
          for (int j = 0; j < sactable.getRowCount(); j++) {
-             sos_det x = new sos_det(null, tbkey.getText(),
+             sos_det x = new sos_det(null, bsNumberToUS(tbkey.getText()),
                 sactable.getValueAt(j, 1).toString(),
                 sactable.getValueAt(j, 0).toString(),
                 sactable.getValueAt(j, 2).toString(),
@@ -1030,7 +1031,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
          ArrayList<so_tax> list = new ArrayList<so_tax>();
          if (! headertax.isEmpty()) {
           for (String[] s : headertax) {
-              so_tax x = new so_tax(null, tbkey.getText(),
+              so_tax x = new so_tax(null, bsNumberToUS(tbkey.getText()),
                 s[0].toString(),
                 bsParseDouble(xZero(s[1])),
                 xZero(s[2]));   
@@ -1045,7 +1046,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
          for (int j = 0; j < orddet.getRowCount(); j++) {
              if (linetax.containsKey(orddet.getValueAt(j,0))) {
                   for (String[] s : (ArrayList<String[]>)linetax.get(orddet.getValueAt(j,0))) {
-                      sod_tax x = new sod_tax(null, tbkey.getText(),
+                      sod_tax x = new sod_tax(null, bsNumberToUS(tbkey.getText()),
                         xZero(orddet.getValueAt(j, 0).toString()),
                         s[0],
                         bsParseDouble(xZero(s[1])),

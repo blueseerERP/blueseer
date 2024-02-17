@@ -56,6 +56,7 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.ctr.cusData;
 import static com.blueseer.utl.BlueSeerUtils.bsNumber;
+import static com.blueseer.utl.BlueSeerUtils.bsNumberToUS;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getDateDB;
@@ -925,7 +926,7 @@ try {
         int row = tableorder.rowAtPoint(evt.getPoint());
         int col = tableorder.columnAtPoint(evt.getPoint());
         if ( col == 1) {
-                getdetail(tableorder.getValueAt(row, 2).toString() );
+                getdetail(bsNumberToUS(tableorder.getValueAt(row, 2).toString()) );
                 btdetail.setEnabled(true);
                 detailpanel.setVisible(true);
               
@@ -933,7 +934,7 @@ try {
         if ( col == 0) {
                 String mypanel = "OrderMaint";
                if (! checkperms(mypanel)) { return; }
-               String[] args = new String[]{tableorder.getValueAt(row, 2).toString()};
+               String[] args = new String[]{bsNumberToUS(tableorder.getValueAt(row, 2).toString())};
                reinitpanels(mypanel, true, args);
               
         }

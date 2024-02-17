@@ -61,6 +61,7 @@ import static com.blueseer.pur.purData.updatePOTransaction;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDoubleZ;
 import static com.blueseer.utl.BlueSeerUtils.bsNumber;
+import static com.blueseer.utl.BlueSeerUtils.bsNumberToUS;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.bsdate;
@@ -706,7 +707,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         if (ddship.getSelectedItem() != null) {
             shipto = ddship.getSelectedItem().toString();
         }
-        po_mstr x = new po_mstr(null, tbkey.getText().toString(),
+        po_mstr x = new po_mstr(null, bsNumberToUS(tbkey.getText()),
                         ddvend.getSelectedItem().toString(),
                 setDateDB(orddate.getDate()).toString(),
                 setDateDB(duedate.getDate()).toString(),
@@ -733,7 +734,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
     public ArrayList<pod_mstr> createDetRecord() {
         ArrayList<pod_mstr> list = new ArrayList<pod_mstr>();
          for (int j = 0; j < orddet.getRowCount(); j++) {
-             pod_mstr x = new pod_mstr(null, tbkey.getText().toString(),
+             pod_mstr x = new pod_mstr(null, bsNumberToUS(tbkey.getText()),
                 bsParseInt(orddet.getValueAt(j, 0).toString()),
                 orddet.getValueAt(j, 1).toString(),
                 orddet.getValueAt(j, 3).toString(),
@@ -765,7 +766,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
             shipcode = tbshipcode.getText();
         }
         po_addr x = new po_addr(null, 
-                tbkey.getText(),
+                bsNumberToUS(tbkey.getText()),
                 shipcode,
                 tbshipname.getText(),
                 tbshipline1.getText(),
@@ -786,7 +787,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
     public ArrayList<po_meta> createPOMRecord() {
          ArrayList<po_meta> list = new ArrayList<po_meta>();
          for (int j = 0; j < sactable.getRowCount(); j++) {
-             po_meta x = new po_meta(null, tbkey.getText().toString(),
+             po_meta x = new po_meta(null, bsNumberToUS(tbkey.getText()),
                 sactable.getValueAt(j, 1).toString(),
                 sactable.getValueAt(j, 0).toString(),
                 sactable.getValueAt(j, 2).toString(),
@@ -804,7 +805,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
          ArrayList<po_tax> list = new ArrayList<po_tax>();
          if (! headertax.isEmpty()) {
           for (String[] s : headertax) {
-              po_tax x = new po_tax(null, tbkey.getText().toString(),
+              po_tax x = new po_tax(null, bsNumberToUS(tbkey.getText()),
                 s[0].toString(),
                 bsParseDouble(s[1].toString()),
                 s[2].toString()); 
@@ -819,7 +820,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
          for (int j = 0; j < orddet.getRowCount(); j++) {
              if (linetax.containsKey(orddet.getValueAt(j,0))) {
                   for (String[] s : (ArrayList<String[]>)linetax.get(orddet.getValueAt(j,0))) {
-                      pod_tax x = new pod_tax(null, tbkey.getText().toString(),
+                      pod_tax x = new pod_tax(null, bsNumberToUS(tbkey.getText()),
                         orddet.getValueAt(j, 0).toString(),
                         s[0].toString(),
                         bsParseDouble(s[1].toString()),
