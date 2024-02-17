@@ -922,7 +922,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
                 
         so_mstr x = new so_mstr(null, 
-                 bsParseInt(tbkey.getText()),
+                 tbkey.getText(),
                  ddcust.getSelectedItem().toString(),
                  ddship.getSelectedItem().toString(),
                  ddsite.getSelectedItem().toString(),
@@ -976,7 +976,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                  }
                             
                 sod_det x = new sod_det(null, 
-                bsParseInt(tbkey.getText()),
+                tbkey.getText(),
                 bsParseInt(orddet.getValueAt(j, 0).toString()),
                 orddet.getValueAt(j, 1).toString(),
                 orddet.getValueAt(j, 2).toString(),
@@ -1015,7 +1015,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     public ArrayList<sos_det> createSOSRecord() {
          ArrayList<sos_det> list = new ArrayList<sos_det>();
          for (int j = 0; j < sactable.getRowCount(); j++) {
-             sos_det x = new sos_det(null, bsParseInt(tbkey.getText()),
+             sos_det x = new sos_det(null, tbkey.getText(),
                 sactable.getValueAt(j, 1).toString(),
                 sactable.getValueAt(j, 0).toString(),
                 sactable.getValueAt(j, 2).toString(),
@@ -1030,7 +1030,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
          ArrayList<so_tax> list = new ArrayList<so_tax>();
          if (! headertax.isEmpty()) {
           for (String[] s : headertax) {
-              so_tax x = new so_tax(null, bsParseInt(tbkey.getText()),
+              so_tax x = new so_tax(null, tbkey.getText(),
                 s[0].toString(),
                 bsParseDouble(xZero(s[1])),
                 xZero(s[2]));   
@@ -1045,7 +1045,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
          for (int j = 0; j < orddet.getRowCount(); j++) {
              if (linetax.containsKey(orddet.getValueAt(j,0))) {
                   for (String[] s : (ArrayList<String[]>)linetax.get(orddet.getValueAt(j,0))) {
-                      sod_tax x = new sod_tax(null, bsParseInt(tbkey.getText()),
+                      sod_tax x = new sod_tax(null, tbkey.getText(),
                         xZero(orddet.getValueAt(j, 0).toString()),
                         s[0],
                         bsParseDouble(xZero(s[1])),

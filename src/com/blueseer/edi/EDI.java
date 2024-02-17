@@ -3149,7 +3149,7 @@ public class EDI {
         String[] custinfo = cusData.getCustInfo(e.ov_billto);
         String site = OVData.getDefaultSite();
         ordData.so_mstr so = new ordData.so_mstr(null, 
-                sonbr,
+                String.valueOf(sonbr),
                  e.ov_billto,
                  shipto,
                  site,
@@ -3184,7 +3184,7 @@ public class EDI {
                uom = e.getDetUOM(j);
            }
         ordData.sod_det sod = new ordData.sod_det(null, 
-                sonbr,
+                String.valueOf(sonbr),
                 j + 1,
                 e.getDetItem(j), 
                 e.getDetCustItem(j), 

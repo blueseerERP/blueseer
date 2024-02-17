@@ -2605,7 +2605,7 @@ public class ordData {
 
     }
     
-    public static String getOrderItem(int order, String line) {
+    public static String getOrderItem(String order, String line) {
         String item = "";
         try{
         Connection con = null;
