@@ -123,11 +123,11 @@ public class ordData {
                         + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
-          ps.setInt(1, x.so_nbr);
+          ps.setString(1, x.so_nbr);
           res = ps.executeQuery();
           ps = con.prepareStatement(sqlInsert);
             if (! res.isBeforeFirst()) {
-            ps.setInt(1, x.so_nbr);
+            ps.setString(1, x.so_nbr);
             ps.setString(2, x.so_cust);
             ps.setString(3, x.so_ship);
             ps.setString(4, x.so_site);
@@ -282,7 +282,7 @@ public class ordData {
                 "so_taxcode = ?, so_confirm = ?, so_plan = ? " +
                  " where so_nbr = ? ; ";
 	ps = con.prepareStatement(sql) ;
-        ps.setInt(22, x.so_nbr);
+        ps.setString(22, x.so_nbr);
             ps.setString(1, x.so_cust);
             ps.setString(2, x.so_ship);
             ps.setString(3, x.so_site);
@@ -324,12 +324,12 @@ public class ordData {
                         + "sod_desc, sod_taxamt, sod_site, sod_bom, sod_ship ) "
                         + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
         ps = con.prepareStatement(sqlSelect); 
-        ps.setInt(1, x.sod_nbr);
+        ps.setString(1, x.sod_nbr);
         ps.setInt(2, x.sod_line);
         res = ps.executeQuery();
         if (! res.isBeforeFirst()) {  // insert
 	 ps = con.prepareStatement(sqlInsert) ;
-            ps.setInt(1, x.sod_nbr);
+            ps.setString(1, x.sod_nbr);
             ps.setInt(2, x.sod_line);
             ps.setString(3, x.sod_item);
             ps.setString(4, x.sod_custitem);
@@ -354,7 +354,7 @@ public class ordData {
             rows = ps.executeUpdate();
         } else {    // update
          ps = con.prepareStatement(sqlUpdate) ;
-            ps.setInt(21, x.sod_nbr);
+            ps.setString(21, x.sod_nbr);
             ps.setInt(22, x.sod_line);
             ps.setString(1, x.sod_item);
             ps.setString(2, x.sod_custitem);
@@ -545,50 +545,50 @@ public class ordData {
         PreparedStatement ps = null; 
         String sql = "delete from so_mstr where so_nbr = ?; ";
         ps = con.prepareStatement(sql);
-        ps.setInt(1, x.so_nbr);
+        ps.setString(1, x.so_nbr);
         ps.executeUpdate();
         sql = "delete from sod_det where sod_nbr = ?; ";
         ps = con.prepareStatement(sql);
-        ps.setInt(1, x.so_nbr);
+        ps.setString(1, x.so_nbr);
         ps.executeUpdate();
         sql = "delete from sod_tax where sodt_nbr = ?; ";
         ps = con.prepareStatement(sql);
-        ps.setInt(1, x.so_nbr);
+        ps.setString(1, x.so_nbr);
         ps.executeUpdate();
         sql = "delete from sos_det where sos_nbr = ?; ";
         ps = con.prepareStatement(sql);
-        ps.setInt(1, x.so_nbr);
+        ps.setString(1, x.so_nbr);
         ps.executeUpdate();
         sql = "delete from so_tax where sot_nbr = ?; ";
         ps = con.prepareStatement(sql);
-        ps.setInt(1, x.so_nbr);
+        ps.setString(1, x.so_nbr);
         ps.executeUpdate();
         ps.close();
     }
     
-    private static void _deleteOrderTaxMstr(int x, Connection con) throws SQLException { 
+    private static void _deleteOrderTaxMstr(String x, Connection con) throws SQLException { 
         PreparedStatement ps = null; 
         String sql = "delete from so_tax where sot_nbr = ?; ";
         ps = con.prepareStatement(sql);
-        ps.setInt(1, x);
+        ps.setString(1, x);
         ps.executeUpdate();
         ps.close();
     }
       
-    private static void _deleteOrderTaxDet(int x, Connection con) throws SQLException { 
+    private static void _deleteOrderTaxDet(String x, Connection con) throws SQLException { 
         PreparedStatement ps = null; 
         String sql = "delete from sod_tax where sodt_nbr = ?; ";
         ps = con.prepareStatement(sql);
-        ps.setInt(1, x);
+        ps.setString(1, x);
         ps.executeUpdate();
         ps.close();
     }
     
-    private static void _deleteOrderSummaryDet(int x, Connection con) throws SQLException { 
+    private static void _deleteOrderSummaryDet(String x, Connection con) throws SQLException { 
         PreparedStatement ps = null; 
         String sql = "delete from sos_det where sos_nbr = ?; ";
         ps = con.prepareStatement(sql);
-        ps.setInt(1, x);
+        ps.setString(1, x);
         ps.executeUpdate();
         ps.close();
     }
@@ -660,7 +660,7 @@ public class ordData {
                 } else {
                     while(res.next()) {
                         m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                        r = new so_mstr(m, res.getInt("so_nbr"), res.getString("so_cust"), res.getString("so_ship"),
+                        r = new so_mstr(m, res.getString("so_nbr"), res.getString("so_cust"), res.getString("so_ship"),
                     res.getString("so_site"), res.getString("so_curr"), res.getString("so_shipvia"), res.getString("so_wh"), res.getString("so_po"),
                     res.getString("so_due_date"), res.getString("so_ord_date"), res.getString("so_create_date"), res.getString("so_userid"), res.getString("so_status"),
                     res.getString("so_isallocated"), res.getString("so_terms"), res.getString("so_ar_acct"), res.getString("so_ar_cc"), 
@@ -690,7 +690,7 @@ public class ordData {
             } else {
                 while(res.next()) {
                     m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                    r = new so_mstr(m, res.getInt("so_nbr"), res.getString("so_cust"), res.getString("so_ship"),
+                    r = new so_mstr(m, res.getString("so_nbr"), res.getString("so_cust"), res.getString("so_ship"),
                 res.getString("so_site"), res.getString("so_curr"), res.getString("so_shipvia"), res.getString("so_wh"), res.getString("so_po"),
                 res.getString("so_due_date"), res.getString("so_ord_date"), res.getString("so_create_date"), res.getString("so_userid"), res.getString("so_status"),
                 res.getString("so_isallocated"), res.getString("so_terms"), res.getString("so_ar_acct"), res.getString("so_ar_cc"), 
@@ -713,7 +713,7 @@ public class ordData {
              try (ResultSet res = ps.executeQuery();) {
                     while(res.next()) {
                     m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                    r = new sod_det(m, res.getInt("sod_nbr"), res.getInt("sod_line"), res.getString("sod_item"),
+                    r = new sod_det(m, res.getString("sod_nbr"), res.getInt("sod_line"), res.getString("sod_item"),
                     res.getString("sod_custitem"), res.getString("sod_po"), res.getDouble("sod_ord_qty"), res.getString("sod_uom"), res.getDouble("sod_all_qty"),
                     res.getDouble("sod_listprice"), res.getDouble("sod_disc"), res.getDouble("sod_netprice"), res.getString("sod_ord_date"), res.getString("sod_due_date"),
                     res.getDouble("sod_shipped_qty"), res.getString("sod_status"), res.getString("sod_wh"), res.getString("sod_loc"), 
@@ -742,7 +742,7 @@ public class ordData {
             } else {
                 while(res.next()) {
                     m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                    r = new sod_det(m, res.getInt("sod_nbr"), res.getInt("sod_line"), res.getString("sod_item"),
+                    r = new sod_det(m, res.getString("sod_nbr"), res.getInt("sod_line"), res.getString("sod_item"),
                     res.getString("sod_custitem"), res.getString("sod_po"), res.getDouble("sod_ord_qty"), res.getString("sod_uom"), res.getDouble("sod_all_qty"),
                     res.getDouble("sod_listprice"), res.getDouble("sod_disc"), res.getDouble("sod_netprice"), res.getString("sod_ord_date"), res.getString("sod_due_date"),
                     res.getDouble("sod_shipped_qty"), res.getString("sod_status"), res.getString("sod_wh"), res.getString("sod_loc"), 
@@ -765,7 +765,7 @@ public class ordData {
              try (ResultSet res = ps.executeQuery();) {
                     while(res.next()) {
                     m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                    r = new sos_det(m, res.getInt("sos_nbr"), res.getString("sos_desc"), res.getString("sos_type"),
+                    r = new sos_det(m, res.getString("sos_nbr"), res.getString("sos_desc"), res.getString("sos_type"),
                     res.getString("sos_amttype"), res.getDouble("sos_amt") );
                     list.add(r);
                     }
@@ -790,7 +790,7 @@ public class ordData {
             } else {
                 while(res.next()) {
                     m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                    r = new sos_det(m, res.getInt("sos_nbr"), res.getString("sos_desc"), res.getString("sos_type"),
+                    r = new sos_det(m, res.getString("sos_nbr"), res.getString("sos_desc"), res.getString("sos_type"),
                     res.getString("sos_amttype"), res.getDouble("sos_amt") );
                     list.add(r);
                 }
@@ -814,7 +814,7 @@ public class ordData {
                 } else {
                     while(res.next()) {
                         m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                        r = new so_tax(m, res.getInt("sot_nbr"), res.getString("sot_desc"), res.getDouble("sot_percent"),
+                        r = new so_tax(m, res.getString("sot_nbr"), res.getString("sot_desc"), res.getDouble("sot_percent"),
                     res.getString("sot_type"));
                     }
                 }
@@ -841,7 +841,7 @@ public class ordData {
             } else {
                 while(res.next()) {
                     m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                     r = new so_tax(m, res.getInt("sot_nbr"), res.getString("sot_desc"), res.getDouble("sot_percent"),
+                     r = new so_tax(m, res.getString("sot_nbr"), res.getString("sot_desc"), res.getDouble("sot_percent"),
                     res.getString("sot_type"));
                     list.add(r);
                 }
@@ -861,7 +861,7 @@ public class ordData {
              try (ResultSet res = ps.executeQuery();) {
                     while(res.next()) {
                     m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                    r = new sod_tax(m, res.getInt("sodt_nbr"), res.getString("sodt_line"), res.getString("sodt_desc"),
+                    r = new sod_tax(m, res.getString("sodt_nbr"), res.getString("sodt_line"), res.getString("sodt_desc"),
                     res.getDouble("sodt_percent"), res.getString("sodt_type") );
                     list.add(r);
                     }
@@ -886,7 +886,7 @@ public class ordData {
             } else {
                 while(res.next()) {
                     m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                    r = new sod_tax(m, res.getInt("sodt_nbr"), res.getString("sodt_line"), res.getString("sodt_desc"),
+                    r = new sod_tax(m, res.getString("sodt_nbr"), res.getString("sodt_line"), res.getString("sodt_desc"),
                     res.getDouble("sodt_percent"), res.getString("sodt_type") );
                     list.add(r);
                 }
@@ -906,12 +906,12 @@ public class ordData {
                         + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
-          ps.setInt(1, x.sod_nbr);
+          ps.setString(1, x.sod_nbr);
           ps.setInt(2, x.sod_line);
           res = ps.executeQuery();
           ps = con.prepareStatement(sqlInsert);  
             if (! res.isBeforeFirst()) {
-            ps.setInt(1, x.sod_nbr);
+            ps.setString(1, x.sod_nbr);
             ps.setInt(2, x.sod_line);
             ps.setString(3, x.sod_item);
             ps.setString(4, x.sod_custitem);
@@ -946,12 +946,12 @@ public class ordData {
                         + " values (?,?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
-          ps.setInt(1, x.sos_nbr);
+          ps.setString(1, x.sos_nbr);
           ps.setString(2, x.sos_desc);
           res = ps.executeQuery();
           ps = con.prepareStatement(sqlInsert); 
             if (! res.isBeforeFirst()) {
-            ps.setInt(1, x.sos_nbr);
+            ps.setString(1, x.sos_nbr);
             ps.setString(2, x.sos_desc);
             ps.setString(3, x.sos_type);
             ps.setString(4, x.sos_amttype);
@@ -969,11 +969,11 @@ public class ordData {
                         + " values (?,?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
-          ps.setInt(1, x.sodt_nbr);
+          ps.setString(1, x.sodt_nbr);
           res = ps.executeQuery();
           ps = con.prepareStatement(sqlInsert);    
             if (! res.isBeforeFirst()) { 
-            ps.setInt(1, x.sodt_nbr);
+            ps.setString(1, x.sodt_nbr);
             ps.setString(2, x.sodt_line);
             ps.setString(3, x.sodt_desc);
             ps.setDouble(4, x.sodt_percent);
@@ -990,12 +990,12 @@ public class ordData {
                         + " values (?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
-          ps.setInt(1, x.sot_nbr);
+          ps.setString(1, x.sot_nbr);
           ps.setString(2, x.sot_desc);
           res = ps.executeQuery();
           ps = con.prepareStatement(sqlInsert); 
             if (! res.isBeforeFirst()) {
-            ps.setInt(1, x.sot_nbr);
+            ps.setString(1, x.sot_nbr);
             ps.setString(2, x.sot_desc);
             ps.setDouble(3, x.sot_percent);
             ps.setString(4, x.sot_type);
@@ -2806,13 +2806,13 @@ public class ordData {
         }
     }
     
-    public record so_mstr(String[] m, int so_nbr, String so_cust, String so_ship, String so_site,
+    public record so_mstr(String[] m, String so_nbr, String so_cust, String so_ship, String so_site,
     String so_curr, String so_shipvia, String so_wh, String so_po, String so_due_date,
     String so_ord_date, String so_create_date, String so_userid, String so_status, String so_isallocated,
     String so_terms, String so_ar_acct, String so_ar_cc, String so_rmks, String so_type, String so_taxcode,
     String so_issourced, String so_confirm, String so_plan, String so_entrytype) {
         public so_mstr(String[] m) {
-            this(m, 0, "", "", "", "", "", "", "", "", "",
+            this(m, "", "", "", "", "", "", "", "", "", "",
                     "", "", "", "", "", "", "", "", "", "",
                     "", "", "", ""
                     );
@@ -2820,37 +2820,37 @@ public class ordData {
     }
     
                               
-    public record sod_det(String[] m, int sod_nbr, int sod_line, String sod_item, String sod_custitem, 
+    public record sod_det(String[] m, String sod_nbr, int sod_line, String sod_item, String sod_custitem, 
         String sod_po, double sod_ord_qty, String sod_uom, double sod_all_qty, 
         double sod_listprice, double sod_disc, double sod_netprice, String sod_ord_date, 
         String sod_due_date, double sod_shipped_qty, String sod_status, String sod_wh, 
         String sod_loc, String sod_desc, double sod_taxamt, String sod_site, String sod_bom, String sod_ship) {
         public sod_det(String[] m) {
-            this (m, 0, 0, "", "", "", 0.00, "", 0.00, 0.00, 0.00,
+            this (m, "", 0, "", "", "", 0.00, "", 0.00, 0.00, 0.00,
                     0.00, "", "", 0.00, "", "", "", "", 0.00, "",
                     "", "" );
         }
     }
     
           
-    public record so_tax(String[] m, int sot_nbr, String sot_desc, double sot_percent, String sot_type ) {
+    public record so_tax(String[] m, String sot_nbr, String sot_desc, double sot_percent, String sot_type ) {
         public so_tax(String[] m) {
-            this (m, 0, "", 0.00, "");
+            this (m, "", "", 0.00, "");
         }
     }
     
    
-     public record sod_tax(String[] m, int sodt_nbr, String sodt_line, String sodt_desc, 
+     public record sod_tax(String[] m, String sodt_nbr, String sodt_line, String sodt_desc, 
         double sodt_percent, String sodt_type ) {
         public sod_tax(String[] m) {
-            this (m, 0, "", "", 0.00, "");
+            this (m, "", "", "", 0.00, "");
         }
     }
     
-    public record sos_det(String[] m, int sos_nbr, String sos_desc, String sos_type, 
+    public record sos_det(String[] m, String sos_nbr, String sos_desc, String sos_type, 
         String sos_amttype, double sos_amt) {
         public sos_det(String[] m) {
-            this (m, 0, "", "", "", 0.00);
+            this (m, "", "", "", "", 0.00);
         }
     }
     
