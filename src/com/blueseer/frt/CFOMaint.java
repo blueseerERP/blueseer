@@ -67,7 +67,7 @@ import static com.blueseer.shp.shpData.confirmShipperTransaction;
 import static com.blueseer.shp.shpData.getShipperHeader;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
-import static com.blueseer.utl.BlueSeerUtils.bsParseDoubleUS;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import static com.blueseer.utl.BlueSeerUtils.clog;
@@ -1349,14 +1349,14 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
         if (sac != null && ! sac.isEmpty()) {
             for (String[] ss : sac) {
                 myamttype = ss[3].toString();
-                myamt = bsParseDoubleUS(ss[4].toString());
+                myamt = bsParseDouble(ss[4].toString());
                 // adjust if percent based
-                 if (ss[3].toString().equals("percent") && bsParseDoubleUS(ss[4].toString()) > 0) {
+                 if (ss[3].toString().equals("percent") && bsParseDouble(ss[4].toString()) > 0) {
                    myamttype = "amount";
                    if (ss[2].equals("discount")) {
-                     myamt = -1 * (bsParseDoubleUS(ss[4].toString()) / 100) * totamt;
+                     myamt = -1 * (bsParseDouble(ss[4].toString()) / 100) * totamt;
                    } else {
-                     myamt = (bsParseDoubleUS(ss[4].toString()) / 100) * totamt;  
+                     myamt = (bsParseDouble(ss[4].toString()) / 100) * totamt;  
                    }
                  }    
                 cnt++;

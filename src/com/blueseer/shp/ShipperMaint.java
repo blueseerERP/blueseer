@@ -44,6 +44,9 @@ import com.blueseer.shp.shpData.ship_det;
 import com.blueseer.shp.shpData.ship_mstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatIntUS;
+import static com.blueseer.utl.BlueSeerUtils.bsNumber;
+import static com.blueseer.utl.BlueSeerUtils.bsNumberToUS;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
@@ -634,7 +637,7 @@ public class ShipperMaint extends javax.swing.JPanel {
     
     public void reinitshippervariables(String myshipper) {
        
-        tbshipper.setText(myshipper);
+        tbshipper.setText(bsNumber(myshipper));
         if (myshipper.compareTo("") == 0) {
             btadd.setEnabled(true);
 
@@ -644,7 +647,7 @@ public class ShipperMaint extends javax.swing.JPanel {
 
 
        
-        tbshipper.setText(myshipper);
+        tbshipper.setText(bsNumber(myshipper));
         
         tbqty.setText("");
         tbdesc.setText("");
@@ -685,7 +688,7 @@ public class ShipperMaint extends javax.swing.JPanel {
                 while (res.next()) {
                     i++;
                     
-                    tbshipper.setText(res.getString("sh_id"));
+                    tbshipper.setText(bsNumber(res.getString("sh_id")));
                     ddbillto.setSelectedItem(res.getString("sh_cust"));
                     ddshipto.setSelectedItem(res.getString("sh_ship"));
                     tbref.setText(res.getString("sh_ref"));
@@ -2490,7 +2493,7 @@ public class ShipperMaint extends javax.swing.JPanel {
 
     private void btnewshipperActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewshipperActionPerformed
                 initnew();
-                tbshipper.setText(String.valueOf(OVData.getNextNbr("shipper")));
+                tbshipper.setText(bsNumber(OVData.getNextNbr("shipper")));
                 java.util.Date now = new java.util.Date();
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 DateFormat dftime = new SimpleDateFormat("HH:mm:ss");

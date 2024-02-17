@@ -692,22 +692,7 @@ public class BlueSeerUtils {
         }
         return z;
     }
-    
-    public static double bsParseDoubleUS(String x) {
-        double z = 0;
-        if (! x.isEmpty()) {
-        NumberFormat nf = NumberFormat.getInstance(Locale.US);
-        Number number = 0;
-                    try {
-                        number = nf.parse(x);
-                    } catch (ParseException ex) {
-                        bsmf.MainFrame.show(getMessageTag(1017));
-                    }
-        z = number.doubleValue();
-        }
-        return z;
-    }
-    
+        
     public static int bsParseInt(String x) {
         // always returns . decimal based double
         int z = 0;
@@ -917,6 +902,27 @@ public class BlueSeerUtils {
         }
         return x;
     }
+    
+    public static String bsNumberToUS(String invalue) {
+                
+        String x = "0";
+        String pattern = "#";
+        if (! invalue.isEmpty()) {
+        String adjvalue = invalue.replace('.', defaultDecimalSeparator);
+       // DecimalFormat df = new DecimalFormat("#0.00###", new DecimalFormatSymbols(Locale.getDefault())); 
+     //  NumberFormat nf = NumberFormat.getInstance(Locale.getDefault()); 
+       DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());
+       DecimalFormat usdf = (DecimalFormat) NumberFormat.getNumberInstance(Locale.US);
+       usdf.applyPattern(pattern);
+        try { 
+            x = usdf.format(df.parse(adjvalue));
+        } catch (ParseException ex) {
+            bslog(ex);
+        }
+        }
+        return x;
+    }
+    
     
     public static String currformatWithSymbol(String invalue) {
         // invalue will come over as a . decimal regardless of Locale

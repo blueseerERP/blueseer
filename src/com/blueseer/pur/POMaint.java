@@ -574,7 +574,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         cbedi.setEnabled(false);
         tbkey.setForeground(Color.blue);
         if (! x.isEmpty()) {
-          tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
+          tbkey.setText(bsNumber(OVData.getNextNbr(x)));  
           tbkey.setEditable(false);
         } 
         
@@ -1123,7 +1123,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
  
     public void updateForm() throws ParseException {
-        tbkey.setText(po.po_nbr());
+        tbkey.setText(bsNumber(po.po_nbr()));
         ddvend.setSelectedItem(po.po_vend());
         ddvend.setEnabled(false);
         ddstatus.setSelectedItem(po.po_status());

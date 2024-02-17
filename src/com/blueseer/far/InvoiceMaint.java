@@ -46,6 +46,7 @@ import static com.blueseer.srv.ShipperServ.getInvoiceJSON;
 import static com.blueseer.srv.ShipperServ.getInvoiceXML;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsNumber;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
@@ -416,7 +417,7 @@ public class InvoiceMaint extends javax.swing.JPanel {
         tbkey.setEditable(true);
         tbkey.setForeground(Color.blue);
         if (! x.isEmpty()) {
-          tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
+          tbkey.setText(bsNumber(OVData.getNextNbr(x)));  
           tbkey.setEditable(false);
         } 
         tbkey.requestFocus();
@@ -786,7 +787,7 @@ public class InvoiceMaint extends javax.swing.JPanel {
                 while (res.next()) {
                     i++;
                     
-                    tbkey.setText(res.getString("sh_id"));
+                    tbkey.setText(bsNumber(res.getString("sh_id")));
                     tbcust.setText(res.getString("sh_cust"));
                     lbcust.setText(res.getString("cm_name"));
                     tbship.setText(res.getString("sh_ship"));

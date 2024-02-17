@@ -775,7 +775,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         java.util.Date now = new java.util.Date();
         String key = String.valueOf(OVData.getNextNbr("order"));
         ordData.so_mstr so = new ordData.so_mstr(null, 
-                 key,
+                 bsParseInt(key),
                  ddcust.getSelectedItem().toString(),
                  ddcust.getSelectedItem().toString(),
                  ddsite.getSelectedItem().toString(),
@@ -817,7 +817,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
             for (int j = 0; j < detailtable.getRowCount(); j++) {
                 netprice = bsParseDouble(detailtable.getValueAt(j, 5).toString()) - ((detaildisc / 100) * bsParseDouble(detailtable.getValueAt(j, 5).toString()));
                 sod_det x = new sod_det(null, 
-                key,
+                bsParseInt(key),
                 bsParseInt(detailtable.getValueAt(j, 1).toString()), // line
                 detailtable.getValueAt(j, 2).toString(), // item
                 "", //custitem
@@ -849,7 +849,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
             
             for (int j = 0; j < sactable.getRowCount(); j++) {
                
-                ordData.sos_det x = new ordData.sos_det(null, key,
+                ordData.sos_det x = new ordData.sos_det(null, bsParseInt(key),
                 sactable.getValueAt(j, 1).toString(),
                 sactable.getValueAt(j, 0).toString(),
                 sactable.getValueAt(j, 2).toString(),
@@ -857,7 +857,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                 listsac.add(x); 
                 
               if (sactable.getValueAt(j, 0).toString().equals("tax")) {
-                ordData.so_tax z = new ordData.so_tax(null, key,
+                ordData.so_tax z = new ordData.so_tax(null, bsParseInt(key),
                 sactable.getValueAt(j, 1).toString(), // desc
                 bsParseDouble(sactable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.')), // percent
                 sactable.getValueAt(j, 2).toString()); // amount type

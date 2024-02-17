@@ -54,7 +54,8 @@ import com.blueseer.shp.shpData;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble5;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble; 
-import static com.blueseer.utl.BlueSeerUtils.bsParseDoubleUS;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.bsformat;
 import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
 import static com.blueseer.utl.BlueSeerUtils.currformatDoubleUS;
@@ -2873,7 +2874,7 @@ public class OVData {
 
     }
 
-    public static double getTaxAmtApplicableByOrder(String order, double amt) {
+    public static double getTaxAmtApplicableByOrder(int order, double amt) {
         double taxamt = 0.00;
         double taxpercent = 0.00;
 
@@ -5493,7 +5494,7 @@ public class OVData {
                  ArrayList<String[]> k = z.getValue();
                  int m = 0;
                  String BillToCode;
-                 String nbr = "";
+                 int nbr = 0;
                  double disc = 0;
                  String[] custinfo = new String[]{"","","","","","","", ""};
                  for (String[] g : k) {
@@ -5505,7 +5506,7 @@ public class OVData {
                         String[] addr = new String[]{BillToCode, g[25], g[27], g[28], g[26], g[30], g[32], g[31], g[33], g[2], g[34], g[35], g[37], g[38], g[36], g[40], g[42], g[41], g[43]};  
                         custinfo = OVData.addCustMstrWShipToMinimal(addr);
 
-                        nbr = String.valueOf(OVData.getNextNbr("order")); 
+                        nbr = OVData.getNextNbr("order"); 
                     
                        // bsmf.MainFrame.show(g[48] + "/" + g[49] + "/" + g[50]);
                         st.executeUpdate("insert into so_mstr "
@@ -5847,7 +5848,7 @@ public class OVData {
                     j = 0;
                      
                     res =  st.executeQuery("select so_nbr from so_mstr where " +
-                                    " so_nbr = " + "'" + String.valueOf(indexnbr) + "'" + ";");
+                                    " so_nbr = " + "'" + indexnbr + "'" + ";");
                     
                     while (res.next()) {
                         j++;
@@ -12520,7 +12521,7 @@ return myarray;
          return billto;
      }
 
-    public static ArrayList getOrderWHSource(String order) {
+    public static ArrayList getOrderWHSource(int order) {
          ArrayList<String> wh = new ArrayList<String>();
           try{
 
@@ -14561,7 +14562,7 @@ return mystring;
                                 + " values ( " + "'" + shipper + "'" + ","
                                 + "'" + elements[0] + "'" + ","
                                 + "'" + elements[2] + "'" + ","
-                                + "'" + currformatDoubleUS(amt * ( bsParseDoubleUS(elements[1]) / 100 )) + "'" + ","   // amount is currently 'foreign' ...not base
+                                + "'" + currformatDoubleUS(amt * ( bsParseDouble(elements[1]) / 100 )) + "'" + ","   // amount is currently 'foreign' ...not base
                                 + "'" + elements[1] + "'" 
                                 + ")"
                                 + ";");
@@ -14801,7 +14802,7 @@ return mystring;
                                 + " values ( " + "'" + shipper + "'" + ","
                                 + "'" + elements[0] + "'" + ","
                                 + "'" + elements[2] + "'" + ","
-                                + "'" + currformatDoubleUS(amt * ( bsParseDoubleUS(elements[1]) / 100 )) + "'" + ","   // amount is currently 'foreign' ...not base
+                                + "'" + currformatDoubleUS(amt * ( bsParseDouble(elements[1]) / 100 )) + "'" + ","   // amount is currently 'foreign' ...not base
                                 + "'" + elements[1] + "'" 
                                 + ")"
                                 + ";");
@@ -15041,7 +15042,7 @@ return mystring;
                                 + " values ( " + "'" + shipper + "'" + ","
                                 + "'" + elements[0] + "'" + ","
                                 + "'" + elements[2] + "'" + ","
-                                + "'" + currformatDoubleUS(amt * ( bsParseDoubleUS(elements[1]) / 100 )) + "'" + ","   // amount is currently 'foreign' ...not base
+                                + "'" + currformatDoubleUS(amt * ( bsParseDouble(elements[1]) / 100 )) + "'" + ","   // amount is currently 'foreign' ...not base
                                 + "'" + elements[1] + "'" 
                                 + ")"
                                 + ";");
@@ -15137,7 +15138,7 @@ return mystring;
                     if (curr.toUpperCase().equals(basecurr.toUpperCase())) {
                         baseamt = amt;
                     } else {
-                        baseamt = amt / bsParseDoubleUS(exchangerate);
+                        baseamt = amt / bsParseDouble(exchangerate);
                     }
                     
                     
@@ -15235,8 +15236,8 @@ return mystring;
                     }
                     
                      for (int j = 0; j < ardref.size(); j++) {
-                    st.executeUpdate("update ar_mstr set ar_applied = " + "'" + bsParseDoubleUS(newamt.get(j).toString()) + "'" + "," +
-                            " ar_open_amt = " + "'" + bsParseDoubleUS(openamt.get(j).toString()) + "'" + "," +
+                    st.executeUpdate("update ar_mstr set ar_applied = " + "'" + bsParseDouble(newamt.get(j).toString()) + "'" + "," +
+                            " ar_open_amt = " + "'" + bsParseDouble(openamt.get(j).toString()) + "'" + "," +
                             " ar_status = " + "'" + status.get(j) + "'" +
                             " where ar_nbr = " + "'" + ardref.get(j) + "'" + 
                             " and ar_type = 'I' "
@@ -15302,7 +15303,7 @@ return mystring;
          return myreturn;
      }
         
-    public static void sourceOrder(String order) {
+    public static void sourceOrder(int order) {
            try {
             Connection con = null;
             if (ds != null) {
@@ -15345,7 +15346,7 @@ return mystring;
                            bsmf.MainFrame.show(getMessageTag(1106));
                       
                  } else {
-                     bsmf.MainFrame.show(getMessageTag(1034, order));
+                     bsmf.MainFrame.show(getMessageTag(1034, String.valueOf(order)));
                      return;
                  }
               
@@ -16440,7 +16441,7 @@ return mystring;
                         " inner join cm_mstr on cm_code = sh_cust " +
                         " left outer join cms_det on cms_code = sh_cust and cms_shipto = sh_ship " +
                         " inner join site_mstr on site_site = sh_site " +
-                        " where shd_so = " + "'" + order + "'" + ";");
+                        " where shd_so = " + "'" + bsParseInt(order) + "'" + ";");
                        int i = 0;
                        while (res.next()) {
                           i++;
@@ -16899,7 +16900,7 @@ return mystring;
                         " inner join cm_mstr on cm_code = sh_cust " +
                         " left outer join cms_det on cms_code = sh_cust and cms_shipto = sh_ship " +
                         " inner join site_mstr on site_site = sh_site " +
-                        " where shd_so = " + "'" + order + "'" + ";");
+                        " where shd_so = " + "'" + bsParseInt(order) + "'" + ";");
                        int i = 0;
                        while (res.next()) {
                           i++;
@@ -17089,14 +17090,14 @@ return mystring;
                 String site_csz = "";
                 String bill_csz = "";
                 String ship_csz = "";
-                double taxes = getOrderTotalTax(order);
+                double taxes = getOrderTotalTax(bsParseInt(order));
                 res = st.executeQuery("select so_cust, so_site, so_curr, " +
                         " cm_city, cm_state, cm_zip, cm_country, cms_city, cms_state, cms_zip, cms_country, site_city, site_state, site_zip, site_country " +
                         " from so_mstr " +
                         " inner join cm_mstr on cm_code = so_cust " +
                         " left outer join cms_det on cms_code = so_cust and cms_shipto = so_ship " +
                         " inner join site_mstr on site_site = so_site " +
-                        " where so_nbr = " + "'" + order + "'" + ";");
+                        " where so_nbr = " + "'" + bsParseInt(order) + "'" + ";");
                        while (res.next()) {
                           cust = res.getString(("so_cust"));
                           site = res.getString(("so_site"));
@@ -17123,7 +17124,7 @@ return mystring;
                Path imagepath = FileSystems.getDefault().getPath(cleanDirString(getSystemImageDirectory()) + logo);
                 HashMap hm = new HashMap();
                 hm.put("REPORT_TITLE", "ORDER");
-                hm.put("myid",  order);
+                hm.put("myid",  bsParseInt(order));
                 hm.put("site_csz", site_csz);
                 hm.put("bill_csz", bill_csz);
                 hm.put("ship_csz", ship_csz);
@@ -18039,7 +18040,7 @@ MainFrame.bslog(e);
               //  "Part", "PO", "Line", "Qty", "listprice", "disc", "netprice", "loc", "WH", "serial", "lot", "cost"
               for (int j = 0; j < voucherdet.getRowCount(); j++) {
                     qty = bsParseDouble(voucherdet.getValueAt(j,3).toString());
-                    amt += bsParseDoubleUS(voucherdet.getValueAt(j, 3).toString()) * bsParseDoubleUS(voucherdet.getValueAt(j, 4).toString());
+                    amt += bsParseDouble(voucherdet.getValueAt(j, 3).toString()) * bsParseDouble(voucherdet.getValueAt(j, 4).toString());
                     st.executeUpdate("insert into vod_mstr "
                         + "(vod_id, vod_vend, vod_rvdid, vod_rvdline, vod_item, vod_qty, "
                         + " vod_voprice, vod_date, vod_invoice, vod_expense_acct, vod_expense_cc )  "
@@ -18912,7 +18913,7 @@ MainFrame.bslog(e);
           return shiptocode;
       }
      
-    public static void updateOrderStatusError(String nbr) {
+    public static void updateOrderStatusError(int nbr) {
             try{
             Connection con = null;
             if (ds != null) {
@@ -18941,7 +18942,7 @@ MainFrame.bslog(e);
         
        }
       
-    public static void updateOrderSourceFlag(String nbr) {
+    public static void updateOrderSourceFlag(int nbr) {
             try{
             Connection con = null;
             if (ds != null) {

@@ -27,6 +27,7 @@ SOFTWARE.
 package com.blueseer.ord;
 
 import static bsmf.MainFrame.tags;
+import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import com.blueseer.utl.OVData;
 import java.awt.Component;
 import java.io.IOException;
@@ -182,7 +183,7 @@ public class OrderSource extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btConfirmActionPerformed
-                OVData.sourceOrder(tborder.getText());
+                OVData.sourceOrder(bsParseInt(tborder.getText()));
     }//GEN-LAST:event_btConfirmActionPerformed
 
 

@@ -879,7 +879,7 @@ try {
                         mymodel.addRow(new Object[]{
                             BlueSeerUtils.clickflag,
                             BlueSeerUtils.clickbasket,
-                                res.getString("so_nbr"),
+                                bsNumber(res.getString("so_nbr")),
                                 res.getString("so_cust"),
                                 res.getString("so_po"),
                                 res.getString("so_rmks"),
@@ -937,6 +937,7 @@ try {
                reinitpanels(mypanel, true, args);
               
         }
+        
     }//GEN-LAST:event_tableorderMouseClicked
 
     private void tbprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbprintActionPerformed

@@ -43,7 +43,7 @@ import com.blueseer.shp.shpData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatIntUS;
-import static com.blueseer.utl.BlueSeerUtils.bsParseDoubleUS;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDoubleUS;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -1412,7 +1412,7 @@ public class fglData {
                     res.close();
                     st.close();
                       for (int j = 0; j < acct_cr.size(); j++) {
-                      glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), setDateDB(parseDate(ap.ap_effdate())), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
+                      glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), setDateDB(parseDate(ap.ap_effdate())), bsParseDouble(cost.get(j).toString()), bsParseDouble(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
                     }
           
         return myerror;
@@ -1487,7 +1487,7 @@ public class fglData {
                 
                     }
                      for (int j = 0; j < acct_cr.size(); j++) {
-                      glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), setDateDB(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
+                      glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), setDateDB(effdate), bsParseDouble(cost.get(j).toString()), bsParseDouble(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
                     }
           
                      res.close();
@@ -1613,7 +1613,7 @@ public class fglData {
                     
                     
                      for (int j = 0; j < acct_cr.size(); j++) {
-                      glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), setDateDB(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
+                      glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), setDateDB(effdate), bsParseDouble(cost.get(j).toString()), bsParseDouble(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
                     }
                      
                      
@@ -1717,7 +1717,7 @@ public class fglData {
                     doc.add(gldoc);
                     }
                      for (int j = 0; j < acct_cr.size(); j++) {
-                      glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), setDateDB(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
+                      glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), setDateDB(effdate), bsParseDouble(cost.get(j).toString()), bsParseDouble(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
                     }
            }
             catch (SQLException s){
@@ -1808,7 +1808,7 @@ public class fglData {
                     
                     }
                      for (int j = 0; j < acct_cr.size(); j++) {
-                      glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), setDateDB(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
+                      glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), setDateDB(effdate), bsParseDouble(cost.get(j).toString()), bsParseDouble(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
                     }
           
                      res.close();
@@ -1890,7 +1890,7 @@ public class fglData {
                     }
                     
                      for (int j = 0; j < acct_cr.size(); j++) {
-                      glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), setDateDB(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
+                      glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), setDateDB(effdate), bsParseDouble(cost.get(j).toString()), bsParseDouble(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
                     }
                     
            }
@@ -2011,8 +2011,8 @@ public class fglData {
                                     acct_dr.add(res.getString("bk_acct"));
                                     cc_cr.add(OVData.getDefaultTaxCCByType(elements[2]));
                                     cc_dr.add(res.getString("cm_ar_cc"));
-                                    cost.add(( net * ( bsParseDoubleUS(elements[1]) / 100 )));  // credit AR for sales less tax
-                                    basecost.add(( netbase * ( bsParseDoubleUS(elements[1]) / 100 )));  // credit AR for sales less tax
+                                    cost.add(( net * ( bsParseDouble(elements[1]) / 100 )));  // credit AR for sales less tax
+                                    basecost.add(( netbase * ( bsParseDouble(elements[1]) / 100 )));  // credit AR for sales less tax
                                     curr.add(res.getString("ard_curr"));
                                     basecurr.add(res.getString("ard_base_curr"));
                                     site.add(res.getString("ar_site"));
@@ -2030,8 +2030,8 @@ public class fglData {
                         acct_dr.add(res.getString("bk_acct"));
                         cc_cr.add(OVData.getDefaultTaxCCByType(taxinfo[2]));
                         cc_dr.add(res.getString("cm_ar_cc"));
-                        cost.add(bsParseDoubleUS(taxinfo[3]));  // problem here...need art_base_amt as well as art_amt...an issue only for material tax with regard to currency.
-                        basecost.add(bsParseDoubleUS(taxinfo[3]));  // base and non-base currency material tax is the same...needs to be addresssed.
+                        cost.add(bsParseDouble(taxinfo[3]));  // problem here...need art_base_amt as well as art_amt...an issue only for material tax with regard to currency.
+                        basecost.add(bsParseDouble(taxinfo[3]));  // base and non-base currency material tax is the same...needs to be addresssed.
                         curr.add(res.getString("ard_curr"));
                         basecurr.add(res.getString("ard_base_curr"));
                         site.add(res.getString("ar_site"));
@@ -2087,7 +2087,7 @@ public class fglData {
                     
                      // process the arrays into glEntry
                     for (int j = 0; j < acct_cr.size(); j++) {
-                      glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), setDateDB(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
+                      glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), setDateDB(effdate), bsParseDouble(cost.get(j).toString()), bsParseDouble(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
                     }
            }
             catch (SQLException s){
@@ -2171,7 +2171,7 @@ public class fglData {
                     res.close();
                     // process the arrays into glEntry
                     for (int j = 0; j < v_acct_cr.size(); j++) {
-                      glEntryXP(bscon, v_acct_cr.get(j).toString(), v_cc_cr.get(j).toString(), v_acct_dr.get(j).toString(), v_cc_dr.get(j).toString(), setDateDB(effdate), bsParseDoubleUS(v_cost.get(j).toString()), bsParseDoubleUS(v_cost.get(j).toString()), curr, basecurr, v_ref.get(j).toString(), v_site.get(j).toString(), v_type.get(j).toString(), v_desc.get(j).toString(), v_doc.get(j).toString());  
+                      glEntryXP(bscon, v_acct_cr.get(j).toString(), v_cc_cr.get(j).toString(), v_acct_dr.get(j).toString(), v_cc_dr.get(j).toString(), setDateDB(effdate), bsParseDouble(v_cost.get(j).toString()), bsParseDouble(v_cost.get(j).toString()), curr, basecurr, v_ref.get(j).toString(), v_site.get(j).toString(), v_type.get(j).toString(), v_desc.get(j).toString(), v_doc.get(j).toString());  
                     }
                     
            }
@@ -2256,7 +2256,7 @@ public class fglData {
                        
                     }
                      for (int j = 0; j < acct_cr.size(); j++) {
-                      glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), setDateDB(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(cost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
+                      glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), setDateDB(effdate), bsParseDouble(cost.get(j).toString()), bsParseDouble(cost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
                     }
                     
                     st.close();
@@ -2387,7 +2387,7 @@ public class fglData {
                     nres.close();
                   }  // for each rvd
                     for (int j = 0; j < acct_cr.size(); j++) {
-                      glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), setDateDB(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), currarray.get(j).toString(), basecurrarray.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
+                      glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), setDateDB(effdate), bsParseDouble(cost.get(j).toString()), bsParseDouble(basecost.get(j).toString()), currarray.get(j).toString(), basecurrarray.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
                     }
             
             st.close();
@@ -2638,8 +2638,8 @@ public class fglData {
                           double taxvalue = 0;
                           double basetaxvalue = 0;
                           for (String[] elements : taxelements) {
-                              taxvalue = totamt * ( bsParseDoubleUS(elements[1]) / 100 );
-                              basetaxvalue = basetotamt * ( bsParseDoubleUS(elements[1]) / 100 );
+                              taxvalue = totamt * ( bsParseDouble(elements[1]) / 100 );
+                              basetaxvalue = basetotamt * ( bsParseDouble(elements[1]) / 100 );
                            //   bsmf.MainFrame.show(taxvalue + "/" + basetaxvalue + "/" + totamt + "/" + basetotamt );
                           glEntryXP(bscon, defaultsalesacct, defaultsalescc, OVData.getDefaultTaxAcctByType(elements[2]), OVData.getDefaultTaxCCByType(elements[2]), setDateDB(effdate), taxvalue, basetaxvalue, curr, basecurr, thisref, thissite, thistype, "Tax: " + elements[2], gldoc);
                           }
@@ -2681,7 +2681,7 @@ public class fglData {
                    } // for each sac charge
                     
                 for (int j = 0; j < acct_cr.size(); j++) {
-                    glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), setDateDB(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
+                    glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), setDateDB(effdate), bsParseDouble(cost.get(j).toString()), bsParseDouble(basecost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
                 } 
             
             res.close();    
@@ -2922,7 +2922,7 @@ public class fglData {
                     if (tottax > 0) {
                       ArrayList<String[]> taxelements = OVData.getTaxPercentElementsApplicableByTaxCode(taxcode);
                           for (String[] elements : taxelements) {
-                          glEntry(OVData.getDefaultSalesAcct(), OVData.getDefaultSalesCC(), OVData.getDefaultTaxAcctByType(elements[2]), OVData.getDefaultTaxCCByType(elements[2]), setDateDB(effdate), ( totamt * ( bsParseDoubleUS(elements[1]) / 100 )), ( basetotamt * ( bsParseDoubleUS(elements[1]) / 100 )), curr, basecurr, thisref, thissite, thistype, "Tax: " + elements[2], gldoc);
+                          glEntry(OVData.getDefaultSalesAcct(), OVData.getDefaultSalesCC(), OVData.getDefaultTaxAcctByType(elements[2]), OVData.getDefaultTaxCCByType(elements[2]), setDateDB(effdate), ( totamt * ( bsParseDouble(elements[1]) / 100 )), ( basetotamt * ( bsParseDouble(elements[1]) / 100 )), curr, basecurr, thisref, thissite, thistype, "Tax: " + elements[2], gldoc);
                           }
                     }
                     
@@ -2949,7 +2949,7 @@ public class fglData {
                     
                     
                       for (int j = 0; j < acct_cr.size(); j++) {
-                      glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), setDateDB(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
+                      glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), setDateDB(effdate), bsParseDouble(cost.get(j).toString()), bsParseDouble(basecost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
                     }
                     
            }
@@ -3032,7 +3032,7 @@ public class fglData {
                     }
                     
                      for (int j = 0; j < acct_cr.size(); j++) {
-                      glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), setDateDB(effdate), bsParseDoubleUS(cost.get(j).toString()), bsParseDoubleUS(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
+                      glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), setDateDB(effdate), bsParseDouble(cost.get(j).toString()), bsParseDouble(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
                     }
                  
                     st.close();
@@ -5040,7 +5040,7 @@ return myarray;
 
         // now do glentry for all the reversed accounts in the arraylist..washing against the Retained Earnings account
          for (String[] a : accounts) {
-              fglData.glEntry(re_acct, cc, a[0], cc, date, bsParseDoubleUS(a[1]), bsParseDoubleUS(a[1]), curr, basecurr, "YearEndClose", site, "GL", "YearEndClose", gldoc);  
+              fglData.glEntry(re_acct, cc, a[0], cc, date, bsParseDouble(a[1]), bsParseDouble(a[1]), curr, basecurr, "YearEndClose", site, "GL", "YearEndClose", gldoc);  
          }
 
        // now post

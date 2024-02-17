@@ -67,7 +67,11 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.bsNumber;
+import static com.blueseer.utl.BlueSeerUtils.bsNumberToUS;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
+import static com.blueseer.utl.BlueSeerUtils.getDateDB;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.sql.Connection;
@@ -300,14 +304,14 @@ public class InvoiceBrowse extends javax.swing.JPanel {
                     totalsales = totalsales + (res.getDouble("shd_qty") * res.getDouble("shd_netprice"));
                     totalqty = totalqty + res.getDouble("shd_qty");
                    modeldetail.addRow(new Object[]{ 
-                      res.getString("shd_id"), 
+                      bsNumber(res.getString("shd_id")), 
                       res.getString("shd_item"),
                       res.getString("shd_custitem"),
                       res.getString("shd_so"),
                       res.getString("shd_soline"), 
                       res.getString("shd_po"),
-                      res.getString("shd_qty"),
-                      currformatDouble(res.getDouble("shd_netprice"))
+                      bsNumber(res.getString("shd_qty")),
+                      bsParseDouble(currformatDouble(res.getDouble("shd_netprice")))
                    });
                 }
                
@@ -773,14 +777,14 @@ public class InvoiceBrowse extends javax.swing.JPanel {
                          totopen = totopen + res.getDouble("ar_open_amt");
                          
                          mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, BlueSeerUtils.clickbasket, 
-                               res.getString("sh_id"),
+                                bsNumber(res.getString("sh_id")),
                                 res.getString("sh_site"),
                                 res.getString("sh_cust"),
-                                BlueSeerUtils.xNull(res.getString("sh_shipdate")),
-                                BlueSeerUtils.xNull(res.getString("sh_confdate")),
+                                getDateDB(res.getString("sh_shipdate")),
+                                getDateDB(res.getString("sh_confdate")),
                                 status,
-                                currformatDouble(res.getDouble("ar_amt")),
-                                currformatDouble(res.getDouble("ar_open_amt")),
+                                bsParseDouble(currformatDouble(res.getDouble("ar_amt"))),
+                                bsParseDouble(currformatDouble(res.getDouble("ar_open_amt"))),
                                 BlueSeerUtils.clickprint,
                                 BlueSeerUtils.clickmail
                             });
@@ -820,18 +824,18 @@ public class InvoiceBrowse extends javax.swing.JPanel {
         int row = tablereport.rowAtPoint(evt.getPoint());
         int col = tablereport.columnAtPoint(evt.getPoint());
         if ( col == 1) {
-                getdetail(tablereport.getValueAt(row, 2).toString());
+                getdetail(bsNumberToUS(tablereport.getValueAt(row, 2).toString()));
                 btdetail.setEnabled(true);
                 detailpanel.setVisible(true);
         }
         if ( col == 0) {
                 String mypanel = "InvoiceMaint";
                if (! checkperms(mypanel)) { return; }
-               String[] args = new String[]{tablereport.getValueAt(row, 2).toString()};
+               String[] args = new String[]{bsNumberToUS(tablereport.getValueAt(row, 2).toString())};
                reinitpanels(mypanel, true, args);
         }
         if (col == 10) {
-            OVData.printInvoice(tablereport.getValueAt(row, 2).toString(), true); 
+            OVData.printInvoice(bsNumberToUS(tablereport.getValueAt(row, 2).toString()), true); 
         }
         if (col == 11) {
             if (sending) {
@@ -842,7 +846,7 @@ public class InvoiceBrowse extends javax.swing.JPanel {
                // tablereport.setEnabled(false);
                 tablereport.getModel().setValueAt(BlueSeerUtils.clicklock,row,11);
                 sending = true; 
-                executeTask(tablereport.getValueAt(row, 2).toString(), row, tablereport.getValueAt(row, 3).toString());
+                executeTask(bsNumberToUS(tablereport.getValueAt(row, 2).toString()), row, bsNumberToUS(tablereport.getValueAt(row, 3).toString()));
             } else {
                 bsmf.MainFrame.show(x[1]);
             }

@@ -3149,7 +3149,7 @@ public class EDI {
         String[] custinfo = cusData.getCustInfo(e.ov_billto);
         String site = OVData.getDefaultSite();
         ordData.so_mstr so = new ordData.so_mstr(null, 
-                String.valueOf(sonbr),
+                sonbr,
                  e.ov_billto,
                  shipto,
                  site,
@@ -3184,7 +3184,7 @@ public class EDI {
                uom = e.getDetUOM(j);
            }
         ordData.sod_det sod = new ordData.sod_det(null, 
-                String.valueOf(sonbr),
+                sonbr,
                 j + 1,
                 e.getDetItem(j), 
                 e.getDetCustItem(j), 
@@ -3475,7 +3475,7 @@ public class EDI {
                }
        
         if (error)
-            OVData.updateOrderStatusError(String.valueOf(sonbr));
+            OVData.updateOrderStatusError(sonbr); 
         }
     
     }
@@ -3526,7 +3526,7 @@ public class EDI {
                }
        
         if (error)
-            OVData.updateOrderStatusError(String.valueOf(sonbr));
+            OVData.updateOrderStatusError(sonbr);
         }
     
     }
@@ -4045,7 +4045,7 @@ public class EDI {
      }
     
     
-    public static int Create940(String nbr)  {
+    public static int Create940(int nbr)  {
         int errorcode = 0;
        
         // errorcode = 0 ... clean exit
@@ -4080,7 +4080,7 @@ public class EDI {
         c_in[4] = "";
         c_in[5] = "";
         c_in[6] = "";
-        c_in[7] = nbr;
+        c_in[7] = String.valueOf(nbr);
         c_in[15] = "0"; // dir out
         c_in[12] = "0"; // is override
         
@@ -4111,7 +4111,7 @@ public class EDI {
                     String[] c_out = (String[])envelope;
                     
                     EDData.writeEDILog(c_out, "INFO", "Export"); 
-                    EDData.CreateFreightEDIRecs(c_in, nbr);
+                    EDData.CreateFreightEDIRecs(c_in, String.valueOf(nbr));
                     
 
                     } catch (IllegalAccessException | ClassNotFoundException |

@@ -68,7 +68,11 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.bsNumber;
+import static com.blueseer.utl.BlueSeerUtils.bsNumberToUS;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
+import static com.blueseer.utl.BlueSeerUtils.getDateDB;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.sql.Connection;
@@ -275,6 +279,7 @@ public class ShipperBrowse extends javax.swing.JPanel {
     
     public void getdetail(String shipper) {
       
+        bsmf.MainFrame.show(shipper);
          modeldetail.setNumRows(0);
          double totalsales = 0;
          double totalqty = 0;
@@ -298,14 +303,14 @@ public class ShipperBrowse extends javax.swing.JPanel {
                     totalsales = totalsales + (res.getDouble("shd_qty") * res.getDouble("shd_netprice"));
                     totalqty = totalqty + res.getDouble("shd_qty");
                    modeldetail.addRow(new Object[]{ 
-                      res.getString("shd_id"), 
+                      bsNumber(res.getString("shd_id")), 
                       res.getString("shd_item"),
                       res.getString("shd_custitem"),
                       res.getString("shd_so"),
                       res.getString("shd_soline"), 
                       res.getString("shd_po"),
-                      res.getString("shd_qty"),
-                      currformatDouble(res.getDouble("shd_netprice"))
+                      bsNumber(res.getString("shd_qty")),
+                      bsParseDouble(currformatDouble(res.getDouble("shd_netprice")))
                    });
                 }
                
@@ -792,13 +797,13 @@ public class ShipperBrowse extends javax.swing.JPanel {
                          totqty = totqty + res.getDouble("qty");
                          
                          mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, BlueSeerUtils.clickbasket, 
-                               res.getString("sh_id"),
+                                bsNumber(res.getString("sh_id")),
                                 res.getString("sh_cust"),
-                                BlueSeerUtils.xNull(res.getString("sh_shipdate")),
-                                BlueSeerUtils.xNull(res.getString("sh_confdate")),
+                                getDateDB(res.getString("sh_shipdate")),
+                                getDateDB(res.getString("sh_confdate")),
                                 status,
-                                res.getString("qty"),
-                                currformatDouble(res.getDouble("price"))
+                                bsNumber(res.getString("qty")),
+                                bsParseDouble(currformatDouble(res.getDouble("price")))
                             });
                                 
                        }
@@ -836,18 +841,18 @@ public class ShipperBrowse extends javax.swing.JPanel {
         int row = tablereport.rowAtPoint(evt.getPoint());
         int col = tablereport.columnAtPoint(evt.getPoint());
         if ( col == 1) {
-                getdetail(tablereport.getValueAt(row, 2).toString());
+                getdetail(bsNumberToUS(tablereport.getValueAt(row, 2).toString()));
                 btdetail.setEnabled(true);
                 detailpanel.setVisible(true);
         }
         if ( col == 0) {
                 String mypanel = "ShipMaint";
                if (! checkperms(mypanel)) { return; }
-               String[] args = new String[]{tablereport.getValueAt(row, 2).toString()};
+               String[] args = new String[]{bsNumberToUS(tablereport.getValueAt(row, 2).toString())};
                reinitpanels(mypanel, true, args);
         }
         if (col == 10) {
-            OVData.printInvoice(tablereport.getValueAt(row, 2).toString(), true); 
+            OVData.printInvoice(bsNumberToUS(tablereport.getValueAt(row, 2).toString()), true); 
         }
         if (col == 11) {
             if (sending) {

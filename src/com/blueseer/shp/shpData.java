@@ -46,7 +46,7 @@ import static com.blueseer.fgl.fglData.glEntryXP;
 import com.blueseer.ord.ordData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
-import static com.blueseer.utl.BlueSeerUtils.bsParseDoubleUS;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDoubleUS;
@@ -1938,15 +1938,15 @@ public class shpData {
                  // sac order of elements...sos_nbr, sos_desc, sos_type, sos_amttype, sos_amt
                  for (String[] s : sac) {
                  myamttype = s[3].toString();
-                 myamt = bsParseDoubleUS(s[4].toString());
+                 myamt = bsParseDouble(s[4].toString());
 
                  // adjust if percent based
-                 if (s[3].toString().equals("percent") && bsParseDoubleUS(s[4].toString()) > 0) {
+                 if (s[3].toString().equals("percent") && bsParseDouble(s[4].toString()) > 0) {
                    myamttype = "amount";
                    if (s[2].equals("discount")) {
-                     myamt = -1 * (bsParseDoubleUS(s[4].toString()) / 100) * totamt;
+                     myamt = -1 * (bsParseDouble(s[4].toString()) / 100) * totamt;
                    } else {
-                     myamt = (bsParseDoubleUS(s[4].toString()) / 100) * totamt;  
+                     myamt = (bsParseDouble(s[4].toString()) / 100) * totamt;  
                    }
                  }    
                  st.executeUpdate(" insert into shs_det (shs_nbr, shs_so, shs_desc, shs_type, shs_amttype, shs_amt ) " +
