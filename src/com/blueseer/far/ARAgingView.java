@@ -39,8 +39,11 @@ import static bsmf.MainFrame.user;
 import com.blueseer.ctr.cusData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsNumber;
+import static com.blueseer.utl.BlueSeerUtils.bsNumberToUS;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
+import static com.blueseer.utl.BlueSeerUtils.getDateDB;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
@@ -382,16 +385,16 @@ public class ARAgingView extends javax.swing.JPanel {
                     i++;
                         modeldetail.addRow(new Object[]{
                             BlueSeerUtils.clickflag,
-                            res.getString("ar_nbr"),
+                            bsNumber(res.getString("ar_nbr")),
                             res.getString("ar_rmks"),
                             res.getString("ar_type"),
-                            res.getString("ar_effdate"),
-                            res.getString("ar_duedate"),
-                            currformatDouble(res.getDouble("0")),
-                            currformatDouble(res.getDouble("30")),
-                            currformatDouble(res.getDouble("60")),
-                            currformatDouble(res.getDouble("90")),
-                            currformatDouble(res.getDouble("90p"))
+                            getDateDB(res.getString("ar_effdate")),
+                            getDateDB(res.getString("ar_duedate")),
+                            bsParseDouble(currformatDouble(res.getDouble("0"))),
+                            bsParseDouble(currformatDouble(res.getDouble("30"))),
+                            bsParseDouble(currformatDouble(res.getDouble("60"))),
+                            bsParseDouble(currformatDouble(res.getDouble("90"))),
+                            bsParseDouble(currformatDouble(res.getDouble("90p")))
                             });
                    }
                 
@@ -464,12 +467,12 @@ public class ARAgingView extends javax.swing.JPanel {
                         modelpayment.addRow(new Object[]{
                             res.getString("ar_nbr"),
                             res.getString("ard_ref"),
-                            res.getString("ar_effdate"),
-                            res.getString("b.ar_duedate"),
+                            getDateDB(res.getString("ar_effdate")),
+                            getDateDB(res.getString("b.ar_duedate")),
                             res.getString("ar_type"),
                             res.getString("ar_ref"),
-                            res.getDouble("ard_amt"),
-                            res.getDouble("ar_amt")
+                            bsParseDouble(currformatDouble(res.getDouble("ard_amt"))),
+                            bsParseDouble(currformatDouble(res.getDouble("ar_amt")))
                             });
                    }
                
@@ -970,11 +973,11 @@ try {
                             BlueSeerUtils.clickbasket,
                             res.getString("ar_cust"),
                             custname,
-                            currformatDouble(res.getDouble("0")),
-                            currformatDouble(res.getDouble("30")),
-                            currformatDouble(res.getDouble("60")),
-                            currformatDouble(res.getDouble("90")),
-                            currformatDouble(res.getDouble("90p"))
+                            bsParseDouble(currformatDouble(res.getDouble("0"))),
+                            bsParseDouble(currformatDouble(res.getDouble("30"))),
+                            bsParseDouble(currformatDouble(res.getDouble("60"))),
+                            bsParseDouble(currformatDouble(res.getDouble("90"))),
+                            bsParseDouble(currformatDouble(res.getDouble("90p")))
                             });
                 }
                  
@@ -1202,7 +1205,7 @@ try {
         int col = tabledetail.columnAtPoint(evt.getPoint());
            if ( col == 0) {     
                if (! checkperms("InvoiceMaint")) { return; }
-               String[] args = new String[]{tabledetail.getValueAt(row, 1).toString()};
+               String[] args = new String[]{bsNumberToUS(tabledetail.getValueAt(row, 1).toString())};
                reinitpanels("InvoiceMaint", true, args);
            }
     }//GEN-LAST:event_tabledetailMouseClicked

@@ -45,6 +45,7 @@ import static com.blueseer.inv.invData.updateItemMstr;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDoubleZ;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatInt;
+import static com.blueseer.utl.BlueSeerUtils.bsNumber;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.bsformat;
@@ -64,6 +65,7 @@ import static com.blueseer.utl.BlueSeerUtils.ludialog;
 import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormat;
 import com.blueseer.utl.DTData;
@@ -487,7 +489,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
         tbkey.setEditable(true);
         tbkey.setForeground(Color.blue);
         if (! x.isEmpty()) {
-          tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
+          tbkey.setText(bsNumber(OVData.getNextNbr(x)));  
           tbkey.setEditable(false);
         } 
         tbkey.requestFocus();
@@ -780,7 +782,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
         ddtype.setSelectedItem(x.it_type());
         comments.setText(x.it_comments());
         tbdrawing.setText(x.it_drawing());
-        tbcreatedate.setText(x.it_createdate());
+        tbcreatedate.setText(getDateDB(x.it_createdate()));
         ddwh.setSelectedItem(x.it_wh());
         ddloc.setSelectedItem(x.it_loc());
         ddrouting.setSelectedItem(x.it_wf());
