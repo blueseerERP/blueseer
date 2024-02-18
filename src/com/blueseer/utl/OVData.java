@@ -16303,7 +16303,7 @@ return mystring;
                  String ship_csz = "";
                  int linecount = 0;
                 res = st.executeQuery("select shd_line from ship_det " +
-                        " where shd_id = " + "'" + invoice + "'" + ";"); 
+                        " where shd_id = " + "'" + bsParseInt(invoice) + "'" + ";"); 
                 while (res.next()) {
                     linecount++;
                 }
@@ -16317,7 +16317,7 @@ return mystring;
                         " inner join cm_mstr on cm_code = sh_cust " +
                         " left outer join cms_det on cms_code = sh_cust and cms_shipto = sh_ship " +
                         " inner join site_mstr on site_site = sh_site " +
-                        " where sh_id = " + "'" + invoice + "'" + ";");
+                        " where sh_id = " + "'" + bsParseInt(invoice) + "'" + ";");
                        while (res.next()) {
                           cust = res.getString(("sh_cust"));
                           site = res.getString(("sh_site"));
