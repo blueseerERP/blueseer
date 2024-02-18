@@ -1358,7 +1358,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                              String.valueOf(shipperid), 
                               ddcust.getSelectedItem().toString(),
                               ddship.getSelectedItem().toString(),
-                              tbkey.getText(),
+                              bsNumberToUS(tbkey.getText()),
                               ponbr.getText().replace("'", ""),  // po
                               ponbr.getText().replace("'", ""),  // ref
                               setDateDB(duedate.getDate()),

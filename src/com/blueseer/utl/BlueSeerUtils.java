@@ -1691,7 +1691,14 @@ public class BlueSeerUtils {
     }
 }
 
-    
+     public static String getGlobalTag(String key) {
+         String tag = "";
+          if (tags != null && tags.containsKey(key)) {
+            tag = tags.getString(key);
+          }
+         return tag;
+     }
+         
      public static String getGlobalProgTag(String key) {
          String tag = "";
           if (tags != null && tags.containsKey("global.prog." + key)) {

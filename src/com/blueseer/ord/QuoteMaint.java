@@ -88,6 +88,7 @@ import static com.blueseer.ord.ordData.updateQuoteTransaction;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatInt;
 import static com.blueseer.utl.BlueSeerUtils.bsNumber;
+import static com.blueseer.utl.BlueSeerUtils.bsNumberToUS;
 import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.callChangeDialog;
 import static com.blueseer.utl.BlueSeerUtils.clog;
@@ -95,6 +96,7 @@ import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.logChange;
+import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormatNull;
 import static com.blueseer.utl.OVData.addCustPriceList;
@@ -524,7 +526,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbkey.setEditable(true);
         tbkey.setForeground(Color.blue);
         if (! x.isEmpty()) {
-          tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
+          tbkey.setText(bsNumber(OVData.getNextNbr(x)));  
           tbkey.setEditable(false);
         } 
         tbkey.requestFocus();
@@ -713,7 +715,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
     public quo_mstr createRecord() {
         java.util.Date now = new java.util.Date();
         quo_mstr x = new quo_mstr(null, 
-                tbkey.getText(), 
+                bsNumberToUS(tbkey.getText()), 
                 ddcust.getSelectedItem().toString(),
                 "", // ship
                 ddsite.getSelectedItem().toString(),
@@ -740,7 +742,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         ArrayList<quo_det> list = new ArrayList<quo_det>();
          for (int j = 0; j < detailtable.getRowCount(); j++) {
              quo_det x = new quo_det(null, 
-                detailtable.getValueAt(j, 0).toString(), // key
+                bsNumberToUS(detailtable.getValueAt(j, 0).toString()), // key
                 bsParseInt(detailtable.getValueAt(j, 1).toString()), // line
                 detailtable.getValueAt(j, 2).toString(), // item
                 BlueSeerUtils.boolToString(OVData.isValidItem(detailtable.getValueAt(j, 2).toString())), // isinventory
@@ -760,7 +762,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
     public ArrayList<quo_sac> createSACRecord() {
          ArrayList<quo_sac> list = new ArrayList<quo_sac>();
          for (int j = 0; j < sactable.getRowCount(); j++) {
-             quo_sac x = new quo_sac(null, tbkey.getText().toString(),
+             quo_sac x = new quo_sac(null, bsNumberToUS(tbkey.getText()),
                 sactable.getValueAt(j, 1).toString(),
                 sactable.getValueAt(j, 0).toString(),
                 sactable.getValueAt(j, 2).toString(),
@@ -787,7 +789,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                  setDateDB(now), // order date
                  setDateDB(now), // create date
                  bsmf.MainFrame.userid,
-                 "hold", // status
+                 getGlobalProgTag("hold"), // status
                  "",   // order level allocation status c,p 
                  ddterms.getSelectedItem().toString(),
                  cusData.getCustSalesAcct(ddcust.getSelectedItem().toString()),
@@ -986,15 +988,15 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     public void updateForm() throws ParseException {
         isLoad = true;
-        tbkey.setText(x.quo_nbr());
+        tbkey.setText(bsNumber(x.quo_nbr()));
         ddcust.setSelectedItem(x.quo_cust());
         ddsite.setSelectedItem(x.quo_site());
         ddstatus.setSelectedItem(x.quo_status());
         ddquotetype.setSelectedItem(x.quo_type());
         ddpricegroup.setSelectedItem(x.quo_groupcode());
         dddisccode.setSelectedItem(x.quo_disccode());
-        dcquoteexpire.setDate(BlueSeerUtils.parseDate(x.quo_expire()));
-        dcpricingexpire.setDate(BlueSeerUtils.parseDate(x.quo_priceexpire()));
+        dcquoteexpire.setDate(parseDate(x.quo_expire()));
+        dcpricingexpire.setDate(parseDate(x.quo_priceexpire()));
         ddtaxcode.setSelectedItem(x.quo_taxcode());
         ddterms.setSelectedItem(x.quo_terms());
         ddcurr.setSelectedItem(x.quo_curr());
@@ -1012,7 +1014,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                       bsFormatInt(quod.quod_line()), 
                       quod.quod_item(),
                       quod.quod_desc(),
-                      bsFormatDouble(quod.quod_qty()),
+                      bsNumber(quod.quod_qty()),
                       bsFormatDouble(quod.quod_listprice()),
                       bsFormatDouble(quod.quod_disc()),
                       bsFormatDouble(quod.quod_netprice()),
@@ -1464,6 +1466,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         btprintquote.setText("Print Quote");
+        btprintquote.setName("btprint"); // NOI18N
         btprintquote.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btprintquoteActionPerformed(evt);

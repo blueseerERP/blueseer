@@ -69,9 +69,15 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.bsNumber;
+import static com.blueseer.utl.BlueSeerUtils.bsNumberToUS;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
+import static com.blueseer.utl.BlueSeerUtils.getDateDB;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.sql.Connection;
@@ -822,9 +828,7 @@ try {
             ResultSet res = null;
             try {
 
-                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                String fromdate = "";
-                String todate = "";
+               
                mymodel.setNumRows(0);
                  
               
@@ -847,27 +851,12 @@ try {
                      tc.setCellRenderer(new ServiceOrderBrowse.SomeRenderer());
                  }   
                
-                
-             
-                 if (dcfrom.getDate() == null) {
-                     fromdate = bsmf.MainFrame.lowdate;
-                 } else {
-                     fromdate = dfdate.format(dcfrom.getDate());
-                 }
-                 if (dcto.getDate() == null) {
-                     todate = bsmf.MainFrame.hidate;
-                 } else {
-                    todate = dfdate.format(dcto.getDate()); 
-                 }
-                  
-                 
-                
                       
                   // now lets get the pos_mstr records    
                   res = st.executeQuery("select sv_nbr, sv_cust, sv_ship, sv_type, sv_status, sv_create_date, sv_due_date, sv_issched, sum(svd_qty * svd_netprice) as 'price' from sv_mstr " +
                         " inner join svd_det on svd_nbr = sv_nbr " +
-                        " where sv_create_date >= " + "'" + fromdate + "'" + 
-                        " and sv_create_date <= " + "'" + todate + "'" +
+                        " where sv_create_date >= " + "'" + setDateDB(dcfrom.getDate()) + "'" + 
+                        " and sv_create_date <= " + "'" + setDateDB(dcto.getDate()) + "'" +
                         " group by sv_nbr, sv_cust, sv_ship, sv_type, sv_status, sv_create_date, sv_due_date, sv_issched " +
                         " order by sv_nbr desc;");
                 
@@ -880,21 +869,21 @@ try {
                          
                          
                                                  
-                         if (trantype.equals("order") && ! status.equals("void")) {
+                         if (trantype.equals("order") && ! status.equals(getGlobalProgTag("void"))) {
                              totsales = totsales + res.getDouble("price");
                          }
-                         if (trantype.equals("quote") && ! status.equals("void")) {
+                         if (trantype.equals("quote") && ! status.equals(getGlobalProgTag("void"))) {
                              totquotes = totquotes + res.getDouble("price");
                          }
                          mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, BlueSeerUtils.clickbasket, 
-                               res.getString("sv_nbr"),
+                               bsNumber(res.getString("sv_nbr")),
                                 res.getString("sv_cust"),
                                 res.getString("sv_ship"),
                                 res.getString("sv_type"),
                                 res.getString("sv_status"),
-                                res.getString("sv_create_date"),
-                                res.getString("sv_due_date"),
-                                currformatDouble(res.getDouble("price")),
+                                getDateDB(res.getString("sv_create_date")),
+                                getDateDB(res.getString("sv_due_date")),
+                                bsParseDouble(currformatDouble(res.getDouble("price"))),
                                 BlueSeerUtils.clickprint 
                             });
                        }
@@ -934,10 +923,10 @@ try {
         int row = tablereport.rowAtPoint(evt.getPoint());
         int col = tablereport.columnAtPoint(evt.getPoint());
         if (col == 0) {
-            reinitpanels("ServiceOrderMaint", true, new String[]{tablereport.getValueAt(row, 2).toString()});
+            reinitpanels("ServiceOrderMaint", true, new String[]{bsNumberToUS(tablereport.getValueAt(row, 2).toString())});
         }
         if ( col == 1) {
-                getdetail(tablereport.getValueAt(row, 2).toString());
+                getdetail(bsNumberToUS(tablereport.getValueAt(row, 2).toString()));
                 btdetail.setEnabled(true);
                 detailpanel.setVisible(true);
         }

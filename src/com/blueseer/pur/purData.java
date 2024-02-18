@@ -39,6 +39,7 @@ import static bsmf.MainFrame.user;
 import com.blueseer.fap.fapData.vod_mstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -1842,7 +1843,7 @@ public class purData {
             
             res = st.executeQuery("SELECT  sum(pod_netprice * pod_ord_qty) as mytotal  " +
                                     " FROM  pod_mstr  " +
-                                    " where pod_nbr = " + "'" + nbr + "'" +       
+                                    " where pod_nbr = " + "'" + bsParseInt(nbr) + "'" +       
                                     ";");
                 while (res.next()) {
                     ordertotal += res.getDouble("mytotal");

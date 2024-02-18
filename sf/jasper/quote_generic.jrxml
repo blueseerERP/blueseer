@@ -40,7 +40,7 @@ inner join cm_mstr on cm_code =quo_cust
 left outer join cms_det on cms_code = quo_cust and cms_shipto = quo_ship 
 inner join site_mstr on site_site =quo_site where quod_nbr =  $P{myid}]]>
 	</queryString>
-	<field name="quo_nbr" class="java.lang.String"/>
+	<field name="quo_nbr" class="java.lang.Integer"/>
 	<field name="quod_nbr" class="java.lang.String"/>
 	<field name="quo_curr" class="java.lang.String"/>
 	<field name="quod_desc" class="java.lang.String"/>
@@ -98,7 +98,7 @@ inner join site_mstr on site_site =quo_site where quod_nbr =  $P{myid}]]>
 			</image>
 			<image>
 				<reportElement x="389" y="2" width="100" height="42" uuid="3182d172-4323-47ed-b8bb-b2f9b3f2b8cd"/>
-				<imageExpression><![CDATA[new net.sf.jasperreports.components.barbecue.BarbecueRenderer(net.sourceforge.barbecue.BarcodeFactory.createCode39($F{quod_nbr}, false))]]></imageExpression>
+				<imageExpression><![CDATA[new net.sf.jasperreports.components.barbecue.BarbecueRenderer(net.sourceforge.barbecue.BarcodeFactory.createCode39(String.valueOf($F{quod_nbr}), false))]]></imageExpression>
 			</image>
 			<textField>
 				<reportElement x="290" y="-60" width="277" height="36" uuid="a7cde1bb-1086-48a2-9028-a66a015392fc"/>
@@ -168,7 +168,7 @@ inner join site_mstr on site_site =quo_site where quod_nbr =  $P{myid}]]>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$R{jasper.quote.lblorder}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="###0.#####">
 				<reportElement x="489" y="20" width="76" height="19" uuid="b3942233-34d2-4d95-9aa0-5a057f00fcbe"/>
 				<textFieldExpression><![CDATA[$F{quo_nbr}]]></textFieldExpression>
 			</textField>

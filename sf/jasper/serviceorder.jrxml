@@ -35,7 +35,7 @@ inner join cm_mstr on cm_code = sv_cust
 left outer join cms_det on cms_code = sv_cust and cms_shipto = sv_ship 
 inner join site_mstr on site_site = sv_site where svd_nbr =  $P{myid}]]>
 	</queryString>
-	<field name="sv_nbr" class="java.lang.String">
+	<field name="sv_nbr" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.label" value="sv_nbr"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="sv_mstr"/>
 	</field>
@@ -123,7 +123,7 @@ inner join site_mstr on site_site = sv_site where svd_nbr =  $P{myid}]]>
 			</image>
 			<image>
 				<reportElement x="389" y="2" width="100" height="42" uuid="3182d172-4323-47ed-b8bb-b2f9b3f2b8cd"/>
-				<imageExpression><![CDATA[new net.sf.jasperreports.components.barbecue.BarbecueRenderer(net.sourceforge.barbecue.BarcodeFactory.createCode39($F{svd_nbr}, false))]]></imageExpression>
+				<imageExpression><![CDATA[new net.sf.jasperreports.components.barbecue.BarbecueRenderer(net.sourceforge.barbecue.BarcodeFactory.createCode39(String.valueOf($F{svd_nbr}), false))]]></imageExpression>
 			</image>
 			<textField>
 				<reportElement x="192" y="0" width="152" height="15" uuid="9f662613-b949-47dc-bcb7-81404d37bb2f"/>
@@ -214,7 +214,7 @@ inner join site_mstr on site_site = sv_site where svd_nbr =  $P{myid}]]>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$R{jasper.srvorder.lblorder}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="###0.#####">
 				<reportElement x="489" y="20" width="76" height="19" uuid="b3942233-34d2-4d95-9aa0-5a057f00fcbe"/>
 				<textFieldExpression><![CDATA[$F{sv_nbr}]]></textFieldExpression>
 			</textField>

@@ -1090,18 +1090,18 @@ public class ordData {
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.svd_nbr);
-          ps.setString(2, x.svd_line);
+          ps.setInt(2, x.svd_line);
           res = ps.executeQuery();
           ps = con.prepareStatement(sqlInsert);  
             if (! res.isBeforeFirst()) {
-            ps.setString(1, x.svd_line);
+            ps.setInt(1, x.svd_line);
             ps.setString(2, x.svd_item);
             ps.setString(3, x.svd_type);
             ps.setString(4, x.svd_desc);
             ps.setString(5, x.svd_nbr);
-            ps.setString(6, x.svd_qty);
+            ps.setDouble(6, x.svd_qty);
             ps.setString(7, x.svd_uom);
-            ps.setString(8, x.svd_netprice);
+            ps.setDouble(8, x.svd_netprice);
             rows = ps.executeUpdate();
             } 
             return rows;
@@ -1234,27 +1234,27 @@ public class ordData {
                         + " values (?,?,?,?,?,?,?,?); ";  
         ps = con.prepareStatement(sqlSelect); 
         ps.setString(1, x.svd_nbr);
-        ps.setString(2, x.svd_line);
+        ps.setInt(2, x.svd_line);
         res = ps.executeQuery();
         if (! res.isBeforeFirst()) {  // insert
 	ps = con.prepareStatement(sqlInsert) ;
-            ps.setString(1, x.svd_line);
+            ps.setInt(1, x.svd_line);
             ps.setString(2, x.svd_item);
             ps.setString(3, x.svd_type);
             ps.setString(4, x.svd_desc);
             ps.setString(5, x.svd_nbr);
-            ps.setString(6, x.svd_qty);
+            ps.setDouble(6, x.svd_qty);
             ps.setString(7, x.svd_uom);
-            ps.setString(8, x.svd_netprice);
+            ps.setDouble(8, x.svd_netprice);
             rows = ps.executeUpdate();
         } else {    // update
         ps = con.prepareStatement(sqlUpdate) ;
             ps.setString(5, x.svd_nbr);
-            ps.setString(6, x.svd_line);
+            ps.setInt(6, x.svd_line);
             ps.setString(1, x.svd_item);
-            ps.setString(2, x.svd_qty);
+            ps.setDouble(2, x.svd_qty);
             ps.setString(3, x.svd_uom);
-            ps.setString(4, x.svd_netprice);
+            ps.setDouble(4, x.svd_netprice);
             rows = ps.executeUpdate();
         }
             
@@ -1984,7 +1984,7 @@ public class ordData {
         String sql = "select * from quo_mstr where quo_nbr = ? ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
-        ps.setString(1, x[0]);
+        ps.setInt(1, bsParseInt(x[0]));
              try (ResultSet res = ps.executeQuery();) {
                 if (! res.isBeforeFirst()) {
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
@@ -2031,7 +2031,7 @@ public class ordData {
         String sql = "select * from quo_det where quod_nbr = ? order by quod_line ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
-        ps.setString(1, code);
+        ps.setInt(1, bsParseInt(code));
              try (ResultSet res = ps.executeQuery();) {
                 if (! res.isBeforeFirst()) {
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
@@ -2070,7 +2070,7 @@ public class ordData {
         String sql = "select * from quo_sac where quos_nbr = ? ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
-        ps.setString(1, code);
+        ps.setInt(1, bsParseInt(code));
              try (ResultSet res = ps.executeQuery();) {
                 if (! res.isBeforeFirst()) {
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
@@ -2869,16 +2869,16 @@ public class ordData {
         }
     }
     
-    public record svd_det(String[] m, String svd_nbr, String svd_line, String svd_uom, 
+    public record svd_det(String[] m, String svd_nbr, int svd_line, String svd_uom, 
         String svd_item, String svd_desc, String svd_type, String svd_custitem, 
-        String svd_qty, String svd_completed_hrs, String svd_po,  String svd_ord_date, 
+        double svd_qty, double svd_completed_hrs, String svd_po,  String svd_ord_date, 
         String svd_due_date, String svd_create_date, String svd_char1, String svd_char2, String svd_char3,
-        String svd_status, String svd_listprice, String svd_netprice, String svd_disc,  
-        String svd_taxamt, String svd_taxcode, String svd_site) {
+        String svd_status, double svd_listprice, double svd_netprice, double svd_disc,  
+        double svd_taxamt, String svd_taxcode, String svd_site) {
         public svd_det(String[] m) {
-            this (m, "", "", "", "", "", "", "", "", "", "",
-                    "", "", "", "", "", "", "", "", "", "",
-                    "", "", "");
+            this (m, "", 0, "", "", "", "", "", 0, 0, "",
+                    "", "", "", "", "", "", "", 0, 0, 0,
+                    0, "", "");
         }
     }
     

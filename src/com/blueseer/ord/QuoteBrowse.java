@@ -71,7 +71,11 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDoubleZ;
+import static com.blueseer.utl.BlueSeerUtils.bsNumber;
+import static com.blueseer.utl.BlueSeerUtils.bsNumberToUS;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
+import static com.blueseer.utl.BlueSeerUtils.getDateDB;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -795,13 +799,13 @@ public class QuoteBrowse extends javax.swing.JPanel {
                          totqty = totqty + res.getDouble("qty");
                          
                          mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, BlueSeerUtils.clickbasket, 
-                               res.getString("quo_nbr"),
+                               bsNumber(res.getString("quo_nbr")),
                                 res.getString("quo_cust"),
-                                setDateFormat(parseDate(res.getString("quo_date"))),
-                                setDateFormat(parseDate(res.getString("quo_expire"))),
+                                getDateDB(res.getString("quo_date")),
+                                getDateDB(res.getString("quo_expire")),
                                 res.getString("quo_status"),
-                                bsFormatDoubleZ(res.getDouble("qty")),
-                                bsFormatDouble(res.getDouble("price"))
+                                bsNumber(res.getDouble("qty")),
+                                bsParseDouble(currformatDouble(res.getDouble("price")))
                             });
                                 
                        }
@@ -839,14 +843,14 @@ public class QuoteBrowse extends javax.swing.JPanel {
         int row = tablereport.rowAtPoint(evt.getPoint());
         int col = tablereport.columnAtPoint(evt.getPoint());
         if ( col == 1) {
-                getdetail(tablereport.getValueAt(row, 2).toString());
+                getdetail(bsNumberToUS(tablereport.getValueAt(row, 2).toString()));
                 btdetail.setEnabled(true);
                 detailpanel.setVisible(true);
         }
         if ( col == 0) {
                 String mypanel = "QuoteMaint";
                if (! checkperms(mypanel)) { return; }
-               String[] args = new String[]{tablereport.getValueAt(row, 2).toString()};
+               String[] args = new String[]{bsNumberToUS(tablereport.getValueAt(row, 2).toString())};
                reinitpanels(mypanel, true, args);
         }
         if (col == 10) {

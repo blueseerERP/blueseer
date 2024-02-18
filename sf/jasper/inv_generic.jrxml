@@ -46,7 +46,7 @@ left outer join cms_det on cms_code = sh_cust and cms_shipto = sh_ship
 inner join site_mstr on site_site = sh_site 
 where shd_id =  $P{myid}]]>
 	</queryString>
-	<field name="shd_id" class="java.lang.String"/>
+	<field name="shd_id" class="java.lang.Integer"/>
 	<field name="sh_curr" class="java.lang.String"/>
 	<field name="it_desc" class="java.lang.String"/>
 	<field name="charges" class="java.lang.Double"/>
@@ -114,7 +114,7 @@ where shd_id =  $P{myid}]]>
 			</image>
 			<image>
 				<reportElement x="389" y="2" width="100" height="42" uuid="3182d172-4323-47ed-b8bb-b2f9b3f2b8cd"/>
-				<imageExpression><![CDATA[new net.sf.jasperreports.components.barbecue.BarbecueRenderer(net.sourceforge.barbecue.BarcodeFactory.createCode39($F{shd_id}, false))]]></imageExpression>
+				<imageExpression><![CDATA[new net.sf.jasperreports.components.barbecue.BarbecueRenderer(net.sourceforge.barbecue.BarcodeFactory.createCode39(String.valueOf($F{shd_id}), false))]]></imageExpression>
 			</image>
 			<textField>
 				<reportElement x="367" y="-36" width="198" height="36" uuid="df5bfe61-737c-4048-8921-aa870ee0c843"/>
@@ -203,7 +203,7 @@ where shd_id =  $P{myid}]]>
 				<textElement textAlignment="Left"/>
 				<textFieldExpression><![CDATA[$R{jasper.invoice.lblinvoicenbr}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="###0.#####">
 				<reportElement x="489" y="20" width="76" height="19" uuid="b3942233-34d2-4d95-9aa0-5a057f00fcbe"/>
 				<textFieldExpression><![CDATA[$F{shd_id}]]></textFieldExpression>
 			</textField>

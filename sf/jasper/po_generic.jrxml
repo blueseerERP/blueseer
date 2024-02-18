@@ -38,7 +38,7 @@ inner join po_mstr on po_nbr = pod_nbr
 inner join vd_mstr on vd_addr = po_vend 
 inner join site_mstr on site_site = po_site where pod_nbr =  $P{myid};]]>
 	</queryString>
-	<field name="po_nbr" class="java.lang.String">
+	<field name="po_nbr" class="java.lang.Integer">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="it_desc" class="java.lang.String">
@@ -118,7 +118,7 @@ inner join site_mstr on site_site = po_site where pod_nbr =  $P{myid};]]>
 			</image>
 			<image>
 				<reportElement x="209" y="42" width="100" height="31" uuid="3182d172-4323-47ed-b8bb-b2f9b3f2b8cd"/>
-				<imageExpression><![CDATA[new net.sf.jasperreports.components.barbecue.BarbecueRenderer(net.sourceforge.barbecue.BarcodeFactory.createCode39($F{po_nbr}, false))]]></imageExpression>
+				<imageExpression><![CDATA[new net.sf.jasperreports.components.barbecue.BarbecueRenderer(net.sourceforge.barbecue.BarcodeFactory.createCode39(String.valueOf($F{po_nbr}), false))]]></imageExpression>
 			</image>
 			<textField>
 				<reportElement x="312" y="0" width="243" height="36" uuid="975f85f9-9b7e-4ca4-8d30-6b26f0d0375a"/>
@@ -225,7 +225,7 @@ inner join site_mstr on site_site = po_site where pod_nbr =  $P{myid};]]>
 				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$R{jasper.po.lblponbr}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField pattern="###0.#####">
 				<reportElement x="489" y="20" width="66" height="19" uuid="b3942233-34d2-4d95-9aa0-5a057f00fcbe"/>
 				<textFieldExpression><![CDATA[$F{po_nbr}]]></textFieldExpression>
 			</textField>
