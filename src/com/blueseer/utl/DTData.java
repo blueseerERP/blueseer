@@ -33,7 +33,9 @@ import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.bsNumber;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
+import static com.blueseer.utl.BlueSeerUtils.getDateDB;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import java.sql.DriverManager;
@@ -4109,12 +4111,13 @@ public class DTData {
                         " order by so_nbr desc ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("so_nbr"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, 
+                                   bsNumber(res.getString("so_nbr")),
                                    res.getString("so_cust"),
                                    res.getString("so_ship"),
                                    res.getString("so_po"),
-                                   res.getString("so_ord_date"),
-                                   res.getString("so_due_date"),
+                                   getDateDB(res.getString("so_ord_date")),
+                                   getDateDB(res.getString("so_due_date")),
                                    res.getString("so_status")
                         });
                     }
