@@ -64,8 +64,10 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.bsNumber;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
+import static com.blueseer.utl.BlueSeerUtils.getDateDB;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.getTitleTag;
@@ -529,13 +531,13 @@ public class ExpenseBrowse extends javax.swing.JPanel {
                                
                     while (res.next()) {
                         mymodel.addRow(new Object[] {
-                            res.getString("ap_nbr"),
+                            bsNumber(res.getString("ap_nbr")),
                             res.getString("ap_vend"),
                             res.getString("vd_name"),
                             res.getString("ap_ref"),
                             res.getString("ap_type"),
-                            res.getString("ap_effdate"),
-                            BlueSeerUtils.currformat(res.getString("ap_amt")),
+                            getDateDB(res.getString("ap_effdate")),
+                            bsParseDouble(currformatDouble(res.getDouble("ap_amt"))),
                             res.getString("vod_item"),
                             res.getString("ap_status"),
                             res.getString("ap_curr"),
