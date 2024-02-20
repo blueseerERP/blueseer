@@ -42,6 +42,7 @@ import static com.blueseer.edi.ediData.getAPIDet;
 import static com.blueseer.edi.ediData.getAPIMethodsList;
 import static com.blueseer.edi.ediData.getAPIMstr;
 import static com.blueseer.edi.ediData.isAPIMethodUnique;
+import static com.blueseer.edi.ediData.updateAPIDetTransaction;
 import static com.blueseer.edi.ediData.updateAPITransaction;
 import static com.blueseer.utl.BlueSeerUtils.ConvertBoolToYesNo;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
@@ -1796,6 +1797,8 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             bsmf.MainFrame.show(getMessageTag(1095));
             return;
         }
+        
+        
         for (int i : rows) {
             tabledetail.getModel().setValueAt(tbmethod.getText(), i, 0);
             tabledetail.getModel().setValueAt(ddverb.getSelectedItem().toString(), i, 1);
@@ -1806,6 +1809,10 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             tabledetail.getModel().setValueAt(tbdestdir.getText(), i, 6);
             tabledetail.getModel().setValueAt(ConvertBoolToYesNo(cbenabled.isSelected()), i, 7);
         }
+        
+        updateAPIDetTransaction(tbkey.getText(), createAPIDMetaRecord(), createDetRecord());
+        
+        setURL();
     }//GEN-LAST:event_btupdatedetailActionPerformed
 
 

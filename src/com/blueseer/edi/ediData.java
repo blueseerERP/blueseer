@@ -1898,7 +1898,7 @@ public class ediData {
             bscon.setAutoCommit(false);
             for (String line : lines) {
                _deleteAPILines(x, line, bscon);  // discard unwanted lines
-             }
+            }
             for (api_det z : apid) {
                 _updateAPIdet(z, bscon, ps, res);
             }
@@ -1943,6 +1943,61 @@ public class ediData {
         }
     return m;
     }
+    
+    public static String[] updateAPIDetTransaction(String x, ArrayList<apid_meta> apidm, ArrayList<api_det> apid) {
+        // used for single Detail Record Updates;  apid should have only a single record
+        String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            bscon = DriverManager.getConnection(url + db, user, pass);
+            bscon.setAutoCommit(false);
+            
+            for (api_det z : apid) {
+                _updateAPIdet(z, bscon, ps, res);
+            }
+            _deleteAllAPIDMeta(x, bscon); // delete all meta details for this apidm_id...then add diff back
+            for (apid_meta z : apidm) {
+                _updateAPIDMeta(z, bscon, ps, res);
+            }
+            bscon.commit();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
     
     public static String[] updateAS2Transaction(String x, as2_mstr as2) {
         String[] m = new String[2];
