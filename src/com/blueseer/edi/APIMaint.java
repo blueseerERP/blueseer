@@ -717,19 +717,20 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         int i = tabledetail.getSelectedRow();
         String method = tabledetail.getModel().getValueAt(i, 0).toString();
         String verb = tabledetail.getModel().getValueAt(i, 1).toString();
-        String value = tabledetail.getModel().getValueAt(i, 4).toString();
+        String methodpath = tabledetail.getModel().getValueAt(i, 4).toString();
         String urlstring = "";
         String port = "";
            
-            
-        if (value.isBlank() && ! verb.equals("POST") && ! verb.equals("PUT")) {
+          
+        //override methodpath if it's blank (not specified) with the meta params tables
+        if (methodpath.isBlank() && ddclass.getSelectedItem().toString().equals("PARAM")) {
             ArrayList<String[]> list = apidm.get(tabledetail.getModel().getValueAt(i, 0).toString());
             if (list != null) {
                 for (String[] s : list) {
-                    value = value + s[0] + "=" + s[1] + "&";
+                    methodpath = methodpath + s[0] + "=" + s[1] + "&";
                 }
-                if (value.endsWith("&")) {
-                    value = value.substring(0, value.length() - 1);
+                if (methodpath.endsWith("&")) {
+                    methodpath = methodpath.substring(0, methodpath.length() - 1);
                 }
             }
         }
@@ -738,8 +739,8 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             value = value + "api_key=" + tbapikey.getText();
         }
         */
-        if (! value.isBlank() && ! verb.equals("GET")) {
-        value = "?" + value;
+        if (! methodpath.isBlank() && ddclass.getSelectedItem().toString().equals("PARAM")) {
+        methodpath = "?" + methodpath;
         }
         
         
@@ -750,7 +751,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
 
        
-        urlstring = ddprotocol.getSelectedItem().toString() + "://" + tburl.getText() + port + tbpath.getText() + value;
+        urlstring = ddprotocol.getSelectedItem().toString() + "://" + tburl.getText() + port + tbpath.getText() + methodpath;
        
         tburlstring.setText(urlstring);
     }
@@ -804,7 +805,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         btupdate = new javax.swing.JButton();
         btadd = new javax.swing.JButton();
         ddcontenttype = new javax.swing.JComboBox<>();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        ddauth = new javax.swing.JComboBox<>();
         jLabel22 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         tbsourcedir = new javax.swing.JTextField();
@@ -907,7 +908,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         jLabel17.setText("Protocol");
 
-        ddclass.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "REST", "SOAP" }));
+        ddclass.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "REST", "SOAP", "PARAM" }));
 
         jLabel16.setText("Class");
         jLabel16.setName("lblclass"); // NOI18N
@@ -964,7 +965,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         ddcontenttype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "text/plain", "text/css", "text/csv", "text/html", "text/javascript", "text/xml", "application/pdf", "application/json", "application/ld+json", "application/xml", "application/xhtml+xml", "application/zip", "application/EDI-X12", "application/EDIFACT", "application/octet-stream", "application/x-www-form-urlencoded", "audio/mpeg", "image/gif", "image/jpeg", "image/png", "image/tiff", "image/vnd.microsoft.icon", "image/x-icon", "image/vnd.djvu", "image/svg+xml", "multipart/mixed", "multipart/alternative", "multipart/form-data", "video/mpeg", "video/mp4", "video/quicktime", "video/x-ms-wmv", "video/x-msvideo", "video/x-flv", "video/webm" }));
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "NONE", "BASIC AUTH", "APIKEY", "OAUTH2", "JWT", "OIDC" }));
+        ddauth.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "NONE", "BASIC AUTH", "APIKEY", "OAUTH2", "JWT", "OIDC" }));
 
         jLabel22.setText("Authentication");
 
@@ -1045,7 +1046,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addComponent(tbapikey))
                         .addGap(44, 44, 44))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(ddauth, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel3Layout.setVerticalGroup(
@@ -1118,7 +1119,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addComponent(jLabel11))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ddauth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel22))
                 .addGap(0, 11, Short.MAX_VALUE))
         );
@@ -1476,23 +1477,32 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             conn.setConnectTimeout(10000);
             conn.setReadTimeout(10000);
             
-            
-            if (! tbapikey.getText().isBlank()) {
-            conn.setRequestProperty("Authorization", tbapikey.getText());
+            if (ddauth.getSelectedItem().toString().equals("APIKEY")) {
+                if (! tbapikey.getText().isBlank()) {
+                conn.setRequestProperty("Authorization", tbapikey.getText());
+                }
             }
             
-            if (! tbuser.getText().isBlank() && tbpass.getPassword().length > 0) {
-            String userCredentials = new String(tbuser.getText() + ":" + String.valueOf(tbpass.getPassword()));
-            String basicAuth = "Basic " + Base64.toBase64String(userCredentials.getBytes());
-            conn.setRequestProperty("Authorization", basicAuth);
-            }
             
+            if (ddauth.getSelectedItem().toString().equals("BASIC AUTH")) {
+               if (! tbuser.getText().isBlank() && tbpass.getPassword().length > 0) {
+                String userCredentials = new String(tbuser.getText() + ":" + String.valueOf(tbpass.getPassword()));
+                String basicAuth = "Basic " + Base64.toBase64String(userCredentials.getBytes());
+                conn.setRequestProperty("Authorization", basicAuth);
+                } 
+            }
             
             StringBuilder requestHeaders = new StringBuilder();
             
-            if (verb.equals("POST") || verb.equals("PUT")) {
-                conn.setDoOutput(true);
+            
+            if (ddclass.getSelectedItem().toString().equals("REST")) {
                 conn.setRequestMethod(verb);
+                if (verb.equals("POST") || verb.equals("PUT")) {
+                conn.setDoOutput(true);
+                }
+            }
+            
+            if (! ddclass.getSelectedItem().toString().equals("PARAM")) {
                 ArrayList<apid_meta> headertags = getAPIDMeta(tbkey.getText());
                 for (apid_meta am : headertags) {
                         if (am.apidm_method().equals(method)) {
@@ -1512,7 +1522,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 
                 // if posting data...add file
                 // calling this opens the connection
-                if (verb.equals("POST") || verb.equals("PUT")) {
+                if (ddclass.getSelectedItem().toString().equals("REST") && (verb.equals("POST") || verb.equals("PUT"))) {
                     if (! tbsourcedir.getText().isBlank()) {
                         DataOutputStream dos = new DataOutputStream( conn.getOutputStream());
                         Path sourcepath = FileSystems.getDefault().getPath(tbsourcedir.getText());
@@ -1818,12 +1828,12 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JCheckBox cbfile;
     private javax.swing.JCheckBox cbrequestheaders;
     private javax.swing.JCheckBox cbresponseheaders;
+    private javax.swing.JComboBox<String> ddauth;
     private javax.swing.JComboBox<String> ddclass;
     private javax.swing.JComboBox<String> ddcontenttype;
     private javax.swing.JComboBox<String> ddprotocol;
     private javax.swing.JComboBox<String> ddtype;
     private javax.swing.JComboBox<String> ddverb;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
