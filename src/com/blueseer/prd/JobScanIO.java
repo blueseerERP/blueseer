@@ -302,7 +302,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         qtylabel.setText("");
         qtylabel.setForeground(Color.black);
         ddop.removeAllItems();
-        tbref.setText("");
+        tboperator.setText("");
       
        
        historytable.setModel(historymodel);
@@ -333,7 +333,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         btcommit = new javax.swing.JButton();
         ddop = new javax.swing.JComboBox();
         jLabel7 = new javax.swing.JLabel();
-        tbref = new javax.swing.JTextField();
+        tboperator = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         qtylabel = new javax.swing.JLabel();
         lblmessage = new javax.swing.JLabel();
@@ -344,7 +344,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Prod Entry By Plan Ticket"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Job Scan By Operator"));
         jPanel1.setName("panelmain"); // NOI18N
 
         tbqty.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -387,17 +387,17 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         jLabel7.setText("Operation");
         jLabel7.setName("lblop"); // NOI18N
 
-        tbref.addFocusListener(new java.awt.event.FocusAdapter() {
+        tboperator.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                tbrefFocusGained(evt);
+                tboperatorFocusGained(evt);
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
-                tbrefFocusLost(evt);
+                tboperatorFocusLost(evt);
             }
         });
 
-        jLabel8.setText("Reference");
-        jLabel8.setName("lblreference"); // NOI18N
+        jLabel8.setText("UserID");
+        jLabel8.setName("lbluserid"); // NOI18N
 
         qtylabel.setForeground(new java.awt.Color(25, 102, 232));
 
@@ -445,27 +445,30 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
                     .addComponent(lblmessage, javax.swing.GroupLayout.PREFERRED_SIZE, 378, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGap(14, 14, 14)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jLabel5)
-                                .addComponent(jLabel4)
-                                .addComponent(jLabel7))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(tbscan, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(47, 47, 47)
-                                    .addComponent(partlabel, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(qtylabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addGap(64, 64, 64)
+                            .addComponent(btcommit))
                         .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(jLabel8)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addGap(14, 14, 14)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(jLabel5)
+                                        .addComponent(jLabel4)
+                                        .addComponent(jLabel7)))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                    .addContainerGap()
+                                    .addComponent(jLabel8)))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(btcommit)
-                                .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(tboperator, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(tbscan, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(47, 47, 47)
+                                        .addComponent(partlabel, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(qtylabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
                 .addContainerGap(161, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -478,6 +481,10 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
                         .addComponent(jLabel5))
                     .addComponent(partlabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tboperator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(qtylabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -489,11 +496,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(1, 1, 1)
                         .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(26, 26, 26)
                 .addComponent(btcommit)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblmessage, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -594,7 +597,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
                 bsmf.MainFrame.userid,
                 prodline,
                 "",   //  tr_actcell
-                tbref.getText().replace(",", ""),   // remarks 
+                tboperator.getText().replace(",", ""),   // remarks 
                 "", // pack station
                 "", // pack date
                 "", // assembly date
@@ -663,13 +666,13 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         tbqty.requestFocusInWindow();
     }//GEN-LAST:event_tbscanActionPerformed
 
-    private void tbrefFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbrefFocusGained
+    private void tboperatorFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tboperatorFocusGained
         // TODO add your handling code here:
-    }//GEN-LAST:event_tbrefFocusGained
+    }//GEN-LAST:event_tboperatorFocusGained
 
-    private void tbrefFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbrefFocusLost
+    private void tboperatorFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tboperatorFocusLost
         // TODO add your handling code here:
-    }//GEN-LAST:event_tbrefFocusLost
+    }//GEN-LAST:event_tboperatorFocusLost
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -686,8 +689,8 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
     private javax.swing.JLabel lblmessage;
     private javax.swing.JLabel partlabel;
     private javax.swing.JLabel qtylabel;
+    private javax.swing.JTextField tboperator;
     private javax.swing.JTextField tbqty;
-    private javax.swing.JTextField tbref;
     private javax.swing.JTextField tbscan;
     // End of variables declaration//GEN-END:variables
 }
