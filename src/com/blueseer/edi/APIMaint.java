@@ -398,6 +398,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         taoutput.setText("");
         tburlstring.setText("");
         ddcontenttype.setSelectedIndex(0);
+        ddauth.setSelectedIndex(0);
         tbapikey.setText("");
         
         isLoad = false;
@@ -580,7 +581,11 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 ddclass.getSelectedItem().toString(),
                 String.valueOf(BlueSeerUtils.boolToInt(cbresponseheaders.isSelected())),
                 String.valueOf(BlueSeerUtils.boolToInt(cbrequestheaders.isSelected())),
-                ddcontenttype.getSelectedItem().toString()
+                ddcontenttype.getSelectedItem().toString(),
+                ddauth.getSelectedItem().toString(),
+                "", //char1
+                "", //char2
+                "" // char3
                 );
         return x;
     }
@@ -599,7 +604,10 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tabledetail.getModel().getValueAt(j, 4).toString(),
                 tabledetail.getModel().getValueAt(j, 5).toString(),
                 tabledetail.getModel().getValueAt(j, 6).toString(),
-                String.valueOf(BlueSeerUtils.boolToInt(Boolean.valueOf(tabledetail.getModel().getValueAt(j, 7).toString())))
+                String.valueOf(BlueSeerUtils.boolToInt(Boolean.valueOf(tabledetail.getModel().getValueAt(j, 7).toString()))),
+                "", //char1
+                "", //char2
+                "" // char3
                 );
        
         list.add(x);
@@ -681,7 +689,8 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbapikey.setText(x.api_key());
         ddprotocol.setSelectedItem(x.api_protocol());
         ddclass.setSelectedItem(x.api_class());
-        ddcontenttype.setSelectedItem(x.api_cert()); // needs record refactor
+        ddcontenttype.setSelectedItem(x.api_contenttype()); 
+        ddauth.setSelectedItem(x.api_auth());
         cbrequestheaders.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.api_signed())));
         cbresponseheaders.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.api_encrypted())));
         // now detail

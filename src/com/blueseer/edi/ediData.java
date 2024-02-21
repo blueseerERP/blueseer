@@ -1346,8 +1346,9 @@ public class ediData {
         String sqlSelect = "select * from api_mstr where api_id = ?";
         String sqlInsert = "insert into api_mstr (api_id, api_desc, api_version," +
         " api_url, api_port, api_path, api_user, " +
-        " api_pass, api_key, api_protocol, api_class, api_encrypted, api_signed, api_cert ) " +
-                " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+        " api_pass, api_key, api_protocol, api_class, api_encrypted, api_signed, api_contenttype, " +
+        " api_auth, api_char1, api_char2, api_char3 ) " +
+                " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.api_id);
@@ -1367,7 +1368,11 @@ public class ediData {
             psi.setString(11, x.api_class);
             ps.setString(12, x.api_encrypted);
             ps.setString(13, x.api_signed);
-            ps.setString(13, x.api_cert);
+            ps.setString(14, x.api_contenttype);
+            ps.setString(15, x.api_auth);
+            ps.setString(16, x.api_char1);
+            ps.setString(17, x.api_char2);
+            ps.setString(18, x.api_char3);
             
             int rows = psi.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
@@ -1440,8 +1445,9 @@ public class ediData {
         String sqlSelect = "select * from api_mstr where api_id = ?";
         String sqlInsert = "insert into api_mstr (api_id, api_desc, api_version," +
         " api_url, api_port, api_path, api_user, " +
-        " api_pass, api_key, api_protocol, api_class, api_encrypted, api_signed, api_cert ) " +
-                " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+        " api_pass, api_key, api_protocol, api_class, api_encrypted, api_signed, api_contenttype, " +
+        " api_auth, api_char1, api_char2, api_char3 ) " +
+                " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.api_id);
@@ -1461,7 +1467,11 @@ public class ediData {
             ps.setString(11, x.api_class);
             ps.setString(12, x.api_encrypted);
             ps.setString(13, x.api_signed);
-            ps.setString(14, x.api_cert);
+            ps.setString(14, x.api_contenttype);
+            ps.setString(15, x.api_auth);
+            ps.setString(16, x.api_char1);
+            ps.setString(17, x.api_char2);
+            ps.setString(18, x.api_char3);
             rows = ps.executeUpdate();
             } 
             return rows;
@@ -1516,9 +1526,10 @@ public class ediData {
         int rows = 0;
         String sqlSelect = "select * from api_det where apid_id = ? and apid_method = ?";
         String sqlInsert = "insert into api_det (apid_id, apid_method, apid_seq,  " +
-                             " apid_verb, apid_type, apid_path, apid_key, " +
-                            " apid_value, apid_source, apid_destination, apid_enabled ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?); "; 
+                            " apid_verb, apid_type, apid_path, apid_key, " +
+                            " apid_value, apid_source, apid_destination, apid_enabled, " +
+                            "apid_char1, apid_char2, apid_char3 ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.apid_id);
@@ -1537,6 +1548,9 @@ public class ediData {
             ps.setString(9, x.apid_source);
             ps.setString(10, x.apid_destination);
             ps.setString(11, x.apid_enabled);
+            ps.setString(12, x.apid_char1);
+            ps.setString(13, x.apid_char2);
+            ps.setString(14, x.apid_char3);
             rows = ps.executeUpdate();
             } 
             return rows;
@@ -1667,7 +1681,7 @@ public class ediData {
         String[] m = new String[2];
         String sql = "update api_mstr set api_desc = ?, api_version = ?, api_url = ?, api_port = ?, " +
                 " api_path = ?, api_user = ?, api_pass = ?, api_key = ?, api_protocol = ?, api_class = ?,  " +
-                " api_encrypted = ?, api_signed = ?, api_cert = ? " +
+                " api_encrypted = ?, api_signed = ?, api_contenttype = ?, api_auth = ?, api_char1 = ?, api_char2 = ?, api_char3 = ? " +
                 "  where api_id = ? ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
@@ -1683,8 +1697,12 @@ public class ediData {
         ps.setString(10, x.api_class);
         ps.setString(11, x.api_encrypted);
         ps.setString(12, x.api_signed);
-        ps.setString(13, x.api_cert);
-        ps.setString(14, x.api_id);
+        ps.setString(13, x.api_contenttype);
+        ps.setString(14, x.api_auth);
+        ps.setString(15, x.api_char1);
+        ps.setString(16, x.api_char2);
+        ps.setString(17, x.api_char3);
+        ps.setString(18, x.api_id);
         int rows = ps.executeUpdate();
         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
         } catch (SQLException s) {
@@ -1743,7 +1761,7 @@ public class ediData {
         int rows = 0;
         String sql = "update api_mstr set api_desc = ?, api_version = ?, api_url = ?, api_port = ?, " +
                 " api_path = ?, api_user = ?, api_pass = ?, api_key = ?, api_protocol = ?, api_class = ?,  " +
-                " api_encrypted = ?, api_signed = ?, api_cert = ? " +
+                " api_encrypted = ?, api_signed = ?, api_contenttype = ?, api_auth = ?, api_char1 = ?, api_char2 = ?, api_char3 = ? " +
                 "  where api_id = ? ";
 	ps = con.prepareStatement(sql) ;
         ps.setString(1, x.api_desc);
@@ -1758,8 +1776,12 @@ public class ediData {
         ps.setString(10, x.api_class);
         ps.setString(11, x.api_encrypted);
         ps.setString(12, x.api_signed);
-         ps.setString(13, x.api_cert);
-        ps.setString(14, x.api_id);
+        ps.setString(13, x.api_contenttype);
+        ps.setString(14, x.api_auth);
+        ps.setString(15, x.api_char1);
+        ps.setString(16, x.api_char2);
+        ps.setString(17, x.api_char3);
+        ps.setString(18, x.api_id);
             rows = ps.executeUpdate();
         return rows;
     }
@@ -1808,12 +1830,14 @@ public class ediData {
         String sqlSelect = "select * from api_det where apid_id = ? and apid_method = ?";
         String sqlUpdate = "update api_det set apid_seq = ?, " +
                            " apid_verb = ?, apid_type = ?, apid_path = ?,  " +
-                           " apid_key = ?, apid_value = ?, apid_source = ?, apid_destination = ?, apid_enabled = ? " +
-                 " where apid_id = ? and apid_method = ? ; ";
+                           " apid_key = ?, apid_value = ?, apid_source = ?, apid_destination = ?, apid_enabled = ?, " +
+                           " apid_char1 = ?, apid_char2 = ?, apid_char3 = ? " + 
+                           " where apid_id = ? and apid_method = ? ; ";
         String sqlInsert = "insert into api_det (apid_id, apid_method, apid_seq,  " +
                              " apid_verb, apid_type, apid_path, apid_key, " +
-                            " apid_value, apid_source, apid_destination, apid_enabled ) " +
-                           " values (?,?,?,?,?,?,?,?,?,?,?); " ;
+                            " apid_value, apid_source, apid_destination, apid_enabled, " +
+                            " apid_char1, apid_char2, apid_char3 ) " +
+                           " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?); " ;
         ps = con.prepareStatement(sqlSelect);
         ps.setString(1, x.apid_id);
         ps.setString(2, x.apid_method);
@@ -1831,6 +1855,9 @@ public class ediData {
             ps.setString(9, x.apid_source);
             ps.setString(10, x.apid_destination);
             ps.setString(11, x.apid_enabled); 
+            ps.setString(12, x.apid_char1);
+            ps.setString(13, x.apid_char2);
+            ps.setString(14, x.apid_char3);
             // ps.setString(9, x.ecnt_notes);  another mechanism updates the Notes field
             rows = ps.executeUpdate();
         } else {    // update
@@ -1844,9 +1871,12 @@ public class ediData {
             ps.setString(6, x.apid_value);
             ps.setString(7, x.apid_source);
             ps.setString(8, x.apid_destination);
-            ps.setString(9, x.apid_enabled);  
-            ps.setString(10, x.apid_id);
-            ps.setString(11, x.apid_method);
+            ps.setString(9, x.apid_enabled); 
+            ps.setString(10, x.apid_char1);
+            ps.setString(11, x.apid_char2);
+            ps.setString(12, x.apid_char3);
+            ps.setString(13, x.apid_id);
+            ps.setString(14, x.apid_method);
             // ps.setString(7, x.ecnt_notes);  another mechanism updates the Notes field
             rows = ps.executeUpdate();
         }
@@ -2129,7 +2159,11 @@ public class ediData {
                             res.getString("api_class"),
                             res.getString("api_encrypted"),
                             res.getString("api_signed"),
-                            res.getString("api_cert")
+                            res.getString("api_contenttype"),
+                            res.getString("api_auth"),
+                            res.getString("api_char1"),
+                            res.getString("api_char2"),
+                            res.getString("api_char3")    
                         );
                     }
                 }
@@ -2169,7 +2203,11 @@ public class ediData {
                             res.getString("api_class"),
                             res.getString("api_encrypted"),
                             res.getString("api_signed"),
-                            res.getString("api_cert")
+                            res.getString("api_contenttype"),
+                            res.getString("api_auth"),
+                            res.getString("api_char1"),
+                            res.getString("api_char2"),
+                            res.getString("api_char3")
                         );
                     }
                 }
@@ -2259,7 +2297,11 @@ public class ediData {
                         res.getString("apid_value"),
                         res.getString("apid_source"),
                         res.getString("apid_destination"),        
-                        res.getString("apid_enabled"));
+                        res.getString("apid_enabled"),
+                        res.getString("apid_char1"),
+                        res.getString("apid_char2"),
+                        res.getString("apid_char3")        
+                        );
                         list.add(r);
                     }
                 }
@@ -2298,7 +2340,10 @@ public class ediData {
                         res.getString("apid_value"),
                         res.getString("apid_source"),
                         res.getString("apid_destination"),
-                        res.getString("apid_enabled"));
+                        res.getString("apid_enabled"),
+                        res.getString("apid_char1"),
+                        res.getString("apid_char2"),
+                        res.getString("apid_char3"));
                     }
                 }
             }
@@ -4334,18 +4379,20 @@ public class ediData {
     public record api_mstr(String[] m, String api_id, String api_desc, String api_version,
         String api_url, String api_port, String api_path, String api_user,
         String api_pass, String api_key, String api_protocol, String api_class,
-        String api_encrypted, String api_signed, String api_cert) {
+        String api_encrypted, String api_signed, String api_contenttype, String api_auth,
+        String api_char1, String api_char2, String api_char3) {
         public api_mstr(String[] m) {
             this(m, "", "", "", "", "", "", "", "", "", "", 
-                    "", "", "", "");
+                    "", "", "", "", "", "", "", "");
         }
     }
     
     public record api_det(String[] m, String apid_id, String apid_method, String apid_seq,
         String apid_verb, String apid_type, String apid_path, String apid_key,
-         String apid_value, String apid_source, String apid_destination, String apid_enabled ) {
+         String apid_value, String apid_source, String apid_destination, String apid_enabled,
+         String apid_char1, String apid_char2, String apid_char3) {
         public api_det(String[] m) {
-            this(m, "", "", "", "", "", "", "", "", "", "", "");
+            this(m, "", "", "", "", "", "", "", "", "", "", "", "", "", "");
         }
     }
     
