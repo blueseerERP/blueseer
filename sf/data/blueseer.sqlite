@@ -642,7 +642,11 @@ CREATE TABLE "api_mstr" (
   "api_class" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "api_encrypted" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',
   "api_signed" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',
-  "api_cert" varchar(120) NOT NULL COLLATE NOCASE DEFAULT ''
+  "api_contenttype" varchar(120) NOT NULL COLLATE NOCASE DEFAULT '',
+  "api_auth" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
+  "api_char1" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "api_char2" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "api_char3" varchar(100) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -658,7 +662,10 @@ CREATE TABLE "api_det" (
   "apid_value" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
   "apid_source" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
   "apid_destination" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
-  "apid_enabled" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0'
+  "apid_enabled" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "apid_char1" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "apid_char2" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "apid_char3" varchar(100) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
