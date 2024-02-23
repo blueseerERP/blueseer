@@ -36,6 +36,7 @@ import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.BlueSeerUtils.bsNode;
 import com.blueseer.utl.BlueSeerUtils.bsTree;
 import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
+import static com.blueseer.utl.BlueSeerUtils.xNull;
 import com.blueseer.utl.EDData;
 import com.blueseer.utl.OVData;
 import com.fasterxml.jackson.core.JsonParser;
@@ -70,6 +71,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -1688,8 +1690,8 @@ public abstract class EDIMap {  // took out the implements EDIMapi
 	    return lhm;
 	}
     
-    public static List<String[]> jsonTagsToSegment(String json) throws IOException {
-	    ObjectMapper mapper = new ObjectMapper();
+    public static List<String[]> jsonTagsToSegmentExperiemental(String json) throws IOException {
+	   ObjectMapper mapper = new ObjectMapper();
             JsonNode jsonNode = mapper.readTree(json);
 	    JsonParser jsonParser = jsonNode.traverse();
 	    String parent = "";
@@ -1808,6 +1810,80 @@ public abstract class EDIMap {  // took out the implements EDIMapi
 	    return newresult;
 	}
 
+    public static List<String[]> jsonTagsToSegment(String json) throws IOException {
+      ArrayList<String[]> flat = new ArrayList<String[]>();
+      ObjectMapper mapper = new ObjectMapper();
+            JsonNode jsonNode = mapper.readTree(json);
+	    JsonParser jsonParser = jsonNode.traverse();
+	    String parent = "";
+	    Stack<String> segments = new Stack<String>();
+            HashSet<String> seen = new HashSet<>();
+           String currentvalue = "";
+           String currenttoken = "";
+           ArrayList<String[]> result = new ArrayList<String[]>();
+	   
+           //parse all tags into flat ArrayList...for look ahead capabilities 
+           while (!jsonParser.isClosed()) {
+	    	JsonToken x = jsonParser.nextToken();
+                currentvalue = (jsonParser.getText() != null) ? jsonParser.getText() : "";
+                currenttoken = (jsonParser.getCurrentToken() != null) ? jsonParser.getCurrentToken().name() : "";
+                String[] s = new String[]{jsonParser.getCurrentName(),currenttoken,currentvalue};
+                flat.add(s);
+            }
+            
+           // now loop through flat and assign parent paths
+           
+          
+           for (int k = 0; k < flat.size(); k++) {
+               if (k == 0) {
+                   segments.push("ROOT");
+                   continue;
+               }
+               if (flat.get(k)[1].equals("FIELD_NAME") && flat.get(k+1)[1].equals("START_OBJECT")) {
+                   segments.push(flat.get(k)[0]);
+                   String v[] = new String[]{segments.get(segments.size()-1),segments.get(segments.size()-2),"1","no","yes","landmark",flat.get(k)[0],"0","100","-","M","N"};
+                   if (! seen.contains(segments.get(segments.size()-1) + "," + segments.get(segments.size()-2) + "," + flat.get(k)[0])) {
+                    result.add(v);
+                   }
+                   seen.add(segments.get(segments.size()-1) + "," + segments.get(segments.size()-2) + "," + flat.get(k)[0]);
+               }
+               if (flat.get(k)[1].equals("FIELD_NAME") && flat.get(k+1)[1].equals("START_ARRAY") && flat.get(k+2)[1].equals("START_OBJECT")) {
+                   segments.push(flat.get(k)[0]);
+                   String v[] = new String[]{segments.get(segments.size()-1),segments.get(segments.size()-2),"1","no","yes","landmark",flat.get(k)[0],"0","100","-","M","N"};
+                   if (! seen.contains(segments.get(segments.size()-1) + "," + segments.get(segments.size()-2) + "," + flat.get(k)[0])) {
+                    result.add(v);
+                   }
+                   seen.add(segments.get(segments.size()-1) + "," + segments.get(segments.size()-2) + "," + flat.get(k)[0]);
+               } 
+               
+               // field
+               if (flat.get(k)[1].equals("FIELD_NAME") && flat.get(k+1)[1].startsWith("VALUE")) {
+                   String v[] = new String[]{segments.get(segments.size()-1),segments.get(segments.size()-2),"0","no","no",flat.get(k)[0],flat.get(k)[0],"0","100","-","O","F"};
+                   if (! seen.contains(segments.get(segments.size()-1) + "," + segments.get(segments.size()-2) + "," + flat.get(k)[0])) {
+                    result.add(v);
+                   }
+                   seen.add(segments.get(segments.size()-1) + "," + segments.get(segments.size()-2) + "," + flat.get(k)[0]);
+               }
+               
+               if (flat.get(k)[1].equals("END_OBJECT")) {
+                   if (! flat.get(k+1)[1].equals("START_OBJECT") && ! flat.get(k+1)[1].equals("END_ARRAY")) {
+                       if (! segments.empty()) {                       
+                         segments.pop();
+                       }
+                   }
+               }
+               if (flat.get(k)[1].equals("END_ARRAY")) {
+                    if (! flat.get(k-1)[1].equals("START_ARRAY") && ! flat.get(k-1)[1].startsWith("VALUE")) { // skip value array ending 
+                       if (! segments.empty()) {                       
+                         segments.pop();
+                       }
+                    }
+                }
+               System.out.println(String.join(",",flat.get(k)) + " / " + String.join(",", segments));
+           } 
+            
+      return result;
+    }
     
     public static LinkedHashMap<String, String[]> xmlToSegments(String xml, ArrayList<String[]> isf) throws IOException {
         ArrayList<String[]> result = new ArrayList<String[]>();

@@ -31,6 +31,7 @@ import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.tags;
 import static com.blueseer.edi.EDIMap.csvToSegment;
 import static com.blueseer.edi.EDIMap.jsonTagsToSegment;
+import static com.blueseer.edi.EDIMap.jsonTagsToSegmentExperiemental;
 import static com.blueseer.edi.EDIMap.xmlTagsToSegments;
 import static com.blueseer.edi.ediData.addDFStructureTransaction;
 import static com.blueseer.edi.ediData.addMapStruct;
@@ -1442,7 +1443,7 @@ public class StructMaint extends javax.swing.JPanel  {
                     //lines = Files.readAllLines(file.toPath());
                     filecontent = new String(Files.readAllBytes(file.toPath()));
                     if (filecontent.startsWith("{") || filecontent.startsWith("[")) {
-                     lines = jsonTagsToSegment(filecontent);
+                     lines = jsonTagsToSegment(filecontent); 
                     } else if (filecontent.startsWith("<")) {
                      lines = xmlTagsToSegments(filecontent);   
                     } else if (ddfiletype.getSelectedItem().toString().equals("CSV")) {

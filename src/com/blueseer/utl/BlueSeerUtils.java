@@ -1767,6 +1767,7 @@ public class BlueSeerUtils {
     
     
      public static void startTask(String[] message) {
+        bsmf.MainFrame.disableAllMenus();
         bsmf.MainFrame.MainProgressBar.setVisible(true);
         bsmf.MainFrame.MainProgressBar.setIndeterminate(true);
         bsmf.MainFrame.MainProgressBar.setBackground(Color.BLUE);
@@ -1775,6 +1776,7 @@ public class BlueSeerUtils {
      
      
      public static void endTask(String[] message) {
+        bsmf.MainFrame.enableAllMenus();
         bsmf.MainFrame.MainProgressBar.setVisible(false);
         bsmf.MainFrame.MainProgressBar.setIndeterminate(false);
         message(message);
