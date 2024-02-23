@@ -1766,7 +1766,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                        }
                     }
                 }
-               System.out.println(String.join(",",flat.get(k)) + " / " + String.join(",", segments));
+             //  System.out.println(String.join(",",flat.get(k)) + " / " + String.join(",", segments));
            } 
             
       return result;
