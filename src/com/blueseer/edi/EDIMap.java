@@ -1689,133 +1689,12 @@ public abstract class EDIMap {  // took out the implements EDIMapi
            // lhm.forEach((k,v) -> System.out.println("lhmnew: " + k + " = " + v));
 	    return lhm;
 	}
-    
-    public static List<String[]> jsonTagsToSegmentExperiemental(String json) throws IOException {
-	   ObjectMapper mapper = new ObjectMapper();
-            JsonNode jsonNode = mapper.readTree(json);
-	    JsonParser jsonParser = jsonNode.traverse();
-	    String parent = "";
-	    String lhmkey = "";
-	    Stack<String> segments = new Stack<String>();
-	    LinkedHashMap<String,ArrayList<String>> lhm = new LinkedHashMap<String,ArrayList<String>>();
-	   JsonToken z = null;
-	   int arraycount = 0;
-	   boolean startcount = false;
-           String absoluteparent = "";
-           String[] parr = null;
-           String rootnode = "";
-           ArrayList<String[]> newresult = new ArrayList<String[]>();
-	    while (!jsonParser.isClosed()) {
-	    	
-	    	JsonToken x = jsonParser.nextToken();
-	    	if (x == JsonToken.FIELD_NAME) {
-                 //   System.out.println("here1: " + jsonParser.getCurrentName());
-	    		z = jsonParser.nextToken();
-                        if (z.name().startsWith("VALUE")) {
-	    		String k[] = new String[]{parent,absoluteparent,"0","no","no",jsonParser.getCurrentName(),jsonParser.getCurrentName(),"0","100","-","O","F"};
-	    		newresult.add(k);
-                          ArrayList<String> temp = lhm.get(lhmkey);
-	    		  if (temp != null) {
-                                  if (! temp.contains(jsonParser.getCurrentName())) {
-	    			  temp.add(jsonParser.getCurrentName());
-	    			  lhm.put(lhmkey, temp);
-                                  }
-	    		  } else {
-	    			  ArrayList<String> al = new ArrayList<String>();
-	    			  al.add(jsonParser.getCurrentName());
-	    			  lhm.put(lhmkey, al);
-	    		  }
-	    		} else if(z == JsonToken.START_OBJECT) {
-                                parent = jsonParser.getCurrentName();
-	    			lhmkey = parent + ":" + String.valueOf("1");
-	    			if (! parent.isBlank()) {
-	  	    		  lhm.put(lhmkey, null);
-	    			}
-	    			segments.push(parent);
-                                absoluteparent = "";
-                                for (String j : segments) {
-                                    absoluteparent += (":" + j);
-                                }
-                                parr = absoluteparent.split(":",-1);
-                                if (parr != null && parr.length > 1) {
-                                    absoluteparent = parr[parr.length - 2];
-                                }
-                                if (absoluteparent.isBlank()) {
-                                    String k[] = new String[]{jsonParser.getCurrentName(),absoluteparent,"1","no","yes","landmark",jsonParser.getCurrentName(),"0","100","-","M","N"};
-                                    newresult.add(k);
-                                } else {
-                                    String k[] = new String[]{jsonParser.getCurrentName(),absoluteparent,"1","yes","yes","landmark",jsonParser.getCurrentName(),"0","100","-","M","N"};
-                                    newresult.add(k);
-                                }
-                                 
-	    		} else if(z == JsonToken.START_ARRAY) {
-	    			parent = jsonParser.getCurrentName();
-	    			segments.push(parent+"array");
-                                absoluteparent = "";
-                                for (String j : segments) {
-                                    absoluteparent += (":" + j);
-                                }
-                                parr = absoluteparent.split(":",-1);
-                                if (parr != null && parr.length > 1) {
-                                    absoluteparent = parr[parr.length - 2];
-                                }
-	    			startcount = true;
-                                String k[] = new String[]{jsonParser.getCurrentName(),absoluteparent,"100","yes","yes","landmark",jsonParser.getCurrentName(),"0","100","-","M","N"};
-	    		        newresult.add(k);
-	    		} 
-	    	}
-	    	if (x == JsonToken.START_OBJECT) {
-                  //  System.out.println("here1: " + jsonParser.getCurrentName() + " / " + x.name());
-	    		if (startcount) {
-	    		arraycount++;
-	    		}
-	    		lhmkey = parent + ":" + String.valueOf(arraycount);
-	    		 if (! parent.isBlank()) {
-		    		  lhm.put(lhmkey, null);
-		    		  }
-	    		segments.push(parent);
-                        if (segments.size() == 1) {
-                            rootnode = segments.get(0);
-                        }
-	    	}
-	    	if (x == JsonToken.END_OBJECT) {
-                   // System.out.println("myobjectend: " + jsonParser.getCurrentName() + " / " + x.name());
-	    	   if (! segments.empty()) {	
-                   segments.pop();
-                   }
-	    	}
-	    	if (x == JsonToken.END_ARRAY) {
-                  //  System.out.println("myarrayend: " + jsonParser.getCurrentName() + " / " + x.name());
-	    		if (! segments.empty()) {
-                        segments.pop();
-                        }
-	    		arraycount = 0;
-	    		startcount = false;
-	    	}
-	       
-	    }
-	    ArrayList<String[]> result = new ArrayList<String[]>();
-	    for (Map.Entry<String, ArrayList<String>> val : lhm.entrySet()) {
-	    	if (val.getValue() != null) {
-                    String[] j = new String[val.getValue().size() + 1];
-                    j[0] = val.getKey().split(":")[0];
-                    for (int k = 1; k < val.getValue().size() + 1; k++) {
-                            j[k] = val.getValue().get(k - 1);
-                    }
-                    result.add(j);
-                }
-	    }
-	  //  lhm.forEach((k,v) -> System.out.println(k + ":" + v));
-	 //   result.forEach((k) -> System.out.println(k[0]));
-	    return newresult;
-	}
-
+       
     public static List<String[]> jsonTagsToSegment(String json) throws IOException {
       ArrayList<String[]> flat = new ArrayList<String[]>();
       ObjectMapper mapper = new ObjectMapper();
             JsonNode jsonNode = mapper.readTree(json);
 	    JsonParser jsonParser = jsonNode.traverse();
-	    String parent = "";
 	    Stack<String> segments = new Stack<String>();
             HashSet<String> seen = new HashSet<>();
            String currentvalue = "";
@@ -1831,14 +1710,13 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                 flat.add(s);
             }
             
-           // now loop through flat and assign parent paths
-           
-          
+           // now loop through flat array and assign parents and fields...filtering for unique only
            for (int k = 0; k < flat.size(); k++) {
                if (k == 0) {
-                   segments.push("ROOT");
+                   segments.push("");
                    continue;
                }
+               // push
                if (flat.get(k)[1].equals("FIELD_NAME") && flat.get(k+1)[1].equals("START_OBJECT")) {
                    segments.push(flat.get(k)[0]);
                    String v[] = new String[]{segments.get(segments.size()-1),segments.get(segments.size()-2),"1","no","yes","landmark",flat.get(k)[0],"0","100","-","M","N"};
@@ -1849,12 +1727,20 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                }
                if (flat.get(k)[1].equals("FIELD_NAME") && flat.get(k+1)[1].equals("START_ARRAY") && flat.get(k+2)[1].equals("START_OBJECT")) {
                    segments.push(flat.get(k)[0]);
-                   String v[] = new String[]{segments.get(segments.size()-1),segments.get(segments.size()-2),"1","no","yes","landmark",flat.get(k)[0],"0","100","-","M","N"};
+                   String v[] = new String[]{segments.get(segments.size()-1),segments.get(segments.size()-2),"100","no","yes","landmark",flat.get(k)[0],"0","100","-","M","N"};
                    if (! seen.contains(segments.get(segments.size()-1) + "," + segments.get(segments.size()-2) + "," + flat.get(k)[0])) {
                     result.add(v);
                    }
                    seen.add(segments.get(segments.size()-1) + "," + segments.get(segments.size()-2) + "," + flat.get(k)[0]);
                } 
+               if (flat.get(k)[1].equals("FIELD_NAME") && flat.get(k+1)[1].equals("START_ARRAY") && (flat.get(k+2)[1].equals("END_ARRAY") || flat.get(k+2)[1].startsWith("VALUE") )) {
+                   segments.push(flat.get(k)[0]);
+                   String v[] = new String[]{segments.get(segments.size()-1),segments.get(segments.size()-2),"15","no","no",flat.get(k)[0],flat.get(k)[0],"0","100","-","O","F"};
+                   if (! seen.contains(segments.get(segments.size()-1) + "," + segments.get(segments.size()-2) + "," + flat.get(k)[0])) {
+                    result.add(v);
+                   }
+                   seen.add(segments.get(segments.size()-1) + "," + segments.get(segments.size()-2) + "," + flat.get(k)[0]);
+               }
                
                // field
                if (flat.get(k)[1].equals("FIELD_NAME") && flat.get(k+1)[1].startsWith("VALUE")) {
@@ -1865,6 +1751,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                    seen.add(segments.get(segments.size()-1) + "," + segments.get(segments.size()-2) + "," + flat.get(k)[0]);
                }
                
+               // pop
                if (flat.get(k)[1].equals("END_OBJECT")) {
                    if (! flat.get(k+1)[1].equals("START_OBJECT") && ! flat.get(k+1)[1].equals("END_ARRAY")) {
                        if (! segments.empty()) {                       

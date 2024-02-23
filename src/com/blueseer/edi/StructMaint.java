@@ -31,7 +31,6 @@ import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.tags;
 import static com.blueseer.edi.EDIMap.csvToSegment;
 import static com.blueseer.edi.EDIMap.jsonTagsToSegment;
-import static com.blueseer.edi.EDIMap.jsonTagsToSegmentExperiemental;
 import static com.blueseer.edi.EDIMap.xmlTagsToSegments;
 import static com.blueseer.edi.ediData.addDFStructureTransaction;
 import static com.blueseer.edi.ediData.addMapStruct;
