@@ -3267,6 +3267,18 @@ CREATE TABLE "fin_meta" (
   "finm_key" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
   "finm_value" varchar(200) NOT NULL COLLATE NOCASE DEFAULT ''
 );
+CREATE TABLE "job_clock" (
+  "jobc_planid" int(8) NOT NULL DEFAULT '0',
+  "jobc_op" int(4) NOT NULL  DEFAULT '0',
+  "jobc_qty" decimal(14,5) NOT NULL DEFAULT '0',
+  "jobc_empnbr" int(8)  NOT NULL DEFAULT '0',
+  "jobc_indate" date DEFAULT '0000-00-00',
+  "jobc_outdate" date DEFAULT '0000-00-00',
+  "jobc_intime" time COLLATE NOCASE DEFAULT '',
+  "jobc_outtime" time COLLATE NOCASE DEFAULT '',
+  "jobc_tothrs" decimal(14,2)  NOT NULL DEFAULT '0',
+  "jobc_code" varchar(2) NOT NULL COLLATE NOCASE DEFAULT ''
+); 
 
 
 End Transaction;
