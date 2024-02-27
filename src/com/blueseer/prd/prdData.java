@@ -25,12 +25,20 @@ SOFTWARE.
  */
 package com.blueseer.prd;
 
+import java.util.Date;
+
 /**
  *
  * @author terryva
  */
 public class prdData {
     
-   
+   public record job_clock (String[] m, String jobc_planid, int jobc_op, double jobc_qty, String jobc_empnbr,
+        Date jobc_indate, Date jobc_outdate, String jobc_intime, String jobc_outtime, double jobc_tothrs,
+        String jobc_code ) {
+        public job_clock(String[] m) {
+            this(m,"", 0, 0.00, "", null, null, "", "", 0.00, "");
+        }
+    }
     
 }
