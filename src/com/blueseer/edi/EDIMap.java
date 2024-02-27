@@ -2050,8 +2050,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         
 		return lhmnew;
 	}
-   
-    
+       
     public static List<String[]> xmlTagsToSegments(String xml) throws IOException {
         ArrayList<String[]> result = new ArrayList<String[]>();
         ArrayList<String[]> newresult = new ArrayList<String[]>();
@@ -2230,7 +2229,6 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         
 		return newresult;
 	}
-
     
     public static List<String[]> csvToSegment(String csv) throws IOException {
 	   
@@ -2251,7 +2249,6 @@ public abstract class EDIMap {  // took out the implements EDIMapi
 	  
 	    return result;
 	}
-
     
     public static String xmlgetPathToRoot(String tagc, String tagp, String root, LinkedHashMap<String, String> lhm) {
 		String r = tagp;
