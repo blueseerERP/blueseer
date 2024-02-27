@@ -33,6 +33,7 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.pur.purData;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -61,7 +62,7 @@ public class prdData {
             } else {
               con = DriverManager.getConnection(url + db, user, pass);  
             }
-            int rows = _addUpdateJobClock(x, con, ps, res);  
+            int rows = _addJobClock(x, con, ps, res);  
             if (rows > 0) {
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
             } else {
@@ -96,7 +97,7 @@ public class prdData {
     return m;
     }
    
-   public static int _addUpdateJobClock(job_clock x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+   public static int _addJobClock(job_clock x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
         String sqlSelect = "select * from job_clock where jobc_planid = ? and jobc_op = ? and jobc_empnbr = ? and jobc_code = ? ;";
         String sqlInsert = "insert into job_clock (jobc_planid, jobc_op, jobc_qty, jobc_empnbr, " 
@@ -125,6 +126,38 @@ public class prdData {
             rows = ps.executeUpdate();
             } 
             return rows;
+    }
+    
+   public static String[] updateJobClock(job_clock x) {
+        // method only updates job_clock records that are in 'open' condition....jobc_code = '01'
+        // method only updates table fields that are relevant to clocking out
+        String[] m = new String[2];
+        int rows = 0;
+        String sql = "update job_clock set jobc_outdate = ?, jobc_outtime = ?, jobc_qty = ?, " +
+                " jobc_tothrs = ?, jobc_code = ? where jobc_planid = ? and jobc_op = ? and jobc_empnbr = ? " +
+                " and jobc_code = '01' ";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
+	PreparedStatement ps = con.prepareStatement(sql)) {
+        ps.setString(1, x.jobc_outdate());
+        ps.setString(2, x.jobc_outtime());
+        ps.setDouble(3, x.jobc_qty());
+        ps.setDouble(4, x.jobc_tothrs());
+        ps.setString(5, x.jobc_code());
+        ps.setString(6, x.jobc_planid());
+        ps.setInt(7, x.jobc_op());
+        ps.setString(8, x.jobc_empnbr());
+        rows = ps.executeUpdate();
+        if (rows > 0) {
+           m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};  
+        } else {
+           m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1012)}; 
+        }
+        
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
     }
     
     
