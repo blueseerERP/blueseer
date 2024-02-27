@@ -386,7 +386,6 @@ public class hrmData {
                 res = st.executeQuery("select emp_nbr from emp_mstr order by emp_nbr ;");
                 while (res.next()) {
                     myarray.add(res.getString("emp_nbr"));
-
                 }
 
             } catch (SQLException s) {
@@ -398,14 +397,44 @@ public class hrmData {
                 if (st != null) {
                     st.close();
                 }
-                if (con != null) {
-                    con.close();
-                }
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
         return myarray;
+
+    }
+
+    public static boolean isValidEmployeeID(String id) {
+        boolean x = false;
+        try {
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                res = st.executeQuery("select emp_nbr from emp_mstr where emp_nbr = " + "'" + id + "'" + ";");
+                if (res.isBeforeFirst()) {
+                    x = true;
+                }
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return x;
 
     }
 
