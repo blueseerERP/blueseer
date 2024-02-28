@@ -56,13 +56,23 @@ import static com.blueseer.hrm.hrmData.getEmployeeMstr;
 import static com.blueseer.hrm.hrmData.isValidEmployeeID;
 import com.blueseer.inv.invData;
 import com.blueseer.inv.invData.inv_ctrl;
+import static com.blueseer.prd.prdData.addJobClock;
+import static com.blueseer.prd.prdData.getJobClockInTime;
+import com.blueseer.prd.prdData.job_clock;
+import static com.blueseer.prd.prdData.updateJobClock;
 import com.blueseer.sch.schData;
 import static com.blueseer.sch.schData.getPlanDetHistory;
 import com.blueseer.sch.schData.plan_mstr;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.bsNumberToUS;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.setDateDB;
+import static com.blueseer.utl.BlueSeerUtils.xZero;
 import java.awt.Component;
 import java.sql.Connection;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import javax.swing.BorderFactory;
@@ -94,6 +104,9 @@ String siteaddr = "";
 String sitephone = "";
 String sitecitystatezip = "";
 boolean planLegit = false;
+
+String clockdate = "";
+String clocktime = "";
 
 javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
@@ -352,6 +365,73 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
        tbscan.requestFocusInWindow();
         
     }
+    
+    public job_clock createRecordIn() { 
+        java.util.Date now = new java.util.Date();
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+        clockdate = dfdate.format(now);
+        clocktime = dftime.format(now);
+                    
+        job_clock x = new job_clock(null, 
+                 bsParseInt(tbscan.getText()),
+                 bsParseInt(ddop.getSelectedItem().toString()),
+                 bsParseDouble(xZero(tbqty.getText())),
+                 tboperator.getText(),
+                 setDateDB(now), //indate
+                 setDateDB(null),  //outdate
+                 clocktime,
+                 "",
+                 0,
+                 "01" // clock in
+                );
+        return x;
+    }
+   
+    public job_clock createRecordOut() { 
+        java.util.Date now = new java.util.Date();
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+        clockdate = dfdate.format(now);
+        clocktime = dftime.format(now);
+        
+        String[] intime = getJobClockInTime(bsParseInt(tbscan.getText()), bsParseInt(ddop.getSelectedItem().toString()), tboperator.getText());
+        Calendar clockstart = Calendar.getInstance();
+        Calendar clockstop = Calendar.getInstance();
+        clockstart.set( Integer.valueOf(intime[0].substring(0,4)), Integer.valueOf(intime[0].substring(5,7)), Integer.valueOf(intime[0].substring(8,10)), Integer.valueOf(intime[1].substring(0,2)), Integer.valueOf(intime[1].substring(3,5)) );
+        clockstop.set(Integer.valueOf(clockdate.substring(0,4)), Integer.valueOf(clockdate.substring(5,7)), Integer.valueOf(clockdate.substring(8,10)), Integer.valueOf(clocktime.substring(0,2)), Integer.valueOf(clocktime.substring(3,5)));
+        double quarterhour = 0;
+        long milis1 = clockstart.getTimeInMillis();
+        long milis2 = clockstop.getTimeInMillis();
+        long diff = milis2 - milis1;
+        long diffHours = diff / (60 * 60 * 1000);
+        long diffMinutes = diff / (60 * 1000);
+        long diffDays = diff / (24 * 60 * 60 * 1000);
+        long diffSeconds = diff / 1000;
+        if (diffMinutes > 0) {
+            quarterhour = (diffMinutes / (double) 60) ;
+
+        }
+        double nbrhours = quarterhour;   // this is the total hours accumulated in quarter increments
+
+        
+        
+        job_clock x = new job_clock(null, 
+                 bsParseInt(tbscan.getText()),
+                 bsParseInt(ddop.getSelectedItem().toString()),
+                 bsParseDouble(xZero(tbqty.getText())),
+                 tboperator.getText(),
+                 setDateDB(null), //indate
+                 setDateDB(now),  //outdate
+                 "", // intime
+                 clocktime, // out time
+                 nbrhours,
+                 "00" // clock out and close
+                );
+        return x;
+    }
+   
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -678,6 +758,8 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
                  lblmessage.setForeground(Color.blue);
                  getScanHistory(tbscan.getText());
                  
+                 updateJobClock(createRecordOut());
+                 
                 if (BlueSeerUtils.ConvertStringToBool(ic.printsubticket())) {               
                      try {
                         printTubTicket(tbscan.getText(), String.valueOf(key));
@@ -686,7 +768,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
                     }
                 }
             }
-              initvars(null);
+              new AnswerWorker().execute();
        } 
     }//GEN-LAST:event_btcommitActionPerformed
 
@@ -733,6 +815,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         } else {
             if (dddir.getSelectedItem().toString().equals("In")) {
                 // create job_clock record and return init(null)
+                addJobClock(createRecordIn());
                 partlabel.setText("");
                 userlabel.setText("");
                 oplabel.setText("");

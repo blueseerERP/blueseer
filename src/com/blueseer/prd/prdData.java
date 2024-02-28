@@ -106,14 +106,14 @@ public class prdData {
                         + " values (?,?,?,?,?,?,?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
-          ps.setString(1, x.jobc_planid());
+          ps.setInt(1, x.jobc_planid());
           ps.setInt(2, x.jobc_op());
           ps.setString(3, x.jobc_empnbr());
           ps.setString(4, x.jobc_code());
           res = ps.executeQuery();
           ps = con.prepareStatement(sqlInsert);
             if (! res.isBeforeFirst()) {
-            ps.setString(1, x.jobc_planid());
+            ps.setInt(1, x.jobc_planid());
             ps.setInt(2, x.jobc_op());
             ps.setDouble(3, x.jobc_qty());
             ps.setString(4, x.jobc_empnbr());
@@ -143,7 +143,7 @@ public class prdData {
         ps.setDouble(3, x.jobc_qty());
         ps.setDouble(4, x.jobc_tothrs());
         ps.setString(5, x.jobc_code());
-        ps.setString(6, x.jobc_planid());
+        ps.setInt(6, x.jobc_planid());
         ps.setInt(7, x.jobc_op());
         ps.setString(8, x.jobc_empnbr());
         rows = ps.executeUpdate();
@@ -159,13 +159,68 @@ public class prdData {
         }
         return m;
     }
+   
+   public static job_clock getJobClock(String[] x) {
+       // gets clockin jobs only
+        job_clock r = null;
+        String[] m = new String[2];
+        String sql = "select * from job_clock where jobc_planid = ? and jobc_op = ? and jobc_empnbr = ? and jobc_code = '01' ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, x[0]);
+        ps.setString(2, x[1]);
+        ps.setString(3, x[2]);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new job_clock(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new job_clock(m, res.getInt("jobc_planid"), res.getInt("jobc_op"), res.getDouble("jobc_qty"), res.getString("jobc_empnbr"),
+                    res.getString("jobc_indate"), res.getString("jobc_outdate"), res.getString("jobc_intime"), res.getString("jobc_outtime"),
+                    res.getDouble("jobc_tothrs"), res.getString("jobc_code"));
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new job_clock(m);
+        }
+        return r;
+    }
+    
+   // miscellaneous methods
+   public static String[] getJobClockInTime(int plan, int op, String empnbr) {
+           // get billto specific data
+            // aracct, arcc, currency, bank, terms, carrier, onhold, site
+        String[] timeinfo = new String[]{"",""};
+        String sql = "select jobc_indate, jobc_intime from job_clock where jobc_planid = ? and jobc_op = ? and jobc_empnbr = ? and jobc_code = '01';";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setInt(1, plan);
+        ps.setInt(2, op);
+        ps.setString(3, empnbr);
+             try (ResultSet res = ps.executeQuery();) {
+               while (res.next()) {
+               timeinfo[0] = res.getString("jobc_indate");
+               timeinfo[1] = res.getString("jobc_intime");           
+               }
+            }
+        }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+        }
+        return timeinfo;
+    }
     
     
-   public record job_clock (String[] m, String jobc_planid, int jobc_op, double jobc_qty, String jobc_empnbr,
+   public record job_clock (String[] m, int jobc_planid, int jobc_op, double jobc_qty, String jobc_empnbr,
         String jobc_indate, String jobc_outdate, String jobc_intime, String jobc_outtime, double jobc_tothrs,
         String jobc_code ) {
         public job_clock(String[] m) {
-            this(m,"", 0, 0.00, "", null, null, "", "", 0.00, "");
+            this(m, 0, 0, 0.00, "", null, null, "", "", 0.00, "");
         }
     }
     
