@@ -73,6 +73,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingWorker;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.view.JasperViewer;
 
@@ -92,6 +93,7 @@ String sitename = "";
 String siteaddr = "";
 String sitephone = "";
 String sitecitystatezip = "";
+boolean planLegit = false;
 
 javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
@@ -107,6 +109,28 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         setLanguageTags(this);
     }
 
+     class AnswerWorker extends SwingWorker<Integer, Integer> {
+        protected Integer doInBackground() throws Exception
+        {
+                // Do a time-consuming task.
+                Thread.sleep(2000);
+                return 1;
+        }
+
+        protected void done()
+        {
+                try
+                {
+                       // JOptionPane.showMessageDialog(f, get());
+                        initvars(null);
+                }
+                catch (Exception e)
+                {
+                        MainFrame.bslog(e);
+                }
+        }
+}
+   
     
     public void printTubTicket(String scan, String subid) throws PrinterException {
         
@@ -239,18 +263,19 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
        }
        
        // now get history of plan jobid (scan)
+       planLegit = true;
        getScanHistory(tbscan.getText());
        
        tboperator.requestFocusInWindow();
        
       } else {
+            planLegit = false;
               btcommit.setEnabled(false);
               tbscan.setText("");
               qtylabel.setText("Bad Ticket");
               qtylabel.setForeground(Color.red);
         // bsmf.MainFrame.show("Bad Ticket: " + scan);
          tbscan.requestFocusInWindow();
-            return;
       }
     }
        
@@ -302,11 +327,20 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         
         tbqty.setText("");
         tbscan.setText("");
+        tboperator.setText("");
+        ddop.removeAllItems();
+        
+        
+        lblmessage.setText("");
+        lblmessage.setForeground(Color.black);
+        partlabel.setText("");
+        partlabel.setForeground(Color.black);
+        userlabel.setText("");
+        userlabel.setForeground(Color.black);
+        oplabel.setText("");
+        oplabel.setForeground(Color.black);
         qtylabel.setText("");
         qtylabel.setForeground(Color.black);
-        ddop.removeAllItems();
-        tboperator.setText("");
-      
        
        historytable.setModel(historymodel);
        historytable.getTableHeader().setReorderingAllowed(false);
@@ -344,7 +378,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         jpaneltable = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         historytable = new javax.swing.JTable();
-        cbdir = new javax.swing.JComboBox<>();
+        dddir = new javax.swing.JComboBox<>();
         userlabel = new javax.swing.JLabel();
         oplabel = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
@@ -372,11 +406,6 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 tbscanFocusLost(evt);
-            }
-        });
-        tbscan.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tbscanActionPerformed(evt);
             }
         });
 
@@ -442,7 +471,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
                 .addContainerGap())
         );
 
-        cbdir.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "In", "Out" }));
+        dddir.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "In", "Out" }));
 
         userlabel.setForeground(new java.awt.Color(25, 102, 232));
 
@@ -468,7 +497,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
                             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbdir, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(dddir, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tbscan, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tboperator, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -492,7 +521,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbdir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dddir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
                 .addGap(7, 7, 7)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -688,29 +717,41 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         validateJob(tbscan.getText());        
     }//GEN-LAST:event_tbscanFocusLost
 
-    private void tbscanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbscanActionPerformed
-        tbqty.requestFocusInWindow();
-    }//GEN-LAST:event_tbscanActionPerformed
-
     private void tboperatorFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tboperatorFocusGained
-       tboperator.setBackground(Color.yellow);
+        tboperator.setBackground(Color.yellow);
     }//GEN-LAST:event_tboperatorFocusGained
 
     private void tboperatorFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tboperatorFocusLost
         tboperator.setBackground(Color.white);
        // emp_mstr emp = getEmployeeMstr(new String[]{tboperator.getText()});
+       if (planLegit) {
         if (! isValidEmployeeID(tboperator.getText())) {
-            bsmf.MainFrame.show("Invalid Scan for Employee ID");
+            lblmessage.setText("Invalid Employee ID");
+            lblmessage.setForeground(Color.red);
+            tboperator.setText("");
+            tboperator.requestFocusInWindow();
         } else {
-            tboperator.setBackground(Color.white);
-            tbqty.requestFocusInWindow();
+            if (dddir.getSelectedItem().toString().equals("In")) {
+                // create job_clock record and return init(null)
+                partlabel.setText("");
+                userlabel.setText("");
+                oplabel.setText("");
+                qtylabel.setText("");
+                lblmessage.setText("clock in success");
+                lblmessage.setForeground(Color.blue);
+                new AnswerWorker().execute();
+            } else {
+                tboperator.setBackground(Color.white);
+                tbqty.requestFocusInWindow();
+            }
         }
+       }
     }//GEN-LAST:event_tboperatorFocusLost
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btcommit;
-    private javax.swing.JComboBox<String> cbdir;
+    private javax.swing.JComboBox<String> dddir;
     private javax.swing.JComboBox ddop;
     private javax.swing.JTable historytable;
     private javax.swing.JLabel jLabel1;
