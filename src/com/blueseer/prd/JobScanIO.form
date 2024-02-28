@@ -49,26 +49,34 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="dddir" alignment="0" min="-2" pref="107" max="-2" attributes="0"/>
-                              <Component id="tbscan" alignment="0" min="-2" pref="134" max="-2" attributes="0"/>
-                              <Component id="tboperator" alignment="0" min="-2" pref="134" max="-2" attributes="0"/>
-                              <Component id="ddop" alignment="0" min="-2" pref="131" max="-2" attributes="0"/>
-                              <Component id="tbqty" alignment="0" min="-2" pref="96" max="-2" attributes="0"/>
-                              <Component id="btcommit" alignment="0" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="qtylabel" min="-2" pref="376" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <EmptySpace min="-2" pref="64" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="userlabel" min="-2" pref="195" max="-2" attributes="0"/>
-                                      <Component id="partlabel" min="-2" pref="195" max="-2" attributes="0"/>
-                                      <Component id="oplabel" alignment="0" min="-2" pref="195" max="-2" attributes="0"/>
+                                      <Component id="tbscan" alignment="0" min="-2" pref="134" max="-2" attributes="0"/>
+                                      <Component id="tboperator" alignment="0" min="-2" pref="134" max="-2" attributes="0"/>
+                                      <Component id="ddop" alignment="0" min="-2" pref="131" max="-2" attributes="0"/>
+                                      <Component id="tbqty" alignment="0" min="-2" pref="96" max="-2" attributes="0"/>
+                                      <Component id="btcommit" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="-2" pref="83" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="qtylabel" min="-2" pref="376" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Group type="102" alignment="1" attributes="0">
+                                          <EmptySpace min="-2" pref="64" max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="0" attributes="0">
+                                              <Component id="userlabel" min="-2" pref="195" max="-2" attributes="0"/>
+                                              <Component id="partlabel" min="-2" pref="195" max="-2" attributes="0"/>
+                                              <Component id="oplabel" alignment="0" min="-2" pref="195" max="-2" attributes="0"/>
+                                          </Group>
+                                          <EmptySpace min="-2" pref="83" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="dddir" min="-2" pref="107" max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="btclear" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -84,8 +92,9 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="dddir" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="btclear" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="tbscan" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -293,6 +302,14 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Direction"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btclear">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Clear"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btclearActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
