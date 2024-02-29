@@ -57,6 +57,7 @@ import static com.blueseer.hrm.hrmData.isValidEmployeeID;
 import com.blueseer.inv.invData;
 import com.blueseer.inv.invData.inv_ctrl;
 import static com.blueseer.prd.prdData.addJobClock;
+import static com.blueseer.prd.prdData.getJobClock;
 import static com.blueseer.prd.prdData.getJobClockHistory;
 import static com.blueseer.prd.prdData.getJobClockInTime;
 import com.blueseer.prd.prdData.job_clock;
@@ -203,10 +204,12 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
  
     }
     
-    public void getScanHistory(String scan) {
+    public void getScanHistory() {
        historymodel.setRowCount(0);
+       String io = "";
        ArrayList<String[]> hist = getJobClockHistory(setDateDB(new java.util.Date()));
        for (String[] h : hist) {
+           io = (h[8].equals("01")) ? "Clocked In" : "Clocked Out";
             historymodel.addRow(new Object[]{
                       h[2], // user
                       h[0], // jobid
@@ -216,7 +219,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
                       h[5], // in time
                       h[6], // out date
                       h[7], // outtime
-                      h[8] // code
+                      io // code
                   });
        }
     }
@@ -253,6 +256,8 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
            ddop.addItem("0");
            partlabel.setText(partlabel.getText() + " " + "No Operations..." + "\n" + "make sure item has routing AND standard cost");
            partlabel.setForeground(Color.yellow);
+           new AnswerWorker().execute();
+           return;
        } else {
           double prevscanned = schData.getPlanDetTotQtyByOp(tbscan.getText(), ddop.getSelectedItem().toString());
           double qtysched = schData.getPlanSchedQty(tbscan.getText());
@@ -266,6 +271,8 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
             lblmessage.setText(getMessageTag(1071,tbscan.getText()));
             lblmessage.setForeground(Color.red);
             btcommit.setEnabled(false);
+            new AnswerWorker().execute();
+            return;
             } 
           
           if (qtysched == 0 ) { // check if scheduled
@@ -277,7 +284,12 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
        
        // now get history of plan jobid (scan)
        planLegit = true;
-       getScanHistory(tbscan.getText());
+       if (dddir.getSelectedItem().toString().equals("In")) {
+           tbqty.setText("0");
+           tbqty.setEnabled(false);
+       } else {
+           tbqty.setEnabled(true);
+       }
        
        tboperator.requestFocusInWindow();
        
@@ -360,6 +372,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
        historytable.getTableHeader().setReorderingAllowed(false);
        historymodel.setRowCount(0);
        
+       getScanHistory();
        
        btcommit.setEnabled(false);
         
@@ -377,7 +390,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         job_clock x = new job_clock(null, 
                  bsParseInt(tbscan.getText()),
                  bsParseInt(ddop.getSelectedItem().toString()),
-                 bsParseDouble(xZero(tbqty.getText())),
+                 0,
                  tboperator.getText(),
                  setDateDB(now), //indate
                  setDateDB(null),  //outdate
@@ -608,7 +621,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
                                 .addComponent(dddir, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(btclear)))))
-                .addContainerGap(25, Short.MAX_VALUE))
+                .addContainerGap(176, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -770,7 +783,6 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
                  int key = OVData.CreatePlanDet(mytable, isLastOp);
                  lblmessage.setText("Scan Complete");
                  lblmessage.setForeground(Color.blue);
-                 getScanHistory(tbscan.getText());
                  
                  updateJobClock(createRecordOut());
                  
@@ -843,9 +855,17 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
                 }
                 new AnswerWorker().execute();
             } else {
-                tboperator.setBackground(Color.white);
-                tbqty.requestFocusInWindow();
-                btcommit.setEnabled(true);
+                job_clock jc = getJobClock(new String[]{tbscan.getText(), ddop.getSelectedItem().toString(), tboperator.getText()});
+                if (jc.m()[0].equals("1")) {
+                    lblmessage.setText("No clock In record found for this ticket/operation/user combination");
+                    lblmessage.setForeground(Color.red);
+                    new AnswerWorker().execute();
+                } else {
+                    tboperator.setBackground(Color.white);
+                    tbqty.requestFocusInWindow();
+                    btcommit.setEnabled(true); 
+                }
+                
             }
         }
        }

@@ -231,7 +231,7 @@ public class prdData {
             try {
              res = st.executeQuery("select * from job_clock where jobc_indate = " + "'" + now + "'" +
                      " or jobc_outdate = " + "'" + now + "'"
-                     + " order by abs(pland_op) ;");
+                     + " order by jobc_planid ;");
            while (res.next()) {
                String[] w = new String[]{
                     res.getString("jobc_planid"),
