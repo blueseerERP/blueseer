@@ -836,8 +836,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         if (! isValidEmployeeID(tboperator.getText())) {
             lblmessage.setText("Invalid Employee ID");
             lblmessage.setForeground(Color.red);
-            tboperator.setText("");
-           // tboperator.requestFocusInWindow();
+            new AnswerWorker().execute();
         } else {
             if (dddir.getSelectedItem().toString().equals("In")) {
                 // create job_clock record and return init(null)
