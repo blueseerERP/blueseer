@@ -57,6 +57,7 @@ import static com.blueseer.hrm.hrmData.isValidEmployeeID;
 import com.blueseer.inv.invData;
 import com.blueseer.inv.invData.inv_ctrl;
 import static com.blueseer.prd.prdData.addJobClock;
+import static com.blueseer.prd.prdData.getJobClockHistory;
 import static com.blueseer.prd.prdData.getJobClockInTime;
 import com.blueseer.prd.prdData.job_clock;
 import static com.blueseer.prd.prdData.updateJobClock;
@@ -111,9 +112,8 @@ String clocktime = "";
 
 javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                "jobid", "operation", "qty", "date", "userid"
+                "user", "jobid", "operation", "qty", "in date", "in time", "out date", "out time", "In/Out"
             });
-    
     
     /**
      * Creates new form CarrierMaintPanel
@@ -205,14 +205,18 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
     
     public void getScanHistory(String scan) {
        historymodel.setRowCount(0);
-       ArrayList<String[]> hist = getPlanDetHistory(scan);
+       ArrayList<String[]> hist = getJobClockHistory(setDateDB(new java.util.Date()));
        for (String[] h : hist) {
             historymodel.addRow(new Object[]{
-                      h[1], // jobid
-                      h[3], // op
-                      h[7], // qty
-                      h[5], // date
-                      h[8] // userid
+                      h[2], // user
+                      h[0], // jobid
+                      h[1], // op
+                      h[3], // qty
+                      h[4], // in date
+                      h[5], // in time
+                      h[6], // out date
+                      h[7], // outtime
+                      h[8] // code
                   });
        }
     }
@@ -262,18 +266,13 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
             lblmessage.setText(getMessageTag(1071,tbscan.getText()));
             lblmessage.setForeground(Color.red);
             btcommit.setEnabled(false);
-            } else {
-                btcommit.setEnabled(true);
-          }
+            } 
           
           if (qtysched == 0 ) { // check if scheduled
             lblmessage.setText(getMessageTag(1182,tbscan.getText()));
             lblmessage.setForeground(Color.red);
             btcommit.setEnabled(false);
-            } else {
-                btcommit.setEnabled(true);
-          }
-          
+            } 
        }
        
        // now get history of plan jobid (scan)
@@ -339,6 +338,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         
     public void initvars(String[] arg) {
         
+        btcommit.setEnabled(false);
         tbqty.setText("");
         tbscan.setText("");
         tboperator.setText("");
@@ -845,6 +845,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
             } else {
                 tboperator.setBackground(Color.white);
                 tbqty.requestFocusInWindow();
+                btcommit.setEnabled(true);
             }
         }
        }

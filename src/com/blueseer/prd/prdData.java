@@ -39,6 +39,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -214,6 +216,53 @@ public class prdData {
         }
         return timeinfo;
     }
+   
+   public static ArrayList<String[]> getJobClockHistory(String now) {
+      ArrayList<String[]> x = new ArrayList<String[]>();
+      try {
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+             res = st.executeQuery("select * from job_clock where jobc_indate = " + "'" + now + "'" +
+                     " or jobc_outdate = " + "'" + now + "'"
+                     + " order by abs(pland_op) ;");
+           while (res.next()) {
+               String[] w = new String[]{
+                    res.getString("jobc_planid"),
+                    res.getString("jobc_op"),
+                    res.getString("jobc_empnbr"),
+                    res.getString("jobc_qty"),
+                    res.getString("jobc_indate"),
+                    res.getString("jobc_intime"),
+                    res.getString("jobc_outdate"),
+                    res.getString("jobc_outtime"),
+                    res.getString("jobc_code")
+               };
+               x.add(w);
+           }
+
+        } catch (SQLException s) {
+            MainFrame.bslog(s);
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+    } catch (Exception e) {
+        MainFrame.bslog(e);
+    }
+      return x;
+  }
     
     
    public record job_clock (String[] m, int jobc_planid, int jobc_op, double jobc_qty, String jobc_empnbr,
