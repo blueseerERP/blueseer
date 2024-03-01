@@ -196,8 +196,11 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="dcTo" pref="115" max="32767" attributes="0"/>
-                                  <Component id="dcFrom" max="32767" attributes="0"/>
+                                  <Component id="dcTo" max="32767" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <Component id="dcFrom" min="-2" pref="127" max="-2" attributes="0"/>
+                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  </Group>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
@@ -252,7 +255,7 @@
                               <Component id="tbrmks" min="-2" pref="154" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace pref="10" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
