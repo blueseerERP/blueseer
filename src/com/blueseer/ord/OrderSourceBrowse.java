@@ -75,13 +75,17 @@ import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.sql.Connection;
 import java.text.DecimalFormatSymbols;
+import java.util.Enumeration;
 import java.util.Locale;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumn;
 
 /**
  *
@@ -90,7 +94,7 @@ import javax.swing.JTabbedPane;
 public class OrderSourceBrowse extends javax.swing.JPanel {
  
      public Map<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
-     
+     public String defcurr;
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{
                             getGlobalColumnTag("select"), 
@@ -101,7 +105,24 @@ public class OrderSourceBrowse extends javax.swing.JPanel {
                             getGlobalColumnTag("type"), 
                             getGlobalColumnTag("status"), 
                             getGlobalColumnTag("amount"), 
-                            getGlobalColumnTag("sourced")});
+                            getGlobalColumnTag("sourced")}){
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0 || col == 1)       
+                            return ImageIcon.class;
+                        else if (col == 7) 
+                            return Double.class;
+                        else return String.class;  //other columns accept String values  
+                      }
+                      
+                      @Override
+                      public boolean isCellEditable(int row, int column) {
+                            return false;
+                            //Only the first column
+                            // return column == 1;
+                      }
+                      
+                        };;
                 
     javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{getGlobalColumnTag("order"), 
@@ -134,6 +155,35 @@ public class OrderSourceBrowse extends javax.swing.JPanel {
     }
     
    
+class SomeRenderer extends DefaultTableCellRenderer {
+        
+    public Component getTableCellRendererComponent(JTable table,
+            Object value, boolean isSelected, boolean hasFocus, int row,
+            int column) {
+
+        Component c = super.getTableCellRendererComponent(table,
+                value, isSelected, hasFocus, row, column);
+        /*
+        String currency = (String)table.getModel().getValueAt(table.convertRowIndexToModel(row), 10);  // 8 = status column
+        if (! currency.equals(defcurr)) {
+            table.getColumnModel().getColumn(9).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(currency)));
+        } else {
+            table.getColumnModel().getColumn(9).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(defcurr)));
+        }
+       */
+        
+        //c.setBackground(row % 2 == 0 ? Color.LIGHT_GRAY : Color.WHITE);
+      // c.setBackground(row % 2 == 0 ? Color.GREEN : Color.LIGHT_GRAY);
+      // c.setBackground(row % 3 == 0 ? new Color(245,245,220) : Color.LIGHT_GRAY);
+       /*
+            if (column == 3)
+            c.setForeground(Color.BLUE);
+            else
+                c.setBackground(table.getBackground());
+       */
+        return c;
+    }
+    }
 
     
     
@@ -250,6 +300,7 @@ public class OrderSourceBrowse extends javax.swing.JPanel {
         lblqtytot.setText("0");
         labeldettotal.setText("");
         
+        defcurr = OVData.getDefaultCurrency();
         
         java.util.Date now = new java.util.Date();
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -574,11 +625,21 @@ try {
         
               tablereport.setModel(mymodel);
               tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
-              tablereport.getColumnModel().getColumn(0).setCellRenderer(new ButtonRenderer());
+             // tablereport.getColumnModel().getColumn(0).setCellRenderer(new ButtonRenderer());
               tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-               tablereport.getColumnModel().getColumn(1).setCellRenderer(new ButtonRenderer());
+            //   tablereport.getColumnModel().getColumn(1).setCellRenderer(new ButtonRenderer());
               tablereport.getColumnModel().getColumn(1).setMaxWidth(100);
-                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                
+              Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+                 while (en.hasMoreElements()) {
+                     TableColumn tc = en.nextElement();
+                     if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) {
+                         continue;
+                     }
+                     tc.setCellRenderer(new OrderSourceBrowse.SomeRenderer());
+                 }
+              
+                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 
                  double totqty = 0.00;
                  double totamt = 0.00;
@@ -610,7 +671,9 @@ try {
                           totamt += res.getDouble(("total"));
                           totqty += res.getDouble(("qty"));
                
-                    mymodel.addRow(new Object[]{"Select", "Detail", res.getString("so_nbr"),
+                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag,
+                            BlueSeerUtils.clickbasket, 
+                            res.getString("so_nbr"),
                                 res.getString("so_cust"),
                                 res.getString("so_ord_date"),
                                 res.getString("so_type"),
