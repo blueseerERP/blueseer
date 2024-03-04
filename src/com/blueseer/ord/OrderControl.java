@@ -40,6 +40,7 @@ import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.IBlueSeerc;
+import com.blueseer.utl.OVData;
 import java.awt.Component;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
@@ -223,6 +224,9 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
     
     public String[] updateRecord(String[] x) {
      String[] m = addUpdateORCtrl(createRecord());
+     // additional sys_meta 
+     SysMeta();
+     
         return m;
      }
       
@@ -267,7 +271,15 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
      
     }
     
-    
+    // additional methods
+    public void SysMeta() {
+      if (! tbstartdate.getText().isBlank() && BlueSeerUtils.isParsableToInt(tbstartdate.getText())) {
+          OVData.addUpdateSysMetaData("system", "orderbrowse", "browse_start_date", tbstartdate.getText());  
+      }
+      if (! tbenddate.getText().isBlank() && BlueSeerUtils.isParsableToInt(tbenddate.getText())) {
+          OVData.addUpdateSysMetaData("system", "orderbrowse", "browse_end_date", tbenddate.getText());  
+      }
+    }
     
    
     /**
@@ -291,6 +303,11 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
         cbexceedQOHU = new javax.swing.JCheckBox();
         btjson = new javax.swing.JButton();
         cbvouchershipping = new javax.swing.JCheckBox();
+        jPanel3 = new javax.swing.JPanel();
+        tbstartdate = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        tbenddate = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -359,24 +376,62 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
 
         cbvouchershipping.setText("Voucher Shipping?");
 
+        jLabel1.setText("Browse Start Date");
+
+        jLabel2.setText("Browse End Date");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(tbenddate, javax.swing.GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
+                    .addComponent(tbstartdate))
+                .addContainerGap())
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbstartdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbenddate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(14, 14, 14)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cballocate)
-                    .addComponent(cbexceedQOHU)
-                    .addComponent(cbautosource)
-                    .addComponent(cbautoinvoice)
-                    .addComponent(cbcustitem)
-                    .addComponent(cbvouchershipping))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btupdate)
-                    .addComponent(btjson))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cballocate)
+                            .addComponent(cbexceedQOHU)
+                            .addComponent(cbautosource)
+                            .addComponent(cbautoinvoice)
+                            .addComponent(cbcustitem)
+                            .addComponent(cbvouchershipping))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btupdate)
+                            .addComponent(btjson))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -388,9 +443,8 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btupdate)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
-                        .addComponent(btjson)
-                        .addContainerGap())
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btjson))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(5, 5, 5)
                         .addComponent(cbautosource, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -403,8 +457,10 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbexceedQOHU)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbvouchershipping)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addComponent(cbvouchershipping)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         add(jPanel1);
@@ -450,7 +506,12 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
     private javax.swing.JCheckBox cbsrvmitemdefault;
     private javax.swing.JCheckBox cbsrvmtype;
     private javax.swing.JCheckBox cbvouchershipping;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JTextField tbenddate;
+    private javax.swing.JTextField tbstartdate;
     // End of variables declaration//GEN-END:variables
 }
