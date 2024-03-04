@@ -64,6 +64,7 @@ import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.setDateDB;
+import static com.blueseer.utl.OVData.getSysMetaData;
 import java.sql.Connection;
 import java.util.Calendar;
 import java.util.Enumeration;
@@ -304,9 +305,29 @@ public class OrderRpt extends javax.swing.JPanel {
          dcFrom.setDate(now);
          dcTo.setDate(now);
          Calendar calfrom = Calendar.getInstance();
-         calfrom.add(Calendar.DATE, -365);
-         dcFrom.setDate(calfrom.getTime());
          
+        ArrayList<String[]> obc = getSysMetaData("system", "orderbrowse");
+        for (String[] s : obc) {
+            if (s[0].equals("browse_start_date")) {
+               if (! s[1].isBlank() && BlueSeerUtils.isParsableToInt(s[1]) && s[1].length() < 8) {
+               calfrom.add(Calendar.DATE, Integer.valueOf(s[1]));
+               dcFrom.setDate(calfrom.getTime()); 
+               }
+               if (! s[1].isBlank() && BlueSeerUtils.isParsableToInt(s[1]) && s[1].length() == 8) {
+               dcFrom.setDate(BlueSeerUtils.parseDate(BlueSeerUtils.convertDateFormat("yyyyMMdd", s[1]))); 
+               }
+            }
+            if (s[0].equals("browse_end_date")) {
+               if (! s[1].isBlank() && BlueSeerUtils.isParsableToInt(s[1]) && s[1].length() < 8) {
+               calfrom.add(Calendar.DATE, Integer.valueOf(s[1]));
+               dcTo.setDate(calfrom.getTime()); 
+               }
+               if (! s[1].isBlank() && BlueSeerUtils.isParsableToInt(s[1]) && s[1].length() == 8) {
+               dcTo.setDate(BlueSeerUtils.parseDate(BlueSeerUtils.convertDateFormat("yyyyMMdd", s[1]))); 
+               }
+            }
+        } 
+        
         dddatetype.setSelectedIndex(0);
         
          cbopen.setSelected(true);
