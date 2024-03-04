@@ -20243,7 +20243,7 @@ return mylist;
         
     }   
     
-    public static boolean addSysMetaData(String id, String type, String key, String value) {
+    public static boolean addUpdateSysMetaData(String id, String type, String key, String value) {
         boolean x = false;
         try {
             
@@ -20275,6 +20275,14 @@ return mylist;
                             + "'" + value + "'" + ")"
                             + ";");
                     x = true;
+                } else {
+                    st.executeUpdate("update sys_meta set "
+                            + " sysm_key = " + "'" + key + "'" + ","
+                            + " sysm_value = " + "'" + value + "'"
+                            + " where sysm_id = " + "'" + id + "'" + " and "
+                            + " sysm_type = " +  "'" + type + "'"
+                            + ";");
+                    x = true;
                 }
             } // if proceed
             catch (SQLException s) {
@@ -20285,9 +20293,6 @@ return mylist;
                 }
                 if (st != null) {
                     st.close();
-                }
-                if (con != null) {
-                    con.close();
                 }
             }
         } catch (Exception e) {
@@ -20375,7 +20380,7 @@ return mylist;
             }
             
             String Sourcefile = file.getName();
-            boolean x = OVData.addSysMetaData(key, systype, "attachments", Sourcefile);
+            boolean x = OVData.addUpdateSysMetaData(key, systype, "attachments", Sourcefile);
             if (x) {
                 Files.copy(file.toPath(), new File(cleanDirString(getSystemAttachmentDirectory()) + systype + "_" + key + "_" + Sourcefile).toPath(), StandardCopyOption.REPLACE_EXISTING);
                 bsmf.MainFrame.show(getMessageTag(1007));
