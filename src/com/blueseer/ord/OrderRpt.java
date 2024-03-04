@@ -306,7 +306,7 @@ public class OrderRpt extends javax.swing.JPanel {
          dcTo.setDate(now);
          Calendar calfrom = Calendar.getInstance();
          
-        ArrayList<String[]> obc = getSysMetaData("system", "orderbrowse");
+        ArrayList<String[]> obc = getSysMetaData("system", "ordercontrol");
         for (String[] s : obc) {
             if (s[0].equals("browse_start_date")) {
                if (! s[1].isBlank() && BlueSeerUtils.isParsableToInt(s[1]) && s[1].length() < 8) {

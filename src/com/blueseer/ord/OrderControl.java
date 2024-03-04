@@ -41,6 +41,7 @@ import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.IBlueSeerc;
 import com.blueseer.utl.OVData;
+import static com.blueseer.utl.OVData.getSysMetaData;
 import java.awt.Component;
 import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
@@ -54,6 +55,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
@@ -268,16 +270,26 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
     cbsrvmitemdefault.setSelected(BlueSeerUtils.ConvertStringToBool(x.orc_srvm_item_default()));
     cballocate.setSelected(BlueSeerUtils.ConvertStringToBool(x.orc_autoallocate()));  
     cbexceedQOHU.setSelected(BlueSeerUtils.ConvertStringToBool(x.orc_exceedqohu()));  
-     
+    
+    // get sysmeta recs
+    ArrayList<String[]> obc = getSysMetaData("system", "ordercontrol");
+    for (String[] s : obc) {
+            if (s[0].equals("browse_start_date")) {
+                tbstartdate.setText(s[1]);
+            }
+            if (s[0].equals("browse_end_date")) {
+                tbenddate.setText(s[1]);
+            }
+        } 
     }
     
     // additional methods
     public void SysMeta() {
       if (! tbstartdate.getText().isBlank() && BlueSeerUtils.isParsableToInt(tbstartdate.getText())) {
-          OVData.addUpdateSysMetaData("system", "orderbrowse", "browse_start_date", tbstartdate.getText());  
+          OVData.addUpdateSysMeta("system", "ordercontrol", "browse_start_date", tbstartdate.getText());  
       }
       if (! tbenddate.getText().isBlank() && BlueSeerUtils.isParsableToInt(tbenddate.getText())) {
-          OVData.addUpdateSysMetaData("system", "orderbrowse", "browse_end_date", tbenddate.getText());  
+          OVData.addUpdateSysMeta("system", "ordercontrol", "browse_end_date", tbenddate.getText());  
       }
     }
     

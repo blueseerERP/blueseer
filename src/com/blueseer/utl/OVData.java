@@ -20257,7 +20257,7 @@ return mylist;
             ResultSet res = null;
             try {
 
-                res = st.executeQuery("select sysm_value from sys_meta where " +
+                res = st.executeQuery("select sysm_key, sysm_value from sys_meta where " +
                         " sysm_id = " + "'" + id + "'" + " AND " +
                         " sysm_type = " + "'" + type + "'" + 
                         " order by sysm_value;" );
@@ -20283,7 +20283,7 @@ return mylist;
     }   
     
     
-    public static boolean addUpdateSysMetaData(String id, String type, String key, String value) {
+    public static boolean addSysMetaDataNoUnique(String id, String type, String key, String value) {
         boolean x = false;
         try {
             
@@ -20315,12 +20315,61 @@ return mylist;
                             + "'" + value + "'" + ")"
                             + ";");
                     x = true;
+                } 
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return x;
+    }
+
+    public static boolean addUpdateSysMeta(String id, String type, String key, String value) {
+        boolean x = false;
+        try {
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                int i = 0;
+                res = st.executeQuery("SELECT sysm_value FROM sys_meta where sysm_id = " + "'" + id + "'"
+                        + " AND sysm_type = " + "'" + type + "'"
+                        + " AND sysm_key = " + "'" + key + "'"     
+                        + " ;");
+                while (res.next()) {
+                    i++;
+                }
+
+                if (i == 0) {
+                    st.executeUpdate("insert into sys_meta (sysm_id, sysm_type, sysm_key, sysm_value) values ( "
+                            + "'" + id + "'" + ","
+                            + "'" + type + "'" + ","
+                            + "'" + key + "'" + ","
+                            + "'" + value + "'" + ")"
+                            + ";");
+                    x = true;
                 } else {
                     st.executeUpdate("update sys_meta set "
-                            + " sysm_key = " + "'" + key + "'" + ","
                             + " sysm_value = " + "'" + value + "'"
                             + " where sysm_id = " + "'" + id + "'" + " and "
-                            + " sysm_type = " +  "'" + type + "'"
+                            + " sysm_type = " +  "'" + type + "'" + " and "
+                            + " sysm_key = " +  "'" + key + "'"  
                             + ";");
                     x = true;
                 }
@@ -20341,6 +20390,7 @@ return mylist;
         return x;
     }
 
+    
     public static boolean canUpdate(String panelClassName) {
     boolean myreturn = false;
     try{
@@ -20420,7 +20470,7 @@ return mylist;
             }
             
             String Sourcefile = file.getName();
-            boolean x = OVData.addUpdateSysMetaData(key, systype, "attachments", Sourcefile);
+            boolean x = OVData.addSysMetaDataNoUnique(key, systype, "attachments", Sourcefile);
             if (x) {
                 Files.copy(file.toPath(), new File(cleanDirString(getSystemAttachmentDirectory()) + systype + "_" + key + "_" + Sourcefile).toPath(), StandardCopyOption.REPLACE_EXISTING);
                 bsmf.MainFrame.show(getMessageTag(1007));
