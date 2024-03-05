@@ -5,3 +5,5 @@ system,sysdir,image_directory,images
 system,sysdir,jasper_directory,jasper
 system,sysdir,label_directory,zebra
 system,sysdir,edi_directory,edi
+system,ordercontrol,browse_start_date,-365
+system,ordercontrol,browse_end_date,30
