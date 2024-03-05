@@ -305,6 +305,7 @@ public class OrderRpt extends javax.swing.JPanel {
          dcFrom.setDate(now);
          dcTo.setDate(now);
          Calendar calfrom = Calendar.getInstance();
+         Calendar calto = Calendar.getInstance();
          
         ArrayList<String[]> obc = getSysMetaData("system", "ordercontrol");
         for (String[] s : obc) {
@@ -319,8 +320,8 @@ public class OrderRpt extends javax.swing.JPanel {
             }
             if (s[0].equals("browse_end_date")) {
                if (! s[1].isBlank() && BlueSeerUtils.isParsableToInt(s[1]) && s[1].length() < 8) {
-               calfrom.add(Calendar.DATE, Integer.valueOf(s[1]));
-               dcTo.setDate(calfrom.getTime()); 
+               calto.add(Calendar.DATE, Integer.valueOf(s[1]));
+               dcTo.setDate(calto.getTime()); 
                }
                if (! s[1].isBlank() && BlueSeerUtils.isParsableToInt(s[1]) && s[1].length() == 8) {
                dcTo.setDate(BlueSeerUtils.parseDate(BlueSeerUtils.convertDateFormat("yyyyMMdd", s[1]))); 
