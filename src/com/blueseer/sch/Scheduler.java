@@ -821,6 +821,56 @@ public class Scheduler extends javax.swing.JPanel {
 
     }    
     
+    public void getOperations(String planid) {
+       modeldetail.setRowCount(0);
+       modelavailable.setRowCount(0);
+         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+      
+        try {
+
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                int i = 0;  
+                double totqty = 0;
+                double totcap = 0;
+                
+                res = st.executeQuery("select * from plan_operation " +
+                        " where plo_parent = " + "'" + planid + "'" + " order by plo_op ;");
+                while (res.next()) {
+                 modeldetail.addRow(new Object[]{ 
+                      res.getString("plo_op"), 
+                       res.getString("plo_cell"),
+                       res.getString("plo_qty"),
+                       res.getString("plo_qty_comp"),
+                       res.getDouble("plo_status"),
+                      res.getString("plo_operator")});
+                }
+             
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        } 
+    }
+    
     public ArrayList<String[]> getSummaryByDate(String fromdate, String todate) {
         
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -1353,6 +1403,11 @@ public class Scheduler extends javax.swing.JPanel {
     private void mytableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mytableMouseClicked
           int row = mytable.rowAtPoint(evt.getPoint());
         int col = mytable.columnAtPoint(evt.getPoint());
+        
+        if ( col == 0) {
+              printticket(mytable.getValueAt(row, 0).toString(), "Work Order");
+        }
+        
         if ( col == 13) {
               printticket(mytable.getValueAt(row, 0).toString(), "Work Order");
         }
