@@ -20281,7 +20281,47 @@ return mylist;
         return myarray;
         
     }   
-    
+
+    public static String getSysMetaValue(String id, String type, String key) {
+         String x = "";
+         try{
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                res = st.executeQuery("select sysm_value from sys_meta where " +
+                        " sysm_id = " + "'" + id + "'" + " AND " +
+                        " sysm_type = " + "'" + type + "'" + " AND " +
+                        " sysm_key = " + "'" + key + "'" +
+                        " order by sysm_value;" );
+               while (res.next()) {
+                x = res.getString("sysm_value");                    
+                }
+               
+           }
+            catch (SQLException s){
+                MainFrame.bslog(s);
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return x;
+        
+    }   
+        
     
     public static boolean addSysMetaDataNoUnique(String id, String type, String key, String value) {
         boolean x = false;

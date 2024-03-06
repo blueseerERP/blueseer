@@ -273,7 +273,7 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
     
     // get sysmeta recs
     ArrayList<String[]> obc = getSysMetaData("system", "ordercontrol");
-    for (String[] s : obc) {
+        for (String[] s : obc) {
             if (s[0].equals("browse_start_date")) {
                 tbstartdate.setText(s[1]);
             }
