@@ -79,6 +79,7 @@ import static bsmf.MainFrame.user;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.OVData.getSysMetaValue;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.beans.PropertyChangeEvent;
@@ -597,8 +598,11 @@ public class Scheduler extends javax.swing.JPanel {
               con = DriverManager.getConnection(url + db, user, pass);  
             }
             
-                String jasperfile = "jobticket.jasper";  // need to make this changeable via site_mstr
-
+                String jasperfile = getSysMetaValue("system", "inventorycontrol", "jasper_job_ticket");  
+                if (jasperfile.isBlank()) {
+                    jasperfile = "jobticket.jasper";
+                }
+                
                 HashMap hm = new HashMap();
                 hm.put("BUSINESSTITLE", bustitle);
                 hm.put("REPORT_TITLE", jasperfile);
