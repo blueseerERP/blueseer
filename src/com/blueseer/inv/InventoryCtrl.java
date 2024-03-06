@@ -41,6 +41,7 @@ import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.IBlueSeerc;
 import com.blueseer.utl.OVData;
+import static com.blueseer.utl.OVData.getSysMetaData;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.GradientPaint;
@@ -213,7 +214,9 @@ public class InventoryCtrl extends javax.swing.JPanel implements IBlueSeerc {
     
     public String[] updateRecord(String[] x) {
      String[] m = addUpdateINVCtrl(createRecord());
-        return m;
+     // additional sys_meta 
+     SysMeta();
+     return m;
      }
       
     public String[] getRecord(String[] key) {
@@ -237,10 +240,26 @@ public class InventoryCtrl extends javax.swing.JPanel implements IBlueSeerc {
     cbdemdtoplan.setSelected(BlueSeerUtils.ConvertStringToBool(x.demdtoplan()));      
     cbprintsubticket.setSelected(BlueSeerUtils.ConvertStringToBool(x.printsubticket()));    
     cbautoitem.setSelected(BlueSeerUtils.ConvertStringToBool(x.autoitem()));   
-    cbserialize.setSelected(BlueSeerUtils.ConvertStringToBool(x.serialize()));  
+    cbserialize.setSelected(BlueSeerUtils.ConvertStringToBool(x.serialize())); 
+    
+    // get sysmeta recs
+    ArrayList<String[]> obc = getSysMetaData("system", "inventorycontrol");
+        for (String[] s : obc) {
+            if (s[0].equals("jasper_job_ticket")) {
+                tbjasper.setText(s[1]);
+            }
+        } 
     }
     
   
+     // additional methods
+    public void SysMeta() {
+      if (! tbjasper.getText().isBlank()) {
+          OVData.addUpdateSysMeta("system", "inventorycontrol", "jasper_job_ticket", tbjasper.getText());  
+      }
+    }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -257,6 +276,8 @@ public class InventoryCtrl extends javax.swing.JPanel implements IBlueSeerc {
         cbprintsubticket = new javax.swing.JCheckBox();
         cbautoitem = new javax.swing.JCheckBox();
         cbserialize = new javax.swing.JCheckBox();
+        tbjasper = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -286,19 +307,24 @@ public class InventoryCtrl extends javax.swing.JPanel implements IBlueSeerc {
         cbserialize.setText("Serialize Inventory?");
         cbserialize.setName("cbserialize"); // NOI18N
 
+        jLabel1.setText("Job Ticket Jasper");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(53, 53, 53)
+                .addGap(15, 15, 15)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(cbdemdtoplan)
                     .addComponent(cbmultiplan)
                     .addComponent(cbprintsubticket)
                     .addComponent(cbautoitem)
                     .addComponent(cbserialize)
-                    .addComponent(btupdate))
+                    .addComponent(btupdate)
+                    .addComponent(tbjasper, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(119, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -314,7 +340,11 @@ public class InventoryCtrl extends javax.swing.JPanel implements IBlueSeerc {
                 .addComponent(cbautoitem)
                 .addGap(18, 18, 18)
                 .addComponent(cbserialize)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbjasper, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addComponent(btupdate)
                 .addGap(20, 20, 20))
         );
@@ -337,6 +367,8 @@ public class InventoryCtrl extends javax.swing.JPanel implements IBlueSeerc {
     private javax.swing.JCheckBox cbmultiplan;
     private javax.swing.JCheckBox cbprintsubticket;
     private javax.swing.JCheckBox cbserialize;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JTextField tbjasper;
     // End of variables declaration//GEN-END:variables
 }

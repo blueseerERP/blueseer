@@ -34,8 +34,10 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
-                  <EmptySpace min="53" pref="53" max="-2" attributes="0"/>
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
+                  <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="cbdemdtoplan" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="cbmultiplan" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -43,6 +45,7 @@
                       <Component id="cbautoitem" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="cbserialize" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="btupdate" min="-2" max="-2" attributes="0"/>
+                      <Component id="tbjasper" alignment="0" min="-2" pref="160" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="119" max="32767" attributes="0"/>
               </Group>
@@ -61,7 +64,12 @@
                   <Component id="cbautoitem" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="cbserialize" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="39" max="32767" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="tbjasper" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace pref="12" max="32767" attributes="0"/>
                   <Component id="btupdate" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
               </Group>
@@ -106,6 +114,13 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Serialize Inventory?"/>
             <Property name="name" type="java.lang.String" value="cbserialize" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="tbjasper">
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel1">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Job Ticket Jasper"/>
           </Properties>
         </Component>
       </SubComponents>
