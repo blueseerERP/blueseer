@@ -550,7 +550,14 @@ public class schData {
                     "", "", "", "", "", "");
         }
     }
-     
+    
+     public record plan_operation(String[] m, int plo_id, int plo_parent, 
+        int plo_op, double pl_qty, double plo_qty_comp, String plo_cell,
+        String plo_operator, String plo_date, String plo_status, String plo_userid) {
+        public plan_operation(String[] m) {
+            this(m, 0, 0, 0, 0, 0, "", "", "", "", "");
+        }
+    }
     
     
 }
