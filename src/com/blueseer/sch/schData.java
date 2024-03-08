@@ -80,6 +80,104 @@ public class schData {
         return r;
     }
     
+    public static String[] addPlanOperation(plan_operation x) {
+        String[] m = new String[2];
+        String sqlSelect = "SELECT * FROM  plan_operation where plo_parent = ? and plo_op = ?";
+        String sqlInsert = "insert into plan_operation (plo_parent, plo_op, pl_qty, plo_qty_comp, plo_cell, "
+                        + " plo_operator, plo_date, plo_status, plo_userid ) "
+                        + " values (?,?,?,?,?,?,?,?,?); ";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+             ps.setInt(1, x.plo_parent);
+             ps.setInt(2, x.plo_op);
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setInt(1, x.plo_parent);
+            psi.setInt(2, x.plo_op);
+            psi.setDouble(3, x.pl_qty);
+            psi.setDouble(4, x.plo_qty_comp);
+            psi.setString(5, x.plo_cell);
+            psi.setString(6, x.plo_operator);
+            psi.setString(7, x.plo_date);
+            psi.setString(8, x.plo_status);
+            psi.setString(9, x.plo_userid);
+            int rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+
+    public static ArrayList<plan_operation> getPlanOperation(String parent) {
+        plan_operation r = null;
+        String[] m = new String[2];
+        ArrayList<plan_operation> list = new ArrayList<plan_operation>();
+        String sql = "select * from plan_operation where plo_parent = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, parent);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new plan_operation(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new plan_operation(m, res.getInt("plo_id"), res.getInt("plo_parent"), res.getInt("plo_op"),
+                            res.getDouble("plo_qty"), res.getDouble("plo_qty_comp"), res.getString("plo_cell"), res.getString("plo_operator"),
+                            res.getString("plo_date"), res.getString("plo_status"), res.getString("plo_userid"));
+                        list.add(r);
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new plan_operation(m);
+               list.add(r);
+        }
+        return list;
+    }
+    
+    public static plan_operation getPlanOperation(String parent, String op) {
+        plan_operation r = null;
+        String[] m = new String[2];
+        String sql = "select * from plan_operation where plo_parent = ? and plo_op = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, parent);
+        ps.setString(2, op);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new plan_operation(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new plan_operation(m, res.getInt("plo_id"), res.getInt("plo_parent"), res.getInt("plo_op"),
+                            res.getDouble("plo_qty"), res.getDouble("plo_qty_comp"), res.getString("plo_cell"), res.getString("plo_operator"),
+                            res.getString("plo_date"), res.getString("plo_status"), res.getString("plo_userid"));
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new plan_operation(m);
+        }
+        return r;
+    }
+    
     
     // misc functions 
     public static String getPlanItem(String serialno) {
