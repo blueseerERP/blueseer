@@ -513,7 +513,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         String[] detail = invData.getItemDetail(pm.plan_item());
         boolean isPlan = true;
         
-        if (pm.plan_nbr().isBlank()) {
+        if (pm.m()[0].equals("1")) {
             isPlan = false;
         }
         double qty = Double.valueOf(tbqty.getText());
@@ -553,9 +553,9 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         // qty field is not greater than qty previous + qty scheduled
         // this should work for multiscan and nonmultican conditions
        // bsmf.MainFrame.show(pm.plan_qty_sched());
-        double schedqty = pm.plan_qty_sched().isBlank() ? 0 : Double.valueOf(pm.plan_qty_sched());
-        if ( qty > (schedqty - prevscanned) ) {
-             lblmessage.setText("Qty Exceeds limit (Already Scanned Qty: " + String.valueOf(prevscanned) + " out of SchedQty: " + String.valueOf(schedqty) + ")");
+        
+        if ( qty > (pm.plan_qty_sched() - prevscanned) ) {
+             lblmessage.setText("Qty Exceeds limit (Already Scanned Qty: " + String.valueOf(prevscanned) + " out of SchedQty: " + String.valueOf(pm.plan_qty_sched()) + ")");
             lblmessage.setForeground(Color.red);
             initvars(null);
             return;

@@ -63,11 +63,11 @@ public class schData {
                 } else {
                     while(res.next()) {
                         m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-                        r = new plan_mstr(m, res.getString("plan_nbr"), res.getString("plan_item"), res.getString("plan_site"),
-                    res.getString("plan_qty_req").replace('.',defaultDecimalSeparator), res.getString("plan_qty_comp").replace('.',defaultDecimalSeparator), res.getString("plan_qty_sched").replace('.',defaultDecimalSeparator), 
+                        r = new plan_mstr(m, res.getInt("plan_nbr"), res.getString("plan_item"), res.getString("plan_site"),
+                    res.getDouble("plan_qty_req"), res.getDouble("plan_qty_comp"), res.getDouble("plan_qty_sched"), 
                     res.getString("plan_date_create"), res.getString("plan_date_due"), res.getString("plan_date_sched"),
-                    res.getString("plan_status"), res.getString("plan_rmks"), res.getString("plan_order"), res.getString("plan_line"), 
-                    res.getString("plan_type"), res.getString("plan_cell"), res.getString("plan_is_sched")
+                    res.getInt("plan_status"), res.getString("plan_rmks"), res.getString("plan_order"), res.getString("plan_line"), 
+                    res.getString("plan_type"), res.getString("plan_cell"), res.getInt("plan_is_sched")
         );
                     }
                 }
@@ -80,10 +80,108 @@ public class schData {
         return r;
     }
     
-    public static String[] addPlanOperation(plan_operation x) {
+    public static String[] addPlanMstr(plan_mstr x) {
+        String[] m = new String[2];
+        String sqlSelect = "SELECT * FROM  plan_mstr where plan_nbr = ?";
+        String sqlInsert = "insert into plan_mstr (plan_nbr, plan_item, plan_site, plan_qty_req, plan_qty_comp, "
+                        + " plan_qty_sched, plan_date_create, plan_date_due, plan_date_sched, plan_status, " 
+                        + " plan_rmks, plan_order, plan_line, plan_type, plan_cell, plan_is_sched ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); ";
+       
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+             PreparedStatement ps = con.prepareStatement(sqlSelect);) {
+             ps.setInt(1, x.plan_nbr);
+          try (ResultSet res = ps.executeQuery();
+               PreparedStatement psi = con.prepareStatement(sqlInsert);) {  
+            if (! res.isBeforeFirst()) {
+            psi.setInt(1, x.plan_nbr);
+            psi.setString(2, x.plan_item);
+            psi.setString(3, x.plan_site);
+            psi.setDouble(4, x.plan_qty_req);
+            psi.setDouble(5, x.plan_qty_comp);
+            psi.setDouble(6, x.plan_qty_sched);
+            psi.setString(7, x.plan_date_create);
+            psi.setString(8, x.plan_date_due);
+            psi.setString(9, x.plan_date_sched);
+            psi.setInt(10, x.plan_status);
+            psi.setString(11, x.plan_rmks);
+            psi.setString(12, x.plan_order);
+            psi.setString(13, x.plan_line);
+            psi.setString(14, x.plan_type);
+            psi.setString(15, x.plan_cell);
+            psi.setInt(16, x.plan_is_sched);
+            int rows = psi.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+            } else {
+            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordAlreadyExists};    
+            }
+          } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+          }
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+    
+    public static String[] addPlanOperationTrans(ArrayList<plan_operation> plo) {
+         String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            if (ds != null) {
+              bscon = ds.getConnection();
+            } else {
+              bscon = DriverManager.getConnection(url + db, user, pass);  
+            }
+            bscon.setAutoCommit(false);
+            for (plan_operation z : plo) {
+                _addPlanOperation(z, bscon, ps, res);
+            }
+            bscon.commit();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    public static String[] addPlanOperation(plan_operation x ) {
         String[] m = new String[2];
         String sqlSelect = "SELECT * FROM  plan_operation where plo_parent = ? and plo_op = ?";
-        String sqlInsert = "insert into plan_operation (plo_parent, plo_op, pl_qty, plo_qty_comp, plo_cell, "
+        String sqlInsert = "insert into plan_operation (plo_parent, plo_op, plo_qty, plo_qty_comp, plo_cell, "
                         + " plo_operator, plo_date, plo_status, plo_userid ) "
                         + " values (?,?,?,?,?,?,?,?,?); ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
@@ -95,7 +193,7 @@ public class schData {
             if (! res.isBeforeFirst()) {
             psi.setInt(1, x.plo_parent);
             psi.setInt(2, x.plo_op);
-            psi.setDouble(3, x.pl_qty);
+            psi.setDouble(3, x.plo_qty);
             psi.setDouble(4, x.plo_qty_comp);
             psi.setString(5, x.plo_cell);
             psi.setString(6, x.plo_operator);
@@ -118,6 +216,34 @@ public class schData {
         return m;
     }
 
+    public static int _addPlanOperation(plan_operation x, Connection con, PreparedStatement ps, ResultSet res ) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "SELECT * FROM  plan_operation where plo_parent = ? and plo_op = ?";
+        String sqlInsert = "insert into plan_operation (plo_parent, plo_op, plo_qty, plo_qty_comp, plo_cell, "
+                        + " plo_operator, plo_date, plo_status, plo_userid ) "
+                        + " values (?,?,?,?,?,?,?,?,?); ";
+       
+        ps = con.prepareStatement(sqlSelect);
+             ps.setInt(1, x.plo_parent);
+             ps.setInt(2, x.plo_op);
+             res = ps.executeQuery();
+             ps = con.prepareStatement(sqlInsert); 
+            if (! res.isBeforeFirst()) {
+            ps.setInt(1, x.plo_parent);
+            ps.setInt(2, x.plo_op);
+            ps.setDouble(3, x.plo_qty);
+            ps.setDouble(4, x.plo_qty_comp);
+            ps.setString(5, x.plo_cell);
+            ps.setString(6, x.plo_operator);
+            ps.setString(7, x.plo_date);
+            ps.setString(8, x.plo_status);
+            ps.setString(9, x.plo_userid);
+            rows = ps.executeUpdate();
+            }
+        return rows;
+    }
+
+    
     public static ArrayList<plan_operation> getPlanOperation(String parent) {
         plan_operation r = null;
         String[] m = new String[2];
@@ -638,19 +764,19 @@ public class schData {
   }
 
     
-     public record plan_mstr(String[] m, String plan_nbr, String plan_item,
-        String plan_site, String plan_qty_req, String plan_qty_comp, String plan_qty_sched,
-        String plan_date_create, String plan_date_due, String plan_date_sched, String plan_status,
+     public record plan_mstr(String[] m, int plan_nbr, String plan_item,
+        String plan_site, double plan_qty_req, double plan_qty_comp, double plan_qty_sched,
+        String plan_date_create, String plan_date_due, String plan_date_sched, int plan_status,
         String plan_rmks, String plan_order, String plan_line, String plan_type, String plan_cell,
-        String plan_is_sched) {
+        int plan_is_sched) {
         public plan_mstr(String[] m) {
-            this(m, "", "", "", "", "", "", "", "", "", "",
-                    "", "", "", "", "", "");
+            this(m, 0, "", "", 0, 0, 0, "", "", "", 0,
+                    "", "", "", "", "", 0);
         }
     }
     
      public record plan_operation(String[] m, int plo_id, int plo_parent, 
-        int plo_op, double pl_qty, double plo_qty_comp, String plo_cell,
+        int plo_op, double plo_qty, double plo_qty_comp, String plo_cell,
         String plo_operator, String plo_date, String plo_status, String plo_userid) {
         public plan_operation(String[] m) {
             this(m, 0, 0, 0, 0, 0, "", "", "", "", "");

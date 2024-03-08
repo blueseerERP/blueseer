@@ -29,12 +29,20 @@ package com.blueseer.prd;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.inv.invData;
+import static com.blueseer.inv.invData.getItemWFOPs;
+import static com.blueseer.sch.schData.addPlanMstr;
+import static com.blueseer.sch.schData.addPlanOperationTrans;
+import com.blueseer.sch.schData.plan_mstr;
+import com.blueseer.sch.schData.plan_operation;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
@@ -148,6 +156,52 @@ public class PlanMiscMaint extends javax.swing.JPanel {
          
         
     }
+    
+    public plan_mstr createRecordPlan(int nbr) {
+        
+        java.util.Date now = new java.util.Date();
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        plan_mstr x = new plan_mstr(null, nbr,
+                ddpart.getSelectedItem().toString(),
+                ddsite.getSelectedItem().toString(),
+                bsParseDouble(tbqty.getText().replace(defaultDecimalSeparator, '.')),
+                0,
+                0,
+                dfdate.format(now),
+                dfdate.format(dcduedate.getDate()),
+                null,
+                0, // status
+                tbrmks.getText(),
+                "", // order
+                "", // line
+                "MISC", // type
+                "", // cell
+                0 // issched
+                );
+        return x;
+    }
+   
+    public ArrayList<plan_operation> createRecordPlanOp(int nbr) {
+        ArrayList<plan_operation> list = new ArrayList<plan_operation>();
+        ArrayList<String> ops = getItemWFOPs(ddpart.getSelectedItem().toString());
+         for (String op : ops) {
+             plan_operation x = new plan_operation(null, 
+                0, // id
+                nbr, // parent
+                bsParseInt(op), // op
+                bsParseDouble(tbqty.getText().replace(defaultDecimalSeparator, '.')), // qty
+                0, // comp qty
+                "", // cell
+                "", // operator
+                null, // date
+                "", //status
+                bsmf.MainFrame.userid // userid
+                );
+        list.add(x);
+         }
+        return list;   
+    }
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -272,76 +326,16 @@ public class PlanMiscMaint extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-
-        java.util.Date now = new java.util.Date();
-        
-        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-      
-        
-         try {
-             Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                int i = 0;
-                
-                
-                Pattern p = Pattern.compile("^[1-9]\\d*$");
-                Matcher m = p.matcher(tbqty.getText());
-                if (!m.find() || tbqty.getText() == null) {
-                    bsmf.MainFrame.show(getMessageTag(1028));
-                    tbqty.requestFocus();
-                   return;
-                }
-               
-                Map<String,Integer> f = OVData.getTableInfo("plan_mstr");
-                int fc;
-                fc = checkLength(f,"plan_rmks");
-                if (tbrmks.getText().length() > fc) {
-                bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
-                tbrmks.requestFocus();
-                return;
-                } 
-                
-                
-                int nbr = OVData.getNextNbr("plan");
-                
-                
-                        st.executeUpdate("insert into plan_mstr "
-                            + "(plan_nbr, plan_item, plan_qty_req, plan_date_create, plan_date_due, plan_type, plan_rmks, plan_site ) "
-                            + " values ( " + "'" + nbr + "'" + ","
-                            + "'" + ddpart.getSelectedItem().toString() + "'" + ","
-                            + "'" + tbqty.getText() + "'" + ","
-                            + "'" + dfdate.format(now) + "'" + ","
-                            + "'" + dfdate.format(dcduedate.getDate()) + "'" + ","
-                                + "'" + "MISC" + "'" + ","
-                                + "'" + tbrmks.getText().replace("'", "") + "'" + ","
-                                + "'" + ddsite.getSelectedItem().toString() + "'"
-                            + ")"
-                            + ";");
-                        bsmf.MainFrame.show(getMessageTag(1007));
-                   initvars(null);
-               
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
+        int nbr = OVData.getNextNbr("plan");
+        addPlanMstr(createRecordPlan(nbr));
+        String[] m = addPlanOperationTrans(createRecordPlanOp(nbr));
+        if (m[0].equals("0")) {
+        bsmf.MainFrame.show(getMessageTag(1007));
+        } else {
+            bsmf.MainFrame.show(m[1]);
         }
+        initvars(null);
+        
     }//GEN-LAST:event_btaddActionPerformed
 
 
