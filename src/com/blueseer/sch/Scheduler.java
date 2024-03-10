@@ -27,6 +27,7 @@ package com.blueseer.sch;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.defaultDecimalSeparator;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.OVData;
 import com.toedter.calendar.DateUtil;
@@ -76,9 +77,18 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.sch.schData.getPlanOperation;
+import com.blueseer.sch.schData.plan_operation;
+import static com.blueseer.sch.schData.updatePlanOperation;
+import static com.blueseer.utl.BlueSeerUtils.bsNumber;
+import static com.blueseer.utl.BlueSeerUtils.bsNumberToUS;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.parseDate;
+import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import static com.blueseer.utl.OVData.getSysMetaValue;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -99,6 +109,8 @@ import javax.swing.table.TableCellEditor;
  */
 public class Scheduler extends javax.swing.JPanel {
 
+    int currplan = 0;
+    int currop = 0;
     // NOTE:  if you change this...you must also adjust APCheckRun...my advise....dont change it
        Scheduler.MyTableModel mymodel = new Scheduler.MyTableModel(new Object[][]{},
                         new String[]{
@@ -1088,7 +1100,7 @@ public class Scheduler extends javax.swing.JPanel {
         panelOpMaint = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
         ddopcell = new javax.swing.JComboBox<>();
-        ccopoperator = new javax.swing.JComboBox<>();
+        ddopoperator = new javax.swing.JComboBox<>();
         jLabel13 = new javax.swing.JLabel();
         dcopdate = new com.toedter.calendar.JDateChooser();
         jLabel14 = new javax.swing.JLabel();
@@ -1443,6 +1455,11 @@ public class Scheduler extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tableoperations.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableoperationsMouseClicked(evt);
+            }
+        });
         jScrollPane4.setViewportView(tableoperations);
 
         panelOp.add(jScrollPane4);
@@ -1464,6 +1481,11 @@ public class Scheduler extends javax.swing.JPanel {
         jLabel16.setText("Status:");
 
         btupdate.setText("Update");
+        btupdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btupdateActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelOpMaintLayout = new javax.swing.GroupLayout(panelOpMaint);
         panelOpMaint.setLayout(panelOpMaintLayout);
@@ -1483,7 +1505,7 @@ public class Scheduler extends javax.swing.JPanel {
                     .addGroup(panelOpMaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(dcopdate, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
                         .addComponent(ddopcell, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(ccopoperator, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(ddopoperator, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(tbopqty, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ddopstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(363, Short.MAX_VALUE))
@@ -1497,7 +1519,7 @@ public class Scheduler extends javax.swing.JPanel {
                     .addComponent(ddopcell, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelOpMaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ccopoperator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ddopoperator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel13))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelOpMaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1551,10 +1573,11 @@ public class Scheduler extends javax.swing.JPanel {
     }//GEN-LAST:event_bthideActionPerformed
 
     private void mytableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mytableMouseClicked
-          int row = mytable.rowAtPoint(evt.getPoint());
+        int row = mytable.rowAtPoint(evt.getPoint());
         int col = mytable.columnAtPoint(evt.getPoint());
         
         if ( col == 0) {
+              currop = Integer.valueOf(mytable.getValueAt(row, 0).toString());
               getOperations(mytable.getValueAt(row, 0).toString());
         }
         
@@ -1869,6 +1892,36 @@ public class Scheduler extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_ddcellchoiceActionPerformed
 
+    private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
+        schData.plan_operation x = new schData.plan_operation(null, 
+                0, // id
+                currplan, // parent
+                currop, // op
+                bsParseDouble(tbopqty.getText().replace(defaultDecimalSeparator, '.')), // qty
+                0, // comp qty
+                ddopcell.getSelectedItem().toString(), // cell
+                ddopoperator.getSelectedItem().toString(), // operator
+                setDateDB(dcopdate.getDate()), // date
+                ddopstatus.getSelectedItem().toString(), //status
+                bsmf.MainFrame.userid // userid
+                );
+        updatePlanOperation(x);
+    }//GEN-LAST:event_btupdateActionPerformed
+
+    private void tableoperationsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableoperationsMouseClicked
+        int row = tableoperations.rowAtPoint(evt.getPoint());
+        int col = tableoperations.columnAtPoint(evt.getPoint());
+        currop = Integer.valueOf(tableoperations.getValueAt(row, 0).toString());
+        plan_operation x = getPlanOperation(currplan, currop);
+        if ( x.m()[0].equals("0")) {
+              ddopcell.setSelectedItem(x.plo_cell());
+              ddopoperator.setSelectedItem(x.plo_operator());
+              tbopqty.setText(bsNumber(x.plo_qty()));
+              dcopdate.setDate(parseDate(x.plo_date()));
+              ddopstatus.setSelectedItem(x.plo_status());              
+        }
+    }//GEN-LAST:event_tableoperationsMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PanelDetail;
@@ -1880,12 +1933,12 @@ public class Scheduler extends javax.swing.JPanel {
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JCheckBox cbclosed;
     private javax.swing.JCheckBox cbsched;
-    private javax.swing.JComboBox<String> ccopoperator;
     private com.toedter.calendar.JDateChooser dcfrom;
     private com.toedter.calendar.JDateChooser dcopdate;
     private com.toedter.calendar.JDateChooser dcto;
     private javax.swing.JComboBox<String> ddcellchoice;
     private javax.swing.JComboBox<String> ddopcell;
+    private javax.swing.JComboBox<String> ddopoperator;
     private javax.swing.JComboBox<String> ddopstatus;
     private javax.swing.JComboBox ddsite;
     private javax.swing.JTextField frompart;

@@ -126,6 +126,8 @@ public class schData {
         return m;
     }
     
+    
+    
     public static String[] addPlanOperationTrans(ArrayList<plan_operation> plo) {
          String[] m = new String[2];
         Connection bscon = null;
@@ -216,6 +218,31 @@ public class schData {
         return m;
     }
 
+    public static String[] updatePlanOperation(plan_operation x ) {
+        String[] m = new String[2];
+        String sqlUpdate = "update plan_operation set plo_qty = ?, plo_qty_comp = ?, plo_cell = ?, "
+                        + " plo_operator = ?, plo_date = ?, plo_status = ?  "
+                        + " where plo_parent = ? and plo_op = ? ; ";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+             PreparedStatement ps = con.prepareStatement(sqlUpdate);) {
+            ps.setDouble(1, x.plo_qty);
+            ps.setDouble(2, x.plo_qty_comp);
+            ps.setString(3, x.plo_cell);
+            ps.setString(4, x.plo_operator);
+            ps.setString(5, x.plo_date);
+            ps.setString(6, x.plo_status);
+            ps.setInt(7, x.plo_parent);
+            ps.setInt(8, x.plo_op);
+            int rows = ps.executeUpdate();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+        } catch (SQLException s) {
+	       MainFrame.bslog(s);
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        }
+        return m;
+    }
+
+    
     public static int _addPlanOperation(plan_operation x, Connection con, PreparedStatement ps, ResultSet res ) throws SQLException {
         int rows = 0;
         String sqlSelect = "SELECT * FROM  plan_operation where plo_parent = ? and plo_op = ?";
@@ -275,14 +302,14 @@ public class schData {
         return list;
     }
     
-    public static plan_operation getPlanOperation(String parent, String op) {
+    public static plan_operation getPlanOperation(int parent, int op) {
         plan_operation r = null;
         String[] m = new String[2];
         String sql = "select * from plan_operation where plo_parent = ? and plo_op = ? ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql);) {
-        ps.setString(1, parent);
-        ps.setString(2, op);
+        ps.setInt(1, parent);
+        ps.setInt(2, op);
              try (ResultSet res = ps.executeQuery();) {
                 if (! res.isBeforeFirst()) {
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
