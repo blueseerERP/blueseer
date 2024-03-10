@@ -1893,19 +1893,21 @@ public class Scheduler extends javax.swing.JPanel {
     }//GEN-LAST:event_ddcellchoiceActionPerformed
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
-        schData.plan_operation x = new schData.plan_operation(null, 
-                0, // id
-                currplan, // parent
-                currop, // op
-                bsParseDouble(tbopqty.getText().replace(defaultDecimalSeparator, '.')), // qty
-                0, // comp qty
-                ddopcell.getSelectedItem().toString(), // cell
-                ddopoperator.getSelectedItem().toString(), // operator
-                setDateDB(dcopdate.getDate()), // date
-                ddopstatus.getSelectedItem().toString(), //status
-                bsmf.MainFrame.userid // userid
-                );
-        updatePlanOperation(x);
+        if (currplan > 0 && currop > 0) {
+            schData.plan_operation x = new schData.plan_operation(null, 
+                    0, // id
+                    currplan, // parent
+                    currop, // op
+                    bsParseDouble(tbopqty.getText().replace(defaultDecimalSeparator, '.')), // qty
+                    0, // comp qty
+                    ddopcell.getSelectedItem().toString(), // cell
+                    ddopoperator.getSelectedItem().toString(), // operator
+                    setDateDB(dcopdate.getDate()), // date
+                    ddopstatus.getSelectedItem().toString(), //status
+                    bsmf.MainFrame.userid // userid
+                    );
+            updatePlanOperation(x);
+        }
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void tableoperationsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableoperationsMouseClicked
