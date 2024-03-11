@@ -126,10 +126,7 @@ public class Scheduler extends javax.swing.JPanel {
                             getGlobalColumnTag("scheddate"), 
                             getGlobalColumnTag("order"), 
                             getGlobalColumnTag("line"), 
-                            getGlobalColumnTag("status"), 
-                            getGlobalColumnTag("print"), 
-                            getGlobalColumnTag("update"), 
-                            getGlobalColumnTag("void")})
+                            getGlobalColumnTag("status")})
                {
                    @Override
                 public void setValueAt(Object aValue, int row, int column) {
@@ -149,9 +146,7 @@ public class Scheduler extends javax.swing.JPanel {
                    
                       @Override  
                       public Class getColumnClass(int col) {  
-                        if (col == 13 || col == 14 || col == 15  ) {      
-                            return ImageIcon.class;  
-                        } else if (col == 6 || col == 7 || col == 8) {
+                        if (col == 6 || col == 7 || col == 8) {
                             return Integer.class;
                         } else if (col == 4) {
                             return Boolean.class;    
@@ -849,10 +844,10 @@ public class Scheduler extends javax.swing.JPanel {
 
     }    
     
-    public void getOperations(String planid) {
-       PanelDetail.setVisible(true);
-       panelOp.setVisible(true);
-       panelDet.setVisible(false);
+    public void getOperations(int planid) {
+        PanelDetail.setVisible(true);
+        panelOp.setVisible(true);
+        panelDet.setVisible(false);
         modeloperations.setRowCount(0);
         //jPanel2.repaint();
          DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -1085,6 +1080,9 @@ public class Scheduler extends javax.swing.JPanel {
         jLabel6 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
+        btprint = new javax.swing.JButton();
+        btupdate = new javax.swing.JButton();
+        btvoid = new javax.swing.JButton();
         PanelReport = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         mytable = new javax.swing.JTable();
@@ -1108,7 +1106,7 @@ public class Scheduler extends javax.swing.JPanel {
         jLabel15 = new javax.swing.JLabel();
         ddopstatus = new javax.swing.JComboBox<>();
         jLabel16 = new javax.swing.JLabel();
-        btupdate = new javax.swing.JButton();
+        btopupdate = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
         setPreferredSize(new java.awt.Dimension(1211, 744));
@@ -1212,6 +1210,27 @@ public class Scheduler extends javax.swing.JPanel {
 
         jLabel11.setText("To Item:");
 
+        btprint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/print.png"))); // NOI18N
+        btprint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btprintActionPerformed(evt);
+            }
+        });
+
+        btupdate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/refresh.png"))); // NOI18N
+        btupdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btupdateActionPerformed(evt);
+            }
+        });
+
+        btvoid.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/void.png"))); // NOI18N
+        btvoid.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btvoidActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -1219,15 +1238,8 @@ public class Scheduler extends javax.swing.JPanel {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(85, 85, 85)
-                                .addComponent(btcommit)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(bthide))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addComponent(btRun)))
+                        .addGap(10, 10, 10)
+                        .addComponent(btRun)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addContainerGap()
@@ -1259,10 +1271,6 @@ public class Scheduler extends javax.swing.JPanel {
                                     .addComponent(jLabel7))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel3Layout.createSequentialGroup()
-                                        .addComponent(cbsched)
-                                        .addGap(5, 5, 5)
-                                        .addComponent(cbclosed, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                             .addComponent(topart, javax.swing.GroupLayout.Alignment.LEADING)
@@ -1272,7 +1280,24 @@ public class Scheduler extends javax.swing.JPanel {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(jLabel3)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
+                                        .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                                .addComponent(cbsched)
+                                                .addGap(5, 5, 5)
+                                                .addComponent(cbclosed, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                                .addComponent(btcommit)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(bthide)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(btprint, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(btupdate, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(btvoid, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addGap(0, 0, Short.MAX_VALUE)))))))
                 .addGap(20, 20, 20))
         );
         jPanel3Layout.setVerticalGroup(
@@ -1303,11 +1328,15 @@ public class Scheduler extends javax.swing.JPanel {
                     .addComponent(cbsched)
                     .addComponent(cbclosed))
                 .addGap(5, 5, 5)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btRun)
-                    .addComponent(btcommit)
-                    .addComponent(bthide))
-                .addGap(5, 5, 5)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btRun)
+                        .addComponent(btcommit)
+                        .addComponent(bthide))
+                    .addComponent(btprint)
+                    .addComponent(btupdate)
+                    .addComponent(btvoid))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelcount, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9))
@@ -1423,7 +1452,7 @@ public class Scheduler extends javax.swing.JPanel {
             .addGroup(panelDetLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(panelDetLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 567, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 474, Short.MAX_VALUE)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -1442,6 +1471,7 @@ public class Scheduler extends javax.swing.JPanel {
         panelOp.setLayout(new javax.swing.BoxLayout(panelOp, javax.swing.BoxLayout.Y_AXIS));
 
         jScrollPane4.setBorder(javax.swing.BorderFactory.createTitledBorder("Operations"));
+        jScrollPane4.setPreferredSize(new java.awt.Dimension(300, 422));
 
         tableoperations.setAutoCreateRowSorter(true);
         tableoperations.setModel(new javax.swing.table.DefaultTableModel(
@@ -1464,7 +1494,7 @@ public class Scheduler extends javax.swing.JPanel {
 
         panelOp.add(jScrollPane4);
 
-        panelOpMaint.setPreferredSize(new java.awt.Dimension(462, 422));
+        panelOpMaint.setPreferredSize(new java.awt.Dimension(300, 422));
 
         jLabel12.setText("Cell:");
 
@@ -1480,10 +1510,10 @@ public class Scheduler extends javax.swing.JPanel {
 
         jLabel16.setText("Status:");
 
-        btupdate.setText("Update");
-        btupdate.addActionListener(new java.awt.event.ActionListener() {
+        btopupdate.setText("Update");
+        btopupdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btupdateActionPerformed(evt);
+                btopupdateActionPerformed(evt);
             }
         });
 
@@ -1501,14 +1531,14 @@ public class Scheduler extends javax.swing.JPanel {
                     .addComponent(jLabel16))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelOpMaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btupdate)
+                    .addComponent(btopupdate)
                     .addGroup(panelOpMaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(dcopdate, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
                         .addComponent(ddopcell, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(ddopoperator, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(tbopqty, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ddopstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(363, Short.MAX_VALUE))
+                .addContainerGap(270, Short.MAX_VALUE))
         );
         panelOpMaintLayout.setVerticalGroup(
             panelOpMaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1534,8 +1564,8 @@ public class Scheduler extends javax.swing.JPanel {
                     .addComponent(ddopstatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel16))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btupdate)
-                .addContainerGap(118, Short.MAX_VALUE))
+                .addComponent(btopupdate)
+                .addContainerGap(134, Short.MAX_VALUE))
         );
 
         panelOp.add(panelOpMaint);
@@ -1549,16 +1579,16 @@ public class Scheduler extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(PanelReport, javax.swing.GroupLayout.DEFAULT_SIZE, 492, Short.MAX_VALUE)
+                .addComponent(PanelReport, javax.swing.GroupLayout.DEFAULT_SIZE, 585, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(PanelDetail, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 549, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 549, Short.MAX_VALUE)
             .addComponent(PanelReport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(PanelDetail, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 549, Short.MAX_VALUE)
+            .addComponent(PanelDetail, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 549, Short.MAX_VALUE)
         );
 
         add(jPanel2, java.awt.BorderLayout.CENTER);
@@ -1577,10 +1607,11 @@ public class Scheduler extends javax.swing.JPanel {
         int col = mytable.columnAtPoint(evt.getPoint());
         
         if ( col == 0) {
-              currop = Integer.valueOf(mytable.getValueAt(row, 0).toString());
-              getOperations(mytable.getValueAt(row, 0).toString());
+              currplan = Integer.valueOf(mytable.getValueAt(row, 0).toString());
+              getOperations(Integer.valueOf(mytable.getValueAt(row, 0).toString()));
         }
         
+        /*
         if ( col == 13) {
               printticket(mytable.getValueAt(row, 0).toString(), "Work Order");
         }
@@ -1613,7 +1644,7 @@ public class Scheduler extends javax.swing.JPanel {
                         mytable.setValueAt(getGlobalProgTag("void"), row, 12);
                    } 
         }
-        
+        */
          
     }//GEN-LAST:event_mytableMouseClicked
 
@@ -1679,10 +1710,7 @@ public class Scheduler extends javax.swing.JPanel {
                 while (en.hasMoreElements()) {
                     TableColumn tc = en.nextElement();
                     if (tc.getIdentifier().toString().equals("isSched") ||
-                        tc.getIdentifier().toString().equals("Cell") ||
-                        tc.getIdentifier().toString().equals("Print") ||
-                        tc.getIdentifier().toString().equals("Update") ||
-                        tc.getIdentifier().toString().equals("Void")) {
+                        tc.getIdentifier().toString().equals("Cell") ) {
                         continue;
                     }
                     tc.setCellRenderer(new Scheduler.SomeRenderer());
@@ -1707,9 +1735,9 @@ public class Scheduler extends javax.swing.JPanel {
                     //             new ProdSchedPanel.ButtonEditor(new JCheckBox()));
                 //      mytable.getColumn("Void").setCellEditor(
                     //              new ProdSchedPanel.ButtonEditor(new JCheckBox()));
-                mytable.getColumn(getGlobalColumnTag("update")).setMaxWidth(100);
-                mytable.getColumn(getGlobalColumnTag("print")).setMaxWidth(100);
-                mytable.getColumn(getGlobalColumnTag("void")).setMaxWidth(100);
+               // mytable.getColumn(getGlobalColumnTag("update")).setMaxWidth(100);
+               // mytable.getColumn(getGlobalColumnTag("print")).setMaxWidth(100);
+               // mytable.getColumn(getGlobalColumnTag("void")).setMaxWidth(100);
 
                 mymodel.setRowCount(0);
 
@@ -1779,10 +1807,7 @@ public class Scheduler extends javax.swing.JPanel {
                         res.getString("plan_date_sched"),
                         res.getString("plan_order"),
                         res.getString("plan_line"),
-                        status,
-                        BlueSeerUtils.clickprint,
-                        BlueSeerUtils.clickrefresh,
-                        BlueSeerUtils.clicktrash
+                        status
                     });
                 }
                 labelqtysched.setText(String.valueOf(schtot));
@@ -1892,23 +1917,27 @@ public class Scheduler extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_ddcellchoiceActionPerformed
 
-    private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
+    private void btopupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btopupdateActionPerformed
+        
         if (currplan > 0 && currop > 0) {
+            String operator = (ddopoperator.getSelectedItem() == null) ? "" : ddopoperator.getSelectedItem().toString();
+            String cell = (ddopcell.getSelectedItem() == null) ? "" : ddopcell.getSelectedItem().toString();
             schData.plan_operation x = new schData.plan_operation(null, 
                     0, // id
                     currplan, // parent
                     currop, // op
                     bsParseDouble(tbopqty.getText().replace(defaultDecimalSeparator, '.')), // qty
                     0, // comp qty
-                    ddopcell.getSelectedItem().toString(), // cell
-                    ddopoperator.getSelectedItem().toString(), // operator
+                    cell, // cell
+                    operator, // operator
                     setDateDB(dcopdate.getDate()), // date
                     ddopstatus.getSelectedItem().toString(), //status
                     bsmf.MainFrame.userid // userid
                     );
             updatePlanOperation(x);
+            getOperations(currplan);
         }
-    }//GEN-LAST:event_btupdateActionPerformed
+    }//GEN-LAST:event_btopupdateActionPerformed
 
     private void tableoperationsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableoperationsMouseClicked
         int row = tableoperations.rowAtPoint(evt.getPoint());
@@ -1924,6 +1953,84 @@ public class Scheduler extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_tableoperationsMouseClicked
 
+    private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
+        if (mytable.getSelectedRowCount() == 0) {
+        bsmf.MainFrame.show(getMessageTag(1188));
+        return;
+        }
+        
+        if (mytable.getSelectedRowCount() > 1) {
+        bsmf.MainFrame.show(getMessageTag(1095));
+        return;
+        }
+        
+        if (mytable.getSelectedRowCount() == 1) {
+        int row = mytable.getSelectedRow();
+        printticket(mytable.getValueAt(row, 0).toString(), "Work Order");
+        }
+        
+    }//GEN-LAST:event_btprintActionPerformed
+
+    private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
+        if (mytable.getSelectedRowCount() == 0) {
+        bsmf.MainFrame.show(getMessageTag(1188));
+        return;
+        }
+        
+        if (mytable.getSelectedRowCount() > 1) {
+        bsmf.MainFrame.show(getMessageTag(1095));
+        return;
+        }
+        
+        if (mytable.getSelectedRowCount() == 1) {
+        int row = mytable.getSelectedRow();
+          if (mytable.getValueAt(row, 4).toString().equals("false")) {
+              bsmf.MainFrame.show(getMessageTag(1182));
+              return;
+          }
+            if ( mytable.getValueAt(row, 12).equals(getGlobalProgTag("open"))) {
+                        // lets confirm valid date has been entered
+                        if (! BlueSeerUtils.isValidDateStr(mytable.getValueAt(row, 9).toString())) {
+                            bsmf.MainFrame.show(getMessageTag(1123));
+                            return;
+                        }
+                        boolean isGood = schData.updatePlanOrder(mytable.getValueAt(row, 0).toString(), 
+                        mytable.getValueAt(row, 6).toString(),
+                        mytable.getValueAt(row, 5).toString(),
+                        mytable.getValueAt(row, 9).toString(),
+                        mytable.getValueAt(row,12).toString() 
+                         );  
+                           if (! isGood) {
+                               bsmf.MainFrame.show(getMessageTag(1012));
+                           } else {
+                               bsmf.MainFrame.show(getMessageTag(1008));
+                           }
+            } 
+        }
+    }//GEN-LAST:event_btupdateActionPerformed
+
+    private void btvoidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btvoidActionPerformed
+        
+        if (mytable.getSelectedRowCount() == 0) {
+        bsmf.MainFrame.show(getMessageTag(1188));
+        return;
+        }
+        
+        if (mytable.getSelectedRowCount() > 1) {
+        bsmf.MainFrame.show(getMessageTag(1095));
+        return;
+        }
+        
+        if (mytable.getSelectedRowCount() == 1) {
+        int row = mytable.getSelectedRow();
+            if ( mytable.getValueAt(row, 12).equals(getGlobalProgTag("open"))) {
+                            schData.updatePlanStatus(mytable.getValueAt(row, 0).toString(), "-1");
+                            bsmf.MainFrame.show(getMessageTag(1072, mytable.getValueAt(row, 0).toString()));
+                            mytable.setValueAt(getGlobalProgTag("void"), row, 12);
+            }
+        }
+    }//GEN-LAST:event_btvoidActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PanelDetail;
@@ -1931,7 +2038,10 @@ public class Scheduler extends javax.swing.JPanel {
     private javax.swing.JButton btRun;
     private javax.swing.JButton btcommit;
     private javax.swing.JButton bthide;
+    private javax.swing.JButton btopupdate;
+    private javax.swing.JButton btprint;
     private javax.swing.JButton btupdate;
+    private javax.swing.JButton btvoid;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JCheckBox cbclosed;
     private javax.swing.JCheckBox cbsched;
