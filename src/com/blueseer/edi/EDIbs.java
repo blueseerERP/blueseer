@@ -394,6 +394,7 @@ public static void main(String args[]) throws IOException {
                    System.out.println(dfdate.format(now) + ", No files to process,,,,,,,,,,,,,");
                    System.exit(1);
                }
+               long starttime = System.currentTimeMillis(); 
               for (int i = 0; i < listOfFiles.length; i++) {
                 if (listOfFiles[i].isFile()) {
                // System.out.println("file: " + listOfFiles[i].getName());
@@ -433,6 +434,8 @@ public static void main(String args[]) throws IOException {
                   }
                 }
               }
+              long duration = System.currentTimeMillis() - starttime;
+              System.out.println(dfdate.format(now) + " execution time = " + duration + " millsecs" );
        } catch (IOException ex) {
           ex.printStackTrace();
        }
@@ -509,7 +512,7 @@ public static void main(String args[]) throws IOException {
                }
                
               System.out.println(dfdate.format(now) + " " + " File Count=" + listOfFiles.length );
-               
+              long starttime = System.currentTimeMillis(); 
                
               for (int i = 0; i < listOfFiles.length; i++) {
                 match = false;
@@ -578,6 +581,9 @@ public static void main(String args[]) throws IOException {
                   } // else it's non-zero size...process it
                 } // yep it's a file
               } // for all files found
+              long duration = System.currentTimeMillis() - starttime;
+              System.out.println(dfdate.format(now) + " execution time = " + duration + " millsecs" );
+              
        } catch (IOException ex) {
           ex.printStackTrace();
           System.out.println(dfdate.format(now) + " " + " IOException" ); 
@@ -605,8 +611,8 @@ public static void main(String args[]) throws IOException {
         }
         
         File[] listOfFiles = folder.listFiles();
-        
-        long z = System.currentTimeMillis() - ((long)daysBack * 24L * 60L * 60L * 1000L);
+        long starttime = System.currentTimeMillis(); 
+        long z = starttime - ((long)daysBack * 24L * 60L * 60L * 1000L);
         int count = 0;
         long dt = new Date().getTime();
         
@@ -622,6 +628,8 @@ public static void main(String args[]) throws IOException {
             }
             
         }
+        long duration = System.currentTimeMillis() - starttime;
+        System.out.println("execution time: " + duration + " millsecs" );
         System.out.println("delete is set to: " + isDelete);
         System.out.println("file count is: " + listOfFiles.length);
         System.out.println("delete count is: " + count);
@@ -646,7 +654,8 @@ public static void main(String args[]) throws IOException {
          System.exit(1);   
         }
         long count = 0;
-        long z = System.currentTimeMillis() - ((long)daysBack * 24L * 60L * 60L * 1000L);
+        long starttime = System.currentTimeMillis();
+        long z = starttime - ((long)daysBack * 24L * 60L * 60L * 1000L);
         
         Path targetdir = FileSystems.getDefault().getPath(dir);
 	File[] listOfFiles = folder.listFiles();
@@ -663,23 +672,8 @@ public static void main(String args[]) throws IOException {
                 }
             }
         }
-        
-        /*
-        long count = Files.walk(targetdir)
-	      .sorted(Comparator.reverseOrder())
-	      .map(Path::toFile)
-		  .filter(e -> e.lastModified() < z)
-	      .count();
-        
-        if (isDelete) {	
-        Files.walk(targetdir)
-	      .sorted(Comparator.reverseOrder())
-	      .map(Path::toFile)
-	      .filter(e -> e.lastModified() < z)
-	     // .forEach(e -> System.out.println(e.getAbsolutePath().toString() + " " + new Date(e.lastModified())));
-	      .forEach(File::delete);
-        }	
-        */
+        long duration = System.currentTimeMillis() - starttime;
+        System.out.println("execution time: " + duration + " millsecs" );
         System.out.println("For Files/Dirs older than this number of days: " + days);
         System.out.println("delete is set to: " + isDelete);
         System.out.println("delete count is: " + count);
