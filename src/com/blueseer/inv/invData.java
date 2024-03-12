@@ -1905,7 +1905,7 @@ public class invData {
     }
     
     
-     public static void updateCurrentItemCost(String item) {
+    public static void updateCurrentItemCost(String item) {
         calcCost cur = new calcCost();
         ArrayList<Double> costlist = cur.getTotalCost(item, OVData.getDefaultBomID(item) );
         OVData.updateItemCostRec(item, invData.getItemSite(item), "current", costlist.get(0), costlist.get(1), costlist.get(2), costlist.get(3), costlist.get(4), costlist.get(0) + costlist.get(1) + costlist.get(2) + costlist.get(3) + costlist.get(4));
@@ -2482,7 +2482,47 @@ public class invData {
     return price;
 
     }
-    
+   
+    public static String getDeptByItemOperation(String item, int op) {
+    String mystring = "";
+    try{
+       Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+            res = st.executeQuery("SELECT wc_cc from wc_mstr inner join wf_mstr on wf_cell = wc_cell " +
+                    " inner join item_mstr on it_wf = wf_id " + 
+                    " where it_item = " + "'" + item + "'" +
+                    " and wf_op = " + "'" + op + "'" + ";");
+               while (res.next()) {
+                    mystring = (res.getString("wc_cc"));
+                }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return mystring;
+
+    }
+
     
     public static ArrayList getItemMaintInit() {
                ArrayList myarray = new ArrayList();

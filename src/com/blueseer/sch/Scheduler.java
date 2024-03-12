@@ -77,6 +77,8 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.hrm.hrmData.getEmpNameByDept;
+import static com.blueseer.inv.invData.getDeptByItemOperation;
 import static com.blueseer.sch.schData.getPlanOperation;
 import com.blueseer.sch.schData.plan_operation;
 import static com.blueseer.sch.schData.updatePlanOperation;
@@ -111,6 +113,7 @@ public class Scheduler extends javax.swing.JPanel {
 
     int currplan = 0;
     int currop = 0;
+    String curritem = "";
     // NOTE:  if you change this...you must also adjust APCheckRun...my advise....dont change it
        Scheduler.MyTableModel mymodel = new Scheduler.MyTableModel(new Object[][]{},
                         new String[]{
@@ -1608,6 +1611,7 @@ public class Scheduler extends javax.swing.JPanel {
         
         if ( col == 0) {
               currplan = Integer.valueOf(mytable.getValueAt(row, 0).toString());
+              curritem = mytable.getValueAt(row, 1).toString();
               getOperations(Integer.valueOf(mytable.getValueAt(row, 0).toString()));
         }
         
@@ -1944,9 +1948,19 @@ public class Scheduler extends javax.swing.JPanel {
         int col = tableoperations.columnAtPoint(evt.getPoint());
         currop = Integer.valueOf(tableoperations.getValueAt(row, 0).toString());
         plan_operation x = getPlanOperation(currplan, currop);
+        String dept = getDeptByItemOperation(curritem, currop);
+        
         if ( x.m()[0].equals("0")) {
-              ddopcell.setSelectedItem(x.plo_cell());
+              ArrayList<String> operators = getEmpNameByDept(dept);
+              
+              ddopoperator.removeAllItems();
+              for (String operator : operators) {
+                  ddopoperator.addItem(operator);
+              }
+              ddopoperator.insertItemAt("", 0);
               ddopoperator.setSelectedItem(x.plo_operator());
+              
+              ddopcell.setSelectedItem(x.plo_cell());
               tbopqty.setText(bsNumber(x.plo_qty()));
               dcopdate.setDate(parseDate(x.plo_date()));
               ddopstatus.setSelectedItem(x.plo_status());              

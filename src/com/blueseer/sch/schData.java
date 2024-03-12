@@ -35,6 +35,7 @@ import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -42,6 +43,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  *
@@ -807,6 +809,11 @@ public class schData {
         String plo_operator, String plo_date, String plo_status, String plo_userid) {
         public plan_operation(String[] m) {
             this(m, 0, 0, 0, 0, 0, "", "", "", "", "");
+        }
+        public plan_operation update_plo_qty_comp(plan_operation po, double qty) {
+            Objects.requireNonNull(po, "record plan_operation is required");
+            double newqty = po.plo_qty_comp + qty;
+            return new plan_operation(po.m, po.plo_id, po.plo_parent, po.plo_op, po.plo_qty, newqty, po.plo_cell, po.plo_operator, po.plo_date, po.plo_status, po.plo_userid);
         }
     }
     
