@@ -646,6 +646,47 @@ public class Scheduler extends javax.swing.JPanel {
         
     }
     
+    public void printOperationTicket(String jobid, String op, String bustitle) {
+        
+       try {
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            
+                String jasperfile = getSysMetaValue("system", "inventorycontrol", "jasper_operation_ticket");  
+                if (jasperfile.isBlank()) {
+                    jasperfile = "operationticket.jasper";
+                }
+                
+                HashMap hm = new HashMap();
+                hm.put("BUSINESSTITLE", bustitle);
+                hm.put("REPORT_TITLE", jasperfile);
+                hm.put("SUBREPORT_DIR", "jasper/");
+                hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags); 
+                hm.put("myid",  jobid);
+                hm.put("myid",  op);
+                //hm.put("imagepath", "images/avmlogo.png");
+               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
+               // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
+                File mytemplate = new File("jasper/" + jasperfile);
+                JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
+              //  JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/jobticket.pdf");
+         
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+            jasperViewer.setVisible(true);
+                
+                
+           con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        
+    }
+    
+    
     public void postcommit(int count) {
          /*
          Calendar calfrom = Calendar.getInstance();
@@ -1110,6 +1151,7 @@ public class Scheduler extends javax.swing.JPanel {
         ddopstatus = new javax.swing.JComboBox<>();
         jLabel16 = new javax.swing.JLabel();
         btopupdate = new javax.swing.JButton();
+        btopprint = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
         setPreferredSize(new java.awt.Dimension(1211, 744));
@@ -1520,6 +1562,13 @@ public class Scheduler extends javax.swing.JPanel {
             }
         });
 
+        btopprint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/print.png"))); // NOI18N
+        btopprint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btopprintActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelOpMaintLayout = new javax.swing.GroupLayout(panelOpMaint);
         panelOpMaint.setLayout(panelOpMaintLayout);
         panelOpMaintLayout.setHorizontalGroup(
@@ -1534,7 +1583,10 @@ public class Scheduler extends javax.swing.JPanel {
                     .addComponent(jLabel16))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelOpMaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btopupdate)
+                    .addGroup(panelOpMaintLayout.createSequentialGroup()
+                        .addComponent(btopupdate)
+                        .addGap(31, 31, 31)
+                        .addComponent(btopprint, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panelOpMaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(dcopdate, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
                         .addComponent(ddopcell, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1559,15 +1611,18 @@ public class Scheduler extends javax.swing.JPanel {
                     .addComponent(dcopdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel14))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelOpMaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbopqty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel15))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelOpMaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ddopstatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel16))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btopupdate)
+                .addGroup(panelOpMaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(panelOpMaintLayout.createSequentialGroup()
+                        .addGroup(panelOpMaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tbopqty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel15))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelOpMaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(ddopstatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel16))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btopupdate))
+                    .addComponent(btopprint))
                 .addContainerGap(134, Short.MAX_VALUE))
         );
 
@@ -1589,9 +1644,9 @@ public class Scheduler extends javax.swing.JPanel {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 549, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 549, Short.MAX_VALUE)
             .addComponent(PanelReport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(PanelDetail, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 549, Short.MAX_VALUE)
+            .addComponent(PanelDetail, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 549, Short.MAX_VALUE)
         );
 
         add(jPanel2, java.awt.BorderLayout.CENTER);
@@ -2045,6 +2100,12 @@ public class Scheduler extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btvoidActionPerformed
 
+    private void btopprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btopprintActionPerformed
+        if (currplan > 0 && currop > 0) {
+           printOperationTicket(String.valueOf(currplan), String.valueOf(currop), "Operation Ticket"); 
+        }
+    }//GEN-LAST:event_btopprintActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PanelDetail;
@@ -2052,6 +2113,7 @@ public class Scheduler extends javax.swing.JPanel {
     private javax.swing.JButton btRun;
     private javax.swing.JButton btcommit;
     private javax.swing.JButton bthide;
+    private javax.swing.JButton btopprint;
     private javax.swing.JButton btopupdate;
     private javax.swing.JButton btprint;
     private javax.swing.JButton btupdate;
