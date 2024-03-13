@@ -41,8 +41,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -77,6 +76,8 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.hrm.hrmData.getEmpFormalNameByID;
+import static com.blueseer.hrm.hrmData.getEmpIDByFormalName;
 import static com.blueseer.hrm.hrmData.getEmpNameByDept;
 import static com.blueseer.inv.invData.getDeptByItemOperation;
 import static com.blueseer.sch.schData.getPlanOperation;
@@ -174,13 +175,12 @@ public class Scheduler extends javax.swing.JPanel {
                getGlobalColumnTag("schedqty"), 
                getGlobalColumnTag("status")});
     
-    MyTableModelDetail modeloperations = new MyTableModelDetail(new Object[][]{},
+    DefaultTableModel modeloperations = new DefaultTableModel(new Object[][]{},
            new String[]{
                getGlobalColumnTag("operation"), 
+               getGlobalColumnTag("description"),
                getGlobalColumnTag("cell"), 
                getGlobalColumnTag("qty"), 
-               getGlobalColumnTag("compqty"), 
-               getGlobalColumnTag("status"), 
                getGlobalColumnTag("operator")})
             {       
                 @Override
@@ -754,7 +754,8 @@ public class Scheduler extends javax.swing.JPanel {
          
         frompart.setText("");
         topart.setText("");
-         
+        lbopdesc.setText("");
+        
         mymodel.setRowCount(0);
         mytable.setModel(mymodel);
         mytable.getTableHeader().setReorderingAllowed(false);
@@ -908,6 +909,7 @@ public class Scheduler extends javax.swing.JPanel {
         PanelDetail.setVisible(true);
         panelOp.setVisible(true);
         panelDet.setVisible(false);
+        
         modeloperations.setRowCount(0);
         //jPanel2.repaint();
          DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -922,21 +924,24 @@ public class Scheduler extends javax.swing.JPanel {
             }
             Statement st = con.createStatement();
             ResultSet res = null;
+            String operatorname = "";
             try {
-                int i = 0;  
-                double totqty = 0;
-                double totcap = 0;
-                
-                res = st.executeQuery("select * from plan_operation " +
+                                
+                res = st.executeQuery("select plo_op, plo_cell, plo_qty, plo_operator, wf_desc from plan_operation inner join plan_mstr on plan_nbr = plo_parent inner join item_mstr on it_item = plan_item inner join wf_mstr on wf_id = it_wf and plo_op = wf_op " +
                         " where plo_parent = " + "'" + planid + "'" + " order by plo_op ;");
                 while (res.next()) {
+                 if (! res.getString("plo_operator").isBlank()) {
+                     operatorname = getEmpFormalNameByID(res.getString("plo_operator"));
+                 } else {
+                   operatorname = "";  
+                 }
+                 
                  modeloperations.addRow(new Object[]{ 
-                      res.getString("plo_op"), 
+                       res.getString("plo_op"),
+                       res.getString("wf_desc"),
                        res.getString("plo_cell"),
                        res.getString("plo_qty"),
-                       res.getString("plo_qty_comp"),
-                       res.getDouble("plo_status"),
-                      res.getString("plo_operator")});
+                       operatorname});                       
                 }
              
 
@@ -1164,10 +1169,15 @@ public class Scheduler extends javax.swing.JPanel {
         jLabel14 = new javax.swing.JLabel();
         tbopqty = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
-        ddopstatus = new javax.swing.JComboBox<>();
+        ddop = new javax.swing.JComboBox<>();
         jLabel16 = new javax.swing.JLabel();
         btopupdate = new javax.swing.JButton();
         btopprint = new javax.swing.JButton();
+        tbopqtycomp = new javax.swing.JTextField();
+        jLabel17 = new javax.swing.JLabel();
+        ddopstatus = new javax.swing.JComboBox<>();
+        jLabel18 = new javax.swing.JLabel();
+        lbopdesc = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
         setPreferredSize(new java.awt.Dimension(1211, 744));
@@ -1175,6 +1185,7 @@ public class Scheduler extends javax.swing.JPanel {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Scheduler"));
         jPanel2.setName("panelmain"); // NOI18N
+        jPanel2.setPreferredSize(new java.awt.Dimension(1469, 725));
 
         jc.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jc.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
@@ -1568,9 +1579,7 @@ public class Scheduler extends javax.swing.JPanel {
 
         jLabel15.setText("Qty:");
 
-        ddopstatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "open", "closed", "void" }));
-
-        jLabel16.setText("Status:");
+        jLabel16.setText("Operation:");
 
         btopupdate.setText("Update");
         btopupdate.addActionListener(new java.awt.event.ActionListener() {
@@ -1586,6 +1595,12 @@ public class Scheduler extends javax.swing.JPanel {
             }
         });
 
+        jLabel17.setText("Qty Comp:");
+
+        ddopstatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "open", "closed", "void" }));
+
+        jLabel18.setText("Status:");
+
         javax.swing.GroupLayout panelOpMaintLayout = new javax.swing.GroupLayout(panelOpMaint);
         panelOpMaint.setLayout(panelOpMaintLayout);
         panelOpMaintLayout.setHorizontalGroup(
@@ -1597,50 +1612,66 @@ public class Scheduler extends javax.swing.JPanel {
                     .addComponent(jLabel13)
                     .addComponent(jLabel14)
                     .addComponent(jLabel15)
-                    .addComponent(jLabel16))
+                    .addComponent(jLabel16)
+                    .addComponent(jLabel17)
+                    .addComponent(jLabel18))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelOpMaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelOpMaintLayout.createSequentialGroup()
-                        .addComponent(btopupdate)
-                        .addGap(31, 31, 31)
-                        .addComponent(btopprint, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panelOpMaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(dcopdate, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
                         .addComponent(ddopcell, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(ddopoperator, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(tbopqty, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ddopstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(258, Short.MAX_VALUE))
+                    .addGroup(panelOpMaintLayout.createSequentialGroup()
+                        .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lbopdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(panelOpMaintLayout.createSequentialGroup()
+                        .addGroup(panelOpMaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(ddopstatus, 0, 86, Short.MAX_VALUE)
+                            .addComponent(tbopqtycomp, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tbopqty, javax.swing.GroupLayout.Alignment.LEADING))
+                        .addGap(48, 48, 48)
+                        .addComponent(btopupdate)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btopprint, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelOpMaintLayout.setVerticalGroup(
             panelOpMaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelOpMaintLayout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(panelOpMaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel12)
-                    .addComponent(ddopcell, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelOpMaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ddopoperator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel13))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(panelOpMaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(dcopdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel14))
+                    .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel16)
+                    .addComponent(lbopdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelOpMaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(panelOpMaintLayout.createSequentialGroup()
+                        .addGroup(panelOpMaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel12)
+                            .addComponent(ddopcell, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelOpMaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(ddopoperator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel13))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(panelOpMaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(dcopdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel14))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelOpMaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tbopqty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel15))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelOpMaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tbopqtycomp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel17))
+                        .addGap(4, 4, 4)
+                        .addGroup(panelOpMaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(ddopstatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel16))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btopupdate))
+                            .addComponent(jLabel18)
+                            .addComponent(btopupdate)))
                     .addComponent(btopprint))
-                .addContainerGap(119, Short.MAX_VALUE))
+                .addGap(0, 0, 0))
         );
 
         panelOp.add(panelOpMaint);
@@ -1685,6 +1716,10 @@ public class Scheduler extends javax.swing.JPanel {
               currplan = Integer.valueOf(mytable.getValueAt(row, 1).toString());
               curritem = mytable.getValueAt(row, 2).toString();
               getOperations(Integer.valueOf(mytable.getValueAt(row, 1).toString()));
+              ddop.removeAllItems();
+              for (int j = 0; j < tableoperations.getRowCount(); j++) {
+                  ddop.addItem(tableoperations.getValueAt(j, 0).toString());
+              }
         }
     }//GEN-LAST:event_mytableMouseClicked
 
@@ -1966,6 +2001,7 @@ public class Scheduler extends javax.swing.JPanel {
         if (currplan > 0 && currop > 0) {
             String operator = (ddopoperator.getSelectedItem() == null) ? "" : ddopoperator.getSelectedItem().toString();
             String cell = (ddopcell.getSelectedItem() == null) ? "" : ddopcell.getSelectedItem().toString();
+            operator = getEmpIDByFormalName(operator);
             schData.plan_operation x = new schData.plan_operation(null, 
                     0, // id
                     currplan, // parent
@@ -1975,7 +2011,7 @@ public class Scheduler extends javax.swing.JPanel {
                     cell, // cell
                     operator, // operator
                     setDateDB(dcopdate.getDate()), // date
-                    ddopstatus.getSelectedItem().toString(), //status
+                    ddop.getSelectedItem().toString(), //status
                     bsmf.MainFrame.userid // userid
                     );
             updatePlanOperation(x);
@@ -1998,12 +2034,13 @@ public class Scheduler extends javax.swing.JPanel {
                   ddopoperator.addItem(operator);
               }
               ddopoperator.insertItemAt("", 0);
-              ddopoperator.setSelectedItem(x.plo_operator());
-              
+              ddopoperator.setSelectedItem(getEmpFormalNameByID(x.plo_operator()));
+              ddop.setSelectedItem(String.valueOf(x.plo_op()));
               ddopcell.setSelectedItem(x.plo_cell());
               tbopqty.setText(bsNumber(x.plo_qty()));
               dcopdate.setDate(parseDate(x.plo_date()));
-              ddopstatus.setSelectedItem(x.plo_status());              
+              ddopstatus.setSelectedItem(x.plo_status());    
+              lbopdesc.setText(tableoperations.getValueAt(row, 1).toString());
         }
     }//GEN-LAST:event_tableoperationsMouseClicked
 
@@ -2110,6 +2147,7 @@ public class Scheduler extends javax.swing.JPanel {
     private com.toedter.calendar.JDateChooser dcopdate;
     private com.toedter.calendar.JDateChooser dcto;
     private javax.swing.JComboBox<String> ddcellchoice;
+    private javax.swing.JComboBox<String> ddop;
     private javax.swing.JComboBox<String> ddopcell;
     private javax.swing.JComboBox<String> ddopoperator;
     private javax.swing.JComboBox<String> ddopstatus;
@@ -2123,6 +2161,8 @@ public class Scheduler extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -2144,6 +2184,7 @@ public class Scheduler extends javax.swing.JPanel {
     private javax.swing.JLabel labelqtysched;
     private javax.swing.JLabel lblThisDateQtyCapacity;
     private javax.swing.JLabel lblThisDateQtySched;
+    private javax.swing.JLabel lbopdesc;
     private javax.swing.JTable mytable;
     private javax.swing.JPanel panelDet;
     private javax.swing.JPanel panelOp;
@@ -2152,6 +2193,7 @@ public class Scheduler extends javax.swing.JPanel {
     private javax.swing.JTable tabledetail;
     private javax.swing.JTable tableoperations;
     private javax.swing.JTextField tbopqty;
+    private javax.swing.JTextField tbopqtycomp;
     private javax.swing.JTextField topart;
     // End of variables declaration//GEN-END:variables
 }

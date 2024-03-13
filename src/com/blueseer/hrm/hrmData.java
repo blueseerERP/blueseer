@@ -370,6 +370,83 @@ public class hrmData {
     }
         return lines;
     }
+
+    public static String getEmpFormalNameByID(String id) {
+        String x = "";
+        try {
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                res = st.executeQuery("select emp_lname, emp_fname from emp_mstr " +
+                        " where emp_nbr = " + "'" + id + "'" + ";");
+                while (res.next()) {
+                    x = res.getString("emp_lname") + ", " + res.getString("emp_fname");
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return x;
+
+    }
+    
+    public static String getEmpIDByFormalName(String formalname) {
+        String x = "";
+        String[] fn = formalname.split(",", -1);
+        if (fn == null || fn.length < 2) {
+            return "";
+        }
+        
+        try {
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                res = st.executeQuery("select emp_nbr from emp_mstr " +
+                        " where emp_lname = " + "'" + fn[0].trim() + "'" +
+                        " and emp_fname = " + "'" + fn[1].trim() + "'" + ";");
+                while (res.next()) {
+                    x = res.getString("emp_nbr");
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return x;
+
+    }
+    
     
     public static ArrayList getempmstrlist() {
         ArrayList myarray = new ArrayList();

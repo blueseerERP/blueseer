@@ -52,6 +52,7 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.hrm.hrmData.emp_mstr;
+import static com.blueseer.hrm.hrmData.getEmpFormalNameByID;
 import static com.blueseer.hrm.hrmData.getEmployeeMstr;
 import static com.blueseer.hrm.hrmData.isValidEmployeeID;
 import com.blueseer.inv.invData;
@@ -64,7 +65,9 @@ import com.blueseer.prd.prdData.job_clock;
 import static com.blueseer.prd.prdData.updateJobClock;
 import com.blueseer.sch.schData;
 import static com.blueseer.sch.schData.getPlanDetHistory;
+import static com.blueseer.sch.schData.getPlanOperation;
 import com.blueseer.sch.schData.plan_mstr;
+import com.blueseer.sch.schData.plan_operation;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsNumberToUS;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
@@ -226,7 +229,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
     
     public void validateJob(String scan) {
        
-        
+        boolean opticketScan = false;
         
         lblmessage.setText("");
         if (scan.isEmpty()) {
@@ -235,6 +238,17 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
             return;
         }
         
+         // now check for operation ticket override...containing hyphen with job-op value
+       if (scan.contains("-")) { // must be operation specific ticket
+          opticketScan = true;
+          String[] sc = scan.split("-",-1);
+          ddop.setSelectedItem(sc[1]);
+          plan_operation po = getPlanOperation(Integer.valueOf(sc[0]), Integer.valueOf(sc[1]));
+          tboperator.setText(po.plo_operator());
+          userlabel.setText(getEmpFormalNameByID(po.plo_operator()));
+       }
+        
+    if (! opticketScan) {    
         if (schData.isPlan(scan)) {
       // tbqty.setText(String.valueOf(schData.getPlanSchedQty(scan)));
        partlabel.setText(schData.getPlanItem(scan));
@@ -291,6 +305,8 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
            tbqty.setEnabled(true);
        }
        
+      
+       
        tboperator.requestFocusInWindow();
        
       } else {
@@ -302,6 +318,9 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         // bsmf.MainFrame.show("Bad Ticket: " + scan);
          tbscan.requestFocusInWindow();
       }
+        
+    } // if not opticketscan    
+        
     }
        
     public void setLanguageTags(Object myobj) {
