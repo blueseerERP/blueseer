@@ -654,7 +654,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT  {
         }
         
         emp_mstr x = new emp_mstr(null, 
-                tbkey.getText().toString(),
+                tbkey.getText(),
                 lastname.getText(),
                 firstname.getText(),
                 middlename.getText(),
@@ -1342,11 +1342,6 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT  {
             }
         });
 
-        tbkey.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                tbkeyFocusLost(evt);
-            }
-        });
         tbkey.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tbkeyActionPerformed(evt);
@@ -2324,19 +2319,6 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT  {
     private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
         lookUpFrame();
     }//GEN-LAST:event_btlookupActionPerformed
-
-    private void tbkeyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbkeyFocusLost
-        String x = BlueSeerUtils.bsformat("", tbkey.getText(), "0");
-        if (x.equals("error")) {
-            tbkey.setText("");
-            tbkey.setBackground(Color.yellow);
-            bsmf.MainFrame.show(getMessageTag(1000));
-            tbkey.requestFocus();
-        } else {
-            tbkey.setText(x);
-            tbkey.setBackground(Color.white);
-        }
-    }//GEN-LAST:event_tbkeyFocusLost
 
     private void btaddattachmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddattachmentActionPerformed
         OVData.addFileAttachment(tbkey.getText(), this.getClass().getSimpleName(), this );

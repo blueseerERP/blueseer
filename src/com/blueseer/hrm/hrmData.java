@@ -116,6 +116,7 @@ public class hrmData {
     }
         
     public static String[] updateEmployeeMstr(emp_mstr x) {
+        System.out.println(x.emp_nbr() + "/" + x.emp_dept);
         String[] m = new String[2];
         String sql = "update emp_mstr set emp_lname = ?, emp_fname = ?, "
                         + " emp_mname = ?, emp_dept = ?, emp_status = ?, emp_startdate = ?, emp_shift = ?, emp_type = ?, "
