@@ -117,6 +117,7 @@ public class Scheduler extends javax.swing.JPanel {
     // NOTE:  if you change this...you must also adjust APCheckRun...my advise....dont change it
        Scheduler.MyTableModel mymodel = new Scheduler.MyTableModel(new Object[][]{},
                         new String[]{
+                            getGlobalColumnTag("select"),
                             getGlobalColumnTag("planid"), 
                             getGlobalColumnTag("item"), 
                             getGlobalColumnTag("duedate"), 
@@ -137,22 +138,26 @@ public class Scheduler extends javax.swing.JPanel {
                         return;
                     }
                     super.setValueAt(aValue, row, column);
-                    if (column == 5) {
+                    /*
+                    if (column == 6) {
                        // String value = aValue == null ? null : aValue.toString();
                         if (aValue == null) {
-                            super.setValueAt(null, row, 1);
+                            super.setValueAt(null, row, 6);
                         } else {
-                            super.setValueAt(cellsonly.indexOf(aValue), row, 1);
+                            super.setValueAt(cellsonly.indexOf(aValue), row, 6);
                         }
                     }
+                    */
                 }
                    
                       @Override  
                       public Class getColumnClass(int col) {  
-                        if (col == 6 || col == 7 || col == 8) {
+                        if (col == 7 || col == 8 || col == 9) {
                             return Integer.class;
                         } else if (col == 4) {
-                            return Boolean.class;    
+                            return Boolean.class;  
+                        } else if (col == 0) {
+                            return ImageIcon.class;      
                         } else {
                             return String.class;
                         }  //other columns accept String values  
@@ -174,28 +179,35 @@ public class Scheduler extends javax.swing.JPanel {
                getGlobalColumnTag("operation"), 
                getGlobalColumnTag("cell"), 
                getGlobalColumnTag("qty"), 
-               getGlobalColumnTag("qtycomp"), 
+               getGlobalColumnTag("compqty"), 
                getGlobalColumnTag("status"), 
-               getGlobalColumnTag("operator")});
+               getGlobalColumnTag("operator")})
+            {       
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                      return false;
+                      //Only the first column
+                      // return column == 1;
+                }
+
+            };
      
      DefaultTableModel modelavailable = new DefaultTableModel(new Object[][]{},
            new String[]{
                getGlobalColumnTag("cell"), 
                getGlobalColumnTag("capacity"), 
                getGlobalColumnTag("schedqty"), 
-               getGlobalColumnTag("availqty")});
-             /*
-                    {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 1 || col == 2 || col == 3  ) {      
-                            return Integer.class; 
-                        } else {
-                            return String.class;
-                        }  //other columns accept String values  
-                      }  
-                        }
-             */
+               getGlobalColumnTag("availqty")})
+             {       
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                      return false;
+                      //Only the first column
+                      // return column == 1;
+                }
+
+            };
+            
     
     boolean isLoad = false;
     ArrayList<String[]>  cells = new ArrayList<String[]>();  // contains cell and capacity
@@ -240,17 +252,17 @@ public class Scheduler extends javax.swing.JPanel {
           }  
          
        boolean[] canEdit = new boolean[]{
-                false, false, false, false, false, true, true, false, false, true, false, false, false, false, false, false
+                false, false, false, false, false, false, true, true, false, false, true, false, false, false, false, false, false
         };
 
         public boolean isCellEditable(int rowIndex, int columnIndex) {
             // plan is closed
             if (mytable.getModel().getValueAt(rowIndex, 12).equals(getGlobalProgTag("closed"))) {   // 1
-               canEdit = new boolean[]{false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};  
+               canEdit = new boolean[]{false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};  
             } else if (mytable.getModel().getValueAt(rowIndex, 12).equals(getGlobalProgTag("void"))) {   // -1
-               canEdit = new boolean[]{false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};  
+               canEdit = new boolean[]{false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false};  
             } else {
-               canEdit = new boolean[]{false, false, false, false, false, true, true, false, false, true, false, false, false, false, false, false};  
+               canEdit = new boolean[]{false, false, false, false, false, false, true, true, false, false, true, false, false, false, false, false, false};  
             }
             
             return canEdit[columnIndex];
@@ -264,9 +276,9 @@ public class Scheduler extends javax.swing.JPanel {
         public Class getColumnClass(int column) {
             
             
-               if (column == 6)       
+               if (column == 7)       
                 return Double.class; 
-               else if (column == 4) 
+               else if (column == 5) 
                    return Boolean.class;
             else return String.class;  //other columns accept String values 
             
@@ -354,8 +366,8 @@ public class Scheduler extends javax.swing.JPanel {
         }
         else
         {
-              String status = (String) mytable.getModel().getValueAt(table.convertRowIndexToModel(row), 12);  // 7 = status column
-             
+              String status = (String) mytable.getModel().getValueAt(table.convertRowIndexToModel(row), 13);  // 7 = status column
+             /*
               if (status.equals(getGlobalProgTag("closed"))) {
               setForeground(Color.blue);
              } else if (status.equals(getGlobalProgTag("void"))) {
@@ -364,6 +376,9 @@ public class Scheduler extends javax.swing.JPanel {
               setBackground(table.getBackground());
               setForeground(table.getForeground());
               }
+              */
+              setBackground(table.getBackground());
+              setForeground(table.getForeground());
         }
         /*
             boolean issched = (Boolean) mytable.getModel().getValueAt(table.convertRowIndexToModel(row), 4);
@@ -1540,6 +1555,7 @@ public class Scheduler extends javax.swing.JPanel {
 
         panelOp.add(jScrollPane4);
 
+        panelOpMaint.setBorder(javax.swing.BorderFactory.createTitledBorder("Operation Maintenance"));
         panelOpMaint.setPreferredSize(new java.awt.Dimension(300, 422));
 
         jLabel12.setText("Cell:");
@@ -1594,7 +1610,7 @@ public class Scheduler extends javax.swing.JPanel {
                         .addComponent(ddopoperator, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(tbopqty, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ddopstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(270, Short.MAX_VALUE))
+                .addContainerGap(258, Short.MAX_VALUE))
         );
         panelOpMaintLayout.setVerticalGroup(
             panelOpMaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1624,7 +1640,7 @@ public class Scheduler extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btopupdate))
                     .addComponent(btopprint))
-                .addContainerGap(134, Short.MAX_VALUE))
+                .addContainerGap(119, Short.MAX_VALUE))
         );
 
         panelOp.add(panelOpMaint);
@@ -1645,9 +1661,9 @@ public class Scheduler extends javax.swing.JPanel {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 549, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 549, Short.MAX_VALUE)
             .addComponent(PanelReport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(PanelDetail, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 549, Short.MAX_VALUE)
+            .addComponent(PanelDetail, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 549, Short.MAX_VALUE)
         );
 
         add(jPanel2, java.awt.BorderLayout.CENTER);
@@ -1666,46 +1682,10 @@ public class Scheduler extends javax.swing.JPanel {
         int col = mytable.columnAtPoint(evt.getPoint());
         
         if ( col == 0) {
-              currplan = Integer.valueOf(mytable.getValueAt(row, 0).toString());
-              curritem = mytable.getValueAt(row, 1).toString();
-              getOperations(Integer.valueOf(mytable.getValueAt(row, 0).toString()));
+              currplan = Integer.valueOf(mytable.getValueAt(row, 1).toString());
+              curritem = mytable.getValueAt(row, 2).toString();
+              getOperations(Integer.valueOf(mytable.getValueAt(row, 1).toString()));
         }
-        
-        /*
-        if ( col == 13) {
-              printticket(mytable.getValueAt(row, 0).toString(), "Work Order");
-        }
-        
-        
-        if (col == 14)   {
-                    if ( mytable.getValueAt(row, 12).equals(getGlobalProgTag("open"))) {
-                        // lets confirm valid date has been entered
-                        if (! BlueSeerUtils.isValidDateStr(mytable.getValueAt(row, 9).toString())) {
-                            bsmf.MainFrame.show(getMessageTag(1123));
-                            return;
-                        }
-                        boolean isGood = schData.updatePlanOrder(mytable.getValueAt(row, 0).toString(), 
-                        mytable.getValueAt(row, 6).toString(),
-                        mytable.getValueAt(row, 5).toString(),
-                        mytable.getValueAt(row, 9).toString(),
-                        mytable.getValueAt(row,12).toString() 
-                         );  
-                           if (! isGood) {
-                               bsmf.MainFrame.show(getMessageTag(1012));
-                           } else {
-                               bsmf.MainFrame.show(getMessageTag(1008));
-                           }
-                   } 
-        }
-        if (col == 15)   {
-                    if ( mytable.getValueAt(row, 12).equals(getGlobalProgTag("open"))) {
-                        schData.updatePlanStatus(mytable.getValueAt(row, 0).toString(), "-1");
-                        bsmf.MainFrame.show(getMessageTag(1072, mytable.getValueAt(row, 0).toString()));
-                        mytable.setValueAt(getGlobalProgTag("void"), row, 12);
-                   } 
-        }
-        */
-         
     }//GEN-LAST:event_mytableMouseClicked
 
     private void btRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRunActionPerformed
@@ -1755,12 +1735,12 @@ public class Scheduler extends javax.swing.JPanel {
                 //  mytable.getColumnModel().getColumn(0).setCellRenderer(new ProdSchedPanel.SomeRenderer());
 
                 CheckBoxRenderer checkBoxRenderer = new CheckBoxRenderer();
-                mytable.getColumnModel().getColumn(4).setCellRenderer(checkBoxRenderer);
+                mytable.getColumnModel().getColumn(5).setCellRenderer(checkBoxRenderer);
 
                 //  ComboBoxRenderer comboBoxRenderer = new ComboBoxRenderer(new String[]{"1","2"});
                 //  mytable.getColumnModel().getColumn(5).setCellRenderer(comboBoxRenderer);
                 
-                TableColumn col = mytable.getColumnModel().getColumn(5);
+                TableColumn col = mytable.getColumnModel().getColumn(6);
                // col.setCellEditor(new ComboBoxEditor(cellsonly.toArray(new String[cellsonly.size()])));
               //  col.setCellEditor(new TestCellEditor(cellsonly.toArray(new String[cellsonly.size()])));
               col.setCellEditor(new DefaultCellEditor(new JComboBox(cellsonly.toArray(new String[cellsonly.size()]))));
@@ -1769,6 +1749,9 @@ public class Scheduler extends javax.swing.JPanel {
                 Enumeration<TableColumn> en = mytable.getColumnModel().getColumns();
                 while (en.hasMoreElements()) {
                     TableColumn tc = en.nextElement();
+                    if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) {
+                         continue;
+                     }
                     if (tc.getIdentifier().toString().equals("isSched") ||
                         tc.getIdentifier().toString().equals("Cell") ) {
                         continue;
@@ -1780,9 +1763,9 @@ public class Scheduler extends javax.swing.JPanel {
                 //        mytable.getColumn("Print").setCellRenderer(new ProdSchedPanel.ButtonRenderer());
                 //        mytable.getColumn("Void").setCellRenderer(new ProdSchedPanel.ButtonRenderer());
 
-                DefaultCellEditor singleClick = (DefaultCellEditor) mytable.getDefaultEditor(mytable.getColumnClass(6));
+                DefaultCellEditor singleClick = (DefaultCellEditor) mytable.getDefaultEditor(mytable.getColumnClass(7));
                 singleClick.setClickCountToStart(1);
-                mytable.setDefaultEditor(mytable.getColumnClass(6), singleClick);
+                mytable.setDefaultEditor(mytable.getColumnClass(7), singleClick);
                 //   DefaultCellEditor singleClick2 = (DefaultCellEditor) mytable.getDefaultEditor(mytable.getColumnClass(5));
                 //  singleClick2.setClickCountToStart(1);
                 //   mytable.setDefaultEditor(mytable.getColumnClass(5), singleClick2);
@@ -1855,6 +1838,7 @@ public class Scheduler extends javax.swing.JPanel {
                     if (res.getString("plan_status").equals("-1")) { status = getGlobalProgTag("void"); }
 
                     mymodel.addRow(new Object[]{
+                        BlueSeerUtils.clickflag, 
                         res.getString("plan_nbr"),
                         res.getString("plan_item"),
                         res.getString("plan_date_due"),
@@ -1906,7 +1890,7 @@ public class Scheduler extends javax.swing.JPanel {
 //Double.valueOf(tableavailable.getModel().getValueAt(table.convertRowIndexToModel(row), 3).toString());  // 7 = status column
              
         for (int i = 0 ; i < mymodel.getRowCount(); i++) {
-            if (! mymodel.getValueAt(i, 12).equals(getGlobalProgTag("open")) && ! mymodel.getValueAt(i, 12).equals(getGlobalProgTag("closed")) && ! mymodel.getValueAt(i, 12).equals(getGlobalProgTag("void"))) {
+            if (! mymodel.getValueAt(i, 13).equals(getGlobalProgTag("open")) && ! mymodel.getValueAt(i, 13).equals(getGlobalProgTag("closed")) && ! mymodel.getValueAt(i, 13).equals(getGlobalProgTag("void"))) {
                 bsmf.MainFrame.show(getMessageTag(1124));
                 commit = false;
                 break;
@@ -1916,20 +1900,20 @@ public class Scheduler extends javax.swing.JPanel {
         if (commit) {
             ArrayList<String[]> list = new ArrayList<String[]>();
             for (int i = 0 ; i < mymodel.getRowCount(); i++) {
-                if ( (boolean) mymodel.getValueAt(i, 4) == true ) {
+                if ( (boolean) mymodel.getValueAt(i, 5) == true ) {
                     continue;
                 }
-                if (    mymodel.getValueAt(i, 5).toString().isEmpty() || 
-                        mymodel.getValueAt(i, 5) == null || 
-                        mymodel.getValueAt(i, 6).toString().isEmpty() || 
-                        mymodel.getValueAt(i, 6) == null ||
-                        mymodel.getValueAt(i, 6).toString().equals("0") ) {
+                if (    mymodel.getValueAt(i, 6).toString().isEmpty() || 
+                        mymodel.getValueAt(i, 6) == null || 
+                        mymodel.getValueAt(i, 7).toString().isEmpty() || 
+                        mymodel.getValueAt(i, 7) == null ||
+                        mymodel.getValueAt(i, 7).toString().equals("0") ) {
                   continue;  
                 }
-                list.add(new String[]{mymodel.getValueAt(i, 0).toString(),
-                    mymodel.getValueAt(i, 5).toString(),
+                list.add(new String[]{mymodel.getValueAt(i, 1).toString(),
                     mymodel.getValueAt(i, 6).toString(),
-                    mymodel.getValueAt(i, 12).toString()});
+                    mymodel.getValueAt(i, 7).toString(),
+                    mymodel.getValueAt(i, 13).toString()});
             }
             
             mymodel.setRowCount(0);
@@ -2036,7 +2020,7 @@ public class Scheduler extends javax.swing.JPanel {
         
         if (mytable.getSelectedRowCount() == 1) {
         int row = mytable.getSelectedRow();
-        printticket(mytable.getValueAt(row, 0).toString(), "Work Order");
+        printticket(mytable.getValueAt(row, 1).toString(), "Work Order");
         }
         
     }//GEN-LAST:event_btprintActionPerformed
@@ -2054,21 +2038,21 @@ public class Scheduler extends javax.swing.JPanel {
         
         if (mytable.getSelectedRowCount() == 1) {
         int row = mytable.getSelectedRow();
-          if (mytable.getValueAt(row, 4).toString().equals("false")) {
+          if (mytable.getValueAt(row, 5).toString().equals("false")) {
               bsmf.MainFrame.show(getMessageTag(1182));
               return;
           }
-            if ( mytable.getValueAt(row, 12).equals(getGlobalProgTag("open"))) {
+            if ( mytable.getValueAt(row, 13).equals(getGlobalProgTag("open"))) {
                         // lets confirm valid date has been entered
-                        if (! BlueSeerUtils.isValidDateStr(mytable.getValueAt(row, 9).toString())) {
+                        if (! BlueSeerUtils.isValidDateStr(mytable.getValueAt(row, 10).toString())) {
                             bsmf.MainFrame.show(getMessageTag(1123));
                             return;
                         }
-                        boolean isGood = schData.updatePlanOrder(mytable.getValueAt(row, 0).toString(), 
+                        boolean isGood = schData.updatePlanOrder(mytable.getValueAt(row, 1).toString(), 
+                        mytable.getValueAt(row, 7).toString(),
                         mytable.getValueAt(row, 6).toString(),
-                        mytable.getValueAt(row, 5).toString(),
-                        mytable.getValueAt(row, 9).toString(),
-                        mytable.getValueAt(row,12).toString() 
+                        mytable.getValueAt(row, 10).toString(),
+                        mytable.getValueAt(row,13).toString() 
                          );  
                            if (! isGood) {
                                bsmf.MainFrame.show(getMessageTag(1012));
@@ -2093,10 +2077,10 @@ public class Scheduler extends javax.swing.JPanel {
         
         if (mytable.getSelectedRowCount() == 1) {
         int row = mytable.getSelectedRow();
-            if ( mytable.getValueAt(row, 12).equals(getGlobalProgTag("open"))) {
-                            schData.updatePlanStatus(mytable.getValueAt(row, 0).toString(), "-1");
-                            bsmf.MainFrame.show(getMessageTag(1072, mytable.getValueAt(row, 0).toString()));
-                            mytable.setValueAt(getGlobalProgTag("void"), row, 12);
+            if ( mytable.getValueAt(row, 13).equals(getGlobalProgTag("open"))) {
+                            schData.updatePlanStatus(mytable.getValueAt(row, 1).toString(), "-1");
+                            bsmf.MainFrame.show(getMessageTag(1072, mytable.getValueAt(row, 1).toString()));
+                            mytable.setValueAt(getGlobalProgTag("void"), row, 13);
             }
         }
     }//GEN-LAST:event_btvoidActionPerformed
