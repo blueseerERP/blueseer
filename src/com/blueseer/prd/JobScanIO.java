@@ -65,10 +65,12 @@ import com.blueseer.prd.prdData.job_clock;
 import static com.blueseer.prd.prdData.updateJobClock;
 import com.blueseer.sch.schData;
 import static com.blueseer.sch.schData.getPlanDetHistory;
+import static com.blueseer.sch.schData.getPlanMstr;
 import static com.blueseer.sch.schData.getPlanOperation;
 import com.blueseer.sch.schData.plan_mstr;
 import com.blueseer.sch.schData.plan_operation;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsNumberToUS;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
@@ -113,6 +115,8 @@ boolean planLegit = false;
 
 String clockdate = "";
 String clocktime = "";
+String plannbr = "";
+String planop = "";
 
 javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
@@ -227,9 +231,69 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
        }
     }
     
+    public void setOperations(String plan) {
+        ddop.removeAllItems();
+        ArrayList<plan_operation> pos = getPlanOperation(plan);
+        for (plan_operation po : pos) {
+            ddop.addItem(String.valueOf(po.plo_op()));
+        }
+    }
+    
+    public void badScan(String messg) {
+      planLegit = false;
+      btcommit.setEnabled(false);
+      tbscan.setText("");
+      lblmessage.setText(messg);
+      lblmessage.setForeground(Color.red);
+      tbscan.requestFocusInWindow();
+    }
+    
+    public void validateOperator(String dir, String plan) {
+        if (! isValidEmployeeID(tboperator.getText())) {
+            badScan("Invalid Employee ID");
+            new AnswerWorker().execute();
+        }
+        if (plan.isBlank()) {
+            badScan("Empty Job Number");
+            new AnswerWorker().execute();
+        }
+        
+        if (dir.equals("In")) {
+                // create job_clock record and return init(null)
+                String[] m = addJobClock(createRecordIn());
+                partlabel.setText("");
+                oplabel.setText("");
+                userlabel.setText("");
+                qtylabel.setText("");
+                if (m[0].equals("1")) {
+                   lblmessage.setText("already clocked in");
+                   lblmessage.setForeground(Color.red);
+                } else {
+                   lblmessage.setText("clock in success");
+                   lblmessage.setForeground(Color.blue);
+                }
+                new AnswerWorker().execute();
+        } else {
+                job_clock jc = getJobClock(new String[]{plan, ddop.getSelectedItem().toString(), tboperator.getText()});
+                if (jc.m()[0].equals("1")) {
+                    lblmessage.setText("No clock In record found for this ticket/operation/user combination");
+                    lblmessage.setForeground(Color.red);
+                    new AnswerWorker().execute();
+                } else {
+                    tboperator.setBackground(Color.white);
+                    tbqty.requestFocusInWindow();
+                    btcommit.setEnabled(true); 
+                }
+                
+        }
+    }
+    
     public void validateJob(String scan) {
        
         boolean opticketScan = false;
+        double qtysched = 0;
+        double prevscanned = 0;
+        double remaining = 0;
         
         lblmessage.setText("");
         if (scan.isEmpty()) {
@@ -238,16 +302,83 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
             return;
         }
         
-         // now check for operation ticket override...containing hyphen with job-op value
+         // check for operation ticket override...containing hyphen with job-op value
        if (scan.contains("-")) { // must be operation specific ticket
           opticketScan = true;
           String[] sc = scan.split("-",-1);
-          ddop.setSelectedItem(sc[1]);
-          plan_operation po = getPlanOperation(Integer.valueOf(sc[0]), Integer.valueOf(sc[1]));
-          tboperator.setText(po.plo_operator());
-          userlabel.setText(getEmpFormalNameByID(po.plo_operator()));
+          if (sc != null && sc.length == 2) {
+            plannbr = sc[0];
+            planop = sc[1];
+          } else { // if sc != null
+                badScan("Bad Ticket");
+                new AnswerWorker().execute();
+                return;
+          }
+       } else { // regular job scan
+           plannbr = scan;
        }
+       
+       // now validate       
+       if (! schData.isPlan(plannbr)) {
+                badScan("Bad Ticket");
+                new AnswerWorker().execute();
+                return;
+        } 
+        plan_mstr pm = getPlanMstr(new String[]{plannbr});
+        if (Integer.valueOf(pm.plan_status()) != 0 ) { // check if closed
+            badScan(getMessageTag(1071));
+            new AnswerWorker().execute();
+            return;
+        }
+        if (pm.plan_qty_sched() == 0) {
+            badScan(getMessageTag(1182));
+            new AnswerWorker().execute();
+            return;
+        }
+        setOperations(plannbr);
+        if (ddop.getItemCount() > 0) { 
+            if (! planop.isBlank()) {
+                ddop.setSelectedItem(planop);
+            } else {
+                ddop.setSelectedIndex(ddop.getItemCount() - 1);  
+            }
+        } else {
+            badScan("No Operations found! Check Routing for this item.");
+            new AnswerWorker().execute();
+            return;
+        }
+        partlabel.setText(schData.getPlanItem(scan));
+        qtysched = pm.plan_qty_sched(); // assume parent plan sched qty
         
+        if (opticketScan) {
+        plan_operation po = getPlanOperation(Integer.valueOf(plannbr), Integer.valueOf(planop));
+        qtysched = po.plo_qty();  // override parent plan sched qty
+        tboperator.setText(po.plo_operator());
+        userlabel.setText(getEmpFormalNameByID(po.plo_operator()));
+        }
+        
+        prevscanned = schData.getPlanDetTotQtyByOp(plannbr, planop);
+        remaining = qtysched - prevscanned;
+        tbqty.setText(bsFormatDouble(remaining));
+        qtylabel.setText("qty sched: " + String.valueOf(qtysched) + "     qty scanned: " + String.valueOf(prevscanned));
+        
+        planLegit = true;
+       if (dddir.getSelectedItem().toString().equals("In")) {
+           tbqty.setText("0");
+           tbqty.setEnabled(false);
+       } else {
+           tbqty.setEnabled(true);
+       }
+       
+       if (opticketScan) {
+           validateOperator(dddir.getSelectedItem().toString(), plannbr);
+           tboperator.setEnabled(false);
+       } else {
+           tboperator.requestFocusInWindow(); 
+       }
+       
+       
+    /*    
     if (! opticketScan) {    
         if (schData.isPlan(scan)) {
       // tbqty.setText(String.valueOf(schData.getPlanSchedQty(scan)));
@@ -310,17 +441,16 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
        tboperator.requestFocusInWindow();
        
       } else {
-            planLegit = false;
+              planLegit = false;
               btcommit.setEnabled(false);
               tbscan.setText("");
               qtylabel.setText("Bad Ticket");
               qtylabel.setForeground(Color.red);
-        // bsmf.MainFrame.show("Bad Ticket: " + scan);
-         tbscan.requestFocusInWindow();
+              tbscan.requestFocusInWindow();
       }
         
     } // if not opticketscan    
-        
+    */    
     }
        
     public void setLanguageTags(Object myobj) {
@@ -407,8 +537,8 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         clocktime = dftime.format(now);
                     
         job_clock x = new job_clock(null, 
-                 bsParseInt(tbscan.getText()),
-                 bsParseInt(ddop.getSelectedItem().toString()),
+                 bsParseInt(plannbr),
+                 bsParseInt(planop),
                  0,
                  tboperator.getText(),
                  setDateDB(now), //indate
@@ -428,7 +558,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         clockdate = dfdate.format(now);
         clocktime = dftime.format(now);
         
-        String[] intime = getJobClockInTime(bsParseInt(tbscan.getText()), bsParseInt(ddop.getSelectedItem().toString()), tboperator.getText());
+        String[] intime = getJobClockInTime(bsParseInt(plannbr), bsParseInt(planop), tboperator.getText());
         Calendar clockstart = Calendar.getInstance();
         Calendar clockstop = Calendar.getInstance();
         clockstart.set( Integer.valueOf(intime[0].substring(0,4)), Integer.valueOf(intime[0].substring(5,7)), Integer.valueOf(intime[0].substring(8,10)), Integer.valueOf(intime[1].substring(0,2)), Integer.valueOf(intime[1].substring(3,5)) );
@@ -450,8 +580,8 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         
         
         job_clock x = new job_clock(null, 
-                 bsParseInt(tbscan.getText()),
-                 bsParseInt(ddop.getSelectedItem().toString()),
+                 bsParseInt(plannbr),
+                 bsParseInt(planop),
                  bsParseDouble(xZero(tbqty.getText())),
                  tboperator.getText(),
                  setDateDB(null), //indate
@@ -668,14 +798,15 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tboperator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel8))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel4)
-                                .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(1, 1, 1)
-                                .addComponent(qtylabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(qtylabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel4))))
                         .addGap(44, 44, 44)
                         .addComponent(btcommit)
                         .addGap(5, 5, 5)
@@ -683,17 +814,21 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jpaneltable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(userlabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(13, Short.MAX_VALUE))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         add(jPanel1);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btcommitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcommitActionPerformed
-       
-        plan_mstr pm = schData.getPlanMstr(new String[]{tbscan.getText()});
-        inv_ctrl ic = invData.getINVCtrl(new String[]{tbscan.getText()});
-        double prevscanned = schData.getPlanDetTotQtyByOp(tbscan.getText(), ddop.getSelectedItem().toString());
+        if (plannbr.isBlank() || planop.isBlank()) {
+            badScan("job number or operation is blank");
+            return;
+        }
+        
+        plan_mstr pm = schData.getPlanMstr(new String[]{plannbr});
+        inv_ctrl ic = invData.getINVCtrl(new String[]{plannbr});
+        double prevscanned = schData.getPlanDetTotQtyByOp(plannbr, planop);
         String[] detail = invData.getItemDetail(pm.plan_item());
         boolean isPlan = true;
         
@@ -703,20 +838,20 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         double qty = Double.valueOf(tbqty.getText());
         
         if (! isPlan) {
-            lblmessage.setText(getMessageTag(1070,tbscan.getText()));
+            lblmessage.setText(getMessageTag(1070,plannbr));
             lblmessage.setForeground(Color.red);
             initvars(null);
             return;
         }
         
         if (isPlan &&  Integer.valueOf(pm.plan_status()) > 0 ) {
-            lblmessage.setText(getMessageTag(1071,tbscan.getText()));
+            lblmessage.setText(getMessageTag(1071,plannbr));
             lblmessage.setForeground(Color.red);
             initvars(null);
             return;
         }
         if (isPlan &&  Integer.valueOf(pm.plan_status()) < 0 ) {
-            lblmessage.setText(getMessageTag(1072,tbscan.getText()));
+            lblmessage.setText(getMessageTag(1072,plannbr));
             lblmessage.setForeground(Color.red);
             initvars(null);
             return;
@@ -726,7 +861,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         // if false...only one scan per plan ticket per operation
         
         if (! BlueSeerUtils.ConvertStringToBool(ic.planmultiscan()) && (prevscanned > 0)) {
-            lblmessage.setText("Ticket Already Reported for this Operation " + tbscan.getText() + " / " + ddop.getSelectedItem().toString());
+            lblmessage.setText("Ticket Already Reported for this Operation " + plannbr + " / " + planop);
             lblmessage.setForeground(Color.red);
                 initvars(null);
                 return;
@@ -749,7 +884,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         
         
         if (isPlan &&  Integer.valueOf(pm.plan_status()) == 0 ) {
-            boolean isLastOp = OVData.isLastOperation(pm.plan_item(), ddop.getSelectedItem().toString() );
+            boolean isLastOp = OVData.isLastOperation(pm.plan_item(), planop );
             //OK ...if here..we should be prepared to commit.... Let's commit the transaction with OVData.loadTranHistByTable
             
             JTable mytable = new JTable();
@@ -768,11 +903,11 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
              mymodel.addRow(new Object[]{
                 pm.plan_item(),
                 "ISS-WIP",
-                ddop.getSelectedItem().toString(),
+                planop,
                 tbqty.getText(),
                 dfdate.format(now),
                 loc, // location
-                tbscan.getText(),  // serialno  
+                plannbr,  // serialno  
                 pm.plan_type(),  // reference 
                 pm.plan_site(),
                 bsmf.MainFrame.userid,
@@ -807,7 +942,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
                  
                 if (BlueSeerUtils.ConvertStringToBool(ic.printsubticket())) {               
                      try {
-                        printTubTicket(tbscan.getText(), String.valueOf(key));
+                        printTubTicket(plannbr, String.valueOf(key));
                     } catch (PrinterException ex) {
                         MainFrame.bslog(ex);
                     }
@@ -849,43 +984,8 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
     }//GEN-LAST:event_tboperatorFocusGained
 
     private void tboperatorFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tboperatorFocusLost
-        tboperator.setBackground(Color.white);
-       // emp_mstr emp = getEmployeeMstr(new String[]{tboperator.getText()});
-       if (planLegit) {
-        if (! isValidEmployeeID(tboperator.getText())) {
-            lblmessage.setText("Invalid Employee ID");
-            lblmessage.setForeground(Color.red);
-            new AnswerWorker().execute();
-        } else {
-            if (dddir.getSelectedItem().toString().equals("In")) {
-                // create job_clock record and return init(null)
-                String[] m = addJobClock(createRecordIn());
-                partlabel.setText("");
-                oplabel.setText("");
-                userlabel.setText("");
-                qtylabel.setText("");
-                if (m[0].equals("1")) {
-                   lblmessage.setText("already clocked in");
-                   lblmessage.setForeground(Color.red);
-                } else {
-                   lblmessage.setText("clock in success");
-                   lblmessage.setForeground(Color.blue);
-                }
-                new AnswerWorker().execute();
-            } else {
-                job_clock jc = getJobClock(new String[]{tbscan.getText(), ddop.getSelectedItem().toString(), tboperator.getText()});
-                if (jc.m()[0].equals("1")) {
-                    lblmessage.setText("No clock In record found for this ticket/operation/user combination");
-                    lblmessage.setForeground(Color.red);
-                    new AnswerWorker().execute();
-                } else {
-                    tboperator.setBackground(Color.white);
-                    tbqty.requestFocusInWindow();
-                    btcommit.setEnabled(true); 
-                }
-                
-            }
-        }
+       if (! tboperator.getText().isBlank()) {
+        validateOperator(dddir.getSelectedItem().toString(), plannbr);
        }
     }//GEN-LAST:event_tboperatorFocusLost
 
