@@ -69,12 +69,14 @@ import static com.blueseer.sch.schData.getPlanMstr;
 import static com.blueseer.sch.schData.getPlanOperation;
 import com.blueseer.sch.schData.plan_mstr;
 import com.blueseer.sch.schData.plan_operation;
+import static com.blueseer.sch.schData.updatePlanOperationStatusQty;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsNumberToUS;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import static com.blueseer.utl.BlueSeerUtils.xZero;
@@ -355,6 +357,11 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         qtysched = po.plo_qty();  // override parent plan sched qty
         tboperator.setText(po.plo_operator());
         userlabel.setText(getEmpFormalNameByID(po.plo_operator()));
+           if (! po.plo_status().equals(getGlobalProgTag("open"))) {
+               badScan("Operation ticket is closed");
+               new AnswerWorker().execute();
+               return;
+           }
         }
         
         prevscanned = schData.getPlanDetTotQtyByOp(plannbr, planop);
@@ -939,6 +946,8 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
                  lblmessage.setForeground(Color.blue);
                  
                  updateJobClock(createRecordOut());
+                 String status = ((qty + prevscanned) >= pm.plan_qty_sched()) ? "closed" : "open";
+                 updatePlanOperationStatusQty(String.valueOf(plannbr), String.valueOf(planop), status, bsParseDouble(tbqty.getText()));
                  
                 if (BlueSeerUtils.ConvertStringToBool(ic.printsubticket())) {               
                      try {

@@ -2011,7 +2011,7 @@ public class Scheduler extends javax.swing.JPanel {
                     cell, // cell
                     operator, // operator
                     setDateDB(dcopdate.getDate()), // date
-                    ddop.getSelectedItem().toString(), //status
+                    ddopstatus.getSelectedItem().toString(), //status
                     bsmf.MainFrame.userid // userid
                     );
             updatePlanOperation(x);

@@ -792,6 +792,58 @@ public class schData {
       return myreturn;
   }
 
+    public static boolean updatePlanOperationStatusQty(String plan, String op, String status, double qty) {
+      boolean x = false;  
+      try {
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            int i = 0;
+            double qtycomp = 0;
+            try {
+             res = st.executeQuery("select plo_id, plo_qty_comp from plan_operation where plo_parent = " + "'" + plan + "'"
+                     + " and plo_op = " + "'" + op + "'"
+                     + " ;");
+           while (res.next()) {
+               i++;
+               qtycomp += res.getDouble("plo_qty_comp");               
+           }
+           
+           qtycomp += qty; // add incoming qty to stored qty
+
+           if (i > 0) {
+                    st.executeUpdate("update plan_operation set "
+                        + "plo_qty_comp =  " + "'" + qtycomp + "'" + ","       
+                        + "plo_status = " + "'" + status + "'"
+                        + " where plo_parent = " + "'" + plan + "'" 
+                        + " and plo_op = " + "'" + op + "'"
+                        + ";");
+                    x = true;
+           }
+        } catch (SQLException s) {
+            MainFrame.bslog(s);
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+    } catch (Exception e) {
+        MainFrame.bslog(e);
+    }
+      return x;
+  }
+
+
+    
     
      public record plan_mstr(String[] m, int plan_nbr, String plan_item,
         String plan_site, double plan_qty_req, double plan_qty_comp, double plan_qty_sched,
