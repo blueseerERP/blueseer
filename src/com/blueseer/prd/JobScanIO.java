@@ -355,6 +355,11 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         if (opticketScan) {
         plan_operation po = getPlanOperation(Integer.valueOf(plannbr), Integer.valueOf(planop));
         qtysched = po.plo_qty();  // override parent plan sched qty
+           if (po.plo_operator().isBlank()) {
+               badScan("Operator not assigned for ticket");
+               new AnswerWorker().execute();
+               return;
+           }
         tboperator.setText(po.plo_operator());
         userlabel.setText(getEmpFormalNameByID(po.plo_operator()));
            if (! po.plo_status().equals(getGlobalProgTag("open"))) {
@@ -845,22 +850,19 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         double qty = Double.valueOf(tbqty.getText());
         
         if (! isPlan) {
-            lblmessage.setText(getMessageTag(1070,plannbr));
-            lblmessage.setForeground(Color.red);
-            initvars(null);
+            badScan(getMessageTag(1070,plannbr));
+            new AnswerWorker().execute();
             return;
         }
         
         if (isPlan &&  Integer.valueOf(pm.plan_status()) > 0 ) {
-            lblmessage.setText(getMessageTag(1071,plannbr));
-            lblmessage.setForeground(Color.red);
-            initvars(null);
+            badScan(getMessageTag(1071,plannbr));
+            new AnswerWorker().execute();
             return;
         }
         if (isPlan &&  Integer.valueOf(pm.plan_status()) < 0 ) {
-            lblmessage.setText(getMessageTag(1072,plannbr));
-            lblmessage.setForeground(Color.red);
-            initvars(null);
+            badScan(getMessageTag(1072,plannbr));
+            new AnswerWorker().execute();
             return;
         }
         
@@ -868,10 +870,9 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         // if false...only one scan per plan ticket per operation
         
         if (! BlueSeerUtils.ConvertStringToBool(ic.planmultiscan()) && (prevscanned > 0)) {
-            lblmessage.setText("Ticket Already Reported for this Operation " + plannbr + " / " + planop);
-            lblmessage.setForeground(Color.red);
-                initvars(null);
-                return;
+            badScan("Ticket Already Reported for this Operation " + plannbr + " / " + planop);
+            new AnswerWorker().execute();
+            return;
         }
         
         
