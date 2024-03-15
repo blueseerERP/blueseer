@@ -1252,7 +1252,7 @@ CREATE TABLE IF NOT EXISTS `plan_operation` (
   `plo_cell` varchar(30) NOT NULL  DEFAULT '',
   `plo_operator` varchar(30) NOT NULL  DEFAULT '',
   `plo_date` date  DEFAULT NULL,
-  `plo_status` varchar(1) NOT NULL  DEFAULT '',
+  `plo_status` varchar(10) NOT NULL  DEFAULT '',
   `plo_userid` varchar(30) NOT NULL  DEFAULT '',
   index parentop (`plo_parent`, `plo_op`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

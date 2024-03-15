@@ -3288,7 +3288,7 @@ CREATE TABLE "plan_operation" (
   "plo_cell" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "plo_operator" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "plo_date" date DEFAULT '0000-00-00',
-  "plo_status" varchar(1) NOT NULL COLLATE NOCASE DEFAULT '',
+  "plo_status" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
   "plo_userid" varchar(30) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 
