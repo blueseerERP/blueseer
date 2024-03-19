@@ -850,7 +850,7 @@ public class schData {
         String plan_date_create, String plan_date_due, String plan_date_sched, int plan_status,
         String plan_rmks, String plan_order, String plan_line, String plan_type, String plan_cell,
         int plan_is_sched) {
-        public plan_mstr(String[] m) {
+         plan_mstr(String[] m) {
             this(m, 0, "", "", 0, 0, 0, "", "", "", 0,
                     "", "", "", "", "", 0);
         }
