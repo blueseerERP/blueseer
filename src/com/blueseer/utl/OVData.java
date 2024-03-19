@@ -13380,6 +13380,11 @@ return mystring;
                     + " plan_is_sched = '1' " + ","
                     + " plan_date_sched = " + "'" + datesched + "'" 
                     + " where plan_nbr = " + "'" + s[0] + "'" + ";" );
+            st.executeUpdate(" update plan_operation " +
+                   " set plo_date = "  + "'" + datesched + "'" + ","
+                   + " plo_cell = " + "'" + s[1] + "'" + ","
+                    + " plo_qty = " + "'" + s[2] + "'"
+                    + " where plo_parent = " + "'" + s[0] + "'" + ";" );
        }      
           } catch (SQLException s) {
            MainFrame.bslog(s);

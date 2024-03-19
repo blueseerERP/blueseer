@@ -193,7 +193,7 @@ public class PlanMiscMaint extends javax.swing.JPanel {
                 0, // comp qty
                 "", // cell
                 "", // operator
-                null, // date
+                null, // date 
                 "", //status
                 bsmf.MainFrame.userid // userid
                 );
