@@ -716,7 +716,7 @@ public class JobBrowse extends javax.swing.JPanel {
 
         dcfrom.setDateFormatString("yyyy-MM-dd");
 
-        cbclosed.setText("OpenOnly?");
+        cbclosed.setText("Closed Only?");
         cbclosed.setName("cbopen"); // NOI18N
 
         bthidedetail.setText("Hide Detail");
@@ -1012,6 +1012,10 @@ try {
                  
                  
                 while (res.next()) {
+                    
+                    if (cbclosed.isSelected() && ! res.getString("plo_op").equals("closed") ) {
+                        continue;
+                    }
                     
                     if (! ddop.getSelectedItem().toString().isBlank() && ! res.getString("plo_op").equals(ddop.getSelectedItem().toString())) {
                         continue;

@@ -382,7 +382,7 @@
                 </Component>
                 <Component class="javax.swing.JCheckBox" name="cbclosed">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="OpenOnly?"/>
+                    <Property name="text" type="java.lang.String" value="Closed Only?"/>
                     <Property name="name" type="java.lang.String" value="cbopen" noResource="true"/>
                   </Properties>
                 </Component>
