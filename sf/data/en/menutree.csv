@@ -205,8 +205,8 @@ BOMMenu,BOMTree,3,JMenuItem,BOM Tree,,,,1,1
 BOMMenu,WhereUsedUtility,4,JMenuItem,Where Used Utility,,,,1,1
 ProductionMenu,ProdEntryMaint,1,JMenuItem,Production Entry,,,,1,1
 ProductionMenu,ProdEntryByPlan,2,JMenuItem,Production Entry By Plan,,,,1,1
-ProductionMenu,JobScanIO,3,JMenuItem,Operator Job Scan,,,,1,1
-ProductionMenu,JobBrowse,4,JMenuItem,Job Browse,,,,1,1
+ProductionMenu,JobScanIO,3,JMenuItem,Job Operation Scan,,,,1,1
+ProductionMenu,JobBrowse,4,JMenuItem,Job Operation Browse,,,,1,1
 ProductionMenu,OEEEntry,5,JMenuItem,OEE Entry,,,,1,1
 ProductionMenu,ProductionReports,6,JMenu,Production Reports,,,,1,1
 ProductionReports,ProdDetRpt,1,JMenuItem,Production Report Detail,,1,,1,1

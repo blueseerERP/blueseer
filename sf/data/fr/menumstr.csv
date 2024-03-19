@@ -308,3 +308,5 @@ CFOControl,,com.blueseer.frt.CFOControl,JMenuItem,cfoc
 QuoteMaint,,com.blueseer.ord.QuoteMaint,JMenuItem,quom
 QuoteBrowse,,com.blueseer.ord.QuoteBrowse,JMenuItem,quob
 ChartMain,,com.blueseer.utl.ChartMain,JMenuItem,chart
+JobScanIO,,com.blueseer.prd.JobScanIO,JMenuItem,jobs
+JobBrowse,,com.blueseer.prd.JobBrowse,JMenuItem,jobb

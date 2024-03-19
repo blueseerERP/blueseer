@@ -1007,8 +1007,8 @@ try {
                         " AND plan_item <= " + "'" + tpart + "'" + 
                          " AND plo_cell >= " + "'" + fcell + "'" + 
                         " AND plo_cell <= " + "'" + tcell + "'" + 
-                        " AND plan_is_sched = " + "'1' "  +
-                        " order by plan_item, plo_date;");    
+                      //  " AND plan_is_sched = " + "'1' "  +
+                        " order by plan_nbr, plo_op;");    
                  
                  
                 while (res.next()) {
@@ -1097,7 +1097,7 @@ try {
         int col = mastertable.columnAtPoint(evt.getPoint());
          // select any field in a row grabs the vendor for that row...so open the possibility of payment for that row/vendor
         String jobnbr = mastertable.getValueAt(row, 1).toString();
-        
+        /*
         if ( col == 0) {
             getdetail(jobnbr);
             bthidedetail.setEnabled(true);
@@ -1106,6 +1106,7 @@ try {
         if ( col == 14) {
             printticket(mastertable.getValueAt(row, 1).toString(), "Work Order");
         }
+        */
     }//GEN-LAST:event_mastertableMouseClicked
 
     private void ddoperatorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddoperatorActionPerformed

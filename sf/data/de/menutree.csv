@@ -206,8 +206,10 @@ BOMMenu,BOMTree,3,JMenuItem,Stücklistenbaum,,,,1,1
 BOMMenu,WhereUsedUtility,4,JMenuItem,Wo verwendet Dienstprogramm,,,,1,1
 ProductionMenu,ProdEntryMaint,1,JMenuItem,Produktionseintrag,,,,1,1
 ProductionMenu,ProdEntryByPlan,2,JMenuItem,Produktionszugang nach Plan,,,,1,1
-ProductionMenu,OEEEntry,3,JMenuItem,OEE-Eintrag,,,,1,1
-ProductionMenu,ProductionReports,4,JMenu,Produktionsberichte,,,,1,1
+ProductionMenu,JobScanIO,3,JMenuItem,Job-Vorgangsscan,,,,1,1
+ProductionMenu,JobBrowse,4,JMenuItem,Jobvorgang Durchsuchen,,,,1,1
+ProductionMenu,OEEEntry,5,JMenuItem,OEE-Eintrag,,,,1,1
+ProductionMenu,ProductionReports,6,JMenu,Produktionsberichte,,,,1,1
 ProductionReports,ProdDetRpt,1,JMenuItem,Details zum Produktionsbericht,,1,,1,1
 ProductionReports,ProdByWeekFGUnits,2,JMenuItem,Wöchentliche FG-Produktionseinheiten (BarChart),,1,,1,1
 ProductionReports,ProdByWeekFGDollars,3,JMenuItem,Wöchentliche FG-Produktionsdollar (BarChart),,1,,1,1

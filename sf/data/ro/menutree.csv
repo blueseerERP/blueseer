@@ -206,8 +206,10 @@ BOMMenu,BOMTree,3,JMenuItem,Arborele BOM,,,,1,1
 BOMMenu,WhereUsedUtility,4,JMenuItem,Unde este folosit utilitarul,,,,1,1
 ProductionMenu,ProdEntryMaint,1,JMenuItem,Intrare în producție,,,,1,1
 ProductionMenu,ProdEntryByPlan,2,JMenuItem,Intrarea producției după plan,,,,1,1
-ProductionMenu,OEEEntry,3,JMenuItem,Intrare OEE,,,,1,1
-ProductionMenu,ProductionReports,4,JMenu,Rapoarte de producție,,,,1,1
+ProductionMenu,JobScanIO,3,JMenuItem,Job Operation Scan,,,,1,1
+ProductionMenu,JobBrowse,4,JMenuItem,Job Operation Browse,,,,1,1
+ProductionMenu,OEEEntry,5,JMenuItem,Intrare OEE,,,,1,1
+ProductionMenu,ProductionReports,6,JMenu,Rapoarte de producție,,,,1,1
 ProductionReports,ProdDetRpt,1,JMenuItem,Detaliu raport de producție,,1,,1,1
 ProductionReports,ProdByWeekFGUnits,2,JMenuItem,Unități de producție săptămânale FG (Grafic cu bare),,1,,1,1
 ProductionReports,ProdByWeekFGDollars,3,JMenuItem,Dolari săptămânali de producție FG (BarChart),,1,,1,1

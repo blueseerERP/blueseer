@@ -206,8 +206,10 @@ BOMMenu,BOMTree,3,JMenuItem,Malzeme Listesi Ağacı,,,,1,1
 BOMMenu,WhereUsedUtility,4,JMenuItem,Kullanım Yeri,,,,1,1
 ProductionMenu,ProdEntryMaint,1,JMenuItem,Üretim Girişi,,,,1,1
 ProductionMenu,ProdEntryByPlan,2,JMenuItem,Plana Göre Üretim Girişi,,,,1,1
-ProductionMenu,OEEEntry,3,JMenuItem,OEE Girişi,,,,1,1
-ProductionMenu,ProductionReports,4,JMenu,Üretim Raporları,,,,1,1
+ProductionMenu,JobScanIO,3,JMenuItem,İş Operasyonu Taraması,,,,1,1
+ProductionMenu,JobBrowse,4,JMenuItem,İş Operasyonuna Gözat,,,,1,1
+ProductionMenu,OEEEntry,5,JMenuItem,OEE Girişi,,,,1,1
+ProductionMenu,ProductionReports,6,JMenu,Üretim Raporları,,,,1,1
 ProductionReports,ProdDetRpt,1,JMenuItem,Üretim Raporu Detayı,,1,,1,1
 ProductionReports,ProdByWeekFGUnits,2,JMenuItem,Haftalık FG Üretim Birimleri (BarChart),,1,,1,1
 ProductionReports,ProdByWeekFGDollars,3,JMenuItem,Haftalık FG Üretim Doları (BarChart),,1,,1,1

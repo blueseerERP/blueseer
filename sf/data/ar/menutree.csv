@@ -206,8 +206,10 @@ BOMMenu,BOMTree,3,JMenuItem,شجرة بوم,,,,1,1
 BOMMenu,WhereUsedUtility,4,JMenuItem,حيث تستخدم الأداة المساعدة,,,,1,1
 ProductionMenu,ProdEntryMaint,1,JMenuItem,دخول الإنتاج,,,,1,1
 ProductionMenu,ProdEntryByPlan,2,JMenuItem,إدخال الإنتاج حسب الخطة,,,,1,1
-ProductionMenu,OEEEntry,3,JMenuItem,دخول OEE,,,,1,1
-ProductionMenu,ProductionReports,4,JMenu,تقارير الإنتاج,,,,1,1
+ProductionMenu,JobScanIO,3,JMenuItem,مسح عملية العمل,,,,1,1
+ProductionMenu,JobBrowse,4,JMenuItem,تصفح العمليات الوظيفية,,,,1,1
+ProductionMenu,OEEEntry,5,JMenuItem,دخول OEE,,,,1,1
+ProductionMenu,ProductionReports,6,JMenu,تقارير الإنتاج,,,,1,1
 ProductionReports,ProdDetRpt,1,JMenuItem,تفاصيل تقرير الإنتاج,,1,,1,1
 ProductionReports,chart_production,2,JMenuItem,تقارير الرسم البياني,,1,,1,1
 ScrapMenu,ScrapEntry,1,JMenuItem,دخول الخردة,,,,1,1
