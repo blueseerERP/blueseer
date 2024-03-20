@@ -80,6 +80,7 @@ import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import static com.blueseer.utl.BlueSeerUtils.xZero;
+import static com.blueseer.utl.OVData.getSysMetaValue;
 import java.awt.Component;
 import java.sql.Connection;
 import java.util.Calendar;
@@ -114,6 +115,7 @@ String siteaddr = "";
 String sitephone = "";
 String sitecitystatezip = "";
 boolean planLegit = false;
+boolean requireOpScan = false;
 
 String clockdate = "";
 String clocktime = "";
@@ -216,11 +218,13 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
     public void getScanHistory() {
        historymodel.setRowCount(0);
        String io = "";
+       String operatorName = "";
        ArrayList<String[]> hist = getJobClockHistory(setDateDB(new java.util.Date()));
        for (String[] h : hist) {
            io = (h[8].equals("01")) ? "Clocked In" : "Clocked Out";
+           operatorName = getEmpFormalNameByID(h[2]);
             historymodel.addRow(new Object[]{
-                      h[2], // user
+                      operatorName, // user
                       h[0], // jobid
                       h[1], // op
                       h[3], // qty
@@ -302,6 +306,12 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         if (scan.isEmpty()) {
             qtylabel.setText("");
             partlabel.setText("");
+            return;
+        } 
+        
+        if (requireOpScan && ! scan.contains("-")) {
+            badScan("Operation Ticket must be used");
+            new AnswerWorker().execute();
             return;
         }
         
@@ -512,6 +522,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         
     public void initvars(String[] arg) {
         
+        requireOpScan = BlueSeerUtils.ConvertStringToBool(getSysMetaValue("system", "inventorycontrol", "operation_scan_required"));
         btcommit.setEnabled(false);
         tbqty.setText("");
         tbscan.setText("");
