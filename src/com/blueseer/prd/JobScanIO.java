@@ -245,9 +245,10 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
       planLegit = false;
       btcommit.setEnabled(false);
       tbscan.setText("");
+      tbscan.setEnabled(false);
       lblmessage.setText(messg);
       lblmessage.setForeground(Color.red);
-      tbscan.requestFocusInWindow();
+      //tbscan.requestFocusInWindow();
     }
     
     public void validateOperator(String dir, String plan) {
@@ -528,7 +529,10 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         userlabel.setForeground(Color.black);
         qtylabel.setText("");
         qtylabel.setForeground(Color.black);
-       
+        
+        tboperator.setBackground(Color.white);
+        tbscan.setBackground(Color.white);
+        
        historytable.setModel(historymodel);
        historytable.getTableHeader().setReorderingAllowed(false);
        historymodel.setRowCount(0);
@@ -536,7 +540,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
        getScanHistory();
        
        btcommit.setEnabled(false);
-        
+       tbscan.setEnabled(true);
        tbscan.requestFocusInWindow();
         
     }

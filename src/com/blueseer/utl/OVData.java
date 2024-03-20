@@ -45,6 +45,7 @@ import static com.blueseer.fgl.fglData.setGLRecNbr;
 import com.blueseer.hrm.hrmData;
 import com.blueseer.inv.calcCost;
 import com.blueseer.inv.invData;
+import static com.blueseer.inv.invData.getItemWFOPs;
 import com.blueseer.inv.invData.item_mstr;
 import com.blueseer.ord.ordData;
 import static com.blueseer.ord.ordData.getOrderTotalTax;
@@ -53,7 +54,6 @@ import com.blueseer.sch.schData;
 import com.blueseer.shp.shpData;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble5;
-import static com.blueseer.utl.BlueSeerUtils.bsParseDouble; 
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.bsformat;
@@ -19550,19 +19550,30 @@ MainFrame.bslog(e);
                       nbr++;  
                     }
                     recnumber++;
-                                st.executeUpdate("insert into plan_mstr "
-                                    + "(plan_nbr, plan_order, plan_line, plan_item, plan_qty_req, plan_date_create, plan_date_due, plan_type, plan_site ) "
-                                    + " values ( " + "'" + nbr + "'" + ","
-                                    + "'" + a_order.get(z) + "'" + ","
-                                    + "'" + a_line.get(z) + "'" + ","
-                                    + "'" + a_part.get(z) + "'" + ","
-                                    + "'" + a_qty.get(z) + "'" + ","
-                                    + "'" + df.format(cal.getTime()) + "'" + ","
-                                    + "'" + a_duedate.get(z) + "'" + ","
-                                    + "'DEMD'" + ","
-                                    + "'" + site + "'"
-                                    + ")"
-                                    + ";");
+                        st.executeUpdate("insert into plan_mstr "
+                            + "(plan_nbr, plan_order, plan_line, plan_item, plan_qty_req, plan_date_create, plan_date_due, plan_type, plan_site ) "
+                            + " values ( " + "'" + nbr + "'" + ","
+                            + "'" + a_order.get(z) + "'" + ","
+                            + "'" + a_line.get(z) + "'" + ","
+                            + "'" + a_part.get(z) + "'" + ","
+                            + "'" + a_qty.get(z) + "'" + ","
+                            + "'" + df.format(cal.getTime()) + "'" + ","
+                            + "'" + a_duedate.get(z) + "'" + ","
+                            + "'DEMD'" + ","
+                            + "'" + site + "'"
+                            + ")"
+                            + ";");
+                        
+                        ArrayList<String> ops = getItemWFOPs(a_part.get(z).toString());
+                        for (String op : ops) {
+                            st.executeUpdate("insert into plan_operation "
+                            + "(plo_parent, plo_op, plo_qty) "
+                            + " values ( " + "'" + nbr + "'" + ","
+                            + "'" + bsParseInt(op) + "'" + ","
+                            + "'" + a_qty.get(z) + "'" 
+                            + ")"
+                            + ";");
+                        }
                 }
        } catch (SQLException s) {
             MainFrame.bslog(s);
