@@ -192,10 +192,8 @@ public class JobBrowse extends javax.swing.JPanel {
            
         }  
       @Override  
-      public boolean isCellEditable(int row, int col) {  
-        if (col == 0)       //first column will be uneditable  
+      public boolean isCellEditable(int row, int col) {
             return false;  
-        else return true;  
       }  
        
         }    
@@ -558,6 +556,7 @@ public class JobBrowse extends javax.swing.JPanel {
          
          mymodel.setRowCount(0);
          mastertable.setModel(mymodel);
+         mastertable.getTableHeader().setReorderingAllowed(false);
         
         ArrayList<String> operators = getempmstrlist();
         ddoperator.removeAllItems();
@@ -615,12 +614,13 @@ public class JobBrowse extends javax.swing.JPanel {
         dcfrom = new com.toedter.calendar.JDateChooser();
         fromcell = new javax.swing.JTextField();
         cbclosed = new javax.swing.JCheckBox();
-        bthidedetail = new javax.swing.JButton();
         ddop = new javax.swing.JComboBox<>();
         jLabel10 = new javax.swing.JLabel();
         ddoperator = new javax.swing.JComboBox<>();
         jLabel8 = new javax.swing.JLabel();
         lblempname = new javax.swing.JLabel();
+        tbjobid = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
         tablepanel = new javax.swing.JPanel();
         masterpanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -729,14 +729,6 @@ public class JobBrowse extends javax.swing.JPanel {
         cbclosed.setText("Closed Only?");
         cbclosed.setName("cbopen"); // NOI18N
 
-        bthidedetail.setText("Hide Detail");
-        bthidedetail.setName("bthidedetail"); // NOI18N
-        bthidedetail.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bthidedetailActionPerformed(evt);
-            }
-        });
-
         jLabel10.setText("Operation");
 
         ddoperator.addActionListener(new java.awt.event.ActionListener() {
@@ -747,16 +739,22 @@ public class JobBrowse extends javax.swing.JPanel {
 
         jLabel8.setText("Operator");
 
+        jLabel13.setText("Job ID");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
+                .addComponent(jLabel13)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel2)
                     .addComponent(jLabel3)
-                    .addComponent(jLabel10))
+                    .addComponent(jLabel10)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(tbjobid, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel2)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel3Layout.createSequentialGroup()
@@ -779,7 +777,7 @@ public class JobBrowse extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(0, 8, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                                 .addComponent(jLabel6)
@@ -793,11 +791,8 @@ public class JobBrowse extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(cbclosed)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(btRun)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(bthidedetail)))
-                .addGap(20, 20, 20))
+                    .addComponent(btRun))
+                .addGap(73, 73, 73))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -810,7 +805,10 @@ public class JobBrowse extends javax.swing.JPanel {
                             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel1)
                                 .addComponent(frompart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel2))
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel2)
+                                .addComponent(tbjobid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel13)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -827,9 +825,7 @@ public class JobBrowse extends javax.swing.JPanel {
                             .addComponent(tocell, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel6)
                             .addComponent(cbclosed)))
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btRun)
-                        .addComponent(bthidedetail)))
+                    .addComponent(btRun))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -981,14 +977,28 @@ try {
                 } else {
                     fcell = fromcell.getText();
                 }
-                 if (tocell.getText().isEmpty()) {
+                if (tocell.getText().isEmpty()) {
                     tcell = bsmf.MainFrame.hichar;
                 } else {
                     tcell = tocell.getText();
                 }
+                
+                String jobid = "";
+                if (! tbjobid.getText().isBlank()) {
+                    if (tbjobid.getText().contains("-")) {
+                       String[] sc = tbjobid.getText().split("-",-1);
+                        if (sc != null && sc.length == 2) {
+                          jobid = sc[0];
+                        } 
+                    } else {
+                        jobid = tbjobid.getText();
+                    }
+                }
+                 
+                
              
-                  CheckBoxRenderer checkBoxRenderer = new CheckBoxRenderer();
-                mastertable.getColumnModel().getColumn(4).setCellRenderer(checkBoxRenderer); 
+              //    CheckBoxRenderer checkBoxRenderer = new CheckBoxRenderer();
+             //   mastertable.getColumnModel().getColumn(4).setCellRenderer(checkBoxRenderer); 
                  
                  Enumeration<TableColumn> en = mastertable.getColumnModel().getColumns();
                  while (en.hasMoreElements()) {
@@ -1006,21 +1016,36 @@ try {
                
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                  
-                 res = st.executeQuery("SELECT plan_nbr, plan_item, plo_op, plo_operator, plo_operatorname, plo_cell, " +
+                 if (! jobid.isBlank()) {
+                   res = st.executeQuery("SELECT plan_nbr, plan_item, plo_op, plo_operator, plo_operatorname, plo_cell, " +
                          "plo_qty, plo_qty_comp, plo_date, plo_status, " +
                          " jobc_empnbr, jobc_qty, coalesce(jobc_tothrs,0) as jobc_tothrs, jobc_code  " +
                         " FROM  plan_operation " +
                         " inner join plan_mstr on plan_nbr = plo_parent " +
                         " left outer join job_clock on jobc_planid = plo_parent and jobc_op = plo_op " + 
-                        " where plo_date >= " + "'" + dfdate.format(dcfrom.getDate()) + "'" + 
-                        " AND plo_date <= " + "'" + dfdate.format(dcto.getDate()) + "'" + 
+                        " where plo_parent = " + "'" + jobid + "'" + 
+                        " order by plo_op;");    
+  
+                 } else {
+                   res = st.executeQuery("SELECT plan_nbr, plan_item, plo_op, plo_operator, plo_operatorname, plo_cell, " +
+                         "plo_qty, plo_qty_comp, plo_date, plo_status, " +
+                         " jobc_empnbr, jobc_qty, coalesce(jobc_tothrs,0) as jobc_tothrs, jobc_code  " +
+                        " FROM  plan_operation " +
+                        " inner join plan_mstr on plan_nbr = plo_parent " +
+                        " left outer join job_clock on jobc_planid = plo_parent and jobc_op = plo_op " + 
+                        " where " +
+                        " (( plo_date >= " + "'" + dfdate.format(dcfrom.getDate()) + "'" + 
+                        " AND plo_date <= " + "'" + dfdate.format(dcto.getDate()) + "'" + " ) OR plo_date is null )" + 
                         " AND plan_item >= " + "'" + fpart + "'" + 
                         " AND plan_item <= " + "'" + tpart + "'" + 
                          " AND plo_cell >= " + "'" + fcell + "'" + 
                         " AND plo_cell <= " + "'" + tcell + "'" + 
                       //  " AND plan_is_sched = " + "'1' "  +
                         " order by plan_nbr, plo_op;");    
+  
+                 }
                  
+                                  
                  
                 while (res.next()) {
                     
@@ -1103,11 +1128,6 @@ try {
        
     }//GEN-LAST:event_btRunActionPerformed
 
-    private void bthidedetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bthidedetailActionPerformed
-       detailpanel.setVisible(false);
-       bthidedetail.setEnabled(false);
-    }//GEN-LAST:event_bthidedetailActionPerformed
-
     private void mastertableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mastertableMouseClicked
         int row = mastertable.rowAtPoint(evt.getPoint());
         int col = mastertable.columnAtPoint(evt.getPoint());
@@ -1138,7 +1158,6 @@ try {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btRun;
-    private javax.swing.JButton bthidedetail;
     private javax.swing.JCheckBox cbclosed;
     private com.toedter.calendar.JDateChooser dcfrom;
     private com.toedter.calendar.JDateChooser dcto;
@@ -1151,6 +1170,7 @@ try {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1174,6 +1194,7 @@ try {
     private javax.swing.JTable mastertable;
     private javax.swing.JTable tabledetail;
     private javax.swing.JPanel tablepanel;
+    private javax.swing.JTextField tbjobid;
     private javax.swing.JTextField tocell;
     private javax.swing.JTextField topart;
     // End of variables declaration//GEN-END:variables
