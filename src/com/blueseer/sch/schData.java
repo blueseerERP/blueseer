@@ -186,8 +186,8 @@ public class schData {
         String[] m = new String[2];
         String sqlSelect = "SELECT * FROM  plan_operation where plo_parent = ? and plo_op = ?";
         String sqlInsert = "insert into plan_operation (plo_parent, plo_op, plo_qty, plo_qty_comp, plo_cell, "
-                        + " plo_operator, plo_date, plo_status, plo_userid ) "
-                        + " values (?,?,?,?,?,?,?,?,?); ";
+                        + " plo_operator, plo_operatorname, plo_date, plo_status, plo_userid ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?); ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setInt(1, x.plo_parent);
@@ -201,9 +201,10 @@ public class schData {
             psi.setDouble(4, x.plo_qty_comp);
             psi.setString(5, x.plo_cell);
             psi.setString(6, x.plo_operator);
-            psi.setString(7, x.plo_date);
-            psi.setString(8, x.plo_status);
-            psi.setString(9, x.plo_userid);
+            psi.setString(7, x.plo_operatorname);
+            psi.setString(8, x.plo_date);
+            psi.setString(9, x.plo_status);
+            psi.setString(10, x.plo_userid);
             int rows = psi.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
             } else {
@@ -223,7 +224,7 @@ public class schData {
     public static String[] updatePlanOperation(plan_operation x ) {
         String[] m = new String[2];
         String sqlUpdate = "update plan_operation set plo_qty = ?, plo_qty_comp = ?, plo_cell = ?, "
-                        + " plo_operator = ?, plo_date = ?, plo_status = ?  "
+                        + " plo_operator = ?, plo_operatorname = ?, plo_date = ?, plo_status = ?  "
                         + " where plo_parent = ? and plo_op = ? ; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlUpdate);) {
@@ -231,10 +232,11 @@ public class schData {
             ps.setDouble(2, x.plo_qty_comp);
             ps.setString(3, x.plo_cell);
             ps.setString(4, x.plo_operator);
-            ps.setString(5, x.plo_date);
-            ps.setString(6, x.plo_status);
-            ps.setInt(7, x.plo_parent);
-            ps.setInt(8, x.plo_op);
+            ps.setString(5, x.plo_operatorname);
+            ps.setString(6, x.plo_date);
+            ps.setString(7, x.plo_status);
+            ps.setInt(8, x.plo_parent);
+            ps.setInt(9, x.plo_op);
             int rows = ps.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
         } catch (SQLException s) {
@@ -249,8 +251,8 @@ public class schData {
         int rows = 0;
         String sqlSelect = "SELECT * FROM  plan_operation where plo_parent = ? and plo_op = ?";
         String sqlInsert = "insert into plan_operation (plo_parent, plo_op, plo_qty, plo_qty_comp, plo_cell, "
-                        + " plo_operator, plo_date, plo_status, plo_userid ) "
-                        + " values (?,?,?,?,?,?,?,?,?); ";
+                        + " plo_operator, plo_operatorname, plo_date, plo_status, plo_userid ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?); ";
        
         ps = con.prepareStatement(sqlSelect);
              ps.setInt(1, x.plo_parent);
@@ -264,9 +266,10 @@ public class schData {
             ps.setDouble(4, x.plo_qty_comp);
             ps.setString(5, x.plo_cell);
             ps.setString(6, x.plo_operator);
-            ps.setString(7, x.plo_date);
-            ps.setString(8, x.plo_status);
-            ps.setString(9, x.plo_userid);
+            ps.setString(7, x.plo_operatorname);
+            ps.setString(8, x.plo_date);
+            ps.setString(9, x.plo_status);
+            ps.setString(10, x.plo_userid);
             rows = ps.executeUpdate();
             }
         return rows;
@@ -289,7 +292,7 @@ public class schData {
                     while(res.next()) {
                         m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
                         r = new plan_operation(m, res.getInt("plo_id"), res.getInt("plo_parent"), res.getInt("plo_op"),
-                            res.getDouble("plo_qty"), res.getDouble("plo_qty_comp"), res.getString("plo_cell"), res.getString("plo_operator"),
+                            res.getDouble("plo_qty"), res.getDouble("plo_qty_comp"), res.getString("plo_cell"), res.getString("plo_operator"), res.getString("plo_operatorname"),
                             res.getString("plo_date"), res.getString("plo_status"), res.getString("plo_userid"));
                         list.add(r);
                     }
@@ -320,7 +323,7 @@ public class schData {
                     while(res.next()) {
                         m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
                         r = new plan_operation(m, res.getInt("plo_id"), res.getInt("plo_parent"), res.getInt("plo_op"),
-                            res.getDouble("plo_qty"), res.getDouble("plo_qty_comp"), res.getString("plo_cell"), res.getString("plo_operator"),
+                            res.getDouble("plo_qty"), res.getDouble("plo_qty_comp"), res.getString("plo_cell"), res.getString("plo_operator"), res.getString("plo_operatorname"),
                             res.getString("plo_date"), res.getString("plo_status"), res.getString("plo_userid"));
                     }
                 }
@@ -858,14 +861,14 @@ public class schData {
     
      public record plan_operation(String[] m, int plo_id, int plo_parent, 
         int plo_op, double plo_qty, double plo_qty_comp, String plo_cell,
-        String plo_operator, String plo_date, String plo_status, String plo_userid) {
+        String plo_operator, String plo_operatorname, String plo_date, String plo_status, String plo_userid) {
         public plan_operation(String[] m) {
-            this(m, 0, 0, 0, 0, 0, "", "", "", "", "");
+            this(m, 0, 0, 0, 0, 0, "", "", "", "", "", "");
         }
         public plan_operation update_plo_qty_comp(plan_operation po, double qty) {
             Objects.requireNonNull(po, "record plan_operation is required");
             double newqty = po.plo_qty_comp + qty;
-            return new plan_operation(po.m, po.plo_id, po.plo_parent, po.plo_op, po.plo_qty, newqty, po.plo_cell, po.plo_operator, po.plo_date, po.plo_status, po.plo_userid);
+            return new plan_operation(po.m, po.plo_id, po.plo_parent, po.plo_op, po.plo_qty, newqty, po.plo_cell, po.plo_operator, po.plo_operatorname, po.plo_date, po.plo_status, po.plo_userid);
         }
     }
     

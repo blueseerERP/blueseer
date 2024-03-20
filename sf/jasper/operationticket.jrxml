@@ -49,6 +49,7 @@
      plan_line,
      plan_cell, 
      plo_operator,
+     plo_operatorname,
      plo_cell,
      it_item, it_rev, it_desc, it_wf, wf_op,  wf_desc, wf_cell, 
      case when wf_assert = 0 then 'no' else 'yes' end as assert,
@@ -125,6 +126,7 @@ where plan_nbr = $P{myid} and wf_op = $P{myop};]]>
 	<field name="bomcode" class="java.lang.String"/>
 	<field name="plo_operator" class="java.lang.String"/>
 	<field name="plo_cell" class="java.lang.String"/>
+	<field name="plo_operatorname" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -163,7 +165,7 @@ where plan_nbr = $P{myid} and wf_op = $P{myop};]]>
 				<textElement>
 					<font size="12" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{plo_operator}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{plo_operatorname}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>

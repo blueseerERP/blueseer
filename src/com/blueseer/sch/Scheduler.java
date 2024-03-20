@@ -2001,7 +2001,7 @@ public class Scheduler extends javax.swing.JPanel {
         if (currplan > 0 && currop > 0) {
             String operator = (ddopoperator.getSelectedItem() == null) ? "" : ddopoperator.getSelectedItem().toString();
             String cell = (ddopcell.getSelectedItem() == null) ? "" : ddopcell.getSelectedItem().toString();
-            operator = getEmpIDByFormalName(operator);
+            String operatorid = getEmpIDByFormalName(operator);
             schData.plan_operation x = new schData.plan_operation(null, 
                     0, // id
                     currplan, // parent
@@ -2009,7 +2009,8 @@ public class Scheduler extends javax.swing.JPanel {
                     bsParseDouble(tbopqty.getText().replace(defaultDecimalSeparator, '.')), // qty
                     0, // comp qty
                     cell, // cell
-                    operator, // operator
+                    operatorid, // operator
+                    operator, // operatorname
                     setDateDB(dcopdate.getDate()), // date
                     ddopstatus.getSelectedItem().toString(), //status
                     bsmf.MainFrame.userid // userid
@@ -2034,7 +2035,7 @@ public class Scheduler extends javax.swing.JPanel {
                   ddopoperator.addItem(operator);
               }
               ddopoperator.insertItemAt("", 0);
-              ddopoperator.setSelectedItem(getEmpFormalNameByID(x.plo_operator()));
+              ddopoperator.setSelectedItem(x.plo_operatorname());
               ddop.setSelectedItem(String.valueOf(x.plo_op()));
               ddopcell.setSelectedItem(x.plo_cell());
               tbopqty.setText(bsNumber(x.plo_qty()));

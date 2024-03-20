@@ -1251,6 +1251,7 @@ CREATE TABLE IF NOT EXISTS `plan_operation` (
   `plo_qty_comp` decimal(14,5) NOT NULL DEFAULT '0',
   `plo_cell` varchar(30) NOT NULL  DEFAULT '',
   `plo_operator` varchar(30) NOT NULL  DEFAULT '',
+  `plo_operatorname` varchar(100) NOT NULL  DEFAULT '',
   `plo_date` date  DEFAULT NULL,
   `plo_status` varchar(10) NOT NULL  DEFAULT '',
   `plo_userid` varchar(30) NOT NULL  DEFAULT '',

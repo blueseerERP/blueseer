@@ -257,11 +257,21 @@ public class JobBrowse extends javax.swing.JPanel {
       // c.setBackground(row % 3 == 0 ? new Color(245,245,220) : Color.LIGHT_GRAY);
        
        
-              String status = (String) mastertable.getModel().getValueAt(table.convertRowIndexToModel(row), 10);  // 7 = status column
+              String status = mastertable.getModel().getValueAt(table.convertRowIndexToModel(row), 10).toString();  // 7 = status column
+              String plostatus = mastertable.getModel().getValueAt(table.convertRowIndexToModel(row), 9).toString();  // 7 = status column
+              
               if (status != null && status.equals("in")) {
               setForeground(Color.blue);
               setBackground(table.getBackground());
-             } else {
+              } else {
+              setBackground(table.getBackground());
+              setForeground(table.getForeground());
+              }
+              
+              if (plostatus != null && plostatus.equals("unscheduled")) {
+              setForeground(Color.red);
+              setBackground(table.getBackground());
+              } else {
               setBackground(table.getBackground());
               setForeground(table.getForeground());
               }
@@ -954,6 +964,7 @@ try {
                 String fcell;
                 String tcell;
                 String clockstatus;
+                String plostatus;
                 
                 if (frompart.getText().isEmpty()) {
                     fpart = bsmf.MainFrame.lowchar;
@@ -995,7 +1006,7 @@ try {
                
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                  
-                 res = st.executeQuery("SELECT plan_nbr, plan_item, plo_op, plo_operator, plo_cell, " +
+                 res = st.executeQuery("SELECT plan_nbr, plan_item, plo_op, plo_operator, plo_operatorname, plo_cell, " +
                          "plo_qty, plo_qty_comp, plo_date, plo_status, " +
                          " jobc_empnbr, jobc_qty, coalesce(jobc_tothrs,0) as jobc_tothrs, jobc_code  " +
                         " FROM  plan_operation " +
@@ -1013,14 +1024,14 @@ try {
                  
                 while (res.next()) {
                     
-                    if (cbclosed.isSelected() && ! res.getString("plo_op").equals("closed") ) {
+                    if (cbclosed.isSelected() && ! res.getString("plo_status").equals("closed") ) {
                         continue;
                     }
                     
                     if (! ddop.getSelectedItem().toString().isBlank() && ! res.getString("plo_op").equals(ddop.getSelectedItem().toString())) {
                         continue;
                     }
-                    if (! res.getString("plo_operator").isBlank() && ! ddoperator.getSelectedItem().toString().isBlank() && ! res.getString("plo_operator").equals(ddoperator.getSelectedItem().toString())) {
+                    if (! ddoperator.getSelectedItem().toString().isBlank() && ! res.getString("plo_operator").equals(ddoperator.getSelectedItem().toString())) {
                         continue;
                     }
                     
@@ -1030,6 +1041,11 @@ try {
                     } else {
                         clockstatus = (res.getString("jobc_code").equals("01")) ? "in" : "out";
                     }
+                    if (res.getString("plo_status").isBlank()) {
+                        plostatus = "unscheduled";
+                    } else {
+                        plostatus = res.getString("plo_status");
+                    }
                     schtot = schtot + res.getInt("plo_qty");
                     comptot = comptot + res.getInt("plo_qty_comp");
                     avghours = avghours + res.getDouble("jobc_tothrs");
@@ -1037,13 +1053,13 @@ try {
                                 res.getString("plan_nbr"),
                                 res.getString("plan_item"),
                                 res.getString("plo_op"),
-                                res.getString("plo_operator"),
+                                res.getString("plo_operatorname"),
                                 res.getString("plo_cell"),
                                 res.getString("plo_date"),
                                 res.getDouble("plo_qty"),
                                 res.getDouble("plo_qty_comp"),
                                 res.getDouble("jobc_tothrs"),
-                                res.getString("plo_status"),
+                                plostatus,
                                 clockstatus
                             });
                     
@@ -1110,8 +1126,12 @@ try {
     }//GEN-LAST:event_mastertableMouseClicked
 
     private void ddoperatorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddoperatorActionPerformed
-        if (! isLoad && ddoperator.getSelectedItem() != null && ! ddoperator.getSelectedItem().toString().isBlank()) {
-            lblempname.setText(getEmpFormalNameByID(ddoperator.getSelectedItem().toString()));
+        if (! isLoad && ddoperator.getSelectedItem() != null ) {
+            if (! ddoperator.getSelectedItem().toString().isBlank()) {
+                lblempname.setText(getEmpFormalNameByID(ddoperator.getSelectedItem().toString()));
+            } else {
+                lblempname.setText("");
+            }
         }
     }//GEN-LAST:event_ddoperatorActionPerformed
 
