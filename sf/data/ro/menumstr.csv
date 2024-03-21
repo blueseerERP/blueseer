@@ -297,7 +297,7 @@ PayProfileMaint,,com.blueseer.fgl.PayProfileMaint,JMenuItem,ppfm
 PayProfileBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,ppfb
 TaxMaint,,com.blueseer.fgl.TaxMaint,JMenuItem,taxm
 TaxBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,taxb
-InventoryCtrl,,com.blueseer.inv.InventoryCtrl,JMenuItem,inve
+InventoryCtrl,,com.blueseer.inv.InventoryCtrl,JMenuItem,invc
 MassLoad,,com.blueseer.utl.MassLoad,JMenuItem,load
 SchemaBrowse,Schema Details of Database BSDB,com.blueseer.utl.ReportPanel,JMenuItem,schema
 CronBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,cronb
