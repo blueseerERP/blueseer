@@ -4,21 +4,20 @@ param(
 )
 
 if (-not($version)) { throw "You must supply a version:  6.4, 6.5, etc" }
-if (-not($patch)) { throw "You must supply a 2nd parameter patch nbr:  1, 2, etc" }
 
 
 $wip = "c:\bs\wip"
-$patchvar = ".patch" + $version
-$patchsqlvar = ".patchsqlv" + $version
+# $patchvar = ".patch" + $version
+#$patchsqlvar = ".patchsqlv" + $version
 
 # get latest patch number
-$filecontent = get-content $patchvar
-foreach ($line in $filecontent) {
-     if ($line.startsWith("patch=")) {
-     $e = $line -split '='
-     $pc = [int]$e[1]
-     } 
-}
+#$filecontent = get-content $patchvar
+#foreach ($line in $filecontent) {
+#     if ($line.startsWith("patch=")) {
+#     $e = $line -split '='
+#     $pc = [int]$e[1]
+#     } 
+#}
 
 
 # create jar only patch zip file
@@ -37,9 +36,9 @@ $patchzip = "blueseer.patch.ver." + $version + "." + $patch + "." + "zip"
 $patchmain = "blueseer.patch.ver." + $version + "." + "zip"
 mkdir $patchdir
 mkdir $patchdir\dist
-cp $patchvar $patchdir\.patch
-cp $patchvar ..\.patch
-cp $patchsqlvar $patchdir\
+#cp $patchvar $patchdir\.patch
+#cp $patchvar ..\.patch
+#cp $patchsqlvar $patchdir\
 cp patch_install.bat $patchdir\
 cp patch_install.sh $patchdir\
 cp ..\sf\patches\patch_instructions.pdf $patchdir\
