@@ -5888,7 +5888,7 @@ public class OVData {
                 st.executeUpdate("insert into sod_det "
                             + "(sod_nbr, sod_item, sod_site, sod_po, sod_ord_qty, sod_netprice, "
                             + " sod_listprice, sod_disc, sod_due_date, sod_ord_date, sod_uom, sod_desc, "
-                            + "sod_shipped_qty, sod_custitem, sod_status, sod_line, sod_ship) "
+                            + "sod_shipped_qty, sod_custitem, sod_status, sod_line, sod_ship, sod_bom) "
                     + " values ( " + 
                     "'" +  String.valueOf(indexnbr) + "'" + "," + 
                     "'" +  items.get(itempos)[0] + "'" + "," +
@@ -5906,7 +5906,8 @@ public class OVData {
                     "'" +  "" + "'" + "," + 
                     "'" +  "open" + "'" + "," +    
                     "'" +  String.valueOf(z + 1) + "'" + "," +
-                    "'" +  custs.get(custpos) + "'" + ");"
+                    "'" +  custs.get(custpos) + "'" + "," +
+                    "'" +  items.get(itempos)[0] + "'" + ");"
                    );    
                 } // for each sales order det random z
                 } // if j == 0

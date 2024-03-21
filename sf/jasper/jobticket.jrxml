@@ -156,6 +156,10 @@ order by wf_op;]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{jasper.jobticket.lbltitle}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="0" y="10" width="81" height="21" uuid="51ef54fb-71d1-4f7f-a10b-5725044d47b8"/>
+				<text><![CDATA[jobticket.jrxml]]></text>
+			</staticText>
 		</band>
 	</title>
 	<pageHeader>

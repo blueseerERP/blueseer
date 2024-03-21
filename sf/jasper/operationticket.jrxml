@@ -133,7 +133,7 @@ where plan_nbr = $P{myid} and wf_op = $P{myop};]]>
 	<title>
 		<band height="31" splitType="Stretch">
 			<textField>
-				<reportElement x="656" y="2" width="33" height="20" uuid="805c8360-67d7-49a1-8232-4cb88891f800"/>
+				<reportElement x="640" y="2" width="49" height="20" uuid="805c8360-67d7-49a1-8232-4cb88891f800"/>
 				<textElement>
 					<font size="12" isBold="true"/>
 				</textElement>
@@ -154,14 +154,14 @@ where plan_nbr = $P{myid} and wf_op = $P{myop};]]>
 				<textFieldExpression><![CDATA[$R{jasper.opticket.lbltitle}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="320" y="2" width="54" height="20" uuid="6de12b44-5f61-41cf-87d2-4ffe3afee314"/>
+				<reportElement x="320" y="2" width="65" height="20" uuid="6de12b44-5f61-41cf-87d2-4ffe3afee314"/>
 				<textElement>
 					<font size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{jasper.opticket.lbloperator}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="383" y="2" width="177" height="20" uuid="0ff9a476-1938-46a7-898b-00ac9826b122"/>
+				<reportElement x="392" y="2" width="201" height="20" uuid="0ff9a476-1938-46a7-898b-00ac9826b122"/>
 				<textElement>
 					<font size="12" isBold="true"/>
 				</textElement>
