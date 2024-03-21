@@ -261,19 +261,14 @@ public class JobBrowse extends javax.swing.JPanel {
               if (status != null && status.equals("in")) {
               setForeground(Color.blue);
               setBackground(table.getBackground());
-              } else {
-              setBackground(table.getBackground());
-              setForeground(table.getForeground());
-              }
-              
-              if (plostatus != null && plostatus.equals("unscheduled")) {
+              } else if (plostatus != null && plostatus.equals("unscheduled")) {
               setForeground(Color.red);
               setBackground(table.getBackground());
               } else {
               setBackground(table.getBackground());
               setForeground(table.getForeground());
               }
-        
+             
             
        // c.setBackground(table.getBackground());
             
@@ -827,12 +822,13 @@ public class JobBrowse extends javax.swing.JPanel {
                             .addComponent(cbclosed)))
                     .addComponent(btRun))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel10)
-                    .addComponent(jLabel8)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblempname, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(ddoperator))
+                    .addComponent(ddoperator)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel10)
+                        .addComponent(jLabel8)))
                 .addContainerGap())
         );
 

@@ -3292,6 +3292,12 @@ CREATE TABLE "plan_operation" (
   "plo_status" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
   "plo_userid" varchar(30) NOT NULL COLLATE NOCASE DEFAULT ''
 );
+CREATE TABLE "inv_meta" (
+  "invm_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "invm_type" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "invm_key" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "invm_value" varchar(200) NOT NULL COLLATE NOCASE DEFAULT ''
+);
 
 
 End Transaction;

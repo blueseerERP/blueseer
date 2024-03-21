@@ -79,3 +79,4 @@ insert into task_det (taskd_id, taskd_owner, taskd_desc, taskd_sequence) values 
 .import apidmeta.csv apid_meta
 .separator :
 .import apidet.csv api_det
+.import invmeta.csv inv_meta

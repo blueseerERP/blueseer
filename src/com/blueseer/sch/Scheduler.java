@@ -80,6 +80,8 @@ import static com.blueseer.hrm.hrmData.getEmpFormalNameByID;
 import static com.blueseer.hrm.hrmData.getEmpIDByFormalName;
 import static com.blueseer.hrm.hrmData.getEmpNameByDept;
 import static com.blueseer.inv.invData.getDeptByItemOperation;
+import static com.blueseer.inv.invData.getInvMetaOperators;
+import static com.blueseer.inv.invData.getItemRouting;
 import static com.blueseer.sch.schData.getPlanOperation;
 import com.blueseer.sch.schData.plan_operation;
 import static com.blueseer.sch.schData.updatePlanOperation;
@@ -2025,11 +2027,12 @@ public class Scheduler extends javax.swing.JPanel {
         int col = tableoperations.columnAtPoint(evt.getPoint());
         currop = Integer.valueOf(tableoperations.getValueAt(row, 0).toString());
         plan_operation x = getPlanOperation(currplan, currop);
-        String dept = getDeptByItemOperation(curritem, currop);
+       // String dept = getDeptByItemOperation(curritem, currop);
+        String routing = getItemRouting(curritem);
         
         if ( x.m()[0].equals("0")) {
-              ArrayList<String> operators = getEmpNameByDept(dept);
-              
+             // ArrayList<String> operators = getEmpNameByDept(dept);
+              ArrayList<String> operators = getInvMetaOperators(routing, String.valueOf(x.plo_op()));
               ddopoperator.removeAllItems();
               for (String operator : operators) {
                   ddopoperator.addItem(operator);

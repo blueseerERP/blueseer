@@ -67,3 +67,4 @@ load data local infile 'cfoctrl.csv' replace into table frt_ctrl fields terminat
 load data local infile 'timezone.csv' replace into table time_zone fields terminated by ',' ignore 0 Lines; show errors;
 load data local infile 'sysmeta.csv' replace into table sys_meta fields terminated by ',' ignore 0 Lines; show errors;
 load data local infile 'apidmeta.csv' replace into table apid_meta fields terminated by ',' ignore 0 Lines; show errors; 
+load data local infile 'invmeta.csv' replace into table inv_meta fields terminated by ':' ignore 0 Lines; show errors; 

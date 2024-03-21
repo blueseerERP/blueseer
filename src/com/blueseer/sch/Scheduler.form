@@ -164,20 +164,13 @@
                                           </Group>
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Group type="103" groupAlignment="0" attributes="0">
-                                              <Group type="102" alignment="0" attributes="0">
-                                                  <Component id="labelqtyreqd" min="-2" pref="51" max="-2" attributes="0"/>
-                                                  <EmptySpace max="32767" attributes="0"/>
-                                              </Group>
-                                              <Group type="102" attributes="0">
-                                                  <Group type="103" groupAlignment="0" attributes="0">
-                                                      <Component id="labelcount" alignment="0" min="-2" pref="35" max="-2" attributes="0"/>
-                                                      <Component id="labelqtysched" alignment="0" min="-2" pref="47" max="-2" attributes="0"/>
-                                                      <Component id="lblThisDateQtySched" alignment="0" min="-2" pref="51" max="-2" attributes="0"/>
-                                                      <Component id="lblThisDateQtyCapacity" alignment="0" min="-2" pref="51" max="-2" attributes="0"/>
-                                                  </Group>
-                                                  <EmptySpace pref="153" max="32767" attributes="0"/>
-                                              </Group>
+                                              <Component id="labelqtyreqd" alignment="0" min="-2" pref="51" max="-2" attributes="0"/>
+                                              <Component id="labelcount" alignment="0" min="-2" pref="35" max="-2" attributes="0"/>
+                                              <Component id="labelqtysched" alignment="0" min="-2" pref="47" max="-2" attributes="0"/>
+                                              <Component id="lblThisDateQtySched" alignment="0" min="-2" pref="51" max="-2" attributes="0"/>
+                                              <Component id="lblThisDateQtyCapacity" alignment="0" min="-2" pref="51" max="-2" attributes="0"/>
                                           </Group>
+                                          <EmptySpace max="32767" attributes="0"/>
                                       </Group>
                                       <Group type="102" alignment="0" attributes="0">
                                           <Group type="103" groupAlignment="1" attributes="0">

@@ -2844,3 +2844,9 @@ CREATE TABLE IF NOT EXISTS `fin_meta` (
   `finm_key` varchar(80) NOT NULL DEFAULT '',
   `finm_value` varchar(200) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `inv_meta` (
+  `invm_id` varchar(30) NOT NULL DEFAULT '',
+  `invm_type` varchar(80) NOT NULL DEFAULT '',
+  `invm_key` varchar(80) NOT NULL DEFAULT '',
+  `invm_value` varchar(200) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

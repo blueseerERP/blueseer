@@ -35,8 +35,14 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.hrm.hrmData.getEmpFormalNameByID;
+import static com.blueseer.hrm.hrmData.getEmpNameAll;
+import static com.blueseer.hrm.hrmData.getempmstrlist;
+import static com.blueseer.inv.invData.addInvMetaOperator;
 import static com.blueseer.inv.invData.addRoutingMstr;
+import static com.blueseer.inv.invData.deleteInvMetaOperator;
 import static com.blueseer.inv.invData.deleteRoutingMstr;
+import static com.blueseer.inv.invData.getInvMetaOperators;
 import static com.blueseer.inv.invData.getRoutingMstr;
 import static com.blueseer.inv.invData.updateRoutingMstr;
 import com.blueseer.inv.invData.wf_mstr;
@@ -59,6 +65,7 @@ import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
 import com.blueseer.utl.IBlueSeerT;
 import static com.blueseer.utl.OVData.canUpdate;
+import static com.blueseer.utl.OVData.getSysMetaData;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -76,6 +83,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -98,7 +106,9 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeerT {
                 public static wf_mstr x = null;
     
    // global datatablemodel declarations   
-                
+    DefaultListModel listmodel = new DefaultListModel();
+    
+    
     public RoutingMaint() {
         initComponents();
         setLanguageTags(this);
@@ -287,7 +297,10 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddop.removeAllItems();
         tbopdesc.setText("");
         tbrunhoursinverted.setText("0");
-       
+        lbloperatorname.setText("");
+        
+        listOperators.setModel(listmodel);
+        
         tbrunhours.setText("0");
         tbsetuphours.setText("0");
         cbmilestone.setSelected(false);
@@ -306,6 +319,14 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
         ddwc.insertItemAt("", 0);
         ddwc.setSelectedIndex(0);
+        
+        ddoperator.removeAllItems();
+        ArrayList<String> ops = getempmstrlist();
+        for (String code : ops) {
+            ddoperator.addItem(code);
+        }
+        ddoperator.setSelectedIndex(0);
+        
         
        isLoad = false;
     }
@@ -554,6 +575,9 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbsetuphours.setText(x.wf_setup_hours().replace('.',defaultDecimalSeparator));
         tbrunhoursinverted.setText(bsFormatDouble(runhours,"0").replace('.',defaultDecimalSeparator));
         cbmilestone.setSelected(BlueSeerUtils.ConvertStringToBool(x.wf_assert()));
+        
+        getOperators(tbkey.getText(), ddop.getSelectedItem().toString());
+        
         setAction(x.m());  
         }
     }
@@ -591,6 +615,13 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     }
     
+    public void getOperators(String routing, String op) {
+        listmodel.removeAllElements();
+        ArrayList<String> operators = getInvMetaOperators(routing, op);
+        for (String operator : operators) {
+            listmodel.addElement(operator);
+        } 
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -627,6 +658,13 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddwc = new javax.swing.JComboBox<>();
         btlookup = new javax.swing.JButton();
         btlookupWorkCenter = new javax.swing.JButton();
+        ddoperator = new javax.swing.JComboBox<>();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        listOperators = new javax.swing.JList<>();
+        btaddoperator = new javax.swing.JButton();
+        btdeleteoperator = new javax.swing.JButton();
+        lbloperatorname = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
 
         jButton1.setText("jButton1");
 
@@ -744,39 +782,73 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
+        ddoperator.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddoperatorActionPerformed(evt);
+            }
+        });
+
+        jScrollPane1.setViewportView(listOperators);
+
+        btaddoperator.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/add.png"))); // NOI18N
+        btaddoperator.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btaddoperatorActionPerformed(evt);
+            }
+        });
+
+        btdeleteoperator.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/delete.png"))); // NOI18N
+        btdeleteoperator.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btdeleteoperatorActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setText("Operator");
+        jLabel4.setName("lbloperator"); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel7)
+                    .addComponent(jLabel10)
+                    .addComponent(jLabel9)
+                    .addComponent(jLabel2)
+                    .addComponent(jLabel1)
+                    .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addComponent(btdelete)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(btupdate)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(btadd))
                         .addComponent(cbmilestone, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(tbopdesc, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(tbrunhoursinverted, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
                                 .addComponent(tbsetuphours))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jLabel12)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(tbrunhours, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(tbrunhours, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createSequentialGroup()
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btaddoperator, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btdeleteoperator, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                    .addComponent(btdelete)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btupdate)))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btadd)))
                     .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -790,7 +862,11 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(ddwc, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btlookupWorkCenter, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btlookupWorkCenter, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(ddoperator, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lbloperatorname, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -835,11 +911,28 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(jLabel10)
                     .addComponent(tbrunhours, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel12))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btadd)
-                    .addComponent(btupdate)
-                    .addComponent(btdelete))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(ddoperator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel4))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addComponent(lbloperatorname, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btdeleteoperator, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btadd)
+                            .addComponent(btupdate)
+                            .addComponent(btdelete)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btaddoperator, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -962,17 +1055,53 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeerT {
         lookUpFrameWorkCenter();
     }//GEN-LAST:event_btlookupWorkCenterActionPerformed
 
+    private void btaddoperatorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddoperatorActionPerformed
+        if (! lbloperatorname.getText().isBlank()) {
+        addInvMetaOperator(tbkey.getText(), ddop.getSelectedItem().toString(), lbloperatorname.getText());
+        getOperators(tbkey.getText(), ddop.getSelectedItem().toString());
+        ddoperator.setSelectedIndex(0);
+        }
+    }//GEN-LAST:event_btaddoperatorActionPerformed
+
+    private void btdeleteoperatorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeleteoperatorActionPerformed
+        boolean proceed = true;
+
+        if (listOperators.isSelectionEmpty()) {
+            proceed = false;
+            bsmf.MainFrame.show(getMessageTag(1029));
+        } else {
+            proceed = bsmf.MainFrame.warn(getMessageTag(1004));
+        }
+        if (proceed) {
+            deleteInvMetaOperator(tbkey.getText(), ddop.getSelectedItem().toString(), listOperators.getSelectedValue().toString());
+            getOperators(tbkey.getText(), ddop.getSelectedItem().toString());
+        }
+    }//GEN-LAST:event_btdeleteoperatorActionPerformed
+
+    private void ddoperatorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddoperatorActionPerformed
+        if (! isLoad && ddoperator.getSelectedItem() != null ) {
+            if (! ddoperator.getSelectedItem().toString().isBlank()) {
+                lbloperatorname.setText(getEmpFormalNameByID(ddoperator.getSelectedItem().toString()));
+            } else {
+                lbloperatorname.setText("");
+            }
+        }
+    }//GEN-LAST:event_ddoperatorActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
+    private javax.swing.JButton btaddoperator;
     private javax.swing.JButton btclear;
     private javax.swing.JButton btdelete;
+    private javax.swing.JButton btdeleteoperator;
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btlookupWorkCenter;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btupdate;
     private javax.swing.JCheckBox cbmilestone;
     private javax.swing.JComboBox ddop;
+    private javax.swing.JComboBox<String> ddoperator;
     private javax.swing.JComboBox<String> ddsite;
     private javax.swing.JComboBox<String> ddwc;
     private javax.swing.JButton jButton1;
@@ -981,10 +1110,14 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lbloperatorname;
+    private javax.swing.JList<String> listOperators;
     private javax.swing.JTextField tbkey;
     private javax.swing.JTextField tbopdesc;
     private javax.swing.JTextField tbrunhours;

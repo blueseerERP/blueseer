@@ -2561,6 +2561,126 @@ public class invData {
         return set;
     }
     
+    public static ArrayList getInvMetaOperators(String routing, String op) {
+               ArrayList myarray = new ArrayList();
+             try{
+                Connection con = null;
+                if (ds != null) {
+                  con = ds.getConnection();
+                } else {
+                  con = DriverManager.getConnection(url + db, user, pass);  
+                }
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                try{ 
+                    res = st.executeQuery("select invm_value from inv_meta where invm_id = " + "'" + routing + "'" +
+                            " and invm_type = 'operator' and invm_key = " + "'" + op + "'" +
+                            " order by invm_value ;" );
+                   while (res.next()) {
+                    myarray.add(res.getString("invm_value"));                    
+                    }
+               }
+                catch (SQLException s){
+                    MainFrame.bslog(s);
+                } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
+            }
+            catch (Exception e){
+                MainFrame.bslog(e);
+            }
+            return myarray;
+
+        }
+
+    public static void addInvMetaOperator(String routing, String op, String value) {
+        try {
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                int i = 0;
+                res = st.executeQuery("select invm_value from inv_meta where invm_id = " + "'" + routing + "'" +
+                            " and invm_type = 'operator' " +
+                            " and invm_key = " + "'" + op + "'" +
+                            " and invm_value = " + "'" + value + "'" +
+                            "  ;" );
+                while (res.next()) {
+                    i++;
+                }
+
+                if (i == 0) {
+                    st.executeUpdate("insert into inv_meta values ( "
+                            + "'" + routing + "'" + ","
+                            + "'" + "operator" + "'" + ","
+                            + "'" + op + "'" + ","
+                            + "'" + value + "'"     
+                            + ")"
+                            + ";");
+                }
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+    }
+
+    public static void deleteInvMetaOperator(String routing, String op, String value) {
+        try {
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                st.executeUpdate("delete from inv_meta where invm_id = " + "'" + routing + "'" +
+                            " and invm_type = 'operator' " +
+                            " and invm_key = " + "'" + op + "'" +
+                            " and invm_value = " + "'" + value + "'" +
+                            "  ;" );
+            } 
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+    }
+
+    
     public static ArrayList getItemMaintInit() {
                ArrayList myarray = new ArrayList();
              try{
