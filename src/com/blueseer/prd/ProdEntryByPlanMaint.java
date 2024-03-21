@@ -58,6 +58,7 @@ import static com.blueseer.sch.schData.getPlanDetHistory;
 import com.blueseer.sch.schData.plan_mstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.OVData.getSysMetaValue;
 import java.awt.Component;
 import java.sql.Connection;
 import java.util.Collections;
@@ -178,6 +179,15 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
     
     public void validateScan(String scan) {
        
+        boolean requireOpScan = BlueSeerUtils.ConvertStringToBool(getSysMetaValue("system", "inventorycontrol", "operation_scan_required"));
+        if (requireOpScan) {
+            btcommit.setEnabled(false);
+            tbscan.setText("");
+            qtylabel.setText("Operational Scanning Required...See Inventory Control");
+            qtylabel.setForeground(Color.red);
+            tbscan.requestFocusInWindow();
+            return;
+        }
         
         
         lblmessage.setText("");
