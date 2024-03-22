@@ -299,7 +299,9 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbrunhoursinverted.setText("0");
         lbloperatorname.setText("");
         
+        listmodel.removeAllElements();
         listOperators.setModel(listmodel);
+        
         
         tbrunhours.setText("0");
         tbsetuphours.setText("0");
@@ -971,6 +973,22 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeerT {
                     tbrunhoursinverted.setText(String.valueOf(currformatDouble(runhours)));
                     cbmilestone.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("wf_assert")));
                 }
+                // potentially new op...fields to defaults
+                if (i == 0) {
+                    ddwc.setSelectedIndex(0);
+                    tbopdesc.setText("");
+                    ddsite.setSelectedIndex(0);
+                    tbrunhours.setText("");
+                    tbsetuphours.setText("");
+                    tbrunhoursinverted.setText("");
+                    cbmilestone.setSelected(false);
+                    
+                    btadd.setEnabled(true);
+                    btupdate.setEnabled(false);
+                    btdelete.setEnabled(false);
+                    
+                }
+                
            } catch (SQLException s) {
                 MainFrame.bslog(s);
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordSQLError};  
@@ -987,6 +1005,9 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeerT {
             MainFrame.bslog(e);
             m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordConnError};  
         }
+        
+        getOperators(tbkey.getText(), ddop.getSelectedItem().toString());
+        
         }
     }//GEN-LAST:event_ddopActionPerformed
 
