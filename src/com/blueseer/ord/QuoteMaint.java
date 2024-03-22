@@ -1971,7 +1971,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_tbpriceFocusGained
 
     private void tbqtyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbqtyFocusLost
-                String x = BlueSeerUtils.bsformat("", tbqty.getText(), "0");
+        String x = BlueSeerUtils.bsformat("", tbqty.getText(), "0");
         if (x.equals("error")) {
             tbqty.setText("");
             tbqty.setBackground(Color.yellow);

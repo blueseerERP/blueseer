@@ -826,6 +826,9 @@ public class BlueSeerUtils {
         }
        
         DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());
+        if (! Locale.getDefault().getLanguage().equals("ar")) { // revisit
+        df.applyPattern(pattern);
+        }
         
         try {   
             outvalue = df.format(df.parse(invalue));
