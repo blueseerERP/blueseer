@@ -69,6 +69,7 @@ import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import static com.blueseer.utl.BlueSeerUtils.xZero;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
+import static com.blueseer.utl.OVData.createPlanFromServiceOrder;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -589,6 +590,8 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
     
     public String[] addRecord(String[] x) {
      String[] m = addServiceOrderTransaction(createDetRecord(), createRecord());
+     // create Plan Order for Job scanning
+     createPlanFromServiceOrder(ddsite.getSelectedItem().toString(), tbkey.getText(), false);
      return m;
     } 
     
@@ -1594,7 +1597,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
                         .addComponent(btdelete)
                         .addGap(6, 6, 6)
                         .addComponent(btupdate)
-                        .addGap(10, 10, 10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btadd))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(95, 95, 95)
@@ -1722,8 +1725,9 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
                         .addComponent(tbtotdollars, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(btprint)
                     .addComponent(btdelete)
-                    .addComponent(btupdate)
-                    .addComponent(btadd))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btupdate)
+                        .addComponent(btadd)))
                 .addGap(18, 18, 18))
         );
 

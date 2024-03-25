@@ -19595,6 +19595,115 @@ MainFrame.bslog(e);
     return recnumber;
    }
   
+    public static int createPlanFromServiceOrder(String site, String serviceorder, boolean isMulti) {
+
+    int recnumber = 0;
+    
+    DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+    Calendar cal = Calendar.getInstance();
+    cal.getTime();
+   // int wk = getForecastWeek(cal.getTime());
+   // ArrayList<Date> dates = OVData.getForecastDates(String.valueOf(cal.get(Calendar.YEAR)));
+     try{
+
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            Statement st2 = con.createStatement();
+            ResultSet res = null;
+           
+            try {
+
+            ArrayList a_order =  new ArrayList();
+            ArrayList a_duedate =  new ArrayList();
+            int k = 0;
+
+          if (isMulti) {  
+            res = st.executeQuery("select  sv_nbr, sv_due_date, coalesce(plan_nbr,0) as 'plan_nbr'" +
+                  " from sv_mstr " +
+                  " left outer join plan_mstr on plan_site = sv_site and plan_order = sv_nbr " +
+                  " where sv_site = " + "'" + site + "'" +
+                  " and sv_status = " + "'" + getGlobalProgTag("open") + "'" +
+                                 ";" );
+          } else {
+            res = st.executeQuery("select sv_nbr, sv_due_date, coalesce(plan_nbr,0) as 'plan_nbr'" +
+                  " from sv_mstr " +
+                  " left outer join plan_mstr on plan_site = sv_site and plan_order = sv_nbr " +
+                  " where sv_nbr = " + "'" + serviceorder + "'" +
+                  " and sv_status = " + "'" + getGlobalProgTag("open") + "'" +
+                                 ";" );  
+          }
+              
+                while (res.next()) {
+                    if (res.getString("plan_nbr").equals("0")) {
+                                 a_order.add(res.getString("sv_nbr"));
+                                 a_duedate.add(res.getString("sv_due_date"));
+                    }
+                }  
+
+
+                // adjustment for sqlite
+                int nbr = 0;
+                for (int z = 0 ; z < a_order.size(); z++) {
+                    if (z == 0) {
+                      nbr = OVData.getNextNbr("plan", a_order.size()); // skip ahead numbering to reduce db calls
+                    } else {
+                      nbr++;  
+                    }
+                    recnumber++;
+                        st.executeUpdate("insert into plan_mstr "
+                            + "(plan_nbr, plan_order, plan_line, plan_item, plan_qty_req, plan_date_create, plan_date_due, plan_type, plan_site ) "
+                            + " values ( " + "'" + nbr + "'" + ","
+                            + "'" + a_order.get(z) + "'" + ","
+                            + "'" + "1" + "'" + ","
+                            + "'" + a_order.get(z) + "'" + ","
+                            + "'" + "1" + "'" + ","
+                            + "'" + df.format(cal.getTime()) + "'" + ","
+                            + "'" + a_duedate.get(z) + "'" + ","
+                            + "'SRVC'" + ","
+                            + "'" + site + "'"
+                            + ")"
+                            + ";");
+                        res = st2.executeQuery("select  svd_nbr, svd_line, svd_item, svd_desc, svd_qty " +
+                            " from svd_det " +
+                            " where svd_nbr = " + "'" + a_order.get(z) + "'" +";" );
+                        while (res.next()) {
+                            st.executeUpdate("insert into plan_operation "
+                            + "(plo_parent, plo_op, plo_qty) "
+                            + " values ( " + "'" + nbr + "'" + ","
+                            + "'" + bsParseInt(res.getString("svd_line")) + "'" + ","
+                            + "'" + res.getDouble("svd_qty") + "'" 
+                            + ")"
+                            + ";");
+                        }
+                }
+       } catch (SQLException s) {
+            MainFrame.bslog(s);
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (st2 != null) {
+                    st2.close();
+                }
+               
+                con.close();
+        }
+    } catch (SQLException e){
+        MainFrame.bslog(e);
+
+    }
+    return recnumber;
+   }
+  
+    
     public static ArrayList getForecastDates(String year) {
         ArrayList<Date> fctdates = new ArrayList<Date>();
         Calendar cal = Calendar.getInstance();

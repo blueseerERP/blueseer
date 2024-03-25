@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="800" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="760" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5c23a538-9f5b-41f2-97dc-c7635f83e5fc">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="REPORT_TITLE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TICKET_TYPE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="myid" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="part" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="op" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="BUSINESSTITLE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="myop" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="cust" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="custpart" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="myidop" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+     plan_nbr,
+     plan_item,
+     plan_qty_req,
+     plan_qty_sched,
+     plan_date_due,
+     plan_date_sched,
+     plan_date_create,
+     plan_order,
+     plan_type,
+     plan_line,
+     plan_cell, 
+     plo_operator,
+     plo_operatorname,
+     plo_cell,
+     sv_po,
+     sv_nbr,
+     sv_cust,
+     svd_line,
+     svd_item,
+     svd_desc,
+     svd_qty
+FROM
+     plan_mstr
+inner join sv_mstr on sv_nbr = plan_order
+inner join svd_det on svd_nbr = sv_nbr and
+                                            svd_line = $P{myop}
+inner join plan_operation on plo_parent = plan_nbr and plo_op = $P{myop}
+where plan_nbr = $P{myid};]]>
+	</queryString>
+	<field name="plan_nbr" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="plan_item" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="plan_qty_req" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="plan_qty_sched" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="plan_date_due" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="plan_date_sched" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="plan_date_create" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="plan_order" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="plan_line" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="plan_cell" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="sv_po" class="java.lang.String"/>
+	<field name="sv_cust" class="java.lang.String"/>
+	<field name="svd_item" class="java.lang.String"/>
+	<field name="svd_desc" class="java.lang.String"/>
+	<field name="plan_type" class="java.lang.String"/>
+	<field name="plo_operator" class="java.lang.String"/>
+	<field name="plo_cell" class="java.lang.String"/>
+	<field name="plo_operatorname" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="31" splitType="Stretch">
+			<textField>
+				<reportElement x="640" y="2" width="49" height="20" uuid="805c8360-67d7-49a1-8232-4cb88891f800"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.opticket.lblcell}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="689" y="2" width="71" height="20" uuid="71f6067a-9231-45b5-907e-c5a3d77eda41"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{plo_cell}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="20" y="0" width="277" height="31" uuid="293ea45a-0f31-4428-9460-aee7637b6cab"/>
+				<textElement>
+					<font size="18"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.opticket.lbltitle}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="320" y="2" width="65" height="20" uuid="6de12b44-5f61-41cf-87d2-4ffe3afee314"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.opticket.lbloperator}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="392" y="2" width="201" height="20" uuid="0ff9a476-1938-46a7-898b-00ac9826b122"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{plo_operatorname}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="112" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="5" width="760" height="1" uuid="560d1dfe-9162-4754-8cd9-0565a997b349"/>
+			</line>
+			<textField>
+				<reportElement x="19" y="11" width="62" height="17" uuid="1d6cdd3c-1ec7-4d6e-a768-c9ca56536dbe"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.opticket.lbljoblot}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="91" y="11" width="100" height="20" uuid="780e4fa8-14ac-4057-92af-f71e667a90dc"/>
+				<textFieldExpression><![CDATA[$F{plan_nbr}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="204" y="6" width="47" height="14" uuid="603b2d1f-617d-495f-ba17-31d9df1cc15a"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.opticket.lblitem}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="280" y="3" width="174" height="20" uuid="8337b8f0-509d-4326-9311-206093ec714c"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{plan_item}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="280" y="67" width="100" height="17" uuid="271ba4d0-b5fb-418b-8e7a-f9b2fc19c7e8"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sv_cust}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="669" y="5" width="91" height="20" uuid="6b176497-4809-4032-a18b-f01cdd861408"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{plan_qty_sched}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="204" y="67" width="76" height="18" uuid="bb8956f2-7e19-44c8-a9f7-473c00f426f6"/>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.opticket.lblcustomer}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="607" y="5" width="62" height="14" uuid="f54ab5ad-cd16-4150-a0b5-625afb6435b7"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.opticket.lblqty}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="442" y="30" width="78" height="20" uuid="b7a21ef4-e383-44b7-a7f4-a7fe2d5eae78">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.opticket.lblduedate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="442" y="51" width="78" height="20" uuid="90cb00ed-1bc5-4746-8670-a48b557ec473">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.opticket.lblcreatedate}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="19" y="28" width="172" height="50" uuid="8861bf31-2830-45b3-b2bb-96c92992523b"/>
+				<imageExpression><![CDATA[new net.sf.jasperreports.components.barbecue.BarbecueRenderer(net.sourceforge.barbecue.BarcodeFactory.createCode39($P{myidop}, false))]]></imageExpression>
+			</image>
+			<textField>
+				<reportElement x="520" y="30" width="106" height="20" uuid="5dbeeb35-f0ef-42e9-8bff-3d6188bcb946"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{plan_date_due}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="520" y="51" width="136" height="20" uuid="520bd178-fec5-4983-90f5-a7a009876289"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{plan_date_create}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="442" y="71" width="78" height="20" uuid="f083cb41-e809-4899-9f09-ab908325ba88">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.opticket.lblscheddate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="520" y="71" width="136" height="20" uuid="449bdd55-6acd-4a46-b1c3-4e48b688c595"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{plan_date_sched}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="204" y="89" width="76" height="18" uuid="a68e8836-95c5-4c86-99a9-dad61c49bf39"/>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.opticket.lblpo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="280" y="89" width="140" height="17" uuid="cebe414d-6f6e-41a0-9226-e9c447ecb1d7"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sv_po}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="442" y="92" width="42" height="20" uuid="4133097b-5f9e-4164-9e85-76bb21558c97">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.opticket.lblordertype}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="520" y="92" width="73" height="17" uuid="73971ff4-00d5-4d37-a030-f6217fca5ac5"/>
+				<textFieldExpression><![CDATA[$F{plan_type}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="204" y="25" width="76" height="18" uuid="db741a12-65cb-40e9-96dc-ce95914e976b"/>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.opticket.lbldesc}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="280" y="25" width="140" height="17" uuid="0ddfe843-94d7-43ca-a60b-94427905a20b">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+				</reportElement>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{svd_item}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="27" splitType="Stretch">
+			<textField>
+				<reportElement x="19" y="0" width="72" height="20" uuid="75d4b49c-6e1e-4a7e-ac04-2d0312b1b0d4"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.opticket.lbloperation}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="330" y="0" width="55" height="20" uuid="92a31bb1-e9d8-470d-9922-7458fc88f16b"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.opticket.lblwc}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="4" y="19" width="756" height="1" uuid="c9e36006-c5df-41ef-96b1-529b4e6ddb52"/>
+			</line>
+			<textField>
+				<reportElement x="551" y="2" width="67" height="16" uuid="48d924f9-8b2d-4e1c-a8c5-e0b2cc2a2a9a"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.opticket.lblqtycomp}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="644" y="2" width="78" height="16" uuid="60ac3857-2e43-467e-a193-bf40cb36c714"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.opticket.lblqtyscrap}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="91" y="0" width="43" height="19" uuid="464508d8-3bf4-4dd7-9818-32d281acf332"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.opticket.lbldesc}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="405" y="0" width="69" height="20" uuid="129c15d0-f172-4a67-9280-3eac2feb8660"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.opticket.lblpiecesperhour}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="29" splitType="Stretch">
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="19" y="0" width="62" height="20" uuid="978682a3-4259-41c3-adae-54872ecfe90a"/>
+				<textFieldExpression><![CDATA[$F{plan_line}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="330" y="0" width="58" height="20" uuid="32390b0a-6d5c-4fae-8870-72c4e68a5f90"/>
+				<textFieldExpression><![CDATA[$F{plan_cell}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="91" y="0" width="229" height="20" uuid="edbe7124-d60b-42b0-a896-8522f841a299"/>
+				<textFieldExpression><![CDATA[$F{svd_desc}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="552" y="0" width="67" height="20" uuid="ec99802d-5c85-44b8-b76a-dfcaad37615a"/>
+				<text><![CDATA[____________]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="647" y="0" width="67" height="20" uuid="ffe9ad20-571e-47ff-8128-c4944e2a9467"/>
+				<text><![CDATA[____________]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="405" y="0" width="58" height="20" uuid="f40fd096-4959-4bab-bce5-550de3f660f3"/>
+				<textFieldExpression><![CDATA[new BigDecimal($F{plan_qty_sched}).setScale(0, BigDecimal.ROUND_HALF_DOWN)]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="28" splitType="Stretch"/>
+	</summary>
+</jasperReport>

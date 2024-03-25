@@ -139,6 +139,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         protected Integer doInBackground() throws Exception
         {
                 // Do a time-consuming task.
+                disableAll();
                 Thread.sleep(2000);
                 return 1;
         }
@@ -243,6 +244,20 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         for (plan_operation po : pos) {
             ddop.addItem(String.valueOf(po.plo_op()));
         }
+    }
+    
+    public void disableAll() {
+        dddir.setEnabled(false);
+        ddop.setEnabled(false);
+        tbqty.setEnabled(false);
+        tbscan.setEnabled(false);
+    }
+    
+    public void enableAll() {
+        dddir.setEnabled(true);
+        ddop.setEnabled(true);
+        tbqty.setEnabled(true);
+        tbscan.setEnabled(true);
     }
     
     public void badScan(String messg) {
@@ -530,6 +545,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         ddop.removeAllItems();
         
         
+        
         lblmessage.setText("");
         lblmessage.setForeground(Color.black);
         partlabel.setText("");
@@ -549,9 +565,9 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
        historymodel.setRowCount(0);
        
        getScanHistory();
-       
+       enableAll();
        btcommit.setEnabled(false);
-       tbscan.setEnabled(true);
+       
        tbscan.requestFocusInWindow();
         
     }

@@ -406,6 +406,46 @@ public class hrmData {
 
     }
     
+    public static ArrayList getEmpFormalNameByID(ArrayList<String> list) {
+        ArrayList myarray = new ArrayList();
+        try {
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                for (String empid : list) {
+                    res = st.executeQuery("select emp_nbr, emp_lname, emp_fname from emp_mstr " +
+                        " where emp_active = '1' and emp_nbr = " + "'" + empid + "'" +
+                        " order by emp_lname ;");
+                    while (res.next()) {
+                        myarray.add(res.getString("emp_lname") + ", " + res.getString("emp_fname"));
+                    }
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return myarray;
+
+    }
+
+    
     public static String getEmpIDByFormalName(String formalname) {
         String x = "";
         String[] fn = formalname.split(",", -1);
@@ -533,6 +573,7 @@ public class hrmData {
             ResultSet res = null;
             try {
                 res = st.executeQuery("select emp_nbr, emp_lname, emp_fname from emp_mstr " +
+                        " where emp_active = '1' " +
                         " order by emp_lname ;");
                 while (res.next()) {
                     myarray.add(res.getString("emp_lname") + ", " + res.getString("emp_fname"));

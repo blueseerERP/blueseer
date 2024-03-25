@@ -76,6 +76,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.hrm.hrmData;
 import static com.blueseer.hrm.hrmData.getEmpFormalNameByID;
 import static com.blueseer.hrm.hrmData.getEmpIDByFormalName;
 import static com.blueseer.hrm.hrmData.getEmpNameByDept;
@@ -117,6 +118,7 @@ public class Scheduler extends javax.swing.JPanel {
     int currplan = 0;
     int currop = 0;
     String curritem = "";
+    String currplantype = "";
     // NOTE:  if you change this...you must also adjust APCheckRun...my advise....dont change it
        Scheduler.MyTableModel mymodel = new Scheduler.MyTableModel(new Object[][]{},
                         new String[]{
@@ -663,7 +665,7 @@ public class Scheduler extends javax.swing.JPanel {
         
     }
     
-    public void printOperationTicket(String jobid, String op, String bustitle) {
+    public void printOperationTicket(String jobid, String op, String plantype, String bustitle) {
         
        try {
             Connection con = null;
@@ -676,6 +678,10 @@ public class Scheduler extends javax.swing.JPanel {
                 String jasperfile = getSysMetaValue("system", "inventorycontrol", "jasper_operation_ticket");  
                 if (jasperfile.isBlank()) {
                     jasperfile = "operationticket.jasper";
+                }
+                
+                if (plantype.equals("SRVC")) {
+                    jasperfile = "operationSVticket.jasper";
                 }
                 
                 HashMap hm = new HashMap();
@@ -907,7 +913,7 @@ public class Scheduler extends javax.swing.JPanel {
 
     }    
     
-    public void getOperations(int planid) {
+    public void getOperations(int planid, String jobtype) {
         PanelDetail.setVisible(true);
         panelOp.setVisible(true);
         panelDet.setVisible(false);
@@ -928,22 +934,42 @@ public class Scheduler extends javax.swing.JPanel {
             ResultSet res = null;
             String operatorname = "";
             try {
-                                
-                res = st.executeQuery("select plo_op, plo_cell, plo_qty, plo_operator, wf_desc from plan_operation inner join plan_mstr on plan_nbr = plo_parent inner join item_mstr on it_item = plan_item inner join wf_mstr on wf_id = it_wf and plo_op = wf_op " +
+                if (jobtype.equals("SRVC")) {                
+                 res = st.executeQuery("select plo_op, plo_cell, plo_qty, plo_operator, svd_item from plan_operation inner join plan_mstr on plan_nbr = plo_parent  " +
+                         " inner join svd_det on svd_line = plo_op and svd_nbr = plan_order " +
                         " where plo_parent = " + "'" + planid + "'" + " order by plo_op ;");
-                while (res.next()) {
-                 if (! res.getString("plo_operator").isBlank()) {
-                     operatorname = getEmpFormalNameByID(res.getString("plo_operator"));
-                 } else {
-                   operatorname = "";  
-                 }
-                 
-                 modeloperations.addRow(new Object[]{ 
-                       res.getString("plo_op"),
-                       res.getString("wf_desc"),
-                       res.getString("plo_cell"),
-                       res.getString("plo_qty"),
-                       operatorname});                       
+                    while (res.next()) {
+                     if (! res.getString("plo_operator").isBlank()) {
+                         operatorname = getEmpFormalNameByID(res.getString("plo_operator"));
+                     } else {
+                       operatorname = "";  
+                     }
+
+                     modeloperations.addRow(new Object[]{ 
+                           res.getString("plo_op"),
+                           res.getString("svd_item"),
+                           res.getString("plo_cell"),
+                           res.getString("plo_qty"),
+                           operatorname});                       
+                    }
+                } else {
+                 res = st.executeQuery("select plo_op, plo_cell, plo_qty, plo_operator, wf_desc from plan_operation inner join plan_mstr on plan_nbr = plo_parent inner join item_mstr on it_item = plan_item inner join wf_mstr on wf_id = it_wf and plo_op = wf_op " +
+                        " where plo_parent = " + "'" + planid + "'" + " order by plo_op ;");   
+                
+                    while (res.next()) {
+                     if (! res.getString("plo_operator").isBlank()) {
+                         operatorname = getEmpFormalNameByID(res.getString("plo_operator"));
+                     } else {
+                       operatorname = "";  
+                     }
+
+                     modeloperations.addRow(new Object[]{ 
+                           res.getString("plo_op"),
+                           res.getString("wf_desc"),
+                           res.getString("plo_cell"),
+                           res.getString("plo_qty"),
+                           operatorname});                       
+                    }
                 }
              
 
@@ -1717,7 +1743,8 @@ public class Scheduler extends javax.swing.JPanel {
         if ( col == 0) {
               currplan = Integer.valueOf(mytable.getValueAt(row, 1).toString());
               curritem = mytable.getValueAt(row, 2).toString();
-              getOperations(Integer.valueOf(mytable.getValueAt(row, 1).toString()));
+              currplantype = mytable.getValueAt(row, 4).toString();
+              getOperations(Integer.valueOf(mytable.getValueAt(row, 1).toString()), mytable.getValueAt(row, 4).toString());
               ddop.removeAllItems();
               for (int j = 0; j < tableoperations.getRowCount(); j++) {
                   ddop.addItem(tableoperations.getValueAt(j, 0).toString());
@@ -2018,7 +2045,7 @@ public class Scheduler extends javax.swing.JPanel {
                     bsmf.MainFrame.userid // userid
                     );
             updatePlanOperation(x);
-            getOperations(currplan);
+            getOperations(currplan, currplantype);
         }
     }//GEN-LAST:event_btopupdateActionPerformed
 
@@ -2029,10 +2056,16 @@ public class Scheduler extends javax.swing.JPanel {
         plan_operation x = getPlanOperation(currplan, currop);
        // String dept = getDeptByItemOperation(curritem, currop);
         String routing = getItemRouting(curritem);
-        
+        ArrayList<String> operators = null;
         if ( x.m()[0].equals("0")) {
              // ArrayList<String> operators = getEmpNameByDept(dept);
-              ArrayList<String> operators = getInvMetaOperators(routing, String.valueOf(x.plo_op()));
+              if (currplantype.equals("SRVC")) {
+              // operators = hrmData.getEmpFormalNameByID(OVData.getCodeMstr("OPERATOR"));  
+               operators = hrmData.getEmpNameAll();
+              } else {
+               operators = getInvMetaOperators(routing, String.valueOf(x.plo_op()));    
+              }
+              
               ddopoperator.removeAllItems();
               for (String operator : operators) {
                   ddopoperator.addItem(operator);
@@ -2128,7 +2161,7 @@ public class Scheduler extends javax.swing.JPanel {
 
     private void btopprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btopprintActionPerformed
         if (currplan > 0 && currop > 0) {
-           printOperationTicket(String.valueOf(currplan), String.valueOf(currop), "Operation Ticket"); 
+            printOperationTicket(String.valueOf(currplan), String.valueOf(currop), currplantype, "Operation Ticket"); 
         }
     }//GEN-LAST:event_btopprintActionPerformed
 
