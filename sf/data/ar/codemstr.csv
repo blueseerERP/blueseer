@@ -20,6 +20,7 @@ ItemType,RAW,Raw Material,1
 ItemType,SUB,Sub Assembly,1
 ItemType,ASSET,Asset,1
 ItemType,SERVICE,Service,1
+ItemType,TOOLING,Tooling,1
 freightsrvtype,LTL,Less Than Truckload,1
 freightsrvtype,FTL,Full Truckload,1
 freightsrvtype,Flatbed,Flat Bed Services,1
