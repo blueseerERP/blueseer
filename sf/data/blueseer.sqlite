@@ -3292,6 +3292,25 @@ CREATE TABLE "plan_operation" (
   "plo_status" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
   "plo_userid" varchar(30) NOT NULL COLLATE NOCASE DEFAULT ''
 );
+CREATE TABLE "plan_opdet" (
+  "plod_id" int(8) NOT NULL DEFAULT '0',
+  "plod_parent" int(8) NOT NULL DEFAULT '0',
+  "plod_op" varchar(4) NOT NULL COLLATE NOCASE DEFAULT '',
+  "plod_type" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
+  "plod_itemdesc" varchar(500) NOT NULL COLLATE NOCASE DEFAULT '',
+  "plod_qty" decimal(14,5) NOT NULL DEFAULT '0',
+  "plod_cost" decimal(14,5) NOT NULL DEFAULT '0',
+  "plod_operator" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "plod_date" date  DEFAULT '0000-00-00',
+  "plod_time" time COLLATE NOCASE DEFAULT ''
+); 
+CREATE TABLE "plan_meta" (
+  "plam_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "plam_type" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "plam_key" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "plam_value" varchar(200) NOT NULL COLLATE NOCASE DEFAULT ''
+);
+
 CREATE TABLE "inv_meta" (
   "invm_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "invm_type" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
