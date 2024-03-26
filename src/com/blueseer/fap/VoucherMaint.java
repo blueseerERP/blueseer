@@ -201,7 +201,7 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
         tableattachment.getTableHeader().setReorderingAllowed(false);
         tableattachment.getColumnModel().getColumn(0).setMaxWidth(100);
        
-       java.util.Date now = new java.util.Date();
+                java.util.Date now = new java.util.Date();
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
                 String clockdate = dfdate.format(now);

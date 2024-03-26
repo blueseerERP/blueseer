@@ -28,17 +28,21 @@ package com.blueseer.prd;
 
 import com.blueseer.inv.*;
 import bsmf.MainFrame;
+import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.tags;
 import static com.blueseer.inv.invData.addUOMMstr;
 import static com.blueseer.inv.invData.deleteUOMMstr;
 import static com.blueseer.inv.invData.getUOMMstr;
 import com.blueseer.inv.invData.uom_mstr;
 import static com.blueseer.inv.invData.updateUOMMstr;
+import static com.blueseer.prd.prdData.addPlanOpDet;
+import static com.blueseer.prd.prdData.deletePlanOpDet;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
@@ -62,6 +66,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -85,6 +90,24 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
     boolean isLoad = false;
     
     // global datatablemodel declarations    
+    javax.swing.table.DefaultTableModel materialmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+            new String[]{
+                getGlobalColumnTag("id"), 
+                getGlobalColumnTag("op"), 
+                getGlobalColumnTag("item"), 
+                getGlobalColumnTag("quantity"), 
+                getGlobalColumnTag("cost"),
+                getGlobalColumnTag("operator")
+            }){
+              @Override  
+              public Class getColumnClass(int col) {  
+                if (col == 3 || col == 4)       
+                    return Double.class; 
+                else if (col == 0) {
+                    return Integer.class;
+                } else return String.class;  //other columns accept String values  
+              }  
+            };;
                 
     /**
      * Creates new form CarrierMaintPanel
@@ -272,6 +295,24 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
        isLoad = true;
         tbkey.setText("");
         tbdesc.setText("");
+        
+        buttonGroup1.add(rbmaterial);
+        buttonGroup1.add(rbtooling);
+        buttonGroup1.add(rbservice);
+        rbmaterial.setEnabled(true);
+        rbtooling.setSelected(false);
+        rbservice.setEnabled(false);
+        
+        materialmodel.setRowCount(0);
+        materialtable.setModel(materialmodel);
+        materialtable.getTableHeader().setReorderingAllowed(false);
+        
+        ddmaterial.removeAllItems();
+        ArrayList<String> mylist = invData.getItemMasterAlllist();
+        for (int i = 0; i < mylist.size(); i++) {
+            ddmaterial.addItem(mylist.get(i));
+        }
+        
        isLoad = false;
     }
     
@@ -368,7 +409,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
       return x.m();  
     }
     
-     public invData.uom_mstr createRecord() {
+    public invData.uom_mstr createRecord() {
         invData.uom_mstr x = new invData.uom_mstr(null, 
            tbkey.getText(),
            tbdesc.getText()
@@ -376,7 +417,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         return x;
     }
     
-     public void lookUpFrame() {
+    public void lookUpFrame() {
         
         luinput.removeActionListener(lual);
         lual = new ActionListener() {
@@ -415,6 +456,9 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         
     }
 
+    // misc methods
+    
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -425,6 +469,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -808,7 +853,27 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_tbkeyActionPerformed
 
     private void btaddmatlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddmatlActionPerformed
-
+        String datatype = "";
+        String item = "";
+        if (rbmaterial.isSelected()) {
+            datatype = "material";
+            item = ddmaterial.getSelectedItem().toString();
+        }
+        int id = addPlanOpDet(tbkey.getText(), 
+                ddop.getSelectedItem().toString(), 
+                datatype, 
+                item, 
+                Double.valueOf(tbqty.getText()), 
+                Double.valueOf(tbqty.getText()), 
+                "operator" );
+        materialmodel.addRow(new Object[] { 
+                id,
+                ddop.getSelectedItem().toString(), 
+                datatype, 
+                item, 
+                Double.valueOf(tbqty.getText()), 
+                Double.valueOf(tbqty.getText()), 
+                "operator"});
        
     }//GEN-LAST:event_btaddmatlActionPerformed
 
@@ -817,7 +882,14 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_tbqtyActionPerformed
 
     private void btdeletematlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdeletematlActionPerformed
-        boolean proceed = true;
+          int[] rows = materialtable.getSelectedRows();
+        for (int i : rows) {
+            bsmf.MainFrame.show(getMessageTag(1031,String.valueOf(i)));
+            ((javax.swing.table.DefaultTableModel) materialtable.getModel()).removeRow(i);
+            deletePlanOpDet(materialtable.getValueAt(i, 0).toString()); 
+        }
+        
+        
 
     }//GEN-LAST:event_btdeletematlActionPerformed
 
@@ -827,6 +899,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JButton btclear;
     private javax.swing.JButton btdeletematl;
     private javax.swing.JButton btlookup;
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox<String> ddmaterial;
     private javax.swing.JComboBox<String> ddop;
     private javax.swing.JComboBox<String> ddtooling;

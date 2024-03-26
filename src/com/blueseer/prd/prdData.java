@@ -27,6 +27,7 @@ package com.blueseer.prd;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.dbtype;
 import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
@@ -40,6 +41,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -263,6 +268,103 @@ public class prdData {
     }
       return x;
   }
+   
+   public static int addPlanOpDet(String job, String op, String datatype, String item, double qty, double cost, String operator) {
+        int x = 0;
+        try {
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                java.util.Date now = new java.util.Date();
+                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+                String clockdate = dfdate.format(now);
+                String clocktime = dftime.format(now);
+                  if (dbtype.equals("sqlite")) { 
+                    st.executeUpdate("insert into plan_opdet values ( "
+                            + "'" + job + "'" + "," 
+                            + "'" + op + "'" + "," 
+                            + "'" + datatype + "'" + "," 
+                            + "'" + item + "'" + ","        
+                            + "'" + qty + "'" + ","
+                            + "'" + cost + "'" + ","
+                            + "'" + operator + "'" + ","
+                            + "'" + clockdate + "'" + ","  
+                            + "'" + clocktime + "'" + ","        
+                            +  ")"
+                            + ";");
+                  } else {
+                     st.executeUpdate("insert into plan_opdet values ( "
+                            + "'" + job + "'" + "," 
+                            + "'" + op + "'" + "," 
+                            + "'" + datatype + "'" + "," 
+                            + "'" + item + "'" + ","        
+                            + "'" + qty + "'" + ","
+                            + "'" + cost + "'" + ","
+                            + "'" + operator + "'" + ","
+                            + "'" + clockdate + "'" + ","  
+                            + "'" + clocktime + "'" + ","        
+                            +  ")"
+                            + ";" , Statement.RETURN_GENERATED_KEYS); 
+                  }
+                res = st.getGeneratedKeys();
+                while (res.next()) {
+                    x = res.getInt(1);
+                }
+                res.close();   
+                
+            } // if proceed
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (con != null) {
+                    con.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return x;
+    }
+
+   public static void deletePlanOpDet(String id) {
+        try {
+
+                Connection con = DriverManager.getConnection(url + db, user, pass);
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                try {
+
+                    int i = st.executeUpdate("delete from plan_opdet where plod_id = " + "'" + id + "'" + " ;");
+                } catch (SQLException s) {
+                    MainFrame.bslog(s);
+                    bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+                } finally {
+                    if (res != null) {
+                        res.close();
+                    }
+                    if (st != null) {
+                        st.close();
+                    }
+                    con.close();
+                }
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            }
+    }
     
     
    public record job_clock (String[] m, int jobc_planid, int jobc_op, double jobc_qty, String jobc_empnbr,
