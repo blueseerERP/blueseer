@@ -312,9 +312,15 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         materialtable.getTableHeader().setReorderingAllowed(false);
         
         ddmaterial.removeAllItems();
-        ArrayList<String> mylist = invData.getItemMasterAlllist();
+        ArrayList<String> mylist = invData.getItemMasterRawlist();
         for (int i = 0; i < mylist.size(); i++) {
             ddmaterial.addItem(mylist.get(i));
+        }
+        
+        ddtooling.removeAllItems();
+        ArrayList<String> tooling = invData.getItemsByType("TOOLING");
+        for (int i = 0; i < tooling.size(); i++) {
+            ddtooling.addItem(tooling.get(i));
         }
         
        isLoad = false;
