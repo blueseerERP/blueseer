@@ -37,6 +37,10 @@ import com.blueseer.inv.invData.uom_mstr;
 import static com.blueseer.inv.invData.updateUOMMstr;
 import static com.blueseer.prd.prdData.addPlanOpDet;
 import static com.blueseer.prd.prdData.deletePlanOpDet;
+import static com.blueseer.sch.schData.getPlanMstr;
+import static com.blueseer.sch.schData.getPlanOperation;
+import com.blueseer.sch.schData.plan_mstr;
+import com.blueseer.sch.schData.plan_operation;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
@@ -88,7 +92,8 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
 
     // global variable declarations
     boolean isLoad = false;
-    
+    public static plan_mstr x = null;
+    public static ArrayList<plan_operation> plolist = null;
     // global datatablemodel declarations    
     javax.swing.table.DefaultTableModel materialmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
@@ -162,9 +167,8 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
             BlueSeerUtils.endTask(message);
            if (this.type.equals("delete")) {
              initvars(null);  
-           } else if (this.type.equals("get") && message[0].equals("1")) {
-             tbkey.requestFocus();
-           } else if (this.type.equals("get") && message[0].equals("0")) {
+           } else if (this.type.equals("get")) {
+             updateForm();
              tbkey.requestFocus();
            } else {
              initvars(null);  
@@ -294,7 +298,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
     public void setComponentDefaultValues() {
        isLoad = true;
         tbkey.setText("");
-        tbdesc.setText("");
+        tbitem.setText("");
         
         buttonGroup1.add(rbmaterial);
         buttonGroup1.add(rbtooling);
@@ -356,9 +360,9 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         } 
                 
         fc = checkLength(f,"uom_desc");
-        if (tbdesc.getText().length() > fc) {
+        if (tbitem.getText().length() > fc) {
         bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
-        tbdesc.requestFocus();
+        tbitem.requestFocus();
         return false;
         } 
         
@@ -402,9 +406,8 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
      }
       
     public String[] getRecord(String[] key) {
-      uom_mstr x = getUOMMstr(key);
-      tbkey.setText(x.uom_id());
-      tbdesc.setText(x.uom_desc());
+      x = getPlanMstr(key);
+      plolist = getPlanOperation(key[0]);
       setAction(x.m());
       return x.m();  
     }
@@ -412,7 +415,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
     public invData.uom_mstr createRecord() {
         invData.uom_mstr x = new invData.uom_mstr(null, 
            tbkey.getText(),
-           tbdesc.getText()
+           tbitem.getText()
         );
         return x;
     }
@@ -423,9 +426,9 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         lual = new ActionListener() {
         public void actionPerformed(ActionEvent event) {
         if (lurb1.isSelected()) {  
-         luModel = DTData.getUOMBrowseUtil(luinput.getText(),0, "uom_id");
+         luModel = DTData.getJobBrowseUtil(luinput.getText(),0, "plan_nbr"); 
         } else {
-         luModel = DTData.getUOMBrowseUtil(luinput.getText(),0, "uom_desc");   
+         luModel = DTData.getJobBrowseUtil(luinput.getText(),0, "plan_item");    
         }
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
@@ -446,16 +449,47 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
                 int column = target.getSelectedColumn();
                 if ( column == 0) {
                 ludialog.dispose();
-                initvars(new String[]{target.getValueAt(row,1).toString(), target.getValueAt(row,2).toString()});
+                initvars(new String[]{target.getValueAt(row,1).toString()});
                 }
             }
         };
         luTable.addMouseListener(luml);
       
-        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), getClassLabelTag("lbldesc", this.getClass().getSimpleName())); 
+        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), getClassLabelTag("lblitem", this.getClass().getSimpleName())); 
         
     }
 
+    public void updateForm() {
+        isLoad = true;
+        tbkey.setText(String.valueOf(x.plan_nbr()));
+        tborder.setText(x.plan_order());
+      //  cbapply.setSelected(BlueSeerUtils.ConvertStringToBool(x.car_apply()));
+        setAction(x.m());
+        
+        // now detail
+        ddop.removeAllItems();
+        for (plan_operation plo : plolist) {
+            ddop.addItem(String.valueOf(plo.plo_op()));
+        }
+        ddop.insertItemAt("", 0);
+        ddop.setSelectedIndex(0);
+        
+        materialmodel.setRowCount(0);
+        /*
+        for (taxd_mstr taxd : taxdlist) {
+                    taxmodel.addRow(new Object[]{
+                      taxd.taxd_line(),   
+                      taxd.taxd_desc(), 
+                      taxd.taxd_percent(),
+                      taxd.taxd_type(),
+                      ConvertIntToYesNo(Integer.valueOf(taxd.taxd_enabled()))
+                     
+                  });
+        }
+        */
+        isLoad = false;
+    }
+    
     // misc methods
     
     
@@ -474,7 +508,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        tbdesc = new javax.swing.JTextField();
+        tbitem = new javax.swing.JTextField();
         tbkey = new javax.swing.JTextField();
         btlookup = new javax.swing.JButton();
         btclear = new javax.swing.JButton();
@@ -724,7 +758,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(81, 81, 81)
-                .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tbitem, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(406, 406, 406))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(25, 25, 25)
@@ -817,7 +851,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
                                     .addComponent(jLabel15))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(tbitem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel2))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -932,7 +966,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JRadioButton rbservice;
     private javax.swing.JRadioButton rbtooling;
     private javax.swing.JTextField tbcost;
-    private javax.swing.JTextField tbdesc;
+    private javax.swing.JTextField tbitem;
     private javax.swing.JTextField tbkey;
     private javax.swing.JTextField tbophours;
     private javax.swing.JTextField tboplaborcost;
