@@ -293,7 +293,7 @@ public class schData {
                         m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
                         r = new plan_operation(m, res.getInt("plo_id"), res.getInt("plo_parent"), res.getInt("plo_op"),
                             res.getDouble("plo_qty"), res.getDouble("plo_qty_comp"), res.getString("plo_cell"), res.getString("plo_operator"), res.getString("plo_operatorname"),
-                            res.getString("plo_date"), res.getString("plo_status"), res.getString("plo_userid") , res.getString("plo_desc"));
+                            res.getString("plo_date"), res.getString("plo_status"), res.getString("plo_userid") , res.getString("plo_desc"), res.getString("plo_notes"));
                         list.add(r);
                     }
                 }
@@ -324,7 +324,7 @@ public class schData {
                         m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
                         r = new plan_operation(m, res.getInt("plo_id"), res.getInt("plo_parent"), res.getInt("plo_op"),
                             res.getDouble("plo_qty"), res.getDouble("plo_qty_comp"), res.getString("plo_cell"), res.getString("plo_operator"), res.getString("plo_operatorname"),
-                            res.getString("plo_date"), res.getString("plo_status"), res.getString("plo_userid"), res.getString("plo_desc"));
+                            res.getString("plo_date"), res.getString("plo_status"), res.getString("plo_userid"), res.getString("plo_desc"), res.getString("plo_notes"));
                     }
                 }
             }
@@ -862,14 +862,14 @@ public class schData {
      public record plan_operation(String[] m, int plo_id, int plo_parent, 
         int plo_op, double plo_qty, double plo_qty_comp, String plo_cell,
         String plo_operator, String plo_operatorname, String plo_date, 
-        String plo_status, String plo_userid, String plo_desc) {
+        String plo_status, String plo_userid, String plo_desc, String plo_notes) {
         public plan_operation(String[] m) {
-            this(m, 0, 0, 0, 0, 0, "", "", "", "", "", "", "");
+            this(m, 0, 0, 0, 0, 0, "", "", "", "", "", "", "", "");
         }
         public plan_operation update_plo_qty_comp(plan_operation po, double qty) {
             Objects.requireNonNull(po, "record plan_operation is required");
             double newqty = po.plo_qty_comp + qty;
-            return new plan_operation(po.m, po.plo_id, po.plo_parent, po.plo_op, po.plo_qty, newqty, po.plo_cell, po.plo_operator, po.plo_operatorname, po.plo_date, po.plo_status, po.plo_userid, po.plo_desc);
+            return new plan_operation(po.m, po.plo_id, po.plo_parent, po.plo_op, po.plo_qty, newqty, po.plo_cell, po.plo_operator, po.plo_operatorname, po.plo_date, po.plo_status, po.plo_userid, po.plo_desc, po.plo_notes);
         }
     }
     

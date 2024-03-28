@@ -358,11 +358,13 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
             new AnswerWorker().execute();
             return;
         }
-        if (pm.plan_qty_sched() == 0) {
+        
+        if (pm.plan_qty_sched() == 0 && ! pm.plan_type().equals("SRVC")) {
             badScan(getMessageTag(1182));
             new AnswerWorker().execute();
             return;
         }
+        
         setOperations(plannbr);
         if (ddop.getItemCount() > 0) { 
             if (! planop.isBlank()) {
@@ -381,7 +383,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         if (opticketScan) {
         plan_operation po = getPlanOperation(Integer.valueOf(plannbr), Integer.valueOf(planop));
         qtysched = po.plo_qty();  // override parent plan sched qty
-           if (po.plo_operator().isBlank()) {
+           if (po.plo_operator().isBlank() && ! pm.plan_type().equals("SRVC")) {
                badScan("Operator not assigned for ticket");
                new AnswerWorker().execute();
                return;

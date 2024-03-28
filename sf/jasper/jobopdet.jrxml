@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.9.0.final using JasperReports Library version 6.9.0-cb8f9004be492ccc537180b49c026951f4220bf3  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty" uuid="078cf306-3884-4a22-bf78-2e22eac8a13d">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="op" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="myid" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select * from plan_opdet 
+where plod_parent = $P{myid} and plod_op = $P{op};]]>
+	</queryString>
+	<field name="plod_type" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ps_child"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pbm_mstr"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="plod_itemdesc" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="it_desc"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="item_mstr"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="plod_qty" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="ps_qty_per"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pbm_mstr"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="plod_cost" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="ps_ref"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pbm_mstr"/>
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="17" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="83" height="12" uuid="cb969a1e-09e6-420f-8401-dd62a22754a8"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{plod_type}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="91" y="0" width="100" height="12" uuid="17207d79-bb71-4245-a361-297ab29d6bd1"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{plod_itemdesc}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="202" y="0" width="58" height="12" uuid="31e0f31c-3421-4ce5-b2f5-029e138baea2"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{plod_qty}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

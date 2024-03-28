@@ -198,8 +198,9 @@ public class PlanMiscMaint extends javax.swing.JPanel {
                 null, // date 
                 "", //status
                 bsmf.MainFrame.userid, // userid
-                op[1] // operation description
-                );
+                op[1], // operation description
+                "" // notes   
+             );
         list.add(x);
          }
         return list;   

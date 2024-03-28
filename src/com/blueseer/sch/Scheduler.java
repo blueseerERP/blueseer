@@ -636,10 +636,11 @@ public class Scheduler extends javax.swing.JPanel {
               con = DriverManager.getConnection(url + db, user, pass);  
             }
             
-                String jasperfile = getSysMetaValue("system", "inventorycontrol", "jasper_job_ticket");  
-                if (jasperfile.isBlank()) {
-                    jasperfile = "jobticket.jasper";
-                }
+              //  String jasperfile = getSysMetaValue("system", "inventorycontrol", "jasper_job_ticket");  
+              //  if (jasperfile.isBlank()) {
+               String jasperfile = "jobSVticket.jasper";
+              //  }
+                
                 
                 HashMap hm = new HashMap();
                 hm.put("BUSINESSTITLE", bustitle);
@@ -2043,8 +2044,9 @@ public class Scheduler extends javax.swing.JPanel {
                     setDateDB(dcopdate.getDate()), // date
                     ddopstatus.getSelectedItem().toString(), //status
                     bsmf.MainFrame.userid, // userid
-                    lbopdesc.getText() // op desc 
-                    );
+                    lbopdesc.getText(), // op desc 
+                    "" // notes
+            );
             updatePlanOperation(x);
             getOperations(currplan, currplantype);
         }

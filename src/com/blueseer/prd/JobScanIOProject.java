@@ -28,8 +28,13 @@ package com.blueseer.prd;
 
 import com.blueseer.inv.*;
 import bsmf.MainFrame;
+import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.defaultDecimalSeparator;
+import static bsmf.MainFrame.ds;
+import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
+import static bsmf.MainFrame.url;
+import static bsmf.MainFrame.user;
 import static com.blueseer.inv.invData.addUOMMstr;
 import static com.blueseer.inv.invData.deleteUOMMstr;
 import static com.blueseer.inv.invData.getUOMMstr;
@@ -39,6 +44,7 @@ import static com.blueseer.prd.prdData.addPlanOpDet;
 import static com.blueseer.prd.prdData.deletePlanOpDet;
 import static com.blueseer.prd.prdData.getJobClockDetail;
 import static com.blueseer.prd.prdData.getPlanOpDet;
+import static com.blueseer.prd.prdData.updatePlanOPNotes;
 import static com.blueseer.sch.schData.getPlanMstr;
 import static com.blueseer.sch.schData.getPlanOperation;
 import com.blueseer.sch.schData.plan_mstr;
@@ -59,22 +65,27 @@ import static com.blueseer.utl.BlueSeerUtils.ludialog;
 import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import static com.blueseer.utl.BlueSeerUtils.lurb2;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
 import com.blueseer.utl.IBlueSeerT;
 import com.blueseer.utl.OVData;
 import static com.blueseer.utl.OVData.canUpdate;
+import static com.blueseer.utl.OVData.getSysMetaValue;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -88,6 +99,9 @@ import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.SwingWorker;
 import javax.swing.table.TableColumnModel;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -504,8 +518,10 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         public void actionPerformed(ActionEvent event) {
         if (lurb1.isSelected()) {  
          luModel = DTData.getJobBrowseUtil(luinput.getText(),0, "plan_nbr"); 
+        } else if (lurb2.isSelected()) {
+         luModel = DTData.getJobBrowseUtil(luinput.getText(),0, "plan_order");
         } else {
-         luModel = DTData.getJobBrowseUtil(luinput.getText(),0, "plan_item");    
+         luModel = DTData.getJobBrowseUtil(luinput.getText(),0, "sv_cust");    
         }
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
@@ -532,7 +548,8 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         };
         luTable.addMouseListener(luml);
       
-        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), getClassLabelTag("lblitem", this.getClass().getSimpleName())); 
+        callDialog(getClassLabelTag("lblid", this.getClass().getSimpleName()), getClassLabelTag("lblorder", this.getClass().getSimpleName()),
+                getClassLabelTag("lblcust", this.getClass().getSimpleName()) ); 
         
     }
 
@@ -543,17 +560,24 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
       //  cbapply.setSelected(BlueSeerUtils.ConvertStringToBool(x.car_apply()));
         
         
-        // now detail
+       
         ddop.removeAllItems();
+        ddopnotes.removeAllItems();
+        
         for (plan_operation plo : plolist) {
             ddop.addItem(String.valueOf(plo.plo_op()));
+            ddopnotes.addItem(String.valueOf(plo.plo_op()));
         }
         
         ddop.insertItemAt("", 0);
+        ddopnotes.insertItemAt("", 0);
+        
         if (! jobop[1].isBlank()) {
          ddop.setSelectedItem(jobop[1]);
+         ddopnotes.setSelectedItem(jobop[1]);
         } else {
-         ddop.setSelectedIndex(0);   
+         ddop.setSelectedIndex(0);  
+         ddopnotes.setSelectedIndex(0);
         }
         
         plodmatl = getPlanOpDet(jobop[0]);
@@ -619,6 +643,91 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
          tbtothours.setText(bsNumber(tothours));
     }
     
+    public void printticket(String jobid, String bustitle) {
+        
+       try {
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            
+                
+                String jasperfile = "jobSVticket.jasper";
+               
+                
+                HashMap hm = new HashMap();
+                hm.put("BUSINESSTITLE", bustitle);
+                hm.put("REPORT_TITLE", jasperfile);
+                hm.put("SUBREPORT_DIR", "jasper/");
+                hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags); 
+                hm.put("myid",  jobid);
+                //hm.put("imagepath", "images/avmlogo.png");
+               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
+               // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
+                File mytemplate = new File("jasper/" + jasperfile);
+                JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
+              //  JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/jobticket.pdf");
+         
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+            jasperViewer.setVisible(true);
+                
+                
+           con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        
+    }
+    
+    public void printOperationTicket(String jobid, String op, String plantype, String bustitle) {
+        
+       try {
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            
+                String jasperfile = getSysMetaValue("system", "inventorycontrol", "jasper_operation_ticket");  
+                if (jasperfile.isBlank()) {
+                    jasperfile = "operationticket.jasper";
+                }
+                
+                if (plantype.equals("SRVC")) {
+                    jasperfile = "operationSVticket.jasper";
+                }
+                
+                HashMap hm = new HashMap();
+                hm.put("BUSINESSTITLE", bustitle);
+                hm.put("REPORT_TITLE", jasperfile);
+                hm.put("SUBREPORT_DIR", "jasper/");
+                hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags); 
+                hm.put("myid",  jobid);
+                hm.put("myop",  op);
+                hm.put("myidop", jobid + "-" + op);
+                //hm.put("imagepath", "images/avmlogo.png");
+               // res = st.executeQuery("select shd_id, sh_cust, shd_po, shd_item, shd_qty, shd_netprice, cm_code, cm_name, cm_line1, cm_line2, cm_city, cm_state, cm_zip, concat(cm_city, \" \", cm_state, \" \", cm_zip) as st_citystatezip, site_desc from ship_det inner join ship_mstr on sh_id = shd_id inner join cm_mstr on cm_code = sh_cust inner join site_mstr on site_site = sh_site where shd_id = '1848' ");
+               // JRResultSetDataSource jasperReports = new JRResultSetDataSource(res);
+                File mytemplate = new File("jasper/" + jasperfile);
+                JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, con );
+              //  JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/jobticket.pdf");
+         
+            JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+            jasperViewer.setVisible(true);
+                
+                
+           con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        
+    }
+    
+
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -677,11 +786,12 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         lbloperation = new javax.swing.JLabel();
         lblmaterial = new javax.swing.JLabel();
         lbltooling = new javax.swing.JLabel();
+        btprint = new javax.swing.JButton();
         panelNotes = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jButton1 = new javax.swing.JButton();
+        tanotes = new javax.swing.JTextArea();
+        btupdatenotes = new javax.swing.JButton();
         ddopnotes = new javax.swing.JComboBox<>();
         jLabel17 = new javax.swing.JLabel();
         panelClock = new javax.swing.JPanel();
@@ -695,7 +805,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         panelMain.setName("panelmain"); // NOI18N
         panelMain.setPreferredSize(new java.awt.Dimension(785, 550));
 
-        jLabel1.setText("Scan:");
+        jLabel1.setText("Job:");
         jLabel1.setName("lblid"); // NOI18N
 
         jLabel2.setText("Service:");
@@ -856,7 +966,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 197, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -902,6 +1012,13 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         jLabel16.setText("Operator:");
+
+        btprint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/print.png"))); // NOI18N
+        btprint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btprintActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelMainLayout = new javax.swing.GroupLayout(panelMain);
         panelMain.setLayout(panelMainLayout);
@@ -951,7 +1068,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
                                         .addGap(18, 18, 18)
                                         .addComponent(rbservice))
                                     .addComponent(tboperator, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 124, Short.MAX_VALUE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panelMainLayout.createSequentialGroup()
                         .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -966,7 +1083,9 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btclear))
+                                .addComponent(btclear)
+                                .addGap(34, 34, 34)
+                                .addComponent(btprint, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(panelMainLayout.createSequentialGroup()
                                 .addComponent(ddmaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -978,12 +1097,14 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
             panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelMainLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel1))
-                    .addComponent(btlookup)
-                    .addComponent(btclear, javax.swing.GroupLayout.Alignment.LEADING))
+                .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel1))
+                        .addComponent(btlookup)
+                        .addComponent(btclear, javax.swing.GroupLayout.Alignment.LEADING))
+                    .addComponent(btprint))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(panelMainLayout.createSequentialGroup()
@@ -991,10 +1112,11 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
                             .addComponent(tborder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3))
                         .addGap(9, 9, 9)
-                        .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4)
-                            .addComponent(lbloperation, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lbloperation, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel4)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tboperator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1045,11 +1167,22 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Operational Note"));
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane3.setViewportView(jTextArea1);
+        tanotes.setColumns(20);
+        tanotes.setRows(5);
+        jScrollPane3.setViewportView(tanotes);
 
-        jButton1.setText("Add Note Entry");
+        btupdatenotes.setText("Update Notes");
+        btupdatenotes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btupdatenotesActionPerformed(evt);
+            }
+        });
+
+        ddopnotes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddopnotesActionPerformed(evt);
+            }
+        });
 
         jLabel17.setText("Operation:");
 
@@ -1063,26 +1196,26 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
                 .addComponent(jLabel17)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(ddopnotes, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 284, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 457, Short.MAX_VALUE)
+                .addComponent(btupdatenotes)
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
+                    .addComponent(btupdatenotes)
                     .addComponent(ddopnotes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel17))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout panelNotesLayout = new javax.swing.GroupLayout(panelNotes);
         panelNotes.setLayout(panelNotesLayout);
         panelNotesLayout.setHorizontalGroup(
             panelNotesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 635, Short.MAX_VALUE)
+            .addGap(0, 800, Short.MAX_VALUE)
             .addGroup(panelNotesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(panelNotesLayout.createSequentialGroup()
                     .addContainerGap()
@@ -1091,7 +1224,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         );
         panelNotesLayout.setVerticalGroup(
             panelNotesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 323, Short.MAX_VALUE)
+            .addGap(0, 550, Short.MAX_VALUE)
             .addGroup(panelNotesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(panelNotesLayout.createSequentialGroup()
                     .addContainerGap()
@@ -1231,6 +1364,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
              if (ddop.getSelectedItem().toString().isBlank()) {
                 lbloperation.setText("");
                 tboperator.setText("");
+                materialmodel.setNumRows(0);
                 for (String[] s : plodmatl) {
                     if (s[3].equals("material") || s[3].equals("tooling")) {
                     materialmodel.addRow(new Object[] { 
@@ -1289,19 +1423,36 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         } 
     }//GEN-LAST:event_rbmaterialStateChanged
 
+    private void ddopnotesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddopnotesActionPerformed
+        if (ddopnotes.getSelectedItem() != null && ! ddopnotes.getSelectedItem().toString().isBlank()) {
+        plan_operation plo = getPlanOperation(Integer.valueOf(jobop[0]), Integer.valueOf(ddopnotes.getSelectedItem().toString()));
+        tanotes.setText(plo.plo_notes());
+        }
+    }//GEN-LAST:event_ddopnotesActionPerformed
+
+    private void btupdatenotesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdatenotesActionPerformed
+        updatePlanOPNotes(jobop[0], ddopnotes.getSelectedItem().toString(), tanotes.getText());
+        bsmf.MainFrame.show("Notes update complete");
+    }//GEN-LAST:event_btupdatenotesActionPerformed
+
+    private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
+        printticket(jobop[0], "Job Service Ticket");
+    }//GEN-LAST:event_btprintActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btaddmatl;
     private javax.swing.JButton btclear;
     private javax.swing.JButton btdeletematl;
     private javax.swing.JButton btlookup;
+    private javax.swing.JButton btprint;
+    private javax.swing.JButton btupdatenotes;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox<String> ddmaterial;
     private javax.swing.JComboBox<String> ddop;
     private javax.swing.JComboBox<String> ddopnotes;
     private javax.swing.JComboBox<String> ddtooling;
     private javax.swing.JTable historytable;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -1326,7 +1477,6 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JLabel lblmaterial;
     private javax.swing.JLabel lbloperation;
     private javax.swing.JLabel lbltooling;
@@ -1337,6 +1487,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JRadioButton rbmaterial;
     private javax.swing.JRadioButton rbservice;
     private javax.swing.JRadioButton rbtooling;
+    private javax.swing.JTextArea tanotes;
     private javax.swing.JTextField tbcost;
     private javax.swing.JTextField tbitem;
     private javax.swing.JTextField tbkey;

@@ -318,6 +318,40 @@ public class prdData {
       return x;
   }
    
+   public static int updatePlanOPNotes(String job, String op, String notes) {
+        int x = 0;
+        try {
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                 st.executeUpdate("update plan_operation set plo_notes = " + "'" + notes + "'" +
+                         " where plo_parent = " + "'" + job + "'" +
+                         " and plo_op = " + "'" + op + "'" + ";");
+                
+            } 
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return x;
+    }
+
    
    public static int addPlanOpDet(String job, String op, String datatype, String item, double qty, double cost, String operator) {
         int x = 0;
@@ -389,7 +423,7 @@ public class prdData {
         }
         return x;
     }
-
+   
    public static void deletePlanOpDet(String id) {
         try {
 
