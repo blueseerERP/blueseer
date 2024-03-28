@@ -111,6 +111,7 @@ public class JobBrowse extends javax.swing.JPanel {
        MasterModel mymodel = new MasterModel(new Object[][]{},
                         new String[]{ 
                             getGlobalColumnTag("planid"), 
+                            getGlobalColumnTag("type"),
                             getGlobalColumnTag("item"), 
                             getGlobalColumnTag("operation"),
                             getGlobalColumnTag("operator"),
@@ -125,7 +126,7 @@ public class JobBrowse extends javax.swing.JPanel {
                {
                       @Override  
                       public Class getColumnClass(int col) {  
-                        if (col == 6 || col == 7 || col == 8)
+                        if (col == 7 || col == 8 || col == 9)
                             return Double.class;
                         else return String.class;  //other columns accept String values  
                       }  
@@ -255,13 +256,13 @@ public class JobBrowse extends javax.swing.JPanel {
       // c.setBackground(row % 3 == 0 ? new Color(245,245,220) : Color.LIGHT_GRAY);
        
        
-              String status = mastertable.getModel().getValueAt(table.convertRowIndexToModel(row), 10).toString();  // 7 = status column
-              String plostatus = mastertable.getModel().getValueAt(table.convertRowIndexToModel(row), 9).toString();  // 7 = status column
-              
+              String status = mastertable.getModel().getValueAt(table.convertRowIndexToModel(row), 11).toString();  // 7 = status column
+              String plostatus = mastertable.getModel().getValueAt(table.convertRowIndexToModel(row), 10).toString();  // 7 = status column
+              String plotype = mastertable.getModel().getValueAt(table.convertRowIndexToModel(row), 1).toString();
               if (status != null && status.equals("in")) {
               setForeground(Color.blue);
               setBackground(table.getBackground());
-              } else if (plostatus != null && plostatus.equals("unscheduled")) {
+              } else if (plostatus != null && plostatus.equals("unscheduled") && ! plotype.equals("SRVC")) {
               setForeground(Color.red);
               setBackground(table.getBackground());
               } else {
@@ -1013,7 +1014,7 @@ try {
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                  
                  if (! jobid.isBlank()) {
-                   res = st.executeQuery("SELECT plan_nbr, plan_item, plo_op, plo_operator, plo_operatorname, plo_cell, " +
+                   res = st.executeQuery("SELECT plan_nbr, plan_type, plan_item, plo_op, plo_operator, plo_operatorname, plo_cell, " +
                          "plo_qty, plo_qty_comp, plo_date, plo_status, " +
                          " jobc_empnbr, jobc_qty, coalesce(jobc_tothrs,0) as jobc_tothrs, jobc_code  " +
                         " FROM  plan_operation " +
@@ -1023,7 +1024,7 @@ try {
                         " order by plo_op;");    
   
                  } else {
-                   res = st.executeQuery("SELECT plan_nbr, plan_item, plo_op, plo_operator, plo_operatorname, plo_cell, " +
+                   res = st.executeQuery("SELECT plan_nbr, plan_type, plan_item, plo_op, plo_operator, plo_operatorname, plo_cell, " +
                          "plo_qty, plo_qty_comp, plo_date, plo_status, " +
                          " jobc_empnbr, jobc_qty, coalesce(jobc_tothrs,0) as jobc_tothrs, jobc_code  " +
                         " FROM  plan_operation " +
@@ -1072,6 +1073,7 @@ try {
                     avghours = avghours + res.getDouble("jobc_tothrs");
                     mymodel.addRow(new Object[]{
                                 res.getString("plan_nbr"),
+                                res.getString("plan_type"),
                                 res.getString("plan_item"),
                                 res.getString("plo_op"),
                                 res.getString("plo_operatorname"),

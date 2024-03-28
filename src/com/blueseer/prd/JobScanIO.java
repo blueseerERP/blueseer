@@ -116,6 +116,7 @@ String sitephone = "";
 String sitecitystatezip = "";
 boolean planLegit = false;
 boolean requireOpScan = false;
+boolean isLoad = false;
 
 String clockdate = "";
 String clocktime = "";
@@ -239,11 +240,13 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
     }
     
     public void setOperations(String plan) {
+        isLoad = true;
         ddop.removeAllItems();
         ArrayList<plan_operation> pos = getPlanOperation(plan);
         for (plan_operation po : pos) {
             ddop.addItem(String.valueOf(po.plo_op()));
         }
+        isLoad = false;
     }
     
     public void disableAll() {
@@ -274,10 +277,12 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         if (! isValidEmployeeID(tboperator.getText())) {
             badScan("Invalid Employee ID");
             new AnswerWorker().execute();
+            return;
         }
         if (plan.isBlank()) {
             badScan("Empty Job Number");
             new AnswerWorker().execute();
+            return;
         }
         
         if (dir.equals("In")) {
@@ -346,6 +351,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
            plannbr = scan;
        }
        
+       
        // now validate       
        if (! schData.isPlan(plannbr)) {
                 badScan("Bad Ticket");
@@ -366,6 +372,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         }
         
         setOperations(plannbr);
+        //bsmf.MainFrame.show("here: " + planop);
         if (ddop.getItemCount() > 0) { 
             if (! planop.isBlank()) {
                 ddop.setSelectedItem(planop);
@@ -390,7 +397,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
            }
         tboperator.setText(po.plo_operator());
         userlabel.setText(getEmpFormalNameByID(po.plo_operator()));
-           if (! po.plo_status().equals(getGlobalProgTag("open"))) {
+           if (po.plo_status().equals(getGlobalProgTag("closed"))) {
                badScan("Operation ticket is closed");
                new AnswerWorker().execute();
                return;
@@ -414,6 +421,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
            validateOperator(dddir.getSelectedItem().toString(), plannbr);
            tboperator.setEnabled(false);
        } else {
+           tboperator.setEnabled(true);
            tboperator.requestFocusInWindow(); 
        }
        
@@ -604,6 +612,11 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         clocktime = dftime.format(now);
         
         String[] intime = getJobClockInTime(bsParseInt(plannbr), bsParseInt(planop), tboperator.getText());
+        
+        if (intime[0].isBlank() || intime[1].isBlank()) {
+            return null;
+        }
+        
         Calendar clockstart = Calendar.getInstance();
         Calendar clockstop = Calendar.getInstance();
         clockstart.set( Integer.valueOf(intime[0].substring(0,4)), Integer.valueOf(intime[0].substring(5,7)), Integer.valueOf(intime[0].substring(8,10)), Integer.valueOf(intime[1].substring(0,2)), Integer.valueOf(intime[1].substring(3,5)) );
@@ -706,6 +719,12 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         btcommit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btcommitActionPerformed(evt);
+            }
+        });
+
+        ddop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddopActionPerformed(evt);
             }
         });
 
@@ -871,6 +890,13 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
             return;
         }
         
+        job_clock jc = createRecordOut();
+        if (jc == null) {
+            badScan("missing clock in date and time in job_clock record");
+            return;
+        }
+        
+        
         plan_mstr pm = schData.getPlanMstr(new String[]{plannbr});
         inv_ctrl ic = invData.getINVCtrl(new String[]{plannbr});
         double prevscanned = schData.getPlanDetTotQtyByOp(plannbr, planop);
@@ -979,10 +1005,13 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
                  lblmessage.setText("Scan Complete");
                  lblmessage.setForeground(Color.blue);
                  
-                 updateJobClock(createRecordOut());
+                 updateJobClock(jc);
                  String status = ((qty + prevscanned) >= pm.plan_qty_sched()) ? "closed" : "open";
-                 updatePlanOperationStatusQty(String.valueOf(plannbr), String.valueOf(planop), status, bsParseDouble(tbqty.getText()));
                  
+                // do not close or commit qty if SRVC
+                 if (! pm.plan_type().equals("SRVC")) {
+                 updatePlanOperationStatusQty(String.valueOf(plannbr), String.valueOf(planop), status, bsParseDouble(tbqty.getText()));
+                 }
                 if (BlueSeerUtils.ConvertStringToBool(ic.printsubticket())) {               
                      try {
                         printTubTicket(plannbr, String.valueOf(key));
@@ -1035,6 +1064,13 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
     private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
         initvars(null);
     }//GEN-LAST:event_btclearActionPerformed
+
+    private void ddopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddopActionPerformed
+        if (! isLoad && ddop.getSelectedItem() != null && ! ddop.getSelectedItem().toString().isBlank()) {
+            planop = ddop.getSelectedItem().toString();
+        }
+       // bsmf.MainFrame.show("ddopaction: " + planop);
+    }//GEN-LAST:event_ddopActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -610,7 +610,7 @@ public class hrmData {
             ResultSet res = null;
             try {
                 res = st.executeQuery("select emp_nbr from emp_mstr where emp_nbr = " + "'" + id + "'" + ";");
-                if (res.isBeforeFirst()) {
+                while (res.next()) {
                     x = true;
                 }
             } catch (SQLException s) {

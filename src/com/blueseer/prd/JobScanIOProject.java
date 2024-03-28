@@ -1284,6 +1284,12 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
     private void btaddmatlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddmatlActionPerformed
         String datatype = "";
         String item = "";
+        
+        if (ddop.getSelectedItem().toString().isBlank()) {
+            bsmf.MainFrame.show("An operation must be selected");
+            return;
+        }
+        
         if (rbmaterial.isSelected()) {
             datatype = "material";
             item = ddmaterial.getSelectedItem().toString();
