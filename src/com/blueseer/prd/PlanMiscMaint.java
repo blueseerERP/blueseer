@@ -36,6 +36,7 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.inv.invData;
+import static com.blueseer.inv.invData.getItemWFOPandDESC;
 import static com.blueseer.inv.invData.getItemWFOPs;
 import static com.blueseer.sch.schData.addPlanMstr;
 import static com.blueseer.sch.schData.addPlanOperationTrans;
@@ -183,12 +184,12 @@ public class PlanMiscMaint extends javax.swing.JPanel {
    
     public ArrayList<plan_operation> createRecordPlanOp(int nbr) {
         ArrayList<plan_operation> list = new ArrayList<plan_operation>();
-        ArrayList<String> ops = getItemWFOPs(ddpart.getSelectedItem().toString());
-         for (String op : ops) {
+        ArrayList<String[]> ops = getItemWFOPandDESC(ddpart.getSelectedItem().toString());
+         for (String[] op : ops) {
              plan_operation x = new plan_operation(null, 
                 0, // id
                 nbr, // parent
-                bsParseInt(op), // op
+                bsParseInt(op[0]), // op
                 bsParseDouble(tbqty.getText().replace(defaultDecimalSeparator, '.')), // qty
                 0, // comp qty
                 "", // cell
@@ -196,7 +197,8 @@ public class PlanMiscMaint extends javax.swing.JPanel {
                 "", // operatorname
                 null, // date 
                 "", //status
-                bsmf.MainFrame.userid // userid
+                bsmf.MainFrame.userid, // userid
+                op[1] // operation description
                 );
         list.add(x);
          }

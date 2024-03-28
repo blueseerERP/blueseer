@@ -19673,10 +19673,11 @@ MainFrame.bslog(e);
                             " where svd_nbr = " + "'" + a_order.get(z) + "'" +";" );
                         while (res.next()) {
                             st.executeUpdate("insert into plan_operation "
-                            + "(plo_parent, plo_op, plo_qty) "
+                            + "(plo_parent, plo_op, plo_qty, plo_desc) "
                             + " values ( " + "'" + nbr + "'" + ","
                             + "'" + bsParseInt(res.getString("svd_line")) + "'" + ","
-                            + "'" + res.getDouble("svd_qty") + "'" 
+                            + "'" + res.getDouble("svd_qty") + "'" + ","
+                            + "'" + res.getString("svd_item") + "'"        
                             + ")"
                             + ";");
                         }

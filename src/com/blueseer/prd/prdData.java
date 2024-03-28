@@ -269,6 +269,56 @@ public class prdData {
       return x;
   }
    
+   public static ArrayList<String[]> getJobClockDetail(int plan) {
+      ArrayList<String[]> x = new ArrayList<String[]>();
+      try {
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+             res = st.executeQuery("select jobc_planid, jobc_op, jobc_empnbr, jobc_qty, jobc_indate, jobc_intime, jobc_outdate, jobc_outtime, jobc_tothrs, jobc_code, emp_lname, emp_fname, emp_rate from job_clock inner join emp_mstr on emp_nbr = jobc_empnbr where jobc_planid = " + "'" + plan + "'" 
+                     + " order by jobc_indate ;");
+           while (res.next()) {
+               String[] w = new String[]{
+                    res.getString("jobc_planid"),
+                    res.getString("jobc_op"),
+                    res.getString("jobc_empnbr"),
+                    res.getString("emp_lname") + ", " + res.getString("emp_fname"),
+                    res.getString("emp_rate"),
+                    res.getString("jobc_qty"),
+                    res.getString("jobc_indate"),
+                    res.getString("jobc_intime"),
+                    res.getString("jobc_outdate"),
+                    res.getString("jobc_outtime"),
+                    res.getString("jobc_tothrs"), 
+                    res.getString("jobc_code")
+               };
+               x.add(w);
+           }
+
+        } catch (SQLException s) {
+            MainFrame.bslog(s);
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+    } catch (Exception e) {
+        MainFrame.bslog(e);
+    }
+      return x;
+  }
+   
+   
    public static int addPlanOpDet(String job, String op, String datatype, String item, double qty, double cost, String operator) {
         int x = 0;
         try {
@@ -288,7 +338,7 @@ public class prdData {
                 String clockdate = dfdate.format(now);
                 String clocktime = dftime.format(now);
                   if (dbtype.equals("sqlite")) { 
-                    st.executeUpdate("insert into plan_opdet values ( "
+                    st.executeUpdate("insert into plan_opdet (plod_parent, plod_op, plod_type, plod_itemdesc, plod_qty, plod_cost, plod_operator, plod_date, plod_time) values ( "
                             + "'" + job + "'" + "," 
                             + "'" + op + "'" + "," 
                             + "'" + datatype + "'" + "," 
@@ -297,11 +347,11 @@ public class prdData {
                             + "'" + cost + "'" + ","
                             + "'" + operator + "'" + ","
                             + "'" + clockdate + "'" + ","  
-                            + "'" + clocktime + "'" + ","        
+                            + "'" + clocktime + "'"      
                             +  ")"
                             + ";");
                   } else {
-                     st.executeUpdate("insert into plan_opdet values ( "
+                     st.executeUpdate("insert into plan_opdet (plod_parent, plod_op, plod_type, plod_itemdesc, plod_qty, plod_cost, plod_operator, plod_date, plod_time) values ( "
                             + "'" + job + "'" + "," 
                             + "'" + op + "'" + "," 
                             + "'" + datatype + "'" + "," 
@@ -310,7 +360,7 @@ public class prdData {
                             + "'" + cost + "'" + ","
                             + "'" + operator + "'" + ","
                             + "'" + clockdate + "'" + ","  
-                            + "'" + clocktime + "'" + ","        
+                            + "'" + clocktime + "'"       
                             +  ")"
                             + ";" , Statement.RETURN_GENERATED_KEYS); 
                   }
@@ -365,8 +415,103 @@ public class prdData {
                 MainFrame.bslog(e);
             }
     }
-    
-    
+   
+   public static ArrayList<String[]> getPlanOpDet(String job) {
+       ArrayList<String[]> x = new ArrayList<String[]>();
+      try {
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+             res = st.executeQuery("select * from plan_opdet where plod_parent = " + "'" + job + "'" 
+                     + " order by plod_op ;");
+           while (res.next()) {
+               String[] w = new String[]{
+                   res.getString("plod_id"),
+                    res.getString("plod_parent"),
+                    res.getString("plod_op"),
+                    res.getString("plod_type"),
+                    res.getString("plod_itemdesc"),
+                    res.getString("plod_qty"),
+                    res.getString("plod_cost"),
+                    res.getString("plod_operator"),
+                    res.getString("plod_date"),
+                    res.getString("plod_time")
+               };
+               x.add(w);
+           }
+
+        } catch (SQLException s) {
+            MainFrame.bslog(s);
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+    } catch (Exception e) {
+        MainFrame.bslog(e);
+    }
+      return x;
+   }
+   
+   public static ArrayList<String[]> getPlanOpDet(String job, String op) {
+       ArrayList<String[]> x = new ArrayList<String[]>();
+      try {
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+             res = st.executeQuery("select * from plan_opdet where plod_parent = " + "'" + job + "'" 
+                     + " and plod_op = " + "'" + op + "'"
+                     + " order by plod_type ;");
+           while (res.next()) {
+               String[] w = new String[]{
+                   res.getString("plod_id"),
+                    res.getString("plod_parent"),
+                    res.getString("plod_op"),
+                    res.getString("plod_type"),
+                    res.getString("plod_itemdesc"),
+                    res.getString("plod_qty"),
+                    res.getString("plod_cost"),
+                    res.getString("plod_operator"),
+                    res.getString("plod_date"),
+                    res.getString("plod_time")
+               };
+               x.add(w);
+           }
+
+        } catch (SQLException s) {
+            MainFrame.bslog(s);
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+    } catch (Exception e) {
+        MainFrame.bslog(e);
+    }
+      return x;
+   }
+   
+   
    public record job_clock (String[] m, int jobc_planid, int jobc_op, double jobc_qty, String jobc_empnbr,
         String jobc_indate, String jobc_outdate, String jobc_intime, String jobc_outtime, double jobc_tothrs,
         String jobc_code ) {

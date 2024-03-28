@@ -2042,7 +2042,8 @@ public class Scheduler extends javax.swing.JPanel {
                     operator, // operatorname
                     setDateDB(dcopdate.getDate()), // date
                     ddopstatus.getSelectedItem().toString(), //status
-                    bsmf.MainFrame.userid // userid
+                    bsmf.MainFrame.userid, // userid
+                    lbopdesc.getText() // op desc 
                     );
             updatePlanOperation(x);
             getOperations(currplan, currplantype);

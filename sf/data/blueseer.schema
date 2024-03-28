@@ -1255,10 +1255,11 @@ CREATE TABLE IF NOT EXISTS `plan_operation` (
   `plo_date` date  DEFAULT NULL,
   `plo_status` varchar(10) NOT NULL  DEFAULT '',
   `plo_userid` varchar(30) NOT NULL  DEFAULT '',
+  `plo_desc` varchar(100) NOT NULL  DEFAULT '',
   index parentop (`plo_parent`, `plo_op`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `plan_opdet` (
-  `plod_id` int(8) NOT NULL DEFAULT '0',
+  `plod_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `plod_parent` int(8) NOT NULL DEFAULT '0',
   `plod_op` varchar(4) NOT NULL  DEFAULT '',
   `plod_type` varchar(20) NOT NULL  DEFAULT '',
@@ -1271,6 +1272,7 @@ CREATE TABLE IF NOT EXISTS `plan_opdet` (
   index parentop (`plod_parent`, `plod_op`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `job_clock` (
+  `jobc_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `jobc_planid` int(8) NOT NULL DEFAULT '0',
   `jobc_op` int(4) NOT NULL  DEFAULT '0',
   `jobc_qty` decimal(14,5) NOT NULL DEFAULT '0',

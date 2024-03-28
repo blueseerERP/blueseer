@@ -4182,6 +4182,45 @@ public class invData {
 
     }
 
+    public static ArrayList<String[]> getItemWFOPandDESC(String myitem) {
+       ArrayList<String[]> myarray = new ArrayList();
+        try{
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+            Statement st = con.createStatement();
+                    ResultSet res = null;
+            try{
+               
+                 res = st.executeQuery("SELECT wf_op, wf_op_desc from wf_mstr inner join item_mstr on it_wf = wf_id where it_item = " + "'" + myitem.toString() + "'" + " order by wf_op;");
+               while (res.next()) {
+                    myarray.add(new String[]{res.getString("wf_op"), res.getString("wf_op_desc")});
+                }
+
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myarray;
+
+    }
+
+    
     public static ArrayList getItemMasterSchedlist() {
        ArrayList myarray = new ArrayList();
         try{

@@ -57,6 +57,7 @@
                       <Component id="jLabel3" alignment="1" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel1" alignment="1" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel15" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel16" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
@@ -66,7 +67,9 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
                                   <Component id="ddtooling" max="32767" attributes="0"/>
-                                  <EmptySpace min="-2" pref="204" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="lbltooling" min="-2" pref="175" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" attributes="0">
                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -88,6 +91,7 @@
                                           <EmptySpace type="separate" max="-2" attributes="0"/>
                                           <Component id="rbservice" min="-2" max="-2" attributes="0"/>
                                       </Group>
+                                      <Component id="tboperator" alignment="0" min="-2" pref="152" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="32767" attributes="0"/>
                               </Group>
@@ -96,8 +100,11 @@
                       </Group>
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="ddop" alignment="0" min="-2" pref="78" max="-2" attributes="0"/>
-                              <Component id="ddmaterial" alignment="0" min="-2" pref="143" max="-2" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="ddop" min="-2" pref="78" max="-2" attributes="0"/>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Component id="lbloperation" min="-2" pref="210" max="-2" attributes="0"/>
+                              </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="1" max="-2" attributes="0">
                                       <Component id="tborder" alignment="0" max="32767" attributes="0"/>
@@ -107,6 +114,11 @@
                                   <Component id="btlookup" min="-2" pref="25" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="btclear" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="ddmaterial" min="-2" pref="143" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="lblmaterial" min="-2" pref="175" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -125,8 +137,8 @@
                           <Component id="tbkey" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="btclear" min="-2" max="-2" attributes="0"/>
                       <Component id="btlookup" min="-2" max="-2" attributes="0"/>
+                      <Component id="btclear" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -139,8 +151,14 @@
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="ddop" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="lbloperation" alignment="0" max="32767" attributes="0"/>
                           </Group>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="tboperator" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jLabel16" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="rbmaterial" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="rbtooling" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -158,7 +176,16 @@
                                       <Component id="ddtooling" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel15" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
+                              </Group>
+                              <Group type="102" attributes="0">
+                                  <Component id="lblmaterial" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="lbltooling" max="32767" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" alignment="1" attributes="0">
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="tbitem" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -174,7 +201,7 @@
                                       <Component id="btaddmatl" min="-2" pref="20" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
-                              <Component id="btdeletematl" min="-2" pref="20" max="-2" attributes="0"/>
+                              <Component id="btdeletematl" alignment="1" min="-2" pref="20" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <Component id="jPanel2" max="32767" attributes="0"/>
@@ -233,6 +260,9 @@
               <StringArray count="0"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ddopActionPerformed"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
@@ -255,6 +285,9 @@
               <StringArray count="0"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ddmaterialActionPerformed"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
@@ -525,6 +558,9 @@
               <StringArray count="0"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ddtoolingActionPerformed"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
@@ -538,16 +574,26 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Material"/>
           </Properties>
+          <Events>
+            <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="rbmaterialStateChanged"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rbmaterialActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JRadioButton" name="rbtooling">
           <Properties>
             <Property name="text" type="java.lang.String" value="Tooling"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rbtoolingActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JRadioButton" name="rbservice">
           <Properties>
             <Property name="text" type="java.lang.String" value="Service"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rbserviceActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btdeletematl">
           <Properties>
@@ -558,6 +604,19 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdeletematlActionPerformed"/>
           </Events>
+        </Component>
+        <Component class="javax.swing.JTextField" name="tboperator">
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel16">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Operator:"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="lbloperation">
+        </Component>
+        <Component class="javax.swing.JLabel" name="lblmaterial">
+        </Component>
+        <Component class="javax.swing.JLabel" name="lbltooling">
         </Component>
       </SubComponents>
     </Container>
