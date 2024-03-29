@@ -626,7 +626,7 @@ public class Scheduler extends javax.swing.JPanel {
         
     }
     
-    public void printticket(String jobid, String bustitle) {
+    public void printticket(String jobid, String bustitle, String jobtype) {
         
        try {
             Connection con = null;
@@ -636,11 +636,15 @@ public class Scheduler extends javax.swing.JPanel {
               con = DriverManager.getConnection(url + db, user, pass);  
             }
             
-              //  String jasperfile = getSysMetaValue("system", "inventorycontrol", "jasper_job_ticket");  
-              //  if (jasperfile.isBlank()) {
-               String jasperfile = "jobSVticket.jasper";
-              //  }
-                
+              String jasperfile = getSysMetaValue("system", "inventorycontrol", "jasper_job_ticket");  
+              if (jasperfile.isBlank()) {
+                 jasperfile = "jobticket.jasper";
+              }
+              
+              if (jobtype.equals("SRVC")) {
+                  jasperfile = "jobSVticket.jasper";
+                  bustitle = "Job Service Ticket";
+              }
                 
                 HashMap hm = new HashMap();
                 hm.put("BUSINESSTITLE", bustitle);
@@ -2097,7 +2101,7 @@ public class Scheduler extends javax.swing.JPanel {
         
         if (mytable.getSelectedRowCount() == 1) {
         int row = mytable.getSelectedRow();
-        printticket(mytable.getValueAt(row, 1).toString(), "Work Order");
+        printticket(mytable.getValueAt(row, 1).toString(), "Work Order", mytable.getValueAt(row, 4).toString());
         }
         
     }//GEN-LAST:event_btprintActionPerformed
