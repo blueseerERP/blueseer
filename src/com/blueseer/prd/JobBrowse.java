@@ -368,7 +368,7 @@ public class JobBrowse extends javax.swing.JPanel {
 
         try {
         
-        ChartUtilities.saveChartAsJPEG(new File(chartfilepath), chart, (tablepanel.getWidth() - 30) / 2, this.getHeight() - 200);
+        ChartUtilities.saveChartAsJPEG(new File(chartfilepath), chart, (tablepanel.getWidth() - 70) / 2, this.getHeight() - 200);
         } catch (IOException e) {
             MainFrame.bslog(e);
         }
@@ -1210,7 +1210,7 @@ try {
                 
                 labelcount.setText(String.valueOf(i));
                
-                 
+                chartHours(); 
                 
                 
              //    RowSorter<TableModel> sorter = new TableRowSorter<TableModel>(mymodel);
