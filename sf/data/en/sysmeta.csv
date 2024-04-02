@@ -9,3 +9,4 @@ system,ordercontrol,browse_start_date,-365
 system,ordercontrol,browse_end_date,30
 system,inventorycontrol,jasper_job_ticket,jobticket.jasper
 system,inventorycontrol,operation_scan_required,1
+system,inventorycontrol,project_operation,0

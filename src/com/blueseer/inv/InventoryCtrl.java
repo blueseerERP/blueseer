@@ -249,8 +249,10 @@ public class InventoryCtrl extends javax.swing.JPanel implements IBlueSeerc {
                 tbjasper.setText(s[1]);
             }
             if (s[0].equals("operation_scan_required")) {
-                tbjasper.setText(s[1]);
                 cbopscan.setSelected(BlueSeerUtils.ConvertStringToBool(s[1]));
+            }
+            if (s[0].equals("project_operation")) {
+                cbprojectop.setSelected(BlueSeerUtils.ConvertStringToBool(s[1]));
             }
         } 
     }
@@ -261,7 +263,8 @@ public class InventoryCtrl extends javax.swing.JPanel implements IBlueSeerc {
       if (! tbjasper.getText().isBlank()) {
           OVData.addUpdateSysMeta("system", "inventorycontrol", "jasper_job_ticket", tbjasper.getText());  
       }
-      OVData.addUpdateSysMeta("system", "inventorycontrol", "operation_scan_required", BlueSeerUtils.boolToString(cbopscan.isSelected()));  
+      OVData.addUpdateSysMeta("system", "inventorycontrol", "operation_scan_required", BlueSeerUtils.boolToString(cbopscan.isSelected())); 
+      OVData.addUpdateSysMeta("system", "inventorycontrol", "project_operation", BlueSeerUtils.boolToString(cbprojectop.isSelected()));
       
     }
     
@@ -285,6 +288,7 @@ public class InventoryCtrl extends javax.swing.JPanel implements IBlueSeerc {
         tbjasper = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         cbopscan = new javax.swing.JCheckBox();
+        cbprojectop = new javax.swing.JCheckBox();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -318,6 +322,8 @@ public class InventoryCtrl extends javax.swing.JPanel implements IBlueSeerc {
 
         cbopscan.setText("Operation Scanning Required");
 
+        cbprojectop.setText("Project Operation Scanning");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -327,6 +333,7 @@ public class InventoryCtrl extends javax.swing.JPanel implements IBlueSeerc {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cbprojectop)
                     .addComponent(cbopscan)
                     .addComponent(cbdemdtoplan)
                     .addComponent(cbmultiplan)
@@ -352,7 +359,9 @@ public class InventoryCtrl extends javax.swing.JPanel implements IBlueSeerc {
                 .addComponent(cbautoitem)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbserialize)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbprojectop)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbjasper, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
@@ -379,6 +388,7 @@ public class InventoryCtrl extends javax.swing.JPanel implements IBlueSeerc {
     private javax.swing.JCheckBox cbmultiplan;
     private javax.swing.JCheckBox cbopscan;
     private javax.swing.JCheckBox cbprintsubticket;
+    private javax.swing.JCheckBox cbprojectop;
     private javax.swing.JCheckBox cbserialize;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;

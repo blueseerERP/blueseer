@@ -68,7 +68,7 @@ FROM
 inner join sv_mstr on sv_nbr = plan_order
 inner join cm_mstr on cm_code = sv_cust
 inner join plan_operation on plo_parent = plan_nbr 
-inner join svd_det on svd_nbr = sv_nbr and
+left outer join svd_det on svd_nbr = sv_nbr and
                                             svd_line = plo_op
 
 where plan_nbr = $P{myid};]]>

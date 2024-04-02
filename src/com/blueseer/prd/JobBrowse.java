@@ -84,14 +84,21 @@ import static com.blueseer.hrm.hrmData.getEmpNameByDept;
 import static com.blueseer.hrm.hrmData.getempmstrlist;
 import static com.blueseer.inv.invData.getAllOperationIDs;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.getTitleTag;
+import com.blueseer.utl.OVData;
 import java.sql.Connection;
 import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -99,6 +106,13 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.labels.PieSectionLabelGenerator;
+import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
+import org.jfree.chart.plot.PiePlot;
+import org.jfree.data.general.DefaultPieDataset;
 
 /**
  *
@@ -148,9 +162,10 @@ public class JobBrowse extends javax.swing.JPanel {
       double schtot = 0;
       double comptot = 0;
       double avghours = 0;
+      double tothours = 0;
       boolean isLoad = false;
       boolean multiOp = false;
-      
+      String chartfilepath = OVData.getSystemTempDirectory() + "/" + "jobbrowse.jpg";
       
       
     /**
@@ -324,6 +339,51 @@ public class JobBrowse extends javax.swing.JPanel {
         setLanguageTags(this);
     }
 
+    public void chartHours() {
+               
+                DefaultPieDataset dataset = new DefaultPieDataset();
+               
+                LinkedHashMap<String, Double> lhm = new LinkedHashMap<String, Double>();
+                for (int j = 0; j < mastertable.getRowCount(); j++) {
+                    if (lhm.containsKey(mastertable.getValueAt(j, 4).toString())) {
+                       lhm.put(mastertable.getValueAt(j, 4).toString(), lhm.get(mastertable.getValueAt(j, 4).toString()) + Double.valueOf(mastertable.getValueAt(j, 9).toString()));
+                    } else {
+                        lhm.put(mastertable.getValueAt(j, 4).toString(), Double.valueOf(mastertable.getValueAt(j, 9).toString()));
+                    }
+                }
+                
+                for (Map.Entry<String, Double> z : lhm.entrySet()) {
+                  dataset.setValue(z.getKey(), z.getValue());
+                }
+        JFreeChart chart = ChartFactory.createPieChart("Hours By Operator", dataset, true, true, false);
+        PiePlot plot = (PiePlot) chart.getPlot();
+      //  plot.setSectionPaint(KEY1, Color.green);
+      //  plot.setSectionPaint(KEY2, Color.red);
+     //   plot.setExplodePercent(KEY1, 0.10);
+        //plot.setSimpleLabels(true);
+
+        PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
+            "{0}: {1} ({2})", NumberFormat.getCurrencyInstance(), new DecimalFormat("0.00%"));
+        plot.setLabelGenerator(gen);
+
+        try {
+        
+        ChartUtilities.saveChartAsJPEG(new File(chartfilepath), chart, (tablepanel.getWidth() - 30) / 2, this.getHeight() - 200);
+        } catch (IOException e) {
+            MainFrame.bslog(e);
+        }
+        ImageIcon myicon = new ImageIcon(chartfilepath);
+        myicon.getImage().flush();   
+        pielabel.setIcon(myicon);
+        this.repaint();
+       
+       // bsmf.MainFrame.show("your chart is complete...go to chartview");
+                
+              
+       
+    }
+    
+    
     public void getdetail(String jobnbr) {
       
          modeldetail.setNumRows(0);
@@ -374,7 +434,7 @@ public class JobBrowse extends javax.swing.JPanel {
                
                
                 
-                tabledetail.setModel(modeldetail);
+              //  tabledetail.setModel(modeldetail);
                 this.repaint();
 
             } catch (SQLException s) {
@@ -533,6 +593,7 @@ public class JobBrowse extends javax.swing.JPanel {
          
         isLoad = true;
         
+        pielabel.setHorizontalTextPosition(SwingConstants.CENTER);
          java.util.Date now = new java.util.Date();
          
          Calendar calfrom = Calendar.getInstance();
@@ -567,6 +628,7 @@ public class JobBrowse extends javax.swing.JPanel {
         for (String s : set) {
               ddop.addItem(s);
         }
+        ddop.insertItemAt("1", 0);
         ddop.insertItemAt("", 0);
         ddop.setSelectedIndex(0);
         
@@ -595,6 +657,8 @@ public class JobBrowse extends javax.swing.JPanel {
         jLabel11 = new javax.swing.JLabel();
         labelavghours = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
+        lbltothours = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -617,13 +681,14 @@ public class JobBrowse extends javax.swing.JPanel {
         lblempname = new javax.swing.JLabel();
         tbjobid = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
+        cbchart = new javax.swing.JCheckBox();
+        btcsv = new javax.swing.JButton();
         tablepanel = new javax.swing.JPanel();
         masterpanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         mastertable = new javax.swing.JTable();
         detailpanel = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        tabledetail = new javax.swing.JTable();
+        pielabel = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -634,23 +699,33 @@ public class JobBrowse extends javax.swing.JPanel {
 
         labelcount.setText("0");
 
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel7.setText("Rows");
         jLabel7.setName("lblcount"); // NOI18N
 
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel9.setText("Total Sched Qty");
         jLabel9.setName("lbltotalschedqty"); // NOI18N
 
         labelqtycomp.setBackground(new java.awt.Color(195, 129, 129));
         labelqtycomp.setText("0");
 
+        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel11.setText("Total Comp Qty");
         jLabel11.setName("lbltotalreqdqty"); // NOI18N
 
         labelavghours.setBackground(new java.awt.Color(195, 129, 129));
         labelavghours.setText("0");
 
+        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel12.setText("Average Hours");
+        jLabel12.setToolTipText("");
         jLabel12.setName("lbltotalreqdqty"); // NOI18N
+
+        lbltothours.setBackground(new java.awt.Color(195, 129, 129));
+        lbltothours.setText("0");
+
+        jLabel14.setText("Total Hours");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -660,31 +735,40 @@ public class JobBrowse extends javax.swing.JPanel {
                 .addGap(96, 96, 96)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(labelavghours, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(labelqtycomp, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(labelqtysched, javax.swing.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE)
-                    .addComponent(labelcount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(labelcount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lbltothours, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(labelcount, javax.swing.GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(11, 11, 11)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(labelqtysched, javax.swing.GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE)
-                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(11, 11, 11)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel11)
-                    .addComponent(labelqtycomp, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(labelcount, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelqtysched, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelqtycomp, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel11))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lbltothours, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel14))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelavghours, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -737,6 +821,21 @@ public class JobBrowse extends javax.swing.JPanel {
 
         jLabel13.setText("Job ID");
 
+        cbchart.setText("Chart");
+        cbchart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbchartActionPerformed(evt);
+            }
+        });
+
+        btcsv.setText("CSV");
+        btcsv.setName("btcsv"); // NOI18N
+        btcsv.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btcsvActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -787,8 +886,13 @@ public class JobBrowse extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(cbclosed)
-                    .addComponent(btRun))
-                .addGap(73, 73, 73))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(btRun)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btcsv)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbchart)))
+                .addGap(60, 60, 60))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -821,15 +925,20 @@ public class JobBrowse extends javax.swing.JPanel {
                             .addComponent(tocell, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel6)
                             .addComponent(cbclosed)))
-                    .addComponent(btRun))
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btRun)
+                        .addComponent(cbchart)
+                        .addComponent(btcsv)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblempname, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(ddoperator)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel10)
-                        .addComponent(jLabel8)))
+                    .addComponent(ddoperator, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel10)
+                            .addComponent(jLabel8))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -840,7 +949,7 @@ public class JobBrowse extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 176, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 166, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(48, 48, 48))
         );
@@ -855,6 +964,8 @@ public class JobBrowse extends javax.swing.JPanel {
 
         tablepanel.setLayout(new javax.swing.BoxLayout(tablepanel, javax.swing.BoxLayout.LINE_AXIS));
 
+        masterpanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Data Table"));
+        masterpanel.setPreferredSize(new java.awt.Dimension(464, 400));
         masterpanel.setLayout(new java.awt.BorderLayout());
 
         mastertable.setModel(new javax.swing.table.DefaultTableModel(
@@ -879,22 +990,10 @@ public class JobBrowse extends javax.swing.JPanel {
 
         tablepanel.add(masterpanel);
 
-        detailpanel.setLayout(new java.awt.BorderLayout());
-
-        tabledetail.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane2.setViewportView(tabledetail);
-
-        detailpanel.add(jScrollPane2, java.awt.BorderLayout.CENTER);
+        detailpanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Chart Panel"));
+        detailpanel.setPreferredSize(new java.awt.Dimension(464, 400));
+        detailpanel.setLayout(new java.awt.CardLayout());
+        detailpanel.add(pielabel, "card2");
 
         tablepanel.add(detailpanel);
 
@@ -933,6 +1032,7 @@ public class JobBrowse extends javax.swing.JPanel {
         schtot = 0;
         comptot = 0;
         avghours = 0;
+        tothours = 0;
         
         labelqtysched.setText("0");
         labelqtycomp.setText("0");
@@ -958,6 +1058,7 @@ try {
                 String tcell;
                 String clockstatus;
                 String plostatus;
+                String operatorname;
                 
                 if (frompart.getText().isEmpty()) {
                     fpart = bsmf.MainFrame.lowchar;
@@ -1016,27 +1117,31 @@ try {
                  if (! jobid.isBlank()) {
                    res = st.executeQuery("SELECT plan_nbr, plan_type, plan_item, plo_op, plo_operator, plo_operatorname, plo_cell, " +
                          "plo_qty, plo_qty_comp, plo_date, plo_status, " +
-                         " jobc_empnbr, jobc_qty, coalesce(jobc_tothrs,0) as jobc_tothrs, jobc_code  " +
+                         " jobc_empnbr, jobc_qty, coalesce(jobc_tothrs,0) as jobc_tothrs, jobc_code,  " +
+                         " emp_lname, emp_fname " +   
                         " FROM  plan_operation " +
                         " inner join plan_mstr on plan_nbr = plo_parent " +
                         " left outer join job_clock on jobc_planid = plo_parent and jobc_op = plo_op " + 
+                        " left outer join emp_mstr on emp_nbr = jobc_empnbr " +   
                         " where plo_parent = " + "'" + jobid + "'" + 
                         " order by plo_op;");    
   
                  } else {
                    res = st.executeQuery("SELECT plan_nbr, plan_type, plan_item, plo_op, plo_operator, plo_operatorname, plo_cell, " +
                          "plo_qty, plo_qty_comp, plo_date, plo_status, " +
-                         " jobc_empnbr, jobc_qty, coalesce(jobc_tothrs,0) as jobc_tothrs, jobc_code  " +
+                         " jobc_empnbr, jobc_qty, coalesce(jobc_tothrs,0) as jobc_tothrs, jobc_code,  " +
+                         " emp_lname, emp_fname " +  
                         " FROM  plan_operation " +
                         " inner join plan_mstr on plan_nbr = plo_parent " +
                         " left outer join job_clock on jobc_planid = plo_parent and jobc_op = plo_op " + 
+                        " left outer join emp_mstr on emp_nbr = jobc_empnbr " +    
                         " where " +
                         " (( plo_date >= " + "'" + dfdate.format(dcfrom.getDate()) + "'" + 
                         " AND plo_date <= " + "'" + dfdate.format(dcto.getDate()) + "'" + " ) OR plo_date is null )" + 
                         " AND plan_item >= " + "'" + fpart + "'" + 
                         " AND plan_item <= " + "'" + tpart + "'" + 
-                         " AND plo_cell >= " + "'" + fcell + "'" + 
-                        " AND plo_cell <= " + "'" + tcell + "'" + 
+                         " AND ( ( plo_cell >= " + "'" + fcell + "'" + 
+                        " AND plo_cell <= " + "'" + tcell + "'" + ") OR plo_cell = '' ) " + 
                       //  " AND plan_is_sched = " + "'1' "  +
                         " order by plan_nbr, plo_op;");    
   
@@ -1053,7 +1158,7 @@ try {
                     if (! ddop.getSelectedItem().toString().isBlank() && ! res.getString("plo_op").equals(ddop.getSelectedItem().toString())) {
                         continue;
                     }
-                    if (! ddoperator.getSelectedItem().toString().isBlank() && ! res.getString("plo_operator").equals(ddoperator.getSelectedItem().toString())) {
+                    if (! ddoperator.getSelectedItem().toString().isBlank() && ! res.getString("jobc_empnbr").equals(ddoperator.getSelectedItem().toString())) {
                         continue;
                     }
                     
@@ -1068,15 +1173,19 @@ try {
                     } else {
                         plostatus = res.getString("plo_status");
                     }
+                    
+                    operatorname = res.getString("emp_lname") + ", " + res.getString("emp_fname");
+                    
                     schtot = schtot + res.getInt("plo_qty");
                     comptot = comptot + res.getInt("plo_qty_comp");
                     avghours = avghours + res.getDouble("jobc_tothrs");
+                    tothours = tothours + res.getDouble("jobc_tothrs");
                     mymodel.addRow(new Object[]{
                                 res.getString("plan_nbr"),
                                 res.getString("plan_type"),
                                 res.getString("plan_item"),
                                 res.getString("plo_op"),
-                                res.getString("plo_operatorname"),
+                                operatorname,
                                 res.getString("plo_cell"),
                                 res.getString("plo_date"),
                                 res.getDouble("plo_qty"),
@@ -1095,7 +1204,7 @@ try {
                 } else {
                   labelavghours.setText(String.valueOf(avghours));  
                 }
-                
+                lbltothours.setText(String.valueOf(tothours));
                 labelqtysched.setText(String.valueOf(schtot));
                 labelqtycomp.setText(String.valueOf(comptot));
                 
@@ -1131,12 +1240,9 @@ try {
         int col = mastertable.columnAtPoint(evt.getPoint());
          // select any field in a row grabs the vendor for that row...so open the possibility of payment for that row/vendor
         String jobnbr = mastertable.getValueAt(row, 1).toString();
+        
+       
         /*
-        if ( col == 0) {
-            getdetail(jobnbr);
-            bthidedetail.setEnabled(true);
-            detailpanel.setVisible(true);
-        }
         if ( col == 14) {
             printticket(mastertable.getValueAt(row, 1).toString(), "Work Order");
         }
@@ -1153,9 +1259,27 @@ try {
         }
     }//GEN-LAST:event_ddoperatorActionPerformed
 
+    private void cbchartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbchartActionPerformed
+        if (! isLoad) {
+            if (cbchart.isSelected()) {
+                chartHours();
+                detailpanel.setVisible(true);
+            } else {
+                detailpanel.setVisible(false);
+            }
+        }
+    }//GEN-LAST:event_cbchartActionPerformed
+
+    private void btcsvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcsvActionPerformed
+        if (mastertable != null && mymodel.getRowCount() > 0)
+        OVData.exportCSV(mastertable);
+    }//GEN-LAST:event_btcsvActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btRun;
+    private javax.swing.JButton btcsv;
+    private javax.swing.JCheckBox cbchart;
     private javax.swing.JCheckBox cbclosed;
     private com.toedter.calendar.JDateChooser dcfrom;
     private com.toedter.calendar.JDateChooser dcto;
@@ -1169,6 +1293,7 @@ try {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1182,15 +1307,15 @@ try {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel labelavghours;
     private javax.swing.JLabel labelcount;
     private javax.swing.JLabel labelqtycomp;
     private javax.swing.JLabel labelqtysched;
     private javax.swing.JLabel lblempname;
+    private javax.swing.JLabel lbltothours;
     private javax.swing.JPanel masterpanel;
     private javax.swing.JTable mastertable;
-    private javax.swing.JTable tabledetail;
+    private javax.swing.JLabel pielabel;
     private javax.swing.JPanel tablepanel;
     private javax.swing.JTextField tbjobid;
     private javax.swing.JTextField tocell;

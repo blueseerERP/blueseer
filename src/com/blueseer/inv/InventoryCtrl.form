@@ -39,6 +39,7 @@
                   <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="cbprojectop" min="-2" max="-2" attributes="0"/>
                       <Component id="cbopscan" min="-2" max="-2" attributes="0"/>
                       <Component id="cbdemdtoplan" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="cbmultiplan" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -67,7 +68,9 @@
                   <Component id="cbautoitem" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="cbserialize" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="cbprojectop" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="tbjasper" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -129,6 +132,11 @@
         <Component class="javax.swing.JCheckBox" name="cbopscan">
           <Properties>
             <Property name="text" type="java.lang.String" value="Operation Scanning Required"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="cbprojectop">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Project Operation Scanning"/>
           </Properties>
         </Component>
       </SubComponents>

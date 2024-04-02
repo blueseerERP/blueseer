@@ -112,6 +112,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
     // global variable declarations
     boolean isLoad = false;
     boolean isOpScan = false;
+    boolean projectOpScan = false;
     boolean hasInit = false;
     
     public static plan_mstr x = null;
@@ -414,7 +415,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
            tbitem.setEnabled(false);
            ddtooling.setEnabled(false);
            ddmaterial.setEnabled(true);
-           if (isOpScan) {
+           if (isOpScan || projectOpScan) {
                ddop.setEnabled(false);
            }
         } else {
@@ -449,6 +450,8 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
     
     public void initvars(String[] arg) {
        isLoad = true;
+       projectOpScan = BlueSeerUtils.ConvertStringToBool(getSysMetaValue("system", "inventorycontrol", "project_operation"));
+        
        setPanelComponentState(this, false); 
        setComponentDefaultValues();
         btlookup.setEnabled(true);
@@ -564,22 +567,30 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         ddop.removeAllItems();
         ddopnotes.removeAllItems();
         
-        for (plan_operation plo : plolist) {
-            ddop.addItem(String.valueOf(plo.plo_op()));
-            ddopnotes.addItem(String.valueOf(plo.plo_op()));
-        }
+        if (projectOpScan) {
         
-        ddop.insertItemAt("", 0);
-        ddopnotes.insertItemAt("", 0);
+            for (plan_operation plo : plolist) {
+                ddop.addItem(String.valueOf(plo.plo_op()));
+                ddopnotes.addItem(String.valueOf(plo.plo_op()));
+            }
+
+            ddop.insertItemAt("", 0);
+            ddopnotes.insertItemAt("", 0);
         
-        if (! jobop[1].isBlank()) {
-         ddop.setSelectedItem(jobop[1]);
-         ddopnotes.setSelectedItem(jobop[1]);
+            if (! jobop[1].isBlank()) {
+             ddop.setSelectedItem(jobop[1]);
+             ddopnotes.setSelectedItem(jobop[1]);
+            } else {
+             ddop.setSelectedIndex(0);  
+             ddopnotes.setSelectedIndex(0);
+            }
         } else {
-         ddop.setSelectedIndex(0);  
-         ddopnotes.setSelectedIndex(0);
-        }
-        
+            ddop.insertItemAt("1", 0);
+            ddopnotes.insertItemAt("1", 0);
+            ddop.setSelectedIndex(0);  
+            ddopnotes.setSelectedIndex(0);
+            
+        } 
         plodmatl = getPlanOpDet(jobop[0]);
         getClockRecords();
         displayTotals();  

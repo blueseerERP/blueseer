@@ -116,6 +116,7 @@ String sitephone = "";
 String sitecitystatezip = "";
 boolean planLegit = false;
 boolean requireOpScan = false;
+boolean projectOpScan = false;
 boolean isLoad = false;
 
 String clockdate = "";
@@ -242,10 +243,12 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
     public void setOperations(String plan) {
         isLoad = true;
         ddop.removeAllItems();
+        
         ArrayList<plan_operation> pos = getPlanOperation(plan);
-        for (plan_operation po : pos) {
-            ddop.addItem(String.valueOf(po.plo_op()));
-        }
+            for (plan_operation po : pos) {
+                ddop.addItem(String.valueOf(po.plo_op()));
+            }
+        
         isLoad = false;
     }
     
@@ -270,7 +273,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
       tbscan.setEnabled(false);
       lblmessage.setText(messg);
       lblmessage.setForeground(Color.red);
-      //tbscan.requestFocusInWindow();
+      tbscan.requestFocusInWindow();
     }
     
     public void validateOperator(String dir, String plan) {
@@ -307,9 +310,21 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
                     lblmessage.setForeground(Color.red);
                     new AnswerWorker().execute();
                 } else {
+                    if (projectOpScan) {
                     tboperator.setBackground(Color.white);
                     tbqty.requestFocusInWindow();
                     btcommit.setEnabled(true); 
+                    } else {
+                        job_clock jco = createRecordOut();
+                        if (jco == null) {
+                            badScan("missing clock in date and time in job_clock record");
+                            return;
+                        }
+                        lblmessage.setText("Scan Out Complete");
+                        lblmessage.setForeground(Color.blue);
+                        updateJobClock(jco);
+                        new AnswerWorker().execute();
+                    }
                 }
                 
         }
@@ -328,6 +343,12 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
             partlabel.setText("");
             return;
         } 
+        
+        if (! projectOpScan && scan.contains("-")) {
+            badScan("Project scanning only...Generic Job Ticket must be used");
+            new AnswerWorker().execute();
+            return;
+        }
         
         if (requireOpScan && ! scan.contains("-")) {
             badScan("Operation Ticket must be used");
@@ -371,8 +392,10 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
             return;
         }
         
+        
         setOperations(plannbr);
         //bsmf.MainFrame.show("here: " + planop);
+        if (projectOpScan) {
         if (ddop.getItemCount() > 0) { 
             if (! planop.isBlank()) {
                 ddop.setSelectedItem(planop);
@@ -408,6 +431,9 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         remaining = qtysched - prevscanned;
         tbqty.setText(bsFormatDouble(remaining));
         qtylabel.setText("qty sched: " + String.valueOf(qtysched) + "     qty scanned: " + String.valueOf(prevscanned));
+        } else { // if not projectOpScan
+            planop = ddop.getSelectedItem().toString();
+        }
         
         planLegit = true;
        if (dddir.getSelectedItem().toString().equals("In")) {
@@ -548,6 +574,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
     public void initvars(String[] arg) {
         
         requireOpScan = BlueSeerUtils.ConvertStringToBool(getSysMetaValue("system", "inventorycontrol", "operation_scan_required"));
+        projectOpScan = BlueSeerUtils.ConvertStringToBool(getSysMetaValue("system", "inventorycontrol", "project_operation"));
         btcommit.setEnabled(false);
         tbqty.setText("");
         tbscan.setText("");
@@ -576,6 +603,16 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
        
        getScanHistory();
        enableAll();
+       if (! projectOpScan) {
+           ddop.setEnabled(false);
+           ddop.setVisible(false);
+           lbloperation.setVisible(false);
+           tbqty.setEnabled(false);
+           tbqty.setVisible(false);
+           lblqty.setVisible(false);
+           qtylabel.setVisible(false);
+           btcommit.setVisible(false);
+       }
        btcommit.setEnabled(false);
        
        tbscan.requestFocusInWindow();
@@ -665,12 +702,12 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
 
         jPanel1 = new javax.swing.JPanel();
         tbqty = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
+        lblqty = new javax.swing.JLabel();
         tbscan = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         btcommit = new javax.swing.JButton();
         ddop = new javax.swing.JComboBox();
-        jLabel7 = new javax.swing.JLabel();
+        lbloperation = new javax.swing.JLabel();
         tboperator = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         qtylabel = new javax.swing.JLabel();
@@ -699,8 +736,8 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
             }
         });
 
-        jLabel4.setText("Quantity");
-        jLabel4.setName("lblqty"); // NOI18N
+        lblqty.setText("Quantity");
+        lblqty.setName("lblqty"); // NOI18N
 
         tbscan.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -728,8 +765,8 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
             }
         });
 
-        jLabel7.setText("Operation");
-        jLabel7.setName("lblop"); // NOI18N
+        lbloperation.setText("Operation");
+        lbloperation.setName("lblop"); // NOI18N
 
         tboperator.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
@@ -768,7 +805,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
             jpaneltableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jpaneltableLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 651, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jpaneltableLayout.setVerticalGroup(
@@ -798,43 +835,41 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jpaneltable, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblmessage, javax.swing.GroupLayout.PREFERRED_SIZE, 378, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblqty, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lbloperation, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(dddir, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btclear))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(tbscan, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(tboperator, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(btcommit))
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(qtylabel, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                        .addGap(64, 64, 64)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(oplabel, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(partlabel, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(userlabel, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(83, 83, 83))))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(dddir, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btclear)))))
-                .addContainerGap(176, Short.MAX_VALUE))
+                                    .addComponent(btcommit)
+                                    .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(22, 22, 22)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(oplabel, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
+                                    .addComponent(partlabel, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
+                                    .addComponent(userlabel, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
+                                    .addComponent(qtylabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(140, 140, 140)
+                        .addComponent(lblmessage, javax.swing.GroupLayout.PREFERRED_SIZE, 378, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jpaneltable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -852,33 +887,31 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
                     .addComponent(partlabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel7))
-                    .addComponent(oplabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tboperator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel8))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(1, 1, 1)
-                                .addComponent(qtylabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel4))))
-                        .addGap(44, 44, 44)
-                        .addComponent(btcommit)
-                        .addGap(5, 5, 5)
-                        .addComponent(lblmessage, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jpaneltable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(userlabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(24, Short.MAX_VALUE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbloperation))
+                        .addGap(7, 7, 7)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblqty))
+                        .addGap(39, 39, 39)
+                        .addComponent(btcommit))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(userlabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(2, 2, 2)
+                        .addComponent(oplabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(qtylabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblmessage, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jpaneltable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
         add(jPanel1);
@@ -1002,7 +1035,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
             } else {
                  //must have successfully enter tran_mstr...now lets create pland_mstr...and update plan_mstr if closing
                  int key = OVData.CreatePlanDet(mytable, isLastOp);
-                 lblmessage.setText("Scan Complete");
+                 lblmessage.setText("Scan Out Complete");
                  lblmessage.setForeground(Color.blue);
                  
                  updateJobClock(jc);
@@ -1052,7 +1085,9 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
     }//GEN-LAST:event_tbscanFocusLost
 
     private void tboperatorFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tboperatorFocusGained
+        if (planLegit) {
         tboperator.setBackground(Color.yellow);
+        }
     }//GEN-LAST:event_tboperatorFocusGained
 
     private void tboperatorFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tboperatorFocusLost
@@ -1080,14 +1115,14 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
     private javax.swing.JComboBox ddop;
     private javax.swing.JTable historytable;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel jpaneltable;
     private javax.swing.JLabel lblmessage;
+    private javax.swing.JLabel lbloperation;
+    private javax.swing.JLabel lblqty;
     private javax.swing.JLabel oplabel;
     private javax.swing.JLabel partlabel;
     private javax.swing.JLabel qtylabel;

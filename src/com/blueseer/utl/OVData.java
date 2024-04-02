@@ -19596,7 +19596,13 @@ MainFrame.bslog(e);
    }
   
     public static int createPlanFromServiceOrder(String site, String serviceorder, boolean isMulti) {
-
+    boolean projectOpScan = BlueSeerUtils.ConvertStringToBool(getSysMetaValue("system", "inventorycontrol", "project_operation"));
+    String schedstatus = "1";
+    String qtysched = "1";
+    if (projectOpScan) {
+        schedstatus = "0";
+        qtysched = "0";
+    }
     int recnumber = 0;
     
     DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -19656,7 +19662,7 @@ MainFrame.bslog(e);
                     }
                     recnumber++;
                         st.executeUpdate("insert into plan_mstr "
-                            + "(plan_nbr, plan_order, plan_line, plan_item, plan_qty_req, plan_date_create, plan_date_due, plan_type, plan_site ) "
+                            + "(plan_nbr, plan_order, plan_line, plan_item, plan_qty_req, plan_date_create, plan_date_due, plan_type, plan_site, plan_is_sched, plan_qty_sched ) "
                             + " values ( " + "'" + nbr + "'" + ","
                             + "'" + a_order.get(z) + "'" + ","
                             + "'" + "1" + "'" + ","
@@ -19665,21 +19671,36 @@ MainFrame.bslog(e);
                             + "'" + df.format(cal.getTime()) + "'" + ","
                             + "'" + a_duedate.get(z) + "'" + ","
                             + "'SRVC'" + ","
-                            + "'" + site + "'"
+                            + "'" + site + "'" + ","
+                            + "'" + schedstatus + "'" + "," 
+                            + "'" + qtysched + "'"
                             + ")"
                             + ";");
-                        res = st2.executeQuery("select  svd_nbr, svd_line, svd_item, svd_desc, svd_qty " +
-                            " from svd_det " +
-                            " where svd_nbr = " + "'" + a_order.get(z) + "'" +";" );
-                        while (res.next()) {
+                        if (projectOpScan) {
+                            res = st2.executeQuery("select  svd_nbr, svd_line, svd_item, svd_desc, svd_qty " +
+                                " from svd_det " +
+                                " where svd_nbr = " + "'" + a_order.get(z) + "'" +";" );
+                            while (res.next()) {
+                                st.executeUpdate("insert into plan_operation "
+                                + "(plo_parent, plo_op, plo_qty, plo_desc) "
+                                + " values ( " + "'" + nbr + "'" + ","
+                                + "'" + bsParseInt(res.getString("svd_line")) + "'" + ","
+                                + "'" + res.getDouble("svd_qty") + "'" + ","
+                                + "'" + res.getString("svd_item") + "'"        
+                                + ")"
+                                + ";");
+                            }
+                        } else { // this insert is for project only (no operation) scanning
                             st.executeUpdate("insert into plan_operation "
-                            + "(plo_parent, plo_op, plo_qty, plo_desc) "
-                            + " values ( " + "'" + nbr + "'" + ","
-                            + "'" + bsParseInt(res.getString("svd_line")) + "'" + ","
-                            + "'" + res.getDouble("svd_qty") + "'" + ","
-                            + "'" + res.getString("svd_item") + "'"        
-                            + ")"
-                            + ";");
+                                + "(plo_parent, plo_date, plo_op, plo_qty, plo_desc, plo_status) "
+                                + " values ( " + "'" + nbr + "'" + ","
+                                + "'" + df.format(cal.getTime()) + "'" + ","
+                                + "'" + "1" + "'" + ","
+                                + "'" + "1" + "'" + ","
+                                + "'" + "Generic project order" + "'" + ","
+                                + "'" + "open" + "'"
+                                + ")"
+                                + ";");
                         }
                 }
        } catch (SQLException s) {
