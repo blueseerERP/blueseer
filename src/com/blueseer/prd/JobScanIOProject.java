@@ -1311,7 +1311,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         }
         if (rbservice.isSelected()) {
             datatype = "service";
-            item = tbitem.getText();
+            item = tbitem.getText().replace("'", "");
         }
         int id = addPlanOpDet(tbkey.getText(), 
                 ddop.getSelectedItem().toString(), 
