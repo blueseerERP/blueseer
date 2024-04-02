@@ -646,6 +646,37 @@ public class ordData {
     return r;
     }
     
+    public static sv_mstr getServiceOrderMstr(String[] x) {
+        sv_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from sv_mstr where sv_nbr = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setInt(1, bsParseInt(x[0]));
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
+                r = new sv_mstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new sv_mstr(m, res.getString("sv_nbr"), res.getString("sv_cust"), res.getString("sv_ship"),
+                    res.getString("sv_po"), res.getString("sv_crew"), res.getString("sv_create_date"), res.getString("sv_due_date"), res.getString("sv_rmks"),
+                    res.getString("sv_status"), res.getString("sv_issched"), res.getString("sv_userid"), res.getString("sv_type"), res.getString("sv_char1"),
+                    res.getString("sv_char2"), res.getString("sv_char3"), res.getString("sv_terms"), res.getString("sv_curr"), 
+                    res.getString("sv_ar_acct"), res.getString("sv_ar_cc"), res.getString("sv_onhold"), res.getString("sv_taxcode"),
+                    res.getString("sv_site"));
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new sv_mstr(m);
+        }
+        return r;
+    }
+    
     public static so_mstr getOrderMstr(String[] x) {
         so_mstr r = null;
         String[] m = new String[2];
@@ -677,6 +708,7 @@ public class ordData {
         return r;
     }
     
+    
     private static so_mstr _getOrderMstr(String[] x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         so_mstr r = null;
         String[] m = new String[2];
@@ -699,6 +731,33 @@ public class ordData {
                 }
             }
             return r;
+    }
+    
+    public static ArrayList<svd_det> getServiceOrderDet(String[] x) {
+        ArrayList<svd_det> list = new ArrayList<svd_det>();
+        svd_det r = null;
+        String[] m = new String[2];
+        String sql = "select * from svd_det where svd_nbr = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setInt(1, bsParseInt(x[0]));
+             try (ResultSet res = ps.executeQuery();) {
+                    while(res.next()) {
+                    m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                    r = new svd_det(m, res.getString("svd_nbr"), res.getInt("svd_line"), res.getString("svd_uom"),
+                    res.getString("svd_item"), res.getString("svd_desc"), res.getString("svd_type"), res.getString("svd_custitem"), 
+                    res.getDouble("svd_qty"),res.getDouble("svd_completed_hrs"), res.getString("svd_po"), res.getString("svd_ord_date"), 
+                    res.getString("svd_due_date"), res.getString("svd_create_date"),res.getString("svd_char1"), res.getString("svd_char2"), res.getString("svd_char3"), 
+                    res.getString("svd_status"), res.getDouble("svd_listprice"), res.getDouble("svd_netprice"), res.getDouble("svd_disc"), 
+                    res.getDouble("svd_taxamt"), res.getString("svd_taxcode"), res.getString("svd_site") );
+                    list.add(r);
+                    }
+                
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s); 
+        }
+        return list;
     }
     
     

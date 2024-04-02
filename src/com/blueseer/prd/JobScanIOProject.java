@@ -35,22 +35,30 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.fgl.fglData;
 import static com.blueseer.inv.invData.addUOMMstr;
 import static com.blueseer.inv.invData.deleteUOMMstr;
 import static com.blueseer.inv.invData.getUOMMstr;
 import com.blueseer.inv.invData.uom_mstr;
 import static com.blueseer.inv.invData.updateUOMMstr;
+import com.blueseer.ord.ordData;
+import static com.blueseer.ord.ordData.getServiceOrderMstr;
+import com.blueseer.ord.ordData.svd_det;
 import static com.blueseer.prd.prdData.addPlanOpDet;
 import static com.blueseer.prd.prdData.deletePlanOpDet;
 import static com.blueseer.prd.prdData.getJobClockDetail;
 import static com.blueseer.prd.prdData.getPlanOpDet;
 import static com.blueseer.prd.prdData.updatePlanOPNotes;
+import com.blueseer.sch.schData;
 import static com.blueseer.sch.schData.getPlanMstr;
 import static com.blueseer.sch.schData.getPlanOperation;
 import com.blueseer.sch.schData.plan_mstr;
 import com.blueseer.sch.schData.plan_operation;
+import com.blueseer.shp.shpData;
+import static com.blueseer.shp.shpData.confirmShipperTransaction;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsNumber;
+import static com.blueseer.utl.BlueSeerUtils.bsNumberToUS;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
@@ -84,6 +92,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -737,6 +747,55 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         
     }
     
+    public String[] autoInvoiceServiceOrder(String nbr) {
+        
+         java.util.Date now = new java.util.Date();
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        int shipperid = OVData.getNextNbr("shipper");   
+        ordData.sv_mstr sv = getServiceOrderMstr(new String[]{nbr});  
+        shpData.ship_mstr sh = shpData.createShipMstrJRT(String.valueOf(shipperid), sv.sv_site(),
+                             String.valueOf(shipperid), 
+                              sv.sv_cust(),
+                              sv.sv_ship(),
+                              bsNumberToUS(tbkey.getText()),
+                              sv.sv_po(),  // po
+                              sv.sv_po(),  // ref
+                              sv.sv_due_date(),
+                              sv.sv_create_date(),
+                              sv.sv_rmks(),
+                              "",
+                              "S", "", sv.sv_site()); 
+        
+        ArrayList<svd_det> svdarray = ordData.getServiceOrderDet(new String[]{nbr});
+        ArrayList<String[]> detail = new ArrayList<String[]>();
+        for (svd_det svd : svdarray) {
+            detail.add(new String[]{
+                String.valueOf(svd.svd_line()),
+                svd.svd_item(),
+                svd.svd_type(),
+                svd.svd_desc(),
+                svd.svd_nbr(),
+                String.valueOf(svd.svd_qty()),
+                String.valueOf(svd.svd_netprice()),
+                svd.svd_uom()
+            });
+        }
+        
+        ArrayList<shpData.ship_det> shd = shpData.createShipDetJRTmin(detail, String.valueOf(shipperid), sv.sv_create_date(), sv.sv_site());
+        shpData.addShipperTransaction(shd, sh);
+        shpData.updateShipperSAC(String.valueOf(shipperid));
+        schData.updatePlanOrderStatus(tbkey.getText(),"close");
+        // now confirm shipment
+        String[] message = confirmShipperTransaction("serviceorder", String.valueOf(shipperid), now);
+        message = new String[]{"0", "Service Order has been invoiced"};    
+       
+        // autopost
+        if (OVData.isAutoPost()) {
+            fglData.PostGL();
+        }        
+        return message;
+    }
+    
 
     
     /**
@@ -798,6 +857,8 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         lblmaterial = new javax.swing.JLabel();
         lbltooling = new javax.swing.JLabel();
         btprint = new javax.swing.JButton();
+        btcommit = new javax.swing.JButton();
+        lblmessage = new javax.swing.JLabel();
         panelNotes = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -1031,6 +1092,13 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
+        btcommit.setText("Commit");
+        btcommit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btcommitActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelMainLayout = new javax.swing.GroupLayout(panelMain);
         panelMain.setLayout(panelMainLayout);
         panelMainLayout.setHorizontalGroup(
@@ -1088,6 +1156,10 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
                                 .addGap(18, 18, 18)
                                 .addComponent(lbloperation, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(panelMainLayout.createSequentialGroup()
+                                .addComponent(ddmaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblmaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(panelMainLayout.createSequentialGroup()
                                 .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(tborder, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(tbkey, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE))
@@ -1096,11 +1168,11 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btclear)
                                 .addGap(34, 34, 34)
-                                .addComponent(btprint, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(panelMainLayout.createSequentialGroup()
-                                .addComponent(ddmaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblmaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(btprint, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btcommit)
+                                .addGap(28, 28, 28)
+                                .addComponent(lblmessage, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -1115,7 +1187,10 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
                             .addComponent(jLabel1))
                         .addComponent(btlookup)
                         .addComponent(btclear, javax.swing.GroupLayout.Alignment.LEADING))
-                    .addComponent(btprint))
+                    .addComponent(btprint)
+                    .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btcommit)
+                        .addComponent(lblmessage, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(panelMainLayout.createSequentialGroup()
@@ -1456,10 +1531,25 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         printticket(jobop[0], "Job Service Ticket");
     }//GEN-LAST:event_btprintActionPerformed
 
+    private void btcommitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcommitActionPerformed
+        
+        boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
+        if (proceed) {
+         String[] message = autoInvoiceServiceOrder(tborder.getText());
+         if (message[0].equals("1")) { // if error
+           bsmf.MainFrame.show(message[1]);
+         } else {
+           executeTask(dbaction.get, new String[]{tbkey.getText()});
+         }
+         initvars(null);
+        } 
+    }//GEN-LAST:event_btcommitActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btaddmatl;
     private javax.swing.JButton btclear;
+    private javax.swing.JButton btcommit;
     private javax.swing.JButton btdeletematl;
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btprint;
@@ -1495,6 +1585,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JLabel lblmaterial;
+    private javax.swing.JLabel lblmessage;
     private javax.swing.JLabel lbloperation;
     private javax.swing.JLabel lbltooling;
     private javax.swing.JTable materialtable;

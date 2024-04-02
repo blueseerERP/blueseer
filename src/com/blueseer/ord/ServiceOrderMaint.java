@@ -40,6 +40,7 @@ import com.blueseer.fgl.fglData;
 import com.blueseer.inv.invData;
 import static com.blueseer.ord.ordData.addServiceOrderTransaction;
 import static com.blueseer.ord.ordData.getServiceOrderLines;
+import static com.blueseer.ord.ordData.getServiceOrderMstr;
 import com.blueseer.ord.ordData.sv_mstr;
 import com.blueseer.ord.ordData.svd_det;
 import static com.blueseer.ord.ordData.updateServiceOrderTransaction;
@@ -898,7 +899,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
          java.util.Date now = new java.util.Date();
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
         int shipperid = OVData.getNextNbr("shipper");   
-         
+        
         shpData.ship_mstr sh = shpData.createShipMstrJRT(String.valueOf(shipperid), ddsite.getSelectedItem().toString(),
                              String.valueOf(shipperid), 
                               ddcust.getSelectedItem().toString(),
@@ -1982,7 +1983,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
     }//GEN-LAST:event_btquotetoorderActionPerformed
 
     private void btinvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btinvoiceActionPerformed
-          String[] message = autoInvoiceOrder();
+         String[] message = autoInvoiceOrder();
          if (message[0].equals("1")) { // if error
            bsmf.MainFrame.show(message[1]);
          } else {

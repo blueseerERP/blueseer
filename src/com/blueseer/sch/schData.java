@@ -795,6 +795,57 @@ public class schData {
       return myreturn;
   }
 
+    public static boolean updatePlanOrderStatus(String order, String status) {
+      boolean myreturn = false;  
+      try {
+
+           if (status.equals(getGlobalProgTag("open"))) { status = "0"; }
+           if (status.equals(getGlobalProgTag("close"))) { status = "1"; }
+           if (status.equals(getGlobalProgTag("void"))) { status = "-1"; }
+
+
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+             boolean proceed = true;
+             res = st.executeQuery("select plan_status from plan_mstr where plan_nbr = " + "'" + order + "'" 
+                     + " ;");
+           while (res.next()) {
+                if (res.getInt("plan_status") > 0 || res.getInt("plan_status") < 0)
+                    proceed = false;
+           }
+
+           if (proceed) {
+                    st.executeUpdate("update plan_mstr set "       
+                        + "plan_status = " + "'" + status + "'"
+                        + " where plan_nbr = " + "'" + order + "'" 
+                        + ";");
+                    myreturn = true;
+           }
+        } catch (SQLException s) {
+            MainFrame.bslog(s);
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+    } catch (Exception e) {
+        MainFrame.bslog(e);
+    }
+      return myreturn;
+  }
+
+    
     public static boolean updatePlanOperationStatusQty(String plan, String op, String status, double qty) {
       boolean x = false;  
       try {
