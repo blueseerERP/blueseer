@@ -124,6 +124,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
     boolean isOpScan = false;
     boolean projectOpScan = false;
     boolean hasInit = false;
+    int planstatus = 0;
     
     public static plan_mstr x = null;
     public static ArrayList<plan_operation> plolist = null;
@@ -362,7 +363,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         tbkey.setText("");
         tbitem.setText("");
         lbloperation.setText("");
-        tboperator.setText("");
+        lblmessage.setText("");
         
         plodmatl.clear();
         
@@ -418,6 +419,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public void setAction(String[] x) {
+        lblmessage.setText("");
         if (x[0].equals("0")) { 
            setPanelComponentState(this, true);
            tbkey.setEditable(false);
@@ -428,6 +430,16 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
            if (isOpScan || projectOpScan) {
                ddop.setEnabled(false);
            }
+           
+           if (planstatus > 0 || planstatus < 0) {
+               lblmessage.setText("job is closed");
+               lblmessage.setForeground(Color.blue);
+               btcommit.setEnabled(false);
+               btaddmatl.setEnabled(false);
+               btdeletematl.setEnabled(false);
+           }
+           
+           
         } else {
            tbkey.setForeground(Color.red); 
         }
@@ -570,6 +582,8 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         
         tbkey.setText(String.valueOf(x.plan_nbr()));
         tborder.setText(x.plan_order());
+        planstatus = x.plan_status();
+        
       //  cbapply.setSelected(BlueSeerUtils.ConvertStringToBool(x.car_apply()));
         
         
@@ -602,6 +616,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
             
         } 
         plodmatl = getPlanOpDet(jobop[0]);
+        ddop.setSelectedIndex(0);
         getClockRecords();
         displayTotals();  
         
@@ -784,7 +799,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         ArrayList<shpData.ship_det> shd = shpData.createShipDetJRTmin(detail, String.valueOf(shipperid), sv.sv_create_date(), sv.sv_site());
         shpData.addShipperTransaction(shd, sh);
         shpData.updateShipperSAC(String.valueOf(shipperid));
-        schData.updatePlanOrderStatus(tbkey.getText(),"close");
+        schData.updatePlanOrderStatus(tbkey.getText(),"closed");
         // now confirm shipment
         String[] message = confirmShipperTransaction("serviceorder", String.valueOf(shipperid), now);
         message = new String[]{"0", "Service Order has been invoiced"};    
@@ -851,8 +866,6 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         rbtooling = new javax.swing.JRadioButton();
         rbservice = new javax.swing.JRadioButton();
         btdeletematl = new javax.swing.JButton();
-        tboperator = new javax.swing.JTextField();
-        jLabel16 = new javax.swing.JLabel();
         lbloperation = new javax.swing.JLabel();
         lblmaterial = new javax.swing.JLabel();
         lbltooling = new javax.swing.JLabel();
@@ -1038,7 +1051,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 214, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1083,8 +1096,6 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
-        jLabel16.setText("Operator:");
-
         btprint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/print.png"))); // NOI18N
         btprint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1116,8 +1127,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(jLabel4)
                     .addComponent(jLabel3)
                     .addComponent(jLabel1)
-                    .addComponent(jLabel15)
-                    .addComponent(jLabel16))
+                    .addComponent(jLabel15))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1145,8 +1155,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
                                         .addGap(18, 18, 18)
                                         .addComponent(rbtooling)
                                         .addGap(18, 18, 18)
-                                        .addComponent(rbservice))
-                                    .addComponent(tboperator, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(rbservice)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panelMainLayout.createSequentialGroup()
@@ -1203,11 +1212,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
                             .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel4)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tboperator, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel16))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(22, 22, 22)
                         .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(rbmaterial)
                             .addComponent(rbtooling)
@@ -1394,7 +1399,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
                 item, 
                 Double.valueOf(tbqty.getText()), 
                 Double.valueOf(tbcost.getText()), 
-                tboperator.getText() );
+                "" );
         materialmodel.addRow(new Object[] { 
                 id,
                 ddop.getSelectedItem().toString(), 
@@ -1402,7 +1407,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
                 item, 
                 Double.valueOf(tbqty.getText()), 
                 Double.valueOf(tbcost.getText()), 
-                tboperator.getText()});
+                ""});
         
         plodmatl = getPlanOpDet(jobop[0]);
         getClockRecords();
@@ -1455,7 +1460,6 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
          if (! isLoad && ddop.getSelectedItem() != null) {
              if (ddop.getSelectedItem().toString().isBlank()) {
                 lbloperation.setText("");
-                tboperator.setText("");
                 materialmodel.setNumRows(0);
                 for (String[] s : plodmatl) {
                     if (s[3].equals("material") || s[3].equals("tooling")) {
@@ -1472,7 +1476,6 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
              } else {
                 plan_operation plo = getPlanOperation(Integer.valueOf(jobop[0]), Integer.valueOf(ddop.getSelectedItem().toString()));
                 lbloperation.setText(plo.plo_desc()); 
-                tboperator.setText(plo.plo_operatorname());
                 materialmodel.setNumRows(0);
                  
                 for (String[] s : plodmatl) {
@@ -1567,7 +1570,6 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -1599,7 +1601,6 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JTextField tbcost;
     private javax.swing.JTextField tbitem;
     private javax.swing.JTextField tbkey;
-    private javax.swing.JTextField tboperator;
     private javax.swing.JTextField tbophours;
     private javax.swing.JTextField tboplaborcost;
     private javax.swing.JTextField tboplaborcosttot;

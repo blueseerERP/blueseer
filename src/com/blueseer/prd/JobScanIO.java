@@ -277,6 +277,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
     }
     
     public void validateOperator(String dir, String plan) {
+        System.out.println("firing...");
         if (! isValidEmployeeID(tboperator.getText())) {
             badScan("Invalid Employee ID");
             new AnswerWorker().execute();
@@ -776,6 +777,11 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
                 tboperatorFocusLost(evt);
             }
         });
+        tboperator.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tboperatorActionPerformed(evt);
+            }
+        });
 
         jLabel8.setText("UserID");
         jLabel8.setName("lbluserid"); // NOI18N
@@ -1091,7 +1097,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
     }//GEN-LAST:event_tboperatorFocusGained
 
     private void tboperatorFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tboperatorFocusLost
-       if (! tboperator.getText().isBlank()) {
+       if (! tboperator.getText().isBlank() && ! evt.getCause().equals("ACTIVATION")) {
         validateOperator(dddir.getSelectedItem().toString(), plannbr);
        }
     }//GEN-LAST:event_tboperatorFocusLost
@@ -1106,6 +1112,13 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         }
        // bsmf.MainFrame.show("ddopaction: " + planop);
     }//GEN-LAST:event_ddopActionPerformed
+
+    private void tboperatorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tboperatorActionPerformed
+        if (! tboperator.getText().isBlank()) {
+           validateOperator(dddir.getSelectedItem().toString(), plannbr);
+       }
+       
+    }//GEN-LAST:event_tboperatorActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

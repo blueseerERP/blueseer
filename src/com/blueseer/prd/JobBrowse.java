@@ -363,7 +363,7 @@ public class JobBrowse extends javax.swing.JPanel {
         //plot.setSimpleLabels(true);
 
         PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
-            "{0}: {1} ({2})", NumberFormat.getCurrencyInstance(), new DecimalFormat("0.00%"));
+            "{0}: {1} ({2})", NumberFormat.getNumberInstance(), new DecimalFormat("0.00%"));
         plot.setLabelGenerator(gen);
 
         try {

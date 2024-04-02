@@ -122,35 +122,31 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="duedate" min="-2" pref="142" max="-2" attributes="0"/>
-                                  <Component id="tbpo" min="-2" pref="168" max="-2" attributes="0"/>
-                                  <Component id="ddstatus" min="-2" pref="142" max="-2" attributes="0"/>
-                                  <Component id="ddcrew" min="-2" pref="142" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="ddsite" alignment="0" min="-2" pref="101" max="-2" attributes="0"/>
-                                  <Component id="createdate" alignment="0" min="-2" pref="142" max="-2" attributes="0"/>
-                              </Group>
+                          <Component id="ddsite" alignment="0" min="-2" pref="101" max="-2" attributes="0"/>
+                          <Component id="createdate" alignment="0" min="-2" pref="142" max="-2" attributes="0"/>
+                          <Component id="duedate" min="-2" pref="142" max="-2" attributes="0"/>
+                          <Component id="tbpo" min="-2" pref="168" max="-2" attributes="0"/>
+                          <Component id="ddstatus" min="-2" pref="142" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Component id="ddcrew" min="-2" pref="142" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <Component id="btquotetoorder" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
-                                      <Component id="btinvoice" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace min="99" pref="99" max="-2" attributes="0"/>
-                                      <Component id="cbpaid" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                              <EmptySpace min="-2" pref="51" max="-2" attributes="0"/>
+                              <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="btquotetoorder" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
+                              <Component id="btinvoice" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="99" pref="99" max="-2" attributes="0"/>
+                              <Component id="cbpaid" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="ddoptype" alignment="0" min="-2" pref="116" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="51" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
@@ -282,6 +278,8 @@
                                       <Group type="103" groupAlignment="3" attributes="0">
                                           <Component id="ddcrew" alignment="3" min="-2" max="-2" attributes="0"/>
                                           <Component id="jLabel93" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="ddoptype" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="jLabel14" alignment="3" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                               </Group>
@@ -1023,6 +1021,21 @@
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btlookupActionPerformed"/>
               </Events>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="ddoptype">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="0"/>
+                </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JLabel" name="jLabel14">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Project Job Type"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>

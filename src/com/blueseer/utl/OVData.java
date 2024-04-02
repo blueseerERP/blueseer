@@ -19595,7 +19595,7 @@ MainFrame.bslog(e);
     return recnumber;
    }
   
-    public static int createPlanFromServiceOrder(String site, String serviceorder, boolean isMulti) {
+    public static int createPlanFromServiceOrder(String site, String serviceorder, String optype, boolean isMulti) {
     boolean projectOpScan = BlueSeerUtils.ConvertStringToBool(getSysMetaValue("system", "inventorycontrol", "project_operation"));
     String schedstatus = "1";
     String qtysched = "1";
@@ -19677,10 +19677,11 @@ MainFrame.bslog(e);
                             + ")"
                             + ";");
                         if (projectOpScan) {
-                            res = st2.executeQuery("select  svd_nbr, svd_line, svd_item, svd_desc, svd_qty " +
+                            if (optype.equals("lines")) {
+                              res = st2.executeQuery("select  svd_nbr, svd_line, svd_item, svd_desc, svd_qty " +
                                 " from svd_det " +
                                 " where svd_nbr = " + "'" + a_order.get(z) + "'" +";" );
-                            while (res.next()) {
+                              while (res.next()) {
                                 st.executeUpdate("insert into plan_operation "
                                 + "(plo_parent, plo_op, plo_qty, plo_desc) "
                                 + " values ( " + "'" + nbr + "'" + ","
@@ -19689,8 +19690,26 @@ MainFrame.bslog(e);
                                 + "'" + res.getString("svd_item") + "'"        
                                 + ")"
                                 + ";");
+                              }
+                            } else { // must be routing based
+                              res = st2.executeQuery("select  wf_id, wf_op, wf_op_desc, wf_cell " +
+                                " from wf_mstr " +
+                                " where wf_id = " + "'" + optype + "'" +";" );
+                              while (res.next()) {
+                                st.executeUpdate("insert into plan_operation "
+                                + "(plo_parent, plo_op, plo_qty, plo_desc, plo_cell) "
+                                + " values ( " + "'" + nbr + "'" + ","
+                                + "'" + bsParseInt(res.getString("wf_op")) + "'" + ","
+                                + "'" + "1" + "'" + ","
+                                + "'" + res.getString("wf_op_desc") + "'" + ","
+                                + "'" + res.getString("wf_cell") + "'"         
+                                + ")"
+                                + ";");
+                              }  
                             }
+                            
                         } else { // this insert is for project only (no operation) scanning
+                            if (optype.equals("generic")) {
                             st.executeUpdate("insert into plan_operation "
                                 + "(plo_parent, plo_date, plo_op, plo_qty, plo_desc, plo_status) "
                                 + " values ( " + "'" + nbr + "'" + ","
@@ -19701,6 +19720,22 @@ MainFrame.bslog(e);
                                 + "'" + "open" + "'"
                                 + ")"
                                 + ";");
+                            } else {
+                              res = st2.executeQuery("select  wf_id, wf_op, wf_op_desc, wf_cell " +
+                                " from wf_mstr " +
+                                " where wf_id = " + "'" + optype + "'" +";" );
+                              while (res.next()) {
+                                st.executeUpdate("insert into plan_operation "
+                                + "(plo_parent, plo_op, plo_qty, plo_desc, plo_cell) "
+                                + " values ( " + "'" + nbr + "'" + ","
+                                + "'" + bsParseInt(res.getString("wf_op")) + "'" + ","
+                                + "'" + "1" + "'" + ","
+                                + "'" + res.getString("wf_op_desc") + "'" + ","
+                                + "'" + res.getString("wf_cell") + "'"         
+                                + ")"
+                                + ";");
+                              }    
+                            }
                         }
                 }
        } catch (SQLException s) {

@@ -800,7 +800,7 @@ public class schData {
       try {
 
            if (status.equals(getGlobalProgTag("open"))) { status = "0"; }
-           if (status.equals(getGlobalProgTag("close"))) { status = "1"; }
+           if (status.equals(getGlobalProgTag("closed"))) { status = "1"; }
            if (status.equals(getGlobalProgTag("void"))) { status = "-1"; }
 
 
