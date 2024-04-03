@@ -27,6 +27,7 @@ SOFTWARE.
 package com.blueseer.prd;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.checkperms;
 import static bsmf.MainFrame.db;
 import java.awt.Color;
 import java.awt.Component;
@@ -75,6 +76,7 @@ import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.mydialog;
 import static bsmf.MainFrame.pass;
+import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
@@ -84,6 +86,7 @@ import static com.blueseer.hrm.hrmData.getEmpNameByDept;
 import static com.blueseer.hrm.hrmData.getempmstrlist;
 import static com.blueseer.inv.invData.getAllOperationIDs;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.bsNumberToUS;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
@@ -1300,7 +1303,14 @@ try {
     }//GEN-LAST:event_btcsvActionPerformed
 
     private void detailtableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_detailtableMouseClicked
-        // TODO add your handling code here:
+        int row = detailtable.rowAtPoint(evt.getPoint());
+        int col = detailtable.columnAtPoint(evt.getPoint());
+        if ( col == 0) {
+                String mypanel = "JobClockMaint";
+               if (! checkperms(mypanel)) { return; }
+               String[] args = new String[]{bsNumberToUS(detailtable.getValueAt(row, 1).toString())};
+               reinitpanels(mypanel, true, args);
+        }
     }//GEN-LAST:event_detailtableMouseClicked
 
     private void bthidedetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bthidedetailActionPerformed

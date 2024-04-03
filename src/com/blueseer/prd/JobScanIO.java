@@ -265,6 +265,13 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         ddop.setEnabled(true);
         tbqty.setEnabled(true);
         tbscan.setEnabled(true);
+        ddop.setEnabled(false);
+       ddop.setVisible(true);
+       lbloperation.setVisible(true);
+       tbqty.setVisible(true);
+       lblqty.setVisible(true);
+       qtylabel.setVisible(true);
+       btcommit.setVisible(true);
     }
     
     public void badScan(String messg) {
@@ -574,7 +581,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
     }
         
     public void initvars(String[] arg) {
-        
+        //System.out.println("here: inivar");
         requireOpScan = BlueSeerUtils.ConvertStringToBool(getSysMetaValue("system", "inventorycontrol", "operation_scan_required"));
        // projectOpScan = BlueSeerUtils.ConvertStringToBool(getSysMetaValue("system", "inventorycontrol", "project_operation"));
         btcommit.setEnabled(false);
