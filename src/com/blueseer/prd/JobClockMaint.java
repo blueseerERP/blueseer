@@ -36,10 +36,25 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.luModel;
+import static com.blueseer.utl.BlueSeerUtils.luTable;
+import static com.blueseer.utl.BlueSeerUtils.lual;
+import static com.blueseer.utl.BlueSeerUtils.ludialog;
+import static com.blueseer.utl.BlueSeerUtils.luinput;
+import static com.blueseer.utl.BlueSeerUtils.luml;
+import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import static com.blueseer.utl.BlueSeerUtils.lurb2;
 import static com.blueseer.utl.BlueSeerUtils.parseDate;
+import com.blueseer.utl.DTData;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -59,6 +74,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
 
 /**
  *
@@ -138,9 +154,7 @@ public class JobClockMaint extends javax.swing.JPanel {
         dcindate.setDate(now);
         dcoutdate.setDate(now);
         tbintime.setText("");
-        tbintimeadj.setText("");
         tbouttime.setText("");
-        tbouttimeadj.setText("");
         tbtothrs.setText("0.00");
         
         tbcode.setText("");
@@ -152,9 +166,7 @@ public class JobClockMaint extends javax.swing.JPanel {
         tbnewtothours.setEditable(false);
         tbcode.setEditable(false);
         tbintime.setEditable(false);
-        tbintimeadj.setEditable(false);
         tbouttime.setEditable(false);
-        tbouttimeadj.setEditable(false);
         tbtothrs.setEditable(false);
         
         
@@ -189,26 +201,33 @@ public class JobClockMaint extends javax.swing.JPanel {
 
         int i = 0;
 
-        res = st.executeQuery("SELECT code_id, t.emp_nbr as t_emp_nbr, emp_fname, emp_lname, indate, outdate, intime, intime_adj, outtime, outtime_adj, tothrs FROM  time_clock t inner join emp_mstr e on e.emp_nbr = t.emp_nbr " +
-                              " where recid = " + "'" + recid + "'" +
+        res = st.executeQuery("SELECT jobc_code, t.jobc_empnbr as t_emp_nbr, emp_fname, emp_lname, jobc_indate, jobc_outdate, jobc_intime, jobc_outtime, jobc_tothrs FROM  job_clock t inner join emp_mstr e on e.emp_nbr = t.jobc_empnbr " +
+                              " where jobc_id = " + "'" + recid + "'" +
                               ";" );
         while (res.next()) {
             i++;
             hasRec = true;
             
-            if (res.getString("code_id").equals("01") ) {
+            if (res.getString("jobc_code").equals("01") ) {
                 bsmf.MainFrame.show(getMessageTag(1159));
+                return false;
             } else {
             lblemployee.setText(res.getString("t_emp_nbr") + "  " + res.getString("emp_fname") + 
                                "  " + res.getString("emp_lname"));
-            dcindate.setDate(parseDate(res.getString("indate")));
-            dcoutdate.setDate(parseDate(res.getString("outdate")));
-            tbintime.setText(res.getString("intime"));
-            tbintimeadj.setText(res.getString("intime_adj"));
-            tbouttime.setText(res.getString("outtime"));
-            tbouttimeadj.setText(res.getString("outtime_adj"));
-            tbtothrs.setText(res.getString("tothrs"));
-            tbcode.setText(res.getString("code_id"));
+            dcindate.setDate(parseDate(res.getString("jobc_indate")));
+            dcoutdate.setDate(parseDate(res.getString("jobc_outdate")));
+            tbintime.setText(res.getString("jobc_intime"));
+            tbouttime.setText(res.getString("jobc_outtime"));
+            tbtothrs.setText(res.getString("jobc_tothrs"));
+            tbcode.setText(res.getString("jobc_code"));
+            
+            // preset adj times
+            ddInTimeHr.setSelectedItem(res.getString("jobc_intime").substring(0,2));
+            ddInTimeMin.setSelectedItem(res.getString("jobc_intime").substring(3,5));
+            
+            ddOutTimeHr.setSelectedItem(res.getString("jobc_outtime").substring(0,2));
+            ddOutTimeMin.setSelectedItem(res.getString("jobc_outtime").substring(3,5));
+            
             }
         }
 
@@ -216,6 +235,7 @@ public class JobClockMaint extends javax.swing.JPanel {
             tbrecid.setText(recid);
             tbrecid.setEditable(false);
             tbrecid.setForeground(Color.blue);
+            adjustTime();
         }
 
         }
@@ -281,6 +301,48 @@ public class JobClockMaint extends javax.swing.JPanel {
         
     }
     
+    public void lookUpFrame() {
+        
+        luinput.removeActionListener(lual);
+        lual = new ActionListener() {
+        public void actionPerformed(ActionEvent event) {
+        if (lurb1.isSelected()) {  
+         luModel = DTData.getJobClockUtil(luinput.getText(),0, "jobc_empnbr"); 
+        } else if (lurb2.isSelected()) {
+         luModel = DTData.getJobClockUtil(luinput.getText(),0, "emp_lname");
+        } else {
+         luModel = DTData.getJobClockUtil(luinput.getText(),0, "jobc_indate");    
+        }
+        luTable.setModel(luModel);
+        luTable.getColumnModel().getColumn(0).setMaxWidth(50);
+        if (luModel.getRowCount() < 1) {
+            ludialog.setTitle(getMessageTag(1001));
+        } else {
+            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
+        }
+        }
+        };
+        luinput.addActionListener(lual);
+        
+        luTable.removeMouseListener(luml);
+        luml = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JTable target = (JTable)e.getSource();
+                int row = target.getSelectedRow();
+                int column = target.getSelectedColumn();
+                if ( column == 0) {
+                ludialog.dispose();
+                initvars(new String[]{target.getValueAt(row,1).toString()});
+                }
+            }
+        };
+        luTable.addMouseListener(luml);
+      
+        callDialog(getClassLabelTag("lblempnbr", this.getClass().getSimpleName()), getClassLabelTag("lbllastname", this.getClass().getSimpleName()),
+                getClassLabelTag("lblindate", this.getClass().getSimpleName()) ); 
+        
+    }
+
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -295,17 +357,13 @@ public class JobClockMaint extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         tbtothrs = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
         tbrecid = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         tbintime = new javax.swing.JTextField();
         dcindate = new com.toedter.calendar.JDateChooser();
-        tbouttimeadj = new javax.swing.JTextField();
         btupdate = new javax.swing.JButton();
-        tbintimeadj = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         dcoutdate = new com.toedter.calendar.JDateChooser();
         tbouttime = new javax.swing.JTextField();
@@ -330,7 +388,7 @@ public class JobClockMaint extends javax.swing.JPanel {
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Clock Record Maintenance"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Job Clock Maintenance"));
         jPanel1.setName("panelmain"); // NOI18N
 
         jLabel1.setText("RecordID");
@@ -345,9 +403,6 @@ public class JobClockMaint extends javax.swing.JPanel {
         jLabel2.setText("InDate");
         jLabel2.setName("lblindate"); // NOI18N
 
-        jLabel4.setText("Adj InTime");
-        jLabel4.setName("lblintimeadj"); // NOI18N
-
         tbrecid.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 tbrecidActionPerformed(evt);
@@ -356,9 +411,6 @@ public class JobClockMaint extends javax.swing.JPanel {
 
         jLabel3.setText("InTime");
         jLabel3.setName("lblintime"); // NOI18N
-
-        jLabel7.setText("Adj OutTime");
-        jLabel7.setName("lblouttimeadj"); // NOI18N
 
         jLabel8.setText("Total Hours");
         jLabel8.setName("lbltothours"); // NOI18N
@@ -453,51 +505,28 @@ public class JobClockMaint extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btbrowse, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addGap(4, 4, 4)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel2)
                             .addComponent(jLabel3)
-                            .addComponent(jLabel4)
                             .addComponent(jLabel5)
                             .addComponent(jLabel6)
-                            .addComponent(jLabel7)
                             .addComponent(jLabel8))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(tbouttime, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(13, 13, 13)
-                                .addComponent(jLabel11)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(ddOutTimeHr, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(dcindate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(dcoutdate, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
-                                    .addComponent(tbintimeadj, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tbouttimeadj, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tbtothrs, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblemployee, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(tbintime, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(13, 13, 13)
-                                    .addComponent(jLabel9)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(ddInTimeHr, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 6, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(dcindate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(dcoutdate, javax.swing.GroupLayout.DEFAULT_SIZE, 171, Short.MAX_VALUE)
+                                        .addComponent(tbtothrs, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(lblemployee, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(tbintime, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 97, Short.MAX_VALUE)))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(ddOutTimeMin, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(tbnewintime, javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(ddInTimeMin, javax.swing.GroupLayout.Alignment.TRAILING, 0, 80, Short.MAX_VALUE))
-                                    .addComponent(tbnewouttime, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel15)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -505,7 +534,24 @@ public class JobClockMaint extends javax.swing.JPanel {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel16)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tbcode, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(tbcode, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(ddOutTimeHr, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(ddOutTimeMin, 0, 80, Short.MAX_VALUE)
+                                    .addComponent(tbnewintime, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(ddInTimeMin, javax.swing.GroupLayout.Alignment.TRAILING, 0, 80, Short.MAX_VALUE)
+                                    .addComponent(tbnewouttime, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
+                                    .addComponent(ddInTimeHr, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(1, 1, 1)))))
                 .addGap(47, 47, 47))
         );
         jPanel1Layout.setVerticalGroup(
@@ -529,36 +575,35 @@ public class JobClockMaint extends javax.swing.JPanel {
                                         .addComponent(jLabel16)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(dcindate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel2))
+                            .addComponent(jLabel2)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(ddInTimeHr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel9)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tbintime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3)
-                            .addComponent(ddInTimeHr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(ddInTimeMin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel9)
                             .addComponent(jLabel10))
                         .addGap(9, 9, 9)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tbintimeadj, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4)
                             .addComponent(tbnewintime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel13))
                         .addGap(11, 11, 11)
-                        .addComponent(dcoutdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(dcoutdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(ddOutTimeHr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel11))))
                     .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbouttime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6)
-                    .addComponent(ddOutTimeHr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ddOutTimeMin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel11)
                     .addComponent(jLabel12))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbouttimeadj, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7)
                     .addComponent(tbnewouttime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel14))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -612,15 +657,14 @@ public class JobClockMaint extends javax.swing.JPanel {
 
 
          if (proceed) {
-        st.executeUpdate("update time_clock set " +
-                              "code_id = '77' " + "," +
-                              "indate = " + "'" + dfdate.format(dcindate.getDate()) + "'" + "," +
-                              "outdate = " + "'" +  dfdate.format(dcoutdate.getDate()) + "'"  + "," +
-                              "intime_adj = " + "'" +  tbnewintime.getText() + "'"  + "," +
-                              "outtime_adj = " + "'" +  tbnewouttime.getText() + "'"  + "," +
-                              "tothrs = " + "'" + tbnewtothours.getText() + "'" + "," +
-                              "changed = " + "'" + clockdate + "'" +
-                              " where recid = " + "'" + tbrecid.getText().toString() + "'" +
+        st.executeUpdate("update job_clock set " +
+                              "jobc_code = '77' " + "," +
+                              "jobc_indate = " + "'" + dfdate.format(dcindate.getDate()) + "'" + "," +
+                              "jobc_outdate = " + "'" +  dfdate.format(dcoutdate.getDate()) + "'"  + "," +
+                              "jobc_intime = " + "'" +  tbnewintime.getText() + "'"  + "," +
+                              "jobc_outtime = " + "'" +  tbnewouttime.getText() + "'"  + "," +        
+                              "jobc_tothrs = " + "'" + tbnewtothours.getText() + "'" +
+                              " where jobc_id = " + "'" + tbrecid.getText().toString() + "'" +
                               ";" );
         
         bsmf.MainFrame.show(getMessageTag(1008));
@@ -659,7 +703,7 @@ public class JobClockMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_tbtothrsFocusLost
 
     private void btbrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbrowseActionPerformed
-        reinitpanels("BrowseUtil", true, new String[]{"clockrecupdate","recid"});
+        lookUpFrame();
     }//GEN-LAST:event_btbrowseActionPerformed
 
     private void tbrecidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbrecidActionPerformed
@@ -716,22 +760,18 @@ public class JobClockMaint extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblemployee;
     private javax.swing.JTextField tbcode;
     private javax.swing.JTextField tbintime;
-    private javax.swing.JTextField tbintimeadj;
     private javax.swing.JTextField tbnewintime;
     private javax.swing.JTextField tbnewouttime;
     private javax.swing.JTextField tbnewtothours;
     private javax.swing.JTextField tbouttime;
-    private javax.swing.JTextField tbouttimeadj;
     private javax.swing.JTextField tbrecid;
     private javax.swing.JTextField tbtothrs;
     // End of variables declaration//GEN-END:variables

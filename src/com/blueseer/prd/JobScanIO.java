@@ -116,13 +116,14 @@ String sitephone = "";
 String sitecitystatezip = "";
 boolean planLegit = false;
 boolean requireOpScan = false;
-boolean projectOpScan = false;
 boolean isLoad = false;
 
 String clockdate = "";
 String clocktime = "";
 String plannbr = "";
 String planop = "";
+
+public static plan_mstr pm = null;
 
 javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
@@ -224,7 +225,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
        String operatorName = "";
        ArrayList<String[]> hist = getJobClockHistory(setDateDB(new java.util.Date()));
        for (String[] h : hist) {
-           io = (h[8].equals("01")) ? "Clocked In" : "Clocked Out";
+           io = (h[8].equals("01")) ? "In" : "Out";
            operatorName = getEmpFormalNameByID(h[2]);
             historymodel.addRow(new Object[]{
                       operatorName, // user
@@ -277,7 +278,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
     }
     
     public void validateOperator(String dir, String plan) {
-        System.out.println("firing...");
+       // System.out.println("firing...");
         if (! isValidEmployeeID(tboperator.getText())) {
             badScan("Invalid Employee ID");
             new AnswerWorker().execute();
@@ -311,7 +312,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
                     lblmessage.setForeground(Color.red);
                     new AnswerWorker().execute();
                 } else {
-                    if (projectOpScan) {
+                    if (! pm.plan_type().equals("SRVC")) {
                     tboperator.setBackground(Color.white);
                     tbqty.requestFocusInWindow();
                     btcommit.setEnabled(true); 
@@ -344,13 +345,13 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
             partlabel.setText("");
             return;
         } 
-        
+        /*
         if (! projectOpScan && scan.contains("-")) {
             badScan("Project scanning only...Generic Job Ticket must be used");
             new AnswerWorker().execute();
             return;
         }
-        
+        */
         if (requireOpScan && ! scan.contains("-")) {
             badScan("Operation Ticket must be used");
             new AnswerWorker().execute();
@@ -380,7 +381,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
                 new AnswerWorker().execute();
                 return;
         } 
-        plan_mstr pm = getPlanMstr(new String[]{plannbr});
+        pm = getPlanMstr(new String[]{plannbr});
         if (Integer.valueOf(pm.plan_status()) != 0 ) { // check if closed
             badScan(getMessageTag(1071));
             new AnswerWorker().execute();
@@ -395,8 +396,8 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         
         
         setOperations(plannbr);
-        //bsmf.MainFrame.show("here: " + planop);
-        if (projectOpScan) {
+        System.out.println("here: " + plannbr + "/" + planop + "/" + opticketScan);
+        if (opticketScan) {
         if (ddop.getItemCount() > 0) { 
             if (! planop.isBlank()) {
                 ddop.setSelectedItem(planop);
@@ -411,7 +412,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         partlabel.setText(schData.getPlanItem(scan));
         qtysched = pm.plan_qty_sched(); // assume parent plan sched qty
         
-        if (opticketScan) {
+       
         plan_operation po = getPlanOperation(Integer.valueOf(plannbr), Integer.valueOf(planop));
         qtysched = po.plo_qty();  // override parent plan sched qty
            if (po.plo_operator().isBlank() && ! pm.plan_type().equals("SRVC")) {
@@ -426,15 +427,15 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
                new AnswerWorker().execute();
                return;
            }
-        }
+         
         
         prevscanned = schData.getPlanDetTotQtyByOp(plannbr, planop);
         remaining = qtysched - prevscanned;
         tbqty.setText(bsFormatDouble(remaining));
         qtylabel.setText("qty sched: " + String.valueOf(qtysched) + "     qty scanned: " + String.valueOf(prevscanned));
-        } else { // if not projectOpScan
+        } else {
             planop = ddop.getSelectedItem().toString();
-        }
+        } 
         
         planLegit = true;
        if (dddir.getSelectedItem().toString().equals("In")) {
@@ -575,7 +576,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
     public void initvars(String[] arg) {
         
         requireOpScan = BlueSeerUtils.ConvertStringToBool(getSysMetaValue("system", "inventorycontrol", "operation_scan_required"));
-        projectOpScan = BlueSeerUtils.ConvertStringToBool(getSysMetaValue("system", "inventorycontrol", "project_operation"));
+       // projectOpScan = BlueSeerUtils.ConvertStringToBool(getSysMetaValue("system", "inventorycontrol", "project_operation"));
         btcommit.setEnabled(false);
         tbqty.setText("");
         tbscan.setText("");
@@ -604,7 +605,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
        
        getScanHistory();
        enableAll();
-       if (! projectOpScan) {
+       if (! requireOpScan) {
            ddop.setEnabled(false);
            ddop.setVisible(false);
            lbloperation.setVisible(false);
@@ -936,7 +937,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         }
         
         
-        plan_mstr pm = schData.getPlanMstr(new String[]{plannbr});
+       // plan_mstr pm = schData.getPlanMstr(new String[]{plannbr});
         inv_ctrl ic = invData.getINVCtrl(new String[]{plannbr});
         double prevscanned = schData.getPlanDetTotQtyByOp(plannbr, planop);
         String[] detail = invData.getItemDetail(pm.plan_item());

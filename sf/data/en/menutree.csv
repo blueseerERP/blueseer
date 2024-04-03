@@ -177,13 +177,14 @@ Inventory,ItemMenu,7,JMenu,Item Menu,,,,1,1
 Inventory,RoutingMenu,8,JMenu,Routing Menu,,,,1,1
 Inventory,BOMMenu,9,JMenu,BOM Menu,,,,1,1
 Inventory,ProductionMenu,10,JMenu,Production Menu,,,,1,1
-Inventory,ScrapMenu,11,JMenu,Scrap Menu,,,,1,1
-Inventory,InvAdjustmentsMenu,12,JMenu,Inventory Adjustments Menu,,,,1,1
-Inventory,ScheduleMenu,13,JMenu,Schedule Menu,,,,1,1
-Inventory,MRPMenu,14,JMenu,MRP Menu,,,,1,1
-Inventory,InvRptPicker,15,JMenuItem,Inventory Report Selector,,1,,1,1
-Inventory,InventoryReportsMenu,16,JMenu,Inventory Misc Reports,,,,1,1
-Inventory,InventoryCtrl,17,JMenuItem,Inventory Control,,,,1,1
+Inventory,JobScanMenu,11,JMenu,Job Scanning Menu,,,,1,1
+Inventory,ScrapMenu,12,JMenu,Scrap Menu,,,,1,1
+Inventory,InvAdjustmentsMenu,13,JMenu,Inventory Adjustments Menu,,,,1,1
+Inventory,ScheduleMenu,14,JMenu,Schedule Menu,,,,1,1
+Inventory,MRPMenu,15,JMenu,MRP Menu,,,,1,1
+Inventory,InvRptPicker,16,JMenuItem,Inventory Report Selector,,1,,1,1
+Inventory,InventoryReportsMenu,17,JMenu,Inventory Misc Reports,,,,1,1
+Inventory,InventoryCtrl,18,JMenuItem,Inventory Control,,,,1,1
 InvAdjustmentsMenu,LocationTransfer,1,JMenuItem,Location Transfer,,,,1,1
 InvAdjustmentsMenu,InventoryAdjustment,2,JMenuItem,Inventory Adjustment,,,,1,1
 InventoryReportsMenu,TransBrowse,1,JMenuItem,Transaction Browse,,1,,1,1
@@ -205,13 +206,14 @@ BOMMenu,BOMTree,3,JMenuItem,BOM Tree,,,,1,1
 BOMMenu,WhereUsedUtility,4,JMenuItem,Where Used Utility,,,,1,1
 ProductionMenu,ProdEntryMaint,1,JMenuItem,Production Entry,,,,1,1
 ProductionMenu,ProdEntryByPlan,2,JMenuItem,Production Entry By Plan,,,,1,1
-ProductionMenu,JobScanIO,3,JMenuItem,Job Operation Scan,,,,1,1
-ProductionMenu,JobBrowse,4,JMenuItem,Job Operation Browse,,,,1,1
-ProductionMenu,JobScanIOProject,5,JMenuItem,Project Job Scan,,,,1,1
-ProductionMenu,OEEEntry,6,JMenuItem,OEE Entry,,,,1,1
-ProductionMenu,ProductionReports,7,JMenu,Production Reports,,,,1,1
+ProductionMenu,OEEEntry,3,JMenuItem,OEE Entry,,,,1,1
+ProductionMenu,ProductionReports,4,JMenu,Production Reports,,,,1,1
 ProductionReports,ProdDetRpt,1,JMenuItem,Production Report Detail,,1,,1,1
 ProductionReports,chart_production,2,JMenuItem,Chart Reporting,,1,,1,1
+JobScanMenu,JobScanIO,1,JMenuItem,Job Operation Scan,,,,1,1
+JobScanMenu,JobBrowse,2,JMenuItem,Job Operation Browse,,,,1,1
+JobScanMenu,JobScanIOProject,3,JMenuItem,Job Project Maintenance,,,,1,1
+JobScanMenu,JobClockMaint,4,JMenuItem,Job Clock Maintenance,,,,1,1
 ScrapMenu,ScrapEntry,1,JMenuItem,Scrap Entry,,,,1,1
 ScrapMenu,ScrapReports,2,JMenu,Scrap Reports,,,,1,1
 ScrapReports,chart_scrap,1,JMenuItem,Chart Reporting,,1,,1,1

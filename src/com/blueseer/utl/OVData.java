@@ -9678,7 +9678,7 @@ return outvalue;
             ResultSet res = null;
             try {
 
-                res = st.executeQuery("select wf_id from wf_mstr;" );
+                res = st.executeQuery("select distinct wf_id from wf_mstr;" );
                while (res.next()) {
                 myarray.add(res.getString("wf_id"));                    
                 }
@@ -19596,12 +19596,13 @@ MainFrame.bslog(e);
    }
   
     public static int createPlanFromServiceOrder(String site, String serviceorder, String optype, boolean isMulti) {
-    boolean projectOpScan = BlueSeerUtils.ConvertStringToBool(getSysMetaValue("system", "inventorycontrol", "project_operation"));
-    String schedstatus = "1";
-    String qtysched = "1";
-    if (projectOpScan) {
-        schedstatus = "0";
-        qtysched = "0";
+    
+    String schedstatus = "0";
+    String qtysched = "0";
+    
+    if (optype.equals("generic")) {  // all other planned orders...other than SRVC generic....must be scheduled via schm
+        schedstatus = "1";
+        qtysched = "1";
     }
     int recnumber = 0;
     
@@ -19676,7 +19677,9 @@ MainFrame.bslog(e);
                             + "'" + qtysched + "'"
                             + ")"
                             + ";");
-                        if (projectOpScan) {
+                        
+                        
+                        // now job_operation options
                             if (optype.equals("lines")) {
                               res = st2.executeQuery("select  svd_nbr, svd_line, svd_item, svd_desc, svd_qty " +
                                 " from svd_det " +
@@ -19691,6 +19694,17 @@ MainFrame.bslog(e);
                                 + ")"
                                 + ";");
                               }
+                            } else if(optype.equals("generic")) {
+                            st.executeUpdate("insert into plan_operation "
+                                + "(plo_parent, plo_date, plo_op, plo_qty, plo_desc, plo_status) "
+                                + " values ( " + "'" + nbr + "'" + ","
+                                + "'" + df.format(cal.getTime()) + "'" + ","
+                                + "'" + "1" + "'" + ","
+                                + "'" + "1" + "'" + ","
+                                + "'" + "Generic project order" + "'" + ","
+                                + "'" + "open" + "'"
+                                + ")"
+                                + ";");
                             } else { // must be routing based
                               res = st2.executeQuery("select  wf_id, wf_op, wf_op_desc, wf_cell " +
                                 " from wf_mstr " +
@@ -19707,36 +19721,7 @@ MainFrame.bslog(e);
                                 + ";");
                               }  
                             }
-                            
-                        } else { // this insert is for project only (no operation) scanning
-                            if (optype.equals("generic")) {
-                            st.executeUpdate("insert into plan_operation "
-                                + "(plo_parent, plo_date, plo_op, plo_qty, plo_desc, plo_status) "
-                                + " values ( " + "'" + nbr + "'" + ","
-                                + "'" + df.format(cal.getTime()) + "'" + ","
-                                + "'" + "1" + "'" + ","
-                                + "'" + "1" + "'" + ","
-                                + "'" + "Generic project order" + "'" + ","
-                                + "'" + "open" + "'"
-                                + ")"
-                                + ";");
-                            } else {
-                              res = st2.executeQuery("select  wf_id, wf_op, wf_op_desc, wf_cell " +
-                                " from wf_mstr " +
-                                " where wf_id = " + "'" + optype + "'" +";" );
-                              while (res.next()) {
-                                st.executeUpdate("insert into plan_operation "
-                                + "(plo_parent, plo_op, plo_qty, plo_desc, plo_cell) "
-                                + " values ( " + "'" + nbr + "'" + ","
-                                + "'" + bsParseInt(res.getString("wf_op")) + "'" + ","
-                                + "'" + "1" + "'" + ","
-                                + "'" + res.getString("wf_op_desc") + "'" + ","
-                                + "'" + res.getString("wf_cell") + "'"         
-                                + ")"
-                                + ";");
-                              }    
-                            }
-                        }
+                         
                 }
        } catch (SQLException s) {
             MainFrame.bslog(s);

@@ -339,3 +339,5 @@ admin,chart_shipping,0
 admin,JobScanIO,0
 admin,JobBrowse,0
 admin,JobScanIOProject,0
+admin,JobClockMaint,0
+admin,JobScanMenu,0

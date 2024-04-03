@@ -537,8 +537,7 @@ public class JobBrowse extends javax.swing.JPanel {
          calto.add(Calendar.DATE, 14);
          dcto.setDate(calto.getTime());
          
-         fromcell.setText("");
-         tocell.setText("");
+         
          frompart.setText("");
          topart.setText("");
          
@@ -613,8 +612,7 @@ public class JobBrowse extends javax.swing.JPanel {
          calto.add(Calendar.DATE, 14);
          dcto.setDate(calto.getTime());
          
-         fromcell.setText("");
-         tocell.setText("");
+        
          frompart.setText("");
          topart.setText("");
          lblempname.setText("");
@@ -669,7 +667,6 @@ public class JobBrowse extends javax.swing.JPanel {
         lbltothours = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
-        jLabel6 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         frompart = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
@@ -677,11 +674,8 @@ public class JobBrowse extends javax.swing.JPanel {
         topart = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         dcto = new com.toedter.calendar.JDateChooser();
-        tocell = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
         dcfrom = new com.toedter.calendar.JDateChooser();
-        fromcell = new javax.swing.JTextField();
         cbclosed = new javax.swing.JCheckBox();
         ddop = new javax.swing.JComboBox<>();
         jLabel10 = new javax.swing.JLabel();
@@ -789,9 +783,6 @@ public class JobBrowse extends javax.swing.JPanel {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jLabel6.setText("To Cell:");
-        jLabel6.setName("lbltocell"); // NOI18N
-
         jLabel4.setText("To Item");
         jLabel4.setName("lbltoitem"); // NOI18N
 
@@ -813,9 +804,6 @@ public class JobBrowse extends javax.swing.JPanel {
 
         jLabel2.setText("From Date");
         jLabel2.setName("lblfromdate"); // NOI18N
-
-        jLabel5.setText("From Cell:");
-        jLabel5.setName("lblfromcell"); // NOI18N
 
         dcfrom.setDateFormatString("yyyy-MM-dd");
 
@@ -868,7 +856,7 @@ public class JobBrowse extends javax.swing.JPanel {
                     .addComponent(jLabel10)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(tbjobid, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, 37, Short.MAX_VALUE)
                         .addComponent(jLabel2)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -891,20 +879,6 @@ public class JobBrowse extends javax.swing.JPanel {
                     .addComponent(ddoperator, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tocell, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel5)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(fromcell, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addComponent(lblempname, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(cbclosed)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(btRun)
@@ -913,8 +887,9 @@ public class JobBrowse extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbchart)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(bthidedetail)))
-                .addGap(60, 60, 60))
+                        .addComponent(bthidedetail, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblempname, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(85, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -936,17 +911,9 @@ public class JobBrowse extends javax.swing.JPanel {
                             .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel4)
-                                .addComponent(topart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(topart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(cbclosed))
                             .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(fromcell, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tocell, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6)
-                            .addComponent(cbclosed)))
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btRun)
                         .addComponent(cbchart)
@@ -955,12 +922,12 @@ public class JobBrowse extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblempname, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(ddoperator, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel10)
-                            .addComponent(jLabel8))
+                            .addComponent(jLabel8)
+                            .addComponent(ddoperator, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -1120,16 +1087,7 @@ try {
                 } else {
                     tpart = topart.getText();
                 }
-                 if (fromcell.getText().isEmpty()) {
-                    fcell = bsmf.MainFrame.lowchar;
-                } else {
-                    fcell = fromcell.getText();
-                }
-                if (tocell.getText().isEmpty()) {
-                    tcell = bsmf.MainFrame.hichar;
-                } else {
-                    tcell = tocell.getText();
-                }
+               
                 
                 String jobid = "";
                 if (! tbjobid.getText().isBlank()) {
@@ -1190,8 +1148,6 @@ try {
                         " AND plo_date <= " + "'" + dfdate.format(dcto.getDate()) + "'" + " ) OR plo_date is null )" + 
                         " AND plan_item >= " + "'" + fpart + "'" + 
                         " AND plan_item <= " + "'" + tpart + "'" + 
-                         " AND ( ( plo_cell >= " + "'" + fcell + "'" + 
-                        " AND plo_cell <= " + "'" + tcell + "'" + ") OR plo_cell = '' ) " + 
                       //  " AND plan_is_sched = " + "'1' "  +
                         " order by plan_nbr, plo_op;");    
   
@@ -1208,9 +1164,9 @@ try {
                     if (! ddop.getSelectedItem().toString().isBlank() && ! res.getString("plo_op").equals(ddop.getSelectedItem().toString())) {
                         continue;
                     }
-                    if (! ddoperator.getSelectedItem().toString().isBlank() && ! res.getString("plo_operator").equals(ddoperator.getSelectedItem().toString())) {
-                        continue;
-                    }
+                   // if (! ddoperator.getSelectedItem().toString().isBlank() && ! res.getString("plo_operator").equals(ddoperator.getSelectedItem().toString())) {
+                  //      continue;
+                  //  }
                     if (! ddoperator.getSelectedItem().toString().isBlank() && res.getString("jobc_empnbr")!= null && ! res.getString("jobc_empnbr").equals(ddoperator.getSelectedItem().toString())) {
                         continue;
                     }
@@ -1233,8 +1189,11 @@ try {
                         clockid = res.getInt("jobc_id");
                     }
                     
-                    operatorname = res.getString("emp_lname") + ", " + res.getString("emp_fname");
-                    
+                    if (res.getString("emp_lname") != null) {
+                        operatorname = res.getString("emp_lname") + ", " + res.getString("emp_fname");
+                    } else {
+                        operatorname = "";
+                    }
                     schtot = schtot + res.getInt("plo_qty");
                     comptot = comptot + res.getInt("plo_qty_comp");
                     avghours = avghours + res.getDouble("jobc_tothrs");
@@ -1362,7 +1321,6 @@ try {
     private javax.swing.JComboBox<String> ddoperator;
     private javax.swing.JPanel detailpanel;
     private javax.swing.JTable detailtable;
-    private javax.swing.JTextField fromcell;
     private javax.swing.JTextField frompart;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -1373,8 +1331,6 @@ try {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
@@ -1395,7 +1351,6 @@ try {
     private javax.swing.JLabel pielabel;
     private javax.swing.JPanel tablepanel;
     private javax.swing.JTextField tbjobid;
-    private javax.swing.JTextField tocell;
     private javax.swing.JTextField topart;
     // End of variables declaration//GEN-END:variables
 }

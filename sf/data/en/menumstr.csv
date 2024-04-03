@@ -33,6 +33,7 @@ CostReports,,,JMenu,
 RoutingMenu,,,JMenu, 
 BOMMenu,,,JMenu, 
 ProductionMenu,,,JMenu, 
+JobScanMenu,,,JMenu, 
 ProductionReports,,,JMenu, 
 ScrapMenu,,,JMenu, 
 InvAdjustmentsMenu,,,JMenu, 
@@ -329,4 +330,5 @@ chart_scrap,,com.blueseer.utl.ChartMain,JMenuItem,chsp
 chart_shipping,,com.blueseer.utl.ChartMain,JMenuItem,chsh
 JobScanIO,,com.blueseer.prd.JobScanIO,JMenuItem,jobs
 JobBrowse,,com.blueseer.prd.JobBrowse,JMenuItem,jobb
-JobScanIOProject,,com.blueseer.prd.JobScanIOProject,JMenuItem,jobp
+JobScanIOProject,,com.blueseer.prd.JobScanIOProject,JMenuItem,jobm
+JobClockMaint,,com.blueseer.prd.JobClockMaint,JMenuItem,jobc

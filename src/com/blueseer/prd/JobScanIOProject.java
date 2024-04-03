@@ -122,7 +122,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
     // global variable declarations
     boolean isLoad = false;
     boolean isOpScan = false;
-    boolean projectOpScan = false;
+    boolean requireOpScan = false;
     boolean hasInit = false;
     int planstatus = 0;
     
@@ -427,7 +427,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
            tbitem.setEnabled(false);
            ddtooling.setEnabled(false);
            ddmaterial.setEnabled(true);
-           if (isOpScan || projectOpScan) {
+           if (isOpScan || requireOpScan) {
                ddop.setEnabled(false);
            }
            
@@ -472,8 +472,8 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
     
     public void initvars(String[] arg) {
        isLoad = true;
-       projectOpScan = BlueSeerUtils.ConvertStringToBool(getSysMetaValue("system", "inventorycontrol", "project_operation"));
-        
+       requireOpScan = BlueSeerUtils.ConvertStringToBool(getSysMetaValue("system", "inventorycontrol", "operation_scan_required"));
+       
        setPanelComponentState(this, false); 
        setComponentDefaultValues();
         btlookup.setEnabled(true);
@@ -591,7 +591,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         ddop.removeAllItems();
         ddopnotes.removeAllItems();
         
-        if (projectOpScan) {
+        if (requireOpScan) {
         
             for (plan_operation plo : plolist) {
                 ddop.addItem(String.valueOf(plo.plo_op()));
