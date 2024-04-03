@@ -135,7 +135,8 @@ public class JobBrowse extends javax.swing.JPanel {
                             getGlobalColumnTag("compqty"),
                             getGlobalColumnTag("hours"), 
                             getGlobalColumnTag("status"),
-                            getGlobalColumnTag("code")
+                            getGlobalColumnTag("code"),
+                            getGlobalColumnTag("clockid")
                             })
                {
                       @Override  
@@ -148,14 +149,21 @@ public class JobBrowse extends javax.swing.JPanel {
       
       
        DetailModel modeldetail = new DetailModel(new Object[][]{},
-                        new String[]{getGlobalColumnTag("id"), 
-                            getGlobalColumnTag("planid"), 
-                            getGlobalColumnTag("item"), 
-                            getGlobalColumnTag("operation"), 
-                            getGlobalColumnTag("cell"), 
-                            getGlobalColumnTag("effectivedate"), 
-                            getGlobalColumnTag("reference"), 
-                            getGlobalColumnTag("quantity")});
+                        new String[]{getGlobalColumnTag("select"),
+                            getGlobalColumnTag("id"),
+                            getGlobalColumnTag("name"),
+                            getGlobalColumnTag("indate"), 
+                            getGlobalColumnTag("intime"), 
+                            getGlobalColumnTag("outdate"), 
+                            getGlobalColumnTag("outtime"),
+                            getGlobalColumnTag("status")}){
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
 
       
      
@@ -384,7 +392,7 @@ public class JobBrowse extends javax.swing.JPanel {
     }
     
     
-    public void getdetail(String jobnbr) {
+    public void getdetail(String clockid) {
       
          modeldetail.setNumRows(0);
          double total = 0.00;
@@ -408,10 +416,10 @@ public class JobBrowse extends javax.swing.JPanel {
                 
                 
                 
-                 res = st.executeQuery("SELECT * from plan_operation   " +
-                        " inner join plan_mstr on plan_nbr = plo_parent " +
-                        " where pland_parent = " + "'" + jobnbr + "'" + 
-                         " order by pland_id desc ;"); 
+                 res = st.executeQuery("SELECT * from job_clock   " +
+                        " inner join emp_mstr on emp_nbr = jobc_empnbr " +
+                        " where jobc_id = " + "'" + clockid + "'" + 
+                         " order by jobc_indate desc ;"); 
                
                  
              
@@ -421,20 +429,20 @@ public class JobBrowse extends javax.swing.JPanel {
                     qty = qty + 0;
                     i++;
                         modeldetail.addRow(new Object[]{
-                            res.getString("pland_id"),
-                            res.getString("pland_parent"),
-                            res.getString("pland_item"),
-                            res.getString("pland_op"),
-                            res.getString("pland_cell"),
-                            res.getString("pland_date"),
-                            res.getString("pland_ref"),
-                            res.getDouble("pland_qty")
+                            BlueSeerUtils.clickflag,
+                            res.getString("jobc_id"),
+                            res.getString("emp_lname") + ", " + res.getString("emp_fname"),
+                            res.getString("jobc_indate"),
+                            res.getString("jobc_intime"),
+                            res.getString("jobc_outdate"),
+                            res.getString("jobc_outtime"),
+                            res.getString("jobc_code")
                             });
                    }
                
                
                 
-              //  tabledetail.setModel(modeldetail);
+                detailtable.setModel(modeldetail);
                 this.repaint();
 
             } catch (SQLException s) {
@@ -632,6 +640,7 @@ public class JobBrowse extends javax.swing.JPanel {
         ddop.insertItemAt("", 0);
         ddop.setSelectedIndex(0);
         
+        chartpanel.setVisible(false);
         detailpanel.setVisible(false);
           
          
@@ -683,12 +692,16 @@ public class JobBrowse extends javax.swing.JPanel {
         jLabel13 = new javax.swing.JLabel();
         cbchart = new javax.swing.JCheckBox();
         btcsv = new javax.swing.JButton();
+        bthidedetail = new javax.swing.JButton();
         tablepanel = new javax.swing.JPanel();
         masterpanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         mastertable = new javax.swing.JTable();
-        detailpanel = new javax.swing.JPanel();
+        chartpanel = new javax.swing.JPanel();
         pielabel = new javax.swing.JLabel();
+        detailpanel = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        detailtable = new javax.swing.JTable();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -836,6 +849,13 @@ public class JobBrowse extends javax.swing.JPanel {
             }
         });
 
+        bthidedetail.setText("Hide Detail");
+        bthidedetail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bthidedetailActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -891,7 +911,9 @@ public class JobBrowse extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btcsv)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbchart)))
+                        .addComponent(cbchart)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(bthidedetail)))
                 .addGap(60, 60, 60))
         );
         jPanel3Layout.setVerticalGroup(
@@ -928,7 +950,8 @@ public class JobBrowse extends javax.swing.JPanel {
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btRun)
                         .addComponent(cbchart)
-                        .addComponent(btcsv)))
+                        .addComponent(btcsv)
+                        .addComponent(bthidedetail)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblempname, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -990,10 +1013,36 @@ public class JobBrowse extends javax.swing.JPanel {
 
         tablepanel.add(masterpanel);
 
-        detailpanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Chart Panel"));
+        chartpanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Chart Panel"));
+        chartpanel.setPreferredSize(new java.awt.Dimension(464, 400));
+        chartpanel.setLayout(new java.awt.CardLayout());
+        chartpanel.add(pielabel, "card2");
+
+        tablepanel.add(chartpanel);
+
+        detailpanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Clock Records"));
         detailpanel.setPreferredSize(new java.awt.Dimension(464, 400));
-        detailpanel.setLayout(new java.awt.CardLayout());
-        detailpanel.add(pielabel, "card2");
+        detailpanel.setLayout(new java.awt.BorderLayout());
+
+        detailtable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        detailtable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                detailtableMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(detailtable);
+
+        detailpanel.add(jScrollPane2, java.awt.BorderLayout.CENTER);
 
         tablepanel.add(detailpanel);
 
@@ -1059,6 +1108,7 @@ try {
                 String clockstatus;
                 String plostatus;
                 String operatorname;
+                int clockid = 0;
                 
                 if (frompart.getText().isEmpty()) {
                     fpart = bsmf.MainFrame.lowchar;
@@ -1117,7 +1167,7 @@ try {
                  if (! jobid.isBlank()) {
                    res = st.executeQuery("SELECT plan_nbr, plan_type, plan_item, plo_op, plo_operator, plo_operatorname, plo_cell, " +
                          "plo_qty, plo_qty_comp, plo_date, plo_status, " +
-                         " jobc_empnbr, jobc_qty, coalesce(jobc_tothrs,0) as jobc_tothrs, jobc_code,  " +
+                         " jobc_id, jobc_empnbr, jobc_qty, coalesce(jobc_tothrs,0) as jobc_tothrs, jobc_code,  " +
                          " emp_lname, emp_fname " +   
                         " FROM  plan_operation " +
                         " inner join plan_mstr on plan_nbr = plo_parent " +
@@ -1129,7 +1179,7 @@ try {
                  } else {
                    res = st.executeQuery("SELECT plan_nbr, plan_type, plan_item, plo_op, plo_operator, plo_operatorname, plo_cell, " +
                          "plo_qty, plo_qty_comp, plo_date, plo_status, " +
-                         " jobc_empnbr, jobc_qty, coalesce(jobc_tothrs,0) as jobc_tothrs, jobc_code,  " +
+                         " jobc_id, jobc_empnbr, jobc_qty, coalesce(jobc_tothrs,0) as jobc_tothrs, jobc_code,  " +
                          " emp_lname, emp_fname " +  
                         " FROM  plan_operation " +
                         " inner join plan_mstr on plan_nbr = plo_parent " +
@@ -1158,7 +1208,10 @@ try {
                     if (! ddop.getSelectedItem().toString().isBlank() && ! res.getString("plo_op").equals(ddop.getSelectedItem().toString())) {
                         continue;
                     }
-                    if (! ddoperator.getSelectedItem().toString().isBlank() && ! res.getString("jobc_empnbr").equals(ddoperator.getSelectedItem().toString())) {
+                    if (! ddoperator.getSelectedItem().toString().isBlank() && ! res.getString("plo_operator").equals(ddoperator.getSelectedItem().toString())) {
+                        continue;
+                    }
+                    if (! ddoperator.getSelectedItem().toString().isBlank() && res.getString("jobc_empnbr")!= null && ! res.getString("jobc_empnbr").equals(ddoperator.getSelectedItem().toString())) {
                         continue;
                     }
                     
@@ -1172,6 +1225,12 @@ try {
                         plostatus = "unscheduled";
                     } else {
                         plostatus = res.getString("plo_status");
+                    }
+                    
+                    if (res.getString("jobc_id") == null) {
+                        clockid = 0;
+                    } else {
+                        clockid = res.getInt("jobc_id");
                     }
                     
                     operatorname = res.getString("emp_lname") + ", " + res.getString("emp_fname");
@@ -1192,7 +1251,8 @@ try {
                                 res.getDouble("plo_qty_comp"),
                                 res.getDouble("jobc_tothrs"),
                                 plostatus,
-                                clockstatus
+                                clockstatus,
+                                clockid
                             });
                     
                     
@@ -1241,7 +1301,12 @@ try {
          // select any field in a row grabs the vendor for that row...so open the possibility of payment for that row/vendor
         String jobnbr = mastertable.getValueAt(row, 1).toString();
         
-       
+        if (col == 12) {
+            if (! mastertable.getValueAt(row, 11).toString().equals("n/c")) {
+            getdetail(mastertable.getValueAt(row, 12).toString());
+            detailpanel.setVisible(true);
+            }
+        }
         /*
         if ( col == 14) {
             printticket(mastertable.getValueAt(row, 1).toString(), "Work Order");
@@ -1263,9 +1328,9 @@ try {
         if (! isLoad) {
             if (cbchart.isSelected()) {
                 chartHours();
-                detailpanel.setVisible(true);
+                chartpanel.setVisible(true);
             } else {
-                detailpanel.setVisible(false);
+                chartpanel.setVisible(false);
             }
         }
     }//GEN-LAST:event_cbchartActionPerformed
@@ -1275,17 +1340,28 @@ try {
         OVData.exportCSV(mastertable);
     }//GEN-LAST:event_btcsvActionPerformed
 
+    private void detailtableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_detailtableMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_detailtableMouseClicked
+
+    private void bthidedetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bthidedetailActionPerformed
+        detailpanel.setVisible(false);
+    }//GEN-LAST:event_bthidedetailActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btRun;
     private javax.swing.JButton btcsv;
+    private javax.swing.JButton bthidedetail;
     private javax.swing.JCheckBox cbchart;
     private javax.swing.JCheckBox cbclosed;
+    private javax.swing.JPanel chartpanel;
     private com.toedter.calendar.JDateChooser dcfrom;
     private com.toedter.calendar.JDateChooser dcto;
     private javax.swing.JComboBox<String> ddop;
     private javax.swing.JComboBox<String> ddoperator;
     private javax.swing.JPanel detailpanel;
+    private javax.swing.JTable detailtable;
     private javax.swing.JTextField fromcell;
     private javax.swing.JTextField frompart;
     private javax.swing.JLabel jLabel1;
@@ -1307,6 +1383,7 @@ try {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel labelavghours;
     private javax.swing.JLabel labelcount;
     private javax.swing.JLabel labelqtycomp;
