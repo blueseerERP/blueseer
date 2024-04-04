@@ -7,7 +7,7 @@
 <h3>programming language: Java programming language</h3> 
 <h3>operating system: Cross-Platform</h3>
 <h3>genre:  Enterprise Resource Planning (ERP), EDI, Accounting, Personal Finance</h3> 
-<h3>languages supported: English, French, Spanish, Turkish, German, Romanian</h3>
+<h3>languages supported: English, French, Spanish, Turkish, German, Romanian, Arabic</h3>
 <h3>license: MIT License</h3>
 <h3>website: www.blueseer.com</h3>
 
