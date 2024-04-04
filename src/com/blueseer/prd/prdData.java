@@ -56,7 +56,8 @@ public class prdData {
    
     
    public static String[] addJobClock(job_clock x) {
-        String[] m = new String[2];
+       
+       String[] m = new String[2];
         if (x == null) {
             return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
         }
@@ -65,11 +66,20 @@ public class prdData {
         ResultSet res = null;
         try { 
             if (ds != null) {
+                
+              try {  
               con = ds.getConnection();
+              } catch (SQLException s) {
+                  System.out.println(s);
+              }
+              
             } else {
               con = DriverManager.getConnection(url + db, user, pass);  
+              
             }
+            
             int rows = _addJobClock(x, con, ps, res);  
+            
             if (rows > 0) {
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
             } else {
@@ -345,6 +355,7 @@ public class prdData {
                 if (st != null) {
                     st.close();
                 }
+                con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -414,9 +425,8 @@ public class prdData {
                 if (st != null) {
                     st.close();
                 }
-                if (con != null) {
                     con.close();
-                }
+                
             }
         } catch (Exception e) {
             MainFrame.bslog(e);

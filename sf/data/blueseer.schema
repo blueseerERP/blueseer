@@ -1283,8 +1283,7 @@ CREATE TABLE IF NOT EXISTS `job_clock` (
   `jobc_intime` time  NOT NULL DEFAULT '00:00:00',
   `jobc_outtime` time  NOT NULL DEFAULT '00:00:00',
   `jobc_tothrs` decimal(14,2)  NOT NULL DEFAULT '0',
-  `jobc_code` varchar(2) NOT NULL  DEFAULT '',
-  index planopemp (`jobc_planid`, `jobc_op`, `jobc_empnbr`)
+  `jobc_code` varchar(2) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `po_ctrl` (
   `poc_rcpt_acct` varchar(12)  NOT NULL DEFAULT '',

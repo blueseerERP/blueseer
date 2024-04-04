@@ -2641,6 +2641,7 @@ public class invData {
                 if (st != null) {
                     st.close();
                 }
+                con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -2674,6 +2675,7 @@ public class invData {
                 if (st != null) {
                     st.close();
                 }
+                con.close();
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
