@@ -57,6 +57,7 @@ import com.blueseer.sch.schData.plan_operation;
 import com.blueseer.shp.shpData;
 import static com.blueseer.shp.shpData.confirmShipperTransaction;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsNumber;
 import static com.blueseer.utl.BlueSeerUtils.bsNumberToUS;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
@@ -427,7 +428,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
            tbitem.setEnabled(false);
            ddtooling.setEnabled(false);
            ddmaterial.setEnabled(true);
-           if (isOpScan || requireOpScan) {
+           if (isOpScan) {
                ddop.setEnabled(false);
            }
            
@@ -591,30 +592,24 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         ddop.removeAllItems();
         ddopnotes.removeAllItems();
         
-        if (requireOpScan) {
-        
-            for (plan_operation plo : plolist) {
-                ddop.addItem(String.valueOf(plo.plo_op()));
-                ddopnotes.addItem(String.valueOf(plo.plo_op()));
-            }
+       
+        for (plan_operation plo : plolist) {
+            ddop.addItem(String.valueOf(plo.plo_op()));
+            ddopnotes.addItem(String.valueOf(plo.plo_op()));
+        }
 
-            ddop.insertItemAt("", 0);
-            ddopnotes.insertItemAt("", 0);
-        
-            if (! jobop[1].isBlank()) {
-             ddop.setSelectedItem(jobop[1]);
-             ddopnotes.setSelectedItem(jobop[1]);
-            } else {
-             ddop.setSelectedIndex(0);  
-             ddopnotes.setSelectedIndex(0);
-            }
+        ddop.insertItemAt("", 0);
+        ddopnotes.insertItemAt("", 0);
+
+        if (! jobop[1].isBlank()) {
+         ddop.setSelectedItem(jobop[1]);
+         ddopnotes.setSelectedItem(jobop[1]);
         } else {
-            ddop.insertItemAt("1", 0);
-            ddopnotes.insertItemAt("1", 0);
-            ddop.setSelectedIndex(0);  
-            ddopnotes.setSelectedIndex(0);
+         ddop.setSelectedIndex(0);  
+         ddopnotes.setSelectedIndex(0);
+        }
             
-        } 
+       
         plodmatl = getPlanOpDet(jobop[0]);
         ddop.setSelectedIndex(0);
         getClockRecords();
@@ -670,13 +665,13 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
          }
          
          
-         tbopmatlcost.setText(bsNumber(opmatl));
-         tbopmatlcosttot.setText(bsNumber(totmatl));
-         tboplaborcost.setText(bsNumber(oplbr));
-         tboplaborcosttot.setText(bsNumber(totlbr));
-         tbtotalcost.setText(bsNumber(totmatl + totlbr));
-         tbophours.setText(bsNumber(ophours));
-         tbtothours.setText(bsNumber(tothours));
+         tbopmatlcost.setText(bsFormatDouble(opmatl));
+         tbopmatlcosttot.setText(bsFormatDouble(totmatl));
+         tboplaborcost.setText(bsFormatDouble(oplbr));
+         tboplaborcosttot.setText(bsFormatDouble(totlbr));
+         tbtotalcost.setText(bsFormatDouble(totmatl + totlbr));
+         tbophours.setText(bsFormatDouble(ophours));
+         tbtothours.setText(bsFormatDouble(tothours));
     }
     
     public void printticket(String jobid, String bustitle) {
@@ -1462,7 +1457,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
                 lbloperation.setText("");
                 materialmodel.setNumRows(0);
                 for (String[] s : plodmatl) {
-                    if (s[3].equals("material") || s[3].equals("tooling")) {
+                    if (s[3].equals("material") || s[3].equals("tooling") || s[3].equals("service")) {
                     materialmodel.addRow(new Object[] { 
                     s[0],
                     s[2], 
@@ -1479,7 +1474,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
                 materialmodel.setNumRows(0);
                  
                 for (String[] s : plodmatl) {
-                    if (s[2].equals(ddop.getSelectedItem().toString()) && (s[3].equals("material") || s[3].equals("tooling"))) {
+                    if (s[2].equals(ddop.getSelectedItem().toString()) && (s[3].equals("material") || s[3].equals("tooling") || s[3].equals("service"))) {
                     materialmodel.addRow(new Object[] { 
                     s[0],
                     s[2], 

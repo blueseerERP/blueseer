@@ -939,26 +939,11 @@ public class Scheduler extends javax.swing.JPanel {
             ResultSet res = null;
             String operatorname = "";
             try {
-                if (jobtype.equals("SRVC")) {                
-                 res = st.executeQuery("select plo_op, plo_cell, plo_qty, plo_operator, svd_item from plan_operation inner join plan_mstr on plan_nbr = plo_parent  " +
-                         " inner join svd_det on svd_line = plo_op and svd_nbr = plan_order " +
-                        " where plo_parent = " + "'" + planid + "'" + " order by plo_op ;");
-                    while (res.next()) {
-                     if (! res.getString("plo_operator").isBlank()) {
-                         operatorname = getEmpFormalNameByID(res.getString("plo_operator"));
-                     } else {
-                       operatorname = "";  
-                     }
-
-                     modeloperations.addRow(new Object[]{ 
-                           res.getString("plo_op"),
-                           res.getString("svd_item"),
-                           res.getString("plo_cell"),
-                           res.getString("plo_qty"),
-                           operatorname});                       
-                    }
-                } else {
-                 res = st.executeQuery("select plo_op, plo_cell, plo_qty, plo_operator, wf_desc from plan_operation inner join plan_mstr on plan_nbr = plo_parent inner join item_mstr on it_item = plan_item inner join wf_mstr on wf_id = it_wf and plo_op = wf_op " +
+                
+                 res = st.executeQuery("select plo_op, plo_cell, plo_qty, plo_operator, plo_desc from plan_operation " +
+                         " inner join plan_mstr on plan_nbr = plo_parent " +
+                         " inner join item_mstr on it_item = plan_item " +
+                         " inner join wf_mstr on wf_id = it_wf and plo_op = wf_op " +
                         " where plo_parent = " + "'" + planid + "'" + " order by plo_op ;");   
                 
                     while (res.next()) {
@@ -970,12 +955,12 @@ public class Scheduler extends javax.swing.JPanel {
 
                      modeloperations.addRow(new Object[]{ 
                            res.getString("plo_op"),
-                           res.getString("wf_desc"),
+                           res.getString("plo_desc"),
                            res.getString("plo_cell"),
                            res.getString("plo_qty"),
                            operatorname});                       
                     }
-                }
+                
              
 
             } catch (SQLException s) {
@@ -1889,6 +1874,10 @@ public class Scheduler extends javax.swing.JPanel {
                 }
                 while (res.next()) {
 
+                    if (res.getString("plan_type").equals("SRVC")) {
+                        continue;
+                    }
+                    
                     if (cbclosed.isSelected() && res.getInt("plan_status") == 1) {
                         continue;
                     }

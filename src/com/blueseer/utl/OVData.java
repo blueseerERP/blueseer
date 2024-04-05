@@ -19597,13 +19597,9 @@ MainFrame.bslog(e);
   
     public static int createPlanFromServiceOrder(String site, String serviceorder, String optype, boolean isMulti) {
     
-    String schedstatus = "0";
-    String qtysched = "0";
-    
-    if (optype.equals("generic")) {  // all other planned orders...other than SRVC generic....must be scheduled via schm
-        schedstatus = "1";
-        qtysched = "1";
-    }
+    String schedstatus = "1";
+    String qtysched = "1";
+  
     int recnumber = 0;
     
     DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -19686,11 +19682,13 @@ MainFrame.bslog(e);
                                 " where svd_nbr = " + "'" + a_order.get(z) + "'" +";" );
                               while (res.next()) {
                                 st.executeUpdate("insert into plan_operation "
-                                + "(plo_parent, plo_op, plo_qty, plo_desc) "
+                                + "(plo_parent, plo_date, plo_op, plo_qty, plo_desc, plo_status) "
                                 + " values ( " + "'" + nbr + "'" + ","
+                                + "'" + df.format(cal.getTime()) + "'" + ","        
                                 + "'" + bsParseInt(res.getString("svd_line")) + "'" + ","
                                 + "'" + res.getDouble("svd_qty") + "'" + ","
-                                + "'" + res.getString("svd_item") + "'"        
+                                + "'" + res.getString("svd_item") + "'"  + ","
+                                + "'" + "open" + "'"        
                                 + ")"
                                 + ";");
                               }
@@ -19711,12 +19709,14 @@ MainFrame.bslog(e);
                                 " where wf_id = " + "'" + optype + "'" +";" );
                               while (res.next()) {
                                 st.executeUpdate("insert into plan_operation "
-                                + "(plo_parent, plo_op, plo_qty, plo_desc, plo_cell) "
+                                + "(plo_parent, plo_date, plo_op, plo_qty, plo_desc, plo_cell, plo_status) "
                                 + " values ( " + "'" + nbr + "'" + ","
+                                + "'" + df.format(cal.getTime()) + "'" + ","        
                                 + "'" + bsParseInt(res.getString("wf_op")) + "'" + ","
                                 + "'" + "1" + "'" + ","
                                 + "'" + res.getString("wf_op_desc") + "'" + ","
-                                + "'" + res.getString("wf_cell") + "'"         
+                                + "'" + res.getString("wf_cell") + "'" + "," 
+                                + "'" + "open" + "'"        
                                 + ")"
                                 + ";");
                               }  

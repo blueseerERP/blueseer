@@ -86,6 +86,8 @@ import static com.blueseer.hrm.hrmData.getEmpNameByDept;
 import static com.blueseer.hrm.hrmData.getempmstrlist;
 import static com.blueseer.inv.invData.getAllOperationIDs;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatInt;
 import static com.blueseer.utl.BlueSeerUtils.bsNumberToUS;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
@@ -619,6 +621,10 @@ public class JobBrowse extends javax.swing.JPanel {
          frompart.setText("");
          topart.setText("");
          lblempname.setText("");
+         tbjobid.setText("");
+         cbclosed.setSelected(false);
+         cbchart.setSelected(false);
+         
          
          mymodel.setRowCount(0);
          mastertable.setModel(mymodel);
@@ -1224,13 +1230,13 @@ try {
                 if (ddop.getSelectedItem().toString().isBlank()) {
                   labelavghours.setText("N/A");  
                 } else {
-                  labelavghours.setText(String.valueOf(avghours));  
+                  labelavghours.setText(bsFormatDouble(avghours));  
                 }
-                lbltothours.setText(String.valueOf(tothours));
-                labelqtysched.setText(String.valueOf(schtot));
-                labelqtycomp.setText(String.valueOf(comptot));
+                lbltothours.setText(bsFormatDouble(tothours));
+                labelqtysched.setText(bsFormatDouble(schtot));
+                labelqtycomp.setText(bsFormatDouble(comptot));
                 
-                labelcount.setText(String.valueOf(i));
+                labelcount.setText(bsFormatInt(i));
                
                 chartHours(); 
                 
