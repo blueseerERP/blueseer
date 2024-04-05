@@ -88,17 +88,22 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -108,11 +113,19 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JViewport;
+import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.table.TableColumnModel;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.labels.PieSectionLabelGenerator;
+import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
+import org.jfree.chart.plot.PiePlot;
+import org.jfree.data.general.DefaultPieDataset;
 
 /**
  *
@@ -126,6 +139,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
     boolean requireOpScan = false;
     boolean hasInit = false;
     int planstatus = 0;
+    String chartfilepath = OVData.getSystemTempDirectory() + "/" + "jobm.jpg";
     
     public static plan_mstr x = null;
     public static ArrayList<plan_operation> plolist = null;
@@ -360,7 +374,17 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         jTabbedPane1.add("Main", panelMain);
         jTabbedPane1.add("Notes", panelNotes); 
         jTabbedPane1.add("TimeClock", panelClock);
+        jTabbedPane1.add("Charts", panelChart);
        
+        lblchart.setHorizontalTextPosition(SwingConstants.CENTER);
+        ddchart.removeAllItems();
+        ddchart.addItem("Total Hours By Operator");
+        ddchart.addItem("Total Cost By Operator");
+        ddchart.addItem("Total Operational Cost");
+        ddchart.addItem("Total Cost Material vs Labor");
+        ddchart.setSelectedIndex(0);
+        
+        
         tbkey.setText("");
         tbitem.setText("");
         lbloperation.setText("");
@@ -620,6 +644,117 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
     
     // misc methods
     
+    public void chartIt() {
+               
+        DefaultPieDataset dataset = new DefaultPieDataset();
+               
+        double totmatl = 0.00;
+        double opmatl = 0.00;
+        double totlbr = 0.00;
+        double oplbr = 0.00;
+        double tothours = 0.00;
+        double ophours = 0.00;
+        String title = "";
+        NumberFormat nf = null;
+        LinkedHashMap<String, Double> lhm = new LinkedHashMap<String, Double>();
+         /*
+         for (int j = 0; j < plodmatl.size(); j++) {
+             if (! ddop.getSelectedItem().toString().isBlank() && ddop.getSelectedItem().toString().equals(plodmatl.get(j)[2])) {
+               opmatl = opmatl + (bsParseDouble(plodmatl.get(j)[5]) * bsParseDouble(plodmatl.get(j)[6])   );   
+             }
+             totmatl = totmatl + (bsParseDouble(plodmatl.get(j)[5]) * bsParseDouble(plodmatl.get(j)[6])   ); 
+         }
+         */
+         if (ddchart.getSelectedIndex() == 0) {
+            nf = NumberFormat.getNumberInstance();
+            title = "Hours By Operator";
+            for (int j = 0; j < clockmodel.getRowCount(); j++) {
+                if (lhm.containsKey(clockmodel.getValueAt(j, 2).toString())) {
+                   lhm.put(clockmodel.getValueAt(j, 2).toString(), lhm.get(clockmodel.getValueAt(j, 2).toString()) + Double.valueOf(clockmodel.getValueAt(j, 8).toString()));
+                } else {
+                   lhm.put(clockmodel.getValueAt(j, 2).toString(), Double.valueOf(clockmodel.getValueAt(j, 8).toString()));
+                }
+            }   
+         }
+         if (ddchart.getSelectedIndex() == 1) {
+            nf = NumberFormat.getCurrencyInstance();
+            title = "Cost By Operator";
+            for (int j = 0; j < clockmodel.getRowCount(); j++) {
+                if (lhm.containsKey(clockmodel.getValueAt(j, 2).toString())) {
+                   lhm.put(clockmodel.getValueAt(j, 2).toString(), lhm.get(clockmodel.getValueAt(j, 2).toString()) + (Double.valueOf(clockmodel.getValueAt(j, 3).toString()) * Double.valueOf(clockmodel.getValueAt(j, 8).toString())));
+                } else {
+                   lhm.put(clockmodel.getValueAt(j, 2).toString(), (Double.valueOf(clockmodel.getValueAt(j, 3).toString()) * Double.valueOf(clockmodel.getValueAt(j, 8).toString())));
+                }
+            }   
+         }
+         if (ddchart.getSelectedIndex() == 2) {
+             nf = NumberFormat.getCurrencyInstance();
+             title = "Total Cost By Operation";
+            for (int j = 0; j < plodmatl.size(); j++) {
+                String[] s = plodmatl.get(j);
+                if (lhm.containsKey(s[2])) {
+                   lhm.put(s[2], lhm.get(s[2]) + (Double.valueOf(s[5]) * Double.valueOf(s[6]) ));
+                } else {
+                   lhm.put(s[2], (Double.valueOf(s[5]) * Double.valueOf(s[6]) ));
+                }
+            } 
+            for (int j = 0; j < clockmodel.getRowCount(); j++) {
+                if (lhm.containsKey(clockmodel.getValueAt(j, 0).toString())) {
+                   lhm.put(clockmodel.getValueAt(j, 0).toString(), lhm.get(clockmodel.getValueAt(j, 0).toString()) + ( Double.valueOf(clockmodel.getValueAt(j, 3).toString()) * Double.valueOf(clockmodel.getValueAt(j, 8).toString()) )  );
+                } else {
+                   lhm.put(clockmodel.getValueAt(j, 0).toString(), ( Double.valueOf(clockmodel.getValueAt(j, 3).toString()) * Double.valueOf(clockmodel.getValueAt(j, 8).toString()) ));
+                }
+            }   
+         }
+         
+         if (ddchart.getSelectedIndex() == 3) {
+             nf = NumberFormat.getCurrencyInstance();
+             title = "Total Cost Material vs Labor";
+            for (int j = 0; j < plodmatl.size(); j++) {
+                String[] s = plodmatl.get(j);
+                totmatl += (Double.valueOf(s[5]) * Double.valueOf(s[6]) );
+            } 
+            for (int j = 0; j < clockmodel.getRowCount(); j++) {
+                totlbr += (Double.valueOf(clockmodel.getValueAt(j, 3).toString()) * Double.valueOf(clockmodel.getValueAt(j, 8).toString()));
+               
+            }  
+            lhm.put("material", totmatl);
+            lhm.put("labor", totlbr);
+         }
+                
+                for (Map.Entry<String, Double> z : lhm.entrySet()) {
+                  dataset.setValue(z.getKey(), z.getValue());
+                }
+                
+        JFreeChart chart = ChartFactory.createPieChart(title, dataset, true, true, false);
+        PiePlot plot = (PiePlot) chart.getPlot();
+      //  plot.setSectionPaint(KEY1, Color.green);
+      //  plot.setSectionPaint(KEY2, Color.red);
+     //   plot.setExplodePercent(KEY1, 0.10);
+        //plot.setSimpleLabels(true);
+
+        PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(
+            "{0}: {1} ({2})", nf, new DecimalFormat("0.00%"));
+        plot.setLabelGenerator(gen);
+
+        try {
+        
+        ChartUtilities.saveChartAsJPEG(new File(chartfilepath), chart, (panelChart.getWidth() - 70), this.getHeight() - 200);
+        } catch (IOException e) {
+            MainFrame.bslog(e);
+        }
+        ImageIcon myicon = new ImageIcon(chartfilepath);
+        myicon.getImage().flush();   
+        lblchart.setIcon(myicon);
+        this.repaint();
+       
+       // bsmf.MainFrame.show("your chart is complete...go to chartview");
+                
+              
+       
+    }
+    
+    
     public void getClockRecords() {
         clockmodel.setNumRows(0);
         ArrayList<String[]> clockd = getJobClockDetail(Integer.valueOf(jobop[0]));
@@ -877,6 +1012,13 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         panelClock = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         historytable = new javax.swing.JTable();
+        panelChart = new javax.swing.JPanel();
+        jPanel5 = new javax.swing.JPanel();
+        btrefreshchart = new javax.swing.JButton();
+        ddchart = new javax.swing.JComboBox<>();
+        jLabel18 = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        lblchart = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
         add(jTabbedPane1);
@@ -1352,6 +1494,75 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         );
 
         add(panelClock);
+
+        panelChart.setPreferredSize(new java.awt.Dimension(800, 550));
+
+        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Data Charts"));
+
+        btrefreshchart.setText("Refresh");
+        btrefreshchart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btrefreshchartActionPerformed(evt);
+            }
+        });
+
+        ddchart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddchartActionPerformed(evt);
+            }
+        });
+
+        jLabel18.setText("Selection:");
+
+        jPanel1.setLayout(new java.awt.CardLayout());
+        jPanel1.add(lblchart, "card2");
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addGap(17, 17, 17)
+                .addComponent(jLabel18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ddchart, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 409, Short.MAX_VALUE)
+                .addComponent(btrefreshchart)
+                .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btrefreshchart)
+                    .addComponent(ddchart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel18))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout panelChartLayout = new javax.swing.GroupLayout(panelChart);
+        panelChart.setLayout(panelChartLayout);
+        panelChartLayout.setHorizontalGroup(
+            panelChartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 800, Short.MAX_VALUE)
+            .addGroup(panelChartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelChartLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addContainerGap()))
+        );
+        panelChartLayout.setVerticalGroup(
+            panelChartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 550, Short.MAX_VALUE)
+            .addGroup(panelChartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelChartLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+        );
+
+        add(panelChart);
     }// </editor-fold>//GEN-END:initComponents
     
     private void btlookupActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlookupActionPerformed
@@ -1543,6 +1754,14 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         } 
     }//GEN-LAST:event_btcommitActionPerformed
 
+    private void btrefreshchartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrefreshchartActionPerformed
+        chartIt();
+    }//GEN-LAST:event_btrefreshchartActionPerformed
+
+    private void ddchartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddchartActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ddchartActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btaddmatl;
@@ -1551,8 +1770,10 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JButton btdeletematl;
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btprint;
+    private javax.swing.JButton btrefreshchart;
     private javax.swing.JButton btupdatenotes;
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JComboBox<String> ddchart;
     private javax.swing.JComboBox<String> ddmaterial;
     private javax.swing.JComboBox<String> ddop;
     private javax.swing.JComboBox<String> ddopnotes;
@@ -1566,6 +1787,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -1574,18 +1796,22 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JLabel lblchart;
     private javax.swing.JLabel lblmaterial;
     private javax.swing.JLabel lblmessage;
     private javax.swing.JLabel lbloperation;
     private javax.swing.JLabel lbltooling;
     private javax.swing.JTable materialtable;
+    private javax.swing.JPanel panelChart;
     private javax.swing.JPanel panelClock;
     private javax.swing.JPanel panelMain;
     private javax.swing.JPanel panelNotes;
