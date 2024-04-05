@@ -36,6 +36,7 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -287,7 +288,7 @@ public class JobClockMaint extends javax.swing.JPanel {
        tbnewouttime.setText(ddOutTimeHr.getSelectedItem().toString() + ":" + ddOutTimeMin.getSelectedItem().toString());
        String start = dfdate.format(dcindate.getDate()) + tbnewintime.getText();
        String stop = dfdate.format(dcoutdate.getDate()) + tbnewouttime.getText();
-       tbnewtothours.setText(String.valueOf(calcTotHours(start, stop)));
+       tbnewtothours.setText(bsFormatDouble(calcTotHours(start, stop)));
     }
     
     
