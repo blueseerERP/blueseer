@@ -95,6 +95,7 @@ import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import static com.blueseer.utl.BlueSeerUtils.setDateDB;
+import static com.blueseer.utl.BlueSeerUtils.xNull;
 import static com.blueseer.utl.OVData.getSysMetaValue;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
@@ -1961,15 +1962,15 @@ public class Scheduler extends javax.swing.JPanel {
                 if ( (boolean) mymodel.getValueAt(i, 5) == true ) {
                     continue;
                 }
-                if (    mymodel.getValueAt(i, 6).toString().isEmpty() || 
-                        mymodel.getValueAt(i, 6) == null || 
+                if (  //  mymodel.getValueAt(i, 6).toString().isEmpty() || 
+                     //   mymodel.getValueAt(i, 6) == null || 
                         mymodel.getValueAt(i, 7).toString().isEmpty() || 
                         mymodel.getValueAt(i, 7) == null ||
                         mymodel.getValueAt(i, 7).toString().equals("0") ) {
                   continue;  
                 }
                 list.add(new String[]{mymodel.getValueAt(i, 1).toString(),
-                    mymodel.getValueAt(i, 6).toString(),
+                    xNull(mymodel.getValueAt(i, 6).toString()),
                     mymodel.getValueAt(i, 7).toString(),
                     mymodel.getValueAt(i, 13).toString()});
             }
