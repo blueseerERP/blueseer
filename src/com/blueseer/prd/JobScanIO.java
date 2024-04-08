@@ -404,6 +404,9 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         
         setOperations(plannbr);
         System.out.println("here: " + plannbr + "/" + planop + "/" + opticketScan);
+        
+        plan_operation po = null;
+        
         if (opticketScan) {
         if (ddop.getItemCount() > 0) { 
             if (! planop.isBlank()) {
@@ -420,7 +423,8 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         qtysched = pm.plan_qty_sched(); // assume parent plan sched qty
         
        
-        plan_operation po = getPlanOperation(Integer.valueOf(plannbr), Integer.valueOf(planop));
+        po = getPlanOperation(Integer.valueOf(plannbr), Integer.valueOf(planop));
+        
         qtysched = po.plo_qty();  // override parent plan sched qty
            if (po.plo_operator().isBlank() && ! pm.plan_type().equals("SRVC")) {
                badScan("Operator not assigned for ticket");
@@ -452,7 +456,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
            tbqty.setEnabled(true);
        }
        
-       if (opticketScan) {
+       if (opticketScan && po != null && ! po.plo_operator().isBlank()) {
            validateOperator(dddir.getSelectedItem().toString(), plannbr);
            tboperator.setEnabled(false);
        } else {

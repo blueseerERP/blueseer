@@ -363,6 +363,42 @@ public class prdData {
         return x;
     }
 
+   public static int updatePlanOPOperator(String job, String op, String operator, String operatorname) {
+        int x = 0;
+        try {
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                 st.executeUpdate("update plan_operation set plo_operator = " + "'" + operator + "'" + ", "
+                 + " plo_operatorname = " + "'" + operatorname + "'" +
+                         " where plo_parent = " + "'" + job + "'" +
+                         " and plo_op = " + "'" + op + "'" + ";");
+                
+            } 
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return x;
+    }
+
    
    public static int addPlanOpDet(String job, String op, String datatype, String item, double qty, double cost, String operator) {
         int x = 0;

@@ -47,22 +47,22 @@
      plan_order,
      plan_type,
      plan_line,
-     plan_cell, 
+     plan_cell,
+     plo_op, 
      plo_operator,
      plo_operatorname,
      plo_cell,
+     plo_qty,
+     plo_desc,
+     plo_notes,
      sv_po,
      sv_nbr,
      sv_cust,
-     svd_line,
-     svd_item,
-     svd_desc,
-     svd_qty
+     cm_name
 FROM
      plan_mstr
 inner join sv_mstr on sv_nbr = plan_order
-inner join svd_det on svd_nbr = sv_nbr and
-                                            svd_line = $P{myop}
+inner join cm_mstr on cm_code = sv_cust
 inner join plan_operation on plo_parent = plan_nbr and plo_op = $P{myop}
 where plan_nbr = $P{myid};]]>
 	</queryString>
@@ -98,12 +98,15 @@ where plan_nbr = $P{myid};]]>
 	</field>
 	<field name="sv_po" class="java.lang.String"/>
 	<field name="sv_cust" class="java.lang.String"/>
-	<field name="svd_item" class="java.lang.String"/>
-	<field name="svd_desc" class="java.lang.String"/>
+	<field name="plo_op" class="java.lang.String"/>
+	<field name="plo_qty" class="java.lang.Double"/>
+	<field name="plo_desc" class="java.lang.String"/>
 	<field name="plan_type" class="java.lang.String"/>
 	<field name="plo_operator" class="java.lang.String"/>
 	<field name="plo_cell" class="java.lang.String"/>
 	<field name="plo_operatorname" class="java.lang.String"/>
+	<field name="plo_notes" class="java.lang.String"/>
+	<field name="cm_name" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -167,7 +170,7 @@ where plan_nbr = $P{myid};]]>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{jasper.opticket.lblitem}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{jasper.opticket.lblorder}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="280" y="3" width="174" height="20" uuid="8337b8f0-509d-4326-9311-206093ec714c"/>
@@ -177,7 +180,7 @@ where plan_nbr = $P{myid};]]>
 				<textFieldExpression><![CDATA[$F{plan_item}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="280" y="67" width="100" height="17" uuid="271ba4d0-b5fb-418b-8e7a-f9b2fc19c7e8"/>
+				<reportElement x="280" y="43" width="100" height="17" uuid="271ba4d0-b5fb-418b-8e7a-f9b2fc19c7e8"/>
 				<textElement>
 					<font size="10"/>
 				</textElement>
@@ -191,7 +194,7 @@ where plan_nbr = $P{myid};]]>
 				<textFieldExpression><![CDATA[$F{plan_qty_sched}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="204" y="67" width="76" height="18" uuid="bb8956f2-7e19-44c8-a9f7-473c00f426f6"/>
+				<reportElement x="204" y="42" width="76" height="18" uuid="bb8956f2-7e19-44c8-a9f7-473c00f426f6"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
@@ -257,14 +260,14 @@ where plan_nbr = $P{myid};]]>
 				<textFieldExpression><![CDATA[$F{plan_date_sched}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="204" y="89" width="76" height="18" uuid="a68e8836-95c5-4c86-99a9-dad61c49bf39"/>
+				<reportElement x="204" y="78" width="76" height="18" uuid="a68e8836-95c5-4c86-99a9-dad61c49bf39"/>
 				<textElement>
 					<font fontName="SansSerif" size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{jasper.opticket.lblpo}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="280" y="89" width="140" height="17" uuid="cebe414d-6f6e-41a0-9226-e9c447ecb1d7"/>
+				<reportElement x="280" y="78" width="140" height="17" uuid="cebe414d-6f6e-41a0-9226-e9c447ecb1d7"/>
 				<textElement>
 					<font size="10"/>
 				</textElement>
@@ -297,7 +300,21 @@ where plan_nbr = $P{myid};]]>
 				<textElement>
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{svd_item}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{plo_op}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="204" y="60" width="76" height="18" uuid="251e62b1-fe6a-46d9-94b3-3e8d9138fc80"/>
+				<textElement>
+					<font fontName="SansSerif" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$R{jasper.opticket.lblname}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="280" y="61" width="100" height="17" uuid="91801f82-30f3-473c-b655-91ab84d22f02"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cm_name}]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageHeader>
@@ -315,25 +332,11 @@ where plan_nbr = $P{myid};]]>
 				<textElement>
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{jasper.opticket.lblwc}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{jasper.opticket.lblnotes}]]></textFieldExpression>
 			</textField>
 			<line>
 				<reportElement x="4" y="19" width="756" height="1" uuid="c9e36006-c5df-41ef-96b1-529b4e6ddb52"/>
 			</line>
-			<textField>
-				<reportElement x="551" y="2" width="67" height="16" uuid="48d924f9-8b2d-4e1c-a8c5-e0b2cc2a2a9a"/>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{jasper.opticket.lblqtycomp}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="644" y="2" width="78" height="16" uuid="60ac3857-2e43-467e-a193-bf40cb36c714"/>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{jasper.opticket.lblqtyscrap}]]></textFieldExpression>
-			</textField>
 			<textField>
 				<reportElement x="91" y="0" width="43" height="19" uuid="464508d8-3bf4-4dd7-9818-32d281acf332"/>
 				<textElement>
@@ -341,41 +344,33 @@ where plan_nbr = $P{myid};]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{jasper.opticket.lbldesc}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="405" y="0" width="69" height="20" uuid="129c15d0-f172-4a67-9280-3eac2feb8660"/>
-				<textElement>
-					<font isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$R{jasper.opticket.lblpiecesperhour}]]></textFieldExpression>
-			</textField>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="29" splitType="Stretch">
+		<band height="44" splitType="Stretch">
 			<textField>
 				<reportElement stretchType="RelativeToTallestObject" x="19" y="0" width="62" height="20" uuid="978682a3-4259-41c3-adae-54872ecfe90a"/>
-				<textFieldExpression><![CDATA[$F{plan_line}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{plo_op}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="330" y="0" width="58" height="20" uuid="32390b0a-6d5c-4fae-8870-72c4e68a5f90"/>
-				<textFieldExpression><![CDATA[$F{plan_cell}]]></textFieldExpression>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="330" y="0" width="430" height="20" uuid="32390b0a-6d5c-4fae-8870-72c4e68a5f90"/>
+				<textFieldExpression><![CDATA[$F{plo_notes}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="91" y="0" width="229" height="20" uuid="edbe7124-d60b-42b0-a896-8522f841a299"/>
-				<textFieldExpression><![CDATA[$F{svd_desc}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{plo_desc}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="552" y="0" width="67" height="20" uuid="ec99802d-5c85-44b8-b76a-dfcaad37615a"/>
-				<text><![CDATA[____________]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="647" y="0" width="67" height="20" uuid="ffe9ad20-571e-47ff-8128-c4944e2a9467"/>
-				<text><![CDATA[____________]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="405" y="0" width="58" height="20" uuid="f40fd096-4959-4bab-bce5-550de3f660f3"/>
-				<textFieldExpression><![CDATA[new BigDecimal($F{plan_qty_sched}).setScale(0, BigDecimal.ROUND_HALF_DOWN)]]></textFieldExpression>
-			</textField>
+			<subreport>
+				<reportElement x="40" y="30" width="102" height="10" uuid="dee2ecab-50fd-4bbe-ad98-5fd4c1290c5c"/>
+				<subreportParameter name="op">
+					<subreportParameterExpression><![CDATA[$F{plo_op}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="myid">
+					<subreportParameterExpression><![CDATA[$F{plan_nbr}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "jobopdet.jasper"]]></subreportExpression>
+			</subreport>
 		</band>
 	</detail>
 	<summary>
