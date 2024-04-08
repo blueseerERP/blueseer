@@ -55,9 +55,15 @@ public class schData {
         plan_mstr r = null;
         String[] m = new String[2];
         String sql = "select * from plan_mstr where plan_nbr = ? ;";
+        if (x.length > 1 && ! x[1].isBlank()) {
+            sql = "select * from plan_mstr where plan_nbr = ? and plan_type = ? ;";
+        }
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());   
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, x[0]);
+        if (x.length > 1 && ! x[1].isBlank()) {
+            ps.setString(2, x[1]);
+        }
              try (ResultSet res = ps.executeQuery();) {
                 if (! res.isBeforeFirst()) {
                 m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};

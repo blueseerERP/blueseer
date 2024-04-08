@@ -548,12 +548,13 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
       if (key[0].contains("-")) {
           isOpScan = true;
           jobop = key[0].split("-",-1);
+          jobop[1] = "SRVC"; // override jobop[1] assignment
           x = getPlanMstr(jobop);
       } else {
           isOpScan = false;
           jobop[0] = key[0];
-          jobop[1] = "";
-          x = getPlanMstr(key); 
+          jobop[1] = "SRVC";
+          x = getPlanMstr(jobop); 
       }
       
       plolist = getPlanOperation(jobop[0]);
@@ -576,11 +577,11 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         lual = new ActionListener() {
         public void actionPerformed(ActionEvent event) {
         if (lurb1.isSelected()) {  
-         luModel = DTData.getJobBrowseUtil(luinput.getText(),0, "plan_nbr"); 
+         luModel = DTData.getJobSRVCBrowseUtil(luinput.getText(),0, "plan_nbr"); 
         } else if (lurb2.isSelected()) {
-         luModel = DTData.getJobBrowseUtil(luinput.getText(),0, "plan_order");
+         luModel = DTData.getJobSRVCBrowseUtil(luinput.getText(),0, "plan_order");
         } else {
-         luModel = DTData.getJobBrowseUtil(luinput.getText(),0, "sv_cust");    
+         luModel = DTData.getJobSRVCBrowseUtil(luinput.getText(),0, "sv_cust");    
         }
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
