@@ -45,6 +45,7 @@ import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatIntUS;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDoubleUS;
+import static com.blueseer.utl.BlueSeerUtils.formatUS;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.parseDate;
@@ -1373,8 +1374,8 @@ public class fglData {
                     ArrayList acct_dr =   new ArrayList();
                     ArrayList cc_dr =   new ArrayList();
                     ArrayList site =   new ArrayList();
-                    ArrayList cost =  new ArrayList();   
-                    ArrayList basecost =  new ArrayList();
+                    ArrayList<Double> cost =  new ArrayList();   
+                    ArrayList<Double> basecost =  new ArrayList();
                     ArrayList curr =  new ArrayList();
                     ArrayList basecurr =  new ArrayList();
                     ArrayList doc =  new ArrayList();
@@ -1439,8 +1440,8 @@ public class fglData {
                     ArrayList acct_dr =   new ArrayList();
                     ArrayList cc_dr =   new ArrayList();
                     ArrayList site =   new ArrayList();
-                    ArrayList cost =  new ArrayList();   
-                    ArrayList basecost =  new ArrayList();
+                    ArrayList<Double> cost =  new ArrayList();   
+                    ArrayList<Double> basecost =  new ArrayList();
                     ArrayList curr =  new ArrayList();
                     ArrayList basecurr =  new ArrayList();
                     ArrayList doc =  new ArrayList();
@@ -1528,8 +1529,8 @@ public class fglData {
                     ArrayList acct_dr =   new ArrayList();
                     ArrayList cc_dr =   new ArrayList();
                     ArrayList site =   new ArrayList();
-                    ArrayList cost =  new ArrayList();   
-                    ArrayList basecost =  new ArrayList();
+                    ArrayList<Double> cost =  new ArrayList();   
+                    ArrayList<Double> basecost =  new ArrayList();
                     ArrayList curr =  new ArrayList();
                     ArrayList basecurr =  new ArrayList();
                    
@@ -1847,8 +1848,8 @@ public class fglData {
                     ArrayList acct_dr =   new ArrayList();
                     ArrayList cc_dr =   new ArrayList();
                     ArrayList site =   new ArrayList();
-                    ArrayList cost =  new ArrayList(); 
-                    ArrayList basecost =  new ArrayList(); 
+                    ArrayList<Double> cost =  new ArrayList(); 
+                    ArrayList<Double> basecost =  new ArrayList(); 
                     ArrayList curr =  new ArrayList(); 
                     ArrayList basecurr =  new ArrayList(); 
                    
@@ -1943,8 +1944,8 @@ public class fglData {
                     ArrayList acct_dr =   new ArrayList();
                     ArrayList cc_dr =   new ArrayList();
                     ArrayList site =   new ArrayList();
-                    ArrayList cost =  new ArrayList();   
-                    ArrayList basecost =  new ArrayList(); 
+                    ArrayList<Double> cost =  new ArrayList();   
+                    ArrayList<Double> basecost =  new ArrayList(); 
                     ArrayList curr =  new ArrayList(); 
                     ArrayList basecurr =  new ArrayList(); 
                     
@@ -2286,8 +2287,8 @@ public class fglData {
                     ArrayList acct_dr =   new ArrayList();
                     ArrayList cc_dr =   new ArrayList();
                     ArrayList site =   new ArrayList();
-                    ArrayList cost =  new ArrayList();   
-                    ArrayList basecost =  new ArrayList();
+                    ArrayList<Double> cost =  new ArrayList();   
+                    ArrayList<Double> basecost =  new ArrayList();
                     ArrayList currarray =  new ArrayList();
                     ArrayList basecurrarray =  new ArrayList();
                    
@@ -2419,8 +2420,8 @@ public class fglData {
                     ArrayList acct_dr =   new ArrayList();
                     ArrayList cc_dr =   new ArrayList();
                     ArrayList site =   new ArrayList();
-                    ArrayList cost =  new ArrayList();
-                    ArrayList basecost =  new ArrayList();
+                    ArrayList<Double> cost =  new ArrayList();
+                    ArrayList<Double> basecost =  new ArrayList();
                     String thissite = "";
                     String thisref = "";
                     String thistype = "ISS-SALES";
@@ -2662,11 +2663,11 @@ public class fglData {
                         acct_dr.add(custsalesacct);
                         cc_cr.add(defaultsalescc);
                         cc_dr.add(custsalescc);
-                        cost.add(Double.valueOf(s[4]));
+                        cost.add(bsParseDouble(s[4]));
                         if (basecurr.toUpperCase().equals(curr.toUpperCase())) {
-                        basecost.add(Double.valueOf(s[4]));   
+                        basecost.add(bsParseDouble(s[4]));   
                         } else {
-                        basecost.add(OVData.getExchangeBaseValue(basecurr, curr, Double.valueOf(s[4])));  
+                        basecost.add(OVData.getExchangeBaseValue(basecurr, curr, bsParseDouble(s[4])));  
                         }
                         site.add(thissite);
                         ref.add(thisref);
@@ -2681,7 +2682,7 @@ public class fglData {
                    } // for each sac charge
                     
                 for (int j = 0; j < acct_cr.size(); j++) {
-                    glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), setDateDB(effdate), bsParseDouble(cost.get(j).toString()), bsParseDouble(basecost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
+                    glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), setDateDB(effdate), cost.get(j), basecost.get(j), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
                 } 
             
             res.close();    
@@ -2724,8 +2725,8 @@ public class fglData {
                     ArrayList acct_dr =   new ArrayList();
                     ArrayList cc_dr =   new ArrayList();
                     ArrayList site =   new ArrayList();
-                    ArrayList cost =  new ArrayList();
-                    ArrayList basecost =  new ArrayList();
+                    ArrayList<Double> cost =  new ArrayList();
+                    ArrayList<Double> basecost =  new ArrayList();
                     String thissite = "";
                     String thisref = "";
                     String thistype = "ISS-SALES";
@@ -2987,8 +2988,8 @@ public class fglData {
                     ArrayList acct_dr =   new ArrayList();
                     ArrayList cc_dr =   new ArrayList();
                     ArrayList site =   new ArrayList();
-                    ArrayList cost =  new ArrayList();   
-                    ArrayList basecost =  new ArrayList();
+                    ArrayList<Double> cost =  new ArrayList();   
+                    ArrayList<Double> basecost =  new ArrayList();
                     ArrayList curr =  new ArrayList();
                     ArrayList basecurr =  new ArrayList();
                    
