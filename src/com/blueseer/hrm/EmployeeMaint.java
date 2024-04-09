@@ -53,6 +53,8 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.adm.admData;
+import static com.blueseer.adm.admData.addChangeLog;
 import com.blueseer.fgl.fglData;
 import static com.blueseer.hrm.hrmData.addEmployeeMstr;
 import static com.blueseer.hrm.hrmData.deleteEmployeeMstr;
@@ -63,6 +65,7 @@ import static com.blueseer.hrm.hrmData.getEmployeeMstr;
 import static com.blueseer.hrm.hrmData.updateEmployeeMstr;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.callChangeDialog;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
@@ -70,6 +73,7 @@ import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.logChange;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -606,7 +610,18 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT  {
      }
      
     public String[] updateRecord(String[] x) {
-     String[] m = updateEmployeeMstr(createRecord());
+       emp_mstr _x = this.x;
+       emp_mstr _y = createRecord();
+     String[] m = updateEmployeeMstr(_y);
+     
+     // change log check
+     if (m[0].equals("0")) {
+       ArrayList<admData.change_log> c = logChange(tbkey.getText(), this.getClass().getSimpleName(),_x,_y);
+       if (! c.isEmpty()) {
+           addChangeLog(c);
+       } 
+     }
+     
          return m;
      }
      
@@ -1265,6 +1280,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT  {
         btnew = new javax.swing.JButton();
         tbclear = new javax.swing.JButton();
         btlookup = new javax.swing.JButton();
+        btchangelog = new javax.swing.JButton();
         jPanelPay = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -1754,6 +1770,13 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT  {
             }
         });
 
+        btchangelog.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/change.png"))); // NOI18N
+        btchangelog.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btchangelogActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelMainLayout = new javax.swing.GroupLayout(jPanelMain);
         jPanelMain.setLayout(jPanelMainLayout);
         jPanelMainLayout.setHorizontalGroup(
@@ -1777,7 +1800,9 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT  {
                                 .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(13, 13, 13)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btchangelog, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnew)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(tbclear)
@@ -1804,7 +1829,8 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT  {
                     .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btnew)
                         .addComponent(tbclear))
-                    .addComponent(btlookup))
+                    .addComponent(btlookup)
+                    .addComponent(btchangelog))
                 .addGap(12, 12, 12)
                 .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelMainLayout.createSequentialGroup()
@@ -2346,9 +2372,14 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT  {
         }
     }//GEN-LAST:event_tableattachmentMouseClicked
 
+    private void btchangelogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btchangelogActionPerformed
+        callChangeDialog(tbkey.getText(), this.getClass().getSimpleName());
+    }//GEN-LAST:event_btchangelogActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btaddattachment;
+    private javax.swing.JButton btchangelog;
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btdeleteattachment;
     private javax.swing.JButton btexcadd;
