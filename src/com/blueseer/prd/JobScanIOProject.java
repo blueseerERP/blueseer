@@ -1728,6 +1728,8 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
              if (ddop.getSelectedItem().toString().isBlank()) {
                 lbloperation.setText("");
                 materialmodel.setNumRows(0);
+                ddoperator.setSelectedItem("");
+                dcdate.setDate(null);
                 for (String[] s : plodmatl) {
                     if (s[3].equals("material") || s[3].equals("tooling") || s[3].equals("service")) {
                     materialmodel.addRow(new Object[] { 

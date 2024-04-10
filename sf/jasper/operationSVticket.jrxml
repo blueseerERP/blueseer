@@ -52,6 +52,7 @@
      plo_operator,
      plo_operatorname,
      plo_cell,
+     plo_date,
      plo_qty,
      plo_desc,
      plo_notes,
@@ -107,6 +108,7 @@ where plan_nbr = $P{myid};]]>
 	<field name="plo_operatorname" class="java.lang.String"/>
 	<field name="plo_notes" class="java.lang.String"/>
 	<field name="cm_name" class="java.lang.String"/>
+	<field name="plo_date" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -257,7 +259,7 @@ where plan_nbr = $P{myid};]]>
 				<textElement>
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{plan_date_sched}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{plo_date}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="204" y="78" width="76" height="18" uuid="a68e8836-95c5-4c86-99a9-dad61c49bf39"/>
