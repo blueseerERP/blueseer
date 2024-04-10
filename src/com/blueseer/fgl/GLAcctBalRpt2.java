@@ -68,7 +68,9 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatInt;
+import static com.blueseer.utl.BlueSeerUtils.bsNumber;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
@@ -440,7 +442,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
         }
         String[] fromdatearray = fglData.getGLCalForDate(now);
         //int fromdateperiod = Integer.valueOf(fromdatearray.get(1).toString());
-        ddperiod.setSelectedItem(fromdatearray[1]);
+        ddperiod.setSelectedItem(bsNumber(fromdatearray[1]));
         ArrayList startend = fglData.getGLCalForPeriod(Integer.valueOf(ddyear.getSelectedItem().toString()), Integer.valueOf(ddperiod.getSelectedItem().toString()));
         datelabel.setText(startend.get(0).toString() + " To " + startend.get(1).toString());
         
@@ -868,8 +870,9 @@ try {
                 
                 
                  
-                 int period = Integer.valueOf(ddperiod.getSelectedItem().toString());
-                 int year = Integer.valueOf(ddyear.getSelectedItem().toString());
+                 int period = bsParseInt(ddperiod.getSelectedItem().toString());
+                 int year = bsParseInt(ddyear.getSelectedItem().toString());
+                 
                  int prioryear = 0;
                  double begbal = 0.00;
                  double activity = 0.00;

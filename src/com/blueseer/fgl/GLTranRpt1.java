@@ -75,6 +75,7 @@ import static bsmf.MainFrame.user;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import java.sql.Connection;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
@@ -494,8 +495,8 @@ try {
                      
                  res = st.executeQuery("SELECT * from gl_hist " +
                         " inner join ac_mstr on ac_id = glh_acct " +
-                        " where glh_effdate >= " + "'" + dfdate.format(dcFrom.getDate())  + "'" + 
-                        " AND glh_effdate <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
+                        " where glh_effdate >= " + "'" + setDateDB(dcFrom.getDate())  + "'" + 
+                        " AND glh_effdate <= " + "'" + setDateDB(dcTo.getDate()) + "'" +
                          " AND glh_acct >= " + "'" + ddacctfrom.getSelectedItem().toString() + "'" +
                          " AND glh_acct <= " + "'" + ddacctto.getSelectedItem().toString() + "'" +
                          " AND glh_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +
