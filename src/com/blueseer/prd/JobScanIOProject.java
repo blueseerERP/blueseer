@@ -79,6 +79,7 @@ import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.lurb2;
+import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeer;
@@ -1744,7 +1745,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
                 lbloperation.setText(plo.plo_desc()); 
                 materialmodel.setNumRows(0);
                 ddoperator.setSelectedItem(plo.plo_operatorname());
-                
+                dcdate.setDate(parseDate(plo.plo_date()));
                 for (String[] s : plodmatl) {
                     if (s[2].equals(ddop.getSelectedItem().toString()) && (s[3].equals("material") || s[3].equals("tooling") || s[3].equals("service"))) {
                     materialmodel.addRow(new Object[] { 
