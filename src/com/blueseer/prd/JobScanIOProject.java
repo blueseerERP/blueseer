@@ -557,6 +557,10 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
           isOpScan = false;
           jobop[0] = key[0];
           jobop[1] = "SRVC";
+          if (key.length > 1 && ! key[1].isBlank()) {
+              jobop[1] = key[1];
+          }
+          
           x = getPlanMstr(jobop); 
       }
       

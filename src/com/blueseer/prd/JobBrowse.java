@@ -129,6 +129,7 @@ public class JobBrowse extends javax.swing.JPanel {
        // NOTE:  if you change this...you must also adjust APCheckRun...my advise....dont change it
        MasterModel mymodel = new MasterModel(new Object[][]{},
                         new String[]{ 
+                            getGlobalColumnTag("select"),
                             getGlobalColumnTag("planid"), 
                             getGlobalColumnTag("type"),
                             getGlobalColumnTag("item"), 
@@ -146,7 +147,9 @@ public class JobBrowse extends javax.swing.JPanel {
                {
                       @Override  
                       public Class getColumnClass(int col) {  
-                        if (col == 7 || col == 8 || col == 9)
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else if (col == 8 || col == 9 || col == 10)
                             return Double.class;
                         else return String.class;  //other columns accept String values  
                       }  
@@ -215,7 +218,7 @@ public class JobBrowse extends javax.swing.JPanel {
          
         @Override  
           public Class getColumnClass(int col) {  
-            if (col == 7 || col == 8 || col == 9)       
+            if (col == 8 || col == 9 || col == 10)       
                 return Double.class;  
             else return String.class;  //other columns accept String values  
            
@@ -284,9 +287,9 @@ public class JobBrowse extends javax.swing.JPanel {
       // c.setBackground(row % 3 == 0 ? new Color(245,245,220) : Color.LIGHT_GRAY);
        
        
-              String status = mastertable.getModel().getValueAt(table.convertRowIndexToModel(row), 11).toString();  // 7 = status column
-              String plostatus = mastertable.getModel().getValueAt(table.convertRowIndexToModel(row), 10).toString();  // 7 = status column
-              String plotype = mastertable.getModel().getValueAt(table.convertRowIndexToModel(row), 1).toString();
+              String status = mastertable.getModel().getValueAt(table.convertRowIndexToModel(row), 12).toString();  // 7 = status column
+              String plostatus = mastertable.getModel().getValueAt(table.convertRowIndexToModel(row), 11).toString();  // 7 = status column
+              String plotype = mastertable.getModel().getValueAt(table.convertRowIndexToModel(row), 2).toString();
               if (status != null && status.equals("in")) {
               setForeground(Color.blue);
               setBackground(table.getBackground());
@@ -358,10 +361,10 @@ public class JobBrowse extends javax.swing.JPanel {
                
                 LinkedHashMap<String, Double> lhm = new LinkedHashMap<String, Double>();
                 for (int j = 0; j < mastertable.getRowCount(); j++) {
-                    if (lhm.containsKey(mastertable.getValueAt(j, 4).toString())) {
-                       lhm.put(mastertable.getValueAt(j, 4).toString(), lhm.get(mastertable.getValueAt(j, 4).toString()) + Double.valueOf(mastertable.getValueAt(j, 9).toString()));
+                    if (lhm.containsKey(mastertable.getValueAt(j, 5).toString())) {
+                       lhm.put(mastertable.getValueAt(j, 5).toString(), lhm.get(mastertable.getValueAt(j, 5).toString()) + Double.valueOf(mastertable.getValueAt(j, 10).toString()));
                     } else {
-                        lhm.put(mastertable.getValueAt(j, 4).toString(), Double.valueOf(mastertable.getValueAt(j, 9).toString()));
+                        lhm.put(mastertable.getValueAt(j, 5).toString(), Double.valueOf(mastertable.getValueAt(j, 10).toString()));
                     }
                 }
                 
@@ -1208,6 +1211,7 @@ try {
                     avghours = avghours + res.getDouble("jobc_tothrs");
                     tothours = tothours + res.getDouble("jobc_tothrs");
                     mymodel.addRow(new Object[]{
+                                BlueSeerUtils.clickflag,
                                 res.getString("plan_nbr"),
                                 res.getString("plan_type"),
                                 res.getString("plan_item"),
@@ -1267,11 +1271,18 @@ try {
         int row = mastertable.rowAtPoint(evt.getPoint());
         int col = mastertable.columnAtPoint(evt.getPoint());
          // select any field in a row grabs the vendor for that row...so open the possibility of payment for that row/vendor
-        String jobnbr = mastertable.getValueAt(row, 1).toString();
+       
+        if ( col == 0) {
+                String mypanel = "JobScanIOProject";
+               if (! checkperms(mypanel)) { return; }
+              String[] args = new String[]{mastertable.getValueAt(row, 1).toString(), mastertable.getValueAt(row, 2).toString()};
+               reinitpanels(mypanel, true, args);
+              
+        }
         
-        if (col == 12) {
-            if (! mastertable.getValueAt(row, 11).toString().equals("n/c")) {
-            getdetail(mastertable.getValueAt(row, 12).toString());
+        if (col == 13) {
+            if (! mastertable.getValueAt(row, 12).toString().equals("n/c")) {
+            getdetail(mastertable.getValueAt(row, 13).toString());
             detailpanel.setVisible(true);
             }
         }
