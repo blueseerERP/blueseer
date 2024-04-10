@@ -222,7 +222,7 @@ public class OrderRpt extends javax.swing.JPanel {
                 while (res.next()) {
                     qty += (res.getDouble("sod_netprice") * res.getDouble("sod_ord_qty"));
                    modeldetail.addRow(new Object[]{ 
-                      res.getString("sod_nbr"), 
+                      bsNumber(res.getInt("sod_nbr")), 
                        res.getString("sod_item"),
                        bsParseDouble(currformatDouble(res.getDouble("sod_netprice"))),
                       bsNumber(res.getInt("sod_ord_qty")), 

@@ -359,7 +359,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
        jTabbedPane1.add(getClassLabelTag("main", this.getClass().getSimpleName()), MainPanel);
        jTabbedPane1.add(getClassLabelTag("costbom", this.getClass().getSimpleName()), CostBOMPanel);
        jTabbedPane1.add(getClassLabelTag("images", this.getClass().getSimpleName()), ImagePanel);
-       jTabbedPane1.add("Attachments", panelAttachment);
+       jTabbedPane1.add(getClassLabelTag("attachments", this.getClass().getSimpleName()), panelAttachment);
        
        attachmentmodel.setNumRows(0);
         tableattachment.setModel(attachmentmodel);

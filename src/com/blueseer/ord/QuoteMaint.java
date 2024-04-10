@@ -392,10 +392,10 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         isLoad = true;
         tbkey.setText("");
       
-        jTabbedPane1.removeAll();
-        jTabbedPane1.add("Main", jPanelMain);
-        jTabbedPane1.add("SAC/Tax", jPanelCharges);
-        jTabbedPane1.add("Attachments", panelAttachment);
+       jTabbedPane1.removeAll();
+       jTabbedPane1.add(getClassLabelTag("main", this.getClass().getSimpleName()), jPanelMain);
+       jTabbedPane1.add(getClassLabelTag("sactax", this.getClass().getSimpleName()), jPanelCharges);
+       jTabbedPane1.add(getClassLabelTag("attachments", this.getClass().getSimpleName()), panelAttachment);
         
         attachmentmodel.setNumRows(0);
         tableattachment.setModel(attachmentmodel);
@@ -833,7 +833,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
                 setDateDB(now),
                 setDateDB(now),   
                 0, //shipqty
-                "open", // status
+                getGlobalProgTag("open"), // status
                 "", //warehouse
                 "", //loc
                 detailtable.getValueAt(j, 3).toString(),  //itemdesc
@@ -1389,6 +1389,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         dcpricingexpire.setDateFormatString("yyyy-MM-dd");
 
         jLabel3.setText("Pricing Expire Date");
+        jLabel3.setName("lblpriceexpiredate"); // NOI18N
 
         tarmks.setColumns(20);
         tarmks.setRows(5);
@@ -1483,7 +1484,7 @@ public class QuoteMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel16.setName("lblcurr"); // NOI18N
 
         jLabel17.setText("Taxes");
-        jLabel17.setName("lbltottaxes"); // NOI18N
+        jLabel17.setName("lbltotaltaxes"); // NOI18N
 
         btchangelog.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/change.png"))); // NOI18N
         btchangelog.addActionListener(new java.awt.event.ActionListener() {

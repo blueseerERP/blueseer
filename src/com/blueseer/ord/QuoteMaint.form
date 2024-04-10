@@ -498,6 +498,7 @@
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
             <Property name="text" type="java.lang.String" value="Pricing Expire Date"/>
+            <Property name="name" type="java.lang.String" value="lblpriceexpiredate" noResource="true"/>
           </Properties>
         </Component>
         <Container class="javax.swing.JScrollPane" name="jScrollPane1">
@@ -719,7 +720,7 @@
         <Component class="javax.swing.JLabel" name="jLabel17">
           <Properties>
             <Property name="text" type="java.lang.String" value="Taxes"/>
-            <Property name="name" type="java.lang.String" value="lbltottaxes" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="lbltotaltaxes" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btchangelog">

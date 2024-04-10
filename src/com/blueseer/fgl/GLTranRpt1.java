@@ -72,7 +72,9 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
+import static com.blueseer.utl.BlueSeerUtils.getDateDB;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.setDateDB;
@@ -515,10 +517,10 @@ try {
                                 res.getString("glh_acct"),
                                 res.getString("ac_desc"),
                                 res.getString("glh_cc"),
-                                res.getString("glh_effdate"),
+                                getDateDB(res.getString("glh_effdate")),
                                 res.getString("glh_type"),
                                 res.getString("glh_ref"),
-                                res.getDouble("glh_base_amt")
+                                bsParseDouble(currformatDouble(res.getDouble("glh_base_amt")))
                             });
                 }
                 labeldollar.setText(String.valueOf(currformatDouble(dol)));

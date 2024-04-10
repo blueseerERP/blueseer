@@ -80,10 +80,13 @@ import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.parseDate;
+import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormat;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormatNull;
 import java.sql.Connection;
 import java.text.DecimalFormatSymbols;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Locale;
 import javax.swing.BorderFactory;
@@ -344,10 +347,12 @@ public class QuoteBrowse extends javax.swing.JPanel {
         
         
         java.util.Date now = new java.util.Date();
-        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-        DateFormat dfyear = new SimpleDateFormat("yyyy");
-        DateFormat dfperiod = new SimpleDateFormat("M");
+        Calendar cal = new GregorianCalendar();
+        cal.set(Calendar.DAY_OF_YEAR, 1);
+        java.util.Date firstday = cal.getTime();
         
+        dcfrom.setDate(firstday);
+        dcto.setDate(now);
                
         mymodel.setNumRows(0);
         modeldetail.setNumRows(0);
@@ -728,8 +733,7 @@ public class QuoteBrowse extends javax.swing.JPanel {
                 
 
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-                String fromdate = "";
-                String todate = "";
+                
                 mymodel.setNumRows(0);
                  
               //  tablereport.getColumnModel().getColumn(10).setCellRenderer(new InvoiceBrowsePanel.SomeRenderer());
@@ -759,16 +763,7 @@ public class QuoteBrowse extends javax.swing.JPanel {
                  if (custto.isEmpty()) {
                      custto = "ZZZZZZZZ";
                  }
-                 if (dcfrom.getDate() == null) {
-                     fromdate = bsmf.MainFrame.lowdate;
-                 } else {
-                     fromdate = dfdate.format(dcfrom.getDate());
-                 }
-                 if (dcto.getDate() == null) {
-                     todate = bsmf.MainFrame.hidate;
-                 } else {
-                    todate = dfdate.format(dcto.getDate()); 
-                 }
+                 
                 
                       //must be type balance sheet
                  if (cbactive.isSelected()) {
@@ -776,8 +771,8 @@ public class QuoteBrowse extends javax.swing.JPanel {
                         " inner join quo_det on quod_nbr = quo_nbr where " +
                         " quo_nbr >= " + "'" + nbrfrom + "'" + " AND " +
                         " quo_nbr <= " + "'" + nbrto + "'" + " AND " +
-                        " quo_date >= " + "'" + fromdate + "'" + " AND " +
-                        " quo_date <= " + "'" + todate + "'" + " AND " +
+                        " quo_date >= " + "'" + setDateDB(dcfrom.getDate()) + "'" + " AND " +
+                        " quo_date <= " + "'" + setDateDB(dcto.getDate()) + "'" + " AND " +
                         " quo_cust >= " + "'" + custfrom + "'" + " AND " +
                         " quo_cust <= " + "'" + custto + "'" + " AND " +
                         " quo_status <> " + "'" + getGlobalProgTag("closed") + "'" +
@@ -787,8 +782,8 @@ public class QuoteBrowse extends javax.swing.JPanel {
                         " inner join quo_det on quod_nbr = quo_nbr where " +
                         " quo_nbr >= " + "'" + nbrfrom + "'" + " AND " +
                         " quo_nbr <= " + "'" + nbrto + "'" + " AND " +
-                        " quo_date >= " + "'" + fromdate + "'" + " AND " +
-                        " quo_date <= " + "'" + todate + "'" + " AND " +
+                        " quo_date >= " + "'" + setDateDB(dcfrom.getDate()) + "'" + " AND " +
+                        " quo_date <= " + "'" + setDateDB(dcto.getDate()) + "'" + " AND " +
                         " quo_cust >= " + "'" + custfrom + "'" + " AND " +
                         " quo_cust <= " + "'" + custto + "'" + 
                         " group by quo_nbr, quo_status, quo_cust, quo_date, quo_expire;"); 

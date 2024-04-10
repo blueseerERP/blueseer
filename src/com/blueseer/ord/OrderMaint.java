@@ -415,12 +415,13 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         isLoad = true;
         
         ArrayList<String[]> initDataSets = ordData.getSalesOrderInit();
-                
-        jTabbedPane1.removeAll();
-        jTabbedPane1.add("Main", jPanelMain);
-        jTabbedPane1.add("Lines", jPanelLines);
-        jTabbedPane1.add("Schedule", jPanelSched);
-        jTabbedPane1.add("Attachments", panelAttachment);
+        
+       jTabbedPane1.removeAll();
+       jTabbedPane1.add(getClassLabelTag("main", this.getClass().getSimpleName()), jPanelMain);
+       jTabbedPane1.add(getClassLabelTag("lines", this.getClass().getSimpleName()), jPanelLines);
+       jTabbedPane1.add(getClassLabelTag("schedule", this.getClass().getSimpleName()), jPanelSched);
+       jTabbedPane1.add(getClassLabelTag("attachments", this.getClass().getSimpleName()), panelAttachment);
+        
         
         jTabbedPane1.setEnabledAt(1, false);
         jTabbedPane1.setEnabledAt(2, false);

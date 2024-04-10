@@ -133,6 +133,9 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
                       public Class getColumnClass(int col) {  
                         if (col == 0  || col == 1 || col == 10 )       
                             return ImageIcon.class;  
+                        else if (col == 9) {
+                            return Double.class;
+                        }
                         else return String.class;  //other columns accept String values  
                       }
                       
@@ -407,10 +410,10 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
                         " where svd_nbr = " + "'" + order + "'" +  ";");
                 while (res.next()) {
                    modeldetail.addRow(new Object[]{ 
-                      res.getString("svd_nbr"), 
+                      bsNumber(res.getString("svd_nbr")), 
                       res.getString("svd_item"),
-                      res.getString("svd_qty"),
-                      res.getString("svd_netprice")});
+                      bsNumber(res.getString("svd_qty")),
+                      bsParseDouble(currformatDouble(res.getDouble("svd_netprice")))});
                 }
                
              
@@ -507,11 +510,8 @@ public class ServiceOrderBrowse extends javax.swing.JPanel {
         
         // tablereport.getColumnModel().getColumn(0).setCellRenderer(new ButtonRenderer());
          tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-       //  tablereport.getColumnModel().getColumn(8).setCellRenderer(new ButtonRenderer());
-         tablereport.getColumnModel().getColumn(7).setMaxWidth(100);
-                //          ReportPanel.TableReport.getColumn("CallID").setCellEditor(
-                    //       new ButtonEditor(new JCheckBox()));
-        
+         tablereport.getColumnModel().getColumn(9).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
+      
         
        
       
@@ -875,8 +875,10 @@ try {
                          if (trantype.equals("quote") && ! status.equals(getGlobalProgTag("void"))) {
                              totquotes = totquotes + res.getDouble("price");
                          }
-                         mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, BlueSeerUtils.clickbasket, 
-                               bsNumber(res.getString("sv_nbr")),
+                         mymodel.addRow(new Object[]{
+                             BlueSeerUtils.clickflag, 
+                             BlueSeerUtils.clickbasket, 
+                               bsNumber(res.getInt("sv_nbr")),
                                 res.getString("sv_cust"),
                                 res.getString("sv_ship"),
                                 res.getString("sv_type"),
