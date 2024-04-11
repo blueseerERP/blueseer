@@ -1178,18 +1178,18 @@ public class OVData {
                             + "'" + item + "'" + ","
                             + "'" + set + "'" + ","
                             + "'" + site + "'" + ","
-                            + "'" + mtl + "'" + ","
-                            + "'" + ovh + "'" + ","
-                            + "'" + out + "'" + ","
-                            + "'" + tot + "'"
+                            + "'" + currformatDoubleUS(mtl) + "'" + ","
+                            + "'" + currformatDoubleUS(ovh) + "'" + ","
+                            + "'" + currformatDoubleUS(out) + "'" + ","
+                            + "'" + currformatDoubleUS(tot) + "'"
                             + ")"
                             + ";");
                 } else {
                     st.executeUpdate("update item_cost set " 
-                            + "itc_mtl_top = " + "'" + mtl + "'" + ","
-                            + "itc_ovh_top = " + "'" + ovh + "'" + ","
-                            + "itc_out_top = " + "'" + out + "'" + ","
-                            + "itc_total = " + "'" + tot + "'"
+                            + "itc_mtl_top = " + "'" + currformatDoubleUS(mtl) + "'" + ","
+                            + "itc_ovh_top = " + "'" + currformatDoubleUS(ovh) + "'" + ","
+                            + "itc_out_top = " + "'" + currformatDoubleUS(out) + "'" + ","
+                            + "itc_total = " + "'" + currformatDoubleUS(tot) + "'"
                             + " where "        
                             + "itc_item = " + "'" + item + "'" + " AND "
                             + "itc_set = " + "'" + set + "'" + " AND "
@@ -1227,10 +1227,10 @@ public class OVData {
             ResultSet res = null;
             try {
             st.executeUpdate("update item_cost set " +
-                  " itc_mtl_top = " + "'" + mtl + "'" + "," +
-                  " itc_ovh_top = " + "'" + ovh + "'" + "," +
-                  " itc_out_top = " + "'" + out + "'" + "," +
-                  " itc_total = " + "'" + tot + "'" +
+                  " itc_mtl_top = " + "'" + currformatDoubleUS(mtl) + "'" + "," +
+                  " itc_ovh_top = " + "'" + currformatDoubleUS(ovh) + "'" + "," +
+                  " itc_out_top = " + "'" + currformatDoubleUS(out) + "'" + "," +
+                  " itc_total = " + "'" + currformatDoubleUS(tot) + "'" +
                   " where itc_item = " + "'" + item + "'" +
                   " and itc_set = " + "'" + set + "'" +
                   " and itc_site = " + "'" + site + "'" +
@@ -1267,12 +1267,12 @@ public class OVData {
             ResultSet res = null;
             try {
             st.executeUpdate("update item_cost set " +
-                  " itc_mtl_top = " + "'" + mtl + "'" + "," +
-                  " itc_ovh_top = " + "'" + ovh + "'" + "," +
-                  " itc_out_top = " + "'" + out + "'" + "," +
-                  " itc_lbr_top = " + "'" + lbr + "'" + "," +
-                  " itc_bdn_top = " + "'" + bdn + "'" + "," +        
-                  " itc_total = " + "'" + tot + "'" +
+                  " itc_mtl_top = " + "'" + currformatDoubleUS(mtl) + "'" + "," +
+                  " itc_ovh_top = " + "'" + currformatDoubleUS(ovh) + "'" + "," +
+                  " itc_out_top = " + "'" + currformatDoubleUS(out) + "'" + "," +
+                  " itc_lbr_top = " + "'" + currformatDoubleUS(lbr) + "'" + "," +
+                  " itc_bdn_top = " + "'" + currformatDoubleUS(bdn) + "'" + "," +        
+                  " itc_total = " + "'" + currformatDoubleUS(tot) + "'" +
                   " where itc_item = " + "'" + item + "'" +
                   " and itc_set = " + "'" + set + "'" +
                   " and itc_site = " + "'" + site + "'" +

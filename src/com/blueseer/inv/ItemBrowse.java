@@ -72,6 +72,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDoubleZ;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformat;
@@ -498,9 +499,9 @@ try {
                                 res.getString("it_code"),
                                 res.getString("it_type"),
                                 res.getString("it_uom"),
-                                bsParseDouble(res.getString("it_mtl_cost")),
-                                bsParseDouble(res.getString("it_sell_price")),
-                                bsFormatDoubleZ(res.getDouble("qty"))
+                                bsFormatDouble(res.getDouble("it_mtl_cost")),
+                                bsFormatDouble(res.getDouble("it_sell_price")),
+                                bsFormatDouble(res.getDouble("qty"))
                             });
                 } 
                 

@@ -46,6 +46,7 @@ import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDoubleZ;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatInt;
 import static com.blueseer.utl.BlueSeerUtils.bsNumber;
+import static com.blueseer.utl.BlueSeerUtils.bsNumberToUS;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.bsformat;
@@ -689,7 +690,8 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
         if (dcexpire.getDate() != null) {
             expire = setDateDB(dcexpire.getDate());
         }
-        item_mstr x = new item_mstr(null, tbkey.getText().toString(),
+        item_mstr x = new item_mstr(null, 
+                tbkey.getText().toString(),
                 tbdesc.getText().toUpperCase(),
                 bsParseInt(tblotsize.getText()),
                 bsParseDouble(tbsellprice.getText()),

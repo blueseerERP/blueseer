@@ -742,7 +742,7 @@ public class BlueSeerUtils {
     
     public static String bsFormatDouble(double invalue) {
         String outvalue = "";
-        String pattern = "#0.00"; 
+        String pattern = "#0.00###"; 
         DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());    
         df.applyPattern(pattern);
         outvalue = df.format(invalue); 
@@ -1058,7 +1058,7 @@ public class BlueSeerUtils {
         
     public static String currformatDoubleUS(double invalue) {
         String x = "";
-        String pattern = "#0.00###";
+        String pattern = "#0.00";
        // DecimalFormat df = new DecimalFormat("#0.00###", new DecimalFormatSymbols(Locale.getDefault())); 
         DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.US);
         df.applyPattern(pattern);

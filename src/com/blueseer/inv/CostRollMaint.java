@@ -50,6 +50,8 @@ import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble5;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
+import static com.blueseer.utl.BlueSeerUtils.currformatDoubleUS;
+import static com.blueseer.utl.BlueSeerUtils.formatUS;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -985,17 +987,17 @@ public class CostRollMaint extends javax.swing.JPanel {
 
                     if (i > 0) {
                         st.executeUpdate("update item_cost set "
-                                + "itc_mtl_low = " + "'" + toplowtable.getValueAt(0, 1).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "itc_mtl_top = " + "'" + toplowtable.getValueAt(0, 3).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "itc_lbr_low = " + "'" + toplowtable.getValueAt(1, 1).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "itc_lbr_top = " + "'" + toplowtable.getValueAt(1, 3).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "itc_bdn_low = " + "'" + toplowtable.getValueAt(2, 1).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "itc_bdn_top = " + "'" + toplowtable.getValueAt(2, 3).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "itc_ovh_low = " + "'" + toplowtable.getValueAt(3, 1).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "itc_ovh_top = " + "'" + toplowtable.getValueAt(3, 3).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "itc_out_low = " + "'" + toplowtable.getValueAt(4, 1).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "itc_out_top = " + "'" + toplowtable.getValueAt(4, 3).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "itc_total = " + "'" + toplowtable.getValueAt(5, 5).toString().replace(defaultDecimalSeparator, '.') + "'" 
+                                + "itc_mtl_low = " + "'" + currformatDoubleUS(bsParseDouble(toplowtable.getValueAt(0, 1).toString())) + "'" + ","
+                                + "itc_mtl_top = " + "'" + currformatDoubleUS(bsParseDouble(toplowtable.getValueAt(0, 3).toString())) + "'" + ","
+                                + "itc_lbr_low = " + "'" + currformatDoubleUS(bsParseDouble(toplowtable.getValueAt(1, 1).toString())) + "'" + ","
+                                + "itc_lbr_top = " + "'" + currformatDoubleUS(bsParseDouble(toplowtable.getValueAt(1, 3).toString())) + "'" + ","
+                                + "itc_bdn_low = " + "'" + currformatDoubleUS(bsParseDouble(toplowtable.getValueAt(2, 1).toString())) + "'" + ","
+                                + "itc_bdn_top = " + "'" + currformatDoubleUS(bsParseDouble(toplowtable.getValueAt(2, 3).toString())) + "'" + ","
+                                + "itc_ovh_low = " + "'" + currformatDoubleUS(bsParseDouble(toplowtable.getValueAt(3, 1).toString())) + "'" + ","
+                                + "itc_ovh_top = " + "'" + currformatDoubleUS(bsParseDouble(toplowtable.getValueAt(3, 3).toString())) + "'" + ","
+                                + "itc_out_low = " + "'" + currformatDoubleUS(bsParseDouble(toplowtable.getValueAt(4, 1).toString())) + "'" + ","
+                                + "itc_out_top = " + "'" + currformatDoubleUS(bsParseDouble(toplowtable.getValueAt(4, 3).toString())) + "'" + ","
+                                + "itc_total = " + "'" + currformatDoubleUS(bsParseDouble(toplowtable.getValueAt(5, 5).toString())) + "'" 
                                 + " where itc_item = " + "'" + tbitem.getText() + "'"
                                 + " AND itc_set = 'standard' "
                                 + " AND itc_site = " + "'" + thissite + "'"
@@ -1021,11 +1023,11 @@ public class CostRollMaint extends javax.swing.JPanel {
                                          + " AND itr_routing = " + "'" + routing + "'" + ";");
                         
                          
-                            itrcost = Double.valueOf(costtable.getValueAt(i,8).toString()) + 
-                                   Double.valueOf(costtable.getValueAt(i,6).toString()) +
-                                 Double.valueOf(costtable.getValueAt(i,7).toString()) +
-                                 Double.valueOf(costtable.getValueAt(i,9).toString()) +
-                                 Double.valueOf(costtable.getValueAt(i,10).toString()) ;
+                            itrcost = bsParseDouble(costtable.getValueAt(i,8).toString()) + 
+                                   bsParseDouble(costtable.getValueAt(i,6).toString()) +
+                                 bsParseDouble(costtable.getValueAt(i,7).toString()) +
+                                 bsParseDouble(costtable.getValueAt(i,9).toString()) +
+                                 bsParseDouble(costtable.getValueAt(i,10).toString()) ;
                                 
                          
                             st.executeUpdate("insert into itemr_cost (itr_item, itr_site, itr_set, itr_routing, itr_op, " +
@@ -1036,12 +1038,12 @@ public class CostRollMaint extends javax.swing.JPanel {
                                 + "'" + "standard" + "'" + ","
                                 + "'" + routing + "'" + ","
                                 + "'" + op + "'" + ","
-                                + "'" + currformatDouble(itrcost).replace(defaultDecimalSeparator, '.') + "'" + "," 
-                                + "'" + costtable.getValueAt(i, 8).toString().replace(defaultDecimalSeparator, '.') + "'" + ","   
-                                + "'" + costtable.getValueAt(i, 6).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "'" + costtable.getValueAt(i, 7).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "'" + costtable.getValueAt(i, 9).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                                + "'" + costtable.getValueAt(i, 10).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + currformatDoubleUS(itrcost) + "'" + "," 
+                                + "'" + formatUS(costtable.getValueAt(i, 8).toString()) + "'" + ","   
+                                + "'" + formatUS(costtable.getValueAt(i, 6).toString()) + "'" + ","
+                                + "'" + formatUS(costtable.getValueAt(i, 7).toString()) + "'" + ","
+                                + "'" + formatUS(costtable.getValueAt(i, 9).toString()) + "'" + ","
+                                + "'" + formatUS(costtable.getValueAt(i, 10).toString()) + "'" + ","
                                 + "'" + "0" + "'" + ","
                                 + "'" + "0" + "'" + ","
                                 + "'" + "0" + "'" + ","
