@@ -763,10 +763,10 @@ public class InventoryMaint extends javax.swing.JPanel {
             cc_dr = prodline;
         }
             gl_pair gv = new gl_pair(null,
-                    invacct, 
-                    prodline, 
-                    acct, 
-                    cc,  
+                    acct_cr, 
+                    cc_cr, 
+                    acct_dr, 
+                    cc_dr,  
                     dfdate.format(dcdate.getDate()), 
                     (cost * bsParseDouble(tbqty.getText())),  
                     (cost * bsParseDouble(tbqty.getText())),  

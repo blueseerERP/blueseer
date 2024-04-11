@@ -758,6 +758,15 @@ public class BlueSeerUtils {
         return outvalue;
     }
     
+    public static String bsFormatDoubleUS(double invalue) {
+        String x = "";
+        String pattern = "#0.00###";
+        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.US);
+        df.applyPattern(pattern);
+        x = df.format(invalue);
+        return x;
+    }
+    
     
     public static String bsFormatInt(int invalue) {
         String outvalue = "";
@@ -988,7 +997,7 @@ public class BlueSeerUtils {
     
     public static String currformatDoubleWithSymbol(double invalue, String currency) {
         String x = "";
-        String pattern = "#0.00###";
+        String pattern = "#0.00";
         Currency c = Currency.getInstance(currency);
         String symbol = "$";
         if (! currency.equals("USD")) {

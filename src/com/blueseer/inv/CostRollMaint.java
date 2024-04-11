@@ -46,7 +46,9 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble5;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatDoubleUS;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
@@ -987,17 +989,17 @@ public class CostRollMaint extends javax.swing.JPanel {
 
                     if (i > 0) {
                         st.executeUpdate("update item_cost set "
-                                + "itc_mtl_low = " + "'" + currformatDoubleUS(bsParseDouble(toplowtable.getValueAt(0, 1).toString())) + "'" + ","
-                                + "itc_mtl_top = " + "'" + currformatDoubleUS(bsParseDouble(toplowtable.getValueAt(0, 3).toString())) + "'" + ","
-                                + "itc_lbr_low = " + "'" + currformatDoubleUS(bsParseDouble(toplowtable.getValueAt(1, 1).toString())) + "'" + ","
-                                + "itc_lbr_top = " + "'" + currformatDoubleUS(bsParseDouble(toplowtable.getValueAt(1, 3).toString())) + "'" + ","
-                                + "itc_bdn_low = " + "'" + currformatDoubleUS(bsParseDouble(toplowtable.getValueAt(2, 1).toString())) + "'" + ","
-                                + "itc_bdn_top = " + "'" + currformatDoubleUS(bsParseDouble(toplowtable.getValueAt(2, 3).toString())) + "'" + ","
-                                + "itc_ovh_low = " + "'" + currformatDoubleUS(bsParseDouble(toplowtable.getValueAt(3, 1).toString())) + "'" + ","
-                                + "itc_ovh_top = " + "'" + currformatDoubleUS(bsParseDouble(toplowtable.getValueAt(3, 3).toString())) + "'" + ","
-                                + "itc_out_low = " + "'" + currformatDoubleUS(bsParseDouble(toplowtable.getValueAt(4, 1).toString())) + "'" + ","
-                                + "itc_out_top = " + "'" + currformatDoubleUS(bsParseDouble(toplowtable.getValueAt(4, 3).toString())) + "'" + ","
-                                + "itc_total = " + "'" + currformatDoubleUS(bsParseDouble(toplowtable.getValueAt(5, 5).toString())) + "'" 
+                                + "itc_mtl_low = " + "'" + bsFormatDoubleUS(bsParseDouble(toplowtable.getValueAt(0, 1).toString())) + "'" + ","
+                                + "itc_mtl_top = " + "'" + bsFormatDoubleUS(bsParseDouble(toplowtable.getValueAt(0, 3).toString())) + "'" + ","
+                                + "itc_lbr_low = " + "'" + bsFormatDoubleUS(bsParseDouble(toplowtable.getValueAt(1, 1).toString())) + "'" + ","
+                                + "itc_lbr_top = " + "'" + bsFormatDoubleUS(bsParseDouble(toplowtable.getValueAt(1, 3).toString())) + "'" + ","
+                                + "itc_bdn_low = " + "'" + bsFormatDoubleUS(bsParseDouble(toplowtable.getValueAt(2, 1).toString())) + "'" + ","
+                                + "itc_bdn_top = " + "'" + bsFormatDoubleUS(bsParseDouble(toplowtable.getValueAt(2, 3).toString())) + "'" + ","
+                                + "itc_ovh_low = " + "'" + bsFormatDoubleUS(bsParseDouble(toplowtable.getValueAt(3, 1).toString())) + "'" + ","
+                                + "itc_ovh_top = " + "'" + bsFormatDoubleUS(bsParseDouble(toplowtable.getValueAt(3, 3).toString())) + "'" + ","
+                                + "itc_out_low = " + "'" + bsFormatDoubleUS(bsParseDouble(toplowtable.getValueAt(4, 1).toString())) + "'" + ","
+                                + "itc_out_top = " + "'" + bsFormatDoubleUS(bsParseDouble(toplowtable.getValueAt(4, 3).toString())) + "'" + ","
+                                + "itc_total = " + "'" + bsFormatDoubleUS(bsParseDouble(toplowtable.getValueAt(5, 5).toString())) + "'" 
                                 + " where itc_item = " + "'" + tbitem.getText() + "'"
                                 + " AND itc_set = 'standard' "
                                 + " AND itc_site = " + "'" + thissite + "'"
@@ -1038,12 +1040,12 @@ public class CostRollMaint extends javax.swing.JPanel {
                                 + "'" + "standard" + "'" + ","
                                 + "'" + routing + "'" + ","
                                 + "'" + op + "'" + ","
-                                + "'" + currformatDoubleUS(itrcost) + "'" + "," 
-                                + "'" + formatUS(costtable.getValueAt(i, 8).toString()) + "'" + ","   
-                                + "'" + formatUS(costtable.getValueAt(i, 6).toString()) + "'" + ","
-                                + "'" + formatUS(costtable.getValueAt(i, 7).toString()) + "'" + ","
-                                + "'" + formatUS(costtable.getValueAt(i, 9).toString()) + "'" + ","
-                                + "'" + formatUS(costtable.getValueAt(i, 10).toString()) + "'" + ","
+                                + "'" + bsFormatDoubleUS(itrcost) + "'" + "," 
+                                + "'" + bsFormatDoubleUS(bsParseDouble(costtable.getValueAt(i, 8).toString())) + "'" + ","   
+                                + "'" + bsFormatDoubleUS(bsParseDouble(costtable.getValueAt(i, 6).toString())) + "'" + ","
+                                + "'" + bsFormatDoubleUS(bsParseDouble(costtable.getValueAt(i, 7).toString())) + "'" + ","
+                                + "'" + bsFormatDoubleUS(bsParseDouble(costtable.getValueAt(i, 9).toString())) + "'" + ","
+                                + "'" + bsFormatDoubleUS(bsParseDouble(costtable.getValueAt(i, 10).toString())) + "'" + ","
                                 + "'" + "0" + "'" + ","
                                 + "'" + "0" + "'" + ","
                                 + "'" + "0" + "'" + ","
