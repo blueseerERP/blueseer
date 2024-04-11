@@ -54,12 +54,13 @@ import com.blueseer.sch.schData;
 import com.blueseer.shp.shpData;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble5;
+import static com.blueseer.utl.BlueSeerUtils.bsFormatDoubleUS;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.bsformat;
 import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
 import static com.blueseer.utl.BlueSeerUtils.currformatDoubleUS;
-import static com.blueseer.utl.BlueSeerUtils.formatUS;
+import static com.blueseer.utl.BlueSeerUtils.formatUSC;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalTag;
@@ -1178,18 +1179,18 @@ public class OVData {
                             + "'" + item + "'" + ","
                             + "'" + set + "'" + ","
                             + "'" + site + "'" + ","
-                            + "'" + currformatDoubleUS(mtl) + "'" + ","
-                            + "'" + currformatDoubleUS(ovh) + "'" + ","
-                            + "'" + currformatDoubleUS(out) + "'" + ","
-                            + "'" + currformatDoubleUS(tot) + "'"
+                            + "'" + bsFormatDoubleUS(mtl) + "'" + ","
+                            + "'" + bsFormatDoubleUS(ovh) + "'" + ","
+                            + "'" + bsFormatDoubleUS(out) + "'" + ","
+                            + "'" + bsFormatDoubleUS(tot) + "'"
                             + ")"
                             + ";");
                 } else {
                     st.executeUpdate("update item_cost set " 
-                            + "itc_mtl_top = " + "'" + currformatDoubleUS(mtl) + "'" + ","
-                            + "itc_ovh_top = " + "'" + currformatDoubleUS(ovh) + "'" + ","
-                            + "itc_out_top = " + "'" + currformatDoubleUS(out) + "'" + ","
-                            + "itc_total = " + "'" + currformatDoubleUS(tot) + "'"
+                            + "itc_mtl_top = " + "'" + bsFormatDoubleUS(mtl) + "'" + ","
+                            + "itc_ovh_top = " + "'" + bsFormatDoubleUS(ovh) + "'" + ","
+                            + "itc_out_top = " + "'" + bsFormatDoubleUS(out) + "'" + ","
+                            + "itc_total = " + "'" + bsFormatDoubleUS(tot) + "'"
                             + " where "        
                             + "itc_item = " + "'" + item + "'" + " AND "
                             + "itc_set = " + "'" + set + "'" + " AND "
@@ -1227,10 +1228,10 @@ public class OVData {
             ResultSet res = null;
             try {
             st.executeUpdate("update item_cost set " +
-                  " itc_mtl_top = " + "'" + currformatDoubleUS(mtl) + "'" + "," +
-                  " itc_ovh_top = " + "'" + currformatDoubleUS(ovh) + "'" + "," +
-                  " itc_out_top = " + "'" + currformatDoubleUS(out) + "'" + "," +
-                  " itc_total = " + "'" + currformatDoubleUS(tot) + "'" +
+                  " itc_mtl_top = " + "'" + bsFormatDoubleUS(mtl) + "'" + "," +
+                  " itc_ovh_top = " + "'" + bsFormatDoubleUS(ovh) + "'" + "," +
+                  " itc_out_top = " + "'" + bsFormatDoubleUS(out) + "'" + "," +
+                  " itc_total = " + "'" + bsFormatDoubleUS(tot) + "'" +
                   " where itc_item = " + "'" + item + "'" +
                   " and itc_set = " + "'" + set + "'" +
                   " and itc_site = " + "'" + site + "'" +
@@ -1267,12 +1268,12 @@ public class OVData {
             ResultSet res = null;
             try {
             st.executeUpdate("update item_cost set " +
-                  " itc_mtl_top = " + "'" + currformatDoubleUS(mtl) + "'" + "," +
-                  " itc_ovh_top = " + "'" + currformatDoubleUS(ovh) + "'" + "," +
-                  " itc_out_top = " + "'" + currformatDoubleUS(out) + "'" + "," +
-                  " itc_lbr_top = " + "'" + currformatDoubleUS(lbr) + "'" + "," +
-                  " itc_bdn_top = " + "'" + currformatDoubleUS(bdn) + "'" + "," +        
-                  " itc_total = " + "'" + currformatDoubleUS(tot) + "'" +
+                  " itc_mtl_top = " + "'" + bsFormatDoubleUS(mtl) + "'" + "," +
+                  " itc_ovh_top = " + "'" + bsFormatDoubleUS(ovh) + "'" + "," +
+                  " itc_out_top = " + "'" + bsFormatDoubleUS(out) + "'" + "," +
+                  " itc_lbr_top = " + "'" + bsFormatDoubleUS(lbr) + "'" + "," +
+                  " itc_bdn_top = " + "'" + bsFormatDoubleUS(bdn) + "'" + "," +        
+                  " itc_total = " + "'" + bsFormatDoubleUS(tot) + "'" +
                   " where itc_item = " + "'" + item + "'" +
                   " and itc_set = " + "'" + set + "'" +
                   " and itc_site = " + "'" + site + "'" +

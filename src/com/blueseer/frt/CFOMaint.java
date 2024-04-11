@@ -74,7 +74,7 @@ import static com.blueseer.utl.BlueSeerUtils.clog;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDoubleUS;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
-import static com.blueseer.utl.BlueSeerUtils.formatUS;
+import static com.blueseer.utl.BlueSeerUtils.formatUSC;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
@@ -1336,7 +1336,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
              ddratetype.getSelectedItem().toString(), // item
              tbkey.getText(), // order
              tbnumber.getText(), // cust fo
-             formatUS(tbcost.getText()), // netprice
+             formatUSC(tbcost.getText()), // netprice
              "0" // taxamt
              };
         list.add(s);

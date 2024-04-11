@@ -616,6 +616,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
         jLabel9.setName("lbltype"); // NOI18N
 
         btprint.setText("Print/PDF");
+        btprint.setName("btprintpdf"); // NOI18N
         btprint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btprintActionPerformed(evt);

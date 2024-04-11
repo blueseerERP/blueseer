@@ -1035,13 +1035,22 @@ public class BlueSeerUtils {
     
     public static String formatUSZ(String invalue) {
         // invalue will come over as a . decimal regardless of Locale
-        String x = "0";
+        String x = "0.00";
         String pattern = "#0.#####";
         if (! invalue.isEmpty()) {
+            
+        NumberFormat nf = NumberFormat.getInstance(Locale.getDefault());
+        if (Locale.getDefault().getLanguage().equals("ar") && invalue.contains(".")) { // if AR locale and US keyboard "." then change decimal separator
+            invalue = invalue.replace('.', '\u066B'); 
+        } 
+        if (Locale.getDefault().getLanguage().equals("ar") && invalue.startsWith("-")) {
+            invalue = invalue.substring(1) + "-";
+        }    
+            
         DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.US);
         df.applyPattern(pattern);
         try {   
-            x = df.format(df.parse(invalue));
+            x = df.format(nf.parse(invalue));
         } catch (ParseException ex) {
             bslog(ex);
         }
@@ -1049,15 +1058,24 @@ public class BlueSeerUtils {
         return x;
     }
         
-    public static String formatUS(String invalue) {
+    public static String formatUSC(String invalue) {
         // invalue will come over as a . decimal regardless of Locale
-        String x = "0";
+        String x = "0.00";
         String pattern = "#0.00###";
         if (! invalue.isEmpty()) {
+            
+        NumberFormat nf = NumberFormat.getInstance(Locale.getDefault());
+        if (Locale.getDefault().getLanguage().equals("ar") && invalue.contains(".")) { // if AR locale and US keyboard "." then change decimal separator
+            invalue = invalue.replace('.', '\u066B'); 
+        } 
+        if (Locale.getDefault().getLanguage().equals("ar") && invalue.startsWith("-")) {
+            invalue = invalue.substring(1) + "-";
+        }    
+            
         DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.US);
         df.applyPattern(pattern);
         try {   
-            x = df.format(df.parse(invalue));
+            x = df.format(nf.parse(invalue));
         } catch (ParseException ex) {
             bslog(ex);
         }

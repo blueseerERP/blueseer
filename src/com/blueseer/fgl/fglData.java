@@ -45,7 +45,7 @@ import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatIntUS;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDoubleUS;
-import static com.blueseer.utl.BlueSeerUtils.formatUS;
+import static com.blueseer.utl.BlueSeerUtils.formatUSC;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.parseDate;

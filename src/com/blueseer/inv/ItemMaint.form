@@ -762,7 +762,7 @@
                     <Component class="javax.swing.JLabel" name="jLabel62">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="ShipWt"/>
-                        <Property name="name" type="java.lang.String" value="lblshipwt" noResource="true"/>
+                        <Property name="name" type="java.lang.String" value="lblshipwgt" noResource="true"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel67">
@@ -791,7 +791,7 @@
                     <Component class="javax.swing.JLabel" name="jLabel70">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="NetWt"/>
-                        <Property name="name" type="java.lang.String" value="lblnetwt" noResource="true"/>
+                        <Property name="name" type="java.lang.String" value="lblnetwgt" noResource="true"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JTextField" name="revlevel">
@@ -1608,6 +1608,7 @@
         <Component class="javax.swing.JButton" name="btimageprint">
           <Properties>
             <Property name="text" type="java.lang.String" value="Print"/>
+            <Property name="name" type="java.lang.String" value="btprint" noResource="true"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btimageprintActionPerformed"/>

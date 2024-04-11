@@ -1480,7 +1480,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
         });
 
         jLabel62.setText("ShipWt");
-        jLabel62.setName("lblshipwt"); // NOI18N
+        jLabel62.setName("lblshipwgt"); // NOI18N
 
         jLabel67.setText("LeadTime");
         jLabel67.setName("lblleadtime"); // NOI18N
@@ -1498,7 +1498,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
         });
 
         jLabel70.setText("NetWt");
-        jLabel70.setName("lblnetwt"); // NOI18N
+        jLabel70.setName("lblnetwgt"); // NOI18N
 
         jLabel65.setText("Eng Rev");
         jLabel65.setName("lblengrev"); // NOI18N
@@ -1918,7 +1918,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -2180,6 +2180,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
         });
 
         btimageprint.setText("Print");
+        btimageprint.setName("btprint"); // NOI18N
         btimageprint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btimageprintActionPerformed(evt);

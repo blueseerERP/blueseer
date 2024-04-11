@@ -257,7 +257,7 @@
             <Component class="javax.swing.JLabel" name="jLabel2">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Component"/>
-                <Property name="name" type="java.lang.String" value="lblcomponent" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="lblcomp" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel5">
@@ -308,7 +308,7 @@
             <Component class="javax.swing.JLabel" name="jLabel4">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Operation"/>
-                <Property name="name" type="java.lang.String" value="lbloperation" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="lblop" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="btdelete">
@@ -860,11 +860,13 @@
             <Component class="javax.swing.JCheckBox" name="cbdefault">
               <Properties>
                 <Property name="text" type="java.lang.String" value="default"/>
+                <Property name="name" type="java.lang.String" value="cbdefault" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JCheckBox" name="cbenabled">
               <Properties>
                 <Property name="text" type="java.lang.String" value="enabled"/>
+                <Property name="name" type="java.lang.String" value="cbenabled" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="lblopname">

@@ -1203,7 +1203,7 @@ public class BOMMaint extends javax.swing.JPanel {
         jLabel3.setName("lblqtyper"); // NOI18N
 
         jLabel2.setText("Component");
-        jLabel2.setName("lblcomponent"); // NOI18N
+        jLabel2.setName("lblcomp"); // NOI18N
 
         jLabel5.setText("Reference");
         jLabel5.setName("lblref"); // NOI18N
@@ -1240,7 +1240,7 @@ public class BOMMaint extends javax.swing.JPanel {
         });
 
         jLabel4.setText("Operation");
-        jLabel4.setName("lbloperation"); // NOI18N
+        jLabel4.setName("lblop"); // NOI18N
 
         btdelete.setText("Delete");
         btdelete.setName("btdelete"); // NOI18N
@@ -1604,8 +1604,10 @@ public class BOMMaint extends javax.swing.JPanel {
         });
 
         cbdefault.setText("default");
+        cbdefault.setName("cbdefault"); // NOI18N
 
         cbenabled.setText("enabled");
+        cbenabled.setName("cbenabled"); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
