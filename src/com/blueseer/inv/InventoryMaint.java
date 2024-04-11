@@ -47,6 +47,7 @@ import static com.blueseer.utl.BlueSeerUtils.ludialog;
 import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
@@ -686,8 +687,8 @@ public class InventoryMaint extends javax.swing.JPanel {
                 site, // site
                 tbitem.getText(),
                 qty,
-                dfdate.format(today), //entdate
-                dfdate.format(dcdate.getDate()), //effdate
+                setDateDB(today), //entdate
+                setDateDB(dcdate.getDate()), //effdate
                 bsmf.MainFrame.userid, //userid
                 tbref.getText(), //ref
                 "", //addrcode
@@ -767,7 +768,7 @@ public class InventoryMaint extends javax.swing.JPanel {
                     cc_cr, 
                     acct_dr, 
                     cc_dr,  
-                    dfdate.format(dcdate.getDate()), 
+                    setDateDB(dcdate.getDate()), 
                     (cost * bsParseDouble(tbqty.getText())),  
                     (cost * bsParseDouble(tbqty.getText())),  
                     basecurr, 

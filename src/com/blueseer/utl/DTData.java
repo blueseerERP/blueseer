@@ -7783,8 +7783,8 @@ return mymodel;
                                 res.getString("glt_doc"),
                                 res.getString("glt_ref"),
                                 res.getString("glt_desc"),
-                                res.getString("glt_effdate"),
-                                res.getString("glt_entdate"),
+                                getDateDB(res.getString("glt_effdate")),
+                                getDateDB(res.getString("glt_entdate")),
                                 res.getDouble("glt_base_amt")
                         });
                     }
