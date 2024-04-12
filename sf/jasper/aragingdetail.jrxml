@@ -27,16 +27,16 @@
 	<field name="COLUMN_5" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="COLUMN_6" class="java.lang.String">
+	<field name="COLUMN_6" class="java.lang.Double">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="COLUMN_7" class="java.lang.String">
+	<field name="COLUMN_7" class="java.lang.Double">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="COLUMN_8" class="java.lang.String">
+	<field name="COLUMN_8" class="java.lang.Double">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="COLUMN_9" class="java.lang.String"/>
+	<field name="COLUMN_9" class="java.lang.Double"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
