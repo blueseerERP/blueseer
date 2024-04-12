@@ -28,10 +28,12 @@ package com.blueseer.prd;
 
 import com.blueseer.inv.*;
 import bsmf.MainFrame;
+import static bsmf.MainFrame.checkperms;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
+import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
@@ -70,6 +72,7 @@ import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
@@ -183,7 +186,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
                 getGlobalColumnTag("outdate"),
                 getGlobalColumnTag("outtime"),
                 getGlobalColumnTag("totalhours"),
-                getGlobalColumnTag("code")
+                getGlobalColumnTag("status")
                 
             }){
               @Override  
@@ -775,8 +778,13 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
     public void getClockRecords() {
         clockmodel.setNumRows(0);
         ArrayList<String[]> clockd = getJobClockDetail(Integer.valueOf(jobop[0]));
+        String status = "";
         for (String[] c : clockd) {
-            
+            if (c[11].equals("01")) {
+                status = getGlobalProgTag("clockin");
+            } else {
+                status = getGlobalProgTag("clockout");
+            }
             clockmodel.addRow(new Object[] { 
                 c[1],
                 c[2], 
@@ -787,7 +795,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
                 c[8],
                 c[9],
                 c[10],
-                c[11]});
+                status});
             
         }
     }
@@ -1029,6 +1037,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         btupdate = new javax.swing.JButton();
         dcdate = new com.toedter.calendar.JDateChooser();
         jLabel19 = new javax.swing.JLabel();
+        btclock = new javax.swing.JButton();
         panelNotes = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -1287,6 +1296,13 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
 
         jLabel19.setText("Date:");
 
+        btclock.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/clock.png"))); // NOI18N
+        btclock.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btclockActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelMainLayout = new javax.swing.GroupLayout(panelMain);
         panelMain.setLayout(panelMainLayout);
         panelMainLayout.setHorizontalGroup(
@@ -1366,7 +1382,9 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
                                 .addComponent(btclear)
                                 .addGap(34, 34, 34)
                                 .addComponent(btprint, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btclock, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btcommit)
                                 .addGap(28, 28, 28)
                                 .addComponent(lblmessage, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -1387,7 +1405,8 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(btprint)
                     .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(btcommit)
-                        .addComponent(lblmessage, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(lblmessage, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btclock))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(panelMainLayout.createSequentialGroup()
@@ -1849,10 +1868,20 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         bsmf.MainFrame.show("Operation has been updated");
     }//GEN-LAST:event_btupdateActionPerformed
 
+    private void btclockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclockActionPerformed
+       
+               String mypanel = "JobScanIO";
+               if (! checkperms(mypanel)) { return; }
+               String[] args = new String[]{""};
+               reinitpanels(mypanel, true, args);
+        
+    }//GEN-LAST:event_btclockActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btaddmatl;
     private javax.swing.JButton btclear;
+    private javax.swing.JButton btclock;
     private javax.swing.JButton btcommit;
     private javax.swing.JButton btdeletematl;
     private javax.swing.JButton btlookup;

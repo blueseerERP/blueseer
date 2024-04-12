@@ -257,8 +257,8 @@ public class schData {
         int rows = 0;
         String sqlSelect = "SELECT * FROM  plan_operation where plo_parent = ? and plo_op = ?";
         String sqlInsert = "insert into plan_operation (plo_parent, plo_op, plo_qty, plo_qty_comp, plo_cell, "
-                        + " plo_operator, plo_operatorname, plo_date, plo_status, plo_userid ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?); ";
+                        + " plo_operator, plo_operatorname, plo_date, plo_status, plo_userid, plo_desc, plo_notes ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?); ";
        
         ps = con.prepareStatement(sqlSelect);
              ps.setInt(1, x.plo_parent);
@@ -276,6 +276,8 @@ public class schData {
             ps.setString(8, x.plo_date);
             ps.setString(9, x.plo_status);
             ps.setString(10, x.plo_userid);
+            ps.setString(11, x.plo_desc);
+            ps.setString(12, x.plo_notes);
             rows = ps.executeUpdate();
             }
         return rows;

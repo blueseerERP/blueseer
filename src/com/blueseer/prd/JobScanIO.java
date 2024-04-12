@@ -403,7 +403,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         
         
         setOperations(plannbr);
-        System.out.println("here: " + plannbr + "/" + planop + "/" + opticketScan);
+       // System.out.println("here: " + plannbr + "/" + planop + "/" + opticketScan);
         
         plan_operation po = null;
         
@@ -426,11 +426,13 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         po = getPlanOperation(Integer.valueOf(plannbr), Integer.valueOf(planop));
         
         qtysched = po.plo_qty();  // override parent plan sched qty
+           /*
            if (po.plo_operator().isBlank() && ! pm.plan_type().equals("SRVC")) {
                badScan("Operator not assigned for ticket");
                new AnswerWorker().execute();
                return;
            }
+           */
         tboperator.setText(po.plo_operator());
         userlabel.setText(getEmpFormalNameByID(po.plo_operator()));
            if (po.plo_status().equals(getGlobalProgTag("closed"))) {
@@ -607,8 +609,8 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         qtylabel.setText("");
         qtylabel.setForeground(Color.black);
         
-        tboperator.setBackground(Color.white);
-        tbscan.setBackground(Color.white);
+       tboperator.setBackground(Color.white);
+       tbscan.setBackground(Color.white);
         
        historytable.setModel(historymodel);
        historytable.getTableHeader().setReorderingAllowed(false);
@@ -737,7 +739,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
 
         setBackground(new java.awt.Color(0, 102, 204));
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Job Scan By Operator"));
+        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Job Scanning Clock"));
         jPanel1.setName("panelmain"); // NOI18N
 
         tbqty.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -802,7 +804,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
 
         partlabel.setForeground(new java.awt.Color(25, 102, 232));
 
-        jpaneltable.setBorder(javax.swing.BorderFactory.createTitledBorder("JobID Scan History"));
+        jpaneltable.setBorder(javax.swing.BorderFactory.createTitledBorder("Scan History Today"));
 
         historytable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {

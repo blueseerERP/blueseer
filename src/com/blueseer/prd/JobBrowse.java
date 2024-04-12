@@ -130,7 +130,7 @@ public class JobBrowse extends javax.swing.JPanel {
        MasterModel mymodel = new MasterModel(new Object[][]{},
                         new String[]{ 
                             getGlobalColumnTag("select"),
-                            getGlobalColumnTag("planid"), 
+                            getGlobalColumnTag("jobid"), 
                             getGlobalColumnTag("type"),
                             getGlobalColumnTag("item"), 
                             getGlobalColumnTag("operation"),
@@ -699,6 +699,7 @@ public class JobBrowse extends javax.swing.JPanel {
         cbchart = new javax.swing.JCheckBox();
         btcsv = new javax.swing.JButton();
         bthidedetail = new javax.swing.JButton();
+        btclock = new javax.swing.JButton();
         tablepanel = new javax.swing.JPanel();
         masterpanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -856,6 +857,13 @@ public class JobBrowse extends javax.swing.JPanel {
             }
         });
 
+        btclock.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/clock.png"))); // NOI18N
+        btclock.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btclockActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -868,7 +876,7 @@ public class JobBrowse extends javax.swing.JPanel {
                     .addComponent(jLabel10)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(tbjobid, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, 37, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, 21, Short.MAX_VALUE)
                         .addComponent(jLabel2)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -897,11 +905,13 @@ public class JobBrowse extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btcsv)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btclock, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbchart)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(bthidedetail, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(lblempname, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(85, Short.MAX_VALUE))
+                .addContainerGap(68, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -909,15 +919,17 @@ public class JobBrowse extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel1)
-                                .addComponent(frompart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel2)
-                                .addComponent(tbjobid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel13)))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel1)
+                                    .addComponent(frompart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel2)
+                                    .addComponent(tbjobid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel13)))
+                            .addComponent(btclock))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -934,13 +946,11 @@ public class JobBrowse extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblempname, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel10)
-                            .addComponent(jLabel8)
-                            .addComponent(ddoperator, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel10)
+                        .addComponent(jLabel8)
+                        .addComponent(ddoperator, javax.swing.GroupLayout.DEFAULT_SIZE, 23, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -1166,7 +1176,7 @@ try {
                  }
                  
                                   
-                 
+                ImageIcon img = null; 
                 while (res.next()) {
                     
                     if (cbclosed.isSelected() && ! res.getString("plo_status").equals("closed") ) {
@@ -1210,8 +1220,13 @@ try {
                     comptot = comptot + res.getInt("plo_qty_comp");
                     avghours = avghours + res.getDouble("jobc_tothrs");
                     tothours = tothours + res.getDouble("jobc_tothrs");
+                    if (res.getString("plan_type").equals("SRVC")) {
+                        img = BlueSeerUtils.clickflag;
+                    } else {
+                        img = BlueSeerUtils.clickvoid;
+                    }
                     mymodel.addRow(new Object[]{
-                                BlueSeerUtils.clickflag,
+                                img,
                                 res.getString("plan_nbr"),
                                 res.getString("plan_type"),
                                 res.getString("plan_item"),
@@ -1272,7 +1287,7 @@ try {
         int col = mastertable.columnAtPoint(evt.getPoint());
          // select any field in a row grabs the vendor for that row...so open the possibility of payment for that row/vendor
        
-        if ( col == 0) {
+        if ( col == 0 && mastertable.getValueAt(row, 2).toString().equals("SRVC")) {
                 String mypanel = "JobScanIOProject";
                if (! checkperms(mypanel)) { return; }
               String[] args = new String[]{mastertable.getValueAt(row, 1).toString(), mastertable.getValueAt(row, 2).toString()};
@@ -1334,9 +1349,19 @@ try {
         detailpanel.setVisible(false);
     }//GEN-LAST:event_bthidedetailActionPerformed
 
+    private void btclockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclockActionPerformed
+
+        String mypanel = "JobScanIO";
+        if (! checkperms(mypanel)) { return; }
+        String[] args = new String[]{""};
+        reinitpanels(mypanel, true, args);
+
+    }//GEN-LAST:event_btclockActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btRun;
+    private javax.swing.JButton btclock;
     private javax.swing.JButton btcsv;
     private javax.swing.JButton bthidedetail;
     private javax.swing.JCheckBox cbchart;

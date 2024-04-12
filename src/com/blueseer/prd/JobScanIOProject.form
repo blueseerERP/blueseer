@@ -137,7 +137,9 @@
                                   <Component id="btclear" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
                                   <Component id="btprint" min="-2" pref="27" max="-2" attributes="0"/>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="btclock" min="-2" pref="27" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="btcommit" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
                                   <Component id="lblmessage" min="-2" pref="187" max="-2" attributes="0"/>
@@ -168,6 +170,7 @@
                           <Component id="btcommit" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="lblmessage" alignment="3" min="-2" pref="23" max="-2" attributes="0"/>
                       </Group>
+                      <Component id="btclock" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -656,6 +659,16 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Date:"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="btclock">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/images/clock.png"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btclockActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>

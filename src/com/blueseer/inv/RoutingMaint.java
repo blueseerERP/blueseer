@@ -564,7 +564,7 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeerT {
         double runhours = 0;
         assignOPs(x.wf_id());
                  
-        if (Double.valueOf(x.wf_run_hours()) > 0)
+        if (! x.wf_run_hours().isBlank() && Double.valueOf(x.wf_run_hours()) > 0)
             runhours = (1 / Double.valueOf(x.wf_run_hours()));
         else
             runhours = 0;
