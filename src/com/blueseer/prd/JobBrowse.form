@@ -233,7 +233,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
                               <Group type="102" attributes="0">
-                                  <Component id="cbhiearchical" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cbhierarchical" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="32767" attributes="0"/>
                                   <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                               </Group>
@@ -330,7 +330,7 @@
                                       </Group>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="cbhiearchical" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cbhierarchical" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
@@ -479,12 +479,13 @@
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btclockActionPerformed"/>
                   </Events>
                 </Component>
-                <Component class="javax.swing.JCheckBox" name="cbhiearchical">
+                <Component class="javax.swing.JCheckBox" name="cbhierarchical">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Hiearchical"/>
+                    <Property name="text" type="java.lang.String" value="Hierarchical"/>
+                    <Property name="name" type="java.lang.String" value="lblhierarchical" noResource="true"/>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbhiearchicalActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbhierarchicalActionPerformed"/>
                   </Events>
                 </Component>
               </SubComponents>

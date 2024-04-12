@@ -671,6 +671,9 @@ public class JobBrowse extends javax.swing.JPanel {
          
         isLoad = true;
         
+        cbhierarchical.setSelected(true);
+        cbchart.setEnabled(false);
+        
         pielabel.setHorizontalTextPosition(SwingConstants.CENTER);
          java.util.Date now = new java.util.Date();
          
@@ -763,7 +766,7 @@ public class JobBrowse extends javax.swing.JPanel {
         btcsv = new javax.swing.JButton();
         bthidedetail = new javax.swing.JButton();
         btclock = new javax.swing.JButton();
-        cbhiearchical = new javax.swing.JCheckBox();
+        cbhierarchical = new javax.swing.JCheckBox();
         tablepanel = new javax.swing.JPanel();
         masterpanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -928,10 +931,11 @@ public class JobBrowse extends javax.swing.JPanel {
             }
         });
 
-        cbhiearchical.setText("Hiearchical");
-        cbhiearchical.addActionListener(new java.awt.event.ActionListener() {
+        cbhierarchical.setText("Hierarchical");
+        cbhierarchical.setName("lblhierarchical"); // NOI18N
+        cbhierarchical.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbhiearchicalActionPerformed(evt);
+                cbhierarchicalActionPerformed(evt);
             }
         });
 
@@ -944,7 +948,7 @@ public class JobBrowse extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(cbhiearchical)
+                        .addComponent(cbhierarchical)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel3))
                     .addGroup(jPanel3Layout.createSequentialGroup()
@@ -1020,7 +1024,7 @@ public class JobBrowse extends javax.swing.JPanel {
                                 .addComponent(tbjobid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel13)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbhiearchical)))
+                        .addComponent(cbhierarchical)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblempname, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1209,7 +1213,7 @@ try {
                 consolidatedModel.setRowCount(0);
                 mymodel.setRowCount(0);   
                 
-                if (cbhiearchical.isSelected()) { 
+                if (cbhierarchical.isSelected()) { 
                     mastertable.setModel(consolidatedModel); 
                     mastertable.getColumnModel().getColumn(0).setMaxWidth(100);
                     mastertable.getColumnModel().getColumn(1).setMaxWidth(100);
@@ -1244,7 +1248,7 @@ try {
                  
                  if (! jobid.isBlank()) {
                      
-                    if (cbhiearchical.isSelected()) {
+                    if (cbhierarchical.isSelected()) {
                      res = st.executeQuery("SELECT plan_nbr, plan_type, plan_item, plan_order, " +
                          "plan_qty_sched, plan_qty_comp, plan_line, plan_cell, plan_date_sched, plan_date_create, plan_status " +
                         " FROM  plan_mstr " +
@@ -1265,7 +1269,7 @@ try {
   
                  } else {
                     
-                    if (cbhiearchical.isSelected()) {
+                    if (cbhierarchical.isSelected()) {
                      res = st.executeQuery("SELECT plan_nbr, plan_type, plan_item, plan_order, " +
                          "plan_qty_sched, plan_qty_comp, plan_line, plan_cell, plan_date_sched, plan_date_create, plan_status " +
                         " FROM  plan_mstr " +
@@ -1299,7 +1303,7 @@ try {
                 while (res.next()) {
                     i++;
                     
-                    if (! cbhiearchical.isSelected()) {
+                    if (! cbhierarchical.isSelected()) {
                         
                     if (cbclosed.isSelected() && ! res.getString("plo_status").equals("closed") ) {
                         continue;
@@ -1348,7 +1352,7 @@ try {
                         img = BlueSeerUtils.clickvoid;
                     }
                     
-                    if (cbhiearchical.isSelected()) {
+                    if (cbhierarchical.isSelected()) {
                      
                     consolidatedModel.addRow(new Object[]{
                                 img,
@@ -1427,7 +1431,7 @@ try {
          // select any field in a row grabs the vendor for that row...so open the possibility of payment for that row/vendor
        
          
-        if (cbhiearchical.isSelected()) {
+        if (cbhierarchical.isSelected()) {
             if ( col == 0 && mastertable.getValueAt(row, 4).toString().equals("SRVC")) {
                     String mypanel = "JobScanIOProject";
                    if (! checkperms(mypanel)) { return; }
@@ -1531,9 +1535,12 @@ try {
 
     }//GEN-LAST:event_btclockActionPerformed
 
-    private void cbhiearchicalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbhiearchicalActionPerformed
+    private void cbhierarchicalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbhierarchicalActionPerformed
         if (! isLoad) {
-            if (cbhiearchical.isSelected()) {
+            
+            chartpanel.setVisible(false);
+            
+            if (cbhierarchical.isSelected()) {
                 cbchart.setEnabled(false);
                 cbchart.setSelected(false);
             } else {
@@ -1541,7 +1548,7 @@ try {
                 cbchart.setSelected(false);
             }
         }
-    }//GEN-LAST:event_cbhiearchicalActionPerformed
+    }//GEN-LAST:event_cbhierarchicalActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1551,7 +1558,7 @@ try {
     private javax.swing.JButton bthidedetail;
     private javax.swing.JCheckBox cbchart;
     private javax.swing.JCheckBox cbclosed;
-    private javax.swing.JCheckBox cbhiearchical;
+    private javax.swing.JCheckBox cbhierarchical;
     private javax.swing.JPanel chartpanel;
     private com.toedter.calendar.JDateChooser dcfrom;
     private com.toedter.calendar.JDateChooser dcto;
