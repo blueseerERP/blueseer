@@ -148,6 +148,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
     boolean requireOpScan = false;
     boolean hasInit = false;
     int planstatus = 0;
+    String plantype = "";
     String chartfilepath = OVData.getSystemTempDirectory() + "/" + "jobm.jpg";
     
     public static plan_mstr x = null;
@@ -477,8 +478,17 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
                btcommit.setEnabled(false);
                btaddmatl.setEnabled(false);
                btdeletematl.setEnabled(false);
+               btupdate.setEnabled(false);
            }
            
+           if (planstatus == 0 && ! plantype.equals("SRVC")) {
+               lblmessage.setText("inventory job type...view only");
+               lblmessage.setForeground(Color.red);
+               btcommit.setEnabled(false);
+               btaddmatl.setEnabled(false);
+               btdeletematl.setEnabled(false);
+               btupdate.setEnabled(false);
+           }
            
         } else {
            tbkey.setForeground(Color.red); 
@@ -628,7 +638,9 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         tbkey.setText(String.valueOf(x.plan_nbr()));
         tborder.setText(x.plan_order());
         planstatus = x.plan_status();
+        plantype = x.plan_type();
         
+       
       //  cbapply.setSelected(BlueSeerUtils.ConvertStringToBool(x.car_apply()));
         
         

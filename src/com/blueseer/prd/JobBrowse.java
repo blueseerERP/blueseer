@@ -154,10 +154,38 @@ public class JobBrowse extends javax.swing.JPanel {
                         else return String.class;  //other columns accept String values  
                       }  
                         };
+       
+       MasterModel consolidatedModel = new MasterModel(new Object[][]{},
+                        new String[]{ 
+                            getGlobalColumnTag("select"),
+                            getGlobalColumnTag("detail"),
+                            getGlobalColumnTag("records"),
+                            getGlobalColumnTag("jobid"), 
+                            getGlobalColumnTag("type"),
+                            getGlobalColumnTag("item"), 
+                            getGlobalColumnTag("order"),
+                            getGlobalColumnTag("cell"),
+                            getGlobalColumnTag("scheddate"), 
+                            getGlobalColumnTag("schedqty"),
+                            getGlobalColumnTag("compqty"),
+                            getGlobalColumnTag("hours"), 
+                            getGlobalColumnTag("status")
+                            })
+               {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0 || col == 1 || col == 2)       
+                            return ImageIcon.class;  
+                        else if (col == 9 || col == 10 || col == 11)
+                            return Double.class;
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
       
       
-       DetailModel modeldetail = new DetailModel(new Object[][]{},
+       DetailModel modeldetailclock = new DetailModel(new Object[][]{},
                         new String[]{getGlobalColumnTag("select"),
+                            getGlobalColumnTag("operation"),
                             getGlobalColumnTag("id"),
                             getGlobalColumnTag("name"),
                             getGlobalColumnTag("indate"), 
@@ -173,7 +201,23 @@ public class JobBrowse extends javax.swing.JPanel {
                       }  
                         };
 
-      
+      DetailModel modeldetailplo = new DetailModel(new Object[][]{},
+                        new String[]{
+                            getGlobalColumnTag("operation"),
+                            getGlobalColumnTag("description"),
+                            getGlobalColumnTag("operator"),
+                            getGlobalColumnTag("cell"),
+                            getGlobalColumnTag("schedqty"), 
+                            getGlobalColumnTag("compqty"), 
+                            getGlobalColumnTag("date"),
+                            getGlobalColumnTag("status")}){
+                      @Override  
+                      public Class getColumnClass(int col) { 
+                        if (col == 4 || col == 5)       
+                            return Double.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
      
       double schtot = 0;
       double comptot = 0;
@@ -400,11 +444,13 @@ public class JobBrowse extends javax.swing.JPanel {
     }
     
     
-    public void getdetail(String clockid) {
+    public void getdetail(String detailtype, String jobid) {
       
-         modeldetail.setNumRows(0);
-         double total = 0.00;
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
+        modeldetailclock.setNumRows(0);
+        modeldetailplo.setNumRows(0);
+                 
+        double total = 0.00;
+        DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
         
         
         try {
@@ -423,21 +469,17 @@ public class JobBrowse extends javax.swing.JPanel {
                 int qty = 0;
                 
                 
-                
+                if (detailtype.equals("clock")) {
                  res = st.executeQuery("SELECT * from job_clock   " +
                         " inner join emp_mstr on emp_nbr = jobc_empnbr " +
-                        " where jobc_id = " + "'" + clockid + "'" + 
-                         " order by jobc_indate desc ;"); 
-               
-                 
-             
-                
-                 
-                while (res.next()) {
+                        " where jobc_planid = " + "'" + jobid + "'" + 
+                         " order by jobc_op ;"); 
+                 while (res.next()) {
                     qty = qty + 0;
                     i++;
-                        modeldetail.addRow(new Object[]{
+                        modeldetailclock.addRow(new Object[]{
                             BlueSeerUtils.clickflag,
+                            res.getString("jobc_op"),
                             res.getString("jobc_id"),
                             res.getString("emp_lname") + ", " + res.getString("emp_fname"),
                             res.getString("jobc_indate"),
@@ -447,10 +489,31 @@ public class JobBrowse extends javax.swing.JPanel {
                             res.getString("jobc_code")
                             });
                    }
-               
-               
+                 detailtable.setModel(modeldetailclock);
+                 detailpanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Clock Records"));
+                 
+                } else {
+                  res = st.executeQuery("SELECT * from plan_operation   " +
+                        " where plo_parent = " + "'" + jobid + "'" + 
+                         " order by plo_op ;"); 
+                  while (res.next()) {
+                    qty = qty + 0;
+                    i++;
+                        modeldetailplo.addRow(new Object[]{
+                            res.getString("plo_op"),
+                            res.getString("plo_desc"),
+                            res.getString("plo_operatorname"),
+                            res.getString("plo_cell"),
+                            res.getDouble("plo_qty"),
+                            res.getDouble("plo_qty_comp"),
+                            res.getString("plo_date"),
+                            res.getString("plo_status")
+                            });
+                   }
+                  detailtable.setModel(modeldetailplo);
+                  detailpanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Operations"));
+                }
                 
-                detailtable.setModel(modeldetail);
                 this.repaint();
 
             } catch (SQLException s) {
@@ -630,7 +693,7 @@ public class JobBrowse extends javax.swing.JPanel {
          
          
          mymodel.setRowCount(0);
-         mastertable.setModel(mymodel);
+        // mastertable.setModel(mymodel);
          mastertable.getTableHeader().setReorderingAllowed(false);
         
         ArrayList<String> operators = getempmstrlist();
@@ -700,6 +763,7 @@ public class JobBrowse extends javax.swing.JPanel {
         btcsv = new javax.swing.JButton();
         bthidedetail = new javax.swing.JButton();
         btclock = new javax.swing.JButton();
+        cbhiearchical = new javax.swing.JCheckBox();
         tablepanel = new javax.swing.JPanel();
         masterpanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -864,6 +928,13 @@ public class JobBrowse extends javax.swing.JPanel {
             }
         });
 
+        cbhiearchical.setText("Hiearchical");
+        cbhiearchical.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbhiearchicalActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -872,8 +943,13 @@ public class JobBrowse extends javax.swing.JPanel {
                 .addComponent(jLabel13)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel10)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(cbhiearchical)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel3))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel10))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(tbjobid, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, 21, Short.MAX_VALUE)
@@ -919,17 +995,7 @@ public class JobBrowse extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel1)
-                                    .addComponent(frompart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel2)
-                                    .addComponent(tbjobid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel13)))
-                            .addComponent(btclock))
+                        .addComponent(btclock)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -942,7 +1008,19 @@ public class JobBrowse extends javax.swing.JPanel {
                         .addComponent(btRun)
                         .addComponent(cbchart)
                         .addComponent(btcsv)
-                        .addComponent(bthidedetail)))
+                        .addComponent(bthidedetail))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel1)
+                                .addComponent(frompart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel2)
+                                .addComponent(tbjobid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel13)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cbhiearchical)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblempname, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1094,9 +1172,9 @@ try {
                 String tpart;
                 String fcell;
                 String tcell;
-                String clockstatus;
-                String plostatus;
-                String operatorname;
+                String clockstatus = "";
+                String plostatus = "";
+                String operatorname = "";
                 int clockid = 0;
                 
                 if (frompart.getText().isEmpty()) {
@@ -1128,24 +1206,52 @@ try {
               //    CheckBoxRenderer checkBoxRenderer = new CheckBoxRenderer();
              //   mastertable.getColumnModel().getColumn(4).setCellRenderer(checkBoxRenderer); 
                  
-                 Enumeration<TableColumn> en = mastertable.getColumnModel().getColumns();
-                 while (en.hasMoreElements()) {
+                consolidatedModel.setRowCount(0);
+                mymodel.setRowCount(0);   
+                
+                if (cbhiearchical.isSelected()) { 
+                    mastertable.setModel(consolidatedModel); 
+                    mastertable.getColumnModel().getColumn(0).setMaxWidth(100);
+                    mastertable.getColumnModel().getColumn(1).setMaxWidth(100);
+                    mastertable.getColumnModel().getColumn(2).setMaxWidth(100);
+                    Enumeration<TableColumn> en = mastertable.getColumnModel().getColumns();
+                    while (en.hasMoreElements()) {
+                     TableColumn tc = en.nextElement();
+                     if (consolidatedModel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) {
+                         continue;
+                     }
+                     tc.setCellRenderer(new SomeRenderer());
+                    } 
+                } else {
+                    mastertable.setModel(mymodel);
+                    mastertable.getColumnModel().getColumn(0).setMaxWidth(100);
+                    Enumeration<TableColumn> en = mastertable.getColumnModel().getColumns();
+                    while (en.hasMoreElements()) {
                      TableColumn tc = en.nextElement();
                      if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) {
                          continue;
                      }
                      tc.setCellRenderer(new SomeRenderer());
-                 }   
+                    } 
+                }
+                 
                 
-                mastertable.getColumnModel().getColumn(0).setMaxWidth(100);
+                
                
-            
-                mymodel.setRowCount(0);
+                
                
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                  
                  if (! jobid.isBlank()) {
-                   res = st.executeQuery("SELECT plan_nbr, plan_type, plan_item, plo_op, plo_operator, plo_operatorname, plo_cell, " +
+                     
+                    if (cbhiearchical.isSelected()) {
+                     res = st.executeQuery("SELECT plan_nbr, plan_type, plan_item, plan_order, " +
+                         "plan_qty_sched, plan_qty_comp, plan_line, plan_cell, plan_date_sched, plan_date_create, plan_status " +
+                        " FROM  plan_mstr " +
+                        " where plan_nbr = " + "'" + jobid + "'" + 
+                        " order by plan_nbr;");    
+                    } else {
+                    res = st.executeQuery("SELECT plan_nbr, plan_type, plan_item, plo_op, plo_operator, plo_operatorname, plo_cell, " +
                          "plo_qty, plo_qty_comp, plo_date, plo_status, " +
                          " jobc_id, jobc_empnbr, jobc_qty, coalesce(jobc_tothrs,0) as jobc_tothrs, jobc_code,  " +
                          " emp_lname, emp_fname " +   
@@ -1154,10 +1260,23 @@ try {
                         " left outer join job_clock on jobc_planid = plo_parent and jobc_op = plo_op " + 
                         " left outer join emp_mstr on emp_nbr = jobc_empnbr " +   
                         " where plo_parent = " + "'" + jobid + "'" + 
-                        " order by plo_op;");    
+                        " order by plo_op;"); 
+                    }
   
                  } else {
-                   res = st.executeQuery("SELECT plan_nbr, plan_type, plan_item, plo_op, plo_operator, plo_operatorname, plo_cell, " +
+                    
+                    if (cbhiearchical.isSelected()) {
+                     res = st.executeQuery("SELECT plan_nbr, plan_type, plan_item, plan_order, " +
+                         "plan_qty_sched, plan_qty_comp, plan_line, plan_cell, plan_date_sched, plan_date_create, plan_status " +
+                        " FROM  plan_mstr " +
+                        " where " +
+                        " (( plan_date_create >= " + "'" + dfdate.format(dcfrom.getDate()) + "'" + 
+                        " AND plan_date_create <= " + "'" + dfdate.format(dcto.getDate()) + "'" + " ) OR plan_date_create is null )" + 
+                        " AND plan_item >= " + "'" + fpart + "'" + 
+                        " AND plan_item <= " + "'" + tpart + "'" + 
+                        " order by plan_nbr;");     
+                    } else { 
+                    res = st.executeQuery("SELECT plan_nbr, plan_type, plan_item, plo_op, plo_operator, plo_operatorname, plo_cell, " +
                          "plo_qty, plo_qty_comp, plo_date, plo_status, " +
                          " jobc_id, jobc_empnbr, jobc_qty, coalesce(jobc_tothrs,0) as jobc_tothrs, jobc_code,  " +
                          " emp_lname, emp_fname " +  
@@ -1172,13 +1291,16 @@ try {
                         " AND plan_item <= " + "'" + tpart + "'" + 
                       //  " AND plan_is_sched = " + "'1' "  +
                         " order by plan_nbr, plo_op;");    
-  
+                    }
                  }
                  
                                   
                 ImageIcon img = null; 
                 while (res.next()) {
+                    i++;
                     
+                    if (! cbhiearchical.isSelected()) {
+                        
                     if (cbclosed.isSelected() && ! res.getString("plo_status").equals("closed") ) {
                         continue;
                     }
@@ -1186,14 +1308,12 @@ try {
                     if (! ddop.getSelectedItem().toString().isBlank() && ! res.getString("plo_op").equals(ddop.getSelectedItem().toString())) {
                         continue;
                     }
-                   // if (! ddoperator.getSelectedItem().toString().isBlank() && ! res.getString("plo_operator").equals(ddoperator.getSelectedItem().toString())) {
-                  //      continue;
-                  //  }
+                
                     if (! ddoperator.getSelectedItem().toString().isBlank() && res.getString("jobc_empnbr")!= null && ! res.getString("jobc_empnbr").equals(ddoperator.getSelectedItem().toString())) {
                         continue;
                     }
                     
-                    i++;
+                    
                     if (res.getString("jobc_code") == null) {
                         clockstatus = "n/c";
                     } else {
@@ -1220,11 +1340,32 @@ try {
                     comptot = comptot + res.getInt("plo_qty_comp");
                     avghours = avghours + res.getDouble("jobc_tothrs");
                     tothours = tothours + res.getDouble("jobc_tothrs");
+                    }
+                    
                     if (res.getString("plan_type").equals("SRVC")) {
                         img = BlueSeerUtils.clickflag;
                     } else {
                         img = BlueSeerUtils.clickvoid;
                     }
+                    
+                    if (cbhiearchical.isSelected()) {
+                     
+                    consolidatedModel.addRow(new Object[]{
+                                img,
+                                BlueSeerUtils.clickbasket,
+                                BlueSeerUtils.clickclock,
+                                res.getString("plan_nbr"),
+                                res.getString("plan_type"),
+                                res.getString("plan_item"),
+                                res.getString("plan_order"),
+                                res.getString("plan_cell"),
+                                res.getString("plan_date_sched"),
+                                res.getDouble("plan_qty_sched"),
+                                res.getDouble("plan_qty_comp"),
+                                0,
+                                res.getString("plan_status")
+                            });
+                    } else {
                     mymodel.addRow(new Object[]{
                                 img,
                                 res.getString("plan_nbr"),
@@ -1240,10 +1381,8 @@ try {
                                 plostatus,
                                 clockstatus,
                                 clockid
-                            });
-                    
-                    
-                    
+                            });  
+                    }
                 }
                 avghours = (i > 0) ? (avghours / i) : 0;
                 if (ddop.getSelectedItem().toString().isBlank()) {
@@ -1287,19 +1426,53 @@ try {
         int col = mastertable.columnAtPoint(evt.getPoint());
          // select any field in a row grabs the vendor for that row...so open the possibility of payment for that row/vendor
        
-        if ( col == 0 && mastertable.getValueAt(row, 2).toString().equals("SRVC")) {
-                String mypanel = "JobScanIOProject";
-               if (! checkperms(mypanel)) { return; }
-              String[] args = new String[]{mastertable.getValueAt(row, 1).toString(), mastertable.getValueAt(row, 2).toString()};
-               reinitpanels(mypanel, true, args);
-              
-        }
-        
-        if (col == 13) {
-            if (! mastertable.getValueAt(row, 12).toString().equals("n/c")) {
-            getdetail(mastertable.getValueAt(row, 13).toString());
-            detailpanel.setVisible(true);
+         
+        if (cbhiearchical.isSelected()) {
+            if ( col == 0 && mastertable.getValueAt(row, 4).toString().equals("SRVC")) {
+                    String mypanel = "JobScanIOProject";
+                   if (! checkperms(mypanel)) { return; }
+                  String[] args = new String[]{mastertable.getValueAt(row, 3).toString()};
+                   reinitpanels(mypanel, true, args);
+
             }
+            if (col == 1) {
+                getdetail("plo", mastertable.getValueAt(row, 3).toString());
+                detailpanel.setVisible(true);
+            }
+            if (col == 2) {
+                getdetail("clock", mastertable.getValueAt(row, 3).toString());
+                detailpanel.setVisible(true);
+            }
+            /*
+            if ( col == 0 && mastertable.getValueAt(row, 2).toString().equals("SRVC")) {
+                    String mypanel = "JobScanIOProject";
+                   if (! checkperms(mypanel)) { return; }
+                  String[] args = new String[]{mastertable.getValueAt(row, 1).toString(), mastertable.getValueAt(row, 2).toString()};
+                   reinitpanels(mypanel, true, args);
+
+            }
+
+            if (col == 13) {
+                if (! mastertable.getValueAt(row, 12).toString().equals("n/c")) {
+                getdetail(mastertable.getValueAt(row, 13).toString());
+                detailpanel.setVisible(true);
+                }
+            }
+            */
+        } else {
+            if ( col == 0 && mastertable.getValueAt(row, 2).toString().equals("SRVC")) {
+                    String mypanel = "JobScanIOProject";
+                   if (! checkperms(mypanel)) { return; }
+                  String[] args = new String[]{mastertable.getValueAt(row, 1).toString(), mastertable.getValueAt(row, 2).toString()};
+                   reinitpanels(mypanel, true, args);
+
+            }
+            /*
+            if (col == 1) {
+                getdetail("plo", mastertable.getValueAt(row, 1).toString());
+                detailpanel.setVisible(true);
+            }
+            */
         }
         /*
         if ( col == 14) {
@@ -1337,10 +1510,10 @@ try {
     private void detailtableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_detailtableMouseClicked
         int row = detailtable.rowAtPoint(evt.getPoint());
         int col = detailtable.columnAtPoint(evt.getPoint());
-        if ( col == 0) {
+        if ( modeldetailclock.getRowCount() > 0 && col == 0) {
                 String mypanel = "JobClockMaint";
                if (! checkperms(mypanel)) { return; }
-               String[] args = new String[]{bsNumberToUS(detailtable.getValueAt(row, 1).toString())};
+               String[] args = new String[]{bsNumberToUS(detailtable.getValueAt(row, 2).toString())};
                reinitpanels(mypanel, true, args);
         }
     }//GEN-LAST:event_detailtableMouseClicked
@@ -1358,6 +1531,18 @@ try {
 
     }//GEN-LAST:event_btclockActionPerformed
 
+    private void cbhiearchicalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbhiearchicalActionPerformed
+        if (! isLoad) {
+            if (cbhiearchical.isSelected()) {
+                cbchart.setEnabled(false);
+                cbchart.setSelected(false);
+            } else {
+                cbchart.setEnabled(true);
+                cbchart.setSelected(false);
+            }
+        }
+    }//GEN-LAST:event_cbhiearchicalActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btRun;
@@ -1366,6 +1551,7 @@ try {
     private javax.swing.JButton bthidedetail;
     private javax.swing.JCheckBox cbchart;
     private javax.swing.JCheckBox cbclosed;
+    private javax.swing.JCheckBox cbhiearchical;
     private javax.swing.JPanel chartpanel;
     private com.toedter.calendar.JDateChooser dcfrom;
     private com.toedter.calendar.JDateChooser dcto;
