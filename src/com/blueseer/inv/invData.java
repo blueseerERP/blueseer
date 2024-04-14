@@ -2329,7 +2329,7 @@ public class invData {
                                               " AND cpr_uom = " + "'" + uom + "'" +
                                               " AND cpr_curr = " + "'" + curr + "'" +
                                               " AND cpr_volqty <= " + "'" + qty + "'" + 
-                                              " AND ( cpr_expire = null OR cpr_expire >= " + "'" + BlueSeerUtils.setDateFormat(now) + "'" + " ) " +           
+                                              " AND ( cpr_expire is null OR cpr_expire >= " + "'" + BlueSeerUtils.setDateFormat(now) + "'" + " ) " +           
                                               " AND cpr_type = 'VOLUME' "+ " order by cpr_volqty desc;");
                         while (res.next()) {
                            v++;
@@ -2343,7 +2343,7 @@ public class invData {
                                               " AND cpr_item = " + "'" + item + "'" +
                                               " AND cpr_uom = " + "'" + uom + "'" +
                                               " AND cpr_curr = " + "'" + curr + "'" +
-                                              " AND ( cpr_expire = null OR cpr_expire >= " + "'" + BlueSeerUtils.setDateFormat(now) + "'" + " ) " +         
+                                              " AND ( cpr_expire is null OR cpr_expire >= " + "'" + BlueSeerUtils.setDateFormat(now) + "'" + " ) " +         
                                               " AND cpr_type = 'LIST' "+ ";");
                         while (res.next()) {
                            price = res.getString("cpr_price").replace('.', defaultDecimalSeparator);
