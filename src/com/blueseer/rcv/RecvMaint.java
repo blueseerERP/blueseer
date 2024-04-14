@@ -430,6 +430,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddwh.removeAllItems();
         ddloc.removeAllItems();
         ddvend.removeAllItems();
+        ddsite.removeAllItems();
         
         String defaultsite = null;
         
@@ -816,6 +817,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddvend.setSelectedItem(rv.rv_vend());
         dcdate.setDate(parseDate(rv.rv_recvdate()));
         tbpackingslip.setText(rv.rv_packingslip());
+        ddsite.setSelectedItem(rv.rv_site());
         tbkey.setText(rv.rv_id());
         
         for (recv_det rvd : rvdlist) {
@@ -1163,6 +1165,12 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         jLabel41.setText("Cost");
         jLabel41.setName("lblcost"); // NOI18N
+
+        ddsite.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddsiteActionPerformed(evt);
+            }
+        });
 
         ddwh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1565,7 +1573,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
                     tbprice.setText("");
                     ddwh.setSelectedIndex(0);
                     ddloc.setSelectedIndex(0);
-                    ddsite.setSelectedIndex(0);
+                  //  ddsite.setSelectedIndex(0);
                     lblvendpart.setText("");
                     duedate.setText("");
                     tbqtyrcvd.setText("");
@@ -1617,7 +1625,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
                     ddloc.setSelectedItem(res.getString("it_loc"));
                     if (res.getString("it_wh") != null)
                     ddwh.setSelectedItem(res.getString("it_wh"));
-                    ddsite.setSelectedItem(res.getString("pod_site"));
+                  //  ddsite.setSelectedItem(res.getString("pod_site"));
                     lblvendpart.setText(res.getString("pod_venditem"));
                     duedate.setText(res.getString("pod_due_date"));
                     tbqtyrcvd.setText(res.getString("pod_rcvd_qty"));
@@ -1671,6 +1679,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
                 }
                 res = st.executeQuery("select po_nbr from po_mstr where po_vend = " + "'" + ddvend.getSelectedItem().toString() + "'" + 
                         " AND po_status <> " + "'" + getGlobalProgTag("closed") + "'" + 
+                        " AND po_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +         
                         ";");
                 while (res.next()) {
                     ddpo.addItem(res.getString("po_nbr"));
@@ -1737,7 +1746,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
                        " inner join po_mstr on po_nbr = pod_nbr where pod_nbr = " + "'" + mypo + "'" + ";");
                 while (res.next()) {
                    ddline.addItem(res.getString("pod_line"));
-                   ddsite.setSelectedItem(res.getString("pod_site"));
+                   // ddsite.setSelectedItem(res.getString("pod_site"));
                 }
                 res.close();
             } catch (SQLException s) {
@@ -1835,6 +1844,14 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
     }//GEN-LAST:event_tableattachmentMouseClicked
 
+    private void ddsiteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddsiteActionPerformed
+        if (! isLoad && ddsite.getSelectedItem() != null) {
+            if (ddvend.getSelectedItem() != null && ddvend.getItemCount() > 0) {
+                ddvend.setSelectedIndex(0);
+            }
+        }
+    }//GEN-LAST:event_ddsiteActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btaddattachment;
@@ -1884,9 +1901,6 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JLabel labelmessage;
     private javax.swing.JLabel lblitem;
     private javax.swing.JLabel lblmessage;
-    private javax.swing.JLabel lblstatus;
-    private javax.swing.JLabel lblstatus1;
-    private javax.swing.JLabel lblstatus2;
     private javax.swing.JLabel lblvendpart;
     private javax.swing.JLabel lbvendor;
     private javax.swing.JTextField orddate;
