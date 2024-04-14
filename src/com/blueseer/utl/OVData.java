@@ -10666,6 +10666,42 @@ return mycount;
 
 }   
 
+    public static boolean isRawItemOnly() {
+
+   boolean rawitemonly = false;
+    try{
+
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+            
+            res = st.executeQuery("select poc_rawonly from po_ctrl;");
+           while (res.next()) {
+                rawitemonly = res.getBoolean("poc_rawonly");
+            }
+
+       }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return rawitemonly;
+
+}   
+
     public static boolean isCustItemOnly() {
 
    boolean custitemonly = false;

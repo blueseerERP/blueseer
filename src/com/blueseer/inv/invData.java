@@ -4590,6 +4590,46 @@ public class invData {
 
     }
 
+    public static ArrayList getItemMasterRawListBySite(String site) {
+       ArrayList myarray = new ArrayList();
+        try{
+           Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+            Statement st = con.createStatement();
+                    ResultSet res = null;
+            try{
+               
+                res = st.executeQuery("select it_item from item_mstr " +
+                        " where it_class = 'P' and it_site = " + "'" + site + "'" + " order by it_item ;");
+               while (res.next()) {
+                    myarray.add(res.getString("it_item"));
+
+                }
+
+           }
+            catch (SQLException s){
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myarray;
+
+    }
+
 
     public static ArrayList getItemRange(String site, String fromitem, String toitem) {
        ArrayList myarray = new ArrayList();

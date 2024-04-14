@@ -1126,6 +1126,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
     public void updateForm() throws ParseException {
         tbkey.setText(bsNumber(po.po_nbr()));
         ddvend.setSelectedItem(po.po_vend());
+        ddsite.setSelectedItem(po.po_site());
         ddvend.setEnabled(false);
         ddstatus.setSelectedItem(po.po_status());
         ddedistatus.setSelectedItem(po.po_edistatus());
@@ -1934,6 +1935,12 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         cbblanket.setText("Blanket");
         cbblanket.setName("cbblanket"); // NOI18N
+
+        ddsite.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ddsiteActionPerformed(evt);
+            }
+        });
 
         jLabel91.setText("Site");
         jLabel91.setName("lblsite"); // NOI18N
@@ -3281,6 +3288,21 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
             OVData.openFileAttachment(tbkey.getText(), this.getClass().getSimpleName(), tableattachment.getValueAt(row, 1).toString());
         }
     }//GEN-LAST:event_tableattachmentMouseClicked
+
+    private void ddsiteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddsiteActionPerformed
+        if (! isLoad && ddsite.getSelectedItem() != null) {
+            ddpart.removeAllItems();
+            ArrayList<String> items = new ArrayList<String>();
+            if (OVData.isRawItemOnly()) {
+                items = invData.getItemMasterRawListBySite(ddsite.getSelectedItem().toString()); 
+            } else {
+                items = invData.getItemMasterListBySite(ddsite.getSelectedItem().toString()); 
+            }
+            for (String item : items) {
+            ddpart.addItem(item);
+            } 
+        }
+    }//GEN-LAST:event_ddsiteActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btLookUpCustItem;

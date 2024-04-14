@@ -245,7 +245,8 @@ public class ItemBrowse extends javax.swing.JPanel {
         
         ddfromitem.removeAllItems();
         ddtoitem.removeAllItems();
-        ArrayList<String> items = invData.getItemMasterListBySite(OVData.getDefaultSite()); 
+     //   ArrayList<String> items = invData.getItemMasterListBySite(OVData.getDefaultSite()); 
+        ArrayList<String> items = invData.getItemMasterAlllist(); 
         for (String item : items) {
         ddfromitem.addItem(item);
         ddtoitem.addItem(item);

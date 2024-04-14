@@ -693,7 +693,8 @@ try {
                         " (select sum(case when pom_type = 'tax' and pom_amttype = 'percent' then pom_amt end) from po_meta where pom_nbr = po_nbr)as 'taxpercent', " +
                         " (select sum(case when pom_type = 'tax' and pom_amttype = 'amount' then pom_amt end) from po_meta where pom_nbr = po_nbr) as 'taxcharge' " +
                          " from po_mstr inner join pod_mstr on pod_nbr = po_nbr inner join vd_mstr on vd_addr = po_vend where " +
-                        " po_vend >= " + "'" + vendfrom + "'" + " AND " +
+                        " po_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + " AND " +
+                        " po_vend >= " + "'" + vendfrom + "'" + " AND " +        
                         " po_vend <= " + "'" + vendto + "'" + " AND " +
                      " po_nbr >= " + "'" + pofrom + "'" + " AND " +
                         " po_nbr <= " + "'" + poto + "'" + 
