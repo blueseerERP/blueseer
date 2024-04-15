@@ -575,6 +575,7 @@ try {
          //     new String[]{"Detail", "PO", "Vend", "Line", "Part", "Type", "Status", "OrdQty", "RecvQty"});   
              res = st.executeQuery("select rv_id, rv_vend, rv_packingslip, rv_recvdate, rv_status, rv_ref, rv_rmks " +
                          " from recv_mstr where " +
+                         " rv_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + " AND " + 
                         " rv_vend >= " + "'" + vendfrom + "'" + " AND " +
                         " rv_vend <= " + "'" + vendto + "'" + " AND " +
                      " rv_id >= " + "'" + pofrom + "'" + " AND " +
