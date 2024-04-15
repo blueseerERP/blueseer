@@ -337,6 +337,7 @@ public class ARAgingView extends javax.swing.JPanel {
                         " FROM  ar_mstr " +
                         " where ar_cust = " + "'" + cust + "'" + 
                         " AND ar_status = 'o' " +
+                        " AND ar_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +        
                          " order by ar_cust, ar_nbr ;"); 
                  } else {
                  res = st.executeQuery("SELECT ar_cust, ar_rmks, ar_type, ar_nbr, ar_effdate, ar_duedate, " +
@@ -348,6 +349,7 @@ public class ARAgingView extends javax.swing.JPanel {
                         " FROM  ar_mstr " +
                         " where ar_cust = " + "'" + cust + "'" + 
                         " AND ar_status = 'o' " +
+                        " AND ar_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +        
                          " order by ar_cust, ar_nbr ;");     
                  }
                  
@@ -577,6 +579,14 @@ public class ARAgingView extends javax.swing.JPanel {
             ddtocust.addItem(mycusts.get(i));
         } 
         ddtocust.setSelectedIndex(ddtocust.getItemCount() - 1);
+        
+        ddsite.removeAllItems();
+        ArrayList<String> sites = OVData.getSiteList();
+        for (int i = 0; i < sites.size(); i++) {
+            ddsite.addItem(sites.get(i));
+        }
+        ddsite.setSelectedItem(OVData.getDefaultSite());
+        
          
     }
     /**
@@ -605,6 +615,8 @@ public class ARAgingView extends javax.swing.JPanel {
         btexport = new javax.swing.JButton();
         btcsv = new javax.swing.JButton();
         btpdf = new javax.swing.JButton();
+        ddsite = new javax.swing.JComboBox<>();
+        jLabel1 = new javax.swing.JLabel();
         tablepanel = new javax.swing.JPanel();
         summarypanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -684,6 +696,8 @@ public class ARAgingView extends javax.swing.JPanel {
             }
         });
 
+        jLabel1.setText("Site");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -697,7 +711,11 @@ public class ARAgingView extends javax.swing.JPanel {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(ddfromcust, 0, 169, Short.MAX_VALUE)
                     .addComponent(ddtocust, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btexport)
                     .addGroup(jPanel3Layout.createSequentialGroup()
@@ -710,7 +728,7 @@ public class ARAgingView extends javax.swing.JPanel {
                         .addComponent(btcsv)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btpdf)))
-                .addGap(223, 223, 223))
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -722,7 +740,9 @@ public class ARAgingView extends javax.swing.JPanel {
                         .addComponent(btdetail)
                         .addComponent(cbpaymentpanel)
                         .addComponent(btcsv)
-                        .addComponent(btpdf))
+                        .addComponent(btpdf)
+                        .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1))
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(ddfromcust, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel2)))
@@ -951,6 +971,7 @@ try {
                         " inner join cm_mstr on cm_code = ar_cust " +
                         " where ar_cust = " + "'" + custs.get(j) + "'" + 
                         " AND ar_status = 'o' " +
+                        " AND ar_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +
                          " group by ar_cust, cm_name order by ar_cust;");
                  }  else {
                  res = st.executeQuery("SELECT ar_cust, cm_name, " +
@@ -963,6 +984,7 @@ try {
                         " inner join cm_mstr on cm_code = ar_cust " +
                          " where ar_cust = " + "'" + custs.get(j) + "'" + 
                         " AND ar_status = 'o' " +
+                        " AND ar_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +         
                          " group by ar_cust, cm_name order by ar_cust;");
                  }
                   while (res.next()) {
@@ -1219,8 +1241,10 @@ try {
     private javax.swing.JButton btpdf;
     private javax.swing.JCheckBox cbpaymentpanel;
     private javax.swing.JComboBox ddfromcust;
+    private javax.swing.JComboBox<String> ddsite;
     private javax.swing.JComboBox ddtocust;
     private javax.swing.JPanel detailpanel;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel7;
