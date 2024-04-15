@@ -579,6 +579,7 @@ try {
              res = st.executeQuery("select po_nbr, po_vend, pod_line, po_type, po_status, pod_item, " +
                       " pod_ord_qty, pod_rcvd_qty, pod_netprice " +
                          " from po_mstr inner join pod_mstr on pod_nbr = po_nbr where " +
+                        " po_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + " AND " + 
                         " po_vend >= " + "'" + vendfrom + "'" + " AND " +
                         " po_vend <= " + "'" + vendto + "'" + " AND " +
                      " po_nbr >= " + "'" + pofrom + "'" + " AND " +
