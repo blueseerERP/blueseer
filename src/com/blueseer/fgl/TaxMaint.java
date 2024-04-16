@@ -42,6 +42,7 @@ import static com.blueseer.utl.BlueSeerUtils.ConvertStringToBool;
 import static com.blueseer.utl.BlueSeerUtils.ConvertTrueFalseToStringInt;
 import static com.blueseer.utl.BlueSeerUtils.callChangeDialog;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
@@ -66,6 +67,7 @@ import java.awt.event.MouseEvent;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
@@ -358,7 +360,9 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeerT {
             return false;
         }
         boolean b = true;
-               
+        
+              
+        
                 if (tbkey.getText().isEmpty()) {
                     b = false;
                     bsmf.MainFrame.show(getMessageTag(1024, "tbkey"));
@@ -369,6 +373,13 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeerT {
                 if (tbdesc.getText().isEmpty()) {
                     b = false;
                     bsmf.MainFrame.show(getMessageTag(1024, "tbdesc"));
+                    tbdesc.requestFocus();
+                    return b;
+                }
+                
+                if (tbdesc.getText().length() > 30) {
+                    b = false;
+                    bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + "30"));
                     tbdesc.requestFocus();
                     return b;
                 }
@@ -900,6 +911,12 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeerT {
             return;
         }
         
+        if (tbtaxelement.getText().length() > 30) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + "30"));
+            tbtaxelement.requestFocus();
+            return;
+        }
+        
         int line = getmaxline();
         line++;
         
@@ -970,6 +987,12 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_btchangelogActionPerformed
 
     private void btupdateelementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateelementActionPerformed
+        if (tbtaxelement.getText().length() > 30) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + "30"));
+            tbtaxelement.requestFocus();
+            return;
+        }
+        
         int[] rows = tabletax.getSelectedRows();
         if (rows.length != 1) {
             bsmf.MainFrame.show(getMessageTag(1095));
