@@ -2342,7 +2342,7 @@ CREATE TABLE "so_mstr" (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "so_tax" (
   "sot_nbr" varchar(8) NOT NULL,
-  "sot_desc" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
+  "sot_desc" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "sot_type" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
   "sot_amttype" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
   "sot_percent" decimal(14,4) NOT NULL COLLATE NOCASE DEFAULT '0',
@@ -3021,7 +3021,7 @@ CREATE TABLE "wkfd_log" (
 );
 CREATE TABLE "po_tax" (
   "pot_nbr" varchar(8) NOT NULL,
-  "pot_desc" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
+  "pot_desc" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "pot_type" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
   "pot_amttype" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
   "pot_percent" decimal(14,4) NOT NULL COLLATE NOCASE DEFAULT '0',
