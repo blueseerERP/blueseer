@@ -60,9 +60,9 @@
      case when plan_type = 'DEMD' then sod_custitem else 'N/A' end as custitem
 FROM
      plan_mstr
-inner join plan_operation on plo_parent = plan_nbr and plo_op = wf_op
 inner join item_mstr on it_item = plan_item
 left outer join wf_mstr on wf_id = it_wf 
+left outer join plan_operation on plo_parent = plan_nbr and plo_op = wf_op
 left outer join bom_mstr on bom_item = plan_item and bom_primary = '1' and bom_enabled = '1'
 left outer join so_mstr on so_nbr = plan_order
 left outer join sod_det on sod_nbr = so_nbr and
