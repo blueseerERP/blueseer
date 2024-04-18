@@ -240,18 +240,14 @@ public class GLTranMaint extends javax.swing.JPanel {
             ddacct2.setSelectedIndex(0);
         
         ddcc.removeAllItems();
-        ArrayList cc = fglData.getGLCCList();
-        for (int i = 0; i < cc.size(); i++) {
-            ddcc.addItem(cc.get(i));
-        }
+        fglData.getGLCCList().stream().forEach((s) -> ddcc.addItem(s));
         ddcc.setSelectedItem(OVData.getDefaultCC());
        
+        
         ddcurr.removeAllItems();
-        ArrayList cur = fglData.getCurrlist();
-        for (int i = 0; i < cur.size(); i++) {
-            ddcurr.addItem(cur.get(i));
-        } 
+        fglData.getCurrlist().stream().forEach((s) -> ddcurr.addItem(s));
         ddcurr.setSelectedItem(OVData.getDefaultCurrency());
+        
         
        ddsite.setSelectedItem(OVData.getDefaultSite());
        tbuserid.setText(bsmf.MainFrame.userid);
