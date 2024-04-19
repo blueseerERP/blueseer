@@ -326,7 +326,7 @@ public class AcctMaint extends javax.swing.JPanel implements IBlueSeerT  {
             return false;
         }
 
-        Map<String,Integer> f = OVData.getTableInfo("ac_mstr");
+        Map<String,Integer> f = OVData.getTableInfo(new String[]{"ac_mstr"});
         int fc;
 
         fc = checkLength(f,"ac_id");

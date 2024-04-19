@@ -330,7 +330,7 @@ public class VendXrefMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public boolean validateInput(String x) {
-        Map<String,Integer> f = OVData.getTableInfo("vdp_mstr");
+        Map<String,Integer> f = OVData.getTableInfo(new String[]{"vdp_mstr"});
         int fc;
         
         if (ddvend.getSelectedItem() == null || ddvend.getSelectedItem().toString().isEmpty()) {

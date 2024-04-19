@@ -536,7 +536,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT  {
             return false;
         }
         
-         Map<String,Integer> f = OVData.getTableInfo("emp_mstr");
+         Map<String,Integer> f = OVData.getTableInfo(new String[]{"emp_mstr"});
         int fc;
 
         fc = checkLength(f,"emp_nbr");

@@ -698,7 +698,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
            
     public boolean validateInput(dbaction x) {
-       Map<String,Integer> f = OVData.getTableInfo("recv_mstr");
+       Map<String,Integer> f = OVData.getTableInfo(new String[]{"recv_mstr","recv_det"});
         int fc;
         
         if (ddvend.getSelectedItem() == null || ddvend.getSelectedItem().toString().isEmpty()) {
@@ -713,9 +713,7 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbpackingslip.requestFocus();
         return false;
         } 
-        
-        f = OVData.getTableInfo("recv_det");
-        
+                
         fc = checkLength(f,"rvd_lot");
         if (tblot.getText().length() > fc) {
         bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));

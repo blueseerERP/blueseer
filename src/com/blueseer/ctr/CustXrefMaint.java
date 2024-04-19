@@ -338,7 +338,7 @@ public class CustXrefMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public boolean validateInput(dbaction x) {
        
-        Map<String,Integer> f = OVData.getTableInfo("cup_mstr");
+        Map<String,Integer> f = OVData.getTableInfo(new String[]{"cup_mstr"});
         int fc;
         
         if (ddcust.getSelectedItem() == null || ddcust.getSelectedItem().toString().isEmpty()) {

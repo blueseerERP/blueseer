@@ -328,7 +328,7 @@ public class BankMaint extends javax.swing.JPanel implements IBlueSeerT {
             bsmf.MainFrame.show(getMessageTag(1185));
             return false;
         }
-        Map<String,Integer> f = OVData.getTableInfo("bk_mstr");
+        Map<String,Integer> f = OVData.getTableInfo(new String[]{"bk_mstr"});
         int fc;
 
         fc = checkLength(f,"bk_id");

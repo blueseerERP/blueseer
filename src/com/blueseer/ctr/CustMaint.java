@@ -697,7 +697,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
             return false;
         }
         
-        Map<String,Integer> f = OVData.getTableInfo("cm_mstr");
+        Map<String,Integer> f = OVData.getTableInfo(new String[]{"cm_mstr"});
         int fc;
 
         fc = checkLength(f,"cm_code");
@@ -809,7 +809,7 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public boolean validateInputShipTo(dbaction action) {
         
-        Map<String,Integer> f = OVData.getTableInfo("cms_det");
+        Map<String,Integer> f = OVData.getTableInfo(new String[]{"cms_det"});
         int fc;
 
         fc = checkLength(f,"cms_shipto");

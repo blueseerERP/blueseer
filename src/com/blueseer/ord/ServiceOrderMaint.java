@@ -488,7 +488,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
     
     public boolean validateInput(String key) {
         
-        Map<String,Integer> f = OVData.getTableInfo("sv_mstr");
+        Map<String,Integer> f = OVData.getTableInfo(new String[]{"sv_mstr"});
         int fc;
 
         fc = checkLength(f,"sv_po");

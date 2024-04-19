@@ -302,7 +302,7 @@ public class PrinterMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public boolean validateInput(dbaction x) {
        
-        Map<String,Integer> f = OVData.getTableInfo("prt_mstr");
+        Map<String,Integer> f = OVData.getTableInfo(new String[]{"prt_mstr"});
         int fc;
 
         fc = checkLength(f,"prt_id");

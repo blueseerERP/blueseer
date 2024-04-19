@@ -313,7 +313,7 @@ public class GenCodeMaint extends javax.swing.JPanel implements IBlueSeerT    {
     
     public boolean validateInput(dbaction x) {
         
-         Map<String,Integer> f = OVData.getTableInfo("code_mstr");
+         Map<String,Integer> f = OVData.getTableInfo(new String[]{"code_mstr"});
         int fc;
                
         fc = checkLength(f,"code_code");        

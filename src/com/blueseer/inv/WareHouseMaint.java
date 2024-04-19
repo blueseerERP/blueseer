@@ -343,7 +343,7 @@ public class WareHouseMaint extends javax.swing.JPanel implements IBlueSeerT {
             return false;
         }
         
-        Map<String,Integer> f = OVData.getTableInfo("wh_mstr");
+        Map<String,Integer> f = OVData.getTableInfo(new String[]{"wh_mstr"});
         int fc;        
         fc = checkLength(f,"wh_id");
         if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {

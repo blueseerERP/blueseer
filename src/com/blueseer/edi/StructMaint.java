@@ -348,7 +348,7 @@ public class StructMaint extends javax.swing.JPanel  {
     }
      
     public boolean validateInput(dbaction x) {
-        Map<String,Integer> f = OVData.getTableInfo("dfs_mstr");
+        Map<String,Integer> f = OVData.getTableInfo(new String[]{"dfs_mstr"});
         int fc;
 
         fc = checkLength(f,"dfs_id");

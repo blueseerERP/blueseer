@@ -16160,7 +16160,7 @@ return mystring;
         }
     }
     
-    public static Map<String,Integer> getTableInfo(String tablename) {
+    public static Map<String,Integer> getTableInfo(String[] tablenames) {
          Map<String,Integer> hm = new HashMap<String,Integer>();
          try{
             Connection con = null;
@@ -16172,10 +16172,12 @@ return mystring;
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
-                res = st.executeQuery("select * from " +  tablename  + " limit 1 ;");
-                ResultSetMetaData rsmd = res.getMetaData();
-                for (int i = 1; i <= rsmd.getColumnCount(); i++) {
-                  hm.put(rsmd.getColumnName(i), rsmd.getPrecision(i));  
+                for (String t : tablenames) {
+                    res = st.executeQuery("select * from " +  t  + " limit 1 ;");
+                    ResultSetMetaData rsmd = res.getMetaData();
+                    for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+                      hm.put(rsmd.getColumnName(i), rsmd.getPrecision(i));  
+                    }
                 }
            }
             catch (SQLException s){

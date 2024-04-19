@@ -415,7 +415,7 @@ public class DriverMaint extends javax.swing.JPanel implements IBlueSeerT {
     public boolean validateInput(dbaction x) {
        
                
-        Map<String,Integer> f = OVData.getTableInfo("drv_mstr");
+        Map<String,Integer> f = OVData.getTableInfo(new String[]{"drv_mstr"});
         int fc;
 
         fc = checkLength(f,"drv_id");

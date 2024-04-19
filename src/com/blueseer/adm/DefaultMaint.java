@@ -196,7 +196,7 @@ public class DefaultMaint extends javax.swing.JPanel implements IBlueSeerc {
             return false;
         }
         
-        Map<String,Integer> f = OVData.getTableInfo("ov_mstr");
+        Map<String,Integer> f = OVData.getTableInfo(new String[]{"ov_mstr"});
         int fc;
         fc = checkLength(f,"ov_site");        
         if (tbsite.getText().length() > fc || tbsite.getText().isEmpty()) { 

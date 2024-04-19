@@ -501,22 +501,6 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
             return false;
         }
         
-        Map<String,Integer> f = OVData.getTableInfo("uom_mstr");
-        int fc;        
-        fc = checkLength(f,"uom_id");
-        if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {
-        bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
-        tbkey.requestFocus();
-        return false;
-        } 
-                
-        fc = checkLength(f,"uom_desc");
-        if (tbitem.getText().length() > fc) {
-        bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
-        tbitem.requestFocus();
-        return false;
-        } 
-        
         return true;
     }
     

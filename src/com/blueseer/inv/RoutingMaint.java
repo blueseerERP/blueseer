@@ -368,7 +368,7 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeerT {
             return false;
         }
         
-        Map<String,Integer> f = OVData.getTableInfo("wf_mstr");
+        Map<String,Integer> f = OVData.getTableInfo(new String[]{"wf_mstr"});
         int fc;
 
         fc = checkLength(f,"wf_id");

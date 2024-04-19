@@ -345,7 +345,7 @@ public class SiteMaint extends javax.swing.JPanel implements IBlueSeerT {
             return false;
         }
         
-        Map<String,Integer> f = OVData.getTableInfo("site_mstr");
+        Map<String,Integer> f = OVData.getTableInfo(new String[]{"site_mstr"});
         int fc;
 
         fc = checkLength(f,"site_site");

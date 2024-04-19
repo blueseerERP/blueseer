@@ -506,7 +506,7 @@ public class ProdEntryMaint extends javax.swing.JPanel {
                     return;
                 }
         
-        Map<String,Integer> f = OVData.getTableInfo("tran_mstr");
+        Map<String,Integer> f = OVData.getTableInfo(new String[]{"tran_mstr"});
         int fc;
         fc = checkLength(f,"tr_serial");
         if (tbserialno.getText().length() > fc) {

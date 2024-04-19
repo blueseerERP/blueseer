@@ -305,7 +305,7 @@ public class CurrencyMaint extends javax.swing.JPanel implements IBlueSeerT {
             bsmf.MainFrame.show(getMessageTag(1185));
             return false;
         }        
-        Map<String,Integer> f = OVData.getTableInfo("cur_mstr");
+        Map<String,Integer> f = OVData.getTableInfo(new String[]{"cur_mstr"});
         int fc;
         
         

@@ -334,7 +334,7 @@ public class LocationMaint extends javax.swing.JPanel implements IBlueSeerT {
             return false;
         }
         
-        Map<String,Integer> f = OVData.getTableInfo("loc_mstr");
+        Map<String,Integer> f = OVData.getTableInfo(new String[]{"loc_mstr"});
         int fc;
 
         fc = checkLength(f,"loc_loc");

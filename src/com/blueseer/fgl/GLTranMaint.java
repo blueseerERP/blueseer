@@ -596,7 +596,7 @@ public class GLTranMaint extends javax.swing.JPanel {
     
     public boolean validateInput(BlueSeerUtils.dbaction x) {
                
-        Map<String,Integer> f = OVData.getTableInfo("gl_tran");
+        Map<String,Integer> f = OVData.getTableInfo(new String[]{"gl_tran"});
         int fc;
         
         fc = checkLength(f,"glt_ref");        

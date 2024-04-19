@@ -841,7 +841,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
             return false;
         }
         
-        Map<String,Integer> f = OVData.getTableInfo("po_mstr");
+        Map<String,Integer> f = OVData.getTableInfo(new String[]{"po_mstr"}); 
         int fc;        
         fc = checkLength(f,"po_nbr");
         if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {
@@ -1274,7 +1274,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
    
     public boolean validateInputShipTo(dbaction action) {
         
-        Map<String,Integer> f = OVData.getTableInfo("po_addr");
+        Map<String,Integer> f = OVData.getTableInfo(new String[]{"po_addr"});
         int fc;
 
         fc = checkLength(f,"poa_shipto");

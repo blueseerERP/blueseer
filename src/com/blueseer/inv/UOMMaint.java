@@ -307,7 +307,7 @@ public class UOMMaint extends javax.swing.JPanel implements IBlueSeerT {
             return false;
         }
         
-        Map<String,Integer> f = OVData.getTableInfo("uom_mstr");
+        Map<String,Integer> f = OVData.getTableInfo(new String[]{"uom_mstr"});
         int fc;        
         fc = checkLength(f,"uom_id");
         if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {

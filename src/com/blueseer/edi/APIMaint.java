@@ -440,7 +440,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public boolean validateInput(dbaction x) {
            
-        Map<String,Integer> f = OVData.getTableInfo("api_mstr");
+        Map<String,Integer> f = OVData.getTableInfo(new String[]{"api_mstr"});
         
         int fc = checkLength(f,"api_id");
         if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {

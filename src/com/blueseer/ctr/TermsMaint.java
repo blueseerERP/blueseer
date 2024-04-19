@@ -342,7 +342,7 @@ public class TermsMaint extends javax.swing.JPanel implements IBlueSeerT {
             return false;
         }
         
-        Map<String,Integer> f = OVData.getTableInfo("cust_term");
+        Map<String,Integer> f = OVData.getTableInfo(new String[]{"cust_term"});
         int fc;
         
         if ((x.equals(x.delete) || x.equals(x.update)) && cbsystemcode.isSelected()) {

@@ -345,7 +345,7 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
     public boolean validateInput(dbaction x) {
        
                
-        Map<String,Integer> f = OVData.getTableInfo("wkf_mstr");
+        Map<String,Integer> f = OVData.getTableInfo(new String[]{"wkf_mstr"});
         int fc;
 
         fc = checkLength(f,"wkf_id");

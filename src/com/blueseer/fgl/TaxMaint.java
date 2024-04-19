@@ -359,41 +359,33 @@ public class TaxMaint extends javax.swing.JPanel implements IBlueSeerT {
             bsmf.MainFrame.show(getMessageTag(1185));
             return false;
         }
-        boolean b = true;
         
-              
+        Map<String,Integer> f = OVData.getTableInfo(new String[]{"tax_mstr", "taxd_mstr"});
+        int fc;
+
+        fc = checkLength(f,"tax_code");
+        if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbkey.requestFocus();
+            return false;
+        }
         
-                if (tbkey.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024, "tbkey"));
-                    tbkey.requestFocus();
-                    return b;
-                }
+        fc = checkLength(f,"tax_desc");
+        if (tbdesc.getText().length() > fc || tbdesc.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbdesc.requestFocus();
+            return false;
+        }
                 
-                if (tbdesc.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024, "tbdesc"));
-                    tbdesc.requestFocus();
-                    return b;
-                }
-                
-                if (tbdesc.getText().length() > 30) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + "30"));
-                    tbdesc.requestFocus();
-                    return b;
-                }
-                
-                if (tabletax.getRowCount() < 1) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1062));
-                    tbtaxelement.requestFocus();
-                    return b;
-                }
+        if (tabletax.getRowCount() < 1) {
+            bsmf.MainFrame.show(getMessageTag(1062));
+            tbtaxelement.requestFocus();
+            return false;
+        }
                 
                 
                
-        return b;
+        return true;
     }
     
     public void initvars(String[] arg) {

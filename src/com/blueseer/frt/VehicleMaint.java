@@ -397,20 +397,26 @@ public class VehicleMaint extends javax.swing.JPanel implements IBlueSeerT {
     public boolean validateInput(dbaction x) {
        
                
-        Map<String,Integer> f = OVData.getTableInfo("car_mstr");
+        Map<String,Integer> f = OVData.getTableInfo(new String[]{"veh_mstr"});
         int fc;
 
-        fc = checkLength(f,"car_id");
+        fc = checkLength(f,"veh_id");
         if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {
             bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
             tbkey.requestFocus();
             return false;
         }     
          
-        fc = checkLength(f,"car_desc");
+        fc = checkLength(f,"veh_desc");
         if (tbdesc.getText().length() > fc ) {
             bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
             tbdesc.requestFocus();
+            return false;
+        } 
+        fc = checkLength(f,"veh_rmks");
+        if (tarmks.getText().length() > fc ) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tarmks.requestFocus();
             return false;
         } 
                

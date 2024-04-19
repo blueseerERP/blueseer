@@ -706,7 +706,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
             return false;
         }
         
-        Map<String,Integer> f = OVData.getTableInfo("so_mstr");
+        Map<String,Integer> f = OVData.getTableInfo(new String[]{"so_mstr"});
         int fc;
 
         fc = checkLength(f,"so_nbr");

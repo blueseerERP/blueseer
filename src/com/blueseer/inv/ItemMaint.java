@@ -512,7 +512,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
             bsmf.MainFrame.show(getMessageTag(1185));
             return false;
         }
-        Map<String,Integer> f = OVData.getTableInfo("item_mstr");
+        Map<String,Integer> f = OVData.getTableInfo(new String[]{"item_mstr"});
         int fc;
 
         fc = checkLength(f,"it_item");

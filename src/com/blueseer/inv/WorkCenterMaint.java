@@ -335,7 +335,7 @@ public class WorkCenterMaint extends javax.swing.JPanel implements IBlueSeerT {
             return false;
         }
         
-        Map<String,Integer> f = OVData.getTableInfo("wc_mstr");
+        Map<String,Integer> f = OVData.getTableInfo(new String[]{"wc_mstr"});
         int fc;
 
         fc = checkLength(f,"wc_cell");

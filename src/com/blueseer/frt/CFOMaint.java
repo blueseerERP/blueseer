@@ -772,7 +772,7 @@ public class CFOMaint extends javax.swing.JPanel implements IBlueSeerT {
     public boolean validateInput(dbaction x) {
        
                
-        Map<String,Integer> f = OVData.getTableInfo("cfo_mstr");
+        Map<String,Integer> f = OVData.getTableInfo(new String[]{"cfo_mstr"});
         int fc;
 
         fc = checkLength(f,"cfo_nbr");
