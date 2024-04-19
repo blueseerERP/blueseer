@@ -477,6 +477,8 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
         ddsite.setSelectedItem(OVData.getDefaultSite());
         ddcode.setSelectedIndex(0);
         
+        dduom.setSelectedItem("EA");
+        
        isLoad = false;
     }
     
