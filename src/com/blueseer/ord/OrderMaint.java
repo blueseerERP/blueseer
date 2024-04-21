@@ -1847,6 +1847,9 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
             newdisc += bsParseDouble(sactable.getValueAt(j,3).toString());
             }
          }
+         
+         // check for customer specific discounts
+         newdisc += invData.getItemDiscFromCust(ddcust.getSelectedItem().toString());
         
          for (int j = 0; j < orddet.getRowCount(); j++) {
              listprice = bsParseDouble(orddet.getValueAt(j, 7).toString());
