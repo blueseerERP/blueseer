@@ -27,6 +27,7 @@ package com.blueseer.ctr;
 
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.ds;
@@ -2047,6 +2048,49 @@ public class cusData {
         return myarray;
         
     }
+    
+    public static String getDiscCodeByCust(String cust) {
+       String x = "";
+       
+        try{
+            
+        Connection con = null;
+        if (ds != null) {
+        con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                
+                res = st.executeQuery("select cm_disc_code from cm_mstr where cm_code = " + "'" + cust + "'" + ";");
+                while (res.next()) {
+                  x = res.getString("cm_disc_code");
+                } 
+           }
+            catch (SQLException s){
+                bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return x;
+        
+    }
+    
+    
+    
+     
     
     
     public static ArrayList gettermsmstrlist() {

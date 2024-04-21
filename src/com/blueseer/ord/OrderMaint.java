@@ -36,6 +36,7 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.ctr.cusData;
+import static com.blueseer.ctr.cusData.getDiscCodeByCust;
 import static com.blueseer.ctr.cusData.getShipAddressInfo;
 import com.blueseer.fgl.fglData;
 import com.blueseer.inv.invData;
@@ -1393,7 +1394,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                ddcust.setBackground(null);
            }
             
-           
+           String disckey = getDiscCodeByCust(ddcust.getSelectedItem().toString());
             
             ArrayList mycusts = cusData.getcustshipmstrlist(ddcust.getSelectedItem().toString());
             for (int i = 0; i < mycusts.size(); i++) {
@@ -1438,13 +1439,19 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                     while (res.next()) {
                         ddpart.addItem(res.getString("cup_item"));
                     }
-                    res = st.executeQuery("select cpr_disc, cpr_item from cpr_mstr where cpr_cust = " + "'" + mykey + "'" + 
-                                          " AND cpr_type = " + "'" + "DISCOUNT" + "'" + ";");
-                    while (res.next()) {
-                      sacmodel.addRow(new Object[]{ "discount", res.getString("cpr_item"), "percent", res.getString("cpr_disc")
-                      });
-                    }
                 }
+                
+                // discounts...first check if generic disc code applied to cust master...else use cust code
+                if (! disckey.isBlank()) {
+                  mykey = disckey;  
+                }
+                res = st.executeQuery("select cpr_disc, cpr_item from cpr_mstr where cpr_cust = " + "'" + mykey + "'" + 
+                                      " AND cpr_type = " + "'" + "DISCOUNT" + "'" + ";");
+                while (res.next()) {
+                  sacmodel.addRow(new Object[]{ "discount", res.getString("cpr_item"), "percent", res.getString("cpr_disc")
+                  });
+                }
+                
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
