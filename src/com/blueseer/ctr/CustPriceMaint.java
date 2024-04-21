@@ -1145,6 +1145,7 @@ public class CustPriceMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_btdeletediscActionPerformed
 
     private void btupdatediscActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdatediscActionPerformed
+        if (! disclist.isSelectionEmpty())
         try {
 
            Connection con = null;
