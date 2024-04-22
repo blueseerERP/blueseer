@@ -28,11 +28,16 @@ compress-archive -update -path ..\dist\bsmf.jar -destinationpath $wip\$jaronly
 compress-archive -update -path ..\.patch -destinationpath $wip\$jaronly
 compress-archive -update -path instructions.txt -destinationpath $wip\$jaronly
 
+# create jar and jasper patch zip file
+$jaronly = "blueseer.base.patch.zip"
+rm $wip\$jaronly
+compress-archive -update -path ..\dist\blueseer.jar -destinationpath $wip\$jaronly
+compress-archive -update -path ..\sf\jasper -destinationpath $wip\$jaronly
 
 
 rm blueseer.patch.*.zip
 $patchdir = "patchV" + $version + "P" + $pc
-$patchzip = "blueseer.patch.ver." + $version + "." + $patch + "." + "zip"
+#$patchzip = "blueseer.patch.ver." + $version + "." + $patch + "." + "zip"
 $patchmain = "blueseer.patch.ver." + $version + "." + "zip"
 mkdir $patchdir
 mkdir $patchdir\dist
@@ -47,9 +52,9 @@ cp ..\sf\zebra $patchdir\ -recurse
 # cp ..\dist $patchdir\ -recurse
 cp ..\dist\bsmf.jar $patchdir\dist\bsmf.jar
 cp ..\dist\blueseer.jar $patchdir\dist\blueseer.jar
-compress-archive -force -path $patchdir -destinationpath $wip\$patchzip
+#compress-archive -force -path $patchdir -destinationpath $wip\$patchzip
 ## patchmain will always be latest patch number (for app auto patch purposes)
-cp $wip\$patchzip $wip\$patchmain
+#cp $wip\$patchzip $wip\$patchmain
 rmdir $patchdir -force -recurse
 
 $myzip = "blueseer.server.mysql.win.v" + $version + ".zip"
