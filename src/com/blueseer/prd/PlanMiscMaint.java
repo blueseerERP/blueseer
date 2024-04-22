@@ -174,7 +174,7 @@ public class PlanMiscMaint extends javax.swing.JPanel {
                 0, // status
                 tbrmks.getText(),
                 "", // order
-                "", // line
+                "0", // line
                 "MISC", // type
                 "", // cell
                 0 // issched
