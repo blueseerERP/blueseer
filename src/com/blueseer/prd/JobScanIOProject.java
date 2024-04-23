@@ -408,7 +408,8 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         rbmaterial.setEnabled(true);
         rbtooling.setEnabled(true);
         rbservice.setEnabled(true);
-        
+        tbcost.setText("");
+        tbqty.setText("");
         rbmaterial.setSelected(true);
         
         clockmodel.setNumRows(0);
@@ -1790,12 +1791,14 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
     private void ddmaterialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddmaterialActionPerformed
         if (! isLoad && ddmaterial.getSelectedItem() != null) {
             lblmaterial.setText(invData.getItemDesc(ddmaterial.getSelectedItem().toString()));
+            tbcost.setText(bsNumber(invData.getItemPurchPrice(ddmaterial.getSelectedItem().toString())));
         }
     }//GEN-LAST:event_ddmaterialActionPerformed
 
     private void ddtoolingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddtoolingActionPerformed
         if (! isLoad && ddtooling.getSelectedItem() != null) {
             lbltooling.setText(invData.getItemDesc(ddtooling.getSelectedItem().toString()));
+            tbcost.setText(bsNumber(invData.getItemPurchPrice(ddtooling.getSelectedItem().toString())));
         }
     }//GEN-LAST:event_ddtoolingActionPerformed
 
