@@ -39,6 +39,7 @@ import static com.blueseer.fgl.fglData.getDeptMstr;
 import static com.blueseer.fgl.fglData.updateDeptMstr;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -66,6 +67,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -323,75 +325,69 @@ public class DeptMaint extends javax.swing.JPanel implements IBlueSeerT {
             bsmf.MainFrame.show(getMessageTag(1185));
             return false;
         }
-        boolean b = true;
-               
-                if (tbkey.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024, "ID"));
-                    tbkey.requestFocus();
-                    return b;
-                }
         
-                if (tbdesc.getText().isEmpty()) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1024, "Description"));
-                    tbdesc.requestFocus();
-                    return b;
-                }
+        Map<String,Integer> f = OVData.getTableInfo(new String[]{"dept_mstr"});
+        int fc;
+
+        fc = checkLength(f,"dept_id");
+        if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbkey.requestFocus();
+            return false;
+        }
+        
+        fc = checkLength(f,"dept_desc");
+        if (tbdesc.getText().length() > fc || tbdesc.getText().isEmpty()) {
+            bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+            tbdesc.requestFocus();
+            return false;
+        }
+        
+        
                 
-                if (! tbcopacct.getText().isEmpty() && ! OVData.isValidGLAcct(tbcopacct.getText())) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1026));
-                    tbcopacct.requestFocus();
-                    return b;
-                }
-                
-                if (! tblbracct.getText().isEmpty() && ! OVData.isValidGLAcct(tblbracct.getText())) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1026));
-                    tblbracct.requestFocus();
-                    return b;
-                }
-                
-                if (! tbbdnacct.getText().isEmpty() && ! OVData.isValidGLAcct(tbbdnacct.getText())) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1026));
-                    tbbdnacct.requestFocus();
-                    return b;
-                }
-                
-                if (! tblbrusageacct.getText().isEmpty() && ! OVData.isValidGLAcct(tblbrusageacct.getText())) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1026));
-                    tblbrusageacct.requestFocus();
-                    return b;
-                }
-                
-                if (! tblbrrateacct.getText().isEmpty() && ! OVData.isValidGLAcct(tblbrrateacct.getText())) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1026));
-                    tblbrrateacct.requestFocus();
-                    return b;
-                }
-                
-                if (! tbbdnusageacct.getText().isEmpty() && ! OVData.isValidGLAcct(tbbdnusageacct.getText())) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1026));
-                    tbbdnusageacct.requestFocus();
-                    return b;
-                }
-                
-                if (! tbbdnrateacct.getText().isEmpty() && ! OVData.isValidGLAcct(tbbdnrateacct.getText())) {
-                    b = false;
-                    bsmf.MainFrame.show(getMessageTag(1026));
-                    tbbdnrateacct.requestFocus();
-                    return b;
-                }
-                
-                
-                
+        if (! tbcopacct.getText().isEmpty() && ! OVData.isValidGLAcct(tbcopacct.getText())) {
+            bsmf.MainFrame.show(getMessageTag(1026));
+            tbcopacct.requestFocus();
+            return false;
+        }
+
+        if (! tblbracct.getText().isEmpty() && ! OVData.isValidGLAcct(tblbracct.getText())) {
+            bsmf.MainFrame.show(getMessageTag(1026));
+            tblbracct.requestFocus();
+            return false;
+        }
+
+        if (! tbbdnacct.getText().isEmpty() && ! OVData.isValidGLAcct(tbbdnacct.getText())) {
+            bsmf.MainFrame.show(getMessageTag(1026));
+            tbbdnacct.requestFocus();
+            return false;
+        }
+
+        if (! tblbrusageacct.getText().isEmpty() && ! OVData.isValidGLAcct(tblbrusageacct.getText())) {
+            bsmf.MainFrame.show(getMessageTag(1026));
+            tblbrusageacct.requestFocus();
+            return false;
+        }
+
+        if (! tblbrrateacct.getText().isEmpty() && ! OVData.isValidGLAcct(tblbrrateacct.getText())) {
+            bsmf.MainFrame.show(getMessageTag(1026));
+            tblbrrateacct.requestFocus();
+            return false;
+        }
+
+        if (! tbbdnusageacct.getText().isEmpty() && ! OVData.isValidGLAcct(tbbdnusageacct.getText())) {
+            bsmf.MainFrame.show(getMessageTag(1026));
+            tbbdnusageacct.requestFocus();
+            return false;
+        }
+
+        if (! tbbdnrateacct.getText().isEmpty() && ! OVData.isValidGLAcct(tbbdnrateacct.getText())) {
+            bsmf.MainFrame.show(getMessageTag(1026));
+            tbbdnrateacct.requestFocus();
+            return false;
+        }   
                
-        return b;
+        return true;
     }
     
     public void initvars(String[] arg) {
