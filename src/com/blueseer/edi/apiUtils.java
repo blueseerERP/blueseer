@@ -1278,7 +1278,7 @@ public class apiUtils {
                 JceKeyTransRecipient recipient = new JceKeyTransEnvelopedRecipient(decryptionKey);
                 try {
                 decryptedData = recipientInfo.getContent(recipient);
-                } catch (Exception ex) {
+                } catch (CMSException ex) {
                 bslog(ex);
                 }
             }
