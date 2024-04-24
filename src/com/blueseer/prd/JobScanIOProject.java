@@ -47,15 +47,18 @@ import com.blueseer.inv.invData.uom_mstr;
 import static com.blueseer.inv.invData.updateUOMMstr;
 import com.blueseer.ord.ordData;
 import static com.blueseer.ord.ordData.getServiceOrderMstr;
+import static com.blueseer.ord.ordData.isServiceOrderGeneric;
 import com.blueseer.ord.ordData.svd_det;
 import static com.blueseer.prd.prdData.addPlanOpDet;
 import static com.blueseer.prd.prdData.deletePlanOpDet;
 import static com.blueseer.prd.prdData.getJobClockDetail;
 import static com.blueseer.prd.prdData.getPlanOpDet;
+import static com.blueseer.prd.prdData.getPlanOpLastOp;
 import static com.blueseer.prd.prdData.updatePlanOPDate;
 import static com.blueseer.prd.prdData.updatePlanOPNotes;
 import static com.blueseer.prd.prdData.updatePlanOPOperator;
 import com.blueseer.sch.schData;
+import static com.blueseer.sch.schData.addPlanOperation;
 import static com.blueseer.sch.schData.getPlanMstr;
 import static com.blueseer.sch.schData.getPlanOperation;
 import com.blueseer.sch.schData.plan_mstr;
@@ -67,6 +70,7 @@ import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsNumber;
 import static com.blueseer.utl.BlueSeerUtils.bsNumberToUS;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
@@ -469,6 +473,9 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
            tbitem.setEnabled(false);
            ddtooling.setEnabled(false);
            ddmaterial.setEnabled(true);
+           if (! isServiceOrderGeneric(tborder.getText())) {
+               btaddop.setEnabled(false);
+           }
            if (isOpScan) {
                ddop.setEnabled(false);
            }
@@ -1035,6 +1042,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         dcdate = new com.toedter.calendar.JDateChooser();
         jLabel19 = new javax.swing.JLabel();
         btclock = new javax.swing.JButton();
+        btaddop = new javax.swing.JButton();
         panelNotes = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -1300,6 +1308,13 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
+        btaddop.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/add.png"))); // NOI18N
+        btaddop.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btaddopActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelMainLayout = new javax.swing.GroupLayout(panelMain);
         panelMain.setLayout(panelMainLayout);
         panelMainLayout.setHorizontalGroup(
@@ -1363,7 +1378,9 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
                         .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panelMainLayout.createSequentialGroup()
                                 .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btaddop, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(lbloperation, javax.swing.GroupLayout.PREFERRED_SIZE, 210, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(panelMainLayout.createSequentialGroup()
                                 .addComponent(ddmaterial, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1417,7 +1434,8 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
                                     .addComponent(lbloperation, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(ddop, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel4)))
+                                        .addComponent(jLabel4))
+                                    .addComponent(btaddop, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(panelMainLayout.createSequentialGroup()
@@ -1876,9 +1894,39 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         
     }//GEN-LAST:event_btclockActionPerformed
 
+    private void btaddopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddopActionPerformed
+        if (! tbkey.getText().isBlank()) {
+        int newop = getPlanOpLastOp(tbkey.getText());
+        String opdesc = bsmf.MainFrame.input("Enter Operation Description: ");
+        plan_operation x = new plan_operation(null, 
+                0, // id
+                bsParseInt(tbkey.getText()), // parent
+                newop + 1, // op
+                1, // qty
+                0, // comp qty
+                "", // cell
+                "", // operator
+                "", // operatorname
+                null, // date 
+                "", //status
+                bsmf.MainFrame.userid, // userid
+                opdesc, // operation description
+                "" // notes   
+             );
+        String[] m = addPlanOperation(x);
+            if (m[0].equals("0")) {
+                bsmf.MainFrame.show("operation added");
+                initvars(new String[]{tbkey.getText()});
+            } else {
+                bsmf.MainFrame.show("operation not added..." + m[1]);
+            }
+        }
+    }//GEN-LAST:event_btaddopActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btaddmatl;
+    private javax.swing.JButton btaddop;
     private javax.swing.JButton btclear;
     private javax.swing.JButton btclock;
     private javax.swing.JButton btcommit;

@@ -192,8 +192,8 @@ public class schData {
         String[] m = new String[2];
         String sqlSelect = "SELECT * FROM  plan_operation where plo_parent = ? and plo_op = ?";
         String sqlInsert = "insert into plan_operation (plo_parent, plo_op, plo_qty, plo_qty_comp, plo_cell, "
-                        + " plo_operator, plo_operatorname, plo_date, plo_status, plo_userid ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?); ";
+                        + " plo_operator, plo_operatorname, plo_date, plo_status, plo_userid, plo_desc, plo_notes ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?); ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setInt(1, x.plo_parent);
@@ -211,6 +211,8 @@ public class schData {
             psi.setString(8, x.plo_date);
             psi.setString(9, x.plo_status);
             psi.setString(10, x.plo_userid);
+            psi.setString(11, x.plo_desc);
+            psi.setString(12, x.plo_notes);
             int rows = psi.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
             } else {
@@ -852,7 +854,6 @@ public class schData {
     }
       return myreturn;
   }
-
     
     public static boolean updatePlanOperationStatusQty(String plan, String op, String status, double qty) {
       boolean x = false;  

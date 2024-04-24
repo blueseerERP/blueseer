@@ -434,6 +434,43 @@ public class prdData {
         return x;
     }
 
+   public static int getPlanOpLastOp(String jobid) {
+        
+          int x = 0;
+          
+          try {
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                 res = st.executeQuery("select plo_op from plan_operation where plo_parent = " + "'" + jobid + "'" 
+                         + " order by plo_op ;");
+               while (res.next()) {
+                   x = res.getInt("plo_op");
+               }
+              
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+          return x;
+      }
+    
    
    public static int addPlanOpDet(String job, String op, String datatype, String item, double qty, double cost, String operator) {
         int x = 0;

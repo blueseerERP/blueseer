@@ -692,7 +692,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
                 "", // isched
                 bsmf.MainFrame.userid,
                 ddtype.getSelectedItem().toString(),
-                "", // char1
+                ddoptype.getSelectedItem().toString(), // char1
                 "", // char2
                 "", // char3
                 terms,
