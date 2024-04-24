@@ -434,6 +434,42 @@ public class prdData {
         return x;
     }
 
+   public static int updatePlanOPDesc(String job, String op, String desc) {
+        int x = 0;
+        try {
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                 st.executeUpdate("update plan_operation set plo_desc = " + "'" + desc + "'" + 
+                         " where plo_parent = " + "'" + job + "'" +
+                         " and plo_op = " + "'" + op + "'" + ";");
+                
+            } 
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return x;
+    }
+
+   
    public static int getPlanOpLastOp(String jobid) {
         
           int x = 0;

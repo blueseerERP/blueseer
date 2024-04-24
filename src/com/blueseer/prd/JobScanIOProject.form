@@ -121,7 +121,7 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="btaddop" min="-2" pref="25" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="lbloperation" min="-2" pref="210" max="-2" attributes="0"/>
+                                  <Component id="tbopdesc" min="-2" pref="188" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="ddmaterial" min="-2" pref="143" max="-2" attributes="0"/>
@@ -184,13 +184,15 @@
                                       <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace min="-2" pref="9" max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Component id="lbloperation" alignment="0" max="32767" attributes="0"/>
-                                      <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="ddop" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="1" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Group type="103" groupAlignment="3" attributes="0">
+                                              <Component id="ddop" alignment="3" min="-2" max="-2" attributes="0"/>
+                                              <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                          <Component id="btaddop" alignment="1" min="-2" pref="20" max="-2" attributes="0"/>
                                       </Group>
-                                      <Component id="btaddop" alignment="1" min="-2" pref="20" max="-2" attributes="0"/>
+                                      <Component id="tbopdesc" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
@@ -602,8 +604,6 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btdeletematlActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JLabel" name="lbloperation">
-        </Component>
         <Component class="javax.swing.JLabel" name="lblmaterial">
         </Component>
         <Component class="javax.swing.JLabel" name="lbltooling">
@@ -682,6 +682,8 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btaddopActionPerformed"/>
           </Events>
+        </Component>
+        <Component class="javax.swing.JTextField" name="tbopdesc">
         </Component>
       </SubComponents>
     </Container>

@@ -40,14 +40,14 @@ where plod_parent = $P{myid} and plod_op = $P{op};]]>
 	<detail>
 		<band height="17" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="0" width="83" height="12" uuid="cb969a1e-09e6-420f-8401-dd62a22754a8"/>
+				<reportElement x="0" y="0" width="40" height="12" uuid="cb969a1e-09e6-420f-8401-dd62a22754a8"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{plod_type}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="91" y="0" width="100" height="12" uuid="17207d79-bb71-4245-a361-297ab29d6bd1"/>
+				<reportElement x="40" y="0" width="162" height="12" uuid="17207d79-bb71-4245-a361-297ab29d6bd1"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
