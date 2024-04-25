@@ -40,12 +40,14 @@ import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.IBlueSeerc;
 import com.blueseer.utl.OVData;
+import static com.blueseer.utl.OVData.getSysMetaData;
 import java.awt.Component;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -249,6 +251,7 @@ public class GLControl extends javax.swing.JPanel implements IBlueSeerc {
     
     public String[] updateRecord(String[] x) {
      String[] m = addUpdateGLCtrl(createRecord());
+     SysMeta();
         return m;
      }
       
@@ -278,8 +281,22 @@ public class GLControl extends javax.swing.JPanel implements IBlueSeerc {
     tbearnings.setText(x.gl_earnings());
     tbforeignreal.setText(x.gl_foreignreal());
     cbautopost.setSelected(BlueSeerUtils.ConvertStringToBool(x.gl_autopost()));
+    
+    // get sysmeta recs
+    ArrayList<String[]> obc = getSysMetaData("system", "glcontrol");
+        for (String[] s : obc) {
+            if (s[0].equals("burden_rate")) {
+                tbbdnrate.setText(s[1]);
+            }
+        } 
+    
+    
     }
     
+     // additional methods
+    public void SysMeta() {
+       OVData.addUpdateSysMeta("system", "glcontrol", "burden_rate", tbbdnrate.getText().trim()); 
+    }
     
    
     
@@ -308,6 +325,8 @@ public class GLControl extends javax.swing.JPanel implements IBlueSeerc {
         jLabel6 = new javax.swing.JLabel();
         cbautopost = new javax.swing.JCheckBox();
         btcleargl = new javax.swing.JButton();
+        tbbdnrate = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -350,6 +369,8 @@ public class GLControl extends javax.swing.JPanel implements IBlueSeerc {
             }
         });
 
+        jLabel7.setText("Burden Rate");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -375,7 +396,8 @@ public class GLControl extends javax.swing.JPanel implements IBlueSeerc {
                                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                         .addComponent(jLabel4)
                                         .addComponent(jLabel5)
-                                        .addComponent(jLabel6))
+                                        .addComponent(jLabel6)
+                                        .addComponent(jLabel7))
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
                                 .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
                                     .addComponent(btcleargl)
@@ -384,7 +406,8 @@ public class GLControl extends javax.swing.JPanel implements IBlueSeerc {
                                 .addComponent(tbisto, javax.swing.GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
                                 .addComponent(btupdate, javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(tbearnings)
-                                .addComponent(tbforeignreal, javax.swing.GroupLayout.Alignment.TRAILING)))))
+                                .addComponent(tbforeignreal, javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(tbbdnrate, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -414,9 +437,13 @@ public class GLControl extends javax.swing.JPanel implements IBlueSeerc {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbforeignreal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbbdnrate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7))
+                .addGap(4, 4, 4)
                 .addComponent(cbautopost)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 8, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btupdate)
                     .addComponent(btcleargl)))
@@ -450,7 +477,9 @@ public class GLControl extends javax.swing.JPanel implements IBlueSeerc {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JTextField tbbdnrate;
     private javax.swing.JTextField tbbsfrom;
     private javax.swing.JTextField tbbsto;
     private javax.swing.JTextField tbearnings;

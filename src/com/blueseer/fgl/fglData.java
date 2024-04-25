@@ -55,6 +55,7 @@ import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import com.blueseer.utl.OVData;
+import static com.blueseer.utl.OVData.getSysMetaValue;
 import static java.lang.Math.abs;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -3080,15 +3081,19 @@ public class fglData {
                 
                     double mtlcost = 0.00;
                     double lbrcost = 0.00;
+                    double bdncost = 0.00;
                     String jobid = getShipperRef(shipper);
                     
                     if (jobid.isBlank()) {
                         return false;
                     }
                     
+                    String bdn = getSysMetaValue("system", "glcontrol", "burden_rate");
+                    double bdnrate = (bdn.isBlank()) ? 0.00 : bsParseDouble(bdn);
                     String cc = OVData.getDefaultCC();
                     String cogsmtl = "";
                     String cogslbr = "";
+                    String cogsbdn = "";
                     String invacct = "";
                     String order = getPlanSrvOrderNumber(jobid);
                     sv_mstr sv = getServiceOrderMstr(new String[]{order});
@@ -3101,6 +3106,7 @@ public class fglData {
                         invacct = res.getString("pl_inventory");
                         cogsmtl = res.getString("pl_cogs_mtl");
                         cogslbr = res.getString("pl_cogs_lbr");
+                        cogsbdn = res.getString("pl_cogs_bdn");
                     }
                     
                     // get material cost
@@ -3130,6 +3136,7 @@ public class fglData {
                      + " order by jobc_indate ;");
                      while (res.next()) {
                         lbrcost += res.getDouble("emp_rate") * res.getDouble("jobc_tothrs");
+                        bdncost += bdnrate * res.getDouble("jobc_tothrs");  // revisit...probably should be calculated based on start / finish or proj
                     }
                     
                     acct_cr.add(invacct);
@@ -3145,6 +3152,23 @@ public class fglData {
                     type.add(thistype);
                     desc.add(thisdesc);
                     doc.add(gldoc); 
+                    
+                    // burden cost if any
+                    if (bdnrate > 0) {
+                    acct_cr.add(invacct);
+                    acct_dr.add(cogsbdn);
+                    cc_cr.add(cc);
+                    cc_dr.add(cc);
+                    cost.add(bdncost);
+                    basecost.add(bdncost);
+                    site.add(sv.sv_site());
+                    curr.add(sv.sv_curr());
+                    basecurr.add(sv.sv_curr());
+                    ref.add(jobid);
+                    type.add(thistype);
+                    desc.add(thisdesc);
+                    doc.add(gldoc); 
+                    }
                   
                     res.close();
                     st.close();
