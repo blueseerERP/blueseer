@@ -26,12 +26,13 @@ SOFTWARE.
 package com.blueseer.ord;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.checkperms;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
-import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.reinitpanels;
+import com.blueseer.utl.OVData;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
@@ -350,6 +351,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         tbtotqty.setText("");
         totlines.setText("");
         tbtotdollars.setText("");
+        tbjobnbr.setText("");
         
         myorddetmodel.setRowCount(0);
         orddet.setModel(myorddetmodel);
@@ -561,6 +563,8 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
                     ddcrew.setSelectedItem(res.getString("sv_crew"));
                     duedate.setDate(BlueSeerUtils.parseDate(res.getString("sv_due_date")));
                     createdate.setDate(BlueSeerUtils.parseDate(res.getString("sv_create_date")));
+                    tbjobnbr.setText(res.getString("sv_char2"));
+                    ddoptype.setSelectedItem(res.getString("sv_char1"));
                 }
                
                 
@@ -1083,6 +1087,8 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         btlookup = new javax.swing.JButton();
         ddoptype = new javax.swing.JComboBox<>();
         jLabel14 = new javax.swing.JLabel();
+        btjob = new javax.swing.JButton();
+        tbjobnbr = new javax.swing.JTextField();
 
         jLabel4.setText("jLabel4");
 
@@ -1526,6 +1532,13 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
 
         jLabel14.setText("Project Job Type");
 
+        btjob.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/tools.png"))); // NOI18N
+        btjob.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btjobActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -1586,7 +1599,11 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(99, 99, 99)
                         .addComponent(cbpaid))
-                    .addComponent(ddoptype, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ddoptype, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(tbjobnbr, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btjob, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(51, 51, 51))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1691,15 +1708,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
                                     .addComponent(ddcrew, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel93)
                                     .addComponent(ddoptype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel14))))
-                        .addGap(4, 4, 4)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel85))
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(ddstatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel6))))
+                                    .addComponent(jLabel14)))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(14, 14, 14)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1707,6 +1716,16 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
                             .addComponent(btinvoice))
                         .addGap(5, 5, 5)
                         .addComponent(cbpaid)))
+                .addGap(4, 4, 4)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel85))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(ddstatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel6)
+                        .addComponent(tbjobnbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btjob, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel86)
@@ -2102,6 +2121,15 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         lookUpFrame();
     }//GEN-LAST:event_btlookupActionPerformed
 
+    private void btjobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btjobActionPerformed
+      if (! tbjobnbr.getText().isBlank()) {
+       String mypanel = "JobScanIOProject";
+       if (! checkperms(mypanel)) { return; }
+       String[] args = new String[]{tbjobnbr.getText()};
+       reinitpanels(mypanel, true, args);
+      }
+    }//GEN-LAST:event_btjobActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btadditem;
@@ -2109,6 +2137,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JButton btdelete;
     private javax.swing.JButton btdelitem;
     private javax.swing.JButton btinvoice;
+    private javax.swing.JButton btjob;
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
     private javax.swing.JButton btnewcust;
@@ -2173,6 +2202,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JTextArea remarks;
     private javax.swing.JTextArea serviceitem;
     private javax.swing.JTextField tbhours;
+    private javax.swing.JTextField tbjobnbr;
     private javax.swing.JTextField tbkey;
     private javax.swing.JTextField tbpo;
     private javax.swing.JTextField tbprice;
