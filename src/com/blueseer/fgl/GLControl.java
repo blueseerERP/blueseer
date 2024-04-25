@@ -200,25 +200,25 @@ public class GLControl extends javax.swing.JPanel implements IBlueSeerc {
         boolean b = true;
                                 
                 
-                if (tbbsfrom.getText().isEmpty() || ! OVData.isValidGLAcct(tbbsfrom.getText())) {
+                if (tbbsfrom.getText().isEmpty()) {
                     b = false;
                     bsmf.MainFrame.show(getMessageTag(1026));
                     tbbsfrom.requestFocus();
                     return b;
                 }
-                if (tbbsto.getText().isEmpty() || ! OVData.isValidGLAcct(tbbsto.getText())) {
+                if (tbbsto.getText().isEmpty()) {
                     b = false;
                     bsmf.MainFrame.show(getMessageTag(1026));
                     tbbsto.requestFocus();
                     return b;
                 }
-                if (tbisfrom.getText().isEmpty() || ! OVData.isValidGLAcct(tbisfrom.getText())) {
+                if (tbisfrom.getText().isEmpty() ) {
                     b = false;
                     bsmf.MainFrame.show(getMessageTag(1026));
                     tbisfrom.requestFocus();
                     return b;
                 }
-                if (tbisto.getText().isEmpty() || ! OVData.isValidGLAcct(tbisto.getText())) {
+                if (tbisto.getText().isEmpty()) {
                     b = false;
                     bsmf.MainFrame.show(getMessageTag(1026));
                     tbisto.requestFocus();
