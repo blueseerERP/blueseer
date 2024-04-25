@@ -145,7 +145,7 @@ SiteMaint,,com.blueseer.adm.SiteMaint,JMenuItem,site
 CronMaint,,com.blueseer.adm.CronMaint,JMenuItem,cron
 TermsMaint,,com.blueseer.ctr.TermsMaint,JMenuItem,term
 TrainingRpt1,,com.blueseer.hrm.TrainingRpt,JMenuItem,trnr
-UnPostedTransRpt,,com.blueseer.utl.ReportPanel,JMenuItem,ungl
+UnPostedTransRpt,,com.blueseer.utl.ReportPanel,JMenuItem,glun
 UserBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,usrb
 UserMaint,,com.blueseer.adm.UserMaint,JMenuItem,usrm
 WorkCellBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,wkcb
@@ -239,7 +239,7 @@ ProdEntryByPlan,,com.blueseer.prd.ProdEntryByPlanMaint,JMenuItem,prodp
 LabelFileMaint,,com.blueseer.lbl.LabelMaint,JMenuItem,lblm
 LabelFileBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,lblfb
 ARTranRpt1,,com.blueseer.far.ARTranRpt1,JMenuItem,artr
-GLTranRpt1,,com.blueseer.fgl.GLTranRpt1,JMenuItem,gltrb
+GLTranRpt1,,com.blueseer.fgl.GLTranRpt1,JMenuItem,glpt
 IncomeStatement1,,com.blueseer.fgl.IncomeStatementRpt1,JMenuItem,inst
 GLIncStmtDef,,com.blueseer.fgl.GLIncStmtDef,JMenuItem,insd
 IncomeStatementYear,,com.blueseer.fgl.IncomeStatementRptYear,JMenuItem,insty
