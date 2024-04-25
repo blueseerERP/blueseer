@@ -42,6 +42,7 @@ import static com.blueseer.fap.fapData._VouchAndPayTransaction;
 import static com.blueseer.fap.fapData._VoucherTransaction;
 import com.blueseer.fap.fapData.vod_mstr;
 import com.blueseer.fgl.fglData;
+import static com.blueseer.fgl.fglData._glEntryFromSrvJobScan;
 import static com.blueseer.fgl.fglData.glEntryXP;
 import com.blueseer.ord.ordData;
 import com.blueseer.utl.BlueSeerUtils;
@@ -268,12 +269,15 @@ public class shpData {
             
             fglData._glEntryFromShipper(shipper, effdate, bscon);
             
+            
             _updateShipperStatus(shipper, effdate, bscon); 
             if (type.equals("order")) {
             _updateOrderFromShipper(shipper, bscon); 
             }
             if (type.equals("serviceorder")) {
             _updateServiceOrderFromShipper(shipper, bscon); 
+            _glEntryFromSrvJobScan(shipper, bscon);
+             
             }
             // if type.equals("cash")....no order to update
             
@@ -503,7 +507,7 @@ public class shpData {
                 carrier,  
                 shipdate,
                 orddate,
-                so,
+                ref,
                 po,
                 remarks,
                 bsmf.MainFrame.userid,
@@ -1671,6 +1675,52 @@ public class shpData {
                   res = st.executeQuery("select sh_cust from ship_mstr where sh_id = " + "'" + shipper + "'" +";");
                 while (res.next()) {
                     billto = res.getString("sh_cust");
+                }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+
+    }
+         return billto;
+     }
+
+    public static String getShipperRef(String shipper) {
+         String billto = "";
+          try{
+
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+            
+           java.util.Date now = new java.util.Date();
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+            String mydate = dfdate.format(now);
+
+
+
+                  res = st.executeQuery("select sh_ref from ship_mstr where sh_id = " + "'" + shipper + "'" +";");
+                while (res.next()) {
+                    billto = res.getString("sh_ref");
                 }
        }
         catch (SQLException s){

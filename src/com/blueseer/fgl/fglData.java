@@ -36,10 +36,14 @@ import static bsmf.MainFrame.user;
 import com.blueseer.ctr.cusData;
 import com.blueseer.fap.fapData.ap_mstr;
 import static com.blueseer.far.farData.getARTaxMaterialOnly;
+import static com.blueseer.ord.ordData.getServiceOrderMstr;
+import com.blueseer.ord.ordData.sv_mstr;
 import static com.blueseer.pur.purData.getPOCurrency;
 import com.blueseer.rcv.rcvData.recv_det;
 import com.blueseer.rcv.rcvData.recv_mstr;
+import static com.blueseer.sch.schData.getPlanSrvOrderNumber;
 import com.blueseer.shp.shpData;
+import static com.blueseer.shp.shpData.getShipperRef;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatIntUS;
@@ -3042,7 +3046,116 @@ public class fglData {
         return myerror;
         
          }
-     
+    
+    public static boolean _glEntryFromSrvJobScan(String shipper, Connection bscon) throws SQLException {
+                boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
+       
+          
+                Statement st = bscon.createStatement();
+                ResultSet res = null;
+               
+                
+               java.util.Date now = new java.util.Date();
+                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+                String mydate = dfdate.format(now);
+                
+                 // added SQLITE adjustment here...create arraylist of entries for glentry instead of inline
+                    ArrayList acct_cr = new ArrayList();
+                    ArrayList ref =  new ArrayList();
+                    ArrayList desc =   new ArrayList();
+                    ArrayList type =   new ArrayList();
+                    ArrayList cc_cr =   new ArrayList();
+                    ArrayList acct_dr =   new ArrayList();
+                    ArrayList cc_dr =   new ArrayList();
+                    ArrayList site =   new ArrayList();
+                    ArrayList<Double> cost =  new ArrayList();   
+                    ArrayList<Double> basecost =  new ArrayList();
+                    ArrayList curr =  new ArrayList();
+                    ArrayList basecurr =  new ArrayList();
+                    ArrayList doc =  new ArrayList();
+                   
+                    String thistype = "ISS-SALES";
+                    String thisdesc = "SERVICE ORDER SALES";   
+                
+                    double mtlcost = 0.00;
+                    double lbrcost = 0.00;
+                    String jobid = getShipperRef(shipper);
+                    
+                    if (jobid.isBlank()) {
+                        return false;
+                    }
+                    
+                    String cc = OVData.getDefaultCC();
+                    String cogsmtl = "";
+                    String cogslbr = "";
+                    String invacct = "";
+                    String order = getPlanSrvOrderNumber(jobid);
+                    sv_mstr sv = getServiceOrderMstr(new String[]{order});
+                    
+                    // set parent GL doc number
+                    String gldoc = fglData.setGLRecNbr("SV");
+                    
+                    res = st.executeQuery("select * from pl_mstr where pl_line = " + "'" + cc + "'" + ";");
+                    while (res.next()) {
+                        invacct = res.getString("pl_inventory");
+                        cogsmtl = res.getString("pl_cogs_mtl");
+                        cogslbr = res.getString("pl_cogs_lbr");
+                    }
+                    
+                    // get material cost
+                    res = st.executeQuery("select * from plan_opdet where plod_parent = " + "'" + jobid + "'" 
+                     + " order by plod_op ;");
+                    while (res.next()) {
+                        mtlcost += res.getDouble("plod_qty") * res.getDouble("plod_cost");
+                    }
+                    
+                    acct_cr.add(invacct);
+                    acct_dr.add(cogsmtl);
+                    cc_cr.add(cc);
+                    cc_dr.add(cc);
+                    cost.add(mtlcost);
+                    basecost.add(mtlcost);
+                    site.add(sv.sv_site());
+                    curr.add(sv.sv_curr());
+                    basecurr.add(sv.sv_curr());
+                    ref.add(jobid);
+                    type.add(thistype);
+                    desc.add(thisdesc);
+                    doc.add(gldoc);
+                    
+                                        
+                    // get labor cost
+                     res = st.executeQuery("select jobc_planid, jobc_op, jobc_empnbr, jobc_qty, jobc_indate, jobc_intime, jobc_outdate, jobc_outtime, jobc_tothrs, jobc_code, emp_lname, emp_fname, emp_rate from job_clock inner join emp_mstr on emp_nbr = jobc_empnbr where jobc_planid = " + "'" + jobid + "'" 
+                     + " order by jobc_indate ;");
+                     while (res.next()) {
+                        lbrcost += res.getDouble("emp_rate") * res.getDouble("jobc_tothrs");
+                    }
+                    
+                    acct_cr.add(invacct);
+                    acct_dr.add(cogslbr);
+                    cc_cr.add(cc);
+                    cc_dr.add(cc);
+                    cost.add(lbrcost);
+                    basecost.add(lbrcost);
+                    site.add(sv.sv_site());
+                    curr.add(sv.sv_curr());
+                    basecurr.add(sv.sv_curr());
+                    ref.add(jobid);
+                    type.add(thistype);
+                    desc.add(thisdesc);
+                    doc.add(gldoc); 
+                  
+                    res.close();
+                    st.close();
+                      for (int j = 0; j < acct_cr.size(); j++) {
+                      glEntryXP(bscon, acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), setDateDB(parseDate(mydate)), bsParseDouble(cost.get(j).toString()), bsParseDouble(basecost.get(j).toString()), curr.get(j).toString(), basecurr.get(j).toString(), ref.get(j).toString(), site.get(j).toString(), type.get(j).toString(), desc.get(j).toString(), doc.get(j).toString());  
+                    }
+          
+        return myerror;
+        
+        }
+    
     
     public static ArrayList getCurrlist() {
         ArrayList myarray = new ArrayList();

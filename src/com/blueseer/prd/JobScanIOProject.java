@@ -931,7 +931,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         
     }
     
-    public String[] autoInvoiceServiceOrder(String nbr) {
+    public String[] autoInvoiceServiceOrder(String nbr, String jobid) {
         
          java.util.Date now = new java.util.Date();
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -941,9 +941,9 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
                              String.valueOf(shipperid), 
                               sv.sv_cust(),
                               sv.sv_ship(),
-                              bsNumberToUS(tbkey.getText()),
+                              bsNumberToUS(sv.sv_nbr()),
                               sv.sv_po(),  // po
-                              sv.sv_po(),  // ref
+                              jobid,  // ref
                               sv.sv_due_date(),
                               sv.sv_create_date(),
                               sv.sv_rmks(),
@@ -1854,7 +1854,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         
         boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
-         String[] message = autoInvoiceServiceOrder(tborder.getText());
+         String[] message = autoInvoiceServiceOrder(tborder.getText(), tbkey.getText());
          if (message[0].equals("1")) { // if error
            bsmf.MainFrame.show(message[1]);
          } else {

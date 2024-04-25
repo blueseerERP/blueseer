@@ -368,6 +368,27 @@ public class schData {
       return x;
   }
     
+    public static String getPlanSrvOrderNumber(String serialno) {
+
+          // From perspective of "has it been scanned...or is there a 1 in lbl_scan which is set when label is scanned
+          // assume it's false i.e. hasn't been scanned.
+        String x = "";
+        String sql = "select plan_order from plan_mstr where plan_nbr = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+            PreparedStatement ps = con.prepareStatement(sql);) {
+            ps.setString(1, serialno);  
+            try (ResultSet res = ps.executeQuery();) {
+               while (res.next()) {
+                   x = res.getString("plan_order");
+               }
+            }
+        } catch (SQLException e) {
+            MainFrame.bslog(e);
+        } 
+      return x;
+  }
+    
+    
     public static double getPlanSchedQty(String serialno) {
 
       // From perspective of "has it been scanned...or is there a 1 in lbl_scan which is set when label is scanned
