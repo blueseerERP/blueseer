@@ -19713,6 +19713,9 @@ MainFrame.bslog(e);
                             + ")"
                             + ";");
                         
+                        // update original service order with job number
+                        st.executeUpdate("update sv_mstr set sv_char2 = " + "'" + nbr + "'" +
+                                " where sv_nbr = " + "'" + a_order.get(z) + "'" + ";");
                         
                         // now job_operation options
                             if (optype.equals("lines")) {
