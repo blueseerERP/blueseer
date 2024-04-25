@@ -212,7 +212,7 @@ ProductionReports,ProdDetRpt,1,JMenuItem,Production Report Detail,,1,,1,1
 ProductionReports,chart_production,2,JMenuItem,Chart Reporting,,1,,1,1
 JobScanMenu,JobScanIO,1,JMenuItem,Job Operation Scan,,,,1,1
 JobScanMenu,JobBrowse,2,JMenuItem,Job Operation Browse,,,,1,1
-JobScanMenu,JobScanIOProject,3,JMenuItem,Job Project Maintenance,,,,1,1
+JobScanMenu,JobScanIOProject,3,JMenuItem,Job / Service Order Maintenance,,,,1,1
 JobScanMenu,JobClockMaint,4,JMenuItem,Job Clock Maintenance,,,,1,1
 ScrapMenu,ScrapEntry,1,JMenuItem,Scrap Entry,,,,1,1
 ScrapMenu,ScrapReports,2,JMenu,Scrap Reports,,,,1,1
