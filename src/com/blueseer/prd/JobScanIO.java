@@ -288,6 +288,12 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
     
     public void validateOperator(String dir, String plan) {
        // System.out.println("firing...");
+        String thisop = "0";
+        if (ddop.getSelectedItem() != null) {
+           thisop = ddop.getSelectedItem().toString(); 
+        } 
+        
+        
         if (! isValidEmployeeID(tboperator.getText())) {
             badScan("Invalid Employee ID");
             new AnswerWorker().execute();
@@ -315,7 +321,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
                 }
                 new AnswerWorker().execute();
         } else {
-                job_clock jc = getJobClock(new String[]{plan, ddop.getSelectedItem().toString(), tboperator.getText()});
+                job_clock jc = getJobClock(new String[]{plan, thisop, tboperator.getText()});
                 if (jc.m()[0].equals("1")) {
                     lblmessage.setText("No clock In record found for this ticket/operation/user combination");
                     lblmessage.setForeground(Color.red);
@@ -343,6 +349,11 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
     
     public void validateJob(String scan) {
        
+        String thisop = "0";
+        if (ddop.getSelectedItem() != null) {
+           thisop = ddop.getSelectedItem().toString(); 
+        }
+        
         boolean opticketScan = false;
         double qtysched = 0;
         double prevscanned = 0;
@@ -384,7 +395,14 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
        }
        
        
-       // now validate       
+       // now validate    
+       
+       if (! schData.hasOperations(plannbr)) {
+                badScan("Job does not have any operations");
+                new AnswerWorker().execute();
+                return;
+        } 
+       
        if (! schData.isPlan(plannbr)) {
                 badScan("Bad Ticket");
                 new AnswerWorker().execute();
@@ -449,7 +467,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         tbqty.setText(bsFormatDouble(remaining));
         qtylabel.setText("qty sched: " + String.valueOf(qtysched) + "     qty scanned: " + String.valueOf(prevscanned));
         } else {
-            planop = ddop.getSelectedItem().toString();
+            planop = thisop;
         } 
         
         planLegit = true;

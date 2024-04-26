@@ -19734,7 +19734,10 @@ MainFrame.bslog(e);
                                 + ")"
                                 + ";");
                               }
-                            } else if(optype.equals("generic")) {
+                            } 
+                            
+                            /*
+                            else if(optype.equals("generic")) {
                             st.executeUpdate("insert into plan_operation "
                                 + "(plo_parent, plo_date, plo_op, plo_qty, plo_desc, plo_status) "
                                 + " values ( " + "'" + nbr + "'" + ","
@@ -19745,7 +19748,9 @@ MainFrame.bslog(e);
                                 + "'" + "open" + "'"
                                 + ")"
                                 + ";");
-                            } else { // must be routing based
+                            } 
+                            */
+                            if(! optype.equals("generic") && ! optype.equals("lines")) { // must be routing based
                               res = st2.executeQuery("select  wf_id, wf_op, wf_op_desc, wf_cell " +
                                 " from wf_mstr " +
                                 " where wf_id = " + "'" + optype + "'" +";" );

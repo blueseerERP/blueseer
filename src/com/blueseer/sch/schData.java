@@ -707,7 +707,45 @@ public class schData {
         }
           return myreturn;
       }
-     
+    
+    public static boolean hasOperations(String serialno) {
+          
+          // From perspective of "does it exist"
+          // assume it's false i.e. it doesnt exist.
+          boolean myreturn = false;
+          int i = 0;
+          
+          try {
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            
+            try {
+                 res = st.executeQuery("select * from plan_operation where plo_parent = " + "'" + serialno + "'" 
+                         + " ;");
+               while (res.next()) {
+                 i++; 
+               }
+               if (i > 0) {
+                   myreturn = true;
+               }
+              
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            }
+            con.close();
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+          return myreturn;
+      }
+    
+    
     public static String orderPlanStatus(String order) {
       String x = "unknown";
       int summation = 0;
