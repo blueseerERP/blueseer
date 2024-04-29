@@ -3300,12 +3300,16 @@ CREATE TABLE "plan_opdet" (
   "plod_parent" int(8) NOT NULL DEFAULT '0',
   "plod_op" varchar(4) NOT NULL COLLATE NOCASE DEFAULT '',
   "plod_type" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
+  "plod_item" varchar(36) NOT NULL COLLATE NOCASE DEFAULT '',
   "plod_itemdesc" varchar(500) NOT NULL COLLATE NOCASE DEFAULT '',
   "plod_qty" decimal(14,5) NOT NULL DEFAULT '0',
   "plod_cost" decimal(14,5) NOT NULL DEFAULT '0',
   "plod_operator" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "plod_date" date  DEFAULT '0000-00-00',
-  "plod_time" time COLLATE NOCASE DEFAULT ''
+  "plod_time" time COLLATE NOCASE DEFAULT '',
+  "plod_char1" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "plod_char2" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "plod_char3" varchar(50) NOT NULL COLLATE NOCASE DEFAULT ''
 ); 
 CREATE TABLE "plan_meta" (
   "plam_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',

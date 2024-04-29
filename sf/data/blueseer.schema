@@ -1264,12 +1264,16 @@ CREATE TABLE IF NOT EXISTS `plan_opdet` (
   `plod_parent` int(8) NOT NULL DEFAULT '0',
   `plod_op` varchar(4) NOT NULL  DEFAULT '',
   `plod_type` varchar(20) NOT NULL  DEFAULT '',
+  `plod_item` varchar(36) NOT NULL  DEFAULT '',
   `plod_itemdesc` varchar(500) NOT NULL  DEFAULT '',
   `plod_qty` decimal(14,5) NOT NULL DEFAULT '0',
   `plod_cost` decimal(14,5) NOT NULL DEFAULT '0',
   `plod_operator` varchar(30) NOT NULL  DEFAULT '',
   `plod_date` date  DEFAULT NULL,
   `plod_time` time  NOT NULL DEFAULT '00:00:00',
+  `plod_char1` varchar(50)  NOT NULL DEFAULT '',
+  `plod_char2` varchar(50)  NOT NULL DEFAULT '',
+  `plod_char3` varchar(50)  NOT NULL DEFAULT '',
   index parentop (`plod_parent`, `plod_op`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `job_clock` (

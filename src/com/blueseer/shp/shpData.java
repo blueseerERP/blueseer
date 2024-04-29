@@ -1021,34 +1021,29 @@ public class shpData {
                 double sum = 0;
                 boolean serialized = false;
                 int i = 0;
-                String tempitem = "";
+               
                  ArrayList<String[]> list = new ArrayList<String[]>();
                 res = st.executeQuery("select * from plan_opdet " +
+                       " left outer join item_mstr on it_item = plod_item " + 
                        " where plod_parent = " + "'" + jobid + "'" +
                        " and ( plod_type = 'material' or plod_type = 'tooling') " +        
                        " order by plod_op ;");
                     while (res.next()) {
-                       
-                    tempitem = res.getString("plod_itemdesc").split(" -- ")[0];
-                    
-                     res2 = st.executeQuery("select * from item_mstr " +
-                       " where it_item = " + "'" + tempitem + "' ;");
-                     
-                    while (res2.next()) {                    
+                                  
                     String[] x = new String[13];
                     i = 0;
-                    x[0] = res.getString("shd_item");
-                    x[1] = res.getString("shd_qty");
-                    x[2] = res.getString("shd_uom");
-                    x[3] = res.getString("shd_loc");
-                    x[4] = res.getString("shd_wh");
-                    x[5] = res.getString("sh_site");
-                    x[6] = res.getString("shd_serial");
-                    x[7] = res2.getString("it_loc");
-                    x[8] = res2.getString("it_wh");
-                    x[9] = res2.getString("it_code");
-                    x[10] = res2.getString("it_phantom");
-                    x[11] = res.getString("shd_bom");
+                    x[0] = res.getString("plod_item");
+                    x[1] = res.getString("plod_qty");
+                    x[2] = res.getString("it_uom");
+                    x[3] = res.getString("it_loc");
+                    x[4] = res.getString("it_wh");
+                    x[5] = res.getString("it_site");
+                    x[6] = ""; // serial number
+                    x[7] = res.getString("it_loc");
+                    x[8] = res.getString("it_wh");
+                    x[9] = res.getString("it_code");
+                    x[10] = res.getString("it_phantom");
+                    x[11] = ""; // bom
                     baseqty = OVData.getUOMBaseQty(x[0], x[5], x[2], bsParseDouble(x[1]));
                     x[12] = String.valueOf(baseqty);
                  //   if (x[3].isEmpty()) {x[3] = x[7];} // if no loc in shipper...use item default loc
@@ -1056,10 +1051,9 @@ public class shpData {
                     if (x[9] != null && ! x[9].equals("S")) {  // no service items
                      list.add(x);
                     }
-                  } //res2
+                  
                 }
                 res.close();
-                res2.close();
                 
                 // lets wash out phantoms and add BOM to new ArrayList
                 ArrayList<String[]> newlist = new ArrayList<String[]>();

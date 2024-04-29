@@ -508,7 +508,7 @@ public class prdData {
       }
     
    
-   public static int addPlanOpDet(String job, String op, String datatype, String item, double qty, double cost, String operator) {
+   public static int addPlanOpDet(String job, String op, String datatype, String item, String itemdesc, double qty, double cost, String operator) {
         int x = 0;
         try {
             
@@ -527,11 +527,12 @@ public class prdData {
                 String clockdate = dfdate.format(now);
                 String clocktime = dftime.format(now);
                   if (dbtype.equals("sqlite")) { 
-                    st.executeUpdate("insert into plan_opdet (plod_parent, plod_op, plod_type, plod_itemdesc, plod_qty, plod_cost, plod_operator, plod_date, plod_time) values ( "
+                    st.executeUpdate("insert into plan_opdet (plod_parent, plod_op, plod_type, plod_item, plod_itemdesc, plod_qty, plod_cost, plod_operator, plod_date, plod_time) values ( "
                             + "'" + job + "'" + "," 
                             + "'" + op + "'" + "," 
                             + "'" + datatype + "'" + "," 
-                            + "'" + item + "'" + ","        
+                            + "'" + item + "'" + ","   
+                            + "'" + itemdesc + "'" + ","        
                             + "'" + qty + "'" + ","
                             + "'" + cost + "'" + ","
                             + "'" + operator + "'" + ","
@@ -540,11 +541,12 @@ public class prdData {
                             +  ")"
                             + ";");
                   } else {
-                     st.executeUpdate("insert into plan_opdet (plod_parent, plod_op, plod_type, plod_itemdesc, plod_qty, plod_cost, plod_operator, plod_date, plod_time) values ( "
+                     st.executeUpdate("insert into plan_opdet (plod_parent, plod_op, plod_type, plod_item, plod_itemdesc, plod_qty, plod_cost, plod_operator, plod_date, plod_time) values ( "
                             + "'" + job + "'" + "," 
                             + "'" + op + "'" + "," 
                             + "'" + datatype + "'" + "," 
-                            + "'" + item + "'" + ","        
+                            + "'" + item + "'" + ","
+                            + "'" + itemdesc + "'" + ","
                             + "'" + qty + "'" + ","
                             + "'" + cost + "'" + ","
                             + "'" + operator + "'" + ","

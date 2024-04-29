@@ -437,7 +437,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         ddoperator.insertItemAt("", 0);
         
         ddmaterial.removeAllItems();
-        ArrayList<String> mylist = invData.getItemMasterRawlist();
+        ArrayList<String> mylist = invData.getItemsByTypeExcept(new String[]{"TOOLING"});
         for (int i = 0; i < mylist.size(); i++) {
             ddmaterial.addItem(mylist.get(i));
         }
@@ -1694,6 +1694,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
     private void btaddmatlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddmatlActionPerformed
         String datatype = "";
         String item = "";
+        String itemdesc = "";
         
         if (ddop.getSelectedItem().toString().isBlank()) {
             bsmf.MainFrame.show("An operation must be selected");
@@ -1702,20 +1703,24 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         
         if (rbmaterial.isSelected()) {
             datatype = "material";
-            item = ddmaterial.getSelectedItem().toString() + " -- " + lblmaterial.getText();
+            item = ddmaterial.getSelectedItem().toString();
+            itemdesc = ddmaterial.getSelectedItem().toString() + " -- " + lblmaterial.getText();
         }
         if (rbtooling.isSelected()) {
             datatype = "tooling";
-            item = ddtooling.getSelectedItem().toString() + " -- " + lbltooling.getText();
+            item = ddtooling.getSelectedItem().toString();
+            itemdesc = ddtooling.getSelectedItem().toString() + " -- " + lbltooling.getText();
         }
         if (rbservice.isSelected()) {
             datatype = "service";
             item = tbitem.getText().replace("'", "");
+            itemdesc = item;
         }
         int id = addPlanOpDet(tbkey.getText(), 
                 ddop.getSelectedItem().toString(), 
                 datatype, 
                 item, 
+                itemdesc,
                 Double.valueOf(tbqty.getText()), 
                 Double.valueOf(tbcost.getText()), 
                 "" );
