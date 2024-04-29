@@ -3307,6 +3307,7 @@ CREATE TABLE "plan_opdet" (
   "plod_operator" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "plod_date" date  DEFAULT '0000-00-00',
   "plod_time" time COLLATE NOCASE DEFAULT '',
+  "plod_consumable" tinyint(1) NOT NULL DEFAULT '0',
   "plod_char1" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
   "plod_char2" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
   "plod_char3" varchar(50) NOT NULL COLLATE NOCASE DEFAULT ''

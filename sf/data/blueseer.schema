@@ -1271,6 +1271,7 @@ CREATE TABLE IF NOT EXISTS `plan_opdet` (
   `plod_operator` varchar(30) NOT NULL  DEFAULT '',
   `plod_date` date  DEFAULT NULL,
   `plod_time` time  NOT NULL DEFAULT '00:00:00',
+  `plod_consumable` tinyint(1)  NOT NULL DEFAULT '0',
   `plod_char1` varchar(50)  NOT NULL DEFAULT '',
   `plod_char2` varchar(50)  NOT NULL DEFAULT '',
   `plod_char3` varchar(50)  NOT NULL DEFAULT '',

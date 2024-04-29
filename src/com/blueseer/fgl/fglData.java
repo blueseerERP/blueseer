@@ -3111,7 +3111,7 @@ public class fglData {
                     
                     // get material cost
                     res = st.executeQuery("select * from plan_opdet where plod_parent = " + "'" + jobid + "'" 
-                     + " order by plod_op ;");
+                     + " and plod_consumable = '1' order by plod_op ;");
                     while (res.next()) {
                         mtlcost += res.getDouble("plod_qty") * res.getDouble("plod_cost");
                     }

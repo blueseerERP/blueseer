@@ -169,7 +169,8 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
                 getGlobalColumnTag("item"), 
                 getGlobalColumnTag("quantity"), 
                 getGlobalColumnTag("cost"),
-                getGlobalColumnTag("operator")
+                getGlobalColumnTag("operator"),
+                getGlobalColumnTag("consumable")
             }){
               @Override  
               public Class getColumnClass(int col) {  
@@ -398,7 +399,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         ddchart.addItem("Total Operational Cost");
         ddchart.addItem("Total Cost Material vs Labor");
         ddchart.setSelectedIndex(0);
-        
+        cbconsumable.setSelected(true);
         
         tbkey.setText("");
         tbitem.setText("");
@@ -740,6 +741,9 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
              nf = NumberFormat.getCurrencyInstance();
              title = "Total Cost Material vs Labor";
             for (int j = 0; j < plodmatl.size(); j++) {
+                if (! plodmatl.get(j)[10].equals("1")) {  // if not consumable...do not add in calc
+                 continue;
+                }
                 String[] s = plodmatl.get(j);
                 totmatl += (Double.valueOf(s[5]) * Double.valueOf(s[6]) );
             } 
@@ -818,6 +822,9 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         double ophours = 0.00;
         
          for (int j = 0; j < plodmatl.size(); j++) {
+             if (! plodmatl.get(j)[10].equals("1")) {  // if not consumable...do not add in calc
+                 continue;
+             }
              if (! ddop.getSelectedItem().toString().isBlank() && ddop.getSelectedItem().toString().equals(plodmatl.get(j)[2])) {
                opmatl = opmatl + (bsParseDouble(plodmatl.get(j)[5]) * bsParseDouble(plodmatl.get(j)[6])   );   
              }
@@ -1049,6 +1056,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
         btaddop = new javax.swing.JButton();
         tbopdesc = new javax.swing.JTextField();
         btbrowse = new javax.swing.JButton();
+        cbconsumable = new javax.swing.JCheckBox();
         panelNotes = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
@@ -1328,6 +1336,8 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
+        cbconsumable.setText("Consumable");
+
         javax.swing.GroupLayout panelMainLayout = new javax.swing.GroupLayout(panelMain);
         panelMain.setLayout(panelMainLayout);
         panelMainLayout.setHorizontalGroup(
@@ -1380,7 +1390,9 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
                                                     .addComponent(rbtooling))
                                                 .addComponent(ddoperator, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(rbservice)))
+                                        .addComponent(rbservice)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(cbconsumable)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(panelMainLayout.createSequentialGroup()
@@ -1466,7 +1478,8 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
                         .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(rbmaterial)
                             .addComponent(rbtooling)
-                            .addComponent(rbservice))
+                            .addComponent(rbservice)
+                            .addComponent(cbconsumable))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(panelMainLayout.createSequentialGroup()
@@ -1723,7 +1736,8 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
                 itemdesc,
                 Double.valueOf(tbqty.getText()), 
                 Double.valueOf(tbcost.getText()), 
-                "" );
+                "",
+                BlueSeerUtils.boolToInt(cbconsumable.isSelected()));
         materialmodel.addRow(new Object[] { 
                 id,
                 ddop.getSelectedItem().toString(), 
@@ -1731,7 +1745,8 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
                 item, 
                 Double.valueOf(tbqty.getText()), 
                 Double.valueOf(tbcost.getText()), 
-                ""});
+                "",
+                cbconsumable.isSelected()});
         
         plodmatl = getPlanOpDet(jobop[0]);
         getClockRecords();
@@ -1796,7 +1811,8 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
                     s[4], 
                     Double.valueOf(s[5]), 
                     Double.valueOf(s[6]), 
-                    s[7]}); 
+                    s[7],
+                    BlueSeerUtils.ConvertStringToBool(s[10])}); 
                     }
                 }
              } else {
@@ -1814,7 +1830,8 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
                     s[4], 
                     Double.valueOf(s[5]), 
                     Double.valueOf(s[6]), 
-                    s[7]}); 
+                    s[7],
+                    BlueSeerUtils.ConvertStringToBool(s[10])}); 
                     }
                 }
                 
@@ -1967,6 +1984,7 @@ public class JobScanIOProject extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JButton btupdate;
     private javax.swing.JButton btupdatenotes;
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JCheckBox cbconsumable;
     private com.toedter.calendar.JDateChooser dcdate;
     private javax.swing.JComboBox<String> ddchart;
     private javax.swing.JComboBox<String> ddmaterial;

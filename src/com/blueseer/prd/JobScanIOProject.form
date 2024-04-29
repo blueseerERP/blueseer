@@ -101,6 +101,8 @@
                                           </Group>
                                           <EmptySpace max="-2" attributes="0"/>
                                           <Component id="rbservice" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                                          <Component id="cbconsumable" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
                                   <EmptySpace max="32767" attributes="0"/>
@@ -213,6 +215,7 @@
                               <Component id="rbmaterial" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="rbtooling" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="rbservice" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="cbconsumable" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="1" attributes="0">
@@ -690,6 +693,11 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btbrowseActionPerformed"/>
           </Events>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="cbconsumable">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Consumable"/>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>

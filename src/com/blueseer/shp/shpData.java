@@ -1026,7 +1026,8 @@ public class shpData {
                 res = st.executeQuery("select * from plan_opdet " +
                        " left outer join item_mstr on it_item = plod_item " + 
                        " where plod_parent = " + "'" + jobid + "'" +
-                       " and ( plod_type = 'material' or plod_type = 'tooling') " +        
+                       " and ( plod_type = 'material' or plod_type = 'tooling') " +  
+                       " and plod_consumable = '1' " +        
                        " order by plod_op ;");
                     while (res.next()) {
                                   
