@@ -288,11 +288,10 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
     
     public void validateOperator(String dir, String plan) {
        // System.out.println("firing...");
-        String thisop = "0";
+        String thisop = "1";
         if (ddop.getSelectedItem() != null) {
            thisop = ddop.getSelectedItem().toString(); 
         } 
-        
         
         if (! isValidEmployeeID(tboperator.getText())) {
             badScan("Invalid Employee ID");
@@ -321,6 +320,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
                 }
                 new AnswerWorker().execute();
         } else {
+           // System.out.println(plan + "/" + thisop + "/" + tboperator.getText());
                 job_clock jc = getJobClock(new String[]{plan, thisop, tboperator.getText()});
                 if (jc.m()[0].equals("1")) {
                     lblmessage.setText("No clock In record found for this ticket/operation/user combination");
@@ -349,7 +349,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
     
     public void validateJob(String scan) {
        
-        String thisop = "0";
+        String thisop = "1";
         if (ddop.getSelectedItem() != null) {
            thisop = ddop.getSelectedItem().toString(); 
         }
@@ -660,7 +660,6 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
         clockdate = dfdate.format(now);
         clocktime = dftime.format(now);
-                    
         job_clock x = new job_clock(null, 
                  bsParseInt(plannbr),
                  bsParseInt(planop),

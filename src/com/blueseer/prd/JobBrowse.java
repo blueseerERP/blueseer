@@ -1301,7 +1301,7 @@ try {
                                   
                 ImageIcon img = null; 
                 while (res.next()) {
-                    i++;
+                    
                     
                     if (! cbhierarchical.isSelected()) {
                         
@@ -1316,6 +1316,8 @@ try {
                     if (! ddoperator.getSelectedItem().toString().isBlank() && res.getString("jobc_empnbr")!= null && ! res.getString("jobc_empnbr").equals(ddoperator.getSelectedItem().toString())) {
                         continue;
                     }
+                    
+                    i++;
                     
                     
                     if (res.getString("jobc_code") == null) {
