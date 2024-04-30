@@ -695,6 +695,7 @@ public class JobBrowse extends javax.swing.JPanel {
          cbchart.setSelected(false);
          
          
+         consolidatedModel.setRowCount(0);
          mymodel.setRowCount(0);
         // mastertable.setModel(mymodel);
          mastertable.getTableHeader().setReorderingAllowed(false);
