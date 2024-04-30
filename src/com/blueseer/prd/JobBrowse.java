@@ -1540,7 +1540,10 @@ try {
 
     private void cbhierarchicalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbhierarchicalActionPerformed
         if (! isLoad) {
-            
+         
+         consolidatedModel.setRowCount(0);
+         mymodel.setRowCount(0);
+         
             chartpanel.setVisible(false);
             
             if (cbhierarchical.isSelected()) {
