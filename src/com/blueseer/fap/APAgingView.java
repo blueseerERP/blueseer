@@ -430,14 +430,23 @@ public class APAgingView extends javax.swing.JPanel {
                 String blanket = "";
                 double dol = 0;
                 int qty = 0;
-                
+                 if (bsmf.MainFrame.dbtype.equals("sqlite")) {
                  res = st.executeQuery("SELECT ap_vend, apd_nbr, ap_ref, apd_ref, ap_type, ap_nbr, ap_check, ap_effdate, ap_duedate, ap_amt, apd_voamt " +
                         " FROM  ap_mstr " +
                         " inner join apd_mstr on apd_batch = ap_batch " +
                         " where ap_vend = " + "'" + vend + "'" + 
                         " AND ap_type = 'C' " +
                         " AND ap_effdate >= date() - date(date(), '-90 day') " +
-                         " order by ap_effdate desc ;");        
+                         " order by ap_effdate desc ;");      
+                 } else {
+                  res = st.executeQuery("SELECT ap_vend, apd_nbr, ap_ref, apd_ref, ap_type, ap_nbr, ap_check, ap_effdate, ap_duedate, ap_amt, apd_voamt " +
+                        " FROM  ap_mstr " +
+                        " inner join apd_mstr on apd_batch = ap_batch " +
+                        " where ap_vend = " + "'" + vend + "'" + 
+                        " AND ap_type = 'C' " +
+                        " AND ap_effdate >= curdate() - interval 90 day " +
+                         " order by ap_effdate desc ;");   
+                 }
                  
                 String ponbr = ""; 
                 while (res.next()) {
