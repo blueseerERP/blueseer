@@ -557,6 +557,11 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
         m = addReceiverTransaction(createDetRecord(), createRecord(), null, null);  
      }
      
+      // autopost
+        if (OVData.isAutoPost()) {
+            fglData.PostGL();
+        } 
+     
     return m;
     }
     
