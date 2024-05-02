@@ -943,7 +943,7 @@ public class OVData {
         }
     }
 
-    public static void addMenuToAllUsers(String menu) {
+    public static void addMenuToAllUsers(String menu, boolean isReadOnly) {
         try {
             
             Connection con = null;
@@ -959,8 +959,9 @@ public class OVData {
                 int i = 0;
                 String[] permlist = null;
                 String newperms = "";
-                boolean canadd = true;
-
+                boolean addit = true;
+                String readonly = (isReadOnly) ? "1" : "0";
+                
                 ArrayList<String> users = new ArrayList();
 
                 res = st.executeQuery("SELECT user_id FROM  user_mstr where user_id <> 'admin' ;");
@@ -969,17 +970,19 @@ public class OVData {
                 }
 
                 for (String user : users) {
-                    canadd = true;
+                    addit = true;
                     res = st.executeQuery("SELECT perm_user FROM  perm_mstr where perm_user = "
                             + "'" + user + "'"
                             + " and perm_menu = " + "'" + menu + "'" + ";");
                     while (res.next()) {
-                        canadd = false;
+                        addit = false;
                     }
-                    if (canadd) {
+                    if (addit) {
                         st.executeUpdate("insert into perm_mstr values ( "
                                 + "'" + user + "'" + ","
-                                + "'" + menu + "'" + ")"
+                                + "'" + menu + "'" + ","
+                                + "'" + readonly + "'" 
+                                + ")"
                                 + ";");
                     }
                 }

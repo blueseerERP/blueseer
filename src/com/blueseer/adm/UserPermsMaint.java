@@ -460,7 +460,7 @@ public class UserPermsMaint extends javax.swing.JPanel {
 
     private void btusermenuassignActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btusermenuassignActionPerformed
         if (dduserapplied.getSelectedItem().toString().equals("ALL")) {
-        OVData.addMenuToAllUsers(ddmenuuser.getSelectedItem().toString());
+        OVData.addMenuToAllUsers(ddmenuuser.getSelectedItem().toString(), cbreadonly.isSelected());
         } else {
         String myreturn = OVData.addMenuToUser(ddmenuuser.getSelectedItem().toString(), dduserapplied.getSelectedItem().toString(), cbreadonly.isSelected());
         if (myreturn.equals("0")) { 
