@@ -1376,6 +1376,12 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         shpData.updateShipperSAC(String.valueOf(shipperid));
         // now confirm shipment
         String[] message = confirmShipperTransaction("order", String.valueOf(shipperid), now);
+        
+         // autopost
+        if (OVData.isAutoPost()) {
+            fglData.PostGL();
+        } 
+        
         return message;
     }
     
