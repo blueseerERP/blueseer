@@ -594,6 +594,10 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
     public String[] addRecord(String[] x) {
      String[] m = VoucherTransaction(ddtype.getSelectedItem().toString() , createDetRecord(), createRecord(), false);
      updateReceivers(); 
+      // autopost
+        if (OVData.isAutoPost()) {
+            fglData.PostGL();
+        } 
      return m;
      }
     

@@ -547,6 +547,12 @@ public class IncomeMaint extends javax.swing.JPanel implements IBlueSeer {
                         + ";" );                  
                    
                       m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+                      
+                       // autopost
+        if (OVData.isAutoPost()) {
+            fglData.PostGL();
+        } 
+                      
                    initvars(null);
                 
             } catch (SQLException s) {

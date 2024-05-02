@@ -676,6 +676,10 @@ public class GLTranMaint extends javax.swing.JPanel {
     
     public String[] addRecord(String[] x) {
      String[] m = addGL(createRecord());
+      // autopost
+        if (OVData.isAutoPost()) {
+            fglData.PostGL();
+        } 
          return m;
      }
         

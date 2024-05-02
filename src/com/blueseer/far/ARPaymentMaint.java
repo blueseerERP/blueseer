@@ -488,6 +488,12 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
         boolean error = OVData.ARUpdate(tbkey.getText());
         if (! error)
         error = fglData.glEntryFromARPayment(tbkey.getText(), dcdate.getDate());
+        
+         // autopost
+        if (OVData.isAutoPost()) {
+            fglData.PostGL();
+        } 
+        
         return m;
     }
      

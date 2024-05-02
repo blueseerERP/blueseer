@@ -27,6 +27,7 @@ package com.blueseer.inv;
 
 
 import static bsmf.MainFrame.tags;
+import com.blueseer.fgl.fglData;
 import com.blueseer.fgl.fglData.gl_pair;
 import static com.blueseer.fgl.fglData.setGLRecNbr;
 import static com.blueseer.inv.invData.getItemMstr;
@@ -781,6 +782,11 @@ public class InventoryMaint extends javax.swing.JPanel {
             );
                 
         String[] m = inventoryAdjustmentTransaction(tm, in, gv);
+        
+         // autopost
+        if (OVData.isAutoPost()) {
+            fglData.PostGL();
+        } 
         
         BlueSeerUtils.message(m);
         if (m[0].equals("0")) {

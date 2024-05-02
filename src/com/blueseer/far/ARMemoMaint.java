@@ -511,6 +511,10 @@ public class ARMemoMaint extends javax.swing.JPanel implements IBlueSeerT {
         if (! error) {
             error = fglData.glEntryFromARMemo(tbkey.getText(), dcdate.getDate());
         }
+         // autopost
+        if (OVData.isAutoPost()) {
+            fglData.PostGL();
+        } 
         return m;
     }
      

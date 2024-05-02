@@ -397,6 +397,11 @@ public class PayRollMaint extends javax.swing.JPanel {
                     // now lets do journal entries
                     fglData.glEntryFromPayRoll(tbid.getText(), dcpay.getDate());
                     
+                     // autopost
+        if (OVData.isAutoPost()) {
+            fglData.PostGL();
+        } 
+        
              message = new String[]{"0", "PayRoll has been committed"};         
                      
                      

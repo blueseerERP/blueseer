@@ -60,6 +60,7 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static com.blueseer.fap.fapData.apCheckRunTransaction;
+import com.blueseer.fgl.fglData;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Component;
@@ -770,6 +771,10 @@ try {
               //OVData.APCheckRun(mytable, now, Integer.valueOf(tbchecknbr.getText().toString()), "AP-Vendor");
               apCheckRunTransaction(mytable, OVData.getNextNbr("batch"), OVData.getDefaultCurrency(), Integer.valueOf(tbchecknbr.getText().toString()), now, "AP-Vendor");
              }
+              // autopost
+        if (OVData.isAutoPost()) {
+            fglData.PostGL();
+        } 
              postcommit();
              bsmf.MainFrame.show(getMessageTag(1125));
     }//GEN-LAST:event_btcommitActionPerformed
