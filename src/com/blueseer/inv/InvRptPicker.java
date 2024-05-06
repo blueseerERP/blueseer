@@ -1381,15 +1381,21 @@ public class InvRptPicker extends javax.swing.JPanel {
         
         if (input) { // input...draw variable input panel
            resetVariables();
-           hidePanels();
-           showPanels(new String[]{"tb1"});
-           lbkey1.setText(getClassLabelTag("lblfromloc", this.getClass().getSimpleName()));
-           lbkey2.setText(getClassLabelTag("lbltoloc", this.getClass().getSimpleName()));
+           hidePanels();ArrayList<String> locs = OVData.getLocationList();
+           for (String s : locs) {
+               ddkey1.addItem(s);
+               ddkey2.addItem(s);
+           }
+           ddkey1.setSelectedIndex(0);
+           ddkey2.setSelectedIndex(ddkey2.getItemCount() - 1);
+           showPanels(new String[]{"dd"});
+           lbddkey1.setText(getClassLabelTag("lblfromloc", this.getClass().getSimpleName()));
+           lbddkey2.setText(getClassLabelTag("lbltoloc", this.getClass().getSimpleName()));
           
          } else { // output...fill report
             // colect variables from input
-            String fromloc = tbkey1.getText();
-            String toloc = tbkey2.getText();
+            String fromloc = ddkey1.getSelectedItem().toString();
+            String toloc = ddkey2.getSelectedItem().toString();
             String site = OVData.getDefaultSite();
             // cleanup variables
           
