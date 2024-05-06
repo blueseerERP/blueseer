@@ -313,8 +313,9 @@ public class InvRptPicker extends javax.swing.JPanel {
         tbkey4.setText("");
         dcdate1.setVisible(true);
         dcdate2.setVisible(true);
-        ddkey1.setSelectedIndex(0);
-        ddkey2.setSelectedIndex(0);
+        ddkey1.removeAllItems();
+        ddkey2.removeAllItems();
+        
         rbactive.setSelected(true);
         rbinactive.setSelected(false);
         
@@ -1263,6 +1264,223 @@ public class InvRptPicker extends javax.swing.JPanel {
                
     }
    
+    /* Item QOH By Warehouse */
+    public void itemQOHWH (boolean input) {
+        
+        if (input) { // input...draw variable input panel
+           resetVariables();
+           hidePanels();
+           ArrayList<String> whs = OVData.getWareHouseList();
+           for (String s : whs) {
+               ddkey1.addItem(s);
+               ddkey2.addItem(s);
+           }
+           ddkey1.setSelectedIndex(0);
+           ddkey2.setSelectedIndex(ddkey2.getItemCount() - 1);
+           showPanels(new String[]{"dd"});
+           lbddkey1.setText(getClassLabelTag("lblfromwh", this.getClass().getSimpleName()));
+           lbddkey2.setText(getClassLabelTag("lbltowh", this.getClass().getSimpleName()));
+          
+         } else { // output...fill report
+            // colect variables from input
+            String fromwh = ddkey1.getSelectedItem().toString();
+            String towh = ddkey2.getSelectedItem().toString();
+            String site = OVData.getDefaultSite();
+            // cleanup variables
+          
+            if (fromwh.isEmpty()) {
+                  fromwh = bsmf.MainFrame.lowchar;
+            }
+            if (towh.isEmpty()) {
+                  towh = bsmf.MainFrame.hichar;
+            }
+            
+             // create and fill tablemodel
+            // column 1 is always 'select' and always type ImageIcon
+            // the remaining columns are whatever you require
+               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                        new String[]{
+                            getGlobalColumnTag("select"),
+                             getGlobalColumnTag("item"), 
+                             getGlobalColumnTag("description"), 
+                             getGlobalColumnTag("code"),
+                             getGlobalColumnTag("qoh"), 
+                             getGlobalColumnTag("allocated"), 
+                             getGlobalColumnTag("location"), 
+                             getGlobalColumnTag("warehouse")})
+                   {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
+           
+           try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+              String qtyall = ""; 
+              res = st.executeQuery("select it_item, it_desc, it_code, " + 
+                       "case when in_qoh is null then '0' else in_qoh end as qoh, " +
+                       "case when in_loc is null then '0' else in_loc end as loc, " +
+                       "case when in_wh is null then '0' else in_wh end as wh, " +
+                       " (select sum(sod_all_qty - sod_shipped_qty) from sod_det where sod_item = in_item and sod_status <> 'close' group by sod_item) as qtyall " +
+                       " from in_mstr inner join item_mstr on it_item = in_item " +
+                       " where in_wh >= " + "'" + fromwh + "'" +  " AND " 
+                       + " in_wh <= " + "'" + towh + "'"         
+                       + ";" );
+              
+                while (res.next()) {
+                    qtyall = "0";
+                    if (res.getString("qtyall") != null) {
+                       qtyall = res.getString("qtyall");
+                    } 
+                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, 
+                        res.getString("it_item"),
+                        res.getString("it_desc"),
+                        res.getString("it_code"),
+                        res.getString("qoh"),
+                        qtyall,
+                        res.getString("loc"),
+                        res.getString("wh")
+                                });
+                }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+      
+      // now assign tablemodel to table
+            tablereport.setModel(mymodel);
+            tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+            Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+              while (en.hasMoreElements()) {
+                 TableColumn tc = en.nextElement();
+                 if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) { // select column
+                     continue;  
+                 }
+                 tc.setCellRenderer(new InvRptPicker.renderer1());
+             }
+        } // else run report
+               
+    }
+   
+    /* Item QOH By Warehouse */
+    public void itemQOHLoc (boolean input) {
+        
+        if (input) { // input...draw variable input panel
+           resetVariables();
+           hidePanels();
+           showPanels(new String[]{"tb1"});
+           lbkey1.setText(getClassLabelTag("lblfromloc", this.getClass().getSimpleName()));
+           lbkey2.setText(getClassLabelTag("lbltoloc", this.getClass().getSimpleName()));
+          
+         } else { // output...fill report
+            // colect variables from input
+            String fromloc = tbkey1.getText();
+            String toloc = tbkey2.getText();
+            String site = OVData.getDefaultSite();
+            // cleanup variables
+          
+            if (fromloc.isEmpty()) {
+                  fromloc = bsmf.MainFrame.lowchar;
+            }
+            if (toloc.isEmpty()) {
+                  toloc = bsmf.MainFrame.hichar;
+            }
+            
+             // create and fill tablemodel
+            // column 1 is always 'select' and always type ImageIcon
+            // the remaining columns are whatever you require
+               javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                        new String[]{
+                            getGlobalColumnTag("select"),
+                             getGlobalColumnTag("item"), 
+                             getGlobalColumnTag("description"),
+                             getGlobalColumnTag("code"),
+                             getGlobalColumnTag("qoh"), 
+                             getGlobalColumnTag("allocated"), 
+                             getGlobalColumnTag("location"), 
+                             getGlobalColumnTag("warehouse")})
+                   {
+                      @Override  
+                      public Class getColumnClass(int col) {  
+                        if (col == 0)       
+                            return ImageIcon.class;  
+                        else return String.class;  //other columns accept String values  
+                      }  
+                        };
+           
+           try{
+            Connection con = DriverManager.getConnection(url + db, user, pass);
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+              String qtyall = ""; 
+              res = st.executeQuery("select it_item, it_desc, it_code, " + 
+                       "case when in_qoh is null then '0' else in_qoh end as qoh, " +
+                       "case when in_loc is null then '0' else in_loc end as loc, " +
+                       "case when in_wh is null then '0' else in_wh end as wh, " +
+                       " (select sum(sod_all_qty - sod_shipped_qty) from sod_det where sod_item = in_item and sod_status <> 'close' group by sod_item) as qtyall " +
+                       " from in_mstr inner join item_mstr on it_item = in_item " +
+                       " where in_loc >= " + "'" + fromloc + "'" +  " AND " 
+                       + " in_loc <= " + "'" + toloc + "'"         
+                       + ";" );
+              
+                while (res.next()) {
+                    qtyall = "0";
+                    if (res.getString("qtyall") != null) {
+                       qtyall = res.getString("qtyall");
+                    } 
+                    mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, 
+                        res.getString("it_item"),
+                        res.getString("it_desc"),
+                        res.getString("it_code"),
+                        res.getString("qoh"),
+                        qtyall,
+                        res.getString("loc"),
+                        res.getString("wh")
+                                });
+                }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+      
+      // now assign tablemodel to table
+            tablereport.setModel(mymodel);
+            tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+            Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+              while (en.hasMoreElements()) {
+                 TableColumn tc = en.nextElement();
+                 if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) { // select column
+                     continue;  
+                 }
+                 tc.setCellRenderer(new InvRptPicker.renderer1());
+             }
+        } // else run report
+               
+    }
+   
     /* CUSTOM FUNCTIONS END */
     
     /**
@@ -1340,10 +1558,6 @@ public class InvRptPicker extends javax.swing.JPanel {
                 btcsvActionPerformed(evt);
             }
         });
-
-        ddkey1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        ddkey2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         lbddkey2.setText("jLabel2");
 
