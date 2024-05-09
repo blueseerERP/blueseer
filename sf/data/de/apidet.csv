@@ -1,3 +1,4 @@
+222:getDieselPrices:1:GET:json::::::1:::
 999:getDillonGridPoints:1:GET:json:::/34.4166,-79.3712:::1:::
 995:getDillonForecast:1:GET:json:::/35,69/forecast:::1:::
 993:getDirections:1:GET:json::::::1:::

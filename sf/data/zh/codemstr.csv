@@ -1,0 +1,481 @@
+logpath,ftp,logs/ftp.log,1
+logpath,as2,logs/as2.log,1
+logpath,cron,logs/cron.log,1
+PCC,PCC,DEFAULT SEVERITY CODE,1
+Discounts,Freight,Freight,1
+Discounts,Volume,Volume,1
+Discounts,Other,Other,1
+Discounts,Promo,Promo,1
+orderstatus,cancel,,1
+orderstatus,closed,,1
+orderstatus,error,,1
+orderstatus,hold,,1
+orderstatus,open,,1
+orderstatus,commit,,1
+orderstatus,backorder,,1
+engineer,frank,,1
+ItemType,CONT,Container,1
+ItemType,FG,Finished Goods,1
+ItemType,RAW,Raw Material,1
+ItemType,SUB,Sub Assembly,1
+ItemType,ASSET,Asset,1
+ItemType,SERVICE,Service,1
+ItemType,TOOLING,Tooling,1
+freightsrvtype,LTL,Less Than Truckload,1
+freightsrvtype,FTL,Full Truckload,1
+freightsrvtype,Flatbed,Flat Bed Services,1
+freightsrvtype,Refrigerated,Refridgerated Services,1
+freightsrvtype,Expedite,Expedited Services,1
+freightsrvtype,Intermodal,Intermodal,1
+freighteqptype,Box Truck,Box Truck,1
+freighteqptype,Enclosed 53,53 Enclosed Trailer,1
+freighteqptype,Flatbed,Flat bed trailer,1
+freighteqptype,Stepdeck,stepdeck singledrop trailer,1
+freighteqptype,Conestoga,Conestoga trailer,1
+freighteqptype,Gooseneck,Gooseneck trailer,1
+freighteqptype,Removable Gooseneck,RGN Gooseneck trailer,1
+freighteqptype,Stretch RGN,Stretch RGN Gooseneck trailer,1
+freighteqptype,Lowboy,Lowboy double drop trailer,1
+freighteqptype,Reefer,Refrigerated trailer,1
+freighteqptype,Specialized,Specialized trailer,1
+edidoctype,generic,Generic Document Type,1
+edidoctype,850csv,CSV Order,1
+edidoctype,856csv,CSV Shipping Notice,1
+edidoctype,810csv,CSV Invoice,1
+edidoctype,855csv,CSV Order Ack,1
+edidoctype,850xml,XML Order,1
+edidoctype,856xml,XML Shipping Notice,1
+edidoctype,810xml,XML Invoice,1
+edidoctype,855xml,XML Order Ack,1
+edidoctype,850json,JSON Order,1
+edidoctype,856json,JSON Shipping Notice,1
+edidoctype,810json,JSON Invoice,1
+edidoctype,855json,JSON Order Ack,1
+edidoctype,850une,Edifact ORDERS,1
+edidoctype,856une,Edifact DESADV,1
+edidoctype,810une,Edifact INVOIC,1
+edidoctype,855une,Edifact ORDRSP,1
+edidoctype,850db,Database Order,1
+edidoctype,856db,Database Shipping Notice,1
+edidoctype,855db,Database Order Ack,1
+edidoctype,810db,Database Invoice,1
+edidoctype,850idoc,IDOC Order,1
+edidoctype,856idoc,IDOC Shipping Notice,1
+edidoctype,810idoc,IDOC Invoice,1
+edidoctype,855idoc,IDOC Order Ack,1
+edidoctype,850x12,X12,1
+edidoctype,830x12,X12,1
+edidoctype,862x12,X12,1
+edidoctype,810x12,X12,1
+edidoctype,812x12,X12,1
+edidoctype,856x12,X12,1
+edidoctype,855x12,X12,1
+edidoctype,820x12,X12,1
+edidoctype,940x12,X12,1
+edidoctype,943x12,X12,1
+edidoctype,944x12,X12,1
+edidoctype,945x12,X12,1
+edidoctype,204x12,X12,1
+edidoctype,204db,Database Freight Order,1
+edidoctype,990x12,X12,1
+edidoctype,990db,Database Freight Order Response,1
+edidoctype,214x12,X12,1
+edidoctype,214db,Database Freight Status,1
+edidoctype,997x12,X12,1
+edidoctype,864x12,X12,1
+edidoctype,847x12,X12,1
+edidoctype,846x12,X12,1
+edidoctype,852x12,X12,1
+edidoctype,880x12,X12,1
+edidoctype,875x12,X12,1
+edidoctype,865x12,X12,1
+edidoctype,860x12,X12,1
+edidoctype,870x12,X12,1
+edidoctype,824x12,X12,1
+edidoctype,832x12,X12,1
+edidoctype,861x12,X12,1
+edidoctype,404x12,X12,1
+edidoctype,300x12,X12,1
+edidoctype,301x12,X12,1
+edidoctype,310x12,X12,1
+edidoctype,315x12,X12,1
+edidoctype,304x12,X12,1
+edidoctype,210x12,X12,1
+edidoctype,270x12,X12,1
+edidoctype,270json,JSON,1
+edidoctype,270xml,XML,1
+edidoctype,271x12,X12,1
+edidoctype,271json,JSON,1
+edidoctype,271xml,XML,1
+edidoctype,274x12,X12,1
+edidoctype,274json,JSON,1
+edidoctype,274xml,XML,1
+edidoctype,275x12,X12,1
+edidoctype,275json,JSON,1
+edidoctype,275xml,XML,1
+edidoctype,276x12,X12,1
+edidoctype,276json,JSON,1
+edidoctype,276xml,XML,1
+edidoctype,277x12,X12,1
+edidoctype,277json,JSON,1
+edidoctype,277xml,XML,1
+edidoctype,278x12,X12,1
+edidoctype,278json,JSON,1
+edidoctype,278xml,XML,1
+edidoctype,834x12,X12,1
+edidoctype,834json,JSON,1
+edidoctype,834xml,XML,1
+edidoctype,835x12,X12,1
+edidoctype,835json,JSON,1
+edidoctype,835xml,XML,1
+edidoctype,837x12,X12 Health Claim,1
+edidoctype,837json,JSON CLAIM,1
+edidoctype,837xml,XML CLAIM,1
+edixreftype,BT,bill-to,1
+edixreftype,ST,ship-to,1
+edixreftype,PY,payer,1
+edixreftype,VN,vendor,1
+edixreftype,SM,204 code,1
+edixreftype,IM,210 code,1
+edixreftype,QM,214 code,1
+edixreftype,GF,990 code,1
+trantype,ISS-SALES,,1
+trantype,ISS-SCRAP,,1
+trantype,WIP-ISFG,,1
+trantype,ISS-MISC,,1
+trantype,RCT-MISC,,1
+trantype,ISS-REWK,,1
+trantype,RCT-PURCH,,1
+trantype,LOC-TRNF,,1
+trantype,WIP-TRAN,,1
+trantype,RCT-FG,,1
+labeltype,cont,,1
+labeltype,pouch,,1
+labeltype,addr,,1
+SCRAP,AB1,Scrap Code AB,1
+SCRAP,VB1,Scrap Code VB,1
+CELL,CELL1,100,1
+CELL,CELL2,100,1
+CELL,CELL3,100,1
+OPERATOR,1000,,1
+OPERATOR,1001,,1
+OPERATOR,1002,,1
+edixref,1000,DANAHER,1
+engineer,Ted,,1
+state,AK,Alaska,1
+state,AL,Alabama,1
+state,AR,Arkansas,1
+state,AZ,Arizona,1
+state,CA,California,1
+state,CO,Colorado,1
+state,CT,Connecticut,1
+state,DC,District of Columbia,1
+state,DE,Delaware,1
+state,FL,Florida,1
+state,GA,Georgia,1
+state,HI,Hawaii,1
+state,IA,Iowa,1
+state,ID,Idaho,1
+state,IL,Illinois,1
+state,IN,Indiana,1
+state,KS,Kansas,1
+state,KY,Kentucky,1
+state,LA,Louisiana,1
+state,MA,Massachusetts,1
+state,MD,Maryland,1
+state,ME,Maine,1
+state,MI,Michigan,1
+state,MN,Minnesota,1
+state,MO,Missouri,1
+state,MS,Mississippi,1
+state,MT,Montana,1
+state,NC,North Carolina,1
+state,ND,North Dakota,1
+state,NE,Nebraska,1
+state,NH,New Hampshire,1
+state,NJ,New Jersey,1
+state,NM,New Mexico,1
+state,NV,Nevada,1
+state,NY,New York,1
+state,OH,Ohio,1
+state,OK,Oklahoma,1
+state,OR,Oregon,1
+state,PA,Pennsylvania,1
+state,PR,Puerto Rico,1
+state,RI,Rhode Island,1
+state,SC,South Carolina,1
+state,SD,South Dakota,1
+state,TN,Tennessee,1
+state,TX,Texas,1
+state,UT,Utah,1
+state,VA,Virginia,1
+state,VT,Vermont,1
+state,WA,Washington State,1
+state,WI,Wisconsin,1
+state,WV,West Virginia,1
+state,WY,Wyoming,1
+jasper,P3,genericJTableP3.jasper,1
+jasper,P4,genericJTableP4.jasper,1
+jasper,P5,genericJTableP5.jasper,1
+jasper,P5C,genericJTableP5C.jasper,1
+jasper,P6,genericJTableP6.jasper,1
+jasper,P6A,genericJTableP6a.jasper,1
+jasper,P6C,genericJTableP5C.jasper,1
+jasper,L1,genericJTableL11.jasper,1
+jasper,L2,genericJTableL11a.jasper,1
+jasper,L6,genericJTableL6.jasper,1
+jasper,L7,genericJTableL7.jasper,1
+jasper,L7C,genericJTableL7C.jasper,1
+jasper,L8,genericJTableL8.jasper,1
+jasper,L8C,genericJTableL8C.jasper,1
+country,ISO3,Country Name,1
+country,AFG,Afghanistan,1
+country,ALB,Albania,1
+country,DZA,Algeria,1
+country,ASM,American Samoa,1
+country,AND,Andorra,1
+country,AGO,Angola,1
+country,AIA,Anguilla,1
+country,ATA,Antarctica,1
+country,ATG,Antigua and Barbuda,1
+country,ARG,Argentina,1
+country,ARM,Armenia,1
+country,ABW,Aruba,1
+country,AUS,Australia,1
+country,AUT,Austria,1
+country,AZE,Azerbaijan,1
+country,BHS,Bahamas,1
+country,BHR,Bahrain,1
+country,BGD,Bangladesh,1
+country,BRB,Barbados,1
+country,BLR,Belarus,1
+country,BEL,Belgium,1
+country,BLZ,Belize,1
+country,BEN,Benin,1
+country,BMU,Bermuda,1
+country,BTN,Bhutan,1
+country,BOL,Bolivia,1
+country,BIH,Bosnia and Herzegovina,1
+country,BWA,Botswana,1
+country,BRA,Brazil,1
+country,IOT,British Indian Ocean Territory,1
+country,VGB,British Virgin Islands,1
+country,BRN,Brunei,1
+country,BGR,Bulgaria,1
+country,BFA,Burkina Faso,1
+country,BDI,Burundi,1
+country,KHM,Cambodia,1
+country,CMR,Cameroon,1
+country,CAN,Canada,1
+country,CPV,Cape Verde,1
+country,CYM,Cayman Islands,1
+country,CAF,Central African Republic,1
+country,TCD,Chad,1
+country,CHL,Chile,1
+country,CHN,China,1
+country,CXR,Christmas Island,1
+country,CCK,Cocos Islands,1
+country,COL,Colombia,1
+country,COM,Comoros,1
+country,COK,Cook Islands,1
+country,CRI,Costa Rica,1
+country,HRV,Croatia,1
+country,CUB,Cuba,1
+country,CUW,Curacao,1
+country,CYP,Cyprus,1
+country,CZE,Czech Republic,1
+country,COD,Democratic Republic of the Congo,1
+country,DNK,Denmark,1
+country,DJI,Djibouti,1
+country,DMA,Dominica,1
+country,DOM,Dominican Republic,1
+country,TLS,East Timor,1
+country,ECU,Ecuador,1
+country,EGY,Egypt,1
+country,SLV,El Salvador,1
+country,GNQ,Equatorial Guinea,1
+country,ERI,Eritrea,1
+country,EST,Estonia,1
+country,ETH,Ethiopia,1
+country,FLK,Falkland Islands,1
+country,FRO,Faroe Islands,1
+country,FJI,Fiji,1
+country,FIN,Finland,1
+country,FRA,France,1
+country,PYF,French Polynesia,1
+country,GAB,Gabon,1
+country,GMB,Gambia,1
+country,GEO,Georgia,1
+country,DEU,Germany,1
+country,GHA,Ghana,1
+country,GIB,Gibraltar,1
+country,GRC,Greece,1
+country,GRL,Greenland,1
+country,GRD,Grenada,1
+country,GUM,Guam,1
+country,GTM,Guatemala,1
+country,GGY,Guernsey,1
+country,GIN,Guinea,1
+country,GNB,Guinea-Bissau,1
+country,GUY,Guyana,1
+country,HTI,Haiti,1
+country,HND,Honduras,1
+country,HKG,Hong Kong,1
+country,HUN,Hungary,1
+country,ISL,Iceland,1
+country,IND,India,1
+country,IDN,Indonesia,1
+country,IRN,Iran,1
+country,IRQ,Iraq,1
+country,IRL,Ireland,1
+country,IMN,Isle of Man,1
+country,ISR,Israel,1
+country,ITA,Italy,1
+country,CIV,Ivory Coast,1
+country,JAM,Jamaica,1
+country,JPN,Japan,1
+country,JEY,Jersey,1
+country,JOR,Jordan,1
+country,KAZ,Kazakhstan,1
+country,KEN,Kenya,1
+country,KIR,Kiribati,1
+country,XKX,Kosovo,1
+country,KWT,Kuwait,1
+country,KGZ,Kyrgyzstan,1
+country,LAO,Laos,1
+country,LVA,Latvia,1
+country,LBN,Lebanon,1
+country,LSO,Lesotho,1
+country,LBR,Liberia,1
+country,LBY,Libya,1
+country,LIE,Liechtenstein,1
+country,LTU,Lithuania,1
+country,LUX,Luxembourg,1
+country,MAC,Macau,1
+country,MKD,Macedonia,1
+country,MDG,Madagascar,1
+country,MWI,Malawi,1
+country,MYS,Malaysia,1
+country,MDV,Maldives,1
+country,MLI,Mali,1
+country,MLT,Malta,1
+country,MHL,Marshall Islands,1
+country,MRT,Mauritania,1
+country,MUS,Mauritius,1
+country,MYT,Mayotte,1
+country,MEX,Mexico,1
+country,FSM,Micronesia,1
+country,MDA,Moldova,1
+country,MCO,Monaco,1
+country,MNG,Mongolia,1
+country,MNE,Montenegro,1
+country,MSR,Montserrat,1
+country,MAR,Morocco,1
+country,MOZ,Mozambique,1
+country,MMR,Myanmar,1
+country,NAM,Namibia,1
+country,NRU,Nauru,1
+country,NPL,Nepal,1
+country,NLD,Netherlands,1
+country,ANT,Netherlands Antilles,1
+country,NCL,New Caledonia,1
+country,NZL,New Zealand,1
+country,NIC,Nicaragua,1
+country,NER,Niger,1
+country,NGA,Nigeria,1
+country,NIU,Niue,1
+country,PRK,North Korea,1
+country,MNP,Northern Mariana Islands,1
+country,NOR,Norway,1
+country,OMN,Oman,1
+country,PAK,Pakistan,1
+country,PLW,Palau,1
+country,PSE,Palestine,1
+country,PAN,Panama,1
+country,PNG,Papua New Guinea,1
+country,PRY,Paraguay,1
+country,PER,Peru,1
+country,PHL,Philippines,1
+country,PCN,Pitcairn,1
+country,POL,Poland,1
+country,PRT,Portugal,1
+country,PRI,Puerto Rico,1
+country,QAT,Qatar,1
+country,COG,Republic of the Congo,1
+country,REU,Reunion,1
+country,ROU,Romania,1
+country,RUS,Russia,1
+country,RWA,Rwanda,1
+country,BLM,Saint Barthelemy,1
+country,SHN,Saint Helena,1
+country,KNA,Saint Kitts and Nevis,1
+country,LCA,Saint Lucia,1
+country,MAF,Saint Martin,1
+country,SPM,Saint Pierre and Miquelon,1
+country,VCT,Saint Vincent and the Grenadines,1
+country,WSM,Samoa,1
+country,SMR,San Marino,1
+country,STP,Sao Tome and Principe,1
+country,SAU,Saudi Arabia,1
+country,SEN,Senegal,1
+country,SRB,Serbia,1
+country,SYC,Seychelles,1
+country,SLE,Sierra Leone,1
+country,SGP,Singapore,1
+country,SXM,Sint Maarten,1
+country,SVK,Slovakia,1
+country,SVN,Slovenia,1
+country,SLB,Solomon Islands,1
+country,SOM,Somalia,1
+country,ZAF,South Africa,1
+country,KOR,South Korea,1
+country,SSD,South Sudan,1
+country,ESP,Spain,1
+country,LKA,Sri Lanka,1
+country,SDN,Sudan,1
+country,SUR,Suriname,1
+country,SJM,Svalbard and Jan Mayen,1
+country,SWZ,Swaziland,1
+country,SWE,Sweden,1
+country,CHE,Switzerland,1
+country,SYR,Syria,1
+country,TWN,Taiwan,1
+country,TJK,Tajikistan,1
+country,TZA,Tanzania,1
+country,THA,Thailand,1
+country,TGO,Togo,1
+country,TKL,Tokelau,1
+country,TON,Tonga,1
+country,TTO,Trinidad and Tobago,1
+country,TUN,Tunisia,1
+country,TUR,Turkey,1
+country,TKM,Turkmenistan,1
+country,TCA,Turks and Caicos Islands,1
+country,TUV,Tuvalu,1
+country,VIR,U.S. Virgin Islands,1
+country,UGA,Uganda,1
+country,UKR,Ukraine,1
+country,ARE,United Arab Emirates,1
+country,GBR,United Kingdom,1
+country,USA,United States,1
+country,URY,Uruguay,1
+country,UZB,Uzbekistan,1
+country,VUT,Vanuatu,1
+country,VAT,Vatican,1
+country,VEN,Venezuela,1
+country,VNM,Vietnam,1
+country,WLF,Wallis and Futuna,1
+country,ESH,Western Sahara,1
+country,YEM,Yemen,1
+country,ZMB,Zambia,1
+country,ZWE,Zimbabwe,1
+sys_job_class,com.blueseer.crn.jobAS2,,1
+sys_job_class,com.blueseer.crn.jobSys,,1
+sys_job_class,com.blueseer.crn.jobBch,,1
+sys_job_class,com.blueseer.crn.jobFTP,,1
+sys_job_class,com.blueseer.crn.jobWkf,,1
+edimaps,internal,1,1
+sys_smtp,auth,yes,1
+sys_smtp,tls,yes,1
+fieldlabel,materialtax,Material Tax,1
+sys_def_acct_exp,90000000,Default Expense Account,1

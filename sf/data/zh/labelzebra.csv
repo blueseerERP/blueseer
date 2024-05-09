@@ -1,0 +1,4 @@
+generic,A generic 4 x 6 container label,generic.prn,cont
+address,Address Labels for Shiptos,address.prn,addr
+ucc,UCC label generic,ucc.prn,cont
+aiag,AIAG label generic,aiag.prn,cont

@@ -1,0 +1,45 @@
+asset,asset,,10000000,90000000,10000000
+ap,ap,,10000000,90000000,10000030
+ar,ar,,10000000,90000000,10000294
+batch,batch,,10000000,90000000,10000027
+call,call,,20000,30000,22006
+checknumber,checknumber range,,100000,900000,123485
+ecn,ecn range,,10000,90000,10013
+ediout,edi out file range,,10000,90000,100042
+edifile,edifile range,,1,100000,1
+edilog,edilog range,,300,10000000,1
+expensenumber,expensenumber range,,1000000,9000000,1000007
+expenseaccount,expense acct range,,99000000,99999999,99000000
+incomeaccount,income acct range,,59000000,59999999,59000000
+rexpense,recur expense range,,10000,90000,10007
+gl,gl transaction range,,10000000,90000000,10000018
+label,label range,,10000000,90000000,10000159
+order,sales order range,,10000,49999,10000
+srvm,service order range,,50000,99999,50000
+do,Distribution order range,,10000,90000,12022
+fo,freight order range,,50000000,79999999,50005001
+cfo,carrier freight order range,,30000000,79999999,30005001
+ovdev,unknown,,1000,9999,1024
+plan,plan master range,,100000,999999,100250
+pland,plan detail range,,100,999,125
+po,purchase order number range,,10000,99999,83282
+pos,point of sale range,,10000000,99999999,10000023
+purchreq,purchase requisition range,,5000,9999,5664
+quality,quality number range,,200,999,210
+receiver,receiver tran nbr range,,100000,999999,100057
+sample,sample,,100000,999999,100133
+serial,serial number range,,1000000,9999999,1000000
+shipper,shipper number range,,2000,9999,2117
+shipto,shipto number range,,100000,999999,143546
+task,task master number range,,1000,9999,1005
+tr_hist,transaction number range,,10000000,99999999,10000173
+voucher,voucher number range,,10000,99999,50090
+customer,customer number range,,200000,299999,200000
+vendor,vendor number range,,400000,499999,400000
+item,item number range,,50000000,59999999,50000000
+employee,employee number range,,10000,19999,10000
+payroll,payroll transaction number range,,30000,99999,30000
+driver,driver transaction number range,,100,99999,100
+vehicle,vehicle transaction number range,,200,99999,200
+broker,broker transaction number range,,500,99999,500
+quote,quote transaction number range,,7000,99999,7000
