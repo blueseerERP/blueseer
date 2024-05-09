@@ -638,6 +638,7 @@ CREATE TABLE "api_mstr" (
   "api_user" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
   "api_pass" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
   "api_key" varchar(120) NOT NULL COLLATE NOCASE DEFAULT '',
+  "api_keylabel" varchar(120) NOT NULL COLLATE NOCASE DEFAULT '',
   "api_protocol" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "api_class" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "api_encrypted" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',

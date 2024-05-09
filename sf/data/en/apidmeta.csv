@@ -1,3 +1,9 @@
 555,x12_validate,Ocp-Apim-Subscription-Key,3ecf6b1c5cf34bd797a5f4c57951a1cf
 444,numbersAPI,X-RapidAPI-Host,numbersapi.p.rapidapi.com
 444,numbersAPI,X-RapidAPI-Key,79c6232215msh5a285d996d7620cp1a67acjsne9d46615d723
+222,getDieselPrices,frequency,weekly
+222,getDieselPrices,data[0],value
+222,getDieselPrices,facets[product][],EPD2D
+222,getDieselPrices,start,2024-05-01
+222,getDieselPrices,length,5000
+222,getDieselPrices,offset,0

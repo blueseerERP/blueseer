@@ -400,7 +400,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddcontenttype.setSelectedIndex(0);
         ddauth.setSelectedIndex(0);
         tbapikey.setText("");
-        
+        tbkeylabel.setText("");
         isLoad = false;
     }
     
@@ -577,6 +577,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tbuser.getText(),
                 passwd,
                 tbapikey.getText(),
+                tbkeylabel.getText(),
                 ddprotocol.getSelectedItem().toString(),
                 ddclass.getSelectedItem().toString(),
                 String.valueOf(BlueSeerUtils.boolToInt(cbresponseheaders.isSelected())),
@@ -687,6 +688,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbuser.setText(x.api_user());
         tbpass.setText(bsmf.MainFrame.PassWord("1", x.api_pass().toCharArray()));
         tbapikey.setText(x.api_key());
+        tbkeylabel.setText(x.api_keylabel());
         ddprotocol.setSelectedItem(x.api_protocol());
         ddclass.setSelectedItem(x.api_class());
         ddcontenttype.setSelectedItem(x.api_contenttype()); 
@@ -743,6 +745,14 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                     methodpath = methodpath.substring(0, methodpath.length() - 1);
                 }
             }
+        }
+        
+        // tack on api key in param string if APIKEY auth
+        // note...if they want it in the header...then select ddauth = NONE and put in param table
+        if (ddauth.getSelectedItem().toString().equals("APIKEY")) {
+                if (! tbapikey.getText().isBlank()) {
+                methodpath = methodpath + "&" + tbkeylabel.getText() + "=" + tbapikey.getText();   
+                }
         }
         /*
         if (! tbapikey.getText().isBlank()) {
@@ -817,6 +827,8 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddcontenttype = new javax.swing.JComboBox<>();
         ddauth = new javax.swing.JComboBox<>();
         jLabel22 = new javax.swing.JLabel();
+        tbkeylabel = new javax.swing.JTextField();
+        jLabel23 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         tbsourcedir = new javax.swing.JTextField();
         tbdestdir = new javax.swing.JTextField();
@@ -979,6 +991,8 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         jLabel22.setText("Authentication");
 
+        jLabel23.setText("Key Label");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -1012,7 +1026,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addComponent(btrun)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(cbfile)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 92, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btdelete)
                         .addGap(6, 6, 6)
                         .addComponent(btupdate)
@@ -1035,29 +1049,33 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(ddclass, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(ddprotocol, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(38, 38, 38)
-                        .addComponent(jLabel18)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbresponseheaders, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(cbrequestheaders)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(ddcontenttype, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel10)
                             .addComponent(jLabel8)
                             .addComponent(jLabel11))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(tbuser)
-                            .addComponent(tbpass, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)
-                            .addComponent(tbapikey))
-                        .addGap(44, 44, 44))
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tbuser, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbpass, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(tbapikey, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel23)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tbkeylabel, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(ddauth, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ddcontenttype, 0, 239, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(cbresponseheaders, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cbrequestheaders)
+                        .addGap(311, 311, 311))))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1113,25 +1131,27 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                                     .addComponent(jLabel16)))))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(cbresponseheaders)
                             .addComponent(tbuser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel10))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(cbrequestheaders)
                             .addComponent(tbpass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel8))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel18)
-                            .addComponent(ddcontenttype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tbapikey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel11))))
+                            .addComponent(jLabel11)
+                            .addComponent(tbkeylabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel23))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ddauth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel22))
-                .addGap(0, 11, Short.MAX_VALUE))
+                    .addComponent(jLabel22)
+                    .addComponent(jLabel18)
+                    .addComponent(ddcontenttype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbresponseheaders)
+                    .addComponent(cbrequestheaders))
+                .addGap(0, 9, Short.MAX_VALUE))
         );
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Methods"));
@@ -1487,13 +1507,6 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             conn.setConnectTimeout(10000);
             conn.setReadTimeout(10000);
             
-            if (ddauth.getSelectedItem().toString().equals("APIKEY")) {
-                if (! tbapikey.getText().isBlank()) {
-                conn.setRequestProperty("Authorization", tbapikey.getText());
-                }
-            }
-            
-            
             if (ddauth.getSelectedItem().toString().equals("BASIC AUTH")) {
                if (! tbuser.getText().isBlank() && tbpass.getPassword().length > 0) {
                 String userCredentials = new String(tbuser.getText() + ":" + String.valueOf(tbpass.getPassword()));
@@ -1816,7 +1829,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             tabledetail.getModel().setValueAt(tbkvpair.getText(), i, 4);
             tabledetail.getModel().setValueAt(tbsourcedir.getText(), i, 5);
             tabledetail.getModel().setValueAt(tbdestdir.getText(), i, 6);
-            tabledetail.getModel().setValueAt(ConvertBoolToYesNo(cbenabled.isSelected()), i, 7);
+            tabledetail.getModel().setValueAt(String.valueOf(cbenabled.isSelected()), i, 7);
         }
         
         updateAPIDetTransaction(tbkey.getText(), createAPIDMetaRecord(), createDetRecord());
@@ -1865,6 +1878,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -1890,6 +1904,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JTextField tbdesc;
     private javax.swing.JTextField tbdestdir;
     private javax.swing.JTextField tbkey;
+    private javax.swing.JTextField tbkeylabel;
     private javax.swing.JTextField tbkvpair;
     private javax.swing.JTextField tbmethod;
     private javax.swing.JPasswordField tbpass;
