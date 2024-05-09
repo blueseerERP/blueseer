@@ -904,8 +904,7 @@ public class BlueSeerUtils {
         String adjvalue = invalue.replace('.', defaultDecimalSeparator);
        // DecimalFormat df = new DecimalFormat("#0.00###", new DecimalFormatSymbols(Locale.getDefault())); 
      //  NumberFormat nf = NumberFormat.getInstance(Locale.getDefault()); 
-        System.out.println("locale: " + Locale.getDefault());
-        Locale locale = Locale.CHINA;
+       
         DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());
         df.applyPattern(pattern);
         try { 
