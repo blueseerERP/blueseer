@@ -27,7 +27,6 @@ package com.blueseer.utl;
 
 import bsmf.MainFrame;
 import static bsmf.MainFrame.bslog;
-import static bsmf.MainFrame.session;
 import javax.swing.InputMap;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;

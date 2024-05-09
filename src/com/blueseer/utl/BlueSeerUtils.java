@@ -906,7 +906,7 @@ public class BlueSeerUtils {
      //  NumberFormat nf = NumberFormat.getInstance(Locale.getDefault()); 
         System.out.println("locale: " + Locale.getDefault());
         Locale locale = Locale.CHINA;
-        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(locale);
+        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());
         df.applyPattern(pattern);
         try { 
             x = df.format(df.parse(adjvalue));
