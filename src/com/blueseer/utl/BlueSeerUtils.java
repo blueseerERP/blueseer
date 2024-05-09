@@ -1257,6 +1257,11 @@ public class BlueSeerUtils {
         return (i == 1) ? "YES" : "NO";
     }
     
+    public static String ConvertIntToBoolString(int i) {
+        return (i == 1) ? "true" : "false";
+    }
+    
+    
     public static String ConvertBoolToYesNo(boolean x) {
         return (x) ? "YES" : "NO";
     }

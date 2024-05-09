@@ -45,6 +45,7 @@ import static com.blueseer.edi.ediData.isAPIMethodUnique;
 import static com.blueseer.edi.ediData.updateAPIDetTransaction;
 import static com.blueseer.edi.ediData.updateAPITransaction;
 import static com.blueseer.utl.BlueSeerUtils.ConvertBoolToYesNo;
+import static com.blueseer.utl.BlueSeerUtils.ConvertIntToBoolString;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
@@ -700,7 +701,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         ArrayList<api_det> z = getAPIDet(x.api_id());
         for (api_det d : z) {
             detailmodel.addRow(new Object[]{d.apid_method(), d.apid_verb(), d.apid_type(),
-                 d.apid_seq(), d.apid_value(), d.apid_source(), d.apid_destination(), d.apid_enabled()});
+                 d.apid_seq(), d.apid_value(), d.apid_source(), d.apid_destination(), ConvertIntToBoolString(Integer.valueOf(d.apid_enabled()))});
         }
         
         // now  meta
