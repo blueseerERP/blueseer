@@ -80,7 +80,7 @@ import org.apache.commons.net.ftp.FTPReply;
 public class admData {
 
     public static String[] addSiteMstr(site_mstr x) {
-        String[] m = new String[2];
+        String[] m ;
         String sqlSelect = "SELECT * FROM  site_mstr where site_site = ?";
         String sqlInsert = "insert into site_mstr (site_site, site_desc, site_line1, site_line2, site_line3, "
                         + " site_city, site_state, site_country, site_zip, site_phone, site_web, site_sqename, site_sqeemail, site_logo, site_iv_jasper, " 
@@ -128,7 +128,7 @@ public class admData {
     }
 
     public static String[] updateSiteMstr(site_mstr x) {
-        String[] m = new String[2];
+        String[] m ;
         String sql = "update site_mstr set site_desc = ?, site_line1 = ?, site_line2 = ?, "
                 + " site_line3 = ?, site_city = ?, site_state = ?, site_country = ?, "
                 + " site_zip = ?, site_phone = ?, site_web = ?, site_sqename = ?, site_sqeemail = ?, "
@@ -167,7 +167,7 @@ public class admData {
     
     public static site_mstr getSiteMstr(String[] x) {
         site_mstr r = null;
-        String[] m = new String[2];
+        String[] m;
         String sql = "select * from site_mstr where site_site = ? ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
@@ -213,7 +213,7 @@ public class admData {
     }
     
     public static String[] deleteSiteMstr(site_mstr x) { 
-       String[] m = new String[2];
+       String[] m ;
         String sql = "delete from site_mstr where site_site = ?; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
@@ -229,7 +229,7 @@ public class admData {
     
     
     public static String[] addUserMstr(user_mstr x) {
-        String[] m = new String[2];
+        String[] m ;
         String sqlSelect = "SELECT * FROM  user_mstr where user_id = ?";
         String sqlInsert = "insert into user_mstr (user_id, user_site, user_lname, "
                         + " user_fname, user_mname, user_email, user_phone, user_cell, " 
@@ -268,7 +268,7 @@ public class admData {
     }
 
     public static String[] updateUserMstr(user_mstr x) {
-        String[] m = new String[2];
+        String[] m ;
         String sql = "update user_mstr set user_site = ?, user_lname = ?, user_fname = ?, "
                 + " user_mname = ?, user_email = ?, user_phone = ?, user_cell = ?, "
                 + " user_rmks = ?, user_passwd = ? "          
@@ -296,7 +296,7 @@ public class admData {
 
     public static user_mstr getUserMstr(String[] x) {
         user_mstr r = null;
-        String[] m = new String[2];
+        String[] m ;
         String sql = "select * from user_mstr where user_id = ? ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
@@ -331,7 +331,7 @@ public class admData {
     }
     
     public static String[] deleteUserMstr(user_mstr x) { 
-       String[] m = new String[2];
+       String[] m ;
         String sql = "delete from user_mstr where user_id = ?; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
@@ -348,7 +348,7 @@ public class admData {
     
     public static String[] addUpdateOVMstr(ov_mstr x) {
         int rows = 0;
-        String[] m = new String[2];
+        String[] m ;
         String sqlSelect = "SELECT * FROM  ov_mstr"; // there should always be only 1 or 0 records in ov_mstr
         String sqlInsert = "insert into ov_mstr (ov_site, ov_cc, ov_wh, ov_currency, ov_labelprinter) "
                         + " values (?,?,?,?,?); "; 
@@ -389,7 +389,7 @@ public class admData {
    
     public static ov_mstr getOVMstr(String[] x) {
         ov_mstr r = null;
-        String[] m = new String[2];
+        String[] m ;
         String sql = "select * from ov_mstr ;";  // will always be only 0 or 1 records
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
@@ -432,7 +432,7 @@ public class admData {
     }
     
     public static String[] addFTPMstr(ftp_mstr x) {
-        String[] m = new String[2];
+        String[] m ;
         String sqlSelect = "SELECT * FROM  ftp_mstr where ftp_id = ?";
         String sqlInsert = "insert into ftp_mstr (ftp_id, ftp_desc, ftp_ip, ftp_login, " +
                           " ftp_passwd, ftp_commands, ftp_indir, ftp_outdir, ftp_delete, ftp_passive, " +
@@ -476,7 +476,7 @@ public class admData {
     }
 
     public static String[] updateFTPMstr(ftp_mstr x) {
-        String[] m = new String[2];
+        String[] m ;
         String sql = "update ftp_mstr set ftp_desc = ?, ftp_ip = ?, ftp_login = ?, " +
                           " ftp_passwd = ?, ftp_commands = ?, ftp_indir = ?, ftp_outdir = ?, " +
                           " ftp_delete = ?, ftp_passive = ?, " +
@@ -510,7 +510,7 @@ public class admData {
     }
     
     public static String[] deleteFTPMstr(ftp_mstr x) { 
-       String[] m = new String[2];
+       String[] m ;
         String sql = "delete from ftp_mstr where ftp_id = ?; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
@@ -526,7 +526,7 @@ public class admData {
     
     public static ftp_mstr getFTPMstr(String[] x) {
         ftp_mstr r = null;
-        String[] m = new String[2];
+        String[] m ;
         String sql = "select * from ftp_mstr where ftp_id = ? ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
@@ -566,7 +566,7 @@ public class admData {
     }
     
     public static String[] addCodeMstr(code_mstr x) {
-        String[] m = new String[2];
+        String[] m ;
         String sqlSelect = "SELECT * FROM  code_mstr where code_code = ? and code_key = ?";
         String sqlInsert = "insert into code_mstr (code_code, code_key, code_value, code_internal) " 
                         + " values (?,?,?,?); "; 
@@ -598,7 +598,7 @@ public class admData {
     }
 
     public static String[] addOrUpdateCodeMstr(code_mstr x) {
-        String[] m = new String[2];
+        String[] m ;
         String sqlSelect = "SELECT * FROM  code_mstr where code_code = ? and code_key = ?";
         String sqlInsert = "insert into code_mstr (code_code, code_key, code_value, code_internal) " 
                         + " values (?,?,?,?); "; 
@@ -638,7 +638,7 @@ public class admData {
     }
     
     public static String[] updateCodeMstr(code_mstr x) {
-        String[] m = new String[2];
+        String[] m ;
         String sql = "update code_mstr set code_value = ?, code_internal = ? " +   
                           " where code_code = ? and code_key = ? ; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
@@ -657,7 +657,7 @@ public class admData {
     }
     
     public static String[] deleteCodeMstr(code_mstr x) { 
-       String[] m = new String[2];
+       String[] m ;
         String sql = "delete from code_mstr where code_code = ? and code_key = ?; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
@@ -674,7 +674,7 @@ public class admData {
     
     public static code_mstr getCodeMstr(String[] x) {
         code_mstr r = null;
-        String[] m = new String[2];
+        String[] m ;
         String sql = "";
          if (x.length >= 2 && ! x[1].isEmpty()) {
             sql = "select * from code_mstr where code_code = ? and code_key = ? ;"; 
@@ -713,7 +713,7 @@ public class admData {
     }
     
     public static String[] addJaspMstr(jasp_mstr x) {
-        String[] m = new String[2];
+        String[] m ;
         String sqlSelect = "SELECT * FROM  jasp_mstr where jasp_group = ? and jasp_sequence = ?";
         String sqlInsert = "insert into jasp_mstr (jasp_group, jasp_desc, jasp_func, jasp_sequence, jasp_format) " 
                         + " values (?,?,?,?,?); "; 
@@ -746,7 +746,7 @@ public class admData {
     }
 
     public static String[] updateJaspMstr(jasp_mstr x) {
-        String[] m = new String[2];
+        String[] m ;
         String sql = "update jasp_mstr set jasp_desc = ?, jasp_func = ?, jasp_format = ? " +   
                           " where jasp_group = ? and jasp_sequence = ? ; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
@@ -766,7 +766,7 @@ public class admData {
     }
     
     public static String[] deleteJaspMstr(jasp_mstr x) { 
-       String[] m = new String[2];
+       String[] m ;
         String sql = "delete from jasp_mstr where jasp_group = ? and jasp_sequence = ?; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
@@ -783,7 +783,7 @@ public class admData {
     
     public static jasp_mstr getJaspMstr(String[] x) {
         jasp_mstr r = null;
-        String[] m = new String[2];
+        String[] m ;
         String sql = "";
          if (x.length >= 2 && ! x[1].isEmpty()) {
             sql = "select * from jasp_mstr where jasp_group = ? and jasp_sequence = ? ;"; 
@@ -823,7 +823,7 @@ public class admData {
     }
     
     public static String[] addCounter(counter x) {
-        String[] m = new String[2];
+        String[] m ;
         String sqlSelect = "SELECT * FROM  counter where counter_name = ?";
         String sqlInsert = "insert into counter (counter_name, counter_desc, counter_prefix, "
                         + " counter_from, counter_to, counter_id ) "
@@ -857,7 +857,7 @@ public class admData {
     }
 
     public static String[] updateCounter(counter x) {
-        String[] m = new String[2];
+        String[] m ;
         String sql = "update counter set counter_desc = ?, counter_prefix = ?, counter_from = ?, " +   
                           " counter_to = ?, counter_id = ? where counter_name = ? ; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
@@ -878,7 +878,7 @@ public class admData {
     }
     
     public static String[] deleteCounter(counter x) { 
-       String[] m = new String[2];
+       String[] m ;
         String sql = "delete from counter where counter_name = ?; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
@@ -894,7 +894,7 @@ public class admData {
     
     public static counter getCounter(String[] x) {
         counter r = null;
-        String[] m = new String[2];
+        String[] m ;
         String sql = "select * from counter where counter_name = ? ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
@@ -925,7 +925,7 @@ public class admData {
     }
     
     public static String[] addMenuMstr(menu_mstr x) {
-        String[] m = new String[2];
+        String[] m ;
         String sqlSelect = "SELECT * FROM  menu_mstr where menu_id = ?";
         String sqlInsert = "insert into menu_mstr (menu_id, menu_desc, menu_type, "
                         + " menu_panel, menu_navcode ) "
@@ -958,7 +958,7 @@ public class admData {
     }
 
     public static String[] updateMenuMstr(menu_mstr x) {
-        String[] m = new String[2];
+        String[] m ;
         String sql = "update menu_mstr set menu_desc = ?, menu_type = ?, menu_panel = ?, " +   
                           " menu_navcode = ? where menu_id = ? ; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
@@ -979,7 +979,7 @@ public class admData {
         
     public static menu_mstr getMenuMstr(String[] x) {
         menu_mstr r = null;
-        String[] m = new String[2];
+        String[] m ;
         String sql = "select * from menu_mstr where menu_id = ? ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
@@ -1009,7 +1009,7 @@ public class admData {
     }
     
     public static String[] deleteMenuMstr(menu_mstr x) { 
-       String[] m = new String[2];
+       String[] m ;
         String sql = "delete from menu_mstr where menu_id = ?; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
@@ -1024,7 +1024,7 @@ public class admData {
     }
     
     public static String[] addPanelMstr(panel_mstr x) {
-        String[] m = new String[2];
+        String[] m ;
         String sqlSelect = "SELECT * FROM  panel_mstr where panel_id = ?";
         String sqlInsert = "insert into panel_mstr (panel_id, panel_desc, panel_core ) "
                         + " values (?,?,?); "; 
@@ -1054,7 +1054,7 @@ public class admData {
     }
 
     public static String[] updatePanelMstr(panel_mstr x) {
-        String[] m = new String[2];
+        String[] m ;
         String sql = "update panel_mstr set panel_desc = ?, panel_core = ? " +   
                           " where panel_id = ? ; ";
        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
@@ -1073,7 +1073,7 @@ public class admData {
         
     public static panel_mstr getPanelMstr(String[] x) {
         panel_mstr r = null;
-        String[] m = new String[2];
+        String[] m ;
         String sql = "select * from panel_mstr where panel_id = ? ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
@@ -1101,7 +1101,7 @@ public class admData {
     }
     
     public static String[] deletePanelMstr(panel_mstr x) { 
-       String[] m = new String[2];
+       String[] m ;
         String sql = "delete from panel_mstr where panel_id = ?; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
@@ -1116,7 +1116,7 @@ public class admData {
     }
     
     public static String[] addPrtMstr(prt_mstr x) {
-        String[] m = new String[2];
+        String[] m ;
         String sqlSelect = "SELECT * FROM  prt_mstr where prt_id = ?";
         String sqlInsert = "insert into prt_mstr (prt_id, prt_desc, prt_type, "
                         + " prt_ip, prt_port ) "
@@ -1149,7 +1149,7 @@ public class admData {
     }
 
     public static String[] updatePrtMstr(prt_mstr x) {
-        String[] m = new String[2];
+        String[] m ;
         String sql = "update prt_mstr set prt_desc = ?, prt_type = ?, prt_ip = ?, " +   
                           " prt_ip = ? where prt_id = ? ; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
@@ -1170,7 +1170,7 @@ public class admData {
         
     public static prt_mstr getPrtMstr(String[] x) {
         prt_mstr r = null;
-        String[] m = new String[2];
+        String[] m ;
         String sql = "select * from prt_mstr where prt_id = ? ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
@@ -1200,7 +1200,7 @@ public class admData {
     }
     
     public static String[] deleteMenuMstr(prt_mstr x) { 
-       String[] m = new String[2];
+       String[] m ;
         String sql = "delete from prt_mstr where prt_id = ?; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
@@ -1216,7 +1216,7 @@ public class admData {
     
     
     public static String[] addPksMstr(pks_mstr x, String returned_keyid) {
-        String[] m = new String[2];
+        String[] m ;
         String sqlSelect = "SELECT * FROM  pks_mstr where pks_id = ? ";
         String sqlInsert = "insert into pks_mstr (pks_id, pks_desc, pks_type, "
                         + " pks_user, pks_pass, pks_file, pks_storeuser, pks_storepass, " 
@@ -1259,7 +1259,7 @@ public class admData {
     }
 
     public static String[] updatePksMstr(pks_mstr x) {
-        String[] m = new String[2];
+        String[] m ;
         String sql = "update pks_mstr set pks_desc = ?, pks_type = ?, pks_user = ?,  " +   
                           " pks_pass = ? , pks_file = ?, pks_storeuser = ?, " +
                           " pks_storepass = ?, pks_expire = ?, pks_create = ?, pks_parent = ?, " +
@@ -1291,7 +1291,7 @@ public class admData {
     }
     
     public static String[] deletePksMstr(pks_mstr x) { 
-       String[] m = new String[2];
+       String[] m ;
         String sql = "delete from pks_mstr where pks_id = ? ; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
@@ -1307,7 +1307,7 @@ public class admData {
     
     public static pks_mstr getPksMstr(String[] x) {
         pks_mstr r = null;
-        String[] m = new String[2];
+        String[] m ;
         String sql = "select * from pks_mstr where pks_id = ? ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
@@ -1347,7 +1347,7 @@ public class admData {
     
     
     public static String[] addCronMstr(cron_mstr x) {
-        String[] m = new String[2];
+        String[] m ;
         String sqlSelect = "SELECT * FROM  cron_mstr where cron_jobid = ? ";
         String sqlInsert = "insert into cron_mstr (cron_jobid, cron_desc, cron_group, " 
                         + " cron_prog, cron_param, cron_priority, cron_expression, cron_enabled, "
@@ -1388,7 +1388,7 @@ public class admData {
     }
 
     public static String[] updateCronMstr(cron_mstr x) {
-        String[] m = new String[2];
+        String[] m ;
         String sql = "update cron_mstr set cron_desc = ?, cron_group = ?, " 
                         + " cron_prog = ?, cron_param = ?, cron_priority = ?, cron_expression = ?, cron_enabled = ?, "
                         + " cron_modflag = ?, cron_lastrun = ?, cron_lastmod = ?, cron_userid = ? "
@@ -1417,7 +1417,7 @@ public class admData {
     }
     
     public static String[] deleteCronMstr(cron_mstr x) { 
-       String[] m = new String[2];
+       String[] m ;
         String sql = "delete from cron_mstr where cron_jobid = ? ; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
@@ -1433,7 +1433,7 @@ public class admData {
     
     public static cron_mstr getCronMstr(String[] x) {
         cron_mstr r = null;
-        String[] m = new String[2];
+        String[] m ;
         String sql = "select * from cron_mstr where cron_jobid = ? ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
@@ -1543,7 +1543,7 @@ public class admData {
     public static ArrayList<change_log> getChangeLog(String[] x) {
          ArrayList<change_log> list = new ArrayList<change_log>();
         change_log r = null;
-        String[] m = new String[2];
+        String[] m ;
         String sql = "select * from change_log where chg_key = ? and chg_class = ? ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
@@ -1581,7 +1581,7 @@ public class admData {
     public static ArrayList<change_log> getChangeLogByTable(String[] x) {
          ArrayList<change_log> list = new ArrayList<change_log>();
         change_log r = null;
-        String[] m = new String[2];
+        String[] m ;
         String sql = "select * from change_log where chg_key = ? and chg_table = ? ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
@@ -1617,7 +1617,7 @@ public class admData {
     }
     
     public static String[] addFTPAttr(ArrayList<ftp_attr> ftpa) {
-        String[] m = new String[2];
+        String[] m = new String[2] ;
         Connection bscon = null;
         PreparedStatement ps = null;
         ResultSet res = null;
@@ -1683,7 +1683,7 @@ public class admData {
     }
 
     public static String[] addUpdateFTPAttr(String x, ArrayList<String[]> y) {
-        String[] m = new String[2];
+        String[] m = new String[2] ;
         String sqlDelete = "delete from ftp_attr where ftpa_id = ?";
         String sqlInsert = "insert into ftp_attr (ftpa_id, ftpa_key, ftpa_value)  " +
                 " values (?,?,?); "; 
@@ -1707,7 +1707,7 @@ public class admData {
     }
     
     public static String[] deleteFTPAttrMstr(String x) { 
-       String[] m = new String[2];
+       String[] m ;
         String sql = "delete from ftp_attr where ftpa_id = ?; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
@@ -1726,7 +1726,7 @@ public class admData {
     public static ArrayList<ftp_attr> getFTPAttr(String[] x) {
         ftp_attr r = null;
         ArrayList<ftp_attr> list = new ArrayList<ftp_attr>();
-        String[] m = new String[2];
+        String[] m ;
         String sql = "select * from ftp_attr where ftpa_id = ? ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
@@ -1757,7 +1757,7 @@ public class admData {
     public static HashMap<String, String> getFTPAttrHash(String[] x) {
         ftp_attr r = null;
         HashMap<String, String> map = new HashMap<String, String>();
-        String[] m = new String[2];
+        String[] m ;
         String sql = "select * from ftp_attr where ftpa_id = ? ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
@@ -2361,7 +2361,7 @@ public class admData {
     public static ArrayList<cron_mstr> getCronMstrEnabled() {
         cron_mstr r = null;
         ArrayList<cron_mstr> list = new ArrayList<cron_mstr>();
-        String[] m = new String[2];
+        String[] m ;
         String sql = "select * from cron_mstr where cron_enabled = '1' ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
@@ -2400,7 +2400,7 @@ public class admData {
     public static ArrayList<cron_mstr> getCronMstrMod() {
         cron_mstr r = null;
         ArrayList<cron_mstr> list = new ArrayList<cron_mstr>();
-        String[] m = new String[2];
+        String[] m ;
         String sql = "select * from cron_mstr where cron_modflag = '1' ;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql);) {
