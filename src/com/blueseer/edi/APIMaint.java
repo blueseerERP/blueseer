@@ -1683,7 +1683,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbkvpair.setText(tabledetail.getModel().getValueAt(row, 4).toString());
         tbsourcedir.setText(tabledetail.getModel().getValueAt(row, 5).toString());
         tbdestdir.setText(tabledetail.getModel().getValueAt(row, 6).toString());
-        cbenabled.setSelected(bsmf.MainFrame.ConvertStringToBool(tabledetail.getModel().getValueAt(row, 7).toString()));
+        cbenabled.setSelected(BlueSeerUtils.ConvertTrueFalseToBoolean(tabledetail.getModel().getValueAt(row, 7).toString()));
         
         kvmodel.removeAllElements();
        
