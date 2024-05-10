@@ -1090,7 +1090,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 int i = 0;
                 double netcheck = 0;
                     res = st.executeQuery("SELECT pyd_id, pyd_empnbr, pyd_checknbr, pyd_paydate, pyd_tothours, pyd_payamt, " +
-                             " (select sum(pyl_amt) from pay_line where pyl_id = pyd_id and pyl_checknbr = pyd_checknbr ) as 'deductions' " +
+                             " (select sum(pyl_amt) from pay_line where pyl_id = pyd_id and pyl_checknbr = pyd_checknbr and pyl_type = 'deduction' ) as 'deductions' " +
                             " FROM  pay_det where pyd_empnbr = " + "'" + empnbr + "'" + " order by pyd_paydate desc ;");
                     while (res.next()) {
                           netcheck = res.getDouble("pyd_payamt") - res.getDouble("deductions");
