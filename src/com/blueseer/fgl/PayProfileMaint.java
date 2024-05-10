@@ -725,9 +725,9 @@ public class PayProfileMaint extends javax.swing.JPanel {
                             "'" + tbdesc.getText() + "'"  + 
                             ")" + ";");     
                 
-              
+              // "Element", "Type", "Acct", "CC", "Percent", "AmountType", "Enabled"
                      for (int j = 0; j < tableelement.getRowCount(); j++) {
-                     st.executeUpdate("insert into pay_profdet (paypd_parentcode, paypd_desc, paypd_type, paypd_amt, paypd_amttype, paypd_enabled ) values ( " 
+                     st.executeUpdate("insert into pay_profdet (paypd_parentcode,  paypd_desc, paypd_type, paypd_acct, paypd_cc, paypd_amt, paypd_amttype, paypd_enabled ) values ( " 
                             + "'" + tbprofilecode.getText() + "'" + ","
                             + "'" + tableelement.getValueAt(j, 0).toString() + "'" + ","
                             + "'" + tableelement.getValueAt(j, 1).toString() + "'" + ","
