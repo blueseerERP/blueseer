@@ -329,20 +329,47 @@ public class admData {
         }
         return r;
     }
-    
-    public static String[] deleteUserMstr(user_mstr x) { 
-       String[] m ;
-        String sql = "delete from user_mstr where user_id = ?; ";
-        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
-	PreparedStatement ps = con.prepareStatement(sql)) {
-        ps.setString(1, x.user_id);
-        int rows = ps.executeUpdate();
-        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-        } catch (SQLException s) {
-	       MainFrame.bslog(s);
-               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+        
+    public static String[] deleteUserMstr(user_mstr x) {
+        String[] m = new String[2];
+        if (x == null) {
+            return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
         }
-        return m;
+        Connection con = null;
+        try { 
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            _deleteUserMstr(x, con);  
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
+        } finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    public static void _deleteUserMstr(user_mstr x, Connection con) throws SQLException { 
+       PreparedStatement ps = null;   
+        String sql = "delete from user_mstr where user_id = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x.user_id);
+        ps.executeUpdate();
+        sql = "delete from perm_mstr where perm_user = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x.user_id);
+        ps.executeUpdate();
+        ps.close();
     }
         
     
