@@ -57,12 +57,14 @@ import com.blueseer.adm.admData;
 import static com.blueseer.adm.admData.addChangeLog;
 import com.blueseer.fgl.fglData;
 import static com.blueseer.hrm.hrmData.addEmployeeMstr;
-import static com.blueseer.hrm.hrmData.deleteEmployeeMstr;
+import static com.blueseer.hrm.hrmData.addEmployeeTransaction;
+import static com.blueseer.hrm.hrmData.deleteEmpMstr;
 import com.blueseer.hrm.hrmData.emp_exception;
 import com.blueseer.hrm.hrmData.emp_mstr;
 import static com.blueseer.hrm.hrmData.getEmployeeExceptions;
 import static com.blueseer.hrm.hrmData.getEmployeeMstr;
 import static com.blueseer.hrm.hrmData.updateEmployeeMstr;
+import static com.blueseer.hrm.hrmData.updateEmployeeTransaction;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callChangeDialog;
@@ -461,6 +463,12 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT  {
         tbsupervisor.setText("");
         tbaccount.setText("");
         tbroute.setText("");
+        
+        tbexcdesc.setText("");
+        tbexcamt.setText("");
+        ddexctype.setSelectedIndex(0);
+        ddexcamttype.setSelectedIndex(0);
+        
         ddpayfrequency.setSelectedIndex(0); 
         cbautoclock.setSelected(false);
         ddsite.removeAllItems();
@@ -468,6 +476,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT  {
         ddshift.removeAllItems();
         ddstate.removeAllItems();
         ddcountry.removeAllItems();
+        
         String defaultsite = "";
         
         for (String[] s : initDataSets) {
@@ -605,14 +614,15 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }
     
     public String[] addRecord(String[] x) {
-     String[] m = addEmployeeMstr(createRecord());
+     String[] m = addEmployeeTransaction(createRecord(), createExceptionRecord());
          return m;
      }
      
     public String[] updateRecord(String[] x) {
        emp_mstr _x = this.x;
        emp_mstr _y = createRecord();
-     String[] m = updateEmployeeMstr(_y);
+       ArrayList<emp_exception> _z = createExceptionRecord();
+     String[] m = updateEmployeeTransaction(_y, _z);
      
      // change log check
      if (m[0].equals("0")) {
@@ -629,7 +639,7 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT  {
      String[] m = new String[2];
         boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
-         m = deleteEmployeeMstr(createRecord()); 
+         m = deleteEmpMstr(createRecord()); 
          initvars(null);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
@@ -707,7 +717,25 @@ public class EmployeeMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 );
         return x;
     }
-        
+
+    public ArrayList<emp_exception> createExceptionRecord() {
+         ArrayList<emp_exception> list = new ArrayList<emp_exception>();
+         for (int j = 0; j < exctable.getRowCount(); j++) {
+             emp_exception x = new emp_exception(null, 
+                tbkey.getText().toString(),
+                exctable.getValueAt(j, 1).toString(),
+                exctable.getValueAt(j, 0).toString(),
+                OVData.getDefaultPayTaxAcct(),
+                OVData.getDefaultCC(),
+                exctable.getValueAt(j, 2).toString(),
+                exctable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.'));     
+                list.add(x);
+         }
+       
+        return list;
+    }
+     
+    
     public void lookUpFrame() {
         
         luinput.removeActionListener(lual);

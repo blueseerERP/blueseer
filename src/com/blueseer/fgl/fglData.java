@@ -1596,7 +1596,7 @@ public class fglData {
                      
                      
                     taxacct = OVData.getPayProfileDetAcct(res.getString("pyl_profile"), res.getString("pyl_profile_line"));
-                    if (taxacct.isEmpty()) {
+                    if (taxacct == null || taxacct.isEmpty()) {
                        taxacct = defaulttaxacct; 
                     }  
                      

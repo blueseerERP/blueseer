@@ -114,7 +114,239 @@ public class hrmData {
         }
         return m;
     }
+
+    private static int _addEmpMstr(emp_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+       int rows = 0;
+       String sqlSelect = "select * from emp_mstr where emp_nbr = ?";
+        String sqlInsert = "insert into emp_mstr (emp_nbr, emp_lname, emp_fname, "
+                        + " emp_mname, emp_dept, emp_status, emp_startdate, emp_shift, emp_type, "
+                            + " emp_gender, emp_jobtitle, emp_ssn, emp_autoclock, emp_active, emp_rate, emp_profile, "
+                            + " emp_acct, emp_routing, emp_payfrequency, emp_efla_days, "
+                            + " emp_vac_days, emp_vac_taken, emp_addrline1, emp_addrline2, emp_city, "
+                            + " emp_state, emp_country, emp_zip, emp_phone, emp_emer_contact, emp_emer_phone, emp_dob, emp_termdate, emp_clockin, emp_supervisor) " +
+                " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+        ps = con.prepareStatement(sqlSelect);
+        ps.setString(1, x.emp_nbr);
+        res = ps.executeQuery();
+        ps = con.prepareStatement(sqlInsert);
+            if (! res.isBeforeFirst()) {
+             ps.setString(1, x.emp_nbr);
+            ps.setString(2, x.emp_lname);
+            ps.setString(3, x.emp_fname);
+            ps.setString(4, x.emp_mname);
+            ps.setString(5, x.emp_dept);
+            ps.setString(6, x.emp_status);
+            ps.setString(7, x.emp_startdate);
+            ps.setString(8, x.emp_shift);
+            ps.setString(9, x.emp_type);
+            ps.setString(10, x.emp_gender);
+            ps.setString(11, x.emp_jobtitle);
+            ps.setString(12, x.emp_ssn);
+            ps.setString(13, x.emp_autoclock);
+            ps.setString(14, x.emp_active);
+            ps.setString(15, x.emp_rate);
+            ps.setString(16, x.emp_profile);
+            ps.setString(17, x.emp_acct);
+            ps.setString(18, x.emp_routing);
+            ps.setString(19, x.emp_payfrequency);
+            ps.setString(20, x.emp_efla_days);
+            ps.setString(21, x.emp_vac_days);
+            ps.setString(22, x.emp_vac_taken);
+            ps.setString(23, x.emp_addrline1);
+            ps.setString(24, x.emp_addrline2);
+            ps.setString(25, x.emp_city);
+            ps.setString(26, x.emp_state);
+            ps.setString(27, x.emp_country);
+            ps.setString(28, x.emp_zip);
+            ps.setString(29, x.emp_phone);
+            ps.setString(30, x.emp_emer_contact);
+            ps.setString(31, x.emp_emer_phone);
+            ps.setString(32, x.emp_dob);
+            ps.setString(33, x.emp_termdate);
+            ps.setString(34, x.emp_clockin);
+            ps.setString(35, x.emp_supervisor);
+            rows = ps.executeUpdate();   
+            }
         
+       return rows;
+    }
+    
+    private static int _updateEmpMstr(emp_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+       int rows = 0;
+        String sql = "update emp_mstr set emp_lname = ?, emp_fname = ?, "
+                        + " emp_mname = ?, emp_dept = ?, emp_status = ?, emp_startdate = ?, emp_shift = ?, emp_type = ?, "
+                            + " emp_gender = ?, emp_jobtitle = ?, emp_ssn = ?, emp_autoclock = ?, emp_active = ?, emp_rate = ?, emp_profile = ?, "
+                            + " emp_acct = ?, emp_routing = ?, emp_payfrequency = ?, emp_efla_days = ?, "
+                            + " emp_vac_days = ?, emp_vac_taken = ?, emp_addrline1 = ?, emp_addrline2 = ?, emp_city = ?, "
+                            + " emp_state = ?, emp_country = ?, emp_zip = ?, emp_phone = ?, emp_emer_contact = ?, emp_emer_phone = ?, emp_dob = ?, emp_termdate = ?, emp_supervisor = ? " +
+                              " where emp_nbr = ? ";
+            ps = con.prepareStatement(sql);
+            ps.setString(34, x.emp_nbr);
+            ps.setString(1, x.emp_lname);
+            ps.setString(2, x.emp_fname);
+            ps.setString(3, x.emp_mname);
+            ps.setString(4, x.emp_dept);
+            ps.setString(5, x.emp_status);
+            ps.setString(6, x.emp_startdate);
+            ps.setString(7, x.emp_shift);
+            ps.setString(8, x.emp_type);
+            ps.setString(9, x.emp_gender);
+            ps.setString(10, x.emp_jobtitle);
+            ps.setString(11, x.emp_ssn);
+            ps.setString(12, x.emp_autoclock);
+            ps.setString(13, x.emp_active);
+            ps.setString(14, x.emp_rate);
+            ps.setString(15, x.emp_profile);
+            ps.setString(16, x.emp_acct);
+            ps.setString(17, x.emp_routing);
+            ps.setString(18, x.emp_payfrequency);
+            ps.setString(19, x.emp_efla_days);
+            ps.setString(20, x.emp_vac_days);
+            ps.setString(21, x.emp_vac_taken);
+            ps.setString(22, x.emp_addrline1);
+            ps.setString(23, x.emp_addrline2);
+            ps.setString(24, x.emp_city);
+            ps.setString(25, x.emp_state);
+            ps.setString(26, x.emp_country);
+            ps.setString(27, x.emp_zip);
+            ps.setString(28, x.emp_phone);
+            ps.setString(29, x.emp_emer_contact);
+            ps.setString(30, x.emp_emer_phone);
+            ps.setString(31, x.emp_dob);
+            ps.setString(32, x.emp_termdate);
+            ps.setString(33, x.emp_supervisor);
+            rows = ps.executeUpdate();   
+            
+        
+       return rows;
+    }
+    
+    
+    public static String[] addEmployeeTransaction(emp_mstr emp, ArrayList<emp_exception> empexc) {
+        String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            if (ds != null) {
+              bscon = ds.getConnection();
+            } else {
+              bscon = DriverManager.getConnection(url + db, user, pass);  
+            }
+            bscon.setAutoCommit(false);
+            
+            if (empexc != null) {
+            _deleteEmpExceptions(emp.emp_nbr, bscon, ps);
+            }
+            _addEmpMstr(emp, bscon, ps, res);  
+            
+            if (empexc != null) {
+                for (emp_exception z : empexc) {
+                    _addEmpException(z, bscon, ps, res);
+                }
+            }
+           
+            
+            bscon.commit();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+     
+    public static String[] updateEmployeeTransaction(emp_mstr emp, ArrayList<emp_exception> empexc) {
+        String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            if (ds != null) {
+              bscon = ds.getConnection();
+            } else {
+              bscon = DriverManager.getConnection(url + db, user, pass);  
+            }
+            bscon.setAutoCommit(false);
+            
+            if (empexc != null) {
+            _deleteEmpExceptions(emp.emp_nbr, bscon, ps);
+            }
+            _updateEmpMstr(emp, bscon, ps, res);  
+            
+            if (empexc != null) {
+                for (emp_exception z : empexc) {
+                    _addEmpException(z, bscon, ps, res);
+                }
+            }
+           
+            
+            bscon.commit();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    
     public static String[] updateEmployeeMstr(emp_mstr x) {
         System.out.println(x.emp_nbr() + "/" + x.emp_dept);
         String[] m = new String[2];
@@ -171,21 +403,65 @@ public class hrmData {
         return m;
     }
     
-    public static String[] deleteEmployeeMstr(emp_mstr x) { 
-       String[] m = new String[2];
-        String sql = "delete from emp_mstr where emp_nbr = ?; ";
-        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
-	PreparedStatement ps = con.prepareStatement(sql)) {
-        ps.setString(1, x.emp_nbr);
-        int rows = ps.executeUpdate();
-        m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
-        } catch (SQLException s) {
-	       MainFrame.bslog(s);
-               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+     
+     public static String[] deleteEmpMstr(emp_mstr x) {
+        String[] m = new String[2];
+        if (x == null) {
+            return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
         }
-        return m;
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            _deleteEmpMstr(x, con, ps, res);  // add cms_det
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
     }
-      
+    
+    private static void _deleteEmpMstr(emp_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException { 
+       
+        String sql = "delete from emp_mstr where emp_nbr = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x.emp_nbr);
+        ps.executeUpdate();
+        sql = "delete from emp_exception where empx_nbr = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x.emp_nbr);
+        ps.executeUpdate();
+    }
+     
+    
     public static emp_mstr getEmployeeMstr(String[] x) {
         emp_mstr r = null;
         String[] m = new String[2];
@@ -248,6 +524,40 @@ public class hrmData {
         return r;
     }
    
+    private static int _addEmpException(emp_exception x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from emp_exception where empx_nbr = ? and empx_desc = ? and empx_amt = ?";
+        String sqlInsert = "insert into emp_exception (empx_nbr, empx_desc, empx_type, empx_acct, "
+                        + " empx_cc, empx_amttype, empx_amt ) "
+                        + " values (?,?,?,?,?,?,?); "; 
+       
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x.empx_nbr);
+          ps.setString(2, x.empx_desc);
+          ps.setString(3, x.empx_amt);
+          res = ps.executeQuery();
+          ps = con.prepareStatement(sqlInsert); 
+            if (! res.isBeforeFirst()) {
+            ps.setString(1, x.empx_nbr);
+            ps.setString(2, x.empx_desc);
+            ps.setString(3, x.empx_type);
+            ps.setString(4, x.empx_acct);
+            ps.setString(5, x.empx_cc);
+            ps.setString(6, x.empx_amttype);
+            ps.setString(7, x.empx_amt);
+            rows = ps.executeUpdate();
+            } 
+            return rows;
+    }
+    
+    private static void _deleteEmpExceptions(String x, Connection con, PreparedStatement ps) throws SQLException { 
+        
+        String sql = "delete from emp_exception where empx_nbr = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x);
+        ps.executeUpdate();
+    }
+    
     public static ArrayList<emp_exception> getEmployeeExceptions(String[] x) {
         ArrayList<emp_exception> list = new ArrayList<emp_exception>();
         emp_exception r = null;
