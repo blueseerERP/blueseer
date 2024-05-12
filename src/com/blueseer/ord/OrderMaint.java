@@ -1702,6 +1702,12 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public void setPrice() {
+        
+        // save current price if this is a line item update
+        String cur_listprice = listprice.getText();
+        String cur_discount = discount.getText();
+                
+        
         listprice.setText("0");
         netprice.setText("0");
         discount.setText("0");
@@ -1725,7 +1731,18 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                 if (pricetype.equals("item")) {
                     listprice.setBackground(Color.white);
                 }
-                discount.setText(bsFormatDouble(invData.getItemDiscFromCust(ddcust.getSelectedItem().toString())));
+                double disc = invData.getItemDiscFromCust(ddcust.getSelectedItem().toString());
+                discount.setText(bsFormatDouble(disc));
+                
+                // override if line item update and price not found...line update due to qty change
+                if (disc == 0) {
+                    discount.setText(cur_discount);
+                }
+                if (price == 0) {
+                    listprice.setText(cur_listprice);
+                }
+                
+                
                 setNetPrice();
         }
     }
