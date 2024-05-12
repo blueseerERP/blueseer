@@ -1029,6 +1029,7 @@ public class ordData {
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.sodt_nbr);
+          ps.setString(1, x.sodt_line);
           res = ps.executeQuery();
           ps = con.prepareStatement(sqlInsert);    
             if (! res.isBeforeFirst()) { 
