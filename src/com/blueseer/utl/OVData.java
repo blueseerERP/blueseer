@@ -47,6 +47,7 @@ import com.blueseer.inv.calcCost;
 import com.blueseer.inv.invData;
 import static com.blueseer.inv.invData.getItemWFOPs;
 import static com.blueseer.ord.ordData.getOrderTotalTax;
+import static com.blueseer.ord.ordData.getSVOrderTotalTax;
 import static com.blueseer.pur.purData.getPOTotalTax;
 import com.blueseer.sch.schData;
 import com.blueseer.shp.shpData;
@@ -17210,6 +17211,7 @@ return mystring;
                 String site_csz = "";
                 String bill_csz = "";
                 String ship_csz = "";
+                double taxes = getSVOrderTotalTax(bsParseInt(order));
                 res = st.executeQuery("select sv_cust, sv_site, sv_type, sv_curr, " +
                         " cm_city, cm_state, cm_zip, cm_country, cms_country, site_country, " +
                         " cms_city, cms_state, cms_zip, site_city, site_state, site_zip " +
@@ -17255,6 +17257,7 @@ return mystring;
                 hm.put("bill_csz", bill_csz);
                 hm.put("ship_csz", ship_csz);
                 hm.put("tac", tac_str);
+                hm.put("taxes", taxes);
                 hm.put("imagepath", imagepath.toString());
                 hm.put("REPORT_LOCALE", BlueSeerUtils.getCurrencyLocale(currency));
                 hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);

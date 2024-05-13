@@ -1117,8 +1117,8 @@ public class ordData {
         int rows = 0;
         String sqlSelect = "select * from sv_mstr where sv_nbr = ?";
         String sqlInsert = "insert into sv_mstr (sv_nbr, sv_cust, sv_ship, sv_site, " +
-                          " sv_po, sv_due_date, sv_create_date, sv_type, sv_status, sv_rmks, sv_curr, sv_char1  ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?); "; 
+                          " sv_po, sv_due_date, sv_create_date, sv_type, sv_status, sv_rmks, sv_curr, sv_char1, sv_taxcode  ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.sv_nbr);
@@ -1137,6 +1137,7 @@ public class ordData {
             ps.setString(10, x.sv_rmks);
             ps.setString(11, x.sv_curr);
             ps.setString(12, x.sv_char1);
+            ps.setString(13, x.sv_taxcode);
             rows = ps.executeUpdate();
             } 
             return rows;
@@ -1168,7 +1169,7 @@ public class ordData {
             return rows;
     }
     
-    public static String[] addServiceOrderTransaction(ArrayList<svd_det> svd, sv_mstr sv) {
+    public static String[] addServiceOrderTransaction(ArrayList<svd_det> svd, sv_mstr sv, ArrayList<sos_det> sos) {
         String[] m = new String[2];
         Connection bscon = null;
         PreparedStatement ps = null;
@@ -1177,8 +1178,15 @@ public class ordData {
             bscon = DriverManager.getConnection(url + db, user, pass);
             bscon.setAutoCommit(false);
             _addServiceOrderMstr(sv, bscon, ps, res);  
-            for (svd_det z : svd) {
-                _addServiceOrderDet(z, bscon, ps, res);
+            if (svd != null) {
+                for (svd_det z : svd) {
+                    _addServiceOrderDet(z, bscon, ps, res);
+                }
+            }
+            if (sos != null) {
+                for (sos_det z : sos) {
+                    _addOrderSummaryDet(z, bscon, ps, res);
+                }
             }
             bscon.commit();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
@@ -1269,7 +1277,7 @@ public class ordData {
     private static int _updateServiceOrderMstr(sv_mstr x, Connection con, PreparedStatement ps) throws SQLException {
         int rows = 0;
         String sql = "update sv_mstr set sv_cust = ?, sv_ship = ?, " +
-                "sv_po = ?, sv_due_date = ?, sv_crew = ?, sv_rmks = ?, sv_status = ?  " +
+                "sv_po = ?, sv_due_date = ?, sv_crew = ?, sv_rmks = ?, sv_status = ?, sv_taxcode = ?  " +
                  " where sv_nbr = ? ; ";
 	ps = con.prepareStatement(sql) ;
         ps.setString(8, x.sv_nbr);
@@ -1280,6 +1288,7 @@ public class ordData {
             ps.setString(5, x.sv_crew);
             ps.setString(6, x.sv_rmks);
             ps.setString(7, x.sv_status);
+            ps.setString(8, x.sv_taxcode);
             rows = ps.executeUpdate();
         return rows;
     }
@@ -1333,7 +1342,7 @@ public class ordData {
     }
         
      // update order master.... multiple table transaction function
-    public static String[] updateServiceOrderTransaction(String x, ArrayList<String> lines, ArrayList<svd_det> svd, sv_mstr sv) {
+    public static String[] updateServiceOrderTransaction(String x, ArrayList<String> lines, ArrayList<svd_det> svd, sv_mstr sv, ArrayList<sos_det> sos) {
         String[] m = new String[2];
         Connection bscon = null;
         PreparedStatement ps = null;
@@ -1353,6 +1362,10 @@ public class ordData {
                     continue;
                 }
                 _updateServiceOrderDet(z, bscon, ps, res);
+            }
+            _deleteOrderSummaryDet(sv.sv_nbr, bscon);
+            for (sos_det z : sos) {
+                _addOrderSummaryDet(z, bscon, ps, res);
             }
              _updateServiceOrderMstr(sv, bscon, ps);  // update so_mstr
             bscon.commit();
@@ -2587,6 +2600,67 @@ public class ordData {
     return tax;
 
     }
+    
+    public static double getSVOrderTotalTax(int nbr) {
+       double tax = 0;
+     try{
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+            
+            double ordertotal = 0;
+            
+            res = st.executeQuery("SELECT  sum(svd_netprice * svd_qty) as mytotal  " +
+                                    " FROM  svd_det  " +
+                                    " where svd_nbr = " + "'" + nbr + "'" +       
+                                    ";");
+                while (res.next()) {
+                    ordertotal += res.getDouble("mytotal");
+                }
+            
+            res = st.executeQuery("SELECT * " +
+                                    " FROM  sos_det  " +
+                                    " where sos_nbr = " + "'" + nbr + "'" +
+                                    " and sos_type = 'tax' " +        
+                                    " ;");
+
+                double sosamt = 0;
+                while (res.next()) {
+                    sosamt = res.getDouble("sos_amt");
+                    if (res.getString("sos_amttype").equals("percent")) {
+                        if (sosamt > 0)
+                        tax += (ordertotal * (sosamt / 100)); 
+                    } else {
+                       tax += sosamt;
+                    }
+                }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+                }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return tax;
+
+    }
+    
     
     public static double getOrderTotal(String nbr) {
        double tax = 0;

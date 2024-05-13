@@ -24,6 +24,7 @@
 	<parameter name="bill_csz" class="java.lang.String"/>
 	<parameter name="ship_csz" class="java.lang.String"/>
 	<parameter name="tac" class="java.lang.String"/>
+	<parameter name="taxes" class="java.lang.Double"/>
 	<queryString>
 		<![CDATA[select sv_nbr, svd_nbr,  
 sv_cust,  sv_rmks, sv_po, sv_curr, sv_due_date, sv_create_date, svd_item, svd_desc, svd_qty, svd_netprice, 
@@ -106,8 +107,15 @@ inner join site_mstr on site_site = sv_site where svd_nbr =  $P{myid}]]>
 	<field name="sv_po" class="java.lang.String"/>
 	<field name="cm_phone" class="java.lang.String"/>
 	<field name="sv_create_date" class="java.lang.String"/>
-	<variable name="totalamount" class="java.lang.Double" calculation="Sum">
-		<variableExpression><![CDATA[new Double($F{svd_netprice}.doubleValue()) * new Double($F{svd_qty}.doubleValue())]]></variableExpression>
+	<variable name="taxsum" class="java.lang.Double">
+		<variableExpression><![CDATA[new Double($P{taxes}.doubleValue())]]></variableExpression>
+	</variable>
+	<variable name="grossamount" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[new Double($F{svd_qty}.doubleValue() * $F{svd_netprice}.doubleValue())]]></variableExpression>
+	</variable>
+	<variable name="totalamount" class="java.lang.Double">
+		<variableExpression><![CDATA[new Double($V{grossamount}.doubleValue() + 	$V{taxsum}.doubleValue()
+)]]></variableExpression>
 	</variable>
 	<background>
 		<band splitType="Stretch"/>
@@ -389,11 +397,11 @@ inner join site_mstr on site_site = sv_site where svd_nbr =  $P{myid}]]>
 			<textField pattern="¤ #,##0.00">
 				<reportElement x="436" y="30" width="129" height="20" uuid="378a8a9d-5625-4e24-8803-f36c873089fe"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$V{totalamount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{grossamount}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="331" y="30" width="100" height="20" uuid="811834f6-d14f-48bb-bf9f-6ec299e0d5b0"/>
-				<textFieldExpression><![CDATA[$R{jasper.srvorder.lblnettotal} + "(" + $F{sv_curr} + "):"]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{jasper.srvorder.lblgrosstotal} + "(" + $F{sv_curr} + "):"]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="10" y="25" width="317" height="126" isPrintWhenDetailOverflows="true" uuid="8bb92a29-4ed8-4bd4-8dcc-f98fdcc610c9"/>
@@ -401,6 +409,23 @@ inner join site_mstr on site_site = sv_site where svd_nbr =  $P{myid}]]>
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{tac}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement x="344" y="60" width="221" height="40" uuid="39039fff-a923-40e0-be0e-c16a87fe7198"/>
+				<subreportParameter name="myid">
+					<subreportParameterExpression><![CDATA[$F{svd_nbr}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "sacsvord.jasper"]]></subreportExpression>
+			</subreport>
+			<textField>
+				<reportElement x="328" y="131" width="100" height="20" uuid="e9d747ea-69f8-4455-8456-5db8f7af6693"/>
+				<textFieldExpression><![CDATA[$R{jasper.srvorder.lblnettotal} + "(" + $F{sv_curr} + "):"]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="438" y="130" width="129" height="20" uuid="f98b0b40-c554-44dd-a7c6-ef795e84b713"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$V{totalamount}]]></textFieldExpression>
 			</textField>
 		</band>
 	</lastPageFooter>

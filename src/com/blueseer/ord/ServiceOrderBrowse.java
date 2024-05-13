@@ -835,6 +835,8 @@ try {
                 
                  double totsales = 0;
                  double totquotes = 0;
+                 double tax = 0;
+                 double total = 0;
                  
                  String trantype = "";
                  String status = "";
@@ -853,7 +855,10 @@ try {
                
                       
                   // now lets get the pos_mstr records    
-                  res = st.executeQuery("select sv_nbr, sv_cust, sv_ship, sv_type, sv_status, sv_create_date, sv_due_date, sv_issched, sum(svd_qty * svd_netprice) as 'price' from sv_mstr " +
+                  res = st.executeQuery("select sv_nbr, sv_cust, sv_ship, sv_type, sv_status, sv_create_date, sv_due_date, sv_issched, sum(svd_qty * svd_netprice) as 'price', " +
+                          " (select sum(case when sos_type = 'tax' and sos_amttype = 'percent' then sos_amt end) from sos_det where sos_nbr = sv_nbr)as 'taxpercent', " +
+                        " (select sum(case when sos_type = 'tax' and sos_amttype = 'amount' then sos_amt end) from sos_det where sos_nbr = sv_nbr) as 'taxcharge' " +
+                          " from sv_mstr " +
                         " inner join svd_det on svd_nbr = sv_nbr " +
                         " where sv_create_date >= " + "'" + setDateDB(dcfrom.getDate()) + "'" + 
                         " and sv_create_date <= " + "'" + setDateDB(dcto.getDate()) + "'" +
@@ -862,8 +867,8 @@ try {
                 
                 
                        while (res.next()) {
-                          
-                        
+                         tax = 0; 
+                         total = 0;
                          trantype = res.getString("sv_type");
                          status = res.getString("sv_status");
                          
@@ -875,6 +880,17 @@ try {
                          if (trantype.equals("quote") && ! status.equals(getGlobalProgTag("void"))) {
                              totquotes = totquotes + res.getDouble("price");
                          }
+                         
+                         if (res.getDouble("taxpercent") != 0) {
+                          tax = res.getDouble("price") * (res.getDouble("taxpercent") / 100.0);
+                         } else {
+                           tax = 0;  
+                         }
+                        tax += res.getDouble("taxcharge");
+                                        
+                        total = res.getDouble("price") + tax;
+                         
+                         
                          mymodel.addRow(new Object[]{
                              BlueSeerUtils.clickflag, 
                              BlueSeerUtils.clickbasket, 
@@ -885,7 +901,7 @@ try {
                                 res.getString("sv_status"),
                                 getDateDB(res.getString("sv_create_date")),
                                 getDateDB(res.getString("sv_due_date")),
-                                bsParseDouble(currformatDouble(res.getDouble("price"))),
+                                bsParseDouble(currformatDouble(total)),
                                 BlueSeerUtils.clickprint 
                             });
                        }

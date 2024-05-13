@@ -109,7 +109,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
 
      // global variable declarations
                 boolean isLoad = false;
-    
+    ArrayList<String[]> headertax = new ArrayList<String[]>();
    // global datatablemodel declarations    
     javax.swing.table.DefaultTableModel myorddetmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
@@ -408,7 +408,15 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
             ddstatus.addItem(mylist.get(i));
         }
         ddstatus.setSelectedItem(getGlobalProgTag("open"));
-         
+        
+        ddtax.removeAllItems();
+        ArrayList<String> taxlist = OVData.gettaxcodelist();
+        for (int i = 0; i < taxlist.size(); i++) {
+            ddtax.addItem(taxlist.get(i));
+        }
+        ddtax.insertItemAt("", 0);
+        ddtax.setSelectedIndex(0);
+        
        isLoad = false;
     }
     
@@ -565,6 +573,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
                     createdate.setDate(BlueSeerUtils.parseDate(res.getString("sv_create_date")));
                     tbjobnbr.setText(res.getString("sv_char2"));
                     ddoptype.setSelectedItem(res.getString("sv_char1"));
+                    ddtax.setSelectedItem(res.getString("sv_taxcode"));
                 }
                
                 
@@ -602,7 +611,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
     }
     
     public String[] addRecord(String[] x) {
-     String[] m = addServiceOrderTransaction(createDetRecord(), createRecord());
+     String[] m = addServiceOrderTransaction(createDetRecord(), createRecord(), createSOSRecord());
      // create Plan Order for Job scanning
      createPlanFromServiceOrder(ddsite.getSelectedItem().toString(), tbkey.getText(), ddoptype.getSelectedItem().toString(), false);
      return m;
@@ -630,7 +639,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         }
         
         // now update
-        m = updateServiceOrderTransaction(tbkey.getText(), badlines, createDetRecord(), createRecord());
+        m = updateServiceOrderTransaction(tbkey.getText(), badlines, createDetRecord(), createRecord(), createSOSRecord());
      
      return m;
     }
@@ -682,7 +691,6 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         String terms = cm.cm_terms();
         String carrier = cm.cm_carrier();
         String onhold = cm.cm_onhold();
-        String taxcode = cm.cm_tax_code();
         String curr = cm.cm_curr();
         sv_mstr x = new sv_mstr(null, bsNumberToUS(tbkey.getText()),
                  ddcust.getSelectedItem().toString(),
@@ -704,7 +712,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
                 acct,
                 cc,
                 onhold, // onhold
-                taxcode, // taxcode
+                ddtax.getSelectedItem().toString(), // taxcode
                  ddsite.getSelectedItem().toString()
                 );
         return x;
@@ -746,6 +754,23 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
             
         return list;
     }
+    
+    public ArrayList<ordData.sos_det> createSOSRecord() {
+        // type, desc, value, amt
+        headertax = OVData.getTaxPercentElementsApplicableByTaxCode(ddtax.getSelectedItem().toString());
+         ArrayList<ordData.sos_det> list = new ArrayList<ordData.sos_det>();
+         for (String[] t : headertax) {
+             ordData.sos_det x = new ordData.sos_det(null, bsNumberToUS(tbkey.getText()),
+                t[0],
+                "tax",
+                "percent",
+                bsParseDouble(xZero(t[1])));     
+                list.add(x);
+         }
+       
+        return list;
+    }
+    
     
     public void lookUpFrame() {
         
@@ -838,6 +863,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
                 res = st.executeQuery("select cm_name, cm_carrier, cm_tax_code, cm_curr from cm_mstr where cm_code = " + "'" + mykey + "'" + ";");
                 while (res.next()) {
                     lblcustname.setText(res.getString("cm_name"));
+                    ddtax.setSelectedItem((res.getString("cm_tax_code")));
                    
                 }
                 
@@ -923,7 +949,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
                               dfdate.format(createdate.getDate()).toString(),
                               remarks.getText().replace("'", ""),
                               "",
-                              "S", "", ddsite.getSelectedItem().toString() ); 
+                              "S", ddtax.getSelectedItem().toString(), ddsite.getSelectedItem().toString() ); 
         ArrayList<String[]> detail = tableToArrayList();
         ArrayList<shpData.ship_det> shd = shpData.createShipDetJRTmin(detail, String.valueOf(shipperid), dfdate.format(createdate.getDate()).toString(), ddsite.getSelectedItem().toString());
         shpData.addShipperTransaction(shd, sh);
@@ -1089,6 +1115,8 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         jLabel14 = new javax.swing.JLabel();
         btjob = new javax.swing.JButton();
         tbjobnbr = new javax.swing.JTextField();
+        ddtax = new javax.swing.JComboBox<>();
+        jLabel15 = new javax.swing.JLabel();
 
         jLabel4.setText("jLabel4");
 
@@ -1539,6 +1567,8 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
             }
         });
 
+        jLabel15.setText("Tax Code:");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -1581,15 +1611,16 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
                     .addComponent(jLabel83, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(ddcrew, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(createdate, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(duedate, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(tbpo, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ddstatus, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(ddcrew, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel14)))
+                    .addComponent(duedate, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel15, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -1599,11 +1630,13 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(99, 99, 99)
                         .addComponent(cbpaid))
-                    .addComponent(ddoptype, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(tbjobnbr, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btjob, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btjob, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(ddtax, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(ddoptype, javax.swing.GroupLayout.Alignment.LEADING, 0, 116, Short.MAX_VALUE)))
                 .addGap(51, 51, 51))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1687,7 +1720,10 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
                                 .addGap(4, 4, 4)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel81)
-                                    .addComponent(duedate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(duedate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                        .addComponent(ddtax, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(jLabel15)))))
                         .addGap(6, 6, 6)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblshipname, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2155,6 +2191,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JComboBox ddship;
     private javax.swing.JComboBox<String> ddsite;
     private javax.swing.JComboBox<String> ddstatus;
+    private javax.swing.JComboBox<String> ddtax;
     private javax.swing.JComboBox ddtype;
     private javax.swing.JComboBox<String> dduom;
     private com.toedter.calendar.JDateChooser duedate;
@@ -2164,6 +2201,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

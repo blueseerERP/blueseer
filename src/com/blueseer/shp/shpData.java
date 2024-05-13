@@ -481,9 +481,9 @@ public class shpData {
         String terms = cm.cm_terms();
         String carrier = cm.cm_carrier();
         String onhold = cm.cm_onhold();
-        if (taxcode == null || taxcode.isEmpty()) {
-        taxcode = cm.cm_tax_code();
-        }
+     //   if (taxcode == null || taxcode.isEmpty()) {
+     //   taxcode = cm.cm_tax_code();
+     //   }
         String curr = cm.cm_curr();
         // logic for asset type shipment/sale
         if (shiptype.equals("A")) {
