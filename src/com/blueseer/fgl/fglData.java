@@ -1552,15 +1552,19 @@ public class fglData {
                     String bankacct = OVData.getDefaultBankAcct(bank);
                     
                     
-                    // LETS DO LABOR FIRST....THIS WILL DEBIT LABOR EXPENSE AND CREDIT CASH WITH THE NET CHECK PAYMENT
                     
-                       res = st.executeQuery("select py_id, py_site, pyd_emptype, pyd_checknbr, pyd_payamt, pyd_empdept from pay_det inner join pay_mstr on py_id = pyd_id  " +
+                    // LETS DO LABOR FIRST....THIS WILL DEBIT LABOR EXPENSE AND CREDIT CASH WITH THE NET CHECK PAYMENT
+                    res = st.executeQuery("select py_id, py_site, pyd_emptype, pyd_checknbr, pyd_payamt, pyd_empdept, " +
+                            " (select sum(case when pyl_type = 'deduction' then pyl_amt end) from pay_line where pyl_id = pyd_id and pyl_empnbr = pyd_empnbr and pyl_checknbr = pyd_checknbr)as 'deductions' " +
+                            " from pay_det inner join pay_mstr on py_id = pyd_id  " +
                                " where pyd_id = " + "'" + batch + "'" +";");
-                   
+                    Double netpay = 0.00;
                     Double amt = 0.00;   
                     while (res.next()) {
                      // credit Cash account and debit labor expense
                     amt = res.getDouble("pyd_payamt");
+                    netpay = amt - res.getDouble("deductions");
+                    
                     if (res.getString("pyd_emptype").equals("Hourly-Direct")) {
                      acct_dr.add(laboracct);   
                     } else {
@@ -1569,8 +1573,8 @@ public class fglData {
                     acct_cr.add(bankacct);
                     cc_cr.add(res.getString("pyd_empdept"));
                     cc_dr.add(res.getString("pyd_empdept"));
-                    cost.add(amt);
-                    basecost.add(amt);
+                    cost.add(netpay);
+                    basecost.add(netpay);
                     curr.add(defaultcurr);
                     basecurr.add(defaultcurr);
                     site.add(res.getString("py_site"));
