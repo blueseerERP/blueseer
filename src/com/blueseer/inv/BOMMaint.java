@@ -78,6 +78,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Locale;
@@ -714,13 +716,12 @@ public class BOMMaint extends javax.swing.JPanel {
           tblotsize.setText(invData.getItemLotSize(x.bom_item()));
           ddcomp.removeItem(tbkey.getText());  // remove parent from component list
           tbbomid.setText(BomID);
-          
           getComponents(x.bom_item(), BomID);
           
           bind_tree(x.bom_item(), BomID);
-          
+         
           callSimulateCost();
-          
+         
           getCostSets(x.bom_item());
           
           cbdefault.setSelected(BlueSeerUtils.ConvertStringToBool(x.bom_primary()));
@@ -747,7 +748,7 @@ public class BOMMaint extends javax.swing.JPanel {
     
     
     public void getCostSets(String parent) {
-       
+         
         tbparentcostSTD.setText(String.valueOf(bsFormatDouble5(invData.getItemCost(parent, "STANDARD", OVData.getDefaultSite()))));
              
         calcCost cur = new calcCost();
@@ -816,7 +817,7 @@ public class BOMMaint extends javax.swing.JPanel {
       
         double totalcost = 0.00;
         if (node != null) {
-            
+             
         totalcost = OVData.simulateCost("", 
                 tbkey.getText(), 
                 node.toString(), 
@@ -837,6 +838,7 @@ public class BOMMaint extends javax.swing.JPanel {
         for (int j = 0; j < matltable.getRowCount(); j++) {
              matl = matl + (bsParseDouble(matltable.getValueAt(j, 2).toString()) * bsParseDouble(matltable.getValueAt(j, 4).toString()) ); 
          }
+        
         tbtotoperationalsim.setText(String.valueOf(bsFormatDouble5(totalcost)));
         totalcost += matl;
         tbtotmaterialsim.setText(String.valueOf(bsFormatDouble5(matl)));
@@ -844,6 +846,7 @@ public class BOMMaint extends javax.swing.JPanel {
         totalcost += ovhout;
         tbovhout.setText(String.valueOf(bsFormatDouble5(ovhout)));
         tbparentcostsim.setText(String.valueOf(bsFormatDouble5(totalcost)));
+        
                 
     }
         
