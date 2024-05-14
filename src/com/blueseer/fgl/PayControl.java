@@ -254,7 +254,8 @@ public class PayControl extends javax.swing.JPanel implements IBlueSeerc {
         tbsalcc.getText(),
         tbtaxacct.getText(),
         tbtaxcc.getText(),
-        tbwithholdacct.getText()
+        tbwithholdacct.getText(),
+        tbpayrollpayable.getText()
         );
         return x;
     }
@@ -268,6 +269,7 @@ public class PayControl extends javax.swing.JPanel implements IBlueSeerc {
         tbtaxacct.setText(x.payc_payrolltax_acct());
         tbtaxcc.setText(x.payc_payrolltax_cc());
         tbwithholdacct.setText(x.payc_withhold_acct());
+        tbpayrollpayable.setText(x.payc_varchar());
     }
     
     
@@ -299,6 +301,8 @@ public class PayControl extends javax.swing.JPanel implements IBlueSeerc {
         jLabel7 = new javax.swing.JLabel();
         tbwithholdacct = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
+        tbpayrollpayable = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -336,6 +340,8 @@ public class PayControl extends javax.swing.JPanel implements IBlueSeerc {
         jLabel8.setText("Default Withholding Acct");
         jLabel8.setName("lblwithholdingacct"); // NOI18N
 
+        jLabel9.setText("Payroll Payable Acct");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -350,9 +356,11 @@ public class PayControl extends javax.swing.JPanel implements IBlueSeerc {
                     .addComponent(jLabel3)
                     .addComponent(jLabel6)
                     .addComponent(jLabel7)
-                    .addComponent(jLabel8))
+                    .addComponent(jLabel8)
+                    .addComponent(jLabel9))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(tbpayrollpayable)
                     .addComponent(tbwithholdacct)
                     .addComponent(tbtaxcc, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -402,8 +410,12 @@ public class PayControl extends javax.swing.JPanel implements IBlueSeerc {
                     .addComponent(tbwithholdacct, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbpayrollpayable, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9))
+                .addGap(35, 35, 35)
                 .addComponent(btupdate)
-                .addContainerGap(155, Short.MAX_VALUE))
+                .addContainerGap(100, Short.MAX_VALUE))
         );
 
         add(jPanel1);
@@ -427,10 +439,12 @@ public class PayControl extends javax.swing.JPanel implements IBlueSeerc {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField tbbank;
     private javax.swing.JTextField tblbracct;
     private javax.swing.JTextField tblbrcc;
+    private javax.swing.JTextField tbpayrollpayable;
     private javax.swing.JTextField tbsalacct;
     private javax.swing.JTextField tbsalcc;
     private javax.swing.JTextField tbtaxacct;

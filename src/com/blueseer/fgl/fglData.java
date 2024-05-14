@@ -1065,11 +1065,11 @@ public class fglData {
         String sqlSelect = "SELECT * FROM  pay_ctrl"; // there should always be only 1 or 0 records 
         String sqlInsert = "insert into pay_ctrl (payc_bank, payc_labor_acct, payc_labor_cc, " +
         " payc_salaried_acct,  payc_salaried_cc,  payc_payrolltax_acct,  payc_payrolltax_cc, " +
-        "payc_withhold_acct ) "
-                        + " values (?,?,?,?,?,?,?,?); "; 
+        "payc_withhold_acct, payc_varchar ) "
+                        + " values (?,?,?,?,?,?,?,?,?); "; 
         String sqlUpdate = "update pay_ctrl set payc_bank = ?, payc_labor_acct = ?, payc_labor_cc = ?, " +
         " payc_salaried_acct = ?,  payc_salaried_cc = ?,  payc_payrolltax_acct = ?,  payc_payrolltax_cc = ?, " +
-        "payc_withhold_acct = ? ; ";
+        "payc_withhold_acct = ?, payc_varchar = ? ; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
           try (ResultSet res = ps.executeQuery();
@@ -1084,6 +1084,7 @@ public class fglData {
             psi.setString(6, x.payc_payrolltax_acct);
             psi.setString(7, x.payc_payrolltax_cc);
             psi.setString(8, x.payc_withhold_acct);
+            psi.setString(9, x.payc_varchar);
              rows = psi.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
             } else {
@@ -1095,6 +1096,7 @@ public class fglData {
             psu.setString(6, x.payc_payrolltax_acct);
             psu.setString(7, x.payc_payrolltax_cc);
             psu.setString(8, x.payc_withhold_acct);
+            psu.setString(9, x.payc_varchar);
             rows = psu.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};    
             }
@@ -1130,7 +1132,8 @@ public class fglData {
                                 res.getString("payc_salaried_cc"),
                                 res.getString("payc_payrolltax_acct"),
                                 res.getString("payc_payrolltax_cc"),
-                                res.getString("payc_withhold_acct")
+                                res.getString("payc_withhold_acct"),
+                                res.getString("payc_varchar")
                         );
                     }
                 }
@@ -1541,6 +1544,10 @@ public class fglData {
                    
                     String gldoc = setGLRecNbr("PR");
                     String thistype = "PayRoll";
+                    
+                    pay_ctrl pc = getPAYCtrl(null);
+                    
+                    
                     String laboracct = OVData.getDefaultPayLaborAcct();
                     String withhold = OVData.getDefaultPayWithHoldAcct();
                     String salariedacct = OVData.getDefaultPaySalariedAcct();
@@ -1552,7 +1559,7 @@ public class fglData {
                     String bankacct = OVData.getDefaultBankAcct(bank);
                     
                     
-                    
+                    // credit payables...debit expense direct/indirect labor
                     // LETS DO LABOR FIRST....THIS WILL DEBIT LABOR EXPENSE AND CREDIT CASH WITH THE NET CHECK PAYMENT
                     res = st.executeQuery("select py_id, py_site, pyd_emptype, pyd_checknbr, pyd_payamt, pyd_empdept, " +
                             " (select sum(case when pyl_type = 'deduction' then pyl_amt end) from pay_line where pyl_id = pyd_id and pyl_empnbr = pyd_empnbr and pyl_checknbr = pyd_checknbr)as 'deductions' " +
@@ -1570,7 +1577,22 @@ public class fglData {
                     } else {
                      acct_dr.add(salariedacct);   
                     }
+                    acct_cr.add(pc.payc_varchar); // varchar = payroll payables
+                    cc_cr.add(res.getString("pyd_empdept"));
+                    cc_dr.add(res.getString("pyd_empdept"));
+                    cost.add(netpay);
+                    basecost.add(netpay);
+                    curr.add(defaultcurr);
+                    basecurr.add(defaultcurr);
+                    site.add(res.getString("py_site"));
+                    ref.add(res.getString("py_id"));
+                    type.add(thistype);
+                    desc.add("CheckNbr:" + res.getString("pyd_checknbr"));
+                    doc.add(gldoc);
+                    
+                    // now debit payroll payable (payc_varchar) and credit cashacct
                     acct_cr.add(bankacct);
+                    acct_dr.add(pc.payc_varchar); // varchar = payroll payables
                     cc_cr.add(res.getString("pyd_empdept"));
                     cc_dr.add(res.getString("pyd_empdept"));
                     cost.add(netpay);
@@ -1588,7 +1610,7 @@ public class fglData {
                     
                     // NOW LETS DO WITHHOLDINGS...
                     // NOTE!!! THis needs to be broken into individual withholding accounts...currently lumped into one withholding account...with 'descriptions'
-                      res = st.executeQuery("select py_id, py_site, pyd_checknbr, pyl_amt, pyl_profile, pyl_profile_line, pyl_type, pyl_code, pyl_desc, pyl_empnbr, pyd_empdept from pay_line " +
+                      res = st.executeQuery("select py_id, py_site, pyd_checknbr, pyl_amt, pyl_profile, pyl_profile_line, pyl_type, pyl_code, pyl_desc, pyl_empnbr, pyd_empdept, pyd_emptype from pay_line " +
                               " inner join pay_det on pyd_id = pyl_id and pyd_empnbr = pyl_empnbr " +
                               " inner join pay_mstr on py_id = pyd_id  " +
                                " where pyl_type = 'deduction' and pyd_id = " + "'" + batch + "'" +";");
@@ -1605,8 +1627,12 @@ public class fglData {
                     }  
                      
                     amt = res.getDouble("pyl_amt");
-                    acct_cr.add(withhold);
-                    acct_dr.add(taxacct);
+                    acct_cr.add(taxacct);
+                    if (res.getString("pyd_emptype").equals("Hourly-Direct")) {
+                     acct_dr.add(laboracct);   
+                    } else {
+                     acct_dr.add(salariedacct);   
+                    }
                     cc_cr.add(res.getString("pyd_empdept"));
                     cc_dr.add(res.getString("pyd_empdept"));
                       cost.add(amt);
@@ -5556,9 +5582,9 @@ return myarray;
     
     public record pay_ctrl(String[] m, String payc_bank, String payc_labor_acct, String payc_labor_cc,
         String payc_salaried_acct, String payc_salaried_cc, String payc_payrolltax_acct, String payc_payrolltax_cc,
-        String payc_withhold_acct ) {
+        String payc_withhold_acct, String payc_varchar ) {
         public pay_ctrl(String[] m) {
-            this(m, "", "", "", "", "", "", "", "");
+            this(m, "", "", "", "", "", "", "", "", "");
         }
     }
     
