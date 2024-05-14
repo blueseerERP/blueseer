@@ -552,6 +552,7 @@ public class PayRollMaint extends javax.swing.JPanel {
           StyleConstants.setBackground(keyWord, Color.YELLOW);
           StyleConstants.setBold(keyWord, true);
           double empexception = 0;
+          double deductamt = 0;
         
         try {
 
@@ -566,7 +567,7 @@ public class PayRollMaint extends javax.swing.JPanel {
             try {
                 int i = 0;
                 String html = "<html><body><table><tr><td align='right' style='color:blue;font-size:20px;'>Deductions:</td><td></td></tr></table>";
-                res = st.executeQuery("SELECT paypd_desc, paypd_id, paypd_parentcode, paypd_amt from pay_profdet inner join " +
+                res = st.executeQuery("SELECT paypd_desc, paypd_id, paypd_parentcode, paypd_amt, paypd_amttype from pay_profdet inner join " +
                              " emp_mstr on emp_profile = paypd_parentcode " +
                               " where emp_nbr = " + "'" + empnbr + "'" +
                               " order by paypd_desc " +        
@@ -574,7 +575,12 @@ public class PayRollMaint extends javax.swing.JPanel {
                 
                 html += "<table>";
                 while (res.next()) {
-                    html += "<tr><td align='right'>" + res.getString("paypd_desc") + ":" + "</td><td>" + currformatDouble(amount * (res.getDouble("paypd_amt") / 100)) + "</td></tr>";
+                    if (res.getString("paypd_amttype").equals("percent")) {
+                     deductamt = amount * (res.getDouble("paypd_amt") / 100);
+                    } else {
+                     deductamt = res.getDouble("paypd_amt");   
+                    }
+                    html += "<tr><td align='right'>" + res.getString("paypd_desc") + ":" + "</td><td>" + currformatDouble(deductamt) + "</td></tr>";
                 // doc.insertString(doc.getLength(), res.getString("paypd_desc") + ":\t", null );
                 // doc.insertString(doc.getLength(), currformatDouble(amount * res.getDouble("paypd_amt")) + "\n", null );
                 // "EmpID", "type", "code", "desc", "rate", "amt"
@@ -585,7 +591,7 @@ public class PayRollMaint extends javax.swing.JPanel {
                                             res.getString("paypd_id"),
                                             res.getString("paypd_desc"),
                                             res.getString("paypd_amt").replace('.',defaultDecimalSeparator),
-                                            currformatDouble(amount * (res.getDouble("paypd_amt") / 100)).replace('.',defaultDecimalSeparator)
+                                            currformatDouble(deductamt).replace('.',defaultDecimalSeparator)
                                             } );
                 
                 }
