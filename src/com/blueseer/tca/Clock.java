@@ -594,9 +594,9 @@ public class Clock extends javax.swing.JPanel {
                     }
 
                     if (dddir.getSelectedItem().toString().equals(getGlobalProgTag("clockin"))) {
-                    lbimage.setIcon(new ImageIcon(getClass().getResource("/images/bugs.png")));
+                    lbimage.setIcon(new ImageIcon(getClass().getResource("/images/statusgo.png")));
                     } else {
-                    lbimage.setIcon(new ImageIcon(getClass().getResource("/images/coyote.png")));    
+                    lbimage.setIcon(new ImageIcon(getClass().getResource("/images/statusnogo.png")));    
                     }
                     jTextArea1.append(lbname.getText() + "..." + lbstatus.getText() + "..." + lbclockdatetime.getText() + "...clocktime-> "  + timeclock_adj + "\n");
 
