@@ -3796,7 +3796,9 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         // segment = ":" + segment; // preprend blank
          for (Map.Entry<String, String[]> z : mappedInput.entrySet()) {
              String[] v = z.getKey().split("\\+");
-            
+             if (v.length < 2) {
+                 continue;
+             }
             if (inputfiletype.equals("X12") || inputfiletype.equals("UNE") || inputfiletype.equals("FF")) {
                     if (v[0].equals(segment) && v[1].equals(String.valueOf(gloop))) {
                         k = z.getValue();
@@ -3805,8 +3807,8 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                 String[] vsub = v[1].split(",",-1);
                 // this needs to be revisited... vsub[j.length-1] only works for variable loop counts...not implemented yet
                 // hardcode to third ,,, value...which will be element 2
-               // if (v[0].equals(segment + ":" + elementName) && vsub.length >= j.length && vsub[j.length-1].equals(String.valueOf(gloop))) {
-                if (v[0].equals(segment + ":" + elementName) && vsub.length >= j.length && vsub[2].equals(String.valueOf(gloop))) {
+                if (v[0].equals(segment + ":" + elementName) && vsub.length >= j.length && vsub[j.length-1].equals(String.valueOf(gloop))) {
+              //  if (v[0].equals(segment + ":" + elementName) && vsub.length >= j.length && vsub[2].equals(String.valueOf(gloop))) {
                     k = z.getValue();
                 }
             }
