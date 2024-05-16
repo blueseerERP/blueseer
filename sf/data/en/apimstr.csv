@@ -8,3 +8,4 @@
 555,api.edination.com,,api.edination.com,,/v2/x12/read,,,,,https,REST,0,0,,APIKEY,,,
 444,RapidAPI Numbers Examples,,numbersapi.p.rapidapi.com,,,,,,,https,REST,0,0,application/json,APIKEY,,,
 222,US Dept of Energy APIs,,api.eia.gov/v2/petroleum/pri/gnd/data,,,,,BjdRfedhDQGR8orRGSBMmkydWXWHv9AzRSlFfZ60,api_key,https,PARAM,0,0,application/json,APIKEY,,,
+220,US Dept of Agriculture,,marsapi.ams.usda.gov/services/v1.2/reports,,,api_key,0vgoHqEhtTY1EMaqaO6bMZ58FhKhoZs8,,,https,REST,0,0,application/json,BASIC AUTH,,,

@@ -28,6 +28,7 @@ package com.blueseer.utl;
 
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.db;
 import java.awt.Color;
 import java.awt.Font;
@@ -72,21 +73,27 @@ import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDoubleWithSymbol;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getTitleTag;
+import static com.blueseer.utl.BlueSeerUtils.isParsableToDouble;
+import static com.blueseer.utl.BlueSeerUtils.isValidDateStr;
 import static com.blueseer.utl.ReportPanel.TableReport;
 import java.awt.Component;
 import java.awt.Image;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Currency;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -97,6 +104,7 @@ import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.CategoryLabelPositions;
+import org.jfree.chart.axis.DateAxis;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.labels.PieSectionLabelGenerator;
 import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
@@ -104,11 +112,18 @@ import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.MultiplePiePlot;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
+import org.jfree.data.time.Day;
+import org.jfree.data.time.TimeSeries;
+import org.jfree.data.time.TimeSeriesCollection;
+import org.jfree.data.xy.XYDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 
 /**
  *
@@ -240,7 +255,10 @@ public class ChartMain extends javax.swing.JPanel {
         lhm.put("Shipping -- units per week", "1");
         ml.add("Shipping -- dollars per week");
         lhm.put("Shipping -- dollars per week", "1");
-        
+        ml.add("Generic -- xy plot <date,number>");
+        lhm.put("Generic -- xy plot <date,number>", "1");
+        ml.add("Generic -- xy plot <number,number>");
+        lhm.put("Generic -- xy plot <number,number>", "1");
         
         }
         
@@ -2370,6 +2388,137 @@ public class ChartMain extends javax.swing.JPanel {
         } 
  }
 
+    public void GenericDataXY(String reporttitle) {
+    try {
+          List<String> filecontent = getInput();
+          cleanUpOldChartFile();
+          ChartPanel.setVisible(true);
+          JFreeChart chart;      
+          boolean error = false;     
+
+                if (reporttitle.equals("Generic -- xy plot <date,number>")) {
+                TimeSeriesCollection dataset = new TimeSeriesCollection(); 
+                TimeSeries s2 = new TimeSeries("XY Data");
+                String[] arr;
+                    for (String s : filecontent) {
+                        if (s.isBlank()) {
+                            continue;
+                        }
+                        arr = s.split(",");
+                        if (arr == null || arr.length != 2 || ! isValidDateStr(arr[0])) {
+                            error = true;
+                            break;
+                        }
+                        String[] date = arr[0].split("-");
+                        int year = Integer.parseInt(date[0]);
+                        int month = Integer.parseInt(date[1]);
+                        int day = Integer.parseInt(date[2]);
+                        s2.add(new Day(day, month, year),Double.parseDouble(arr[1]));
+                    }
+                  if (error) {
+                      bsmf.MainFrame.show("Invalid date format");
+                      return;
+                  }  
+                  dataset.addSeries(s2);
+                  chart = ChartFactory.createXYLineChart("Generic XY plot" + "\n", getGlobalColumnTag("x"), getGlobalColumnTag("y"), dataset, PlotOrientation.VERTICAL, true, true, false);
+                
+                } else {
+                   XYSeriesCollection dataset = new XYSeriesCollection();
+                   XYSeries s1 = new XYSeries("XY Data");
+                   String[] arr;
+                    for (String s : filecontent) {
+                        
+                        arr = s.split(",");
+                        if (arr == null || arr.length != 2 || ! isParsableToDouble(arr[0]) || ! isParsableToDouble(arr[1])) {
+                            error = true;
+                            break;
+                        }
+                        s1.add(Double.valueOf(arr[0]),Double.valueOf(arr[1]));
+                    }
+                    if (error) {
+                      bsmf.MainFrame.show("Invalid number format");
+                      return;
+                  } 
+                    dataset.addSeries(s1);
+                  chart = ChartFactory.createXYLineChart("Generic XY plot" + "\n", getGlobalColumnTag("x"), getGlobalColumnTag("y"), dataset, PlotOrientation.VERTICAL, true, true, false);
+                                   
+                }
+               // JFreeChart chart = ChartFactory.createBarChart("Generic XY plot" + "\n", getGlobalColumnTag("x"), getGlobalColumnTag("y"), dataset, PlotOrientation.VERTICAL, true, true, false);
+                /*
+                CategoryItemRenderer renderer = new CustomRenderer();
+                CategoryPlot p = chart.getCategoryPlot();
+                CategoryAxis axis = p.getDomainAxis();
+                ValueAxis axisv = p.getRangeAxis();
+                axis.setCategoryLabelPositions(CategoryLabelPositions.UP_90);
+                axisv.setVerticalTickLabels(false);
+                p.setRenderer(renderer);
+                */
+                XYPlot plot = (XYPlot) chart.getPlot();
+                
+                if (reporttitle.equals("Generic -- xy plot <date,number>")) {
+                DateAxis dateAxis = new DateAxis();
+                dateAxis.setDateFormatOverride(new SimpleDateFormat("dd-MM-yyyy"));
+                plot.setDomainAxis(dateAxis);
+                }
+                
+                try {
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
+                    ChartUtilities.writeChartAsJPEG(baos, chart, jPanel2.getWidth(), this.getHeight() - 150);
+                    ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+                    myimage = ImageIO.read(bais);
+                    ImageIcon myicon = new ImageIcon(myimage);
+                    myicon.getImage().flush();   
+                    chartlabel.setIcon(myicon);
+                    bais.close();
+                    baos.close();
+                    } catch (IOException e) {
+                    MainFrame.bslog(e);
+                    }
+            
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        } 
+ }
+
+    public File getfile(String title) {
+        
+        File file = null;
+        JFileChooser jfc = new JFileChooser(FileSystems.getDefault().getPath("edi").toFile());
+        jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        jfc.setDialogTitle(title);
+        int returnVal = jfc.showOpenDialog(this);
+       
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            try {
+            file = jfc.getSelectedFile();
+            String SourceDir = file.getAbsolutePath();
+            file = new File(SourceDir);
+               if (! file.exists()) {
+                 return null;
+               }
+            }
+            catch (Exception ex) {
+            ex.printStackTrace();
+            }
+        } 
+        return file;
+    }
+        
+    public List<String> getInput() {
+        List<String> lines = new ArrayList<String>();
+        File infile = getfile("Open Input Data File");
+        if (infile != null) {
+            try {   
+                lines = Files.readAllLines(infile.toPath());
+                
+            } catch (IOException ex) {
+                bslog(ex);
+            }   
+        } 
+        return lines;
+    }
+    
      
     class MyPrintable implements Printable {
   ImageIcon printImage = new javax.swing.ImageIcon(chartfilepath);
@@ -2855,17 +3004,14 @@ public class ChartMain extends javax.swing.JPanel {
         } 
         if (whichreport.equals("Scrap -- dollars by department")) {
             DeptAccumDollar();
-        
-            tacodes.setText("");
-            ArrayList codes = OVData.getdeptanddesclist();
-            String str = "";
-            for (int i = 0; i < codes.size(); i++) {
-              str += (codes.get(i)) + "\n";
-            }
-            tacodes.setText(str);
-        
-         //   CodePanel.setVisible(true);
         } 
+        
+        if (whichreport.equals("Generic -- xy plot <date,number>")) {
+            GenericDataXY(whichreport);
+        } 
+        if (whichreport.equals("Generic -- xy plot <number,number>")) {
+            GenericDataXY(whichreport);
+        }
         
         
     }//GEN-LAST:event_btChartActionPerformed
