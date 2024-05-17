@@ -1455,7 +1455,8 @@ public class shpData {
                         si[8], // vendor
                         "", // ap_check 
                         defaultshippingacct,
-                        defaultsalescc
+                        defaultsalescc,
+                        "" // po
                         );      
                         ArrayList<vod_mstr> vd = new ArrayList<vod_mstr>();
                         vd.add(y);

@@ -114,7 +114,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
                 
                  javax.swing.table.DefaultTableModel expensemodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
-                getGlobalColumnTag("po"), 
+                getGlobalColumnTag("id"), 
                 getGlobalColumnTag("line"), 
                 getGlobalColumnTag("item"), 
                 getGlobalColumnTag("qty"),
@@ -566,7 +566,8 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
                                               res.getString("vod_rvdid"),
                                               res.getString("vod_rvdline"),
                                               res.getString("vod_expense_acct"),
-                                              res.getString("vod_expense_cc")
+                                              res.getString("vod_expense_cc"),
+                                              res.getString("vod_po")
                                               });
                  
                   
@@ -635,7 +636,8 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
                 ddvend.getSelectedItem().toString(),
                 tbcheck.getText(), 
                 expensedet.getValueAt(j, 7).toString(),
-                expensedet.getValueAt(j, 8).toString()
+                expensedet.getValueAt(j, 8).toString(),
+                tbpo.getText()
                 );
         list.add(x);
          }
@@ -782,6 +784,8 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddprofile = new javax.swing.JComboBox<>();
         jLabel2 = new javax.swing.JLabel();
         btaddprofile = new javax.swing.JButton();
+        tbpo = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -943,6 +947,8 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
+        jLabel3.setText("PO Number");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -996,7 +1002,12 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(lbacct, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(tbrmks, javax.swing.GroupLayout.PREFERRED_SIZE, 349, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tbcheck, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(tbcheck, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(31, 31, 31)
+                                        .addComponent(jLabel3)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(tbpo, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addComponent(tbitemservice, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1056,7 +1067,9 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addGap(12, 12, 12)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbcheck, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
+                    .addComponent(jLabel1)
+                    .addComponent(tbpo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbrmks, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1114,7 +1127,8 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
                                                   "expense",
                                                   voucherline,
                                                   ddacct.getSelectedItem().toString(),
-                                                  ddcc.getSelectedItem().toString()
+                                                  ddcc.getSelectedItem().toString(),
+                                                  tbpo.getText()
                                                   });
        
         tbitemservice.setText("");
@@ -1341,6 +1355,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel35;
     private javax.swing.JLabel jLabel36;
     private javax.swing.JLabel jLabel4;
@@ -1358,6 +1373,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JTextField tbcheck;
     private javax.swing.JTextField tbitemservice;
     private javax.swing.JTextField tbkey;
+    private javax.swing.JTextField tbpo;
     private javax.swing.JTextField tbprice;
     private javax.swing.JTextField tbqty;
     private javax.swing.JTextField tbrmks;

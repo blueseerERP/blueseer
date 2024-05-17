@@ -1055,7 +1055,8 @@ public class CashTran extends javax.swing.JPanel {
                 ddentityExpense.getSelectedItem().toString(),
                 tbKeyExpense.getText(), 
                 expenseTable.getValueAt(j, 5).toString(),
-                vi[2]
+                vi[2],
+                tbexpensePO.getText()
                 );
         list.add(y);
          }

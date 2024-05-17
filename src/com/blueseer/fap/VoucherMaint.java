@@ -739,7 +739,8 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
                 ddvend.getSelectedItem().toString(),
                 tbinvoice.getText(), // ap_check 
                 voucherdet.getValueAt(j, 7).toString(),
-                voucherdet.getValueAt(j, 8).toString()
+                voucherdet.getValueAt(j, 8).toString(),
+                voucherdet.getValueAt(j, 0).toString()     
                 );
         list.add(x);
          }

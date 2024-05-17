@@ -589,8 +589,8 @@ public class fapData {
         int rows = 0;
         String sqlSelect = "select * from vod_mstr where vod_id = ? and vod_rvdid = ? and vod_rvdline = ?";
         String sqlInsert = "insert into vod_mstr (vod_id, vod_rvdid, vod_rvdline, vod_item, vod_qty, vod_voprice, vod_date, vod_vend," +
-        "vod_invoice, vod_expense_acct, vod_expense_cc ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?); "; 
+        "vod_invoice, vod_expense_acct, vod_expense_cc, vod_po ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.vod_id);
@@ -610,6 +610,7 @@ public class fapData {
             ps.setString(9, x.vod_invoice);
             ps.setString(10, x.vod_expense_acct);
             ps.setString(11, x.vod_expense_cc);
+            ps.setString(12, x.vod_po);
             rows = ps.executeUpdate();
             } 
             return rows;
@@ -1005,10 +1006,10 @@ public class fapData {
     
     public record vod_mstr(String[] m, String vod_id, String vod_rvdid, int vod_rvdline, 
         String vod_item, double vod_qty, double vod_voprice, String vod_date, String vod_vend,
-        String vod_invoice, String vod_expense_acct, String vod_expense_cc) {
+        String vod_invoice, String vod_expense_acct, String vod_expense_cc, String vod_po) {
         public vod_mstr(String[]m) {
             this(m, "", "", 0, "", 0, 0, "", "", "", "",
-                    "" );
+                    "", "" );
         }
     }
     

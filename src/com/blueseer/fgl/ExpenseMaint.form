@@ -85,7 +85,13 @@
                                           <Component id="lbacct" min="-2" pref="291" max="-2" attributes="0"/>
                                       </Group>
                                       <Component id="tbrmks" alignment="0" min="-2" pref="349" max="-2" attributes="0"/>
-                                      <Component id="tbcheck" alignment="0" min="-2" pref="119" max="-2" attributes="0"/>
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <Component id="tbcheck" min="-2" pref="119" max="-2" attributes="0"/>
+                                          <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
+                                          <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="tbpo" min="-2" pref="199" max="-2" attributes="0"/>
+                                      </Group>
                                       <Group type="102" alignment="0" attributes="0">
                                           <Component id="tbitemservice" min="-2" pref="316" max="-2" attributes="0"/>
                                           <EmptySpace max="-2" attributes="0"/>
@@ -164,6 +170,8 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="tbcheck" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="tbpo" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace pref="14" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -463,6 +471,13 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btaddprofileActionPerformed"/>
           </Events>
+        </Component>
+        <Component class="javax.swing.JTextField" name="tbpo">
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel3">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="PO Number"/>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>

@@ -937,7 +937,8 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
                 ddvend.getSelectedItem().toString(),
                 tbpackingslip.getText(), // ap_check 
                 v[1],
-                v[2]
+                v[2],
+                rvdet.getValueAt(j, 2).toString()
                 );
         list.add(x);
          }
