@@ -5,3 +5,4 @@ alter table plan_opdet add column plod_char1 varchar(50) COLLATE NOCASE DEFAULT 
 alter table plan_opdet add column plod_char2 varchar(50) COLLATE NOCASE DEFAULT '';
 alter table plan_opdet add column plod_char3 varchar(50) COLLATE NOCASE DEFAULT '';
 alter table plan_opdet add column plod_consumable tinyint(1) DEFAULT '0';
+alter table vod_mstr add column vod_po varchar(30) COLLATE NOCASE DEFAULT '';
