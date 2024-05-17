@@ -6,3 +6,9 @@ alter table plan_opdet add column plod_char2 varchar(50) COLLATE NOCASE DEFAULT 
 alter table plan_opdet add column plod_char3 varchar(50) COLLATE NOCASE DEFAULT '';
 alter table plan_opdet add column plod_consumable tinyint(1) DEFAULT '0';
 alter table vod_mstr add column vod_po varchar(30) COLLATE NOCASE DEFAULT '';
+alter table ap_mstr add column ap_entrytype varchar(20) COLLATE NOCASE DEFAULT '';
+alter table ap_mstr add column ap_approved tinyint(1) DEFAULT '0';
+alter table ap_mstr add column ap_approver varchar(30) COLLATE NOCASE DEFAULT '';
+alter table ap_mstr add column ap_misc1 varchar(50) COLLATE NOCASE DEFAULT '';
+alter table ap_mstr add column ap_misc2 varchar(50) COLLATE NOCASE DEFAULT '';
+alter table ap_mstr add column ap_misc3 varchar(50) COLLATE NOCASE DEFAULT '';

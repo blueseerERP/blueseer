@@ -54,7 +54,15 @@ CREATE TABLE "ap_mstr" (
   "ap_check" varchar(30) COLLATE NOCASE DEFAULT '',
   "ap_batch" int(11) COLLATE NOCASE DEFAULT '0',
   "ap_site" varchar(10) COLLATE NOCASE DEFAULT '',
-  "ap_subtype" varchar(20) COLLATE NOCASE DEFAULT '');
+  "ap_subtype" varchar(20) COLLATE NOCASE DEFAULT '',
+  "ap_entrytype" varchar(20)  COLLATE NOCASE DEFAULT '',
+  "ap_approved" tinyint(1)  NOT NULL DEFAULT '0',
+  "ap_approver" varchar(30) COLLATE NOCASE DEFAULT '',
+  "ap_misc1" varchar(50) COLLATE NOCASE DEFAULT '',
+  "ap_misc2" varchar(50) COLLATE NOCASE DEFAULT '',
+  "ap_misc3" varchar(50) COLLATE NOCASE DEFAULT ''
+
+);
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
