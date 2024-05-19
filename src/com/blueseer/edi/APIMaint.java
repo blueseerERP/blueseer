@@ -589,7 +589,8 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 ddauth.getSelectedItem().toString(),
                 "", //char1
                 "", //char2
-                "" // char3
+                "", // char3,
+                tanotes.getText()
                 );
         return x;
     }
