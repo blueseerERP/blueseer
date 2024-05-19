@@ -495,6 +495,12 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             tbapikey.requestFocus();
             return false;
         }
+        fc = checkLength(f,"api_notes");
+        if (tanotes.getText().length() > fc) {
+            bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
+            tanotes.requestFocus();
+            return false;
+        }
                 
                 
                 
