@@ -116,7 +116,12 @@ public class fapData {
                 String.valueOf(checknbr), //ap_check
                 String.valueOf(batchid), //ap_batch
                 s[1], //ap_site
-                "");
+                "", // subtype
+                "", // entrytype
+                "1", // approved
+                "" // approver
+                );
+                
                 
                 
                 _addAPMstr(x, bscon, ps, res);
@@ -223,7 +228,10 @@ public class fapData {
                 String.valueOf(batchid), //ap_check 
                 String.valueOf(batchid), //ap_batch
                 ap.ap_site, //ap_site
-                ap.ap_subtype
+                ap.ap_subtype,
+                ap.ap_entrytype,
+                ap.ap_approved,
+                ap.ap_approver
                 ); 
                 _addAPMstr(x, bscon, ps, res); // add AP Type E payment
             
@@ -333,7 +341,10 @@ public class fapData {
                 String.valueOf(batchid), //ap_check 
                 String.valueOf(batchid), //ap_batch
                 ap.ap_site, //ap_site
-                ap.ap_subtype
+                ap.ap_subtype,
+                ap.ap_entrytype,
+                ap.ap_approved,
+                ap.ap_approver
                 ); 
                 _addAPMstr(x, bscon, ps, res); // add AP Type E payment
             
@@ -499,7 +510,10 @@ public class fapData {
                 "", //ap_check
                 String.valueOf(batchid), //ap_batch
                 s[1], //ap_site
-                "Expense"
+                "Expense",
+                "manual",
+                "1",
+                ""
                 );
                 _addAPMstr(x, bscon, ps, res);
                 // increment each check nbr per record
@@ -589,8 +603,8 @@ public class fapData {
         int rows = 0;
         String sqlSelect = "select * from vod_mstr where vod_id = ? and vod_rvdid = ? and vod_rvdline = ?";
         String sqlInsert = "insert into vod_mstr (vod_id, vod_rvdid, vod_rvdline, vod_item, vod_qty, vod_voprice, vod_date, vod_vend," +
-        "vod_invoice, vod_expense_acct, vod_expense_cc, vod_po ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?); "; 
+        "vod_invoice, vod_expense_acct, vod_expense_cc, vod_po, vod_poline, vod_approved ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.vod_id);
@@ -611,6 +625,8 @@ public class fapData {
             ps.setString(10, x.vod_expense_acct);
             ps.setString(11, x.vod_expense_cc);
             ps.setString(12, x.vod_po);
+            ps.setInt(13, x.vod_poline);
+            ps.setString(14, x.vod_approved);
             rows = ps.executeUpdate();
             } 
             return rows;
@@ -989,11 +1005,12 @@ public class fapData {
         double ap_amt, double ap_base_amt, String ap_effdate, String ap_entdate, String ap_duedate,
         String ap_type, String ap_rmks, String ap_ref, String ap_terms, String ap_acct,
         String ap_cc, String ap_applied, String ap_status, String ap_bank, String ap_curr,
-        String ap_base_curr, String ap_check, String ap_batch, String ap_site, String ap_subtype) {
+        String ap_base_curr, String ap_check, String ap_batch, String ap_site, String ap_subtype,
+        String ap_entrytype, String ap_approved, String ap_approver) {
         public ap_mstr(String[]m) {
             this(m, "", "", "", 0, 0, "", "", "", "", "", 
                     "", "", "", "", "", "", "", "", "", "",
-                    "", "", "");
+                    "", "", "", "", "", "");
         }
     }
     
@@ -1006,10 +1023,11 @@ public class fapData {
     
     public record vod_mstr(String[] m, String vod_id, String vod_rvdid, int vod_rvdline, 
         String vod_item, double vod_qty, double vod_voprice, String vod_date, String vod_vend,
-        String vod_invoice, String vod_expense_acct, String vod_expense_cc, String vod_po) {
+        String vod_invoice, String vod_expense_acct, String vod_expense_cc, String vod_po, int vod_poline,
+        String vod_approved) {
         public vod_mstr(String[]m) {
             this(m, "", "", 0, "", 0, 0, "", "", "", "",
-                    "", "" );
+                    "", "", 0, "" );
         }
     }
     

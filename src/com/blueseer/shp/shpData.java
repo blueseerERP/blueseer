@@ -1441,7 +1441,10 @@ public class shpData {
                         shipper, //ap_check // in this case voucher number is reference field
                         String.valueOf(voucher), //ap_batch
                         si[12], //ap_site
-                        "Expense"); 
+                        "Expense",
+                        "",
+                        "1",
+                        "");  
                         
                         // create vod_mstr JRT
                         fapData.vod_mstr y = new fapData.vod_mstr(null, 
@@ -1456,7 +1459,9 @@ public class shpData {
                         "", // ap_check 
                         defaultshippingacct,
                         defaultsalescc,
-                        "" // po
+                        "", // po
+                        0, // po line
+                        "1"    // auto approved
                         );      
                         ArrayList<vod_mstr> vd = new ArrayList<vod_mstr>();
                         vd.add(y);

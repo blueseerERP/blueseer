@@ -1040,7 +1040,10 @@ public class CashTran extends javax.swing.JPanel {
                 tbKeyExpense.getText(), //ap_check // in this case voucher number is reference field
                 "", //ap_batch
                 OVData.getDefaultSite(), //ap_site
-                "Expense"); 
+                "Expense",
+                "",
+                "1",
+                ""); 
         
         ArrayList<fapData.vod_mstr> list = new ArrayList<fapData.vod_mstr>();
          for (int j = 0; j < expenseTable.getRowCount(); j++) {
@@ -1056,7 +1059,9 @@ public class CashTran extends javax.swing.JPanel {
                 tbKeyExpense.getText(), 
                 expenseTable.getValueAt(j, 5).toString(),
                 vi[2],
-                tbexpensePO.getText()
+                tbexpensePO.getText(),
+                bsParseInt(expenseTable.getValueAt(j, 0).toString()),
+                "1"
                 );
         list.add(y);
          }

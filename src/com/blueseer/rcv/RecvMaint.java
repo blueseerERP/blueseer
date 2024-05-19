@@ -919,7 +919,10 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
                 vonbr, //ap_check // in this case voucher number is reference field
                 String.valueOf(batchid), //ap_batch
                 ddsite.getSelectedItem().toString(), //ap_site
-                "Receipt"); 
+                "Receipt",
+                "",
+                "1",
+                "");  
         return x;  
     }
     
@@ -938,7 +941,9 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tbpackingslip.getText(), // ap_check 
                 v[1],
                 v[2],
-                rvdet.getValueAt(j, 2).toString()
+                rvdet.getValueAt(j, 2).toString(),
+                bsParseInt(rvdet.getValueAt(j, 3).toString()),
+                "1"    // auto approved
                 );
         list.add(x);
          }

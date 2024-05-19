@@ -69,6 +69,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.utl.BlueSeerUtils.ConvertIntToYesNo;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
@@ -105,7 +106,8 @@ public class VoucherBrowse extends javax.swing.JPanel {
                             getGlobalColumnTag("reference"), 
                             getGlobalColumnTag("remarks"),
                             getGlobalColumnTag("status"), 
-                            getGlobalColumnTag("amount")})
+                            getGlobalColumnTag("amount"),
+                            getGlobalColumnTag("approved")})
             {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -377,6 +379,7 @@ public class VoucherBrowse extends javax.swing.JPanel {
         tbfromnbr = new javax.swing.JTextField();
         tbtonbr = new javax.swing.JTextField();
         cbvoucher = new javax.swing.JCheckBox();
+        cbapproved = new javax.swing.JCheckBox();
         jPanel3 = new javax.swing.JPanel();
         labelopen = new javax.swing.JLabel();
         labeltotal = new javax.swing.JLabel();
@@ -461,6 +464,8 @@ public class VoucherBrowse extends javax.swing.JPanel {
         cbvoucher.setText("UnPaid?");
         cbvoucher.setName("cbunvouchered"); // NOI18N
 
+        cbapproved.setText("UnApproved?");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -492,7 +497,9 @@ public class VoucherBrowse extends javax.swing.JPanel {
                 .addComponent(btRun)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cbvoucher)
-                .addGap(11, 11, 11))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cbapproved)
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -506,7 +513,8 @@ public class VoucherBrowse extends javax.swing.JPanel {
                     .addComponent(jLabel5)
                     .addComponent(tbfromnbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6)
-                    .addComponent(cbvoucher))
+                    .addComponent(cbvoucher)
+                    .addComponent(cbapproved))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
@@ -664,7 +672,7 @@ public class VoucherBrowse extends javax.swing.JPanel {
                         " rvd_po <= " + "'" + poto + "'" +
                         " order by rvd_po ;");
            */
-           res = st.executeQuery(" select ap_nbr, ap_status, ap_ref, ap_rmks, ap_vend, ap_amt, ap_subtype " +
+           res = st.executeQuery(" select ap_nbr, ap_status, ap_ref, ap_rmks, ap_vend, ap_amt, ap_subtype, ap_approved " +
                         " FROM  ap_mstr where " + 
                         " ap_vend >= " + "'" + vendfrom + "'" + " AND " +
                         " ap_vend <= " + "'" + vendto + "'" + " AND " +
@@ -680,6 +688,9 @@ public class VoucherBrowse extends javax.swing.JPanel {
                  if (cbvoucher.isSelected() && ! res.getString("ap_status").equals("o")) {
                      continue;
                  }  
+                 if (cbapproved.isSelected() && res.getString("ap_approved").equals("1")) {
+                     continue;
+                 } 
                  total += res.getDouble("ap_amt");
                  if (res.getString("ap_status").equals("o")) {
                     open += res.getDouble("ap_amt");
@@ -693,7 +704,8 @@ public class VoucherBrowse extends javax.swing.JPanel {
                                 res.getString("ap_ref"),
                                 res.getString("ap_rmks"),
                                 res.getString("ap_status"),
-                                bsParseDouble(currformatDouble(res.getDouble("ap_amt")))
+                                bsParseDouble(currformatDouble(res.getDouble("ap_amt"))),
+                                ConvertIntToYesNo(res.getInt("ap_approved"))
                             });
                
              
@@ -737,6 +749,7 @@ public class VoucherBrowse extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btRun;
+    private javax.swing.JCheckBox cbapproved;
     private javax.swing.JCheckBox cbvoucher;
     private javax.swing.JComboBox ddsite;
     private javax.swing.JComboBox ddvendfrom;

@@ -655,7 +655,8 @@ CREATE TABLE "api_mstr" (
   "api_auth" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
   "api_char1" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
   "api_char2" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
-  "api_char3" varchar(100) NOT NULL COLLATE NOCASE DEFAULT ''
+  "api_char3" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "api_notes" varchar(1000) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -2787,7 +2788,9 @@ CREATE TABLE "vod_mstr" (
   "vod_invoice" varchar(30) COLLATE NOCASE DEFAULT '',
   "vod_expense_acct" varchar(12) NOT NULL COLLATE NOCASE DEFAULT '',
   "vod_expense_cc" varchar(4) NOT NULL COLLATE NOCASE DEFAULT '',
-  "vod_po" varchar(30) NOT NULL COLLATE NOCASE DEFAULT ''
+  "vod_po" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "vod_poline" int(8) DEFAULT '0',
+  "vod_approved" tinyint(1) DEFAULT '0'
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

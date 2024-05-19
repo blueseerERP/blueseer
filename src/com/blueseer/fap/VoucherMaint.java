@@ -721,7 +721,10 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tbkey.getText(), //ap_check // in this case voucher number is reference field
                 String.valueOf(batchid), //ap_batch
                 ddsite.getSelectedItem().toString(), //ap_site
-                ddtype.getSelectedItem().toString()); 
+                ddtype.getSelectedItem().toString(),
+                "",
+                "1",
+                bsmf.MainFrame.userid);   
         return x;  
     }
     
@@ -740,7 +743,9 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tbinvoice.getText(), // ap_check 
                 voucherdet.getValueAt(j, 7).toString(),
                 voucherdet.getValueAt(j, 8).toString(),
-                voucherdet.getValueAt(j, 0).toString()     
+                voucherdet.getValueAt(j, 0).toString(),
+                bsParseInt(voucherdet.getValueAt(j, 1).toString()),
+                "1"    // auto approved
                 );
         list.add(x);
          }

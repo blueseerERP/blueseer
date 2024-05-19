@@ -37,6 +37,8 @@ import static com.blueseer.edi.EDIMap.clearStaticVariables;
 import static com.blueseer.edi.EDIMap.delimConvertIntToStr;
 import com.blueseer.edi.ediData.dfs_mstr;
 import static com.blueseer.edi.ediData.getDFSMstr;
+import com.blueseer.fap.fapData;
+import static com.blueseer.fap.fapData.VoucherTransaction;
 import com.blueseer.frt.frtData;
 import static com.blueseer.frt.frtData.addCFOTransaction;
 import static com.blueseer.frt.frtData.getCFOPrevious;
@@ -47,9 +49,13 @@ import com.blueseer.shp.shpData;
 import com.blueseer.utl.EDData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
+import static com.blueseer.utl.BlueSeerUtils.getDateDB;
 import static com.blueseer.utl.BlueSeerUtils.getEDIClassLoader;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
+import static com.blueseer.utl.BlueSeerUtils.parseDate;
+import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import static com.blueseer.utl.EDData.getBSDocTypeFromStds;
 import static com.blueseer.utl.EDData.getDFSFileType;
 import static com.blueseer.utl.EDData.getEDIDocTypeFromBSDoc;
@@ -57,6 +63,7 @@ import static com.blueseer.utl.EDData.getEDIFFDocType;
 import static com.blueseer.utl.EDData.getEDIFFSubType;
 import static com.blueseer.utl.EDData.getEDIFileTypeDocType;
 import com.blueseer.utl.OVData;
+import static com.blueseer.vdr.venData.getVendInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -3134,6 +3141,75 @@ public class EDI {
    
     }
    
+    public static String[] createVoucherFrom810i(edi810i e, String[] control) {
+        String[] m = new String[]{"",""};
+            
+        int batchid = OVData.getNextNbr("batch");
+        String vonbr = String.valueOf(OVData.getNextNbr("voucher"));
+        String[] v = getVendInfo(e.vendnbr);
+        double actamt = 0.00;
+        actamt = (bsParseInt(e.tdsamt) / 100);
+        
+        
+        fapData.ap_mstr ap = new fapData.ap_mstr(null, 
+                "", //ap_id
+                e.vendnbr, // ap_vend, 
+                vonbr, // ap_nbr
+                actamt, // ap_amt
+                actamt, // ap_base_amt
+                setDateDB(e.invoicedate, "yyyyMMdd"), // ap_effdate
+                setDateDB(e.invoicedate, "yyyyMMdd"), // ap_entdate
+                setDateDB(OVData.getDueDateFromTerms(parseDate(e.invoicedate, "yyyyMMdd"), v[5])), // ap_duedate         
+                "V", // ap_type
+                "EDI 810", //ap_rmks
+                e.invoice, //ap_ref
+                v[5], //ap_terms
+                v[1], //ap_acct
+                v[2], //ap_cc
+                "0", //ap_applied
+                "o", //ap_status
+                v[4], //ap_bank
+                v[3], //ap_curr
+                OVData.getDefaultCurrency(), //ap_base_curr
+                vonbr, //ap_check // in this case voucher number is reference field
+                String.valueOf(batchid), //ap_batch
+                OVData.getDefaultSite(), //ap_site
+                "Receipt",
+                "EDI",
+                "0",
+                ""); 
+            
+            // now the detail
+            
+            ArrayList<fapData.vod_mstr> list = new ArrayList<fapData.vod_mstr>();
+         for (int j = 0; j < e.getDetCount(); j++ ) {
+             fapData.vod_mstr vd = new fapData.vod_mstr(null, 
+                vonbr,
+                "", // don't know receiver number at this point
+                bsParseInt(e.getDetLine(j)), // assume receiver line is (will be) equal to invoice line
+                e.getDetItem(j),
+                bsParseDouble(e.getDetQty(j)),
+                bsParseDouble(e.getDetPrice(j)),
+                setDateDB(e.invoicedate, "yyyyMMdd"),
+                e.vendnbr,
+                e.bol, // ap_check 
+                v[1],
+                v[2],
+                e.po,
+                bsParseInt(e.getDetLine(j)),
+                "0"
+                );
+        list.add(vd);
+         }
+            
+            
+            
+            if (m[0].isBlank()) { // if not error
+                m = VoucherTransaction("receipt", list, ap, false);
+            } 
+            System.out.println("HERE: " + m[0] + "/" + m[1]);
+            return m;
+     }
         
     
     public static String[] createSOFrom850(edi850 e, String[] control) {
@@ -6055,7 +6131,193 @@ public class EDI {
         
     }
     
-     public static class edi945 {
+    public static class edi810i {
+    // Header fields
+    public String isaSenderID = "";
+    public String isaReceiverID = "";
+    public String gsSenderID = "";
+    public String gsReceiverID = "";
+    public String isaCtrlNum = "";
+    public String isaDate = "";
+    public String doctype = "";
+    public String docid = "";
+    public String invoice = "";
+    public String po = "";
+    public String carrier = "";
+    public String vendnbr = "";
+    public String tpid = "";
+    public String ref = "";
+    public String remarks = "";
+    public String shipmethod = "";
+    public String invoicedate = "";
+    public String bol = "";
+    public String tdsamt = "";
+    
+    
+    // Detail fields     
+    public ArrayList<String[]> detailArray = new ArrayList<String[]>();
+    public int DetFieldsCount810i = 6;
+    public String[] initDetailArray(String[] a) {
+        for (int i = 0; i < a.length; i++) {
+            a[i] = "";
+        }        
+        return a;
+    }
+   
+        
+        public edi810i() {
+            
+        }
+        
+        public edi810i(String isasenderid, String isareceiverid, 
+                      String gssenderid, String gsreceiverid,
+                      String isactrlnum, String isadate, 
+                      String doctype, String docid) {
+            this.isaSenderID = isasenderid;
+            this.isaReceiverID = isareceiverid;
+            this.gsSenderID = gssenderid;
+            this.gsReceiverID = gsreceiverid;
+            this.isaCtrlNum = isactrlnum;
+            this.isaDate = isadate;
+            this.docid = docid;
+            this.doctype = doctype;
+        }
+        
+        // setters for detail
+        public void setDetLine(int i, String v) {
+          this.detailArray.get(i)[0] = v;
+        }
+        public void setDetItem(int i, String v) {
+         this.detailArray.get(i)[1] = v;
+        }
+        public void setDetVendItem(int i, String v) {
+         this.detailArray.get(i)[1] = v;
+        }
+        public void setDetQty(int i, String v) {
+          this.detailArray.get(i)[2] = v;
+        }
+        public void setDetPrice(int i, String v) {
+           this.detailArray.get(i)[3] = v;
+        }
+        public void setDetRef(int i, String v) {
+           this.detailArray.get(i)[7] = v;
+        }
+        
+        
+        
+       // getters for detail
+        public String getDetLine(int i) {
+            return detailArray.get(i)[0];
+        }
+        public String getDetItem(int i) {
+            return detailArray.get(i)[1];
+        }
+        public String getDetVendItem(int i) {
+            return detailArray.get(i)[1];
+        }
+        public String getDetQty(int i) {
+           return detailArray.get(i)[2];
+        }
+        public String getDetPrice(int i) {
+            return detailArray.get(i)[3];
+        }
+        public String getDetRef(int i) {
+           return detailArray.get(i)[5];
+        }
+        
+        
+              
+        // header setters 
+        public void setInvoiceNumber(String v) {
+           this.invoice = v;
+        }
+        public void setPONumber(String v) {
+           this.po = v;
+        }
+        public void setCarrier(String v) {
+           this.carrier = v;
+        }
+        public void setVendNbr(String v) {
+           this.vendnbr = v;
+        }
+        public void setTPID(String v) {
+           this.tpid = v;
+        }
+        public void setRef(String v) {
+           this.ref = v;
+        }
+        public void setRemarks(String v) {
+           this.remarks = v;
+        }
+        public void setShipMethod(String v) {
+           this.shipmethod = v;
+        }
+        public void setInvoiceDate(String v) {
+           this.invoicedate = v;
+        }
+        public void setBOL(String v) {
+           this.bol = v;
+        }
+        public void setTDSAMT(String v) {
+           this.tdsamt = v;
+        }
+        
+ 
+        // header getters
+        public String getInvoiceNumber() {
+           return this.invoice;
+        }
+        public String getPONumber() {
+           return this.po;
+        }
+        public String getCarrier() {
+           return this.carrier;
+        }
+        public String getVendNbr() {
+           return this.vendnbr;
+        }
+        public String getTPID() {
+           return this.tpid;
+        }
+        public String getRef() {
+           return this.ref;
+        }
+        public String getRemarks() {
+           return this.remarks;
+        }
+        public String getShipMethod() {
+           return this.shipmethod;
+        }
+        public String getISASenderID() {
+           return this.isaSenderID;
+        }
+        public String getISAReceiverID() {
+           return this.isaReceiverID;
+        }
+        public String getDocType() {
+           return this.doctype;
+        }
+        public String getDocID() {
+           return this.docid;
+        }
+        public String getInvoiceDate() {
+           return this.invoicedate;
+        }
+        public String getBOL() {
+           return this.bol;
+        }
+        public String getTDSAMT() {
+           return this.tdsamt;
+        }
+        
+        public int getDetCount() {
+            return detailArray.size();
+        }
+       
+    }
+     
+    
+    public static class edi945 {
     // Header fields
     public String isaSenderID = "";
     public String isaReceiverID = "";
@@ -6377,7 +6639,7 @@ public class EDI {
         
     }
     
-      public static class edi204 {
+    public static class edi204 {
     // Header fields
     public String isaSenderID = "";
     public String isaReceiverID = "";
@@ -6744,7 +7006,7 @@ public class EDI {
         
     }
      
-     public static class edi990 {
+    public static class edi990 {
     // Header fields
     public String isaSenderID = "";
     public String isaReceiverID = "";
@@ -6840,7 +7102,7 @@ public class EDI {
         
     }
      
-     public static class edi997i {
+    public static class edi997i {
     // Header fields
     public String isaSenderID = "";
     public String isaReceiverID = "";

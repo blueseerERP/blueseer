@@ -1389,6 +1389,15 @@ public class BlueSeerUtils {
        }
     }
     
+    public static String setDateDB(String date, String format) {
+       String mydate = null;
+       SimpleDateFormat sdf = new SimpleDateFormat(format, new Locale("en-US"));
+       if (date == null) {
+           return mydate;
+       } else {
+           return sdf.format(date);
+       }
+    }
     
     public static String setDateFormat(Date date) {
        String mydate = "";

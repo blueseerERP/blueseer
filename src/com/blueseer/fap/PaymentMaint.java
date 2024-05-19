@@ -609,7 +609,7 @@ try {
                         " AND ap_vend <= " + "'" + tvend + "'" + 
                          " AND ap_bank >= " + "'" + fbank + "'" + 
                         " AND ap_bank <= " + "'" + tbank + "'" + 
-                        " AND ap_type = 'V' AND ap_status = 'o' " + 
+                        " AND ap_type = 'V' AND ap_status = 'o' AND ap_approved = '1' " + 
                         " order by ap_vend;");    
                  
                 while (res.next()) {

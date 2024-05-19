@@ -617,8 +617,10 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tbkey.getText(), //ap_check // in this case voucher number is reference field
                 "0", //ap_batch
                 ddsite.getSelectedItem().toString(), //ap_site
-                "Expense"
-                ); 
+                "Expense",
+                "",
+                "1",
+                ""); 
         return x;  
     }
     
@@ -637,7 +639,9 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tbcheck.getText(), 
                 expensedet.getValueAt(j, 7).toString(),
                 expensedet.getValueAt(j, 8).toString(),
-                tbpo.getText()
+                tbpo.getText(),
+                bsParseInt(expensedet.getValueAt(j, 6).toString()),
+                "1"
                 );
         list.add(x);
          }

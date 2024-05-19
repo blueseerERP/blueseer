@@ -1,4 +1,5 @@
 /* sql updates for  v6.8 */
+alter table api_mstr add column api_notes varchar(1000) COLLATE NOCASE DEFAULT '';
 alter table api_det add column apid_keylabel varchar(120) COLLATE NOCASE DEFAULT '';
 alter table plan_opdet add column plod_item varchar(36) COLLATE NOCASE DEFAULT '';
 alter table plan_opdet add column plod_char1 varchar(50) COLLATE NOCASE DEFAULT '';

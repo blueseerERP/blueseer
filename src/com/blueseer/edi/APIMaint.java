@@ -367,6 +367,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         jTabbedPane1.removeAll();
         jTabbedPane1.add("Main", panelMain);
+        jTabbedPane1.add("Notes", panelNotes);
         jTabbedPane1.add("Output", panelOutput);
         
         tbkey.setText("");
@@ -397,6 +398,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbdestdir.setText("");
         cbenabled.setSelected(false);
         taoutput.setText("");
+        tanotes.setText("");
         tburlstring.setText("");
         ddcontenttype.setSelectedIndex(0);
         ddauth.setSelectedIndex(0);
@@ -864,6 +866,9 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         panelOutput = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         taoutput = new javax.swing.JTextArea();
+        panelNotes = new javax.swing.JPanel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        tanotes = new javax.swing.JTextArea();
 
         setBackground(new java.awt.Color(0, 102, 204));
         add(jTabbedPane1);
@@ -1437,6 +1442,34 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         );
 
         add(panelOutput);
+
+        tanotes.setColumns(20);
+        tanotes.setRows(5);
+        tanotes.setBorder(javax.swing.BorderFactory.createTitledBorder("Text"));
+        jScrollPane4.setViewportView(tanotes);
+
+        javax.swing.GroupLayout panelNotesLayout = new javax.swing.GroupLayout(panelNotes);
+        panelNotes.setLayout(panelNotesLayout);
+        panelNotesLayout.setHorizontalGroup(
+            panelNotesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 553, Short.MAX_VALUE)
+            .addGroup(panelNotesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelNotesLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 533, Short.MAX_VALUE)
+                    .addContainerGap()))
+        );
+        panelNotesLayout.setVerticalGroup(
+            panelNotesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 373, Short.MAX_VALUE)
+            .addGroup(panelNotesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelNotesLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 351, Short.MAX_VALUE)
+                    .addContainerGap()))
+        );
+
+        add(panelNotes);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
@@ -1893,11 +1926,14 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JList<String> listkv;
     private javax.swing.JPanel panelMain;
+    private javax.swing.JPanel panelNotes;
     private javax.swing.JPanel panelOutput;
     private javax.swing.JTable tabledetail;
+    private javax.swing.JTextArea tanotes;
     private javax.swing.JTextArea taoutput;
     private javax.swing.JTextField tbapikey;
     private javax.swing.JTextField tbattributekey;

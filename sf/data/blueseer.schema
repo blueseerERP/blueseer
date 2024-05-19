@@ -81,7 +81,8 @@ CREATE TABLE IF NOT EXISTS `api_mstr` (
   `api_auth` varchar(20) NOT NULL DEFAULT '',
   `api_char1` varchar(100) NOT NULL DEFAULT '',
   `api_char2` varchar(100) NOT NULL DEFAULT '',
-  `api_char3` varchar(100) NOT NULL DEFAULT ''
+  `api_char3` varchar(100) NOT NULL DEFAULT '',
+  `api_notes` varchar(1000) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `api_det` (
   `apid_id` varchar(30)  NOT NULL DEFAULT '',
@@ -2359,7 +2360,9 @@ CREATE TABLE IF NOT EXISTS `vod_mstr` (
   `vod_invoice` varchar(30)  DEFAULT '',
   `vod_expense_acct` varchar(12) NOT NULL  DEFAULT '',
   `vod_expense_cc` varchar(4) NOT NULL  DEFAULT '',
-  `vod_po` varchar(30) NOT NULL  DEFAULT ''
+  `vod_po` varchar(30) NOT NULL  DEFAULT '',
+  `vod_poline` int(8) DEFAULT '0',
+  `vod_approved` tinyint(1) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `vpr_mstr` (
   `vpr_desc` varchar(50)  NOT NULL DEFAULT '',
