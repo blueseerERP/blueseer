@@ -35,6 +35,7 @@ BlueSeer provides modules for the following generic set of business concepts :
 * Job Tracking
 * Job / Operation Scanning
 * Lot Traceability
+* Purchasing
 * Order Management
 * Service Order and Quoting Management
 * Freight Management
