@@ -640,8 +640,8 @@ public class fapData {
         "ap_amt, ap_base_amt, ap_effdate, ap_entdate, ap_duedate, " +
         "ap_type, ap_rmks, ap_ref, ap_terms, ap_acct, " +
         "ap_cc, ap_applied, ap_status, ap_bank, ap_curr, " +
-        "ap_base_curr, ap_check, ap_batch, ap_site, ap_subtype ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+        "ap_base_curr, ap_check, ap_batch, ap_site, ap_subtype, ap_entrytype, ap_approved, ap_approver ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.ap_batch);
@@ -672,6 +672,9 @@ public class fapData {
             ps.setString(20, x.ap_batch);
             ps.setString(21, x.ap_site);
             ps.setString(22, x.ap_subtype);
+            ps.setString(23, x.ap_entrytype);
+            ps.setString(24, x.ap_approved);
+            ps.setString(25, x.ap_approver);
             rows = ps.executeUpdate();
             } 
             return rows;

@@ -293,6 +293,7 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
         BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
         btnew.setEnabled(false);
         btvoid.setEnabled(false);
+        btupdate.setEnabled(false);
         tbkey.setEditable(true);
         tbkey.setForeground(Color.blue);
         if (! x.isEmpty()) {
@@ -318,12 +319,14 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
                        lblstatus.setForeground(Color.blue);
                        btvoid.setEnabled(false);
                        btadd.setEnabled(false);
+                       btupdate.setEnabled(false);
                    }
                    if (status.equals("c")) {
                        lblstatus.setText(getMessageTag(1097));
                        lblstatus.setForeground(Color.blue);
                        btvoid.setEnabled(false);
                        btadd.setEnabled(false);
+                       btupdate.setEnabled(false);
                    }
                    if (status.equals("o") || status.isBlank()) {
                        lblstatus.setText("");

@@ -380,6 +380,8 @@ public class VoucherBrowse extends javax.swing.JPanel {
         tbtonbr = new javax.swing.JTextField();
         cbvoucher = new javax.swing.JCheckBox();
         cbunapproved = new javax.swing.JCheckBox();
+        tbinvoice = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         labelopen = new javax.swing.JLabel();
         labeltotal = new javax.swing.JLabel();
@@ -455,16 +457,18 @@ public class VoucherBrowse extends javax.swing.JPanel {
         jLabel1.setText("From Vend");
         jLabel1.setName("lblfromvend"); // NOI18N
 
-        jLabel3.setText("To ID");
+        jLabel3.setText("To Voucher");
         jLabel3.setName("lbltoid"); // NOI18N
 
-        jLabel6.setText("From ID");
+        jLabel6.setText("From Voucher");
         jLabel6.setName("lblfromid"); // NOI18N
 
         cbvoucher.setText("UnPaid?");
         cbvoucher.setName("cbunvouchered"); // NOI18N
 
         cbunapproved.setText("UnApproved?");
+
+        jLabel8.setText("Invoice Number:");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -490,15 +494,21 @@ public class VoucherBrowse extends javax.swing.JPanel {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(ddvendto, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel5)
-                .addGap(4, 4, 4)
-                .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btRun)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cbvoucher)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cbunapproved)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addGap(4, 4, 4)
+                        .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btRun)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cbvoucher)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cbunapproved))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tbinvoice, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -521,7 +531,9 @@ public class VoucherBrowse extends javax.swing.JPanel {
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(ddvendto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel3)
-                        .addComponent(tbtonbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(tbtonbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tbinvoice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel8)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -672,6 +684,7 @@ public class VoucherBrowse extends javax.swing.JPanel {
                         " rvd_po <= " + "'" + poto + "'" +
                         " order by rvd_po ;");
            */
+           if (tbinvoice.getText().isBlank()) {
            res = st.executeQuery(" select ap_nbr, ap_status, ap_ref, ap_rmks, ap_vend, ap_amt, ap_subtype, ap_approved " +
                         " FROM  ap_mstr where " + 
                         " ap_vend >= " + "'" + vendfrom + "'" + " AND " +
@@ -679,7 +692,12 @@ public class VoucherBrowse extends javax.swing.JPanel {
                         " ap_nbr >= " + "'" + fromnbr + "'" + " AND " +
                         " ap_nbr <= " + "'" + tonbr + "'" + " AND " +
                         " ap_type = 'V' order by ap_nbr desc ;");
-                      
+           } else {
+               res = st.executeQuery(" select ap_nbr, ap_status, ap_ref, ap_rmks, ap_vend, ap_amt, ap_subtype, ap_approved " +
+                        " FROM  ap_mstr where " + 
+                        " ap_ref like " + "'%" + tbinvoice.getText() + "%'" + " AND " +
+                        " ap_type = 'V' order by ap_nbr desc ;");
+           }
         
                   
                 
@@ -763,6 +781,7 @@ public class VoucherBrowse extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -775,6 +794,7 @@ public class VoucherBrowse extends javax.swing.JPanel {
     private javax.swing.JPanel tablepanel;
     private javax.swing.JTable tablereport;
     private javax.swing.JTextField tbfromnbr;
+    private javax.swing.JTextField tbinvoice;
     private javax.swing.JTextField tbtonbr;
     // End of variables declaration//GEN-END:variables
 }
