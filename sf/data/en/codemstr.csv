@@ -474,7 +474,7 @@ sys_job_class,com.blueseer.crn.jobSys,,1
 sys_job_class,com.blueseer.crn.jobBch,,1
 sys_job_class,com.blueseer.crn.jobFTP,,1
 sys_job_class,com.blueseer.crn.jobWkf,,1
-edimaps,internal,1,1
+edimaps,internal,0,1
 sys_smtp,auth,yes,1
 sys_smtp,tls,yes,1
 fieldlabel,materialtax,Material Tax,1

@@ -737,6 +737,36 @@ public class fapData {
         
        }
     
+    public static void approveAPVoucher(String nbr, String status) {
+            try{
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            try {
+                           st.executeUpdate(
+                                 " update ap_mstr set ap_approved = " + "'" + status + "'" +
+                                 " where ap_type = 'V' and ap_nbr = " + "'" + nbr + "'" + ";" );
+            }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        
+       }
+    
+    
     public static String getVoucherStatus(String nbr) {
        String status = "";
      try{

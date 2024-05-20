@@ -51,6 +51,7 @@ import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
+import static com.blueseer.utl.BlueSeerUtils.convertDateFormat;
 import static com.blueseer.utl.BlueSeerUtils.getDateDB;
 import static com.blueseer.utl.BlueSeerUtils.getEDIClassLoader;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
@@ -3150,6 +3151,7 @@ public class EDI {
         double actamt = 0.00;
         actamt = (bsParseInt(e.tdsamt) / 100);
         
+        Date invoicedate = parseDate(convertDateFormat("yyyyMMdd", e.invoicedate));
         
         fapData.ap_mstr ap = new fapData.ap_mstr(null, 
                 "", //ap_id
@@ -3157,9 +3159,9 @@ public class EDI {
                 vonbr, // ap_nbr
                 actamt, // ap_amt
                 actamt, // ap_base_amt
-                setDateDB(e.invoicedate, "yyyyMMdd"), // ap_effdate
-                setDateDB(e.invoicedate, "yyyyMMdd"), // ap_entdate
-                setDateDB(OVData.getDueDateFromTerms(parseDate(e.invoicedate, "yyyyMMdd"), v[5])), // ap_duedate         
+                setDateDB(invoicedate), // ap_effdate
+                setDateDB(invoicedate), // ap_entdate
+                setDateDB(OVData.getDueDateFromTerms(invoicedate, v[5])), // ap_duedate         
                 "V", // ap_type
                 "EDI 810", //ap_rmks
                 e.invoice, //ap_ref

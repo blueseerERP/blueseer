@@ -213,7 +213,7 @@
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="cbvoucher" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="cbapproved" min="-2" max="-2" attributes="0"/>
+                      <Component id="cbunapproved" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -231,7 +231,7 @@
                           <Component id="tbfromnbr" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="cbvoucher" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="cbapproved" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbunapproved" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
@@ -318,7 +318,7 @@
                 <Property name="name" type="java.lang.String" value="cbunvouchered" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JCheckBox" name="cbapproved">
+            <Component class="javax.swing.JCheckBox" name="cbunapproved">
               <Properties>
                 <Property name="text" type="java.lang.String" value="UnApproved?"/>
               </Properties>

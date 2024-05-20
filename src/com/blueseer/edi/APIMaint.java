@@ -705,6 +705,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddauth.setSelectedItem(x.api_auth());
         cbrequestheaders.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.api_signed())));
         cbresponseheaders.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.api_encrypted())));
+        tanotes.setText(x.api_notes());
         // now detail
         detailmodel.setRowCount(0);
         ArrayList<api_det> z = getAPIDet(x.api_id());

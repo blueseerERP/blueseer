@@ -1392,10 +1392,15 @@ public class BlueSeerUtils {
     public static String setDateDB(String date, String format) {
        String mydate = null;
        SimpleDateFormat sdf = new SimpleDateFormat(format, new Locale("en-US"));
-       if (date == null) {
+       if (date == null || date.isBlank()) {
            return mydate;
        } else {
-           return sdf.format(date);
+           try {
+               return sdf.format(sdf.parse(date));
+           } catch (ParseException ex) {
+               bslog(ex);
+               return null;
+           }
        }
     }
     

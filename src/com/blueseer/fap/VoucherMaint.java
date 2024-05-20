@@ -36,6 +36,7 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static com.blueseer.fap.fapData.VoucherTransaction;
+import static com.blueseer.fap.fapData.approveAPVoucher;
 import static com.blueseer.fap.fapData.updateAPVoucherStatus;
 import com.blueseer.fgl.fglData;
 import com.blueseer.utl.BlueSeerUtils;
@@ -218,7 +219,7 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
          tbkey.setText("");
          tbinvoice.setText("");
         tbrmks.setText("");
-        
+        cbapproved.setSelected(false);
         tbrecvamt.setText("");
         
         tbqty.setText("");
@@ -602,8 +603,9 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
      }
     
     public String[] updateRecord(String[] x) {
-     return null;  // no update available...only add and void (reverse)
-     }
+    approveAPVoucher(x[0], BlueSeerUtils.boolToString(cbapproved.isSelected()));
+    return new String[]{"0", "status updated"};  // no update available...only add and void (reverse)
+    }
      
     public String[] deleteRecord(String[] x) {
      // same function used for add...but with 'true' for void as last parameter
@@ -639,6 +641,7 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
                      ddvend.setSelectedItem(res.getString("ap_vend"));
                      ddsite.setSelectedItem(res.getString("ap_site"));
                      ddtype.setSelectedItem(res.getString("ap_subtype"));
+                     cbapproved.setSelected(BlueSeerUtils.ConvertIntegerToBool(res.getInt("ap_approved")));
                      if (res.getString("ap_status").equals("c")) { 
                      ddstatus.setSelectedItem(getGlobalProgTag("closed"));
                      }
@@ -1217,6 +1220,8 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel11 = new javax.swing.JLabel();
         tbcheck = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
+        cbapproved = new javax.swing.JCheckBox();
+        btupdate = new javax.swing.JButton();
         panelAttachment = new javax.swing.JPanel();
         labelmessage = new javax.swing.JLabel();
         btaddattachment = new javax.swing.JButton();
@@ -1446,6 +1451,15 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel12.setText("Check");
         jLabel12.setName("lblcheck"); // NOI18N
 
+        cbapproved.setText("Approve");
+
+        btupdate.setText("Update");
+        btupdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btupdateActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -1458,6 +1472,8 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addGroup(jPanel1Layout.createSequentialGroup()
                                     .addComponent(btvoid)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btupdate)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(btadd))
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -1534,7 +1550,9 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(ddreceiver, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE))
                                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addComponent(tbcontrolamt, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                                    .addComponent(cbapproved)
+                                                    .addComponent(tbcontrolamt, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
                                                 .addGap(18, 18, 18)
                                                 .addComponent(jLabel28)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1600,7 +1618,8 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel37)
                     .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel10))
+                    .addComponent(jLabel10)
+                    .addComponent(cbapproved))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -1657,7 +1676,8 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btadd)
-                    .addComponent(btvoid))
+                    .addComponent(btvoid)
+                    .addComponent(btupdate))
                 .addGap(0, 0, 0))
         );
 
@@ -2092,6 +2112,14 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
     }//GEN-LAST:event_tableattachmentMouseClicked
 
+    private void btupdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateActionPerformed
+          if (! validateInput(BlueSeerUtils.dbaction.update)) {
+           return;
+       }
+        setPanelComponentState(this, false);
+        executeTask(BlueSeerUtils.dbaction.update, new String[]{tbkey.getText()});
+    }//GEN-LAST:event_btupdateActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btaddall;
@@ -2102,7 +2130,9 @@ public class VoucherMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JButton btdeleteitem;
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
+    private javax.swing.JButton btupdate;
     private javax.swing.JButton btvoid;
+    private javax.swing.JCheckBox cbapproved;
     private com.toedter.calendar.JDateChooser dcdate;
     private javax.swing.JComboBox<String> ddacct;
     private javax.swing.JComboBox<String> ddcc;

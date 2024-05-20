@@ -379,7 +379,7 @@ public class VoucherBrowse extends javax.swing.JPanel {
         tbfromnbr = new javax.swing.JTextField();
         tbtonbr = new javax.swing.JTextField();
         cbvoucher = new javax.swing.JCheckBox();
-        cbapproved = new javax.swing.JCheckBox();
+        cbunapproved = new javax.swing.JCheckBox();
         jPanel3 = new javax.swing.JPanel();
         labelopen = new javax.swing.JLabel();
         labeltotal = new javax.swing.JLabel();
@@ -464,7 +464,7 @@ public class VoucherBrowse extends javax.swing.JPanel {
         cbvoucher.setText("UnPaid?");
         cbvoucher.setName("cbunvouchered"); // NOI18N
 
-        cbapproved.setText("UnApproved?");
+        cbunapproved.setText("UnApproved?");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -498,7 +498,7 @@ public class VoucherBrowse extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cbvoucher)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(cbapproved)
+                .addComponent(cbunapproved)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -514,7 +514,7 @@ public class VoucherBrowse extends javax.swing.JPanel {
                     .addComponent(tbfromnbr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6)
                     .addComponent(cbvoucher)
-                    .addComponent(cbapproved))
+                    .addComponent(cbunapproved))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
@@ -688,9 +688,10 @@ public class VoucherBrowse extends javax.swing.JPanel {
                  if (cbvoucher.isSelected() && ! res.getString("ap_status").equals("o")) {
                      continue;
                  }  
-                 if (cbapproved.isSelected() && res.getString("ap_approved").equals("1")) {
+                 if (cbunapproved.isSelected() && res.getString("ap_approved").equals("1")) {
                      continue;
                  } 
+                 
                  total += res.getDouble("ap_amt");
                  if (res.getString("ap_status").equals("o")) {
                     open += res.getDouble("ap_amt");
@@ -749,7 +750,7 @@ public class VoucherBrowse extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btRun;
-    private javax.swing.JCheckBox cbapproved;
+    private javax.swing.JCheckBox cbunapproved;
     private javax.swing.JCheckBox cbvoucher;
     private javax.swing.JComboBox ddsite;
     private javax.swing.JComboBox ddvendfrom;

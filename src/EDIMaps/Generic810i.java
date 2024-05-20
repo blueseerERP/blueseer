@@ -26,13 +26,8 @@ SOFTWARE.
 
 package EDIMaps;
 
-import com.blueseer.edi.EDI;
-import com.blueseer.edi.EDI.edi204;
 import com.blueseer.edi.EDI.edi810i;
 import java.util.ArrayList;
-import com.blueseer.utl.OVData;
-import static com.blueseer.utl.BlueSeerUtils.convertDateFormat;
-import static com.blueseer.edi.EDIMap.ed;
 import com.blueseer.pur.purData;
 import com.blueseer.pur.purData.po_mstr;
 import com.blueseer.utl.EDData;
