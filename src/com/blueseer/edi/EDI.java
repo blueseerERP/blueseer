@@ -3194,7 +3194,7 @@ public class EDI {
                 bsParseDouble(e.getDetPrice(j)),
                 setDateDB(e.invoicedate, "yyyyMMdd"),
                 e.vendnbr,
-                e.bol, // ap_check 
+                e.bol, // ap_check for ap_type 'c' ....bol for ap_type 'v'
                 v[1],
                 v[2],
                 e.po,

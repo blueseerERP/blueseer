@@ -19,6 +19,7 @@ import com.blueseer.utl.EDData;
     
 	           
        e.setVendNbr(getInput("REF","1:VN",2));
+       e.setBOL(getInput("REF","1:MB",2));
        e.setInvoiceNumber(getInput("BIG",2));
        e.setInvoiceDate(getInput("BIG",1));
        e.setPONumber(getInput("BIG",4));
