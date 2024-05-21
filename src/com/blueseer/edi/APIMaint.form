@@ -763,34 +763,33 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
-                          <Group type="103" groupAlignment="1" attributes="0">
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Group type="102" attributes="0">
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="btupdateparam" min="-2" pref="25" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="btdeleteparam" min="-2" pref="25" max="-2" attributes="0"/>
-                                  <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="btaddparam" min="-2" pref="25" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="jLabel19" alignment="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="jLabel20" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="tbattributekey" alignment="0" min="-2" pref="206" max="-2" attributes="0"/>
+                                      <Component id="tbattributevalue" alignment="0" min="-2" pref="206" max="-2" attributes="0"/>
+                                      <Group type="102" attributes="0">
+                                          <Component id="cbkv" min="-2" max="-2" attributes="0"/>
+                                          <EmptySpace min="-2" pref="38" max="-2" attributes="0"/>
+                                          <Component id="btupdateparam" min="-2" pref="25" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="btdeleteparam" min="-2" pref="25" max="-2" attributes="0"/>
+                                          <EmptySpace max="-2" attributes="0"/>
+                                          <Component id="btaddparam" min="-2" pref="25" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
                               </Group>
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Group type="102" attributes="0">
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="jLabel19" alignment="1" min="-2" max="-2" attributes="0"/>
-                                          <Component id="jLabel20" alignment="1" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="tbattributekey" alignment="0" min="-2" pref="206" max="-2" attributes="0"/>
-                                          <Component id="tbattributevalue" alignment="0" min="-2" pref="206" max="-2" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                                  <Group type="102" alignment="0" attributes="0">
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="jScrollPane3" pref="0" max="32767" attributes="0"/>
-                                  </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="jScrollPane3" pref="0" max="32767" attributes="0"/>
                               </Group>
                           </Group>
-                          <EmptySpace pref="18" max="32767" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -808,12 +807,15 @@
                               <Component id="jLabel20" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="1" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="btaddparam" alignment="0" min="-2" pref="25" max="-2" attributes="0"/>
-                                  <Component id="btdeleteparam" alignment="0" min="-2" pref="25" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="btaddparam" alignment="0" min="-2" pref="25" max="-2" attributes="0"/>
+                                      <Component id="btdeleteparam" alignment="0" min="-2" pref="25" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Component id="btupdateparam" min="-2" pref="25" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="btupdateparam" min="-2" pref="25" max="-2" attributes="0"/>
+                              <Component id="cbkv" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jScrollPane3" pref="116" max="32767" attributes="0"/>
@@ -889,6 +891,11 @@
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btupdateparamActionPerformed"/>
                   </Events>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="cbkv">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="HTTP Header"/>
+                  </Properties>
                 </Component>
               </SubComponents>
             </Container>
@@ -993,7 +1000,7 @@
                 <Property name="rows" type="int" value="5"/>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="Text"/>
+                    <TitledBorder title="Output"/>
                   </Border>
                 </Property>
               </Properties>
@@ -1044,7 +1051,7 @@
                 <Property name="rows" type="int" value="5"/>
                 <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                   <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                    <TitledBorder title="Text"/>
+                    <TitledBorder title="Notes"/>
                   </Border>
                 </Property>
               </Properties>

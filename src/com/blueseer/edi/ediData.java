@@ -1563,8 +1563,8 @@ public class ediData {
     private static int _addAPIDMeta(apid_meta x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
         String sqlSelect = "select * from apid_meta where apidm_id = ? and apidm_method = ? and apidm_key = ?;";
-        String sqlInsert = "insert into apid_meta (apidm_id, apidm_method, apidm_key, apidm_value )  " 
-                        + " values (?,?,?,?); "; 
+        String sqlInsert = "insert into apid_meta (apidm_id, apidm_method, apidm_key, apidm_value, apidm_httphead )  " 
+                        + " values (?,?,?,?,?); "; 
        
           ps = con.prepareStatement(sqlSelect); 
           ps.setString(1, x.apidm_id);
@@ -1577,6 +1577,7 @@ public class ediData {
             ps.setString(2, x.apidm_method);
             ps.setString(3, x.apidm_key);
             ps.setString(4, x.apidm_value);
+            ps.setString(5, x.apidm_httphead);
             rows = ps.executeUpdate();
             } 
             return rows;
@@ -1895,9 +1896,9 @@ public class ediData {
     private static int _updateAPIDMeta(apid_meta x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
         int rows = 0;
         String sqlSelect = "select * from apid_meta where apidm_id = ? and apidm_method = ? and apidm_key = ?;";
-        String sqlInsert = "insert into apid_meta (apidm_id, apidm_method, apidm_key, apidm_value )  " 
-                        + " values (?,?,?,?); ";
-        String sqlUpdate = "update apid_meta set apidm_key = ?, apidm_value = ? " +
+        String sqlInsert = "insert into apid_meta (apidm_id, apidm_method, apidm_key, apidm_value, apidm_httphead )  " 
+                        + " values (?,?,?,?,?); ";
+        String sqlUpdate = "update apid_meta set apidm_key = ?, apidm_value = ?, apidm_httphead " +
                  " where apidm_id = ? and apidm_method = ? ; ";
        
         ps = con.prepareStatement(sqlSelect);
@@ -1911,14 +1912,16 @@ public class ediData {
             ps.setString(2, x.apidm_method);
             ps.setString(3, x.apidm_key);
             ps.setString(4, x.apidm_value);
+            ps.setString(5, x.apidm_httphead);
             rows = ps.executeUpdate();
         } else {    // update
          
          ps = con.prepareStatement(sqlUpdate) ;
             ps.setString(1, x.apidm_key);
             ps.setString(2, x.apidm_value);
-            ps.setString(3, x.apidm_id);
-            ps.setString(4, x.apidm_method);
+            ps.setString(3, x.apidm_httphead);
+            ps.setString(4, x.apidm_id);
+            ps.setString(5, x.apidm_method);
             rows = ps.executeUpdate();
         }
             
@@ -2415,7 +2418,8 @@ public class ediData {
                         r = new apid_meta(m, res.getString("apidm_id"), 
                         res.getString("apidm_method"), 
                         res.getString("apidm_key"),
-                        res.getString("apidm_value"));
+                        res.getString("apidm_value"),
+                        res.getString("apidm_httphead"));
                         list.add(r);
                     }
                 }
@@ -2448,7 +2452,8 @@ public class ediData {
                         r = new apid_meta(m, res.getString("apidm_id"), 
                         res.getString("apidm_method"), 
                         res.getString("apidm_key"),
-                        res.getString("apidm_value"));
+                        res.getString("apidm_value"),
+                        res.getString("apidm_httphead"));
                         list.add(r);
                     }
                 }
@@ -4408,9 +4413,9 @@ public class ediData {
         }
     }
     
-    public record apid_meta(String[] m, String apidm_id, String apidm_method, String apidm_key, String apidm_value) {
+    public record apid_meta(String[] m, String apidm_id, String apidm_method, String apidm_key, String apidm_value, String apidm_httphead) {
         public apid_meta(String[] m) {
-            this(m, "", "", "", "");
+            this(m, "", "", "", "", "");
         }
     }
     

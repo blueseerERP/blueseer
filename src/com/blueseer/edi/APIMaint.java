@@ -46,6 +46,9 @@ import static com.blueseer.edi.ediData.updateAPIDetTransaction;
 import static com.blueseer.edi.ediData.updateAPITransaction;
 import static com.blueseer.utl.BlueSeerUtils.ConvertBoolToYesNo;
 import static com.blueseer.utl.BlueSeerUtils.ConvertIntToBoolString;
+import static com.blueseer.utl.BlueSeerUtils.ConvertIntToYesNo;
+import static com.blueseer.utl.BlueSeerUtils.ConvertTrueFalseToBoolean;
+import static com.blueseer.utl.BlueSeerUtils.ConvertTrueFalseToStringInt;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
@@ -221,7 +224,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
              updateForm();
              tbkey.requestFocus();
            } else {
-             initvars(null);  
+             initvars(key); 
            }
             
             } catch (Exception e) {
@@ -637,7 +640,8 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                                 tbkey.getText(),
                                 tabledetail.getModel().getValueAt(j, 0).toString(),
                                 g[0],
-                                g[1]); 
+                                g[1],
+                                ConvertTrueFalseToStringInt(g[2])); 
                             list.add(x);
     			 }
     		 }
@@ -725,7 +729,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                  if (! a.apidm_method().equals(s)) {
                      continue;
                  }
-                 list.add(new String[]{a.apidm_key(), a.apidm_value()});
+                 list.add(new String[]{a.apidm_key(), a.apidm_value(), ConvertIntToYesNo(Integer.valueOf(a.apidm_httphead()))});
             }
             apidm.put(s, list);
            }
@@ -750,7 +754,9 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             ArrayList<String[]> list = apidm.get(tabledetail.getModel().getValueAt(i, 0).toString());
             if (list != null) {
                 for (String[] s : list) {
-                    methodpath = methodpath + s[0] + "=" + s[1] + "&";
+                    if (s[2].equals("NO")) {  // param type KV
+                     methodpath = methodpath + s[0] + "=" + s[1] + "&";
+                    }
                 }
                 if (methodpath.endsWith("&")) {
                     methodpath = methodpath.substring(0, methodpath.length() - 1);
@@ -866,6 +872,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel19 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
         btupdateparam = new javax.swing.JButton();
+        cbkv = new javax.swing.JCheckBox();
         btadddetail = new javax.swing.JButton();
         btdeletedetail = new javax.swing.JButton();
         btupdatedetail = new javax.swing.JButton();
@@ -1233,32 +1240,34 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
+        cbkv.setText("HTTP Header");
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel19, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel20, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tbattributekey, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbattributevalue, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel5Layout.createSequentialGroup()
+                                .addComponent(cbkv)
+                                .addGap(38, 38, 38)
+                                .addComponent(btupdateparam, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btdeleteparam, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btaddparam, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(btupdateparam, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btdeleteparam, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btaddparam, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(jPanel5Layout.createSequentialGroup()
-                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel19, javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jLabel20, javax.swing.GroupLayout.Alignment.TRAILING))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(tbattributekey, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(tbattributevalue, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGroup(jPanel5Layout.createSequentialGroup()
-                            .addContainerGap()
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))))
-                .addContainerGap(18, Short.MAX_VALUE))
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1272,11 +1281,13 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(tbattributevalue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel20))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(btaddparam, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btdeleteparam, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btupdateparam, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btaddparam, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btdeleteparam, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btupdateparam, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cbkv))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE)
                 .addContainerGap())
@@ -1425,7 +1436,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         taoutput.setColumns(20);
         taoutput.setRows(5);
-        taoutput.setBorder(javax.swing.BorderFactory.createTitledBorder("Text"));
+        taoutput.setBorder(javax.swing.BorderFactory.createTitledBorder("Output"));
         jScrollPane2.setViewportView(taoutput);
 
         javax.swing.GroupLayout panelOutputLayout = new javax.swing.GroupLayout(panelOutput);
@@ -1453,7 +1464,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         tanotes.setColumns(20);
         tanotes.setRows(5);
-        tanotes.setBorder(javax.swing.BorderFactory.createTitledBorder("Text"));
+        tanotes.setBorder(javax.swing.BorderFactory.createTitledBorder("Notes"));
         jScrollPane4.setViewportView(tanotes);
 
         javax.swing.GroupLayout panelNotesLayout = new javax.swing.GroupLayout(panelNotes);
@@ -1523,7 +1534,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     private void btrunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrunActionPerformed
         
-        jTabbedPane1.setSelectedIndex(1);
+        
         
         int[] rows = tabledetail.getSelectedRows();
        // taoutput.removeAll();
@@ -1597,7 +1608,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                     }
                 }
            
-            
+            jTabbedPane1.setSelectedIndex(2);
             
             BufferedReader br = null;
             StringBuilder responseHeaders = new StringBuilder();
@@ -1733,7 +1744,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         int i = 0;
         if (x != null) {
             for (String[] xs : x) {
-            kvmodel.add(i, xs[0] + "=" + xs[1]);
+            kvmodel.add(i, xs[0] + "|" + xs[1] + "|" + xs[2]);
             i++;
             }
         } 
@@ -1755,7 +1766,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
         if (proceed) {
             int i = listkv.getSelectedIndex();
-            String[] kv = listkv.getSelectedValue().split("=", -1);
+            String[] kv = listkv.getSelectedValue().split("\\|", -1);
             ArrayList<String[]> list = apidm.get(tbmethod.getText());
             int k = 0;
             for (String[] x : list) {
@@ -1772,20 +1783,21 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_btdeleteparamActionPerformed
 
     private void btaddparamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddparamActionPerformed
-        kvmodel.addElement(tbattributekey.getText() + "=" + tbattributevalue.getText());
+        kvmodel.addElement(tbattributekey.getText() + "|" + tbattributevalue.getText() + "|" + BlueSeerUtils.ConvertBoolToYesNo(cbkv.isSelected()));
         ArrayList<String[]> list = new ArrayList<String[]>();
         if (apidm.containsKey(tbmethod.getText())) {
             list = apidm.get(tbmethod.getText());
-            list.add(new String[]{tbattributekey.getText(), tbattributevalue.getText()});
+            list.add(new String[]{tbattributekey.getText(), tbattributevalue.getText(), BlueSeerUtils.ConvertBoolToYesNo(cbkv.isSelected())});
             ArrayList<String[]> newlist = list;
             apidm.put(tbmethod.getText(), newlist);
         } else {
-            list.add(new String[]{tbattributekey.getText(), tbattributevalue.getText()});
+            list.add(new String[]{tbattributekey.getText(), tbattributevalue.getText(), BlueSeerUtils.ConvertBoolToYesNo(cbkv.isSelected())});
             apidm.put(tbmethod.getText(), list);
         }
         
         tbattributekey.setText("");
         tbattributevalue.setText("");
+        cbkv.setSelected(false);
     }//GEN-LAST:event_btaddparamActionPerformed
 
     private void btupdateurlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateurlActionPerformed
@@ -1795,24 +1807,29 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     private void listkvMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listkvMouseClicked
         int index = listkv.locationToIndex(evt.getPoint());
           if (index >= 0) {
-            String[] s = listkv.getModel().getElementAt(index).split("=");
+            String[] s = listkv.getModel().getElementAt(index).split("\\|");
+            if (s != null && s.length == 3) {
             tbattributekey.setText(s[0]);
             tbattributevalue.setText(s[1]);
+            cbkv.setSelected(BlueSeerUtils.ConvertStringToBool(s[2]));
+            }
+            
           }
     }//GEN-LAST:event_listkvMouseClicked
 
     private void btupdateparamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btupdateparamActionPerformed
         int index = listkv.getSelectedIndex();
-        kvmodel.setElementAt(tbattributekey.getText() + "=" + tbattributevalue.getText(), index);
+        kvmodel.setElementAt(tbattributekey.getText() + "|" + tbattributevalue.getText() + "|" + BlueSeerUtils.ConvertBoolToYesNo(cbkv.isSelected()), index);
         ArrayList<String[]> list = new ArrayList<String[]>();
         if (apidm.containsKey(tbmethod.getText())) {
             list = apidm.get(tbmethod.getText());
-            list.set(index, new String[]{tbattributekey.getText(), tbattributevalue.getText()});
+            list.set(index, new String[]{tbattributekey.getText(), tbattributevalue.getText(), BlueSeerUtils.ConvertBoolToYesNo(cbkv.isSelected())});
             ArrayList<String[]> newlist = list;
             apidm.put(tbmethod.getText(), newlist);
         } 
         tbattributekey.setText("");
         tbattributevalue.setText("");
+        cbkv.setSelected(false);
     }//GEN-LAST:event_btupdateparamActionPerformed
 
     private void btadddetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadddetailActionPerformed
@@ -1897,6 +1914,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JButton btupdateurl;
     private javax.swing.JCheckBox cbenabled;
     private javax.swing.JCheckBox cbfile;
+    private javax.swing.JCheckBox cbkv;
     private javax.swing.JCheckBox cbrequestheaders;
     private javax.swing.JCheckBox cbresponseheaders;
     private javax.swing.JComboBox<String> ddauth;
