@@ -145,7 +145,7 @@ public class AS2Serv extends HttpServlet {
         if (request == null) {
             response.setContentType("text/plain");
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().println("no valid payload provided");
+            response.getWriter().println("BlueSeer AS2 server response:  no valid AS2 payload provided");
         } else {
             
             //response.setContentType("text/plain");
