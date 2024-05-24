@@ -275,10 +275,8 @@ public class APIBrowse extends javax.swing.JPanel {
         tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
         tablereport.getColumnModel().getColumn(1).setMaxWidth(100);
          
-        tbfromid.setText("");
-        tbtoid.setText("");
-        tbfromdesc.setText("");
-        tbtodesc.setText("");
+        tbsearchtext.setText("");
+        
        
           
          
@@ -312,15 +310,11 @@ public class APIBrowse extends javax.swing.JPanel {
         tabledetail = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         btdetail = new javax.swing.JButton();
-        jLabel4 = new javax.swing.JLabel();
         btRun = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        tbfromid = new javax.swing.JTextField();
-        tbtoid = new javax.swing.JTextField();
-        tbfromdesc = new javax.swing.JTextField();
-        tbtodesc = new javax.swing.JTextField();
+        tbsearchtext = new javax.swing.JTextField();
+        ddtype = new javax.swing.JComboBox<>();
         jPanel3 = new javax.swing.JPanel();
 
         setBackground(new java.awt.Color(0, 102, 204));
@@ -383,9 +377,6 @@ public class APIBrowse extends javax.swing.JPanel {
             }
         });
 
-        jLabel4.setText("To Desc");
-        jLabel4.setName("lbltodesc"); // NOI18N
-
         btRun.setText("Run");
         btRun.setName("btrun"); // NOI18N
         btRun.addActionListener(new java.awt.event.ActionListener() {
@@ -394,14 +385,13 @@ public class APIBrowse extends javax.swing.JPanel {
             }
         });
 
-        jLabel1.setText("From Desc");
-        jLabel1.setName("lblfromdesc"); // NOI18N
+        jLabel3.setText("Search Field:");
+        jLabel3.setName("lblsearchfield"); // NOI18N
 
-        jLabel3.setText("To ID");
-        jLabel3.setName("lbltoid"); // NOI18N
+        jLabel6.setText("Search Text:");
+        jLabel6.setName("lblsearchtext"); // NOI18N
 
-        jLabel6.setText("From ID");
-        jLabel6.setName("lblfromid"); // NOI18N
+        ddtype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Description", "URL" }));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -413,18 +403,10 @@ public class APIBrowse extends javax.swing.JPanel {
                     .addComponent(jLabel6)
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(tbtoid, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE)
-                    .addComponent(tbfromid))
-                .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(tbfromdesc, javax.swing.GroupLayout.DEFAULT_SIZE, 111, Short.MAX_VALUE)
-                    .addComponent(tbtodesc))
-                .addGap(145, 145, 145)
+                    .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tbsearchtext, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 183, Short.MAX_VALUE)
                 .addComponent(btRun)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btdetail)
@@ -435,21 +417,15 @@ public class APIBrowse extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
                     .addComponent(btRun)
                     .addComponent(btdetail)
-                    .addComponent(tbfromid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6)
-                    .addComponent(tbfromdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tbsearchtext, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel4)
-                        .addComponent(tbtodesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel3)
-                        .addComponent(tbtoid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(18, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -472,7 +448,7 @@ public class APIBrowse extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 158, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 120, Short.MAX_VALUE)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -485,7 +461,7 @@ public class APIBrowse extends javax.swing.JPanel {
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE))
+                .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 372, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -516,32 +492,17 @@ try {
                 
                mymodel.setNumRows(0);
                 
-                 String idfrom = tbfromid.getText();
-                 String idto = tbtoid.getText();
-                 String descfrom = tbfromdesc.getText();
-                 String descto = tbtodesc.getText();
-                 
-                 if (idfrom.isEmpty()) {
-                     idfrom = bsmf.MainFrame.lowchar;
-                 }
-                  if (idto.isEmpty()) {
-                     idto = bsmf.MainFrame.hichar;
-                 }
-              
-                   if (descfrom.isEmpty()) {
-                     descfrom = bsmf.MainFrame.lowchar;
-                 }
-                  if (descto.isEmpty()) {
-                     descto = bsmf.MainFrame.hichar;
-                 }
-                 
+             if (ddtype.getSelectedItem().toString().equals("URL")) {    
              res = st.executeQuery("select * " +
                          " from api_mstr where " +
-                        " api_id >= " + "'" + idfrom + "'" + " AND " +
-                        " api_id <= " + "'" + idto + "'" + " AND " +
-                     " api_desc >= " + "'" + descfrom + "'" + " AND " +
-                        " api_desc <= " + "'" + descto + "'" + 
-                        " order by api_id ;");
+                     " api_url like " + "'%" + tbsearchtext.getText() + "%'" + 
+                     " order by api_id ;");
+             } else {
+              res = st.executeQuery("select * " +
+                         " from api_mstr where " +
+                     " api_desc like " + "'%" + tbsearchtext.getText() + "%'" + 
+                     " order by api_id ;");   
+             }
                      
                   
                 
@@ -608,10 +569,9 @@ try {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btRun;
     private javax.swing.JButton btdetail;
+    private javax.swing.JComboBox<String> ddtype;
     private javax.swing.JPanel detailpanel;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -622,9 +582,6 @@ try {
     private javax.swing.JTable tabledetail;
     private javax.swing.JPanel tablepanel;
     private javax.swing.JTable tablereport;
-    private javax.swing.JTextField tbfromdesc;
-    private javax.swing.JTextField tbfromid;
-    private javax.swing.JTextField tbtodesc;
-    private javax.swing.JTextField tbtoid;
+    private javax.swing.JTextField tbsearchtext;
     // End of variables declaration//GEN-END:variables
 }
