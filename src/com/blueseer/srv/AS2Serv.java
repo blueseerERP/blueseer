@@ -132,19 +132,7 @@ public class AS2Serv extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/plain");
         response.setStatus(HttpServletResponse.SC_OK);
-        String id = request.getParameter("id");
-        String fromdate = request.getParameter("fromdate");
-        String todate = request.getParameter("todate");
-        String fromitem = request.getParameter("fromitem");
-        String toitem = request.getParameter("toitem");
-        String fromcell = request.getParameter("fromcell");
-        String tocell = request.getParameter("tocell");
-        String status = request.getParameter("status");
-        if (id != null && ! id.isEmpty()) {
-            response.getWriter().println("N/A at this time TEV");
-        } else {
-           response.getWriter().println("N/A at this time TEV"); 
-        }
+        response.getWriter().println("BlueSeer AS2 server response:  use POST method for AS2 transmission");
     }
      
     @Override
