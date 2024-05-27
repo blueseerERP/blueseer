@@ -279,7 +279,7 @@ public class ShipperBrowse extends javax.swing.JPanel {
     
     public void getdetail(String shipper) {
       
-        bsmf.MainFrame.show(shipper);
+      
          modeldetail.setNumRows(0);
          double totalsales = 0;
          double totalqty = 0;
