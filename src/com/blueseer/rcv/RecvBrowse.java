@@ -342,6 +342,8 @@ public class RecvBrowse extends javax.swing.JPanel {
         jLabel6 = new javax.swing.JLabel();
         tbfrompo = new javax.swing.JTextField();
         tbtopo = new javax.swing.JTextField();
+        btprint = new javax.swing.JButton();
+        tbcsv = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
 
         setBackground(new java.awt.Color(0, 102, 204));
@@ -427,6 +429,22 @@ public class RecvBrowse extends javax.swing.JPanel {
         jLabel6.setText("From Receiver");
         jLabel6.setName("lblfromreceiver"); // NOI18N
 
+        btprint.setText("Print/PDF");
+        btprint.setName("btprintpdf"); // NOI18N
+        btprint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btprintActionPerformed(evt);
+            }
+        });
+
+        tbcsv.setText("CSV");
+        tbcsv.setName("btcsv"); // NOI18N
+        tbcsv.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbcsvActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -458,6 +476,10 @@ public class RecvBrowse extends javax.swing.JPanel {
                 .addComponent(btRun)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btdetail)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tbcsv)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btprint)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -472,7 +494,9 @@ public class RecvBrowse extends javax.swing.JPanel {
                     .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5)
                     .addComponent(tbfrompo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6))
+                    .addComponent(jLabel6)
+                    .addComponent(btprint)
+                    .addComponent(tbcsv))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4)
@@ -643,10 +667,20 @@ try {
         }
     }//GEN-LAST:event_tablereportMouseClicked
 
+    private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
+        OVData.printJTableToJasper("Receiver Report", tablereport, "genericJTableL7.jasper" );
+    }//GEN-LAST:event_btprintActionPerformed
+
+    private void tbcsvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbcsvActionPerformed
+        if (tablereport != null)
+        OVData.exportCSV(tablereport);
+    }//GEN-LAST:event_tbcsvActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btRun;
     private javax.swing.JButton btdetail;
+    private javax.swing.JButton btprint;
     private javax.swing.JComboBox ddsite;
     private javax.swing.JComboBox ddvendfrom;
     private javax.swing.JComboBox ddvendto;
@@ -665,6 +699,7 @@ try {
     private javax.swing.JTable tabledetail;
     private javax.swing.JPanel tablepanel;
     private javax.swing.JTable tablereport;
+    private javax.swing.JButton tbcsv;
     private javax.swing.JTextField tbfrompo;
     private javax.swing.JTextField tbtopo;
     // End of variables declaration//GEN-END:variables

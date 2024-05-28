@@ -213,6 +213,10 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="btdetail" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
+                      <Component id="tbcsv" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="btprint" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -229,6 +233,8 @@
                           <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="tbfrompo" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btprint" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tbcsv" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
@@ -317,6 +323,24 @@
             <Component class="javax.swing.JTextField" name="tbfrompo">
             </Component>
             <Component class="javax.swing.JTextField" name="tbtopo">
+            </Component>
+            <Component class="javax.swing.JButton" name="btprint">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Print/PDF"/>
+                <Property name="name" type="java.lang.String" value="btprintpdf" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btprintActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JButton" name="tbcsv">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="CSV"/>
+                <Property name="name" type="java.lang.String" value="btcsv" noResource="true"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tbcsvActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
