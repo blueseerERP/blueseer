@@ -513,6 +513,7 @@ public class ShipperBrowse extends javax.swing.JPanel {
         cbinvoiced.setName("cbinvoiceonly"); // NOI18N
 
         btprint.setText("Print/PDF");
+        btprint.setName("btprintpdf"); // NOI18N
         btprint.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btprintActionPerformed(evt);

@@ -352,6 +352,7 @@
             <Component class="javax.swing.JButton" name="btprint">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Print/PDF"/>
+                <Property name="name" type="java.lang.String" value="btprintpdf" noResource="true"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btprintActionPerformed"/>
