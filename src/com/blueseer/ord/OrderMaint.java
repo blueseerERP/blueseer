@@ -1911,6 +1911,11 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
             return false;
         }
         
+        if (ddpart.getSelectedItem() == null || ddpart.getSelectedItem().toString().isBlank()) {
+            bsmf.MainFrame.show(getMessageTag(1081));
+            ddpart.requestFocus();
+            return false;
+        }
         boolean isvalid = OVData.isValidItem(ddpart.getSelectedItem().toString());
         
         // check unallocated qty
