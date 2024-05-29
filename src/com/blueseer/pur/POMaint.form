@@ -78,8 +78,8 @@
                                   <Component id="lbvend" min="-2" pref="146" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
-                                  <Component id="tbkey" min="-2" pref="72" max="-2" attributes="0"/>
-                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="tbkey" min="-2" pref="98" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="btlookup" min="-2" pref="25" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="btnew" min="-2" max="-2" attributes="0"/>
@@ -119,7 +119,7 @@
                               <Component id="ddcurr" alignment="0" max="32767" attributes="0"/>
                               <Component id="ddtax" alignment="0" max="32767" attributes="0"/>
                               <Component id="ddtype" alignment="0" max="32767" attributes="0"/>
-                              <Component id="ddedistatus" alignment="0" max="32767" attributes="0"/>
+                              <Component id="ddedistatus" alignment="0" pref="159" max="32767" attributes="0"/>
                               <Component id="cbconfirm" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="58" max="-2" attributes="0"/>

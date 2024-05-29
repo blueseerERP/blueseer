@@ -845,7 +845,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         int fc;        
         fc = checkLength(f,"po_nbr");
         if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {
-        bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc));
+        bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc ));
         tbkey.requestFocus();
         return false;
         } 
@@ -2066,8 +2066,8 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(lbvend, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(panelMainLayout.createSequentialGroup()
-                                .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnew)
@@ -2101,7 +2101,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addComponent(ddcurr, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(ddtax, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(ddtype, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(ddedistatus, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(ddedistatus, 0, 159, Short.MAX_VALUE)
                             .addComponent(cbconfirm))
                         .addGap(58, 58, 58)
                         .addComponent(jLabel12)

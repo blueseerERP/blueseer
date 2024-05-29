@@ -683,7 +683,13 @@ public class BlueSeerUtils {
         
         Number number = 0.00;
                     try {
+                        if (Locale.getDefault().getLanguage().equals("zh")) {
+                        Locale cn = new Locale("C@numbers=hans");
+                        com.ibm.icu.text.NumberFormat formatter = com.ibm.icu.text.NumberFormat.getInstance(cn);
+                        number = formatter.parse(x.trim());
+                        } else {
                         number = nf.parse(x.trim());
+                        }
                     } catch (ParseException ex) {
                         bsmf.MainFrame.show(getMessageTag(1017) + "/d  " + x);
                         ex.printStackTrace();
@@ -701,9 +707,16 @@ public class BlueSeerUtils {
         
         Number number = 0;
                     try {
+                        if (Locale.getDefault().getLanguage().equals("zh")) {
+                        Locale cn = new Locale("C@numbers=hans");
+                        com.ibm.icu.text.NumberFormat formatter = com.ibm.icu.text.NumberFormat.getInstance(cn);
+                        number = formatter.parse(x.trim());
+                        } else {
                         number = nf.parse(x.trim());
+                        }
                     } catch (ParseException ex) {
                         bsmf.MainFrame.show(getMessageTag(1017) + "/ " + x);
+                        ex.printStackTrace();
                     }
              z =  number.intValue();
         }
@@ -745,7 +758,14 @@ public class BlueSeerUtils {
         String pattern = "#0.00###"; 
         DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());    
         df.applyPattern(pattern);
-        outvalue = df.format(invalue); 
+        
+        if (Locale.getDefault().getLanguage().equals("zh")) {
+            Locale cn = new Locale("C@numbers=hans");
+            com.ibm.icu.text.NumberFormat formatter = com.ibm.icu.text.NumberFormat.getInstance(cn);
+            outvalue = formatter.format(invalue);
+        } else {
+        outvalue = df.format(invalue);
+        }
         return outvalue;
     }
     
@@ -754,7 +774,13 @@ public class BlueSeerUtils {
         String pattern = "#0.#####"; 
         DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());    
         df.applyPattern(pattern);
-        outvalue = df.format(invalue); 
+        if (Locale.getDefault().getLanguage().equals("zh")) {
+            Locale cn = new Locale("C@numbers=hans");
+            com.ibm.icu.text.NumberFormat formatter = com.ibm.icu.text.NumberFormat.getInstance(cn);
+            outvalue = formatter.format(invalue);
+        } else {
+        outvalue = df.format(invalue);
+        }
         return outvalue;
     }
     
@@ -773,7 +799,13 @@ public class BlueSeerUtils {
         String pattern = "#"; 
         DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());    
         df.applyPattern(pattern);
-        outvalue = df.format(invalue); 
+        if (Locale.getDefault().getLanguage().equals("zh")) {
+            Locale cn = new Locale("C@numbers=hans");
+            com.ibm.icu.text.NumberFormat formatter = com.ibm.icu.text.NumberFormat.getInstance(cn);
+            outvalue = formatter.format(invalue);
+        } else {
+        outvalue = df.format(invalue);
+        }
         return outvalue;
     }
     
@@ -792,7 +824,13 @@ public class BlueSeerUtils {
         String pattern = "#0.00###"; 
         DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());    
         df.applyPattern(pattern);
-        outvalue = df.format(invalue); 
+        if (Locale.getDefault().getLanguage().equals("zh")) {
+            Locale cn = new Locale("C@numbers=hans");
+            com.ibm.icu.text.NumberFormat formatter = com.ibm.icu.text.NumberFormat.getInstance(cn);
+            outvalue = formatter.format(invalue);
+        } else {
+        outvalue = df.format(invalue);
+        }
         return outvalue;
     }
     
@@ -840,7 +878,13 @@ public class BlueSeerUtils {
         }
         
         try {   
+            if (Locale.getDefault().getLanguage().equals("zh")) {
+            Locale cn = new Locale("C@numbers=hans");
+            com.ibm.icu.text.NumberFormat formatter = com.ibm.icu.text.NumberFormat.getInstance(cn);
+            outvalue = formatter.format(Double.valueOf(invalue));
+            } else {
             outvalue = df.format(df.parse(invalue));
+            }
         } catch (ParseException ex) {
             outvalue = "error";
         }
@@ -883,12 +927,21 @@ public class BlueSeerUtils {
     }
     
     public static String bsNumber(double invalue) {
-        String outvalue = "";
+        String x = "0";
         String pattern = "#0.#####"; 
-        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());    
-        df.applyPattern(pattern);
-        outvalue = df.format(invalue); 
-        return outvalue;
+         if (invalue != 0) {
+         if (Locale.getDefault().getLanguage().equals("zh")) {
+            Locale cn = new Locale("C@numbers=hans");
+            com.ibm.icu.text.NumberFormat formatter = com.ibm.icu.text.NumberFormat.getInstance(cn);
+            x = formatter.format(invalue); 
+         }  else { 
+           // String adjvalue = String.valueOf(invalue).replace('.', defaultDecimalSeparator);
+            DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());
+            df.applyPattern(pattern);
+            x = df.format(invalue);
+         }
+        }
+        return x;
     }
     
     public static String bsNumber(String invalue) {
@@ -901,17 +954,20 @@ public class BlueSeerUtils {
         String x = "0";
         String pattern = "#0.#####";
         if (! invalue.isEmpty()) {
-        String adjvalue = invalue.replace('.', defaultDecimalSeparator);
-       // DecimalFormat df = new DecimalFormat("#0.00###", new DecimalFormatSymbols(Locale.getDefault())); 
-     //  NumberFormat nf = NumberFormat.getInstance(Locale.getDefault()); 
-       
-        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());
-        df.applyPattern(pattern);
-        try { 
-            x = df.format(df.parse(adjvalue));
-        } catch (ParseException ex) {
-            bslog(ex);
-        }
+         if (Locale.getDefault().getLanguage().equals("zh")) {
+            Locale cn = new Locale("C@numbers=hans");
+            com.ibm.icu.text.NumberFormat formatter = com.ibm.icu.text.NumberFormat.getInstance(cn);
+            x = formatter.format(bsParseDouble(invalue));
+         }  else { 
+            String adjvalue = invalue.replace('.', defaultDecimalSeparator);
+            DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());
+            df.applyPattern(pattern);
+            try { 
+                x = df.format(df.parse(adjvalue));
+            } catch (ParseException ex) {
+                bslog(ex);
+            }
+         }
         }
         return x;
     }
@@ -928,7 +984,11 @@ public class BlueSeerUtils {
        DecimalFormat usdf = (DecimalFormat) NumberFormat.getNumberInstance(Locale.US);
        usdf.applyPattern(pattern);
         try { 
+            if (Locale.getDefault().getLanguage().equals("zh")) {
+            x = usdf.format(bsParseDouble(invalue));
+            } else {
             x = usdf.format(df.parse(adjvalue));
+            }
         } catch (ParseException ex) {
             bslog(ex);
         }
@@ -992,7 +1052,13 @@ public class BlueSeerUtils {
        // DecimalFormat df = new DecimalFormat("#0.00###", new DecimalFormatSymbols(Locale.getDefault())); 
         DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());
         df.applyPattern(pattern);
+        if (Locale.getDefault().getLanguage().equals("zh")) {
+            Locale cn = new Locale("C@numbers=hans");
+            com.ibm.icu.text.NumberFormat formatter = com.ibm.icu.text.NumberFormat.getInstance(cn);
+            x = formatter.format(invalue);
+        } else {
         x = df.format(invalue);
+        }
         return x;
     }
     
@@ -1006,9 +1072,13 @@ public class BlueSeerUtils {
         }
         DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());
         df.applyPattern(pattern);
-       
+        if (Locale.getDefault().getLanguage().equals("zh")) {
+            Locale cn = new Locale("C@numbers=hans");
+            com.ibm.icu.text.NumberFormat formatter = com.ibm.icu.text.NumberFormat.getInstance(cn);
+            x = symbol + formatter.format(invalue);
+        } else {
         x = symbol + df.format(invalue);
-        
+        }
         return x;
     }
     

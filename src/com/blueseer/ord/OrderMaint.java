@@ -639,7 +639,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         disableShipAddress();
         
         if (! x.isEmpty()) {
-          tbkey.setText(bsNumber(String.valueOf(OVData.getNextNbr(x))));  
+          tbkey.setText(bsNumber(OVData.getNextNbr(x)));  
           tbkey.setEditable(false);
         } 
         tbkey.requestFocus();
