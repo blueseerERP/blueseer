@@ -1037,7 +1037,13 @@ public class BlueSeerUtils {
        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());
         df.applyPattern(pattern);
         try { 
+            if (Locale.getDefault().getLanguage().equals("zh")) {
+            Locale cn = new Locale("C@numbers=hans");
+            com.ibm.icu.text.NumberFormat formatter = com.ibm.icu.text.NumberFormat.getInstance(cn);
+            x = formatter.format(Double.valueOf(invalue));
+            } else {
             x = df.format(df.parse(adjvalue));
+            }
         } catch (ParseException ex) {
             bslog(ex);
         }

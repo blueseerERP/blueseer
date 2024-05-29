@@ -347,9 +347,13 @@ inner join site_mstr on site_site = so_site where sod_nbr =  $P{myid}]]>
 				<reportElement x="0" y="0" width="100" height="16" uuid="978682a3-4259-41c3-adae-54872ecfe90a"/>
 				<textFieldExpression><![CDATA[$F{sod_item}]]></textFieldExpression>
 			</textField>
-			<textField pattern="###0.#####">
+			<textField pattern="#">
 				<reportElement x="360" y="0" width="46" height="16" uuid="32390b0a-6d5c-4fae-8870-72c4e68a5f90"/>
-				<textFieldExpression><![CDATA[$F{sod_ord_qty}]]></textFieldExpression>
+				<textElement markup="none">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[com.blueseer.utl.BlueSeerUtils.bsFormatDouble($F{sod_ord_qty})]]></textFieldExpression>
+				<patternExpression><![CDATA[com.blueseer.utl.BlueSeerUtils.bsFormatDouble(5)]]></patternExpression>
 			</textField>
 			<textField>
 				<reportElement x="109" y="0" width="141" height="16" uuid="a33e94ca-e3f8-4f4f-9bd9-5152ed973656"/>
@@ -361,18 +365,20 @@ inner join site_mstr on site_site = so_site where sod_nbr =  $P{myid}]]>
 			</textField>
 			<textField pattern="¤ #,##0.00">
 				<reportElement x="406" y="0" width="46" height="16" uuid="592ac78d-fe13-4933-a359-766c6b58c1e7"/>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{sod_netprice}]]></textFieldExpression>
+				<textElement textAlignment="Right">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[com.blueseer.utl.BlueSeerUtils.currformatDoubleWithSymbol($F{sod_netprice},$F{so_curr})]]></textFieldExpression>
 			</textField>
-			<textField pattern="¤ #,##0.00">
+			<textField>
 				<reportElement x="501" y="0" width="64" height="16" uuid="be6c6e00-ced3-4654-a526-512503b386e0"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[new Double(($F{sod_ord_qty}.doubleValue() * $F{sod_netprice}.doubleValue()) + $F{sod_taxamt}.doubleValue())]]></textFieldExpression>
+				<textFieldExpression><![CDATA[com.blueseer.utl.BlueSeerUtils.currformatDoubleWithSymbol(new Double(($F{sod_ord_qty}.doubleValue() * $F{sod_netprice}.doubleValue()) + $F{sod_taxamt}.doubleValue()),$F{so_curr})]]></textFieldExpression>
 			</textField>
 			<textField pattern="¤ #,##0.00">
 				<reportElement x="456" y="0" width="41" height="16" uuid="22086fe6-4cb1-40cc-a0bd-389ae084f7f1"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{sod_taxamt}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[com.blueseer.utl.BlueSeerUtils.currformatDoubleWithSymbol($F{sod_taxamt},$F{so_curr})]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -391,9 +397,9 @@ inner join site_mstr on site_site = so_site where sod_nbr =  $P{myid}]]>
 			<textField pattern="¤ #,##0.00">
 				<reportElement x="444" y="78" width="123" height="20" uuid="378a8a9d-5625-4e24-8803-f36c873089fe"/>
 				<textElement textAlignment="Right">
-					<font pdfFontName="" pdfEncoding=""/>
+					<font isBold="false" pdfFontName="" pdfEncoding=""/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{totalamount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[com.blueseer.utl.BlueSeerUtils.currformatDoubleWithSymbol($V{totalamount},$F{so_curr})]]></textFieldExpression>
 			</textField>
 			<subreport>
 				<reportElement x="344" y="20" width="221" height="40" uuid="be4e81b6-fece-4304-86cb-d0c966c9c89e"/>
@@ -409,8 +415,10 @@ inner join site_mstr on site_site = so_site where sod_nbr =  $P{myid}]]>
 			</textField>
 			<textField pattern="¤ #,##0.00">
 				<reportElement x="444" y="0" width="123" height="20" uuid="48370df4-1abb-4aca-833e-b2cfd15c3273"/>
-				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$V{gross}]]></textFieldExpression>
+				<textElement textAlignment="Right">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[com.blueseer.utl.BlueSeerUtils.currformatDoubleWithSymbol($V{gross},$F{so_curr})]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="344" y="78" width="100" height="20" uuid="811834f6-d14f-48bb-bf9f-6ec299e0d5b0"/>
