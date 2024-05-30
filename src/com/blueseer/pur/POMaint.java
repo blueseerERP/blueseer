@@ -844,7 +844,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         Map<String,Integer> f = OVData.getTableInfo(new String[]{"po_mstr"}); 
         int fc;        
         fc = checkLength(f,"po_nbr");
-        if (tbkey.getText().length() > fc || tbkey.getText().isEmpty()) {
+        if (bsNumberToUS(tbkey.getText()).length() > fc || tbkey.getText().isEmpty()) {
         bsmf.MainFrame.show(getMessageTag(1032,"1" + "/" + fc ));
         tbkey.requestFocus();
         return false;

@@ -683,7 +683,7 @@ public class BlueSeerUtils {
         
         Number number = 0.00;
                     try {
-                        if (Locale.getDefault().getLanguage().equals("zh")) {
+                        if (Locale.getDefault().getLanguage().equals("zh") && ! Locale.getDefault().getCountry().equals("US")) {
                         Locale cn = new Locale("C@numbers=hans");
                         com.ibm.icu.text.NumberFormat formatter = com.ibm.icu.text.NumberFormat.getInstance(cn);
                         number = formatter.parse(x.trim());
@@ -707,7 +707,7 @@ public class BlueSeerUtils {
         
         Number number = 0;
                     try {
-                        if (Locale.getDefault().getLanguage().equals("zh")) {
+                        if (Locale.getDefault().getLanguage().equals("zh") && ! Locale.getDefault().getCountry().equals("US")) {
                         Locale cn = new Locale("C@numbers=hans");
                         com.ibm.icu.text.NumberFormat formatter = com.ibm.icu.text.NumberFormat.getInstance(cn);
                         number = formatter.parse(x.trim());
@@ -759,7 +759,7 @@ public class BlueSeerUtils {
         DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());    
         df.applyPattern(pattern);
         
-        if (Locale.getDefault().getLanguage().equals("zh")) {
+        if (Locale.getDefault().getLanguage().equals("zh") && ! Locale.getDefault().getCountry().equals("US")) {
             Locale cn = new Locale("C@numbers=hans");
             com.ibm.icu.text.NumberFormat formatter = com.ibm.icu.text.NumberFormat.getInstance(cn);
             outvalue = formatter.format(invalue);
@@ -774,7 +774,7 @@ public class BlueSeerUtils {
         String pattern = "#0.#####"; 
         DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());    
         df.applyPattern(pattern);
-        if (Locale.getDefault().getLanguage().equals("zh")) {
+        if (Locale.getDefault().getLanguage().equals("zh") && ! Locale.getDefault().getCountry().equals("US")) {
             Locale cn = new Locale("C@numbers=hans");
             com.ibm.icu.text.NumberFormat formatter = com.ibm.icu.text.NumberFormat.getInstance(cn);
             outvalue = formatter.format(invalue);
@@ -799,7 +799,7 @@ public class BlueSeerUtils {
         String pattern = "#"; 
         DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());    
         df.applyPattern(pattern);
-        if (Locale.getDefault().getLanguage().equals("zh")) {
+        if (Locale.getDefault().getLanguage().equals("zh") && ! Locale.getDefault().getCountry().equals("US")) {
             Locale cn = new Locale("C@numbers=hans");
             com.ibm.icu.text.NumberFormat formatter = com.ibm.icu.text.NumberFormat.getInstance(cn);
             outvalue = formatter.format(invalue);
@@ -824,7 +824,7 @@ public class BlueSeerUtils {
         String pattern = "#0.00###"; 
         DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());    
         df.applyPattern(pattern);
-        if (Locale.getDefault().getLanguage().equals("zh")) {
+        if (Locale.getDefault().getLanguage().equals("zh") && ! Locale.getDefault().getCountry().equals("US")) {
             Locale cn = new Locale("C@numbers=hans");
             com.ibm.icu.text.NumberFormat formatter = com.ibm.icu.text.NumberFormat.getInstance(cn);
             outvalue = formatter.format(invalue);
@@ -878,7 +878,7 @@ public class BlueSeerUtils {
         }
         
         try {   
-            if (Locale.getDefault().getLanguage().equals("zh")) {
+            if (Locale.getDefault().getLanguage().equals("zh") && ! Locale.getDefault().getCountry().equals("US")) {
             Locale cn = new Locale("C@numbers=hans");
             com.ibm.icu.text.NumberFormat formatter = com.ibm.icu.text.NumberFormat.getInstance(cn);
             outvalue = formatter.format(Double.valueOf(invalue));
@@ -930,7 +930,7 @@ public class BlueSeerUtils {
         String x = "0";
         String pattern = "#0.#####"; 
          if (invalue != 0) {
-         if (Locale.getDefault().getLanguage().equals("zh")) {
+         if (Locale.getDefault().getLanguage().equals("zh") && ! Locale.getDefault().getCountry().equals("US")) {
             Locale cn = new Locale("C@numbers=hans");
             com.ibm.icu.text.NumberFormat formatter = com.ibm.icu.text.NumberFormat.getInstance(cn);
             x = formatter.format(invalue); 
@@ -954,7 +954,7 @@ public class BlueSeerUtils {
         String x = "0";
         String pattern = "#0.#####";
         if (! invalue.isEmpty()) {
-         if (Locale.getDefault().getLanguage().equals("zh")) {
+         if (Locale.getDefault().getLanguage().equals("zh") && ! Locale.getDefault().getCountry().equals("US")) {
             Locale cn = new Locale("C@numbers=hans");
             com.ibm.icu.text.NumberFormat formatter = com.ibm.icu.text.NumberFormat.getInstance(cn);
             x = formatter.format(bsParseDouble(invalue));
@@ -984,7 +984,7 @@ public class BlueSeerUtils {
        DecimalFormat usdf = (DecimalFormat) NumberFormat.getNumberInstance(Locale.US);
        usdf.applyPattern(pattern);
         try { 
-            if (Locale.getDefault().getLanguage().equals("zh")) {
+            if (Locale.getDefault().getLanguage().equals("zh") && ! Locale.getDefault().getCountry().equals("US")) {
             x = usdf.format(bsParseDouble(invalue));
             } else {
             x = usdf.format(df.parse(adjvalue));
@@ -1037,7 +1037,7 @@ public class BlueSeerUtils {
        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());
         df.applyPattern(pattern);
         try { 
-            if (Locale.getDefault().getLanguage().equals("zh")) {
+            if (Locale.getDefault().getLanguage().equals("zh") && ! Locale.getDefault().getCountry().equals("US")) {
             Locale cn = new Locale("C@numbers=hans");
             com.ibm.icu.text.NumberFormat formatter = com.ibm.icu.text.NumberFormat.getInstance(cn);
             x = formatter.format(Double.valueOf(invalue));
@@ -1058,7 +1058,7 @@ public class BlueSeerUtils {
        // DecimalFormat df = new DecimalFormat("#0.00###", new DecimalFormatSymbols(Locale.getDefault())); 
         DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());
         df.applyPattern(pattern);
-        if (Locale.getDefault().getLanguage().equals("zh")) {
+        if (Locale.getDefault().getLanguage().equals("zh") && ! Locale.getDefault().getCountry().equals("US")) {
             Locale cn = new Locale("C@numbers=hans");
             com.ibm.icu.text.NumberFormat formatter = com.ibm.icu.text.NumberFormat.getInstance(cn);
             x = formatter.format(invalue);
@@ -1078,7 +1078,7 @@ public class BlueSeerUtils {
         }
         DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.getDefault());
         df.applyPattern(pattern);
-        if (Locale.getDefault().getLanguage().equals("zh")) {
+        if (Locale.getDefault().getLanguage().equals("zh") && ! Locale.getDefault().getCountry().equals("US")) {
             Locale cn = new Locale("C@numbers=hans");
             com.ibm.icu.text.NumberFormat formatter = com.ibm.icu.text.NumberFormat.getInstance(cn);
             x = symbol + formatter.format(invalue);
@@ -1443,6 +1443,7 @@ public class BlueSeerUtils {
    
     public static String getDateDB(String indate) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        
         String r = "";
         if (indate != null && ! indate.isEmpty() && ! indate.equals("0000-00-00") && ! indate.equals("null")) {
             try {
