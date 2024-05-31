@@ -3762,7 +3762,7 @@ public class fglData {
           // function returns a 2 items from the gl_cal record where a period matches
           // first element = startdate
           // second element = enddate
-
+    
   ArrayList myarray = new ArrayList();
     try{
 

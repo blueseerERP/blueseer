@@ -2564,6 +2564,7 @@ public class admData {
         Statement st = con.createStatement();
         try{
             st.executeUpdate("update ov_mstr set ov_currency = " + "'" + x + "'" + ";" );
+            st.executeUpdate("update ac_mstr set ac_curr = " + "'" + x + "'" + ";" );
             st.executeUpdate("update cm_mstr set cm_curr = " + "'" + x + "'" + ";" );
             st.executeUpdate("update vd_mstr set vd_curr = " + "'" + x + "'" + ";" );
         }

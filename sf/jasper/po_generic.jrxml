@@ -28,7 +28,7 @@
 (select case when sum(pom_amt) is null then 0 else sum(pom_amt) end from po_meta 
 	where pom_nbr = $P{myid} and pom_amttype = 'amount' and pom_type <> 'tax' and pom_type <> 'passive'
 ) as charges, 
- po_vend, po_rmks, po_due_date, 
+ po_vend, po_rmks, po_due_date, po_curr, 
 po_terms, po_shipvia, pod_nbr, pod_item, pod_venditem, 
 pod_ord_qty, pod_netprice, pod_listprice, 
 vd_addr, vd_name, vd_line1, vd_line2, 
@@ -62,7 +62,7 @@ inner join site_mstr on site_site = po_site where pod_nbr =  $P{myid};]]>
 	<field name="pod_ord_qty" class="java.lang.Double">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="pod_netprice" class="java.math.BigDecimal">
+	<field name="pod_netprice" class="java.lang.Double">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="vd_addr" class="java.lang.String">
@@ -86,6 +86,7 @@ inner join site_mstr on site_site = po_site where pod_nbr =  $P{myid};]]>
 	<field name="pod_listprice" class="java.math.BigDecimal"/>
 	<field name="pod_nbr" class="java.lang.String"/>
 	<field name="charges" class="java.lang.Double"/>
+	<field name="po_curr" class="java.lang.String"/>
 	<variable name="tax" class="java.lang.Double">
 		<variableExpression><![CDATA[new Double($P{taxes}.doubleValue())]]></variableExpression>
 	</variable>
@@ -353,11 +354,11 @@ inner join site_mstr on site_site = po_site where pod_nbr =  $P{myid};]]>
 			</textField>
 			<textField pattern="###0.#####">
 				<reportElement x="344" y="0" width="72" height="16" uuid="edbe7124-d60b-42b0-a896-8522f841a299"/>
-				<textFieldExpression><![CDATA[$F{pod_ord_qty}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[com.blueseer.utl.BlueSeerUtils.bsFormatDouble($F{pod_ord_qty})]]></textFieldExpression>
 			</textField>
 			<textField pattern="¤ #,##0.00">
 				<reportElement x="417" y="0" width="72" height="16" uuid="32390b0a-6d5c-4fae-8870-72c4e68a5f90"/>
-				<textFieldExpression><![CDATA[$F{pod_netprice}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[com.blueseer.utl.BlueSeerUtils.currformatDoubleWithSymbol($F{pod_netprice},$F{po_curr})]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="170" y="0" width="168" height="16" uuid="a33e94ca-e3f8-4f4f-9bd9-5152ed973656"/>
@@ -369,7 +370,7 @@ inner join site_mstr on site_site = po_site where pod_nbr =  $P{myid};]]>
 			</textField>
 			<textField pattern="¤ #,##0.00">
 				<reportElement x="489" y="0" width="78" height="16" uuid="4d12e3fa-309d-4b3b-bef2-866f79abdd66"/>
-				<textFieldExpression><![CDATA[new Double($F{pod_ord_qty}.doubleValue() * $F{pod_netprice}.doubleValue())]]></textFieldExpression>
+				<textFieldExpression><![CDATA[com.blueseer.utl.BlueSeerUtils.currformatDoubleWithSymbol(new Double(($F{pod_ord_qty}.doubleValue() * $F{pod_netprice}.doubleValue())),$F{po_curr})]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -392,12 +393,15 @@ inner join site_mstr on site_site = po_site where pod_nbr =  $P{myid};]]>
 			<textField pattern="¤ #,##0.00">
 				<reportElement x="438" y="0" width="129" height="20" uuid="378a8a9d-5625-4e24-8803-f36c873089fe"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$V{mysumprice}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[com.blueseer.utl.BlueSeerUtils.currformatDoubleWithSymbol($V{mysumprice},$F{po_curr})]]></textFieldExpression>
 			</textField>
 			<subreport>
 				<reportElement x="340" y="20" width="227" height="58" uuid="620e8449-34d3-4da3-bf1d-ba3bd01ed8c3"/>
 				<subreportParameter name="myid">
 					<subreportParameterExpression><![CDATA[$F{pod_nbr}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="curr">
+					<subreportParameterExpression><![CDATA[$F{po_curr}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "sacpo.jasper"]]></subreportExpression>
@@ -405,7 +409,7 @@ inner join site_mstr on site_site = po_site where pod_nbr =  $P{myid};]]>
 			<textField pattern="¤ #,##0.00">
 				<reportElement x="444" y="78" width="123" height="20" uuid="77464007-4350-4530-b465-ebb666471b6a"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$V{totalamount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[com.blueseer.utl.BlueSeerUtils.currformatDoubleWithSymbol($V{totalamount},$F{po_curr})]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="341" y="78" width="100" height="20" uuid="75420708-223f-413e-a2e9-a678700b2a45"/>

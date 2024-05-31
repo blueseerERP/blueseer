@@ -364,12 +364,12 @@ inner join site_mstr on site_site = sv_site where svd_nbr =  $P{myid}]]>
 			</textField>
 			<textField pattern="###0.00">
 				<reportElement x="260" y="0" width="90" height="16" uuid="32390b0a-6d5c-4fae-8870-72c4e68a5f90"/>
-				<textFieldExpression><![CDATA[$F{svd_qty}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[com.blueseer.utl.BlueSeerUtils.bsFormatDouble($F{svd_qty})]]></textFieldExpression>
 			</textField>
 			<textField pattern="¤ #,##0.00">
 				<reportElement x="363" y="0" width="90" height="16" uuid="be6c6e00-ced3-4654-a526-512503b386e0"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{svd_netprice}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[com.blueseer.utl.BlueSeerUtils.currformatDoubleWithSymbol($F{svd_netprice},$F{sv_curr})]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0">
 				<reportElement x="19" y="16" width="214" height="16" uuid="90c06e0b-5d2f-4b38-8178-2f593a2d83a5"/>
@@ -378,7 +378,7 @@ inner join site_mstr on site_site = sv_site where svd_nbr =  $P{myid}]]>
 			<textField pattern="¤ #,##0.00">
 				<reportElement x="460" y="0" width="105" height="16" uuid="d8b0178a-af54-455d-ad4a-f85d7e1fe002"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[new Double($F{svd_qty}.doubleValue() * $F{svd_netprice}.doubleValue())]]></textFieldExpression>
+				<textFieldExpression><![CDATA[com.blueseer.utl.BlueSeerUtils.currformatDoubleWithSymbol(new Double(($F{svd_qty}.doubleValue() * $F{svd_netprice}.doubleValue())),$F{sv_curr})]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -397,7 +397,7 @@ inner join site_mstr on site_site = sv_site where svd_nbr =  $P{myid}]]>
 			<textField pattern="¤ #,##0.00">
 				<reportElement x="436" y="30" width="129" height="20" uuid="378a8a9d-5625-4e24-8803-f36c873089fe"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$V{grossamount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[com.blueseer.utl.BlueSeerUtils.currformatDoubleWithSymbol($V{grossamount},$F{sv_curr})]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="331" y="30" width="100" height="20" uuid="811834f6-d14f-48bb-bf9f-6ec299e0d5b0"/>
@@ -425,7 +425,7 @@ inner join site_mstr on site_site = sv_site where svd_nbr =  $P{myid}]]>
 			<textField pattern="¤ #,##0.00">
 				<reportElement x="438" y="130" width="129" height="20" uuid="f98b0b40-c554-44dd-a7c6-ef795e84b713"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$V{totalamount}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[com.blueseer.utl.BlueSeerUtils.currformatDoubleWithSymbol($V{totalamount},$F{sv_curr})]]></textFieldExpression>
 			</textField>
 		</band>
 	</lastPageFooter>

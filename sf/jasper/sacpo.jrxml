@@ -9,6 +9,7 @@
 	<parameter name="myid" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
+	<parameter name="curr" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select pom_desc, 
 case when pom_amttype = 'percent' and pom_type <> 'tax' then (myamt * -1 * (pom_amt / 100.0)) 
@@ -34,7 +35,7 @@ else pom_amt end as amt from po_meta, (select pod_nbr, sum(pod_ord_qty * pod_lis
 				<textElement textAlignment="Right">
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{amt}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[com.blueseer.utl.BlueSeerUtils.currformatDoubleWithSymbol($F{amt},$P{curr})]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

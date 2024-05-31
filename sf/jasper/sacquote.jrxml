@@ -7,6 +7,7 @@
 	<parameter name="myid" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
+	<parameter name="curr" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[select quos_desc, case when quos_amttype = 'percent' and quos_type <> 'tax' 
 then (myamt * -1 * (quos_amt / 100.0)) 
@@ -38,7 +39,7 @@ from quo_sac, (select quod_nbr, sum(quod_qty * quod_listprice) as 'myamt' from q
 				<textElement textAlignment="Right">
 					<font size="10"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{amt}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[com.blueseer.utl.BlueSeerUtils.currformatDoubleWithSymbol($F{amt},$P{curr})]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

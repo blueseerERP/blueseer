@@ -68,7 +68,9 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatInt;
+import static com.blueseer.utl.BlueSeerUtils.bsNumber;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -411,16 +413,15 @@ public class TrialBalanceRpt extends javax.swing.JPanel {
         for (int i = 1967 ; i < 2222; i++) {
             ddyear.addItem(bsFormatInt(i));
         }
-        ddyear.setSelectedItem(dfyear.format(now));
+        ddyear.setSelectedItem(bsNumber(dfyear.format(now)));
             
         ddperiod.removeAllItems();
         for (int i = 1 ; i <= 12; i++) {
             ddperiod.addItem(bsFormatInt(i));
         }
         String[] fromdatearray = fglData.getGLCalForDate(now);
-        //int fromdateperiod = Integer.valueOf(fromdatearray.get(1).toString());
         ddperiod.setSelectedItem(fromdatearray[1].toString());
-        ArrayList startend = fglData.getGLCalForPeriod(Integer.valueOf(ddyear.getSelectedItem().toString()), Integer.valueOf(ddperiod.getSelectedItem().toString()));
+        ArrayList startend = fglData.getGLCalForPeriod(bsParseInt(ddyear.getSelectedItem().toString()), bsParseInt(ddperiod.getSelectedItem().toString()));
         datelabel.setText(startend.get(0).toString() + " To " + startend.get(1).toString());
        
         
@@ -765,8 +766,8 @@ try {
                 
                 
                  
-                 int period = Integer.valueOf(ddperiod.getSelectedItem().toString());
-                 int year = Integer.valueOf(ddyear.getSelectedItem().toString());
+                 int period = bsParseInt(ddperiod.getSelectedItem().toString());
+                 int year = bsParseInt(ddyear.getSelectedItem().toString());
                  int prioryear = 0;
                  double begbal = 0;
                  double activity = 0;
@@ -1124,11 +1125,11 @@ try {
         int col = tablereport.columnAtPoint(evt.getPoint());
         if ( col == 0) {
                if (tablereport.getColumnCount() == 8) {
-                getdetail(tablereport.getValueAt(row, 1).toString(), tablereport.getValueAt(row, 5).toString(), Integer.valueOf(ddyear.getSelectedItem().toString()), Integer.valueOf(ddperiod.getSelectedItem().toString()));
+                getdetail(tablereport.getValueAt(row, 1).toString(), tablereport.getValueAt(row, 5).toString(), bsParseInt(ddyear.getSelectedItem().toString()), bsParseInt(ddperiod.getSelectedItem().toString()));
                 btdetail.setEnabled(true);
                 detailpanel.setVisible(true);
                } else {
-                 getdetailCC(tablereport.getValueAt(row, 1).toString(), tablereport.getValueAt(row, 6).toString(), tablereport.getValueAt(row, 5).toString(), Integer.valueOf(ddyear.getSelectedItem().toString()), Integer.valueOf(ddperiod.getSelectedItem().toString()));
+                 getdetailCC(tablereport.getValueAt(row, 1).toString(), tablereport.getValueAt(row, 6).toString(), tablereport.getValueAt(row, 5).toString(), bsParseInt(ddyear.getSelectedItem().toString()), bsParseInt(ddperiod.getSelectedItem().toString()));
                 btdetail.setEnabled(true);
                 detailpanel.setVisible(true);  
                }
@@ -1137,7 +1138,7 @@ try {
 
     private void ddyearItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_ddyearItemStateChanged
        if (ddyear.getItemCount() > 0 && ddperiod.getItemCount() > 0) {
-        ArrayList fromdatearray = fglData.getGLCalForPeriod(Integer.valueOf(ddyear.getSelectedItem().toString()), Integer.valueOf(ddperiod.getSelectedItem().toString()));
+        ArrayList fromdatearray = fglData.getGLCalForPeriod(bsParseInt(ddyear.getSelectedItem().toString()), bsParseInt(ddperiod.getSelectedItem().toString()));
         if (fromdatearray.size() == 2)
         datelabel.setText(fromdatearray.get(0).toString() + " To " + fromdatearray.get(1).toString());
        }
@@ -1145,7 +1146,7 @@ try {
 
     private void ddperiodItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_ddperiodItemStateChanged
         if (ddperiod.getItemCount() > 0 && ddyear.getItemCount() > 0) {
-        ArrayList fromdatearray = fglData.getGLCalForPeriod(Integer.valueOf(ddyear.getSelectedItem().toString()), Integer.valueOf(ddperiod.getSelectedItem().toString()));
+        ArrayList fromdatearray = fglData.getGLCalForPeriod(bsParseInt(ddyear.getSelectedItem().toString()), bsParseInt(ddperiod.getSelectedItem().toString()));
         if (fromdatearray.size() == 2)
         datelabel.setText(fromdatearray.get(0).toString() + " To " + fromdatearray.get(1).toString());
         }

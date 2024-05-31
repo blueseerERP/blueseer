@@ -406,6 +406,9 @@ inner join site_mstr on site_site = so_site where sod_nbr =  $P{myid}]]>
 				<subreportParameter name="myid">
 					<subreportParameterExpression><![CDATA[$F{sod_nbr}]]></subreportParameterExpression>
 				</subreportParameter>
+				<subreportParameter name="curr">
+					<subreportParameterExpression><![CDATA[$F{so_curr}]]></subreportParameterExpression>
+				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "sacord.jasper"]]></subreportExpression>
 			</subreport>

@@ -434,7 +434,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
         for (int i = 1967 ; i < 2222; i++) {
             ddyear.addItem(bsFormatInt(i));
         }
-        ddyear.setSelectedItem(dfyear.format(now));
+        ddyear.setSelectedItem(bsNumber(dfyear.format(now)));
             
         ddperiod.removeAllItems();
         for (int i = 1 ; i <= 12; i++) {
@@ -442,8 +442,13 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
         }
         String[] fromdatearray = fglData.getGLCalForDate(now);
         //int fromdateperiod = Integer.valueOf(fromdatearray.get(1).toString());
+        
+       // System.out.println("intx=" + bsParseInt(ddyear.getSelectedItem().toString()) + "," + bsNumber(fromdatearray[1]));
+       
+        
         ddperiod.setSelectedItem(bsNumber(fromdatearray[1]));
-        ArrayList startend = fglData.getGLCalForPeriod(Integer.valueOf(ddyear.getSelectedItem().toString()), Integer.valueOf(ddperiod.getSelectedItem().toString()));
+        
+        ArrayList startend = fglData.getGLCalForPeriod(bsParseInt(ddyear.getSelectedItem().toString()), bsParseInt(ddperiod.getSelectedItem().toString()));
         datelabel.setText(startend.get(0).toString() + " To " + startend.get(1).toString());
         
         ArrayList myacct = fglData.getGLAcctList();
@@ -1253,7 +1258,7 @@ try {
 
     private void ddyearItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_ddyearItemStateChanged
        if (ddyear.getItemCount() > 0 && ddperiod.getItemCount() > 0) {
-        ArrayList fromdatearray = fglData.getGLCalForPeriod(Integer.valueOf(ddyear.getSelectedItem().toString()), Integer.valueOf(ddperiod.getSelectedItem().toString()));
+        ArrayList fromdatearray = fglData.getGLCalForPeriod(bsParseInt(ddyear.getSelectedItem().toString()), bsParseInt(ddperiod.getSelectedItem().toString()));
         if (fromdatearray.size() == 2)
         datelabel.setText(fromdatearray.get(0).toString() + " To " + fromdatearray.get(1).toString());
        }
@@ -1261,7 +1266,7 @@ try {
 
     private void ddperiodItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_ddperiodItemStateChanged
         if (ddperiod.getItemCount() > 0 && ddyear.getItemCount() > 0) {
-        ArrayList fromdatearray = fglData.getGLCalForPeriod(Integer.valueOf(ddyear.getSelectedItem().toString()), Integer.valueOf(ddperiod.getSelectedItem().toString()));
+        ArrayList fromdatearray = fglData.getGLCalForPeriod(bsParseInt(ddyear.getSelectedItem().toString()), bsParseInt(ddperiod.getSelectedItem().toString()));
         if (fromdatearray.size() == 2)
         datelabel.setText(fromdatearray.get(0).toString() + " To " + fromdatearray.get(1).toString());
         }

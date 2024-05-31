@@ -64,7 +64,9 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.bsNumber;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -341,7 +343,7 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
         for (int i = 1967 ; i < 2222; i++) {
             ddyear.addItem(String.valueOf(i));
         }
-        ddyear.setSelectedItem(dfyear.format(now));
+        ddyear.setSelectedItem(bsNumber(dfyear.format(now)));
             
        cbzero.setSelected(false);
         
@@ -580,7 +582,7 @@ try {
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 
                  
-                 int year = Integer.valueOf(ddyear.getSelectedItem().toString());
+                 int year = bsParseInt(ddyear.getSelectedItem().toString());
                  
                  
                  String[] str_activity = {"","","","","","","","","","","","",""};
@@ -751,7 +753,7 @@ try {
     private void ddsumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddsumActionPerformed
         double amt = 0.00;
         for (int i = 0 ; i < tablereport.getRowCount() ; i++) {
-               amt += bsParseDouble(tablereport.getValueAt(i, Integer.valueOf(ddsum.getSelectedItem().toString()) + 2).toString());
+               amt += bsParseDouble(tablereport.getValueAt(i, bsParseInt(ddsum.getSelectedItem().toString()) + 2).toString());
        }
         labelsum.setText(currformatDouble(amt));
     }//GEN-LAST:event_ddsumActionPerformed
