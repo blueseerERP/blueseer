@@ -162,7 +162,7 @@ public class apiServer {
         response.getWriter().println("RemoteHost=" + request.getRemoteHost());
         for (String header : HEADERS) {
         String ip = request.getHeader(header);
-        if (ip != null && ip.length() != 0 && !"unknown".equalsIgnoreCase(ip)) {
+        if (ip != null && ip.length() != 0 && ! "unknown".equalsIgnoreCase(ip)) {
             response.getWriter().println("info: " + header + "=" + ip);
         }
     }
