@@ -157,13 +157,14 @@ public class apiServer {
         response.setContentType("text/html");
         response.setStatus(HttpServletResponse.SC_OK);
         response.getWriter().println("<h1>"+greeting+"</h1>");
-        response.getWriter().println("session=" + request.getSession(true).getId());
-        response.getWriter().println("RemoteAddr=" + request.getRemoteAddr());
-        response.getWriter().println("RemoteHost=" + request.getRemoteHost());
+        response.getWriter().println("session=" + request.getSession(true).getId() + "<br>");
+        response.getWriter().println("RemoteAddr=" + request.getRemoteAddr() + "<br>");
+        response.getWriter().println("RemoteHost=" + request.getRemoteHost() + "<br>");
+        response.getWriter().println("RequestURI=" + request.getRequestURI() + "<br>");
         for (String header : HEADERS) {
         String ip = request.getHeader(header);
         if (ip != null && ip.length() != 0 && ! "unknown".equalsIgnoreCase(ip)) {
-            response.getWriter().println("info: " + header + "=" + ip);
+            response.getWriter().println("info: " + header + "=" + ip + "<br>");
         }
     }
         
