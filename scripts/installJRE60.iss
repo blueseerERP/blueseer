@@ -55,6 +55,8 @@ Source: "C:\bs\blueseer\scripts\bs.cfg.sqlite"; DestDir: "{app}"; DestName: "{#b
 Source: "C:\bs\bsmf\documentation\documentation.pdf"; DestDir: "{app}"; Flags: ignoreversion
 Source: "C:\bs\blueseer\sf\data\*"; DestDir: "{app}\data"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\bs\blueseer\sf\data\fr\bsdb.db"; components: french; DestDir: "{app}\data"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\bs\blueseer\sf\data\ar\bsdb.db"; components: arabic; DestDir: "{app}\data"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "C:\bs\blueseer\sf\data\zh\bsdb.db"; components: chinese; DestDir: "{app}\data"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\bs\blueseer\sf\data\es\bsdb.db"; components: spanish; DestDir: "{app}\data"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\bs\blueseer\sf\data\en\bsdb.db"; components: english; DestDir: "{app}\data"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "C:\bs\blueseer\sf\data\tr\bsdb.db"; components: turkish; DestDir: "{app}\data"; Flags: ignoreversion recursesubdirs createallsubdirs
