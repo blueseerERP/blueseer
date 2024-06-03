@@ -509,6 +509,8 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbdesc.setForeground(Color.black);
         tbdesc.setEditable(false);
         
+        discount.setEditable(false);
+        
         String defaultsite = null;
         
         ddsite.removeAllItems();
@@ -3642,8 +3644,6 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
             discount.setText(x);
             discount.setBackground(Color.white);
         }
-        if (discount.getText().isEmpty())
-            discount.setText("0.00");
         setNetPrice();
         }
     }//GEN-LAST:event_discountFocusLost
