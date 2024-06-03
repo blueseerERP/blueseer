@@ -25,7 +25,6 @@ $jaronly = "blueseer.jaronly.zip"
 rm $wip\$jaronly
 compress-archive -update -path ..\dist\blueseer.jar -destinationpath $wip\$jaronly
 compress-archive -update -path ..\dist\bsmf.jar -destinationpath $wip\$jaronly
-compress-archive -update -path ..\.patch -destinationpath $wip\$jaronly
 compress-archive -update -path instructions.txt -destinationpath $wip\$jaronly
 
 # create jar and jasper patch zip file
