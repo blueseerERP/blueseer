@@ -63,25 +63,18 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
-import static bsmf.MainFrame.driver;
-import static bsmf.MainFrame.mydialog;
-import static bsmf.MainFrame.pass;
-import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
-import static bsmf.MainFrame.url;
-import static bsmf.MainFrame.user;
+import static com.blueseer.adm.SystemControl.newFile;
 import com.blueseer.edi.EDI.AnnoDoc;
 import static com.blueseer.edi.EDI.createIMAP;
 import static com.blueseer.edi.EDI.createMAPUNE;
 import static com.blueseer.edi.EDI.edilog;
 import static com.blueseer.edi.EDI.escapeDelimiter;
 import static com.blueseer.edi.EDI.getEDIType;
-import static com.blueseer.edi.EDIMap.GlobalDebug;
-import static com.blueseer.edi.EDIMap.SegmentCounter;
-import com.blueseer.edi.EDIMap.UserDefinedException;
-import static com.blueseer.edi.EDIMap.splitFFSegment;
+import static com.blueseer.edi.ediData.addDFStructureTransaction;
 import static com.blueseer.edi.ediData.addMapMstr;
 import static com.blueseer.edi.ediData.deleteMapMstr;
+import com.blueseer.edi.ediData.dfs_det;
 import com.blueseer.edi.ediData.dfs_mstr;
 import static com.blueseer.edi.ediData.getDFSMstr;
 import static com.blueseer.edi.ediData.getDSFasArray;
@@ -90,6 +83,7 @@ import static com.blueseer.edi.ediData.getMapMstr;
 
 import com.blueseer.edi.ediData.map_mstr;
 import static com.blueseer.edi.ediData.updateMapMstr;
+import static com.blueseer.utl.BlueSeerUtils.ConvertTrueFalseToBoolean;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
@@ -109,10 +103,9 @@ import com.blueseer.utl.EDData;
 import static com.blueseer.utl.EDData.cbufToList;
 import static com.blueseer.utl.EDData.getBSDocTypeFromStds;
 import static com.blueseer.utl.EDData.getDelimiters;
-import static com.blueseer.utl.EDData.readEDIRawFileIntoArrayList;
 import static com.blueseer.utl.EDData.readEDIRawFileIntoCbuf;
 import com.blueseer.utl.IBlueSeerT;
-import com.blueseer.vdr.venData;
+import static com.blueseer.utl.OVData.getSystemTempDirectory;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -148,7 +141,11 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.MalformedInputException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -168,7 +165,9 @@ import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -1061,6 +1060,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         mappanel.setVisible(true);
         inputpanel.setVisible(true);
         outputpanel.setVisible(true);
+        btunzip.setEnabled(true);
        
         
         if (arg != null && arg.length > 0) {
@@ -2005,6 +2005,216 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
          }
     }
     
+    public String[] loadZippedMap() throws IOException {
+        String[] m = new String[]{"",""};
+        Path patch = null;
+        String v_map = "";
+        String v_inddf = "";
+        String v_outddf = "";
+        
+        File zipfile = getfile("Select Map Zip File");
+        Path pathextractdir = FileSystems.getDefault().getPath(cleanDirString(getSystemTempDirectory()));
+                
+        //  extract zip into temp         
+        File destDir = pathextractdir.toFile();
+        byte[] buffer = new byte[1024];
+        ZipInputStream zis = new ZipInputStream(new FileInputStream(zipfile));
+        ZipEntry zipEntry = zis.getNextEntry();
+        String root = zipEntry.getName().split(Pattern.quote("\\"),-1)[0];
+        while (zipEntry != null) {
+            File newFile = newFile(destDir, zipEntry);
+            if (zipEntry.isDirectory()) {
+                if (!newFile.isDirectory() && !newFile.mkdirs()) {
+                    throw new IOException("Failed to create zip directory " + newFile);
+                }
+            } else {
+                // fix for Windows-created archives
+                File parent = newFile.getParentFile();
+                if (!parent.isDirectory() && !parent.mkdirs()) {
+                    throw new IOException("Failed to create zip directory " + parent);
+                }
+                
+                // write file content
+                FileOutputStream fos = new FileOutputStream(newFile);
+                int len;
+                while ((len = zis.read(buffer)) > 0) {
+                    fos.write(buffer, 0, len);
+                }
+                fos.close();
+            }
+        zipEntry = zis.getNextEntry();
+       }
+        zis.closeEntry();
+        zis.close();
+        
+        // read manifest.txt file and parse into variables
+        Path manifestfile = FileSystems.getDefault().getPath(cleanDirString(getSystemTempDirectory()) + "manifest.txt");
+        if (manifestfile != null) {
+        List<String> lines = Files.readAllLines(manifestfile);
+                for (String segment : lines ) {
+                    if (segment.isBlank()) {
+                        continue;
+                    }
+                    String[] v = segment.split("=");
+                    if (v.length > 1) {
+                        if (v[0].equals("map")) {
+                            v_map = v[1];
+                        }
+                        if (v[0].equals("ifs")) {
+                            v_inddf = v[1];
+                        }
+                        if (v[0].equals("ofs")) {
+                            v_outddf = v[1];
+                        }
+                    }
+                }
+        }
+        
+        // if all is good here...copy map (filename.java) over to edi/maps directory
+        Path sourcepath = FileSystems.getDefault().getPath(cleanDirString(getSystemTempDirectory()) + v_map);
+        Path destinationpath = FileSystems.getDefault().getPath(cleanDirString(EDData.getEDIMapDir()) + v_map);
+        Files.copy(sourcepath, destinationpath, StandardCopyOption.REPLACE_EXISTING);
+        
+        // load map_mstr table info
+        Path mapmstr = FileSystems.getDefault().getPath(cleanDirString(getSystemTempDirectory()) + "mapmstr.csv");
+        if (mapmstr != null) {
+        map_mstr x = null;
+        List<String> lines = Files.readAllLines(mapmstr);
+        for (String segment : lines ) {
+            if (segment.isBlank()) {
+                continue;
+            }
+            String[] v = segment.split(",", -1);
+            x = new map_mstr(null, v[0],
+                    v[1],
+                    v[2],
+                    v[3],
+                    v[4],
+                    v[5],
+                    v[6],
+                    v[7],
+                    v[8],
+                    v[9],
+                    v[10], // package
+                    v[11] // tinyint
+                    );
+        }
+           m = addMapMstr(x);
+        }
+        
+        if (! m[0].equals("0")) {
+            return m;
+        }
+        
+        
+        // load dfs_mstr, dfs_det table info for INBOUND Structure File
+        Path dfsmstr = FileSystems.getDefault().getPath(cleanDirString(getSystemTempDirectory()) + v_inddf + ".dfs");
+        Path dfsdet = FileSystems.getDefault().getPath(cleanDirString(getSystemTempDirectory()) + v_inddf + ".det");
+        if (dfsmstr != null && dfsdet != null) {
+        List<String> dfslines = Files.readAllLines(dfsmstr);
+        List<String> dfsdetlines = Files.readAllLines(dfsdet);
+        dfs_mstr x = null;
+        for (String dfs : dfslines ) {
+            if (dfs.isBlank()) {
+                continue;
+            }
+            String[] v = dfs.split(",", -1);
+            x = new dfs_mstr(null, v[0],
+                v[1],
+                v[2],
+                v[3],
+                v[4],
+                v[5],
+                "" // misc
+                );
+        }
+        ArrayList<dfs_det> detlist = new ArrayList<dfs_det>();
+        for (String det : dfsdetlines ) {
+            if (det.isBlank()) {
+                continue;
+            }
+            String[] v = det.split(",", -1);
+            dfs_det y = new dfs_det(null, 
+                v[0],
+                v[1],
+                v[2],
+                v[3],    
+                v[4],
+                v[5],
+                v[6],
+                v[7],
+                v[8],
+                v[9],
+                v[10],
+                v[11],
+                v[12]
+                );
+            detlist.add(y);
+        }
+        
+         m = addDFStructureTransaction(detlist, x); 
+        }
+        
+        if (! m[0].equals("0")) {
+            return m;
+        }
+        
+        
+         // load dfs_mstr, dfs_det table info for OUTBOUND Structure File
+        dfsmstr = FileSystems.getDefault().getPath(cleanDirString(getSystemTempDirectory()) + v_outddf + ".dfs");
+        dfsdet = FileSystems.getDefault().getPath(cleanDirString(getSystemTempDirectory()) + v_outddf + ".det");
+        if (dfsmstr != null && dfsdet != null) {
+        List<String> dfslines = Files.readAllLines(dfsmstr);
+        List<String> dfsdetlines = Files.readAllLines(dfsdet);
+        dfs_mstr x = null;
+        for (String dfs : dfslines ) {
+            if (dfs.isBlank()) {
+                continue;
+            }
+            String[] v = dfs.split(",", -1);
+            x = new dfs_mstr(null, v[0],
+                v[1],
+                v[2],
+                v[3],
+                v[4],
+                v[5],
+                "" // misc
+                );
+        }
+        ArrayList<dfs_det> detlist = new ArrayList<dfs_det>();
+        for (String det : dfsdetlines ) {
+            if (det.isBlank()) {
+                continue;
+            }
+            String[] v = det.split(",", -1);
+            dfs_det y = new dfs_det(null, 
+                v[0],
+                v[1],
+                v[2],
+                v[3],    
+                v[4],
+                v[5],
+                v[6],
+                v[7],
+                v[8],
+                v[9],
+                v[10],
+                v[11],
+                v[12]
+                );
+            detlist.add(y);
+        }
+        
+          m = addDFStructureTransaction(detlist, x); 
+        }
+        if (! m[0].equals("0")) {
+            return m;
+        }
+        
+        
+        return m;
+    }
+    
     
     public void jarFile(JavaFileObject file) {
         // let's create the jar
@@ -2298,6 +2508,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         btshiftleft = new javax.swing.JButton();
         btshiftright = new javax.swing.JButton();
         btzip = new javax.swing.JButton();
+        btunzip = new javax.swing.JButton();
         tbkey = new javax.swing.JTextField();
         tbpath = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
@@ -2569,6 +2780,18 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             }
         });
         toolbar.add(btzip);
+
+        btunzip.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/output.png"))); // NOI18N
+        btunzip.setToolTipText("Zip Map");
+        btunzip.setFocusable(false);
+        btunzip.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btunzip.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btunzip.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btunzipActionPerformed(evt);
+            }
+        });
+        toolbar.add(btunzip);
 
         tbkey.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -3403,6 +3626,19 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         }
     }//GEN-LAST:event_OutputTabbedPaneStateChanged
 
+    private void btunzipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btunzipActionPerformed
+         try {
+             String[] m = loadZippedMap();
+             if (m[0].equals("0")) {
+                 bsmf.MainFrame.show("Map has been imported");
+             } else {
+                 bsmf.MainFrame.show("Problem with Map Import..." + m[1]);
+             }
+         } catch (IOException ex) {
+             bslog(ex);
+         }
+    }//GEN-LAST:event_btunzipActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTabbedPane InputTabbedPane;
@@ -3419,6 +3655,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     private javax.swing.JButton btshiftleft;
     private javax.swing.JButton btshiftright;
     private javax.swing.JButton btunhide;
+    private javax.swing.JButton btunzip;
     private javax.swing.JButton btupdate;
     private javax.swing.JButton btzip;
     private javax.swing.JCheckBox cbinternal;
