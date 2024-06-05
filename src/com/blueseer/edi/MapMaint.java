@@ -73,6 +73,7 @@ import static com.blueseer.edi.EDI.escapeDelimiter;
 import static com.blueseer.edi.EDI.getEDIType;
 import static com.blueseer.edi.ediData.addDFStructureTransaction;
 import static com.blueseer.edi.ediData.addMapMstr;
+import static com.blueseer.edi.ediData.deleteDFStructure;
 import static com.blueseer.edi.ediData.deleteMapMstr;
 import com.blueseer.edi.ediData.dfs_det;
 import com.blueseer.edi.ediData.dfs_mstr;
@@ -80,6 +81,8 @@ import static com.blueseer.edi.ediData.getDFSMstr;
 import static com.blueseer.edi.ediData.getDSFasArray;
 import static com.blueseer.edi.ediData.getDSFasString;
 import static com.blueseer.edi.ediData.getMapMstr;
+import static com.blueseer.edi.ediData.isValidDFSid;
+import static com.blueseer.edi.ediData.isValidMapid;
 
 import com.blueseer.edi.ediData.map_mstr;
 import static com.blueseer.edi.ediData.updateMapMstr;
@@ -2013,8 +2016,10 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         String v_outddf = "";
         
         File zipfile = getfile("Select Map Zip File");
-        Path pathextractdir = FileSystems.getDefault().getPath(cleanDirString(getSystemTempDirectory()));
-                
+        Path pathextractdir = FileSystems.getDefault().getPath(cleanDirString(getSystemTempDirectory()) + "mapextract");
+        if (! pathextractdir.toFile().exists()) {
+           pathextractdir.toFile().mkdir();
+        }        
         //  extract zip into temp         
         File destDir = pathextractdir.toFile();
         byte[] buffer = new byte[1024];
@@ -2048,7 +2053,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         zis.close();
         
         // read manifest.txt file and parse into variables
-        Path manifestfile = FileSystems.getDefault().getPath(cleanDirString(getSystemTempDirectory()) + "manifest.txt");
+        Path manifestfile = FileSystems.getDefault().getPath(cleanDirString(pathextractdir.toString()) + "manifest.txt");
         if (manifestfile != null) {
         List<String> lines = Files.readAllLines(manifestfile);
                 for (String segment : lines ) {
@@ -2071,146 +2076,186 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         }
         
         // if all is good here...copy map (filename.java) over to edi/maps directory
-        Path sourcepath = FileSystems.getDefault().getPath(cleanDirString(getSystemTempDirectory()) + v_map);
+        Path sourcepath = FileSystems.getDefault().getPath(cleanDirString(pathextractdir.toString()) + v_map);
         Path destinationpath = FileSystems.getDefault().getPath(cleanDirString(EDData.getEDIMapDir()) + v_map);
-        Files.copy(sourcepath, destinationpath, StandardCopyOption.REPLACE_EXISTING);
         
-        // load map_mstr table info
-        Path mapmstr = FileSystems.getDefault().getPath(cleanDirString(getSystemTempDirectory()) + "mapmstr.csv");
-        if (mapmstr != null) {
-        map_mstr x = null;
-        List<String> lines = Files.readAllLines(mapmstr);
-        for (String segment : lines ) {
-            if (segment.isBlank()) {
-                continue;
+        boolean mapOverwrite = true;
+        if (destinationpath.toFile().exists()) {
+             mapOverwrite = bsmf.MainFrame.warn("Overwrite map file? " + v_map);
+        }
+        
+        
+        if (mapOverwrite) {
+            Files.copy(sourcepath, destinationpath, StandardCopyOption.REPLACE_EXISTING);
+
+            // load map_mstr table info
+            String mapkey = "";
+            int index = v_map.lastIndexOf(".java");
+            if (index > 0) {
+                mapkey = v_map.substring(0, index);
             }
-            String[] v = segment.split(",", -1);
-            x = new map_mstr(null, v[0],
+            if (isValidMapid(mapkey)) { // delete old map rec if exists...since overwrite is true
+                deleteMapMstr(new map_mstr(mapkey));
+            }
+            
+            Path mapmstr = FileSystems.getDefault().getPath(cleanDirString(pathextractdir.toString()) + "mapmstr.csv");
+            if (mapmstr != null) {
+            map_mstr x = null;
+            List<String> lines = Files.readAllLines(mapmstr);
+            for (String segment : lines ) {
+                if (segment.isBlank()) {
+                    continue;
+                }
+                String[] v = segment.split(",", -1);
+                x = new map_mstr(null, v[0],
+                        v[1],
+                        v[2],
+                        v[3],
+                        v[4],
+                        v[5],
+                        v[6],
+                        v[7],
+                        v[8],
+                        v[9],
+                        v[10], // package
+                        v[11] // tinyint
+                        );
+            }
+               m = addMapMstr(x);
+            }
+
+            if (! m[0].equals("0")) {
+                return m;
+            }
+        }
+        
+        // load dfs_mstr, dfs_det table info for INBOUND Structure File
+        boolean isfOverwrite = true;
+        if (isValidDFSid(v_inddf)) {
+             isfOverwrite = bsmf.MainFrame.warn("Overwrite inbound structure file? " + v_inddf);
+        }
+        if (isfOverwrite) {
+            deleteDFStructure(new dfs_mstr(v_inddf));
+            Path dfsmstr = FileSystems.getDefault().getPath(cleanDirString(pathextractdir.toString()) + v_inddf + ".dfs");
+            Path dfsdet = FileSystems.getDefault().getPath(cleanDirString(pathextractdir.toString()) + v_inddf + ".det");
+            if (dfsmstr != null && dfsdet != null) {
+            List<String> dfslines = Files.readAllLines(dfsmstr);
+            List<String> dfsdetlines = Files.readAllLines(dfsdet);
+            dfs_mstr x = null;
+            for (String dfs : dfslines ) {
+                if (dfs.isBlank()) {
+                    continue;
+                }
+                String[] v = dfs.split(",", -1);
+                x = new dfs_mstr(null, v[0],
                     v[1],
                     v[2],
                     v[3],
+                    v[4],
+                    v[5],
+                    "" // misc
+                    );
+            }
+            ArrayList<dfs_det> detlist = new ArrayList<dfs_det>();
+            for (String det : dfsdetlines ) {
+                if (det.isBlank()) {
+                    continue;
+                }
+                String[] v = det.split(",", -1);
+                dfs_det y = new dfs_det(null, 
+                    v[0],
+                    v[1],
+                    v[2],
+                    v[3],    
                     v[4],
                     v[5],
                     v[6],
                     v[7],
                     v[8],
                     v[9],
-                    v[10], // package
-                    v[11] // tinyint
+                    v[10],
+                    v[11],
+                    v[12]
                     );
-        }
-           m = addMapMstr(x);
-        }
-        
-        if (! m[0].equals("0")) {
-            return m;
-        }
-        
-        
-        // load dfs_mstr, dfs_det table info for INBOUND Structure File
-        Path dfsmstr = FileSystems.getDefault().getPath(cleanDirString(getSystemTempDirectory()) + v_inddf + ".dfs");
-        Path dfsdet = FileSystems.getDefault().getPath(cleanDirString(getSystemTempDirectory()) + v_inddf + ".det");
-        if (dfsmstr != null && dfsdet != null) {
-        List<String> dfslines = Files.readAllLines(dfsmstr);
-        List<String> dfsdetlines = Files.readAllLines(dfsdet);
-        dfs_mstr x = null;
-        for (String dfs : dfslines ) {
-            if (dfs.isBlank()) {
-                continue;
+                detlist.add(y);
             }
-            String[] v = dfs.split(",", -1);
-            x = new dfs_mstr(null, v[0],
-                v[1],
-                v[2],
-                v[3],
-                v[4],
-                v[5],
-                "" // misc
-                );
-        }
-        ArrayList<dfs_det> detlist = new ArrayList<dfs_det>();
-        for (String det : dfsdetlines ) {
-            if (det.isBlank()) {
-                continue;
+
+             m = addDFStructureTransaction(detlist, x); 
             }
-            String[] v = det.split(",", -1);
-            dfs_det y = new dfs_det(null, 
-                v[0],
-                v[1],
-                v[2],
-                v[3],    
-                v[4],
-                v[5],
-                v[6],
-                v[7],
-                v[8],
-                v[9],
-                v[10],
-                v[11],
-                v[12]
-                );
-            detlist.add(y);
+
+            if (! m[0].equals("0")) {
+                return m;
+            }
         }
-        
-         m = addDFStructureTransaction(detlist, x); 
-        }
-        
-        if (! m[0].equals("0")) {
-            return m;
-        }
-        
         
          // load dfs_mstr, dfs_det table info for OUTBOUND Structure File
-        dfsmstr = FileSystems.getDefault().getPath(cleanDirString(getSystemTempDirectory()) + v_outddf + ".dfs");
-        dfsdet = FileSystems.getDefault().getPath(cleanDirString(getSystemTempDirectory()) + v_outddf + ".det");
-        if (dfsmstr != null && dfsdet != null) {
-        List<String> dfslines = Files.readAllLines(dfsmstr);
-        List<String> dfsdetlines = Files.readAllLines(dfsdet);
-        dfs_mstr x = null;
-        for (String dfs : dfslines ) {
-            if (dfs.isBlank()) {
-                continue;
-            }
-            String[] v = dfs.split(",", -1);
-            x = new dfs_mstr(null, v[0],
-                v[1],
-                v[2],
-                v[3],
-                v[4],
-                v[5],
-                "" // misc
-                );
+         boolean osfOverwrite = true;
+        if (isValidDFSid(v_outddf)) {
+             osfOverwrite = bsmf.MainFrame.warn("Overwrite outbound structure file? " + v_outddf);
         }
-        ArrayList<dfs_det> detlist = new ArrayList<dfs_det>();
-        for (String det : dfsdetlines ) {
-            if (det.isBlank()) {
-                continue;
+        if (osfOverwrite) {
+            deleteDFStructure(new dfs_mstr(v_outddf));
+            Path dfsmstr = FileSystems.getDefault().getPath(cleanDirString(pathextractdir.toString()) + v_outddf + ".dfs");
+            Path dfsdet = FileSystems.getDefault().getPath(cleanDirString(pathextractdir.toString()) + v_outddf + ".det");
+            if (dfsmstr != null && dfsdet != null) {
+            List<String> dfslines = Files.readAllLines(dfsmstr);
+            List<String> dfsdetlines = Files.readAllLines(dfsdet);
+            dfs_mstr x = null;
+            for (String dfs : dfslines ) {
+                if (dfs.isBlank()) {
+                    continue;
+                }
+                String[] v = dfs.split(",", -1);
+                x = new dfs_mstr(null, v[0],
+                    v[1],
+                    v[2],
+                    v[3],
+                    v[4],
+                    v[5],
+                    "" // misc
+                    );
             }
-            String[] v = det.split(",", -1);
-            dfs_det y = new dfs_det(null, 
-                v[0],
-                v[1],
-                v[2],
-                v[3],    
-                v[4],
-                v[5],
-                v[6],
-                v[7],
-                v[8],
-                v[9],
-                v[10],
-                v[11],
-                v[12]
-                );
-            detlist.add(y);
+            ArrayList<dfs_det> detlist = new ArrayList<dfs_det>();
+            for (String det : dfsdetlines ) {
+                if (det.isBlank()) {
+                    continue;
+                }
+                String[] v = det.split(",", -1);
+                dfs_det y = new dfs_det(null, 
+                    v[0],
+                    v[1],
+                    v[2],
+                    v[3],    
+                    v[4],
+                    v[5],
+                    v[6],
+                    v[7],
+                    v[8],
+                    v[9],
+                    v[10],
+                    v[11],
+                    v[12]
+                    );
+                detlist.add(y);
+            }
+
+              m = addDFStructureTransaction(detlist, x); 
+            }
+            if (! m[0].equals("0")) {
+                return m;
+            }
         }
         
-          m = addDFStructureTransaction(detlist, x); 
-        }
-        if (! m[0].equals("0")) {
-            return m;
-        }
-        
+        // cleanup 
+        if (pathextractdir.toFile().exists()) {
+            File[] contents = pathextractdir.toFile().listFiles();
+            if (contents != null) {
+                for (File f : contents) {
+                    f.delete();
+                }
+            }
+           pathextractdir.toFile().delete();
+        }  
         
         return m;
     }
@@ -3631,6 +3676,8 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
              String[] m = loadZippedMap();
              if (m[0].equals("0")) {
                  bsmf.MainFrame.show("Map has been imported");
+             } else if (m[0].isBlank()) {
+                 bsmf.MainFrame.show("map update cancelled");
              } else {
                  bsmf.MainFrame.show("Problem with Map Import..." + m[1]);
              }

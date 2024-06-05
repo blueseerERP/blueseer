@@ -2537,6 +2537,24 @@ public class ediData {
         return x;
     }
     
+    public static boolean isValidMapid(String id) {
+        boolean x = false;
+        String sql = "select * from map_mstr where map_id = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, id);
+             try (ResultSet res = ps.executeQuery();) {
+                if (res.isBeforeFirst()) {
+                x = true;
+                } 
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s); 
+        }
+        return x;
+    }
+    
+    
     public static boolean isValidEDDid(String id) {
         boolean x = false;
         String sql = "select * from edi_doc where edd_id = ?;";
@@ -4330,11 +4348,17 @@ public class ediData {
         public map_mstr(String[] m) {
             this(m, "", "", "", "", "", "", "", "", "", "", "", "");
         }
+        public map_mstr(String id) {
+            this(null, id, "", "", "", "", "", "", "", "", "", "", "");
+        }
     }
     
     public record dfs_mstr(String[] m, String dfs_id, String dfs_desc, String dfs_version, String dfs_doctype, String dfs_filetype, String dfs_delimiter, String dfs_misc) {
         public dfs_mstr(String[] m) {
             this(m, "", "", "", "", "", "", "");
+        }
+        public dfs_mstr(String id) {
+            this(null, id, "", "", "", "", "", "");
         }
     }
     
