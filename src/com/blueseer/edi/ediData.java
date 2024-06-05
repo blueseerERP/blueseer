@@ -2677,6 +2677,33 @@ public class ediData {
         
     }
     
+    public static String[] getDSFMstrasArray(String code) {
+        
+        String[] x = null;
+        String sql = "select * from dfs_mstr where dfs_id = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, code);
+             try (ResultSet res = ps.executeQuery();) {
+               
+                    while(res.next()) {
+                        x = new String[]{
+                        res.getString("dfs_id"),
+                        res.getString("dfs_desc"), 
+                        res.getString("dfs_version"), 
+                        res.getString("dfs_doctype"), 
+                        res.getString("dfs_filetype"),
+                        res.getString("dfs_delimiter"),
+                        res.getString("dfs_misc")};
+                    }
+               
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s); 
+        }
+        return x;
+    }
+    
     public static ArrayList<String[]> getDSFasArray(String code) {
         
         ArrayList<String[]> list = new ArrayList<String[]>();

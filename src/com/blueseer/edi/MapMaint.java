@@ -78,6 +78,7 @@ import static com.blueseer.edi.ediData.deleteMapMstr;
 import com.blueseer.edi.ediData.dfs_det;
 import com.blueseer.edi.ediData.dfs_mstr;
 import static com.blueseer.edi.ediData.getDFSMstr;
+import static com.blueseer.edi.ediData.getDSFMstrasArray;
 import static com.blueseer.edi.ediData.getDSFasArray;
 import static com.blueseer.edi.ediData.getDSFasString;
 import static com.blueseer.edi.ediData.getMapMstr;
@@ -3518,71 +3519,19 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     try {
         out = new ZipOutputStream(new FileOutputStream(f));
         
-        // IFS file into Zip
-        String ifsname = ddifs.getSelectedItem().toString();
-        if (! ifsname.toLowerCase().endsWith(".csv")) {
-            ifsname = ifsname + ".csv";
-        }
-        e = new ZipEntry(ifsname);
-        out.putNextEntry(e);
         
-        // get data from tables instead of file
-        ArrayList<String[]> list = getDSFasArray(ddifs.getSelectedItem().toString());
+        // manifest.txt file
+        e = new ZipEntry("manifest.txt");
+        out.putNextEntry(e);
         StringBuilder sb = new StringBuilder();
-        for (String[] sarray : list) {
-            sb.append(String.join(",",Arrays.copyOfRange(sarray, 1, sarray.length))).append("\n");
-        }
-        data = sb.toString().getBytes();
-        /*
-        dirpath = cleanDirString(EDData.getEDIStructureDir()) + ddifs.getSelectedItem().toString();
-        path = FileSystems.getDefault().getPath(dirpath);
-        file = path.toFile();
-        data = null;
-        if (file != null && file.exists()) {
-                try {   
-                    data = Files.readAllBytes(file.toPath());
-                } catch (IOException ex) {
-                    bslog(ex);
-                }   
-        }
-        */
-        out.write(data, 0, data.length);
+        sb.append("map=" + tbkey.getText() + ".java").append("\n");
+        sb.append("ifs=" + ddifs.getSelectedItem().toString()).append("\n");
+        sb.append("ofs=" + ddofs.getSelectedItem().toString()).append("\n");
+        out.write(sb.toString().getBytes(), 0, sb.toString().getBytes().length);
         out.closeEntry();
         
-        // OFS file into Zip
-        if (! ddofs.getSelectedItem().toString().equals(ddifs.getSelectedItem().toString())) {
-        String ofsname = ddofs.getSelectedItem().toString();
-        if (! ofsname.toLowerCase().endsWith(".csv")) {
-            ofsname = ofsname + ".csv";
-        }
-        e = new ZipEntry(ofsname);
-        out.putNextEntry(e);
         
-        ArrayList<String[]> listofs = getDSFasArray(ddofs.getSelectedItem().toString());
-        StringBuilder sbofs = new StringBuilder();
-        for (String[] sarray : listofs) {
-            sbofs.append(String.join(",",Arrays.copyOfRange(sarray, 1, sarray.length))).append("\n");
-        }
-        data = sbofs.toString().getBytes();
-        
-        /*
-        dirpath = cleanDirString(EDData.getEDIStructureDir()) + ddofs.getSelectedItem().toString();
-        path = FileSystems.getDefault().getPath(dirpath);
-        file = path.toFile();
-        data = null;
-        if (file != null && file.exists()) {
-                try {   
-                    data = Files.readAllBytes(file.toPath());
-                } catch (IOException ex) {
-                    bslog(ex);
-                }   
-        }
-        */
-        out.write(data, 0, data.length);
-        out.closeEntry();
-        }
-        
-        // Map file into Zip
+        // java Map file into Zip
         e = new ZipEntry(tbkey.getText() + ".java");
         out.putNextEntry(e);
         dirpath = cleanDirString(EDData.getEDIMapDir()) + tbkey.getText() + ".java";
@@ -3598,6 +3547,75 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         }
         out.write(data, 0, data.length);
         out.closeEntry();
+        
+        
+        // map_mstr DB record
+        e = new ZipEntry("mapmstr.csv");
+        out.putNextEntry(e);
+        sb = new StringBuilder();
+        map_mstr mm = getMapMstr(new String[]{tbkey.getText()});
+        sb.append(mm.map_id()).append(",");
+        sb.append(mm.map_desc()).append(",");
+        sb.append(mm.map_version()).append(",");
+        sb.append(mm.map_ifs()).append(",");
+        sb.append(mm.map_ofs()).append(",");
+        sb.append(mm.map_indoctype()).append(",");
+        sb.append(mm.map_infiletype()).append(",");
+        sb.append(mm.map_outdoctype()).append(",");
+        sb.append(mm.map_outfiletype()).append(",");
+        sb.append(mm.map_source()).append(",");
+        sb.append(mm.map_package()).append(",");
+        sb.append(mm.map_internal()).append("\n");
+        out.write(sb.toString().getBytes(), 0, sb.toString().getBytes().length);
+        out.closeEntry();
+        
+                
+        // IFS dfs file into Zip
+        String ifsname = ddifs.getSelectedItem().toString();
+        String[] dfsmstr = getDSFMstrasArray(ddifs.getSelectedItem().toString());
+        if (dfsmstr != null) {
+            e = new ZipEntry(ifsname + ".dfs");
+            out.putNextEntry(e);
+            sb = new StringBuilder();
+            sb.append(String.join(",",Arrays.copyOfRange(dfsmstr, 1, dfsmstr.length))).append("\n");
+            out.write(sb.toString().getBytes(), 0, sb.toString().getBytes().length);
+            out.closeEntry();
+        }
+        // IFS det file into Zip
+        e = new ZipEntry(ifsname + ".det");
+        out.putNextEntry(e);
+        ArrayList<String[]> list = getDSFasArray(ddifs.getSelectedItem().toString());
+        sb = new StringBuilder();
+        for (String[] sarray : list) {
+            sb.append(String.join(",",Arrays.copyOfRange(sarray, 1, sarray.length))).append("\n");
+        }
+        out.write(sb.toString().getBytes(), 0, sb.toString().getBytes().length);
+        out.closeEntry();
+        
+        
+        // OFS dfs file into Zip
+        String ofsname = ddofs.getSelectedItem().toString();
+        dfsmstr = getDSFMstrasArray(ddofs.getSelectedItem().toString()); 
+        if (dfsmstr != null) {
+            e = new ZipEntry(ofsname + ".dfs");
+            out.putNextEntry(e);
+            sb = new StringBuilder();
+            sb.append(String.join(",",Arrays.copyOfRange(dfsmstr, 1, dfsmstr.length))).append("\n");
+            out.write(sb.toString().getBytes(), 0, sb.toString().getBytes().length);
+            out.closeEntry();
+        }
+        // OFS det file into Zip
+        e = new ZipEntry(ofsname + ".det");
+        out.putNextEntry(e);
+        list = getDSFasArray(ddofs.getSelectedItem().toString());
+        sb = new StringBuilder();
+        for (String[] sarray : list) {
+            sb.append(String.join(",",Arrays.copyOfRange(sarray, 1, sarray.length))).append("\n");
+        }
+        out.write(sb.toString().getBytes(), 0, sb.toString().getBytes().length);
+        out.closeEntry();
+        
+        
         
         // now test file
         if (testfile != null && testfile.exists()) {
