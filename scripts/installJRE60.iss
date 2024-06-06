@@ -114,6 +114,8 @@ Name: "{commondesktop}\{#MyAppName}";  components: romanian; Filename: "{app}\jr
 
 [Run]
 ;Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: shellexec postinstall skipifsilent
+Filename: "{app}\conf\winservice_cron.bat"; Parameters: "install"; Flags: runhidden
+Filename: "{app}\conf\winservice_api.bat"; Parameters: "install"; Flags: runhidden
 
 [Code]
 function CreateLangFile(): boolean;
