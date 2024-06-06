@@ -3652,6 +3652,15 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     }//GEN-LAST:event_btzipActionPerformed
 
     private void tbkeyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbkeyFocusLost
+        if (! tbkey.getText().isBlank()) {
+            if (Character.isDigit(tbkey.getText().charAt(0))) {
+                bsmf.MainFrame.show("map names cannot start with numbers");
+                tbkey.setText("");
+                tbpath.setText("");
+                return;
+            }
+        }
+        
         if (! tbkey.getText().isBlank() && tbkey.isEditable() && tbpath.isEnabled() && tbpath.getText().isBlank()) {
            tbpath.setText(cleanDirString(EDData.getEDIMapDir()) + tbkey.getText() + ".java");
         }
