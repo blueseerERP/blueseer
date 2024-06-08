@@ -323,7 +323,7 @@ inner join site_mstr on site_site = so_site where sod_nbr =  $P{myid}]]>
 				<textElement textAlignment="Right">
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{jasper.order.lblnetprice}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{jasper.order.lbllistprice}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="501" y="0" width="64" height="20" uuid="8ce50111-5517-4d8a-b3bb-70e319b81f7f"/>
@@ -368,12 +368,12 @@ inner join site_mstr on site_site = so_site where sod_nbr =  $P{myid}]]>
 				<textElement textAlignment="Right">
 					<font isBold="false"/>
 				</textElement>
-				<textFieldExpression><![CDATA[com.blueseer.utl.BlueSeerUtils.currformatDoubleWithSymbol($F{sod_netprice},$F{so_curr})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[com.blueseer.utl.BlueSeerUtils.currformatDoubleWithSymbol($F{sod_listprice},$F{so_curr})]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="501" y="0" width="64" height="16" uuid="be6c6e00-ced3-4654-a526-512503b386e0"/>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[com.blueseer.utl.BlueSeerUtils.currformatDoubleWithSymbol(new Double(($F{sod_ord_qty}.doubleValue() * $F{sod_netprice}.doubleValue()) + $F{sod_taxamt}.doubleValue()),$F{so_curr})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[com.blueseer.utl.BlueSeerUtils.currformatDoubleWithSymbol(new Double(($F{sod_ord_qty}.doubleValue() * $F{sod_listprice}.doubleValue()) + $F{sod_taxamt}.doubleValue()),$F{so_curr})]]></textFieldExpression>
 			</textField>
 			<textField pattern="¤ #,##0.00">
 				<reportElement x="456" y="0" width="41" height="16" uuid="22086fe6-4cb1-40cc-a0bd-389ae084f7f1"/>

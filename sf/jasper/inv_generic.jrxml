@@ -356,7 +356,7 @@ where shd_id =  $P{myid}]]>
 				<textElement textAlignment="Right">
 					<font isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$R{jasper.invoice.lblnetprice}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$R{jasper.invoice.lbllistprice}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="501" y="0" width="64" height="20" uuid="8ed5c42f-d611-4113-845c-cf7e3e649a05"/>
@@ -416,14 +416,14 @@ where shd_id =  $P{myid}]]>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[com.blueseer.utl.BlueSeerUtils.currformatDoubleWithSymbol($F{shd_netprice},$F{sh_curr})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[com.blueseer.utl.BlueSeerUtils.currformatDoubleWithSymbol($F{shd_listprice},$F{sh_curr})]]></textFieldExpression>
 			</textField>
 			<textField pattern="¤ #,##0.00">
 				<reportElement x="501" y="0" width="64" height="16" uuid="be6c6e00-ced3-4654-a526-512503b386e0"/>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[com.blueseer.utl.BlueSeerUtils.currformatDoubleWithSymbol(new Double(($F{shd_qty}.doubleValue() * $F{shd_netprice}.doubleValue()) + $F{shd_taxamt}.doubleValue()),$F{sh_curr})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[com.blueseer.utl.BlueSeerUtils.currformatDoubleWithSymbol(new Double(($F{shd_qty}.doubleValue() * $F{shd_listprice}.doubleValue()) + $F{shd_taxamt}.doubleValue()),$F{sh_curr})]]></textFieldExpression>
 			</textField>
 			<textField pattern="¤ #,##0.00">
 				<reportElement x="456" y="0" width="41" height="16" uuid="22086fe6-4cb1-40cc-a0bd-389ae084f7f1"/>
