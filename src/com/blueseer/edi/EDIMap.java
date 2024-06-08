@@ -2102,7 +2102,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             		Node child = childnodes.item(j);
                      //   System.out.println("CHILD: " + child.getNodeName() + "/" + child.getNodeType() + "  " + child.hasChildNodes() + "/" + child.hasAttributes() + "/" + child.getFirstChild() + "/" + child.getLastChild());
                  
-                        if (child.getNodeType() == 1 && child.getFirstChild().getNodeValue().isBlank() ) {
+                        if (child.getFirstChild() != null && child.getNodeType() == 1 && child.getFirstChild().getNodeValue().isBlank() ) {
                       //    System.out.println("CHILD EMPTY: " + child.getNodeName());  
                           childempty = true;
                         }
@@ -2185,7 +2185,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                                                al.add(attr.getNodeName() + "=" + attr.getNodeValue());
                                                String k[] = new String[]{child.getNodeName(),node.getNodeName(),"0","no","no",attr.getNodeName(),attr.getNodeName(),"0","100","-","O","A"};
                                                newresult.add(k);
-                                               System.out.println("CHILD ATTR: " + child.getNodeName() + "/" + attr.getNodeName());
+                                              // System.out.println("CHILD ATTR: " + child.getNodeName() + "/" + attr.getNodeName());
                  
                                             }
                                       }
