@@ -1308,12 +1308,21 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         if (soslist != null) {
         for (sos_det sos : soslist) {
             if (! sos.sos_type().equals("tax")) {  // don't show header tax again...
-            sacmodel.addRow(new Object[]{
-                      sos.sos_type(), 
-                      sos.sos_desc(),
-                      sos.sos_amttype(),
-                      sos.sos_amt()});
-            }
+                boolean z = true;
+                for (int j = 0; j < sactable.getRowCount(); j++) { // do not add again if already added during custchangeevent
+                          if (sactable.getValueAt(j, 0).toString().equals(sos.sos_type()) &&
+                              sactable.getValueAt(j, 1).toString().equals(sos.sos_desc())) {
+                              z = false;
+                          }
+                }
+                if (z) {
+                    sacmodel.addRow(new Object[]{
+                              sos.sos_type(), 
+                              sos.sos_desc(),
+                              sos.sos_amttype(),
+                              sos.sos_amt()});
+                    }
+                }
         }
         }
         
@@ -1459,8 +1468,8 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                 res = st.executeQuery("select cpr_disc, cpr_item from cpr_mstr where cpr_cust = " + "'" + mykey + "'" + 
                                       " AND cpr_type = " + "'" + "DISCOUNT" + "'" + ";");
                 while (res.next()) {
-                  sacmodel.addRow(new Object[]{ "discount", res.getString("cpr_item"), "percent", res.getString("cpr_disc")
-                  });
+                    sacmodel.addRow(new Object[]{ "discount", res.getString("cpr_item"), "percent", res.getString("cpr_disc")
+                    });
                 }
                 
                 
@@ -1722,7 +1731,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         if (dduom.getItemCount() > 0 && ddpart.getItemCount() > 0 && ddcust.getItemCount() > 0) {
                 TypeAndPrice = invData.getItemPrice("c", ddcust.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), 
                         dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString(), qtyshipped.getText());
-                
+        }     
                 if (TypeAndPrice[0] != null)
                 pricetype = TypeAndPrice[0];
                 
@@ -1747,9 +1756,8 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                     listprice.setText(cur_listprice);
                 }
                 
-                
                 setNetPrice();
-        }
+        
     }
     
     public void setNetPrice() {
