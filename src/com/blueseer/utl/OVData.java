@@ -17975,8 +17975,10 @@ MainFrame.bslog(e);
       // Set smtp properties
       Properties properties = new Properties();
       properties.put("mail.smtp.host", emailserver);
-      properties.put("mail.smtp.auth", "true");
-      properties.put("mail.smtp.starttls.enable", "true");
+      ArrayList<String[]> obc = getSysMetaData("system", "smtp_server_properties");
+        for (String[] s : obc) {
+            properties.put(s[0], s[1]);
+        } 
       Authenticator auth = new SMTPAuthenticator();
       Session session = Session.getDefaultInstance(properties, auth);
 
