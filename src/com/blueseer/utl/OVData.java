@@ -3783,6 +3783,53 @@ public class OVData {
 
     }
 
+    public static ArrayList _getpsmstrlist(String item, Connection bscon) {
+        ArrayList myarray = new ArrayList();
+        String mystring = "";
+        try {
+            
+            
+            
+            Statement st = bscon.createStatement();
+            ResultSet res = null;
+            try {
+
+                res = st.executeQuery("select ps_parent, ps_child, ps_type, ps_qty_per, it_desc, itc_total, ps_op from pbm_mstr "
+                        + " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' "
+                        + " inner join item_mstr on it_item = ps_child "
+                        + " inner join  item_cost on itc_item = it_item and itc_set = 'standard' "
+                        + " where ps_parent = " + "'" + item + "'" + ";");
+                while (res.next()) {
+                    mystring = res.getString("ps_parent") + ","
+                            + res.getString("ps_child") + ","
+                            + res.getString("ps_type") + ","
+                            + res.getString("ps_qty_per") + ","
+                            + res.getString("it_desc") + ","
+                            + res.getString("itc_total") + ","
+                            + res.getString("ps_op");
+
+                    myarray.add(mystring);
+
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return myarray;
+
+    }
+
+    
     public static ArrayList getpsmstrlist(String item, String bom) {
         ArrayList myarray = new ArrayList();
         String mystring = "";
@@ -3828,6 +3875,50 @@ public class OVData {
                     st.close();
                 }
                 con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return myarray;
+
+    }
+
+    public static ArrayList _getpsmstrlist(String item, String bom, Connection bscon) {
+        ArrayList myarray = new ArrayList();
+        String mystring = "";
+        try {
+           
+            Statement st = bscon.createStatement();
+            ResultSet res = null;
+            try {
+                res = st.executeQuery("select ps_parent, ps_child, ps_type, ps_qty_per, it_desc, itc_total, ps_op from pbm_mstr "
+                        + " inner join bom_mstr on bom_id = ps_bom  "
+                        + " inner join item_mstr on it_item = ps_child "
+                        + " inner join  item_cost on itc_item = it_item and itc_set = 'standard' "
+                        + " where ps_parent = " + "'" + item + "'"
+                        + " and ps_bom = " + "'" + bom + "'" + ";");
+                while (res.next()) {
+                    mystring = res.getString("ps_parent") + ","
+                            + res.getString("ps_child") + ","
+                            + res.getString("ps_type") + ","
+                            + res.getString("ps_qty_per") + ","
+                            + res.getString("it_desc") + ","
+                            + res.getString("itc_total") + ","
+                            + res.getString("ps_op");
+
+                    myarray.add(mystring);
+
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
             }
         } catch (Exception e) {
             MainFrame.bslog(e);
@@ -12053,6 +12144,51 @@ return myarray;
 
      }
 
+    public static Double _getLaborAllOps(String item, Connection bscon) {
+
+         Double labor = 0.0;
+         try{
+
+        
+        Statement st = bscon.createStatement();
+        ResultSet res = null;
+        try{
+            
+
+            res = st.executeQuery("select it_lotsize, wf_run_hours, wc_setup_rate, wf_setup_hours, wc_run_rate, wc_run_crew from wf_mstr " + 
+                    " inner join item_mstr on it_wf = wf_id " + 
+                    " inner join wc_mstr on wc_cell = wf_cell  " +
+                    " where it_item = " + "'" + item + "'" + ";");
+           while (res.next()) {
+
+            if (res.getDouble("it_lotsize") == 0) {
+                labor += ( ((res.getDouble("wc_setup_rate") * res.getDouble("wf_setup_hours")) ) +
+                        (res.getDouble("wc_run_rate") * res.getDouble("wf_run_hours") * res.getDouble("wc_run_crew")));
+               } else {
+                 labor += ( ((res.getDouble("wc_setup_rate") * res.getDouble("wf_setup_hours")) / res.getDouble("it_lotsize") ) +
+                        (res.getDouble("wc_run_rate") * res.getDouble("wf_run_hours") * res.getDouble("wc_run_crew")));
+               }
+
+
+
+
+           }
+
+       }
+        catch (SQLException s){
+          MainFrame.bslog(s);
+        } finally {
+            if (res != null) res.close();
+            if (st != null) st.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+         return labor;
+
+     }
+
     public static Double getBurdenAllOps(String item) {
 
          Double burden = 0.0;
@@ -12092,6 +12228,48 @@ return myarray;
             if (res != null) res.close();
             if (st != null) st.close();
             con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+         return burden;
+
+     }
+
+    public static Double _getBurdenAllOps(String item, Connection bscon) {
+
+         Double burden = 0.0;
+
+         try{
+
+        
+        Statement st = bscon.createStatement();
+        ResultSet res = null;
+        try{
+            
+
+            res = st.executeQuery("select it_lotsize, wf_run_hours, wc_setup_rate, wf_setup_hours, wc_bdn_rate, wc_run_crew from wf_mstr " + 
+                    " inner join item_mstr on it_wf = wf_id " + 
+                    " inner join wc_mstr on wc_cell = wf_cell  " +
+                    " where it_item = " + "'" + item + "'" + ";");
+           while (res.next()) {
+            if (res.getDouble("it_lotsize") == 0) {
+                burden += ( ((res.getDouble("wc_bdn_rate") * res.getDouble("wf_setup_hours"))  ) +
+                        (res.getDouble("wc_bdn_rate") * res.getDouble("wf_run_hours")  )  );
+               } else {
+                burden += ( ((res.getDouble("wc_bdn_rate") * res.getDouble("wf_setup_hours"))) / res.getDouble("it_lotsize") ) +
+                        (res.getDouble("wc_bdn_rate") * res.getDouble("wf_run_hours") ) ;  
+               }
+
+           }
+
+       }
+        catch (SQLException s){
+            MainFrame.bslog(s);
+        } finally {
+            if (res != null) res.close();
+            if (st != null) st.close();
         }
     }
     catch (Exception e){

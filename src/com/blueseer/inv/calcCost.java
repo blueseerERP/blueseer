@@ -25,9 +25,20 @@ SOFTWARE.
  */
 package com.blueseer.inv;
 
+import bsmf.MainFrame;
+import static bsmf.MainFrame.db;
+import static bsmf.MainFrame.ds;
+import static bsmf.MainFrame.pass;
+import static bsmf.MainFrame.url;
+import static bsmf.MainFrame.user;
 import com.blueseer.utl.OVData;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.DriverManager;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 /**
@@ -105,12 +116,33 @@ public class calcCost {
     
     public ArrayList getTotalCost(String part, String bom) {
              ArrayList mylist = new ArrayList();
-             getTotalCostRecursive(part,1,bom);
+             Connection bscon = null;
+             if (ds != null) {
+                 try {
+                     bscon = ds.getConnection();
+                 } catch (SQLException ex) {
+                     MainFrame.bslog(ex);
+                 }
+            } else {
+                 try {   
+                     bscon = DriverManager.getConnection(url + db, user, pass);
+                 } catch (SQLException ex) {
+                     MainFrame.bslog(ex);
+                 }
+            }
+             _getTotalCostRecursive(part,1,bom,bscon);
              mylist.add(lowermtlcost + uppermtlcost);
              mylist.add(lowerlbrcost + upperlbrcost);
              mylist.add(lowerbdncost + upperbdncost);
              mylist.add(lowerovhcost + upperovhcost);
              mylist.add(loweroutcost + upperoutcost);
+          if (bscon != null) {
+            try {
+                bscon.close();
+            } catch (SQLException ex) {
+                MainFrame.bslog(ex);
+            }
+          }
              return mylist;
          }
            
@@ -240,7 +272,87 @@ public class calcCost {
          lowerovhcost = ovhcost;
          loweroutcost = outcost;
      }
+      
+    public void _getTotalCostRecursive(String mypart, double perqty, String bom, Connection bscon)  {
+        lastlevel++;
+        String[] newpart = mypart.split("___");
+        ArrayList<String> mylist = new ArrayList<String>();
+        if (lastlevel == 1 && ! bom.isEmpty()) {
+        mylist = OVData._getpsmstrlist(newpart[0], bom, bscon);
+        } else {
+        mylist = OVData._getpsmstrlist(newpart[0], bscon);     
+        }
+        double[] cs = invData.getItemCostSet(newpart[0], bscon); // matl, ovh, out
+        if (lastlevel > 1) {
+                    thisovhcost = (parentqty * cs[1]);
+                    ovhcost = ovhcost + thisovhcost;
+                     thisoutcost = (parentqty * cs[1]);
+                    outcost = outcost + thisoutcost;
+                //    MainFrame.show(mypart + " / " + thisovhcost + " / " + ovhcost);
+        }
+        
+         thislbrcost = OVData._getLaborAllOps(newpart[0], bscon);
+          lbrcost = lbrcost + thislbrcost;
+        
+         thisbdncost = OVData._getBurdenAllOps(newpart[0], bscon);
+          bdncost = bdncost + thisbdncost; 
+          
+          
+        if (lastlevel == 1) {
+            upperlbrcost = upperlbrcost + thislbrcost;
+            upperbdncost = upperbdncost + thisbdncost;
+            // all mtl, ovh, out is generally considered 'lower'  ...but mtl, ovh, out 'could be' assigned 
+            // for FG and therefore should be totals assigned to mtlcost, ovhcost, outcost variables below
+            uppermtlcost = uppermtlcost + (cs[0]);
+            upperovhcost = upperovhcost + (cs[1]);
+            upperoutcost = upperoutcost + (cs[2]);
            
+        }  else {
+            lowerlbrcost = lowerlbrcost + (parentqty * thislbrcost);
+            lowerbdncost = lowerbdncost + (parentqty * thisbdncost);
+            thisovhcost = (parentqty * cs[1]);
+            
+            ovhcost = ovhcost + thisovhcost;
+            thisoutcost = (parentqty * cs[2]);
+            outcost = outcost + thisoutcost;
+        }
+        
+         
+        
+        for ( String myvalue : mylist) {
+           if (lastlevel == 1)
+                perqty = 1;
+            
+            thisparent = perqty;
+            
+            String[] value = myvalue.toUpperCase().split(",");
+              if (value[0].toUpperCase().compareTo(newpart[0].toUpperCase().toString()) == 0) {
+                  double[] ncs = invData.getItemCostSet(value[1], bscon); // matl, ovh, out
+                  if (value[2].toUpperCase().compareTo("M") == 0) {
+                    parentqty = thisparent * Double.valueOf(value[3]);
+                    lastlevel++;
+                    getTotalCostRecursive(value[1] + "___" + value[4] + "___" + value[3], parentqty, "");
+                    lastlevel--;
+                  } else {
+                  parentqty = thisparent * Double.valueOf(value[3]);
+                  thismtlcost = (parentqty * ncs[0]);
+                  mtlcost = mtlcost + thismtlcost;
+                  thisovhcost = (parentqty * ncs[1]);
+                  ovhcost = ovhcost + thisovhcost;
+                  thisoutcost = (parentqty * ncs[2]);
+                  outcost = outcost + thisoutcost;
+                  }
+           
+              } 
+        
+        }
+        lastlevel--;
+         lowermtlcost = mtlcost;
+         lowerovhcost = ovhcost;
+         loweroutcost = outcost;
+     }
+    
+    
     public void getMtlCostRecursive(String mypart, double perqty)  {
         lastlevel++;
        

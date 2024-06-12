@@ -3787,6 +3787,42 @@ public class invData {
 
     }
 
+    public static double[] getItemCostSet(String item, Connection bscon) {
+    double[] cost = new double[]{0,0,0};
+    try{
+    
+    Statement st = bscon.createStatement();
+                    ResultSet res = null;
+    try{
+       
+
+        res = st.executeQuery("select it_mtl_cost, it_out_cost, it_ovh_cost from item_mstr where it_item = " + "'" + item + "'" + ";" );
+       while (res.next()) {
+        cost[0] = res.getDouble("it_mtl_cost"); 
+        cost[1] = res.getDouble("it_ovh_cost");
+        cost[2] = res.getDouble("it_out_cost");
+        }
+
+    }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+    } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+          }
+    }
+    catch (Exception e){
+    MainFrame.bslog(e);
+    }
+    return cost;
+
+    }
+
+    
     public static double getItemMtlCost(String item) {
     double cost = 0;
     try{
