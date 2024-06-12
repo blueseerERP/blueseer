@@ -77,6 +77,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.StringJoiner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -2069,6 +2070,30 @@ public class BlueSeerUtils {
         return c;
     }
   
+     public static <T> String toJson(T x)  {
+        StringBuilder r = new StringBuilder();
+        StringJoiner j = new StringJoiner(",");
+        if (x != null) {  
+        Field[] xfs = x.getClass().getDeclaredFields();
+        for (Field f : xfs) {
+            f.setAccessible(true);
+            if (f.getName().equals("m")) {
+                continue;
+            }
+            try {
+                j.add('"' + f.getName() + '"' + ":" + '"' + f.get(x).toString() + '"');
+            } catch (IllegalArgumentException | IllegalAccessException ex) {
+                bslog(ex);
+            }
+        }
+        r.append("{");
+        r.append(j);
+        r.append("}");
+        }
+        return r.toString();
+    }
+  
+     
      public static void log(String logtype, ArrayList<String> list) {
                  
         if (list == null || list.size() <= 0) {
