@@ -394,10 +394,10 @@ inner join site_mstr on site_site = so_site where sod_nbr =  $P{myid}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$R{jasper.order.lblsummary}]]></textFieldExpression>
 			</textField>
-			<textField pattern="¤ #,##0.00">
+			<textField evaluationTime="Report" pattern="¤ #,##0.00">
 				<reportElement x="444" y="78" width="123" height="20" uuid="378a8a9d-5625-4e24-8803-f36c873089fe"/>
 				<textElement textAlignment="Right">
-					<font isBold="false" pdfFontName="" pdfEncoding=""/>
+					<font isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[com.blueseer.utl.BlueSeerUtils.currformatDoubleWithSymbol($V{totalamount},$F{so_curr})]]></textFieldExpression>
 			</textField>

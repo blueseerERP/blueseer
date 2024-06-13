@@ -32,7 +32,6 @@ import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import com.blueseer.utl.OVData;
-import com.itextpdf.text.Font;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
