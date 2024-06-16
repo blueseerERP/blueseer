@@ -227,6 +227,8 @@ public class ChartMain extends javax.swing.JPanel {
         lhm.put("Production -- total units per week", "1");
         ml.add("Production -- total cost per week");
         lhm.put("Production -- total cost per week", "1");
+        ml.add("Inventory -- inventory value by item");
+        lhm.put("Inventory -- inventory value by item", "1");
         ml.add("Requisition -- amount by account");
         lhm.put("Requisition -- amount by account", "1");
         ml.add("Requisition -- amount by department");
@@ -1180,6 +1182,88 @@ public class ChartMain extends javax.swing.JPanel {
             } catch (IOException e) {
             MainFrame.bslog(e);
             }
+          } catch (SQLException s) {
+           MainFrame.bslog(s);
+        } finally {
+                   if (res != null) res.close();
+                   if (st != null) st.close();
+                   con.close();
+                }
+    } catch (Exception e) {
+        MainFrame.bslog(e);
+    }
+}
+
+    // inventory
+    public void piechart_inventorybyitem() {
+        
+     try {
+        cleanUpOldChartFile();
+        ChartPanel.setVisible(true);
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+            ResultSet res = null;
+
+        try {
+                  
+            res = st.executeQuery("select in_item, sum(in_qoh * itc_total) as 'sum' from in_mstr " +
+                    " left outer join item_cost on itc_item = in_item and itc_set = 'standard' " +
+                    " where in_qoh > 0 group by in_item order by sum desc;");
+
+            DefaultPieDataset dataset = new DefaultPieDataset();
+
+            String item = "";
+            double total = 0.00;
+            double displayed = 0.00;
+            int i = 0;
+            while (res.next()) {
+                i++;
+                if (res.getString("in_item") == null || res.getString("in_item").isEmpty()) {
+                  item = "Unassigned";
+                } else {
+                  item = res.getString("in_item");   
+                }
+                total += res.getDouble("sum");
+                Double amt = res.getDouble("sum");
+                if (i <= Integer.valueOf(ddlimit.getSelectedItem().toString())) {
+                   displayed += res.getDouble("sum"); 
+                   dataset.setValue(item, amt);
+                }
+            }
+            // other
+            if (total > displayed) {
+                dataset.setValue("other", (total - displayed));
+            }
+    JFreeChart chart = ChartFactory.createPieChart(getTitleTag(5029) + " -- Total: " + currformatDoubleWithSymbol(total,curr), dataset, true, true, false);
+    PiePlot plot = (PiePlot) chart.getPlot();
+
+    PieSectionLabelGenerator gen = new StandardPieSectionLabelGenerator(("{1} ({2})"), NumberFormat.getCurrencyInstance(), new DecimalFormat("0.00%"));
+    plot.setLabelGenerator(gen);
+
+    
+    
+    try {
+    ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
+    ChartUtilities.writeChartAsJPEG(baos, chart, jPanel2.getWidth(), this.getHeight() - 150);
+    ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+    myimage = ImageIO.read(bais);
+    ImageIcon myicon = new ImageIcon(myimage);
+    myicon.getImage().flush();   
+    chartlabel.setIcon(myicon);
+    bais.close();
+    baos.close();
+    } catch (IOException e) {
+    MainFrame.bslog(e);
+    }
+    
+    
+    
+    this.repaint();
           } catch (SQLException s) {
            MainFrame.bslog(s);
         } finally {
@@ -2881,6 +2965,10 @@ public class ChartMain extends javax.swing.JPanel {
         
         if (whichreport.equals("Sales -- total sales by date")) {
             piechart_salesbycust();
+        }
+        
+        if (whichreport.equals("Inventory -- inventory value by item")) {
+            piechart_inventorybyitem();
         }
         
         if (whichreport.equals("Finance -- income versus expense")) {
