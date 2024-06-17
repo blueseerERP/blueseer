@@ -645,7 +645,7 @@ public class ChartMain extends javax.swing.JPanel {
                         " and shd_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
                         " and shd_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
                                          //" where mock_nbr <= 10 " +
-                                         " group by c.myweek;");
+                                         " group by c.myweek order by c.myweek;");
                     }
                     
                     
@@ -728,7 +728,7 @@ public class ChartMain extends javax.swing.JPanel {
                          " and shd_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
                          " and shd_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
                                          //" where mock_nbr <= 10 " +
-                                         " group by c.myweek;"); 
+                                         " group by c.myweek order by c.myweek;"); 
                     }
                     
 
@@ -813,7 +813,7 @@ public class ChartMain extends javax.swing.JPanel {
                     " left outer join tran_mstr on week(tr_eff_date) = c.d and tr_type = 'RCT-FG' " +
                     " and tr_eff_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
                     " and tr_eff_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +        
-                    " group by c.d;");
+                    " group by c.d order by c.d;");
                  }
                 DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
@@ -902,7 +902,7 @@ public class ChartMain extends javax.swing.JPanel {
                                      " left outer join itemr_cost on itemr_cost.itr_item = tran_mstr.tr_item " +
                                      " and itr_op = tr_op and itr_set = 'standard' and itr_site = tr_site " +
                                      //" where mock_nbr <= 10 " +
-                                     " group by c.d;");
+                                     " group by c.d order by c.d;");
                 }
                 DefaultCategoryDataset dataset = new DefaultCategoryDataset();
 
@@ -987,7 +987,7 @@ public class ChartMain extends javax.swing.JPanel {
                                      " and sod_due_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
                                      " and sod_due_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
                                      " inner join so_mstr on so_nbr = sod_nbr and so_type = 'DISCRETE' " +        
-                                     " group by c.d;"); 
+                                     " group by c.d order by c.d;"); 
                 }
                 while (res.next()) {
                     dataset.setValue(res.getDouble("sum"), "Sum", res.getString("t"));
@@ -1070,7 +1070,7 @@ public class ChartMain extends javax.swing.JPanel {
                      " and sod_due_date >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
                      " and sod_due_date <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
                      " inner join so_mstr on so_nbr = sod_nbr and so_type = 'DISCRETE' " +        
-                     " group by c.d;");
+                     " group by c.d order by c.d;");
                 }
 
                 DefaultCategoryDataset dataset = new DefaultCategoryDataset();
