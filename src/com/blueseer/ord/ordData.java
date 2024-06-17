@@ -2359,6 +2359,78 @@ public class ordData {
         return lines;
     }
     
+    public static ArrayList<String[]> getOrderBrowseInit() {
+        String defaultsite = "";
+        ArrayList<String[]> lines = new ArrayList<String[]>();
+        try{
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+        // allocate, custitemonly, site, currency, sites, currencies, uoms, 
+        // states, warehouses, locations, customers, taxcodes, carriers, statuses    
+            res = st.executeQuery("select site_site from site_mstr;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "sites";
+               s[1] = res.getString("site_site");
+               lines.add(s);
+            }
+            
+            res = st.executeQuery("select ov_site, ov_currency from ov_mstr;" );
+            while (res.next()) {
+               String[] s = new String[2];
+               s[0] = "currency";
+               s[1] = res.getString("ov_currency");
+               lines.add(s);
+               s = new String[2];
+               s[0] = "site";
+               s[1] = res.getString("ov_site");
+               lines.add(s);
+               defaultsite = s[1];
+            }
+            
+            
+            res = st.executeQuery("select cm_code from cm_mstr order by cm_code ;");
+            while (res.next()) {
+                String[] s = new String[2];
+               s[0] = "customers";
+               s[1] = res.getString("cm_code");
+               lines.add(s);
+            }
+          
+            res = st.executeQuery("select sysm_key, sysm_value from sys_meta where " +
+                        " sysm_id = " + "'system'" + " AND " +
+                        " sysm_type = " + "'ordercontrol'" + 
+                        " order by sysm_value;" );
+               while (res.next()) {
+                String[] s = new String[2];
+                s[0] = "system";
+                s[1] = res.getString("sysm_key") + "," + res.getString("sysm_value");     
+                lines.add(s);
+                }
+            
+            
+        }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+        return lines;
+    }
+    
     
     public static String[] getSOMstrHeaderEDI(String order) {
         String[] x = new String[12];

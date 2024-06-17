@@ -306,28 +306,47 @@ public class OrderRpt extends javax.swing.JPanel {
          dcTo.setDate(now);
          Calendar calfrom = Calendar.getInstance();
          Calendar calto = Calendar.getInstance();
-         
-        ArrayList<String[]> obc = getSysMetaData("system", "ordercontrol");
-        for (String[] s : obc) {
-            if (s[0].equals("browse_start_date")) {
-               if (! s[1].isBlank() && BlueSeerUtils.isParsableToInt(s[1]) && s[1].length() < 8) {
-               calfrom.add(Calendar.DATE, Integer.valueOf(s[1]));
+        ArrayList<String[]> initDataSets = ordData.getOrderBrowseInit();
+        
+        ddsite.removeAllItems();
+        ddfromcust.removeAllItems();
+        ddtocust.removeAllItems(); 
+        for (String[] s : initDataSets) {
+            if (s[0].equals("currency")) {
+              defcurr = s[1];  
+            }
+            if (s[0].equals("sites")) {
+              ddsite.addItem(s[1]); 
+            }
+            if (s[0].equals("customers")) {
+              ddfromcust.addItem(s[1]); 
+              ddtocust.addItem(s[1]);
+            }
+            
+            if (s[0].equals("system")) {
+              String[] t = s[1].split(",",-1);
+              if (t[0].equals("browse_start_date")) {
+               if (! t[1].isBlank() && BlueSeerUtils.isParsableToInt(t[1]) && t[1].length() < 8) {
+               calfrom.add(Calendar.DATE, Integer.valueOf(t[1]));
                dcFrom.setDate(calfrom.getTime()); 
                }
-               if (! s[1].isBlank() && BlueSeerUtils.isParsableToInt(s[1]) && s[1].length() == 8) {
-               dcFrom.setDate(BlueSeerUtils.parseDate(BlueSeerUtils.convertDateFormat("yyyyMMdd", s[1]))); 
+               if (! t[1].isBlank() && BlueSeerUtils.isParsableToInt(t[1]) && t[1].length() == 8) {
+               dcFrom.setDate(BlueSeerUtils.parseDate(BlueSeerUtils.convertDateFormat("yyyyMMdd", t[1]))); 
                }
             }
-            if (s[0].equals("browse_end_date")) {
-               if (! s[1].isBlank() && BlueSeerUtils.isParsableToInt(s[1]) && s[1].length() < 8) {
-               calto.add(Calendar.DATE, Integer.valueOf(s[1]));
+            if (t[0].equals("browse_end_date")) {
+               if (! t[1].isBlank() && BlueSeerUtils.isParsableToInt(t[1]) && t[1].length() < 8) {
+               calto.add(Calendar.DATE, Integer.valueOf(t[1]));
                dcTo.setDate(calto.getTime()); 
                }
-               if (! s[1].isBlank() && BlueSeerUtils.isParsableToInt(s[1]) && s[1].length() == 8) {
-               dcTo.setDate(BlueSeerUtils.parseDate(BlueSeerUtils.convertDateFormat("yyyyMMdd", s[1]))); 
+               if (! t[1].isBlank() && BlueSeerUtils.isParsableToInt(t[1]) && t[1].length() == 8) {
+               dcTo.setDate(BlueSeerUtils.parseDate(BlueSeerUtils.convertDateFormat("yyyyMMdd", t[1]))); 
                }
             }
-        } 
+            }
+            
+        }
+        ddtocust.setSelectedIndex(ddtocust.getItemCount() - 1);
         
         dddatetype.setSelectedIndex(0);
         
@@ -345,26 +364,6 @@ public class OrderRpt extends javax.swing.JPanel {
         
         btdetail.setEnabled(false);
         detailpanel.setVisible(false);
-        
-        defcurr = OVData.getDefaultCurrency();
-        
-        ddsite.removeAllItems();
-        ArrayList sites = OVData.getSiteList();
-        for (Object site : sites) {
-            ddsite.addItem(site);
-        }
-        
-          ddfromcust.removeAllItems();
-         ddtocust.removeAllItems(); 
-         ArrayList mycusts = cusData.getcustmstrlist();
-        for (int i = 0; i < mycusts.size(); i++) {
-            ddfromcust.addItem(mycusts.get(i));
-        }
-        for (int i = 0; i < mycusts.size(); i++) {
-            ddtocust.addItem(mycusts.get(i));
-        } 
-        ddtocust.setSelectedIndex(ddtocust.getItemCount() - 1);
-          
           
     }
     
