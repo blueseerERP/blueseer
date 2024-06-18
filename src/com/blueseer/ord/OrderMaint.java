@@ -415,7 +415,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public void setComponentDefaultValues() {
         
-        isLoad = true;
+        
         
         ArrayList<String[]> initDataSets = ordData.getSalesOrderInit();
         
@@ -622,14 +622,15 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         lbqtyavailable.setBackground(Color.gray);
         lbqtyavailable.setText("");
         
-        isLoad = false;
+       
         
         
     }
         
     
     public void newAction(String x) {
-       setPanelComponentState(this, true);
+        isLoad = true;
+        setPanelComponentState(this, true);
         setComponentDefaultValues();
         BlueSeerUtils.message(new String[]{"0",BlueSeerUtils.addRecordInit});
         btinvoice.setEnabled(false);
@@ -649,6 +650,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
           tbkey.setEditable(false);
         } 
         tbkey.requestFocus();
+        isLoad = false;
     }
     
     public void setAction(String[] x) {
@@ -796,7 +798,8 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public void initvars(String[] arg) {
      
-      setPanelComponentState(jPanelMain, false); 
+       isLoad = true;
+       setPanelComponentState(jPanelMain, false); 
        setPanelComponentState(jPanelLines, false); 
        setPanelComponentState(jPanelSched, false); 
        setPanelComponentState(this, false); 
@@ -805,7 +808,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
        setComponentDefaultValues();
         btnew.setEnabled(true);
         btlookup.setEnabled(true);
-        
+        isLoad = false;
         
         if (arg != null && arg.length > 0) {
             executeTask(dbaction.get, arg);
@@ -1407,7 +1410,8 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         clearShipAddress();
         ddship.removeAllItems();
         dditemship.removeAllItems();
-            
+         
+        
             
            if (ddcust.getSelectedItem() == null || ddcust.getSelectedItem().toString().isEmpty() ) {
                ddcust.setBackground(Color.red);
@@ -1718,6 +1722,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public void getItemInfoExp(String part) {
        // if part is not already in list
+        
         int k = ddpart.getSelectedIndex();
         HashMap<String, String> hm =  getItemDataInit(part, ddsite.getSelectedItem().toString(), ddcust.getSelectedItem().toString());
         int i = 0;
@@ -3672,8 +3677,11 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_ddshipActionPerformed
 
     private void ddpartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddpartActionPerformed
-        if (ddpart.getSelectedItem() != null && ! isLoad)
-        getItemInfoExp(ddpart.getSelectedItem().toString());
+        if (! isLoad) {
+            if (ddpart.getSelectedItem() != null) {
+            getItemInfoExp(ddpart.getSelectedItem().toString());
+            }
+        }
     }//GEN-LAST:event_ddpartActionPerformed
 
     private void qtyshippedFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_qtyshippedFocusGained
@@ -3984,10 +3992,12 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_ddtaxActionPerformed
 
     private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPane1StateChanged
+        if (! isLoad) {
         JTabbedPane sourceTabbedPane = (JTabbedPane) evt.getSource();
         int index = sourceTabbedPane.getSelectedIndex();
         if (index == 1 && ddpart != null && ddpart.getItemCount() > 0) {
             ddpart.setSelectedIndex(0);
+        }
         }
     }//GEN-LAST:event_jTabbedPane1StateChanged
 
