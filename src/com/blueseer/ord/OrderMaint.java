@@ -40,6 +40,7 @@ import static com.blueseer.ctr.cusData.getDiscCodeByCust;
 import static com.blueseer.ctr.cusData.getShipAddressInfo;
 import com.blueseer.fgl.fglData;
 import com.blueseer.inv.invData;
+import static com.blueseer.inv.invData.getItemDataInit;
 import static com.blueseer.inv.invData.getItemQOHTotal;
 import static com.blueseer.ord.ordData.addOrderTransaction;
 import static com.blueseer.ord.ordData.getOrderItemAllocatedQty;
@@ -1715,6 +1716,97 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
     }
     
+    public void getItemInfoExp(String part) {
+       // if part is not already in list
+        int k = ddpart.getSelectedIndex();
+        HashMap<String, String> hm =  getItemDataInit(part, ddsite.getSelectedItem().toString(), ddcust.getSelectedItem().toString());
+        int i = 0;
+        // lets first try as cust part...i.e..-1..lets look up the item based on entering a customer part number.
+        if (k < 0) {
+            for (Map.Entry<String, String> entry : hm.entrySet()) {
+                if (entry.getKey().equals("bycustitem")) {
+                    String[] s = entry.getValue().split(",",-1);
+                    if (s != null && s.length == 2) {
+                        i++;
+                        ddpart.setSelectedItem(s[0]);
+                        custnumber.setText(s[1]);
+                        ddpart.setForeground(Color.blue);
+                        custnumber.setForeground(Color.blue);
+                        custnumber.setEditable(false);  
+                    }
+                }
+            }    
+
+
+            // if i is still 0...then must be a misc item
+            if (i == 0) {
+              //  partnbr.addItem(part);
+              //  partnbr.setSelectedItem(part);
+                custnumber.setText("");
+                ddpart.setForeground(Color.red);
+                custnumber.setForeground(Color.red);
+                custnumber.setEditable(true);
+                tbdesc.setForeground(Color.red);
+                tbdesc.setEditable(true);
+
+                discount.setText("0");
+                listprice.setText("0");
+                listprice.setBackground(Color.white);
+
+                netprice.setText("0");
+                qtyshipped.setText("0");
+            }
+        } else {
+            ddbom.removeAllItems();
+            ddbom.insertItemAt("", 0);
+            
+            for (Map.Entry<String, String> entry : hm.entrySet()) {
+           // String[] det = invData.getItemDetail(ddpart.getSelectedItem().toString());
+            if (entry.getKey().equals("itemdata")) {
+            String[] det = entry.getValue().split(",", -1);
+            discount.setText("0");
+            listprice.setText("0");
+            netprice.setText("0");
+            qtyshipped.setText("0");
+            tbdesc.setText(det[1]);
+             dduom.setSelectedItem(det[2]);
+            ddpart.setForeground(Color.blue);
+            custnumber.setForeground(Color.blue);
+            custnumber.setEditable(false);
+            tbdesc.setForeground(Color.blue);
+            tbdesc.setEditable(false);
+            }
+            
+            if (entry.getKey().equals("itemcust")) {
+              custnumber.setText(entry.getValue());
+            }
+            
+            
+            // do BOM alternates
+            if (entry.getKey().equals("boms")) {
+                ddbom.addItem(entry.getValue());
+            }
+            
+            if (entry.getKey().equals("defaultbom")) {
+            ddbom.setSelectedItem(entry.getValue());
+            }
+            
+           
+            if (entry.getKey().equals("topwhloc")) {
+                String[] arr = entry.getValue().split(",", -1);
+                ddwh.setSelectedItem(arr[0]);
+                ddloc.setSelectedItem(arr[1]);
+                ddpart.setForeground(Color.blue);
+                custnumber.setForeground(Color.blue);
+                setPrice();
+            }
+                         
+            } // for each entry
+        }  
+        
+    }
+    
+    
     public void setPrice() {
         
         // save current price if this is a line item update
@@ -1727,16 +1819,17 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         discount.setText("0");
         String pricetype = "";
         double price = 0.00;
-        String[] TypeAndPrice = new String[]{"","0"};
+        double disc = 0;
+        String[] TypeAndPriceAndDisc = new String[]{"","0", "0"};
         if (dduom.getItemCount() > 0 && ddpart.getItemCount() > 0 && ddcust.getItemCount() > 0) {
-                TypeAndPrice = invData.getItemPrice("c", ddcust.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), 
+                TypeAndPriceAndDisc = invData.getItemPrice("c", ddcust.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), 
                         dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString(), qtyshipped.getText());
         }     
-                if (TypeAndPrice[0] != null)
-                pricetype = TypeAndPrice[0];
+                if (TypeAndPriceAndDisc[0] != null)
+                pricetype = TypeAndPriceAndDisc[0];
                 
-                if (TypeAndPrice[1] != null) {
-                    price = bsParseDouble(TypeAndPrice[1]);
+                if (TypeAndPriceAndDisc[1] != null) {
+                    price = bsParseDouble(TypeAndPriceAndDisc[1]);
                 }
                 listprice.setText(bsFormatDouble(price));
                 if (pricetype.equals("cust")) {
@@ -1745,7 +1838,10 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                 if (pricetype.equals("item")) {
                     listprice.setBackground(Color.white);
                 }
-                double disc = invData.getItemDiscFromCust(ddcust.getSelectedItem().toString());
+                
+                if (TypeAndPriceAndDisc[2] != null) {
+                    disc = bsParseDouble(TypeAndPriceAndDisc[2]);
+                }
                 discount.setText(bsFormatDouble(disc));
                 
                 // override if line item update and price not found...line update due to qty change
@@ -3577,7 +3673,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     private void ddpartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddpartActionPerformed
         if (ddpart.getSelectedItem() != null && ! isLoad)
-        getItemInfo(ddpart.getSelectedItem().toString());
+        getItemInfoExp(ddpart.getSelectedItem().toString());
     }//GEN-LAST:event_ddpartActionPerformed
 
     private void qtyshippedFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_qtyshippedFocusGained

@@ -58,6 +58,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -2295,10 +2296,12 @@ public class invData {
 
            // type is either 'c' for customer price or 'v' for vendor price      
 
-           String[] TypeAndPrice = new String[2];   
+           String[] TypeAndPrice = new String[3];   
            String Type = "none";
            String price = "0";
            String pricecode = "";
+           String disccode = "";
+           double disc = 0;
            java.util.Date now = new java.util.Date();
            
             try{
@@ -2389,9 +2392,35 @@ public class invData {
                          Type = "item";
                          }
                       }
+                      
+                      
+                // discounts if applicable
+                if (type.equals("c")) {
+                
+                res = st.executeQuery("select cm_disc_code from cm_mstr where cm_code = " + "'" + entity + "'" + ";");
+                while (res.next()) {
+                  disccode = res.getString("cm_disc_code");
+                }     
+                 // if there is no pricecode....it defaults to billto
+                if (! disccode.isEmpty()) {
+                    entity = disccode;
+                }
 
+               res = st.executeQuery("select cpr_disc from cpr_mstr where cpr_cust = " + "'" + entity + "'" + 
+                                     " AND cpr_type = " + "'" + "DISCOUNT" + "'" + ";");
+               int i = 0;
+               while (res.next()) {
+                      if (i == 0)
+                      disc = res.getDouble("cpr_disc");
+                      if (i > 0)
+                      disc = disc + res.getDouble("cpr_disc");                   
+                  i++;
+               }
+               }
+                
                TypeAndPrice[0] = Type;
                TypeAndPrice[1] = String.valueOf(price);
+               TypeAndPrice[2] = String.valueOf(disc);
 
                }
                 catch (SQLException s){
@@ -4092,6 +4121,127 @@ public class invData {
 
     }
 
+    public static HashMap<String, String> getItemDataInit(String item, String site, String cust) {
+        HashMap<String,String> hm = new HashMap<String,String>();
+        String[] x = new String[]{"","","","","","","","","","",""};
+        int days = 0;
+        Calendar caldate = Calendar.getInstance();
+        try{
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                res = st.executeQuery("select it_item, it_desc, it_uom, it_prodline, it_code, it_rev, it_status, it_site, it_loc, it_wh, it_expiredays from item_mstr where it_item = " + "'" + item + "';" );
+               while (res.next()) {
+                   if (res.getString("it_expiredays") != null && ! res.getString("it_expiredays").isEmpty()) {
+                   days = res.getInt("it_expiredays");
+                   }  
+                x[0] = res.getString("it_item"); 
+                x[1] = res.getString("it_desc"); 
+                x[2] = res.getString("it_uom"); 
+                x[3] = res.getString("it_prodline"); 
+                x[4] = res.getString("it_code"); 
+                x[5] = res.getString("it_rev"); 
+                x[6] = res.getString("it_status"); 
+                x[7] = res.getString("it_site"); 
+                x[8] = res.getString("it_loc"); 
+                x[9] = res.getString("it_wh"); 
+                if (days > 0) {
+                  caldate.add(Calendar.DATE, days);
+                  x[10] = BlueSeerUtils.setDateFormat(caldate.getTime());
+                }
+                }
+               hm.put("itemdata", String.join(",", x));
+               
+            // cust item info   
+            res = st.executeQuery("select cup_citem from cup_mstr where cup_cust = " + "'" + cust + "'" + 
+                                  " AND cup_item = " + "'" + item + "'" + ";");
+            while (res.next()) {
+               hm.put("itemcust", res.getString("cup_citem"));
+            }
+            
+            
+            // by cust item search key   
+            res = st.executeQuery("select cup_item, cup_citem from cup_mstr where cup_cust = " + "'" + cust + "'" + 
+                                  " AND cup_citem = " + "'" + item + "'" + ";");
+            while (res.next()) {
+               hm.put("bycustitem", res.getString("cup_item") + "," + res.getString("cup_citem"));
+            }
+            
+            
+            // BOM info
+            res = st.executeQuery("select bom_id, bom_primary from bom_mstr "
+                            + " where bom_item = " + "'" + item + "'" 
+                            + " and bom_enabled = '1' " + " order by bom_primary desc ;" ); 
+                   while (res.next()) {
+                    hm.put("boms", res.getString("bom_id"));
+                    }
+            
+            // default BOM
+            String defaultBOM = "";
+            ArrayList<String> boms = new ArrayList<String>();
+            res = st.executeQuery("select distinct ps_bom from pbm_mstr "
+                        + " where ps_parent = " + "'" + item + "';");
+                while (res.next()) {
+                  boms.add(res.getString("ps_bom")); 
+                }
+                res.close();
+              
+                for (String s : boms) {
+                    res = st.executeQuery("select bom_id from bom_mstr "
+                    + " where bom_id = " + "'" + s + "'" +
+                      " and bom_primary = '1' " + ";");
+                    while (res.next()) {
+                       defaultBOM = res.getString("bom_id");
+                    } 
+                }
+             hm.put("defaultbom", defaultBOM);   
+                
+                
+            // top wh/loc qty
+            String[] myloc = new String[2];
+            res = st.executeQuery("select it_loc, it_wh from item_mstr where it_item = " + "'" + item + "'" + 
+                    " AND it_site = " + "'" + site + "'" +
+                    " ;" );
+           while (res.next()) {
+            myloc[0] = res.getString("it_wh");  
+            myloc[1] = res.getString("it_loc");
+            }
+
+            // now overwrite with optimum wh and loc with highest qoh
+            res = st.executeQuery("select in_loc, in_wh from in_mstr where in_item = " + "'" + item + "'" + 
+                    " AND in_site = " + "'" + site + "'" +
+                    " order by in_qoh desc limit 1;" );
+           while (res.next()) {
+            myloc[0] = res.getString("in_wh");  
+            myloc[1] = res.getString("in_loc");
+            }
+            hm.put("topwhloc", String.join(",", myloc));
+               
+               
+          } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
+        } catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return hm;
+    } 
+   
+    
     public static String[] getItemDetail(String item) {
            String[] x = new String[]{"","","","","","","","","","",""};
            int days = 0;
