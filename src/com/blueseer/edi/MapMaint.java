@@ -2154,7 +2154,8 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                     v[3],
                     v[4],
                     v[5],
-                    "" // misc
+                    "", // misc
+                    "0" // default no suppression
                     );
             }
             ArrayList<dfs_det> detlist = new ArrayList<dfs_det>();
@@ -2213,7 +2214,8 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                     v[3],
                     v[4],
                     v[5],
-                    "" // misc
+                    "", // misc
+                    "0" // default no suppression
                     );
             }
             ArrayList<dfs_det> detlist = new ArrayList<dfs_det>();

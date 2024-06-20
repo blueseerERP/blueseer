@@ -750,7 +750,8 @@ CREATE TABLE "dfs_mstr" (
   "dfs_doctype" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
   "dfs_filetype" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
   "dfs_delimiter" varchar(1) NOT NULL COLLATE NOCASE DEFAULT '',
-  "dfs_misc" varchar(50) NOT NULL COLLATE NOCASE DEFAULT ''
+  "dfs_misc" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "dfs_suppressemptytag" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0'
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

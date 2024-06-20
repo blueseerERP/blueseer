@@ -133,7 +133,8 @@ CREATE TABLE IF NOT EXISTS `dfs_mstr` (
   `dfs_doctype` varchar(15)  NOT NULL DEFAULT '',
   `dfs_filetype` varchar(15)  NOT NULL DEFAULT '',
   `dfs_delimiter` int(4)  NOT NULL DEFAULT '0',
-  `dfs_misc` varchar(50)  NOT NULL DEFAULT ''
+  `dfs_misc` varchar(50)  NOT NULL DEFAULT '',
+  `dfs_suppressemptytag` tinyint(1)  NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `ap_ctrl` (
   `apc_bank` varchar(10)  NOT NULL DEFAULT '',

@@ -441,7 +441,8 @@ public class StructMaint extends javax.swing.JPanel  {
                 dddoctype.getSelectedItem().toString(),
                 ddfiletype.getSelectedItem().toString(),
                 tbdelimiter.getText(),
-                "" // misc
+                "", // misc
+                String.valueOf(BlueSeerUtils.boolToInt(cbsuppress.isSelected()))
                 );
         /* potential validation mechanism...would need association between record field and input field
         for(Field f : x.getClass().getDeclaredFields()){
@@ -569,6 +570,7 @@ public class StructMaint extends javax.swing.JPanel  {
         dddoctype.setSelectedItem(x.dfs_doctype()); 
         ddfiletype.setSelectedItem(x.dfs_filetype()); 
         tbdelimiter.setText(x.dfs_delimiter());
+        cbsuppress.setSelected(BlueSeerUtils.ConvertStringToBool(x.dfs_suppressemptytag()));
         setAction(x.m()); 
         
         // now detail
@@ -737,6 +739,7 @@ public class StructMaint extends javax.swing.JPanel  {
         tbdelimiter = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
         btlookupele = new javax.swing.JButton();
+        cbsuppress = new javax.swing.JCheckBox();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -1093,6 +1096,8 @@ public class StructMaint extends javax.swing.JPanel  {
             }
         });
 
+        cbsuppress.setText("Suppress Empty Tag");
+
         javax.swing.GroupLayout panelmaintLayout = new javax.swing.GroupLayout(panelmaint);
         panelmaint.setLayout(panelmaintLayout);
         panelmaintLayout.setHorizontalGroup(
@@ -1129,7 +1134,9 @@ public class StructMaint extends javax.swing.JPanel  {
                                         .addComponent(tbdelimiter, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(tbdesc, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 269, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btlookupele, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(btlookupele, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(74, 74, 74)
+                                .addComponent(cbsuppress)))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelmaintLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -1174,11 +1181,13 @@ public class StructMaint extends javax.swing.JPanel  {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelmaintLayout.createSequentialGroup()
-                        .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tbversion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1)
-                            .addComponent(tbdelimiter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel14))
+                        .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelmaintLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(tbversion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel1)
+                                .addComponent(tbdelimiter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel14))
+                            .addComponent(cbsuppress, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1621,6 +1630,7 @@ public class StructMaint extends javax.swing.JPanel  {
     private javax.swing.JButton btupdaterow;
     private javax.swing.JCheckBox cbisgroup;
     private javax.swing.JCheckBox cbislandmark;
+    private javax.swing.JCheckBox cbsuppress;
     private javax.swing.JComboBox<String> ddalign;
     private javax.swing.JComboBox<String> dddoctype;
     private javax.swing.JComboBox<String> ddfiletype;

@@ -31,6 +31,7 @@ import static com.blueseer.edi.EDI.hanoi;
 import static com.blueseer.edi.EDI.trimSegment;
 import static com.blueseer.edi.ediData.getDSFasString;
 import static com.blueseer.edi.ediData.getMapMstr;
+import static com.blueseer.edi.ediData.isSuppressEmptyTag;
 import com.blueseer.edi.ediData.jsonRecord;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.BlueSeerUtils.bsNode;
@@ -2637,13 +2638,15 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                 }
             }
         }
+        // check if empty tag suppression
         
+        boolean suppress = isSuppressEmptyTag(ofsfile);
         
         // set Attributes if exist of root Element
-        overlayData(rootElement, "", doc, OSF, 1, MD);
+        overlayData(rootElement, "", doc, OSF, 1, MD, suppress);
         
                 
-        createXML(rootElement, "", 0, doc, exclude, OSF, MD, 0);
+        createXML(rootElement, "", 0, doc, exclude, OSF, MD, 0, suppress);
         
         doc.appendChild(rootElement);
              
@@ -2726,7 +2729,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
     	 return r;
      }
     
-    public static void createXML(Element ele, String parentx, int level, Document doc, ArrayList<String> exclude, LinkedHashMap<String, ArrayList<String[]>> osf, Map<String, HashMap<String,String>> MD, int j) {
+    public static void createXML(Element ele, String parentx, int level, Document doc, ArrayList<String> exclude, LinkedHashMap<String, ArrayList<String[]>> osf, Map<String, HashMap<String,String>> MD, int j, boolean suppress) {
 	  //  System.out.println(level + " " + "Name: "+ele.getNodeName() + "     Value: "+ele.getNodeValue());
 	    
             ArrayList<String> list = getChildren(ele.getNodeName(), parentx ,osf);
@@ -2770,14 +2773,14 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                   }
                   childNode = doc.createElement(tag);
                //   System.out.println("HERE 1x:  " + mykey + "/" + actual + "/" + maxallowed + "/" + limit + "/" + j );
-                  overlayData(childNode, ptag, doc, osf, j, MD);
+                  overlayData(childNode, ptag, doc, osf, j, MD, suppress);
                   ele.appendChild(childNode);
                   
               //  if (childNode != null && ! exclude.contains(childNode.getNodeName())) {
                 if (childNode != null) {
                // System.out.println("HERE: " + tag + "/" + limit + "/" + k + "/" + j + "/" + mykey + "/" + level);
             //   System.out.println("HERE: Calling createXML with " + childNode.getTagName() + " and k value = " + k + " and j value = " + j);  
-               createXML(childNode, ptag, level + 1, doc, exclude, osf, MD, j);
+               createXML(childNode, ptag, level + 1, doc, exclude, osf, MD, j, suppress);
                 }
                 
                 } // for limit
@@ -2836,7 +2839,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
 		return list;
 	}
     
-    public static void overlayData(Element ele, String parentx, Document doc, LinkedHashMap<String, ArrayList<String[]>> osf, int k, Map<String, HashMap<String,String>> MD) {
+    public static void overlayData(Element ele, String parentx, Document doc, LinkedHashMap<String, ArrayList<String[]>> osf, int k, Map<String, HashMap<String,String>> MD, boolean suppressEmptyTag) {
         String v = "";
         String parent = "";
         String parentChildKey = "";
@@ -2892,8 +2895,15 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                          //  System.out.println("HERE: lastchild" + nd.getNodeName());
                            }                           
                         } else {
+                         // System.out.println(e.getTagName() + " v = " + v); 
                           e.appendChild(doc.createTextNode(v));	// create data TextNode  
-                          ele.appendChild(e);
+                          if (v.isBlank()) {
+                            if (! suppressEmptyTag) {  
+                            ele.appendChild(e);
+                            }
+                          } else {
+                            ele.appendChild(e);  
+                          } 
                         }
                         	
                         

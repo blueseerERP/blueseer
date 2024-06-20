@@ -26,3 +26,4 @@ bs850ToXML,X12 850 to XML,,X12850.csv,XMLGenericOrder.csv,850x12,X12,850xml,XML,
 bs850TocXML,X12 850 to cXML,,X12850.csv,cXMLOrder.csv,850x12,X12,850xml,XML,edi/maps/bs850TocXML.java,,0
 bsJSONTo850,JSON Order to X12 850,,JSONGenericOrder.csv,X12850.csv,850json,JSON,850x12,X12,edi/maps/bsJSONTo850.java,,0
 bsXMLTo850,XML Order to X12 850,,XMLGenericOrder.csv,X12850.csv,850xml,XML,850x12,X12,edi/maps/bsXMLTo850.java,,0
+bs850ToD365XML,X12 850 to D365 composite V2 XML,,X12850.csv,XMLD365OrderV2,850x12,X12,850xml,XML,edi/maps/bs850ToD365XML.java,,0
