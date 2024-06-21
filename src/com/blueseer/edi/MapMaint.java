@@ -2830,7 +2830,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         toolbar.add(btzip);
 
         btunzip.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/output.png"))); // NOI18N
-        btunzip.setToolTipText("Zip Map");
+        btunzip.setToolTipText("Unzip Map");
         btunzip.setFocusable(false);
         btunzip.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btunzip.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
