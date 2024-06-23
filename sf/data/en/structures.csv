@@ -87,6 +87,17 @@ CSVGenericOrder.csv,ROW,,1,0,0,f8,Quantity,0,10,-,M,F
 CSVGenericOrder.csv,ROW,,1,0,0,f9,UOM,0,4,-,M,F
 CSVGenericOrder.csv,ROW,,1,0,0,f10,Price,0,10,-,M,F
 CSVGenericOrder.csv,ROW,,1,0,0,f11,Reference,0,40,-,O,F
+CSVD365Order.csv,ROW,,100,0,1,landmark,landmark,6,6,-,M,N
+CSVD365Order.csv,ROW,,1,0,0,f1,Purchase Order Number,1,40,-,M,F
+CSVD365Order.csv,ROW,,1,0,0,f2,Currency,1,40,-,M,F
+CSVD365Order.csv,ROW,,1,0,0,f3,Bill-To Code,1,40,-,M,F
+CSVD365Order.csv,ROW,,1,0,0,f4,Bill-To Name,1,40,-,M,F
+CSVD365Order.csv,ROW,,1,0,0,f5,Item Number,1,40,-,M,F
+CSVD365Order.csv,ROW,,1,0,0,f6,Item Description,0,80,-,O,F
+CSVD365Order.csv,ROW,,1,0,0,f7,Quantity,0,10,-,M,F
+CSVD365Order.csv,ROW,,1,0,0,f8,UOM,0,4,-,M,F
+CSVD365Order.csv,ROW,,1,0,0,f9,Price,0,10,-,M,F
+CSVD365Order.csv,ROW,,1,0,0,f10,Reference,0,40,-,O,F
 X12850.csv,ST,,1,0,1,landmark,Transaction Set Header,2,2,-,M,F
 X12850.csv,ST,,1,0,0,e01,Transaction Set Identifier Code,3,3,-,M/Z,F
 X12850.csv,ST,,1,0,0,e02,Transaction Set Control Number,4,9,-,M,F

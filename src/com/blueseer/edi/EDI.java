@@ -820,11 +820,11 @@ public class EDI {
           
           
           
-         if (editype[0].isEmpty()) {
+         if (editype[0] == null || editype[0].isEmpty()) {
            m = new String[]{"1","unknown file type: " + infile};
            EDData.writeEDILog(c, "error", "Unknown File Type: " + infile + " DOCTYPE:FILETYPE " + editype[1] + ":" + editype[0]); 
            return m; 
-         } else if (editype[1].isEmpty()) {
+         } else if (editype[1] == null || editype[1].isEmpty()) {
             m = new String[]{"1","unknown doc type: " + infile};
            EDData.writeEDILog(c, "error", "Unknown Doc Type: " + infile + " DOCTYPE:FILETYPE " + editype[1] + ":" + editype[0]); 
            return m; 
@@ -1516,7 +1516,7 @@ public class EDI {
     }  //for each Segment in Doc  FF check
     
     
-    if (GlobalDebug && type[0].isBlank()) {
+    if (GlobalDebug && type[0] == null) {
      System.out.println("Fell through...Unknown File type!! " + filename );  
     }
     return type;

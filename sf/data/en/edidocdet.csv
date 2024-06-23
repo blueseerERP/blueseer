@@ -17,6 +17,9 @@
 850csv,selection,delimited,constant,1,1,10,,PONumberLM,,,1
 850csv,data,delimited,variable,2,2,50,,,senderid,,1
 850csv,data,fixed,constant,0,0,8,,BLUESEER,receiverid,,1
+850d365,selection,delimited,constant,1,1,10,,OrderNumberD365,,,1
+850d365,data,delimited,variable,2,3,50,,,senderid,,1
+850d365,data,fixed,constant,0,0,8,,BLUESEER,receiverid,,1
 810csv,selection,delimited,constant,1,1,10,,InvoiceNumber,,,1
 810csv,data,delimited,variable,2,2,50,,,senderid,,1
 810csv,data,fixed,constant,0,0,8,,BLUESEER,receiverid,,1

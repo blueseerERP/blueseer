@@ -1,0 +1,5 @@
+OrderNumberD365,Currency,billto,custname,item,description,qty,uom,price,reference
+so12345,USD,ACME,ACME MFG CO.,item1,huffy bike,5,EA,134.54,ref
+so12345,USD,ACME,ACME MFG CO.,item2,tricycle,9,EA,65.98,ref
+so12345,USD,ACME,ACME MFG CO.,item3,trek bike,3,EA,738.00,ref
+so12345,USD,ACME,ACME MFG CO.,item4,schwinn bike,2,EA,250.00,ref
