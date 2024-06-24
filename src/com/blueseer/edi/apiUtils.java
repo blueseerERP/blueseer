@@ -2134,9 +2134,9 @@ public class apiUtils {
             }
         }
         } catch (MessagingException ex) {
-           logdet.add(new String[]{parentkey, "error", " Messaging error; Bad MDN Boundary"}); 
+           logdet.add(new String[]{parentkey, "error", " Messaging error; Bad MDN Boundary " + ex.getMessage()}); 
           writeAS2LogDetail(logdet);
-          return "Messaging error; Bad MDN Boundary"; 
+          return "Messaging error; Bad MDN Boundary " + ex.getMessage(); 
         }   
         
         
