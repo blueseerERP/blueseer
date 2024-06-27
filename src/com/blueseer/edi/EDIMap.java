@@ -407,7 +407,12 @@ public abstract class EDIMap {  // took out the implements EDIMapi
          if ( ! isOverride) {  // if not override...use internal partner / doc lookup for envelope info
            
            if (c[29].toUpperCase().equals("X12")) {  
-             envelope = EDI.generateEnvelope(c[1], c[0], c[21]); // envelope array holds in this order (isa, gs, ge, iea, filename, controlnumber, gsctrlnbr)
+             if (c[0].equals("MapTester")) {
+                envelope = EDI.generateEnvelope(c[1], c[13], c[21]);  //override use of c[13] from mapper ddsenderenvelope
+             }  else {
+                envelope = EDI.generateEnvelope(c[1], c[0], c[21]); 
+             }
+              // envelope array holds in this order (isa, gs, ge, iea, filename, controlnumber, gsctrlnbr)
            } else if(c[29].toUpperCase().equals("UNE")) {
              envelope = EDI.generateEnvelopeUNE(c[1], c[0], c[21]); // envelope array holds in this order (isa, gs, ge, iea, filename, controlnumber, gsctrlnbr)
            } else {
@@ -752,8 +757,20 @@ public abstract class EDIMap {  // took out the implements EDIMapi
      mappedInput.clear();
       
         if (c[0].equals("MapTester")) {
-           // writeOMD(c, EDData.getEDITPDefaults(c[1], "SYSSENDER", "SYSRECEIVER" ));
-            writeOMD(c, null);
+            if (! c[21].equals("MapTester") && c[29].equals("X12")) { // override with ddenvelope choice for enveloping segments
+               String[] tp = EDData.getEDITPDefaults(c[1], c[13], c[21] ); // override use of c[13] isa string for 'sender'
+               tp[7] = (tp[7].isBlank() || tp[7].equals("0")) ? "10" : tp[7];
+               tp[6] = (tp[6].isBlank() || tp[6].equals("0")) ? "42" : tp[6];
+               tp[8] = (tp[8].isBlank() || tp[8].equals("0")) ? "126" : tp[8];
+               
+               writeOMD(c, tp);
+               setOutPutEnvelopeStrings(c);
+               String s = delimConvertIntToStr(tp[7]); // segment delimiter
+               content = ISA + s + GS + s + ST + s + content  + SE + s + GE + s + IEA + s;
+            } else {
+               writeOMD(c, null); 
+            }
+            
             return new String[]{content};
         }
         

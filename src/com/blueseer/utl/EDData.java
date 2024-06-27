@@ -801,7 +801,7 @@ public class EDData {
         return mystring;
         
          }
-    
+        
     public static ArrayList<String> getEDIAttributesList(String doctype, String sndid, String rcvid) {
            
              ArrayList<String> x = new ArrayList<String>();
