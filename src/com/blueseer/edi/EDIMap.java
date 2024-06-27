@@ -408,9 +408,9 @@ public abstract class EDIMap {  // took out the implements EDIMapi
            
            if (c[29].toUpperCase().equals("X12")) {  
              if (c[0].equals("MapTester")) {
-                envelope = EDI.generateEnvelope(c[1], c[13], c[21]);  //override use of c[13] from mapper ddsenderenvelope
+                envelope = EDI.generateEnvelope(c[1], c[13], c[21], c[14]);  //override use of c[13] from mapper ddsenderenvelope
              }  else {
-                envelope = EDI.generateEnvelope(c[1], c[0], c[21]); 
+                envelope = EDI.generateEnvelope(c[1], c[0], c[21], ""); 
              }
               // envelope array holds in this order (isa, gs, ge, iea, filename, controlnumber, gsctrlnbr)
            } else if(c[29].toUpperCase().equals("UNE")) {

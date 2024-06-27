@@ -4075,7 +4075,7 @@ public class DTData {
           
     public static DefaultTableModel getEDICustBrowseUtil( String str, int state, String myfield) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("doctype"), "SndISA/UNB", "SndGS/UNG", "RcvISA/UNB", "RcvGS/UNG", getGlobalColumnTag("map")})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("code"), getGlobalColumnTag("doctype"), "Sender", "Receiver", getGlobalColumnTag("map")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -4114,9 +4114,7 @@ public class DTData {
                     while (res.next()) {
                         mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("edi_id"),
                                    res.getString("edi_doc"),
-                                   res.getString("edi_sndisa"),
                                    res.getString("edi_sndgs"),
-                                   res.getString("edi_rcvisa"),
                                    res.getString("edi_rcvgs"),
                                    res.getString("edi_map")
                         });

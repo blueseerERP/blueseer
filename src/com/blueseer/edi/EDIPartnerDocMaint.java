@@ -91,7 +91,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         setLanguageTags(this);
     }
     
-    public void getCustEDI(String code, String doctype, String sndid, String rcvid) {
+    public void getCustEDI(String code, String doctype, String sndid, String rcvid, String map) {
         
         try {
 
@@ -108,7 +108,8 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                 res = st.executeQuery("select * from edi_mstr where edi_id = " + "'" + code + "'" +
                                       " AND edi_doc = " + "'" + doctype + "'" +
                                       " AND edi_sndgs = " + "'" + sndid + "'" + 
-                                      " AND edi_rcvgs = " + "'" + rcvid + "'" +         
+                                      " AND edi_rcvgs = " + "'" + rcvid + "'" + 
+                                      " AND edi_map = " + "'" + map + "'" +        
                                               ";");
                 while (res.next()) {
                     i++;
@@ -382,7 +383,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
       // ddmap.setSelectedIndex(0);
        
         if (arg != null && arg.length > 0) {
-            getCustEDI(arg[0], arg[1], arg[2], arg[3]);
+            getCustEDI(arg[0], arg[1], arg[2], arg[3], arg[4]);
         }
        
     }
@@ -416,7 +417,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
                 int column = target.getSelectedColumn();
                 if ( column == 0) {
                 ludialog.dispose();
-                initvars(new String[]{target.getValueAt(row,1).toString(), target.getValueAt(row,2).toString(), target.getValueAt(row,4).toString(), target.getValueAt(row,6).toString()});
+                initvars(new String[]{target.getValueAt(row,1).toString(), target.getValueAt(row,2).toString(), target.getValueAt(row,3).toString(), target.getValueAt(row,4).toString(), target.getValueAt(row,5).toString()});
                 }
             }
         };
@@ -425,7 +426,7 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
        
         callDialog(getClassLabelTag("lblcode", this.getClass().getSimpleName()), 
                 getClassLabelTag("lbldoctype", this.getClass().getSimpleName()),
-                getClassLabelTag("lblsndisa", this.getClass().getSimpleName()));
+                getClassLabelTag("lblsndgs", this.getClass().getSimpleName()));
         
     }
 

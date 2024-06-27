@@ -3281,6 +3281,10 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             if (ddenvelopeSender.getSelectedItem() != null && ! ddenvelopeSender.getSelectedItem().toString().isBlank()) {
                 c[13] = ddenvelopeSender.getSelectedItem().toString(); // override use of c[13] during map testing
             }
+            
+            if (ddoutdoctype.getSelectedItem() != null && ! ddoutdoctype.getSelectedItem().toString().isBlank()) {
+                c[14] = ddoutdoctype.getSelectedItem().toString(); // override use of c[13] during map testing
+            }
         }
         c[1] = x.map_indoctype();
         c[9] = String.valueOf(Integer.valueOf(segdelim));
