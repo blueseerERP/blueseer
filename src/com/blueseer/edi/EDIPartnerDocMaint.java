@@ -49,6 +49,7 @@ import static com.blueseer.utl.BlueSeerUtils.ludialog;
 import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import static com.blueseer.utl.BlueSeerUtils.lurb2;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.EDData;
 import static com.blueseer.utl.EDData.getEDIPartnerDesc;
@@ -395,8 +396,10 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
         public void actionPerformed(ActionEvent event) {
         if (lurb1.isSelected()) {  
          luModel = DTData.getEDICustBrowseUtil(luinput.getText(),0, "edi_id");
-        } else {
+        } else if (lurb2.isSelected()) {
          luModel = DTData.getEDICustBrowseUtil(luinput.getText(),0, "edi_doc");   
+        } else {
+         luModel = DTData.getEDICustBrowseUtil(luinput.getText(),0, "edi_sndgs");   
         }
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
