@@ -869,6 +869,45 @@ public class EDData {
         
          }
     
+    public static ArrayList<String[]> getEDISenderReceiverByDocType(String doctype) {
+           
+                    
+        ArrayList<String[]> list = new ArrayList<String[]>();
+        try{
+            Class.forName(driver);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                      res = st.executeQuery("select * from edi_mstr where " + 
+                        " edi_doc = " + "'" + doctype + "'"       
+                        + ";");
+                    while (res.next()) {
+                        String[] arr = new String[]{res.getString("edi_sndgs"), res.getString("edi_rcvgs")};
+                        list.add(arr);
+                    }
+           }
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+        return list;
+        
+         }
+    
     
     public static ArrayList<String> getEDIAttributesList(String doctype, String sndid, String rcvid) {
            

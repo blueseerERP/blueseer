@@ -143,6 +143,7 @@ import java.util.zip.ZipOutputStream;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -922,15 +923,6 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         
         ddenvelopeSender.removeAllItems();
         ddenvelopeReceiver.removeAllItems();
-        ArrayList<String> gsids = EDData.getEDITradeIDs();
-        for (int i = 0; i < gsids.size(); i++) {
-            ddenvelopeSender.addItem(gsids.get(i));
-            ddenvelopeReceiver.addItem(gsids.get(i));
-        }
-        ddenvelopeSender.insertItemAt("", 0);
-        ddenvelopeSender.setSelectedIndex(0);
-        ddenvelopeReceiver.insertItemAt("", 0);
-        ddenvelopeReceiver.setSelectedIndex(0);
         
         ddenvelopeReceiver.setEnabled(false);
         ddenvelopeSender.setEnabled(false);
@@ -3759,6 +3751,19 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         if (cbenvelope.isSelected()) {
             ddenvelopeReceiver.setEnabled(true);
             ddenvelopeSender.setEnabled(true);
+            ArrayList<String[]> gsids = EDData.getEDISenderReceiverByDocType(ddindoctype.getSelectedItem().toString());
+            for (int i = 0; i < gsids.size(); i++) {
+                if(((DefaultComboBoxModel)ddenvelopeSender.getModel()).getIndexOf(gsids.get(i)[0]) == -1) {
+                    ddenvelopeSender.addItem(gsids.get(i)[0]);
+                }
+                if(((DefaultComboBoxModel)ddenvelopeReceiver.getModel()).getIndexOf(gsids.get(i)[1]) == -1) {
+                    ddenvelopeReceiver.addItem(gsids.get(i)[1]);
+                }
+            }
+            ddenvelopeSender.insertItemAt("", 0);
+            ddenvelopeSender.setSelectedIndex(0);
+            ddenvelopeReceiver.insertItemAt("", 0);
+            ddenvelopeReceiver.setSelectedIndex(0);
         } else {
             ddenvelopeReceiver.setEnabled(false);
             ddenvelopeSender.setEnabled(false);
