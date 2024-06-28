@@ -75,29 +75,47 @@ XMLGenericOrder.csv,item,order:detail,1,0,0,listprice,List Price,1,40,-,O,F
 XMLGenericOrder.csv,item,order:detail,1,0,0,netprice,Net Price,1,40,-,O,F
 XMLGenericOrder.csv,item,order:detail,1,0,0,custnumber,Customer Item Number,1,40,-,O,F
 XMLGenericOrder.csv,item,order:detail,1,0,0,skunumber,Sku Number,1,40,-,O,F
-CSVGenericOrder.csv,ROW,,100,0,1,landmark,landmark,6,6,-,M,N
-CSVGenericOrder.csv,ROW,,1,0,0,f1,Purchase Order Number,1,40,-,M,F
-CSVGenericOrder.csv,ROW,,1,0,0,f2,Bill-To Code,1,40,-,M,F
-CSVGenericOrder.csv,ROW,,1,0,0,f3,Bill-To Name,1,40,-,M,F
-CSVGenericOrder.csv,ROW,,1,0,0,f4,Ship-To Code,1,40,-,M,F
-CSVGenericOrder.csv,ROW,,1,0,0,f5,Ship-To Name,1,40,-,M,F
-CSVGenericOrder.csv,ROW,,1,0,0,f6,Item Number,1,40,-,M,F
-CSVGenericOrder.csv,ROW,,1,0,0,f7,Sku Number,1,40,-,M,F
-CSVGenericOrder.csv,ROW,,1,0,0,f8,Quantity,0,10,-,M,F
-CSVGenericOrder.csv,ROW,,1,0,0,f9,UOM,0,4,-,M,F
-CSVGenericOrder.csv,ROW,,1,0,0,f10,Price,0,10,-,M,F
-CSVGenericOrder.csv,ROW,,1,0,0,f11,Reference,0,40,-,O,F
-CSVD365Order.csv,ROW,,100,0,1,landmark,landmark,6,6,-,M,N
-CSVD365Order.csv,ROW,,1,0,0,f1,Purchase Order Number,1,40,-,M,F
-CSVD365Order.csv,ROW,,1,0,0,f2,Currency,1,40,-,M,F
-CSVD365Order.csv,ROW,,1,0,0,f3,Bill-To Code,1,40,-,M,F
-CSVD365Order.csv,ROW,,1,0,0,f4,Bill-To Name,1,40,-,M,F
-CSVD365Order.csv,ROW,,1,0,0,f5,Item Number,1,40,-,M,F
-CSVD365Order.csv,ROW,,1,0,0,f6,Item Description,0,80,-,O,F
-CSVD365Order.csv,ROW,,1,0,0,f7,Quantity,0,10,-,M,F
-CSVD365Order.csv,ROW,,1,0,0,f8,UOM,0,4,-,M,F
-CSVD365Order.csv,ROW,,1,0,0,f9,Price,0,10,-,M,F
-CSVD365Order.csv,ROW,,1,0,0,f10,Reference,0,40,-,O,F
+CSVGenericOrder,ROW,,100,0,1,landmark,landmark,6,6,-,M,N
+CSVGenericOrder,ROW,,1,0,0,f1,Purchase Order Number,1,40,-,M,F
+CSVGenericOrder,ROW,,1,0,0,f2,Bill-To Code,1,40,-,M,F
+CSVGenericOrder,ROW,,1,0,0,f3,Bill-To Name,1,40,-,M,F
+CSVGenericOrder,ROW,,1,0,0,f4,Ship-To Code,1,40,-,M,F
+CSVGenericOrder,ROW,,1,0,0,f5,Ship-To Name,1,40,-,M,F
+CSVGenericOrder,ROW,,1,0,0,f6,Item Number,1,40,-,M,F
+CSVGenericOrder,ROW,,1,0,0,f7,Sku Number,1,40,-,M,F
+CSVGenericOrder,ROW,,1,0,0,f8,Quantity,0,10,-,M,F
+CSVGenericOrder,ROW,,1,0,0,f9,UOM,0,4,-,M,F
+CSVGenericOrder,ROW,,1,0,0,f10,Price,0,10,-,M,F
+CSVGenericOrder,ROW,,1,0,0,f11,Reference,0,40,-,O,F
+CSVGenericInvoice,ROW,,100,0,1,landmark,landmark,6,6,-,M,N
+CSVGenericInvoice,ROW,,1,0,0,f1,Invoice Number,1,40,-,M,F
+CSVGenericInvoice,ROW,,1,0,0,f2,Purchase Order Number,1,40,-,M,F
+CSVGenericInvoice,ROW,,1,0,0,f3,Invoice Date,1,40,-,M,F
+CSVGenericInvoice,ROW,,1,0,0,f4,Purchase Order Date,1,40,-,M,F
+CSVGenericInvoice,ROW,,1,0,0,f5,Bill To Code,1,40,-,M,F
+CSVGenericInvoice,ROW,,1,0,0,f6,Bill To Name,1,40,-,M,F
+CSVGenericInvoice,ROW,,1,0,0,f7,Remit To Code,1,40,-,M,F
+CSVGenericInvoice,ROW,,1,0,0,f8,Remit To Name,1,40,-,M,F
+CSVGenericInvoice,ROW,,1,0,0,f9,Terms Code,1,40,-,M,F
+CSVGenericInvoice,ROW,,1,0,0,f10,Terms Description,1,40,-,M,F
+CSVGenericInvoice,ROW,,1,0,0,f11,Terms Due Date,1,40,-,M,F
+CSVGenericInvoice,ROW,,1,0,0,f12,Reference,1,40,-,M,F
+CSVGenericInvoice,ROW,,1,0,0,f13,Item Number,1,40,-,M,F
+CSVGenericInvoice,ROW,,1,0,0,f14,Cust Item Number,1,40,-,M,F
+CSVGenericInvoice,ROW,,1,0,0,f15,Quantity,1,40,-,M,F
+CSVGenericInvoice,ROW,,1,0,0,f16,Price,1,40,-,M,F
+CSVGenericInvoice,ROW,,1,0,0,f17,Total Amount,1,40,-,M,F
+CSVD365Order,ROW,,100,0,1,landmark,landmark,6,6,-,M,N
+CSVD365Order,ROW,,1,0,0,f1,Purchase Order Number,1,40,-,M,F
+CSVD365Order,ROW,,1,0,0,f2,Currency,1,40,-,M,F
+CSVD365Order,ROW,,1,0,0,f3,Bill-To Code,1,40,-,M,F
+CSVD365Order,ROW,,1,0,0,f4,Bill-To Name,1,40,-,M,F
+CSVD365Order,ROW,,1,0,0,f5,Item Number,1,40,-,M,F
+CSVD365Order,ROW,,1,0,0,f6,Item Description,0,80,-,O,F
+CSVD365Order,ROW,,1,0,0,f7,Quantity,0,10,-,M,F
+CSVD365Order,ROW,,1,0,0,f8,UOM,0,4,-,M,F
+CSVD365Order,ROW,,1,0,0,f9,Price,0,10,-,M,F
+CSVD365Order,ROW,,1,0,0,f10,Reference,0,40,-,O,F
 X12850.csv,ST,,1,0,1,landmark,Transaction Set Header,2,2,-,M,F
 X12850.csv,ST,,1,0,0,e01,Transaction Set Identifier Code,3,3,-,M/Z,F
 X12850.csv,ST,,1,0,0,e02,Transaction Set Control Number,4,9,-,M,F
