@@ -25,8 +25,9 @@ X12834.csv,X12 Benefit Enrollment and Maintenance,generic,834x12,X12,0,,0
 X12835.csv,X12 Health Care Claim Payment/Advice,generic,835x12,X12,0,,0
 X12837.csv,X12 Health Care Claim,generic,837x12,X12,0,,0
 DB,System Database I/O,generic,DB,DB,0,,0
-CSVGenericOrder.csv,Comma Delimited Order,generic,850csv,CSV,44,,0
-CSVD365Order.csv,Comma Delimited Order,generic,850csv,CSV,44,,0
+CSVGenericOrder,Comma Delimited Order,generic,850csv,CSV,44,,0
+CSVGenericInvoice,Comma Delimited Invoice,generic,810csv,CSV,44,,0
+CSVD365Order,Comma Delimited Order,generic,850csv,CSV,44,,0
 XMLGenericOrder.csv,XML Generic Order,generic,850xml,XML,0,,0
 cXMLOrder.csv,cXML Business Order,generic,850xml,XML,0,,0
 JSONGenericOrder.csv,JSON Generic Order,generic,850json,JSON,0,,0
