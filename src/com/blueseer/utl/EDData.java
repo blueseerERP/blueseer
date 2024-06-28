@@ -869,10 +869,10 @@ public class EDData {
         
          }
     
-    public static ArrayList<String[]> getEDISenderReceiverByDocType(String doctype) {
+    public static ArrayList<String> getEDISenderReceiverByDocType(String doctype) {
            
                     
-        ArrayList<String[]> list = new ArrayList<String[]>();
+        ArrayList<String> list = new ArrayList<String>();
         try{
             Class.forName(driver);
             Connection con = null;
@@ -888,7 +888,7 @@ public class EDData {
                         " edi_doc = " + "'" + doctype + "'"       
                         + ";");
                     while (res.next()) {
-                        String[] arr = new String[]{res.getString("edi_sndgs"), res.getString("edi_rcvgs")};
+                        String arr = res.getString("edi_sndgs") + "/" + res.getString("edi_rcvgs");
                         list.add(arr);
                     }
            }

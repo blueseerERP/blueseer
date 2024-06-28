@@ -921,11 +921,8 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         
         cbenvelope.setSelected(false);
         
-        ddenvelopeSender.removeAllItems();
-        ddenvelopeReceiver.removeAllItems();
-        
-        ddenvelopeReceiver.setEnabled(false);
-        ddenvelopeSender.setEnabled(false);
+        ddenvelope.removeAllItems();
+        ddenvelope.setEnabled(false);
         
         
         cbinternal.setEnabled(false);
@@ -985,8 +982,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                     ddoutfiletype.setEnabled(false);
                    // ddindoctype.setEnabled(false);
                    // ddoutdoctype.setEnabled(false);
-                   ddenvelopeSender.setEnabled(false);
-                   ddenvelopeReceiver.setEnabled(false);
+                   ddenvelope.setEnabled(false);
                    if (ddoutfiletype.getSelectedItem() != null && ddoutfiletype.getSelectedItem().toString().equals("X12")) {
                        cbenvelope.setEnabled(true);
                    } else {
@@ -2560,10 +2556,8 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         tbpackage = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         cbinternal = new javax.swing.JCheckBox();
-        ddenvelopeSender = new javax.swing.JComboBox<>();
+        ddenvelope = new javax.swing.JComboBox<>();
         jLabel12 = new javax.swing.JLabel();
-        ddenvelopeReceiver = new javax.swing.JComboBox<>();
-        jLabel13 = new javax.swing.JLabel();
         cbenvelope = new javax.swing.JCheckBox();
 
         setBackground(new java.awt.Color(0, 102, 204));
@@ -2881,9 +2875,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
         cbinternal.setText("Internal");
 
-        jLabel12.setText("GS Sender");
-
-        jLabel13.setText("GS Receiver");
+        jLabel12.setText("Sender/Receiver");
 
         cbenvelope.setText("Envelope");
         cbenvelope.addActionListener(new java.awt.event.ActionListener() {
@@ -2947,23 +2939,20 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(tbpackage, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tbversion, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(ddinfiletype, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(ddoutfiletype, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel12)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cbenvelope)
-                            .addComponent(ddenvelopeSender, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ddenvelopeReceiver, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(tbpackage, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                            .addComponent(ddenvelope, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap())))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -3005,23 +2994,18 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
                             .addComponent(jLabel3)
                             .addComponent(jLabel8)
                             .addComponent(cbinternal)
-                            .addComponent(ddenvelopeSender, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ddenvelope, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel12))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(tbpath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel1))
-                                    .addComponent(btfind, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel9)))
                             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(ddenvelopeReceiver, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel13)))))
+                                .addComponent(tbpath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel1))
+                            .addComponent(btfind, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel9))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -3266,12 +3250,10 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         
         
         if (cbenvelope.isSelected()) {
-            if (ddenvelopeReceiver.getSelectedItem() != null && ! ddenvelopeReceiver.getSelectedItem().toString().isBlank()) {
-                c[21] = ddenvelopeReceiver.getSelectedItem().toString();
-            }
-
-            if (ddenvelopeSender.getSelectedItem() != null && ! ddenvelopeSender.getSelectedItem().toString().isBlank()) {
-                c[13] = ddenvelopeSender.getSelectedItem().toString(); // override use of c[13] during map testing
+            if (ddenvelope.getSelectedItem() != null && ! ddenvelope.getSelectedItem().toString().isBlank()) {
+                String[] arr = ddenvelope.getSelectedItem().toString().split("/",-1);
+                c[13] = arr[0]; // override use of c[13] during map testing
+                c[21] = arr[1];
             }
             
             if (ddoutdoctype.getSelectedItem() != null && ! ddoutdoctype.getSelectedItem().toString().isBlank()) {
@@ -3749,24 +3731,17 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
 
     private void cbenvelopeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbenvelopeActionPerformed
         if (cbenvelope.isSelected()) {
-            ddenvelopeReceiver.setEnabled(true);
-            ddenvelopeSender.setEnabled(true);
-            ArrayList<String[]> gsids = EDData.getEDISenderReceiverByDocType(ddindoctype.getSelectedItem().toString());
+            ddenvelope.setEnabled(true);
+            ArrayList<String> gsids = EDData.getEDISenderReceiverByDocType(ddindoctype.getSelectedItem().toString());
             for (int i = 0; i < gsids.size(); i++) {
-                if(((DefaultComboBoxModel)ddenvelopeSender.getModel()).getIndexOf(gsids.get(i)[0]) == -1) {
-                    ddenvelopeSender.addItem(gsids.get(i)[0]);
-                }
-                if(((DefaultComboBoxModel)ddenvelopeReceiver.getModel()).getIndexOf(gsids.get(i)[1]) == -1) {
-                    ddenvelopeReceiver.addItem(gsids.get(i)[1]);
+                if(((DefaultComboBoxModel)ddenvelope.getModel()).getIndexOf(gsids.get(i)) == -1) {
+                    ddenvelope.addItem(gsids.get(i));
                 }
             }
-            ddenvelopeSender.insertItemAt("", 0);
-            ddenvelopeSender.setSelectedIndex(0);
-            ddenvelopeReceiver.insertItemAt("", 0);
-            ddenvelopeReceiver.setSelectedIndex(0);
+            ddenvelope.insertItemAt("", 0);
+            ddenvelope.setSelectedIndex(0);
         } else {
-            ddenvelopeReceiver.setEnabled(false);
-            ddenvelopeSender.setEnabled(false);
+            ddenvelope.setEnabled(false);
         }
     }//GEN-LAST:event_cbenvelopeActionPerformed
 
@@ -3791,8 +3766,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     private javax.swing.JButton btzip;
     private javax.swing.JCheckBox cbenvelope;
     private javax.swing.JCheckBox cbinternal;
-    private javax.swing.JComboBox<String> ddenvelopeReceiver;
-    private javax.swing.JComboBox<String> ddenvelopeSender;
+    private javax.swing.JComboBox<String> ddenvelope;
     private javax.swing.JComboBox<String> ddifs;
     private javax.swing.JComboBox<String> ddindoctype;
     private javax.swing.JComboBox<String> ddinfiletype;
@@ -3806,7 +3780,6 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
