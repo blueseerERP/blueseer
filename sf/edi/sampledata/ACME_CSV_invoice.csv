@@ -1,0 +1,4 @@
+invoicenumber,ponumber,invoicedate,podate,billtocode,billtoname,remittocode,remittoname,termscode,termsdesc,termsduedate,reference,item,custitem,qty,price,totalamount
+inv999,po12345,20240106,20240101,ACME,ACME MFG CO.,MFGCODE,MFG NAME,N30,Net 30,20240206,myref,itemxxx,custitemxxx,5,134.54,1385.08
+inv999,po12345,20240106,20240101,ACME,ACME MFG CO.,MFGCODE,MFG NAME,N30,Net 30,20240206,myref,itemyyy,custitemyyy,7,85.22,1385.08
+inv999,po12345,20240106,20240101,ACME,ACME MFG CO.,MFGCODE,MFG NAME,N30,Net 30,20240206,myref,itemzzz,custitemzzz,2,57.92,1385.08

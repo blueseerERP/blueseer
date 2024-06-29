@@ -28,3 +28,4 @@ bsJSONTo850,JSON Order to X12 850,,JSONGenericOrder.csv,X12850.csv,850json,JSON,
 bsXMLTo850,XML Order to X12 850,,XMLGenericOrder.csv,X12850.csv,850xml,XML,850x12,X12,edi/maps/bsXMLTo850.java,,0
 bs850ToD365XML,X12 850 to D365 composite V2 XML,,X12850.csv,XMLD365OrderV2,850x12,X12,850xml,XML,edi/maps/bs850ToD365XML.java,,0
 bsCSVToD365XML,CSV data to D365 composite V2 XML,generic,CSVD365Order,XMLD365OrderV2,850csv,CSV,850xml,XML,edi/maps/bsCSVToD365XML.java,,0
+bsCSVTo810,CSV to EDI X12 810 Invoice,generic,CSVGenericInvoice,X12810.csv,810csv,CSV,810x12,X12,edi/maps/bsCSVTo810.java,,0
