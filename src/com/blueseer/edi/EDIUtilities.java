@@ -31,6 +31,7 @@ import bsmf.MainFrame;
 import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.tags;
 import static com.blueseer.ctr.cusData.addCustMstrMass;
+import static com.blueseer.edi.EDI.generate997;
 import static com.blueseer.edi.apiUtils.calculateMIC;
 import static com.blueseer.edi.apiUtils.hashdigest;
 import static com.blueseer.edi.apiUtils.hashdigestString;
@@ -305,6 +306,9 @@ public class EDIUtilities extends javax.swing.JPanel {
                 }
                 if (util.equals("5")) {
                     decryptPGPFile(b);
+                }
+                if (util.equals("6")) {
+                    create997(b);
                 }
             } else { // no period to split...must be blank or malformed selection element
                resetVariables();
@@ -829,6 +833,20 @@ public class EDIUtilities extends javax.swing.JPanel {
          }
     }
     
+    public void create997(boolean input) {
+        taoutput.setText("");
+        if (! tainput.getText().isEmpty()) { 
+            String x = "";
+            try {
+                x = generate997(tainput.getText());
+            } catch (IOException ex) {
+                bslog(ex);
+            }
+            taoutput.setText(x);
+         }
+    }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -886,7 +904,7 @@ public class EDIUtilities extends javax.swing.JPanel {
         jPanel1.setName("panelmain"); // NOI18N
         jPanel1.setPreferredSize(new java.awt.Dimension(1103, 625));
 
-        ddtable.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1.  determine hex value of delimiters in X12 file", "2.  convert delimiter from original to newline in X12 file", "3.  count occurrences of hex character", "4.  get SHA-1 MIC/Digest of content", "5.  decrypt PGP file with passphrase and keyfile" }));
+        ddtable.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1.  determine hex value of delimiters in X12 file", "2.  convert delimiter from original to newline in X12 file", "3.  count occurrences of hex character", "4.  get SHA-1 MIC/Digest of content", "5.  decrypt PGP file with passphrase and keyfile", "6.  create 997 from inbound envelope" }));
         ddtable.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ddtableActionPerformed(evt);

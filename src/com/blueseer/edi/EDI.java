@@ -5023,6 +5023,104 @@ public class EDI {
          return m;
       }
       
+      public static String generate997(String x12indoc) throws IOException {
+	  StringBuilder sb = new StringBuilder();
+          char[] cbuf = x12indoc.toCharArray();
+          char s = cbuf[105];
+          char d = cbuf[104];
+          char e = cbuf[103];
+          String sd = escapeDelimiter(String.valueOf(s));
+          String ed = escapeDelimiter(String.valueOf(e));
+          String es = String.valueOf(e);
+          if (String.format("%02x",(int) cbuf[105]).equals("0d") && String.format("%02x",(int) cbuf[106]).equals("0a")) {
+                          s = cbuf[106];
+          }
+                      
+          
+	  StringBuilder segment = new StringBuilder();
+          ArrayList<String> docin = new ArrayList<String>();
+          for (int k = 0; k < cbuf.length; k++) {
+               if (cbuf[k] == s) {
+                   docin.add(segment.toString());
+                   segment.delete(0, segment.length());
+               } else {
+                   if (! (String.format("%02x",(int) cbuf[k]).equals("0d") || String.format("%02x",(int) cbuf[k]).equals("0a")) ) {
+                       segment.append(cbuf[k]);
+                   } 
+               }
+           }
+          
+          
+          ArrayList<String> docout = new ArrayList<String>();
+            int controlnumber = OVData.getNextNbr("ediout");
+            String newISA = "";
+            String newGS = "";
+            String gstype = "";
+            String gsctrl_in = "";
+            String isaSender = "";
+            ArrayList<String[]> fadocs = new ArrayList<String[]>();
+			for (String in : docin) {
+				if (in.startsWith("ISA")) {
+		       		String[] x = in.split(ed,-1);
+		       		//x[6] = String.format("%-15s", "NATGYP");
+	        		//x[8] = String.format("%-15s", "NATSAP");
+		       		isaSender = x[6];
+		       		String isaReceiver = x[8];
+		       		String senderQ = x[5];
+		       		String receiverQ = x[7];
+		       	        x[6] = isaReceiver;
+	        		x[8] = isaSender;
+	        		x[5] = receiverQ;
+	        		x[7] = senderQ;
+	        		String isactrl_in = x[13];
+	        		x[13] = String.format("%09d", controlnumber);
+	        		newISA = String.join(es, x);
+	        		docout.add(newISA);
+	       	    }
+				if (in.startsWith("GS")) {
+		       		String[] x = in.split(ed,-1);
+		       		//x[6] = String.format("%-15s", "NATGYP");
+	        		//x[8] = String.format("%-15s", "NATSAP");
+		       		String gsSender = x[2];
+		       		String gsReceiver = x[3];
+		       		gstype = x[1];
+		       		x[1] = "FA";
+		       	    x[2] = gsReceiver;
+	        		x[3] = gsSender;
+	        		gsctrl_in = x[6];
+	        		x[6] = String.valueOf(controlnumber);
+	        		newGS = String.join(es, x);
+	        		docout.add(newGS);
+	       	    }
+				if (in.startsWith("ST")) {
+		       		String[] x = in.split(ed,-1);
+		       		fadocs.add(new String[] {x[1],x[2]});
+	       	    }
+			}
+			
+			// now write out 997 doc
+			docout.add("ST" + es + "997" + es + "00001");
+			docout.add("AK1" + es + gstype + es + gsctrl_in);
+			
+			for (String[] k : fadocs) {
+				docout.add("AK2" + es + k[0] + es + k[1]);
+				docout.add("AK5" + es + "A");
+			}
+			int segcounter = 4 + (2 * fadocs.size());
+			docout.add("AK9" + es + "A" + es + fadocs.size() + es + fadocs.size() + es + fadocs.size());
+			docout.add("SE" + es + segcounter + es + "00001");
+			docout.add("GE" + es + "1" + es + controlnumber);
+			docout.add("IEA" + es + "1" + es + String.format("%09d", controlnumber));
+			
+                        
+			for (String str : docout) {
+				sb.append(str).append(String.valueOf(s));
+			}
+			
+                        return sb.toString();
+		}
+	
+      
       public static String[] generateCONTRL(ArrayList<String> docs, String[] c) {
         String[] m = new String[]{"",""};
         
