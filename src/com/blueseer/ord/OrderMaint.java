@@ -3654,11 +3654,9 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_btaddActionPerformed
 
     private void ddcustActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddcustActionPerformed
-
-        if (ddcust.getItemCount() > 0) {
+        
+        if (! isLoad && ddcust.getItemCount() > 0) {
            custChangeEvent(ddcust.getSelectedItem().toString());
-           
-           
         } // if ddcust has a list
         
     }//GEN-LAST:event_ddcustActionPerformed
@@ -3693,7 +3691,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_netpriceActionPerformed
 
     private void ddshipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddshipActionPerformed
-        if (ddship.getItemCount() > 0)  {
+        if (! isLoad && ddship.getItemCount() > 0)  {
             clearShipAddress();
             
               if (ddship.getSelectedItem().toString().equals("<new>")) {
@@ -3848,7 +3846,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_tbmiscActionPerformed
 
     private void ddwhActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddwhActionPerformed
-        if (ddwh.getSelectedItem() != null) {
+        if (! isLoad && ddwh.getSelectedItem() != null) {
              ddloc.removeAllItems();
              ArrayList<String> loc = OVData.getLocationListByWarehouse(ddwh.getSelectedItem().toString());
              for (String lc : loc) {
