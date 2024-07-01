@@ -243,6 +243,46 @@ public class shpData {
     return m;
     }
     
+    public static String[] _addShipperTransaction(ArrayList<ship_det> shd, ship_mstr sh, Connection bscon) {
+        String[] m = new String[2];
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            
+            _addShipMstr(sh, bscon, ps, res);  
+            for (ship_det z : shd) {
+                _addShipDet(z, bscon, ps, res);
+            }
+           
+            bscon.commit();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
     public static String[] confirmShipperTransaction(String type, String shipper, Date effdate) {
         String[] m = new String[2];
         Connection bscon = null;
@@ -320,6 +360,69 @@ public class shpData {
         }
     return m;
     }
+    
+    public static String[] _confirmShipperTransaction(String type, String shipper, Date effdate, Connection bscon) {
+        String[] m = new String[2];
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            
+            AREntry("I", shipper, effdate, bscon);  
+            // if sac 'shipping XXX' type...create voucher
+            // String[] m = VoucherTransaction(OVData.getNextNbr("batch"), ddtype.getSelectedItem().toString() , createDetRecord(), createRecord(), false);
+           // ArrayList<String[]> sac = shpData.getShipperSAC(shipper);
+           // add function that takes shipper number and loops through sac to create vouchers
+            if (! type.equals("freight")) {
+            _addTranMstrShipper(shipper, effdate, bscon);
+            _updateInventoryFromShipper(shipper, bscon);
+            }
+            
+            fglData._glEntryFromShipper(shipper, effdate, bscon);
+            
+            
+            _updateShipperStatus(shipper, effdate, bscon); 
+            if (type.equals("order")) {
+            _updateOrderFromShipper(shipper, bscon); 
+            }
+            if (type.equals("serviceorder")) {
+            _updateServiceOrderFromShipper(shipper, bscon); 
+            _glEntryFromSrvJobScan(shipper, bscon);
+            _updateInventoryFromJob(shipper, bscon);
+            }
+            // if type.equals("cash")....no order to update
+            
+            if (OVData.isVoucherShippingSO()) {
+            _processShipperVouchers(shipper, effdate, bscon);
+            }
+            bscon.commit();
+            m = new String[] {BlueSeerUtils.SuccessBit, getMessageTag(1125)};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
     
     
     private static int _updateShipMstr(ship_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
@@ -2123,7 +2226,7 @@ public class shpData {
 
      }
 
-     public static void updateShipperSAC(String shipper) {
+    public static void updateShipperSAC(String shipper) {
        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
        ArrayList<String> orders = new ArrayList<String>();
        ArrayList<String[]> sac = new ArrayList<String[]>();
@@ -2232,7 +2335,111 @@ public class shpData {
     }
 
    }
+     
+    public static void _updateShipperSAC(String shipper, Connection bscon) {
+       DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 
+       ArrayList<String> orders = new ArrayList<String>();
+       ArrayList<String[]> sac = new ArrayList<String[]>();
+       Double matltax = 0.00;
+       Double totamt = 0.00;
+       
+       String fieldlabel = "";
+       fieldlabel = getCodeValueByCodeKey("fieldlabel", "materialtax");
+       
+       if (fieldlabel.isBlank()) {
+       fieldlabel = "Material Tax";
+       }
+       
+       try{
         
+        Statement st = bscon.createStatement();
+        ResultSet res = null;
+        try{
+
+
+
+             // get Orders on shipper
+             res = st.executeQuery("select shd_so from ship_det where shd_id = " + "'" + shipper + "'" + " group by shd_so;");
+             while (res.next()) {
+                 orders.add(res.getString("shd_so"));
+             }
+
+            // get material tax for each item (if any) associated with this shipper
+            res = st.executeQuery("select shd_taxamt, shd_qty, shd_listprice from ship_det where shd_id = " + "'" + shipper + "'" + ";");
+             while (res.next()) {
+                 matltax += res.getDouble("shd_taxamt");
+                 totamt += res.getDouble("shd_qty") * res.getDouble("shd_listprice");
+             }
+
+
+             // delete old shs_det records first
+             st.executeUpdate("delete from shs_det where shs_nbr = " + "'" + shipper + "'");
+
+              // now lets loop through the orders sos_det table and write to shs_det
+              // we also convert any percent based records to percentage amount of totamt
+             for (String o : orders) {
+             sac = OVData.getOrderSAC(o);
+             //write to shs_det
+                 String myamttype = "";
+                 double myamt = 0.00;
+
+                 // sac order of elements...sos_nbr, sos_desc, sos_type, sos_amttype, sos_amt
+                 for (String[] s : sac) {
+                 myamttype = s[3].toString();
+                 myamt = bsParseDouble(s[4].toString());
+
+                 // adjust if percent based
+                 if (s[3].toString().equals("percent") && bsParseDouble(s[4].toString()) > 0) {
+                   myamttype = "amount";
+                   if (s[2].equals("discount")) {
+                     myamt = -1 * (bsParseDouble(s[4].toString()) / 100) * totamt;
+                   } else {
+                     myamt = (bsParseDouble(s[4].toString()) / 100) * totamt;  
+                   }
+                 }    
+                 st.executeUpdate(" insert into shs_det (shs_nbr, shs_so, shs_desc, shs_type, shs_amttype, shs_amt ) " +
+                                 " values ( "  + "'" + shipper + "'" + "," +
+                                 "'" + s[0] + "'" + "," +
+                                 "'" + s[1] + "'" + "," +
+                                 "'" + s[2] + "'" + "," +
+                                 "'" + myamttype + "'" + "," +
+                                 "'" + currformatDoubleUS(myamt) + "'" + 
+                                 ") ;");
+                 }
+                 // now insert matltax if any for summary purposes
+                 if (matltax > 0) {
+                 st.executeUpdate(" insert into shs_det (shs_nbr, shs_so, shs_desc, shs_type, shs_amttype, shs_amt ) " +
+                                 " values ( "  + "'" + shipper + "'" + "," +
+                                 "'" + "" + "'" + "," +
+                                 "'" + fieldlabel + "'" + "," +
+                                 "'" + "tax" + "'" + "," +
+                                 "'" + "amount" + "'" + "," +
+                                 "'" + currformatDoubleUS(matltax) + "'" + 
+                                 ") ;");
+                 }
+                 
+             }
+
+        }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+           if (res != null) {
+                res.close();
+            }
+            if (st != null) {
+                st.close();
+            }
+        }
+
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+   }
+    
+    
     public static void updateShipperWithFreightOrder(ArrayList<String[]> tablelist) {
         // table structure    "line", "FONbr", "Type", "Shipper", "Ref", "Name", "Addr1", "Addr2", "City", "State", "Zip", "Contact", "Phone", "Email", "Units", "Weight"
        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd"); 

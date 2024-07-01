@@ -54,6 +54,9 @@ import com.blueseer.ord.ordData.sod_tax;
 import com.blueseer.ord.ordData.sos_det;
 import static com.blueseer.ord.ordData.updateOrderTransaction;
 import com.blueseer.shp.shpData;
+import static com.blueseer.shp.shpData._addShipperTransaction;
+import static com.blueseer.shp.shpData._confirmShipperTransaction;
+import static com.blueseer.shp.shpData._updateShipperSAC;
 import static com.blueseer.shp.shpData.confirmShipperTransaction;
 import com.blueseer.shp.shpData.ship_mstr;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
@@ -96,6 +99,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -1369,6 +1373,81 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     // custom funcs 
+    public String[] autoInvoice() {
+        String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            if (ds != null) {
+              bscon = ds.getConnection();
+            } else {
+              bscon = DriverManager.getConnection(url + db, user, pass);  
+            }
+        
+        
+        int shipperid = OVData.getNextNbr("shipper", bscon);   
+         
+        ship_mstr sh = shpData.createShipMstrJRT(String.valueOf(shipperid), ddsite.getSelectedItem().toString(),
+                             String.valueOf(shipperid), 
+                              ddcust.getSelectedItem().toString(),
+                              ddship.getSelectedItem().toString(),
+                              bsNumberToUS(tbkey.getText()),
+                              ponbr.getText().replace("'", ""),  // po
+                              ponbr.getText().replace("'", ""),  // ref
+                              setDateDB(duedate.getDate()),
+                              setDateDB(orddate.getDate()),
+                              remarks.getText().replace("'", ""),
+                              ddshipvia.getSelectedItem().toString(),
+                              "S", 
+                              ddtax.getSelectedItem().toString(),
+                              ddsite.getSelectedItem().toString()); 
+        ArrayList<String[]> detail = tableToArrayList();
+        ArrayList<shpData.ship_det> shd = shpData.createShipDetJRT(detail, String.valueOf(shipperid), setDateDB(orddate.getDate()), ddsite.getSelectedItem().toString());
+        
+        bscon.setAutoCommit(false);    
+                        
+        _addShipperTransaction(shd, sh, bscon);
+        _updateShipperSAC(sh.sh_id(), bscon);
+        m = _confirmShipperTransaction("order", String.valueOf(shipperid), new java.util.Date(), bscon);
+        
+        bscon.commit();
+        
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
     public String[] autoInvoiceOrder() {
         java.util.Date now = new java.util.Date();
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -4019,7 +4098,14 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
            return;
         }
         
-         String[] message = autoInvoiceOrder();
+        //  String[] message = autoInvoiceOrder();
+        String[] message = autoInvoice();
+        // autopost
+        if (OVData.isAutoPost()) {
+            fglData.PostGL();
+        }
+        
+         
          if (message[0].equals("1")) { // if error
            bsmf.MainFrame.show(message[1]);
          } else {
