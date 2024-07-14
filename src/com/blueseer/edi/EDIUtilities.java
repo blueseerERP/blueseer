@@ -283,6 +283,13 @@ public class EDIUtilities extends javax.swing.JPanel {
       rbinactive.setSelected(false);
       buttonGroup1.add(rbactive);
       buttonGroup1.add(rbinactive);
+      
+      btrun.setVisible(true);
+      btclear.setVisible(true);
+      btfile.setVisible(false);
+      btdir.setVisible(false);
+      taoutput.setText("");
+      tainput.setText("");
       isLoad = false;
     }
    
@@ -833,17 +840,63 @@ public class EDIUtilities extends javax.swing.JPanel {
          }
     }
     
+    public void getInput() {
+        if (tainput.getText().isEmpty()) {    
+        File file = getfile("open target file");
+        taoutput.setText("");
+        tainput.setText("");
+        // executeTask(ddtable.getSelectedItem().toString(), null, "");
+        if (file != null && file.exists()) {
+                try {  
+                    BufferedReader f = new BufferedReader(new FileReader(file));
+                     char[] cbuf = new char[(int) file.length()];
+                     f.read(cbuf); 
+                     f.close();
+                    
+                     StringBuilder docstring = new StringBuilder();
+                    for (int i = 0; i < cbuf.length; i++) {
+                        docstring.append(cbuf[i]);
+                    }
+                    tainput.setText(docstring.toString());
+                  //  lines = Files.readAllLines(file.toPath());
+                    /*
+                    for (String segment : lines ) {
+                        tainput.append(segment);
+                        tainput.append("\n");
+                    }
+                    */
+                    tainput.setCaretPosition(0);
+                    panelinput.setVisible(true);
+                    
+                    
+                } catch (MalformedInputException m) {
+                    bslog(m);
+                    bsmf.MainFrame.show("Input file may not be UTF-8 encoded");
+                } catch (IOException ex) {
+                    bslog(ex);
+                    bsmf.MainFrame.show("Error...check data/app.log");
+                }   
+        }
+        }
+    }
+    
     public void create997(boolean input) {
         taoutput.setText("");
-        if (! tainput.getText().isEmpty()) { 
-            String x = "";
-            try {
-                x = generate997(tainput.getText());
-            } catch (IOException ex) {
-                bslog(ex);
-            }
-            taoutput.setText(x);
-         }
+        
+        if (! input) {
+        getInput();
+        
+        
+            if (! tainput.getText().isEmpty()) { 
+                String x = "";
+                try {
+                    x = generate997(tainput.getText());
+                } catch (IOException ex) {
+                    bslog(ex);
+                }
+                taoutput.setText(x);
+             }
+        }
     }
     
     
@@ -866,6 +919,7 @@ public class EDIUtilities extends javax.swing.JPanel {
         btfile = new javax.swing.JButton();
         btrun = new javax.swing.JButton();
         btshowpanels = new javax.swing.JButton();
+        btclear = new javax.swing.JButton();
         panelboxes = new javax.swing.JPanel();
         paneltb = new javax.swing.JPanel();
         lbkey2 = new javax.swing.JLabel();
@@ -942,6 +996,13 @@ public class EDIUtilities extends javax.swing.JPanel {
             }
         });
 
+        btclear.setText("Clear");
+        btclear.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btclearActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout panelbtLayout = new javax.swing.GroupLayout(panelbt);
         panelbt.setLayout(panelbtLayout);
         panelbtLayout.setHorizontalGroup(
@@ -951,6 +1012,8 @@ public class EDIUtilities extends javax.swing.JPanel {
                 .addComponent(ddtable, javax.swing.GroupLayout.PREFERRED_SIZE, 469, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btrun)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btclear)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btfile)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -968,7 +1031,8 @@ public class EDIUtilities extends javax.swing.JPanel {
                     .addComponent(btrun)
                     .addComponent(btfile)
                     .addComponent(btdir)
-                    .addComponent(btshowpanels))
+                    .addComponent(btshowpanels)
+                    .addComponent(btclear))
                 .addContainerGap())
         );
 
@@ -1296,7 +1360,13 @@ public class EDIUtilities extends javax.swing.JPanel {
        paneloutput.setVisible(true);
     }//GEN-LAST:event_btshowpanelsActionPerformed
 
+    private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
+        taoutput.setText("");
+        tainput.setText("");
+    }//GEN-LAST:event_btclearActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btclear;
     private javax.swing.JButton btdir;
     private javax.swing.JButton btfile;
     private javax.swing.JButton btrun;

@@ -113,6 +113,8 @@
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="btrun" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
+                          <Component id="btclear" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Component id="btfile" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="btdir" min="-2" max="-2" attributes="0"/>
@@ -132,6 +134,7 @@
                               <Component id="btfile" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="btdir" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="btshowpanels" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="btclear" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -189,6 +192,14 @@
                   </Properties>
                   <Events>
                     <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btshowpanelsActionPerformed"/>
+                  </Events>
+                </Component>
+                <Component class="javax.swing.JButton" name="btclear">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Clear"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btclearActionPerformed"/>
                   </Events>
                 </Component>
               </SubComponents>
