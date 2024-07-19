@@ -618,11 +618,11 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddsactype.addItem("discount");
         ddsactype.addItem("charge");
         ddsactype.addItem("passive");
-      //  if (isVoucherShippingSO()) {
-      //      ddsactype.addItem("shipping ADD");
-      //      ddsactype.addItem("shipping PPD");
-      //      ddsactype.addItem("shipping BIL");
-     //  }
+        if (isVoucherShippingSO()) {
+            ddsactype.addItem("shipping ADD");
+            ddsactype.addItem("shipping PPD");
+            ddsactype.addItem("shipping BIL");
+       }
         ddsactype.setSelectedIndex(0);
         
         
@@ -815,7 +815,10 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
        
        
        setComponentDefaultValues();
+       
+       if (bsmf.MainFrame.debug) {
        System.out.println("setComponentDefaultValues: " + timediff(start));
+       }
        
         btnew.setEnabled(true);
         btlookup.setEnabled(true);
@@ -823,13 +826,15 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         if (arg != null && arg.length > 0) {
             executeTask(dbaction.get, arg);
-            System.out.println("getTask: " + timediff(start));
         } else {
             tbkey.setEnabled(true);
             tbkey.setEditable(true);
             tbkey.requestFocus();
         }
-     System.out.println("finish init: " + timediff(start));
+        
+        if (bsmf.MainFrame.debug) {
+         System.out.println("finish init: " + timediff(start));
+        }
     }
     
     public String[] addRecord(String[] x) {
