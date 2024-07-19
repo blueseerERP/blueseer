@@ -66,6 +66,7 @@ import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -1191,6 +1192,13 @@ public class BlueSeerUtils {
     
     public static String now() {
         return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
+    }
+    
+    public static long timediff(LocalDateTime fromDateTime) {
+       // return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
+        Duration d = Duration.between(fromDateTime, LocalDateTime.now()); 
+        //long days = d.toDays();
+        return d.toMillis();
     }
     
     

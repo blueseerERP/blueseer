@@ -85,6 +85,7 @@ import static com.blueseer.utl.BlueSeerUtils.lurb2;
 import static com.blueseer.utl.BlueSeerUtils.parseDate;
 import static com.blueseer.utl.BlueSeerUtils.priceformat;
 import static com.blueseer.utl.BlueSeerUtils.setDateDB;
+import static com.blueseer.utl.BlueSeerUtils.timediff;
 import static com.blueseer.utl.BlueSeerUtils.xZero;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeerT;
@@ -106,6 +107,8 @@ import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -251,6 +254,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     public OrderMaint() {
         initComponents();
         setLanguageTags(this);
+        
     }
    
      // interface functions implemented  
@@ -801,7 +805,8 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public void initvars(String[] arg) {
-     
+       LocalDateTime start = LocalDateTime.now();
+       
        isLoad = true;
        setPanelComponentState(jPanelMain, false); 
        setPanelComponentState(jPanelLines, false); 
@@ -810,18 +815,21 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
        
        
        setComponentDefaultValues();
+       System.out.println("setComponentDefaultValues: " + timediff(start));
+       
         btnew.setEnabled(true);
         btlookup.setEnabled(true);
         isLoad = false;
         
         if (arg != null && arg.length > 0) {
             executeTask(dbaction.get, arg);
+            System.out.println("getTask: " + timediff(start));
         } else {
             tbkey.setEnabled(true);
             tbkey.setEditable(true);
             tbkey.requestFocus();
         }
-
+     System.out.println("finish init: " + timediff(start));
     }
     
     public String[] addRecord(String[] x) {
