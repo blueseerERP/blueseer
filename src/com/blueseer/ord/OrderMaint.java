@@ -618,11 +618,11 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddsactype.addItem("discount");
         ddsactype.addItem("charge");
         ddsactype.addItem("passive");
-        if (isVoucherShippingSO()) {
-            ddsactype.addItem("shipping ADD");
-            ddsactype.addItem("shipping PPD");
-            ddsactype.addItem("shipping BIL");
-        }
+      //  if (isVoucherShippingSO()) {
+      //      ddsactype.addItem("shipping ADD");
+      //      ddsactype.addItem("shipping PPD");
+      //      ddsactype.addItem("shipping BIL");
+     //  }
         ddsactype.setSelectedIndex(0);
         
         
