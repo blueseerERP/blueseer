@@ -34,9 +34,15 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.adm.admData.getOVMstr;
+import com.blueseer.adm.admData.ov_mstr;
+
+import com.blueseer.ord.ordData;
+import static com.blueseer.ord.ordData.getOrderMstrSet;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.timediff;
 import com.blueseer.utl.IBlueSeerc;
 import com.blueseer.utl.OVData;
 import static com.blueseer.utl.OVData.deleteNonMasterTransactionData;
@@ -62,6 +68,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -666,6 +673,7 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
         jLabel17 = new javax.swing.JLabel();
         btpatch = new javax.swing.JButton();
         btclean = new javax.swing.JButton();
+        btbandwidth = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -883,6 +891,13 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
             }
         });
 
+        btbandwidth.setText("BandWidth");
+        btbandwidth.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btbandwidthActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -916,13 +931,15 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(btupdate)
                                 .addGap(86, 86, 86)
                                 .addComponent(btclean)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btpatch))
+                                .addComponent(btpatch)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btbandwidth))
                             .addComponent(panelCopySite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
@@ -966,7 +983,8 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btupdate)
                             .addComponent(btpatch)
-                            .addComponent(btclean)))
+                            .addComponent(btclean)
+                            .addComponent(btbandwidth)))
                     .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -995,8 +1013,21 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
         }
     }//GEN-LAST:event_btcleanActionPerformed
 
+    private void btbandwidthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbandwidthActionPerformed
+        String small = bsmf.MainFrame.input("Enter small sales order key: ");
+        String large = bsmf.MainFrame.input("Enter large sales order key: ");
+        LocalDateTime start = LocalDateTime.now();
+        ordData.salesOrder z = getOrderMstrSet(new String[]{small});
+        System.out.println("SO small: " + timediff(start));
+        ordData.salesOrder y = getOrderMstrSet(new String[]{large});
+        System.out.println("SO large: " + timediff(start));
+        ov_mstr ov = getOVMstr(new String[]{""});
+        System.out.println("DEF main: " + timediff(start));
+    }//GEN-LAST:event_btbandwidthActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btbandwidth;
     private javax.swing.JButton btclean;
     private javax.swing.JButton btpatch;
     private javax.swing.JButton btupdate;

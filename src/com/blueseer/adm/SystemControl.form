@@ -71,13 +71,15 @@
                           <EmptySpace max="32767" attributes="0"/>
                           <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Group type="102" attributes="0">
                                   <Component id="btupdate" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="86" max="-2" attributes="0"/>
                                   <Component id="btclean" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="btpatch" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Component id="btbandwidth" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Component id="panelCopySite" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -136,6 +138,7 @@
                               <Component id="btupdate" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="btpatch" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="btclean" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="btbandwidth" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
@@ -508,6 +511,14 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btcleanActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="btbandwidth">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="BandWidth"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btbandwidthActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
