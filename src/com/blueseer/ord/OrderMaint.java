@@ -156,7 +156,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                 public static ArrayList<sos_det> soslist = null;
                 public static ArrayList<sod_tax> sodtaxlist = null;
                 public static ArrayList<so_tax> sotaxlist = null;
-                
+                public static LocalDateTime start;
                 Map<Integer, ArrayList<String[]>> linetax = new HashMap<Integer, ArrayList<String[]>>();
                 ArrayList<String[]> headertax = new ArrayList<String[]>();
      
@@ -319,6 +319,9 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
              initvars(null);  
            }
            
+           if (bsmf.MainFrame.debug) {
+            System.out.println("done : " + timediff(start));
+           }
             
             } catch (Exception e) {
                 MainFrame.bslog(e);
@@ -805,7 +808,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public void initvars(String[] arg) {
-       LocalDateTime start = LocalDateTime.now();
+       start = LocalDateTime.now();
        
        isLoad = true;
        setPanelComponentState(jPanelMain, false); 
