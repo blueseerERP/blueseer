@@ -922,12 +922,21 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
      }
       
     public String[] getRecord(String[] key) {
+        if (bsmf.MainFrame.debug) {
+       System.out.println("get start: " + timediff(start));
+       }
       salesOrder z = getOrderMstrSet(key);
+      if (bsmf.MainFrame.debug) {
+       System.out.println("get after: " + timediff(start));
+       }
       so = z.so();
       sodlist = z.sod();
       soslist = z.sos();
       sodtaxlist = z.sodtax();
       getAttachments(key[0]);
+      if (bsmf.MainFrame.debug) {
+       System.out.println("get return: " + timediff(start));
+       }
       return z.m();
     }
     
@@ -1255,7 +1264,9 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     public void updateForm() throws ParseException {
-        
+        if (bsmf.MainFrame.debug) {
+          System.out.println("update start: " + timediff(start));
+        }
         boolean canInvoice = true;
         
         tbkey.setText(bsNumber(so.so_nbr()));
@@ -1376,6 +1387,10 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         sodlist = null;
         soslist = null;
         sodtaxlist = null;
+        
+        if (bsmf.MainFrame.debug) {
+          System.out.println("update done: " + timediff(start));
+        }
     }
    
     public void getAttachments(String id) {
