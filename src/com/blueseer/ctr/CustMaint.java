@@ -658,7 +658,13 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tbcity.getText(),
                 (ddstate.getSelectedItem() == null) ? "" : ddstate.getSelectedItem().toString(),
                 tbzip.getText(),
-                (ddcountry.getSelectedItem() == null) ? "" : ddcountry.getSelectedItem().toString()
+                (ddcountry.getSelectedItem() == null) ? "" : ddcountry.getSelectedItem().toString(),
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
                 );
         } else {
         x = new cusData.cms_det(null, 
@@ -671,7 +677,13 @@ public class CustMaint extends javax.swing.JPanel implements IBlueSeerT {
                 tbshipcity.getText(),
                 (ddshipstate.getSelectedItem() == null) ? "" : ddshipstate.getSelectedItem().toString(),
                 tbshipzip.getText(),
-                (ddshipcountry.getSelectedItem() == null) ? "" : ddshipcountry.getSelectedItem().toString()
+                (ddshipcountry.getSelectedItem() == null) ? "" : ddshipcountry.getSelectedItem().toString(),
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
                 );
         }
         return x;

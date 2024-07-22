@@ -123,12 +123,15 @@
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="tbkey" max="32767" attributes="0"/>
                               <Component id="ddcust" alignment="0" pref="133" max="32767" attributes="0"/>
-                              <Component id="ddship" alignment="0" pref="133" max="32767" attributes="0"/>
+                              <Component id="tbshipto" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" attributes="0">
-                                  <Component id="btLookUpBillTo" min="-2" pref="25" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="btLookUpBillTo" min="-2" pref="25" max="-2" attributes="0"/>
+                                      <Component id="btLookUpShipTo" min="-2" pref="25" max="-2" attributes="0"/>
+                                  </Group>
                                   <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="lblshiptoaddr" max="32767" attributes="0"/>
@@ -224,21 +227,15 @@
                       <Component id="lbltotdollars" alignment="1" max="32767" attributes="0"/>
                       <Component id="lbldollars" alignment="1" max="32767" attributes="0"/>
                   </Group>
+                  <EmptySpace min="8" pref="8" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                                  <Component id="ddship" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel91" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <Component id="lblshiptoaddr" min="-2" pref="27" max="-2" attributes="0"/>
-                          </Group>
+                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
+                          <Component id="jLabel91" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tbshipto" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
-                          <Component id="lblshiptoname" min="-2" pref="30" max="-2" attributes="0"/>
-                      </Group>
+                      <Component id="lblshiptoaddr" min="-2" pref="27" max="-2" attributes="0"/>
+                      <Component id="btLookUpShipTo" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="lblshiptoname" alignment="1" min="-2" pref="30" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jPanel1" pref="249" max="32767" attributes="0"/>
@@ -316,19 +313,6 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btupdateActionPerformed"/>
           </Events>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="ddship">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="0"/>
-            </Property>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ddshipActionPerformed"/>
-          </Events>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
-          </AuxValues>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel91">
           <Properties>
@@ -852,7 +836,7 @@
                               </Group>
                           </Group>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <EmptySpace pref="82" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -1055,6 +1039,18 @@
             <Property name="text" type="java.lang.String" value="Total $"/>
             <Property name="name" type="java.lang.String" value="lbltotalamount" noResource="true"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JTextField" name="tbshipto">
+        </Component>
+        <Component class="javax.swing.JButton" name="btLookUpShipTo">
+          <Properties>
+            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+              <Image iconType="3" name="/images/find.png"/>
+            </Property>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btLookUpShipToActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -1447,7 +1443,7 @@
                 <DimensionLayout dim="0">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <EmptySpace pref="118" max="32767" attributes="0"/>
+                          <EmptySpace pref="117" max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="jLabel95" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel96" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -1456,14 +1452,16 @@
                               <Component id="jLabel10" alignment="1" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="103" alignment="1" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="ddbom" max="32767" attributes="0"/>
-                                  <Component id="ddwh" max="32767" attributes="0"/>
-                                  <Component id="tbmisc" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="ddloc" alignment="0" pref="94" max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="ddbom" max="32767" attributes="0"/>
+                              <Component id="ddwh" max="32767" attributes="0"/>
+                              <Component id="tbmisc" alignment="0" max="32767" attributes="0"/>
+                              <Component id="ddloc" alignment="0" max="32767" attributes="0"/>
+                              <Group type="102" attributes="0">
+                                  <Component id="tbitemshipto" min="-2" pref="69" max="-2" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Component id="btLookUpItemShipTo" min="-2" pref="25" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="dditemship" alignment="1" min="-2" pref="94" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
@@ -1487,17 +1485,20 @@
                               <Component id="tbmisc" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel94" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="10" max="32767" attributes="0"/>
+                          <EmptySpace pref="9" max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="ddbom" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="dditemship" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="jLabel10" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="jLabel10" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="tbitemshipto" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Component id="btLookUpItemShipTo" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace pref="16" max="32767" attributes="0"/>
+                          <EmptySpace pref="14" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -1571,25 +1572,23 @@
                     <Property name="name" type="java.lang.String" value="lblbom" noResource="true"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="dditemship">
-                  <Properties>
-                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                      <StringArray count="0"/>
-                    </Property>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="dditemshipActionPerformed"/>
-                  </Events>
-                  <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value=""/>
-                    <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="10"/>
-                  </AuxValues>
-                </Component>
                 <Component class="javax.swing.JLabel" name="jLabel10">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="ShipTo"/>
                     <Property name="name" type="java.lang.String" value="lblshipto" noResource="true"/>
                   </Properties>
+                </Component>
+                <Component class="javax.swing.JTextField" name="tbitemshipto">
+                </Component>
+                <Component class="javax.swing.JButton" name="btLookUpItemShipTo">
+                  <Properties>
+                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                      <Image iconType="3" name="/images/find.png"/>
+                    </Property>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btLookUpItemShipToActionPerformed"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>

@@ -34,6 +34,9 @@ import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.ctr.cusData;
+import static com.blueseer.ctr.cusData._getCMSDet;
+import com.blueseer.ctr.cusData.cms_det;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsNumber;
 import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
@@ -612,9 +615,10 @@ public class ordData {
             ArrayList<sos_det> sos = _getOrderSOS(x, bscon, ps, res);
             ArrayList<sod_tax> sotd = _getOrderDetTax(x, bscon, ps, res);
             ArrayList<so_tax> sot = _getOrderTax(x, bscon, ps, res);
+            cms_det cms = _getCMSDet(so.so_cust, so.so_ship, bscon, ps, res );
             
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
-            r = new salesOrder(m, so, sod, sos, sotd, sot);
+            r = new salesOrder(m, so, sod, sos, sotd, sot, cms);
             
         } catch (SQLException s) {
              MainFrame.bslog(s);
@@ -3048,9 +3052,9 @@ public class ordData {
     }
     
     public record salesOrder(String[] m, so_mstr so, ArrayList<sod_det> sod,
-        ArrayList<sos_det> sos, ArrayList<sod_tax> sodtax, ArrayList<so_tax> sotax) {
+        ArrayList<sos_det> sos, ArrayList<sod_tax> sodtax, ArrayList<so_tax> sotax, cms_det cms) {
         public salesOrder(String[] m) {
-            this (m, null, null, null, null, null);
+            this (m, null, null, null, null, null, null);
         }
     }
     

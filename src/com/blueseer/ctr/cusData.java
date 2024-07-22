@@ -201,7 +201,7 @@ public class cusData {
                 cms_det y = new cms_det(null, 
                 ld[0], ld[0], ld[1], ld[2], ld[3],
                     ld[4], ld[5], ld[6], ld[7],
-                    ld[8] );
+                    ld[8], "", "", "", "", "", "" );
                 _addCMSDet(y,  con, ps, res, true);
             }
         } catch (SQLException s) {
@@ -957,7 +957,9 @@ public class cusData {
                         m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
                         r = new cms_det(m, res.getString("cms_code"), res.getString("cms_shipto"), res.getString("cms_name"), res.getString("cms_line1"), res.getString("cms_line2"),
                     res.getString("cms_line3"), res.getString("cms_city"), res.getString("cms_state"), res.getString("cms_zip"),
-                    res.getString("cms_country") 
+                    res.getString("cms_country"), res.getString("cms_contact"), res.getString("cms_phone"),
+                    res.getString("cms_email"), res.getString("cms_misc"), res.getString("cms_plantcode"),
+                    res.getString("cms_type") 
                     );
                     }
                 }
@@ -987,7 +989,9 @@ public class cusData {
                         m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
                         r = new cms_det(m, res.getString("cms_code"), res.getString("cms_shipto"), res.getString("cms_name"), res.getString("cms_line1"), res.getString("cms_line2"),
                     res.getString("cms_line3"), res.getString("cms_city"), res.getString("cms_state"), res.getString("cms_zip"),
-                    res.getString("cms_country") 
+                    res.getString("cms_country"), res.getString("cms_contact"), res.getString("cms_phone"),
+                    res.getString("cms_email"), res.getString("cms_misc"), res.getString("cms_plantcode"),
+                    res.getString("cms_type") 
                     );
                         list.add(r);
                     }
@@ -1000,6 +1004,59 @@ public class cusData {
                list.add(r);
         }
         return list;
+    }
+    
+    public static ArrayList<cms_det> _getCMSDet(String code, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        ArrayList<cms_det> list = new ArrayList<cms_det>();
+        cms_det r = null;
+        String[] m = new String[2];
+        String sqlSelect = "select * from cms_det where cms_code = ? ;";
+          ps = con.prepareStatement(sqlSelect); 
+           ps.setString(1, code);
+          res = ps.executeQuery();
+            if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
+                r = new cms_det(m);
+            } else {
+                while(res.next()) {
+                    m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                    r = new cms_det(m, res.getString("cms_code"), res.getString("cms_shipto"), res.getString("cms_name"), res.getString("cms_line1"), res.getString("cms_line2"),
+                    res.getString("cms_line3"), res.getString("cms_city"), res.getString("cms_state"), res.getString("cms_zip"),
+                    res.getString("cms_country"), res.getString("cms_contact"), res.getString("cms_phone"),
+                    res.getString("cms_email"), res.getString("cms_misc"), res.getString("cms_plantcode"),
+                    res.getString("cms_type") 
+                    );
+                    list.add(r);
+                }
+            }
+            return list;
+    }
+    
+    public static cms_det _getCMSDet(String code, String shipto, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        
+        cms_det r = null;
+        String[] m = new String[2];
+        String sqlSelect = "select * from cms_det where cms_shipto = ? and cms_code = ? ;";
+          ps = con.prepareStatement(sqlSelect); 
+           ps.setString(1, shipto);
+           ps.setString(2, code);
+          res = ps.executeQuery();
+            if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
+                r = new cms_det(m);
+            } else {
+                while(res.next()) {
+                    m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                    r = new cms_det(m, res.getString("cms_code"), res.getString("cms_shipto"), res.getString("cms_name"), res.getString("cms_line1"), res.getString("cms_line2"),
+                    res.getString("cms_line3"), res.getString("cms_city"), res.getString("cms_state"), res.getString("cms_zip"),
+                    res.getString("cms_country"), res.getString("cms_contact"), res.getString("cms_phone"),
+                    res.getString("cms_email"), res.getString("cms_misc"), res.getString("cms_plantcode"),
+                    res.getString("cms_type")
+                        
+                    );
+                }
+            }
+            return r;
     }
     
     
@@ -2689,9 +2746,11 @@ public class cusData {
     public record cms_det(String[] m, String cms_code, String cms_shipto, 
         String cms_name, String cms_line1, String cms_line2,
         String cms_line3, String cms_city, String cms_state, 
-        String cms_zip, String cms_country) {
+        String cms_zip, String cms_country, String cms_contact, String cms_phone, String cms_email,
+        String cms_misc, String cms_plantcode, String cms_type) {
         public cms_det(String[] m) {
-            this(m,"","","","","","","","","","");
+            this(m,"","","","","","","","","","",
+                    "","","","","","");
         }
     }
     
