@@ -73,6 +73,7 @@ import static com.blueseer.utl.BlueSeerUtils.currformatDoubleWithSymbol;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
@@ -518,7 +519,6 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         totlines.setText("");
         custnumber.setText("");
         
-        ddpart.setForeground(Color.black);
         custnumber.setForeground(Color.black);
         custnumber.setEditable(false);
         tbdesc.setForeground(Color.black);
@@ -539,7 +539,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddstatus.removeAllItems();
         ddstate.removeAllItems();
         ddcountry.removeAllItems();
-        ddpart.removeAllItems();
+        
         
         
         for (String[] s : initDataSets) {
@@ -588,9 +588,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
             if (s[0].equals("countries")) {
               ddcountry.addItem(s[1]); 
             }
-            if (s[0].equals("items")) {
-              ddpart.addItem(s[1]); 
-            }
+            
             
         }
         
@@ -1259,9 +1257,14 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         luinput.removeActionListener(lual);
         lual = new ActionListener() {
         public void actionPerformed(ActionEvent event) {
-        
-         luModel = DTData.getItemBrowseUtil(luinput.getText(),0, "it_desc");
-       
+        if (lurb1.isSelected()) {  
+         luModel = DTData.getItemBrowseUtil(luinput.getText(),0, "it_item");
+        } else if (lurb2.isSelected()) {
+         luModel = DTData.getItemBrowseUtil(luinput.getText(),0, "it_desc");   
+        } else {
+         luModel = DTData.getItemBrowseUtil(luinput.getText(),0, "it_code");   
+        } 
+         
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
         if (luModel.getRowCount() < 1) {
@@ -1281,14 +1284,19 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                 int column = target.getSelectedColumn();
                 if ( column == 0) {
                 ludialog.dispose();
-                ddpart.setSelectedItem(target.getValueAt(row,1).toString());
+                tbitem.setText(target.getValueAt(row,1).toString());
+                    if (! tbitem.getText().isBlank()) {
+                     getItemInfoExp(tbitem.getText());
+                    }
                 }
             }
         };
         luTable.addMouseListener(luml);
       
          
-        callDialog(getClassLabelTag("lbldesc", this.getClass().getSimpleName())); 
+        callDialog(getGlobalLabelTag("lblitem"), 
+                getGlobalLabelTag("lbldesc"),
+                getGlobalLabelTag("lbltype")); 
         
     }
     
@@ -1317,7 +1325,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                 int column = target.getSelectedColumn();
                 if ( column == 0) {
                 ludialog.dispose();
-                ddpart.setSelectedItem(target.getValueAt(row,3).toString());
+                tbitem.setText(target.getValueAt(row,3).toString());
                 }
             }
         };
@@ -1655,14 +1663,6 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                     disckey = res.getString("cm_disc_code");
                 }
                 
-                if (custitemonly) {
-                    ddpart.removeAllItems();
-                    res = st.executeQuery("select cup_item from cup_mstr where cup_cust = " + "'" + mykey + "'" + ";");
-                    while (res.next()) {
-                        ddpart.addItem(res.getString("cup_item"));
-                    }
-                }
-                
                 // discounts...first check if generic disc code applied to cust master...else use cust code
                 if (! disckey.isBlank()) {
                   mykey = disckey;  
@@ -1803,119 +1803,13 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
             MainFrame.bslog(e);
         }
     } 
-     
-    public void getItemInfo(String part) {
-        try {
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-               int i = 0;
-                
-               
-               // if part is not already in list
-                int k = ddpart.getSelectedIndex();
-              
-                // lets first try as cust part...i.e....lets look up the item based on entering a customer part number.
-                if (k < 0) {
-                    
-                res = st.executeQuery("select cup_item, cup_citem from cup_mstr where cup_cust = " + "'" + ddcust.getSelectedItem().toString() + "'" 
-                        + " AND cup_citem = " + "'" + part + "'" 
-                        + ";");
-                while (res.next()) {
-                    i++;
-                    ddpart.setSelectedItem(res.getString("cup_item"));
-                    custnumber.setText(res.getString("cup_citem"));
-                    ddpart.setForeground(Color.blue);
-                    custnumber.setForeground(Color.blue);
-                    custnumber.setEditable(false);
-                }
-                
-                // if i is still 0...then must be a misc item
-                if (i == 0) {
-                  //  partnbr.addItem(part);
-                  //  partnbr.setSelectedItem(part);
-                    custnumber.setText("");
-                    ddpart.setForeground(Color.red);
-                    custnumber.setForeground(Color.red);
-                    custnumber.setEditable(true);
-                    tbdesc.setForeground(Color.red);
-                    tbdesc.setEditable(true);
-                    
-                    discount.setText("0");
-                    listprice.setText("0");
-                    listprice.setBackground(Color.white);
-                    
-                    netprice.setText("0");
-                    qtyshipped.setText("0");
-                }
-                
-                }
-                
-             if (k >= 0) {  
-            String[] det = invData.getItemDetail(ddpart.getSelectedItem().toString());
-            discount.setText("0");
-            listprice.setText("0");
-            netprice.setText("0");
-            qtyshipped.setText("0");
-            tbdesc.setText(det[1]);
-            custnumber.setText(cusData.getCustPartFromPart(ddcust.getSelectedItem().toString(),ddpart.getSelectedItem().toString()));
-            dduom.setSelectedItem(det[2]);
-            ddpart.setForeground(Color.blue);
-            custnumber.setForeground(Color.blue);
-            custnumber.setEditable(false);
-            tbdesc.setForeground(Color.blue);
-            tbdesc.setEditable(false);
-            // do BOM alternates
-            ddbom.removeAllItems();
-            ddbom.insertItemAt("", 0);
-            //ddbom.setSelectedIndex(0);
-            ArrayList<String[]> boms = invData.getBOMsByItemSite(ddpart.getSelectedItem().toString());
-            for (String[] wh : boms) {
-                ddbom.addItem(wh[0]);
-            }
-            ddbom.setSelectedItem(OVData.getDefaultBomID(ddpart.getSelectedItem().toString()));
-            
-            if (ddpart.getItemCount() > 0) {
-                String[] arr = OVData.getTopLocationAndWHByQTY(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString());
-                ddwh.setSelectedItem(arr[0]);
-                ddloc.setSelectedItem(arr[1]);
-                ddpart.setForeground(Color.blue);
-                custnumber.setForeground(Color.blue);
-                setPrice();
-                
-            } // if part selected
-             }  
-                
-                
-               
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-    }
-    
+         
     public void getItemInfoExp(String part) {
        // if part is not already in list
-        
+       HashMap<String, String> hm =  getItemDataInit(part, ddsite.getSelectedItem().toString(), ddcust.getSelectedItem().toString());
+        /*
         int k = ddpart.getSelectedIndex();
-        HashMap<String, String> hm =  getItemDataInit(part, ddsite.getSelectedItem().toString(), ddcust.getSelectedItem().toString());
+        
         int i = 0;
         // lets first try as cust part...i.e..-1..lets look up the item based on entering a customer part number.
         if (k < 0) {
@@ -1952,7 +1846,9 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                 netprice.setText("0");
                 qtyshipped.setText("0");
             }
-        } else {
+        } 
+        */
+        if (! tbitem.getText().isBlank()) {
             ddbom.removeAllItems();
             ddbom.insertItemAt("", 0);
             
@@ -1966,7 +1862,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
             qtyshipped.setText("0");
             tbdesc.setText(det[1]);
              dduom.setSelectedItem(det[2]);
-            ddpart.setForeground(Color.blue);
+            tbitem.setForeground(Color.blue);
             custnumber.setForeground(Color.blue);
             custnumber.setEditable(false);
             tbdesc.setForeground(Color.blue);
@@ -1992,7 +1888,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                 String[] arr = entry.getValue().split(",", -1);
                 ddwh.setSelectedItem(arr[0]);
                 ddloc.setSelectedItem(arr[1]);
-                ddpart.setForeground(Color.blue);
+                tbitem.setForeground(Color.blue);
                 custnumber.setForeground(Color.blue);
                 setPrice();
             }
@@ -2017,8 +1913,8 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         double price = 0.00;
         double disc = 0;
         String[] TypeAndPriceAndDisc = new String[]{"","0", "0"};
-        if (dduom.getItemCount() > 0 && ddpart.getItemCount() > 0 && ddcust.getItemCount() > 0) {
-                TypeAndPriceAndDisc = invData.getItemPrice("c", ddcust.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), 
+        if (dduom.getItemCount() > 0 && ! tbitem.getText().isBlank() && ddcust.getItemCount() > 0) {
+                TypeAndPriceAndDisc = invData.getItemPrice("c", ddcust.getSelectedItem().toString(), tbitem.getText(), 
                         dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString(), qtyshipped.getText());
         }     
                 if (TypeAndPriceAndDisc[0] != null)
@@ -2216,27 +2112,27 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
             return false;
         }
         
-        if (ddpart.getSelectedItem() == null || ddpart.getSelectedItem().toString().isBlank()) {
+        if (tbitem.getText().isBlank()) {
             bsmf.MainFrame.show(getMessageTag(1081));
-            ddpart.requestFocus();
+            tbitem.requestFocus();
             return false;
         }
-        boolean isvalid = OVData.isValidItem(ddpart.getSelectedItem().toString());
+        boolean isvalid = OVData.isValidItem(tbitem.getText());
         
         // check unallocated qty
-        if (! OVData.isOrderExceedQOHU() && bsParseDouble(qtyshipped.getText()) > invData.getItemQOHUnallocated(ddpart.getSelectedItem().toString(),ddsite.getSelectedItem().toString(),tbkey.getText())) {
+        if (! OVData.isOrderExceedQOHU() && bsParseDouble(qtyshipped.getText()) > invData.getItemQOHUnallocated(tbitem.getText(),ddsite.getSelectedItem().toString(),tbkey.getText())) {
              bsmf.MainFrame.show(getMessageTag(1092));
              qtyshipped.requestFocus();
              return false;
         }
         
-        if (isvalid && ! OVData.isValidUOMConversion(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), dduom.getSelectedItem().toString())) {
+        if (isvalid && ! OVData.isValidUOMConversion(tbitem.getText(), ddsite.getSelectedItem().toString(), dduom.getSelectedItem().toString())) {
                 bsmf.MainFrame.show(getMessageTag(1093));
                 dduom.requestFocus();
                 return false;
                 
         }
-        if (isvalid && ! OVData.isBaseUOMOfItem(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), dduom.getSelectedItem().toString()) && ! OVData.isValidCustPriceRecordExists(ddcust.getSelectedItem().toString(),ddpart.getSelectedItem().toString(),dduom.getSelectedItem().toString(),ddcurr.getSelectedItem().toString())) {
+        if (isvalid && ! OVData.isBaseUOMOfItem(tbitem.getText(), ddsite.getSelectedItem().toString(), dduom.getSelectedItem().toString()) && ! OVData.isValidCustPriceRecordExists(ddcust.getSelectedItem().toString(),tbitem.getText(),dduom.getSelectedItem().toString(),ddcurr.getSelectedItem().toString())) {
                 bsmf.MainFrame.show(getMessageTag(1094));
                 dduom.requestFocus();
                 return false;
@@ -2450,7 +2346,6 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         lblCustItemAndDesc = new javax.swing.JLabel();
         qtyshipped = new javax.swing.JTextField();
         custnumber = new javax.swing.JTextField();
-        ddpart = new javax.swing.JComboBox();
         lblpart1 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         dduom = new javax.swing.JComboBox<>();
@@ -2459,6 +2354,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbdesc = new javax.swing.JTextField();
         btLookUpCustItem = new javax.swing.JButton();
         btLookUpItemDesc = new javax.swing.JButton();
+        tbitem = new javax.swing.JTextField();
         jPanel7 = new javax.swing.JPanel();
         jLabel89 = new javax.swing.JLabel();
         jLabel80 = new javax.swing.JLabel();
@@ -3196,13 +3092,6 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
-        ddpart.setEditable(true);
-        ddpart.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ddpartActionPerformed(evt);
-            }
-        });
-
         lblpart1.setText("Item Number");
         lblpart1.setName("lblitem"); // NOI18N
 
@@ -3248,20 +3137,22 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(ddpart, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(custnumber, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(btLookUpItemDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 28, Short.MAX_VALUE)
-                            .addComponent(btLookUpCustItem, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
+                        .addComponent(btLookUpCustItem, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(71, 71, 71))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(qtyshipped, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(17, 17, 17)
                         .addComponent(lbqtyavailable, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(dduom, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(dduom, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(tbitem, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btLookUpItemDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -3269,20 +3160,21 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(8, 8, 8)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(custnumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblCustItemAndDesc)
-                    .addComponent(btLookUpCustItem))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel9)
-                        .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(custnumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblCustItemAndDesc)
+                            .addComponent(btLookUpCustItem))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel9)
+                            .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(11, 11, 11)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblpart1)
+                            .addComponent(tbitem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(btLookUpItemDesc))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ddpart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblpart1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(dduom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -3808,17 +3700,17 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
         //    "Line", "Part", "CustPart", "SO", "PO", "Qty", "UOM", "ListPrice", "Discount", "NetPrice"
         if (canproceed) {
-            myorddetmodel.addRow(new Object[]{line, ddpart.getSelectedItem().toString(), custnumber.getText(), tbkey.getText(), ponbr.getText(), 
+            myorddetmodel.addRow(new Object[]{line, tbitem.getText(), custnumber.getText(), tbkey.getText(), ponbr.getText(), 
                 qtyshipped.getText(), uom, listprice.getText(), 
                 discount.getText(), netprice.getText(), 
                 "0", getGlobalProgTag("open"),
                 ddwh.getSelectedItem().toString(), ddloc.getSelectedItem().toString(), tbdesc.getText(), 
-                String.valueOf(bsFormatDouble(OVData.getTaxAmtApplicableByItem(ddpart.getSelectedItem().toString(), (np * qty) ))),
+                String.valueOf(bsFormatDouble(OVData.getTaxAmtApplicableByItem(tbitem.getText(), (np * qty) ))),
                 bom, tbitemshipto.getText()
             });
             
             // lets collect tax elements for each item
-            ArrayList<String[]> list = OVData.getTaxPercentElementsApplicableByItem(ddpart.getSelectedItem().toString());
+            ArrayList<String[]> list = OVData.getTaxPercentElementsApplicableByItem(tbitem.getText());
             if (list != null) {
             linetax.put(line, list);
             } 
@@ -3831,7 +3723,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
          discount.setText("");
          qtyshipped.setText("");
          
-         ddpart.requestFocus();
+         tbitem.requestFocus();
         }
         
     }//GEN-LAST:event_btadditemActionPerformed
@@ -3884,17 +3776,6 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         // TODO add your handling code here:
     }//GEN-LAST:event_netpriceActionPerformed
 
-    private void ddpartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddpartActionPerformed
-        if (! isLoad) {
-            if (ddpart.getSelectedItem() != null) {
-            getItemInfoExp(ddpart.getSelectedItem().toString());
-            if (bsmf.MainFrame.debug) {
-            System.out.println("ddpart fired: " + timediff(start));
-            }
-            }
-        }
-    }//GEN-LAST:event_ddpartActionPerformed
-
     private void qtyshippedFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_qtyshippedFocusGained
         if (qtyshipped.getText().equals("0")) {
             qtyshipped.setText("");
@@ -3920,8 +3801,8 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
         
        
-        if (ddpart.getSelectedItem() != null && ! qtyshipped.getText().isEmpty()) {
-               if (bsParseDouble(qtyshipped.getText()) > invData.getItemQtyByWarehouseAndLocation(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), ddwh.getSelectedItem().toString(), ddloc.getSelectedItem().toString())) {
+        if (! tbitem.getText().isBlank() && ! qtyshipped.getText().isEmpty()) {
+               if (bsParseDouble(qtyshipped.getText()) > invData.getItemQtyByWarehouseAndLocation(tbitem.getText(), ddsite.getSelectedItem().toString(), ddwh.getSelectedItem().toString(), ddloc.getSelectedItem().toString())) {
                    lbqtyavailable.setBackground(Color.red);
                } else {
                    lbqtyavailable.setBackground(Color.green);
@@ -4004,17 +3885,17 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_dduomActionPerformed
 
     private void ddlocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddlocActionPerformed
-       if (ddwh.getSelectedItem() != null && ddloc.getSelectedItem() != null && ddpart.getSelectedItem() != null && ! isLoad) {
+       if (ddwh.getSelectedItem() != null && ddloc.getSelectedItem() != null && ! tbitem.getText().isBlank() && ! isLoad) {
            
            double qty = 0.0;
            String prefix = "";
            if (cbisallocated.isSelected()) {
                prefix = "QOH Unallocated=";
-           qty = invData.getItemQOHUnallocated(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), tbkey.getText());
+           qty = invData.getItemQOHUnallocated(tbitem.getText(), ddsite.getSelectedItem().toString(), tbkey.getText());
            
            } else {
             prefix = "QOH Available=";
-           qty = invData.getItemQtyByWarehouseAndLocation(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), ddwh.getSelectedItem().toString(), ddloc.getSelectedItem().toString());
+           qty = invData.getItemQtyByWarehouseAndLocation(tbitem.getText(), ddsite.getSelectedItem().toString(), ddwh.getSelectedItem().toString(), ddloc.getSelectedItem().toString());
           
            }
            String sqty = String.valueOf(qty);
@@ -4145,7 +4026,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         int col = orddet.columnAtPoint(evt.getPoint());
         //   "Line", "Part", "CustPart", "SO", "PO", "Qty", "UOM", "ListPrice", "Discount", "NetPrice", "QtyShip", "Status", "WH", "LOC", "Desc", "Tax"
         isLoad = true;  
-        ddpart.setSelectedItem(orddet.getValueAt(row, 1).toString());
+        tbitem.setText(orddet.getValueAt(row, 1).toString());
         dduom.setSelectedItem(orddet.getValueAt(row, 6).toString());
         ddwh.setSelectedItem(orddet.getValueAt(row, 12).toString());
         ddloc.setSelectedItem(orddet.getValueAt(row, 13).toString());
@@ -4161,11 +4042,11 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         ddbom.removeAllItems();
         ddbom.insertItemAt("", 0);
-        ArrayList<String[]> boms = invData.getBOMsByItemSite(ddpart.getSelectedItem().toString());
+        ArrayList<String[]> boms = invData.getBOMsByItemSite(tbitem.getText());
         for (String[] wh : boms) {
             ddbom.addItem(wh[0]);
         }
-        ddbom.setSelectedItem(OVData.getDefaultBomID(ddpart.getSelectedItem().toString()));
+        ddbom.setSelectedItem(OVData.getDefaultBomID(tbitem.getText()));
         
         
         if(orddet.getValueAt(row, 17).toString().isBlank()) {
@@ -4215,6 +4096,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_ddtaxActionPerformed
 
     private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPane1StateChanged
+        /*
         if (! isLoad) {
         JTabbedPane sourceTabbedPane = (JTabbedPane) evt.getSource();
         int index = sourceTabbedPane.getSelectedIndex();
@@ -4222,6 +4104,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
             ddpart.setSelectedIndex(0);
         }
         }
+        */
     }//GEN-LAST:event_jTabbedPane1StateChanged
 
     private void btinvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btinvoiceActionPerformed
@@ -4301,12 +4184,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     private void ddsiteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddsiteActionPerformed
             if (! isLoad) {
-            ddpart.removeAllItems();
-            ArrayList<String> items = invData.getItemMasterListBySite(ddsite.getSelectedItem().toString()); 
-            for (String item : items) {
-            ddpart.addItem(item);
-            }  
-            
+           
             if (bsmf.MainFrame.debug) {
             System.out.println("ddsite fired: " + timediff(start));
            }
@@ -4337,7 +4215,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
             if (orddet.getValueAt(i, 11).toString().equals(getGlobalProgTag("closed")) || orddet.getValueAt(i, 11).toString().equals(getGlobalProgTag("partial"))) {
                 bsmf.MainFrame.show(getMessageTag(1088));
                 return;
-            } else if (! orddet.getValueAt(i, 1).toString().equals(ddpart.getSelectedItem().toString())) {
+            } else if (! orddet.getValueAt(i, 1).toString().equals(tbitem.getText())) {
                 bsmf.MainFrame.show(getMessageTag(1096));
                 return;
             }else {
@@ -4360,7 +4238,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                 netprice.setText("");
                 discount.setText("");
                 qtyshipped.setText("");
-                ddpart.requestFocus();
+                tbitem.requestFocus();
                 
                 }
             }
@@ -4477,7 +4355,6 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JComboBox<String> ddcurr;
     private static javax.swing.JComboBox ddcust;
     private javax.swing.JComboBox<String> ddloc;
-    private static javax.swing.JComboBox ddpart;
     private javax.swing.JComboBox<String> ddsacamttype;
     private javax.swing.JComboBox<String> ddsactype;
     private javax.swing.JComboBox ddshipvia;
@@ -4580,6 +4457,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JTextField tbdesc;
     private javax.swing.JTextField tbemail;
     private javax.swing.JTextField tbhdrwh;
+    private javax.swing.JTextField tbitem;
     private javax.swing.JTextField tbitemshipto;
     private javax.swing.JTextField tbkey;
     private javax.swing.JTextField tbmisc;
