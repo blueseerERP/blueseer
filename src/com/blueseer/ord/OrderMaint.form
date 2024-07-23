@@ -1192,9 +1192,7 @@
                                       <Component id="tbdesc" alignment="0" min="-2" pref="260" max="-2" attributes="0"/>
                                       <Component id="custnumber" min="-2" pref="260" max="-2" attributes="0"/>
                                   </Group>
-                                  <EmptySpace max="32767" attributes="0"/>
-                                  <Component id="btLookUpCustItem" min="-2" pref="28" max="-2" attributes="0"/>
-                                  <EmptySpace min="-2" pref="71" max="-2" attributes="0"/>
+                                  <EmptySpace min="71" pref="105" max="32767" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="qtyshipped" min="-2" pref="80" max="-2" attributes="0"/>
@@ -1226,7 +1224,6 @@
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="custnumber" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="lblCustItemAndDesc" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      <Component id="btLookUpCustItem" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="3" attributes="0">
@@ -1315,16 +1312,6 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="tbdesc">
                 </Component>
-                <Component class="javax.swing.JButton" name="btLookUpCustItem">
-                  <Properties>
-                    <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/images/find.png"/>
-                    </Property>
-                  </Properties>
-                  <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btLookUpCustItemActionPerformed"/>
-                  </Events>
-                </Component>
                 <Component class="javax.swing.JButton" name="btLookUpItemDesc">
                   <Properties>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
@@ -1336,6 +1323,9 @@
                   </Events>
                 </Component>
                 <Component class="javax.swing.JTextField" name="tbitem">
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tbitemActionPerformed"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>

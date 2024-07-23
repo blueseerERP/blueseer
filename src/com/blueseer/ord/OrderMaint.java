@@ -521,9 +521,14 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         custnumber.setForeground(Color.black);
         custnumber.setEditable(false);
+        custnumber.setText("");
+        
         tbdesc.setForeground(Color.black);
         tbdesc.setEditable(false);
+        tbdesc.setText("");
         
+        tbitem.setText("");
+        tbitem.setForeground(Color.black);
         discount.setEditable(false);
         
         String defaultsite = null;
@@ -1262,7 +1267,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         } else if (lurb2.isSelected()) {
          luModel = DTData.getItemBrowseUtil(luinput.getText(),0, "it_desc");   
         } else {
-         luModel = DTData.getItemBrowseUtil(luinput.getText(),0, "it_code");   
+         luModel = DTData.getCustXrefBrowseUtil(luinput.getText(), 0, "cup_citem", ddcust.getSelectedItem().toString());   
         } 
          
         luTable.setModel(luModel);
@@ -1286,7 +1291,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                 ludialog.dispose();
                 tbitem.setText(target.getValueAt(row,1).toString());
                     if (! tbitem.getText().isBlank()) {
-                     getItemInfoExp(tbitem.getText());
+                     getItemInfo(tbitem.getText());
                     }
                 }
             }
@@ -1296,7 +1301,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
          
         callDialog(getGlobalLabelTag("lblitem"), 
                 getGlobalLabelTag("lbldesc"),
-                getGlobalLabelTag("lbltype")); 
+                getClassLabelTag("lblcustnumber", this.getClass().getSimpleName())); 
         
     }
     
@@ -1804,7 +1809,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
     } 
          
-    public void getItemInfoExp(String part) {
+    public void getItemInfo(String part) {
        // if part is not already in list
        HashMap<String, String> hm =  getItemDataInit(part, ddsite.getSelectedItem().toString(), ddcust.getSelectedItem().toString());
         /*
@@ -1848,6 +1853,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         } 
         */
+        int i = 0;
         if (! tbitem.getText().isBlank()) {
             ddbom.removeAllItems();
             ddbom.insertItemAt("", 0);
@@ -1856,12 +1862,15 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
            // String[] det = invData.getItemDetail(ddpart.getSelectedItem().toString());
             if (entry.getKey().equals("itemdata")) {
             String[] det = entry.getValue().split(",", -1);
+            if (! det[0].isBlank()) {
+            i++;
+            }
             discount.setText("0");
             listprice.setText("0");
             netprice.setText("0");
             qtyshipped.setText("0");
             tbdesc.setText(det[1]);
-             dduom.setSelectedItem(det[2]);
+            dduom.setSelectedItem(det[2]);
             tbitem.setForeground(Color.blue);
             custnumber.setForeground(Color.blue);
             custnumber.setEditable(false);
@@ -1888,12 +1897,25 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                 String[] arr = entry.getValue().split(",", -1);
                 ddwh.setSelectedItem(arr[0]);
                 ddloc.setSelectedItem(arr[1]);
-                tbitem.setForeground(Color.blue);
-                custnumber.setForeground(Color.blue);
-                setPrice();
             }
                          
             } // for each entry
+            
+            if (i == 0) {
+                custnumber.setText("");
+                tbitem.setForeground(Color.red);
+                custnumber.setForeground(Color.red);
+                custnumber.setEditable(true);
+                tbdesc.setForeground(Color.red);
+                tbdesc.setEditable(true);
+
+                discount.setText("0");
+                listprice.setText("0");
+                listprice.setBackground(Color.white);
+
+                netprice.setText("0");
+                qtyshipped.setText("0"); 
+            }
         }  
         
     }
@@ -2352,7 +2374,6 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         lbqtyavailable = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         tbdesc = new javax.swing.JTextField();
-        btLookUpCustItem = new javax.swing.JButton();
         btLookUpItemDesc = new javax.swing.JButton();
         tbitem = new javax.swing.JTextField();
         jPanel7 = new javax.swing.JPanel();
@@ -3107,17 +3128,16 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel9.setText("Description");
         jLabel9.setName("lbldesc"); // NOI18N
 
-        btLookUpCustItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
-        btLookUpCustItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btLookUpCustItemActionPerformed(evt);
-            }
-        });
-
         btLookUpItemDesc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
         btLookUpItemDesc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btLookUpItemDescActionPerformed(evt);
+            }
+        });
+
+        tbitem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbitemActionPerformed(evt);
             }
         });
 
@@ -3139,9 +3159,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(custnumber, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btLookUpCustItem, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(71, 71, 71))
+                        .addGap(71, 105, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(qtyshipped, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(17, 17, 17)
@@ -3164,8 +3182,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(custnumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblCustItemAndDesc)
-                            .addComponent(btLookUpCustItem))
+                            .addComponent(lblCustItemAndDesc))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel9)
@@ -3718,11 +3735,13 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
             
          refreshDisplayTotals();
          
-          listprice.setText("");
+         listprice.setText("");
          netprice.setText("");
          discount.setText("");
          qtyshipped.setText("");
-         
+         tbitem.setText("");
+         custnumber.setText("");
+         tbdesc.setText("");
          tbitem.requestFocus();
         }
         
@@ -3761,6 +3780,14 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
         
        
+        listprice.setText("");
+         netprice.setText("");
+         discount.setText("");
+         qtyshipped.setText("");
+         tbitem.setText("");
+         custnumber.setText("");
+         tbdesc.setText("");
+         tbitem.requestFocus();
          refreshDisplayTotals();
     }//GEN-LAST:event_btdelitemActionPerformed
 
@@ -4238,6 +4265,9 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                 netprice.setText("");
                 discount.setText("");
                 qtyshipped.setText("");
+                tbitem.setText("");
+                custnumber.setText("");
+                tbdesc.setText("");
                 tbitem.requestFocus();
                 
                 }
@@ -4246,10 +4276,6 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         
     }//GEN-LAST:event_btupdateitemActionPerformed
-
-    private void btLookUpCustItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLookUpCustItemActionPerformed
-        lookUpFrameCustItem();
-    }//GEN-LAST:event_btLookUpCustItemActionPerformed
 
     private void btLookUpItemDescActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLookUpItemDescActionPerformed
         lookUpFrameItemDesc();
@@ -4319,9 +4345,17 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         lookUpFrameShipTo("itemshipto");
     }//GEN-LAST:event_btLookUpItemShipToActionPerformed
 
+    private void tbitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbitemActionPerformed
+        if (isLoad) {
+            return;
+        }
+        if (! tbitem.getText().isBlank()) {
+         getItemInfo(tbitem.getText());
+        }
+    }//GEN-LAST:event_tbitemActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btLookUpBillTo;
-    private javax.swing.JButton btLookUpCustItem;
     private javax.swing.JButton btLookUpItemDesc;
     private javax.swing.JButton btLookUpItemShipTo;
     private javax.swing.JButton btLookUpShipTo;

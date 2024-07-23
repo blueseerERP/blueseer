@@ -6458,7 +6458,7 @@ public class OVData {
                } else {
                    tranhisttype = ctype;
                }
-               OVData.TRHistIssDiscrete(BlueSeerUtils.mysqlDateFormat.parse(date), child.get(j).toString(), (-1 * qty), op, tranhisttype, 0, 0, csite, 
+               OVData.TRHistIssDiscrete(BlueSeerUtils.mysqlDateFormat.parse(date), child.get(j).toString(), (-1 * qty * bsParseDouble(qtyper.get(j).toString())), op, tranhisttype, 0, 0, csite, 
                        loc.get(j).toString(), wh.get(j).toString(), expire, "", "", item + ":" + op, 0, "", "", "", cref, "", "", "", "", serial, program, userid);
 
                // update inventory

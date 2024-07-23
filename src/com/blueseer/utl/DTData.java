@@ -3510,7 +3510,7 @@ public class DTData {
         
     public static DefaultTableModel getCustXrefBrowseUtil( String str, int state, String myfield, String cust) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("customer"), getGlobalColumnTag("custitem"), getGlobalColumnTag("item")})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("item"), getGlobalColumnTag("custitem"), getGlobalColumnTag("customer")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -3550,9 +3550,9 @@ public class DTData {
                         " order by cup_cust, cup_citem ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("cup_cust"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("cup_item"),
                                    res.getString("cup_citem"),
-                                   res.getString("cup_item")
+                                   res.getString("cup_cust")
                         });
                     }
            }
