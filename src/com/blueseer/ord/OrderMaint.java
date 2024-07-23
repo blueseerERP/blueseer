@@ -292,7 +292,10 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                     break;
                 case "get":
                     message = getRecord(key);    
-                    break;    
+                    break; 
+                case "run":
+                    message = autoInvoice();    
+                    break;      
                 default:
                     message = new String[]{"1", "unknown action"};
             }
@@ -4143,8 +4146,11 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
             return;
         }
         
-        if (! ddstatus.getSelectedItem().toString().equals(getGlobalProgTag("hold"))) {
-        // check for multiple ship destinations...autoinvoicing requires single destination orders
+        if (ddstatus.getSelectedItem().toString().equals(getGlobalProgTag("hold"))) {
+          bsmf.MainFrame.show(getMessageTag(1184));  
+          return;
+        }
+        
         Set<String> shiptos = new LinkedHashSet<String>();
         for (int j = 0; j < orddet.getRowCount(); j++) {
             shiptos.add(orddet.getValueAt(j, 17).toString());
@@ -4154,23 +4160,23 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
            return;
         }
         
-        //  String[] message = autoInvoiceOrder();
         
-        String[] message = autoInvoice();
+        executeTask(dbaction.run, new String[]{tbkey.getText()});      
+       // String[] message = autoInvoice();
+       
         // autopost
         if (OVData.isAutoPost()) {
             fglData.PostGL();
         }
         
-         
+         /*
          if (message[0].equals("1")) { // if error
            bsmf.MainFrame.show(message[1]);
          } else {
            executeTask(dbaction.get, new String[]{tbkey.getText()});
          }
-        } else {
-          bsmf.MainFrame.show(getMessageTag(1184));  
-        }
+         */
+       
     }//GEN-LAST:event_btinvoiceActionPerformed
 
     private void btprintorderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintorderActionPerformed
