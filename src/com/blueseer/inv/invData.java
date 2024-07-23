@@ -4121,7 +4121,7 @@ public class invData {
 
     }
 
-    public static HashMap<String, String> getItemDataInit(String item, String site, String cust) {
+    public static HashMap<String, String> getItemDataInit(String item, String site, String entity, String type) {
         HashMap<String,String> hm = new HashMap<String,String>();
         String[] x = new String[]{"","","","","","","","","","",""};
         int days = 0;
@@ -4159,70 +4159,81 @@ public class invData {
                hm.put("itemdata", String.join(",", x));
                
             // cust item info   
-            res = st.executeQuery("select cup_citem from cup_mstr where cup_cust = " + "'" + cust + "'" + 
-                                  " AND cup_item = " + "'" + item + "'" + ";");
-            while (res.next()) {
-               hm.put("itemcust", res.getString("cup_citem"));
-            }
-            
-            
-            // by cust item search key   
-            res = st.executeQuery("select cup_item, cup_citem from cup_mstr where cup_cust = " + "'" + cust + "'" + 
-                                  " AND cup_citem = " + "'" + item + "'" + ";");
-            while (res.next()) {
-               hm.put("bycustitem", res.getString("cup_item") + "," + res.getString("cup_citem"));
-            }
-            
-            
-            // BOM info
-            res = st.executeQuery("select bom_id, bom_primary from bom_mstr "
-                            + " where bom_item = " + "'" + item + "'" 
-                            + " and bom_enabled = '1' " + " order by bom_primary desc ;" ); 
-                   while (res.next()) {
-                    hm.put("boms", res.getString("bom_id"));
-                    }
-            
-            // default BOM
-            String defaultBOM = "";
-            ArrayList<String> boms = new ArrayList<String>();
-            res = st.executeQuery("select distinct ps_bom from pbm_mstr "
-                        + " where ps_parent = " + "'" + item + "';");
+            if (type.equals("cust")) {
+                res = st.executeQuery("select cup_citem from cup_mstr where cup_cust = " + "'" + entity + "'" + 
+                                      " AND cup_item = " + "'" + item + "'" + ";");
                 while (res.next()) {
-                  boms.add(res.getString("ps_bom")); 
+                   hm.put("itemcust", res.getString("cup_citem"));
                 }
-                res.close();
-              
-                for (String s : boms) {
-                    res = st.executeQuery("select bom_id from bom_mstr "
-                    + " where bom_id = " + "'" + s + "'" +
-                      " and bom_primary = '1' " + ";");
-                    while (res.next()) {
-                       defaultBOM = res.getString("bom_id");
-                    } 
-                }
-             hm.put("defaultbom", defaultBOM);   
-                
-                
-            // top wh/loc qty
-            String[] myloc = new String[2];
-            res = st.executeQuery("select it_loc, it_wh from item_mstr where it_item = " + "'" + item + "'" + 
-                    " AND it_site = " + "'" + site + "'" +
-                    " ;" );
-           while (res.next()) {
-            myloc[0] = res.getString("it_wh");  
-            myloc[1] = res.getString("it_loc");
-            }
 
-            // now overwrite with optimum wh and loc with highest qoh
-            res = st.executeQuery("select in_loc, in_wh from in_mstr where in_item = " + "'" + item + "'" + 
-                    " AND in_site = " + "'" + site + "'" +
-                    " order by in_qoh desc limit 1;" );
-           while (res.next()) {
-            myloc[0] = res.getString("in_wh");  
-            myloc[1] = res.getString("in_loc");
+                // by cust item search key   
+                res = st.executeQuery("select cup_item, cup_citem from cup_mstr where cup_cust = " + "'" + entity + "'" + 
+                                      " AND cup_citem = " + "'" + item + "'" + ";");
+                while (res.next()) {
+                   hm.put("bycustitem", res.getString("cup_item") + "," + res.getString("cup_citem"));
+                }
+
+
+                // BOM info
+                res = st.executeQuery("select bom_id, bom_primary from bom_mstr "
+                                + " where bom_item = " + "'" + item + "'" 
+                                + " and bom_enabled = '1' " + " order by bom_primary desc ;" ); 
+                       while (res.next()) {
+                        hm.put("boms", res.getString("bom_id"));
+                        }
+
+                // default BOM
+                String defaultBOM = "";
+                ArrayList<String> boms = new ArrayList<String>();
+                res = st.executeQuery("select distinct ps_bom from pbm_mstr "
+                            + " where ps_parent = " + "'" + item + "';");
+                    while (res.next()) {
+                      boms.add(res.getString("ps_bom")); 
+                    }
+                    res.close();
+
+                    for (String s : boms) {
+                        res = st.executeQuery("select bom_id from bom_mstr "
+                        + " where bom_id = " + "'" + s + "'" +
+                          " and bom_primary = '1' " + ";");
+                        while (res.next()) {
+                           defaultBOM = res.getString("bom_id");
+                        } 
+                    }
+                 hm.put("defaultbom", defaultBOM);   
+
+
+                // top wh/loc qty
+                String[] myloc = new String[2];
+                res = st.executeQuery("select it_loc, it_wh from item_mstr where it_item = " + "'" + item + "'" + 
+                        " AND it_site = " + "'" + site + "'" +
+                        " ;" );
+               while (res.next()) {
+                myloc[0] = res.getString("it_wh");  
+                myloc[1] = res.getString("it_loc");
+                }
+
+                // now overwrite with optimum wh and loc with highest qoh
+                res = st.executeQuery("select in_loc, in_wh from in_mstr where in_item = " + "'" + item + "'" + 
+                        " AND in_site = " + "'" + site + "'" +
+                        " order by in_qoh desc limit 1;" );
+                while (res.next()) {
+                myloc[0] = res.getString("in_wh");  
+                myloc[1] = res.getString("in_loc");
+                }
+                hm.put("topwhloc", String.join(",", myloc));
             }
-            hm.put("topwhloc", String.join(",", myloc));
-               
+            
+            if (type.equals("vend")) {
+                res = st.executeQuery("select vdp_vitem from vdp_mstr where vdp_vend = " + "'" + entity + "'" + 
+                                      " AND vdp_item = " + "'" + item + "'" + ";");
+                while (res.next()) {
+                   hm.put("itemvend", res.getString("vdp_vitem"));
+                } 
+            }
+            
+            
+            
                
           } catch (SQLException s) {
                 MainFrame.bslog(s);

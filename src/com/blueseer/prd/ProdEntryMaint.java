@@ -381,7 +381,7 @@ public class ProdEntryMaint extends javax.swing.JPanel {
         
         // now let's load transaction
         if (! OVData.loadTranHistByTable(transtable)) {
-            m = new String[]{"1", "Error in loadTranHist"};
+            m = new String[]{"1", getMessageTag(1010,"loadTranHist")};
         } else {
             initvars(null);
             m = new String[]{"0", getMessageTag(1007)};

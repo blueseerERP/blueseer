@@ -40,6 +40,7 @@ import com.blueseer.adm.admData;
 import com.blueseer.adm.admData.site_mstr;
 import com.blueseer.fgl.fglData;
 import com.blueseer.inv.invData;
+import static com.blueseer.inv.invData.getItemDataInit;
 import com.blueseer.ord.ordData;
 import static com.blueseer.pur.purData.addPOAddr;
 import static com.blueseer.pur.purData.addPOTransaction;
@@ -72,6 +73,7 @@ import static com.blueseer.utl.BlueSeerUtils.currformatDoubleWithSymbol;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
+import static com.blueseer.utl.BlueSeerUtils.getGlobalLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
@@ -143,6 +145,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
      String status = "";
      boolean venditemonly = true;  
      boolean rawitemonly = false;
+     String classtype = "";
      public static po_mstr po = null;
      public static po_addr poaddr = null;
      public static ArrayList<pod_mstr> podlist = null;
@@ -421,8 +424,9 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         discount.setText("0");
         
         lbvend.setText("");
-        
-       
+        vendnumber.setText("");
+        tbitem.setText("");
+        tbdesc.setText("");
         userid.setText(bsmf.MainFrame.userid);
         duedate.setDate(now);
         orddate.setDate(now);
@@ -452,7 +456,6 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         cbconfirm.setSelected(false);
         cbedi.setSelected(false);
         
-        ddpart.setForeground(Color.black);
         vendnumber.setForeground(Color.black);
         vendnumber.setEditable(false);
         
@@ -463,7 +466,6 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddvend.removeAllItems();
         ddstatus.removeAllItems();
         ddship.removeAllItems();
-        ddpart.removeAllItems();
         dditemship.removeAllItems();
         ddtax.removeAllItems();
         String defaultsite = null;
@@ -480,6 +482,11 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
             
             if (s[0].equals("rawitemonly")) {
               rawitemonly = bsmf.MainFrame.ConvertStringToBool(s[1]);  
+              if (rawitemonly) {
+                  classtype = "P";
+              } else {
+                  classtype = "";
+              }
             }
             
             if (s[0].equals("sites")) {
@@ -510,9 +517,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
             if (s[0].equals("states")) {
               ddshipstate.addItem(s[1]); 
             }
-            if (s[0].equals("items")) {
-              ddpart.addItem(s[1]); 
-            }
+            
             
         }
         
@@ -1005,52 +1010,18 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         
     }
- 
     
-    public void lookUpFrameVendItem() {
-        
-        luinput.removeActionListener(lual);
-        lual = new ActionListener() {
-        public void actionPerformed(ActionEvent event) {
-        luModel = DTData.getVendXrefBrowseUtil(luinput.getText(), 0, "vdp_vitem", ddvend.getSelectedItem().toString());
-        luTable.setModel(luModel);
-        luTable.getColumnModel().getColumn(0).setMaxWidth(50);
-        if (luModel.getRowCount() < 1) {
-            ludialog.setTitle(getMessageTag(1001));
-        } else {
-            ludialog.setTitle(getMessageTag(1002, String.valueOf(luModel.getRowCount())));
-        }
-        }
-        };
-        luinput.addActionListener(lual);
-        
-        luTable.removeMouseListener(luml);
-        luml = new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                JTable target = (JTable)e.getSource();
-                int row = target.getSelectedRow();
-                int column = target.getSelectedColumn();
-                if ( column == 0) {
-                ludialog.dispose();
-                ddpart.setSelectedItem(target.getValueAt(row,1).toString()); }
-            }
-        };
-        luTable.addMouseListener(luml);
-      
-        callDialog(getClassLabelTag("lblvenditem", this.getClass().getSimpleName())); 
-        
-        
-    }
- 
     public void lookUpFrameItemDesc() {
         
         luinput.removeActionListener(lual);
         lual = new ActionListener() {
         public void actionPerformed(ActionEvent event) {
         if (lurb1.isSelected()) {  
-         luModel = DTData.getItemDescBrowseBySite(luinput.getText(), "it_item", ddsite.getSelectedItem().toString());
+         luModel = DTData.getItemDescBrowseBySite(luinput.getText(), "it_item", ddsite.getSelectedItem().toString(), classtype);
+        } else if (lurb2.isSelected()) {
+         luModel = DTData.getItemDescBrowseBySite(luinput.getText(), "it_desc", ddsite.getSelectedItem().toString(), classtype);
         } else {
-         luModel = DTData.getItemDescBrowseBySite(luinput.getText(), "it_desc", ddsite.getSelectedItem().toString());   
+         luModel = DTData.getVendXrefBrowseUtil(luinput.getText(), 0, "vdp_vitem", ddvend.getSelectedItem().toString());   
         }
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
@@ -1071,13 +1042,18 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
                 int column = target.getSelectedColumn();
                 if ( column == 0) {
                 ludialog.dispose();
-                ddpart.setSelectedItem(target.getValueAt(row,1).toString());}
+                tbitem.setText(target.getValueAt(row,1).toString());
+                    if (! tbitem.getText().isBlank()) {
+                         getItemInfo(tbitem.getText());
+                    }
+                }
             }
         };
         luTable.addMouseListener(luml);
       
-        callDialog(getClassLabelTag("lblitem", this.getClass().getSimpleName()), 
-                getClassLabelTag("lbldesc", this.getClass().getSimpleName()));  
+        callDialog(getGlobalLabelTag("lblitem"), 
+                getGlobalLabelTag("lbldesc"),
+                getClassLabelTag("lblvenditem", this.getClass().getSimpleName()));   
         
         
     }
@@ -1226,8 +1202,8 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
     
      // additional functions
     public void setPrice() {
-         if (dduom.getItemCount() > 0 && ddpart.getItemCount() > 0 && ddvend.getItemCount() > 0 && ! ddcurr.getSelectedItem().toString().isEmpty()) {
-                String[] TypeAndPrice = invData.getItemPrice("v", ddvend.getSelectedItem().toString(), ddpart.getSelectedItem().toString(), 
+         if (dduom.getItemCount() > 0 && ! tbitem.getText().isBlank() && ddvend.getItemCount() > 0 && ! ddcurr.getSelectedItem().toString().isEmpty()) {
+                String[] TypeAndPrice = invData.getItemPrice("v", ddvend.getSelectedItem().toString(), tbitem.getText(), 
                         dduom.getSelectedItem().toString(), ddcurr.getSelectedItem().toString(), qtyshipped.getText());
                 String pricetype = TypeAndPrice[0].toString();
                 double price = bsParseDouble(TypeAndPrice[1]);
@@ -1259,12 +1235,12 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
             return false;
         }
         
-        if (OVData.isValidItem(ddpart.getSelectedItem().toString()) && ! OVData.isValidUOMConversion(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), dduom.getSelectedItem().toString())) {
+        if (OVData.isValidItem(tbitem.getText()) && ! OVData.isValidUOMConversion(tbitem.getText(), ddsite.getSelectedItem().toString(), dduom.getSelectedItem().toString())) {
                 bsmf.MainFrame.show(getMessageTag(1026));
                 dduom.requestFocus();
                 return false;
         }
-        if (OVData.isValidItem(ddpart.getSelectedItem().toString()) && ! OVData.isBaseUOMOfItem(ddpart.getSelectedItem().toString(), ddsite.getSelectedItem().toString(), dduom.getSelectedItem().toString()) && ! OVData.isValidVendPriceRecordExists(ddvend.getSelectedItem().toString(),ddpart.getSelectedItem().toString(),dduom.getSelectedItem().toString(),ddcurr.getSelectedItem().toString())) {
+        if (OVData.isValidItem(tbitem.getText()) && ! OVData.isBaseUOMOfItem(tbitem.getText(), ddsite.getSelectedItem().toString(), dduom.getSelectedItem().toString()) && ! OVData.isValidVendPriceRecordExists(ddvend.getSelectedItem().toString(),tbitem.getText(),dduom.getSelectedItem().toString(),ddcurr.getSelectedItem().toString())) {
                 bsmf.MainFrame.show(getMessageTag(1094)); 
                 dduom.requestFocus();
                 return false;
@@ -1420,98 +1396,54 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbshipemail.setText("");
     }    
     
-    public void getparts(String part) {
-        try {
-
-            Connection con = null;
-        if (ds != null) {
-          con = ds.getConnection();
-        } else {
-          con = DriverManager.getConnection(url + db, user, pass);  
-        }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-              
-               // if part is not already in list
-                int k = ddpart.getSelectedIndex();
-              
-                
-                // lets first try as vend part...i.e....lets look up the item based on entering a vendor part number.
-                if (k < 0) {
-                    
-                res = st.executeQuery("select vdp_item, vdp_vitem from vdp_mstr where vdp_vend = " + "'" + ddvend.getSelectedItem().toString() + "'" 
-                        + " AND vdp_vitem = " + "'" + part + "'" 
-                        + ";");
-                int i = 0;
-                while (res.next()) {
-                    i++;
-                   // ddpart.setSelectedItem(res.getString("vdp_item"));
-                    vendnumber.setText(part);
-                    ddpart.setForeground(Color.blue);
-                    vendnumber.setForeground(Color.blue);
-                    vendnumber.setEditable(false);
-                }
-                
-                // if i is still 0...then must be a misc item
-                if (i == 0) {
-                  //  partnbr.addItem(part);
-                  //  partnbr.setSelectedItem(part);
-                    vendnumber.setText("");
-                    ddpart.setForeground(Color.red);
-                    vendnumber.setForeground(Color.red);
-                   // custnumber.setBorder(BorderFactory.createLineBorder(Color.red));
-                    vendnumber.setEditable(true);
-                    
-                    discount.setText("0");
-                    listprice.setText("0");
-                    listprice.setBackground(Color.white);
-                    
-                    netprice.setText("0");
-                    qtyshipped.setText("0");
-                }
-                
-                }
-                
-             if (k >= 0) {   
-            String[] det = invData.getItemDetail(ddpart.getSelectedItem().toString());
+    public void getItemInfo(String item) {
+        
+        HashMap<String, String> hm =  getItemDataInit(item, ddsite.getSelectedItem().toString(), ddvend.getSelectedItem().toString(), "vend");
+        int i = 0;
+        if (! tbitem.getText().isBlank()) {
+          
+            for (Map.Entry<String, String> entry : hm.entrySet()) {
+           // String[] det = invData.getItemDetail(ddpart.getSelectedItem().toString());
+            if (entry.getKey().equals("itemdata")) {
+            String[] det = entry.getValue().split(",", -1);
+            if (! det[0].isBlank()) {
+            i++;
+            }
             discount.setText("0");
             listprice.setText("0");
             netprice.setText("0");
             qtyshipped.setText("0");
             tbdesc.setText(det[1]);
-            vendnumber.setText(venData.getVendItemFromItem(ddvend.getSelectedItem().toString(),ddpart.getSelectedItem().toString()));
-            dduom.setSelectedItem(det[2]);
-            ddpart.setForeground(Color.blue);
+            dduom.setSelectedItem(det[2]); // triggers setPrice
+            tbitem.setForeground(Color.blue);
             vendnumber.setForeground(Color.blue);
             vendnumber.setEditable(false);
-            
-            if (ddpart.getItemCount() > 0) {
-                ddpart.setForeground(Color.blue);
-                vendnumber.setForeground(Color.blue);
-                setPrice();
-                
-            } // if part selected
-             }  
-                
-                
-                
-               
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
+            tbdesc.setForeground(Color.blue);
+            tbdesc.setEditable(false);
             }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
+            
+            if (entry.getKey().equals("itemvend")) {
+              vendnumber.setText(entry.getValue());
+            }
+                         
+            } // for each entry
+            
+            if (i == 0) {
+                vendnumber.setText("");
+                tbitem.setForeground(Color.red);
+                vendnumber.setForeground(Color.red);
+                vendnumber.setEditable(true);
+                tbdesc.setForeground(Color.red);
+                tbdesc.setEditable(true);
+
+                discount.setText("0");
+                listprice.setText("0");
+                listprice.setBackground(Color.white);
+
+                netprice.setText("0");
+                qtyshipped.setText("0"); 
+            }
+        }  
     }
     
     public void setnetprice() {
@@ -1648,13 +1580,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
-                if (venditemonly) {
-                    ddpart.removeAllItems();
-                    res = st.executeQuery("select distinct vdp_item from vdp_mstr where vdp_vend = " + "'" + ddvend.getSelectedItem().toString() + "'" + ";");
-                    while (res.next()) {
-                        ddpart.addItem(res.getString("vdp_item"));
-                    }
-                }
+               
                 res = st.executeQuery("select * from vd_mstr where vd_addr = " + "'" + ddvend.getSelectedItem().toString() + "'" + ";");
                 while (res.next()) {
                     lbvend.setText(res.getString("vd_name"));
@@ -1782,7 +1708,6 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         jPanel3 = new javax.swing.JPanel();
         qtyshipped = new javax.swing.JTextField();
         jLabel79 = new javax.swing.JLabel();
-        ddpart = new javax.swing.JComboBox();
         vendnumber = new javax.swing.JTextField();
         jLabel87 = new javax.swing.JLabel();
         jLabel84 = new javax.swing.JLabel();
@@ -1790,8 +1715,8 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         dduom = new javax.swing.JComboBox<>();
         tbdesc = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        btLookUpCustItem = new javax.swing.JButton();
         btLookUpItemDesc = new javax.swing.JButton();
+        tbitem = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
         netprice = new javax.swing.JTextField();
         jLabel80 = new javax.swing.JLabel();
@@ -2245,13 +2170,6 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel79.setText("PartNumber");
         jLabel79.setName("lblitem"); // NOI18N
 
-        ddpart.setEditable(true);
-        ddpart.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ddpartActionPerformed(evt);
-            }
-        });
-
         jLabel87.setText("VendNumber");
         jLabel87.setName("lblvenditem"); // NOI18N
 
@@ -2270,17 +2188,16 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel6.setText("Description");
         jLabel6.setName("lbldesc"); // NOI18N
 
-        btLookUpCustItem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
-        btLookUpCustItem.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btLookUpCustItemActionPerformed(evt);
-            }
-        });
-
         btLookUpItemDesc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
         btLookUpItemDesc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btLookUpItemDescActionPerformed(evt);
+            }
+        });
+
+        tbitem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbitemActionPerformed(evt);
             }
         });
 
@@ -2298,36 +2215,36 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addComponent(jLabel84, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(ddpart, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(dduom, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(qtyshipped, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(vendnumber, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btLookUpCustItem, javax.swing.GroupLayout.PREFERRED_SIZE, 28, Short.MAX_VALUE)
-                    .addComponent(btLookUpItemDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(dduom, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(qtyshipped, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(vendnumber, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(tbitem, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btLookUpItemDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(vendnumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel87))
-                    .addComponent(btLookUpCustItem))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel6))
-                    .addComponent(btLookUpItemDesc))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ddpart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel79))
+                    .addComponent(vendnumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel87))
+                .addGap(11, 11, 11)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addGap(11, 11, 11)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel79)
+                        .addComponent(tbitem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btLookUpItemDesc))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(dduom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2336,7 +2253,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(qtyshipped, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel84))
-                .addContainerGap(77, Short.MAX_VALUE))
+                .addContainerGap(72, Short.MAX_VALUE))
         );
 
         netprice.setEditable(false);
@@ -2855,7 +2772,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
        
         if (canproceed) {
          myorddetmodel.addRow(new Object[]{line, 
-             ddpart.getSelectedItem().toString(), 
+             tbitem.getText(), 
              tbdesc.getText(),  
              vendnumber.getText(), 
              tbkey.getText(),  
@@ -2868,22 +2785,18 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
              getGlobalProgTag("open"), 
              shipto // shipto
          });
-         sumqty();
-         sumdollars();
-         sumlinecount();
+         refreshDisplayTotals();
          listprice.setText("");
          netprice.setText("");
          discount.setText("");
          qtyshipped.setText("");
-         ddpart.requestFocus();
+         tbitem.setText("");
+         vendnumber.setText("");
+         tbdesc.setText("");
+         tbitem.requestFocus();
         }
        
     }//GEN-LAST:event_btadditemActionPerformed
-
-    private void ddpartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddpartActionPerformed
-         if (ddpart.getSelectedItem() != null && ! isLoad)
-        getparts(ddpart.getSelectedItem().toString());
-    }//GEN-LAST:event_ddpartActionPerformed
 
     private void btdelitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdelitemActionPerformed
          int[] rows = orddet.getSelectedRows();
@@ -2897,9 +2810,15 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         }
        
-         sumqty();
-         sumdollars();
-         sumlinecount();
+         refreshDisplayTotals();
+         listprice.setText("");
+         netprice.setText("");
+         discount.setText("");
+         qtyshipped.setText("");
+         tbitem.setText("");
+         vendnumber.setText("");
+         tbdesc.setText("");
+         tbitem.requestFocus();
     }//GEN-LAST:event_btdelitemActionPerformed
 
     private void netpriceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_netpriceActionPerformed
@@ -2968,11 +2887,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_qtyshippedFocusLost
 
     private void jTabbedPane1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jTabbedPane1StateChanged
-         JTabbedPane sourceTabbedPane = (JTabbedPane) evt.getSource();
-        int index = sourceTabbedPane.getSelectedIndex();
-        if (index == 1 && ddpart != null && ddpart.getItemCount() > 0) {
-            ddpart.setSelectedIndex(0);
-        }
+        
     }//GEN-LAST:event_jTabbedPane1StateChanged
 
     private void listpriceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_listpriceFocusGained
@@ -3002,7 +2917,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
             if (orddet.getValueAt(i, 11).toString().equals(getGlobalProgTag("closed")) || orddet.getValueAt(i, 11).toString().equals(getGlobalProgTag("partial"))) {
                 bsmf.MainFrame.show(getMessageTag(1088));
                 return;
-            } else if (! orddet.getValueAt(i, 1).toString().equals(ddpart.getSelectedItem().toString())) {
+            } else if (! orddet.getValueAt(i, 1).toString().equals(tbitem.getText())) {
                 bsmf.MainFrame.show(getMessageTag(1096));
                 return;
             }else {
@@ -3017,12 +2932,15 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
                 orddet.setValueAt(tbdesc.getText(), i, 2);
                 orddet.setValueAt(shipto, i, 12);
                 
-                refreshDisplayTotals();         
+                refreshDisplayTotals();
                 listprice.setText("");
                 netprice.setText("");
                 discount.setText("");
                 qtyshipped.setText("");
-                ddpart.requestFocus();
+                tbitem.setText("");
+                vendnumber.setText("");
+                tbdesc.setText("");
+                tbitem.requestFocus();
                 
                 }
             }
@@ -3034,7 +2952,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
         int col = orddet.columnAtPoint(evt.getPoint());
          //"line", "Part", "Desc", "VendPart", "PO", "Qty", "UOM", "ListPrice", "Discount", "NetPrice", "QtyRecv", "Status"
          isLoad = true;  
-        ddpart.setSelectedItem(orddet.getValueAt(row, 1).toString());
+        tbitem.setText(orddet.getValueAt(row, 1).toString());
         dduom.setSelectedItem(orddet.getValueAt(row, 6).toString());
         qtyshipped.setText(orddet.getValueAt(row, 5).toString());
         vendnumber.setText(orddet.getValueAt(row, 3).toString());
@@ -3045,10 +2963,6 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
        
         isLoad = false;
     }//GEN-LAST:event_orddetMouseClicked
-
-    private void btLookUpCustItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLookUpCustItemActionPerformed
-        lookUpFrameVendItem();
-    }//GEN-LAST:event_btLookUpCustItemActionPerformed
 
     private void btLookUpItemDescActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLookUpItemDescActionPerformed
         lookUpFrameItemDesc();
@@ -3291,21 +3205,25 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     private void ddsiteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddsiteActionPerformed
         if (! isLoad && ddsite.getSelectedItem() != null) {
-            ddpart.removeAllItems();
-            ArrayList<String> items = new ArrayList<String>();
-            if (OVData.isRawItemOnly()) {
-                items = invData.getItemMasterRawListBySite(ddsite.getSelectedItem().toString()); 
-            } else {
-                items = invData.getItemMasterListBySite(ddsite.getSelectedItem().toString()); 
-            }
-            for (String item : items) {
-            ddpart.addItem(item);
-            } 
+          //  ArrayList<String> items = new ArrayList<String>();
+          //  if (OVData.isRawItemOnly()) {
+          //      items = invData.getItemMasterRawListBySite(ddsite.getSelectedItem().toString()); 
+          //  } else {
+          //      items = invData.getItemMasterListBySite(ddsite.getSelectedItem().toString()); 
+          //  }
         }
     }//GEN-LAST:event_ddsiteActionPerformed
 
+    private void tbitemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbitemActionPerformed
+        if (isLoad) {
+            return;
+        }
+        if (! tbitem.getText().isBlank()) {
+         getItemInfo(tbitem.getText());
+        }
+    }//GEN-LAST:event_tbitemActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btLookUpCustItem;
     private javax.swing.JButton btLookUpItemDesc;
     private javax.swing.JButton btLookUpVendor;
     private javax.swing.JButton btadd;
@@ -3328,7 +3246,6 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JComboBox<String> ddcurr;
     private javax.swing.JComboBox<String> ddedistatus;
     private javax.swing.JComboBox<String> dditemship;
-    private static javax.swing.JComboBox ddpart;
     private javax.swing.JComboBox<String> ddsacamttype;
     private javax.swing.JComboBox<String> ddsactype;
     private javax.swing.JComboBox<String> ddship;
@@ -3413,6 +3330,7 @@ public class POMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JTable tableattachment;
     private javax.swing.JTextField tbbuyer;
     private javax.swing.JTextField tbdesc;
+    private javax.swing.JTextField tbitem;
     private javax.swing.JTextField tbkey;
     private javax.swing.JTextField tbsacamt;
     private javax.swing.JTextField tbsacdesc;

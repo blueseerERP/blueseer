@@ -26,6 +26,7 @@ SOFTWARE.
 package com.blueseer.inv;
 
 
+import bsmf.MainFrame;
 import static bsmf.MainFrame.tags;
 import com.blueseer.fgl.fglData;
 import com.blueseer.fgl.fglData.gl_pair;
@@ -73,6 +74,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.SwingWorker;
 
 /**
  *
@@ -99,6 +101,168 @@ public class InventoryMaint extends javax.swing.JPanel {
         setLanguageTags(this);
     }
 
+    public void executeTask(BlueSeerUtils.dbaction x, String[] y) { 
+      
+        class Task extends SwingWorker<String[], Void> {
+       
+          String type = "";
+          String[] key = null;
+          
+          public Task(BlueSeerUtils.dbaction type, String[] key) { 
+              this.type = type.name();
+              this.key = key;
+          } 
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
+            
+             switch(this.type) {
+                case "run":
+                    message = postProd();    
+                    break;      
+                default:
+                    message = new String[]{"1", "unknown action"};
+            }
+            
+            return message;
+        }
+ 
+        
+       public void done() {
+            try {
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+            initvars(null);  
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x, y); 
+       z.execute(); 
+       
+    }
+    
+    public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else {
+            return;
+        }
+        
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                if (component instanceof JLabel || component instanceof JTable ) {
+                    continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                
+                component.setEnabled(b);
+            }
+        }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    component.setEnabled(b);
+                }
+            }
+    } 
+    
+    public void setComponentDefaultValues() {
+        isLoad = true;
+        java.util.Date now = new java.util.Date();
+       DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        dcdate.setDate(now);
+        dcexpire.setDate(null);
+        tbitem.setText("");
+        tbqty.setText("");
+        tbref.setText("");
+        tbrmks.setText("");
+        tblotserial.setText("");
+        tbitem.setBackground(Color.white);
+        tbqty.setBackground(Color.white);
+        
+        ArrayList<String[]> initDataSets = invData.getInvMaintInit();
+        String defaultsite = "";
+        
+        ddtype.requestFocus();
+        
+        ddsite.removeAllItems();
+        ddwh.removeAllItems();
+        ddloc.removeAllItems();
+        ddacct.removeAllItems();
+        ddcc.removeAllItems();
+        
+        ArrayList<String> wh = OVData.getWareHouseList(); 
+        for (String[] s : initDataSets) {
+            if (s[0].equals("accounts")) {
+              ddacct.addItem(s[1]); 
+            }
+            
+            if (s[0].equals("depts")) {
+              ddcc.addItem(s[1]); 
+            }
+            
+            if (s[0].equals("warehouses")) {
+              ddwh.addItem(s[1]); 
+            }
+            
+            if (s[0].equals("locations")) {
+              ddloc.addItem(s[1]); 
+            }
+          
+            if (s[0].equals("site")) {
+              defaultsite = s[1]; 
+            }
+            if (s[0].equals("sites")) {
+              ddsite.addItem(s[1]); 
+            }
+            
+        }
+        
+         ddsite.setSelectedItem(defaultsite);
+         
+         if (ddacct.getItemCount() > 0) {
+          ddacct.setSelectedIndex(0);
+         }
+         
+         if (ddcc.getItemCount() > 0) {
+          ddcc.setSelectedIndex(0);
+         }
+        
+         ddwh.insertItemAt("", 0);
+         ddloc.insertItemAt("", 0);
+        
+        isLoad = false;
+    }
+    
     public void setLanguageTags(Object myobj) {
        JPanel panel = null;
         JTabbedPane tabpane = null;
@@ -153,79 +317,14 @@ public class InventoryMaint extends javax.swing.JPanel {
              
     }
     
-    public void clearVariables() {
-        java.util.Date now = new java.util.Date();
-       DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-        dcdate.setDate(now);
-        dcexpire.setDate(null);
-        tbitem.setText("");
-        tbqty.setText("");
-        tbref.setText("");
-        tbrmks.setText("");
-        tblotserial.setText("");
-        tbitem.setBackground(Color.white);
-        tbqty.setBackground(Color.white);
-        ddwh.setSelectedIndex(0);
-        ddloc.setSelectedIndex(0);
-        
-    }
+    
     
     public void initvars(String[] arg) {
-        isLoad = true;
         
-        ArrayList<String[]> initDataSets = invData.getInvMaintInit();
-        String defaultsite = "";
         
-        ddtype.requestFocus();
+       setPanelComponentState(this, true); 
+       setComponentDefaultValues();
         
-        ddsite.removeAllItems();
-        ddwh.removeAllItems();
-        ddloc.removeAllItems();
-        ddacct.removeAllItems();
-        ddcc.removeAllItems();
-        
-        ArrayList<String> wh = OVData.getWareHouseList(); 
-        for (String[] s : initDataSets) {
-            if (s[0].equals("accounts")) {
-              ddacct.addItem(s[1]); 
-            }
-            
-            if (s[0].equals("depts")) {
-              ddcc.addItem(s[1]); 
-            }
-            
-            if (s[0].equals("warehouses")) {
-              ddwh.addItem(s[1]); 
-            }
-            
-            if (s[0].equals("locations")) {
-              ddloc.addItem(s[1]); 
-            }
-          
-            if (s[0].equals("site")) {
-              defaultsite = s[1]; 
-            }
-            if (s[0].equals("sites")) {
-              ddsite.addItem(s[1]); 
-            }
-            
-        }
-        
-         ddsite.setSelectedItem(defaultsite);
-         
-         if (ddacct.getItemCount() > 0) {
-          ddacct.setSelectedIndex(0);
-         }
-         
-         if (ddcc.getItemCount() > 0) {
-          ddcc.setSelectedIndex(0);
-         }
-        
-         ddwh.insertItemAt("", 0);
-         ddloc.insertItemAt("", 0);
-        
-        clearVariables();
-        isLoad = false;
     }
     
     public void lookUpFrameItemDesc() {
@@ -310,6 +409,190 @@ public class InventoryMaint extends javax.swing.JPanel {
         
     }
 
+    public String[] postProd() {
+        String[] m = null;
+        boolean isError = false;
+        String type = "";
+        String op = "";
+        double qty = 0;
+        double totalcost = 0.00;
+        
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        Date today = new Date();
+        String loc = "";
+        String wh = "";
+        String acct = "";
+        String cc = "";
+        String site = "";
+        
+        if (ddloc.getSelectedItem() != null)
+        loc = ddloc.getSelectedItem().toString();
+        
+        if (ddwh.getSelectedItem() != null)
+        wh = ddwh.getSelectedItem().toString();
+        
+        if (ddacct.getSelectedItem() != null)
+        acct = ddacct.getSelectedItem().toString();
+        
+        if (ddcc.getSelectedItem() != null)
+        cc = ddcc.getSelectedItem().toString();
+        
+        if (ddsite.getSelectedItem() != null)
+        site = ddsite.getSelectedItem().toString();
+        
+        if (! tbqty.getText().isEmpty()) {
+            qty = bsParseDouble(tbqty.getText());
+        }
+        
+        if (ddtype.getSelectedItem().toString().equals("issue")) {
+            type = "ISS-MISC";
+            qty = (-1 * qty);
+        } else {
+            type = "RCT-MISC";
+            qty = qty;
+        }
+        
+        String gldoc = setGLRecNbr("AJ");
+        
+        // all inventory transactions performed in base currency
+        String basecurr = OVData.getDefaultCurrency();
+        
+        // get cost
+        String itemtype = invData.getItemCode(tbitem.getText());
+        double cost = invData.getItemCost(tbitem.getText(), "standard", site);
+        if (cost == 0 && itemtype.equals("A")) {
+            cost = invData.getItemPurchPrice(tbitem.getText());
+        }
+        
+        // lets get the productline of the part being adjusted
+        String prodline = OVData.getProdLineFromItem(tbitem.getText());
+        
+        if ( prodline == null || prodline.isEmpty() ) {
+            return new String[]{"1", getMessageTag(1066)};
+        }
+        
+        String invacct = OVData.getProdLineInvAcct(prodline);
+        
+        if (invacct.isEmpty()) {
+            return new String[]{"1", getMessageTag(1067)};
+        }
+        
+        if (cost == 0.00) {
+            return new String[]{"1", getMessageTag(1068)};
+        }
+        
+        
+        if ( OVData.isGLPeriodClosed(dfdate.format(dcdate.getDate()))) {
+          return new String[]{"1", getMessageTag(1035)};
+        }
+        
+        String expire = null;
+        if (dcexpire.getDate() != null) {
+            expire = dfdate.format(dcexpire.getDate());
+        }
+        
+        tran_mstr tm = new tran_mstr(null,
+                "", // id
+                site, // site
+                tbitem.getText(),
+                qty,
+                setDateDB(today), //entdate
+                setDateDB(dcdate.getDate()), //effdate
+                bsmf.MainFrame.userid, //userid
+                tbref.getText(), //ref
+                "", //addrcode
+                type, //type
+                null, //datetime
+                tbrmks.getText(), //remarks
+                "", //tr_nbr
+                "", //misc1
+                tblotserial.getText(), //lot
+                tblotserial.getText(), //serial
+                "InventoryMaint", //program
+                0, //amt
+                0, //mtl
+                0, //lbr
+                0, //bdn
+                0, //ovh
+                0, //out
+                "", //batch
+                op, //op
+                loc, //loc
+                wh, //wh
+                expire, //expire
+                cc, //cc
+                "", //wc
+                "", //wf
+                "", //prodline
+                "0", //timestamp ; db assigned
+                "", //cell
+                0, //export
+                "", //order
+                0, //line
+                "", //po
+                0.00, //price
+                cost, //cost
+                acct, //acct
+                "", //terms
+                "", //pack
+                "", //curr
+                null, //packdate
+                null, //assydate
+                "", //uom
+                qty, //baseqty
+                "" //bom
+        );
+        
+        
+        in_mstr in = new in_mstr(null,
+                tbitem.getText(),
+                qty,
+                null, // date
+                loc,
+                wh,
+                site,
+                tblotserial.getText(),
+                expire,
+                bsmf.MainFrame.userid,
+                "InventoryMaint"
+        );
+        
+        String acct_cr = "";
+        String cc_cr = "";
+        String acct_dr = "";
+        String cc_dr = "";
+        if (ddtype.getSelectedItem().toString().equals("issue")) {
+            acct_cr = invacct;
+            cc_cr = prodline;
+            acct_dr = acct;
+            cc_dr = cc;
+        } else {
+            acct_cr = ddacct.getSelectedItem().toString();
+            cc_cr = ddcc.getSelectedItem().toString();
+            acct_dr = invacct;
+            cc_dr = prodline;
+        }
+            gl_pair gv = new gl_pair(null,
+                    acct_cr, 
+                    cc_cr, 
+                    acct_dr, 
+                    cc_dr,  
+                    setDateDB(dcdate.getDate()), 
+                    (cost * bsParseDouble(tbqty.getText())),  
+                    (cost * bsParseDouble(tbqty.getText())),  
+                    basecurr, 
+                    basecurr, 
+                    tbref.getText() , 
+                    type,
+                    site, 
+                    tbrmks.getText(), 
+                    gldoc
+            );
+                
+        m = inventoryAdjustmentTransaction(tm, in, gv); 
+      
+        return m;
+    }
     
     
     
@@ -572,37 +855,7 @@ public class InventoryMaint extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-        boolean proceed = true;
-        boolean isError = false;
-        String type = "";
-        String op = "";
-        double qty = 0;
-        double totalcost = 0.00;
-        
-        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-        Date today = new Date();
-        String loc = "";
-        String wh = "";
-        String acct = "";
-        String cc = "";
-        String site = "";
-        
-        if (ddloc.getSelectedItem() != null)
-        loc = ddloc.getSelectedItem().toString();
-        
-        if (ddwh.getSelectedItem() != null)
-        wh = ddwh.getSelectedItem().toString();
-        
-        if (ddacct.getSelectedItem() != null)
-        acct = ddacct.getSelectedItem().toString();
-        
-        if (ddcc.getSelectedItem() != null)
-        cc = ddcc.getSelectedItem().toString();
-        
-        if (ddsite.getSelectedItem() != null)
-        site = ddsite.getSelectedItem().toString();
-        
-        
+               
         if (tbitem.getText().isEmpty()) {
             tbitem.setBackground(Color.yellow);
             bsmf.MainFrame.show(getMessageTag(1024, tbitem.getName()));
@@ -610,193 +863,21 @@ public class InventoryMaint extends javax.swing.JPanel {
             return;
         }
         
-        if (! tbqty.getText().isEmpty()) {
-            qty = bsParseDouble(tbqty.getText());
-        } else {
+        if (tbqty.getText().isEmpty()) {
             tbqty.setBackground(Color.yellow);
             bsmf.MainFrame.show(getMessageTag(1036));
             tbqty.requestFocus();
             return;
         }
         
-         
-        
-        if (ddtype.getSelectedItem().toString().equals("issue")) {
-            type = "ISS-MISC";
-            qty = (-1 * qty);
-        } else {
-            type = "RCT-MISC";
-            qty = qty;
-        }
-        
-        String gldoc = setGLRecNbr("AJ");
-        
-        // all inventory transactions performed in base currency
-        String basecurr = OVData.getDefaultCurrency();
-        
-        
         // check if item exists
         if (! OVData.isValidItem(tbitem.getText())) {
-            proceed = false;
             bsmf.MainFrame.show(getMessageTag(1026, tbitem.getText()));
             return;
         }
         
-        // get cost
-        String itemtype = invData.getItemCode(tbitem.getText());
-        double cost = invData.getItemCost(tbitem.getText(), "standard", site);
-        if (cost == 0 && itemtype.equals("A")) {
-            cost = invData.getItemPurchPrice(tbitem.getText());
-        }
-        
-        // lets get the productline of the part being adjusted
-        String prodline = OVData.getProdLineFromItem(tbitem.getText());
-        
-        if ( prodline == null || prodline.isEmpty() ) {
-            proceed = false;
-            bsmf.MainFrame.show(getMessageTag(1066, tbitem.getText()));
-            return;
-        }
-        
-        String invacct = OVData.getProdLineInvAcct(prodline);
-        
-        if (invacct.isEmpty()) {
-            proceed = false;
-            bsmf.MainFrame.show(getMessageTag(1067, prodline));
-        }
-        
-        if (cost == 0.00) {
-            proceed = false;
-            bsmf.MainFrame.show(getMessageTag(1068));
-        }
-        
-        
-        if ( OVData.isGLPeriodClosed(dfdate.format(dcdate.getDate()))) {
-                    proceed = false;
-                    bsmf.MainFrame.show(getMessageTag(1035));
-                    return;
-        }
-        String expire = null;
-        if (dcexpire.getDate() != null) {
-            expire = dfdate.format(dcexpire.getDate());
-        }
-        
-               
-        if (proceed) {
-        tran_mstr tm = new tran_mstr(null,
-                "", // id
-                site, // site
-                tbitem.getText(),
-                qty,
-                setDateDB(today), //entdate
-                setDateDB(dcdate.getDate()), //effdate
-                bsmf.MainFrame.userid, //userid
-                tbref.getText(), //ref
-                "", //addrcode
-                type, //type
-                null, //datetime
-                tbrmks.getText(), //remarks
-                "", //tr_nbr
-                "", //misc1
-                tblotserial.getText(), //lot
-                tblotserial.getText(), //serial
-                "InventoryMaint", //program
-                0, //amt
-                0, //mtl
-                0, //lbr
-                0, //bdn
-                0, //ovh
-                0, //out
-                "", //batch
-                op, //op
-                loc, //loc
-                wh, //wh
-                expire, //expire
-                cc, //cc
-                "", //wc
-                "", //wf
-                "", //prodline
-                "0", //timestamp ; db assigned
-                "", //cell
-                0, //export
-                "", //order
-                0, //line
-                "", //po
-                0.00, //price
-                cost, //cost
-                acct, //acct
-                "", //terms
-                "", //pack
-                "", //curr
-                null, //packdate
-                null, //assydate
-                "", //uom
-                qty, //baseqty
-                "" //bom
-        );
-        
-        
-        in_mstr in = new in_mstr(null,
-                tbitem.getText(),
-                qty,
-                null, // date
-                loc,
-                wh,
-                site,
-                tblotserial.getText(),
-                expire,
-                bsmf.MainFrame.userid,
-                "InventoryMaint"
-        );
-        
-        String acct_cr = "";
-        String cc_cr = "";
-        String acct_dr = "";
-        String cc_dr = "";
-        if (ddtype.getSelectedItem().toString().equals("issue")) {
-            acct_cr = invacct;
-            cc_cr = prodline;
-            acct_dr = acct;
-            cc_dr = cc;
-        } else {
-            acct_cr = ddacct.getSelectedItem().toString();
-            cc_cr = ddcc.getSelectedItem().toString();
-            acct_dr = invacct;
-            cc_dr = prodline;
-        }
-            gl_pair gv = new gl_pair(null,
-                    acct_cr, 
-                    cc_cr, 
-                    acct_dr, 
-                    cc_dr,  
-                    setDateDB(dcdate.getDate()), 
-                    (cost * bsParseDouble(tbqty.getText())),  
-                    (cost * bsParseDouble(tbqty.getText())),  
-                    basecurr, 
-                    basecurr, 
-                    tbref.getText() , 
-                    type,
-                    site, 
-                    tbrmks.getText(), 
-                    gldoc
-            );
-                
-        String[] m = inventoryAdjustmentTransaction(tm, in, gv);
-        
-         // autopost
-        if (OVData.isAutoPost()) {
-            fglData.PostGL();
-        } 
-        
-        BlueSeerUtils.message(m);
-        if (m[0].equals("0")) {
-            clearVariables();
-        } 
-        
-        } // proceed
-        
-        
-        
+        setPanelComponentState(this, false);
+        executeTask(BlueSeerUtils.dbaction.run, new String[]{""});
         
     }//GEN-LAST:event_btaddActionPerformed
 

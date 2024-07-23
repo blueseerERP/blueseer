@@ -3635,7 +3635,7 @@ public class DTData {
         
     public static DefaultTableModel getVendXrefBrowseUtil( String str, int state, String myfield, String vend) {
         javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("vendor"), getGlobalColumnTag("venditem"), getGlobalColumnTag("item")})
+                      new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("item"), getGlobalColumnTag("venditem"), getGlobalColumnTag("vendor")})
                 {
                       @Override  
                       public Class getColumnClass(int col) {  
@@ -3675,9 +3675,9 @@ public class DTData {
                         " order by vdp_vend, vdp_vitem ;");
                  }
                     while (res.next()) {
-                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("vdp_vend"),
+                        mymodel.addRow(new Object[] {BlueSeerUtils.clickflag, res.getString("vdp_item"),
                                    res.getString("vdp_vitem"),
-                                   res.getString("vdp_item")
+                                   res.getString("vdp_vend")
                         });
                     }
            }
@@ -6855,7 +6855,7 @@ public class DTData {
 
           res = st.executeQuery(" select it_item, it_desc, it_code, it_type  " +
                     " FROM  item_mstr where " + myfield + " like " + "'%" + str + "%'" +
-                    " and it_site = " + "'" + site + "'" + 
+                    " and it_site = " + "'" + site + "'" +
                     " order by it_item limit 300;");  
 
             while (res.next()) {
@@ -6885,7 +6885,66 @@ public class DTData {
        return mymodel;
    } 
   
-    
+    public static DefaultTableModel getItemDescBrowseBySite(String str, String myfield, String site, String type) {
+
+       javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                    new String[]{getGlobalColumnTag("select"), getGlobalColumnTag("item"), getGlobalColumnTag("description"), getGlobalColumnTag("class"), getGlobalColumnTag("type")})
+               {
+                  @Override  
+                  public Class getColumnClass(int col) {  
+                    if (col == 0)       
+                        return ImageIcon.class;  
+                    else return String.class;  //other columns accept String values  
+                  }  
+                    };
+
+       try{
+
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+
+          res = st.executeQuery(" select it_item, it_desc, it_code, it_type  " +
+                    " FROM  item_mstr where " + myfield + " like " + "'%" + str + "%'" +
+                    " and it_site = " + "'" + site + "'" +
+                    " order by it_item limit 300;");  
+
+            while (res.next()) {
+                if (! type.isBlank() && ! res.getString("it_code").equals(type)) {
+                    continue;
+                }
+                mymodel.addRow(new Object[]{BlueSeerUtils.clickflag, res.getString("it_item"),
+                            res.getString("it_desc"),
+                            res.getString("it_code"),
+                            res.getString("it_type")
+                            });
+            }
+
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+           if (res != null) res.close();
+           if (st != null) st.close();
+           if (con != null) con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+
+
+
+       return mymodel;
+   } 
+  
     public static DefaultTableModel getEmployeeAll() {
 
        javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},

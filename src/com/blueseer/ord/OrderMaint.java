@@ -1814,7 +1814,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
          
     public void getItemInfo(String part) {
        // if part is not already in list
-       HashMap<String, String> hm =  getItemDataInit(part, ddsite.getSelectedItem().toString(), ddcust.getSelectedItem().toString());
+       HashMap<String, String> hm =  getItemDataInit(part, ddsite.getSelectedItem().toString(), ddcust.getSelectedItem().toString(), "cust");
         /*
         int k = ddpart.getSelectedIndex();
         
@@ -1873,7 +1873,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
             netprice.setText("0");
             qtyshipped.setText("0");
             tbdesc.setText(det[1]);
-            dduom.setSelectedItem(det[2]);
+            dduom.setSelectedItem(det[2]);   // triggers setprice
             tbitem.setForeground(Color.blue);
             custnumber.setForeground(Color.blue);
             custnumber.setEditable(false);
