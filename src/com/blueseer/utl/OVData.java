@@ -6599,7 +6599,7 @@ public class OVData {
                 fglData.glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), date, bsParseDouble(cost.get(j).toString()), bsParseDouble(cost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), "ISS-WIP", desc.get(j).toString(), doc.get(j).toString());  
 
                // process tran_hist
-               OVData.TRHistIssDiscrete(BlueSeerUtils.mysqlDateFormat.parse(date), child.get(j).toString(), (-1 * qty), op, "ISS-WIP", 0, 0, csite, 
+               OVData.TRHistIssDiscrete(BlueSeerUtils.mysqlDateFormat.parse(date), child.get(j).toString(), (-1 * qty * bsParseDouble(qtyper.get(j).toString())), op, "ISS-WIP", 0, 0, csite, 
                        loc.get(j).toString(), wh.get(j).toString(), expire, "", "", item + ":" + op, 0, "", "", "", cref, "", "", "", "", serial, program, userid);
 
                // update inventory

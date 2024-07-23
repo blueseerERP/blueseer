@@ -25,12 +25,14 @@ SOFTWARE.
  */
 package com.blueseer.prd;
 
+import bsmf.MainFrame;
 import static bsmf.MainFrame.tags;
 import com.blueseer.inv.invData;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
+import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -62,6 +64,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.SwingWorker;
 
 /**
  *
@@ -85,6 +88,123 @@ public class ProdEntryMaint extends javax.swing.JPanel {
         setLanguageTags(this);
     }
 
+    public void executeTask(dbaction x, String[] y) { 
+      
+        class Task extends SwingWorker<String[], Void> {
+       
+          String type = "";
+          String[] key = null;
+          
+          public Task(dbaction type, String[] key) { 
+              this.type = type.name();
+              this.key = key;
+          } 
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
+            
+             switch(this.type) {
+                case "run":
+                    message = postProd();    
+                    break;      
+                default:
+                    message = new String[]{"1", "unknown action"};
+            }
+            
+            return message;
+        }
+ 
+        
+       public void done() {
+            try {
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+            initvars(null);  
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x, y); 
+       z.execute(); 
+       
+    }
+    
+    public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else {
+            return;
+        }
+        
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                if (component instanceof JLabel || component instanceof JTable ) {
+                    continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                
+                component.setEnabled(b);
+            }
+        }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    component.setEnabled(b);
+                }
+            }
+    } 
+    
+    public void setComponentDefaultValues() {
+        transmodel.setRowCount(0);
+       
+        tbuser.setText(bsmf.MainFrame.userid);
+        tbuser.setEnabled(false);
+        
+        java.util.Date now = new java.util.Date();
+        dcdate.setDate(now);
+        ddop.removeAllItems();
+        tbpart.setText("");
+        tbreference.setText("");
+        tbserialno.setText("");
+        tbqty.setText("");
+        ddbom.removeAllItems();
+        
+        ArrayList<String> sites = OVData.getSiteList();
+        ddsite.removeAllItems();
+        for (String code : sites) {
+            ddsite.addItem(code);
+        }
+        ddsite.setSelectedItem(OVData.getDefaultSite());
+    }
+    
     public void setLanguageTags(Object myobj) {
        JPanel panel = null;
         JTabbedPane tabpane = null;
@@ -176,29 +296,8 @@ public class ProdEntryMaint extends javax.swing.JPanel {
     }
     
     public void initvars(String[] arg) {
-        
-        transmodel.setRowCount(0);
-       
-        tbuser.setText(bsmf.MainFrame.userid);
-        tbuser.setEnabled(false);
-        
-        java.util.Date now = new java.util.Date();
-        dcdate.setDate(now);
-        ddop.removeAllItems();
-        tbpart.setText("");
-        tbreference.setText("");
-        tbserialno.setText("");
-        tbqty.setText("");
-        ddbom.removeAllItems();
-        
-        ArrayList<String> sites = OVData.getSiteList();
-        ddsite.removeAllItems();
-        for (String code : sites) {
-            ddsite.addItem(code);
-        }
-        ddsite.setSelectedItem(OVData.getDefaultSite());
-        
-        
+       setPanelComponentState(this, true); 
+       setComponentDefaultValues();
     }
    
     public void lookUpFrameItemDesc() {
@@ -244,7 +343,51 @@ public class ProdEntryMaint extends javax.swing.JPanel {
         
     }
 
-    
+    public String[] postProd() {
+        String[] m = null;
+        String prodline = "";
+        String expire = "";
+        String loc = OVData.getLocationByItem(tbpart.getText());
+        String wh = OVData.getWarehouseByItem(tbpart.getText());
+        
+        if (dcexpire.getDate() != null && BlueSeerUtils.isValidDateStr(BlueSeerUtils.mysqlDateFormat.format(dcexpire.getDate())) ) {
+            expire = BlueSeerUtils.mysqlDateFormat.format(dcexpire.getDate());
+        } 
+        
+        String op = (ddop.getSelectedItem() == null) ? "0" : ddop.getSelectedItem().toString();
+        transtable.setModel(transmodel);
+        
+            transmodel.addRow(new Object[]{tbpart.getText(), 
+                "ISS-WIP", 
+                op, 
+                tbqty.getText(), 
+                BlueSeerUtils.mysqlDateFormat.format(dcdate.getDate()), 
+                loc, 
+                tbserialno.getText(), 
+                tbreference.getText(),
+                ddsite.getSelectedItem().toString(),
+                tbuser.getText(),
+                prodline,
+                "",  // cell 
+                taremarks.getText(), // remarks
+                "", // packcell
+                "", // packdate
+                "",  // assydate
+                expire, // expiredate
+                "ProdEntryMaint", 
+                wh,
+                ddbom.getSelectedItem().toString()
+                });
+        
+        // now let's load transaction
+        if (! OVData.loadTranHistByTable(transtable)) {
+            m = new String[]{"1", "Error in loadTranHist"};
+        } else {
+            initvars(null);
+            m = new String[]{"0", getMessageTag(1007)};
+        }
+        return m;
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -477,16 +620,7 @@ public class ProdEntryMaint extends javax.swing.JPanel {
 
     private void btsubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btsubmitActionPerformed
         
-        String prodline = "";
-        String expire = "";
-        String loc = OVData.getLocationByItem(tbpart.getText());
-        String wh = OVData.getWarehouseByItem(tbpart.getText());
-        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
         
-        String op = (ddop.getSelectedItem() == null) ? "0" : ddop.getSelectedItem().toString();
-        
-        
-        transtable.setModel(transmodel);
         
         if (! BlueSeerUtils.isParsableToDouble(tbqty.getText()) ) {
             bsmf.MainFrame.show(getMessageTag(1028));
@@ -497,14 +631,12 @@ public class ProdEntryMaint extends javax.swing.JPanel {
             bsmf.MainFrame.show(getMessageTag(1123));
             return;            
         }
-        if (dcexpire.getDate() != null && BlueSeerUtils.isValidDateStr(BlueSeerUtils.mysqlDateFormat.format(dcexpire.getDate())) ) {
-            expire = dfdate.format(dcexpire.getDate());
-        } 
+        
          
-         if ( OVData.isGLPeriodClosed(dfdate.format(dcdate.getDate()))) {
+        if ( OVData.isGLPeriodClosed(BlueSeerUtils.mysqlDateFormat.format(dcdate.getDate()))) {
                     bsmf.MainFrame.show(getMessageTag(1035));
                     return;
-                }
+        }
         
         Map<String,Integer> f = OVData.getTableInfo(new String[]{"tran_mstr"});
         int fc;
@@ -527,48 +659,11 @@ public class ProdEntryMaint extends javax.swing.JPanel {
         bsmf.MainFrame.show(getMessageTag(1032,"0" + "/" + fc));
         taremarks.requestFocus();
         return;
-        } 
-        
-         
-       
-     
-            transmodel.addRow(new Object[]{tbpart.getText(), 
-                "ISS-WIP", 
-                op, 
-                tbqty.getText(), 
-                BlueSeerUtils.mysqlDateFormat.format(dcdate.getDate()), 
-                loc, 
-                tbserialno.getText(), 
-                tbreference.getText(),
-                ddsite.getSelectedItem().toString(),
-                tbuser.getText(),
-                prodline,
-                "",  // cell 
-                taremarks.getText(), // remarks
-                "", // packcell
-                "", // packdate
-                "",  // assydate
-                expire, // expiredate
-                "ProdEntryMaint", 
-                wh,
-                ddbom.getSelectedItem().toString()
-                });
-        
-        // now let's load transaction
-        if (! OVData.loadTranHistByTable(transtable)) {
-            bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-        } else {
-            initvars(null);
-            bsmf.MainFrame.show(getMessageTag(1007));
         }
         
-        // now reset variables for next entry
-        ddop.removeAllItems();
-        tbpart.setText("");
-        tbreference.setText("");
-        tbserialno.setText("");
-        tbqty.setText("");
-        tbpart.requestFocus();
+        setPanelComponentState(this, false);
+        executeTask(dbaction.run, new String[]{""});
+        
     }//GEN-LAST:event_btsubmitActionPerformed
 
     private void tbpartFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbpartFocusLost
