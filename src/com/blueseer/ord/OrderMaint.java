@@ -4136,6 +4136,8 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     private void btinvoiceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btinvoiceActionPerformed
         
+        setPanelComponentState(this, false);
+        
         if (! canUpdate(this.getClass().getName())) {
             bsmf.MainFrame.show(getMessageTag(1185));
             return;
@@ -4153,7 +4155,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
         
         //  String[] message = autoInvoiceOrder();
-        setPanelComponentState(this, false);
+        
         String[] message = autoInvoice();
         // autopost
         if (OVData.isAutoPost()) {
