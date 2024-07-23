@@ -4153,6 +4153,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
         
         //  String[] message = autoInvoiceOrder();
+        setPanelComponentState(this, false);
         String[] message = autoInvoice();
         // autopost
         if (OVData.isAutoPost()) {
