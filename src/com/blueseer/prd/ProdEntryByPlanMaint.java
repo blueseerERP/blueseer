@@ -71,6 +71,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingWorker;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.view.JasperViewer;
 
@@ -105,6 +106,119 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
         setLanguageTags(this);
     }
 
+    public void executeTask(BlueSeerUtils.dbaction x, String[] y) { 
+      
+        class Task extends SwingWorker<String[], Void> {
+       
+          String type = "";
+          String[] key = null;
+          
+          public Task(BlueSeerUtils.dbaction type, String[] key) { 
+              this.type = type.name();
+              this.key = key;
+          } 
+           
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
+            
+             switch(this.type) {
+                case "run":
+                    message = postProd();    
+                    break;      
+                default:
+                    message = new String[]{"1", "unknown action"};
+            }
+            
+            return message;
+        }
+ 
+        
+       public void done() {
+            try {
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+            initvars(null);  
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x, y); 
+       z.execute(); 
+       
+    }
+    
+    public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else {
+            return;
+        }
+        
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                if (component instanceof JLabel || component instanceof JTable ) {
+                    continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                
+                component.setEnabled(b);
+            }
+        }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    component.setEnabled(b);
+                }
+            }
+    } 
+    
+    public void setComponentDefaultValues() {
+        tbqty.setText("");
+        tbscan.setText("");
+        qtylabel.setText("");
+        qtylabel.setForeground(Color.black);
+        ddop.removeAllItems();
+        tbref.setText("");
+      
+       
+       historytable.setModel(historymodel);
+       historytable.getTableHeader().setReorderingAllowed(false);
+       historymodel.setRowCount(0);
+       
+       
+       btcommit.setEnabled(false);
+        
+       tbscan.requestFocusInWindow();
+    }
+    
     
     public void printTubTicket(String scan, String subid) throws PrinterException {
         
@@ -306,24 +420,129 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
     }
     
     public void initvars(String[] arg) {
+       setPanelComponentState(this, true); 
+       setComponentDefaultValues();
+    }
+    
+    public String[] postProd() {
+        String[] m = null;
+        plan_mstr pm = schData.getPlanMstr(new String[]{tbscan.getText()});
+        inv_ctrl ic = invData.getINVCtrl(new String[]{tbscan.getText()});
+        double prevscanned = schData.getPlanDetTotQtyByOp(tbscan.getText(), ddop.getSelectedItem().toString());
+        String[] detail = invData.getItemDetail(pm.plan_item());
+        boolean isPlan = true;
         
-        tbqty.setText("");
-        tbscan.setText("");
-        qtylabel.setText("");
-        qtylabel.setForeground(Color.black);
-        ddop.removeAllItems();
-        tbref.setText("");
-      
-       
-       historytable.setModel(historymodel);
-       historytable.getTableHeader().setReorderingAllowed(false);
-       historymodel.setRowCount(0);
-       
-       
-       btcommit.setEnabled(false);
+        if (pm.m()[0].equals("1")) {
+            isPlan = false;
+        }
+        double qty = Double.valueOf(tbqty.getText());
         
-       tbscan.requestFocusInWindow();
+        if (! isPlan) {
+            lblmessage.setText(getMessageTag(1070,tbscan.getText()));
+            lblmessage.setForeground(Color.red);
+            return new String[]{"1", getMessageTag(1011)};
+        }
         
+        if (isPlan &&  Integer.valueOf(pm.plan_status()) > 0 ) {
+            lblmessage.setText(getMessageTag(1071,tbscan.getText()));
+            lblmessage.setForeground(Color.red);
+            return new String[]{"1", getMessageTag(1011)};
+        }
+        if (isPlan &&  Integer.valueOf(pm.plan_status()) < 0 ) {
+            lblmessage.setText(getMessageTag(1072,tbscan.getText()));
+            lblmessage.setForeground(Color.red);
+            return new String[]{"1", getMessageTag(1011)};
+        }
+        
+         // check inventory control flag... "Plan Multiple Scan Issues"
+        // if false...only one scan per plan ticket per operation
+        
+        if (! BlueSeerUtils.ConvertStringToBool(ic.planmultiscan()) && (prevscanned > 0)) {
+            lblmessage.setText("Ticket Already Reported for this Operation " + tbscan.getText() + " / " + ddop.getSelectedItem().toString());
+            lblmessage.setForeground(Color.red);
+                return new String[]{"1", getMessageTag(1011)};
+        }
+        
+        
+        // now lets sum up qtys posted previously (if any) for this OP and this Ticket and make sure
+        // qty field is not greater than qty previous + qty scheduled
+        // this should work for multiscan and nonmultican conditions
+       // bsmf.MainFrame.show(pm.plan_qty_sched());
+        
+        if ( qty > (pm.plan_qty_sched() - prevscanned) ) {
+             lblmessage.setText("Qty Exceeds limit (Already Scanned Qty: " + String.valueOf(prevscanned) + " out of SchedQty: " + String.valueOf(pm.plan_qty_sched()) + ")");
+            lblmessage.setForeground(Color.red);
+            return new String[]{"1", getMessageTag(1011)};
+        }
+        
+        
+        
+        
+        if (isPlan &&  Integer.valueOf(pm.plan_status()) == 0 ) {
+            boolean isLastOp = OVData.isLastOperation(pm.plan_item(), ddop.getSelectedItem().toString() );
+            //OK ...if here..we should be prepared to commit.... Let's commit the transaction with OVData.loadTranHistByTable
+            
+            JTable mytable = new JTable();
+            javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+            new String[]{
+                "Part", "Type", "Operation", "Qty", "Date", "Location", "SerialNo", "Reference", "Site", "Userid", "ProdLine", "AssyCell", "Rmks", "PackCell", "PackDate", "AssyDate", "ExpireDate", "Program", "Warehouse", "BOM"
+            });
+             // get necessary info from plan_mstr for this scan and store into mytable(mymodel)
+             
+              String prodline = detail[3];
+              String loc = detail[8];
+              String wh = detail[9];
+              String expire = detail[10];
+              java.util.Date now = new java.util.Date();
+              DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+             mymodel.addRow(new Object[]{
+                pm.plan_item(),
+                "ISS-WIP",
+                ddop.getSelectedItem().toString(),
+                tbqty.getText(),
+                dfdate.format(now),
+                loc, // location
+                tbscan.getText(),  // serialno  
+                pm.plan_type(),  // reference 
+                pm.plan_site(),
+                bsmf.MainFrame.userid,
+                prodline,
+                "",   //  tr_actcell
+                tbref.getText().replace(",", ""),   // remarks 
+                "", // pack station
+                "", // pack date
+                "", // assembly date
+                expire,
+                "ProdEntryByPlan", // program
+                wh,
+                ""  // bom will grab default
+            });
+       
+            mytable.setModel(mymodel);
+            
+            
+            // OK...we should have a JTable with the necessary info to create the tran_mstr table
+            
+             if (! OVData.loadTranHistByTable(mytable)) {
+            return new String[]{"1", getMessageTag(1010,"loadTranHist")};
+            } else {
+                 //must have successfully enter tran_mstr...now lets create pland_mstr...and update plan_mstr if closing
+                 int key = OVData.CreatePlanDet(mytable, isLastOp);
+                 lblmessage.setText("Scan Complete");
+                 lblmessage.setForeground(Color.blue);
+                 m = new String[]{"0", getMessageTag(1125)};
+                 getScanHistory(tbscan.getText());
+                 
+                if (BlueSeerUtils.ConvertStringToBool(ic.printsubticket())) {               
+                     try {
+                        printTubTicket(tbscan.getText(), String.valueOf(key));
+                    } catch (PrinterException ex) {
+                        MainFrame.bslog(ex);
+                    }
+                }
+            } 
+       } 
+        return m;
     }
     
     /**
@@ -516,130 +735,8 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
     }// </editor-fold>//GEN-END:initComponents
 
     private void btcommitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcommitActionPerformed
-       
-        plan_mstr pm = schData.getPlanMstr(new String[]{tbscan.getText()});
-        inv_ctrl ic = invData.getINVCtrl(new String[]{tbscan.getText()});
-        double prevscanned = schData.getPlanDetTotQtyByOp(tbscan.getText(), ddop.getSelectedItem().toString());
-        String[] detail = invData.getItemDetail(pm.plan_item());
-        boolean isPlan = true;
-        
-        if (pm.m()[0].equals("1")) {
-            isPlan = false;
-        }
-        double qty = Double.valueOf(tbqty.getText());
-        
-        if (! isPlan) {
-            lblmessage.setText(getMessageTag(1070,tbscan.getText()));
-            lblmessage.setForeground(Color.red);
-            initvars(null);
-            return;
-        }
-        
-        if (isPlan &&  Integer.valueOf(pm.plan_status()) > 0 ) {
-            lblmessage.setText(getMessageTag(1071,tbscan.getText()));
-            lblmessage.setForeground(Color.red);
-            initvars(null);
-            return;
-        }
-        if (isPlan &&  Integer.valueOf(pm.plan_status()) < 0 ) {
-            lblmessage.setText(getMessageTag(1072,tbscan.getText()));
-            lblmessage.setForeground(Color.red);
-            initvars(null);
-            return;
-        }
-        
-         // check inventory control flag... "Plan Multiple Scan Issues"
-        // if false...only one scan per plan ticket per operation
-        
-        if (! BlueSeerUtils.ConvertStringToBool(ic.planmultiscan()) && (prevscanned > 0)) {
-            lblmessage.setText("Ticket Already Reported for this Operation " + tbscan.getText() + " / " + ddop.getSelectedItem().toString());
-            lblmessage.setForeground(Color.red);
-                initvars(null);
-                return;
-        }
-        
-        
-        // now lets sum up qtys posted previously (if any) for this OP and this Ticket and make sure
-        // qty field is not greater than qty previous + qty scheduled
-        // this should work for multiscan and nonmultican conditions
-       // bsmf.MainFrame.show(pm.plan_qty_sched());
-        
-        if ( qty > (pm.plan_qty_sched() - prevscanned) ) {
-             lblmessage.setText("Qty Exceeds limit (Already Scanned Qty: " + String.valueOf(prevscanned) + " out of SchedQty: " + String.valueOf(pm.plan_qty_sched()) + ")");
-            lblmessage.setForeground(Color.red);
-            initvars(null);
-            return;
-        }
-        
-        
-        
-        
-        if (isPlan &&  Integer.valueOf(pm.plan_status()) == 0 ) {
-            boolean isLastOp = OVData.isLastOperation(pm.plan_item(), ddop.getSelectedItem().toString() );
-            //OK ...if here..we should be prepared to commit.... Let's commit the transaction with OVData.loadTranHistByTable
-            
-            JTable mytable = new JTable();
-            javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-            new String[]{
-                "Part", "Type", "Operation", "Qty", "Date", "Location", "SerialNo", "Reference", "Site", "Userid", "ProdLine", "AssyCell", "Rmks", "PackCell", "PackDate", "AssyDate", "ExpireDate", "Program", "Warehouse", "BOM"
-            });
-             // get necessary info from plan_mstr for this scan and store into mytable(mymodel)
-             
-              String prodline = detail[3];
-              String loc = detail[8];
-              String wh = detail[9];
-              String expire = detail[10];
-              java.util.Date now = new java.util.Date();
-              DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-             mymodel.addRow(new Object[]{
-                pm.plan_item(),
-                "ISS-WIP",
-                ddop.getSelectedItem().toString(),
-                tbqty.getText(),
-                dfdate.format(now),
-                loc, // location
-                tbscan.getText(),  // serialno  
-                pm.plan_type(),  // reference 
-                pm.plan_site(),
-                bsmf.MainFrame.userid,
-                prodline,
-                "",   //  tr_actcell
-                tbref.getText().replace(",", ""),   // remarks 
-                "", // pack station
-                "", // pack date
-                "", // assembly date
-                expire,
-                "ProdEntryByPlan", // program
-                wh,
-                ""  // bom will grab default
-            });
-       
-            mytable.setModel(mymodel);
-            
-            
-            // OK...we should have a JTable with the necessary info to create the tran_mstr table
-            
-             if (! OVData.loadTranHistByTable(mytable)) {
-            lblmessage.setText("Unable to scan ticket");
-            lblmessage.setForeground(Color.red);
-            return;
-            } else {
-                 //must have successfully enter tran_mstr...now lets create pland_mstr...and update plan_mstr if closing
-                 int key = OVData.CreatePlanDet(mytable, isLastOp);
-                 lblmessage.setText("Scan Complete");
-                 lblmessage.setForeground(Color.blue);
-                 getScanHistory(tbscan.getText());
-                 
-                if (BlueSeerUtils.ConvertStringToBool(ic.printsubticket())) {               
-                     try {
-                        printTubTicket(tbscan.getText(), String.valueOf(key));
-                    } catch (PrinterException ex) {
-                        MainFrame.bslog(ex);
-                    }
-                }
-            }
-              initvars(null);
-       } 
+       setPanelComponentState(this, false);
+        executeTask(BlueSeerUtils.dbaction.run, new String[]{""});
     }//GEN-LAST:event_btcommitActionPerformed
 
     private void tbqtyFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbqtyFocusGained
