@@ -523,7 +523,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
             
             // OK...we should have a JTable with the necessary info to create the tran_mstr table
             
-             if (! OVData.loadTranHistByTable(mytable)) {
+             if (! OVData.loadTranHistByTable(mytable, null)) {
             return new String[]{"1", getMessageTag(1010,"loadTranHist")};
             } else {
                  //must have successfully enter tran_mstr...now lets create pland_mstr...and update plan_mstr if closing

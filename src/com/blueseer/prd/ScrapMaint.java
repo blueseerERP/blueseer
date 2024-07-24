@@ -491,7 +491,7 @@ public class ScrapMaint extends javax.swing.JPanel {
             });
             
             
-               if (! OVData.loadTranHistByTable(transtable)) {
+               if (! OVData.loadTranHistByTable(transtable, null)) {
             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         } else {
             bsmf.MainFrame.show(getMessageTag(1125));

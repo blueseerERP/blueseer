@@ -121,6 +121,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSetMetaData;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Map.Entry;
@@ -3174,6 +3175,49 @@ public class OVData {
 
     }
 
+    public static ArrayList getpsmstrcompSerialized(String item) {
+        ArrayList myarray = new ArrayList();
+
+        try {
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                res = st.executeQuery("select ps_child from pbm_mstr "
+                        + " inner join bom_mstr on bom_item = ps_parent and bom_primary = '1' "
+                        + " where ps_parent = " + "'" + item + "'"
+                        + " AND ps_misc1 = '1' "        
+                        + " AND ps_op <> '0' ;");
+                while (res.next()) {
+                    myarray.add(res.getString("ps_child"));
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (SQLException e) {
+            MainFrame.bslog(e);
+        }
+        return myarray;
+
+    }
+
+    
     public static ArrayList getzerolevelpsmstr() {
         ArrayList<String> myarray = new ArrayList<String>();
         ArrayList<String> mylist = new ArrayList<String>();
@@ -6318,7 +6362,7 @@ public class OVData {
     }
     }        
 
-    public static void wip_iss_mtl_gl(String item, String op, String csite, Double qty, String date, String cref, String ctype, String cdesc, String serial, String userid, String program, String bom, String gldoc) {
+    public static void wip_iss_mtl_gl(String item, String op, String csite, Double qty, String date, String cref, String ctype, String cdesc, String serial, String userid, String program, String bom, String gldoc, LinkedHashMap<String,String> serialkeys) {
 
     try{
 
@@ -6356,7 +6400,8 @@ public class OVData {
         String pmcode = "";
         String tranhisttype = "";
         String expire = ""; // should be blank for component issues
-
+        String childserial = "";
+        
         boolean isReportable = false;
         
         Connection con = null;
@@ -6458,11 +6503,20 @@ public class OVData {
                } else {
                    tranhisttype = ctype;
                }
+               
+               // component (child) serial numbers of raw material consumed
+               if (serialkeys != null && serialkeys.containsKey(child.get(j).toString())) {
+                   childserial = serialkeys.get(child.get(j).toString());
+               } else {
+                   childserial = "";
+               }
+               
+               // lot number defined as parent FG serial number
                OVData.TRHistIssDiscrete(BlueSeerUtils.mysqlDateFormat.parse(date), child.get(j).toString(), (-1 * qty * bsParseDouble(qtyper.get(j).toString())), op, tranhisttype, 0, 0, csite, 
-                       loc.get(j).toString(), wh.get(j).toString(), expire, "", "", item + ":" + op, 0, "", "", "", cref, "", "", "", "", serial, program, userid);
+                       loc.get(j).toString(), wh.get(j).toString(), expire, "", "", item + ":" + op, 0, "", "", serial, cref, "", "", "", "", childserial, program, userid);
 
                // update inventory
-               OVData.UpdateInventoryDiscrete(child.get(j).toString(), csite, loc.get(j).toString(), wh.get(j).toString(), "", "", bsParseDouble(qtyper.get(j).toString()) * qty * -1);    
+               OVData.UpdateInventoryDiscrete(child.get(j).toString(), csite, loc.get(j).toString(), wh.get(j).toString(), childserial, "", bsParseDouble(qtyper.get(j).toString()) * qty * -1);    
 
            }
 
@@ -6486,7 +6540,7 @@ public class OVData {
                 if (opsarray[1].equals("1")) {
                     break;
                 }
-                wip_iss_mtl_gl_unreported(item, opsarray[0], csite, qty, date, cref, ctype, cdesc, serial, userid, program, bom, gldoc);
+                wip_iss_mtl_gl_unreported(item, opsarray[0], csite, qty, date, cref, ctype, cdesc, serial, userid, program, bom, gldoc, serialkeys);
             }
            } /* if Reportable Op */
            } // if pmcode "M"
@@ -6507,7 +6561,7 @@ public class OVData {
 
     }
 
-    public static void wip_iss_mtl_gl_unreported(String item, String op, String csite, Double qty, String date, String cref, String ctype, String cdesc, String serial, String userid, String program, String bom, String gldoc) {
+    public static void wip_iss_mtl_gl_unreported(String item, String op, String csite, Double qty, String date, String cref, String ctype, String cdesc, String serial, String userid, String program, String bom, String gldoc, LinkedHashMap<String,String> serialkeys) {
 
 
     try{
@@ -6542,7 +6596,8 @@ public class OVData {
                 String basecurr = curr;
 
         String expire = "";  //should be "" for components
-
+        String childserial = "";
+        
         Connection con = null;
             if (ds != null) {
               con = ds.getConnection();
@@ -6598,12 +6653,21 @@ public class OVData {
                 // process GL transactions
                 fglData.glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), date, bsParseDouble(cost.get(j).toString()), bsParseDouble(cost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), "ISS-WIP", desc.get(j).toString(), doc.get(j).toString());  
 
+                // component (child) serial numbers of raw material consumed
+               if (serialkeys != null && serialkeys.containsKey(child.get(j).toString())) {
+                   childserial = serialkeys.get(child.get(j).toString());
+               } else {
+                   childserial = "";
+               }
+               
+               // lot number defined as parent FG serial number
+                
                // process tran_hist
                OVData.TRHistIssDiscrete(BlueSeerUtils.mysqlDateFormat.parse(date), child.get(j).toString(), (-1 * qty * bsParseDouble(qtyper.get(j).toString())), op, "ISS-WIP", 0, 0, csite, 
-                       loc.get(j).toString(), wh.get(j).toString(), expire, "", "", item + ":" + op, 0, "", "", "", cref, "", "", "", "", serial, program, userid);
+                       loc.get(j).toString(), wh.get(j).toString(), expire, "", "", item + ":" + op, 0, "", "", serial, cref, "", "", "", "", childserial, program, userid);
 
                // update inventory
-               OVData.UpdateInventoryDiscrete(child.get(j).toString(), csite, loc.get(j).toString(), wh.get(j).toString(), "", "", bsParseDouble(qtyper.get(j).toString()) * qty * -1);    
+               OVData.UpdateInventoryDiscrete(child.get(j).toString(), csite, loc.get(j).toString(), wh.get(j).toString(), childserial, "", bsParseDouble(qtyper.get(j).toString()) * qty * -1);    
             }
 
 
@@ -13820,7 +13884,7 @@ return mystring;
     }
       
       
-    public static boolean loadTranHistByTable(JTable mytable) {
+    public static boolean loadTranHistByTable(JTable mytable, LinkedHashMap<String,String> serialkeys) {
           
           /*
           Field count must be 20 fields...and must be in this exact order:
@@ -13970,7 +14034,7 @@ return mystring;
               if (dbtype.equals("sqlite")) {    
               st.executeUpdate("insert into tran_mstr "
                         + "(tr_item, tr_type, tr_op, tr_qty, tr_base_qty, tr_uom, tr_cost, tr_eff_date, tr_loc, tr_wh, "
-                        + "tr_serial, tr_ref, tr_site, tr_userid, tr_prodline, tr_export, tr_expire, tr_actcell, tr_rmks, tr_pack, tr_assy_date, tr_pack_date, tr_ent_date, tr_program, tr_bom )"
+                        + "tr_serial, tr_lot, tr_ref, tr_site, tr_userid, tr_prodline, tr_export, tr_expire, tr_actcell, tr_rmks, tr_pack, tr_assy_date, tr_pack_date, tr_ent_date, tr_program, tr_bom )"
                         + " values ( " + "'" + _part + "'" + ","
                         + "'" + temptype + "'" + ","
                         + "'" + _op + "'" + ","
@@ -13982,6 +14046,7 @@ return mystring;
                         + "'" + _loc + "'" + ","
                         + "'" + _wh + "'" + ","
                         + "'" + _serial + "'" + ","
+                        + "'" + _serial + "'" + ","  // tr_lot should be parent serial number...ties in components
                         + "'" + _ref + "'" + ","
                         + "'" + _site + "'" + ","
                         + "'" + _userid + "'" + ","
@@ -14041,7 +14106,7 @@ return mystring;
                   /* we need to consume material component inventory
                    and gl cost of this item through all unreported operations since last 
                   reported Operation */
-                  wip_iss_mtl_gl(_part, _op, _site, _qty, _date, _ref, _type, mytrkey, _serial, _userid, _program, _bom, gldoc);
+                  wip_iss_mtl_gl(_part, _op, _site, _qty, _date, _ref, _type, mytrkey, _serial, _userid, _program, _bom, gldoc, serialkeys);
                   
                   wip_iss_op_cost_gl(_part, _op, _site, _qty, _date, _ref, _type, mytrkey, gldoc);
                   
@@ -14127,7 +14192,7 @@ return mystring;
                   /* we need to consume material component inventory
                    and gl cost of this item through all unreported operations since last 
                   reported Operation */
-                  wip_iss_mtl_gl(_part, _op, _site, _qty, _date, mytrkey, _type, mytrkey, _serial, _userid, _program, _bom, gldoc);
+                  wip_iss_mtl_gl(_part, _op, _site, _qty, _date, mytrkey, _type, mytrkey, _serial, _userid, _program, _bom, gldoc, serialkeys);
                   wip_iss_op_cost_gl(_part, _op, _site, _qty, _date, mytrkey, _type, mytrkey, gldoc);
                   
                   
@@ -14172,7 +14237,7 @@ return mystring;
                   /* we need to consume material component inventory
                    and gl cost of this item through all unreported operations since last 
                   reported Operation */
-                  wip_iss_mtl_gl(_part, _op, _site, _qty, _date, mytrkey, _type, mytrkey, _serial, _userid, _program, _bom, gldoc);
+                  wip_iss_mtl_gl(_part, _op, _site, _qty, _date, mytrkey, _type, mytrkey, _serial, _userid, _program, _bom, gldoc, serialkeys);
                   wip_iss_op_cost_gl(_part, _op, _site, _qty, _date, mytrkey, _type, mytrkey, gldoc);
                   
                   

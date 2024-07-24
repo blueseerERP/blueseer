@@ -661,7 +661,7 @@ public class WorkOrdServ extends HttpServlet {
             });
             mytable.setModel(mymodel);
         // load tran table and create pland_mstr
-         if (! OVData.loadTranHistByTable(mytable)) {
+         if (! OVData.loadTranHistByTable(mytable, null)) {
            return createMessage("loadTranHistByTable failed", "fail", "0");   
          } else {
              int key = OVData.CreatePlanDet(mytable, isLastOp);
@@ -786,7 +786,7 @@ public class WorkOrdServ extends HttpServlet {
             });
             mytable.setModel(mymodel);
         // load tran table and create pland_mstr
-         if (! OVData.loadTranHistByTable(mytable)) {
+         if (! OVData.loadTranHistByTable(mytable, null)) {
            return createMessageJSON("fail", "loadTranHistByTable failed", "");   
          } else {
              int key = OVData.CreatePlanDet(mytable, isLastOp);

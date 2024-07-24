@@ -44,6 +44,8 @@ import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import com.blueseer.utl.DTData;
+import static com.blueseer.utl.OVData.getpsmstrcomp;
+import static com.blueseer.utl.OVData.getpsmstrcompSerialized;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -54,6 +56,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -350,6 +353,18 @@ public class ProdEntryMaint extends javax.swing.JPanel {
         String loc = OVData.getLocationByItem(tbpart.getText());
         String wh = OVData.getWarehouseByItem(tbpart.getText());
         
+        // need to iterate through all components that are serialized
+        ArrayList<String> comps = getpsmstrcompSerialized(tbpart.getText());
+        LinkedHashMap<String,String> serialkeys = new LinkedHashMap<String,String>();
+        for (String s : comps) {
+            String serial = bsmf.MainFrame.input("Enter Serial Number of component: " + s);
+            if (serialkeys.containsKey(s)) {
+                serialkeys.replace(s, serial);
+            } else {
+                serialkeys.put(s, serial);
+            }
+        }
+        
         if (dcexpire.getDate() != null && BlueSeerUtils.isValidDateStr(BlueSeerUtils.mysqlDateFormat.format(dcexpire.getDate())) ) {
             expire = BlueSeerUtils.mysqlDateFormat.format(dcexpire.getDate());
         } 
@@ -380,7 +395,7 @@ public class ProdEntryMaint extends javax.swing.JPanel {
                 });
         
         // now let's load transaction
-        if (! OVData.loadTranHistByTable(transtable)) {
+        if (! OVData.loadTranHistByTable(transtable, serialkeys)) {
             m = new String[]{"1", getMessageTag(1010,"loadTranHist")};
         } else {
             initvars(null);

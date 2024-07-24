@@ -1090,7 +1090,7 @@ javax.swing.table.DefaultTableModel historymodel = new javax.swing.table.Default
             
             // OK...we should have a JTable with the necessary info to create the tran_mstr table
             
-             if (! OVData.loadTranHistByTable(mytable)) {
+             if (! OVData.loadTranHistByTable(mytable, null)) {
             lblmessage.setText("Unable to scan ticket");
             lblmessage.setForeground(Color.red);
             return;

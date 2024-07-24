@@ -507,7 +507,7 @@ public class BackFlushMaint extends javax.swing.JPanel {
     private void btsubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btsubmitActionPerformed
         boolean didLoad = false;
         
-        if (! OVData.loadTranHistByTable(transtable)) {
+        if (! OVData.loadTranHistByTable(transtable, null)) {
             bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
         } else {
             initvars(null);
