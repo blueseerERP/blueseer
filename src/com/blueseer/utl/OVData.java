@@ -19696,16 +19696,20 @@ MainFrame.bslog(e);
               con = DriverManager.getConnection(url + db, user, pass);  
             }
             Statement st = con.createStatement();
+            Statement st2 = con.createStatement();
             ResultSet res = null;
+            ResultSet res2 = null;
            
             try {
            String item = "";
            String order = "";
+           String ops_str = "";
            String line = "";
            String duedate = "";
 
            ArrayList a_part = new ArrayList();
            ArrayList a_order =  new ArrayList();
+           ArrayList a_ops =  new ArrayList();
            ArrayList a_line =   new ArrayList();
            ArrayList a_qty =   new ArrayList();
            ArrayList a_duedate =   new ArrayList();
@@ -19733,14 +19737,23 @@ MainFrame.bslog(e);
 
                  item = res.getString("sod_item");
                  order = res.getString("sod_nbr");
+                 
                  line = res.getString("sod_line");
                  qty = res.getDouble("sod_ord_qty") - res.getDouble("sod_shipped_qty");
                  duedate = res.getString("sod_due_date");
+                 
+                 res2 = st2.executeQuery("select group_concat(wf_op) as ops from item_mstr " +
+                         " left outer join wf_mstr on wf_id = it_wf " +
+                         " where it_item = " + "'" + item + "'" + ";" );
+                 while (res2.next()) {
+                    ops_str = res2.getString("ops"); 
+                 }
                  
 
                 if (res.getString("plan_nbr").equals("0")) {
                              a_part.add(item);
                              a_order.add(order);
+                             a_ops.add(ops_str);
                              a_line.add(line);
                              a_qty.add(qty);
                              a_duedate.add(duedate);
@@ -19772,7 +19785,8 @@ MainFrame.bslog(e);
                             + ")"
                             + ";");
                         
-                        ArrayList<String> ops = getItemWFOPs(a_part.get(z).toString());
+                      //  ArrayList<String> ops = getItemWFOPs(a_part.get(z).toString());
+                        String[] ops = a_ops.get(z).toString().split(",", -1);
                         for (String op : ops) {
                             st.executeUpdate("insert into plan_operation "
                             + "(plo_parent, plo_op, plo_qty) "
@@ -19789,8 +19803,14 @@ MainFrame.bslog(e);
                 if (res != null) {
                     res.close();
                 }
+                if (res2 != null) {
+                    res2.close();
+                }
                 if (st != null) {
                     st.close();
+                }
+                if (st2 != null) {
+                    st2.close();
                 }
                
                 con.close();
