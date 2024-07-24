@@ -81,6 +81,7 @@ public class ProdEntryMaint extends javax.swing.JPanel {
                 "Part", "Type", "Operation", "Qty", "Date", "Location", "SerialNo", "Reference", "Site", "Userid", "ProdLine", "AssyCell", "Rmks", "PackCell", "PackDate", "AssyDate", "ExpireDate", "Program", "WH", "BOM"
             });
     
+    LinkedHashMap<String,String> serialkeys = null; 
     javax.swing.JTable transtable = new javax.swing.JTable();
     
     /**
@@ -353,17 +354,7 @@ public class ProdEntryMaint extends javax.swing.JPanel {
         String loc = OVData.getLocationByItem(tbpart.getText());
         String wh = OVData.getWarehouseByItem(tbpart.getText());
         
-        // need to iterate through all components that are serialized
-        ArrayList<String> comps = getpsmstrcompSerialized(tbpart.getText());
-        LinkedHashMap<String,String> serialkeys = new LinkedHashMap<String,String>();
-        for (String s : comps) {
-            String serial = bsmf.MainFrame.input("Enter Serial Number of component: " + s);
-            if (serialkeys.containsKey(s)) {
-                serialkeys.replace(s, serial);
-            } else {
-                serialkeys.put(s, serial);
-            }
-        }
+        
         
         if (dcexpire.getDate() != null && BlueSeerUtils.isValidDateStr(BlueSeerUtils.mysqlDateFormat.format(dcexpire.getDate())) ) {
             expire = BlueSeerUtils.mysqlDateFormat.format(dcexpire.getDate());
@@ -675,6 +666,19 @@ public class ProdEntryMaint extends javax.swing.JPanel {
         taremarks.requestFocus();
         return;
         }
+        
+        // need to iterate through all components that are serialized
+        ArrayList<String> comps = getpsmstrcompSerialized(tbpart.getText());
+        serialkeys = new LinkedHashMap<String,String>();
+        for (String s : comps) {
+            String serial = bsmf.MainFrame.input("Enter Serial Number of component: " + s);
+            if (serialkeys.containsKey(s)) {
+                serialkeys.replace(s, serial);
+            } else {
+                serialkeys.put(s, serial);
+            }
+        }
+        
         
         setPanelComponentState(this, false);
         executeTask(dbaction.run, new String[]{""});

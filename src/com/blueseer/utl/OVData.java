@@ -3193,7 +3193,7 @@ public class OVData {
                 res = st.executeQuery("select ps_child from pbm_mstr "
                         + " inner join bom_mstr on bom_item = ps_parent and bom_primary = '1' "
                         + " where ps_parent = " + "'" + item + "'"
-                        + " AND ps_misc1 = '1' "        
+                        + " AND ps_serialized = '1' "        
                         + " AND ps_op <> '0' ;");
                 while (res.next()) {
                     myarray.add(res.getString("ps_child"));
