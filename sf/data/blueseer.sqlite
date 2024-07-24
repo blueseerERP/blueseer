@@ -1409,7 +1409,8 @@ CREATE TABLE "pbm_mstr" (
   "ps_userid" varchar(8) COLLATE NOCASE DEFAULT '',
   "ps_misc1" varchar(30) COLLATE NOCASE DEFAULT '',
   "ps_ref" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "ps_bom" varchar(36) NOT NULL COLLATE NOCASE DEFAULT ''
+  "ps_bom" varchar(36) NOT NULL COLLATE NOCASE DEFAULT '',
+  "ps_serialized" tinyint(1) NOT NULL DEFAULT '0'
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

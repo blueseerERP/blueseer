@@ -94,7 +94,11 @@
                                   <Component id="ddop" alignment="0" min="-2" pref="138" max="-2" attributes="0"/>
                                   <Component id="tbref" alignment="0" min="-2" pref="167" max="-2" attributes="0"/>
                                   <Component id="tbcompcost" alignment="0" min="-2" pref="68" max="-2" attributes="0"/>
-                                  <Component id="tbcomptype" alignment="0" min="-2" pref="37" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="tbcomptype" min="-2" pref="37" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
+                                      <Component id="cbserialized" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="btlookup" min="-2" pref="25" max="-2" attributes="0"/>
@@ -218,8 +222,9 @@
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="tbcomptype" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cbserialized" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
                               <Component id="lblopname" min="-2" pref="11" max="-2" attributes="0"/>
@@ -870,6 +875,11 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="lblopname">
+            </Component>
+            <Component class="javax.swing.JCheckBox" name="cbserialized">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Serialized"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>

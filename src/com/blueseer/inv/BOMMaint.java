@@ -335,6 +335,7 @@ public class BOMMaint extends javax.swing.JPanel {
        tbbomdesc.setText("");
        cbdefault.setSelected(false);
        cbenabled.setSelected(false);
+       cbserialized.setSelected(false);
        tbparentcostCUR.setBackground(Color.white); 
        tbparentcostSTD.setBackground(Color.white);
        
@@ -591,7 +592,10 @@ public class BOMMaint extends javax.swing.JPanel {
                 bsformat("d", tbqtyper.getText(), "5").replace(defaultDecimalSeparator, '.'),
                 ddop.getSelectedItem().toString(),
                 tbref.getText(),
-                tbcomptype.getText(), tbbomid.getText());
+                tbcomptype.getText(), tbbomid.getText(), 
+                "", // misc1 
+                "", // desc
+                BlueSeerUtils.boolToString(cbserialized.isSelected()));
         return x;
     } 
     
@@ -601,7 +605,10 @@ public class BOMMaint extends javax.swing.JPanel {
                 bsformat("d", tbqtyper.getText(), "5").replace(defaultDecimalSeparator, '.'),
                 ddop.getSelectedItem().toString(),
                 tbref.getText(),
-                tbcomptype.getText(), tbbomid.getText());
+                tbcomptype.getText(), tbbomid.getText(),
+                "", // misc1 
+                "", // desc
+                BlueSeerUtils.boolToString(cbserialized.isSelected()));
         return x;
     } 
     
@@ -1024,7 +1031,7 @@ public class BOMMaint extends javax.swing.JPanel {
                 boolean proceed = true;
                 int i = 0;
                 String type = "";
-           res = st.executeQuery("SELECT ps_parent, ps_child, ps_op, ps_qty_per, it_desc, it_uom,  ps_ref FROM  pbm_mstr " +
+           res = st.executeQuery("SELECT ps_parent, ps_child, ps_op, ps_serialized, ps_qty_per, it_desc, it_uom,  ps_ref FROM  pbm_mstr " +
                    " inner join item_mstr on it_item = ps_child " +
                    " where ps_parent = " + "'" + parent + "'" + 
                    " AND ps_child = " + "'" + component + "'" + 
@@ -1038,6 +1045,7 @@ public class BOMMaint extends javax.swing.JPanel {
                         tbqtyper.setText(res.getString("ps_qty_per"));
                         tbref.setText(res.getString("ps_ref"));
                         ddcomp.setSelectedItem(res.getString("ps_child"));
+                        cbserialized.setSelected(BlueSeerUtils.ConvertStringToBool(res.getString("ps_serialized")));
                         
                         // set update button 
                         
@@ -1190,6 +1198,7 @@ public class BOMMaint extends javax.swing.JPanel {
         cbdefault = new javax.swing.JCheckBox();
         cbenabled = new javax.swing.JCheckBox();
         lblopname = new javax.swing.JLabel();
+        cbserialized = new javax.swing.JCheckBox();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTree1 = new javax.swing.JTree();
@@ -1612,6 +1621,8 @@ public class BOMMaint extends javax.swing.JPanel {
         cbenabled.setText("enabled");
         cbenabled.setName("cbenabled"); // NOI18N
 
+        cbserialized.setText("Serialized");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -1636,7 +1647,10 @@ public class BOMMaint extends javax.swing.JPanel {
                             .addComponent(ddop, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tbref, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tbcompcost, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbcomptype, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                                .addComponent(tbcomptype, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(19, 19, 19)
+                                .addComponent(cbserialized)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1733,8 +1747,9 @@ public class BOMMaint extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tbcomptype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel9))
-                        .addGap(20, 20, 20))
+                            .addComponent(jLabel9)
+                            .addComponent(cbserialized))
+                        .addGap(18, 18, 18))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(lblopname, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -2094,6 +2109,7 @@ public class BOMMaint extends javax.swing.JPanel {
     private javax.swing.JButton btupdate;
     private javax.swing.JCheckBox cbdefault;
     private javax.swing.JCheckBox cbenabled;
+    private javax.swing.JCheckBox cbserialized;
     private javax.swing.JComboBox ddcomp;
     private javax.swing.JComboBox<String> ddop;
     private javax.swing.JButton jButton1;

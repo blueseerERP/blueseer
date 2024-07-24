@@ -591,8 +591,8 @@ public class invData {
         int rows = 0;
         String sqlSelect = "select * from pbm_mstr where ps_parent = ? and ps_child = ? and ps_op = ? and ps_bom = ?";
         String sqlInsert = "insert into pbm_mstr (ps_parent, ps_child, ps_qty_per, " 
-                        + "ps_op, ps_ref, ps_type, ps_bom ) "
-                        + " values (?,?,?,?,?,?,?); "; 
+                        + "ps_op, ps_ref, ps_type, ps_bom, ps_serialized ) "
+                        + " values (?,?,?,?,?,?,?,?); "; 
        
             PreparedStatement ps = con.prepareStatement(sqlSelect);
             ps.setString(1, x.ps_parent);
@@ -609,6 +609,7 @@ public class invData {
             psi.setString(5, x.ps_ref);
             psi.setString(6, x.ps_type);
             psi.setString(7, x.ps_bom);
+            psi.setString(8, x.ps_serialized);
             rows = psi.executeUpdate();
             } 
             ps.close();
@@ -694,16 +695,18 @@ public class invData {
     private static int _updatePBM(pbm_mstr x, Connection con) throws SQLException {
         int rows = 0;
         String sqlUpdate = "update pbm_mstr set ps_qty_per = ?, " 
-                        + "ps_ref = ?, ps_type = ? "
+                        + "ps_ref = ?, ps_type = ?, ps_serialized = ? "
                         + " where ps_parent = ? and ps_child = ? and ps_op = ? and ps_bom = ? ";
             PreparedStatement psu = con.prepareStatement(sqlUpdate); 
             psu.setString(1, x.ps_qty_per);
             psu.setString(2, x.ps_ref);
             psu.setString(3, x.ps_type);
-            psu.setString(4, x.ps_parent);
-            psu.setString(5, x.ps_child);
-            psu.setString(6, x.ps_op);
-            psu.setString(7, x.ps_bom);
+            psu.setString(4, x.ps_serialized);
+            psu.setString(5, x.ps_parent);
+            psu.setString(6, x.ps_child);
+            psu.setString(7, x.ps_op);
+            psu.setString(8, x.ps_bom);
+            
             rows = psu.executeUpdate();
             psu.close();
         return rows;
@@ -5151,9 +5154,10 @@ public class invData {
 
     
     public record pbm_mstr(String[] m, String ps_parent, String ps_child,
-        String ps_qty_per, String ps_op, String ps_ref, String ps_type, String ps_bom) {
+        String ps_qty_per, String ps_op, String ps_ref, String ps_type, String ps_bom, 
+        String ps_misc1, String ps_desc, String ps_serialized) {
         public pbm_mstr(String[] m) {
-            this(m, "", "", "", "", "", "", "");
+            this(m, "", "", "", "", "", "", "", "", "", "");
         }
     }
     

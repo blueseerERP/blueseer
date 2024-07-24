@@ -1180,6 +1180,7 @@ CREATE TABLE IF NOT EXISTS `pbm_mstr` (
   `ps_misc1` varchar(30)  NOT NULL DEFAULT '',
   `ps_ref` varchar(30) NOT NULL  DEFAULT '',
   `ps_bom` varchar(36) NOT NULL  DEFAULT '',
+  `ps_serialized` tinyint(1)  NOT NULL DEFAULT '0',
   index parentchild (`ps_parent`, `ps_child`),
   index parentbom (`ps_parent`, `ps_bom`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
