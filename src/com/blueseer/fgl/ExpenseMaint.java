@@ -345,7 +345,9 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
         expensemodel.setRowCount(0);
         expensedet.setModel(expensemodel);
         
-       
+        ddprofile.setVisible(false);
+        btaddprofile.setVisible(false);
+        jLabel2.setVisible(false);
         
         java.util.Date now = new java.util.Date();
         dcdate.setEnabled(true);
@@ -381,7 +383,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
         for (String code : myaccts) {
             ddacct.addItem(code);
         }
-        ddacct.setSelectedItem(OVData.getCodeKeyByCode("sys_def_acct_exp"));
+       // ddacct.setSelectedItem(OVData.getCodeKeyByCode("sys_def_acct_exp"));
         
         
            ddcc.removeAllItems();
@@ -400,6 +402,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
         btnew.setEnabled(false);
         tbkey.setEditable(true);
         tbkey.setForeground(Color.blue);
+        ddacct.setSelectedItem(OVData.getCodeKeyByCode("sys_def_acct_exp"));
         if (! x.isEmpty()) {
           tbkey.setText(String.valueOf(OVData.getNextNbr(x)));  
           tbkey.setEditable(false);
@@ -790,6 +793,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
         btaddprofile = new javax.swing.JButton();
         tbpo = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
+        cbprofile = new javax.swing.JCheckBox();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -953,6 +957,13 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         jLabel3.setText("PO Number");
 
+        cbprofile.setText("Profile");
+        cbprofile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbprofileActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -985,7 +996,9 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(btclear)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btaddprofile, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btaddprofile, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cbprofile))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(lbmessage, javax.swing.GroupLayout.PREFERRED_SIZE, 374, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -1026,7 +1039,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
                                         .addComponent(btadditem)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(btdeleteitem)))
-                                .addGap(0, 0, Short.MAX_VALUE))))
+                                .addGap(0, 17, Short.MAX_VALUE))))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addComponent(jLabel28)
@@ -1035,7 +1048,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addGap(361, 361, 361)
                             .addComponent(btadd))
                         .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 775, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 57, Short.MAX_VALUE))
+                .addGap(0, 56, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1048,7 +1061,8 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
                                 .addComponent(btnew)
                                 .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel24)
-                                .addComponent(btclear))
+                                .addComponent(btclear)
+                                .addComponent(cbprofile))
                             .addComponent(btlookup))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -1211,7 +1225,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_ddacctActionPerformed
 
     private void tbpriceFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbpriceFocusLost
-                 String x = BlueSeerUtils.bsformat("", tbprice.getText(), "2");
+        String x = BlueSeerUtils.bsformat("", tbprice.getText(), "2");
         if (x.equals("error")) {
             tbprice.setText("");
             tbprice.setBackground(Color.yellow);
@@ -1339,6 +1353,18 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
          
     }//GEN-LAST:event_ddprofileActionPerformed
 
+    private void cbprofileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbprofileActionPerformed
+        if (cbprofile.isSelected()) {
+            ddprofile.setVisible(true);
+            btaddprofile.setVisible(true);
+            jLabel2.setVisible(true);
+        } else {
+            ddprofile.setVisible(false);
+            btaddprofile.setVisible(false);
+            jLabel2.setVisible(false);
+        }
+    }//GEN-LAST:event_cbprofileActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btadd;
     private javax.swing.JButton btadditem;
@@ -1347,6 +1373,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JButton btdeleteitem;
     private javax.swing.JButton btlookup;
     private javax.swing.JButton btnew;
+    private javax.swing.JCheckBox cbprofile;
     private com.toedter.calendar.JDateChooser dcdate;
     private javax.swing.JComboBox<String> ddacct;
     private javax.swing.JComboBox<String> ddcc;

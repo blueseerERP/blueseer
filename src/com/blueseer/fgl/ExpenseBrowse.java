@@ -179,7 +179,7 @@ public class ExpenseBrowse extends javax.swing.JPanel {
                   cal.set(Calendar.DAY_OF_YEAR, 1);
                   java.util.Date firstday = cal.getTime();
                   
-                res = st.executeQuery("select ap_vend, sum(ap_amt) as 'sum' from ap_mstr " +
+                res = st.executeQuery("select ap_vend, sum(vod_voprice * vod_qty) as 'sum' from ap_mstr " +
                              //  " ap_ref, ap_effdate, ap_duedate, ap_amt, ap_base_amt,  " +
                              //  " ap_status, ap_curr, vod_item, vod_expense_acct " +
                              //  " inner join vd_mstr on vd_addr = ap_vend " +
@@ -517,7 +517,7 @@ public class ExpenseBrowse extends javax.swing.JPanel {
 
                      
                 res = st.executeQuery("select ap_nbr, ap_vend, vd_name, ap_type, " +
-                               " ap_ref, ap_effdate, ap_duedate, ap_amt, ap_base_amt,  " +
+                               " ap_ref, ap_effdate, ap_duedate, (vod_voprice * vod_qty) as amt,  " +
                                " ap_status, ap_curr, vod_item, vod_expense_acct " +
                                " from ap_mstr inner join vd_mstr on vd_addr = ap_vend " +
                                " inner join vod_mstr on vod_id = ap_nbr " + 
@@ -537,7 +537,7 @@ public class ExpenseBrowse extends javax.swing.JPanel {
                             res.getString("ap_ref"),
                             res.getString("ap_type"),
                             getDateDB(res.getString("ap_effdate")),
-                            bsParseDouble(currformatDouble(res.getDouble("ap_amt"))),
+                            bsParseDouble(currformatDouble(res.getDouble("amt"))),
                             res.getString("vod_item"),
                             res.getString("ap_status"),
                             res.getString("ap_curr"),

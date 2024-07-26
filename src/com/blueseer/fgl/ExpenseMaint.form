@@ -60,7 +60,10 @@
                                       </Group>
                                   </Group>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                  <Component id="btaddprofile" min="-2" pref="28" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="btaddprofile" min="-2" pref="28" max="-2" attributes="0"/>
+                                      <Component id="cbprofile" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                                   <EmptySpace max="32767" attributes="0"/>
                                   <Component id="lbmessage" min="-2" pref="374" max="-2" attributes="0"/>
                               </Group>
@@ -108,7 +111,7 @@
                                           <Component id="btdeleteitem" min="-2" max="-2" attributes="0"/>
                                       </Group>
                                   </Group>
-                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                  <EmptySpace min="0" pref="17" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -123,7 +126,7 @@
                           <Component id="jScrollPane7" min="-2" pref="775" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace min="0" pref="57" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="56" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -139,6 +142,7 @@
                                   <Component id="tbkey" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel24" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="btclear" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cbprofile" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Component id="btlookup" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -478,6 +482,14 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="PO Number"/>
           </Properties>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="cbprofile">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Profile"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbprofileActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
