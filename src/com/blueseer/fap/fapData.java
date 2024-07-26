@@ -173,12 +173,13 @@ public class fapData {
     return m;
     }
     
-    public static String[] VouchAndPayTransaction(int batchid, String ctype, ArrayList<vod_mstr> vod, ap_mstr ap, boolean Void) {
+    public static String[] VouchAndPayTransaction(String ctype, ArrayList<vod_mstr> vod, ap_mstr ap, boolean Void) {
         String[] m = new String[2];
         Connection bscon = null;
         PreparedStatement ps = null;
         ResultSet res = null;
         java.util.Date now = new java.util.Date();
+        int batchid = 0;
         try { 
             if (ds != null) {
               bscon = ds.getConnection();
@@ -186,6 +187,7 @@ public class fapData {
               bscon = DriverManager.getConnection(url + db, user, pass);  
             }
             bscon.setAutoCommit(false);
+             batchid = OVData.getNextNbr("batch", bscon);
              _addAPMstr(ap, bscon, ps, res);  
             for (vod_mstr z : vod) {
                 _addVODMstr(z, bscon, ps, res);

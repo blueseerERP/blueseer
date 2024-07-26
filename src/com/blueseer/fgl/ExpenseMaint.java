@@ -508,7 +508,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     
     public String[] addRecord(String[] x) {
-     String[] m = VouchAndPayTransaction(OVData.getNextNbr("batch"), "AP-Expense", createDetRecord(), createRecord(), false);
+     String[] m = VouchAndPayTransaction("AP-Expense", createDetRecord(), createRecord(), false);
       // autopost
         if (OVData.isAutoPost()) {
             fglData.PostGL();

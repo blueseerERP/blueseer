@@ -1061,7 +1061,7 @@ public class CashTran extends javax.swing.JPanel {
         list.add(y);
          }
         
-        String[] m = VouchAndPayTransaction(OVData.getNextNbr("batch"), "AP-Cash", list, x, false);
+        String[] m = VouchAndPayTransaction("AP-Cash", list, x, false);
        
         try {
             Connection con = null;
