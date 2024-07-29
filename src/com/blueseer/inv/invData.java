@@ -2854,20 +2854,31 @@ public class invData {
                  myarray.add(arr);
                 } 
                 
+                res = st.executeQuery("select it_ovh_cost from item_mstr where it_item = " + "'" + item + "'" + ";" );
+                while (res.next()) {
+                String[] arr = new String[]{"ovhcost", res.getString("it_ovh_cost")};
+                 myarray.add(arr);
+                }
+                
+                res = st.executeQuery("select it_out_cost from item_mstr where it_item = " + "'" + item + "'" + ";" );
+                while (res.next()) {
+                String[] arr = new String[]{"outcost", res.getString("it_out_cost")};
+                 myarray.add(arr);
+                }
+                
                 res = st.executeQuery("select wf_op from wf_mstr inner join item_mstr on it_wf = wf_id where it_item = " + "'" + item + "'" + " order by wf_op ;");
                 while (res.next()) {
                  String[] arr = new String[]{"operations",res.getString("wf_op")};
                  myarray.add(arr);
                 }
                 
-                res = st.executeQuery("SELECT ps_child, ps_qty_per, ps_type, ps_op, a.itc_total as 'a.itc_total', b.itc_total as 'b.itc_total' " +
+                res = st.executeQuery("SELECT ps_child, ps_qty_per, ps_type, ps_op, coalesce(a.itc_total,0) as 'a.itc_total', coalesce(b.itc_total,0) as 'b.itc_total' " +
                         " FROM  pbm_mstr  " +
                         " left outer join item_cost a on a.itc_item = ps_child and a.itc_set = 'standard' and a.itc_site = " + "'" + site + "'" +
                         " left outer join item_cost b on b.itc_item = ps_child and b.itc_set = 'current' and b.itc_site = " + "'" + site + "'" +
                         " where ps_parent = " + "'" + item + "'" + 
                         " and ps_bom = " + "'" + bomid + "'" +        
                         " order by ps_child ;");
-
                 while (res.next()) {
                     String[] arr = new String[]{"components",
                         res.getString("ps_child"),

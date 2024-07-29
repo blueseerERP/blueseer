@@ -724,31 +724,46 @@ public class BOMMaint extends javax.swing.JPanel {
       String lotsize = "";
       
       ddop.removeAllItems();  
+      matlmodel.setRowCount(0);
+      matltable.setModel(matlmodel);
+                
       for (String[] code : initdata) {
             if (code[0].equals("operations"))
             ddop.addItem(code[1]);
             
             if (code[0].equals("lotsize"))
             lotsize = code[1];
+            
+            if (code[0].equals("components")) {
+            matlmodel.addRow(new Object[]{
+                                code[1],
+                                code[2],
+                                code[3],
+                                code[4],
+                                code[5]
+                            });
+            }
+            
       }
+      
+       double matlcost = 0.00;
+       calcCost cur = new calcCost();
+       matlcost = cur.getMtlCost(key);
+       tbtotmaterial.setText(String.valueOf(bsFormatDouble5(matlcost)));
         
       // initial x could be blank because of no BOM....need to manually set with key  
       if (x.bom_item().isEmpty()) {
           tbkey.setText(key);
-        //  getOPs(key);
           parent = key;
           tblotsize.setText(lotsize);
           ddcomp.removeItem(key);  // remove parent from component list
       }  else {
           tbkey.setText(x.bom_item());
-          
-        //  getOPs(x.bom_item());
-          
           parent = x.bom_item();
           tblotsize.setText(lotsize);
           ddcomp.removeItem(tbkey.getText());  // remove parent from component list
           tbbomid.setText(BomID);
-          getComponents(x.bom_item(), BomID);
+          //getComponents(x.bom_item(), BomID);
           
           bind_tree(x.bom_item(), BomID);
          
@@ -810,7 +825,18 @@ public class BOMMaint extends javax.swing.JPanel {
     }
     
     public void callSimulateCost() {
-         
+        double ovhcost = 0.00;
+        double outcost = 0.00;
+        
+        for (String[] code : initdata) {
+            if (code[0].equals("ovhcost")) {
+            ovhcost = bsParseDouble(code[1]);
+            }
+            if (code[0].equals("outcost")) {
+            outcost = bsParseDouble(code[1]);
+            }
+        }
+        
         double pph = 0.00;
         double pps = 0.00;
         double pphsim = 0.00;
@@ -879,7 +905,7 @@ public class BOMMaint extends javax.swing.JPanel {
         tbtotoperationalsim.setText(String.valueOf(bsFormatDouble5(totalcost)));
         totalcost += matl;
         tbtotmaterialsim.setText(String.valueOf(bsFormatDouble5(matl)));
-        double ovhout = getItemOvhCost(tbkey.getText()) + getItemOutCost(tbkey.getText());
+        double ovhout = ovhcost + outcost;
         totalcost += ovhout;
         tbovhout.setText(String.valueOf(bsFormatDouble5(ovhout)));
         tbparentcostsim.setText(String.valueOf(bsFormatDouble5(totalcost)));
