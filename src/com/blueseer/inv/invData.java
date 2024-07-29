@@ -2796,6 +2796,110 @@ public class invData {
 
         }
 
+    public static ArrayList getBOMInit(String item, String site) {
+               ArrayList myarray = new ArrayList();
+             try{
+                Connection con = null;
+                if (ds != null) {
+                  con = ds.getConnection();
+                } else {
+                  con = DriverManager.getConnection(url + db, user, pass);  
+                }
+                Statement st = con.createStatement();
+                ResultSet res = null;
+                try{
+                
+                    
+                // get default bom for item    
+                ArrayList<String> boms = new ArrayList<String>();
+                String bomid = "";
+                int i = 0;
+                res = st.executeQuery("select distinct ps_bom from pbm_mstr "
+                        + " where ps_parent = " + "'" + item + "';");
+                while (res.next()) {
+                    i++;
+                  boms.add(res.getString("ps_bom")); 
+                }
+                res.close();
+                if (i > 0) {
+                    for (String s : boms) {
+                        res = st.executeQuery("select bom_id from bom_mstr "
+                        + " where bom_id = " + "'" + s + "'" +
+                          " and bom_primary = '1' " + ";");
+                        while (res.next()) {
+                           bomid = res.getString("bom_id");
+                           String[] arr = new String[]{"defaultbom",res.getString("bom_id")};
+                           myarray.add(arr);
+                        } 
+                    }
+                }
+                    
+                res = st.executeQuery("select it_wf from item_mstr where it_item = " + "'" + item + "'" +  ";" );
+                while (res.next()) { 
+                 String[] arr = new String[]{"routing",res.getString("it_wf")};
+                 myarray.add(arr); 
+                }  
+                
+                res = st.executeQuery("select it_lotsize from item_mstr where it_item = " + "'" + item + "'" +  ";" );
+                while (res.next()) {
+                 String[] arr = new String[]{"lotsize",res.getString("it_lotsize")};
+                 myarray.add(arr); 
+                }
+                
+                res = st.executeQuery("select itc_total from item_cost where itc_item = " + "'" + item + "'" +  " AND " 
+                            + " itc_set = " + "'" + "STANDARD" + "'" + " AND "
+                            + " itc_site = " + "'" + site + "'" + ";" );
+                while (res.next()) {
+                String[] arr = new String[]{"cost", res.getString("itc_total")};
+                 myarray.add(arr);
+                } 
+                
+                res = st.executeQuery("select wf_op from wf_mstr inner join item_mstr on it_wf = wf_id where it_item = " + "'" + item + "'" + " order by wf_op ;");
+                while (res.next()) {
+                 String[] arr = new String[]{"operations",res.getString("wf_op")};
+                 myarray.add(arr);
+                }
+                
+                res = st.executeQuery("SELECT ps_child, ps_qty_per, ps_type, ps_op, a.itc_total as 'a.itc_total', b.itc_total as 'b.itc_total' " +
+                        " FROM  pbm_mstr  " +
+                        " left outer join item_cost a on a.itc_item = ps_child and a.itc_set = 'standard' and a.itc_site = " + "'" + site + "'" +
+                        " left outer join item_cost b on b.itc_item = ps_child and b.itc_set = 'current' and b.itc_site = " + "'" + site + "'" +
+                        " where ps_parent = " + "'" + item + "'" + 
+                        " and ps_bom = " + "'" + bomid + "'" +        
+                        " order by ps_child ;");
+
+                while (res.next()) {
+                    String[] arr = new String[]{"components",
+                        res.getString("ps_child"),
+                        res.getString("ps_op"),
+                    res.getString("ps_qty_per"),
+                    res.getString("b.itc_total"),
+                    res.getString("a.itc_total")};
+                    myarray.add(arr);
+                }
+                
+
+               }
+                catch (SQLException s){
+                    MainFrame.bslog(s);
+                } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
+            }
+            catch (Exception e){
+                MainFrame.bslog(e);
+            }
+            return myarray;
+
+        }
+
+    
     public static ArrayList<String[]> getWareHouseMaintInit() {
         String defaultsite = "";
         ArrayList<String[]> lines = new ArrayList<String[]>();

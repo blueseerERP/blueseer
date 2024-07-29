@@ -51,6 +51,7 @@ import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble5;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsformat;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
+import static com.blueseer.utl.BlueSeerUtils.currformat;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
@@ -119,6 +120,7 @@ public class BOMMaint extends javax.swing.JPanel {
                 boolean bomexist = false;
                 boolean newbomid = false;
                 public static bom_mstr x = null;
+                ArrayList<String[]> initdata = new ArrayList<String[]>();
                 
      javax.swing.table.DefaultTableModel matlmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                     new String[]{
@@ -374,10 +376,9 @@ public class BOMMaint extends javax.swing.JPanel {
     	}
         jTree1.setVisible(false);
        
-       
+        site = OVData.getDefaultSite();
         
-          ArrayList<String> mylist = new ArrayList<String>();
-              mylist = invData.getItemMasterAlllist();
+        ArrayList<String> mylist = invData.getItemMasterAlllist();
                for (int i = 0; i < mylist.size(); i++) {
                     ddcomp.addItem(mylist.get(i));
                }
@@ -528,9 +529,17 @@ public class BOMMaint extends javax.swing.JPanel {
     }
     
     public String[] getRecord(String[] key) {
-                         
+          
+        // init data
+        initdata = invData.getBOMInit(key[0], site);
+        
+        
         // lets first determine if there are any BOMs default or alternates
-        BomID = OVData.getDefaultBomID(key[0]);
+       // BomID = OVData.getDefaultBomID(key[0]);
+        for (String[] code : initdata) {
+            if (code[0].equals("defaultbom"))
+            BomID = code[1];
+        }
                 
         // override with 2nd parameter from lookupUPBOM when we know exactly which BOM ID we want
         if (key.length > 1 && ! key[1].isEmpty()) {
@@ -546,7 +555,14 @@ public class BOMMaint extends javax.swing.JPanel {
         
         
         String[] message = x.m();
-        if (invData.getItemRouting(key[0]).isBlank()) {
+        
+        // override message if no routing for parent item
+        boolean isrouting = false;
+        for (String[] code : initdata) {
+            if (code[0].equals("routing"))
+            isrouting = true;
+        }
+        if (! isrouting) {
           message[0] = "-1";
           message[1] = "No Routing found";
         } 
@@ -705,22 +721,31 @@ public class BOMMaint extends javax.swing.JPanel {
 
     public String[] updateForm(String key) {
      
-      site = OVData.getDefaultSite();
+      String lotsize = "";
+      
+      ddop.removeAllItems();  
+      for (String[] code : initdata) {
+            if (code[0].equals("operations"))
+            ddop.addItem(code[1]);
+            
+            if (code[0].equals("lotsize"))
+            lotsize = code[1];
+      }
         
       // initial x could be blank because of no BOM....need to manually set with key  
       if (x.bom_item().isEmpty()) {
           tbkey.setText(key);
-          getOPs(key);
+        //  getOPs(key);
           parent = key;
-          tblotsize.setText(invData.getItemLotSize(key));
+          tblotsize.setText(lotsize);
           ddcomp.removeItem(key);  // remove parent from component list
       }  else {
           tbkey.setText(x.bom_item());
           
-          getOPs(x.bom_item());
+        //  getOPs(x.bom_item());
           
           parent = x.bom_item();
-          tblotsize.setText(invData.getItemLotSize(x.bom_item()));
+          tblotsize.setText(lotsize);
           ddcomp.removeItem(tbkey.getText());  // remove parent from component list
           tbbomid.setText(BomID);
           getComponents(x.bom_item(), BomID);
@@ -756,8 +781,13 @@ public class BOMMaint extends javax.swing.JPanel {
     
     public void getCostSets(String parent) {
          
-        tbparentcostSTD.setText(String.valueOf(bsFormatDouble5(invData.getItemCost(parent, "STANDARD", OVData.getDefaultSite()))));
-             
+       // tbparentcostSTD.setText(String.valueOf(bsFormatDouble5(invData.getItemCost(parent, "STANDARD", site))));
+        for (String[] code : initdata) {
+            if (code[0].equals("cost")) {
+            tbparentcostSTD.setText(currformat(code[1]));
+            }
+        }
+        
         calcCost cur = new calcCost();
        
         ArrayList<Double> costlist = new ArrayList<Double>();
@@ -888,10 +918,7 @@ public class BOMMaint extends javax.swing.JPanel {
 }
     
     public void getComponents(String parent, String bomid) {
-        
-         
-       String site = invData.getItemSite(parent);
-       
+               
        double matlcost = 0.00;
        calcCost cur = new calcCost();
        matlcost = cur.getMtlCost(parent);
@@ -1841,17 +1868,7 @@ public class BOMMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void tbkeyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbkeyFocusLost
-      /*
-        if (OVData.isValidItem(tbpart.getText())) {
-            getComponents(tbpart.getText());
-            getOPs(tbpart.getText());
-            bind_tree(tbpart.getText());
-            lblparent.setText(OVData.getItemDesc(tbpart.getText()));
-            } else {
-                lblparent.setText("Invalid Parent Part");
-                tbpart.requestFocus();
-            }
-        */
+      
     }//GEN-LAST:event_tbkeyFocusLost
 
     private void jTree1ValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_jTree1ValueChanged
