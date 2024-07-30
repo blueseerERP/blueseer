@@ -7622,69 +7622,75 @@ public class OVData {
     
     
     public static String getSystemImageDirectory() {
- String myreturn = "";
- try{
-
-    Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-    Statement st = con.createStatement();
-    ResultSet res = null;
-    try{
-        res = st.executeQuery("select ov_image_directory from ov_ctrl;" );
-       while (res.next()) {
-        myreturn = res.getString("ov_image_directory");                    
+        String myreturn = "";
+        if (bsmf.MainFrame.clienttype.equals("SERVER")) { // override if execution env is server
+            return "image";
         }
+        try{
 
-   }
-    catch (SQLException s){
-         MainFrame.bslog(s);
-    } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               con.close();
-            }
-}
-catch (Exception e){
-    MainFrame.bslog(e);
-}
-return myreturn;
+           Connection con = null;
+                   if (ds != null) {
+                     con = ds.getConnection();
+                   } else {
+                     con = DriverManager.getConnection(url + db, user, pass);  
+                   }
+           Statement st = con.createStatement();
+           ResultSet res = null;
+           try{
+               res = st.executeQuery("select ov_image_directory from ov_ctrl;" );
+              while (res.next()) {
+               myreturn = res.getString("ov_image_directory");                    
+               }
+
+          }
+           catch (SQLException s){
+                MainFrame.bslog(s);
+           } finally {
+                      if (res != null) res.close();
+                      if (st != null) st.close();
+                      con.close();
+                   }
+       }
+       catch (Exception e){
+           MainFrame.bslog(e);
+       }
+       return myreturn;
 
 }
         
     public static String getSystemTempDirectory() {
- String myreturn = "";
- try{
-
-    Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-    Statement st = con.createStatement();
-    ResultSet res = null;
-    try{
-        res = st.executeQuery("select ov_temp_directory from ov_ctrl;" );
-       while (res.next()) {
-        myreturn = res.getString("ov_temp_directory");                    
+        String myreturn = "";
+        if (bsmf.MainFrame.clienttype.equals("SERVER")) { // override if execution env is server
+            return "temp";
         }
-   }
-    catch (SQLException s){
-         MainFrame.bslog(s);
-    } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               con.close();
-            }
-}
-catch (Exception e){
-    MainFrame.bslog(e);
-}
-return myreturn;
+        try{
+
+           Connection con = null;
+                   if (ds != null) {
+                     con = ds.getConnection();
+                   } else {
+                     con = DriverManager.getConnection(url + db, user, pass);  
+                   }
+           Statement st = con.createStatement();
+           ResultSet res = null;
+           try{
+               res = st.executeQuery("select ov_temp_directory from ov_ctrl;" );
+              while (res.next()) {
+               myreturn = res.getString("ov_temp_directory");                    
+               }
+          }
+           catch (SQLException s){
+                MainFrame.bslog(s);
+           } finally {
+                      if (res != null) res.close();
+                      if (st != null) st.close();
+                      con.close();
+                   }
+       }
+       catch (Exception e){
+           MainFrame.bslog(e);
+       }
+       return myreturn;
 
 }
     
@@ -7720,107 +7726,116 @@ return myreturn;
        return myreturn;
 
 }
-    
-    
+        
     public static String getSystemLabelDirectory() {
- String myreturn = "";
- try{
-
-    Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-    Statement st = con.createStatement();
-    ResultSet res = null;
-    try{
-        res = st.executeQuery("select ov_label_directory from ov_ctrl;" );
-       while (res.next()) {
-        myreturn = res.getString("ov_label_directory");                    
+        String myreturn = "";
+        if (bsmf.MainFrame.clienttype.equals("SERVER")) { // override if execution env is server
+            return "zebra";
         }
+        try{
 
-   }
-    catch (SQLException s){
-         MainFrame.bslog(s);
-    } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               con.close();
-            }
-}
-catch (Exception e){
-    MainFrame.bslog(e);
-}
-return myreturn;
+           Connection con = null;
+                   if (ds != null) {
+                     con = ds.getConnection();
+                   } else {
+                     con = DriverManager.getConnection(url + db, user, pass);  
+                   }
+           Statement st = con.createStatement();
+           ResultSet res = null;
+           try{
+               res = st.executeQuery("select ov_label_directory from ov_ctrl;" );
+              while (res.next()) {
+               myreturn = res.getString("ov_label_directory");                    
+               }
+
+          }
+           catch (SQLException s){
+                MainFrame.bslog(s);
+           } finally {
+                      if (res != null) res.close();
+                      if (st != null) st.close();
+                      con.close();
+                   }
+       }
+       catch (Exception e){
+           MainFrame.bslog(e);
+       }
+       return myreturn;
 
 }
     
     public static String getSystemJasperDirectory() {
- String myreturn = "";
- try{
-
-    Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-    Statement st = con.createStatement();
-    ResultSet res = null;
-    try{
-        res = st.executeQuery("select ov_jasper_directory from ov_ctrl;" );
-       while (res.next()) {
-        myreturn = res.getString("ov_jasper_directory");                    
+        String myreturn = "";
+        if (bsmf.MainFrame.clienttype.equals("SERVER")) { // override if execution env is server
+            return "jasper";
         }
+        
+        try{
 
-   }
-    catch (SQLException s){
-         MainFrame.bslog(s);
-    } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               con.close();
-            }
-}
-catch (Exception e){
-    MainFrame.bslog(e);
-}
-return myreturn;
+           Connection con = null;
+                   if (ds != null) {
+                     con = ds.getConnection();
+                   } else {
+                     con = DriverManager.getConnection(url + db, user, pass);  
+                   }
+           Statement st = con.createStatement();
+           ResultSet res = null;
+           try{
+               res = st.executeQuery("select ov_jasper_directory from ov_ctrl;" );
+              while (res.next()) {
+               myreturn = res.getString("ov_jasper_directory");                    
+               }
+
+          }
+           catch (SQLException s){
+                MainFrame.bslog(s);
+           } finally {
+                      if (res != null) res.close();
+                      if (st != null) st.close();
+                      con.close();
+                   }
+       }
+       catch (Exception e){
+           MainFrame.bslog(e);
+       }
+       return myreturn;
 
 }
     
     public static String getSystemEDIDirectory() {
- String myreturn = "";
- try{
-
-    Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-    Statement st = con.createStatement();
-    ResultSet res = null;
-    try{
-        res = st.executeQuery("select ov_edi_directory from ov_ctrl;" );
-       while (res.next()) {
-        myreturn = res.getString("ov_edi_directory");                    
+        String myreturn = "";
+        if (bsmf.MainFrame.clienttype.equals("SERVER")) { // override if execution env is server
+            return "edi";
         }
+        try{
 
-   }
-    catch (SQLException s){
-         MainFrame.bslog(s);
-    } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               con.close();
-            }
-}
-catch (Exception e){
-    MainFrame.bslog(e);
-}
-return myreturn;
+           Connection con = null;
+                   if (ds != null) {
+                     con = ds.getConnection();
+                   } else {
+                     con = DriverManager.getConnection(url + db, user, pass);  
+                   }
+           Statement st = con.createStatement();
+           ResultSet res = null;
+           try{
+               res = st.executeQuery("select ov_edi_directory from ov_ctrl;" );
+              while (res.next()) {
+               myreturn = res.getString("ov_edi_directory");                    
+               }
+
+          }
+           catch (SQLException s){
+                MainFrame.bslog(s);
+           } finally {
+                      if (res != null) res.close();
+                      if (st != null) st.close();
+                      con.close();
+                   }
+       }
+       catch (Exception e){
+           MainFrame.bslog(e);
+       }
+       return myreturn;
 
 }
     
