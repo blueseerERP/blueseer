@@ -3600,23 +3600,23 @@ public class OVData {
        return mynode;
       }
     
-    public static DefaultMutableTreeNode get_op_nodes_new(String item, String bomid)  {  
-       DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(item);
+    public static DefaultMutableTreeNode get_op_nodes_new(String item, String bomid, Connection bscon)  {  
+       DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(item); 
        ArrayList<String> myops = new ArrayList<String>();
         //myops = OVData.getItemRoutingOPs(mypart);  //based on itr_cost
-         myops = invData.getItemWFOPs(item);   // based on it_wf and wf_mstr
+         myops = invData._getItemWFOPs(item, bscon);   // based on it_wf and wf_mstr
         for ( String myvalue : myops) {
           //  DefaultMutableTreeNode thisop = new DefaultMutableTreeNode(myvalue);
           //  mynode.add(thisop);
             DefaultMutableTreeNode opnode = new DefaultMutableTreeNode(myvalue);
             
-            opnode = OVData.get_nodes_by_op_detail_new(item, item, myvalue, bomid);
+            opnode = OVData.get_nodes_by_op_detail_new(item, item, myvalue, bomid, bscon);
             mynode.add(opnode);
         }
        return mynode;
       }
     
-    public static DefaultMutableTreeNode get_nodes_by_op_detail_new(String root, String item, String myop, String rootbom)  {
+    public static DefaultMutableTreeNode get_nodes_by_op_detail_new(String root, String item, String myop, String rootbom, Connection bscon)  {
         //  bsmf.MainFrame.show(root + "/" + mypart + "/" + myop);
         String myroot = "";
             if (root.toLowerCase().equals(item.toLowerCase()))
@@ -3627,15 +3627,16 @@ public class OVData {
          
         
         ArrayList<String> mylist = new ArrayList<String>();
-        mylist = OVData.getpsmstrlistbyopnew(item, myop, rootbom);
+        
+        mylist = OVData._getpsmstrlistbyopnew(item, myop, rootbom, bscon);
      //   mylist = OVData.getpsmstrlist(newpart[0]);
         for ( String myvalue : mylist) {
             String[] value = myvalue.toUpperCase().split(",");
               if (value[0].toUpperCase().compareTo(item.toUpperCase().toString()) == 0) {
                
                   if (value[2].toUpperCase().compareTo("M") == 0) {
-                    DefaultMutableTreeNode mfgnode = new DefaultMutableTreeNode();   
-                    mfgnode = get_op_nodes(value[1]);
+                    DefaultMutableTreeNode mfgnode = new DefaultMutableTreeNode(); 
+                    mfgnode = get_op_nodes_new(value[1], value[5], bscon);
                     mynode.add(mfgnode);
                   } else {
                   DefaultMutableTreeNode childnode = new DefaultMutableTreeNode(value[1]);   
@@ -3646,8 +3647,7 @@ public class OVData {
         }
         return mynode;
      } 
-     
-    
+         
     public static DefaultMutableTreeNode get_op_nodes(String item)  {  
        DefaultMutableTreeNode mynode = new DefaultMutableTreeNode(item);
        ArrayList<String> myops = new ArrayList<String>();
@@ -4140,7 +4140,8 @@ public class OVData {
                             + res.getString("ps_child") + ","
                             + res.getString("ps_type") + ","
                             + res.getString("ps_qty_per") + ","
-                            + res.getString("it_desc").replace(",","");
+                            + res.getString("it_desc").replace(",","") + ","
+                            + res.getString("ps_bom");
 
                     myarray.add(mystring);
 
@@ -4165,8 +4166,54 @@ public class OVData {
         return myarray;
 
     }
-
     
+    public static ArrayList _getpsmstrlistbyopnew(String item, String myop, String bomid, Connection bscon) {
+        ArrayList myarray = new ArrayList();
+        String mystring = "";
+        try {
+            
+            Statement st = bscon.createStatement();
+            ResultSet res = null;
+            try {
+
+                res = st.executeQuery("select ps_parent, ps_child, ps_type, ps_qty_per, it_desc, ps_bom, "
+                        + "coalesce((select bom_id from bom_mstr where bom_item = ps_child and bom_primary = '1' and ps_type = 'M'),'') as childbom "
+                        + " from pbm_mstr "
+                        + " inner join bom_mstr on bom_id = ps_bom "
+                        + " inner join item_mstr on it_item = ps_child "
+                        + " where ps_parent = " + "'" + item + "'"
+                        + " and ps_op = " + "'" + myop + "'"  
+                        + " and ps_bom = " + "'" + bomid + "'"        
+                        + ";");
+                while (res.next()) {
+                    mystring = res.getString("ps_parent") + ","
+                            + res.getString("ps_child") + ","
+                            + res.getString("ps_type") + ","
+                            + res.getString("ps_qty_per") + ","
+                            + res.getString("it_desc").replace(",","") + ","
+                            + res.getString("childbom");
+
+                    myarray.add(mystring);
+
+                }
+
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return myarray;
+
+    }
+            
     public static ArrayList getpsmstrlistbyopWCost(String item, String myop) {
         ArrayList myarray = new ArrayList();
         String mystring = "";

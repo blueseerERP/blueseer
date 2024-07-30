@@ -1144,11 +1144,33 @@ public class BOMMaint extends javax.swing.JPanel {
     }
     
     public void bind_tree(String parentpart, String bomid) {
-      //  jTree1.setModel(null);
-       
-       // DefaultMutableTreeNode mynode = OVData.get_nodes_without_op(parentpart);
-       DefaultMutableTreeNode mynode = OVData.get_op_nodes_new(parentpart, bomid);
+     
+        Connection bscon = null;
+             if (ds != null) {
+                 try {
+                     bscon = ds.getConnection();
+                 } catch (SQLException ex) {
+                     MainFrame.bslog(ex);
+                 }
+            } else {
+                 try {   
+                     bscon = DriverManager.getConnection(url + db, user, pass);
+                 } catch (SQLException ex) {
+                     MainFrame.bslog(ex);
+                 }
+            }
+        
+       DefaultMutableTreeNode mynode = OVData.get_op_nodes_new(parentpart, bomid, bscon);
       
+        if (bscon != null) {
+            try {
+                bscon.close();
+            } catch (SQLException ex) {
+                MainFrame.bslog(ex);
+            }
+        }
+       
+       
        DefaultTreeModel model = (DefaultTreeModel)jTree1.getModel();
         model.setRoot(mynode);
         
