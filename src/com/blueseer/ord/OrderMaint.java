@@ -854,7 +854,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         if (OVData.isAutoInvoice()) {
         boolean sure = bsmf.MainFrame.warn("This is an auto-invoice order...Are you sure you want to auto-invoice?");     
             if (sure) {     
-               m = autoInvoiceOrder();
+               m = autoInvoice();
             }
         } // if autoinvoice
      return m;
@@ -1581,7 +1581,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
     return m;
     }
-    
+    /*
     public String[] autoInvoiceOrder() {
         java.util.Date now = new java.util.Date();
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -1615,7 +1615,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         return message;
     }
-    
+    */
     public void custChangeEvent(String mykey) {
         
         if (! isLoad) {
