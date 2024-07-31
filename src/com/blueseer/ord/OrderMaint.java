@@ -1522,20 +1522,21 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         int shipperid = OVData.getNextNbr("shipper", bscon);   
          
-        ship_mstr sh = shpData.createShipMstrJRT(String.valueOf(shipperid), ddsite.getSelectedItem().toString(),
-                             String.valueOf(shipperid), 
-                              ddcust.getSelectedItem().toString(),
-                              tbshipto.getText(),
-                              bsNumberToUS(tbkey.getText()),
-                              ponbr.getText().replace("'", ""),  // po
-                              ponbr.getText().replace("'", ""),  // ref
-                              setDateDB(duedate.getDate()),
-                              setDateDB(orddate.getDate()),
-                              remarks.getText().replace("'", ""),
-                              ddshipvia.getSelectedItem().toString(),
-                              "S", 
-                              ddtax.getSelectedItem().toString(),
-                              ddsite.getSelectedItem().toString()); 
+        ship_mstr sh = shpData.createShipMstrJRT(String.valueOf(shipperid), 
+                ddsite.getSelectedItem().toString(),
+                String.valueOf(shipperid), 
+                ddcust.getSelectedItem().toString(),
+                tbshipto.getText(),
+                bsNumberToUS(tbkey.getText()),
+                ponbr.getText().replace("'", ""),  // po
+                ponbr.getText().replace("'", ""),  // ref
+                setDateDB(duedate.getDate()),
+                setDateDB(orddate.getDate()),
+                remarks.getText().replace("'", ""),
+                ddshipvia.getSelectedItem().toString(),
+                "S", 
+                ddtax.getSelectedItem().toString(),
+                ddsite.getSelectedItem().toString()); 
         ArrayList<String[]> detail = tableToArrayList();
         ArrayList<shpData.ship_det> shd = shpData.createShipDetJRT(detail, String.valueOf(shipperid), setDateDB(orddate.getDate()), ddsite.getSelectedItem().toString());
         
@@ -1581,41 +1582,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         }
     return m;
     }
-    /*
-    public String[] autoInvoiceOrder() {
-        java.util.Date now = new java.util.Date();
-        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-        int shipperid = OVData.getNextNbr("shipper");   
-         
-        ship_mstr sh = shpData.createShipMstrJRT(String.valueOf(shipperid), ddsite.getSelectedItem().toString(),
-                             String.valueOf(shipperid), 
-                              ddcust.getSelectedItem().toString(),
-                              tbshipto.getText(),
-                              bsNumberToUS(tbkey.getText()),
-                              ponbr.getText().replace("'", ""),  // po
-                              ponbr.getText().replace("'", ""),  // ref
-                              setDateDB(duedate.getDate()),
-                              setDateDB(orddate.getDate()),
-                              remarks.getText().replace("'", ""),
-                              ddshipvia.getSelectedItem().toString(),
-                              "S", 
-                              ddtax.getSelectedItem().toString(),
-                              ddsite.getSelectedItem().toString()); 
-        ArrayList<String[]> detail = tableToArrayList();
-        ArrayList<shpData.ship_det> shd = shpData.createShipDetJRT(detail, String.valueOf(shipperid), setDateDB(orddate.getDate()), ddsite.getSelectedItem().toString());
-        shpData.addShipperTransaction(shd, sh);
-        shpData.updateShipperSAC(String.valueOf(shipperid));
-        // now confirm shipment
-        String[] message = confirmShipperTransaction("order", String.valueOf(shipperid), now);
-        
-         // autopost
-        if (OVData.isAutoPost()) {
-            fglData.PostGL();
-        } 
-        
-        return message;
-    }
-    */
+    
     public void custChangeEvent(String mykey) {
         
         if (! isLoad) {

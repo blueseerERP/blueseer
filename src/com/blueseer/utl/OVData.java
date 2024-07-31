@@ -8479,7 +8479,43 @@ public class OVData {
         return myitem;
         
     }
-     
+    
+    public static String getDefaultInitData() {
+           String myitem = null;
+         try{
+            
+           Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                res = st.executeQuery("select arc_sales_acct from ar_ctrl;" );
+               while (res.next()) {
+                myitem = res.getString("arc_sales_acct");                    
+                }
+               
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myitem;
+        
+    }
+    
+    
     public static String getDefaultShippingAcct() {
            String myitem = null;
          try{

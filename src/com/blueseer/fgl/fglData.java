@@ -2483,16 +2483,30 @@ public class fglData {
                     
                     String taxcode = "";
                     String curr = "";
-                    String basecurr = OVData.getDefaultCurrency();
-                    String defaultsalesacct = OVData.getDefaultSalesAcct(); // sales acct
-                    String defaultsalescc = OVData.getDefaultSalesCC(); // sales cc
-                    String defaultshippingacct = OVData.getDefaultShippingAcct(); // shipping acct 
-                    String apbankacct = OVData.getDefaultBankAcct(OVData.getDefaultAPBank());
-                    String apacct = OVData.getDefaultAPAcct();
+                    String custsalesacct = "";
+                    String custsalescc = "";
+                    String basecurr = "";
+                    String defaultsalesacct = ""; // sales acct
+                    String defaultsalescc = ""; // sales cc
+                    String defaultassetacct = "";
+                    String defaultassetcc = "";
+                    String defaultshippingacct = ""; // shipping acct 
+                    String apbankacct = ""; // OVData.getDefaultBankAcct(OVData.getDefaultAPBank());
+                    String apacct = ""; // OVData.getDefaultAPAcct();
                     
                     int i = 0;
                    
-                       res = st.executeQuery("select sh_site, sh_ar_acct, sh_taxcode, sh_curr, sh_ar_cc, sh_cust, sh_type from ship_mstr where sh_id = " + "'" + shipper + "'" +";");
+                       res = st.executeQuery("select sh_site, sh_ar_acct, sh_taxcode, sh_curr, " +
+                               " sh_ar_cc, sh_cust, sh_type, cm_ar_acct, cm_ar_cc, " +
+                               " arc_sales_acct, arc_sales_cc, arc_asset_acct, arc_asset_cc, arc_varchar, " +
+                               " ov_currency, bk_acct, apc_apacct " +
+                               " from ship_mstr " +
+                               " inner join cm_mstr on cm_code = sh_cust " +
+                               " inner join ov_mstr " +
+                               " inner join ar_ctrl " +
+                               " inner join ap_ctrl " +
+                               " inner join bk_mstr on bk_id = apc_bank " +
+                               " where sh_id = " + "'" + shipper + "'" +";");
                     while (res.next()) {
                         aracct = res.getString("sh_ar_acct");
                         arcc = res.getString("sh_ar_cc");
@@ -2501,10 +2515,18 @@ public class fglData {
                         taxcode = res.getString("sh_taxcode");
                         shiptype = res.getString("sh_type");
                         curr = res.getString("sh_curr");
+                        custsalesacct = res.getString("cm_ar_acct");
+                        custsalescc = res.getString("cm_ar_cc");
+                        defaultsalesacct = res.getString("arc_sales_acct");
+                        defaultsalescc = res.getString("arc_sales_cc");
+                        defaultassetacct = res.getString("arc_asset_acct");
+                        defaultassetcc = res.getString("arc_asset_cc");
+                        basecurr = res.getString("ov_currency");
+                        defaultshippingacct = res.getString("arc_varchar");
+                        apbankacct = res.getString("bk_acct");
+                        apacct = res.getString("apc_apacct");
                     }
                     
-                    String custsalesacct = cusData.getCustSalesAcct(cust);  // cust AR acct 
-                    String custsalescc = cusData.getCustSalesCC(cust);  // cust AR cc 
                     
                       res = st.executeQuery("select * from ship_det where shd_id = " + "'" + shipper + "'" +";");
                     while (res.next()) {
@@ -2638,8 +2660,8 @@ public class fglData {
                       if (i == 0) {
                           // must be misc...just do sales / AR GL transaction
                         if (shiptype.equals("A")) {  // if from asset transaction
-                        acct_cr.add(OVData.getDefaultAssetAcctAR()); 
-                        cc_cr.add(OVData.getDefaultAssetCC());
+                        acct_cr.add(defaultassetacct); 
+                        cc_cr.add(defaultassetcc);
                         } else {
                         acct_cr.add(defaultsalesacct);  
                         cc_cr.add(defaultsalescc);
