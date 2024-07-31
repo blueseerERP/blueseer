@@ -91,7 +91,6 @@ import static com.blueseer.utl.BlueSeerUtils.timediff;
 import static com.blueseer.utl.BlueSeerUtils.xZero;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeerT;
-import static com.blueseer.utl.OVData.canUpdate;
 import static com.blueseer.utl.OVData.isVoucherShippingSO;
 
 import java.awt.Color;
@@ -152,6 +151,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                 String basecurr = "";
                 boolean custitemonly = true;
                 boolean autoallocate = false;
+                boolean canupdate = false;
                 String allocationStatus = "";
                 public static so_mstr so = null;
                 public static ArrayList<sod_det> sodlist = null;
@@ -294,7 +294,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
                     message = getRecord(key);    
                     break; 
                 case "run":
-                    message = autoInvoice();    
+                    message = Run_autoInvoice();
                     break;      
                 default:
                     message = new String[]{"1", "unknown action"};
@@ -321,6 +321,8 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
              initvars(key);
            } else if (this.type.equals("update") && message[0].equals("0")) {
              initvars(key);    
+           } else if (this.type.equals("run")) {
+             initvars(null);  
            } else {
              initvars(null);  
            }
@@ -434,7 +436,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         
         
-        ArrayList<String[]> initDataSets = ordData.getSalesOrderInit();
+        ArrayList<String[]> initDataSets = ordData.getSalesOrderInit(this.getClass().getName());
         
        jTabbedPane1.removeAll();
        jTabbedPane1.add(getClassLabelTag("main", this.getClass().getSimpleName()), jPanelMain);
@@ -553,6 +555,9 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         for (String[] s : initDataSets) {
             if (s[0].equals("currency")) {
               basecurr = s[1];  
+            }
+            if (s[0].equals("canupdate")) {
+              canupdate = BlueSeerUtils.ConvertStringToBool(s[1]);  
             }
             if (s[0].equals("allocate")) {
               autoallocate = bsmf.MainFrame.ConvertStringToBool(s[1]);  
@@ -728,7 +733,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public boolean validateInput(dbaction x) {
         
-        if (! canUpdate(this.getClass().getName())) {
+        if (! canupdate) {
             bsmf.MainFrame.show(getMessageTag(1185));
             return false;
         }
@@ -1507,6 +1512,16 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
     
     // custom funcs 
+    public String[] Run_autoInvoice() {
+        
+        String[] m = autoInvoice();
+        // autopost
+        if (OVData.isAutoPost()) {
+            fglData.PostGL();
+        }
+        return m;
+    }
+    
     public String[] autoInvoice() {
         String[] m = new String[2];
         Connection bscon = null;
@@ -4108,7 +4123,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         
         
-        if (! canUpdate(this.getClass().getName())) {
+        if (! canupdate) {
             bsmf.MainFrame.show(getMessageTag(1185));
             return;
         }
@@ -4132,18 +4147,8 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerT {
         executeTask(dbaction.run, new String[]{tbkey.getText()});      
        // String[] message = autoInvoice();
        
-        // autopost
-        if (OVData.isAutoPost()) {
-            fglData.PostGL();
-        }
         
-         /*
-         if (message[0].equals("1")) { // if error
-           bsmf.MainFrame.show(message[1]);
-         } else {
-           executeTask(dbaction.get, new String[]{tbkey.getText()});
-         }
-         */
+        
        
     }//GEN-LAST:event_btinvoiceActionPerformed
 

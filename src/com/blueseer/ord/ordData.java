@@ -2209,7 +2209,7 @@ public class ordData {
     
     // miscellaneous SQL queries
     
-    public static ArrayList<String[]> getSalesOrderInit() {
+    public static ArrayList<String[]> getSalesOrderInit(String panelClassName) {
         String defaultsite = "";
         ArrayList<String[]> lines = new ArrayList<String[]>();
         try{
@@ -2226,12 +2226,29 @@ public class ordData {
         // states, warehouses, locations, customers, taxcodes, carriers, statuses    
             res = st.executeQuery("select site_site from site_mstr;");
             while (res.next()) {
-                String[] s = new String[2];
+               String[] s = new String[2];
                s[0] = "sites";
                s[1] = res.getString("site_site");
                lines.add(s);
             }
             
+            res = st.executeQuery("select perm_readonly from perm_mstr inner join menu_mstr on menu_id = perm_menu where perm_user = " + "'" + bsmf.MainFrame.userid + "'" + 
+                    " AND menu_panel = " + "'" + panelClassName + "'" +
+                    ";");
+            while (res.next()) {
+               if (res.getString("perm_readonly").equals("0")) {
+                String[] s = new String[2];
+                s[0] = "canupdate";
+                s[1] = "true";
+                lines.add(s);
+               } else {
+                String[] s = new String[2];
+                s[0] = "canupdate";
+                s[1] = "false";
+                lines.add(s);   
+               }
+           }
+           
             res = st.executeQuery("select ov_site, ov_currency from ov_mstr;" );
             while (res.next()) {
                String[] s = new String[2];
