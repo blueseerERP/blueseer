@@ -2528,14 +2528,22 @@ public class fglData {
                     }
                     
                     
-                      res = st.executeQuery("select * from ship_det where shd_id = " + "'" + shipper + "'" +";");
+                      res = st.executeQuery("select shd_item, shd_qty, shd_uom, shd_loc, shd_id, " +
+                              " shd_netprice, shd_taxamt, coalesce(it_uom, '') as ituom " +
+                              " from ship_det " +
+                              " left outer join item_mstr on it_item = shd_item " +
+                              " where shd_id = " + "'" + shipper + "'" +";");
                     while (res.next()) {
                         part = res.getString("shd_item");
                         qty = res.getDouble("shd_qty");
                         uom = res.getString("shd_uom");
                         loc = res.getString("shd_loc");
                         thisref = res.getString("shd_id");
+                        if (! uom.toUpperCase().equals(res.getString("ituom").toUpperCase())) {
                         baseqty = OVData.getUOMBaseQty(part, thissite, uom, qty);
+                        } else {
+                        baseqty = qty;
+                        }
                         netprice = res.getDouble("shd_netprice"); 
                         matltax += res.getDouble("shd_taxamt");
                         if (basecurr.toUpperCase().equals(curr.toUpperCase())) {

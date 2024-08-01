@@ -943,8 +943,10 @@ public class shpData {
                 double sum = 0;
                 boolean serialized = false;
                 int i = 0;
-                  res = st.executeQuery("select sh_site, shd_item, shd_qty, shd_uom, shd_loc, shd_wh, shd_site, shd_serial, shd_bom, it_loc, it_wh, it_code, it_phantom " +
+                  res = st.executeQuery("select sh_site, shd_item, shd_qty, shd_uom, shd_loc, serialize, " +
+                          " shd_wh, shd_site, shd_serial, shd_bom, it_loc, it_wh, it_code, it_phantom, it_uom " +
                           " from ship_det inner join ship_mstr on sh_id = shd_id  " +
+                          " inner join inv_ctrl " +
                           " left outer join item_mstr on it_item = shd_item " +
                           " where shd_id = " + "'" + shipper + "'" +";");
                 ArrayList<String[]> list = new ArrayList<String[]>();
@@ -963,13 +965,18 @@ public class shpData {
                     x[9] = res.getString("it_code");
                     x[10] = res.getString("it_phantom");
                     x[11] = res.getString("shd_bom");
-                    baseqty = OVData.getUOMBaseQty(x[0], x[5], x[2], bsParseDouble(x[1]));
+                    if (! res.getString("shd_uom").toUpperCase().equals(res.getString("it_uom").toUpperCase())) {
+                        baseqty = OVData.getUOMBaseQty(x[0], x[5], x[2], bsParseDouble(x[1]));
+                    } else {
+                        baseqty = bsParseDouble(x[1]);
+                    }
                     x[12] = String.valueOf(baseqty);
                  //   if (x[3].isEmpty()) {x[3] = x[7];} // if no loc in shipper...use item default loc
                 //    if (x[4].isEmpty()) {x[4] = x[8];} // if no wh in shipper...use item default wh
                     if (x[9] != null && ! x[9].equals("S")) {  // no service items
                      list.add(x);
                     }
+                    serialized = res.getBoolean("serialize");
                 }
                 res.close();
                 
@@ -999,13 +1006,18 @@ public class shpData {
                  //   bsmf.MainFrame.show(item + "/" + uom + "/" + loc + "/" + wh + "/" + site + "/" + serial + "/" + baseqty);
                     // if not serialized...pull from non-serialized inventory... in_serial = ""
                     // check for serialized inventory flag...if not...prevent serial from entry into in_mstr
-                    
+                    /*
                     if (! OVData.isInvCtrlSerialize()) {
                         serialized = false;
                         serial = "";
                         expire = "";
                     } else {
                         serialized = true;
+                    }
+                    */
+                    if (! serialized) {
+                        serial = "";
+                        expire = "";
                     }
                     int z = 0;
                     double qoh = 0.00;
