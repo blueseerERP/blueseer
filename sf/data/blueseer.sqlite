@@ -3342,5 +3342,71 @@ CREATE TABLE "inv_meta" (
   "invm_value" varchar(200) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 
+CREATE TABLE "bill_mstr" (
+  "bill_nbr" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "bill_cust" varchar(30)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "bill_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "bill_servicedate" date DEFAULT '0000-00-00',
+  "bill_billingdate" date DEFAULT '0000-00-00',
+  "bill_termdate" date DEFAULT '0000-00-00',
+  "bill_lastbilldate" date DEFAULT '0000-00-00',
+  "bill_nextbilldate" date DEFAULT '0000-00-00',
+  "bill_acctstatus" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
+  "bill_orderstatus" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
+  "bill_rmks" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
+  "bill_ref" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "bill_type" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "bill_servicetype" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "bill_subtype" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "bill_billingtype" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "bill_frequencytype" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "bill_group" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "bill_category" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "bill_terms" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE "bill_det" (
+  "billd_nbr" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "billd_line" int(6)  NOT NULL DEFAULT '0',
+  "billd_item" varchar(100)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "billd_isinv" tinyint(1) NOT NULL DEFAULT '0',
+  "billd_desc" varchar(100)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "billd_pricetype" varchar(20)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "billd_listprice" decimal(14,5) NOT NULL DEFAULT '0',
+  "billd_disc" decimal(14,5) NOT NULL DEFAULT '0',
+  "billd_netprice" decimal(14,5) NOT NULL DEFAULT '0',
+  "billd_qty" decimal(14,5) NOT NULL DEFAULT '0',
+  "billd_uom" varchar(3)  NOT NULL COLLATE NOCASE DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE "bill_meta" (
+  "billm_nbr" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "billm_type" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "billm_key" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "billm_value" varchar(200) NOT NULL COLLATE NOCASE DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE "bill_sac" (
+  "bills_nbr" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "bills_desc" varchar(20)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "bills_type" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
+  "bills_amttype" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
+  "bills_amt" decimal(14,5) NOT NULL DEFAULT '0',
+  "bills_appcode" varchar(30) NOT NULL COLLATE NOCASE DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE "bill_tran" (
+  "billt_id" INTEGER PRIMARY KEY,
+  "billt_nbr" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "billt_invoice" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "billt_amt" decimal(14,5) NOT NULL DEFAULT '0',
+  "billt_invdate" date  DEFAULT NULL,
+  "billt_billingtype" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "billt_frequencytype" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "billt_servicedate" date DEFAULT '0000-00-00',
+  "billt_billingdate" date DEFAULT '0000-00-00',
+  "billt_usage" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
+  "billt_qty" decimal(14,5) NOT NULL DEFAULT '0',
+  "billt_startdate" date DEFAULT '0000-00-00',
+  "billt_enddate" date DEFAULT '0000-00-00',
+  "billt_remarks" varchar(500) NOT NULL COLLATE NOCASE DEFAULT '',
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
 End Transaction;

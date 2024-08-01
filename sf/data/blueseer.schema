@@ -2890,3 +2890,68 @@ CREATE TABLE IF NOT EXISTS `plan_meta` (
   `plam_key` varchar(80) NOT NULL DEFAULT '',
   `plam_value` varchar(200) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `bill_mstr` (
+  `bill_nbr` varchar(8) NOT NULL PRIMARY KEY,
+  `bill_cust` varchar(30)  NOT NULL DEFAULT '',
+  `bill_site` varchar(10) NOT NULL  DEFAULT '',
+  `bill_servicedate` date DEFAULT NULL,
+  `bill_billingdate` date DEFAULT NULL,
+  `bill_termdate` date DEFAULT NULL,
+  `bill_lastbilldate` date DEFAULT NULL,
+  `bill_nextbilldate` date DEFAULT NULL,
+  `bill_acctstatus` varchar(20) NOT NULL  DEFAULT '',
+  `bill_orderstatus` varchar(20) NOT NULL  DEFAULT '',
+  `bill_rmks` varchar(200) NOT NULL  DEFAULT '',
+  `bill_ref` varchar(50) NOT NULL  DEFAULT '',
+  `bill_type` varchar(30) NOT NULL  DEFAULT '',
+  `bill_servicetype` varchar(30) NOT NULL  DEFAULT '',
+  `bill_subtype` varchar(30) NOT NULL  DEFAULT '',
+  `bill_billingtype` varchar(30) NOT NULL  DEFAULT '',
+  `bill_frequencytype` varchar(30) NOT NULL  DEFAULT '',
+  `bill_group` varchar(30) NOT NULL  DEFAULT '',
+  `bill_category` varchar(30) NOT NULL  DEFAULT '',
+  `bill_terms` varchar(10) NOT NULL  DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `bill_det` (
+  `billd_nbr` varchar(8) NOT NULL,
+  `billd_line` int(6)  NOT NULL DEFAULT '0',
+  `billd_item` varchar(100)  NOT NULL DEFAULT '',
+  `billd_isinv` tinyint(1) NOT NULL  DEFAULT '0',
+  `billd_desc` varchar(100)  NOT NULL DEFAULT '',
+  `billd_pricetype` varchar(20)  NOT NULL DEFAULT '',
+  `billd_listprice` decimal(14,5) NOT NULL  DEFAULT '0',
+  `billd_disc` decimal(14,5) NOT NULL  DEFAULT '0',
+  `billd_netprice` decimal(14,5) NOT NULL  DEFAULT '0',
+  `billd_qty` decimal(14,5) NOT NULL  DEFAULT '0',
+  `billd_uom` varchar(3)  NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `bill_meta` (
+  `billm_nbr` varchar(8) NOT NULL DEFAULT '',
+  `billm_type` varchar(80) NOT NULL DEFAULT '',
+  `billm_key` varchar(80) NOT NULL DEFAULT '',
+  `billm_value` varchar(200) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `bill_sac` (
+  `bills_nbr` varchar(8) NOT NULL,
+  `bills_desc` varchar(20)  NOT NULL DEFAULT '',
+  `bills_type` varchar(20) NOT NULL DEFAULT '',
+  `bills_amttype` varchar(20) NOT NULL DEFAULT '',
+  `bills_amt` decimal(14,5) NOT NULL DEFAULT '0',
+  `bills_appcode` varchar(30) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `bill_tran` (
+  `billt_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `billt_nbr` varchar(8) NOT NULL,
+  `billt_invoice` varchar(8) NOT NULL DEFAULT '',
+  `billt_amt` decimal(14,5) NOT NULL DEFAULT '0',
+  `billt_invdate` date  DEFAULT NULL,
+  `billt_billingtype` varchar(30) NOT NULL  DEFAULT '',
+  `billt_frequencytype` varchar(30) NOT NULL  DEFAULT '',
+  `billt_servicedate` date DEFAULT NULL,
+  `billt_billingdate` date DEFAULT NULL,
+  `billt_usage` varchar(200) NOT NULL DEFAULT '',
+  `billt_qty` decimal(14,5) NOT NULL DEFAULT '0',
+  `billt_startdate` date DEFAULT NULL,
+  `billt_enddate` date DEFAULT NULL,
+  `billt_remarks` varchar(500) NOT NULL DEFAULT '',
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
