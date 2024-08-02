@@ -98,7 +98,7 @@
                               <Group type="102" alignment="0" attributes="0">
                                   <Group type="103" groupAlignment="1" max="-2" attributes="0">
                                       <Component id="ddacctstatus" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="ddquotetype" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="ddtype" alignment="0" max="32767" attributes="0"/>
                                       <Component id="ddsite" alignment="0" pref="121" max="32767" attributes="0"/>
                                       <Component id="ddorderstatus" max="32767" attributes="0"/>
                                   </Group>
@@ -217,7 +217,7 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="dcbillingstartdate" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="ddquotetype" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="ddtype" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
@@ -520,7 +520,7 @@
             </Component>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JComboBox" name="ddquotetype">
+        <Component class="javax.swing.JComboBox" name="ddtype">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
               <StringArray count="0"/>
@@ -536,7 +536,7 @@
               <StringArray count="3">
                 <StringItem index="0" value="active"/>
                 <StringItem index="1" value="suspended"/>
-                <StringItem index="2" value="terminated"/>
+                <StringItem index="2" value="closed"/>
               </StringArray>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value=""/>

@@ -1649,6 +1649,8 @@ public class ordData {
     }
     
     
+    // Quote Master
+    
     public static String[] addQuoteTransaction(ArrayList<quo_det> qod, quo_mstr qo, ArrayList<quo_sac> qsac) {
         String[] m = new String[2];
         Connection bscon = null;
@@ -1951,8 +1953,7 @@ public class ordData {
         ps.executeUpdate();
         ps.close();
     }
-    
-    
+        
     public static String[] deleteQuoteLines(String x, ArrayList<String> lines) {
         String[] m = new String[2];
         if (x == null) {
@@ -2174,8 +2175,7 @@ public class ordData {
         }
         return list;
     }
-   
-    
+       
     public static ArrayList<String> getQuoteLines(String nbr) {
         ArrayList<String> lines = new ArrayList<String>();
         try{
@@ -2204,6 +2204,598 @@ public class ordData {
         MainFrame.bslog(e);
     }
         return lines;
+    }
+    
+    // Billing Recurrable
+    
+    public static String[] addBillingTransaction(ArrayList<bill_det> bd, bill_mstr bm, ArrayList<bill_sac> bsac) {
+        String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            if (ds != null) {
+              bscon = ds.getConnection();
+            } else {
+              bscon = DriverManager.getConnection(url + db, user, pass);  
+            }
+            bscon.setAutoCommit(false);
+            _addBillMstr(bm, bscon, ps, res);  
+            for (bill_det z : bd) {
+                _addBillDet(z, bscon, ps, res);
+            }
+            if (bsac != null) {
+                for (bill_sac z : bsac) {
+                    _addBillSAC(z, bscon, ps, res);
+                }
+            }
+            
+            bscon.commit();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    public static String[] updateBillingTransaction(String x, ArrayList<String> lines, ArrayList<bill_det> bd, bill_mstr bm, ArrayList<bill_sac> bsac) {
+        String[] m = new String[2];
+        Connection bscon = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            if (ds != null) {
+              bscon = ds.getConnection();
+            } else {
+              bscon = DriverManager.getConnection(url + db, user, pass);  
+            }
+            bscon.setAutoCommit(false);
+            for (String line : lines) {
+               _deleteBillLines(x, line, bscon, ps);  // discard unwanted lines
+             }
+            for (bill_det z : bd) {
+                if (bm.bill_acctstatus().equals(getGlobalProgTag("closed"))) {
+                    continue;
+                }
+                _updateBillDet(z, bm, bscon, ps, res);
+            }
+            _deleteBillSAC(bm.bill_nbr, bscon);
+            for (bill_sac z : bsac) {
+                _addBillSAC(z, bscon, ps, res);
+            }
+             _updateBillMstr(bm, bscon, ps);  
+            bscon.commit();
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.updateRecordError};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             }
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (bscon != null) {
+                try {
+                    bscon.setAutoCommit(true);
+                    bscon.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+        
+    private static int _addBillMstr(bill_mstr x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from bill_mstr where bill_nbr = ?";
+        String sqlInsert = "insert into bill_mstr (bill_nbr, bill_cust, " +
+                    "bill_site, bill_servicedate, bill_billingdate," +
+                    " bill_termdate, bill_lastbilldate, bill_nextbilldate," +
+                    " bill_acctstatus, bill_orderstatus, bill_rmks, bill_ref," +
+                    " bill_type, bill_servicetype, bill_subtype, bill_billingtype" +
+                    " bill_frequencytype, bill_group, bill_category, bill_terms ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+       
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x.bill_nbr);
+          res = ps.executeQuery();
+          ps = con.prepareStatement(sqlInsert);
+            if (! res.isBeforeFirst()) {
+            ps.setString(1, x.bill_nbr);
+            ps.setString(2, x.bill_cust);
+            ps.setString(3, x.bill_site);
+            ps.setString(4, x.bill_servicedate);
+            ps.setString(5, x.bill_billingdate);
+            ps.setString(6, x.bill_termdate);
+            ps.setString(7, x.bill_lastbilldate);
+            ps.setString(8, x.bill_nextbilldate);
+            ps.setString(9, x.bill_acctstatus);
+            ps.setString(10, x.bill_orderstatus);
+            ps.setString(11, x.bill_rmks);
+            ps.setString(12, x.bill_ref);
+            ps.setString(13, x.bill_type);
+            ps.setString(14, x.bill_servicetype);
+            ps.setString(15, x.bill_subtype);
+            ps.setString(16, x.bill_billingtype);
+            ps.setString(17, x.bill_frequencytype);
+            ps.setString(18, x.bill_group);
+            ps.setString(19, x.bill_category);
+            ps.setString(20, x.bill_terms);
+            rows = ps.executeUpdate();
+            } 
+            return rows;
+    }
+    
+    private static int _updateBillMstr(bill_mstr x, Connection con, PreparedStatement ps) throws SQLException {
+        int rows = 0;
+        String sql = "update bill_mstr set bill_cust = ?, " +
+                    "bill_site = ?, bill_servicedate = ?, bill_billingdate = ?," +
+                    " bill_termdate = ?, bill_lastbilldate = ?, bill_nextbilldate = ?," +
+                    " bill_acctstatus = ?, bill_orderstatus = ?, bill_rmks = ?, bill_ref = ?," +
+                    " bill_type = ?, bill_servicetype = ?, bill_subtype = ?, bill_billingtype = ?" +
+                    " bill_frequencytype = ?, bill_group = ?, bill_category = ?, bill_terms = ? " +
+                 " where bill_nbr = ? ; ";
+	ps = con.prepareStatement(sql) ;
+            ps.setString(20, x.bill_nbr);
+            ps.setString(1, x.bill_cust);
+            ps.setString(2, x.bill_site);
+            ps.setString(3, x.bill_servicedate);
+            ps.setString(4, x.bill_billingdate);
+            ps.setString(5, x.bill_termdate);
+            ps.setString(6, x.bill_lastbilldate);
+            ps.setString(7, x.bill_nextbilldate);
+            ps.setString(8, x.bill_acctstatus);
+            ps.setString(9, x.bill_orderstatus);
+            ps.setString(10, x.bill_rmks);
+            ps.setString(11, x.bill_ref);
+            ps.setString(12, x.bill_type);
+            ps.setString(13, x.bill_servicetype);
+            ps.setString(14, x.bill_subtype);
+            ps.setString(15, x.bill_billingtype);
+            ps.setString(16, x.bill_frequencytype);
+            ps.setString(17, x.bill_group);
+            ps.setString(18, x.bill_category);
+            ps.setString(19, x.bill_terms);
+            rows = ps.executeUpdate();
+        return rows;
+    }
+    
+    private static int _addBillDet(bill_det x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from bill_det where billd_nbr = ? and billd_line = ?";
+        String sqlInsert = "insert into bill_det (billd_nbr, billd_line, billd_item," +
+                "billd_isinv,  billd_desc,  billd_pricetype,  billd_listprice,  billd_disc, " +
+                "billd_netprice,  billd_qty,  billd_uom ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?); "; 
+       
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x.billd_nbr);
+          ps.setInt(2, x.billd_line);
+          res = ps.executeQuery();
+          ps = con.prepareStatement(sqlInsert);  
+            if (! res.isBeforeFirst()) {
+            ps.setString(1, x.billd_nbr);
+            ps.setInt(2, x.billd_line);
+            ps.setString(3, x.billd_item);
+            ps.setString(4, x.billd_isinv);
+            ps.setString(5, x.billd_desc);
+            ps.setString(6, x.billd_pricetype);
+            ps.setDouble(7, x.billd_listprice);
+            ps.setDouble(8, x.billd_disc);
+            ps.setDouble(9, x.billd_netprice);
+            ps.setDouble(10, x.billd_qty);
+            ps.setString(11, x.billd_uom);
+            rows = ps.executeUpdate();
+            } 
+            return rows;
+    }
+    
+    private static int _updateBillDet(bill_det x, bill_mstr z, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from bill_det where billd_nbr = ? and billd_line = ?";
+        String sqlUpdate = "update bill_det set billd_item = ?, billd_isinv = ?, " +
+                "billd_desc = ?, billd_pricetype = ?, billd_listprice = ?, billd_disc = ?, " +
+                " billd_netprice = ?, billd_qty = ?, billd_uom = ? " +
+                 " where billd_nbr = ? and billd_line = ? ; ";
+        String sqlInsert = "insert into bill_det (billd_nbr, billd_line, billd_item," +
+                "billd_isinv,  billd_desc,  billd_pricetype,  billd_listprice,  billd_disc, " +
+                "billd_netprice,  billd_qty,  billd_uom ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?); "; 
+        ps = con.prepareStatement(sqlSelect); 
+        ps.setString(1, x.billd_nbr);
+        ps.setInt(2, x.billd_line);
+        res = ps.executeQuery();
+        if (! res.isBeforeFirst()) {  // insert
+	 ps = con.prepareStatement(sqlInsert) ;
+            ps.setString(1, x.billd_nbr);
+            ps.setInt(2, x.billd_line);
+            ps.setString(3, x.billd_item);
+            ps.setString(4, x.billd_isinv);
+            ps.setString(5, x.billd_desc);
+            ps.setString(6, x.billd_pricetype);
+            ps.setDouble(7, x.billd_listprice);
+            ps.setDouble(8, x.billd_disc);
+            ps.setDouble(9, x.billd_netprice);
+            ps.setDouble(10, x.billd_qty);
+            ps.setString(11, x.billd_uom); 
+            rows = ps.executeUpdate();
+        } else {    // update
+         ps = con.prepareStatement(sqlUpdate) ;
+            ps.setString(10, x.billd_nbr);
+            ps.setInt(11, x.billd_line);
+            ps.setString(1, x.billd_item);
+            ps.setString(2, x.billd_isinv);
+            ps.setString(3, x.billd_desc);
+            ps.setString(4, x.billd_pricetype);
+            ps.setDouble(5, x.billd_listprice);
+            ps.setDouble(6, x.billd_disc);
+            ps.setDouble(7, x.billd_netprice);
+            ps.setDouble(8, x.billd_qty);
+            ps.setString(9, x.billd_uom); 
+            rows = ps.executeUpdate();
+        }
+            
+        return rows;
+    }
+    
+    private static int _addBillSAC(bill_sac x, Connection con, PreparedStatement ps, ResultSet res) throws SQLException {
+        int rows = 0;
+        String sqlSelect = "select * from bill_sac where bills_nbr = ? and bills_desc = ?";
+        String sqlInsert = "insert into bill_sac (bills_nbr, bills_desc, bills_type, " 
+                        + "bills_amttype, bills_amt, bills_appcode ) "
+                        + " values (?,?,?,?,?,?); "; 
+       
+          ps = con.prepareStatement(sqlSelect); 
+          ps.setString(1, x.bills_nbr);
+          ps.setString(2, x.bills_desc);
+          res = ps.executeQuery();
+          ps = con.prepareStatement(sqlInsert); 
+            if (! res.isBeforeFirst()) {
+            ps.setString(1, x.bills_nbr);
+            ps.setString(2, x.bills_desc);
+            ps.setString(3, x.bills_type);
+            ps.setString(4, x.bills_amttype);
+            ps.setDouble(5, x.bills_amt);
+            ps.setString(6, x.bills_appcode);
+            rows = ps.executeUpdate();
+            } 
+            return rows;
+    }
+    
+    private static void _deleteBillSAC(String x, Connection con) throws SQLException { 
+        PreparedStatement ps = null; 
+        String sql = "delete from bill_sac where bills_nbr = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x);
+        ps.executeUpdate();
+        ps.close();
+    }
+        
+    public static String[] deleteBillLines(String x, ArrayList<String> lines) {
+        String[] m = new String[2];
+        if (x == null) {
+            return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
+        }
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet res = null;
+        try { 
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+             for (String line : lines) {
+               _deleteBillLines(x, line, con, ps);  // add cms_det
+             }
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
+        } finally {
+            if (res != null) {
+                try {
+                    res.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+            if (con != null) {
+                try {
+                    con.setAutoCommit(true);
+                    con.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    private static void _deleteBillLines(String x, String line, Connection con, PreparedStatement ps) throws SQLException { 
+        
+        String sql = "delete from bill_det where billd_nbr = ? and billd_line = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x);
+        ps.setString(2, line);
+        ps.executeUpdate();
+    }
+    
+    public static String[] deleteBillMstr(bill_mstr x) {
+        String[] m = new String[2];
+        if (x == null) {
+            return new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
+        }
+        Connection con = null;
+        try { 
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            _deleteBillMstr(x, con);  // add cms_det
+            m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.deleteRecordSuccess};
+        } catch (SQLException s) {
+             MainFrame.bslog(s);
+             m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordError};
+        } finally {
+            if (con != null) {
+                try {
+                    con.close();
+                } catch (SQLException ex) {
+                    MainFrame.bslog(ex);
+                }
+            }
+        }
+    return m;
+    }
+    
+    private static void _deleteBillMstr(bill_mstr x, Connection con) throws SQLException { 
+        PreparedStatement ps = null; 
+        String sql = "delete from bill_mstr where bill_nbr = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x.bill_nbr);
+        ps.executeUpdate();
+        sql = "delete from bill_det where billd_nbr = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x.bill_nbr);
+        ps.executeUpdate();
+        sql = "delete from bill_sac where bills_nbr = ?; ";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, x.bill_nbr);
+        ps.executeUpdate();
+        ps.close();
+    }
+    
+    public static bill_mstr getBillMstr(String[] x) {
+        bill_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from bill_mstr where bill_nbr = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setInt(1, bsParseInt(x[0]));
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new bill_mstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                     
+                        r = new bill_mstr(m, 
+                            res.getString("bill_nbr"),
+                            res.getString("bill_cust"),
+                            res.getString("bill_site"),
+                            res.getString("bill_servicedate"),
+                            res.getString("bill_billingdate"),
+                            res.getString("bill_termdate"),
+                            res.getString("bill_lastbilldate"),
+                            res.getString("bill_nextbilldate"),
+                            res.getString("bill_acctstatus"),
+                            res.getString("bill_orderstatus"),
+                            res.getString("bill_rmks"),
+                            res.getString("bill_ref"),
+                            res.getString("bill_type"),
+                            res.getString("bill_servicetype"),
+                            res.getString("bill_subtype"),
+                            res.getString("bill_billingtype"),
+                            res.getString("bill_frequencytype"),
+                            res.getString("bill_group"),
+                            res.getString("bill_category"),
+                            res.getString("x.bill_terms"));
+                    }
+                }
+            } 
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new bill_mstr(m);
+        }
+        return r;
+    }
+   
+    public static ArrayList<bill_det> getBillDet(String code) {
+        bill_det r = null;
+        String[] m = new String[2];
+        ArrayList<bill_det> list = new ArrayList<bill_det>();
+        String sql = "select * from bill_det where billd_nbr = ? order by billd_line ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setInt(1, bsParseInt(code));
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new bill_det(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new bill_det(m, res.getString("billd_nbr"), 
+                                res.getInt("billd_line"), 
+                                res.getString("billd_item"), 
+                                res.getString("billd_isinv"), 
+                                res.getString("billd_desc"),
+                                res.getString("billd_pricetype"), 
+                                res.getDouble("billd_listprice"),
+                                res.getDouble("billd_disc"),
+                                res.getDouble("billd_netprice"),
+                                res.getDouble("billd_qty"),
+                                res.getString("billd_uom"));
+                        list.add(r);
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new bill_det(m);
+               list.add(r);
+        }
+        return list;
+    }
+   
+    public static ArrayList<bill_sac> getBillSAC(String code) {
+        bill_sac r = null;
+        String[] m = new String[2];
+        ArrayList<bill_sac> list = new ArrayList<bill_sac>();
+        String sql = "select * from bill_sac where bills_nbr = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setInt(1, bsParseInt(code));
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new bill_sac(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new bill_sac(m, res.getString("bills_nbr"), 
+                                res.getString("bills_desc"), 
+                                res.getString("bills_type"), 
+                                res.getString("bills_amttype"), 
+                                res.getDouble("bills_amt"),
+                                res.getString("bills_appcode"));
+                        list.add(r);
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new bill_sac(m);
+               list.add(r);
+        }
+        return list;
+    }
+       
+    public static ArrayList<String> getBillLines(String nbr) {
+        ArrayList<String> lines = new ArrayList<String>();
+        try{
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        try{
+            Statement st = con.createStatement();
+            ResultSet res = null;
+
+           res = st.executeQuery("SELECT billd_line from bill_det " +
+                   " where billd_nbr = " + "'" + nbr + "'" + " order by billd_line;");
+                        while (res.next()) {
+                          lines.add(res.getString("billd_line"));
+                        }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+        return lines;
+    }
+    
+    public static int _addBillTran(bill_tran x, Connection con) throws SQLException {
+        int rows = 0;
+        String sqlInsert = "insert into bill_tran ( billt_nbr, " +
+            " billt_invoice, billt_amt, billt_invdate," +
+            " billt_billingtype, billt_frequencytype, billt_servicedate," +
+            " billt_billingdate, billt_usage, billt_qty," +
+            " billt_startdate, billt_enddate, billt_remarks)" +
+               " values (?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+          // tr_id and tr_timestamp are db assigned         
+        try (PreparedStatement psi = con.prepareStatement(sqlInsert)) {
+            psi.setString(1, x.billt_nbr);
+            psi.setString(2, x.billt_invoice);
+            psi.setDouble(3, x.billt_amt);
+            psi.setString(4, x.billt_invdate);
+            psi.setString(5, x.billt_billingtype);
+            psi.setString(6, x.billt_frequencytype);
+            psi.setString(7, x.billt_servicedate);
+            psi.setString(8, x.billt_billingdate);
+            psi.setString(9, x.billt_usage);
+            psi.setDouble(10, x.billt_qty);
+            psi.setString(11, x.billt_startdate);
+            psi.setString(12, x.billt_enddate);
+            psi.setString(13, x.billt_remarks);
+            
+            rows = psi.executeUpdate();
+        }
+        return rows;
     }
     
     
@@ -3050,9 +3642,9 @@ public class ordData {
         Statement st = con.createStatement();
         try{
            st.executeUpdate(
-                 " update quo_mstr set quo_status = " + "'" + status + "'" + "," +
-                 " quo_ref = " + "'" + ref + "'" +
-                 " where quo_nbr = " + "'" + nbr + "'" + ";" );
+                 " update bill_mstr set bill_status = " + "'" + status + "'" + "," +
+                 " bill_ref = " + "'" + ref + "'" +
+                 " where bill_nbr = " + "'" + nbr + "'" + ";" );
         }
         catch (SQLException s){
              MainFrame.bslog(s);
@@ -3205,5 +3797,46 @@ public class ordData {
                      "");
         }
     }
+    
+    public record bill_mstr(String[] m, String bill_nbr, String bill_cust, 
+        String bill_site, String bill_servicedate, String bill_billingdate, 
+        String bill_termdate, String bill_lastbilldate, String bill_nextbilldate, 
+        String bill_acctstatus, String bill_orderstatus, String bill_rmks, String bill_ref, 
+        String bill_type, String bill_servicetype, String bill_subtype, String bill_billingtype,
+        String bill_frequencytype, String bill_group, String bill_category, String bill_terms )  {
+        public bill_mstr(String[] m) {
+            this (m, "", "", "", "", "", "", "", "", "", "",
+                     "", "", "", "", "", "", "", "", "", "");
+        }        
+    }
+    public record bill_det(String[] m, String billd_nbr, int billd_line, String billd_item,
+        String billd_isinv, String billd_desc, String billd_pricetype, double billd_listprice, double billd_disc, 
+        double billd_netprice, double billd_qty, String billd_uom 
+        )  {
+        public bill_det(String[] m) {
+            this (m, "", 0, "", "", "", "", 0.00, 0.00, 0.00, 0.00,
+                     "");
+        }
+    }
+    public record bill_sac(String[] m, String bills_nbr, String bills_desc, String bills_type,
+        String bills_amttype, double bills_amt, String bills_appcode 
+        )  {
+        public bill_sac(String[] m) {
+            this (m, "", "", "", "", 0.00, "");
+        }
+    }
+    public record bill_tran(String[] m, String billt_id, String billt_nbr, 
+        String billt_invoice, double billt_amt, String billt_invdate,
+        String billt_billingtype, String billt_frequencytype, String billt_servicedate,
+        String billt_billingdate, String billt_usage, double billt_qty, 
+        String billt_startdate, String billt_enddate, String billt_remarks 
+        )  {
+        public bill_tran(String[] m) {
+            this (m, "", "", "", 0.00, "", "", "", "", "", "",
+                    0.00, "", "", "");
+        }
+    }
+    
+    
     
 }

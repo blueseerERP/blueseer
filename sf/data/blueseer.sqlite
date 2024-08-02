@@ -3369,7 +3369,7 @@ CREATE TABLE "bill_det" (
   "billd_line" int(6)  NOT NULL DEFAULT '0',
   "billd_item" varchar(100)  NOT NULL COLLATE NOCASE DEFAULT '',
   "billd_isinv" tinyint(1) NOT NULL DEFAULT '0',
-  "billd_desc" varchar(100)  NOT NULL COLLATE NOCASE DEFAULT '',
+  "billd_desc" varchar(300)  NOT NULL COLLATE NOCASE DEFAULT '',
   "billd_pricetype" varchar(20)  NOT NULL COLLATE NOCASE DEFAULT '',
   "billd_listprice" decimal(14,5) NOT NULL DEFAULT '0',
   "billd_disc" decimal(14,5) NOT NULL DEFAULT '0',

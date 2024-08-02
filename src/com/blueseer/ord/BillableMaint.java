@@ -71,20 +71,17 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import com.blueseer.ctr.cusData;
 import com.blueseer.inv.invData;
-import static com.blueseer.inv.invData.getItemQOHTotal;
-import static com.blueseer.ord.ordData.addOrderTransaction;
-import static com.blueseer.ord.ordData.addQuoteTransaction;
-import static com.blueseer.ord.ordData.deleteQuoteMstr;
-import static com.blueseer.ord.ordData.getOrderItemAllocatedQty;
-import static com.blueseer.ord.ordData.getQuoteDet;
-import static com.blueseer.ord.ordData.getQuoteLines;
-import static com.blueseer.ord.ordData.getQuoteMstr;
-import static com.blueseer.ord.ordData.getQuoteSAC;
-import com.blueseer.ord.ordData.quo_det;
-import com.blueseer.ord.ordData.quo_mstr;
-import com.blueseer.ord.ordData.quo_sac;
-import com.blueseer.ord.ordData.sod_det;
-import static com.blueseer.ord.ordData.updateQuoteTransaction;
+import static com.blueseer.ord.ordData.addBillingTransaction;
+import com.blueseer.ord.ordData.bill_det;
+import com.blueseer.ord.ordData.bill_mstr;
+import com.blueseer.ord.ordData.bill_sac;
+import static com.blueseer.ord.ordData.deleteBillMstr;
+import static com.blueseer.ord.ordData.getBillDet;
+import static com.blueseer.ord.ordData.getBillLines;
+import static com.blueseer.ord.ordData.getBillMstr;
+import static com.blueseer.ord.ordData.getBillSAC;
+import static com.blueseer.ord.ordData.updateBillingTransaction;
+
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatInt;
 import static com.blueseer.utl.BlueSeerUtils.bsNumber;
@@ -133,10 +130,10 @@ public class BillableMaint extends javax.swing.JPanel implements IBlueSeerT {
                  // global variable declarations
                 boolean isLoad = false;
                 double actamt = 0.00;
-                int quoteline = 0;
-                public static quo_mstr x = null;
-                public static ArrayList<quo_det> quodetlist = null;
-                public static ArrayList<quo_sac> saclist = null;
+                int billline = 0;
+                public static bill_mstr x = null;
+                public static ArrayList<bill_det> billdetlist = null;
+                public static ArrayList<bill_sac> saclist = null;
                 
                
     
@@ -595,8 +592,8 @@ public class BillableMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     
     public String[] addRecord(String[] x) {
-     String[] m = addQuoteTransaction(createDetRecord(), createRecord(), createSACRecord()); 
-     return m;
+     String[] m = addBillingTransaction(createDetRecord(), createRecord(), createSACRecord());  
+     return m; 
      }
      
     public String[] updateRecord(String[] x) {
@@ -605,7 +602,7 @@ public class BillableMaint extends javax.swing.JPanel implements IBlueSeerT {
         ArrayList<String> lines = new ArrayList<String>();
         ArrayList<String> badlines = new ArrayList<String>();
         boolean goodLine = false;
-        lines = getQuoteLines(tbkey.getText());
+        lines = getBillLines(tbkey.getText());
        for (String line : lines) {
           goodLine = false;
           for (int j = 0; j < detailtable.getRowCount(); j++) {
@@ -617,13 +614,13 @@ public class BillableMaint extends javax.swing.JPanel implements IBlueSeerT {
               badlines.add(line);
           }
         }   
-       quo_mstr _x = this.x;
-       quo_mstr _y = createRecord();
+       bill_mstr _x = this.x;
+       bill_mstr _y = createRecord();
        
-       ArrayList<quo_det> _c = this.quodetlist;
-       ArrayList<quo_det> _d = createDetRecord();
+       ArrayList<bill_det> _c = this.billdetlist;
+       ArrayList<bill_det> _d = createDetRecord();
        
-     String[] m = updateQuoteTransaction(tbkey.getText(), badlines, _d, _y, createSACRecord());
+     String[] m = updateBillingTransaction(tbkey.getText(), badlines, _d, _y, createSACRecord());
      
      // change log check
      if (m[0].equals("0")) {
@@ -634,15 +631,15 @@ public class BillableMaint extends javax.swing.JPanel implements IBlueSeerT {
        // detail change
        if (_d.size() > _c.size()) { // added item
            boolean z = false;
-           for (quo_det q1 : _d) {
-            for (quo_det q2 : _c) {
-                if (q2.quod_line() == q1.quod_line()) {
+           for (bill_det q1 : _d) {
+            for (bill_det q2 : _c) {
+                if (q2.billd_line() == q1.billd_line()) {
                     z = true;
                     break;
                 }
             } 
             if (! z) {
-                c.add(clog(tbkey.getText(), q1.getClass().getSimpleName(), this.getClass().getSimpleName(), "added line/item", "", q1.quod_line() + "/" + q1.quod_item()));
+                c.add(clog(tbkey.getText(), q1.getClass().getSimpleName(), this.getClass().getSimpleName(), "added line/item", "", q1.billd_line() + "/" + q1.billd_item()));
                 addChangeLog(c);
             }
             z = false;
@@ -651,24 +648,24 @@ public class BillableMaint extends javax.swing.JPanel implements IBlueSeerT {
        }
        if (_c.size() > _d.size()) { // removed item
            boolean z = false;
-           for (quo_det q1 : _c) {
-            for (quo_det q2 : _d) {
-                if (q2.quod_line() == q1.quod_line()) {
+           for (bill_det q1 : _c) {
+            for (bill_det q2 : _d) {
+                if (q2.billd_line() == q1.billd_line()) {
                     z = true;
                     break;
                 }
             } 
             if (! z) {
-                c.add(clog(tbkey.getText(), q1.getClass().getSimpleName(), this.getClass().getSimpleName(), "removed line/item", q1.quod_line() + "/" + q1.quod_item(), ""));
+                c.add(clog(tbkey.getText(), q1.getClass().getSimpleName(), this.getClass().getSimpleName(), "removed line/item", q1.billd_line() + "/" + q1.billd_item(), ""));
                 addChangeLog(c);
             }
             z = false;
            }
        }
        // changed item
-       for (quo_det q1 : _c) {
-        for (quo_det q2 : _d) { 
-            if (q2.quod_line() == q1.quod_line()) {
+       for (bill_det q1 : _c) {
+        for (bill_det q2 : _d) { 
+            if (q2.billd_line() == q1.billd_line()) {
                 c = logChange(tbkey.getText(), this.getClass().getSimpleName(),q1,q2);
                 if (! c.isEmpty()) {
                     addChangeLog(c);
@@ -687,7 +684,7 @@ public class BillableMaint extends javax.swing.JPanel implements IBlueSeerT {
      String[] m = new String[2];
         boolean proceed = bsmf.MainFrame.warn(getMessageTag(1004));
         if (proceed) {
-         m = deleteQuoteMstr(createRecord()); 
+         m = deleteBillMstr(createRecord()); 
          initvars(null);
         } else {
            m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.deleteRecordCanceled}; 
@@ -696,43 +693,44 @@ public class BillableMaint extends javax.swing.JPanel implements IBlueSeerT {
      }
       
     public String[] getRecord(String[] key) {
-       x = getQuoteMstr(key); 
-       quodetlist = getQuoteDet(key[0]);
-       saclist = getQuoteSAC(key[0]);
+       x = getBillMstr(key); 
+       billdetlist = getBillDet(key[0]);
+       saclist = getBillSAC(key[0]);
        getAttachments(key[0]);
        return x.m();
     }
     
-    public quo_mstr createRecord() {
+    public bill_mstr createRecord() {
         java.util.Date now = new java.util.Date();
-        quo_mstr x = new quo_mstr(null, 
+        bill_mstr x = new bill_mstr(null, 
                 bsNumberToUS(tbkey.getText()), 
                 ddcust.getSelectedItem().toString(),
-                "", // ship
                 ddsite.getSelectedItem().toString(),
-                setDateDB(now),
-                setDateDB(dcservicedate.getDate()),
-                setDateDB(dcbillingstartdate.getDate()),
+                setDateDB(dcservicedate.getDate()), // service start date
+                setDateDB(dcbillingstartdate.getDate()), // billing start date
+                setDateDB(null), // term date
+                "", // last bill date
+                "", // next bill date
                 ddacctstatus.getSelectedItem().toString(),
-                tarmks.getText(),
-                tbtermdate.getText(),
-                ddquotetype.getSelectedItem().toString(),
-                "",
-                ddbillingfrequency.getSelectedItem().toString(),
-                ddbillingtype.getSelectedItem().toString(),
                 ddorderstatus.getSelectedItem().toString(),
-                "0", // approved
-                "", // approver
-                "", //varchar
+                tarmks.getText(),
+                "", //ref
+                ddtype.getSelectedItem().toString(),
+                "", // service type
+                "", // subtype
+                ddbillingtype.getSelectedItem().toString(),
+                ddbillingfrequency.getSelectedItem().toString(),
+                "", // group
+                "", //category
                 ddterms.getSelectedItem().toString()        
         ); 
         return x;  
     }
     
-    public ArrayList<quo_det> createDetRecord() {
-        ArrayList<quo_det> list = new ArrayList<quo_det>();
+    public ArrayList<bill_det> createDetRecord() {
+        ArrayList<bill_det> list = new ArrayList<bill_det>();
          for (int j = 0; j < detailtable.getRowCount(); j++) {
-             quo_det x = new quo_det(null, 
+             bill_det x = new bill_det(null, 
                 bsNumberToUS(detailtable.getValueAt(j, 0).toString()), // key
                 bsParseInt(detailtable.getValueAt(j, 1).toString()), // line
                 detailtable.getValueAt(j, 2).toString(), // item
@@ -750,10 +748,10 @@ public class BillableMaint extends javax.swing.JPanel implements IBlueSeerT {
         return list;   
     }
     
-    public ArrayList<quo_sac> createSACRecord() {
-         ArrayList<quo_sac> list = new ArrayList<quo_sac>();
+    public ArrayList<bill_sac> createSACRecord() {
+         ArrayList<bill_sac> list = new ArrayList<bill_sac>();
          for (int j = 0; j < sactable.getRowCount(); j++) {
-             quo_sac x = new quo_sac(null, bsNumberToUS(tbkey.getText()),
+             bill_sac x = new bill_sac(null, bsNumberToUS(tbkey.getText()),
                 sactable.getValueAt(j, 1).toString(),
                 sactable.getValueAt(j, 0).toString(),
                 sactable.getValueAt(j, 2).toString(),
@@ -761,129 +759,6 @@ public class BillableMaint extends javax.swing.JPanel implements IBlueSeerT {
                 sactable.getValueAt(j, 4).toString());     
                 list.add(x);
          }
-        return list;
-    }
-    
-    public String[] createSO() {
-        java.util.Date now = new java.util.Date();
-        String key = String.valueOf(OVData.getNextNbr("order"));
-        ordData.so_mstr so = new ordData.so_mstr(null, 
-                 key,
-                 ddcust.getSelectedItem().toString(),
-                 ddcust.getSelectedItem().toString(),
-                 ddsite.getSelectedItem().toString(),
-                 ddorderstatus.getSelectedItem().toString(),   
-                 "", // shipvia
-                 "", // wh
-                 tbkey.getText(), // PO ...to be changed manually
-                 setDateDB(now), // due date ...to be changed manually
-                 setDateDB(now), // order date
-                 setDateDB(now), // create date
-                 bsmf.MainFrame.userid,
-                 getGlobalProgTag("hold"), // status
-                 "",   // order level allocation status c,p 
-                 ddterms.getSelectedItem().toString(),
-                 cusData.getCustSalesAcct(ddcust.getSelectedItem().toString()),
-                 cusData.getCustSalesCC(ddcust.getSelectedItem().toString()),
-                 tarmks.getText(),
-                 "DISCRETE",
-                 "",
-                "0", // confirmed
-                "1", // is sourced
-                "1", // is planned
-                "" // entrytype...blank for manual; 'edi' for EDI entry
-                );
-        
-        // now detail
-        // first check and see if any percent based discounts ...to be assigned at detail level of order
-        double detaildisc = 0.00;
-        double netprice = 0.00;
-        for (int j = 0; j < sactable.getRowCount(); j++) {
-               if (sactable.getValueAt(j, 0).toString().equals("discount") && sactable.getValueAt(j, 2).toString().equals("percent")) {
-                   detaildisc += bsParseDouble(sactable.getValueAt(j, 3).toString());
-               }
-        }
-        
-        // now add SOD_DETs
-        ArrayList<sod_det> list = new ArrayList<sod_det>();
-         
-            for (int j = 0; j < detailtable.getRowCount(); j++) {
-                netprice = bsParseDouble(detailtable.getValueAt(j, 5).toString()) - ((detaildisc / 100) * bsParseDouble(detailtable.getValueAt(j, 5).toString()));
-                sod_det x = new sod_det(null, 
-                key,
-                bsParseInt(detailtable.getValueAt(j, 1).toString()), // line
-                detailtable.getValueAt(j, 2).toString(), // item
-                "", //custitem
-                tbkey.getText(), // po
-                bsParseDouble(detailtable.getValueAt(j, 4).toString().replace(defaultDecimalSeparator, '.')), // qty
-                detailtable.getValueAt(j, 8).toString(), //uom
-                0, // allocation value
-                bsParseDouble(detailtable.getValueAt(j, 5).toString().replace(defaultDecimalSeparator, '.')), // listprice
-                detaildisc, //disc
-                bsParseDouble(String.valueOf(netprice).replace(defaultDecimalSeparator, '.')), //netprice
-                setDateDB(now),
-                setDateDB(now),   
-                0, //shipqty
-                getGlobalProgTag("open"), // status
-                "", //warehouse
-                "", //loc
-                detailtable.getValueAt(j, 3).toString(),  //itemdesc
-                0,  //taxamt
-                ddsite.getSelectedItem().toString(),  
-                "", // bomcode
-                "" // shipcode
-                );  
-                list.add(x);
-            }    
-            
-            // now discount, charge, and tax
-            ArrayList<ordData.sos_det> listsac = new ArrayList<ordData.sos_det>();
-            ArrayList<ordData.so_tax> listtax = new ArrayList<ordData.so_tax>();
-            
-            for (int j = 0; j < sactable.getRowCount(); j++) {
-               
-                ordData.sos_det x = new ordData.sos_det(null, key,
-                sactable.getValueAt(j, 1).toString(),
-                sactable.getValueAt(j, 0).toString(),
-                sactable.getValueAt(j, 2).toString(),
-                bsParseDouble(sactable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.')));     
-                listsac.add(x); 
-                
-              if (sactable.getValueAt(j, 0).toString().equals("tax")) {
-                ordData.so_tax z = new ordData.so_tax(null, key,
-                sactable.getValueAt(j, 1).toString(), // desc
-                bsParseDouble(sactable.getValueAt(j, 3).toString().replace(defaultDecimalSeparator, '.')), // percent
-                sactable.getValueAt(j, 2).toString()); // amount type
-                listtax.add(z);   
-               }
-            }
-            
-            // add Sales Order
-            String[] m = addOrderTransaction(list, so, listtax, null, listsac);
-            if (m[0].equals("0")) {
-                m[1] = key;
-            }
-            return m;
-        
-    }
-    
-    public ArrayList<String> createVolumePricing() {
-        ArrayList<String> list = new ArrayList<String>();
-        String s = "";
-        for (int j = 0; j < detailtable.getRowCount(); j++) {
-                s = ddcust.getSelectedItem().toString() + ":" +
-                  detailtable.getValueAt(j, 2).toString() + ":" +
-                  detailtable.getValueAt(j, 3).toString() + ":" +
-                  "VOLUME" + ":" +
-                  detailtable.getValueAt(j, 5).toString() + ":" +
-                  detailtable.getValueAt(j, 4).toString() + ":" +
-                  detailtable.getValueAt(j, 5).toString() + ":" +
-                  "0" + ":" +
-                  detailtable.getValueAt(j, 8).toString() + ":" +
-                  ddorderstatus.getSelectedItem().toString() + ":" +
-                  setDateDB(dcbillingstartdate.getDate()); 
-                list.add(s);
-            }    
         return list;
     }
     
@@ -942,9 +817,9 @@ public class BillableMaint extends javax.swing.JPanel implements IBlueSeerT {
         lual = new ActionListener() {
         public void actionPerformed(ActionEvent event) {
         if (lurb1.isSelected()) {  
-         luModel = DTData.getQuoteBrowseUtil(luinput.getText(),0, "quo_nbr"); 
+         luModel = DTData.getBillingBrowseUtil(luinput.getText(),0, "bill_nbr"); 
         } else {
-         luModel = DTData.getQuoteBrowseUtil(luinput.getText(),0, "quo_cust");    
+         luModel = DTData.getBillingBrowseUtil(luinput.getText(),0, "bill_cust");    
         }
         luTable.setModel(luModel);
         luTable.getColumnModel().getColumn(0).setMaxWidth(50);
@@ -979,50 +854,50 @@ public class BillableMaint extends javax.swing.JPanel implements IBlueSeerT {
 
     public void updateForm() throws ParseException {
         isLoad = true;
-        tbkey.setText(bsNumber(x.quo_nbr()));
-        ddcust.setSelectedItem(x.quo_cust());
-        ddsite.setSelectedItem(x.quo_site());
-        ddacctstatus.setSelectedItem(x.quo_status());
-        ddquotetype.setSelectedItem(x.quo_type());
-        ddbillingtype.setSelectedItem(x.quo_groupcode());
-        ddbillingfrequency.setSelectedItem(x.quo_disccode());
-        dcservicedate.setDate(parseDate(x.quo_expire()));
-        dcbillingstartdate.setDate(parseDate(x.quo_priceexpire()));
-        ddterms.setSelectedItem(x.quo_terms());
-        ddorderstatus.setSelectedItem(x.quo_curr());
-        tarmks.setText(x.quo_rmks());
-        tbtermdate.setText(x.quo_ref());
+        tbkey.setText(bsNumber(x.bill_nbr()));
+        ddcust.setSelectedItem(x.bill_cust());
+        ddsite.setSelectedItem(x.bill_site());
+        ddacctstatus.setSelectedItem(x.bill_acctstatus());
+        ddtype.setSelectedItem(x.bill_type());
+        ddbillingtype.setSelectedItem(x.bill_billingtype());
+        ddbillingfrequency.setSelectedItem(x.bill_frequencytype());
+        dcservicedate.setDate(parseDate(x.bill_servicedate()));
+        dcbillingstartdate.setDate(parseDate(x.bill_billingdate()));
+        ddterms.setSelectedItem(x.bill_terms());
+        ddorderstatus.setSelectedItem(x.bill_orderstatus());
+        tarmks.setText(x.bill_rmks());
+        tbtermdate.setText(x.bill_termdate());
         
         
         
          // now detail
         
         detailmodel.setRowCount(0);
-        for (quo_det quod : quodetlist) {
+        for (bill_det quod : billdetlist) {
                     detailmodel.addRow(new Object[]{
-                      quod.quod_nbr(),   
-                      bsFormatInt(quod.quod_line()), 
-                      quod.quod_item(),
-                      quod.quod_desc(),
-                      bsNumber(quod.quod_qty()),
-                      bsFormatDouble(quod.quod_listprice()),
-                      bsFormatDouble(quod.quod_disc()),
-                      bsFormatDouble(quod.quod_netprice()),
-                      quod.quod_uom()
+                      quod.billd_nbr(),   
+                      bsFormatInt(quod.billd_line()), 
+                      quod.billd_item(),
+                      quod.billd_desc(),
+                      bsNumber(quod.billd_qty()),
+                      bsFormatDouble(quod.billd_listprice()),
+                      bsFormatDouble(quod.billd_disc()),
+                      bsFormatDouble(quod.billd_netprice()),
+                      quod.billd_uom()
                   });
-            quoteline =   Integer.valueOf(quod.quod_line());  
+            billline =   Integer.valueOf(quod.billd_line());  
         }
        
         
         // summary charges and discounts
         if (saclist != null) {
-            for (quo_sac sos : saclist) {
+            for (bill_sac sos : saclist) {
                 sacmodel.addRow(new Object[]{
-                          sos.quos_type(), 
-                          sos.quos_desc(),
-                          sos.quos_amttype(),
-                          sos.quos_amt(),
-                          sos.quos_appcode()});
+                          sos.bills_type(), 
+                          sos.bills_desc(),
+                          sos.bills_amttype(),
+                          sos.bills_amt(),
+                          sos.bills_appcode()});
             }
         }
         
@@ -1192,7 +1067,7 @@ public class BillableMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel3 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tarmks = new javax.swing.JTextArea();
-        ddquotetype = new javax.swing.JComboBox<>();
+        ddtype = new javax.swing.JComboBox<>();
         ddacctstatus = new javax.swing.JComboBox<>();
         jLabel2 = new javax.swing.JLabel();
         tbtermdate = new javax.swing.JTextField();
@@ -1386,7 +1261,7 @@ public class BillableMaint extends javax.swing.JPanel implements IBlueSeerT {
         tarmks.setRows(5);
         jScrollPane1.setViewportView(tarmks);
 
-        ddacctstatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "active", "suspended", "terminated" }));
+        ddacctstatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "active", "suspended", "closed" }));
         ddacctstatus.setToolTipText("");
 
         jLabel2.setText("Acct Status");
@@ -1537,7 +1412,7 @@ public class BillableMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addGroup(jPanelMainLayout.createSequentialGroup()
                                 .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(ddacctstatus, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(ddquotetype, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(ddtype, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(ddsite, javax.swing.GroupLayout.Alignment.LEADING, 0, 121, Short.MAX_VALUE)
                                     .addComponent(ddorderstatus, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addGap(33, 33, 33)
@@ -1631,7 +1506,7 @@ public class BillableMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(dcbillingstartdate, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(ddquotetype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(ddtype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel1)
                                 .addComponent(jLabel3))))
                     .addGroup(jPanelMainLayout.createSequentialGroup()
@@ -1872,7 +1747,7 @@ public class BillableMaint extends javax.swing.JPanel implements IBlueSeerT {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
-        newAction("quote"); 
+        newAction("bill"); 
     }//GEN-LAST:event_btnewActionPerformed
 
     private void btadditemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btadditemActionPerformed
@@ -1882,10 +1757,10 @@ public class BillableMaint extends javax.swing.JPanel implements IBlueSeerT {
       //  Matcher m = p.matcher(tbprice.getText());
        // receiverdet  "Part", "PO", "line", "Qty",  listprice, disc, netprice, loc, serial, lot, recvID, recvLine
        // voucherdet   "PO", "Line", "Part", "Qty", "Price", "RecvID", "RecvLine", "Acct", "CC"
-            quoteline++;
+            billline++;
             actamt += bsParseDouble(tbqty.getText()) * bsParseDouble(tbprice.getText());
             detailmodel.addRow(new Object[] { tbkey.getText(), 
-                                                quoteline,
+                                                billline,
                                                 tbitemservice.getText(),
                                                 lblitemdesc.getText(),
                                                 tbqty.getText(),
@@ -1927,7 +1802,7 @@ public class BillableMaint extends javax.swing.JPanel implements IBlueSeerT {
             bsmf.MainFrame.show(getMessageTag(1031, String.valueOf(i)));
              actamt -= bsParseDouble(detailtable.getModel().getValueAt(i,4).toString()) * bsParseDouble(detailtable.getModel().getValueAt(i,7).toString());
             ((javax.swing.table.DefaultTableModel) detailtable.getModel()).removeRow(i);
-           quoteline--;
+           billline--;
         }
         summarize();
     }//GEN-LAST:event_btdeleteitemActionPerformed
@@ -2009,7 +1884,7 @@ public class BillableMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_btdeleteActionPerformed
 
     private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
-        OVData.printQuote(tbkey.getText()); 
+        OVData.printBillMstr(tbkey.getText()); 
     }//GEN-LAST:event_btprintActionPerformed
 
     private void btsacaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btsacaddActionPerformed
@@ -2160,11 +2035,11 @@ public class BillableMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JComboBox<String> ddbillingtype;
     private javax.swing.JComboBox ddcust;
     private javax.swing.JComboBox<String> ddorderstatus;
-    private javax.swing.JComboBox<String> ddquotetype;
     private javax.swing.JComboBox<String> ddsacamttype;
     private javax.swing.JComboBox<String> ddsactype;
     private javax.swing.JComboBox ddsite;
     private javax.swing.JComboBox<String> ddterms;
+    private javax.swing.JComboBox<String> ddtype;
     private javax.swing.JComboBox<String> dduom;
     private javax.swing.JTable detailtable;
     private javax.swing.JLabel jLabel1;
