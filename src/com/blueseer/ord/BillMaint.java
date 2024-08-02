@@ -125,7 +125,7 @@ import javax.swing.event.TableModelEvent;
  *
  * @author vaughnte
  */
-public class BillableMaint extends javax.swing.JPanel implements IBlueSeerT {
+public class BillMaint extends javax.swing.JPanel implements IBlueSeerT {
                 
                  // global variable declarations
                 boolean isLoad = false;
@@ -190,7 +190,7 @@ public class BillableMaint extends javax.swing.JPanel implements IBlueSeerT {
     /**
      * Creates new form ShipMaintPanel
      */
-    public BillableMaint() {
+    public BillMaint() {
         initComponents();
         setLanguageTags(this);
       
@@ -430,23 +430,6 @@ public class BillableMaint extends javax.swing.JPanel implements IBlueSeerT {
         dcservicedate.setDate(null);
         dcbillingstartdate.setDate(null);
         
-       
-       ddbillingfrequency.removeAllItems();
-        ArrayList<String> dc = cusData.getdisclist();
-        for (int i = 0; i < dc.size(); i++) {
-            ddbillingfrequency.addItem(dc.get(i)); 
-        }
-        ddbillingfrequency.insertItemAt("", 0);
-        ddbillingfrequency.setSelectedIndex(0);
-       
-               
-        ddbillingtype.removeAllItems();
-        ArrayList<String> pg = OVData.getPriceGroupList();
-        for (int i = 0; i < pg.size(); i++) {
-            ddbillingtype.addItem(pg.get(i)); 
-        }
-        ddbillingtype.insertItemAt("", 0);
-        ddbillingtype.setSelectedIndex(0);
         
         ddcust.removeAllItems();
         ArrayList c = cusData.getcustmstrlist();
@@ -479,26 +462,28 @@ public class BillableMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddterms.insertItemAt("", 0);
         ddterms.setSelectedIndex(0);
         
-        ddorderstatus.removeAllItems();
-        ArrayList<String> curr = fglData.getCurrlist();
-        for (int i = 0; i < curr.size(); i++) {
-            ddorderstatus.addItem(curr.get(i));
-        }
-        ddorderstatus.insertItemAt("", 0);
-        ddorderstatus.setSelectedItem(OVData.getDefaultCurrency());
-        
         ddsactype.removeAllItems();
         ddsactype.addItem("charge");
         ddsactype.addItem("discount");
         ddsactype.addItem("tax");
         ddsactype.setSelectedIndex(0);
         
-        //open, closed, void
+       
+        ddacctstatus.removeAllItems();
+        ddacctstatus.addItem(getGlobalProgTag("active"));
+        ddacctstatus.addItem(getGlobalProgTag("suspended"));
+        ddacctstatus.addItem(getGlobalProgTag("closed"));
+        
         ddacctstatus.removeAllItems();
         ddacctstatus.addItem(getGlobalProgTag("open"));
-        ddacctstatus.addItem(getGlobalProgTag("closed"));
-        ddacctstatus.addItem(getGlobalProgTag("void"));
+        ddacctstatus.addItem(getGlobalProgTag("delinquent"));
         
+        ddtype.removeAllItems();
+        ArrayList<String> types = OVData.getCodeMstr("billingtype");
+        for (int i = 0; i < types.size(); i++) {
+            ddtype.addItem(types.get(i));
+        }
+        ddtype.setSelectedIndex(0);
         
        isLoad = false;
     }
@@ -1190,7 +1175,7 @@ public class BillableMaint extends javax.swing.JPanel implements IBlueSeerT {
         dcservicedate.setDateFormatString("yyyy-MM-dd");
 
         jLabel35.setText("Service Date");
-        jLabel35.setName("lblexpiredate"); // NOI18N
+        jLabel35.setName("lblservicedate"); // NOI18N
 
         jLabel28.setText("Total Amount");
         jLabel28.setName("lbltotalamt"); // NOI18N
@@ -1255,7 +1240,7 @@ public class BillableMaint extends javax.swing.JPanel implements IBlueSeerT {
         dcbillingstartdate.setDateFormatString("yyyy-MM-dd");
 
         jLabel3.setText("Billing Start Date");
-        jLabel3.setName("lblpriceexpiredate"); // NOI18N
+        jLabel3.setName("lblbillingdate"); // NOI18N
 
         tarmks.setColumns(20);
         tarmks.setRows(5);
@@ -1265,10 +1250,10 @@ public class BillableMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddacctstatus.setToolTipText("");
 
         jLabel2.setText("Acct Status");
-        jLabel2.setName("lblstatus"); // NOI18N
+        jLabel2.setName("lblacctstatus"); // NOI18N
 
         jLabel8.setText("Service End Date");
-        jLabel8.setName("lblref"); // NOI18N
+        jLabel8.setName("lbltermdate"); // NOI18N
 
         btdelete.setText("Delete");
         btdelete.setName("btdelete"); // NOI18N
@@ -1287,27 +1272,17 @@ public class BillableMaint extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         ddbillingtype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "cycle", "fom", "lom", "mom" }));
-        ddbillingtype.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ddbillingtypeActionPerformed(evt);
-            }
-        });
 
         jLabel9.setText("Billing Type");
-        jLabel9.setName("lblpricegroup"); // NOI18N
+        jLabel9.setName("lblbillingtype"); // NOI18N
 
         ddbillingfrequency.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "weekly", "monthly", "semi-monthly", "yearly", "semi-yearly" }));
-        ddbillingfrequency.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ddbillingfrequencyActionPerformed(evt);
-            }
-        });
 
         jLabel11.setText("Billing Frequency");
-        jLabel11.setName("lbldiscode"); // NOI18N
+        jLabel11.setName("lblbillingfrequency"); // NOI18N
 
         jLabel12.setText("Next Billing Date");
-        jLabel12.setName("lbltaxcode"); // NOI18N
+        jLabel12.setName("lblnextbilldate"); // NOI18N
 
         jLabel13.setText("Discounts");
         jLabel13.setName("lbltotaldisc"); // NOI18N
@@ -1331,12 +1306,12 @@ public class BillableMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel14.setName("lbluom"); // NOI18N
 
         jLabel15.setText("Order Status");
-        jLabel15.setName("lblterms"); // NOI18N
+        jLabel15.setName("lblorderstatus"); // NOI18N
 
         ddorderstatus.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "valid", "delinquent" }));
 
         jLabel16.setText("Terms");
-        jLabel16.setName("lblcurr"); // NOI18N
+        jLabel16.setName("lblterms"); // NOI18N
 
         jLabel17.setText("Taxes");
         jLabel17.setName("lbltotaltaxes"); // NOI18N
@@ -1349,6 +1324,7 @@ public class BillableMaint extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         jLabel18.setText("Last Billing Date");
+        jLabel18.setName("lbllastbilldate"); // NOI18N
 
         javax.swing.GroupLayout jPanelMainLayout = new javax.swing.GroupLayout(jPanelMain);
         jPanelMain.setLayout(jPanelMainLayout);
@@ -1938,49 +1914,6 @@ public class BillableMaint extends javax.swing.JPanel implements IBlueSeerT {
             percentlabel.setText("amount");
         }
     }//GEN-LAST:event_ddsacamttypeActionPerformed
-
-    private void ddbillingtypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddbillingtypeActionPerformed
-        if (! isLoad && ddbillingtype.getSelectedItem() != null && ! ddbillingtype.getSelectedItem().toString().isBlank()) {
-           
-            for (int j = 0; j < detailtable.getRowCount(); j++) { 
-            String[] descprice = invData.getItemPrice("c", ddbillingtype.getSelectedItem().toString(), detailtable.getValueAt(j,2).toString(), 
-            detailtable.getValueAt(j,8).toString(), ddorderstatus.getSelectedItem().toString(), "1");
-            
-            detailtable.setValueAt(bsParseDouble(descprice[1]), j, 5);
-            detailtable.setValueAt(bsParseDouble(descprice[1]), j, 7);
-            }
-            
-            summarize();
-            
-        }
-    }//GEN-LAST:event_ddbillingtypeActionPerformed
-
-    private void ddbillingfrequencyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ddbillingfrequencyActionPerformed
-         if (! isLoad && ddbillingfrequency.getSelectedItem() != null ) {
-            
-            // if blank code...remove from sactable and resummarize...then return;
-            if (ddbillingfrequency.getSelectedItem().toString().isBlank()) {
-                for (int j = 0; j < sactable.getRowCount(); j++) {
-                if (sactable.getValueAt(j, 0) != null && sactable.getValueAt(j, 4) != null && sactable.getValueAt(j, 0).toString().equals("discount") && sactable.getValueAt(j, 4).toString().equals("auto"))
-                   ((javax.swing.table.DefaultTableModel) sactable.getModel()).removeRow(j); 
-                }
-                summarize();
-                return;
-            }
-             // get generic discount key...regardless of cust code
-             ArrayList<String[]> headerdisc = cusData.getDiscountByKey("", ddbillingfrequency.getSelectedItem().toString());
-            
-            for (int j = 0; j < sactable.getRowCount(); j++) {
-                if (sactable.getValueAt(j, 0) != null && sactable.getValueAt(j, 4) != null && sactable.getValueAt(j, 0).toString().equals("discount") && sactable.getValueAt(j, 4).toString().equals("auto"))
-               ((javax.swing.table.DefaultTableModel) sactable.getModel()).removeRow(j); 
-            }
-            for (String[] t : headerdisc) {
-            sacmodel.addRow(new Object[]{ "discount", t[0], "percent", t[1], "auto"});
-            }
-            
-            summarize();
-         }
-    }//GEN-LAST:event_ddbillingfrequencyActionPerformed
 
     private void btchangelogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btchangelogActionPerformed
         callChangeDialog(tbkey.getText(), this.getClass().getSimpleName());

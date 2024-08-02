@@ -332,3 +332,5 @@ JobScanIO,,com.blueseer.prd.JobScanIO,JMenuItem,jobs
 JobBrowse,,com.blueseer.prd.JobBrowse,JMenuItem,jobb
 JobScanIOProject,,com.blueseer.prd.JobScanIOProject,JMenuItem,jobm
 JobClockMaint,,com.blueseer.prd.JobClockMaint,JMenuItem,jobc
+BillMaint,,com.blueseer.ord.BillMaint,JMenuItem,bill
+BillBrowse,,com.blueseer.ord.BillBrowse,JMenuItem,bilb

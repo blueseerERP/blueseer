@@ -479,3 +479,5 @@ sys_smtp,auth,yes,1
 sys_smtp,tls,yes,1
 fieldlabel,materialtax,Material Tax,1
 sys_def_acct_exp,90000000,Default Expense Account,1
+billingtype,Service,,1
+billingtype,Other,,1

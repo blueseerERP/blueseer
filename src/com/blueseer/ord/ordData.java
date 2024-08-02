@@ -2337,7 +2337,7 @@ public class ordData {
                     "bill_site, bill_servicedate, bill_billingdate," +
                     " bill_termdate, bill_lastbilldate, bill_nextbilldate," +
                     " bill_acctstatus, bill_orderstatus, bill_rmks, bill_ref," +
-                    " bill_type, bill_servicetype, bill_subtype, bill_billingtype" +
+                    " bill_type, bill_servicetype, bill_subtype, bill_billingtype, " +
                     " bill_frequencytype, bill_group, bill_category, bill_terms ) "
                         + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
        
@@ -2654,7 +2654,7 @@ public class ordData {
                             res.getString("bill_frequencytype"),
                             res.getString("bill_group"),
                             res.getString("bill_category"),
-                            res.getString("x.bill_terms"));
+                            res.getString("bill_terms"));
                     }
                 }
             } 

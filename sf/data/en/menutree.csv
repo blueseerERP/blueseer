@@ -91,15 +91,17 @@ Order,ServiceOrderMaint,3,JMenuItem,Service Order Maintenance,,,,1,1
 Order,ServiceOrderBrowse,4,JMenuItem,Service Order Browse,,,,1,1
 Order,QuoteMaint,5,JMenuItem,Quote Maintenance,,,,1,1
 Order,QuoteBrowse,6,JMenuItem,Quote Browse,,,,1,1
-Order,OrderSourceBrowse,7,JMenuItem,Order Source Browse,,1,,1,1
-Order,OrdLineBrowse,8,JMenuItem,Order Line Browse,,1,,1,1
-Order,SchedOrdBrowse,9,JMenuItem,Sched Order Browse,,1,,1,1
-Order,OrdRptPicker,10,JMenuItem,Order Report Selector,,,,1,1
-Order,OrderReports,11,JMenu,Other Reports,,,,1,1
-Order,POSMenu,12,JMenu,POS Menu,,,,1,1
-Order,DOMenu,13,JMenu,Distribution Menu,,,,1,1
-Order,OrderSource,14,JMenuItem,Order Source,,,,1,1
-Order,OrderControl,15,JMenuItem,Order Control,,,,1,1
+Order,BillMaint,7,JMenuItem,Billing Maintenance,,,,1,1
+Order,BillBrowse,8,JMenuItem,Billing Browse,,,,1,1
+Order,OrderSourceBrowse,9,JMenuItem,Order Source Browse,,1,,1,1
+Order,OrdLineBrowse,10,JMenuItem,Order Line Browse,,1,,1,1
+Order,SchedOrdBrowse,11,JMenuItem,Sched Order Browse,,1,,1,1
+Order,OrdRptPicker,12,JMenuItem,Order Report Selector,,,,1,1
+Order,OrderReports,13,JMenu,Other Reports,,,,1,1
+Order,POSMenu,14,JMenu,POS Menu,,,,1,1
+Order,DOMenu,15,JMenu,Distribution Menu,,,,1,1
+Order,OrderSource,16,JMenuItem,Order Source,,,,1,1
+Order,OrderControl,17,JMenuItem,Order Control,,,,1,1
 OrderReports,chart_order,1,JMenuItem,Chart Reporting,,1,,1,1
 Shipping,ShipMaint,1,JMenuItem,Shipper Maintenance,,,,1,1
 Shipping,ShipMaintSerial,2,JMenuItem,Shipper Maintenance (Serialized),,,,1,1

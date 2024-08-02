@@ -400,7 +400,7 @@
         <Component class="javax.swing.JLabel" name="jLabel35">
           <Properties>
             <Property name="text" type="java.lang.String" value="Service Date"/>
-            <Property name="name" type="java.lang.String" value="lblexpiredate" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="lblservicedate" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbactualamt">
@@ -502,7 +502,7 @@
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
             <Property name="text" type="java.lang.String" value="Billing Start Date"/>
-            <Property name="name" type="java.lang.String" value="lblpriceexpiredate" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="lblbillingdate" noResource="true"/>
           </Properties>
         </Component>
         <Container class="javax.swing.JScrollPane" name="jScrollPane1">
@@ -548,7 +548,7 @@
         <Component class="javax.swing.JLabel" name="jLabel2">
           <Properties>
             <Property name="text" type="java.lang.String" value="Acct Status"/>
-            <Property name="name" type="java.lang.String" value="lblstatus" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="lblacctstatus" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbtermdate">
@@ -556,7 +556,7 @@
         <Component class="javax.swing.JLabel" name="jLabel8">
           <Properties>
             <Property name="text" type="java.lang.String" value="Service End Date"/>
-            <Property name="name" type="java.lang.String" value="lblref" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="lbltermdate" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JButton" name="btdelete">
@@ -588,9 +588,6 @@
               </StringArray>
             </Property>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ddbillingtypeActionPerformed"/>
-          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
@@ -598,7 +595,7 @@
         <Component class="javax.swing.JLabel" name="jLabel9">
           <Properties>
             <Property name="text" type="java.lang.String" value="Billing Type"/>
-            <Property name="name" type="java.lang.String" value="lblpricegroup" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="lblbillingtype" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="ddbillingfrequency">
@@ -613,9 +610,6 @@
               </StringArray>
             </Property>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ddbillingfrequencyActionPerformed"/>
-          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
           </AuxValues>
@@ -623,13 +617,13 @@
         <Component class="javax.swing.JLabel" name="jLabel11">
           <Properties>
             <Property name="text" type="java.lang.String" value="Billing Frequency"/>
-            <Property name="name" type="java.lang.String" value="lbldiscode" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="lblbillingfrequency" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel12">
           <Properties>
             <Property name="text" type="java.lang.String" value="Next Billing Date"/>
-            <Property name="name" type="java.lang.String" value="lbltaxcode" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="lblnextbilldate" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbtotdisc">
@@ -690,7 +684,7 @@
         <Component class="javax.swing.JLabel" name="jLabel15">
           <Properties>
             <Property name="text" type="java.lang.String" value="Order Status"/>
-            <Property name="name" type="java.lang.String" value="lblterms" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="lblorderstatus" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JComboBox" name="ddorderstatus">
@@ -709,7 +703,7 @@
         <Component class="javax.swing.JLabel" name="jLabel16">
           <Properties>
             <Property name="text" type="java.lang.String" value="Terms"/>
-            <Property name="name" type="java.lang.String" value="lblcurr" noResource="true"/>
+            <Property name="name" type="java.lang.String" value="lblterms" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="tbtottax">
@@ -737,6 +731,7 @@
         <Component class="javax.swing.JLabel" name="jLabel18">
           <Properties>
             <Property name="text" type="java.lang.String" value="Last Billing Date"/>
+            <Property name="name" type="java.lang.String" value="lbllastbilldate" noResource="true"/>
           </Properties>
         </Component>
       </SubComponents>

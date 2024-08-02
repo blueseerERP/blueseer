@@ -43,3 +43,4 @@ driver,driver transaction number range,,100,99999,100
 vehicle,vehicle transaction number range,,200,99999,200
 broker,broker transaction number range,,500,99999,500
 quote,quote transaction number range,,7000,99999,7000
+bill,billing transaction number range,,80000000,99999999,80000000
