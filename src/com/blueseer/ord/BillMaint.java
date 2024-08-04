@@ -410,6 +410,10 @@ public class BillMaint extends javax.swing.JPanel implements IBlueSeerT {
         
         tarmks.setText("");
         tbtermdate.setText("");
+        tblastbillingdate.setText("");
+        tbnextbillingdate.setText("");
+        tblastbillingdate.setEditable(false);
+        tbnextbillingdate.setEditable(false);
         tbitemservice.setText("");
         lblitemdesc.setText("");
         tbqty.setText("");
@@ -692,6 +696,7 @@ public class BillMaint extends javax.swing.JPanel implements IBlueSeerT {
     
     public bill_mstr createRecord() {
         java.util.Date now = new java.util.Date();
+        
         bill_mstr x = new bill_mstr(null, 
                 bsNumberToUS(tbkey.getText()), 
                 ddcust.getSelectedItem().toString(),
@@ -752,29 +757,6 @@ public class BillMaint extends javax.swing.JPanel implements IBlueSeerT {
         return list;
     }
     
-    public String setNextBillDate(LocalDate servicedate, String billingtype, String frequencytype) {
-        String r = "";
-        LocalDate now = LocalDate.now();
-        
-        
-        // determine target date
-        LocalDate targetdate = now;
-        if (frequencytype.equals("fom")) { 
-            targetdate = now.withDayOfMonth(1);
-        }
-        if (frequencytype.equals("mom")) { 
-            targetdate = now.withDayOfMonth(15);
-        }
-        if (frequencytype.equals("lom")) { 
-            targetdate = now.withDayOfMonth(now.lengthOfMonth());
-        }
-        
-        r = targetdate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        
-        
-        
-        return r;
-    }
     
     
     public void lookUpFrameItemDesc() {
@@ -882,6 +864,8 @@ public class BillMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddorderstatus.setSelectedItem(x.bill_orderstatus());
         tarmks.setText(x.bill_rmks());
         tbtermdate.setText(x.bill_termdate());
+        tblastbillingdate.setText(x.bill_lastbilldate());
+        tbnextbillingdate.setText(x.bill_nextbilldate());
         
         
         

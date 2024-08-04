@@ -2243,6 +2243,9 @@ public class ordData {
                 }
             }
             
+            String nbd = findNextBillDate(LocalDate.parse(bm.bill_servicedate), bm.bill_billingtype, bm.bill_frequencytype);
+            _updateBillNextDate(bm.bill_nbr, nbd, "", bscon);
+            
             bscon.commit();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
         } catch (SQLException s) {
@@ -2962,6 +2965,7 @@ public class ordData {
         LocalDate xstart = null;
         LocalDate xend = null;
         String usage = "";
+        double amt = 0.00;
         LocalDate now = LocalDate.now();
       //  bill_mstr bm = getBillMstr(new String[]{bill});
         
@@ -3030,6 +3034,7 @@ public class ordData {
                 "" // bom
                 );
         shd.add(x);
+        amt += Double.valueOf(bdline.billd_netprice() * bdline.billd_qty());
         }      
        
         bscon.setAutoCommit(false);    
@@ -3219,6 +3224,56 @@ public class ordData {
             rows = ps.executeUpdate();
             ps.close();
         return rows;
+    }
+    
+    public static String findNextBillDate(LocalDate servicedate, String billingtype, String frequencytype) {
+        String r = "";
+        LocalDate now = LocalDate.now();
+        
+        
+        // determine target date
+        LocalDate targetdate = now;
+        if (billingtype.equals("fom")) {
+            if (frequencytype.equals("monthly")) {
+              targetdate = now.plusMonths(1).withDayOfMonth(1);
+            } else if (frequencytype.equals("yearly")) {
+              targetdate = now.plusYears(1).withDayOfMonth(1); 
+            } else if (frequencytype.equals("weekly")) {
+              targetdate = now.plusWeeks(1).withDayOfMonth(1);   
+            } else {
+              targetdate = now.plusMonths(1).withDayOfMonth(1);  
+            }
+        }
+        if (billingtype.equals("mom")) { 
+            if (frequencytype.equals("monthly")) {
+              targetdate = now.plusMonths(1).withDayOfMonth(15);
+            } else if (frequencytype.equals("yearly")) {
+              targetdate = now.plusYears(1).withDayOfMonth(15); 
+            } else if (frequencytype.equals("weekly")) {
+              targetdate = now.plusWeeks(1).withDayOfMonth(15);   
+            } else {
+              targetdate = now.plusMonths(1).withDayOfMonth(15);  
+            }
+        }
+        if (billingtype.equals("lom")) { 
+            if (frequencytype.equals("monthly")) {
+              targetdate = now.withDayOfMonth(now.lengthOfMonth());
+            } else if (frequencytype.equals("yearly")) {
+              targetdate = now.plusYears(1);
+              targetdate = targetdate.withDayOfMonth(targetdate.lengthOfMonth());
+            } else if (frequencytype.equals("weekly")) {
+              targetdate = now.plusWeeks(1);
+              targetdate = targetdate.withDayOfMonth(targetdate.lengthOfMonth());  
+            } else {
+              targetdate = now.withDayOfMonth(now.lengthOfMonth()); 
+            }
+        }
+        
+        r = targetdate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        
+        
+        
+        return r;
     }
     
     
