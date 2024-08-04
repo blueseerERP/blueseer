@@ -1633,9 +1633,9 @@ public class cusData {
     
     public static String[] getCustInfo(String cust) {
            // get billto specific data
-            // aracct, arcc, currency, bank, terms, carrier, onhold, site
-        String[] custinfo = new String[]{"","","","","","","", ""};
-        String sql = "select cm_ar_acct, cm_ar_cc, cm_curr, cm_bank, cm_terms, cm_carrier, cm_onhold, cm_site from cm_mstr where cm_code = ?;";
+            // aracct, arcc, currency, bank, terms, carrier, onhold, site, taxcode
+        String[] custinfo = new String[]{"","","","","","","", "", ""};
+        String sql = "select cm_ar_acct, cm_ar_cc, cm_curr, cm_bank, cm_terms, cm_carrier, cm_onhold, cm_site, cm_tax_code from cm_mstr where cm_code = ?;";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection()); 
 	PreparedStatement ps = con.prepareStatement(sql);) {
         ps.setString(1, cust);
@@ -1648,7 +1648,8 @@ public class cusData {
                custinfo[4] = res.getString("cm_terms");
                custinfo[5] = res.getString("cm_carrier");
                custinfo[6] = res.getString("cm_onhold");
-               custinfo[7] = res.getString("cm_site");                   
+               custinfo[7] = res.getString("cm_site");
+               custinfo[8] = res.getString("cm_tax_code");
                }
             }
         }

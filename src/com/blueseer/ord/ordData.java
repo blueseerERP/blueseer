@@ -27,6 +27,7 @@ package com.blueseer.ord;
 
 import com.blueseer.inv.*;
 import bsmf.MainFrame;
+import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.defaultDecimalSeparator;
 import static bsmf.MainFrame.driver;
@@ -37,11 +38,21 @@ import static bsmf.MainFrame.user;
 import com.blueseer.ctr.cusData;
 import static com.blueseer.ctr.cusData._getCMSDet;
 import com.blueseer.ctr.cusData.cms_det;
+import static com.blueseer.ctr.cusData.getCustInfo;
+import com.blueseer.shp.shpData;
+import static com.blueseer.shp.shpData._addShipperTransaction;
+import static com.blueseer.shp.shpData._confirmShipperTransaction;
+import static com.blueseer.shp.shpData._updateShipperSAC;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsNumber;
+import static com.blueseer.utl.BlueSeerUtils.bsNumberToUS;
+import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.parseDateLD;
+import static com.blueseer.utl.BlueSeerUtils.setDateDB;
+import com.blueseer.utl.OVData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -52,6 +63,8 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.logging.Level;
@@ -2666,6 +2679,46 @@ public class ordData {
         return r;
     }
    
+    public static bill_mstr _getBillMstr(String x, Connection bscon, PreparedStatement ps, ResultSet res) throws SQLException {
+        bill_mstr r = null;
+        String[] m = new String[2];
+        String sqlSelect = "select * from bill_mstr where bill_nbr = ?";
+          ps = bscon.prepareStatement(sqlSelect); 
+          ps.setString(1, x);
+          res = ps.executeQuery();
+            if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
+                r = new bill_mstr(m);
+            } else {
+                while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                     
+                        r = new bill_mstr(m, 
+                            res.getString("bill_nbr"),
+                            res.getString("bill_cust"),
+                            res.getString("bill_site"),
+                            res.getString("bill_servicedate"),
+                            res.getString("bill_billingdate"),
+                            res.getString("bill_termdate"),
+                            res.getString("bill_lastbilldate"),
+                            res.getString("bill_nextbilldate"),
+                            res.getString("bill_acctstatus"),
+                            res.getString("bill_orderstatus"),
+                            res.getString("bill_rmks"),
+                            res.getString("bill_ref"),
+                            res.getString("bill_type"),
+                            res.getString("bill_servicetype"),
+                            res.getString("bill_subtype"),
+                            res.getString("bill_billingtype"),
+                            res.getString("bill_frequencytype"),
+                            res.getString("bill_group"),
+                            res.getString("bill_category"),
+                            res.getString("bill_terms"));
+                    }
+            }
+            return r;
+    }
+    
     public static ArrayList<bill_det> getBillDet(String code) {
         bill_det r = null;
         String[] m = new String[2];
@@ -2705,6 +2758,37 @@ public class ordData {
         return list;
     }
    
+    public static ArrayList<bill_det> _getBillDet(String x, Connection bscon, PreparedStatement ps, ResultSet res) throws SQLException {
+        bill_det r = null;
+        String[] m = new String[2];
+        ArrayList<bill_det> list = new ArrayList<bill_det>();
+        String sql = "select * from bill_det where billd_nbr = ? order by billd_line ;";
+	ps = bscon.prepareStatement(sql);
+        ps.setString(1, x);
+        res = ps.executeQuery();
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
+                r = new bill_det(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new bill_det(m, res.getString("billd_nbr"), 
+                                res.getInt("billd_line"), 
+                                res.getString("billd_item"), 
+                                res.getString("billd_isinv"), 
+                                res.getString("billd_desc"),
+                                res.getString("billd_pricetype"), 
+                                res.getDouble("billd_listprice"),
+                                res.getDouble("billd_disc"),
+                                res.getDouble("billd_netprice"),
+                                res.getDouble("billd_qty"),
+                                res.getString("billd_uom"));
+                        list.add(r);
+                    }
+                }
+        return list;
+    }
+   
     public static ArrayList<bill_sac> getBillSAC(String code) {
         bill_sac r = null;
         String[] m = new String[2];
@@ -2738,7 +2822,33 @@ public class ordData {
         }
         return list;
     }
-       
+     
+    public static ArrayList<bill_sac> _getBillSAC(String x, Connection bscon, PreparedStatement ps, ResultSet res) throws SQLException {
+        bill_sac r = null;
+        String[] m = new String[2];
+        ArrayList<bill_sac> list = new ArrayList<bill_sac>();
+        String sql = "select * from bill_sac where bills_nbr = ? ;";
+        ps = bscon.prepareStatement(sql);
+        ps.setString(1, x);
+        res = ps.executeQuery();
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getRecordError};
+                r = new bill_sac(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                        r = new bill_sac(m, res.getString("bills_nbr"), 
+                                res.getString("bills_desc"), 
+                                res.getString("bills_type"), 
+                                res.getString("bills_amttype"), 
+                                res.getDouble("bills_amt"),
+                                res.getString("bills_appcode"));
+                        list.add(r);
+                    }
+                }
+        return list;
+    }
+    
     public static ArrayList<String> getBillLines(String nbr) {
         ArrayList<String> lines = new ArrayList<String>();
         try{
@@ -2775,8 +2885,8 @@ public class ordData {
             " billt_invoice, billt_amt, billt_invdate," +
             " billt_billingtype, billt_frequencytype, billt_servicedate," +
             " billt_billingdate, billt_usage, billt_qty," +
-            " billt_startdate, billt_enddate, billt_remarks)" +
-               " values (?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
+            " billt_startdate, billt_enddate, billt_remarks, billt_status)" +
+               " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?); "; 
           // tr_id and tr_timestamp are db assigned         
         try (PreparedStatement psi = con.prepareStatement(sqlInsert)) {
             psi.setString(1, x.billt_nbr);
@@ -2792,14 +2902,325 @@ public class ordData {
             psi.setString(11, x.billt_startdate);
             psi.setString(12, x.billt_enddate);
             psi.setString(13, x.billt_remarks);
+            psi.setString(14, x.billt_status);
             
             rows = psi.executeUpdate();
         }
         return rows;
     }
     
+    public static String billTransAll() {
+        ArrayList<String> bills = new ArrayList<String>();
+        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        try{
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        try{
+            Statement st = con.createStatement();
+            String sql = "SELECT bill_nbr from bill_mstr " +
+                   " where bill_acctstatus <> 'closed' " +
+                   " and bill_nextbilldate <= " + "'" + today + "'" +
+                   " order by bill_nbr;";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ResultSet res = ps.executeQuery();
+                while (res.next()) {
+                  bills.add(res.getString("bill_nbr"));
+                }
+        
+            for (String b : bills) {
+                _billTrans(_getBillMstr(b, con, ps, res), _getBillDet(b, con, ps, res), con);
+            }            
+          st.close();
+          res.close();
+        }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        }
+        con.close();
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+     
+        return "processed billing count: " + bills.size();
+    }
+    
+    public static void _billTrans(bill_mstr bm, ArrayList<bill_det> bd, Connection bscon) throws SQLException {
+        // check if we already have a billing record...if so...bale
+        if (bm.bill_nextbilldate().isBlank()) {
+            return;
+        }
+        if (getBillTranByDate(bm.bill_nbr(), parseDateLD(bm.bill_nextbilldate())) != null) {
+           return;   // tran record already created...bale
+        } 
+        String[] custdata = getCustInfo(bm.bill_cust());
+        String[] m = null;
+        LocalDate xstart = null;
+        LocalDate xend = null;
+        String usage = "";
+        LocalDate now = LocalDate.now();
+      //  bill_mstr bm = getBillMstr(new String[]{bill});
+        
+        // if here...we need to bill it
+        // get last tran record...if any
+       String[] lasttran = getBillTranLast(bm.bill_nbr()); 
+       
+       if (lasttran == null) {
+           xstart = parseDateLD(bm.bill_servicedate());
+           //xend = now.withDayOfMonth(now.lengthOfMonth());
+           xend = now;
+       } else {
+           xstart = parseDateLD(lasttran[3]).plusDays(1);
+           xend = xstart.plusDays(xstart.lengthOfMonth()); // total for year should sum to 365 or 366
+       }
+        
+       int shipperid = OVData.getNextNbr("shipper", bscon);
+       
+       // create ship mstr
+       shpData.ship_mstr sh = shpData.createShipMstrJRT(String.valueOf(shipperid), 
+                bm.bill_site(),
+                String.valueOf(shipperid), 
+                bm.bill_cust(),
+                "", // shipto
+                bsNumberToUS(bm.bill_nbr()),
+                bm.bill_nbr(),  // po 
+                bm.bill_ref(),  // ref
+                now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), //duedate
+                now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),  // orddate
+                bm.bill_rmks(),
+                "", // shipvia
+                "S", 
+                custdata[8],
+                bm.bill_site()); 
+       
+       // create shp_det 
+       ArrayList<shpData.ship_det> shd = new ArrayList<shpData.ship_det>();
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        
+        // line, item, order, orderline, po, qty, netprice, desc, wh, loc, disc, listprice, tax, cont, serial
+        
+        for (bill_det bdline : bd) {
+            shpData.ship_det x = new shpData.ship_det(null, 
+                String.valueOf(shipperid), // shipper
+                bdline.billd_line(), //shline
+                bdline.billd_item(), // item
+                "", // custimtem
+                bdline.billd_nbr(),  // order
+                bdline.billd_line(), //soline    
+                now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                "", // po
+                bdline.billd_qty(), // qty
+                bdline.billd_uom(), //uom
+                custdata[2], //currency
+                bdline.billd_netprice(), // net price
+                0, // disc
+                bdline.billd_listprice(), // list price
+                bdline.billd_desc(), // desc
+                "", // wh
+                "", // loc
+                0, // taxamt
+                "0", // cont
+                "", // ref
+                "", // serial   
+                bm.bill_site(),
+                "" // bom
+                );
+        shd.add(x);
+        }      
+       
+        bscon.setAutoCommit(false);    
+        try {                
+        _addShipperTransaction(shd, sh, bscon);
+        _updateShipperSAC(sh.sh_id(), bscon);
+        m = _confirmShipperTransaction("bill", String.valueOf(shipperid), new java.util.Date(), bscon);
+        bslog(m[0] + " " + m[1]);
+        
+       // now have xstart and xend...bill it
+       // create bill_tran along with ship_mstr, ship_det ....then call autoinvoice
+       bill_tran bt = new bill_tran(null, 
+                "", // primary key
+                bm.bill_nbr(), 
+                String.valueOf(shipperid), // invoice
+                0, // amt
+                now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), // invdate
+                bm.bill_billingtype(),
+                bm.bill_frequencytype(),
+                bm.bill_servicedate(),
+                bm.bill_billingdate(),
+                "", // usage  ...to be used later for actual service measurements for period
+                0, // qty  ...to be used later for actual service measurements for period
+                xstart.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), // xstartdate
+                xend.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), // xenddate
+                bm.bill_rmks(), // remarks
+                "open" // status
+        );  
+        _addBillTran(bt, bscon);
+        LocalDate nbd = LocalDate.parse(bm.bill_nextbilldate());
+        if (bm.bill_frequencytype().equals("monthly")) {
+            nbd = nbd.plusMonths(1);
+        }
+        if (bm.bill_frequencytype().equals("yearly")) {
+            nbd = nbd.plusYears(1);
+        }
+        if (bm.bill_frequencytype().equals("weekly")) {
+            nbd = nbd.plusWeeks(1);
+        }
+        
+        _updateBillNextDate(bm.bill_nbr(), 
+                nbd.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), 
+                now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                bscon
+                );
+        
+        bscon.commit();
+       
+        } catch (SQLException e) {
+           try {
+                 bscon.rollback();
+                 m = new String[] {BlueSeerUtils.ErrorBit, BlueSeerUtils.addRecordError};
+             } catch (SQLException rb) {
+                 MainFrame.bslog(rb);
+             } 
+        } 
+    }
+    
     
     // miscellaneous SQL queries
+    public static String[] getBillTranByDate(String bill, LocalDate billdate) {
+        String[] r = null;
+        
+        if (billdate == null) {
+                    return r;
+        }
+        
+        String strbilldate = billdate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        try{
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        ResultSet res = null;
+            try{
+                                
+                res = st.executeQuery("select billt_nbr, billt_invoice, billt_startdate, billt_enddate " +
+                        " from bill_tran where billt_nbr = " + "'" + bill + "'" +
+                        " and billt_invdate >= " + "'" + strbilldate + "'" + 
+                        " and billt_status <> 'void' " + ";");
+                while (res.next()) {
+                    r = new String[]{res.getString("billt_nbr"),
+                    res.getString("billt_invoice"),
+                    res.getString("billt_startdate"),
+                    res.getString("billt_enddate")};
+                }
+            }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+             return r;
+    }
+    
+    public static String[] getBillTranByInvoice(String bill, String invoice) {
+        String[] r = null;
+        try{
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        ResultSet res = null;
+            try{
+                res = st.executeQuery("select billt_nbr, billt_invoice, billt_startdate, billt_enddate " +
+                        " from bill_tran where billt_nbr = " + "'" + bill + "'" +
+                        " and billt_invoice = " + "'" + invoice + "'" + 
+                        " and billt_status <> 'void' " + ";");
+                while (res.next()) {
+                    r = new String[]{res.getString("billt_nbr"),
+                    res.getString("billt_invoice"),
+                    res.getString("billt_startdate"),
+                    res.getString("billt_enddate")};
+                }
+            }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+             return r;
+    }
+    
+    public static String[] getBillTranLast(String bill) {
+        String[] r = null;
+        try{
+        Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+        Statement st = con.createStatement();
+        ResultSet res = null;
+            try{
+                res = st.executeQuery("select billt_nbr, billt_invoice, billt_startdate, billt_enddate " +
+                        " from bill_tran where billt_nbr = " + "'" + bill + "'" +
+                        " and billt_status <> 'void' " + 
+                        " order by billt_id desc limit 1 "+ ";");
+                while (res.next()) {
+                    r = new String[]{res.getString("billt_nbr"),
+                    res.getString("billt_invoice"),
+                    res.getString("billt_startdate"),
+                    res.getString("billt_enddate")};
+                }
+            }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+             return r;
+    }
+    
+    private static int _updateBillNextDate(String nbr, String nbd, String lbd, Connection con) throws SQLException {
+        int rows = 0;
+        String sql = "update bill_mstr set bill_nextbilldate = ?, bill_lastbilldate = ? " +
+                 " where bill_nbr = ? ; ";
+	PreparedStatement ps = con.prepareStatement(sql) ;
+            ps.setString(3, nbr);
+            ps.setString(1, nbd);
+            ps.setString(2, lbd);
+            rows = ps.executeUpdate();
+            ps.close();
+        return rows;
+    }
+    
     
     public static ArrayList<String[]> getSalesOrderInit(String panelClassName) {
         String defaultsite = "";
@@ -3829,11 +4250,11 @@ public class ordData {
         String billt_invoice, double billt_amt, String billt_invdate,
         String billt_billingtype, String billt_frequencytype, String billt_servicedate,
         String billt_billingdate, String billt_usage, double billt_qty, 
-        String billt_startdate, String billt_enddate, String billt_remarks 
+        String billt_startdate, String billt_enddate, String billt_remarks, String billt_status 
         )  {
         public bill_tran(String[] m) {
             this (m, "", "", "", 0.00, "", "", "", "", "", "",
-                    0.00, "", "", "");
+                    0.00, "", "", "", "");
         }
     }
     

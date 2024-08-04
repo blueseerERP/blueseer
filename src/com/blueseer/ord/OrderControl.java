@@ -33,6 +33,7 @@ import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static com.blueseer.ord.ordData.addUpdateORCtrl;
+import static com.blueseer.ord.ordData.billTransAll;
 import static com.blueseer.ord.ordData.getORCtrl;
 import com.blueseer.ord.ordData.order_ctrl;
 import static com.blueseer.srv.SalesOrdServ.getSalesOrderJSON;
@@ -320,6 +321,7 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
         jLabel1 = new javax.swing.JLabel();
         tbenddate = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
+        btbilling = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -421,6 +423,13 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
                 .addContainerGap())
         );
 
+        btbilling.setText("Run Billing");
+        btbilling.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btbillingActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -443,7 +452,8 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btupdate)
-                            .addComponent(btjson))))
+                            .addComponent(btjson)
+                            .addComponent(btbilling))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -451,12 +461,6 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btupdate)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btjson))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(5, 5, 5)
                         .addComponent(cbautosource, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -469,8 +473,16 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbexceedQOHU)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cbvouchershipping)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cbvouchershipping))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btupdate)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btjson)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btbilling)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -506,8 +518,16 @@ public class OrderControl extends javax.swing.JPanel implements IBlueSeerc {
         
     }//GEN-LAST:event_btjsonActionPerformed
 
+    private void btbillingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbillingActionPerformed
+        boolean proceed = bsmf.MainFrame.warn("Are you sure you want to run billing?");
+        if (proceed) {
+           bsmf.MainFrame.show(billTransAll());
+        }
+    }//GEN-LAST:event_btbillingActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btbilling;
     private javax.swing.JButton btjson;
     private javax.swing.JButton btupdate;
     private javax.swing.JCheckBox cballocate;

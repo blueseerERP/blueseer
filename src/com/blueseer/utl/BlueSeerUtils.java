@@ -1437,6 +1437,15 @@ public class BlueSeerUtils {
         return r;
     }
     
+    public static LocalDate parseDateLD(String indate) {
+        LocalDate r = null;
+        if (indate != null && ! indate.isEmpty() && ! indate.equals("0000-00-00") && ! indate.equals("null")) {
+            r = LocalDate.parse(indate);
+        }
+        return r;
+    }
+    
+    
     public static Date parseDate(String indate, String format) {
         SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.getDefault());  // "yyyy-MM-dd"
         Date r = null;
@@ -1474,6 +1483,17 @@ public class BlueSeerUtils {
            return sdf.format(date);
        }
     }
+    
+    public static String setDateDBLD(LocalDate date) {
+       String mydate = null;
+       SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", new Locale("en-US"));
+       if (date == null) {
+           return mydate;
+       } else {
+           return sdf.format(date);
+       }
+    }
+    
     
     public static String setDateDB(String date, String format) {
        String mydate = null;

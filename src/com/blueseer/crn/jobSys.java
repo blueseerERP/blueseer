@@ -30,6 +30,7 @@ import com.blueseer.edi.EDI;
 import static com.blueseer.edi.EDI.packageEnvelopes;
 import com.blueseer.edi.EDILoad;
 import com.blueseer.fgl.fglData;
+import com.blueseer.ord.ordData;
 import com.blueseer.utl.EDData;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -59,6 +60,11 @@ public class jobSys implements Job {
         switch (param) {
             case "postgl":  {
                 fglData.PostGL();
+                break;
+            }
+            
+            case "billing":  {
+                ordData.billTransAll();
                 break;
             }
             

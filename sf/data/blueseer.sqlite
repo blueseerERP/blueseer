@@ -3405,7 +3405,8 @@ CREATE TABLE "bill_tran" (
   "billt_qty" decimal(14,5) NOT NULL DEFAULT '0',
   "billt_startdate" date DEFAULT '0000-00-00',
   "billt_enddate" date DEFAULT '0000-00-00',
-  "billt_remarks" varchar(500) NOT NULL COLLATE NOCASE DEFAULT ''
+  "billt_remarks" varchar(500) NOT NULL COLLATE NOCASE DEFAULT '',
+  "billt_status" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 
 

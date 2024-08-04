@@ -2954,4 +2954,5 @@ CREATE TABLE IF NOT EXISTS `bill_tran` (
   `billt_startdate` date DEFAULT NULL,
   `billt_enddate` date DEFAULT NULL,
   `billt_remarks` varchar(500) NOT NULL DEFAULT '',
+  `billt_status` varchar(30) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

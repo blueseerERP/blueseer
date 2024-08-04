@@ -80,6 +80,8 @@ import static com.blueseer.ord.ordData.getBillDet;
 import static com.blueseer.ord.ordData.getBillLines;
 import static com.blueseer.ord.ordData.getBillMstr;
 import static com.blueseer.ord.ordData.getBillSAC;
+import static com.blueseer.ord.ordData.getBillTranByDate;
+import static com.blueseer.ord.ordData.getBillTranLast;
 import static com.blueseer.ord.ordData.updateBillingTransaction;
 
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
@@ -94,6 +96,7 @@ import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.logChange;
 import static com.blueseer.utl.BlueSeerUtils.parseDate;
+import static com.blueseer.utl.BlueSeerUtils.parseDateLD;
 import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import static com.blueseer.utl.BlueSeerUtils.setDateFormatNull;
 import static com.blueseer.utl.OVData.addCustPriceList;
@@ -101,6 +104,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.sql.Connection;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -693,7 +698,7 @@ public class BillMaint extends javax.swing.JPanel implements IBlueSeerT {
                 ddsite.getSelectedItem().toString(),
                 setDateDB(dcservicedate.getDate()), // service start date
                 setDateDB(dcbillingstartdate.getDate()), // billing start date
-                setDateDB(null), // term date
+                setDateDB(null), // term date 
                 "", // last bill date
                 "", // next bill date
                 ddacctstatus.getSelectedItem().toString(),
@@ -746,6 +751,31 @@ public class BillMaint extends javax.swing.JPanel implements IBlueSeerT {
          }
         return list;
     }
+    
+    public String setNextBillDate(LocalDate servicedate, String billingtype, String frequencytype) {
+        String r = "";
+        LocalDate now = LocalDate.now();
+        
+        
+        // determine target date
+        LocalDate targetdate = now;
+        if (frequencytype.equals("fom")) { 
+            targetdate = now.withDayOfMonth(1);
+        }
+        if (frequencytype.equals("mom")) { 
+            targetdate = now.withDayOfMonth(15);
+        }
+        if (frequencytype.equals("lom")) { 
+            targetdate = now.withDayOfMonth(now.lengthOfMonth());
+        }
+        
+        r = targetdate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        
+        
+        
+        return r;
+    }
+    
     
     public void lookUpFrameItemDesc() {
         

@@ -370,6 +370,7 @@ CTP,IT1,1,no,no,e01,Class of Trade Code,2,2,-,O,F
 CTP,IT1,1,no,no,e02,Price Identifier Code,3,3,-,X,F
 CTP,IT1,1,no,no,e03,Unit Price,1,17,-,X,F
 CTP,IT1,1,no,no,e04,Quantity,1,15,-,X,F
+CTP,IT1,1,no,no,e05,UOM Composite,1,15,-,O,F
 CTP,IT1,1,no,no,e06,Price Multiplier Qualifier,3,3,-,O,F
 CTP,IT1,1,no,no,e07,Multiplier,1,10,-,X/Z,F
 CTP,IT1,1,no,no,e08,Monetary Amount,1,18,-,O/Z,F

@@ -965,7 +965,7 @@ public class shpData {
                     x[9] = res.getString("it_code");
                     x[10] = res.getString("it_phantom");
                     x[11] = res.getString("shd_bom");
-                    if (! res.getString("shd_uom").toUpperCase().equals(res.getString("it_uom").toUpperCase())) {
+                    if (res.getString("it_uom") != null && ! res.getString("shd_uom").toUpperCase().equals(res.getString("it_uom").toUpperCase())) {
                         baseqty = OVData.getUOMBaseQty(x[0], x[5], x[2], bsParseDouble(x[1]));
                     } else {
                         baseqty = bsParseDouble(x[1]);
