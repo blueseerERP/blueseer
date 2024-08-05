@@ -223,6 +223,8 @@ public class LocationTransfer extends javax.swing.JPanel {
             ddwhfrom.addItem(code);
             ddwhto.addItem(code);
         }
+        ddwhfrom.insertItemAt("", 0);
+        ddwhto.insertItemAt("", 0);
         
         ArrayList<String> mylist = new ArrayList();
         ddlocfrom.removeAllItems();
@@ -234,6 +236,8 @@ public class LocationTransfer extends javax.swing.JPanel {
                 ddlocto.addItem(code);
             }
         }
+        ddlocfrom.insertItemAt("", 0);
+        ddlocto.insertItemAt("", 0);
         
         
         
@@ -299,6 +303,8 @@ public class LocationTransfer extends javax.swing.JPanel {
         jLabel7 = new javax.swing.JLabel();
         ddwhfrom = new javax.swing.JComboBox<>();
         jLabel10 = new javax.swing.JLabel();
+        tbfromserial = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         ddlocto = new javax.swing.JComboBox();
         ddsiteto = new javax.swing.JComboBox();
@@ -306,12 +312,12 @@ public class LocationTransfer extends javax.swing.JPanel {
         jLabel9 = new javax.swing.JLabel();
         ddwhto = new javax.swing.JComboBox<>();
         jLabel11 = new javax.swing.JLabel();
+        tbtoserial = new javax.swing.JTextField();
+        jLabel14 = new javax.swing.JLabel();
         tbitem = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        tbserial = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         tbqty = new javax.swing.JTextField();
         dcdate = new com.toedter.calendar.JDateChooser();
@@ -319,8 +325,6 @@ public class LocationTransfer extends javax.swing.JPanel {
         bttransfer = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tablelocqty = new javax.swing.JTable();
-        dcexpire = new com.toedter.calendar.JDateChooser();
-        jLabel12 = new javax.swing.JLabel();
         btLookUpItemDesc = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
@@ -346,6 +350,8 @@ public class LocationTransfer extends javax.swing.JPanel {
         jLabel10.setText("Warehouse:");
         jLabel10.setName("lblwh"); // NOI18N
 
+        jLabel13.setText("Serial:");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -354,9 +360,11 @@ public class LocationTransfer extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING))
+                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(tbfromserial)
                     .addComponent(ddsitefrom, 0, 118, Short.MAX_VALUE)
                     .addComponent(ddlocfrom, 0, 118, Short.MAX_VALUE)
                     .addComponent(ddwhfrom, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -377,7 +385,10 @@ public class LocationTransfer extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ddlocfrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7))
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbfromserial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel13)))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("To:"));
@@ -395,6 +406,8 @@ public class LocationTransfer extends javax.swing.JPanel {
 
         jLabel11.setText("Warehouse:");
 
+        jLabel14.setText("Serial:");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -403,14 +416,16 @@ public class LocationTransfer extends javax.swing.JPanel {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel9)
                     .addComponent(jLabel8)
-                    .addComponent(jLabel11))
+                    .addComponent(jLabel11)
+                    .addComponent(jLabel14))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(ddwhto, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(ddlocto, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(ddsiteto, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(tbtoserial)
+                            .addComponent(ddlocto, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(ddsiteto, 0, 118, Short.MAX_VALUE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -429,7 +444,10 @@ public class LocationTransfer extends javax.swing.JPanel {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ddlocto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tbtoserial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel14)))
         );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -468,9 +486,6 @@ public class LocationTransfer extends javax.swing.JPanel {
         jLabel1.setText("Item:");
         jLabel1.setName("lblitem"); // NOI18N
 
-        jLabel5.setText("Serial");
-        jLabel5.setName("lblserial"); // NOI18N
-
         jLabel4.setText("Remarks:");
         jLabel4.setName("lblremarks"); // NOI18N
 
@@ -497,11 +512,6 @@ public class LocationTransfer extends javax.swing.JPanel {
         ));
         jScrollPane1.setViewportView(tablelocqty);
 
-        dcexpire.setDateFormatString("yyyy-MM-dd");
-
-        jLabel12.setText("Expire");
-        jLabel12.setName("lblexpiredate"); // NOI18N
-
         btLookUpItemDesc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/find.png"))); // NOI18N
         btLookUpItemDesc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -519,22 +529,18 @@ public class LocationTransfer extends javax.swing.JPanel {
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tbqty, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tbrmks, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(dcdate, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbserial, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel4Layout.createSequentialGroup()
                                 .addComponent(tbitem, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btLookUpItemDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(dcexpire, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(btLookUpItemDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                         .addGap(0, 13, Short.MAX_VALUE)
@@ -567,15 +573,7 @@ public class LocationTransfer extends javax.swing.JPanel {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbrmks, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(tbserial, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(dcexpire, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel12))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -601,10 +599,7 @@ public class LocationTransfer extends javax.swing.JPanel {
         String locfrom = "";
         String locto = "";
         
-        String expire = "";
-        if (dcexpire.getDate() != null) {
-            expire = dfdate.format(dcexpire.getDate());
-        }
+        
         
         if (ddlocfrom.getSelectedItem() != null)
         locfrom = ddlocfrom.getSelectedItem().toString();
@@ -664,31 +659,31 @@ public class LocationTransfer extends javax.swing.JPanel {
                 siteto, 
                 locto,  
                 whto,
-                expire,
+                "", // expire
                 "", 
                 "", 
                 "", 
                 0, 
                 "", 
                 "", 
-                tbserial.getText(), // lot 
+                tbfromserial.getText(), // lot 
                 tbrmks.getText(), //rmks
-                tbserial.getText(), //ref
+                tbfromserial.getText(), //ref
                 "", 
                 "", 
                 "", 
-                tbserial.getText(),  // serial
+                tbtoserial.getText(),  // serial
                 "LocactionTransferMaint", // program
                 bsmf.MainFrame.userid
                 );
             
         // do the 'to' side
-       rtn = OVData.UpdateInventoryDiscrete(tbitem.getText(), siteto, ddlocto.getSelectedItem().toString(), whto, tbserial.getText(), expire, qty);
+       rtn = OVData.UpdateInventoryDiscrete(tbitem.getText(), siteto, ddlocto.getSelectedItem().toString(), whto, tbfromserial.getText(), "", qty);
       
        // now do the 'from' side
        if (! rtn) {
        qty = -1 * qty;
-       rtn = OVData.UpdateInventoryDiscrete(tbitem.getText(), sitefrom, ddlocfrom.getSelectedItem().toString(), whfrom, tbserial.getText(), expire, qty);
+       rtn = OVData.UpdateInventoryDiscrete(tbitem.getText(), sitefrom, ddlocfrom.getSelectedItem().toString(), whfrom, tbtoserial.getText(), "", qty);
        }
        
       
@@ -725,6 +720,8 @@ public class LocationTransfer extends javax.swing.JPanel {
              for (String lc : loc) {
                 ddlocfrom.addItem(lc);
              }
+             ddlocfrom.insertItemAt("", 0);
+             ddlocfrom.setSelectedIndex(0);
         }
     }//GEN-LAST:event_ddwhfromActionPerformed
 
@@ -735,6 +732,8 @@ public class LocationTransfer extends javax.swing.JPanel {
              for (String lc : loc) {
                 ddlocto.addItem(lc);
              }
+             ddlocto.insertItemAt("", 0);
+             ddlocto.setSelectedIndex(0);
         }
     }//GEN-LAST:event_ddwhtoActionPerformed
 
@@ -747,7 +746,6 @@ public class LocationTransfer extends javax.swing.JPanel {
     private javax.swing.JButton btLookUpItemDesc;
     private javax.swing.JButton bttransfer;
     private com.toedter.calendar.JDateChooser dcdate;
-    private com.toedter.calendar.JDateChooser dcexpire;
     private javax.swing.JComboBox ddlocfrom;
     private javax.swing.JComboBox ddlocto;
     private javax.swing.JComboBox ddsitefrom;
@@ -757,11 +755,11 @@ public class LocationTransfer extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -772,9 +770,10 @@ public class LocationTransfer extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tablelocqty;
+    private javax.swing.JTextField tbfromserial;
     private javax.swing.JTextField tbitem;
     private javax.swing.JTextField tbqty;
     private javax.swing.JTextField tbrmks;
-    private javax.swing.JTextField tbserial;
+    private javax.swing.JTextField tbtoserial;
     // End of variables declaration//GEN-END:variables
 }

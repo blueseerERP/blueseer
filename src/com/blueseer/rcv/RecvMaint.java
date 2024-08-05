@@ -1630,10 +1630,10 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
                     tbprice.setText(res.getString("pod_netprice"));
                     if (res.getString("itc_total") != null)
                     tbcost.setText(res.getString("itc_total"));
-                    if (res.getString("it_loc") != null)
-                    ddloc.setSelectedItem(res.getString("it_loc"));
-                    if (res.getString("it_wh") != null)
-                    ddwh.setSelectedItem(res.getString("it_wh"));
+                  //  if (res.getString("it_loc") != null)
+                  //  ddloc.setSelectedItem(res.getString("it_loc"));
+                  //  if (res.getString("it_wh") != null)
+                  //  ddwh.setSelectedItem(res.getString("it_wh"));
                   //  ddsite.setSelectedItem(res.getString("pod_site"));
                     lblvendpart.setText(res.getString("pod_venditem"));
                     duedate.setText(res.getString("pod_due_date"));
