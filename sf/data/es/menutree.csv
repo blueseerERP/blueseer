@@ -88,17 +88,19 @@ Pedido,OrderMaint,1,JMenuItem,Mantenimiento de pedidos,,,,1,1
 Pedido,OrderBrowse,2,JMenuItem,Buscar pedido,,1,,1,1
 Pedido,ServiceOrderMaint,3,JMenuItem,Mantenimiento de la orden de servicio,,,,1,1
 Pedido,ServiceOrderBrowse,4,JMenuItem,Exploración de órdenes de servicio,,,,1,1
-Pedido,QuoteMaint,5,JMenuItem,Quote Maintenance,,,,1,1
-Pedido,QuoteBrowse,6,JMenuItem,Quote Browse,,,,1,1
-Pedido,OrderSourceBrowse,7,JMenuItem,Origen del pedido Buscar,,1,,1,1
-Pedido,OrdLineBrowse,8,JMenuItem,Exploración de la línea de pedido,,1,,1,1
-Pedido,SchedOrdBrowse,9,JMenuItem,Exploración de pedidos programados,,1,,1,1
-Pedido,OrdRptPicker,10,JMenuItem,Selector de informes de pedidos,,,,1,1
-Pedido,OrderReports,11,JMenu,Otros informes,,,,1,1
-Pedido,POSMenu,12,JMenu,Menú POS,,,,1,1
-Pedido,DOMenu,13,JMenu,Menú de distribución,,,,1,1
-Pedido,OrderSource,14,JMenuItem,Origen de la orden,,,,1,1
-Pedido,OrderControl,15,JMenuItem,Control de pedidos,,,,1,1
+Pedido,QuoteMaint,5,JMenuItem,Cita Mantenimiento,,,,1,1
+Pedido,QuoteBrowse,6,JMenuItem,Cita Exploración,,,,1,1
+Order,BillMaint,7,JMenuItem,Facturación Mantenimiento,,,,1,1
+Order,BillBrowse,8,JMenuItem,Facturación Exploración,,,,1,1
+Pedido,OrderSourceBrowse,9,JMenuItem,Origen del pedido Buscar,,1,,1,1
+Pedido,OrdLineBrowse,10,JMenuItem,Exploración de la línea de pedido,,1,,1,1
+Pedido,SchedOrdBrowse,11,JMenuItem,Exploración de pedidos programados,,1,,1,1
+Pedido,OrdRptPicker,12,JMenuItem,Selector de informes de pedidos,,,,1,1
+Pedido,OrderReports,13,JMenu,Otros informes,,,,1,1
+Pedido,POSMenu,14,JMenu,Menú POS,,,,1,1
+Pedido,DOMenu,15,JMenu,Menú de distribución,,,,1,1
+Pedido,OrderSource,16,JMenuItem,Origen de la orden,,,,1,1
+Pedido,OrderControl,17,JMenuItem,Control de pedidos,,,,1,1
 OrderReports,pcOpenOrdersByCust,1,JMenuItem,Órdenes abiertas por cliente por fecha de vencimiento (PieChart),,1,,1,1
 OrderReports,DiscreteOrderPerWeekUnits,2,JMenuItem,Ordenar unidades por semana (gráfico de barras),,1,,1,1
 OrderReports,DiscreteOrderPerWeekDollars,3,JMenuItem,Ordenar ventas por semana (gráfico de barras),,1,,1,1
@@ -187,7 +189,8 @@ Inventario,InventoryReportsMenu,16,JMenu,Informes varios de inventario,,,,1,1
 Inventario,InventoryCtrl,17,JMenuItem,Control de inventario,,,,1,1
 InvAdjustmentsMenu,LocationTransfer,1,JMenuItem,Transferencia de ubicación,,,,1,1
 InvAdjustmentsMenu,InventoryAdjustment,2,JMenuItem,Ajuste de inventario,,,,1,1
-InventoryReportsMenu,TransBrowse,1,JMenuItem,Exploración de transacciones,,1,,1,1
+InventoryReportsMenu,InventoryBrowse,1,JMenuItem,Informe de inventario,,1,,1,1
+InventoryReportsMenu,TransBrowse,2,JMenuItem,Exploración de transacciones,,1,,1,1
 ItemMenu,ItemMaint,1,JMenuItem,Mantenimiento del artículo,,,,1,1
 ItemMenu,ItemBrowse,2,JMenuItem,Explorar artículo,,1,,1,1
 ItemMenu,UOMMaint,3,JMenuItem,Mantenimiento de UOM,,,,1,1

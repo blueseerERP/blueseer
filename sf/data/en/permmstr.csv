@@ -343,3 +343,4 @@ admin,JobClockMaint,0
 admin,JobScanMenu,0
 admin,BillMaint,0
 admin,BillBrowse,0
+admin,InventoryBrowse,0

@@ -311,3 +311,6 @@ QuoteBrowse,,com.blueseer.ord.QuoteBrowse,JMenuItem,quob
 ChartMain,,com.blueseer.utl.ChartMain,JMenuItem,chart
 JobScanIO,,com.blueseer.prd.JobScanIO,JMenuItem,jobs
 JobBrowse,,com.blueseer.prd.JobBrowse,JMenuItem,jobb
+BillMaint,,com.blueseer.ord.BillMaint,JMenuItem,bill
+BillBrowse,,com.blueseer.ord.BillBrowse,JMenuItem,bilb
+InventoryBrowse,,com.blueseer.inv.InventoryBrowse,JMenuItem,invr

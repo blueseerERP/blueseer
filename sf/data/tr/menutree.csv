@@ -187,7 +187,8 @@ Envanter,InventoryReportsMenu,16,JMenu,Envanter Çeşitli Raporları,,,,1,1
 Envanter,InventoryCtrl,17,JMenuItem,Stok kontrolü,,,,1,1
 InvAdjustmentsMenu,LocationTransfer,1,JMenuItem,Konum Transferi,,,,1,1
 InvAdjustmentsMenu,InventoryAdjustment,2,JMenuItem,Envanter Ayarlama,,,,1,1
-InventoryReportsMenu,TransBrowse,1,JMenuItem,İşlem Gözat,,1,,1,1
+InventoryReportsMenu,InventoryBrowse,1,JMenuItem,Envanter raporu,,1,,1,1
+InventoryReportsMenu,TransBrowse,2,JMenuItem,İşlem Gözat,,1,,1,1
 ItemMenu,ItemMaint,1,JMenuItem,Ürün Bakımı,,,,1,1
 ItemMenu,ItemBrowse,2,JMenuItem,Öğe Gözat,,1,,1,1
 ItemMenu,UOMMaint,3,JMenuItem,UOM Bakımı,,,,1,1
