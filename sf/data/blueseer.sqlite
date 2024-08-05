@@ -3408,6 +3408,15 @@ CREATE TABLE "bill_tran" (
   "billt_remarks" varchar(500) NOT NULL COLLATE NOCASE DEFAULT '',
   "billt_status" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
 );
+CREATE TABLE "bill_log" (
+  "billl_id" INTEGER PRIMARY KEY,
+  "billl_nbr" varchar(8) NOT NULL COLLATE NOCASE DEFAULT '',
+  "billl_type" varchar(20) NOT NULL COLLATE NOCASE DEFAULT '',
+  "billl_messg" varchar(500) NOT NULL COLLATE NOCASE DEFAULT '',
+  "billl_userid" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "billl_date" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "billl_time" varchar(6) NOT NULL COLLATE NOCASE DEFAULT ''
+);
 
 
 End Transaction;
