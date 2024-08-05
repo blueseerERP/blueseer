@@ -95,6 +95,7 @@ public class InventoryBrowse extends javax.swing.JPanel {
                             getGlobalColumnTag("warehouse"),
                             getGlobalColumnTag("location"),
                             getGlobalColumnTag("serial"),
+                            getGlobalColumnTag("expiredate"),
                             getGlobalColumnTag("qty")});
     
     // tr_id, tr_item, tr_type, tr_qty, tr_eff_date, tr_timestamp, tr_ref, tr_serial, tr_program , tr_userid
@@ -489,6 +490,7 @@ try {
                                 res.getString("wh"),
                                 res.getString("loc"),
                                 res.getString("serial"),
+                                res.getString("expire"),
                                 res.getDouble("qoh")   
                             });
                 }
