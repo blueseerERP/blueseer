@@ -2965,3 +2965,25 @@ CREATE TABLE IF NOT EXISTS `bill_log` (
   `billl_date` varchar(10) NOT NULL  DEFAULT '',
   `billl_time` varchar(6) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `inb_mstr` (
+  `inb_item` varchar(36) NOT NULL  DEFAULT '',
+  `inb_per` int(2) NOT NULL DEFAULT '0',
+  `inb_year` int(4) NOT NULL DEFAULT '0',
+  `inb_amt` decimal(15,2) NOT NULL DEFAULT '0.00',
+  `inb_site` varchar(10) NOT NULL  DEFAULT '') 
+ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `prb_mstr` (
+  `prb_item` varchar(36) NOT NULL  DEFAULT '',
+  `prb_per` int(2) NOT NULL DEFAULT '0',
+  `prb_year` int(4) NOT NULL DEFAULT '0',
+  `prb_amt` decimal(15,2) NOT NULL DEFAULT '0.00',
+  `prb_site` varchar(10) NOT NULL  DEFAULT '') 
+ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `usr_log` (
+  `usrl_userid` varchar(36) NOT NULL  DEFAULT '',
+  `usrl_date` varchar(10) NOT NULL DEFAULT '',
+  `usrl_time` varchar(6) NOT NULL  DEFAULT '',
+  `usrl_host` varchar(20) NOT NULL  DEFAULT '',
+  `usrl_ref` varchar(80) NOT NULL  DEFAULT '',
+  `usrl_messg` varchar(80) NOT NULL  DEFAULT '') 
+ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
