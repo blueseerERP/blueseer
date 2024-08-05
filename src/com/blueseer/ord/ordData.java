@@ -2391,32 +2391,31 @@ public class ordData {
         int rows = 0;
         String sql = "update bill_mstr set bill_cust = ?, " +
                     "bill_site = ?, bill_servicedate = ?, bill_billingdate = ?," +
-                    " bill_termdate = ?, bill_lastbilldate = ?, bill_nextbilldate = ?," +
+                    " bill_termdate = ?, bill_nextbilldate = ?, " +
                     " bill_acctstatus = ?, bill_orderstatus = ?, bill_rmks = ?, bill_ref = ?," +
-                    " bill_type = ?, bill_servicetype = ?, bill_subtype = ?, bill_billingtype = ?" +
+                    " bill_type = ?, bill_servicetype = ?, bill_subtype = ?, bill_billingtype = ?, " +
                     " bill_frequencytype = ?, bill_group = ?, bill_category = ?, bill_terms = ? " +
                  " where bill_nbr = ? ; ";
 	ps = con.prepareStatement(sql) ;
-            ps.setString(20, x.bill_nbr);
+            ps.setString(19, x.bill_nbr);
             ps.setString(1, x.bill_cust);
             ps.setString(2, x.bill_site);
             ps.setString(3, x.bill_servicedate);
             ps.setString(4, x.bill_billingdate);
             ps.setString(5, x.bill_termdate);
-            ps.setString(6, x.bill_lastbilldate);
-            ps.setString(7, x.bill_nextbilldate);
-            ps.setString(8, x.bill_acctstatus);
-            ps.setString(9, x.bill_orderstatus);
-            ps.setString(10, x.bill_rmks);
-            ps.setString(11, x.bill_ref);
-            ps.setString(12, x.bill_type);
-            ps.setString(13, x.bill_servicetype);
-            ps.setString(14, x.bill_subtype);
-            ps.setString(15, x.bill_billingtype);
-            ps.setString(16, x.bill_frequencytype);
-            ps.setString(17, x.bill_group);
-            ps.setString(18, x.bill_category);
-            ps.setString(19, x.bill_terms);
+            ps.setString(6, x.bill_nextbilldate);
+            ps.setString(7, x.bill_acctstatus);
+            ps.setString(8, x.bill_orderstatus);
+            ps.setString(9, x.bill_rmks);
+            ps.setString(10, x.bill_ref);
+            ps.setString(11, x.bill_type);
+            ps.setString(12, x.bill_servicetype);
+            ps.setString(13, x.bill_subtype);
+            ps.setString(14, x.bill_billingtype);
+            ps.setString(15, x.bill_frequencytype);
+            ps.setString(16, x.bill_group);
+            ps.setString(17, x.bill_category);
+            ps.setString(18, x.bill_terms);
             rows = ps.executeUpdate();
         return rows;
     }

@@ -411,9 +411,8 @@ public class BillMaint extends javax.swing.JPanel implements IBlueSeerT {
         tarmks.setText("");
         tbtermdate.setText("");
         tblastbillingdate.setText("");
-        tbnextbillingdate.setText("");
+        
         tblastbillingdate.setEditable(false);
-        tbnextbillingdate.setEditable(false);
         tbitemservice.setText("");
         lblitemdesc.setText("");
         tbqty.setText("");
@@ -436,8 +435,9 @@ public class BillMaint extends javax.swing.JPanel implements IBlueSeerT {
        
         
         java.util.Date now = new java.util.Date();
-        dcservicedate.setDate(null);
-        dcbillingstartdate.setDate(null);
+        dcservicedate.setDate(now);
+        dcbillingstartdate.setDate(now);
+        dcnextdate.setDate(now);
         
         
         ddcust.removeAllItems();
@@ -704,8 +704,8 @@ public class BillMaint extends javax.swing.JPanel implements IBlueSeerT {
                 setDateDB(dcservicedate.getDate()), // service start date
                 setDateDB(dcbillingstartdate.getDate()), // billing start date
                 setDateDB(null), // term date 
-                "", // last bill date
-                "", // next bill date
+                tblastbillingdate.getText(), // last bill date
+                setDateDB(dcnextdate.getDate()), // next bill date
                 ddacctstatus.getSelectedItem().toString(),
                 ddorderstatus.getSelectedItem().toString(),
                 tarmks.getText(),
@@ -865,7 +865,7 @@ public class BillMaint extends javax.swing.JPanel implements IBlueSeerT {
         tarmks.setText(x.bill_rmks());
         tbtermdate.setText(x.bill_termdate());
         tblastbillingdate.setText(x.bill_lastbilldate());
-        tbnextbillingdate.setText(x.bill_nextbilldate());
+        dcnextdate.setDate(parseDate(x.bill_nextbilldate()));
         
         
         
@@ -1092,9 +1092,9 @@ public class BillMaint extends javax.swing.JPanel implements IBlueSeerT {
         tbtottax = new javax.swing.JTextField();
         jLabel17 = new javax.swing.JLabel();
         btchangelog = new javax.swing.JButton();
-        tbnextbillingdate = new javax.swing.JTextField();
         tblastbillingdate = new javax.swing.JTextField();
         jLabel18 = new javax.swing.JLabel();
+        dcnextdate = new com.toedter.calendar.JDateChooser();
         jPanelCharges = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         sactable = new javax.swing.JTable();
@@ -1285,7 +1285,7 @@ public class BillMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
-        ddbillingtype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "cycle", "fom", "lom", "mom" }));
+        ddbillingtype.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "fom", "lom", "mom" }));
 
         jLabel9.setText("Billing Type");
         jLabel9.setName("lblbillingtype"); // NOI18N
@@ -1340,6 +1340,8 @@ public class BillMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel18.setText("Last Billing Date");
         jLabel18.setName("lbllastbilldate"); // NOI18N
 
+        dcnextdate.setDateFormatString("yyyy-MM-dd");
+
         javax.swing.GroupLayout jPanelMainLayout = new javax.swing.GroupLayout(jPanelMain);
         jPanelMain.setLayout(jPanelMainLayout);
         jPanelMainLayout.setHorizontalGroup(
@@ -1359,7 +1361,7 @@ public class BillMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addComponent(jLabel7)
                             .addComponent(jLabel15))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 594, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanelMainLayout.createSequentialGroup()
                                 .addComponent(tbitemservice, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1412,13 +1414,13 @@ public class BillMaint extends javax.swing.JPanel implements IBlueSeerT {
                                     .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel16, javax.swing.GroupLayout.Alignment.TRAILING))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(jPanelMainLayout.createSequentialGroup()
-                                        .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(dcservicedate, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(dcbillingstartdate, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(tbtermdate, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(tbtermdate, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(dcservicedate, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
+                                            .addComponent(dcbillingstartdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 108, Short.MAX_VALUE)
                                         .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jLabel11, javax.swing.GroupLayout.Alignment.TRAILING)
                                             .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -1429,11 +1431,10 @@ public class BillMaint extends javax.swing.JPanel implements IBlueSeerT {
                                         .addComponent(jLabel18)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(ddbillingfrequency, 0, 141, Short.MAX_VALUE)
                                     .addComponent(ddbillingtype, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(ddbillingfrequency, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(tbnextbillingdate)
-                                    .addComponent(tblastbillingdate))
-                                .addGap(15, 15, 15))))
+                                    .addComponent(tblastbillingdate)
+                                    .addComponent(dcnextdate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                     .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(jPanelMainLayout.createSequentialGroup()
                             .addGap(116, 116, 116)
@@ -1457,7 +1458,7 @@ public class BillMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(btadd))
                         .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 775, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(15, 15, 15))
         );
         jPanelMainLayout.setVerticalGroup(
             jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1486,10 +1487,10 @@ public class BillMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel10)
                         .addComponent(jLabel35))
-                    .addComponent(dcservicedate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(ddbillingtype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel9)))
+                        .addComponent(jLabel9))
+                    .addComponent(dcservicedate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanelMainLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1505,13 +1506,14 @@ public class BillMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addComponent(ddbillingfrequency, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel11))))
                 .addGap(7, 7, 7)
-                .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ddacctstatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
-                    .addComponent(tbtermdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8)
-                    .addComponent(jLabel12)
-                    .addComponent(tbnextbillingdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(ddacctstatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel2)
+                        .addComponent(tbtermdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel8)
+                        .addComponent(jLabel12))
+                    .addComponent(dcnextdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanelMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ddterms, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1976,6 +1978,7 @@ public class BillMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JButton btsacdelete;
     private javax.swing.JButton btupdate;
     private com.toedter.calendar.JDateChooser dcbillingstartdate;
+    private com.toedter.calendar.JDateChooser dcnextdate;
     private com.toedter.calendar.JDateChooser dcservicedate;
     private javax.swing.JComboBox<String> ddacctstatus;
     private javax.swing.JComboBox<String> ddbillingfrequency;
@@ -2034,7 +2037,6 @@ public class BillMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JTextField tbitemservice;
     private javax.swing.JTextField tbkey;
     private javax.swing.JTextField tblastbillingdate;
-    private javax.swing.JTextField tbnextbillingdate;
     private javax.swing.JTextField tbprice;
     private javax.swing.JTextField tbqty;
     private javax.swing.JTextField tbsacamt;

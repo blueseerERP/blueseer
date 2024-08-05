@@ -49,7 +49,7 @@
                               <Component id="jLabel15" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="jScrollPane1" alignment="0" min="-2" pref="594" max="-2" attributes="0"/>
                               <Group type="102" alignment="0" attributes="0">
                                   <Component id="tbitemservice" min="-2" pref="316" max="-2" attributes="0"/>
@@ -110,14 +110,14 @@
                                       <Component id="jLabel16" alignment="1" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                       <Group type="102" attributes="0">
-                                          <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="dcservicedate" alignment="0" min="-2" pref="161" max="-2" attributes="0"/>
-                                              <Component id="dcbillingstartdate" alignment="0" min="-2" pref="161" max="-2" attributes="0"/>
+                                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
                                               <Component id="tbtermdate" alignment="0" min="-2" pref="102" max="-2" attributes="0"/>
+                                              <Component id="dcservicedate" alignment="0" pref="141" max="32767" attributes="0"/>
+                                              <Component id="dcbillingstartdate" alignment="0" max="32767" attributes="0"/>
                                           </Group>
-                                          <EmptySpace max="32767" attributes="0"/>
+                                          <EmptySpace pref="108" max="32767" attributes="0"/>
                                           <Group type="103" groupAlignment="0" attributes="0">
                                               <Component id="jLabel11" alignment="1" min="-2" max="-2" attributes="0"/>
                                               <Component id="jLabel12" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -132,12 +132,11 @@
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Component id="ddbillingtype" max="32767" attributes="0"/>
-                                      <Component id="ddbillingfrequency" max="32767" attributes="0"/>
-                                      <Component id="tbnextbillingdate" max="32767" attributes="0"/>
-                                      <Component id="tblastbillingdate" max="32767" attributes="0"/>
+                                      <Component id="ddbillingfrequency" alignment="0" pref="141" max="32767" attributes="0"/>
+                                      <Component id="ddbillingtype" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="tblastbillingdate" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="dcnextdate" alignment="0" max="32767" attributes="0"/>
                                   </Group>
-                                  <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -167,7 +166,7 @@
                           <Component id="jScrollPane7" min="-2" pref="775" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -205,11 +204,11 @@
                           <Component id="jLabel10" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel35" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="dcservicedate" min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="ddbillingtype" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <Component id="dcservicedate" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
@@ -232,13 +231,15 @@
                       </Group>
                   </Group>
                   <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="ddacctstatus" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="tbtermdate" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabel8" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabel12" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="tbnextbillingdate" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="ddacctstatus" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="tbtermdate" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel8" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabel12" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <Component id="dcnextdate" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
@@ -580,11 +581,10 @@
         <Component class="javax.swing.JComboBox" name="ddbillingtype">
           <Properties>
             <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="4">
-                <StringItem index="0" value="cycle"/>
-                <StringItem index="1" value="fom"/>
-                <StringItem index="2" value="lom"/>
-                <StringItem index="3" value="mom"/>
+              <StringArray count="3">
+                <StringItem index="0" value="fom"/>
+                <StringItem index="1" value="lom"/>
+                <StringItem index="2" value="mom"/>
               </StringArray>
             </Property>
           </Properties>
@@ -724,14 +724,17 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btchangelogActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JTextField" name="tbnextbillingdate">
-        </Component>
         <Component class="javax.swing.JTextField" name="tblastbillingdate">
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel18">
           <Properties>
             <Property name="text" type="java.lang.String" value="Last Billing Date"/>
             <Property name="name" type="java.lang.String" value="lbllastbilldate" noResource="true"/>
+          </Properties>
+        </Component>
+        <Component class="com.toedter.calendar.JDateChooser" name="dcnextdate">
+          <Properties>
+            <Property name="dateFormatString" type="java.lang.String" value="yyyy-MM-dd"/>
           </Properties>
         </Component>
       </SubComponents>
