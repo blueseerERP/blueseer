@@ -65,14 +65,18 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.fgl.fglData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsNumber;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import java.sql.Connection;
 import java.text.DecimalFormatSymbols;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -83,6 +87,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import org.threeten.bp.LocalDate;
 
 
 
@@ -468,8 +473,44 @@ public class InventoryValuation extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRunActionPerformed
- 
-try {
+        
+        String[] td = new String[]{"","","","",""};
+        Date now = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(now);
+        int thisyear = cal.get(Calendar.YEAR);
+        int thisperiod = cal.get(Calendar.MONTH) + 1;
+        
+        
+        Date targetdate = dcdate.getDate();
+        cal.setTime(targetdate);
+        int targetyear = cal.get(Calendar.YEAR);
+        int targetperiod = cal.get(Calendar.MONTH) + 1;
+        
+        // back targetperiod up by 1
+        targetperiod = targetperiod - 1;
+        if (targetperiod < 1) {
+            targetperiod = 12;
+            targetyear = targetyear - 1;
+        }
+        
+        
+        // if dcdate = today...then reset target period and target year for today
+        boolean isToday = false;
+        if (setDateDB(targetdate).equals(setDateDB(now))) {
+            targetperiod = thisperiod;
+            targetyear = thisyear;
+            isToday = true;
+        } else {
+            td = fglData.getGLCalForDate(targetdate); // td[2] = startdate of period
+        }
+        
+        System.out.println("target date: " + targetdate);
+        System.out.println("target period: " + targetperiod);
+        System.out.println("target year: " + targetyear);
+        System.out.println("start date: " + td[2]);
+        
+    try {
             Connection con = null;
             if (ds != null) {
               con = ds.getConnection();
@@ -494,23 +535,48 @@ try {
                 
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                
+                 if (isToday) {
                  res = st.executeQuery("select it_item, it_code, it_desc, itc_total, " + 
                       "case when inb_amt is null then '0' else inb_amt end as qty " +
                       " from item_mstr " +
                       " inner join item_cost on itc_item = it_item and itc_set = 'standard' and itc_site = it_site " +
                       " left outer join inb_mstr on inb_item = it_item and " +
-                      " inb_site = it_site " +   
+                      " inb_site = it_site " + 
+                      " AND inb_year = " + "'" + targetyear + "'" +
+                      " AND inb_per = " + "'" + targetperiod + "'" +
                        " where it_item >= " + "'" + ddfromitem.getSelectedItem().toString() + "'" +  " AND " 
                        + " it_item <= " + "'" + ddtoitem.getSelectedItem().toString() + "'" +  " AND " 
                        + " it_site = " + "'" + ddsite.getSelectedItem().toString() + "'"        
                        + ";" );
+                 } else {
+                    res = st.executeQuery("select it_item, it_code, it_desc, itc_total, " + 
+                      "case when inb_amt is null then '0' else inb_amt end as qty, " +
+                      " (select tr_qty from tran_mstr where tr_item = it_item and " +
+                            " tr_eff_date >= " + "'" + td[2] + "'" + // td[2] is period start date of targetdate
+                            " and " + " tr_eff_date <= " + "'" + setDateDB(targetdate) + "'"  + ") as trqty " +   
+                      " from item_mstr " +
+                      " inner join item_cost on itc_item = it_item and itc_set = 'standard' and itc_site = it_site " +
+                      " left outer join inb_mstr on inb_item = it_item and " +
+                      " inb_site = it_site " + 
+                      " AND inb_year = " + "'" + targetyear + "'" +
+                      " AND inb_per = " + "'" + targetperiod + "'" +
+                       " where it_item >= " + "'" + ddfromitem.getSelectedItem().toString() + "'" +  " AND " 
+                       + " it_item <= " + "'" + ddtoitem.getSelectedItem().toString() + "'" +  " AND " 
+                       + " it_site = " + "'" + ddsite.getSelectedItem().toString() + "'"        
+                       + ";" ); 
+                 }
+                 double actqty = 0;
                 while (res.next()) {
                    
                     if (! ddclass.getSelectedItem().toString().isBlank() && ! res.getString("it_code").equals(ddclass.getSelectedItem().toString())) {
                         continue;
                     }
-                   
-                    amt = (res.getDouble("qty") * res.getDouble("itc_total"));
+                    if (isToday) {
+                      actqty = res.getDouble("qty");
+                    } else {
+                      actqty = (res.getDouble("qty") + res.getDouble("trqty"));  
+                    }
+                    amt = (actqty * res.getDouble("itc_total"));
                     totamt += amt;
                     i++;
                         mymodel.addRow(new Object[]{
@@ -518,7 +584,7 @@ try {
                                 res.getString("it_desc"),
                                 res.getString("it_code"),
                                 bsParseDouble(currformatDouble(res.getDouble("itc_total"))),
-                                bsNumber(res.getDouble("qty")),
+                                bsNumber(actqty),
                                 bsParseDouble(currformatDouble(amt))   
                             });
                 }
