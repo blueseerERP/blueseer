@@ -188,7 +188,8 @@ Inventar,InventoryCtrl,17,JMenuItem,Bestandskontrolle,,,,1,1
 InvAdjustmentsMenu,LocationTransfer,1,JMenuItem,Standortübertragung,,,,1,1
 InvAdjustmentsMenu,InventoryAdjustment,2,JMenuItem,Inventar anpassung,,,,1,1
 InventoryReportsMenu,InventoryBrowse,1,JMenuItem,Inventarbericht,,1,,1,1
-InventoryReportsMenu,TransBrowse,2,JMenuItem,Transaktionssuche,,1,,1,1
+InventoryReportsMenu,InventoryValuation,2,JMenuItem,Inventur,,1,,1,1
+InventoryReportsMenu,TransBrowse,3,JMenuItem,Transaktionssuche,,1,,1,1
 ItemMenu,ItemMaint,1,JMenuItem,Artikelpflege,,,,1,1
 ItemMenu,ItemBrowse,2,JMenuItem,Artikel durchsuchen,,1,,1,1
 ItemMenu,UOMMaint,3,JMenuItem,ME-Wartung,,,,1,1

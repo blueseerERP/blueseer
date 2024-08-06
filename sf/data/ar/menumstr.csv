@@ -139,7 +139,7 @@ ScrapRpt1,,com.blueseer.prd.ScrapRpt,JMenuItem,scrr
 ShipConfirm,,com.blueseer.shp.ShipperConfirm,JMenuItem,shcf
 ShipMaint,,com.blueseer.shp.ShipperMaint,JMenuItem,shpm
 ShipMaintSerial,,com.blueseer.shp.ShipperMaintSerial,JMenuItem,shps
-InvoiceMaint,,com.blueseer.far.InvoiceMaint,JMenuItem,invv
+InvoiceMaint,,com.blueseer.far.InvoiceMaint,JMenuItem,invm
 SiteMaint,,com.blueseer.adm.SiteMaint,JMenuItem,site
 CronMaint,,com.blueseer.adm.CronMaint,JMenuItem,cron
 TermsMaint,,com.blueseer.ctr.TermsMaint,JMenuItem,term
@@ -332,3 +332,4 @@ JobBrowse,,com.blueseer.prd.JobBrowse,JMenuItem,jobb
 BillMaint,,com.blueseer.ord.BillMaint,JMenuItem,bill
 BillBrowse,,com.blueseer.ord.BillBrowse,JMenuItem,bilb
 InventoryBrowse,,com.blueseer.inv.InventoryBrowse,JMenuItem,invr
+InventoryValuation,,com.blueseer.inv.InventoryValuation,JMenuItem,invv
