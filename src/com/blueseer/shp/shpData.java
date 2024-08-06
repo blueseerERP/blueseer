@@ -44,6 +44,7 @@ import com.blueseer.fap.fapData.vod_mstr;
 import com.blueseer.fgl.fglData;
 import static com.blueseer.fgl.fglData._glEntryFromSrvJobScan;
 import static com.blueseer.fgl.fglData.glEntryXP;
+import static com.blueseer.inv.invData._updateInventoryBalance;
 import com.blueseer.ord.ordData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
@@ -79,6 +80,7 @@ import java.util.Set;
 import javax.swing.JTable;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.threeten.bp.LocalDate;
 /**
  *
  * @author terryva
@@ -806,122 +808,6 @@ public class shpData {
         st.close();
    }
 
-    public static void _updateInventoryFromShipperOld(String shipper, Connection bscon) throws SQLException {
-   
-            Statement st = bscon.createStatement();
-            Statement st2 = bscon.createStatement();
-            Statement st3 = bscon.createStatement();
-            Statement st4 = bscon.createStatement();
-            ResultSet res;
-            ResultSet res2;
-            ResultSet nres;
-
-           java.util.Date now = new java.util.Date();
-            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-            String mydate = dfdate.format(now);
-                String part = "";
-                double qty = 0;
-                String uom = "";
-                double baseqty = 0;
-                String loc = "";
-                String wh = "";
-                String site = "";
-                String serial = "";
-                String expire = "";
-                double sum = 0;
-                int i = 0;
-                  res = st.executeQuery("select sh_site, shd_item, shd_qty, shd_uom, shd_loc, shd_wh, shd_site, shd_serial " +
-                          " from ship_det inner join ship_mstr on sh_id = shd_id  " +
-                          " where shd_id = " + "'" + shipper + "'" +";");
-                while (res.next()) {
-                    i = 0;
-                    part = res.getString("shd_item");
-                    qty = res.getDouble("shd_qty");
-                    uom = res.getString("shd_uom");
-                    loc = res.getString("shd_loc");
-                    wh = res.getString("shd_wh");
-                    site = res.getString("sh_site");
-                    serial = res.getString("shd_serial");
-                    baseqty = OVData.getUOMBaseQty(part, site, uom, qty);
-                  //  bsmf.MainFrame.show(baseqty + "/" + uom + "/" + qty);
-
-                    // lets determine if this is a legitimate item or a misc item...do not inventory misc items
-                    res2 = st4.executeQuery("select it_item, it_loc, it_wh, it_code " +
-                          " from  item_mstr  " +
-                          " where it_item = " + "'" + part + "'" + ";");
-
-                    while (res2.next()) {
-                        // if item type 'S' service....then continue
-                        if (res2.getString("it_code").equals("S")) {
-                          continue;
-                        }
-
-                        i++;
-                        // if no loc in shipper then grab the item default loc
-                        if (loc.isEmpty())
-                           loc = res2.getString("it_loc");
-                         // if no loc in shipper then grab the item default loc
-                        if (wh.isEmpty())
-                           wh = res2.getString("it_wh");
-                    }
-                    // if no item_mstr then continue loop...must be miscellaneous item
-                    if (i == 0) {
-                        continue;
-                    }
-
-
-
-                    // check if in_mstr record exists for this part,loc,site combo
-                    // if not add it
-                    int z = 0;
-                    double qoh = 0.00;
-                    nres = st2.executeQuery("select in_qoh from in_mstr where "
-                            + " in_item = " + "'" + part + "'" 
-                            + " and in_loc = " + "'" + loc + "'"
-                            + " and in_wh = " + "'" + wh + "'"
-                            + " and in_site = " + "'" + site + "'"
-                            + " and in_serial = " + "'" + serial + "'"      
-                            + ";");
-
-                    while (nres.next()) {
-                        z++;
-                        qoh = bsParseDouble(nres.getString("in_qoh"));
-                    }
-                    nres.close();
-
-
-                    if (z == 0) {
-                     sum = (-1 * baseqty);
-                     st3.executeUpdate("insert into in_mstr "
-                            + "(in_site, in_item, in_loc, in_wh, in_serial, in_expire, in_qoh, in_date ) "
-                            + " values ( " 
-                            + "'" + site + "'" + ","
-                            + "'" + part + "'" + ","
-                            + "'" + loc + "'" + ","
-                            + "'" + wh + "'" + ","
-                            + "'" + serial + "'" + ","
-                            + "'" + expire + "'" + ","   
-                            + "'" + sum + "'" + ","
-                            + "'" + mydate + "'"
-                            + ")"
-                            + ";");
-
-                    }  else {
-                       // nres.first();
-                        sum = qoh - baseqty;
-                         st3.executeUpdate("update in_mstr "
-                            + " set in_qoh = " + "'" + sum + "'" + "," +
-                              " in_date = " + "'" + mydate + "'"
-                            + " where in_item = " + "'" + part + "'" 
-                            + " and in_loc = " + "'" + loc + "'"
-                            + " and in_wh = " + "'" + wh + "'"
-                            + " and in_site = " + "'" + site + "'"
-                            + " and in_serial = " + "'" + serial + "'"             
-                            + ";");
-                    }
-                }
-     }
-
     public static void _updateInventoryFromShipper(String shipper, Connection bscon) throws SQLException {
    
             Statement st = bscon.createStatement();
@@ -929,6 +815,8 @@ public class shpData {
             ResultSet res;
 
            java.util.Date now = new java.util.Date();
+           
+           
            
                 String item = "";
                 double qty = 0;
@@ -1003,18 +891,10 @@ public class shpData {
                     site = sd[5];
                     serial = sd[6];
                     lineqty = Double.valueOf(sd[12]);
-                 //   bsmf.MainFrame.show(item + "/" + uom + "/" + loc + "/" + wh + "/" + site + "/" + serial + "/" + baseqty);
-                    // if not serialized...pull from non-serialized inventory... in_serial = ""
-                    // check for serialized inventory flag...if not...prevent serial from entry into in_mstr
-                    /*
-                    if (! OVData.isInvCtrlSerialize()) {
-                        serialized = false;
-                        serial = "";
-                        expire = "";
-                    } else {
-                        serialized = true;
-                    }
-                    */
+                 
+                    // update InventoryBalance ...independent of serialized or non serialized
+                    _updateInventoryBalance(item, site, String.valueOf(LocalDate.now().getYear()), String.valueOf(LocalDate.now().getMonthValue()), (-1 * lineqty), bscon);
+                    
                     if (! serialized) {
                         serial = "";
                         expire = "";
@@ -1197,6 +1077,10 @@ public class shpData {
                  //   bsmf.MainFrame.show(item + "/" + uom + "/" + loc + "/" + wh + "/" + site + "/" + serial + "/" + baseqty);
                     // if not serialized...pull from non-serialized inventory... in_serial = ""
                     // check for serialized inventory flag...if not...prevent serial from entry into in_mstr
+                    
+                  // update InventoryBalance ...independent of serialized or non serialized
+                    _updateInventoryBalance(item, site, String.valueOf(LocalDate.now().getYear()), String.valueOf(LocalDate.now().getMonthValue()), (-1 * lineqty), bscon);
+                      
                     
                     if (! OVData.isInvCtrlSerialize()) {
                         serialized = false;

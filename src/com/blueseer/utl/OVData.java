@@ -45,6 +45,7 @@ import static com.blueseer.fgl.fglData.setGLRecNbr;
 import com.blueseer.hrm.hrmData;
 import com.blueseer.inv.calcCost;
 import com.blueseer.inv.invData;
+import static com.blueseer.inv.invData._updateInventoryBalance;
 import static com.blueseer.inv.invData.getItemWFOPs;
 import static com.blueseer.ord.ordData.getOrderTotalTax;
 import static com.blueseer.ord.ordData.getSVOrderTotalTax;
@@ -13363,7 +13364,9 @@ return mystring;
                             + ";");
                     }
 
-
+            // update InventoryBalance
+            _updateInventoryBalance(item, site, String.valueOf(org.threeten.bp.LocalDate.now().getYear()), String.valueOf(org.threeten.bp.LocalDate.now().getMonthValue()), qty, con);
+                    
 
 
        }
@@ -13815,6 +13818,8 @@ return mystring;
                             + ";");
                     }
                     st2.close();
+                    
+                    
          
     }
     /* end of inventory related functions */

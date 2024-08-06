@@ -42,6 +42,7 @@ import static com.blueseer.fgl.fglData._glEntryFromReceiver;
 import com.blueseer.inv.invData;
 import static com.blueseer.inv.invData._addTranMstr;
 import static com.blueseer.inv.invData._addUpdateInMstr;
+import static com.blueseer.inv.invData._updateInventoryBalance;
 import static com.blueseer.pur.purData._updatePOFromReceiver;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
@@ -60,6 +61,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import org.threeten.bp.LocalDate;
 
 /**
  *
@@ -312,6 +314,10 @@ public class rcvData {
                     );
                     
                     _addUpdateInMstr(in, isInventorySerialized, bscon);
+                    
+                    // update InventoryBalance ...independent of serialized or non serialized
+                    _updateInventoryBalance(z.rvd_item(), rv.rv_site(), String.valueOf(LocalDate.now().getYear()), String.valueOf(LocalDate.now().getMonthValue()), baseqty, bscon);
+                     
                 }
      
      }

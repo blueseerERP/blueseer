@@ -63,6 +63,7 @@ import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
 import javax.swing.JOptionPane;
+import org.threeten.bp.LocalDate;
 
 /**
  *
@@ -1781,6 +1782,9 @@ public class invData {
             _addTranMstr(tm, bscon);
             /* do _addInMstr */
             _addUpdateInMstr(in, isInventorySerialized, bscon);
+            /* update InventoryBalance ...independent of serialized or non serialized */
+            _updateInventoryBalance(in.in_item(), in.in_site(), String.valueOf(LocalDate.now().getYear()), String.valueOf(LocalDate.now().getMonthValue()), in.in_qoh(), bscon);
+                     
             /* do glEntryXPv2 */
             fglData.glEntryXPpair(bscon, gv);
                         
@@ -1821,6 +1825,48 @@ public class invData {
     return m;
     }
     
+    public static int _updateInventoryBalance(String item, String site, String year, String period, double amt, Connection con) throws SQLException {
+        int rows = 0;
+        String sql = "select inb_amt from inb_mstr " 
+                + " where inb_item = ? and inb_site = ? and inb_year = ? and inb_per = ? ";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setString(1, item);
+        ps.setString(2, site);
+        ps.setString(3, year);
+        ps.setString(4, period);
+        ResultSet res = ps.executeQuery();
+        int i = 0;
+        double prevamt = 0;
+        while (res.next()) {
+            i++;
+            prevamt = res.getDouble("inb_amt");
+        }
+        res.close();
+        if (i > 0) {
+            prevamt += amt;
+            sql = "update inb_mstr set inb_amt = ? " 
+                        + " where inb_item = ? and inb_site = ? and inb_year = ? and inb_per = ? ";
+            ps = con.prepareStatement(sql); 
+            ps.setDouble(1, prevamt);
+            ps.setString(2, item);
+            ps.setString(3, site);
+            ps.setString(4, year);
+            ps.setString(5, period);
+            rows = ps.executeUpdate(); 
+        } else {
+            sql = "insert into inb_mstr (inb_item, inb_site, inb_year, inb_per, inb_amt) " +
+                    " values (?,?,?,?,?); ";
+            ps = con.prepareStatement(sql); 
+            ps.setString(1, item);
+            ps.setString(2, site);
+            ps.setString(3, year);
+            ps.setString(4, period);
+            ps.setDouble(5, amt);
+            rows = ps.executeUpdate();   
+        }
+        ps.close();
+        return rows;
+    }
     
    
 
