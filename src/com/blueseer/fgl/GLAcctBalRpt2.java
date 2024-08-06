@@ -95,6 +95,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 public class GLAcctBalRpt2 extends javax.swing.JPanel {
  
      public Map<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
+     public ArrayList<String[]> accounts;
      
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{getGlobalColumnTag("detail"), 
@@ -427,8 +428,10 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
         for (Object site : sites) {
             ddsite.addItem(site);
         }
-         ddsite.setSelectedItem(OVData.getDefaultSite());
+        ddsite.setSelectedItem(OVData.getDefaultSite());
         
+        
+                
         
         ddyear.removeAllItems();
         for (int i = 1967 ; i < 2222; i++) {
@@ -467,7 +470,9 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
         ddtype.addItem("O");
         ddtype.insertItemAt(getGlobalProgTag("all"), 0);
         ddtype.setSelectedIndex(0);
-          
+        
+        accounts = fglData.getGLAcctListRangeWCurrTypeDesc(ddacctfrom.getSelectedItem().toString(), ddacctto.getSelectedItem().toString());
+        
           
     }
     /**
@@ -893,8 +898,8 @@ try {
                  
                  ArrayList<String> ccamts = new ArrayList<String>();
                  
-                 ArrayList<String[]> accounts = fglData.getGLAcctListRangeWCurrTypeDesc(ddacctfrom.getSelectedItem().toString(), ddacctto.getSelectedItem().toString());
-                 ArrayList<String> ccs = fglData.getGLCCList();
+                // ArrayList<String[]> accounts = fglData.getGLAcctListRangeWCurrTypeDesc(ddacctfrom.getSelectedItem().toString(), ddacctto.getSelectedItem().toString());
+                // ArrayList<String> ccs = fglData.getGLCCList();
                  
                   totbegbal = 0.00;
                   totactivity = 0.00;
