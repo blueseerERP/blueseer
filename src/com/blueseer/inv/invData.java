@@ -3529,7 +3529,7 @@ public class invData {
     }   
 
     public static double getItemQtyByWarehouseAndLocation(String item, String site, String wh, String loc) {
-       double cost = 0;
+       double qty = 0;
      try{
         Connection con = null;
         if (ds != null) {
@@ -3549,7 +3549,7 @@ public class invData {
                             + " and in_loc = " + "'" + loc + "'"
                             + ";");
            while (res.next()) {
-            cost += res.getDouble("in_qoh");                    
+            qty += res.getDouble("in_qoh");                    
             }
 
        }
@@ -3568,7 +3568,7 @@ public class invData {
     catch (Exception e){
         MainFrame.bslog(e);
     }
-    return cost;
+    return qty;
 
     }    
 

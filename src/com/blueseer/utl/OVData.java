@@ -13387,6 +13387,114 @@ return mystring;
 
      }
 
+    public static boolean UpdateInventoryLocationTransfer(String item, String site, String loc, String wh, String serial, String expire, Double qty) {
+          boolean myerror = false;  // Set myerror to true for any captured problem...otherwise return false
+    try{
+    
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+        Statement st = con.createStatement();
+            Statement st2 = con.createStatement();
+            Statement st3 = con.createStatement();
+            ResultSet res = null;
+            ResultSet nres = null;
+        try{
+            
+
+            java.util.Date now = new java.util.Date();
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+            String mydate = dfdate.format(now);
+
+            // Skip item code "S" when adjusting inventory -- service item
+            String itemcode = invData.getItemCode(item);
+            if (itemcode.equals("S")) {  
+                return false;
+            }
+
+            if (expire != null && expire.isBlank()) {
+                expire = null;
+            }
+
+                    double sum = 0.00;
+
+                    // check if in_mstr record exists for this part, loc, wh, site, serial, expire combo
+                    // if not add it
+                    nres = st2.executeQuery("select in_qoh from in_mstr where "
+                            + " in_item = " + "'" + item + "'" 
+                            + " and in_loc = " + "'" + loc + "'"
+                            + " and in_wh = " + "'" + wh + "'"
+                            + " and in_site = " + "'" + site + "'"
+                            + " and in_serial = " + "'" + serial + "'"      
+                            + ";");
+                    int z = 0;
+                     double qoh = 0.00;
+                      while (nres.next()) {
+                        z++;
+                        qoh = bsParseDouble(nres.getString("in_qoh"));
+                    }
+                    nres.close();
+
+                   
+
+                    if (z == 0) {
+                     sum = qty;
+                     st3.executeUpdate("insert into in_mstr "
+                            + "(in_site, in_item, in_loc, in_wh, in_serial, in_expire, in_qoh, in_date ) "
+                            + " values ( " 
+                            + "'" + site + "'" + ","
+                            + "'" + item + "'" + ","
+                            + "'" + loc + "'" + ","
+                            + "'" + wh + "'" + ","
+                            + "'" + serial + "'" + ","
+                            + expire + ","        
+                            + "'" + sum + "'" + ","
+                            + "'" + mydate + "'"
+                            + ")"
+                            + ";");
+
+                    }  else {
+                       // nres.first();
+                        sum = qoh + qty;
+                         st3.executeUpdate("update in_mstr "
+                            + " set in_qoh = " + "'" + sum + "'" + "," +
+                              " in_date = " + "'" + mydate + "'"
+                            + " where in_item = " + "'" + item + "'" 
+                            + " and in_loc = " + "'" + loc + "'"
+                            + " and in_wh = " + "'" + wh + "'"
+                            + " and in_site = " + "'" + site + "'"
+                            + " and in_serial = " + "'" + serial + "'"       
+                            + ";");
+                    }
+
+
+
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+             myerror = true;
+        } finally {
+            if (res != null) res.close();
+            if (nres != null) nres.close();
+            if (st != null) st.close();
+            if (st2 != null) st2.close();
+            if (st3 != null) st3.close();
+            con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+        myerror = true;
+    }
+    return myerror;
+
+     }
+
     public static void UpdateInventoryFromPOS(String nbr, boolean isVoid, Connection bscon) throws SQLException {
     Statement st = bscon.createStatement();
     Statement st2 = bscon.createStatement();

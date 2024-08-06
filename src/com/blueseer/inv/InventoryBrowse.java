@@ -217,6 +217,20 @@ public class InventoryBrowse extends javax.swing.JPanel {
     public void initvars(String[] arg) {
         mymodel.setRowCount(0);
         
+        ddclass.removeAllItems();
+        ddclass.addItem("");
+        ddclass.addItem("A");
+        ddclass.addItem("M");
+        ddclass.addItem("P");
+        ddclass.setSelectedIndex(0);
+        
+        ArrayList<String> sites = new ArrayList();
+        ddsite.removeAllItems();
+        sites = OVData.getSiteList();
+        for (String code : sites) {
+            ddsite.addItem(code);
+        }
+        
         ddfromitem.removeAllItems();
         ddtoitem.removeAllItems();
         ArrayList<String> mycode = invData.getItemMasterAlllist();
@@ -260,7 +274,6 @@ public class InventoryBrowse extends javax.swing.JPanel {
         btRun = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        btexport = new javax.swing.JButton();
         labelcount = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         labelqty = new javax.swing.JLabel();
@@ -273,7 +286,13 @@ public class InventoryBrowse extends javax.swing.JPanel {
         ddtoitem = new javax.swing.JComboBox<>();
         tablepanel = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tabletrans = new javax.swing.JTable();
+        tablereport = new javax.swing.JTable();
+        ddsite = new javax.swing.JComboBox<>();
+        jLabel3 = new javax.swing.JLabel();
+        ddclass = new javax.swing.JComboBox<>();
+        jLabel6 = new javax.swing.JLabel();
+        tbcsv = new javax.swing.JButton();
+        btprint = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -294,14 +313,6 @@ public class InventoryBrowse extends javax.swing.JPanel {
         jLabel4.setText("To Item");
         jLabel4.setName("lbltoitem"); // NOI18N
 
-        btexport.setText("Export");
-        btexport.setName("btexport"); // NOI18N
-        btexport.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btexportActionPerformed(evt);
-            }
-        });
-
         labelcount.setText("0");
 
         jLabel7.setText("Count");
@@ -318,8 +329,8 @@ public class InventoryBrowse extends javax.swing.JPanel {
 
         tablepanel.setLayout(new javax.swing.BoxLayout(tablepanel, javax.swing.BoxLayout.LINE_AXIS));
 
-        tabletrans.setAutoCreateRowSorter(true);
-        tabletrans.setModel(new javax.swing.table.DefaultTableModel(
+        tablereport.setAutoCreateRowSorter(true);
+        tablereport.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -330,19 +341,50 @@ public class InventoryBrowse extends javax.swing.JPanel {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(tabletrans);
+        jScrollPane1.setViewportView(tablereport);
 
         tablepanel.add(jScrollPane1);
+
+        jLabel3.setText("Site");
+
+        ddclass.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "A", "M", "P" }));
+
+        jLabel6.setText("Class");
+
+        tbcsv.setText("CSV");
+        tbcsv.setName("btcsv"); // NOI18N
+        tbcsv.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbcsvActionPerformed(evt);
+            }
+        });
+
+        btprint.setText("Print/PDF");
+        btprint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btprintActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(31, 31, 31)
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel4))
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(ddclass, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel4))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                        .addComponent(jLabel1)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(ddtoitem, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -355,11 +397,13 @@ public class InventoryBrowse extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(ddfromloc, 0, 138, Short.MAX_VALUE)
                     .addComponent(ddfromwh, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(381, 381, 381)
+                .addGap(28, 28, 28)
                 .addComponent(btRun)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btexport)
-                .addGap(18, 140, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tbcsv)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btprint)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 283, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel7)
@@ -378,22 +422,26 @@ public class InventoryBrowse extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btRun)
-                        .addComponent(btexport))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(3, 3, 3)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1)
                             .addComponent(ddfromwh, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2)
-                            .addComponent(ddfromitem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(ddfromitem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btRun)
+                            .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel3)
+                            .addComponent(tbcsv)
+                            .addComponent(btprint))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
                             .addComponent(ddtoitem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(ddfromloc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5)))
+                            .addComponent(jLabel5)
+                            .addComponent(ddclass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel7)
@@ -403,7 +451,7 @@ public class InventoryBrowse extends javax.swing.JPanel {
                             .addComponent(jLabel8)
                             .addComponent(labelqty, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(21, 21, 21)
-                .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 539, Short.MAX_VALUE)
+                .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 442, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -436,7 +484,7 @@ try {
                 int i = 0;
             
                 mymodel.setNumRows(0);
-                tabletrans.setModel(mymodel);
+                tablereport.setModel(mymodel);
             
                 String wh = "";
                 String loc = "";
@@ -468,12 +516,17 @@ try {
                       "case when in_qoh is null then '0' else in_qoh end as qoh, " +
                        "case when in_loc is null then '' else in_loc end as loc, " +
                        "case when in_wh is null then '' else in_wh end as wh " +   
-                      " from item_mstr left outer join in_mstr on in_item = it_item " +
+                      " from item_mstr left outer join in_mstr on in_item = it_item and " +
+                      " in_site = it_site " +   
                        " where it_item >= " + "'" + ddfromitem.getSelectedItem().toString() + "'" +  " AND " 
-                       + " it_item <= " + "'" + ddtoitem.getSelectedItem().toString() + "'"                            
+                       + " it_item <= " + "'" + ddtoitem.getSelectedItem().toString() + "'" +  " AND " 
+                       + " it_site = " + "'" + ddsite.getSelectedItem().toString() + "'"        
                        + ";" );
                 while (res.next()) {
                    
+                    if (! ddclass.getSelectedItem().toString().isBlank() && ! res.getString("it_code").equals(ddclass.getSelectedItem().toString())) {
+                        continue;
+                    }
                     if (! res.getString("wh").equals(wh) && ! wh.isBlank()) {
                         continue;
                     }
@@ -515,22 +568,31 @@ try {
        
     }//GEN-LAST:event_btRunActionPerformed
 
-    private void btexportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btexportActionPerformed
-     
-    }//GEN-LAST:event_btexportActionPerformed
+    private void tbcsvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbcsvActionPerformed
+        if (tablereport != null)
+        OVData.exportCSV(tablereport);
+    }//GEN-LAST:event_tbcsvActionPerformed
+
+    private void btprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btprintActionPerformed
+        OVData.printJTableToJasper("Quote Report", tablereport, "genericJTableL8B.jasper" );
+    }//GEN-LAST:event_btprintActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btRun;
-    private javax.swing.JButton btexport;
+    private javax.swing.JButton btprint;
+    private javax.swing.JComboBox<String> ddclass;
     private javax.swing.JComboBox<String> ddfromitem;
     private javax.swing.JComboBox<String> ddfromloc;
     private javax.swing.JComboBox<String> ddfromwh;
+    private javax.swing.JComboBox<String> ddsite;
     private javax.swing.JComboBox<String> ddtoitem;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
@@ -538,6 +600,7 @@ try {
     private javax.swing.JLabel labelcount;
     private javax.swing.JLabel labelqty;
     private javax.swing.JPanel tablepanel;
-    private javax.swing.JTable tabletrans;
+    private javax.swing.JTable tablereport;
+    private javax.swing.JButton tbcsv;
     // End of variables declaration//GEN-END:variables
 }

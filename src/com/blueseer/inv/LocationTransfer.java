@@ -678,12 +678,12 @@ public class LocationTransfer extends javax.swing.JPanel {
                 );
             
         // do the 'to' side
-       rtn = OVData.UpdateInventoryDiscrete(tbitem.getText(), siteto, ddlocto.getSelectedItem().toString(), whto, tbfromserial.getText(), "", qty);
+       rtn = OVData.UpdateInventoryLocationTransfer(tbitem.getText(), siteto, ddlocto.getSelectedItem().toString(), whto, tbtoserial.getText(), "", qty);
       
        // now do the 'from' side
        if (! rtn) {
        qty = -1 * qty;
-       rtn = OVData.UpdateInventoryDiscrete(tbitem.getText(), sitefrom, ddlocfrom.getSelectedItem().toString(), whfrom, tbtoserial.getText(), "", qty);
+       rtn = OVData.UpdateInventoryLocationTransfer(tbitem.getText(), sitefrom, ddlocfrom.getSelectedItem().toString(), whfrom, tbfromserial.getText(), "", qty);
        }
        
       
