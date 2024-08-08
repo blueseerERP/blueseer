@@ -216,7 +216,17 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
         @Override
         public Void doInBackground() throws Exception {
             if (bsmf.MainFrame.clienttype != null && bsmf.MainFrame.clienttype.toUpperCase().equals("REMOTE")) {
-               data = sendServerRequest(null, null);
+               ArrayList<String[]> list = new ArrayList<String[]>();
+               list.add(new String[]{"id","1"});
+               list.add(new String[]{"year","1"});
+               list.add(new String[]{"period","1"});
+               list.add(new String[]{"site","1"});
+               list.add(new String[]{"iscc","1"});
+               list.add(new String[]{"type","1"});
+               list.add(new String[]{"fromacct","1"});
+               list.add(new String[]{"toacct","1"});
+               
+               data = sendServerRequest(list); 
             } else {
                data = fglData.getAccountBalanceReport(key); 
             }

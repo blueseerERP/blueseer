@@ -44,12 +44,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
@@ -2272,30 +2274,51 @@ public class BlueSeerUtils {
         return filename.replace("%", "");
     }
 
-    public static String sendServerRequest(String urlString, String[] v) throws MalformedURLException, IOException {
-        String r = null;
+    public static String sendServerRequest(ArrayList<String[]> vlist) throws MalformedURLException, IOException {
+       
+        StringBuilder sb = null;
+        String urlString = "http://ec2-18-209-43-214.compute-1.amazonaws.com/bsapi/dataServ";
         HttpURLConnection conn = null;
         URL url = new URL(urlString);
-        String user = "";
-        String pass = "";
+        String user = "admin";
+        String pass = "admin";
         
         conn = (HttpURLConnection) url.openConnection();
         conn.setRequestProperty("Content-Type", "text/plain");
         conn.setConnectTimeout(10000);
         conn.setReadTimeout(10000);
-            
+        conn.setRequestMethod("GET");    
            
         if (! user.isBlank() && ! pass.isBlank()) {
         String userCredentials = new String(user + ":" + pass);
         String basicAuth = "Basic " + Base64.toBase64String(userCredentials.getBytes());
         conn.setRequestProperty("Authorization", basicAuth);
         } else {
-            return r;
+            return sb.toString();
         } 
-            
-            
-            StringBuilder requestHeaders = new StringBuilder();
-       return r;
+         
+        for (String[] v : vlist) {
+         conn.setRequestProperty(v[0],v[1]);
+        }
+        
+        if (conn.getResponseCode() != 200) {
+                    sb.append(conn.getResponseCode() + ": " + conn.getResponseMessage());
+                    //throw new RuntimeException("Failed : HTTP error code : "
+                    //		+ conn.getResponseCode());
+        } else {
+            BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+            String output;
+            while ((output = br.readLine()) != null) {
+                sb.append(output);
+            }
+            br.close(); 
+        }
+        
+        if (conn != null) {
+          conn.disconnect();
+        }
+        
+       return sb.toString();
     }
 
 }
