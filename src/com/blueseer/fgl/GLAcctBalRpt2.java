@@ -218,13 +218,13 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
             if (bsmf.MainFrame.clienttype != null && bsmf.MainFrame.clienttype.toUpperCase().equals("REMOTE")) {
                ArrayList<String[]> list = new ArrayList<String[]>();
                list.add(new String[]{"id","1"});
-               list.add(new String[]{"year","1"});
-               list.add(new String[]{"period","1"});
-               list.add(new String[]{"site","1"});
-               list.add(new String[]{"iscc","1"});
-               list.add(new String[]{"type","1"});
-               list.add(new String[]{"fromacct","1"});
-               list.add(new String[]{"toacct","1"});
+               list.add(new String[]{"year",ddyear.getSelectedItem().toString()});
+               list.add(new String[]{"period",ddperiod.getSelectedItem().toString()});
+               list.add(new String[]{"site",ddsite.getSelectedItem().toString()});
+               list.add(new String[]{"iscc",BlueSeerUtils.ConvertBoolToYesNo(cbcc.isSelected())});
+               list.add(new String[]{"type",ddtype.getSelectedItem().toString()});
+               list.add(new String[]{"fromacct",ddacctfrom.getSelectedItem().toString()});
+               list.add(new String[]{"toacct",ddacctto.getSelectedItem().toString()});
                
                data = sendServerRequest(list); 
             } else {

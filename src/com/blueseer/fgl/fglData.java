@@ -1515,6 +1515,7 @@ public class fglData {
                 
             } catch (SQLException s) {
                 MainFrame.bslog(s);
+                sb.append(s.getMessage());
                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
             } finally {
                 if (res != null) {

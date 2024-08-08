@@ -79,6 +79,12 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
            String[] key = new String[]{
              year, period, site, iscc, type, fromacct, toacct  
            }; 
+           String r = getAccountBalanceReport(key);
+           if (r == null || r.isBlank()) {
+             response.getWriter().println("no return for: " + id + "," + year + "," + period + "," + site + "," + iscc + "," + type + "," + fromacct + "," + toacct);   
+           } else {
+             response.getWriter().println(r);   
+           }
            response.getWriter().println(getAccountBalanceReport(key)); 
         } else {
            response.getWriter().println("something is amiss");
