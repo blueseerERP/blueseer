@@ -2277,7 +2277,7 @@ public class BlueSeerUtils {
     public static String sendServerRequest(ArrayList<String[]> vlist) throws MalformedURLException, IOException {
        
         StringBuilder sb = null;
-        String urlString = "http://ec2-18-209-43-214.compute-1.amazonaws.com/bsapi/dataServ";
+        String urlString = "http://ec2-18-209-43-214.compute-1.amazonaws.com:8088/bsapi/dataServ";
         HttpURLConnection conn = null;
         URL url = new URL(urlString);
         String user = "admin";
