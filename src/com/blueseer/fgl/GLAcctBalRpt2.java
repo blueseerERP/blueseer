@@ -86,6 +86,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
+import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableCellRenderer;
 
 /**
@@ -96,6 +97,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
  
      public Map<String, ArrayList<String>> map = new HashMap<String, ArrayList<String>>();
      public ArrayList<String[]> accounts;
+     public String data = null;
      
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{getGlobalColumnTag("detail"), 
@@ -183,7 +185,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
     }
     
    
-     private static class myHeaderRenderer implements TableCellRenderer {
+    private static class myHeaderRenderer implements TableCellRenderer {
       DefaultTableCellRenderer renderer;
       int horAlignment;
       public myHeaderRenderer(JTable table, int horizontalAlignment) {
@@ -202,6 +204,28 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
 }
 
     
+    class Task extends SwingWorker<Void, Void> {
+       
+          String[] key = null;
+          
+          public Task(String[] key) { 
+              this.key = key;
+          }
+        
+        @Override
+        public Void doInBackground() throws Exception {
+            data = fglData.getAccountBalanceReport(key); 
+            return null;
+        }
+ 
+        /*
+         * Executed in event dispatch thread
+         */
+        public void done() {
+            BlueSeerUtils.endTask(new String[]{"0","Report is Complete"});
+            updateForm();
+        }
+    }  
     
     
     /**
@@ -259,8 +283,74 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
        }
     }
     
+    public void updateForm() {
+        double totendbal = 0;
+        double totbegbal = 0;
+        double totactivity = 0;
+        mymodel.setNumRows(0);
+        mymodelCC.setNumRows(0);
+        if (cbcc.isSelected()) {    
+              tablereport.setModel(mymodelCC);
+          tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
+          tablereport.getColumnModel().getColumn(8).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
+          tablereport.getColumnModel().getColumn(9).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
+        //  tablereport.getColumnModel().getColumn(0).setCellRenderer(new ButtonRenderer());
+         tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+          } else {
+              tablereport.setModel(mymodel);
+          tablereport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
+          tablereport.getColumnModel().getColumn(7).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
+          tablereport.getColumnModel().getColumn(8).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));    
+        //  tablereport.getColumnModel().getColumn(0).setCellRenderer(new ButtonRenderer());
+         tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+        }
+        
+        for (int i = 0 ; i < tablereport.getColumnCount(); i++){ 
+              if (cbcc.isSelected()) {
+                  if (i == 7 || i == 8 || i == 9) {
+                 tablereport.getTableHeader().getColumnModel().getColumn(i)
+                 .setHeaderRenderer(new myHeaderRenderer(tablereport, JLabel.RIGHT));
+                  } else {
+                  tablereport.getTableHeader().getColumnModel().getColumn(i)
+                 .setHeaderRenderer(new myHeaderRenderer(tablereport, JLabel.LEFT));    
+                  }
+              } else {
+                   if (i == 6 || i == 7 || i == 8) {
+                 tablereport.getTableHeader().getColumnModel().getColumn(i)
+                 .setHeaderRenderer(new myHeaderRenderer(tablereport, JLabel.RIGHT));
+                  } else {
+                  tablereport.getTableHeader().getColumnModel().getColumn(i)
+                 .setHeaderRenderer(new myHeaderRenderer(tablereport, JLabel.LEFT));    
+                  }
+              }
+        }
+        
+        if (data != null) {  // data = acct, cc, type, curr, desc, site, begbal, activity, endbal
+        String[] arrdata = data.split("\n", -1);
+        for (String x : arrdata) {
+            String[] s = x.split(",",-1);
+            if (s.length < 8) {
+                continue;  // must be blank lines
+            }
+            if (cbzero.isSelected() && bsParseDouble(s[6]) == 0 && bsParseDouble(s[8]) == 0 && bsParseDouble(s[7]) == 0) {
+                     continue;
+            }
+            mymodel.addRow(new Object[]{BlueSeerUtils.clickbasket, s[0], s[2], s[3],
+                                s[4],
+                                s[5],
+                                bsParseDouble(s[6]),
+                                bsParseDouble(s[7]),
+                                bsParseDouble(s[8])
+                            });
+                    // now sum for the total labels display
+                     totendbal = totendbal + bsParseDouble(s[8]);
+                     totbegbal = totbegbal + bsParseDouble(s[6]);
+                     totactivity = totactivity + bsParseDouble(s[7]);
+            }
+        }
+    }
     
-     public void getdetail(String acct, String site, int year, int period) {
+    public void getdetail(String acct, String site, int year, int period) {
       
          modeldetail.setNumRows(0);
          double total = 0.00;
@@ -323,7 +413,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
 
     }
     
-      public void getdetailCC(String acct, String cc, String site, int year, int period) {
+    public void getdetailCC(String acct, String cc, String site, int year, int period) {
       
          modeldetail.setNumRows(0);
          double total = 0.00;
@@ -814,8 +904,18 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRunActionPerformed
-
-    
+    String[] key = new String[]{
+      ddyear.getSelectedItem().toString(),
+      ddperiod.getSelectedItem().toString(),
+      ddsite.getSelectedItem().toString(),
+      String.valueOf(cbcc.isSelected()),
+      ddtype.getSelectedItem().toString(),
+      ddacctfrom.getSelectedItem().toString(),
+      ddacctto.getSelectedItem().toString()
+    };
+    Task task = new Task(key);
+    task.execute();    
+    /*
 try {
             Connection con = null;
             if (ds != null) {
@@ -1071,23 +1171,7 @@ try {
                        
                   }
                   
-                  /* 
-                   // calculate period(s) activity defined by date range 
-                  // activity += OVData.getGLAcctBalSummCC(account.toString(), String.valueOf(fromdateyear), String.valueOf(p));
-                       res = st.executeQuery("select acb_cc, sum(acb_amt) as sum from acb_mstr where acb_year = " +
-                        "'" + String.valueOf(year) + "'" + 
-                        " AND acb_per = " +
-                        "'" + String.valueOf(period) + "'" +
-                        " AND acb_acct = " +
-                        "'" + acctid + "'" +
-                        " AND acb_site = " + "'" + site + "'" +
-                        " group by acb_cc ;");
-                       while (res.next()) {
-                         // activity += res.getDouble(("sum"));
-                         // ccamts.add(res.getString("acb_cc") + "," + "activity" + "," + res.getString("sum"));
-                       }
-                 
-                  */
+                  
                 
                  } // Accts
                                
@@ -1174,13 +1258,8 @@ try {
                  if (cbzero.isSelected() && begbal == 0 && endbal == 0 && activity == 0) {
                      continue ACCTS;
                  }
-                 
-                 
-                 
-               //  if (begbal == 0 && endbal == 0 && activity == 0)
-               //      bsmf.MainFrame.show(account);
+                
                if (ddtype.getSelectedItem().toString().equals(getGlobalProgTag("all"))) {
-                   
                 mymodel.addRow(new Object[]{BlueSeerUtils.clickbasket, acctid, accttype, acctcurr,
                             acctdesc,
                             site,
@@ -1235,7 +1314,7 @@ try {
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
-       
+       */
     }//GEN-LAST:event_btRunActionPerformed
 
     private void btdetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdetailActionPerformed

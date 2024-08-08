@@ -26,12 +26,14 @@ SOFTWARE.
 package com.blueseer.srv;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.ConvertStringToBool;
 import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.driver;
 import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.fgl.fglData.getAccountBalanceReport;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.createMessageJSON;
 import com.blueseer.utl.OVData;
@@ -50,18 +52,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+
 
 /**
  *
  * @author terryva
  */
-public class ItemServ extends HttpServlet {
+public class dataServ extends HttpServlet {
     
         
 @Override
@@ -69,16 +66,22 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/plain");
         response.setStatus(HttpServletResponse.SC_OK);
+     //   int year, int period, String site, boolean iscc, String in_accttype, String fromacct, String toacct
         String id = request.getParameter("id");
-        String fromitem = request.getParameter("fromitem");
-        String toitem = request.getParameter("toitem");
-        String fromcode = request.getParameter("fromcode");
-        String tocode = request.getParameter("tocode");
-        String status = request.getParameter("status");
-        if (id != null && ! id.isEmpty()) {
-            response.getWriter().println(getItemJSON(id));
+        String year = request.getParameter("year");
+        String period = request.getParameter("period");
+        String site = request.getParameter("site");
+        String iscc = request.getParameter("iscc");
+        String type = request.getParameter("type");
+        String fromacct = request.getParameter("fromacct");
+        String toacct = request.getParameter("toacct");
+        if (id != null && ! id.isEmpty() && id.equals("1")) {
+           String[] key = new String[]{
+             year, period, site, iscc, type, fromacct, toacct  
+           }; 
+           response.getWriter().println(getAccountBalanceReport(key)); 
         } else {
-           response.getWriter().println(getItemListByVarJSON(fromitem,toitem,fromcode,tocode,status)); 
+           response.getWriter().println("something is amiss");
         }
     }
 

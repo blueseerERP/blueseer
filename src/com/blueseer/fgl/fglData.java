@@ -48,6 +48,8 @@ import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatDouble;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatIntUS;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
+import static com.blueseer.utl.BlueSeerUtils.bsParseInt;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.currformatDoubleUS;
 import static com.blueseer.utl.BlueSeerUtils.formatUSC;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
@@ -1148,7 +1150,388 @@ public class fglData {
     
     
     // misc functions
-     
+    
+    public static String getAccountBalanceReport(String[] key) {
+        int year = Integer.valueOf(key[0]); 
+        int period = Integer.valueOf(key[1]);
+        String site = key[2];
+        boolean iscc = BlueSeerUtils.ConvertStringToBool(key[3]);
+        String in_accttype = key[4];
+        String fromacct = key[5];
+        String toacct = key[6];
+        
+        StringBuilder sb = new StringBuilder();
+        ArrayList<String[]> accounts = fglData.getGLAcctListRangeWCurrTypeDesc(fromacct, toacct);
+        
+        try {
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                 Statement st2 = con.createStatement();
+                ResultSet res2 = null;
+                
+                int qty = 0;
+                double dol = 0;
+                int j = 0;
+          
+                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                
+                
+                 
+                 
+                 
+                 int prioryear = 0;
+                 double begbal = 0.00;
+                 double activity = 0.00;
+                 double endbal = 0.00;
+                 double totbegbal = 0.00;
+                 double totactivity = 0.00;
+                 double totendbal = 0.00;
+                 double preact = 0.00;
+                 double postact = 0.00;
+                 Date p_datestart = null;
+                 Date p_dateend = null;
+                 
+                 ArrayList<String> ccamts = new ArrayList<String>();
+                 
+                // ArrayList<String[]> accounts = fglData.getGLAcctListRangeWCurrTypeDesc(ddacctfrom.getSelectedItem().toString(), ddacctto.getSelectedItem().toString());
+                // ArrayList<String> ccs = fglData.getGLCCList();
+                 
+                  totbegbal = 0.00;
+                  totactivity = 0.00;
+                  totendbal = 0.00;
+                 
+                 prioryear = year - 1;
+                 String acctid = "";
+                 String acctdesc = "";
+                 String acctcurr = "";
+                 String accttype = "";
+                 String cc = "";
+                 
+                 
+                 if (iscc) {
+                 
+                 ACCTS:    for (String account[] : accounts) {
+                     
+                     
+                  
+                  acctid = account[0];
+                  acctcurr = account[1];
+                  accttype = account[2];
+                  acctdesc = account[3];
+                  
+                 
+                  
+                  begbal = 0.00;
+                  activity = 0.00;
+                  endbal = 0.00;
+                  preact = 0.00;
+                  postact = 0.00;
+                
+                  
+                  
+                 // calculate all acb_mstr records for whole periods < fromdateperiod
+                    // begbal += OVData.getGLAcctBalSummCC(account.toString(), String.valueOf(fromdateyear), String.valueOf(p));
+                  if (accttype.equals("L") || accttype.equals("A")) {
+                      //must be type balance sheet
+                  res = st.executeQuery("select acb_cc, sum(acb_amt) as sum from acb_mstr where " +
+                        " acb_acct = " + "'" + acctid + "'" + " AND " +
+                        " acb_site = " + "'" + site + "'" + " AND " +
+                        " (( acb_year = " + "'" + year + "'" + " AND acb_per <= " + "'" + period + "'" + " ) OR " +
+                        "  ( acb_year <= " + "'" + prioryear + "'" + " )) " +
+                        " group by acb_cc ;");
+                
+                       while (res.next()) {
+                          endbal = 0;
+                          activity = 0;
+                          begbal = 0;
+                          begbal = res.getDouble("sum");
+                          
+                           // now activity
+                                      res2= st2.executeQuery("select sum(acb_amt) as sum from acb_mstr where acb_year = " +
+                                "'" + String.valueOf(year) + "'" + 
+                                " AND acb_per = " +
+                                "'" + String.valueOf(period) + "'" +
+                                " AND acb_acct = " +
+                                "'" + acctid + "'" +
+                                " AND acb_cc = " +
+                                "'" + res.getString("acb_cc") + "'" +
+                                " AND acb_site = " + "'" + site + "'" +
+                                " ;");
+                               while (res2.next()) {
+                                  activity = res2.getDouble(("sum"));
+                               }
+                            
+                               begbal = begbal - activity;
+                               endbal = begbal + activity;
+                        if (in_accttype.equals(getGlobalProgTag("all"))) {       
+                            sb.append(acctid + "," +
+                            res.getString("acb_cc") + "," +
+                            accttype + "," + 
+                            acctcurr + "," +
+                            acctdesc + "," +
+                            site + "," +
+                                currformatDouble(begbal) + "," +
+                            currformatDouble(activity) + "," +
+                            currformatDouble(endbal)
+                            );
+                            sb.append("\n");
+                            
+                            
+                        } else {
+                          if (accttype.equals(in_accttype))  {
+                          sb.append(acctid + "," +
+                            res.getString("acb_cc") + "," +
+                            accttype + "," + 
+                            acctcurr + "," +
+                            acctdesc + "," +
+                            site + "," +
+                                currformatDouble(begbal) + "," +
+                            currformatDouble(activity) + "," +
+                            currformatDouble(endbal)
+                            );
+                            sb.append("\n");
+                          }
+                        }
+                 
+                            
+                       }
+                       
+                 
+                       
+                       
+                  } else {
+                     // must be income statement
+                      res = st.executeQuery("select acb_cc, sum(acb_amt) as sum from acb_mstr where " +
+                        " acb_acct = " + "'" + acctid + "'" + " AND " +
+                        " acb_site = " + "'" + site + "'" + " AND " +
+                        " ( acb_year = " + "'" + year + "'" + " AND acb_per <= " + "'" + period + "'" + ")" +
+                        " group by acb_cc ;");
+                
+                       while (res.next()) {
+                          endbal = 0;
+                          activity = 0;
+                          begbal = 0;
+                          
+                       
+                          begbal = res.getDouble("sum");
+                        
+                                    // now activity
+                                      res2= st2.executeQuery("select sum(acb_amt) as sum from acb_mstr where acb_year = " +
+                                "'" + String.valueOf(year) + "'" + 
+                                " AND acb_per = " +
+                                "'" + String.valueOf(period) + "'" +
+                                " AND acb_acct = " +
+                                "'" + acctid + "'" +
+                                " AND acb_cc = " +
+                                "'" + res.getString("acb_cc") + "'" +
+                                " AND acb_site = " + "'" + site + "'" +
+                                "  ;");
+                               while (res2.next()) {
+                                  activity = res2.getDouble(("sum"));
+                               }
+                            
+                               begbal = begbal - activity;
+                               endbal = begbal + activity;
+                    if (in_accttype.equals(getGlobalProgTag("all"))) {       
+                            sb.append(acctid + "," +
+                            res.getString("acb_cc") + "," +
+                            accttype + "," + 
+                            acctcurr + "," +
+                            acctdesc + "," +
+                            site + "," +
+                                currformatDouble(begbal) + "," +
+                            currformatDouble(activity) + "," +
+                            currformatDouble(endbal)
+                            );
+                            sb.append("\n");
+                           
+                    } else {
+                        if (accttype.equals(in_accttype)) {
+                        sb.append(acctid + "," +
+                            res.getString("acb_cc") + "," +
+                            accttype + "," + 
+                            acctcurr + "," +
+                            acctdesc + "," +
+                            site + "," +
+                                currformatDouble(begbal) + "," +
+                            currformatDouble(activity) + "," +
+                            currformatDouble(endbal)
+                            );
+                            sb.append("\n");
+                       
+                        }
+                    }       
+                                  
+                 
+                            
+                       }
+                 
+                       
+                  }
+                  
+                  /* 
+                   // calculate period(s) activity defined by date range 
+                  // activity += OVData.getGLAcctBalSummCC(account.toString(), String.valueOf(fromdateyear), String.valueOf(p));
+                       res = st.executeQuery("select acb_cc, sum(acb_amt) as sum from acb_mstr where acb_year = " +
+                        "'" + String.valueOf(year) + "'" + 
+                        " AND acb_per = " +
+                        "'" + String.valueOf(period) + "'" +
+                        " AND acb_acct = " +
+                        "'" + acctid + "'" +
+                        " AND acb_site = " + "'" + site + "'" +
+                        " group by acb_cc ;");
+                       while (res.next()) {
+                         // activity += res.getDouble(("sum"));
+                         // ccamts.add(res.getString("acb_cc") + "," + "activity" + "," + res.getString("sum"));
+                       }
+                 
+                  */
+                
+                 } // Accts
+                               
+                   
+                 // now sum for the total labels display
+                 
+                
+                
+                 } else {    // else if not CC included
+                     
+                  
+                 ACCTS:    for (String[] account : accounts) {
+                     
+                     
+                  
+                  acctid = account[0];
+                  acctcurr = account[1];
+                  accttype = account[2];
+                  acctdesc = account[3];
+               
+                  
+                  begbal = 0.00;
+                  activity = 0.00;
+                  endbal = 0.00;
+                  preact = 0.00;
+                  postact = 0.00;
+                
+                  
+                  
+                 // calculate all acb_mstr records for whole periods < fromdateperiod
+                    // begbal += OVData.getGLAcctBalSummCC(account.toString(), String.valueOf(fromdateyear), String.valueOf(p));
+                  if (accttype.equals("L") || accttype.equals("A")) {
+                      //must be type balance sheet
+                  res = st.executeQuery("select sum(acb_amt) as sum from acb_mstr where " +
+                        " acb_acct = " + "'" + acctid + "'" + " AND " +
+                        " acb_site = " + "'" + site + "'" + " AND " +
+                        " (( acb_year = " + "'" + year + "'" + " AND acb_per < " + "'" + period + "'" + " ) OR " +
+                        "  ( acb_year <= " + "'" + prioryear + "'" + " )) " +
+                        ";");
+                
+                       while (res.next()) {
+                          begbal += res.getDouble("sum");
+                       }
+                  } else {
+                     // must be income statement
+                      res = st.executeQuery("select sum(acb_amt) as sum from acb_mstr where " +
+                        " acb_acct = " + "'" + acctid + "'" + " AND " +
+                        " acb_site = " + "'" + site + "'" + " AND " +
+                        " ( acb_year = " + "'" + year + "'" + " AND acb_per < " + "'" + period + "'" + ")" +
+                        ";");
+                
+                       while (res.next()) {
+                          begbal += res.getDouble("sum");
+                       }
+                  }
+                  
+                   
+                   // calculate period(s) activity defined by date range 
+                  // activity += OVData.getGLAcctBalSummCC(account.toString(), String.valueOf(fromdateyear), String.valueOf(p));
+               
+                  
+                 
+                       res = st.executeQuery("select sum(acb_amt) as sum from acb_mstr where acb_year = " +
+                        "'" + String.valueOf(year) + "'" + 
+                        " AND acb_per = " +
+                        "'" + String.valueOf(period) + "'" +
+                        " AND acb_acct = " +
+                        "'" + acctid + "'" +
+                        " AND acb_site = " + "'" + site + "'" +
+                        ";");
+               
+                  
+                
+                       while (res.next()) {
+                          activity += res.getDouble(("sum"));
+                       }
+                 
+                               
+                 endbal = begbal + activity;
+                 
+               
+                
+               if (in_accttype.equals(getGlobalProgTag("all"))) {
+                sb.append(acctid + "," + 
+                            "" + "," + 
+                            accttype + "," +  
+                            acctcurr + "," + 
+                            acctdesc + "," + 
+                            site + "," + 
+                            currformatDouble(begbal) + "," + 
+                            currformatDouble(activity) + "," + 
+                            currformatDouble(endbal)
+                            );
+                sb.append("\n");
+               
+               } else {
+                  if (accttype.equals(in_accttype)) {
+                  sb.append(acctid + "," + 
+                            "" + "," + 
+                            accttype + "," +  
+                            acctcurr + "," + 
+                            acctdesc + "," + 
+                            site + "," + 
+                            currformatDouble(begbal) + "," + 
+                            currformatDouble(activity) + "," + 
+                            currformatDouble(endbal)
+                            );
+                sb.append("\n");
+                    
+                  }
+               }
+             
+                   
+                } // Accts   
+                     
+                     
+                 } // else of cc is not included
+                 
+                
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        
+        return sb.toString();
+    }
+    
     public static String setGLRecNbr(String type) {
            String mystring = "";
           // int nextnbr = OVData.getNextNbr("gl");
