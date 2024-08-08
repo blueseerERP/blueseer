@@ -942,7 +942,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
       ddacctfrom.getSelectedItem().toString(),
       ddacctto.getSelectedItem().toString()
     };
-    BlueSeerUtils.startTask(new String[]{"",getMessageTag(1057)});
+    BlueSeerUtils.startTask(new String[]{"",getMessageTag(1189)});
     disableAll();
     Task task = new Task(key);
     task.execute();    
