@@ -54,6 +54,8 @@ import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.FileSystems;
@@ -107,6 +109,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import org.bouncycastle.util.encoders.Base64;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 /**
@@ -2268,6 +2271,33 @@ public class BlueSeerUtils {
         }
         return filename.replace("%", "");
     }
+
+    public static String sendServerRequest(String urlString, String[] v) throws MalformedURLException, IOException {
+        String r = null;
+        HttpURLConnection conn = null;
+        URL url = new URL(urlString);
+        String user = "";
+        String pass = "";
+        
+        conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestProperty("Content-Type", "text/plain");
+        conn.setConnectTimeout(10000);
+        conn.setReadTimeout(10000);
+            
+           
+        if (! user.isBlank() && ! pass.isBlank()) {
+        String userCredentials = new String(user + ":" + pass);
+        String basicAuth = "Basic " + Base64.toBase64String(userCredentials.getBytes());
+        conn.setRequestProperty("Authorization", basicAuth);
+        } else {
+            return r;
+        } 
+            
+            
+            StringBuilder requestHeaders = new StringBuilder();
+       return r;
+    }
+
 }
 
 

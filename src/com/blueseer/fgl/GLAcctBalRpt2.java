@@ -75,6 +75,7 @@ import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.sendServerRequest;
 import java.sql.Connection;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
@@ -214,7 +215,11 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
         
         @Override
         public Void doInBackground() throws Exception {
-            data = fglData.getAccountBalanceReport(key); 
+            if (bsmf.MainFrame.clienttype != null && bsmf.MainFrame.clienttype.toUpperCase().equals("REMOTE")) {
+               data = sendServerRequest(null, null);
+            } else {
+               data = fglData.getAccountBalanceReport(key); 
+            }
             return null;
         }
  
@@ -222,7 +227,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
          * Executed in event dispatch thread
          */
         public void done() {
-            BlueSeerUtils.endTask(new String[]{"0","Report is Complete"});
+            BlueSeerUtils.endTask(new String[]{"0",getMessageTag(1125)});
             updateForm();
         }
     }  
