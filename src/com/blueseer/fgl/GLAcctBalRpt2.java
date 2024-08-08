@@ -228,6 +228,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
          */
         public void done() {
             BlueSeerUtils.endTask(new String[]{"0",getMessageTag(1125)});
+            enableAll();
             updateForm();
         }
     }  
@@ -479,7 +480,30 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
         }
 
     }
-     
+    
+    public void disableAll() {
+       btdetail.setEnabled(false);
+       btRun.setEnabled(false);
+       btprint.setEnabled(false);
+       ddyear.setEnabled(false);
+       ddperiod.setEnabled(false);
+       ddtype.setEnabled(false);
+       ddacctfrom.setEnabled(false);
+       ddacctto.setEnabled(false);
+       tablepanel.setEnabled(false);
+    }
+    
+    public void enableAll() {
+      btdetail.setEnabled(true);
+       btRun.setEnabled(true);
+       btprint.setEnabled(true);
+       ddyear.setEnabled(true);
+       ddperiod.setEnabled(true);
+       ddtype.setEnabled(true);
+       ddacctfrom.setEnabled(true);
+       ddacctto.setEnabled(true);
+       tablepanel.setEnabled(true); 
+    }
      
     public void initvars(String[] arg) {
         lblendbal.setText("0");
@@ -918,6 +942,8 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
       ddacctfrom.getSelectedItem().toString(),
       ddacctto.getSelectedItem().toString()
     };
+    BlueSeerUtils.startTask(new String[]{"",getMessageTag(1057)});
+    disableAll();
     Task task = new Task(key);
     task.execute();    
     /*
