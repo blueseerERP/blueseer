@@ -2301,7 +2301,7 @@ public class BlueSeerUtils {
         conn.setRequestProperty("Content-Type", "text/plain");
         conn.setConnectTimeout(10000);
         conn.setReadTimeout(10000);
-        conn.setRequestMethod("GET");    
+       // conn.setRequestMethod("GET");    
            
         if (! user.isBlank() && ! pass.isBlank()) {
         String userCredentials = new String(user + ":" + pass);
@@ -2311,7 +2311,7 @@ public class BlueSeerUtils {
             return sb.toString();
         } 
         
-        
+        System.out.println(urlString);
         
         
         if (conn.getResponseCode() != 200) {
