@@ -66,42 +66,58 @@ public class dataServ extends HttpServlet {
 protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
-     //   int year, int period, String site, boolean iscc, String in_accttype, String fromacct, String toacct
+    response.setContentType("text/plain");
+        
+    if (! confirmServerAuth(request)) {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.getWriter().println("br549 authorization failed");
+        return;
+    }
+    
+        
+    if (request.getParameter("id") == null || request.getParameter("id").isEmpty()) {
+      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+      response.getWriter().println(HttpServletResponse.SC_BAD_REQUEST + ": missing id");  
+      return;
+    }
+        
         String id = request.getParameter("id");
-        String year = request.getParameter("year");
-        String period = request.getParameter("period");
-        String site = request.getParameter("site");
-        String iscc = request.getParameter("iscc");
-        String intype = request.getParameter("intype");
-        String fromacct = request.getParameter("fromacct");
-        String toacct = request.getParameter("toacct");
-        
-        response.setContentType("text/plain");
-        
-        if (! confirmServerAuth(request)) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().println("br549 authorization failed");
-            return;
-        }
-        
         
         response.setStatus(HttpServletResponse.SC_OK);
         
         
-        if (id != null && ! id.isEmpty() && id.equals("1")) {
-           String[] key = new String[]{
-             year, period, site, iscc, intype, fromacct, toacct  
+        
+        if (id.equals("1")) {
+           String[] keys = new String[]{
+               request.getParameter("year"), 
+               request.getParameter("period"), 
+               request.getParameter("site"), 
+               request.getParameter("iscc"), 
+               request.getParameter("intype"), 
+               request.getParameter("fromacct"), 
+               request.getParameter("toacct")  
            }; 
-           String r = getAccountBalanceReport(key);
+           
+           for (String k : keys) {
+               if (k == null) {
+                   response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                   response.getWriter().println(HttpServletResponse.SC_BAD_REQUEST + ": missing param");  
+                   return;
+               }
+           }
+           
+           String r = getAccountBalanceReport(keys);
+           
            if (r == null || r.isBlank()) {
-             response.getWriter().println("no return for: " + id + "," + year + "," + period + "," + site + "," + iscc + "," + intype + "," + fromacct + "," + toacct);   
+             response.getWriter().println("no return for: " + String.join(",",keys));   
            } else {
              response.getWriter().println(r);   
            }
-          // response.getWriter().println(getAccountBalanceReport(key)); 
-        } else {
-           response.getWriter().println("something is amiss");
-        }
+        } 
+        
+        
+        
+        
     }
 
  
