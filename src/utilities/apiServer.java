@@ -62,6 +62,11 @@ import org.eclipse.jetty.webapp.WebAppContext;
 
 public class apiServer {
     
+    static {
+    System.setProperty("java.awt.headless", "true");
+    /* java.awt.GraphicsEnvironment.isHeadless() returns false */
+    }
+    
     private static final String[] HEADERS = {
             "X-Forwarded-For",
             "Proxy-Client-IP",
