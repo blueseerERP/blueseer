@@ -1162,7 +1162,7 @@ public class fglData {
         
         StringBuilder sb = new StringBuilder();
         ArrayList<String[]> accounts = fglData.getGLAcctListRangeWCurrTypeDesc(fromacct, toacct);
-        
+        System.out.println("here: " + String.join(",", key) + " -> " + accounts.size());
         try {
             Connection con = null;
             if (ds != null) {
@@ -1183,9 +1183,6 @@ public class fglData {
           
                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
                 
-                
-                 
-                 
                  
                  int prioryear = 0;
                  double begbal = 0.00;

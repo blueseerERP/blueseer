@@ -67,6 +67,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.fgl.fglData.getAccountBalanceReport;
 import static com.blueseer.utl.BlueSeerUtils.bsFormatInt;
 import static com.blueseer.utl.BlueSeerUtils.bsNumber;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
@@ -227,6 +228,18 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
                list.add(new String[]{"toacct",ddacctto.getSelectedItem().toString()});
                
                data = sendServerRequest(list); 
+              /*
+              String[] j = new String[]{
+              ddyear.getSelectedItem().toString(), 
+                  ddperiod.getSelectedItem().toString(), 
+                  ddsite.getSelectedItem().toString(), "true", 
+                  ddtype.getSelectedItem().toString(), 
+                  ddacctfrom.getSelectedItem().toString(), 
+                  ddacctto.getSelectedItem().toString()  
+              };
+              data = getAccountBalanceReport(j);
+              */
+               System.out.println(data);
             } else {
                data = fglData.getAccountBalanceReport(key); 
             }
@@ -365,9 +378,6 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
             }
         }
         
-        if (bsmf.MainFrame.debug) {
-            System.out.println(data);
-        }
     }
     
     public void getdetail(String acct, String site, int year, int period) {
