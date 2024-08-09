@@ -1162,7 +1162,6 @@ public class fglData {
         
         StringBuilder sb = new StringBuilder();
         ArrayList<String[]> accounts = fglData.getGLAcctListRangeWCurrTypeDesc(fromacct, toacct);
-        System.out.println("here: " + String.join(",", key) + " -> " + accounts.size());
         try {
             Connection con = null;
             if (ds != null) {
@@ -1520,8 +1519,7 @@ public class fglData {
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
-        String k = sb.toString();
-        System.out.println("here: " + k);
+        
         return sb.toString();
     }
     

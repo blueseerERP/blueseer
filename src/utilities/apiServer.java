@@ -31,6 +31,7 @@ package utilities;
  */
 
 
+import static bsmf.MainFrame.tags;
 import com.blueseer.srv.AS2Serv;
 import com.blueseer.srv.CustomerServ;
 import com.blueseer.srv.ItemServ;
@@ -40,6 +41,8 @@ import com.blueseer.srv.WorkOrdServ;
 import com.blueseer.srv.dataServ;
 import static com.blueseer.utl.BlueSeerUtils.isParsableToInt;
 import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -77,7 +80,7 @@ public class apiServer {
         
         
         bsmf.MainFrame.setConfig();
-        
+        tags = ResourceBundle.getBundle("resources.bs", Locale.getDefault());
         
         
         

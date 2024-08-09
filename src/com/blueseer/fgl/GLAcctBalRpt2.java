@@ -239,7 +239,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
               };
               data = getAccountBalanceReport(j);
               */
-               System.out.println(data);
+              
             } else {
                data = fglData.getAccountBalanceReport(key); 
             }
