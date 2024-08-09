@@ -2280,7 +2280,13 @@ public class BlueSeerUtils {
     public static String sendServerRequest(ArrayList<String[]> vlist) throws MalformedURLException, IOException {
        
         StringBuilder sb = new StringBuilder();
-        String urlString = "http://ec2-18-209-43-214.compute-1.amazonaws.com:8088/bsapi/dataServ";
+        String urlString = "";
+        if (! bsmf.MainFrame.rhost.isBlank()) {
+            urlString = "http://" + bsmf.MainFrame.rhost + ":8088/bsapi/dataServ";
+        } else {
+            urlString = "http://" + bsmf.MainFrame.ip + ":8088/bsapi/dataServ";
+        }
+        
         HttpURLConnection conn = null;
         
         String user = bsmf.MainFrame.user;
@@ -2314,7 +2320,7 @@ public class BlueSeerUtils {
             return sb.toString();
         } 
         
-        System.out.println(urlString);
+       // System.out.println(urlString);
         
         
         if (conn.getResponseCode() != 200) {
