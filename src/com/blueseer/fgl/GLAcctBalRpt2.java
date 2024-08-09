@@ -364,6 +364,10 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
                      totactivity = totactivity + bsParseDouble(s[7]);
             }
         }
+        
+        if (bsmf.MainFrame.debug) {
+            System.out.println(data);
+        }
     }
     
     public void getdetail(String acct, String site, int year, int period) {
