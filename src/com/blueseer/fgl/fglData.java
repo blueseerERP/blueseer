@@ -1297,13 +1297,7 @@ public class fglData {
                             sb.append("\n");
                           }
                         }
-                 
-                            
                        }
-                       
-                 
-                       
-                       
                   } else {
                      // must be income statement
                       res = st.executeQuery("select acb_cc, sum(acb_amt) as sum from acb_mstr where " +

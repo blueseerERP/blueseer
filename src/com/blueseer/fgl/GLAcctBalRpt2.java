@@ -223,7 +223,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
                list.add(new String[]{"period",ddperiod.getSelectedItem().toString()});
                list.add(new String[]{"site",ddsite.getSelectedItem().toString()});
                list.add(new String[]{"iscc",BlueSeerUtils.ConvertBoolToYesNo(cbcc.isSelected())});
-               list.add(new String[]{"type",ddtype.getSelectedItem().toString()});
+               list.add(new String[]{"intype",ddtype.getSelectedItem().toString()});
                list.add(new String[]{"fromacct",ddacctfrom.getSelectedItem().toString()});
                list.add(new String[]{"toacct",ddacctto.getSelectedItem().toString()});
                

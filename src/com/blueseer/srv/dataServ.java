@@ -72,16 +72,16 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         String period = request.getParameter("period");
         String site = request.getParameter("site");
         String iscc = request.getParameter("iscc");
-        String type = request.getParameter("type");
+        String intype = request.getParameter("intype");
         String fromacct = request.getParameter("fromacct");
         String toacct = request.getParameter("toacct");
         if (id != null && ! id.isEmpty() && id.equals("1")) {
            String[] key = new String[]{
-             year, period, site, iscc, type, fromacct, toacct  
+             year, period, site, iscc, intype, fromacct, toacct  
            }; 
            String r = getAccountBalanceReport(key);
            if (r == null || r.isBlank()) {
-             response.getWriter().println("no return for: " + id + "," + year + "," + period + "," + site + "," + iscc + "," + type + "," + fromacct + "," + toacct);   
+             response.getWriter().println("no return for: " + id + "," + year + "," + period + "," + site + "," + iscc + "," + intype + "," + fromacct + "," + toacct);   
            } else {
              response.getWriter().println(r);   
            }
