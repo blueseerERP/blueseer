@@ -2283,8 +2283,8 @@ public class BlueSeerUtils {
         String urlString = "http://ec2-18-209-43-214.compute-1.amazonaws.com:8088/bsapi/dataServ";
         HttpURLConnection conn = null;
         
-        String user = "admin";
-        String pass = "admin";
+        String user = bsmf.MainFrame.user;
+        String pass = bsmf.MainFrame.pass;
         
         // set parameter string
         String methodpath = "";
