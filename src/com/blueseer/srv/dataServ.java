@@ -85,7 +85,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
            } else {
              response.getWriter().println(r);   
            }
-           response.getWriter().println(getAccountBalanceReport(key)); 
+          // response.getWriter().println(getAccountBalanceReport(key)); 
         } else {
            response.getWriter().println("something is amiss");
         }

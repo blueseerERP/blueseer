@@ -1526,7 +1526,8 @@ public class fglData {
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
-        
+        String k = sb.toString();
+        System.out.println("here: " + k);
         return sb.toString();
     }
     
