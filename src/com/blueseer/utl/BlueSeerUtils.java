@@ -2276,7 +2276,7 @@ public class BlueSeerUtils {
 
     public static String sendServerRequest(ArrayList<String[]> vlist) throws MalformedURLException, IOException {
        
-        StringBuilder sb = null;
+        StringBuilder sb = new StringBuilder();
         String urlString = "http://ec2-18-209-43-214.compute-1.amazonaws.com:8088/bsapi/dataServ";
         HttpURLConnection conn = null;
         
@@ -2318,9 +2318,10 @@ public class BlueSeerUtils {
                     sb.append(conn.getResponseCode() + ": " + conn.getResponseMessage());
                     //throw new RuntimeException("Failed : HTTP error code : "
                     //		+ conn.getResponseCode());
+                    System.out.println("HERE: " + "not 200 OK");
         } else {
             BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
-            String output;
+            String output = "";
             while ((output = br.readLine()) != null) {
                 sb.append(output);
             }
@@ -2330,6 +2331,8 @@ public class BlueSeerUtils {
         if (conn != null) {
           conn.disconnect();
         }
+        
+        System.out.println("HERE: " + sb.toString());
         
        return sb.toString();
     }
