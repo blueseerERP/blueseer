@@ -2279,9 +2279,23 @@ public class BlueSeerUtils {
         StringBuilder sb = null;
         String urlString = "http://ec2-18-209-43-214.compute-1.amazonaws.com:8088/bsapi/dataServ";
         HttpURLConnection conn = null;
-        URL url = new URL(urlString);
+        
         String user = "admin";
         String pass = "admin";
+        
+        // set parameter string
+        String methodpath = "";
+        for (String[] v : vlist) {
+         methodpath = methodpath + v[0] + "=" + v[1] + "&";
+        }
+        if (methodpath.endsWith("&")) {
+                    methodpath = methodpath.substring(0, methodpath.length() - 1);
+        }
+        methodpath = "?" + methodpath;
+        urlString = urlString + methodpath;
+        
+        URL url = new URL(urlString);
+        
         
         conn = (HttpURLConnection) url.openConnection();
         conn.setRequestProperty("Content-Type", "text/plain");
@@ -2296,10 +2310,9 @@ public class BlueSeerUtils {
         } else {
             return sb.toString();
         } 
-         
-        for (String[] v : vlist) {
-         conn.setRequestProperty(v[0],v[1]);
-        }
+        
+        
+        
         
         if (conn.getResponseCode() != 200) {
                     sb.append(conn.getResponseCode() + ": " + conn.getResponseMessage());
