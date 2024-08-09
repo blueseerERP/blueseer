@@ -2346,9 +2346,14 @@ public class BlueSeerUtils {
             Base64 b = new Base64(); 
             String credentials = new String(b.decode(base64Credentials), Charset.forName("UTF-8"));
             final String[] v = credentials.split(":", 2);
-            System.out.println(v[0] + ":" + v[1]);
-           }
-
+            if (v[0].equals(bsmf.MainFrame.user) && v[0].equals(bsmf.MainFrame.pass)) {
+                return true;
+            } else {
+                bslog("api dataServ: Credentials Failed: " + v[0] + ":" + v[1]);
+            }            
+        }
+        bslog("api dataServ: No Authorization sent " + httpRequest.getServletPath());
+        
         return false;
     }
     
