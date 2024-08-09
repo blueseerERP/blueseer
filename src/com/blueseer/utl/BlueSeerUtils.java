@@ -2318,12 +2318,13 @@ public class BlueSeerUtils {
                     sb.append(conn.getResponseCode() + ": " + conn.getResponseMessage());
                     //throw new RuntimeException("Failed : HTTP error code : "
                     //		+ conn.getResponseCode());
-                    System.out.println("HERE: " + "not 200 OK");
+                    
         } else {
             BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
             String output = "";
+            
             while ((output = br.readLine()) != null) {
-                sb.append(output);
+                sb.append(output).append("\n");
             }
             br.close(); 
         }
@@ -2331,8 +2332,6 @@ public class BlueSeerUtils {
         if (conn != null) {
           conn.disconnect();
         }
-        
-        System.out.println("HERE: " + sb.toString());
         
        return sb.toString();
     }

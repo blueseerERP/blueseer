@@ -358,12 +358,14 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
         String[] arrdata = data.split("\n", -1);
         for (String x : arrdata) {
             String[] s = x.split(",",-1);
+            
             if (s.length < 8) {
                 continue;  // must be blank lines
             }
             if (cbzero.isSelected() && bsParseDouble(s[6]) == 0 && bsParseDouble(s[8]) == 0 && bsParseDouble(s[7]) == 0) {
                      continue;
             }
+            
             mymodel.addRow(new Object[]{BlueSeerUtils.clickbasket, s[0], s[2], s[3],
                                 s[4],
                                 s[5],
