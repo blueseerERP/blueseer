@@ -60,6 +60,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.text.DateFormat;
@@ -87,6 +89,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.servlet.http.HttpServletRequest;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
@@ -2336,6 +2339,19 @@ public class BlueSeerUtils {
        return sb.toString();
     }
 
+    public static boolean confirmServerAuth(HttpServletRequest httpRequest) {
+        final String authorization = httpRequest.getHeader("Authorization");
+        if (authorization != null && authorization.toLowerCase().startsWith("basic")) {
+            String base64Credentials = authorization.substring("Basic".length()).trim();
+            Base64 b = new Base64(); 
+            String credentials = new String(b.decode(base64Credentials), Charset.forName("UTF-8"));
+            final String[] v = credentials.split(":", 2);
+            System.out.println(v[0] + ":" + v[1]);
+           }
+
+        return false;
+    }
+    
 }
 
 

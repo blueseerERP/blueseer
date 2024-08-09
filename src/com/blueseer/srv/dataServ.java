@@ -35,6 +35,7 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static com.blueseer.fgl.fglData.getAccountBalanceReport;
 import com.blueseer.utl.BlueSeerUtils;
+import static com.blueseer.utl.BlueSeerUtils.confirmServerAuth;
 import static com.blueseer.utl.BlueSeerUtils.createMessageJSON;
 import com.blueseer.utl.OVData;
 import java.io.BufferedReader;
@@ -64,8 +65,7 @@ public class dataServ extends HttpServlet {
 @Override
 protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
-        response.setContentType("text/plain");
-        response.setStatus(HttpServletResponse.SC_OK);
+        
      //   int year, int period, String site, boolean iscc, String in_accttype, String fromacct, String toacct
         String id = request.getParameter("id");
         String year = request.getParameter("year");
@@ -75,6 +75,19 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         String intype = request.getParameter("intype");
         String fromacct = request.getParameter("fromacct");
         String toacct = request.getParameter("toacct");
+        
+        response.setContentType("text/plain");
+        
+        if (! confirmServerAuth(request)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().println("br549 authorization failed");
+            return;
+        }
+        
+        
+        response.setStatus(HttpServletResponse.SC_OK);
+        
+        
         if (id != null && ! id.isEmpty() && id.equals("1")) {
            String[] key = new String[]{
              year, period, site, iscc, intype, fromacct, toacct  
