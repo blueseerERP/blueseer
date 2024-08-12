@@ -49,7 +49,10 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -138,10 +141,15 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
                     return;
                 }
                 */
-        
+            StringBuilder requestHeaders = new StringBuilder();
+            Enumeration<String> headerNames = request.getHeaderNames();
+            while (headerNames.hasMoreElements()) {
+                requestHeaders.append("Header  " + headerNames.nextElement()).append("\n");
+            }
+            
                 if (request.getParameter("id") == null || request.getParameter("id").isEmpty()) {
                   response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                  response.getWriter().println(HttpServletResponse.SC_BAD_REQUEST + ": missing id");  
+                  response.getWriter().println(HttpServletResponse.SC_BAD_REQUEST + ": missing id " + "\n" + requestHeaders.toString() );  
                   return;
                 }
 
