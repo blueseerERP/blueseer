@@ -301,6 +301,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
                     break;
                 case "getFiles":
                     ArrayList<String[]> arr = new ArrayList<String[]>();
+                    arr.add(new String[]{"id","getFilesOfDir"});
                     arr.add(new String[]{"dir", inDir});
                     rFileList = sendServerPost(arr, "");
                     break;
