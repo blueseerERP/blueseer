@@ -2395,6 +2395,7 @@ public class BlueSeerUtils {
         
         if (conn.getResponseCode() != 200) {
                     sb.append(conn.getResponseCode() + ": " + conn.getResponseMessage());
+                    sb.append(conn.getErrorStream());
                     //throw new RuntimeException("Failed : HTTP error code : "
                     //		+ conn.getResponseCode());
                     

@@ -131,13 +131,13 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         if (request == null) {
             response.getWriter().println("no valid payload provided");
         } else {
-              
+                /*
                 if (! confirmServerAuth(request)) {
                     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     response.getWriter().println("br549 authorization failed");
                     return;
                 }
-    
+                */
         
                 if (request.getParameter("id") == null || request.getParameter("id").isEmpty()) {
                   response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
