@@ -171,18 +171,12 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
                 if (id.equals("runEDI")) { // run EDI engine with list of files
                   String[] files = sb.toString().split(",",-1);
                   response.getWriter().println(runEDI(null, files));  
-                } else {
-                  response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                  response.getWriter().println(HttpServletResponse.SC_BAD_REQUEST + ": unknown id" + "\n" + getHeaders(request));  
-                  return;  
-                }
-                
-                if (id.equals("getFilesOfDir")) { 
+                } else if (id.equals("getFilesOfDir")) { 
                   String dir = request.getHeader("dir");
                   response.getWriter().println(getFilesOfDir(dir));  
                 } else {
                   response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                  response.getWriter().println(HttpServletResponse.SC_BAD_REQUEST + ": missing dir " + "\n" + getHeaders(request));  
+                  response.getWriter().println(HttpServletResponse.SC_BAD_REQUEST + ": unknown ID " + "\n" + getHeaders(request));  
                   return;  
                 }
                 
