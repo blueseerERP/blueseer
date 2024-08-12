@@ -2367,13 +2367,19 @@ public class BlueSeerUtils {
         
         byte[] postDataBytes = postData.getBytes("UTF-8");
         
-        conn = (HttpURLConnection) url.openConnection();
         conn.setDoOutput(true);
         conn.setConnectTimeout(10000);
         conn.setReadTimeout(10000);
         conn.setRequestMethod("POST");
         conn.setRequestProperty("Content-Type", "text/plain");
         conn.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
+        
+        // Custom Headers
+        for (String[] h : hlist) {
+         conn.setRequestProperty(h[0],h[1]);
+        }
+        
+        
              
         // auth   
         if (! user.isBlank() && ! pass.isBlank()) {
@@ -2384,10 +2390,8 @@ public class BlueSeerUtils {
             return sb.toString();
         } 
         
-        // Custom Headers
-        for (String[] h : hlist) {
-         conn.setRequestProperty(h[0],h[1]);
-        }
+        conn = (HttpURLConnection) url.openConnection();
+        
         
         
         conn.getOutputStream().write(postDataBytes);
