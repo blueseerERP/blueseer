@@ -188,7 +188,7 @@ public class BlueSeerUtils {
         public static JTable luTable = new JTable();
         public static MouseListener luml = null;
         public static ActionListener lual = null;
-        public static JDialog ludialog = new JDialog();
+        public static JDialog ludialog = null;
         public static ButtonGroup lubg = null;
         public static JRadioButton lurb1 = null;
         public static JRadioButton lurb2 = null;
