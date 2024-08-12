@@ -144,7 +144,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
             StringBuilder requestHeaders = new StringBuilder();
             Enumeration<String> headerNames = request.getHeaderNames();
             while (headerNames.hasMoreElements()) {
-                requestHeaders.append("Header  " + headerNames.nextElement()).append("\n");
+                requestHeaders.append("Header  " + headerNames.nextElement()).append("  Value  " + request.getHeader(headerNames.nextElement())).append("\n");
             }
             
                 if (request.getParameter("id") == null || request.getParameter("id").isEmpty()) {
