@@ -31,6 +31,7 @@ import static bsmf.MainFrame.tags;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.sendServerPost;
 import com.blueseer.utl.EDData;
 import com.blueseer.utl.OVData;
 import java.awt.Color;
@@ -96,6 +97,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
     private static String inDir = "";
     private static String inArch = ""; 
     private static String ErrorDir = ""; 
+    public static String rData = "";
     
     
      public class CheckBoxRenderer extends JCheckBox implements TableCellRenderer {
@@ -277,7 +279,11 @@ public class EDILoadMaint extends javax.swing.JPanel {
             message[0] = "";
             message[1] = "";
             
-            message = processFiles();
+            if (bsmf.MainFrame.clienttype != null && bsmf.MainFrame.clienttype.toUpperCase().equals("REMOTE")) {
+               message = processFilesPost();
+            } else {
+               message = processFiles(); 
+            }
             
             return message;
         }
@@ -288,8 +294,8 @@ public class EDILoadMaint extends javax.swing.JPanel {
             String[] message = get();
            
             BlueSeerUtils.endTask(message);
-            initvars(null);  
-          
+            //initvars(null);  
+            updateForm();
             
             } catch (Exception e) {
                 MainFrame.bslog(e);
@@ -654,6 +660,40 @@ public class EDILoadMaint extends javax.swing.JPanel {
        }
         
         return x;
+    }
+    
+    public String[] processFilesPost() throws IOException {
+        String[] x = new String[2];
+        int j = 0;  
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0 ; i < mymodel.getRowCount(); i++) {    
+                 if ( (boolean) mymodel.getValueAt(i, 1) ) {
+                    sb.append(inDir + mymodel.getValueAt(i,0).toString());
+                    sb.append(",");
+                 }
+        }
+        String postData = sb.toString();
+        if (postData.endsWith(",")) {
+                    postData = postData.substring(0, postData.length() - 1);
+        }
+        ArrayList<String[]> list = new ArrayList<String[]>();
+        list.add(new String[]{"id","2"});
+        
+        rData = sendServerPost(list, postData);
+        
+        x[0] = "0";
+        x[1] = "Processing complete";
+       
+        return x;
+    }
+    
+    public void updateForm() {
+        if (rData != null && ! rData.isBlank()) {
+            String[] arr = rData.split("\n", -1);
+            for (String s : arr) {
+                tafile.append(s);
+            }
+        }
     }
     
     public String getFileName() {

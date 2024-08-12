@@ -33,6 +33,7 @@ import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.edi.EDI.exeEngine;
 import static com.blueseer.fgl.fglData.getAccountBalanceReport;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.confirmServerAuth;
@@ -53,6 +54,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.transform.TransformerException;
 
 
 /**
@@ -120,148 +122,55 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         
     }
 
- 
-    
-
- 
-public static String getItemJSON(String id) {
-       
-        String x = ""; 
-        
-        try{
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                
-               res = st.executeQuery("select it_item as 'ItemNumber', " +
-               " it_site as 'Site', it_uom as 'UOM', it_code as 'TypeCode', it_wf as 'RoutingCode',  " +
-               " it_loc as 'Location', it_wh as 'Warehouse', " +
-               " it_sell_price as 'SellingPrice', it_pur_price as 'PurchasePrice', it_mtl_cost as 'MaterialCost', " +
-               " it_leadtime as 'LeadTime', it_safestock as 'SafetyStock', " +
-               " it_group as 'Group', it_drawing as 'Drawing' " +          
-               " it_rev as 'Revision', it_custrev as 'CustRevision', " +  
-               " it_taxcode as 'TaxCode', it_custrev as 'Status', " +  
-               " from item_mstr " +   
-               " where it_item = " + "'" + id + "'" + 
-               ";");
-                   
-                   org.json.simple.JsonArray json = new org.json.simple.JsonArray();
-                    ResultSetMetaData rsmd = res.getMetaData(); 
-                    while (res.next()) {
-                        int numColumns = rsmd.getColumnCount();
-                        LinkedHashMap<String, Object> jsonOrderedMap = new LinkedHashMap<String, Object>();
-                          for (int i=1; i<=numColumns; i++) {
-                            String column_name = rsmd.getColumnName(i);
-                            jsonOrderedMap.put(column_name, res.getObject(column_name));
-                          }
-                          json.add(jsonOrderedMap);
-                    }
-                    x = json.toJson();
-                    
+ @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+       // BufferedReader reader = request.getReader();
+        response.setContentType("text/plain");
+        response.setStatus(HttpServletResponse.SC_OK);
+        if (request == null) {
+            response.getWriter().println("no valid payload provided");
+        } else {
               
-                    
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-        return x;
+                if (! confirmServerAuth(request)) {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.getWriter().println("br549 authorization failed");
+                    return;
+                }
+    
         
-         } 
-     
-public static String getItemListByVarJSON(String fromitem, String toitem, String fromcode, String tocode, String status) {
-       
-        String x = ""; 
-        if (fromitem == null || fromitem.isEmpty()) {
-            fromitem = bsmf.MainFrame.lownbr;
-        }
-        if (toitem == null || toitem.isEmpty()) {
-            toitem = bsmf.MainFrame.hinbr;
-        }
-        if (fromcode == null || fromcode.isEmpty()) {
-            fromcode = bsmf.MainFrame.lowchar;
-        }
-        if (tocode == null || tocode.isEmpty()) {
-            tocode = bsmf.MainFrame.hichar;
-        }
-        if (status == null) {
-            status = "";
-        }
-       
-       // System.out.println("HERE: " + fromnbr + "/" + tonbr + "/" + fromdate + "/" + todate + "/" + fromcust + "/" + tocust);
-        try{
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
+                if (request.getParameter("id") == null || request.getParameter("id").isEmpty()) {
+                  response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                  response.getWriter().println(HttpServletResponse.SC_BAD_REQUEST + ": missing id");  
+                  return;
+                }
+
+                String id = request.getParameter("id");
                 
-               res = st.executeQuery("select it_item as 'ItemNumber', " +
-               " it_site as 'Site', it_uom as 'UOM', it_code as 'TypeCode', it_wf as 'RoutingCode',  " +
-               " it_loc as 'Location', it_wh as 'Warehouse', " +
-               " it_sell_price as 'SellingPrice', it_pur_price as 'PurchasePrice', it_mtl_cost as 'MaterialCost', " +
-               " it_leadtime as 'LeadTime', it_safestock as 'SafetyStock', " +
-               " it_rev as 'Revision', it_custrev as 'CustRevision', " +  
-               " it_taxcode as 'TaxCode', it_status as 'Status', " +  
-               " it_group as 'Group', it_drawing as 'Drawing' " +          
-               " from item_mstr " +   
-               " where it_item >= " + "'" + fromitem + "'" + 
-               " and it_item <= " + "'" + toitem + "'" +
-               " and it_code >= " + "'" + fromcode + "'" +
-               " and it_code <= " + "'" + tocode + "'" +
-               ";");
-               
-                    org.json.simple.JsonArray json = new org.json.simple.JsonArray();
-                    ResultSetMetaData rsmd = res.getMetaData(); 
-                    while (res.next()) {
-                        if (! status.isEmpty() && ! res.getString("Status").equals(status)) {
-                        continue;
-                        }
-                        int numColumns = rsmd.getColumnCount();
-                        LinkedHashMap<String, Object> jsonOrderedMap = new LinkedHashMap<String, Object>();
-                          for (int i=1; i<=numColumns; i++) {
-                            String column_name = rsmd.getColumnName(i);
-                            jsonOrderedMap.put(column_name, res.getObject(column_name));
-                          }
-                          json.add(jsonOrderedMap);
-                    }
-                    x = json.toJson();
-                    
-           }
-            catch (SQLException s){
-                 MainFrame.bslog(s);
-           } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               if (con != null) con.close();
-            }
+                String line = "";
+                StringBuilder sb = new StringBuilder();
+                BufferedReader reader = request.getReader();
+                while ((line = reader.readLine()) != null) {
+                sb.append(line);
+                }
+                if (sb.toString().isBlank()) {
+                  response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                  response.getWriter().println(HttpServletResponse.SC_BAD_REQUEST + "empty payload");  
+                  return; 
+                }
+                
+                if (id.equals("2")) { // run EDI engine with list of files
+                  String[] files = sb.toString().split(",",-1);
+                  response.getWriter().println(exeEngine(null, files));  
+                } else {
+                  response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                  response.getWriter().println(HttpServletResponse.SC_BAD_REQUEST + ": unknown id");  
+                  return;  
+                }
+                
         }
-        catch (Exception e){
-            MainFrame.bslog(e);
-            
-        }
-        return x;
-        
-         } 
-  
+    }
+     
     
     
 }
