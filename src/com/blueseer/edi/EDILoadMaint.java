@@ -98,6 +98,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
     private static String inArch = ""; 
     private static String ErrorDir = ""; 
     public static String rData = "";
+    public static String rFileList = "";
     
     
      public class CheckBoxRenderer extends JCheckBox implements TableCellRenderer {
@@ -269,21 +270,46 @@ public class EDILoadMaint extends javax.swing.JPanel {
        }
     }
     
-    public void executeTask() { 
+    public void executeTask(String x, String[] y) { 
       
         class Task extends SwingWorker<String[], Void> {
-           
+         
+          String action = "";
+          String[] key = null;
+          
+          public Task(String action, String[] key) { 
+              this.action = action;
+              this.key = key;
+          }     
+            
         @Override
         public String[] doInBackground() throws Exception {
             String[] message = new String[2];
             message[0] = "";
             message[1] = "";
             
-            if (bsmf.MainFrame.clienttype != null && bsmf.MainFrame.clienttype.toUpperCase().equals("REMOTE")) {
-               message = processFilesPost();
-            } else {
-               message = processFiles(); 
+            rData = "";
+            rFileList = "";
+            
+            switch(this.action) {
+                case "process":
+                    if (bsmf.MainFrame.remoteDB) {
+                        message = processFilesPost();
+                    } else {
+                        message = processFiles(); 
+                    }
+                    break;
+                case "getFiles":
+                    ArrayList<String[]> arr = new ArrayList<String[]>();
+                    arr.add(new String[]{"dir", inDir});
+                    rFileList = sendServerPost(arr, "");
+                    break;
+                default:
+                    message = new String[]{"1", "unknown action"};
             }
+            
+            
+            
             
             return message;
         }
@@ -305,7 +331,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
     }  
       
        BlueSeerUtils.startTask(new String[]{"","Running..."});
-       Task z = new Task(); 
+       Task z = new Task(x, y); 
        z.execute(); 
        
     }
@@ -668,7 +694,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
         StringBuilder sb = new StringBuilder();
         for (int i = 0 ; i < mymodel.getRowCount(); i++) {    
                  if ( (boolean) mymodel.getValueAt(i, 1) ) {
-                    sb.append(inDir + mymodel.getValueAt(i,0).toString());
+                    sb.append(mymodel.getValueAt(i,0).toString());
                     sb.append(",");
                  }
         }
@@ -677,7 +703,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
                     postData = postData.substring(0, postData.length() - 1);
         }
         ArrayList<String[]> list = new ArrayList<String[]>();
-        list.add(new String[]{"id","2"});
+        list.add(new String[]{"id","runEDI"});
         
         rData = sendServerPost(list, postData);
         
@@ -693,6 +719,17 @@ public class EDILoadMaint extends javax.swing.JPanel {
             for (String s : arr) {
                 tafile.append(s);
             }
+        }
+        if (rFileList != null && ! rFileList.isBlank()) {
+            mymodel.setNumRows(0);
+            String[] arr = rFileList.split("\n", -1);
+            for (String s : arr) {
+                mymodel.addRow(new Object[]{
+                s,
+                false
+                });
+            }
+            lbcount.setText(String.valueOf(mymodel.getRowCount()));
         }
     }
     
@@ -724,9 +761,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
    tablereport.setModel(mymodel);
    //tablereport.getColumnModel().getColumn(1).setCellRenderer(new SomeRenderer()); 
    
-   CheckBoxRenderer checkBoxRenderer = new CheckBoxRenderer();
-   tablereport.getColumnModel().getColumn(1).setCellRenderer(checkBoxRenderer); 
-   tablereport.getColumnModel().getColumn(0).setCellRenderer(new SomeRenderer()); 
+   
    boolean toggle = false;
      if (listOfFiles != null) 
      for (int i = 0; i < listOfFiles.length; i++) {
@@ -740,14 +775,20 @@ public class EDILoadMaint extends javax.swing.JPanel {
      
      lbcount.setText(String.valueOf(mymodel.getRowCount()));
     }  
-      
+    
+    
+    
     public void initvars(String[] arg) throws MalformedURLException, SmbException {
     setPanelComponentState(this, true);
     inDir = cleanDirString(EDData.getEDIInDir());
     inArch = cleanDirString(EDData.getEDIInArch()); 
     ErrorDir = cleanDirString(EDData.getEDIErrorDir()); 
     tafile.setFont(new Font("monospaced", Font.PLAIN, 12));
-    getFiles();        
+    CheckBoxRenderer checkBoxRenderer = new CheckBoxRenderer();
+    tablereport.getColumnModel().getColumn(1).setCellRenderer(checkBoxRenderer); 
+    tablereport.getColumnModel().getColumn(0).setCellRenderer(new SomeRenderer()); 
+    tablereport.setModel(mymodel);
+    //getFiles();        
     }
     
     /**
@@ -945,7 +986,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
         
         tafile.append("Loading " + String.valueOf(count) + " File(s)..." + "\n");
         
-        executeTask();
+        executeTask("process", null);
     }//GEN-LAST:event_btProcessActionPerformed
 
     private void tablereportMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablereportMouseClicked
@@ -993,7 +1034,11 @@ public class EDILoadMaint extends javax.swing.JPanel {
 
     private void btrefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrefreshActionPerformed
         tafile.setText("");
-        getFiles();
+        if (bsmf.MainFrame.remoteDB) {
+            executeTask("getFiles", null);
+        } else {
+            getFiles();
+        }
     }//GEN-LAST:event_btrefreshActionPerformed
 
 

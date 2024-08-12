@@ -216,7 +216,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
         
         @Override
         public Void doInBackground() throws Exception {
-            if (bsmf.MainFrame.clienttype != null && bsmf.MainFrame.clienttype.toUpperCase().equals("REMOTE")) {
+            if (bsmf.MainFrame.remoteDB) {
                ArrayList<String[]> list = new ArrayList<String[]>();
                list.add(new String[]{"id","1"});
                list.add(new String[]{"year",ddyear.getSelectedItem().toString()});
@@ -225,21 +225,8 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
                list.add(new String[]{"iscc",BlueSeerUtils.ConvertBoolToYesNo(cbcc.isSelected())});
                list.add(new String[]{"intype",ddtype.getSelectedItem().toString()});
                list.add(new String[]{"fromacct",ddacctfrom.getSelectedItem().toString()});
-               list.add(new String[]{"toacct",ddacctto.getSelectedItem().toString()});
-               
-               data = sendServerRequest(list); 
-              /*
-              String[] j = new String[]{
-              ddyear.getSelectedItem().toString(), 
-                  ddperiod.getSelectedItem().toString(), 
-                  ddsite.getSelectedItem().toString(), "true", 
-                  ddtype.getSelectedItem().toString(), 
-                  ddacctfrom.getSelectedItem().toString(), 
-                  ddacctto.getSelectedItem().toString()  
-              };
-              data = getAccountBalanceReport(j);
-              */
-              
+               list.add(new String[]{"toacct",ddacctto.getSelectedItem().toString()});               
+               data = sendServerRequest(list);
             } else {
                data = fglData.getAccountBalanceReport(key); 
             }

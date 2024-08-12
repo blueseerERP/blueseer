@@ -111,10 +111,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -749,7 +752,7 @@ public class EDI {
     return m;
     }
     
-    public static String exeEngine(String[] args, String[] files) {
+    public static String runEDI(String[] args, String[] files) {
     
         StringBuilder sb = new StringBuilder();
         try {
@@ -4581,7 +4584,25 @@ public class EDI {
         return errorcode;
      }
        
-      
+     // remoteDB tools
+    public static String getFilesOfDir(String dir) {
+        StringBuilder sb = new StringBuilder();
+        Set<String> ss = null;
+        try (Stream<Path> stream = Files.list(Paths.get(dir))) {
+        ss = stream
+          .filter(file -> !Files.isDirectory(file))
+          .map(Path::getFileName)
+          .map(Path::toString)
+          .collect(Collectors.toSet());
+        } catch (IOException ex) {
+            sb.append("IOException in getFilesOfDir: ").append(dir).append("\n");
+        }
+        for (String s : ss) {
+            sb.append(s).append("\n");
+        }
+        return sb.toString();
+    }  
+    
     
      // miscellaneous 
       public static String[] generateEnvelope(String doctype, String sndid, String rcvid, String outdoctype) {

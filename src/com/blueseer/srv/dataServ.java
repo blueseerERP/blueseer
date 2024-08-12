@@ -33,7 +33,8 @@ import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
-import static com.blueseer.edi.EDI.exeEngine;
+import static com.blueseer.edi.EDI.getFilesOfDir;
+import static com.blueseer.edi.EDI.runEDI;
 import static com.blueseer.fgl.fglData.getAccountBalanceReport;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.confirmServerAuth;
@@ -157,20 +158,31 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
                 while ((line = reader.readLine()) != null) {
                 sb.append(line);
                 }
+                
+                /*
                 if (sb.toString().isBlank()) {
                   response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                   response.getWriter().println(HttpServletResponse.SC_BAD_REQUEST + "empty payload" + "\n" + getHeaders(request));  
                   return; 
                 }
-                
+                */
                 
                 // process specific app (id)
-                if (id.equals("2")) { // run EDI engine with list of files
+                if (id.equals("runEDI")) { // run EDI engine with list of files
                   String[] files = sb.toString().split(",",-1);
-                  response.getWriter().println(exeEngine(null, files));  
+                  response.getWriter().println(runEDI(null, files));  
                 } else {
                   response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                   response.getWriter().println(HttpServletResponse.SC_BAD_REQUEST + ": unknown id" + "\n" + getHeaders(request));  
+                  return;  
+                }
+                
+                if (id.equals("getFilesOfDir")) { 
+                  String dir = request.getHeader("dir");
+                  response.getWriter().println(getFilesOfDir(dir));  
+                } else {
+                  response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                  response.getWriter().println(HttpServletResponse.SC_BAD_REQUEST + ": missing dir " + "\n" + getHeaders(request));  
                   return;  
                 }
                 
