@@ -141,19 +141,15 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
                     return;
                 }
                 */
-            StringBuilder requestHeaders = new StringBuilder();
-            Enumeration<String> headerNames = request.getHeaderNames();
-            while (headerNames.hasMoreElements()) {
-                requestHeaders.append("Header  " + headerNames.nextElement()).append("  Value  " + request.getHeader(headerNames.nextElement())).append("\n");
-            }
             
-                if (request.getParameter("id") == null || request.getParameter("id").isEmpty()) {
+            
+                if (request.getHeader("id") == null || request.getHeader("id").isEmpty()) {
                   response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                  response.getWriter().println(HttpServletResponse.SC_BAD_REQUEST + ": missing id " + "\n" + requestHeaders.toString() );  
+                  response.getWriter().println(HttpServletResponse.SC_BAD_REQUEST + ": missing id " + "\n" + getHeaders(request) );  
                   return;
                 }
 
-                String id = request.getParameter("id");
+                String id = request.getHeader("id");
                 
                 String line = "";
                 StringBuilder sb = new StringBuilder();
@@ -163,16 +159,18 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
                 }
                 if (sb.toString().isBlank()) {
                   response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                  response.getWriter().println(HttpServletResponse.SC_BAD_REQUEST + "empty payload");  
+                  response.getWriter().println(HttpServletResponse.SC_BAD_REQUEST + "empty payload" + "\n" + getHeaders(request));  
                   return; 
                 }
                 
+                
+                // process specific app (id)
                 if (id.equals("2")) { // run EDI engine with list of files
                   String[] files = sb.toString().split(",",-1);
                   response.getWriter().println(exeEngine(null, files));  
                 } else {
                   response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                  response.getWriter().println(HttpServletResponse.SC_BAD_REQUEST + ": unknown id");  
+                  response.getWriter().println(HttpServletResponse.SC_BAD_REQUEST + ": unknown id" + "\n" + getHeaders(request));  
                   return;  
                 }
                 
@@ -180,5 +178,17 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
     }
      
     
+    private String getHeaders(HttpServletRequest request) {
     
+    StringBuilder requestHeaders = new StringBuilder();
+
+            Enumeration<String> headerNames = request.getHeaderNames();
+            while (headerNames.hasMoreElements()) {
+                String hd = headerNames.nextElement();
+                requestHeaders.append("Header  " + hd).append("  Value  " + request.getHeader(hd)).append("\n");
+            }
+    return requestHeaders.toString();
+}
+
+
 }
