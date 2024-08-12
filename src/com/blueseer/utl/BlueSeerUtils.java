@@ -2402,7 +2402,7 @@ public class BlueSeerUtils {
         if (conn.getResponseCode() != 200) {
                     sb.append(conn.getResponseCode() + ": " + conn.getResponseMessage());
                     String output = "";
-                    BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+                    BufferedReader br = new BufferedReader(new InputStreamReader((conn.getErrorStream())));
                     while ((output = br.readLine()) != null) {
                         sb.append(output).append("\n");
                     }
