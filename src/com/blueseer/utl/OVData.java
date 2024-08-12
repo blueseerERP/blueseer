@@ -7671,7 +7671,7 @@ public class OVData {
     
     public static String getSystemImageDirectory() {
         String myreturn = "";
-        if (bsmf.MainFrame.clienttype.equals("SERVER")) { // override if execution env is server
+        if (bsmf.MainFrame.remoteDB) { // override if execution env is server
             return "image";
         }
         try{
@@ -7708,7 +7708,7 @@ public class OVData {
         
     public static String getSystemTempDirectory() {
         String myreturn = "";
-        if (bsmf.MainFrame.clienttype.equals("SERVER")) { // override if execution env is server
+        if (bsmf.MainFrame.remoteDB) { // override if execution env is server
             return "temp";
         }
         try{
@@ -7777,7 +7777,7 @@ public class OVData {
         
     public static String getSystemLabelDirectory() {
         String myreturn = "";
-        if (bsmf.MainFrame.clienttype.equals("SERVER")) { // override if execution env is server
+        if (bsmf.MainFrame.remoteDB) { // override if execution env is server
             return "zebra";
         }
         try{
@@ -7814,7 +7814,7 @@ public class OVData {
     
     public static String getSystemJasperDirectory() {
         String myreturn = "";
-        if (bsmf.MainFrame.clienttype.equals("SERVER")) { // override if execution env is server
+        if (bsmf.MainFrame.remoteDB) { // override if execution env is server
             return "jasper";
         }
         
@@ -7852,7 +7852,7 @@ public class OVData {
     
     public static String getSystemEDIDirectory() {
         String myreturn = "";
-        if (bsmf.MainFrame.clienttype.equals("SERVER")) { // override if execution env is server
+        if (bsmf.MainFrame.remoteDB) { // override if execution env is server
             return "edi";
         }
         try{
