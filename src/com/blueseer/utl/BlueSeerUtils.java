@@ -2367,6 +2367,9 @@ public class BlueSeerUtils {
         
         byte[] postDataBytes = postData.getBytes("UTF-8");
         
+        conn = (HttpURLConnection) url.openConnection();
+
+        
         conn.setDoOutput(true);
         conn.setConnectTimeout(10000);
         conn.setReadTimeout(10000);
@@ -2390,8 +2393,7 @@ public class BlueSeerUtils {
             return sb.toString();
         } 
         
-        conn = (HttpURLConnection) url.openConnection();
-        
+                
         
         
         conn.getOutputStream().write(postDataBytes);
@@ -2399,7 +2401,12 @@ public class BlueSeerUtils {
         
         if (conn.getResponseCode() != 200) {
                     sb.append(conn.getResponseCode() + ": " + conn.getResponseMessage());
-                    sb.append(conn.getErrorStream());
+                    String output = "";
+                    BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+                    while ((output = br.readLine()) != null) {
+                        sb.append(output).append("\n");
+                    }
+                    br.close(); 
                     //throw new RuntimeException("Failed : HTTP error code : "
                     //		+ conn.getResponseCode());
                     
