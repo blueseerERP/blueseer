@@ -4603,6 +4603,21 @@ public class EDI {
         return sb.toString();
     }  
     
+    public static String getFileContent(String filepath) {
+        StringBuilder sb = new StringBuilder();
+        String str = "";
+        if (Files.exists(FileSystems.getDefault().getPath(filepath))) {
+           byte[] b;
+            try {
+                b = Files.readAllBytes(FileSystems.getDefault().getPath(filepath));
+                str = new String(b, StandardCharsets.UTF_8);
+            } catch (IOException ex) {
+                str = "IOException";
+            }
+        }
+        return str;
+    }  
+    
     
      // miscellaneous 
       public static String[] generateEnvelope(String doctype, String sndid, String rcvid, String outdoctype) {

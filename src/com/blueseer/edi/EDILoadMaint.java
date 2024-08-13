@@ -99,6 +99,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
     private static String ErrorDir = ""; 
     public static String rData = "";
     public static String rFileList = "";
+    public static String rFileContent = "";
     
     
      public class CheckBoxRenderer extends JCheckBox implements TableCellRenderer {
@@ -290,6 +291,8 @@ public class EDILoadMaint extends javax.swing.JPanel {
             
             rData = "";
             rFileList = "";
+            rFileContent = "";
+            
             
             switch(this.action) {
                 case "process":
@@ -305,6 +308,12 @@ public class EDILoadMaint extends javax.swing.JPanel {
                     arr.add(new String[]{"dir", inDir});
                     rFileList = sendServerPost(arr, "");
                     break;
+                case "getFileContent":
+                    ArrayList<String[]> arrx = new ArrayList<String[]>();
+                    arrx.add(new String[]{"id","getFileContent"});
+                    arrx.add(new String[]{"filepath", key[0]});
+                    rFileContent = sendServerPost(arrx, "");
+                    break;    
                 default:
                     message = new String[]{"1", "unknown action"};
             }
@@ -725,6 +734,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
             mymodel.setNumRows(0);
             String[] arr = rFileList.split("\n", -1);
             for (String s : arr) {
+                if (! s.isBlank()) 
                 mymodel.addRow(new Object[]{
                 s,
                 false
@@ -732,6 +742,16 @@ public class EDILoadMaint extends javax.swing.JPanel {
             }
             lbcount.setText(String.valueOf(mymodel.getRowCount()));
         }
+        
+        if (rFileContent != null && ! rFileContent.isBlank()) {
+            String[] arr = rFileList.split("\n", -1);
+            for (String s : arr) {
+                tafile.append(s);
+                tafile.append("\n");
+            }
+        }
+        
+        
     }
     
     public String getFileName() {
@@ -994,6 +1014,9 @@ public class EDILoadMaint extends javax.swing.JPanel {
           int row = tablereport.rowAtPoint(evt.getPoint());
         int col = tablereport.columnAtPoint(evt.getPoint());
         if ( col == 0) {
+             if (bsmf.MainFrame.remoteDB) {
+            executeTask("getFileContent", null);
+        } else {
              try {
                  tafile.setText("");
                  if (! tablereport.getValueAt(row, col).toString().isEmpty()) {
@@ -1017,7 +1040,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
              } catch (IOException ex) {
                  Logger.getLogger(EDILogBrowse.class.getName()).log(Level.SEVERE, null, ex);
              }
-           
+        }
         }
     }//GEN-LAST:event_tablereportMouseClicked
 

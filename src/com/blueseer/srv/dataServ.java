@@ -33,6 +33,7 @@ import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.edi.EDI.getFileContent;
 import static com.blueseer.edi.EDI.getFilesOfDir;
 import static com.blueseer.edi.EDI.runEDI;
 import static com.blueseer.fgl.fglData.getAccountBalanceReport;
@@ -173,7 +174,10 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
                   response.getWriter().println(runEDI(null, files));  
                 } else if (id.equals("getFilesOfDir")) { 
                   String dir = request.getHeader("dir");
-                  response.getWriter().println(getFilesOfDir(dir));  
+                  response.getWriter().println(getFilesOfDir(dir)); 
+                } else if (id.equals("getFileContent")) { 
+                  String filepath = request.getHeader("filepath");
+                  response.getWriter().println(getFileContent(filepath));  
                 } else {
                   response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                   response.getWriter().println(HttpServletResponse.SC_BAD_REQUEST + ": unknown ID " + "\n" + getHeaders(request));  
