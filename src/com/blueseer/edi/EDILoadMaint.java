@@ -744,7 +744,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
         }
         
         if (rFileContent != null && ! rFileContent.isBlank()) {
-            String[] arr = rFileList.split("\n", -1);
+            String[] arr = rFileContent.split("\n", -1);
             for (String s : arr) {
                 tafile.append(s);
                 tafile.append("\n");
