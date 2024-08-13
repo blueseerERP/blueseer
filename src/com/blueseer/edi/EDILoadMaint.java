@@ -1015,7 +1015,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
         int col = tablereport.columnAtPoint(evt.getPoint());
         if ( col == 0) {
              if (bsmf.MainFrame.remoteDB) {
-            executeTask("getFileContent", null);
+            executeTask("getFileContent", new String[]{cleanDirString(EDData.getEDIInDir()) + tablereport.getValueAt(row, col).toString()});
         } else {
              try {
                  tafile.setText("");
