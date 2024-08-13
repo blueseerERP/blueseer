@@ -38,6 +38,7 @@ import com.blueseer.edi.EDI;
 import static com.blueseer.edi.EDI.escapeDelimiter;
 import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.sendServerPost;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -2637,8 +2638,9 @@ public class EDData {
            segments = EDData.parseFile(cbuf, smbfile.getName());
        } else {
            
+           String DOC = "";
           
-           
+           if (! bsmf.MainFrame.remoteDB) {
            File file = new File(path);
            long max = file.length();
                if (! file.exists()) {
@@ -2655,8 +2657,16 @@ public class EDData {
            RandomAccessFile rf = new RandomAccessFile(path, "r");
            rf.seek(Integer.valueOf(beg));
            rf.read(bytesRead);
-	   String DOC = new String(bytesRead); 
+	   DOC = new String(bytesRead); 
            rf.close();
+           } else {
+            ArrayList<String[]> arrx = new ArrayList<String[]>();
+            arrx.add(new String[]{"id","getFileContent"});
+            arrx.add(new String[]{"filepath", path});
+            DOC = sendServerPost(arrx, "");
+           }
+           
+           
            String delim = "";
            int x = Integer.valueOf(seg);
            delim = String.valueOf((char) x);

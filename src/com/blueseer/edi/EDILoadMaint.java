@@ -94,9 +94,10 @@ public class EDILoadMaint extends javax.swing.JPanel {
 
       MyTableModel mymodel = new MyTableModel(new Object[][]{},
                     new String[]{"File", "Load?"});
-    private static String inDir = "";
-    private static String inArch = ""; 
-    private static String ErrorDir = ""; 
+    
+    private static String inDir = cleanDirString(EDData.getEDIInDir());
+    private static String inArch = cleanDirString(EDData.getEDIInArch()); 
+    private static String ErrorDir = cleanDirString(EDData.getEDIErrorDir()); 
     public static String rData = "";
     public static String rFileList = "";
     public static String rFileContent = "";
@@ -330,7 +331,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
             String[] message = get();
            
             BlueSeerUtils.endTask(message);
-            //initvars(null);  
+            initvars(null);  
             updateForm();
             
             } catch (Exception e) {
@@ -724,6 +725,9 @@ public class EDILoadMaint extends javax.swing.JPanel {
     }
     
     public void updateForm() {
+        
+        tafile.setText("");
+        
         if (rData != null && ! rData.isBlank()) {
             String[] arr = rData.split("\n", -1);
             for (String s : arr) {
@@ -800,15 +804,13 @@ public class EDILoadMaint extends javax.swing.JPanel {
     
     
     public void initvars(String[] arg) throws MalformedURLException, SmbException {
+    
     setPanelComponentState(this, true);
-    inDir = cleanDirString(EDData.getEDIInDir());
-    inArch = cleanDirString(EDData.getEDIInArch()); 
-    ErrorDir = cleanDirString(EDData.getEDIErrorDir()); 
-    tafile.setFont(new Font("monospaced", Font.PLAIN, 12));
     CheckBoxRenderer checkBoxRenderer = new CheckBoxRenderer();
     tablereport.getColumnModel().getColumn(1).setCellRenderer(checkBoxRenderer); 
     tablereport.getColumnModel().getColumn(0).setCellRenderer(new SomeRenderer()); 
     tablereport.setModel(mymodel);
+    tafile.setFont(new Font("monospaced", Font.PLAIN, 12));
     //getFiles();        
     }
     
