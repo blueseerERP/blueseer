@@ -56,7 +56,7 @@ load data local infile 'usrmstr.csv' replace into table user_mstr fields termina
 load data local infile 'mockmstr.csv' replace into table mock_mstr fields terminated by ',' ignore 0 Lines; show errors; 
 load data local infile 'timeclock.csv' replace into table time_clock fields terminated by ',' ignore 0 Lines; show errors;
 load data local infile 'structmstr.csv' replace into table dfs_mstr fields terminated by ',' ignore 0 Lines; show errors; 
-load data local infile 'structures.csv' replace into table dfs_det fields terminated by ',' ignore 0 Lines; show error
+load data local infile 'structures.csv' replace into table dfs_det fields terminated by ',' ignore 0 Lines; show errors;
 load data local infile 'mapmstr.csv' replace into table map_mstr fields terminated by ',' ignore 0 Lines; show errors;  
 load data local infile 'pksmstr.csv' replace into table pks_mstr fields terminated by ',' ignore 0 Lines; show errors;  
 load data local infile 'as2mstr.csv' replace into table as2_mstr fields terminated by ',' ignore 0 Lines; show errors;  
