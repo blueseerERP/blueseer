@@ -726,15 +726,17 @@ public class EDILoadMaint extends javax.swing.JPanel {
     
     public void updateForm() {
         
-        tafile.setText("");
+        
         
         if (rData != null && ! rData.isBlank()) {
+            tafile.setText("");
             String[] arr = rData.split("\n", -1);
             for (String s : arr) {
                 tafile.append(s);
             }
         }
         if (rFileList != null && ! rFileList.isBlank()) {
+            tafile.setText("");
             mymodel.setNumRows(0);
             String[] arr = rFileList.split("\n", -1);
             for (String s : arr) {
@@ -748,6 +750,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
         }
         
         if (rFileContent != null && ! rFileContent.isBlank()) {
+            tafile.setText("");
             String[] arr = rFileContent.split("\n", -1);
             for (String s : arr) {
                 tafile.append(s);
