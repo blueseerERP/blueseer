@@ -40,6 +40,7 @@ import static com.blueseer.edi.apiUtils.createKeyStore;
 import static com.blueseer.edi.apiUtils.createNewKeyPair;
 import static com.blueseer.edi.apiUtils.genereatePGPKeyPair;
 import static com.blueseer.edi.apiUtils.getAsciiDumpPGPKey;
+import static com.blueseer.edi.apiUtils.getPublicKeyAsPEM;
 import static com.blueseer.fgl.fglData.getAccountBalanceReport;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.confirmServerAuth;
@@ -192,6 +193,13 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
                     } catch (Exception ex) {
                         response.getWriter().println("Exception (getAsciiDumpPGPKey): " + ex.getMessage());
                     }
+                } else if (id.equals("getPublicKeyAsPEM")) { 
+                  String key = request.getHeader("key");
+                    try {  
+                        response.getWriter().println(getPublicKeyAsPEM(key));
+                    } catch (Exception ex) {
+                        response.getWriter().println("Exception (getPublicKeyAsPEM): " + ex.getMessage());
+                    }    
                 } else if (id.equals("createKeyStore")) { 
                   String storepass = request.getHeader("storepass");
                   String storefile = request.getHeader("storefile");

@@ -883,11 +883,11 @@ public class apiUtils {
         return cert;
     }
     
-    public static String getPublicKeyAsPEM(String user)  {
+    public static String getPublicKeyAsPEM(String key)  {
         X509Certificate cert = null;
         String s = "";
         FileInputStream fis = null;
-        pks_mstr pks = admData.getPksMstr(new String[]{user});
+        pks_mstr pks = admData.getPksMstr(new String[]{key});
         try {
             // File type
             if (pks.pks_type().equals("publickey") ) {
@@ -918,7 +918,7 @@ public class apiUtils {
             }
             
             if (pks.pks_type().equals("keypair") ) {
-            String[] k = getKeyStoreByUser(user); // store, storeuser, storepass, user, pass
+            String[] k = getKeyStoreByUser(key); // store, storeuser, storepass, user, pass
             k[2] = bsmf.MainFrame.PassWord("1", k[2].toCharArray());
             k[4] = bsmf.MainFrame.PassWord("1", k[4].toCharArray());
             KeyStore keystore = KeyStore.getInstance("PKCS12");
