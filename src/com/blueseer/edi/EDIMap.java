@@ -369,7 +369,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         outreceiver = c[21]; // receiverid
         }
         
-        String[] tp = EDData.getEDITPDefaults(c[1], outsender, outreceiver );
+        String[] tp = EDData.getEDITPDefaultsX(c[1], outsender, outreceiver, map );
     //    bsmf.MainFrame.show(outputdoctype + "/" + outsender + "/" + outreceiver );
     //    bsmf.MainFrame.show(tp[14] + "/" + tp[15] + "/" + tp[16] + "/" + tp[17] );
         
@@ -408,9 +408,9 @@ public abstract class EDIMap {  // took out the implements EDIMapi
            
            if (c[29].toUpperCase().equals("X12")) {  
              if (c[0].equals("MapTester")) {
-                envelope = EDI.generateEnvelope(c[1], c[13], c[21], c[14]);  //override use of c[13] from mapper ddsenderenvelope
+                envelope = EDI.generateEnvelope(c[1], c[13], c[21], c[14], c[2]);  //override use of c[13] from mapper ddsenderenvelope
              }  else {
-                envelope = EDI.generateEnvelope(c[1], c[0], c[21], ""); 
+                envelope = EDI.generateEnvelope(c[1], c[0], c[21], "" ,c[2]); 
              }
               // envelope array holds in this order (isa, gs, ge, iea, filename, controlnumber, gsctrlnbr)
            } else if(c[29].toUpperCase().equals("UNE")) {
@@ -758,7 +758,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
       
         if (c[0].equals("MapTester")) {
             if (! c[21].equals("MapTester") && c[29].equals("X12")) { // override with ddenvelope choice for enveloping segments
-               String[] tp = EDData.getEDITPDefaults(c[1], c[13], c[21] ); // override use of c[13] isa string for 'sender'
+               String[] tp = EDData.getEDITPDefaultsX(c[1], c[13], c[21], c[2] ); // override use of c[13] isa string for 'sender'
                tp[7] = (tp[7].isBlank() || tp[7].equals("0")) ? "10" : tp[7];
                tp[6] = (tp[6].isBlank() || tp[6].equals("0")) ? "42" : tp[6];
                tp[8] = (tp[8].isBlank() || tp[8].equals("0")) ? "126" : tp[8];
@@ -778,7 +778,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             return new String[]{c[23],c[38]};
         }
         // get TP/Doc defaults
-        String[] tp = EDData.getEDITPDefaults(doctype, outsender, outreceiver );
+        String[] tp = EDData.getEDITPDefaultsX(doctype, outsender, outreceiver, map );
         
         if (tp == null || tp.length < 18) {
             setError("tp defaults is null or empty for: " + doctype + "/" + outsender + "/" + outreceiver);

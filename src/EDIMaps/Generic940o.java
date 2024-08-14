@@ -67,7 +67,7 @@ public class Generic940o {
          int segcount = 0;
          
          // envelope array holds in this order (isa, gs, ge, iea, filename, controlnumber)
-         String[] envelope = EDI.generateEnvelope(doctype, entity, "", "");
+         String[] envelope = EDI.generateEnvelope(doctype, entity, "", "", "");
          String ISA = envelope[0];
          String GS = envelope[1];
          String GE = envelope[2];

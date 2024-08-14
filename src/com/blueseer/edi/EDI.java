@@ -1971,14 +1971,7 @@ public class EDI {
             c[0] = x[3];  // senderid
             c[21] = x[1]; // receiverID
       
-            String[] defaults = EDData.getEDITPDefaults(x[0], x[3], x[1]);
             
-            c[29] = defaults[15]; // defines outputfiletype
-            
-            // governs inbound only ...for outbound file...let postmap delimiters kick in
-            c[9] = defaults[7].isBlank() ? "10" : defaults[7];
-            c[10] = defaults[6].isBlank() ? "" : defaults[6];
-            c[11] = defaults[8].isBlank() ? "" : defaults[8];
             
                  
              
@@ -2018,6 +2011,17 @@ public class EDI {
                } else if (! BlueSeerUtils.isEDIClassFile(map) && c[12].isEmpty()) { 
                   messages.add(new String[]{"error", "XML: unable to locate compiled map (" + map + ") for: " + c[1] + "/" + ifs + "/" + x[3] + "/" + x[1]}); 
                } else {
+                
+                c[2] = map;  // override c2 with newly found map
+                String[] defaults = EDData.getEDITPDefaultsX(x[0], x[3], x[1], c[2]);
+            
+                c[29] = defaults[15]; // defines outputfiletype
+
+                // governs inbound only ...for outbound file...let postmap delimiters kick in
+                c[9] = defaults[7].isBlank() ? "10" : defaults[7];
+                c[10] = defaults[6].isBlank() ? "" : defaults[6];
+                c[11] = defaults[8].isBlank() ? "" : defaults[8];
+                
                 
                 messages.add(new String[]{"info","XML: Found map: " + map});
                
@@ -2083,8 +2087,7 @@ public class EDI {
    
   
 }
-   
-    
+       
     public static void processJSON(String content, String[] c, String filename, int idxnbr)   {
     
         int callingidxnbr = idxnbr;   
@@ -2118,14 +2121,7 @@ public class EDI {
             c[0] = x[3];  // senderid
             c[21] = x[1]; // receiverID
       
-            String[] defaults = EDData.getEDITPDefaults(x[0], x[3], x[1]);
             
-            c[29] = defaults[15]; // defines outputfiletype
-            
-            // governs inbound only ...for outbound file...let postmap delimiters kick in
-            c[9] = defaults[7].isBlank() ? "10" : defaults[7];
-            c[10] = defaults[6].isBlank() ? "" : defaults[6];
-            c[11] = defaults[8].isBlank() ? "" : defaults[8];
             
                  
              
@@ -2167,7 +2163,17 @@ public class EDI {
                 
                 messages.add(new String[]{"info","JSON: Found map: " + map});
                
-                   
+                c[2] = map;  // override c2 with newly found map
+                String[] defaults = EDData.getEDITPDefaultsX(x[0], x[3], x[1], c[2]);
+            
+                c[29] = defaults[15]; // defines outputfiletype
+
+                // governs inbound only ...for outbound file...let postmap delimiters kick in
+                c[9] = defaults[7].isBlank() ? "10" : defaults[7];
+                c[10] = defaults[6].isBlank() ? "" : defaults[6];
+                c[11] = defaults[8].isBlank() ? "" : defaults[8];
+                
+                
                    // at this point I should have a doc set and a map ...now call map to operate on doc 
                 URLClassLoader cl = null;
                 try {
@@ -2264,19 +2270,7 @@ public class EDI {
             messages.add(new String[]{"info","CSV:  Doc Recog ID: " + eddmid});
             messages.add(new String[]{"info","CSV:  IFS Type: " + ifs});
             
-            String[] defaults = EDData.getEDITPDefaults(x[0], x[3], x[1]);
-            dfs_mstr dfs = getDFSMstr(new String[]{ifs});
             
-            c[9]  = defaults[7].isBlank() ? "10" : defaults[7];
-            c[10] = defaults[6].isBlank() ? "0" : defaults[6];
-            c[11] = defaults[8].isBlank() ? "0" : defaults[8];
-            
-            // for csv inbound...override the defaults[6]
-            if (dfs != null && ! dfs.dfs_delimiter().isBlank()) {
-                c[10] = dfs.dfs_delimiter();
-            }
-            
-            c[29] = defaults[15]; // defines outputfiletype
             
         // insert isa and st start and stop integer points within the file
         
@@ -2311,7 +2305,25 @@ public class EDI {
                 } else if (! BlueSeerUtils.isEDIClassFile(map) && c[12].isEmpty()) { 
                     messages.add(new String[]{"error","CSV: unable to locate compiled map (" + map + ") for: " + c[1] + "/" + ifs + "/" + x[3] + "/" + x[1]});
                } else {
-                   
+                
+                    c[2] = map;  // override c2 with newly found map
+                    
+                    String[] defaults = EDData.getEDITPDefaultsX(x[0], x[3], x[1], c[2]);
+                    dfs_mstr dfs = getDFSMstr(new String[]{ifs});
+
+                    c[9]  = defaults[7].isBlank() ? "10" : defaults[7];
+                    c[10] = defaults[6].isBlank() ? "0" : defaults[6];
+                    c[11] = defaults[8].isBlank() ? "0" : defaults[8];
+
+                    // for csv inbound...override the defaults[6]
+                    if (dfs != null && ! dfs.dfs_delimiter().isBlank()) {
+                        c[10] = dfs.dfs_delimiter();
+                    }
+
+                    c[29] = defaults[15]; // defines outputfiletype
+                    
+                    
+                    
                    // at this point I should have a doc set (ST to SE) and a map ...now call map to operate on doc 
                 if (GlobalDebug)   
                    System.out.println("Found map: " + map);    
@@ -2564,9 +2576,7 @@ public class EDI {
               map = EDData.getEDIMap(c[1], c[0], c[21]); 
            } 
 
-            // should have partner by now
-            String[] defaults = EDData.getEDITPDefaults(c[1], c[0], c[21]);
-            c[29] = defaults[15]; // defines outputfiletype
+            
            
            // if no map then bail
            if (map.isEmpty()) {
@@ -2574,7 +2584,11 @@ public class EDI {
            } else if (! BlueSeerUtils.isEDIClassFile(map) && c[12].isEmpty()) {
                 messages.add(new String[]{"error","UNE: unable to locate compiled map (" + map + ") for parent/gs02/gs03/doc: " + parentPartner + "/" + c[0] + "/" + c[21] + " / " + c[1]});
            } else {
-               
+            
+            c[2] = map;  // override c2 with newly found map   
+            // should have partner by now
+            String[] defaults = EDData.getEDITPDefaultsX(c[1], c[0], c[21], c[2]);
+            c[29] = defaults[15]; // defines outputfiletype   
             if (GlobalDebug)   
             System.out.println("Entering Map " + map + " with: " +  c[1] +  "/" + c[21]);    
 
@@ -2808,9 +2822,7 @@ public class EDI {
               map = EDData.getEDIMap(c[1], gs02, gs03); 
            } 
 
-           // should have partner by now
-            String[] defaults = EDData.getEDITPDefaults(c[1], gs02, gs03);
-            c[29] = defaults[15]; // defines outputfiletype
+           
            
            // if no map then bail
            if (map.isEmpty()) {
@@ -2818,8 +2830,12 @@ public class EDI {
            } else if (! BlueSeerUtils.isEDIClassFile(map) && c[12].isEmpty()) {
                 messages.add(new String[]{"error","X12: unable to locate compiled map (" + map + ") for parent/gs02/gs03/doc: " + parentPartner + "/" + gs02 + "/" + gs03 + " / " + c[1]});
            } else {
-             
-               
+            
+            c[2] = map;  // override c2 with newly found map   
+            // should have partner by now
+            String[] defaults = EDData.getEDITPDefaultsX(c[1], gs02, gs03, c[2]);
+            c[29] = defaults[15]; // defines outputfiletype
+            
             if (GlobalDebug)   
             System.out.println("Entering Map " + map + " with: " +  c[1] + "/" + gs02 + "/" + gs03);    
 
@@ -2939,14 +2955,7 @@ public class EDI {
             c[0] = x[3];  // senderid
             c[21] = x[1]; // receiverID
       
-            String[] defaults = EDData.getEDITPDefaults(x[0], x[3], x[1]);
             
-            c[29] = defaults[15]; // defines outputfiletype
-            
-            // governs inbound only ...for outbound file...let postmap delimiters kick in
-            c[9] = defaults[7].isBlank() ? "10" : defaults[7];
-            c[10] = defaults[6].isBlank() ? "" : defaults[6];
-            c[11] = defaults[8].isBlank() ? "" : defaults[8];
             
                  
              
@@ -2984,6 +2993,16 @@ public class EDI {
                } else if (! BlueSeerUtils.isEDIClassFile(map) && c[12].isEmpty()) { 
                   messages.add(new String[]{"error", "FF: unable to locate compiled map (" + map + ") for: " + c[1] + "/" + ifs + "/" + x[3] + "/" + x[1]}); 
                } else {
+                
+                c[2] = map;  // override c2 with newly found map   
+                String[] defaults = EDData.getEDITPDefaultsX(x[0], x[3], x[1], c[2]);
+            
+                c[29] = defaults[15]; // defines outputfiletype
+
+                // governs inbound only ...for outbound file...let postmap delimiters kick in
+                c[9] = defaults[7].isBlank() ? "10" : defaults[7];
+                c[10] = defaults[6].isBlank() ? "" : defaults[6];
+                c[11] = defaults[8].isBlank() ? "" : defaults[8];   
                 
                 messages.add(new String[]{"info","FF: Found map: " + map});
                
@@ -4620,7 +4639,7 @@ public class EDI {
     
     
      // miscellaneous 
-      public static String[] generateEnvelope(String doctype, String sndid, String rcvid, String outdoctype) {
+      public static String[] generateEnvelope(String doctype, String sndid, String rcvid, String outdoctype, String map) {
         
         String [] envelope = new String[10];  // will hold 7 elements.... ISA, GS, GE,IEA, filename, isactrl, gsctrl, sd, ed, ud
         
@@ -4629,7 +4648,7 @@ public class EDI {
         
         String[] defaults;
         if (outdoctype.isBlank()) {
-            defaults = EDData.getEDITPDefaults(doctype, sndid, rcvid);
+            defaults = EDData.getEDITPDefaultsX(doctype, sndid, rcvid, map);
         } else {
             defaults = EDData.getEDITPDefaults(doctype, sndid, rcvid, outdoctype);
         }
