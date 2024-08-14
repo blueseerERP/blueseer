@@ -493,7 +493,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                     arr.add(new String[]{"storefilename", getPKSStoreFileName(ddparent.getSelectedItem().toString())});
                     arr.add(new String[]{"encal", ddencalgo.getSelectedItem().toString()});
                     arr.add(new String[]{"signal", ddsigalgo.getSelectedItem().toString()});
-                    arr.add(new String[]{"stength", ddstrength.getSelectedItem().toString()});
+                    arr.add(new String[]{"strength", ddstrength.getSelectedItem().toString()});
                     arr.add(new String[]{"years", ddyears.getSelectedItem().toString()});
                     try {  
                         String s = sendServerPost(arr, "");
