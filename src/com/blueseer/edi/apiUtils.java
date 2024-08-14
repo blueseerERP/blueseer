@@ -1067,14 +1067,14 @@ public class apiUtils {
     }
     
     
-    public static boolean createNewKeyPair(String standard, String alias, String userpass, String passphrase, String filename, String algo, String sigalgo, int strength, int years) {
+    public static boolean createNewKeyPair(String standard, String alias, String userpass, String passphrase, String filename, String algo, String sigalgo, String strength, String years) {
         
         Security.addProvider(new BouncyCastleProvider());
         // --- generate a key pair (you did this already it seems)
         KeyPairGenerator rsaGen;
         try {
         rsaGen = KeyPairGenerator.getInstance(algo, "BC");
-        rsaGen.initialize(strength, new SecureRandom());
+        rsaGen.initialize(Integer.valueOf(strength), new SecureRandom());
         
         final KeyPair pair = rsaGen.generateKeyPair();
         
@@ -1087,9 +1087,9 @@ public class apiUtils {
         JcaPGPKeyConverter c = new JcaPGPKeyConverter();
         PrivateKey prvkey = c.getPrivateKey(elgKp.getPrivateKey()); 
         PublicKey pubkey = c.getPublicKey(elgKp.getPublicKey());
-            cert = createSelfSigned(sigalgo, prvkey, pubkey, years);
+            cert = createSelfSigned(sigalgo, prvkey, pubkey, Integer.valueOf(years));
         } else {
-            cert = createSelfSigned(sigalgo, pair.getPrivate(), pair.getPublic(), years);
+            cert = createSelfSigned(sigalgo, pair.getPrivate(), pair.getPublic(), Integer.valueOf(years));
         }
         // --- create the self signed cert
         

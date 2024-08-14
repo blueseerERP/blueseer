@@ -62,6 +62,7 @@ import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.lurb2;
+import static com.blueseer.utl.BlueSeerUtils.sendServerPost;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.DTData;
 import java.awt.Color;
@@ -460,27 +461,81 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
      String returned_keyid = "";
      
      if (ddtype.getSelectedItem().toString().equals("store")) {
-         if (! createKeyStore(String.valueOf(tbstorepass.getPassword()), 
+         if (bsmf.MainFrame.remoteDB) {
+                    ArrayList<String[]> arr = new ArrayList<String[]>();
+                    arr.add(new String[]{"id","createKeyStore"});
+                    arr.add(new String[]{"storepass", String.valueOf(tbstorepass.getPassword())});
+                    arr.add(new String[]{"storefile", tbfile.getText()});
+                    try {  
+                        String s = sendServerPost(arr, "");
+                    } catch (IOException ex) {
+                        return new String[]{BlueSeerUtils.ErrorBit, "Unable to generate new Store"};
+                    }
+         } else {
+             if (! createKeyStore(String.valueOf(tbstorepass.getPassword()), 
                  tbfile.getText())) {
              return new String[]{BlueSeerUtils.ErrorBit, "Unable to generate new Store"};
+             }
          }
      }
+     
      if (ddtype.getSelectedItem().toString().equals("keypair")) {
+         
          if (ddstandard.getSelectedItem().toString().equals("X.509")) {
-            if (! createNewKeyPair(ddstandard.getSelectedItem().toString(), tbuser.getText(), 
+             
+            if (bsmf.MainFrame.remoteDB) {
+                    ArrayList<String[]> arr = new ArrayList<String[]>();
+                    arr.add(new String[]{"id","createNewKeyPair"});
+                    arr.add(new String[]{"standard", ddstandard.getSelectedItem().toString()});
+                    arr.add(new String[]{"user", tbuser.getText()});
+                    arr.add(new String[]{"pass", String.valueOf(tbpass.getPassword())});
+                    arr.add(new String[]{"storepass", getPKSStorePWD(ddparent.getSelectedItem().toString())});
+                    arr.add(new String[]{"storefilename", getPKSStoreFileName(ddparent.getSelectedItem().toString())});
+                    arr.add(new String[]{"encal", ddencalgo.getSelectedItem().toString()});
+                    arr.add(new String[]{"signal", ddsigalgo.getSelectedItem().toString()});
+                    arr.add(new String[]{"stength", ddstrength.getSelectedItem().toString()});
+                    arr.add(new String[]{"years", ddyears.getSelectedItem().toString()});
+                    try {  
+                        String s = sendServerPost(arr, "");
+                    } catch (IOException ex) {
+                        return new String[]{BlueSeerUtils.ErrorBit, "Unable to generate new User / keypair"};
+                    }
+            } else {
+                if (! createNewKeyPair(ddstandard.getSelectedItem().toString(), tbuser.getText(), 
                     String.valueOf(tbpass.getPassword()), 
                     getPKSStorePWD(ddparent.getSelectedItem().toString()), 
                     getPKSStoreFileName(ddparent.getSelectedItem().toString()),
                     ddencalgo.getSelectedItem().toString(),
                     ddsigalgo.getSelectedItem().toString(),
-                    Integer.valueOf(ddstrength.getSelectedItem().toString()),
-                    Integer.valueOf(ddyears.getSelectedItem().toString())
+                    ddstrength.getSelectedItem().toString(),
+                    ddyears.getSelectedItem().toString()
                     )) {
                 return new String[]{BlueSeerUtils.ErrorBit, "Unable to generate new User / keypair"};
+                } 
             }
+            
          }
          if (ddstandard.getSelectedItem().toString().equals("openPGP")) {
-             try {
+             if (bsmf.MainFrame.remoteDB) {
+                    ArrayList<String[]> arr = new ArrayList<String[]>();
+                    arr.add(new String[]{"id","genereatePGPKeyPair"});
+                    arr.add(new String[]{"user", tbuser.getText()});
+                    arr.add(new String[]{"pass", String.valueOf(tbpass.getPassword())});
+                    arr.add(new String[]{"parent", ddparent.getSelectedItem().toString()});
+                    try {  
+                        String r = sendServerPost(arr, "");
+                        if (r.isBlank()) {
+                        return new String[]{BlueSeerUtils.ErrorBit, "Unable to generate PGP User / keypair"};
+                        } else if (r.equals("0")) {
+                            return new String[]{BlueSeerUtils.ErrorBit, "incorrect path to key store/ring file"};
+                        } else {
+                            returned_keyid = r;
+                        }
+                    } catch (IOException ex) {
+                        return new String[]{BlueSeerUtils.ErrorBit, "Unable to generate PGP User / keypair"};
+                    }
+            } else {
+                try {
                  String r = genereatePGPKeyPair(tbuser.getText(),String.valueOf(tbpass.getPassword()),ddparent.getSelectedItem().toString());
                     if (r.isBlank()) {
                         return new String[]{BlueSeerUtils.ErrorBit, "Unable to generate PGP User / keypair"};
@@ -492,7 +547,8 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                  } catch (Exception ex) {
                    bslog(ex);
                    return new String[]{BlueSeerUtils.ErrorBit, "Unable to generate PGP User / keypair"};
-                 }
+                 } 
+             }  
          }
      }
      String[] m = addPksMstr(createRecord(), returned_keyid); 
@@ -1081,7 +1137,16 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
             if (ddstandard.getSelectedItem().toString().equals("openPGP")) {
                 String s = "";
                 try {
-                    s = getAsciiDumpPGPKey(tbkey.getText(),ddformat.getSelectedItem().toString());
+                    if (bsmf.MainFrame.remoteDB) {
+                    ArrayList<String[]> arr = new ArrayList<String[]>();
+                    arr.add(new String[]{"id","getAsciiDumpPGPKey"});
+                    arr.add(new String[]{"pksid", tbkey.getText()});
+                    arr.add(new String[]{"pkstype", ddformat.getSelectedItem().toString()});
+                      s = sendServerPost(arr, "");  
+                    } else {
+                      s = getAsciiDumpPGPKey(tbkey.getText(),ddformat.getSelectedItem().toString());  
+                    }
+                    
                 } catch (Exception ex) {
                     bslog(ex);
                 }

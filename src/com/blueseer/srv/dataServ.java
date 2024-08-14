@@ -36,6 +36,10 @@ import static bsmf.MainFrame.user;
 import static com.blueseer.edi.EDI.getFileContent;
 import static com.blueseer.edi.EDI.getFilesOfDir;
 import static com.blueseer.edi.EDI.runEDI;
+import static com.blueseer.edi.apiUtils.createKeyStore;
+import static com.blueseer.edi.apiUtils.createNewKeyPair;
+import static com.blueseer.edi.apiUtils.genereatePGPKeyPair;
+import static com.blueseer.edi.apiUtils.getAsciiDumpPGPKey;
 import static com.blueseer.fgl.fglData.getAccountBalanceReport;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.confirmServerAuth;
@@ -55,6 +59,8 @@ import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -177,7 +183,39 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
                   response.getWriter().println(getFilesOfDir(dir)); 
                 } else if (id.equals("getFileContent")) { 
                   String filepath = request.getHeader("filepath");
-                  response.getWriter().println(getFileContent(filepath));  
+                  response.getWriter().println(getFileContent(filepath)); 
+                } else if (id.equals("getAsciiDumpPGPKey")) { 
+                  String pksid = request.getHeader("pksid");
+                  String pkstype = request.getHeader("pkstype");
+                    try {  
+                        response.getWriter().println(getAsciiDumpPGPKey(pksid, pkstype));
+                    } catch (Exception ex) {
+                        response.getWriter().println("Exception (getAsciiDumpPGPKey): " + ex.getMessage());
+                    }
+                } else if (id.equals("createKeyStore")) { 
+                  String storepass = request.getHeader("storepass");
+                  String storefile = request.getHeader("storefile");
+                  response.getWriter().println(createKeyStore(storepass,storefile));
+                } else if (id.equals("createNewKeyPair")) { 
+                  String standard = request.getHeader("standard");
+                  String user = request.getHeader("user");
+                  String pass = request.getHeader("pass");
+                  String storepass = request.getHeader("storepass");
+                  String storefilename = request.getHeader("storefilename");
+                  String encal = request.getHeader("encal");
+                  String signal = request.getHeader("signal");
+                  String strength = request.getHeader("strength");
+                  String years = request.getHeader("years");
+                  response.getWriter().println(createNewKeyPair(standard,user,pass,storepass,storefilename,encal,signal,strength,years));   
+                } else if (id.equals("genereatePGPKeyPair")) { 
+                  String user = request.getHeader("user");
+                  String pass = request.getHeader("pass");
+                  String parent = request.getHeader("parent");
+                    try {
+                        response.getWriter().println(genereatePGPKeyPair(user,pass,parent));
+                    } catch (Exception ex) {
+                        response.getWriter().println("Exception (genereatePGPKeyPair): " + ex.getMessage());
+                    }
                 } else {
                   response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                   response.getWriter().println(HttpServletResponse.SC_BAD_REQUEST + ": unknown ID " + "\n" + getHeaders(request));  
