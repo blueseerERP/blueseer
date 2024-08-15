@@ -46,6 +46,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -303,6 +304,9 @@ public class EDILoadMaint extends javax.swing.JPanel {
                         message = processFiles(); 
                     }
                     break;
+                case "processSingleFile":
+                    message = processSingleFilePost(key[0]);
+                    break;    
                 case "getFiles":
                     ArrayList<String[]> arr = new ArrayList<String[]>();
                     arr.add(new String[]{"id","getFilesOfDir"});
@@ -724,6 +728,23 @@ public class EDILoadMaint extends javax.swing.JPanel {
         return x;
     }
     
+    public String[] processSingleFilePost(String filename) throws IOException {
+        String[] x = new String[2];
+        
+        byte[] tac = Files.readAllBytes(FileSystems.getDefault().getPath(filename));
+        String postData = new String(tac, StandardCharsets.UTF_8);
+                
+        ArrayList<String[]> list = new ArrayList<String[]>();
+        list.add(new String[]{"id","runEDIsingle"});
+        
+        rData = sendServerPost(list, postData);
+        
+        x[0] = "0";
+        x[1] = "Processing complete";
+       
+        return x;
+    }
+        
     public void updateForm() {
         
         
@@ -1057,8 +1078,9 @@ public class EDILoadMaint extends javax.swing.JPanel {
 
     private void btmanualActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btmanualActionPerformed
         String filepath = getFileName();
-        myTask task = new myTask(filepath, cbdebug.isSelected());
-        task.execute();  
+      //  myTask task = new myTask(filepath, cbdebug.isSelected());
+       // task.execute();  
+        executeTask("processSingleFile", new String[]{filepath});
     }//GEN-LAST:event_btmanualActionPerformed
 
     private void btrefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrefreshActionPerformed

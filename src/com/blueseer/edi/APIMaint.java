@@ -65,6 +65,7 @@ import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.sendServerPost;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeerT;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.awt.Color;
 import java.awt.Component;
@@ -980,9 +981,27 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         
     }
     
-    public void processRunPostAfter() {
+    public void processRunPostAfter() throws JsonProcessingException {
+        
+        taoutput.setText("");
         if (rData != null) {
-         taoutput.append(rData);
+         
+         if (ddtype.getSelectedItem().toString().equals("json")) { // prettify JSON output
+                    ObjectMapper mapper = new ObjectMapper();
+                    Object json = mapper.readValue(rData, Object.class);
+                    taoutput.append(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json));
+                    taoutput.setCaretPosition(0);
+                    //if (cbfile.isSelected() && outputfile != null) {
+                    //   outputfile.write(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json));
+                   // }
+                } else {
+                    taoutput.append(rData);
+                    taoutput.setCaretPosition(0);
+                    //if (cbfile.isSelected() && outputfile != null) {
+                    //   outputfile.write(sb.toString());
+                    //}
+                }
+         
          jTabbedPane1.setSelectedIndex(2);
         } 
     }

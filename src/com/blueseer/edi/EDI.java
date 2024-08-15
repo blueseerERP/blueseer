@@ -112,6 +112,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -815,6 +816,77 @@ public class EDI {
        } catch (ClassNotFoundException ex) {
           ex.printStackTrace();
        }
+    
+    return sb.toString();
+}
+
+    public static String runEDIsingle(String[] args, String filecontent) {
+    
+        StringBuilder sb = new StringBuilder();
+        try {
+     
+            boolean isDebug = false;
+            if (args != null && args.length > 0) {
+                if (args[0].equals("-debug")) {
+                    isDebug = true;
+                }
+            }
+           
+            
+            
+            String inDir = cleanDirString(EDData.getEDIInDir());
+            String inArch = cleanDirString(EDData.getEDIInArch()); 
+            String ErrorDir = cleanDirString(EDData.getEDIErrorDir());
+            
+            String f = "manual_" + Long.toHexString(System.currentTimeMillis()) + ".txt";
+            try (BufferedWriter outputfile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(inDir + "temp.txt")))) {
+                outputfile.write(filecontent);
+            }
+            
+            TimeUnit.MILLISECONDS.sleep(10);
+            
+              if (Files.exists(FileSystems.getDefault().getPath(inDir + f))) {
+                File file = new File(inDir + f);
+                sb.append("EDILoad:  processing file " + f).append("\n");
+                  if(file.length() == 0) { 
+                  file.delete();
+                  } else { 
+                 String[] m = EDI.processFile(inDir + f,"","","", isDebug, false, 0, 0);
+                 
+                 // show error if exists...usually malformed envelopes
+                    if (m[0].equals("1")) {
+                        sb.append(m[1]).append("\n");
+                        // now move to error folder
+                        Path movefrom = FileSystems.getDefault().getPath(inDir + f);
+                        Path errortarget = FileSystems.getDefault().getPath(ErrorDir + f);
+                       
+                         Files.move(movefrom, errortarget, StandardCopyOption.REPLACE_EXISTING);
+                    }
+                    
+                    // if delete set in control panel...remove file and continue;
+                         if (EDData.isEDIDeleteFlag()) {
+                          Path filetodelete = FileSystems.getDefault().getPath(inDir + f);
+                          Files.delete(filetodelete);
+                         }
+                    
+                    // now archive file
+                         if (! inArch.isEmpty() && ! EDData.isEDIDeleteFlag() && EDData.isEDIArchFlag() ) {
+                         Path movefrom = FileSystems.getDefault().getPath(inDir + f);
+                         Path target = FileSystems.getDefault().getPath(inArch + f);
+                        // bsmf.MainFrame.show(movefrom.toString() + "  /  " + target.toString());
+                         Files.move(movefrom, target, StandardCopyOption.REPLACE_EXISTING);
+                          // now remove from list
+                         }
+                  }
+                }
+             
+       } catch (IOException ex) {
+          sb.append("error(runEDIsingle) ").append(ex.getMessage());
+       } catch (ClassNotFoundException ex) {
+          sb.append("error(runEDIsingle) ").append(ex.getMessage());
+       } catch (InterruptedException ex) {
+          sb.append("error(runEDIsingle) ").append(ex.getMessage());
+        }
     
     return sb.toString();
 }
