@@ -62,6 +62,7 @@ import static com.blueseer.utl.BlueSeerUtils.ludialog;
 import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import static com.blueseer.utl.BlueSeerUtils.sendServerPost;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.IBlueSeerT;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -150,6 +151,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                 public static ArrayList<apid_meta> apidmlist = null;
                 public static LinkedHashMap<String, ArrayList<String[]>> apidm = new  LinkedHashMap<String, ArrayList<String[]>>();
                 boolean hasInit = false;
+                public static String rData = null;
      // global datatablemodel declarations   
      javax.swing.table.DefaultTableModel detailmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
             new String[]{
@@ -204,7 +206,22 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                     break;
                 case "get":
                     message = getRecord(key);    
-                    break;    
+                    break;  
+                case "run":
+                    rData = null;
+                    ArrayList<String[]> arrx = new ArrayList<String[]>();
+                    arrx.add(new String[]{"id","postAPI"});
+                    arrx.add(new String[]{"key", tbkey.getText()});
+                    arrx.add(new String[]{"method", tbmethod.getText()});
+                    arrx.add(new String[]{"urlstring", tburl.getText()});
+                    arrx.add(new String[]{"requestheader", String.valueOf(cbrequestheaders.isSelected())});
+                    arrx.add(new String[]{"responseheader", String.valueOf(cbresponseheaders.isSelected())});
+                    try {
+                        rData = sendServerPost(arrx, "");
+                    } catch (IOException ex) {
+                        rData = "Failed to run: " + ex.getMessage();
+                    }
+                    break; 
                 default:
                     message = new String[]{"1", "unknown action"};
             }
@@ -793,7 +810,173 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         tburlstring.setText(urlstring);
     }
    
-   
+    public void runProcess() {
+         
+        int[] rows = tabledetail.getSelectedRows();
+       // taoutput.removeAll();
+        taoutput.setText("");
+        if (rows.length == 0 || tburlstring.getText().isBlank()) {
+            bsmf.MainFrame.show("no method selected in detail table");
+            return;
+        }
+        
+       
+        int i = tabledetail.getSelectedRow();
+        String type = tabledetail.getModel().getValueAt(i, 2).toString();
+        String verb = tabledetail.getModel().getValueAt(i, 1).toString();
+        String method = tabledetail.getModel().getValueAt(i, 0).toString();
+        HttpURLConnection conn = null;
+       
+        try {
+                       
+            URL url = new URL(tburlstring.getText());
+
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestProperty("Content-Type", ddcontenttype.getSelectedItem().toString());
+            conn.setConnectTimeout(10000);
+            conn.setReadTimeout(10000);
+            
+            if (ddauth.getSelectedItem().toString().equals("BASIC AUTH")) {
+               if (! tbuser.getText().isBlank() && tbpass.getPassword().length > 0) {
+                String userCredentials = new String(tbuser.getText() + ":" + String.valueOf(tbpass.getPassword()));
+                String basicAuth = "Basic " + Base64.toBase64String(userCredentials.getBytes());
+                conn.setRequestProperty("Authorization", basicAuth);
+                } 
+            }
+            
+            StringBuilder requestHeaders = new StringBuilder();
+            
+            
+            if (ddclass.getSelectedItem().toString().equals("REST")) {
+                conn.setRequestMethod(verb);
+                if (verb.equals("POST") || verb.equals("PUT")) {
+                conn.setDoOutput(true);
+                }
+            }
+            
+            if (! ddclass.getSelectedItem().toString().equals("PARAM")) {
+                ArrayList<apid_meta> headertags = getAPIDMeta(tbkey.getText());
+                for (apid_meta am : headertags) {
+                        if (am.apidm_method().equals(method)) {
+                       // System.out.println(am.apidm_key() + "=" + am.apidm_value());
+                        conn.setRequestProperty(am.apidm_key(),am.apidm_value());
+                        }
+                }
+            }
+            
+            // let's see what request headers look like
+            // call getRequestProperties before opening connection...otherwise generates exception already connected
+            Map<String, List<String>> headers = conn.getRequestProperties();
+            for (Map.Entry<String, List<String>> z : headers.entrySet()) {
+            requestHeaders.append(z.getKey() + " : " + String.join(";", z.getValue()) + "\n");
+            }
+                
+                
+                // if posting data...add file
+                // calling this opens the connection
+                if (ddclass.getSelectedItem().toString().equals("REST") && (verb.equals("POST") || verb.equals("PUT"))) {
+                    if (! tbsourcedir.getText().isBlank()) {
+                        DataOutputStream dos = new DataOutputStream( conn.getOutputStream());
+                        Path sourcepath = FileSystems.getDefault().getPath(tbsourcedir.getText());
+                        dos.write(Files.readAllBytes(sourcepath));
+                        dos.flush();
+                        dos.close();
+                    }
+                }
+           
+            jTabbedPane1.setSelectedIndex(2);
+            
+            BufferedReader br = null;
+            StringBuilder responseHeaders = new StringBuilder();
+            
+            if (conn.getResponseCode() != 200) {
+                    taoutput.append(conn.getResponseCode() + ": " + conn.getResponseMessage());
+                    //throw new RuntimeException("Failed : HTTP error code : "
+                    //		+ conn.getResponseCode());
+            } else {
+                br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+                    
+                    conn.getHeaderFields().entrySet().stream()
+                    .filter(entry -> entry.getKey() != null)
+                    .forEach(entry -> {
+                          responseHeaders.append(entry.getKey()).append(": ");
+                          List headerValues = entry.getValue();
+                          Iterator it = headerValues.iterator();
+                          if (it.hasNext()) {
+                              responseHeaders.append(it.next());
+                              while (it.hasNext()) {
+                                  responseHeaders.append(", ").append(it.next());
+                              }
+                          }
+                          responseHeaders.append("\n");
+                    });
+            }
+
+            int filenumber;
+            Path path;
+            BufferedWriter outputfile = null;
+            if (cbfile.isSelected()) {
+                filenumber = OVData.getNextNbr("ediout");
+                path = FileSystems.getDefault().getPath("edi/api/in" + "/" + "api." + tbkey.getText() + "." + String.valueOf(filenumber) + ".txt"); 
+                outputfile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path.toFile())));
+            }
+            if (br != null) {
+                String output;
+                StringBuilder sb = new StringBuilder();
+                while ((output = br.readLine()) != null) {
+                    sb.append(output);
+                }
+                
+                if (cbrequestheaders.isSelected()) {
+                taoutput.append("Request Headers: " + "\n");
+                taoutput.append(requestHeaders.toString());
+                }
+                
+                if (cbresponseheaders.isSelected()) {
+                taoutput.append("Response Headers: " + "\n");
+                taoutput.append(responseHeaders.toString());
+                }
+                
+                if (type.equals("json")) { // prettify JSON output
+                    ObjectMapper mapper = new ObjectMapper();
+                    Object json = mapper.readValue(sb.toString(), Object.class);
+                    taoutput.append(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json));
+                    taoutput.setCaretPosition(0);
+                    if (cbfile.isSelected() && outputfile != null) {
+                       outputfile.write(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json));
+                    }
+                } else {
+                    taoutput.append(sb.toString());
+                    taoutput.setCaretPosition(0);
+                    if (cbfile.isSelected() && outputfile != null) {
+                       outputfile.write(sb.toString());
+                    }
+                }
+                br.close();
+            }
+            
+           
+            if (outputfile != null) {
+                outputfile.close(); 
+            }
+
+
+
+            } catch (MalformedURLException e) {
+                taoutput.append("MalformedURLException: " + e + "\n");
+            } catch (UnknownHostException ex) {
+                taoutput.append("UnknownHostException: " + ex + "\n");
+            } catch (IOException ex) {
+                taoutput.append("IOException: " + ex + "\n");
+            } catch (Exception ex) {
+                taoutput.append("Exception: " + ex + "\n");
+            } finally {
+               if (conn != null) {
+                conn.disconnect();
+               }
+            }
+        
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -1534,190 +1717,11 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_btlookupActionPerformed
 
     private void btrunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrunActionPerformed
-        
-        
-        
-        int[] rows = tabledetail.getSelectedRows();
-       // taoutput.removeAll();
-        taoutput.setText("");
-        if (rows.length == 0 || tburlstring.getText().isBlank()) {
-            bsmf.MainFrame.show("no method selected in detail table");
-            return;
+        if (bsmf.MainFrame.remoteDB) {
+           executeTask(dbaction.run, new String[]{tbkey.getText()});  
+        } else {
+           runProcess();
         }
-        
-       
-        int i = tabledetail.getSelectedRow();
-        String type = tabledetail.getModel().getValueAt(i, 2).toString();
-        String verb = tabledetail.getModel().getValueAt(i, 1).toString();
-        String method = tabledetail.getModel().getValueAt(i, 0).toString();
-        HttpURLConnection conn = null;
-       
-        try {
-                       
-            URL url = new URL(tburlstring.getText());
-
-            conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestProperty("Content-Type", ddcontenttype.getSelectedItem().toString());
-            conn.setConnectTimeout(10000);
-            conn.setReadTimeout(10000);
-            
-            if (ddauth.getSelectedItem().toString().equals("BASIC AUTH")) {
-               if (! tbuser.getText().isBlank() && tbpass.getPassword().length > 0) {
-                String userCredentials = new String(tbuser.getText() + ":" + String.valueOf(tbpass.getPassword()));
-                String basicAuth = "Basic " + Base64.toBase64String(userCredentials.getBytes());
-                conn.setRequestProperty("Authorization", basicAuth);
-                } 
-            }
-            
-            StringBuilder requestHeaders = new StringBuilder();
-            
-            
-            if (ddclass.getSelectedItem().toString().equals("REST")) {
-                conn.setRequestMethod(verb);
-                if (verb.equals("POST") || verb.equals("PUT")) {
-                conn.setDoOutput(true);
-                }
-            }
-            
-            if (! ddclass.getSelectedItem().toString().equals("PARAM")) {
-                ArrayList<apid_meta> headertags = getAPIDMeta(tbkey.getText());
-                for (apid_meta am : headertags) {
-                        if (am.apidm_method().equals(method)) {
-                       // System.out.println(am.apidm_key() + "=" + am.apidm_value());
-                        conn.setRequestProperty(am.apidm_key(),am.apidm_value());
-                        }
-                }
-            }
-            
-            // let's see what request headers look like
-            // call getRequestProperties before opening connection...otherwise generates exception already connected
-            Map<String, List<String>> headers = conn.getRequestProperties();
-            for (Map.Entry<String, List<String>> z : headers.entrySet()) {
-            requestHeaders.append(z.getKey() + " : " + String.join(";", z.getValue()) + "\n");
-            }
-                
-                
-                // if posting data...add file
-                // calling this opens the connection
-                if (ddclass.getSelectedItem().toString().equals("REST") && (verb.equals("POST") || verb.equals("PUT"))) {
-                    if (! tbsourcedir.getText().isBlank()) {
-                        DataOutputStream dos = new DataOutputStream( conn.getOutputStream());
-                        Path sourcepath = FileSystems.getDefault().getPath(tbsourcedir.getText());
-                        dos.write(Files.readAllBytes(sourcepath));
-                        dos.flush();
-                        dos.close();
-                    }
-                }
-           
-            jTabbedPane1.setSelectedIndex(2);
-            
-            BufferedReader br = null;
-            StringBuilder responseHeaders = new StringBuilder();
-            
-            if (conn.getResponseCode() != 200) {
-                    taoutput.append(conn.getResponseCode() + ": " + conn.getResponseMessage());
-                    //throw new RuntimeException("Failed : HTTP error code : "
-                    //		+ conn.getResponseCode());
-            } else {
-                br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
-                    
-                    conn.getHeaderFields().entrySet().stream()
-                    .filter(entry -> entry.getKey() != null)
-                    .forEach(entry -> {
-                          responseHeaders.append(entry.getKey()).append(": ");
-                          List headerValues = entry.getValue();
-                          Iterator it = headerValues.iterator();
-                          if (it.hasNext()) {
-                              responseHeaders.append(it.next());
-                              while (it.hasNext()) {
-                                  responseHeaders.append(", ").append(it.next());
-                              }
-                          }
-                          responseHeaders.append("\n");
-                    });
-                    /*
-                    conn.getRequestProperties().entrySet().stream()
-                    .filter(entry -> entry.getKey() != null)
-                    .forEach(entry -> {
-                          requestHeaders.append(entry.getKey()).append(": ");
-                          List headerValues = entry.getValue();
-                          Iterator it = headerValues.iterator();
-                          if (it.hasNext()) {
-                              requestHeaders.append(it.next());
-                              while (it.hasNext()) {
-                                  requestHeaders.append(", ").append(it.next());
-                              }
-                          }
-                          requestHeaders.append("\n");
-                    });
-                    */
-                    
-            }
-
-            int filenumber;
-            Path path;
-            BufferedWriter outputfile = null;
-            if (cbfile.isSelected()) {
-                filenumber = OVData.getNextNbr("ediout");
-                path = FileSystems.getDefault().getPath("edi/api/in" + "/" + "api." + tbkey.getText() + "." + String.valueOf(filenumber) + ".txt"); 
-                outputfile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(path.toFile())));
-            }
-            if (br != null) {
-                String output;
-                StringBuilder sb = new StringBuilder();
-                while ((output = br.readLine()) != null) {
-                    sb.append(output);
-                }
-                
-                if (cbrequestheaders.isSelected()) {
-                taoutput.append("Request Headers: " + "\n");
-                taoutput.append(requestHeaders.toString());
-                }
-                
-                if (cbresponseheaders.isSelected()) {
-                taoutput.append("Response Headers: " + "\n");
-                taoutput.append(responseHeaders.toString());
-                }
-                
-                if (type.equals("json")) { // prettify JSON output
-                    ObjectMapper mapper = new ObjectMapper();
-                    Object json = mapper.readValue(sb.toString(), Object.class);
-                    taoutput.append(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json));
-                    taoutput.setCaretPosition(0);
-                    if (cbfile.isSelected() && outputfile != null) {
-                       outputfile.write(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(json));
-                    }
-                } else {
-                    taoutput.append(sb.toString());
-                    taoutput.setCaretPosition(0);
-                    if (cbfile.isSelected() && outputfile != null) {
-                       outputfile.write(sb.toString());
-                    }
-                }
-                br.close();
-            }
-            
-           
-            if (outputfile != null) {
-                outputfile.close(); 
-            }
-
-
-
-            } catch (MalformedURLException e) {
-                taoutput.append("MalformedURLException: " + e + "\n");
-            } catch (UnknownHostException ex) {
-                taoutput.append("UnknownHostException: " + ex + "\n");
-            } catch (IOException ex) {
-                taoutput.append("IOException: " + ex + "\n");
-            } catch (Exception ex) {
-                taoutput.append("Exception: " + ex + "\n");
-            } finally {
-               if (conn != null) {
-                conn.disconnect();
-               }
-            }
-        
         
     }//GEN-LAST:event_btrunActionPerformed
 

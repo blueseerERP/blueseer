@@ -40,7 +40,10 @@ import static com.blueseer.edi.apiUtils.createKeyStore;
 import static com.blueseer.edi.apiUtils.createNewKeyPair;
 import static com.blueseer.edi.apiUtils.genereatePGPKeyPair;
 import static com.blueseer.edi.apiUtils.getAsciiDumpPGPKey;
+import static com.blueseer.edi.apiUtils.getPublicKeyAsOPENSSH;
 import static com.blueseer.edi.apiUtils.getPublicKeyAsPEM;
+import static com.blueseer.edi.apiUtils.postAS2;
+import static com.blueseer.edi.apiUtils.runAPIPost;
 import static com.blueseer.fgl.fglData.getAccountBalanceReport;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.confirmServerAuth;
@@ -199,7 +202,14 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
                         response.getWriter().println(getPublicKeyAsPEM(key));
                     } catch (Exception ex) {
                         response.getWriter().println("Exception (getPublicKeyAsPEM): " + ex.getMessage());
-                    }    
+                    }   
+                } else if (id.equals("getPublicKeyAsOPENSSH")) { 
+                  String key = request.getHeader("key");
+                    try {  
+                        response.getWriter().println(getPublicKeyAsOPENSSH(key));
+                    } catch (Exception ex) {
+                        response.getWriter().println("Exception (getPublicKeyAsOPENSSH): " + ex.getMessage());
+                    }      
                 } else if (id.equals("createKeyStore")) { 
                   String storepass = request.getHeader("storepass");
                   String storefile = request.getHeader("storefile");
@@ -224,6 +234,25 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
                     } catch (Exception ex) {
                         response.getWriter().println("Exception (genereatePGPKeyPair): " + ex.getMessage());
                     }
+                } else if (id.equals("postAS2")) { 
+                  String key = request.getHeader("key");
+                  String debug = request.getHeader("debug");
+                    try {  
+                        response.getWriter().println(postAS2(key, Boolean.valueOf(debug)));
+                    } catch (Exception ex) {
+                        response.getWriter().println("Exception (postAS2): " + ex.getMessage());
+                    } 
+                } else if (id.equals("postAPI")) { 
+                  String key = request.getHeader("key");
+                  String method = request.getHeader("method");
+                  String urlstring = request.getHeader("urlstring");
+                  String requestheader = request.getHeader("requestheader");
+                  String responseheader = request.getHeader("responseheader");
+                    try {  
+                        response.getWriter().println(runAPIPost(key, method, urlstring, requestheader, responseheader));
+                    } catch (Exception ex) {
+                        response.getWriter().println("Exception (postAS2): " + ex.getMessage());
+                    }    
                 } else {
                   response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                   response.getWriter().println(HttpServletResponse.SC_BAD_REQUEST + ": unknown ID " + "\n" + getHeaders(request));  

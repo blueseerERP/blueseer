@@ -34,6 +34,9 @@ import static com.blueseer.edi.APIMaint.apidm;
 import static com.blueseer.edi.AS2Maint.certs;
 import com.blueseer.edi.ediData.api_det;
 import com.blueseer.edi.ediData.api_mstr;
+import static com.blueseer.edi.ediData.getAPIDMeta;
+import static com.blueseer.edi.ediData.getAPIDet;
+import static com.blueseer.edi.ediData.getAPIMstr;
 import static com.blueseer.edi.ediData.getKeyStoreByUser;
 import static com.blueseer.edi.ediData.getKeyStorePass;
 import static com.blueseer.edi.ediData.getKeyUserPass;
@@ -51,6 +54,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -109,6 +113,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -359,7 +364,153 @@ public class apiUtils {
         
         return r;
     }
-       
+    
+    public static String runAPIPost(String key, String method, String urlstring, String showReqHeader, String showRspHeader) {
+        StringBuilder sb = new StringBuilder();
+        StringBuilder responseHeaders = new StringBuilder();
+        StringBuilder requestHeaders = new StringBuilder();
+        api_mstr api = getAPIMstr(key);
+        api_det apid = getAPIDet(key, method);
+        
+        int k = 0;
+        String verb = apid.apid_verb();
+        String value = apid.apid_value();
+        HttpURLConnection conn = null;
+        
+        if (api.m()[0].equals("1") || api.api_id().isBlank()) {
+           return "unknown api_mstr id";
+        }
+        
+        if (apid.m()[0].equals("1") || apid.apid_id().isBlank()) {
+           return "unknown api_det id or api_det method";
+        }
+        
+        if (api.api_url().isBlank() || api.api_protocol().isBlank()) {
+           return "api url and/or protocol is blank";
+        }
+        
+        
+            try {
+                
+                
+                URL url = new URL(urlstring);
+
+                conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestProperty("Content-Type", api.api_contenttype());
+                conn.setConnectTimeout(10000);
+                conn.setReadTimeout(10000);  
+
+                BufferedReader br = null;
+                
+                if (api.api_auth().equals("BASIC AUTH")) {
+                    if (! api.api_user().isBlank() && api.api_pass().length() > 0) {
+                     String userCredentials = new String(api.api_user() + ":" + api.api_pass());
+                     String basicAuth = "Basic " + Base64.toBase64String(userCredentials.getBytes());
+                     conn.setRequestProperty("Authorization", basicAuth);
+                     } 
+                }
+                
+                if (api.api_class().equals("REST")) {
+                    conn.setRequestMethod(verb);
+                    if (verb.equals("POST") || verb.equals("PUT")) {
+                    conn.setDoOutput(true);
+                    }
+                }
+            
+                if (! api.api_class().equals("PARAM")) {
+                    ArrayList<ediData.apid_meta> headertags = getAPIDMeta(api.api_id());
+                    for (ediData.apid_meta am : headertags) {
+                            if (am.apidm_method().equals(method)) {
+                           // System.out.println(am.apidm_key() + "=" + am.apidm_value());
+                            conn.setRequestProperty(am.apidm_key(),am.apidm_value());
+                            }
+                    }
+                }
+                
+                // let's see what request headers look like
+            // call getRequestProperties before conn.getOutputStream()...otherwise generates exception already connected
+            Map<String, List<String>> headers = conn.getRequestProperties();
+            for (Map.Entry<String, List<String>> z : headers.entrySet()) {
+            requestHeaders.append(z.getKey() + " : " + String.join(";", z.getValue()) + "\n");
+            }
+            
+            // if posting data...add file
+                // calling this opens the connection
+                if (api.api_class().equals("REST") && (verb.equals("POST") || verb.equals("PUT"))) {
+                    if (! apid.apid_source().isBlank()) {
+                        DataOutputStream dos = new DataOutputStream( conn.getOutputStream());
+                        Path sourcepath = FileSystems.getDefault().getPath(apid.apid_source());
+                        dos.write(Files.readAllBytes(sourcepath));
+                        dos.flush();
+                        dos.close();
+                    }
+                }
+                
+		if (conn.getResponseCode() != 200) {
+                        sb.append("api post to id: ")
+                                .append(api.api_id())
+                                .append(" with urlstring: ")
+                                .append(urlstring)
+                                .append(" response->")
+                                .append(conn.getResponseCode())
+                                .append(": ")
+                                .append(conn.getResponseMessage());
+		} else {
+                    br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
+                    // to get output headers 
+                    conn.getHeaderFields().entrySet().stream()
+                    .filter(entry -> entry.getKey() != null)
+                    .forEach(entry -> {
+                          responseHeaders.append(entry.getKey()).append(": ");
+                          List headerValues = entry.getValue();
+                          Iterator it = headerValues.iterator();
+                          if (it.hasNext()) {
+                              responseHeaders.append(it.next());
+                              while (it.hasNext()) {
+                                  responseHeaders.append(", ").append(it.next());
+                              }
+                          }
+                          responseHeaders.append("\n");
+                    });
+                }
+
+                if (Boolean.valueOf(showReqHeader)) {
+                  sb.append("Request Headers: " + "\n");
+                  sb.append(requestHeaders.toString());  
+                }
+                
+                if (Boolean.valueOf(showRspHeader)) {
+                  sb.append("Response Headers: " + "\n");
+                  sb.append(responseHeaders.toString());  
+                }
+                
+		String output = "";
+                if (br != null) {
+                    while ((output = br.readLine()) != null) {
+                             sb.append(output);
+                    }
+                    br.close();
+                }
+              
+                
+                } catch (MalformedURLException e) {
+                return "MalformedURLException: " + urlstring + "\n" + e + "\n";
+                } catch (UnknownHostException ex) {
+                    return "UnknownHostException: " + urlstring + "\n" + ex + "\n";
+                } catch (IOException ex) {
+                    return "IOException: " + urlstring + "\n" + ex + "\n";
+                } catch (Exception ex) {
+                    return "Exception: " + urlstring + "\n" + ex + "\n";
+                } finally {
+                   if (conn != null) {
+                    conn.disconnect();
+                   }
+                }
+        
+        return sb.toString();
+    }
+    
+    
     public static PrivateKey getPrivateKey(String user)  {
         PrivateKey key = null;
         FileInputStream fis = null;

@@ -50,6 +50,7 @@ import static com.blueseer.utl.BlueSeerUtils.ludialog;
 import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import static com.blueseer.utl.BlueSeerUtils.sendServerPost;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.EDData;
 import com.blueseer.utl.IBlueSeerT;
@@ -70,6 +71,8 @@ import java.security.NoSuchProviderException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
@@ -101,6 +104,7 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
                 boolean isLoad = false;
                 public static Store certs = null;
                 public static as2_mstr x = null;
+                public static String rData = null;
     // global datatablemodel declarations   
    
     
@@ -143,6 +147,18 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
                     break;
                 case "get":
                     message = getRecord(key);    
+                    break;  
+                case "run":
+                    rData = null;
+                    ArrayList<String[]> arrx = new ArrayList<String[]>();
+                    arrx.add(new String[]{"id","postAS2"});
+                    arrx.add(new String[]{"key", tbkey.getText()});
+                    arrx.add(new String[]{"debug", String.valueOf(cbdebug.isSelected())});
+                    try {
+                        rData = sendServerPost(arrx, "");
+                    } catch (IOException ex) {
+                        rData = "Failed to run: " + ex.getMessage();
+                    }
                     break;    
                 default:
                     message = new String[]{"1", "unknown action"};
@@ -162,6 +178,8 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
            } else if (this.type.equals("get")) {
              updateForm();
              tbkey.requestFocus();
+           } else if (this.type.equals("run")) {
+             processRunPostAfter(); 
            } else {
              initvars(null);  
            }
@@ -547,6 +565,81 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
         }
     }
     
+    public void processRun() {
+         
+        String r = null;
+        Path folderpath = FileSystems.getDefault().getPath(tbindir.getText());
+        File folder = new File(folderpath.toString());
+        File[] listOfFiles = folder.listFiles();
+        taoutput.append("number of files to transmit: ");
+        if (listOfFiles != null) {
+         taoutput.append(String.valueOf(listOfFiles.length));
+        } else {
+         taoutput.append("null source directory");   
+        }
+        taoutput.append("\n");
+        
+        if (listOfFiles != null) {        
+            try {
+                r = apiUtils.postAS2(tbkey.getText(), cbdebug.isSelected());
+            } catch (URISyntaxException ex) {
+                bslog(ex);
+            } catch (IOException ex) {
+                bslog(ex);
+            } catch (CertificateException ex) {
+                bslog(ex);
+            } catch (NoSuchProviderException ex) {
+                bslog(ex);
+            } catch (KeyStoreException ex) {
+                bslog(ex);
+            } catch (NoSuchAlgorithmException ex) {
+                bslog(ex);
+            } catch (UnrecoverableKeyException ex) {
+                bslog(ex);
+            } catch (CMSException ex) {
+                bslog(ex);
+            } catch (SMIMEException ex) {
+                bslog(ex);
+            } catch (Exception ex) {
+                bslog(ex);
+            }
+        }  
+            
+        if (r != null) {
+         taoutput.append(r);
+         Pattern p = Pattern.compile("status__pass");
+		Matcher m = p.matcher(r);
+		if (m.find()) {
+                    lblstatus.setText("PASS!");
+                    lblstatus.setForeground(Color.blue);
+                } else {
+                    lblstatus.setText("FAIL!");
+                    lblstatus.setForeground(Color.red);  
+                }
+        
+        } else {
+            taoutput.append("null return");
+        }
+    }
+    
+    public void processRunPostAfter() {
+        if (rData != null) {
+         taoutput.append(rData);
+         Pattern p = Pattern.compile("status__pass");
+		Matcher m = p.matcher(rData);
+		if (m.find()) {
+                    lblstatus.setText("PASS!");
+                    lblstatus.setForeground(Color.blue);
+                } else {
+                    lblstatus.setText("FAIL!");
+                    lblstatus.setForeground(Color.red);  
+                }
+        
+        } else {
+            taoutput.append("null return");
+        }
+        
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -1125,66 +1218,17 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_btlookupActionPerformed
 
     private void btrunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrunActionPerformed
-      
         taoutput.setText("");
         lblurl.setText("");
         lblstatus.setText("");
-         
-        String r = null;
-        Path folderpath = FileSystems.getDefault().getPath(tbindir.getText());
-        File folder = new File(folderpath.toString());
-        File[] listOfFiles = folder.listFiles();
-        taoutput.append("number of files to transmit: ");
-        if (listOfFiles != null) {
-         taoutput.append(String.valueOf(listOfFiles.length));
-        } else {
-         taoutput.append("null source directory");   
-        }
-        taoutput.append("\n");
         
-        if (listOfFiles != null) {        
-            try {
-                r = apiUtils.postAS2(tbkey.getText(), cbdebug.isSelected());
-            } catch (URISyntaxException ex) {
-                bslog(ex);
-            } catch (IOException ex) {
-                bslog(ex);
-            } catch (CertificateException ex) {
-                bslog(ex);
-            } catch (NoSuchProviderException ex) {
-                bslog(ex);
-            } catch (KeyStoreException ex) {
-                bslog(ex);
-            } catch (NoSuchAlgorithmException ex) {
-                bslog(ex);
-            } catch (UnrecoverableKeyException ex) {
-                bslog(ex);
-            } catch (CMSException ex) {
-                bslog(ex);
-            } catch (SMIMEException ex) {
-                bslog(ex);
-            } catch (Exception ex) {
-                bslog(ex);
-            }
-        }  
-            
-        if (r != null) {
-         taoutput.append(r);
-         Pattern p = Pattern.compile("status__pass");
-		Matcher m = p.matcher(r);
-		if (m.find()) {
-                    lblstatus.setText("PASS!");
-                    lblstatus.setForeground(Color.blue);
-                } else {
-                    lblstatus.setText("FAIL!");
-                    lblstatus.setForeground(Color.red);  
-                }
-        
+        if (bsmf.MainFrame.remoteDB) {
+          executeTask(dbaction.run, new String[]{tbkey.getText()});  
         } else {
-            taoutput.append("null return");
+          processRun();  
         }
-         
-       
+        
+        
            
     }//GEN-LAST:event_btrunActionPerformed
 

@@ -1168,7 +1168,19 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                 
             }
             if (ddformat.getSelectedItem().toString().equals(".ssh2")) {
-                taoutput.append(getPublicKeyAsOPENSSH(tbkey.getText()));
+                if (bsmf.MainFrame.remoteDB) {
+                   ArrayList<String[]> arr = new ArrayList<String[]>();
+                    arr.add(new String[]{"id","getPublicKeyAsOPENSSH"});
+                    arr.add(new String[]{"key", tbkey.getText()});
+                    try {  
+                        taoutput.append(sendServerPost(arr, ""));
+                    } catch (IOException ex) {
+                        bslog(ex);
+                    }
+                } else {
+                    taoutput.append(getPublicKeyAsOPENSSH(tbkey.getText()));  
+                }
+                
             }
     }//GEN-LAST:event_btviewkeyActionPerformed
 
