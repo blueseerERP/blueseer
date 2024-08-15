@@ -383,7 +383,13 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     public void setComponentDefaultValues() {
         isLoad = true;
         
-        
+        if (bsmf.MainFrame.remoteDB) {
+            cblocal.setEnabled(true);
+            cblocal.setSelected(false);
+        } else {
+            cblocal.setEnabled(false);
+            cblocal.setSelected(true);
+        }
         
         kvmodel.removeAllElements();
         listkv.setModel(kvmodel);
@@ -452,6 +458,10 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     public void setAction(String[] x) {
         if (x[0].equals("0")) { 
                    setPanelComponentState(this, true);
+                   if (! bsmf.MainFrame.remoteDB) {
+                    cblocal.setEnabled(false);
+                    cblocal.setSelected(true);
+                   }
                    btadd.setEnabled(false);
                    btaddparam.setEnabled(false);
                    btdeleteparam.setEnabled(false);
@@ -1055,6 +1065,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel22 = new javax.swing.JLabel();
         tbkeylabel = new javax.swing.JTextField();
         jLabel23 = new javax.swing.JLabel();
+        cblocal = new javax.swing.JCheckBox();
         jPanel4 = new javax.swing.JPanel();
         tbsourcedir = new javax.swing.JTextField();
         tbdestdir = new javax.swing.JTextField();
@@ -1216,6 +1227,8 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         jLabel23.setText("Key Label");
 
+        cblocal.setText("Local");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -1246,6 +1259,8 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btupdateurl, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(cblocal)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btdelete)
                         .addGap(6, 6, 6)
                         .addComponent(btupdate)
@@ -1305,7 +1320,9 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addComponent(jLabel21))
                     .addComponent(btupdateurl)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(btdelete)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btdelete)
+                            .addComponent(cblocal))
                         .addComponent(btupdate)
                         .addComponent(btadd)))
                 .addGap(1, 1, 1)
@@ -1745,7 +1762,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     }//GEN-LAST:event_btlookupActionPerformed
 
     private void btrunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrunActionPerformed
-        if (bsmf.MainFrame.remoteDB) {
+        if (bsmf.MainFrame.remoteDB && ! cblocal.isSelected()) {
            executeTask(dbaction.run, new String[]{tbkey.getText()});  
         } else {
            runProcess();
@@ -1948,6 +1965,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JCheckBox cbenabled;
     private javax.swing.JCheckBox cbfile;
     private javax.swing.JCheckBox cbkv;
+    private javax.swing.JCheckBox cblocal;
     private javax.swing.JCheckBox cbrequestheaders;
     private javax.swing.JCheckBox cbresponseheaders;
     private javax.swing.JComboBox<String> ddauth;

@@ -101,6 +101,8 @@
                                   </Group>
                               </Group>
                               <EmptySpace max="32767" attributes="0"/>
+                              <Component id="cblocal" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="btdelete" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
                               <Component id="btupdate" min="-2" max="-2" attributes="0"/>
@@ -174,7 +176,10 @@
                           </Group>
                           <Component id="btupdateurl" min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="btdelete" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="btdelete" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cblocal" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
                               <Component id="btupdate" min="-2" max="-2" attributes="0"/>
                               <Component id="btadd" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -530,6 +535,11 @@
             <Component class="javax.swing.JLabel" name="jLabel23">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Key Label"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JCheckBox" name="cblocal">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Local"/>
               </Properties>
             </Component>
           </SubComponents>
