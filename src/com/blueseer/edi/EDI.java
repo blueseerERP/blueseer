@@ -839,7 +839,7 @@ public class EDI {
             String ErrorDir = cleanDirString(EDData.getEDIErrorDir());
             
             String f = "manual_" + Long.toHexString(System.currentTimeMillis()) + ".txt";
-            try (BufferedWriter outputfile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(inDir + "temp.txt")))) {
+            try (BufferedWriter outputfile = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(inDir + f)))) {
                 outputfile.write(filecontent);
             }
             
