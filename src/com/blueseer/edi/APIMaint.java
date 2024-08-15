@@ -240,6 +240,8 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
            } else if (this.type.equals("get")) {
              updateForm();
              tbkey.requestFocus();
+           } else if (this.type.equals("run")) {
+             processRunPostAfter(); 
            } else {
              initvars(key); 
            }
@@ -976,6 +978,13 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                }
             }
         
+    }
+    
+    public void processRunPostAfter() {
+        if (rData != null) {
+         taoutput.append(rData);
+         jTabbedPane1.setSelectedIndex(2);
+        } 
     }
     
     /**
