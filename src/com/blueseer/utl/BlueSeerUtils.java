@@ -2345,7 +2345,7 @@ public class BlueSeerUtils {
        return sb.toString();
     }
 
-    public static String sendServerPost(ArrayList<String[]> hlist, String postData) throws MalformedURLException, IOException {
+    public static String sendServerPost(ArrayList<String[]> hlist, String postData, byte[] b) throws MalformedURLException, IOException {
        
         StringBuilder sb = new StringBuilder();
         String urlString = "";
@@ -2365,7 +2365,12 @@ public class BlueSeerUtils {
         
         URL url = new URL(urlString);
         
-        byte[] postDataBytes = postData.getBytes("UTF-8");
+        byte[] postDataBytes;
+        if (b != null) {
+            postDataBytes = b;
+        } else {
+            postDataBytes = postData.getBytes("UTF-8");
+        }
         
         conn = (HttpURLConnection) url.openConnection();
 

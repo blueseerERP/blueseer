@@ -218,7 +218,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                     arrx.add(new String[]{"requestheader", String.valueOf(cbrequestheaders.isSelected())});
                     arrx.add(new String[]{"responseheader", String.valueOf(cbresponseheaders.isSelected())});
                     try {
-                        rData = sendServerPost(arrx, "");
+                        rData = sendServerPost(arrx, "", null);
                     } catch (IOException ex) {
                         rData = "Failed to run: " + ex.getMessage();
                     }

@@ -2731,7 +2731,7 @@ public class EDData {
             ArrayList<String[]> arrx = new ArrayList<String[]>();
             arrx.add(new String[]{"id","getFileContent"});
             arrx.add(new String[]{"filepath", path});
-            DOC = sendServerPost(arrx, "");
+            DOC = sendServerPost(arrx, "", null);
            }
            
            

@@ -36,6 +36,7 @@ import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import static com.blueseer.adm.admData.getOVMstr;
 import com.blueseer.adm.admData.ov_mstr;
+import static com.blueseer.edi.EDI.uploadFile;
 
 import com.blueseer.ord.ordData;
 import static com.blueseer.ord.ordData.getOrderMstrSet;
@@ -674,6 +675,7 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
         btpatch = new javax.swing.JButton();
         btclean = new javax.swing.JButton();
         btbandwidth = new javax.swing.JButton();
+        btupload = new javax.swing.JButton();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -898,6 +900,13 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
             }
         });
 
+        btupload.setText("Upload");
+        btupload.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btuploadActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -940,7 +949,8 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
                                 .addComponent(btpatch)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btbandwidth))
-                            .addComponent(panelCopySite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(panelCopySite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btupload))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -979,6 +989,8 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(panelCopySite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btupload)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btupdate)
@@ -1025,12 +1037,17 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
         System.out.println("DEF main: " + timediff(start));
     }//GEN-LAST:event_btbandwidthActionPerformed
 
+    private void btuploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btuploadActionPerformed
+        uploadFile(this, "temp/");
+    }//GEN-LAST:event_btuploadActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btbandwidth;
     private javax.swing.JButton btclean;
     private javax.swing.JButton btpatch;
     private javax.swing.JButton btupdate;
+    private javax.swing.JButton btupload;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JCheckBox cbcustom;
     private javax.swing.JCheckBox cblogin;

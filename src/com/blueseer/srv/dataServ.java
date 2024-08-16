@@ -33,10 +33,12 @@ import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.edi.EDI.fileExists;
 import static com.blueseer.edi.EDI.getFileContent;
 import static com.blueseer.edi.EDI.getFilesOfDir;
 import static com.blueseer.edi.EDI.runEDI;
 import static com.blueseer.edi.EDI.runEDIsingle;
+import static com.blueseer.edi.EDI.writeFile;
 import static com.blueseer.edi.apiUtils.createKeyStore;
 import static com.blueseer.edi.apiUtils.createNewKeyPair;
 import static com.blueseer.edi.apiUtils.genereatePGPKeyPair;
@@ -52,6 +54,7 @@ import static com.blueseer.utl.BlueSeerUtils.createMessageJSON;
 import com.blueseer.utl.OVData;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -71,6 +74,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.transform.TransformerException;
+import org.apache.commons.io.IOUtils;
 
 
 /**
@@ -166,9 +170,14 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
                 
                 String line = "";
                 StringBuilder sb = new StringBuilder();
-                BufferedReader reader = request.getReader();
-                while ((line = reader.readLine()) != null) {
-                sb.append(line);
+                InputStream body = null;
+                if (id.equals("uploadFile")) {
+                   body = request.getInputStream(); // as byte array
+                } else {
+                    BufferedReader reader = request.getReader();  // as string
+                    while ((line = reader.readLine()) != null) {  
+                    sb.append(line);
+                    }
                 }
                 
                 /*
@@ -255,7 +264,13 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
                         response.getWriter().println(runAPIPost(key, method, urlstring, requestheader, responseheader));
                     } catch (Exception ex) {
                         response.getWriter().println("Exception (postAS2): " + ex.getMessage());
-                    }    
+                    } 
+                } else if (id.equals("uploadFile")) { 
+                  String filepath = request.getHeader("filepath");
+                  response.getWriter().println(writeFile(filepath, IOUtils.toByteArray(body)));  
+                  } else if (id.equals("uploadFileExists")) { 
+                  String filepath = request.getHeader("filepath");
+                  response.getWriter().println(fileExists(filepath));   
                 } else {
                   response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                   response.getWriter().println(HttpServletResponse.SC_BAD_REQUEST + ": unknown ID " + "\n" + getHeaders(request));  

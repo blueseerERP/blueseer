@@ -27,6 +27,7 @@ SOFTWARE.
 package com.blueseer.edi;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.bslog;
 import static bsmf.MainFrame.defaultDecimalSeparator;
 import com.blueseer.ctr.cusData;
 import static com.blueseer.edi.EDIMap.HASH;
@@ -56,6 +57,7 @@ import static com.blueseer.utl.BlueSeerUtils.getDateDB;
 import static com.blueseer.utl.BlueSeerUtils.getEDIClassLoader;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.parseDate;
+import static com.blueseer.utl.BlueSeerUtils.sendServerPost;
 import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import static com.blueseer.utl.EDData.getBSDocTypeFromStds;
 import static com.blueseer.utl.EDData.getDFSFileType;
@@ -69,6 +71,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import java.awt.Component;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
@@ -119,6 +122,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javax.swing.JFileChooser;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -4709,8 +4713,62 @@ public class EDI {
         return str;
     }  
     
+    public static boolean fileExists(String filepath) {
+          return (Files.exists(FileSystems.getDefault().getPath(filepath))) ? true : false;
+    }
     
-     // miscellaneous 
+    public static byte[] getFileContentBytes(String filepath) {
+        byte[] b = null;
+        if (Files.exists(FileSystems.getDefault().getPath(filepath))) {
+           
+            try {
+                b = Files.readAllBytes(FileSystems.getDefault().getPath(filepath));
+            } catch (IOException ex) {
+                bslog(ex);
+            }
+        }
+        return b;
+    }  
+    
+    public static String writeFile(String filepath, byte[] b) throws FileNotFoundException, IOException {
+        //String f = "manual_" + Long.toHexString(System.currentTimeMillis()) + ".txt";
+            if (b != null && filepath != null && ! filepath.isBlank()) {
+                try (FileOutputStream  outputfile = new FileOutputStream(filepath)) {
+                    outputfile.write(b);
+                }
+            }
+            return "";
+    }
+    
+    public static void uploadFile(Component comp, String todir) {
+        JFileChooser jfc = new JFileChooser(FileSystems.getDefault().getPath("").toFile());
+        jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        int returnVal = jfc.showOpenDialog(comp);
+       
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            try {
+                String filepath = jfc.getSelectedFile().getAbsolutePath();
+                String filename = jfc.getSelectedFile().getName();
+                
+                Path newpath = FileSystems.getDefault().getPath(cleanDirString(todir) + filename);
+               // BlueSeerUtils.startTask(new String[]{"","Processing..."});
+                    if (bsmf.MainFrame.remoteDB) {
+                    byte[] b = getFileContentBytes(filepath);
+                    ArrayList<String[]> arrx = new ArrayList<String[]>();
+                    arrx.add(new String[]{"id","uploadFile"});
+                    arrx.add(new String[]{"filepath", newpath.toString()});
+                    String s = sendServerPost(arrx, "", b);
+                    }
+            }
+            catch (Exception ex) {
+            ex.printStackTrace();
+            }
+        } 
+    }
+    
+
+    // miscellaneous 
       public static String[] generateEnvelope(String doctype, String sndid, String rcvid, String outdoctype, String map) {
         
         String [] envelope = new String[10];  // will hold 7 elements.... ISA, GS, GE,IEA, filename, isactrl, gsctrl, sd, ed, ud

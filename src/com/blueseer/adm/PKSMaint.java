@@ -467,7 +467,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                     arr.add(new String[]{"storepass", String.valueOf(tbstorepass.getPassword())});
                     arr.add(new String[]{"storefile", tbfile.getText()});
                     try {  
-                        String s = sendServerPost(arr, "");
+                        String s = sendServerPost(arr, "", null);
                     } catch (IOException ex) {
                         return new String[]{BlueSeerUtils.ErrorBit, "Unable to generate new Store"};
                     }
@@ -496,7 +496,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                     arr.add(new String[]{"strength", ddstrength.getSelectedItem().toString()});
                     arr.add(new String[]{"years", ddyears.getSelectedItem().toString()});
                     try {  
-                        String s = sendServerPost(arr, "");
+                        String s = sendServerPost(arr, "", null);
                     } catch (IOException ex) {
                         return new String[]{BlueSeerUtils.ErrorBit, "Unable to generate new User / keypair"};
                     }
@@ -523,7 +523,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                     arr.add(new String[]{"pass", String.valueOf(tbpass.getPassword())});
                     arr.add(new String[]{"parent", ddparent.getSelectedItem().toString()});
                     try {  
-                        String r = sendServerPost(arr, "");
+                        String r = sendServerPost(arr, "", null);
                         if (r.isBlank()) {
                         return new String[]{BlueSeerUtils.ErrorBit, "Unable to generate PGP User / keypair"};
                         } else if (r.equals("0")) {
@@ -1142,7 +1142,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                     arr.add(new String[]{"id","getAsciiDumpPGPKey"});
                     arr.add(new String[]{"pksid", tbkey.getText()});
                     arr.add(new String[]{"pkstype", ddformat.getSelectedItem().toString()});
-                      s = sendServerPost(arr, "");  
+                      s = sendServerPost(arr, "", null);  
                     } else {
                       s = getAsciiDumpPGPKey(tbkey.getText(),ddformat.getSelectedItem().toString());  
                     }
@@ -1158,7 +1158,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                     arr.add(new String[]{"id","getPublicKeyAsPEM"});
                     arr.add(new String[]{"key", tbkey.getText()});
                     try {  
-                        taoutput.append(sendServerPost(arr, ""));
+                        taoutput.append(sendServerPost(arr, "", null));
                     } catch (IOException ex) {
                         bslog(ex);
                     }
@@ -1173,7 +1173,7 @@ public class PKSMaint extends javax.swing.JPanel implements IBlueSeerT {
                     arr.add(new String[]{"id","getPublicKeyAsOPENSSH"});
                     arr.add(new String[]{"key", tbkey.getText()});
                     try {  
-                        taoutput.append(sendServerPost(arr, ""));
+                        taoutput.append(sendServerPost(arr, "", null));
                     } catch (IOException ex) {
                         bslog(ex);
                     }

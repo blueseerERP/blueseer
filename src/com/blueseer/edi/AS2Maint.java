@@ -155,7 +155,7 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
                     arrx.add(new String[]{"key", tbkey.getText()});
                     arrx.add(new String[]{"debug", String.valueOf(cbdebug.isSelected())});
                     try {
-                        rData = sendServerPost(arrx, "");
+                        rData = sendServerPost(arrx, "", null);
                     } catch (IOException ex) {
                         rData = "Failed to run: " + ex.getMessage();
                     }

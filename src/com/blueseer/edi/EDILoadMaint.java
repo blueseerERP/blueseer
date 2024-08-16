@@ -311,13 +311,13 @@ public class EDILoadMaint extends javax.swing.JPanel {
                     ArrayList<String[]> arr = new ArrayList<String[]>();
                     arr.add(new String[]{"id","getFilesOfDir"});
                     arr.add(new String[]{"dir", inDir});
-                    rFileList = sendServerPost(arr, "");
+                    rFileList = sendServerPost(arr, "", null);
                     break;
                 case "getFileContent":
                     ArrayList<String[]> arrx = new ArrayList<String[]>();
                     arrx.add(new String[]{"id","getFileContent"});
                     arrx.add(new String[]{"filepath", key[0]});
-                    rFileContent = sendServerPost(arrx, "");
+                    rFileContent = sendServerPost(arrx, "", null);
                     break;    
                 default:
                     message = new String[]{"1", "unknown action"};
@@ -720,7 +720,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
         ArrayList<String[]> list = new ArrayList<String[]>();
         list.add(new String[]{"id","runEDI"});
         
-        rData = sendServerPost(list, postData);
+        rData = sendServerPost(list, postData, null);
         
         x[0] = "0";
         x[1] = "Processing complete";
@@ -737,7 +737,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
         ArrayList<String[]> list = new ArrayList<String[]>();
         list.add(new String[]{"id","runEDIsingle"});
         
-        rData = sendServerPost(list, postData);
+        rData = sendServerPost(list, postData, null);
         
         x[0] = "0";
         x[1] = "Processing complete";
