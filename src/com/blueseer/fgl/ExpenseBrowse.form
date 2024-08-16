@@ -66,7 +66,9 @@
                   <Component id="btchart" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="bthidechart" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="433" max="32767" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="cbchart" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
               <Component id="jPanel2" alignment="0" pref="1102" max="32767" attributes="0"/>
           </Group>
@@ -83,6 +85,7 @@
                           <Component id="btRun" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="bthidechart" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btchart" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cbchart" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Component id="dcFrom" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -247,6 +250,14 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btchartActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JCheckBox" name="cbchart">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Chart By Account"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cbchartActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

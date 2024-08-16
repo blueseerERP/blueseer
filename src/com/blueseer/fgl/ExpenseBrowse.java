@@ -178,7 +178,22 @@ public class ExpenseBrowse extends javax.swing.JPanel {
                   Calendar cal = new GregorianCalendar();
                   cal.set(Calendar.DAY_OF_YEAR, 1);
                   java.util.Date firstday = cal.getTime();
-                  
+                 
+                if (cbchart.isSelected()) {
+                 res = st.executeQuery("select vod_expense_acct, sum(vod_voprice * vod_qty) as 'sum' from ap_mstr " +
+                             //  " ap_ref, ap_effdate, ap_duedate, ap_amt, ap_base_amt,  " +
+                             //  " ap_status, ap_curr, vod_item, vod_expense_acct " +
+                             //  " inner join vd_mstr on vd_addr = ap_vend " +
+                               " inner join vod_mstr on vod_id = ap_nbr " + 
+                               " where ap_vend >= " + "'" + ddfromvend.getSelectedItem().toString() + "'" +
+                               " and ap_vend <= " + "'" + ddtovend.getSelectedItem().toString() + "'" +
+                               " and ap_effdate >= " + "'" + dfdate.format(dcFrom.getDate()) + "'" +
+                               " and ap_effdate <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
+                               " and ap_type = 'E' " +
+                               " and ap_status = 'c' " +
+                               " group by vod_expense_acct " +
+                               ";");   
+                }  else {
                 res = st.executeQuery("select ap_vend, sum(vod_voprice * vod_qty) as 'sum' from ap_mstr " +
                              //  " ap_ref, ap_effdate, ap_duedate, ap_amt, ap_base_amt,  " +
                              //  " ap_status, ap_curr, vod_item, vod_expense_acct " +
@@ -192,22 +207,36 @@ public class ExpenseBrowse extends javax.swing.JPanel {
                                " and ap_status = 'c' " +
                                " group by ap_vend " +
                                ";");
+                }
              
                 DefaultPieDataset dataset = new DefaultPieDataset();
                
-                String vend = "";
+                String xvar = "";
                 while (res.next()) {
-                    if (res.getString("ap_vend") == null || res.getString("ap_vend").isEmpty()) {
-                      vend = "Unassigned";
+                    if (cbchart.isSelected()) {
+                        if (res.getString("vod_expense_acct") == null || res.getString("vod_expense_acct").isEmpty()) {
+                        xvar = "Unassigned";
+                        } else {
+                        xvar = res.getString("vod_expense_acct");   
+                        } 
                     } else {
-                      vend = res.getString("ap_vend");   
+                        if (res.getString("ap_vend") == null || res.getString("ap_vend").isEmpty()) {
+                        xvar = "Unassigned";
+                        } else {
+                        xvar = res.getString("ap_vend");   
+                        } 
                     }
+                    
                     Double amt = res.getDouble("sum");
                     if (amt < 0) {amt = amt * -1;}
-                  dataset.setValue(vend, amt);
+                  dataset.setValue(xvar, amt);
                 }
-                
-        JFreeChart chart = ChartFactory.createPieChart(getTitleTag(5027), dataset, false, false, false);
+        
+        String title = getTitleTag(5027);
+        if (cbchart.isSelected()) {
+            title = "Expense By Account";
+        }        
+        JFreeChart chart = ChartFactory.createPieChart(title, dataset, false, false, false);
         PiePlot plot = (PiePlot) chart.getPlot();
       //  plot.setSectionPaint(KEY1, Color.green);
       //  plot.setSectionPaint(KEY2, Color.red);
@@ -350,6 +379,7 @@ public class ExpenseBrowse extends javax.swing.JPanel {
         dcFrom = new com.toedter.calendar.JDateChooser();
         dcTo = new com.toedter.calendar.JDateChooser();
         btchart = new javax.swing.JButton();
+        cbchart = new javax.swing.JCheckBox();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -429,6 +459,13 @@ public class ExpenseBrowse extends javax.swing.JPanel {
             }
         });
 
+        cbchart.setText("Chart By Account");
+        cbchart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbchartActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -456,7 +493,9 @@ public class ExpenseBrowse extends javax.swing.JPanel {
                 .addComponent(btchart)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(bthidechart)
-                .addContainerGap(433, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(cbchart)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 1102, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
@@ -470,7 +509,8 @@ public class ExpenseBrowse extends javax.swing.JPanel {
                         .addComponent(jLabel2)
                         .addComponent(btRun)
                         .addComponent(bthidechart)
-                        .addComponent(btchart))
+                        .addComponent(btchart)
+                        .addComponent(cbchart))
                     .addComponent(dcFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -576,11 +616,19 @@ public class ExpenseBrowse extends javax.swing.JPanel {
         btchart.setEnabled(false);
     }//GEN-LAST:event_btchartActionPerformed
 
+    private void cbchartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbchartActionPerformed
+        chartExpense();
+        chartpanel.setVisible(true);
+        bthidechart.setEnabled(true);
+        btchart.setEnabled(false);
+    }//GEN-LAST:event_cbchartActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btRun;
     private javax.swing.JButton btchart;
     private javax.swing.JButton bthidechart;
+    private javax.swing.JCheckBox cbchart;
     private javax.swing.JPanel chartpanel;
     private com.toedter.calendar.JDateChooser dcFrom;
     private com.toedter.calendar.JDateChooser dcTo;
