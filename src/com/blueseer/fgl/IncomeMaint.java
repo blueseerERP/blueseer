@@ -375,6 +375,7 @@ public class IncomeMaint extends javax.swing.JPanel implements IBlueSeer {
         for (String code : mycc) {
             ddcc.addItem(code);
         }
+        ddcc.setSelectedItem(OVData.getDefaultCC());
       
        isLoad = false;
     }

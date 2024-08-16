@@ -391,6 +391,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
         for (String code : mycc) {
             ddcc.addItem(code);
         }
+        ddcc.setSelectedItem(OVData.getDefaultCC());
       
        isLoad = false;
     }
@@ -956,6 +957,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
         });
 
         jLabel3.setText("PO Number");
+        jLabel3.setName("lblref"); // NOI18N
 
         cbprofile.setText("Profile");
         cbprofile.addActionListener(new java.awt.event.ActionListener() {
@@ -1070,14 +1072,14 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
                             .addComponent(jLabel2)))
                     .addComponent(lbmessage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btaddprofile, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel10)
                         .addComponent(jLabel35))
                     .addComponent(dcdate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(ddvend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel36)

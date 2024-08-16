@@ -155,7 +155,7 @@
                       <Component id="lbmessage" max="32767" attributes="0"/>
                       <Component id="btaddprofile" alignment="1" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="ddsite" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -164,7 +164,7 @@
                       </Group>
                       <Component id="dcdate" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="15" max="32767" attributes="0"/>
+                  <EmptySpace type="unrelated" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="2" attributes="0">
                       <Component id="ddvend" alignment="2" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel36" alignment="2" min="-2" max="-2" attributes="0"/>
@@ -481,6 +481,7 @@
         <Component class="javax.swing.JLabel" name="jLabel3">
           <Properties>
             <Property name="text" type="java.lang.String" value="PO Number"/>
+            <Property name="name" type="java.lang.String" value="lblref" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JCheckBox" name="cbprofile">
