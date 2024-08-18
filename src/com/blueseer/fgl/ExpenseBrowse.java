@@ -114,7 +114,6 @@ public class ExpenseBrowse extends javax.swing.JPanel {
                 getGlobalColumnTag("vendor"), 
                 getGlobalColumnTag("name"), 
                 getGlobalColumnTag("reference"), 
-                getGlobalColumnTag("type"),
                 getGlobalColumnTag("duedate"), 
                 getGlobalColumnTag("amount"), 
                 getGlobalColumnTag("item"), 
@@ -124,7 +123,7 @@ public class ExpenseBrowse extends javax.swing.JPanel {
             {
                       @Override  
                       public Class getColumnClass(int col) {  
-                        if (col == 6  )       
+                        if (col == 5  )       
                             return Double.class;  
                         else return String.class;  //other columns accept String values  
                       }  
@@ -351,6 +350,13 @@ public class ExpenseBrowse extends javax.swing.JPanel {
         ddfromvend.setSelectedIndex(0);
         ddtovend.setSelectedIndex(ddfromvend.getItemCount() - 1);
         
+        ddsite.removeAllItems();
+        ArrayList<String> mylist = OVData.getSiteList();
+        for (int i = 0; i < mylist.size(); i++) {
+            ddsite.addItem(mylist.get(i));
+        }
+        ddsite.setSelectedItem(OVData.getDefaultSite());
+        
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -380,6 +386,9 @@ public class ExpenseBrowse extends javax.swing.JPanel {
         dcTo = new com.toedter.calendar.JDateChooser();
         btchart = new javax.swing.JButton();
         cbchart = new javax.swing.JCheckBox();
+        tbprint = new javax.swing.JButton();
+        ddsite = new javax.swing.JComboBox<>();
+        jLabel5 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -466,20 +475,36 @@ public class ExpenseBrowse extends javax.swing.JPanel {
             }
         });
 
+        tbprint.setText("PDF");
+        tbprint.setName("btpdf"); // NOI18N
+        tbprint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tbprintActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setText("Site");
+        jLabel5.setName("lblsite"); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(25, 25, 25)
+                .addGap(20, 20, 20)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3))
+                    .addComponent(jLabel3)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(21, 21, 21)
+                        .addComponent(jLabel2)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(ddfromvend, 0, 115, Short.MAX_VALUE)
                     .addComponent(ddtovend, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(61, 61, 61)
+                .addGap(34, 34, 34)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING))
@@ -489,6 +514,8 @@ public class ExpenseBrowse extends javax.swing.JPanel {
                     .addComponent(dcTo, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btRun)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(tbprint)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btchart)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -510,17 +537,21 @@ public class ExpenseBrowse extends javax.swing.JPanel {
                         .addComponent(btRun)
                         .addComponent(bthidechart)
                         .addComponent(btchart)
-                        .addComponent(cbchart))
+                        .addComponent(cbchart)
+                        .addComponent(tbprint)
+                        .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel5))
                     .addComponent(dcFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(ddtovend, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel3)
                         .addComponent(jLabel4))
-                    .addComponent(dcTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(dcTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 426, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 431, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -551,7 +582,7 @@ public class ExpenseBrowse extends javax.swing.JPanel {
                    
                  mymodel.setNumRows(0);
                 tablereport.setModel(mymodel);
-                tablereport.getColumnModel().getColumn(6).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
+                tablereport.getColumnModel().getColumn(5).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(OVData.getDefaultCurrency())));
                  
                  DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -567,6 +598,7 @@ public class ExpenseBrowse extends javax.swing.JPanel {
                                " and ap_effdate <= " + "'" + dfdate.format(dcTo.getDate()) + "'" +
                                " and ap_type = 'E' " +
                                " and ap_status = 'c' " +
+                               " and ap_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +
                                ";");
                                
                     while (res.next()) {
@@ -575,7 +607,6 @@ public class ExpenseBrowse extends javax.swing.JPanel {
                             res.getString("ap_vend"),
                             res.getString("vd_name"),
                             res.getString("ap_ref"),
-                            res.getString("ap_type"),
                             getDateDB(res.getString("ap_effdate")),
                             bsParseDouble(currformatDouble(res.getDouble("amt"))),
                             res.getString("vod_item"),
@@ -623,6 +654,30 @@ public class ExpenseBrowse extends javax.swing.JPanel {
         btchart.setEnabled(false);
     }//GEN-LAST:event_cbchartActionPerformed
 
+    private void tbprintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbprintActionPerformed
+
+        if (tablereport != null && mymodel.getRowCount() > 0) {
+            OVData.printJTableToJasper("Expense Report", tablereport, "genericJTableL10.jasper" );
+            /*
+            try {
+
+                DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                HashMap hm = new HashMap();
+                hm.put("REPORT_RESOURCE_BUNDLE", bsmf.MainFrame.tags);
+                File mytemplate = new File("jasper/orderbrowsesumary.jasper");
+
+                JasperPrint jasperPrint = JasperFillManager.fillReport(mytemplate.getPath(), hm, new JRTableModelDataSource(tableorder.getModel()) );
+                JasperExportManager.exportReportToPdfFile(jasperPrint,"temp/ordbrowse.pdf");
+
+                JasperViewer jasperViewer = new JasperViewer(jasperPrint, false);
+                jasperViewer.setVisible(true);
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            }
+            */
+        }
+    }//GEN-LAST:event_tbprintActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btRun;
@@ -633,16 +688,19 @@ public class ExpenseBrowse extends javax.swing.JPanel {
     private com.toedter.calendar.JDateChooser dcFrom;
     private com.toedter.calendar.JDateChooser dcTo;
     private javax.swing.JComboBox ddfromvend;
+    private javax.swing.JComboBox<String> ddsite;
     private javax.swing.JComboBox ddtovend;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel pielabel;
     private javax.swing.JTable tablereport;
+    private javax.swing.JButton tbprint;
     // End of variables declaration//GEN-END:variables
 }
