@@ -128,7 +128,7 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
          //   System.out.println("this type: " + this.type);
              switch(this.type) {
                  case "run":
-                    message = getPatch();
+                    message = getPatch("");
                     break;
                 case "update":
                     message = updateRecord(key);
@@ -549,12 +549,14 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
 	    return destFile;
 	}
     
-    public String[] getPatch() throws MalformedURLException, IOException {
+    public static String[] getPatch(String majorVersion) throws MalformedURLException, IOException {
         String[] m = new String[]{"",""};
         Path patch = null;
-        String version = OVData.getVersion();
+        if (majorVersion.isBlank()) {
+        majorVersion = OVData.getVersion();
+        }
         String url = "https://github.com/blueseerERP/blueseer/releases/download/" +
-                "v" + version + "/blueseer.patch.ver." + version + ".zip";
+                "v" + majorVersion + "/blueseer.patch.ver." + majorVersion + ".zip";
 			
         Path currentRelativePath = Paths.get("");
         String s = currentRelativePath.toAbsolutePath().toString();
