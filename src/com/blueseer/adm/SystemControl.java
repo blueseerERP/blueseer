@@ -47,6 +47,7 @@ import static com.blueseer.utl.BlueSeerUtils.timediff;
 import com.blueseer.utl.IBlueSeerc;
 import com.blueseer.utl.OVData;
 import static com.blueseer.utl.OVData.deleteNonMasterTransactionData;
+import static com.blueseer.utl.OVData.getSysMetaValue;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Window;
@@ -405,6 +406,7 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
                             " ov_smtpauthpass = " + "'" + passwd + "'" +        
                             ";");   
                     }
+                    OVData.addUpdateSysMeta("system","administration","autopatch",String.valueOf(BlueSeerUtils.boolToInt(cbautopatch.isSelected())));
                     // now do portion of sys_meta for attachments
                     // this needs to be modified for next major release to incorporate all directory assignments into sys_meta
                     // NEWRELEASEMARK
@@ -491,6 +493,9 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
                             rblocal.setSelected(true);
                         }
                     }
+                    
+                    cbautopatch.setSelected(BlueSeerUtils.ConvertStringToBool(getSysMetaValue("system","administration","autopatch")));
+                    
                     res = st.executeQuery("SELECT *  FROM  sys_meta where sysm_id = 'system' and " +
                             " sysm_type = 'sysdir' AND sysm_key = 'attachment_directory';");
                     while (res.next()) {
@@ -678,6 +683,7 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
         btclean = new javax.swing.JButton();
         btbandwidth = new javax.swing.JButton();
         btupload = new javax.swing.JButton();
+        cbautopatch = new javax.swing.JCheckBox();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -909,6 +915,8 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
             }
         });
 
+        cbautopatch.setText("AutoPatch");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -920,7 +928,8 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cbcustom)
                             .addComponent(cblogin)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cbautopatch))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
@@ -971,7 +980,8 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(tbbgimage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(tbbgimage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cbautopatch))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -1051,6 +1061,7 @@ public class SystemControl extends javax.swing.JPanel implements IBlueSeerc {
     private javax.swing.JButton btupdate;
     private javax.swing.JButton btupload;
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JCheckBox cbautopatch;
     private javax.swing.JCheckBox cbcustom;
     private javax.swing.JCheckBox cblogin;
     private javax.swing.JLabel jLabel1;

@@ -1,3 +1,4 @@
+system,administration,autopatch,0
 system,sysdir,attachment_directory,attachments
 system,sysdir,temp_directory,temp
 system,sysdir,log_directory,logs
