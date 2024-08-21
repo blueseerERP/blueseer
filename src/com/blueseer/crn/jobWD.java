@@ -28,6 +28,7 @@ package com.blueseer.crn;
 import static bsmf.MainFrame.bslog;
 import com.blueseer.adm.admData;
 import com.blueseer.adm.admData.cron_mstr;
+import static com.blueseer.utl.OVData.canReadDB;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -59,11 +60,12 @@ public class jobWD implements Job {
         Scheduler myscheduler = context.getScheduler();
         
 	String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm")); 		
-	/*			
-        JobKey key = context.getJobDetail().getKey();  
-        JobDataMap dataMap = context.getJobDetail().getJobDataMap();
-        String prog = dataMap.getString("prog");
-	*/
+	
+        // check for DB connectivity
+        if (! canReadDB()) {
+           System.out.println("cannot read DB!!!: " + this.getClass().getName() + " run time: " + now); 
+           return;
+        }
         
         
         // let's get all cron tasks that have the mod flag set and are enabled

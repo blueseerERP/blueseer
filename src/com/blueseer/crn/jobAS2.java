@@ -29,6 +29,7 @@ import static bsmf.MainFrame.bslog;
 import com.blueseer.adm.admData;
 import com.blueseer.edi.apiUtils;
 import static com.blueseer.edi.ediData.isValidAS2id;
+import static com.blueseer.utl.OVData.canReadDB;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.KeyStoreException;
@@ -62,6 +63,13 @@ public class jobAS2 implements Job {
         
         // register last run event with cron_mstr...
         String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
+        
+        // check for DB connectivity
+        if (! canReadDB()) {
+           System.out.println("cannot read DB!!!: " + this.getClass().getName() + " run time: " + now); 
+           return;
+        }
+        
         admData.updateCronLastRun(context.getJobDetail().getKey().getName(), now);
         
         // The as2ID must be passed to this job in order to schedule push AS2 comm of this id.

@@ -7922,6 +7922,39 @@ public class OVData {
 
 }   
   
+    public static boolean canReadDB() {
+        boolean x = false; 
+        try{
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+    Statement st = con.createStatement();
+    ResultSet res = null;
+    try{
+        res = st.executeQuery("select ov_version from ov_ctrl;" );
+        while (res.next()) {
+        x = true;                    
+        }
+
+    }
+    catch (SQLException s){
+         MainFrame.bslog(s);
+    } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    return x;
+
+}   
+  
     public static String getVersion() {
     String x = "";
     try{

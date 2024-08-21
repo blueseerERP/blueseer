@@ -26,12 +26,14 @@ SOFTWARE.
 package com.blueseer.crn;
 
 
+import com.blueseer.adm.admData;
 import com.blueseer.edi.EDI;
 import static com.blueseer.edi.EDI.packageEnvelopes;
 import com.blueseer.edi.EDILoad;
 import com.blueseer.fgl.fglData;
 import com.blueseer.ord.ordData;
 import com.blueseer.utl.EDData;
+import static com.blueseer.utl.OVData.canReadDB;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -52,11 +54,21 @@ public class jobSys implements Job {
         
       
         String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));        
-                
+        
+        // check for DB connectivity
+        if (! canReadDB()) {
+           System.out.println("cannot read DB!!!: " + this.getClass().getName() + " run time: " + now); 
+           return;
+        }
+        
+        admData.updateCronLastRun(context.getJobDetail().getKey().getName(), now);
+        
         JobDataMap dataMap = context.getJobDetail().getJobDataMap();
         String param = dataMap.getString("param");
         System.out.println("jobSys firing system method: " + param + " run time: " + now);
-                
+        
+        
+        
         switch (param) {
             case "postgl":  {
                 fglData.PostGL();

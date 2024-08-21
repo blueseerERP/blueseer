@@ -27,6 +27,8 @@ package com.blueseer.crn;
 
 
 import static bsmf.MainFrame.bslog;
+import com.blueseer.adm.admData;
+import static com.blueseer.utl.OVData.canReadDB;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -49,6 +51,14 @@ public class jobBch implements Job {
       
     String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));        
                 
+    // check for DB connectivity
+        if (! canReadDB()) {
+           System.out.println("cannot read DB!!!: " + this.getClass().getName()  + " run time: " + now); 
+           return;
+        }
+        
+        admData.updateCronLastRun(context.getJobDetail().getKey().getName(), now);
+    
     JobDataMap dataMap = context.getJobDetail().getJobDataMap();
     String param = dataMap.getString("param");
     System.out.println("jobBch firing system method: " + param + " run time: " + now);

@@ -31,6 +31,7 @@ import com.blueseer.edi.apiUtils;
 import static com.blueseer.edi.ediData.isFTPidEnabled;
 import static com.blueseer.edi.ediData.isValidAS2id;
 import static com.blueseer.edi.ediData.isValidFTPid;
+import static com.blueseer.utl.OVData.canReadDB;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.KeyStoreException;
@@ -64,6 +65,14 @@ public class jobFTP implements Job {
         
         // register last run event with cron_mstr...
         String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
+        
+        // check for DB connectivity
+        if (! canReadDB()) {
+           System.out.println("cannot read DB!!!: " + this.getClass().getName() +  " run time: " + now); 
+           return;
+        }
+        
+        
         admData.updateCronLastRun(context.getJobDetail().getKey().getName(), now);
         
         // The ftpID must be passed to this job in order to schedule push FTP comm of this id.

@@ -26,7 +26,9 @@ SOFTWARE.
 package com.blueseer.crn;
 
 
+import com.blueseer.adm.admData;
 import com.blueseer.edi.ediData;
+import static com.blueseer.utl.OVData.canReadDB;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import org.quartz.DisallowConcurrentExecution;
@@ -47,11 +49,21 @@ public class jobWkf implements Job {
         
        
         String now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmm"));        
-                
+        
+        // check for DB connectivity
+        if (! canReadDB()) {
+           System.out.println("cannot read DB!!!: " + this.getClass().getName() + " run time: " + now); 
+           return;
+        }
+        
+        admData.updateCronLastRun(context.getJobDetail().getKey().getName(), now);
+        
         JobDataMap dataMap = context.getJobDetail().getJobDataMap();
         String param = dataMap.getString("param");
         System.out.println("jobWkf firing system method: " + param + " run time: " + now);
-                
+        
+        
+        
         ediData ed = new ediData();
         String[] r = ed.processWorkFlowID(param);
         
