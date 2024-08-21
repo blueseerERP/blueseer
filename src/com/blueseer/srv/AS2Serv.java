@@ -227,7 +227,7 @@ public class AS2Serv extends HttpServlet {
         
         // check for sender / receiver
         String sender = "";
-        String sysas2user = EDData.getAS2id();
+        String sysas2user = ""; // EDData.getAS2id();
         String receiver = "";
         String subject = "";
         String messageid = "";
@@ -268,14 +268,8 @@ public class AS2Serv extends HttpServlet {
         if (inHM.containsKey("as2-to")) {
             // set return header as opposite direction
             returnheaders.put("as2-from", inHM.get("as2-to"));
+            receiver = inHM.get("as2-to");
             elementals[1] = receiver;
-            if (inHM.get("as2-to").equals(sysas2user)) {
-              receiver = sysas2user;  
-            } else {
-              writeAS2LogStop(new String[]{"0","unknown","in","error","AS2 receiver ID unknown",now,""});
-              return createMDN("3100", elementals, returnheaders, isDebug);
-             // return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "AS2 receiver ID unknown");  
-            }
         } else {
             writeAS2LogStop(new String[]{"0","unknown","in","error","AS2 receiver ID unrecognized",now,""});
             return createMDN("3100", elementals, returnheaders, isDebug); 
@@ -290,7 +284,7 @@ public class AS2Serv extends HttpServlet {
             
             info = getAS2InfoByIDs(sender , receiver);
             if (info == null) {
-              writeAS2LogStop(new String[]{"0","unknown","in","error","AS2 sender ID unknown with keys: " + sender + "/" + receiver,now,""});  
+              writeAS2LogStop(new String[]{"0","unknown","in","error","AS2 sender / receiver unknown with keys: " + sender + "/" + receiver,now,""});  
               //return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "AS2 sender ID unknown with keys: " + sender + "/" + receiver);    
             return createMDN("3200", elementals, returnheaders, isDebug);
             } 

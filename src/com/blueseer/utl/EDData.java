@@ -2830,37 +2830,6 @@ public class EDData {
         
     }
     
-    public static String getAS2id() {
-       String mystring = "";
-        try{
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try{
-                res = st.executeQuery("select edic_as2id from edi_ctrl ;");
-               while (res.next()) {
-                   mystring = res.getString("edic_as2id");
-                }
-           }
-            catch (SQLException s) {
-                MainFrame.bslog(s);
-            } finally {
-               if (res != null) res.close();
-               if (st != null) st.close();
-               con.close();
-            }
-        }
-        catch (Exception e){
-            MainFrame.bslog(e);
-        }
-        return mystring;
-        
-    }
     
     public static String getAS2url() {
        String mystring = "";
