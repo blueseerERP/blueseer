@@ -145,6 +145,11 @@ public static void runTranslation(String[] args) {
                String archpath = inArch;
                File folder = new File(inDir);
                File[] listOfFiles = folder.listFiles();
+               if (listOfFiles == null) {
+                   System.out.println("EDILoad ERROR:  Unable to list inDir...possible DB read issue ");
+                   return;
+               }
+
                if (listOfFiles.length == 0) {
                    System.out.println("EDILoad:  No files to process");
                }
@@ -241,7 +246,6 @@ public static String[] runTranslationSingleFile(Path targetfilepath) {
     
     return m;
 }
-
 
 public static void runExport(String[] docs) {
         if (docs == null) {
