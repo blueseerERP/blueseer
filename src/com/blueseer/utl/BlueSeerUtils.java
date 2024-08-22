@@ -114,6 +114,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import org.apache.commons.io.IOUtils;
 import org.bouncycastle.util.encoders.Base64;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -2419,6 +2420,7 @@ public class BlueSeerUtils {
             BufferedReader br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
             String output = "";
             
+            
             while ((output = br.readLine()) != null) {
                 sb.append(output).append("\n");
             }
@@ -2430,6 +2432,89 @@ public class BlueSeerUtils {
         }
         
        return sb.toString();
+    }
+
+    public static byte[] sendServerPostByteR(ArrayList<String[]> hlist, String postData, byte[] b) throws MalformedURLException, IOException {
+       
+        StringBuilder sb = new StringBuilder();
+        String urlString = "";
+        if (! bsmf.MainFrame.rhost.isBlank()) {
+            urlString = "http://" + bsmf.MainFrame.rhost + ":8088/bsapi/dataServ";
+        } else {
+            urlString = "http://" + bsmf.MainFrame.ip + ":8088/bsapi/dataServ";
+        }
+        
+        HttpURLConnection conn = null;
+        
+        String user = bsmf.MainFrame.user;
+        String pass = bsmf.MainFrame.pass;
+        
+        
+       
+        
+        URL url = new URL(urlString);
+        
+        byte[] postDataBytes;
+        byte[] readDataBytes = null;
+        
+        if (b != null) {
+            postDataBytes = b;
+        } else {
+            postDataBytes = postData.getBytes("UTF-8");
+        }
+        
+        conn = (HttpURLConnection) url.openConnection();
+
+        
+        conn.setDoOutput(true);
+        conn.setConnectTimeout(10000);
+        conn.setReadTimeout(10000);
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Content-Type", "text/plain");
+        conn.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
+        
+        // Custom Headers
+        for (String[] h : hlist) {
+         conn.setRequestProperty(h[0],h[1]);
+        }
+        
+        
+             
+        // auth   
+        if (! user.isBlank() && ! pass.isBlank()) {
+        String userCredentials = new String(user + ":" + pass);
+        String basicAuth = "Basic " + Base64.toBase64String(userCredentials.getBytes());
+        conn.setRequestProperty("Authorization", basicAuth);
+        } else {
+            return readDataBytes;
+        } 
+        
+                
+        
+        
+        conn.getOutputStream().write(postDataBytes);
+               
+        
+        if (conn.getResponseCode() != 200) {
+                    sb.append(conn.getResponseCode() + ": " + conn.getResponseMessage());
+                    String output = "";
+                    BufferedReader br = new BufferedReader(new InputStreamReader((conn.getErrorStream())));
+                    while ((output = br.readLine()) != null) {
+                        sb.append(output).append("\n");
+                    }
+                    br.close(); 
+                    //throw new RuntimeException("Failed : HTTP error code : "
+                    //		+ conn.getResponseCode());
+                    
+        } else {
+             readDataBytes = IOUtils.toByteArray(conn.getInputStream());
+        }
+        
+        if (conn != null) {
+          conn.disconnect();
+        }
+        
+       return readDataBytes;
     }
 
     

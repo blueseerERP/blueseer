@@ -67,6 +67,7 @@ import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.sendServerPost;
+import static com.blueseer.utl.BlueSeerUtils.sendServerPostByteR;
 import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import com.blueseer.vdr.venData;
 import java.awt.Component;
@@ -21290,7 +21291,7 @@ return mylist;
                     arrx.add(new String[]{"id","getFileContent"});
                     arrx.add(new String[]{"filepath", cleanDirString(OVData.getSystemAttachmentDirectory()) + systype + "_" + key + "_" +filename});
                     //String rFileContent = sendServerPost(arrx, "", null);  
-                    writeFile(cleanDirString(OVData.getSystemTempDirectory()) + systype + "_" + key + "_" +filename, sendServerPost(arrx,"",null).getBytes());
+                    writeFile(cleanDirString(OVData.getSystemTempDirectory()) + systype + "_" + key + "_" +filename, sendServerPostByteR(arrx,"",null));
                    // writeFile(rFileContent, cleanDirString(OVData.getSystemTempDirectory()), systype + "_" + key + "_" + filename);
                     filepath = FileSystems.getDefault().getPath(cleanDirString(OVData.getSystemTempDirectory()) + systype + "_" + key + "_" +filename);
           } else {
