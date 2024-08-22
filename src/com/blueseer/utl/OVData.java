@@ -40,6 +40,8 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
 import com.blueseer.ctr.cusData;
+import static com.blueseer.edi.EDI.getFileContentBytes;
+import static com.blueseer.edi.EDI.writeFile;
 import com.blueseer.fgl.fglData;
 import static com.blueseer.fgl.fglData.setGLRecNbr;
 import com.blueseer.hrm.hrmData;
@@ -64,6 +66,7 @@ import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.sendServerPost;
 import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import com.blueseer.vdr.venData;
 import java.awt.Component;
@@ -21281,8 +21284,18 @@ return mylist;
         Desktop desktop = Desktop.getDesktop();
         File file = new File(filename);
         try {
-          // file = getfile("Open File", filename);  
-          Path filepath = FileSystems.getDefault().getPath(cleanDirString(OVData.getSystemAttachmentDirectory()) + systype + "_" + key + "_" +filename);
+          Path filepath = null;  
+          if (bsmf.MainFrame.remoteDB) {
+            ArrayList<String[]> arrx = new ArrayList<String[]>();
+                    arrx.add(new String[]{"id","getFileContent"});
+                    arrx.add(new String[]{"filepath", cleanDirString(OVData.getSystemAttachmentDirectory()) + systype + "_" + key + "_" +filename});
+                    String rFileContent = sendServerPost(arrx, "", null);  
+                    writeFile(rFileContent, cleanDirString(OVData.getSystemTempDirectory()), systype + "_" + key + "_" + filename);
+                    filepath = FileSystems.getDefault().getPath(cleanDirString(OVData.getSystemTempDirectory()) + systype + "_" + key + "_" +filename);
+          } else {
+           filepath = FileSystems.getDefault().getPath(cleanDirString(OVData.getSystemAttachmentDirectory()) + systype + "_" + key + "_" +filename);   
+          }
+          
           if (! Files.exists(filepath)) {
             bsmf.MainFrame.show("file does not exist at path: " + filepath.toString());
           } else {
@@ -21317,8 +21330,18 @@ return mylist;
             String Sourcefile = file.getName();
             boolean x = OVData.addSysMetaDataNoUnique(key, systype, "attachments", Sourcefile);
             if (x) {
-                Files.copy(file.toPath(), new File(cleanDirString(getSystemAttachmentDirectory()) + systype + "_" + key + "_" + Sourcefile).toPath(), StandardCopyOption.REPLACE_EXISTING);
-                bsmf.MainFrame.show(getMessageTag(1007));
+                if (bsmf.MainFrame.remoteDB) {
+                    byte[] b = getFileContentBytes(file.getAbsolutePath());
+                    ArrayList<String[]> arrx = new ArrayList<String[]>();
+                    arrx.add(new String[]{"id","uploadFile"});
+                    arrx.add(new String[]{"filepath", cleanDirString(getSystemAttachmentDirectory()) + systype + "_" + key + "_" + Sourcefile});
+                    String s = sendServerPost(arrx, "", b);
+                    bsmf.MainFrame.show(getMessageTag(1007));
+                } else {
+                    Files.copy(file.toPath(), new File(cleanDirString(getSystemAttachmentDirectory()) + systype + "_" + key + "_" + Sourcefile).toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    bsmf.MainFrame.show(getMessageTag(1007));
+                }
+                
             } else {
                 bsmf.MainFrame.show(getMessageTag(1011));
             }   
