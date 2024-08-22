@@ -7676,7 +7676,7 @@ public class OVData {
     public static String getSystemImageDirectory() {
         String myreturn = "";
         if (bsmf.MainFrame.remoteDB) { // override if execution env is server
-            return "image";
+            return "images";
         }
         try{
 
