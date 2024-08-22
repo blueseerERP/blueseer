@@ -21366,8 +21366,16 @@ return mylist;
                         + "sysm_value = " + "'" + filename + "'"
                         + " ;");
                     if (i > 0) {
+                        if (bsmf.MainFrame.remoteDB) {
+                        ArrayList<String[]> arrx = new ArrayList<String[]>();
+                        arrx.add(new String[]{"id","deleteFile"});
+                        arrx.add(new String[]{"filepath", cleanDirString(getSystemAttachmentDirectory()) + systype + "_" + key + "_" + filename});
+                        String s = sendServerPost(arrx, "", null);    
+                        } else {
                         Path filepath = FileSystems.getDefault().getPath(cleanDirString(OVData.getSystemAttachmentDirectory()) + systype + "_" + key + "_" + filename);
-                        java.nio.file.Files.deleteIfExists(filepath);
+                        java.nio.file.Files.deleteIfExists(filepath); 
+                        }
+                        
                     }
                     
                 } catch (SQLException s) {

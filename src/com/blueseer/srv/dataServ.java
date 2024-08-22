@@ -33,8 +33,10 @@ import static bsmf.MainFrame.ds;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.edi.EDI.deleteFile;
 import static com.blueseer.edi.EDI.fileExists;
 import static com.blueseer.edi.EDI.getFileContent;
+import static com.blueseer.edi.EDI.getFileContentBytes;
 import static com.blueseer.edi.EDI.getFilesOfDir;
 import static com.blueseer.edi.EDI.runEDI;
 import static com.blueseer.edi.EDI.runEDIsingle;
@@ -199,7 +201,9 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
                   response.getWriter().println(getFilesOfDir(dir)); 
                 } else if (id.equals("getFileContent")) { 
                   String filepath = request.getHeader("filepath");
-                  response.getWriter().println(getFileContent(filepath)); 
+                  response.setContentType("application/octet-stream");
+                  response.getOutputStream().write(getFileContentBytes(filepath));
+                 // response.getWriter().println(getFileContent(filepath)); 
                 } else if (id.equals("getAsciiDumpPGPKey")) { 
                   String pksid = request.getHeader("pksid");
                   String pkstype = request.getHeader("pkstype");
@@ -268,7 +272,10 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
                 } else if (id.equals("uploadFile")) { 
                   String filepath = request.getHeader("filepath");
                   response.getWriter().println(writeFile(filepath, IOUtils.toByteArray(body)));  
-                  } else if (id.equals("uploadFileExists")) { 
+                } else if (id.equals("deleteFile")) { 
+                  String filepath = request.getHeader("filepath");
+                  response.getWriter().println(deleteFile(filepath));   
+                } else if (id.equals("uploadFileExists")) { 
                   String filepath = request.getHeader("filepath");
                   response.getWriter().println(fileExists(filepath));   
                 } else {

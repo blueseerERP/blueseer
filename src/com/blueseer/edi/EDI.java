@@ -4740,6 +4740,16 @@ public class EDI {
             return "";
     }
     
+    public static String deleteFile(String filepathstr) {
+        Path filepath = FileSystems.getDefault().getPath(filepathstr);
+        try {
+            java.nio.file.Files.deleteIfExists(filepath);
+            return "file deleted";
+        } catch (IOException ex) {
+            return "unable to delete file";
+        }
+    }
+    
     public static void uploadFile(Component comp, String todir) {
         JFileChooser jfc = new JFileChooser(FileSystems.getDefault().getPath("").toFile());
         jfc.setFileSelectionMode(JFileChooser.FILES_ONLY);
