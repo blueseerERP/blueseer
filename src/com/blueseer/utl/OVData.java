@@ -21289,8 +21289,9 @@ return mylist;
             ArrayList<String[]> arrx = new ArrayList<String[]>();
                     arrx.add(new String[]{"id","getFileContent"});
                     arrx.add(new String[]{"filepath", cleanDirString(OVData.getSystemAttachmentDirectory()) + systype + "_" + key + "_" +filename});
-                    String rFileContent = sendServerPost(arrx, "", null);  
-                    writeFile(rFileContent, cleanDirString(OVData.getSystemTempDirectory()), systype + "_" + key + "_" + filename);
+                    //String rFileContent = sendServerPost(arrx, "", null);  
+                    writeFile(cleanDirString(OVData.getSystemTempDirectory()) + systype + "_" + key + "_" +filename, sendServerPost(arrx,"",null).getBytes());
+                   // writeFile(rFileContent, cleanDirString(OVData.getSystemTempDirectory()), systype + "_" + key + "_" + filename);
                     filepath = FileSystems.getDefault().getPath(cleanDirString(OVData.getSystemTempDirectory()) + systype + "_" + key + "_" +filename);
           } else {
            filepath = FileSystems.getDefault().getPath(cleanDirString(OVData.getSystemAttachmentDirectory()) + systype + "_" + key + "_" +filename);   
