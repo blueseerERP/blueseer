@@ -31,6 +31,12 @@ import static bsmf.MainFrame.db;
 import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.adm.admData.getOVMstr;
+import com.blueseer.adm.admData.ov_mstr;
+import static com.blueseer.edi.EDI.uploadFile;
+import com.blueseer.ord.ordData;
+import static com.blueseer.ord.ordData.getOrderMstrSet;
+import static com.blueseer.utl.BlueSeerUtils.timediff;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataOutputStream;
@@ -47,6 +53,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -75,7 +82,7 @@ public class test extends javax.swing.JPanel {
         initComponents();
     }
 
-    public void initvars() {
+    public void initvars(String[] arg) {
         
     }
     /**
@@ -91,7 +98,8 @@ public class test extends javax.swing.JPanel {
         btlabelprint = new javax.swing.JButton();
         testmail = new javax.swing.JButton();
         btjobticket = new javax.swing.JButton();
-        btautoclock = new javax.swing.JButton();
+        btupload = new javax.swing.JButton();
+        btbandwidth = new javax.swing.JButton();
 
         btjasper.setText("jasper");
         btjasper.addActionListener(new java.awt.event.ActionListener() {
@@ -121,10 +129,17 @@ public class test extends javax.swing.JPanel {
             }
         });
 
-        btautoclock.setText("AutoClock");
-        btautoclock.addActionListener(new java.awt.event.ActionListener() {
+        btupload.setText("Upload");
+        btupload.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btautoclockActionPerformed(evt);
+                btuploadActionPerformed(evt);
+            }
+        });
+
+        btbandwidth.setText("BandWidth");
+        btbandwidth.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btbandwidthActionPerformed(evt);
             }
         });
 
@@ -138,28 +153,38 @@ public class test extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btlabelprint)
-                            .addComponent(btjasper)
-                            .addComponent(btjobticket))
-                        .addContainerGap(148, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btjasper)
+                                .addGap(46, 46, 46)
+                                .addComponent(btupload)))
+                        .addContainerGap(69, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btautoclock)
-                            .addComponent(testmail))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addComponent(testmail)
+                        .addGap(0, 174, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btjobticket)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btbandwidth)
+                        .addGap(22, 22, 22))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(39, 39, 39)
-                .addComponent(btautoclock)
-                .addGap(18, 18, 18)
+                .addGap(80, 80, 80)
                 .addComponent(testmail)
                 .addGap(18, 18, 18)
-                .addComponent(btjasper)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btjasper)
+                    .addComponent(btupload))
                 .addGap(18, 18, 18)
                 .addComponent(btlabelprint)
-                .addGap(18, 18, 18)
-                .addComponent(btjobticket)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(btjobticket))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(btbandwidth)))
                 .addContainerGap(45, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -293,17 +318,29 @@ MainFrame.bslog(e);
 
     }//GEN-LAST:event_btjobticketActionPerformed
 
-    private void btautoclockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btautoclockActionPerformed
-        OVData.autoclock(-7);
-        bsmf.MainFrame.show("clock complete");
-    }//GEN-LAST:event_btautoclockActionPerformed
+    private void btuploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btuploadActionPerformed
+        uploadFile(this, "temp/");
+    }//GEN-LAST:event_btuploadActionPerformed
+
+    private void btbandwidthActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbandwidthActionPerformed
+        String small = bsmf.MainFrame.input("Enter small sales order key: ");
+        String large = bsmf.MainFrame.input("Enter large sales order key: ");
+        LocalDateTime start = LocalDateTime.now();
+        ordData.salesOrder z = getOrderMstrSet(new String[]{small});
+        System.out.println("SO small: " + timediff(start));
+        ordData.salesOrder y = getOrderMstrSet(new String[]{large});
+        System.out.println("SO large: " + timediff(start));
+        ov_mstr ov = getOVMstr(new String[]{""});
+        System.out.println("DEF main: " + timediff(start));
+    }//GEN-LAST:event_btbandwidthActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btautoclock;
+    private javax.swing.JButton btbandwidth;
     private javax.swing.JButton btjasper;
     private javax.swing.JButton btjobticket;
     private javax.swing.JButton btlabelprint;
+    private javax.swing.JButton btupload;
     private javax.swing.JButton testmail;
     // End of variables declaration//GEN-END:variables
 }
