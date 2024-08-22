@@ -102,6 +102,7 @@ import static java.nio.file.Files.copy;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -4735,6 +4736,9 @@ public class EDI {
             if (b != null && filepath != null && ! filepath.isBlank()) {
                 try (FileOutputStream  outputfile = new FileOutputStream(filepath)) {
                     outputfile.write(b);
+                }
+                if (Files.exists(FileSystems.getDefault().getPath(filepath))) {
+                    Files.setPosixFilePermissions(FileSystems.getDefault().getPath(filepath), PosixFilePermissions.fromString("rw-rw-rw-"));
                 }
             }
             return "";
