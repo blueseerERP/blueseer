@@ -2,6 +2,15 @@
 
 if exist .update set /P PATCH=<.update
 
+set "ARGS=%*"
+
+if exist .bspem (
+set "ARGS=%ARGS% -sshkey"
+)
+
+
+@echo "using args: %ARGS%"
+
 set PATCHDIR="%~dp0\patches\%PATCH%"
 
 if exist .update (
@@ -11,7 +20,11 @@ call :patchInstall
 )
 
 cd %~dp0
-start jre17\bin\javaw -D"java.util.logging.config.file=bslogging.properties" -cp "custom\*;dist\*" bsmf.MainFrame
+IF "%1"=="-debug" (
+jre17\bin\java -D"java.util.logging.config.file=bslogging.properties" -cp "custom\*;dist\*" bsmf.MainFrame %ARGS%
+) else (
+start jre17\bin\javaw -D"java.util.logging.config.file=bslogging.properties" -cp "custom\*;dist\*" bsmf.MainFrame %ARGS%
+)
 
 goto :eof
 
