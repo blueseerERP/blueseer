@@ -36,6 +36,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -67,7 +68,7 @@ public class wfUtils {
      ArrayList<String[]> trafficarray = new ArrayList<String[]>();
      File tf = new File(tffile);
      if(tf.exists()) {
-          FileReader reader = new FileReader(tf);
+          FileReader reader = new FileReader(tf, StandardCharsets.UTF_8);
           BufferedReader br = new BufferedReader(reader);
           String line;
           while ((line = br.readLine()) != null) {
@@ -191,7 +192,7 @@ return r;
      ArrayList<String[]> trafficarray = new ArrayList<String[]>();
      File tf = new File(tffile);
      if(tf.exists()) {
-          FileReader reader = new FileReader(tf);
+          FileReader reader = new FileReader(tf, StandardCharsets.UTF_8);
           BufferedReader br = new BufferedReader(reader);
           String line = "";
           while ((line = br.readLine()) != null) {
@@ -357,7 +358,7 @@ return r;
      ArrayList<String[]> trafficarray = new ArrayList<String[]>();
      File tf = new File(tffile);
      if(tf.exists()) {
-          FileReader reader = new FileReader(tf);
+          FileReader reader = new FileReader(tf, StandardCharsets.UTF_8);
           BufferedReader br = new BufferedReader(reader);
           String line = "";
           while ((line = br.readLine()) != null) {

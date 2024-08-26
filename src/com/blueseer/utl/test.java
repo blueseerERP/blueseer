@@ -48,6 +48,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -230,7 +231,7 @@ int ZPLPrinterPort =9100;
   //          FileOutputStream fos = new FileOutputStream("10.17.4.99");
  //           PrintStream ps = new PrintStream(fos);
 
-BufferedReader fsr = new BufferedReader(new FileReader(new File("zebra/address.prn")));
+BufferedReader fsr = new BufferedReader(new FileReader(new File("zebra/address.prn"), StandardCharsets.UTF_8));
 String line = "";
 String concatline = "";
 while ((line = fsr.readLine()) != null) {

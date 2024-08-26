@@ -663,7 +663,7 @@ if(f.exists() && !f.isDirectory()) {
       String[] x = addLabelMstr(createRecord()); 
     
     
-BufferedReader fsr = new BufferedReader(new FileReader(f));
+BufferedReader fsr = new BufferedReader(new FileReader(f, StandardCharsets.UTF_8));
 String line = "";
 String concatline = "";
 

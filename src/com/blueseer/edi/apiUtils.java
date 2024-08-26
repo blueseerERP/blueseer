@@ -1109,7 +1109,7 @@ public class apiUtils {
     
     public static PrivateKey readPrivateKeyFromPem(File file) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException, NoSuchProviderException {
     KeyFactory factory = KeyFactory.getInstance("RSA");
-    try (FileReader keyReader = new FileReader(file);
+    try (FileReader keyReader = new FileReader(file, StandardCharsets.UTF_8);
       PemReader pemReader = new PemReader(keyReader)) {
         PemObject pemObject = pemReader.readPemObject();
         byte[] content = pemObject.getContent();
@@ -1120,7 +1120,7 @@ public class apiUtils {
 }
     
     public static X509Certificate readPublicKeyFromPem(File file) throws IOException {
-    try (FileReader keyReader = new FileReader(file)) {
+    try (FileReader keyReader = new FileReader(file, StandardCharsets.UTF_8)) {
         PEMParser pemParser = new PEMParser(keyReader);
         JcaPEMKeyConverter converter = new JcaPEMKeyConverter();
         SubjectPublicKeyInfo publicKeyInfo = SubjectPublicKeyInfo.getInstance(pemParser.readObject());

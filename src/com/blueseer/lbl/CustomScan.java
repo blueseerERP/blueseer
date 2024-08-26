@@ -454,7 +454,7 @@ String sitecitystatezip = "";
   //          FileOutputStream fos = new FileOutputStream("10.17.4.99");
  //           PrintStream ps = new PrintStream(fos);
 
-BufferedReader fsr = new BufferedReader(new FileReader(new File("zebra/nitride.prn")));
+BufferedReader fsr = new BufferedReader(new FileReader(new File("zebra/item.prn")));
 String line = "";
 String concatline = "";
 

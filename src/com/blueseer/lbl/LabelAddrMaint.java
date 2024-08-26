@@ -391,7 +391,7 @@ String sitecitystatezip = "";
             try {
             Path template = checkForCustomPath(getSystemLabelDirectory(), "address.prn");
              
-            BufferedReader fsr = new BufferedReader(new FileReader(template.toFile()));
+            BufferedReader fsr = new BufferedReader(new FileReader(template.toFile(), StandardCharsets.UTF_8));
             String line = "";
             String concatline = "";
             while ((line = fsr.readLine()) != null) {

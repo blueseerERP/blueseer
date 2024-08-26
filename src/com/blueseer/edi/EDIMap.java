@@ -1057,7 +1057,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         }
         ISF = list;
     }
-         
+    /*     
     public static Map<String, HashMap<String, String>> readIMD(String isf, ArrayList<String> doc) throws IOException {
 	        Map<String, HashMap<String, String>> hm = new LinkedHashMap<String, HashMap<String, String>>();
 	        HashMap<String, String> data = new LinkedHashMap<String, String>();
@@ -1065,7 +1065,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
                 List<String[]> list = new ArrayList<String[]>();
 	        Set<String> set = new LinkedHashSet<String>();
 	        File cf = new File(isf);
-	    	BufferedReader reader =  new BufferedReader(new FileReader(cf)); 
+	    	BufferedReader reader =  new BufferedReader(new FileReader(cf,StandardCharsets.UTF_8)); 
 			String line;
 			while ((line = reader.readLine()) != null) {
 				if (! line.isEmpty()) {
@@ -1101,7 +1101,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
 			
 	        return hm;
 	    }
-     
+    */ 
     public static String[] splitFFSegment(String segment) {
          boolean inside = false;
          int start = 0;

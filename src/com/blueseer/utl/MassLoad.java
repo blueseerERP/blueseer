@@ -48,6 +48,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.sql.DriverManager;
@@ -389,7 +390,7 @@ public class MassLoad extends javax.swing.JPanel {
             boolean temp = true;
             ArrayList<String> checklist = defineItemMaster();
             ArrayList<String> list = new ArrayList<String>();
-            BufferedReader fsr = new BufferedReader(new FileReader(myfile));
+            BufferedReader fsr = new BufferedReader(new FileReader(myfile, StandardCharsets.UTF_8));
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
@@ -502,7 +503,7 @@ public class MassLoad extends javax.swing.JPanel {
             boolean temp = true;
             ArrayList<String> checklist = defineBOMMaster();
             ArrayList<String> list = new ArrayList<String>();
-            BufferedReader fsr = new BufferedReader(new FileReader(myfile));
+            BufferedReader fsr = new BufferedReader(new FileReader(myfile, StandardCharsets.UTF_8));
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
@@ -593,7 +594,7 @@ public class MassLoad extends javax.swing.JPanel {
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
-            BufferedReader fsr = new BufferedReader(new FileReader(myfile));
+            BufferedReader fsr = new BufferedReader(new FileReader(myfile, StandardCharsets.UTF_8));
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
@@ -676,7 +677,7 @@ public class MassLoad extends javax.swing.JPanel {
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
-            BufferedReader fsr = new BufferedReader(new FileReader(myfile));
+            BufferedReader fsr = new BufferedReader(new FileReader(myfile, StandardCharsets.UTF_8));
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
@@ -784,7 +785,7 @@ public class MassLoad extends javax.swing.JPanel {
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
-            BufferedReader fsr = new BufferedReader(new FileReader(myfile));
+            BufferedReader fsr = new BufferedReader(new FileReader(myfile, StandardCharsets.UTF_8));
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
@@ -878,7 +879,7 @@ public class MassLoad extends javax.swing.JPanel {
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
             ArrayList<String> checklist = defineCarrier();
-            BufferedReader fsr = new BufferedReader(new FileReader(myfile));
+            BufferedReader fsr = new BufferedReader(new FileReader(myfile, StandardCharsets.UTF_8));
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
@@ -956,7 +957,7 @@ public class MassLoad extends javax.swing.JPanel {
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
-            BufferedReader fsr = new BufferedReader(new FileReader(myfile));
+            BufferedReader fsr = new BufferedReader(new FileReader(myfile, StandardCharsets.UTF_8));
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
@@ -1047,7 +1048,7 @@ public class MassLoad extends javax.swing.JPanel {
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
-            BufferedReader fsr = new BufferedReader(new FileReader(myfile));
+            BufferedReader fsr = new BufferedReader(new FileReader(myfile, StandardCharsets.UTF_8));
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
@@ -1144,7 +1145,7 @@ public class MassLoad extends javax.swing.JPanel {
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
-            BufferedReader fsr = new BufferedReader(new FileReader(myfile));
+            BufferedReader fsr = new BufferedReader(new FileReader(myfile, StandardCharsets.UTF_8));
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
@@ -1249,7 +1250,7 @@ public class MassLoad extends javax.swing.JPanel {
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
-            BufferedReader fsr = new BufferedReader(new FileReader(myfile));
+            BufferedReader fsr = new BufferedReader(new FileReader(myfile, StandardCharsets.UTF_8));
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
@@ -1381,7 +1382,7 @@ public class MassLoad extends javax.swing.JPanel {
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
-            BufferedReader fsr = new BufferedReader(new FileReader(myfile));
+            BufferedReader fsr = new BufferedReader(new FileReader(myfile, StandardCharsets.UTF_8));
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
@@ -1494,7 +1495,7 @@ public class MassLoad extends javax.swing.JPanel {
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
-            BufferedReader fsr = new BufferedReader(new FileReader(myfile));
+            BufferedReader fsr = new BufferedReader(new FileReader(myfile, StandardCharsets.UTF_8));
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
@@ -1599,7 +1600,7 @@ public class MassLoad extends javax.swing.JPanel {
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
-            BufferedReader fsr = new BufferedReader(new FileReader(myfile));
+            BufferedReader fsr = new BufferedReader(new FileReader(myfile, StandardCharsets.UTF_8));
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
@@ -1738,7 +1739,7 @@ public class MassLoad extends javax.swing.JPanel {
             boolean temp = true;
             ArrayList<String> checklist = defineVendMstr();
             ArrayList<String> list = new ArrayList<String>();
-            BufferedReader fsr = new BufferedReader(new FileReader(myfile));
+            BufferedReader fsr = new BufferedReader(new FileReader(myfile, StandardCharsets.UTF_8));
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
@@ -1884,7 +1885,7 @@ public class MassLoad extends javax.swing.JPanel {
             boolean temp = true;
             ArrayList<String> checklist = defineCustMstr();
             ArrayList<String> list = new ArrayList<String>();
-            BufferedReader fsr = new BufferedReader(new FileReader(myfile));
+            BufferedReader fsr = new BufferedReader(new FileReader(myfile, StandardCharsets.UTF_8));
             String line = "";
             int i = 0;
             
@@ -2003,7 +2004,7 @@ public class MassLoad extends javax.swing.JPanel {
             boolean temp = true;
             ArrayList<String> checklist = defineCustShipToMstr();
             ArrayList<String> list = new ArrayList<String>();
-            BufferedReader fsr = new BufferedReader(new FileReader(myfile));
+            BufferedReader fsr = new BufferedReader(new FileReader(myfile, StandardCharsets.UTF_8));
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
@@ -2107,7 +2108,7 @@ public class MassLoad extends javax.swing.JPanel {
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
-            BufferedReader fsr = new BufferedReader(new FileReader(myfile));
+            BufferedReader fsr = new BufferedReader(new FileReader(myfile, StandardCharsets.UTF_8));
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
@@ -2213,7 +2214,7 @@ public class MassLoad extends javax.swing.JPanel {
             boolean proceed = true;
             boolean temp = true;
             ArrayList<String> list = new ArrayList<String>();
-            BufferedReader fsr = new BufferedReader(new FileReader(myfile));
+            BufferedReader fsr = new BufferedReader(new FileReader(myfile, StandardCharsets.UTF_8));
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
@@ -2373,7 +2374,7 @@ public class MassLoad extends javax.swing.JPanel {
             ArrayList<String> checklist = defineShopifyOrderCSV();
             ArrayList<String> list = new ArrayList<String>();
             
-            BufferedReader fsr = new BufferedReader(new FileReader(myfile));
+            BufferedReader fsr = new BufferedReader(new FileReader(myfile, StandardCharsets.UTF_8));
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
@@ -2550,7 +2551,7 @@ public class MassLoad extends javax.swing.JPanel {
             ArrayList<String> checklist = defineShopifyFulfillmentCSV();
             ArrayList<String> list = new ArrayList<String>();
             
-            BufferedReader fsr = new BufferedReader(new FileReader(myfile));
+            BufferedReader fsr = new BufferedReader(new FileReader(myfile, StandardCharsets.UTF_8));
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {
@@ -2589,7 +2590,7 @@ public class MassLoad extends javax.swing.JPanel {
     public void processSQLCode (File myfile) throws FileNotFoundException, IOException {
             String[] m = new String[2];
             ArrayList<String> list = new ArrayList<String>();
-            BufferedReader fsr = new BufferedReader(new FileReader(myfile));
+            BufferedReader fsr = new BufferedReader(new FileReader(myfile, StandardCharsets.UTF_8));
             String line = "";
             while ((line = fsr.readLine()) != null) {
                 tacomments.append(line);
@@ -2640,7 +2641,7 @@ public class MassLoad extends javax.swing.JPanel {
             boolean temp = true;
             tacomments.setText("");
             ArrayList<String> list = new ArrayList<String>();
-            BufferedReader fsr = new BufferedReader(new FileReader(myfile));
+            BufferedReader fsr = new BufferedReader(new FileReader(myfile, StandardCharsets.UTF_8));
             String line = "";
             int i = 0;
             while ((line = fsr.readLine()) != null) {

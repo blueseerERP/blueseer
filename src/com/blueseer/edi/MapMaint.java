@@ -3071,17 +3071,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
         // BufferedReader f = null;
          char[] cbuf  = tainput.getText().toCharArray();
          
-         /*
-         try {
-         f = new BufferedReader(new FileReader(infile));
-         cbuf = new char[(int) infile.length()];
-         f.read(cbuf); 
-         } catch (IOException ex) {
-             tasource.setText(ex.toString());
-             return;
-         }
-       
-         */
+        
         // beginning of needs revamping 
     //    String[] editype = getEDIType(cbuf, "testdata");
         String[] editype = new String[]{ddinfiletype.getSelectedItem().toString(),ddindoctype.getSelectedItem().toString()};

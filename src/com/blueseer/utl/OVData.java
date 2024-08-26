@@ -17940,7 +17940,7 @@ return mystring;
         
         Path template = checkForCustomPath(getSystemLabelDirectory(), "item.prn");       
                 
-        BufferedReader fsr = new BufferedReader(new FileReader(template.toFile()));
+        BufferedReader fsr = new BufferedReader(new FileReader(template.toFile(), StandardCharsets.UTF_8));
         String line = "";
         String concatline = "";
 

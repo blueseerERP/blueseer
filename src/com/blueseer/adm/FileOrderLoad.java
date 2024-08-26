@@ -41,6 +41,7 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -204,7 +205,7 @@ public class FileOrderLoad extends javax.swing.JPanel {
             
             //FileUtils.copyDirectoryToDirectory(srcDir, destDir);
             
-            BufferedReader fsr = new BufferedReader(new FileReader(srcDir));
+            BufferedReader fsr = new BufferedReader(new FileReader(srcDir, StandardCharsets.UTF_8));
             String line = "";
             boolean proceed = true;
             while ((line = fsr.readLine()) != null) {

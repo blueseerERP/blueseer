@@ -910,7 +910,7 @@ public class EDI {
         String[] c = null;  // control values to pass to map and log
         File file = new File(infile);
         // need to research removing ^M characters here with possible solution...replaceAll("\\r$", "");
-        BufferedReader f = new BufferedReader(new FileReader(file));
+        BufferedReader f = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8));
          char[] cbuf = new char[(int) file.length()];
          int max = cbuf.length;
          f.read(cbuf); 
@@ -3157,7 +3157,7 @@ public class EDI {
         ArrayList<String> envelopes = new ArrayList<String>();
         
          StringBuilder contents = new StringBuilder();
-         BufferedReader f = new BufferedReader(new FileReader(file));
+         BufferedReader f = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8));
          String text = "";
          while ((text = f.readLine()) != null) {
          contents.append(text).append("&");

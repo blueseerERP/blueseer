@@ -49,6 +49,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.MalformedInputException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -565,7 +566,7 @@ public class EDIUtilities extends javax.swing.JPanel {
         // executeTask(ddtable.getSelectedItem().toString(), null, "");
         if (file != null && file.exists()) {
                 try {  
-                    BufferedReader f = new BufferedReader(new FileReader(file));
+                    BufferedReader f = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8));
                      char[] cbuf = new char[(int) file.length()];
                      f.read(cbuf); 
                      f.close();
@@ -707,7 +708,7 @@ public class EDIUtilities extends javax.swing.JPanel {
         // executeTask(ddtable.getSelectedItem().toString(), null, "");
         if (file != null && file.exists()) {
                 try {  
-                    BufferedReader f = new BufferedReader(new FileReader(file));
+                    BufferedReader f = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8));
                      char[] cbuf = new char[(int) file.length()];
                      f.read(cbuf); 
                      f.close();
@@ -848,7 +849,7 @@ public class EDIUtilities extends javax.swing.JPanel {
         // executeTask(ddtable.getSelectedItem().toString(), null, "");
         if (file != null && file.exists()) {
                 try {  
-                    BufferedReader f = new BufferedReader(new FileReader(file));
+                    BufferedReader f = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8));
                      char[] cbuf = new char[(int) file.length()];
                      f.read(cbuf); 
                      f.close();

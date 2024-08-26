@@ -33,6 +33,7 @@ import static bsmf.MainFrame.tags;
 import static com.blueseer.adm.admData.runFTPClient;
 import static com.blueseer.utl.BlueSeerUtils.isParsableToInt;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -355,7 +356,7 @@ public static void main(String args[]) throws IOException {
      ArrayList<String[]> trafficarray = new ArrayList<String[]>();
      File tf = new File(map);
      if(tf.exists()) {
-          FileReader reader = new FileReader(tf);
+          FileReader reader = new FileReader(tf,StandardCharsets.UTF_8);
           BufferedReader br = new BufferedReader(reader);
           String line = "";
           while ((line = br.readLine()) != null) {
@@ -451,7 +452,7 @@ public static void main(String args[]) throws IOException {
      ArrayList<String[]> trafficarray = new ArrayList<String[]>();
      File tf = new File(map);
      if(tf.exists()) {
-          FileReader reader = new FileReader(tf);
+          FileReader reader = new FileReader(tf,StandardCharsets.UTF_8);
           BufferedReader br = new BufferedReader(reader);
           String line = "";
           while ((line = br.readLine()) != null) {
