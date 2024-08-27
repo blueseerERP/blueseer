@@ -121,6 +121,7 @@ public class BOMMaint extends javax.swing.JPanel {
                 boolean newbomid = false;
                 public static bom_mstr x = null;
                 ArrayList<String[]> initdata = new ArrayList<String[]>();
+                ArrayList<Double> currentcost = new ArrayList<Double>();
                 
      javax.swing.table.DefaultTableModel matlmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                     new String[]{
@@ -540,6 +541,7 @@ public class BOMMaint extends javax.swing.JPanel {
         initdata = invData.getBOMInit(key[0], site);
         
         
+        
         // lets first determine if there are any BOMs default or alternates
        // BomID = OVData.getDefaultBomID(key[0]);
         for (String[] code : initdata) {
@@ -556,9 +558,12 @@ public class BOMMaint extends javax.swing.JPanel {
         }
         
         bom_mstr z = getBOMMstr(key);
-        
+                
         x = z;     
         
+        // get current cost
+        calcCost cur = new calcCost();
+        currentcost = cur.getTotalCost(key[0], BomID);
         
         String[] message = x.m();
         
@@ -732,7 +737,8 @@ public class BOMMaint extends javax.swing.JPanel {
       ddop.removeAllItems();  
       matlmodel.setRowCount(0);
       matltable.setModel(matlmodel);
-                
+      double matlcost = 0.00;
+      
       for (String[] code : initdata) {
             if (code[0].equals("operations"))
             ddop.addItem(code[1]);
@@ -749,12 +755,15 @@ public class BOMMaint extends javax.swing.JPanel {
                                 code[5]
                             });
             }
+            if (code[0].equals("costelements")) {
+            matlcost = bsParseDouble(code[1]) + bsParseDouble(code[6]);
+            }
+            if (code[0].equals("cost")) {
+            tbparentcostSTD.setText(currformat(code[1]));
+            }
             
       }
       
-       double matlcost = 0.00;
-       calcCost cur = new calcCost();
-       matlcost = cur.getMtlCost(key);
        tbtotmaterial.setText(String.valueOf(bsFormatDouble5(matlcost)));
         
       // initial x could be blank because of no BOM....need to manually set with key  
@@ -775,7 +784,7 @@ public class BOMMaint extends javax.swing.JPanel {
          
           callSimulateCost();
          
-          getCostSets(x.bom_item());
+          getCurrentCost(x.bom_item());
           
           cbdefault.setSelected(BlueSeerUtils.ConvertStringToBool(x.bom_primary()));
           cbenabled.setSelected(BlueSeerUtils.ConvertStringToBool(x.bom_enabled()));
@@ -794,7 +803,7 @@ public class BOMMaint extends javax.swing.JPanel {
         getComponents(tbkey.getText(), tbbomid.getText());
         callSimulateCost();
         updateCurrentItemCost(tbkey.getText());
-        getCostSets(tbkey.getText().toString());
+        getCurrentCost(tbkey.getText().toString());
         setAction(x.m());
         
     }
@@ -811,25 +820,14 @@ public class BOMMaint extends javax.swing.JPanel {
         setAction(new String[]{"0","roll complete"});
     }
     
-    public void getCostSets(String parent) {
+    public void getCurrentCost(String parent) {
          
-       // tbparentcostSTD.setText(String.valueOf(bsFormatDouble5(invData.getItemCost(parent, "STANDARD", site))));
-        for (String[] code : initdata) {
-            if (code[0].equals("cost")) {
-            tbparentcostSTD.setText(currformat(code[1]));
-            }
-        }
         
-        calcCost cur = new calcCost();
-       
-        ArrayList<Double> costlist = new ArrayList<Double>();
-        costlist = cur.getTotalCost(parent, tbbomid.getText());
-        
-        
-        
+        tbparentcostCUR.setText(bsFormatDouble5(currentcost.get(0) + currentcost.get(1) + currentcost.get(2) + currentcost.get(3) + currentcost.get(4)));
+        tbtotoperational.setText(bsFormatDouble5(currentcost.get(1) + currentcost.get(2) + currentcost.get(3) + currentcost.get(4)));
+                
       //  double current = costlist.get(0) + costlist.get(1) + costlist.get(2) + costlist.get(3) + costlist.get(4);
-        tbparentcostCUR.setText(bsFormatDouble5(costlist.get(0) + costlist.get(1) + costlist.get(2) + costlist.get(3) + costlist.get(4)));
-        tbtotoperational.setText(bsFormatDouble5(costlist.get(1) + costlist.get(2) + costlist.get(3) + costlist.get(4)));
+        
      //   double standard = Double.valueOf(tbparentcostSTD.getText());
          if (! tbparentcostCUR.getText().equals(tbparentcostSTD.getText())) {
                  tbparentcostCUR.setBackground(Color.green);

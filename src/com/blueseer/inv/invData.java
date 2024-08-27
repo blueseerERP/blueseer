@@ -2935,6 +2935,23 @@ public class invData {
                     myarray.add(arr);
                 }
                 
+                res = st.executeQuery("select * from item_cost where itc_item = " + "'" + item + "'" +  " AND " 
+                            + " itc_set = " + "'" + "STANDARD" + "'" + " AND "
+                            + " itc_site = " + "'" + site + "'" + ";" );
+                while (res.next()) {
+                    String[] arr = new String[]{"costelements",
+                    res.getString("itc_mtl_low"),
+                    res.getString("itc_lbr_low"),
+                    res.getString("itc_bdn_low"),
+                    res.getString("itc_ovh_low"),
+                    res.getString("itc_out_low"),
+                    res.getString("itc_mtl_top"),
+                    res.getString("itc_lbr_top"),
+                    res.getString("itc_bdn_top"),
+                    res.getString("itc_ovh_top"),
+                    res.getString("itc_out_top")};
+                    myarray.add(arr);
+                }
 
                }
                 catch (SQLException s){
