@@ -171,7 +171,22 @@ public class calcCost {
     public ArrayList getTotalCostElements(String part, String bom) {
                   
              ArrayList mylist = new ArrayList();
-             getTotalCostRecursive(part,1,bom);
+             Connection bscon = null;
+             if (ds != null) {
+                 try {
+                     bscon = ds.getConnection();
+                 } catch (SQLException ex) {
+                     MainFrame.bslog(ex);
+                 }
+            } else {
+                 try {   
+                     bscon = DriverManager.getConnection(url + db, user, pass);
+                 } catch (SQLException ex) {
+                     MainFrame.bslog(ex);
+                 }
+            }
+           //  getTotalCostRecursive(part,1,bom);
+             _getTotalCostRecursive(part,1,bom,bscon);
             // getLbrCost(part);
           //   getBdnCost(part);
              mylist.add(lowermtlcost);

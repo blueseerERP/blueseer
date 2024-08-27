@@ -12146,7 +12146,7 @@ return myarray;
     /* stop here */
     
     public static ArrayList getOperationsByItem(String item) {
-   ArrayList myarray = new ArrayList();
+    ArrayList myarray = new ArrayList();
     try{
         Connection con = null;
         if (ds != null) {
@@ -12523,9 +12523,9 @@ return myarray;
      }
 
     public static void setStandardCosts(String site, String item) {
+        
         calcCost cur = new calcCost();
-         ArrayList<Double> costcur = new ArrayList<Double>();
-        costcur = cur.getTotalCostElements(item, ""); // assume default bom
+        ArrayList<Double> costcur = cur.getTotalCostElements(item, ""); // assume default bom
         Double totalcost = 0.00;
         for (Double d : costcur) {
            totalcost += d;
@@ -12540,59 +12540,150 @@ return myarray;
           con = DriverManager.getConnection(url + db, user, pass);  
         }
         Statement st = con.createStatement();
-            ResultSet res = null;
+        ResultSet res = null;
+        Statement st2 = con.createStatement();
+        ResultSet res2 = null;
+        
         try {
             
-            boolean proceed = true;
-
             int i = 0;
-            String perms = "";
-            double itrcost = 0.00;
-            String routing = invData.getItemRouting(item);
-            ArrayList<String> ops = OVData.getOperationsByItem(item);
+            String routing = "";
+            
             // lets do item_cost first 
-            res = st.executeQuery("SELECT itc_item FROM  item_cost where itc_item = " + "'" + item + "'" + ";");
+            res = st.executeQuery("SELECT itc_item, it_wf FROM  item_cost " +
+                    " inner join item_mstr on it_item = itc_item " +
+                    " where itc_item = " + "'" + item + "'" + ";");
                 while (res.next()) {
                     i++;
+                    routing = res.getString("it_wf");
                 }
 
-                if (i > 0) {
-                    st.executeUpdate("update item_cost set "
-                            + "itc_mtl_low = " + "'" + costcur.get(0).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + "itc_mtl_top = " + "'" + costcur.get(5).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + "itc_lbr_low = " + "'" + costcur.get(1).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + "itc_lbr_top = " + "'" + costcur.get(6).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + "itc_bdn_low = " + "'" + costcur.get(2).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + "itc_bdn_top = " + "'" + costcur.get(7).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + "itc_ovh_low = " + "'" + costcur.get(3).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + "itc_ovh_top = " + "'" + costcur.get(8).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + "itc_out_low = " + "'" + costcur.get(4).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + "itc_out_top = " + "'" + costcur.get(9).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
-                            + "itc_total = " + "'" +  totalcost.toString().replace(defaultDecimalSeparator, '.') + "'" 
-                            + " where itc_item = " + "'" + item + "'"
-                            + " AND itc_set = 'standard' "
-                            + " AND itc_site = " + "'" + site + "'"
-                            + ";");
-
-                } else {
-                    proceed = false;
+                if (i == 0) {
+                    return;
                 }
-                // ok now lets do itemr_cost ...routing based costing
-               if (proceed) { 
-                i = -1;
-                for (String op : ops) {
-                // bsmf.MainFrame.show(op);
-                i++;
-                // delete original itemr_cost records for this item, op, routing, standard
-                st.executeUpdate(" delete FROM  itemr_cost where itr_item = " + "'" + item + "'" 
-                                  /*   +  " AND itr_op = " + "'" + op + "'"  remove all ops even ones that were changed/removed by routing maint*/
-                                     + " AND itr_set = 'standard' "
-                                     + " AND itr_site = " + "'" + site + "'"
-                                     + " AND itr_routing = " + "'" + routing + "'" + ";");
+               
+                st.executeUpdate("update item_cost set "
+                        + "itc_mtl_low = " + "'" + costcur.get(0).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "itc_mtl_top = " + "'" + costcur.get(5).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "itc_lbr_low = " + "'" + costcur.get(1).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "itc_lbr_top = " + "'" + costcur.get(6).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "itc_bdn_low = " + "'" + costcur.get(2).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "itc_bdn_top = " + "'" + costcur.get(7).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "itc_ovh_low = " + "'" + costcur.get(3).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "itc_ovh_top = " + "'" + costcur.get(8).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "itc_out_low = " + "'" + costcur.get(4).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "itc_out_top = " + "'" + costcur.get(9).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
+                        + "itc_total = " + "'" +  totalcost.toString().replace(defaultDecimalSeparator, '.') + "'" 
+                        + " where itc_item = " + "'" + item + "'"
+                        + " AND itc_set = 'standard' "
+                        + " AND itc_site = " + "'" + site + "'"
+                        + ";");
 
-                }
-                 ArrayList<String> costs = new ArrayList<String>();
-                 costs = OVData.rollCost(item);
+                
+        // ok now lets do itemr_cost ...routing based costing
+        // delete original itemr_cost records for this item, op, routing, standard
+        // NOTE:   all operation records for itemr_cost for this routing are deleted
+        st.executeUpdate(" delete FROM  itemr_cost where itr_item = " + "'" + item + "'" 
+                          /*   +  " AND itr_op = " + "'" + op + "'"  remove all ops even ones that were changed/removed by routing maint*/
+                             + " AND itr_set = 'standard' "
+                             + " AND itr_site = " + "'" + site + "'"
+                             + " AND itr_routing = " + "'" + routing + "'" + ";");
+
+        // get all info necessary to create itemr_cost records        
+        ArrayList<String> costs = new ArrayList<String>(); // = OVData.rollCost(item);
+        String mystring = "";
+         Double labor = 0.0;
+         Double burden = 0.0;
+         Double material = 0.0;
+         Double ovh = 0.0;
+         Double outside = 0.0;
+         Double total = 0.0;
+         Double prevcost = 0.0;
+         Double stdopcost = 0.0;
+         String op = "";
+         String cell = "";
+         String cc = "";
+         String desc = "";
+         
+         
+        res = st.executeQuery("select it_lotsize, itr_total, wf_cell, wf_op, wc_run_crew, wf_run_hours, wf_setup_hours, " +
+            " wc_desc, wc_cc, wc_run_rate, wc_setup_rate, wc_bdn_rate " +
+            " from wf_mstr inner join item_mstr on it_wf = wf_id " + 
+            " inner join wc_mstr on wc_cell = wf_cell  " + 
+            " left outer join itemr_cost on itr_item = it_item and itr_site = it_site and itr_routing = item_mstr.it_wf and itr_op = wf_op and itr_set = 'standard' " +
+            " where it_item = " + "'" + item + "'" + 
+            " order by wf_op; " );
+           i = 0;         
+           while (res.next()) {
+               i++;
+
+               if (i == 1) {
+                   stdopcost = res.getDouble("itr_total");
+               } else {
+                   stdopcost = res.getDouble("itr_total") - prevcost;
+               }
+               prevcost = res.getDouble("itr_total");
+
+               op = res.getString("wf_op");
+               cell = res.getString("wf_cell");
+               desc = res.getString("wc_desc");
+               cc = res.getString("wc_cc");
+
+
+               material = 0.0;
+               labor = 0.0;
+               burden = 0.0;
+               if (res.getDouble("it_lotsize") == 0) {
+                labor += ( ((res.getDouble("wc_setup_rate") * res.getDouble("wf_setup_hours")) ) +
+                        (res.getDouble("wc_run_rate")) * res.getDouble("wf_run_hours") * res.getDouble("wc_run_crew"));
+                burden += ( ((res.getDouble("wc_bdn_rate") * res.getDouble("wf_setup_hours"))  ) +
+                        (res.getDouble("wc_bdn_rate") * res.getDouble("wf_run_hours") )  );
+               } else {
+                 labor += ( ((res.getDouble("wc_setup_rate") * res.getDouble("wf_setup_hours")) / res.getDouble("it_lotsize") ) +
+                         (res.getDouble("wc_run_rate") * res.getDouble("wf_run_hours") * res.getDouble("wc_run_crew") )  );
+                burden += ( ((res.getDouble("wc_bdn_rate") * res.getDouble("wf_setup_hours")) / res.getDouble("it_lotsize") ) +
+                        (res.getDouble("wc_bdn_rate") * res.getDouble("wf_run_hours") )  );  
+               }
+
+            // now do the matl for this operation
+           res2 = st2.executeQuery("select ps_qty_per, itc_total from pbm_mstr " + 
+                " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' " +
+                " inner join item_cost on ps_child = itc_item and itc_set = 'standard' " +
+                " where ps_parent = " + "'" + item + "'" +
+                " AND ps_op = " + "'" + op + "'" + ";");
+            while (res2.next()) {
+            material += ( res2.getDouble("itc_total") * res2.getDouble("ps_qty_per") );
+            //ovh += ( res2.getDouble("itc_total") * res2.getDouble("ps_qty_per") );
+            //outside += ( res2.getDouble("itc_total") * res2.getDouble("ps_qty_per") );
+           }
+            total = labor + burden + material + ovh + outside;
+           mystring = 
+                   item + "," +
+                   op + "," +
+                   cell + "," +
+                   "" + "," +   // used to be machine
+                   desc + "," +
+                   cc + "," +
+                   String.valueOf(labor) + "," + 
+                   String.valueOf(burden) + "," + 
+                   String.valueOf(material) + "," + 
+                   String.valueOf(ovh) + "," + 
+                   String.valueOf(outside) + "," +
+                   res.getString("wc_setup_rate") + "," +
+                   res.getString("wc_run_rate") + "," +
+                   res.getString("wc_bdn_rate") + "," +
+                   res.getString("wf_setup_hours") + "," +
+                   res.getString("wf_run_hours") + "," +
+                   res.getString("it_lotsize") + "," +
+                   String.valueOf(total) + "," +
+                   String.valueOf(stdopcost) + "," +
+                   totalcost.toString()
+                   ;
+           costs.add(mystring);
+
+           } 
+              
+              
 
                 for (String cost : costs) {
                  String[] elements = cost.split(",", -1);
@@ -12604,7 +12695,7 @@ return myarray;
                             + "'" + site + "'" + ","
                             + "'" + "standard" + "'" + ","
                             + "'" + routing + "'" + ","
-                            + "'" + elements[1].toString() + "'" + ","
+                            + "'" + elements[1] + "'" + ","
                             + "'" + bsformat("",elements[17].toString(),"5").replace(defaultDecimalSeparator, '.') + "'" + "," 
                             + "'" + bsformat("",elements[6].toString(),"5").replace(defaultDecimalSeparator, '.') + "'" + ","   
                             + "'" + bsformat("",elements[7].toString(),"5").replace(defaultDecimalSeparator, '.') + "'" + ","
@@ -12618,13 +12709,14 @@ return myarray;
                             + "'" + "0" + "'" + " ) ;");
                 }  
 
-               }
-        } // if proceed
-        catch (SQLException s) {
+               
+        } catch (SQLException s) {
             MainFrame.bslog(s);
         } finally {
             if (res != null) res.close();
             if (st != null) st.close();
+            if (res2 != null) res2.close();
+            if (st2 != null) st2.close();
             con.close();
         }
     } catch (Exception e) {
@@ -12632,7 +12724,7 @@ return myarray;
     }  
     }
 
-    public static ArrayList rollCost(String item) {
+public static ArrayList rollCost(String item) {
          ArrayList<String> myarray = new ArrayList<String>();
          String mystring = "";
          Double labor = 0.0;
@@ -12712,18 +12804,18 @@ return myarray;
                         (res.getDouble("wc_bdn_rate") * res.getDouble("wf_run_hours") )  );  
                }
 
-               // now do the matl for this operation
-                       res2 = st2.executeQuery("select ps_qty_per, itc_total from pbm_mstr " + 
-                            " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' " +
-                            " inner join item_cost on ps_child = itc_item and itc_set = 'standard' " +
-                            " where ps_parent = " + "'" + item + "'" +
-                            " AND ps_op = " + "'" + op + "'" + ";");
-                        while (res2.next()) {
-                        material += ( res2.getDouble("itc_total") * res2.getDouble("ps_qty_per") );
-                        //ovh += ( res2.getDouble("itc_total") * res2.getDouble("ps_qty_per") );
-                        //outside += ( res2.getDouble("itc_total") * res2.getDouble("ps_qty_per") );
-                       }
-                        total = labor + burden + material + ovh + outside;
+            // now do the matl for this operation
+           res2 = st2.executeQuery("select ps_qty_per, itc_total from pbm_mstr " + 
+                " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' " +
+                " inner join item_cost on ps_child = itc_item and itc_set = 'standard' " +
+                " where ps_parent = " + "'" + item + "'" +
+                " AND ps_op = " + "'" + op + "'" + ";");
+            while (res2.next()) {
+            material += ( res2.getDouble("itc_total") * res2.getDouble("ps_qty_per") );
+            //ovh += ( res2.getDouble("itc_total") * res2.getDouble("ps_qty_per") );
+            //outside += ( res2.getDouble("itc_total") * res2.getDouble("ps_qty_per") );
+           }
+            total = labor + burden + material + ovh + outside;
            mystring = 
                    item + "," +
                    op + "," +
@@ -12767,7 +12859,7 @@ return myarray;
          return myarray;
      }
 
-    public static Double simulateCost(String site, String item, String opvar, 
+public static Double simulateCost(String site, String item, String opvar, 
                                       double runratevar,
                                       double setupratevar,
                                       double burdenratevar,

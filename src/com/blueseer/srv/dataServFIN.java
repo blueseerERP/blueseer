@@ -165,7 +165,28 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
            }
         } 
         
-        
+        if (id.equals("setStandardCosts")) {
+           String[] keys = new String[]{
+               request.getParameter("site"), 
+               request.getParameter("item") 
+           }; 
+           
+           for (String k : keys) {
+               if (k == null) {
+                   response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                   response.getWriter().println(HttpServletResponse.SC_BAD_REQUEST + ": missing param");  
+                   return;
+               }
+           }
+           
+           String r = getAccountActivityYear(keys);
+           
+           if (r == null || r.isBlank()) {
+             response.getWriter().println("no return for: " + String.join(",",keys));   
+           } else {
+             response.getWriter().println(r);   
+           }
+        } 
         
         
     }

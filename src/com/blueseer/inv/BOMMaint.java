@@ -176,7 +176,10 @@ public class BOMMaint extends javax.swing.JPanel {
                     break;
                 case "get":
                     message = getRecord(key);    
-                    break;    
+                    break;   
+                case "run":
+                    OVData.setStandardCosts(site, parent);
+                    break; 
                 default:
                     message = new String[]{"1", "unknown action"};
             }
@@ -196,6 +199,9 @@ public class BOMMaint extends javax.swing.JPanel {
            } else if (this.type.equals("get")) {
              updateForm(this.key[0]);
              tbkey.requestFocus();
+           } else if (this.type.equals("run")) {
+             updateFormRollCost(); 
+             tbkey.requestFocus();  
            } else {
              getRecord(new String[]{this.key[0], this.key[1]});  // add and update
              updateFormAddUpdate();
@@ -793,6 +799,17 @@ public class BOMMaint extends javax.swing.JPanel {
         
     }
     
+    public void updateFormRollCost() {
+        tbparentcostSTD.setText(String.valueOf(bsFormatDouble5(invData.getItemCost(parent, "STANDARD", site))));
+        if (! tbparentcostCUR.getText().equals(tbparentcostSTD.getText())) {
+             tbparentcostCUR.setBackground(Color.green);
+             tbparentcostSTD.setBackground(Color.yellow);
+        } else {
+            tbparentcostCUR.setBackground(Color.green); 
+            tbparentcostSTD.setBackground(Color.green);
+        }
+        setAction(new String[]{"0","roll complete"});
+    }
     
     public void getCostSets(String parent) {
          
@@ -2116,8 +2133,13 @@ public class BOMMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_tbppssimFocusLost
 
     private void btrollActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrollActionPerformed
+       /*
        OVData.setStandardCosts(site, parent);
        getCostSets(parent);
+       */
+       setPanelComponentState(this, false);
+       executeTask("run", new String[]{tbkey.getText(), ""});
+       
     }//GEN-LAST:event_btrollActionPerformed
 
     private void tbqtyperFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbqtyperFocusLost
