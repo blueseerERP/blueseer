@@ -71,6 +71,7 @@ import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.BlueSeerUtils.getTitleTag;
+import static com.blueseer.utl.BlueSeerUtils.sendServerRequest;
 import java.sql.Connection;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
@@ -84,6 +85,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingWorker;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
@@ -105,6 +107,8 @@ import org.jfree.data.general.DefaultPieDataset;
  */
 public class GLAcctBalRpt3 extends javax.swing.JPanel {
  
+    public String xData = null;
+    
      String chartfilepath = OVData.getSystemTempDirectory() + "/" + "chartexpinc.jpg";
     javax.swing.table.DefaultTableModel mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
                         new String[]{"Chart", getGlobalColumnTag("account"), 
@@ -119,9 +123,42 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
                         };
                 
     
+    class Task extends SwingWorker<Void, Void> {
+       
+          String[] key = null;
+          
+          public Task(String[] key) { 
+              this.key = key;
+          }
+        
+        @Override
+        public Void doInBackground() throws Exception {
+            if (bsmf.MainFrame.remoteDB) {
+               ArrayList<String[]> list = new ArrayList<String[]>();
+               list.add(new String[]{"id","getAccountActivityYear"});
+               list.add(new String[]{"year",ddyear.getSelectedItem().toString()});
+               list.add(new String[]{"site",ddsite.getSelectedItem().toString()});
+               list.add(new String[]{"fromacct",ddacctfrom.getSelectedItem().toString()});
+               list.add(new String[]{"toacct",ddacctto.getSelectedItem().toString()});               
+               xData = sendServerRequest(list, "dataServFIN");
+            } else {
+               xData = fglData.getAccountActivityYear(key); 
+            }
+            return null;
+        }
+ 
+        /*
+         * Executed in event dispatch thread
+         */
+        public void done() {
+            BlueSeerUtils.endTask(new String[]{"0",getMessageTag(1125)});
+            enableAll();
+            updateForm();
+        }
+    }  
     
     
-       class ButtonRenderer extends JButton implements TableCellRenderer {
+    class ButtonRenderer extends JButton implements TableCellRenderer {
 
         public ButtonRenderer() {
             setOpaque(true);
@@ -322,7 +359,81 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
        }
     }
     
+     public void disableAll() {
+       
+       btRun.setEnabled(false);
+       bthidechart.setEnabled(false);
+       cbzero.setEnabled(false);
+       ddyear.setEnabled(false);
+       ddsum.setEnabled(false);
+       ddsite.setEnabled(false);
+       ddacctfrom.setEnabled(false);
+       ddacctto.setEnabled(false);
+       tablereport.setEnabled(false);
+    }
     
+    public void enableAll() {
+      btRun.setEnabled(true);
+       bthidechart.setEnabled(true);
+       cbzero.setEnabled(true);
+       ddyear.setEnabled(true);
+       ddsum.setEnabled(true);
+       ddsite.setEnabled(true);
+       ddacctfrom.setEnabled(true);
+       ddacctto.setEnabled(true);
+       tablereport.setEnabled(true); 
+    }
+    
+    public void updateForm() {
+        
+        mymodel.setNumRows(0);
+        
+        if (xData != null) {  
+        String[] arrdata = xData.split("\n", -1);
+        for (String x : arrdata) {
+            String[] s = x.split(",",-1);
+            
+            if (s.length < 8) {
+                continue;  // must be blank lines
+            }
+           
+            
+            if (cbzero.isSelected() && ( ( bsParseDouble(s[2]) +
+                       bsParseDouble(s[3]) +
+                       bsParseDouble(s[4]) +
+                       bsParseDouble(s[5]) +       
+                       bsParseDouble(s[6]) +
+                       bsParseDouble(s[7]) +       
+                       bsParseDouble(s[8]) +       
+                       bsParseDouble(s[9]) +        
+                       bsParseDouble(s[10]) +       
+                       bsParseDouble(s[11]) +       
+                       bsParseDouble(s[12]) +
+                       bsParseDouble(s[13]) ) == 0) ) {
+                     continue;
+                 }
+            
+            mymodel.addRow(new Object[]{BlueSeerUtils.clickchart, s[0],
+                                s[1],
+                                s[2],
+                                s[3],
+                                s[4],
+                                s[5],
+                                s[6],
+                                s[7],
+                                s[8],
+                                s[9],
+                                s[10],
+                                s[11],
+                                s[12],
+                                s[13]
+                             }); 
+            }
+        
+        chartExpAndInc();
+        ddsum.setSelectedIndex(0);
+        }
+    }
     
     public void initvars(String[] arg) {
         chartpanel.setVisible(false);
@@ -559,8 +670,19 @@ public class GLAcctBalRpt3 extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRunActionPerformed
-
-    // chartlabel.setVisible(false);
+    
+        String[] key = new String[]{
+      ddyear.getSelectedItem().toString(),
+      ddsite.getSelectedItem().toString(),
+      ddacctfrom.getSelectedItem().toString(),
+      ddacctto.getSelectedItem().toString()
+    };
+    BlueSeerUtils.startTask(new String[]{"",getMessageTag(1189)});
+    disableAll();
+    Task task = new Task(key);
+    task.execute();  
+    
+  /*  
 try {
             Connection con = null;
             if (ds != null) {
@@ -598,32 +720,6 @@ try {
                  String accttype = "";
                  String acctdesc = "";
                  String[] ac = null;
-                 
-                 /*
-                 String startacct = ddacctfrom.getSelectedItem().toString();
-                 String endacct = ddacctto.getSelectedItem().toString();
-                 
-                  for (int y = 1; y <= 12; y++) {
-                      
-                      res = st.executeQuery("select acb_acct, ac_desc, sum(acb_amt) as sum from acb_mstr inner join ac_mstr on ac_id = acb_acct where " +
-                    " acb_acct >= " + "'" + startacct + "'" + " AND " +
-                    " acb_acct <= " + "'" + endacct + "'" + " AND " +
-                    " acb_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + " AND " +
-                    " acb_year = " + "'" + ddyear.getSelectedItem().toString() + "'" +
-                    " AND acb_per = " + "'" + y + "'" +
-                    " group by acb_acct order by acb_acct " +
-                    ";");
-
-                    while (res.next()) {
-                        str_activity[y - 1] += res.getDouble("sum");
-                        acctid = res.getString("acb_acct");
-                        acctdesc = res.getString("ac_desc");
-                    }
-                  mymodel.addRow(new Object[] { acctid, acctdesc, str_activity[0], str_activity[1], str_activity[2], str_activity[3], str_activity[4], str_activity[5], str_activity[6], str_activity[7], str_activity[8], str_activity[9], str_activity[10], str_activity[11]});
-     
-                      
-                  }
-                 */
                  
                  
                  ACCTS:    for (String account : accounts) {
@@ -724,7 +820,7 @@ try {
         } catch (Exception e) {
             MainFrame.bslog(e);
         }
-       
+       */
     }//GEN-LAST:event_btRunActionPerformed
 
     private void tablereportMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablereportMouseClicked
@@ -746,7 +842,7 @@ try {
     }//GEN-LAST:event_tablereportMouseClicked
 
     private void bthidechartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bthidechartActionPerformed
-       chartpanel.setVisible(false);
+        chartpanel.setVisible(false);
         bthidechart.setEnabled(false);
     }//GEN-LAST:event_bthidechartActionPerformed
 

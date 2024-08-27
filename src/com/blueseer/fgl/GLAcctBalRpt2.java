@@ -218,7 +218,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
         public Void doInBackground() throws Exception {
             if (bsmf.MainFrame.remoteDB) {
                ArrayList<String[]> list = new ArrayList<String[]>();
-               list.add(new String[]{"id","1"});
+               list.add(new String[]{"id","getAccountBalanceReport"});
                list.add(new String[]{"year",ddyear.getSelectedItem().toString()});
                list.add(new String[]{"period",ddperiod.getSelectedItem().toString()});
                list.add(new String[]{"site",ddsite.getSelectedItem().toString()});
@@ -226,7 +226,7 @@ public class GLAcctBalRpt2 extends javax.swing.JPanel {
                list.add(new String[]{"intype",ddtype.getSelectedItem().toString()});
                list.add(new String[]{"fromacct",ddacctfrom.getSelectedItem().toString()});
                list.add(new String[]{"toacct",ddacctto.getSelectedItem().toString()});               
-               data = sendServerRequest(list);
+               data = sendServerRequest(list, "dataServFIN");
             } else {
                data = fglData.getAccountBalanceReport(key); 
             }

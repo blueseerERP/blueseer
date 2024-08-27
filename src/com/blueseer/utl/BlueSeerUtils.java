@@ -2278,14 +2278,14 @@ public class BlueSeerUtils {
         return filename.replace("%", "");
     }
 
-    public static String sendServerRequest(ArrayList<String[]> vlist) throws MalformedURLException, IOException {
+    public static String sendServerRequest(ArrayList<String[]> vlist, String dataClass) throws MalformedURLException, IOException {
        
         StringBuilder sb = new StringBuilder();
         String urlString = "";
         if (! bsmf.MainFrame.rhost.isBlank()) {
-            urlString = "http://" + bsmf.MainFrame.rhost + ":8088/bsapi/dataServ";
+            urlString = "http://" + bsmf.MainFrame.rhost + ":8088/bsapi/" + dataClass;
         } else {
-            urlString = "http://" + bsmf.MainFrame.ip + ":8088/bsapi/dataServ";
+            urlString = "http://" + bsmf.MainFrame.ip + ":8088/bsapi/" + dataClass;
         }
         
         HttpURLConnection conn = null;

@@ -39,6 +39,7 @@ import com.blueseer.srv.SalesOrdServ;
 import com.blueseer.srv.ShipperServ;
 import com.blueseer.srv.WorkOrdServ;
 import com.blueseer.srv.dataServ;
+import com.blueseer.srv.dataServFIN;
 import static com.blueseer.utl.BlueSeerUtils.isParsableToInt;
 import java.io.IOException;
 import java.util.Locale;
@@ -120,6 +121,7 @@ public class apiServer {
         context.addServlet(CustomerServ.class, "/CustomerList/*");
         context.addServlet(TestServlet.class, "/test/*");
         context.addServlet(dataServ.class, "/dataServ/*");
+        context.addServlet(dataServFIN.class, "/dataServFIN/*"); 
         //server.setHandler(context);
         
         

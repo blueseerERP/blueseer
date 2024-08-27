@@ -1523,6 +1523,127 @@ public class fglData {
         return sb.toString();
     }
     
+    public static String getAccountActivityYear(String[] key) {
+        // key = year, site, acctfrom, acctto
+        StringBuilder sb = new StringBuilder();
+        
+        try {
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                int qty = 0;
+                double dol = 0;
+                int i = 0;
+               
+               
+                 DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+                
+                 
+                 int year = bsParseInt(key[0]);
+                 
+                 
+                 String[] str_activity = {"","","","","","","","","","","","",""};
+                 double activity = 0.00;
+                
+                 java.sql.Date p_datestart = null;
+                 java.sql.Date p_dateend = null;
+                 
+                 ArrayList<String> accounts = fglData.getGLAcctListRangeWTypeDesc(key[2], key[3]);
+                
+                 
+                 String acctid = "";
+                 String accttype = "";
+                 String acctdesc = "";
+                 String[] ac = null;
+                 
+                 
+                 ACCTS:    for (String account : accounts) {
+                  ac = account.split(",", -1);
+                  acctid = ac[0];
+                  accttype = ac[1];
+                  acctdesc = ac[2];
+                  str_activity[0] = "";
+                  str_activity[1] = "";
+                  str_activity[2] = "";
+                  str_activity[3] = "";
+                  str_activity[4] = "";
+                  str_activity[5] = "";
+                  str_activity[6] = "";
+                  str_activity[7] = "";
+                  str_activity[8] = "";
+                  str_activity[9] = "";
+                  str_activity[10] = "";
+                  str_activity[11] = "";
+                  
+                  for (int k = 1 ; k<= 12 ; k++) {
+                  
+                  activity = 0.00;
+                   
+                  // calculate period(s) activity defined by date range 
+                  // activity += OVData.getGLAcctBalSummCC(account.toString(), String.valueOf(fromdateyear), String.valueOf(p));
+               
+                  res = st.executeQuery("select sum(acb_amt) as sum from acb_mstr where acb_year = " +
+                        "'" + String.valueOf(year) + "'" + 
+                        " AND acb_per = " +
+                        "'" + String.valueOf(k) + "'" +
+                        " AND acb_acct = " +
+                        "'" + acctid + "'" +
+                        " AND acb_site = " + "'" + key[1] + "'" +
+                        ";");
+                
+                       while (res.next()) {
+                          activity += res.getDouble(("sum"));
+                       }
+                 
+                     str_activity[k - 1] = currformatDouble(activity);
+                 
+                 
+                  } // k
+                 
+                 sb.append(acctid + "," + 
+                            acctdesc + "," + 
+                            str_activity[0] + "," + 
+                            str_activity[1] + "," + 
+                            str_activity[2] + "," + 
+                            str_activity[3] + "," + 
+                            str_activity[4] + "," + 
+                            str_activity[5] + "," + 
+                            str_activity[6] + "," + 
+                            str_activity[7] + "," + 
+                            str_activity[8] + "," + 
+                            str_activity[9] + "," + 
+                            str_activity[10] + "," + 
+                            str_activity[11]
+                            );
+                sb.append("\n");
+              
+                 } // account
+             
+               
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return sb.toString();
+    }
+    
     public static String setGLRecNbr(String type) {
            String mystring = "";
           // int nextnbr = OVData.getNextNbr("gl");

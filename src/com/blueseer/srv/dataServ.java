@@ -89,7 +89,9 @@ public class dataServ extends HttpServlet {
 @Override
 protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
-        
+
+    // doGet unused...moved to business function dataServXXX ...left as template for future use
+    
     response.setContentType("text/plain");
         
     if (! confirmServerAuth(request)) {
@@ -110,7 +112,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         response.setStatus(HttpServletResponse.SC_OK);
         
         
-        
+        // doGet unused...moved to business function dataServXXX ...left as template for future use
         if (id.equals("1")) {
            String[] keys = new String[]{
                request.getParameter("year"), 
@@ -181,14 +183,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
                     sb.append(line);
                     }
                 }
-                
-                /*
-                if (sb.toString().isBlank()) {
-                  response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                  response.getWriter().println(HttpServletResponse.SC_BAD_REQUEST + "empty payload" + "\n" + getHeaders(request));  
-                  return; 
-                }
-                */
+              
                 
                 // process specific app (id)
                 if (id.equals("runEDI")) { // run EDI engine with list of files
