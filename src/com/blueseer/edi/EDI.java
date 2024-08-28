@@ -4784,19 +4784,19 @@ public class EDI {
 
     // miscellaneous 
       public static String[] generateEnvelope(String doctype, String sndid, String rcvid, String outdoctype, String map) {
-        
+       // c[1], c[13], c[21], c[14], c[2] 
         String [] envelope = new String[10];  // will hold 7 elements.... ISA, GS, GE,IEA, filename, isactrl, gsctrl, sd, ed, ud
         
         //  * @return Array with 0=ISA, 1=ISAQUAL, 2=GS, 3=BS_ISA, 4=BS_ISA_QUAL, 5=BS_GS, 6=ELEMDELIM, 7=SEGDELIM, 8=SUBDELIM, 9=FILEPATH, 10=FILEPREFIX, 11=FILESUFFIX,
         //  * @return 12=X12VERSION, 13=SUPPCODE, 14=DIRECTION
         
         String[] defaults;
-        if (outdoctype.isBlank()) {
+        if (outdoctype.isBlank()) { // will be blank if not maptester
             defaults = EDData.getEDITPDefaultsX(doctype, sndid, rcvid, map);
         } else {
-            defaults = EDData.getEDITPDefaults(doctype, sndid, rcvid, outdoctype);
+            defaults = EDData.getEDITPDefaultsMapTester(sndid, rcvid, outdoctype);  // must be map tester
         }
-        ArrayList<String> attrs = EDData.getEDIAttributesList(doctype, sndid, rcvid); 
+        ArrayList<String> attrs = EDData.getEDIAttributesList(outdoctype, sndid, rcvid); 
         Map<String, String> attrkeys = new HashMap<String, String>();
         for (String x : attrs) {
             String[] z = x.split(":", -1);

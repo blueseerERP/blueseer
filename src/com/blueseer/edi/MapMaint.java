@@ -3247,7 +3247,7 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
             }
             
             if (ddoutdoctype.getSelectedItem() != null && ! ddoutdoctype.getSelectedItem().toString().isBlank()) {
-                c[14] = ddoutdoctype.getSelectedItem().toString(); // override use of c[13] during map testing
+                c[14] = ddoutdoctype.getSelectedItem().toString(); 
             }
         }
         c[1] = x.map_indoctype();
@@ -3722,7 +3722,8 @@ public class MapMaint extends javax.swing.JPanel implements IBlueSeerT  {
     private void cbenvelopeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbenvelopeActionPerformed
         if (cbenvelope.isSelected()) {
             ddenvelope.setEnabled(true);
-            ArrayList<String> gsids = EDData.getEDISenderReceiverByDocType(ddindoctype.getSelectedItem().toString());
+            ddenvelope.removeAllItems();
+            ArrayList<String> gsids = EDData.getEDISenderReceiverByDocTypeOUT(ddoutdoctype.getSelectedItem().toString());
             for (int i = 0; i < gsids.size(); i++) {
                 if(((DefaultComboBoxModel)ddenvelope.getModel()).getIndexOf(gsids.get(i)) == -1) {
                     ddenvelope.addItem(gsids.get(i));

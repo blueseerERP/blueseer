@@ -1530,8 +1530,8 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
 
     private void btaddattributeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddattributeActionPerformed
        
-        EDData.addEDIAttributeRecord(tbsndgs.getText(), tbrcvgs.getText(), dddoc.getSelectedItem().toString(), ddattributekey.getSelectedItem().toString(), tbattributevalue.getText());
-        getAttributes(tbsndgs.getText(), tbrcvgs.getText(), dddoc.getSelectedItem().toString());
+        EDData.addEDIAttributeRecord(tbsndgs.getText(), tbrcvgs.getText(), ddoutdoctype.getSelectedItem().toString(), ddattributekey.getSelectedItem().toString(), tbattributevalue.getText());
+        getAttributes(tbsndgs.getText(), tbrcvgs.getText(), ddoutdoctype.getSelectedItem().toString());
         ddattributekey.setSelectedIndex(0);
         tbattributevalue.setText("");
     }//GEN-LAST:event_btaddattributeActionPerformed
@@ -1560,12 +1560,12 @@ public class EDIPartnerDocMaint extends javax.swing.JPanel {
               
                    int i = st.executeUpdate("delete from edi_attr where exa_sndid = " + "'" + tbsndgs.getText() + "'" + 
                                             " and exa_rcvid = " + "'" + tbrcvgs.getText() + "'" +
-                                            " and exa_doc = " + "'" + dddoc.getSelectedItem().toString() + "'" +
+                                            " and exa_doc = " + "'" + ddoutdoctype.getSelectedItem().toString() + "'" +
                                             " and exa_key = " + "'" + z[0].toString() + "'" +
                                              ";");
                     if (i > 0) {
                     bsmf.MainFrame.show(getMessageTag(1031,listAttributes.getSelectedValue().toString()));
-                    getAttributes(tbsndgs.getText(), tbrcvgs.getText(), dddoc.getSelectedItem().toString());
+                    getAttributes(tbsndgs.getText(), tbrcvgs.getText(), ddoutdoctype.getSelectedItem().toString());
                     }
                 } catch (SQLException s) {
                     MainFrame.bslog(s);

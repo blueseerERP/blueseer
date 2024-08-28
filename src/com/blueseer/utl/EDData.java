@@ -870,6 +870,73 @@ public class EDData {
         
          }
     
+    
+    public static String[] getEDITPDefaultsMapTester(String gssndid, String gsrcvid, String outdoctype) {
+           
+                    
+             String[] mystring = new String[]{"","","","","","","0","0","0","","","","","","","","","","","","","","","",""};
+        try{
+            Class.forName(driver);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                
+                   
+                      res = st.executeQuery("select * from edi_mstr where " 
+                      +  " edi_sndgs = " + "'" + gssndid + "'"  
+                      +  " AND edi_rcvgs = " + "'" + gsrcvid + "'"     
+                      +  " AND edi_doctypeout = " + "'" + outdoctype + "'"        
+                        + ";");
+                    while (res.next()) {
+                       mystring[0] = res.getString("edi_sndisa");
+                        mystring[1] = res.getString("edi_sndq");
+                        mystring[2] = res.getString("edi_sndgs");
+                        mystring[3] = res.getString("edi_rcvisa") ;
+                        mystring[4] = res.getString("edi_rcvq") ;
+                        mystring[5] = res.getString("edi_rcvgs");
+                        mystring[6] = res.getString("edi_eledelim");
+                        mystring[7] = res.getString("edi_segdelim") ;
+                        mystring[8] = res.getString("edi_subdelim") ;
+                        mystring[9] = res.getString("edi_filepath");
+                        mystring[10] = res.getString("edi_fileprefix");
+                        mystring[11] = res.getString("edi_filesuffix");
+                        mystring[12] = res.getString("edi_version");
+                        mystring[13] = res.getString("edi_supcode");
+                        mystring[14] = res.getString("edi_doctypeout");
+                        mystring[15] = res.getString("edi_filetypeout");
+                        mystring[16] = res.getString("edi_ifs");
+                        mystring[17] = res.getString("edi_ofs");
+                        mystring[18] = res.getString("edi_id");
+                        mystring[19] = res.getString("edi_doc");
+                        mystring[20] = res.getString("edi_envelopeall");
+                        mystring[21] = res.getString("edi_filetype");
+                        mystring[22] = res.getString("edi_una");
+                        mystring[23] = res.getString("edi_ung");
+                        mystring[24] = res.getString("edi_map");
+                    }
+           }
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+        return mystring;
+        
+         }
+    
     public static String[] getEDITPDefaultsX(String doctype, String gssndid, String gsrcvid, String map) {
            
                     
@@ -955,6 +1022,45 @@ public class EDData {
             try{
                       res = st.executeQuery("select * from edi_mstr where " + 
                         " edi_doc = " + "'" + doctype + "'"       
+                        + ";");
+                    while (res.next()) {
+                        String arr = res.getString("edi_sndgs") + "/" + res.getString("edi_rcvgs");
+                        list.add(arr);
+                    }
+           }
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+        return list;
+        
+         }
+    
+    public static ArrayList<String> getEDISenderReceiverByDocTypeOUT(String doctype) {
+           
+                    
+        ArrayList<String> list = new ArrayList<String>();
+        try{
+            Class.forName(driver);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                      res = st.executeQuery("select * from edi_mstr where " + 
+                        " edi_doctypeout = " + "'" + doctype + "'"       
                         + ";");
                     while (res.next()) {
                         String arr = res.getString("edi_sndgs") + "/" + res.getString("edi_rcvgs");
