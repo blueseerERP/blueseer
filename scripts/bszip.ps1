@@ -39,14 +39,13 @@ $patchdir = "patchV" + $version + "P" + $pc
 $patchmain = "blueseer.patch.ver." + $version + "." + "zip"
 mkdir $patchdir
 mkdir $patchdir\dist
-#cp $patchvar $patchdir\.patch
-#cp $patchvar ..\.patch
-#cp $patchsqlvar $patchdir\
+cp ..\.patch $patchdir\
 cp patch_install.bat $patchdir\
 cp patch_install.sh $patchdir\
 cp ..\sf\patches\patch_instructions.pdf $patchdir\
 cp ..\sf\jasper $patchdir\ -recurse
 cp ..\sf\zebra $patchdir\ -recurse
+cp ..\sf\edi\maps $patchdir\ -recurse
 # cp ..\dist $patchdir\ -recurse
 cp ..\dist\bsmf.jar $patchdir\dist\bsmf.jar
 cp ..\dist\blueseer.jar $patchdir\dist\blueseer.jar
