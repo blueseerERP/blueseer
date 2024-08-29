@@ -229,13 +229,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                 tablereport.getColumnModel().getColumn(13).setMaxWidth(50);
                 tablereport.getColumnModel().getColumn(14).setMaxWidth(50);
                 tablereport.getColumnModel().getColumn(15).setMaxWidth(50);
-                
-              //   tablereport.getColumnModel().getColumn(8).setCellRenderer(new EDITransactionBrowse.DocViewRenderer()); 
-              //   tablereport.getColumnModel().getColumn(12).setCellRenderer(new EDITransactionBrowse.DocViewRenderer()); 
-              
-               //  tablereport.getColumnModel().getColumn(7).setCellRenderer(new EDITransactionBrowse.SomeRenderer()); 
-                
-                 
+             
               
                     if (! ddtradeid.getSelectedItem().toString().isEmpty() && dddoc.getSelectedItem().toString().isEmpty() ) {
                     res = st.executeQuery("SELECT edx_id, edx_comkey, edx_indoctype, edx_outdoctype, " +
@@ -301,6 +295,11 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                 
                 ImageIcon statusImage = null;
                 while (res.next()) {
+                    
+                    if (! ddoutdoctype.getSelectedItem().toString().isBlank() && ! res.getString("edx_outdoctype").equals(ddoutdoctype.getSelectedItem().toString())) {
+                        continue;
+                    }
+                    
                     if (res.getString("detstatus").equals("success")) {
                       statusImage = BlueSeerUtils.clickcheck;
                     }  else {
@@ -309,21 +308,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     if (res.getString("edx_ack").equals("1")) {
                       statusImage = BlueSeerUtils.clickcheckblue; 
                     }
-                    // now check detail log...if 'any' errors....set status to clicknocheck...unless last is 'success'
-                    /*
-                    resdetail = st2.executeQuery("select elg_severity from edi_log " +
-                        " where elg_comkey = " + "'" + res.getInt("edx_comkey") + "'" 
-                       // + " and elg_idxnbr = " + "'" + res.getInt("edx_id") + "'"
-                        +  " order by elg_id;");
-                    while (resdetail.next()) {
-                        if (resdetail.getString("elg_severity").equals("error")) {
-                           statusImage = BlueSeerUtils.clicknocheck; 
-                        }
-                        if (resdetail.getString("elg_severity").equals("success")) {
-                           statusImage = BlueSeerUtils.clickcheck; 
-                        }
-                    }
-                    */
+                
                     i++;
                     
                   if (hm.containsKey(res.getString("edx_indoctype"))) {
@@ -633,12 +618,16 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
         rbFileLog.setSelected(true);
         
         dddoc.removeAllItems();
+        ddoutdoctype.removeAllItems();
         ArrayList<String> mylist = OVData.getCodeMstrKeyList("edidoctype");
         for (int i = 0; i < mylist.size(); i++) {
             dddoc.addItem(mylist.get(i));
+            ddoutdoctype.addItem(mylist.get(i));
         }
         dddoc.insertItemAt("", 0);
         dddoc.setSelectedIndex(0);
+        ddoutdoctype.insertItemAt("", 0);
+        ddoutdoctype.setSelectedIndex(0);
         
         ddtradeid.removeAllItems();
         ArrayList<String> tradeids = EDData.getEDITradeIDs();
@@ -731,6 +720,8 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
         btclearstatus = new javax.swing.JButton();
         ddtradeid = new javax.swing.JComboBox<>();
         dddoc = new javax.swing.JComboBox<>();
+        ddoutdoctype = new javax.swing.JComboBox<>();
+        jLabel9 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         tbtoterrors = new javax.swing.JLabel();
@@ -891,6 +882,8 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
             }
         });
 
+        jLabel9.setText("Out Document Type");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -919,14 +912,6 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel4)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(dddoc, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(27, 27, 27)
-                                .addComponent(jLabel7)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(btRun)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btdetail)
@@ -935,7 +920,19 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btreprocess)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btclearstatus)))
+                                .addComponent(btclearstatus))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel9))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(ddoutdoctype, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(dddoc, 0, 91, Short.MAX_VALUE))
+                                .addGap(27, 27, 27)
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(69, 69, 69)
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -977,6 +974,10 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(ddtradeid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(dddoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ddoutdoctype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9))
                 .addContainerGap())
         );
 
@@ -1034,11 +1035,11 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addGap(41, 41, 41)
-                .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -1245,11 +1246,13 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
             tbref.setEnabled(true);
             btreprocess.setEnabled(false);
             btclearstatus.setEnabled(false);
+            ddoutdoctype.setEnabled(true);
            // getDocLogView();
         } else {
             tbref.setEnabled(false);
             btreprocess.setEnabled(true);
             btclearstatus.setEnabled(true);
+            ddoutdoctype.setEnabled(false);
            // getFileLogView();
         }
     }//GEN-LAST:event_rbDocLogActionPerformed
@@ -1261,11 +1264,13 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
             tbref.setEnabled(true);
             btreprocess.setEnabled(false);
             btclearstatus.setEnabled(false);
+            ddoutdoctype.setEnabled(true);
            // getDocLogView();
         } else {
             tbref.setEnabled(false);
             btreprocess.setEnabled(true);
             btclearstatus.setEnabled(true);
+            ddoutdoctype.setEnabled(false);
          //   getFileLogView();
         }
     }//GEN-LAST:event_rbFileLogActionPerformed
@@ -1330,6 +1335,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
     private com.toedter.calendar.JDateChooser dcfrom;
     private com.toedter.calendar.JDateChooser dcto;
     private javax.swing.JComboBox<String> dddoc;
+    private javax.swing.JComboBox<String> ddoutdoctype;
     private javax.swing.JComboBox<String> ddtradeid;
     private javax.swing.JPanel detailpanel;
     private javax.swing.JLabel jLabel1;
@@ -1341,6 +1347,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
