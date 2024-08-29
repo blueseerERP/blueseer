@@ -4,6 +4,10 @@ IF "%HOUR:~0,1%" == " " SET HOUR=0%HOUR:~1,1%
 set mydate=%date:~10,4%%date:~4,2%%date:~7,2%%HOUR%%time:~3,2%
 echo %mydate%
 
+set PATCHDIR=
+set PATCH=
+set PATCHVER=
+
 if exist .update set /P PATCH=<.update
 
 set "ARGS=%*"
@@ -18,6 +22,7 @@ set "ARGS=%ARGS% -sshkey"
 set PATCHDIR="%~dp0\patches\%PATCH%"
 
 if exist .update (
+@echo "%mydate% found .update file...proceeding to install patch "
 call :patchInstall
 ) else (
 @echo "no patch file...proceeding"
@@ -33,10 +38,10 @@ start jre17\bin\javaw -D"java.util.logging.config.file=bslogging.properties" -cp
 goto :eof
 
 :patchInstall
-@echo "%mydate% patch trigger found...%PATCH%" >>patchlog.txt
+@echo "%mydate% patch trigger found...%PATCHDIR%" >>patchlog.txt
 if exist %PATCHDIR%\dist (
    xcopy %PATCHDIR%\dist dist /E /I /Y /Q 2>&1
-   @echo "copying blueseer.jar to dist folder" >>patchlog.txt
+   @echo "%mydate% copying blueseer.jar to dist folder" >>patchlog.txt
 ) 
 if exist %PATCHDIR%\.patch (
    set /P PATCHVER=<%PATCHDIR%\.patch
@@ -51,7 +56,7 @@ if exist %PATCHDIR%\zebra (
    xcopy %PATCHDIR%\zebra zebra /E /I /Y /Q 2>&1
    @echo "%mydate% copying zebra folder content" >>patchlog.txt
 ) 
-@echo "%mydate% done with patchInstall..." >>patchlog.txt
+@echo "%mydate% done with patchInstall...deleting .update file" >>patchlog.txt
 del /F /Q .update
 exit /b
 
