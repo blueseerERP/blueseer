@@ -5604,7 +5604,7 @@ public class EDI {
             // in practice...should be only 1 AK1 and.... 1 or more AK2s (or no AK2s i.e. all docs of group)
             if (ea[0] != null && ea.length > 2 && ea[0].equals("AK1")) {
                 groupid = ea[2];
-                doctype = EDData.getEDIDocTypeFromStds(ea[1]);
+                doctype = EDData.getBSDocTypeFromGSStds(ea[1]);
             }
             if (ea[0] != null && ea.length > 2 && ea[0].equals("AK2")) {
                 String[] temp = new String[]{doctype, groupid, ea[2], c[24]};
@@ -5625,7 +5625,7 @@ public class EDI {
          }
          */
          if (groupid.isEmpty() || count == 0) {
-             return new String[]{"error","unrecognized gscntrlnum in AK1"};
+             return new String[]{"error","unrecognized gscntrlnum in AK1: " + c[0].trim() + "/" + doctype + "/" + groupid};
          } else {
              return new String[]{"success","997 loaded"};
          }

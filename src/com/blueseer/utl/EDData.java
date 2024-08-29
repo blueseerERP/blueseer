@@ -2542,6 +2542,45 @@ public class EDData {
         
     }
     
+    public static String getBSDocTypeFromGSStds(String gs) {
+       String x = "??";
+        try{
+            Class.forName(driver);
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                
+
+                res = st.executeQuery("select eds_bsdoc from edi_stds " +
+                        " where eds_gs = " + "'" + gs + "'" + 
+                        " order by eds_gs; ");
+               while (res.next()) {
+                   x = res.getString("eds_bsdoc");
+                }
+               
+           }
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return x;
+        
+    }
+    
+    
     public static String getEDIGSTypeFromStds(String doc) {
        String x = "??";
         try{
