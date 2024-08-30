@@ -62,6 +62,7 @@ import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
 import static com.blueseer.utl.BlueSeerUtils.checkLength;
 import static com.blueseer.utl.BlueSeerUtils.currformat;
+import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalColumnTag;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalLabelTag;
@@ -620,7 +621,7 @@ public class GLTranMaint extends javax.swing.JPanel {
             return false;
         }
                
-        if (! ddtype.getSelectedItem().toString().equals("simple") &&  Double.compare(bsParseDouble(tbcontrolamt.getText()), positiveamt) != 0 ) {
+        if (! ddtype.getSelectedItem().toString().equals("simple") &&  ! currformatDouble(positiveamt).equals(currformatDouble(bsParseDouble(tbcontrolamt.getText()))) ) {
             String s_positiveamt = bsFormatDouble(positiveamt);
             bsmf.MainFrame.show(getMessageTag(1039, currformat(tbcontrolamt.getText()) + "/" + s_positiveamt));
             return false;

@@ -455,7 +455,7 @@ public class ARPaymentMaint extends javax.swing.JPanel implements IBlueSeer {
                     bsmf.MainFrame.show(getMessageTag(1130));
                     return b;
                 }
-                 if ( control != actamt || control == 0.00 || actamt == 0.00 ) {
+                 if ( ! currformatDouble(control).equals(currformatDouble(actamt)) || control == 0.00 || actamt == 0.00 ) {
                     b = false;
                     bsmf.MainFrame.show(getMessageTag(1039,String.valueOf(control)));
                     return b;
