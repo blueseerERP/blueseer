@@ -52,6 +52,7 @@ import static com.blueseer.utl.BlueSeerUtils.lurb1;
 import static com.blueseer.utl.BlueSeerUtils.setDateDB;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.OVData;
+import static com.blueseer.utl.OVData.getSysMetaValue;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -855,7 +856,9 @@ public class InventoryMaint extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btaddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btaddActionPerformed
-               
+        
+        boolean requireWHLoc = BlueSeerUtils.ConvertStringToBool(getSysMetaValue("system", "inventorycontrol", "operation_whloc_required"));
+        
         if (tbitem.getText().isEmpty()) {
             tbitem.setBackground(Color.yellow);
             bsmf.MainFrame.show(getMessageTag(1024, tbitem.getName()));
@@ -869,6 +872,21 @@ public class InventoryMaint extends javax.swing.JPanel {
             tbqty.requestFocus();
             return;
         }
+        
+        if (requireWHLoc && ddwh.getSelectedItem().toString().isEmpty()) {
+           // ddwh.setBackground(Color.yellow);
+            bsmf.MainFrame.show(getMessageTag(1190));
+            ddwh.requestFocus();
+            return;
+        }
+        
+        if (requireWHLoc && ddloc.getSelectedItem().toString().isEmpty()) {
+           // ddwh.setBackground(Color.yellow);
+            bsmf.MainFrame.show(getMessageTag(1190));
+            ddloc.requestFocus();
+            return;
+        }
+        
         
         // check if item exists
         if (! OVData.isValidItem(tbitem.getText())) {

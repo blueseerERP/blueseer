@@ -251,6 +251,9 @@ public class InventoryCtrl extends javax.swing.JPanel implements IBlueSeerc {
             if (s[0].equals("operation_scan_required")) {
                 cbopscan.setSelected(BlueSeerUtils.ConvertStringToBool(s[1]));
             }
+            if (s[0].equals("operation_whloc_required")) {
+                cbrequirewhloc.setSelected(BlueSeerUtils.ConvertStringToBool(s[1]));
+            }
            
         } 
             
@@ -263,6 +266,7 @@ public class InventoryCtrl extends javax.swing.JPanel implements IBlueSeerc {
           OVData.addUpdateSysMeta("system", "inventorycontrol", "jasper_job_ticket", tbjasper.getText());  
       }
       OVData.addUpdateSysMeta("system", "inventorycontrol", "operation_scan_required", BlueSeerUtils.boolToString(cbopscan.isSelected())); 
+      OVData.addUpdateSysMeta("system", "inventorycontrol", "operation_whloc_required", BlueSeerUtils.boolToString(cbrequirewhloc.isSelected())); 
     
     }
     
@@ -286,6 +290,7 @@ public class InventoryCtrl extends javax.swing.JPanel implements IBlueSeerc {
         tbjasper = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         cbopscan = new javax.swing.JCheckBox();
+        cbrequirewhloc = new javax.swing.JCheckBox();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -319,6 +324,8 @@ public class InventoryCtrl extends javax.swing.JPanel implements IBlueSeerc {
 
         cbopscan.setText("Operation Scanning Required");
 
+        cbrequirewhloc.setText("WH / Location Required");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -328,6 +335,7 @@ public class InventoryCtrl extends javax.swing.JPanel implements IBlueSeerc {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cbrequirewhloc)
                     .addComponent(cbopscan)
                     .addComponent(cbdemdtoplan)
                     .addComponent(cbmultiplan)
@@ -353,7 +361,9 @@ public class InventoryCtrl extends javax.swing.JPanel implements IBlueSeerc {
                 .addComponent(cbautoitem)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbserialize)
-                .addGap(25, 25, 25)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbrequirewhloc)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbjasper, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
@@ -380,6 +390,7 @@ public class InventoryCtrl extends javax.swing.JPanel implements IBlueSeerc {
     private javax.swing.JCheckBox cbmultiplan;
     private javax.swing.JCheckBox cbopscan;
     private javax.swing.JCheckBox cbprintsubticket;
+    private javax.swing.JCheckBox cbrequirewhloc;
     private javax.swing.JCheckBox cbserialize;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;

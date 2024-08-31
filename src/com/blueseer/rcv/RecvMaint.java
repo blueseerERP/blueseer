@@ -90,6 +90,7 @@ import javax.swing.JTable;
 import javax.swing.SwingWorker;
 import com.blueseer.utl.IBlueSeer;
 import com.blueseer.utl.IBlueSeerT;
+import static com.blueseer.utl.OVData.getSysMetaValue;
 import static com.blueseer.utl.OVData.getSystemAttachmentDirectory;
 import com.blueseer.vdr.venData;
 import static com.blueseer.vdr.venData.getVendInfo;
@@ -703,7 +704,11 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
     }
            
     public boolean validateInput(dbaction x) {
-       Map<String,Integer> f = OVData.getTableInfo(new String[]{"recv_mstr","recv_det"});
+       
+        boolean requireWHLoc = BlueSeerUtils.ConvertStringToBool(getSysMetaValue("system", "inventorycontrol", "operation_whloc_required"));
+        
+        
+        Map<String,Integer> f = OVData.getTableInfo(new String[]{"recv_mstr","recv_det"});
         int fc;
         
         if (ddvend.getSelectedItem() == null || ddvend.getSelectedItem().toString().isEmpty()) {
@@ -733,6 +738,19 @@ public class RecvMaint extends javax.swing.JPanel implements IBlueSeerT {
         return false;
         } 
         
+        if (requireWHLoc && ddwh.getSelectedItem().toString().isEmpty()) {
+           // ddwh.setBackground(Color.yellow);
+            bsmf.MainFrame.show(getMessageTag(1190));
+            ddwh.requestFocus();
+            return false;
+        }
+        
+        if (requireWHLoc && ddloc.getSelectedItem().toString().isEmpty()) {
+           // ddwh.setBackground(Color.yellow);
+            bsmf.MainFrame.show(getMessageTag(1190));
+            ddloc.requestFocus();
+            return false;
+        }
         
         
                 if (! x.name().equals("update")) {  // if adjusting fields in the table....this validation is not necessary as they cannot change the PO

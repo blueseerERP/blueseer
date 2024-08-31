@@ -1,3 +1,4 @@
+system,administration,autopatch,0
 system,sysdir,attachment_directory,attachments
 system,sysdir,temp_directory,temp
 system,sysdir,log_directory,logs
@@ -9,3 +10,8 @@ system,ordercontrol,browse_start_date,-365
 system,ordercontrol,browse_end_date,30
 system,inventorycontrol,jasper_job_ticket,jobticket.jasper
 system,inventorycontrol,operation_scan_required,0
+system,inventorycontrol,operation_whloc_required,0
+system,smtp_server_properties,mail.smtp.port,587
+system,smtp_server_properties,mail.smtp.auth,true
+system,smtp_server_properties,mail.smtp.starttls.enable,true
+system,smtp_server_properties,mail.smtp.ssl.protocols,TLSv1.2
