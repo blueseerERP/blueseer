@@ -6415,7 +6415,7 @@ public class OVData {
     }
     }        
 
-    public static void wip_iss_mtl_gl(String item, String op, String csite, Double qty, String date, String cref, String ctype, String cdesc, String serial, String userid, String program, String bom, String gldoc, LinkedHashMap<String,String> serialkeys) {
+    public static void wip_iss_mtl_gl(String item, String op, String csite, Double qty, String date, String cref, String ctype, String cdesc, String serial, String userid, String program, String bom, String gldoc, LinkedHashMap<String,String[]> serialkeys) {
 
     try{
 
@@ -6454,6 +6454,8 @@ public class OVData {
         String tranhisttype = "";
         String expire = ""; // should be blank for component issues
         String childserial = "";
+        String childserialloc = "";
+        String childserialwh = "";
         
         boolean isReportable = false;
         
@@ -6559,17 +6561,21 @@ public class OVData {
                
                // component (child) serial numbers of raw material consumed
                if (serialkeys != null && serialkeys.containsKey(child.get(j).toString())) {
-                   childserial = serialkeys.get(child.get(j).toString());
+                   childserial = serialkeys.get(child.get(j).toString())[0];
+                   childserialwh = serialkeys.get(child.get(j).toString())[1];
+                   childserialloc = serialkeys.get(child.get(j).toString())[2];
                } else {
                    childserial = "";
+                   childserialwh = wh.get(j).toString();
+                   childserialloc = loc.get(j).toString();
                }
                
                // lot number defined as parent FG serial number
                OVData.TRHistIssDiscrete(BlueSeerUtils.mysqlDateFormat.parse(date), child.get(j).toString(), (-1 * qty * bsParseDouble(qtyper.get(j).toString())), op, tranhisttype, 0, 0, csite, 
-                       loc.get(j).toString(), wh.get(j).toString(), expire, "", "", item + ":" + op, 0, "", "", serial, cref, "", "", "", "", childserial, program, userid);
+                       childserialloc, childserialwh, expire, "", "", item + ":" + op, 0, "", "", serial, cref, "", "", "", "", childserial, program, userid);
 
                // update inventory
-               OVData.UpdateInventoryDiscrete(child.get(j).toString(), csite, loc.get(j).toString(), wh.get(j).toString(), childserial, "", bsParseDouble(qtyper.get(j).toString()) * qty * -1);    
+               OVData.UpdateInventoryDiscrete(child.get(j).toString(), csite, childserialloc, childserialwh, childserial, "", bsParseDouble(qtyper.get(j).toString()) * qty * -1);    
 
            }
 
@@ -6614,7 +6620,7 @@ public class OVData {
 
     }
 
-    public static void wip_iss_mtl_gl_unreported(String item, String op, String csite, Double qty, String date, String cref, String ctype, String cdesc, String serial, String userid, String program, String bom, String gldoc, LinkedHashMap<String,String> serialkeys) {
+    public static void wip_iss_mtl_gl_unreported(String item, String op, String csite, Double qty, String date, String cref, String ctype, String cdesc, String serial, String userid, String program, String bom, String gldoc, LinkedHashMap<String,String[]> serialkeys) {
 
 
     try{
@@ -6650,6 +6656,9 @@ public class OVData {
 
         String expire = "";  //should be "" for components
         String childserial = "";
+        String childserialwh = "";
+        String childserialloc = "";
+        
         
         Connection con = null;
             if (ds != null) {
@@ -6706,21 +6715,26 @@ public class OVData {
                 // process GL transactions
                 fglData.glEntry(acct_cr.get(j).toString(), cc_cr.get(j).toString(), acct_dr.get(j).toString(), cc_dr.get(j).toString(), date, bsParseDouble(cost.get(j).toString()), bsParseDouble(cost.get(j).toString()), curr, basecurr, ref.get(j).toString(), site.get(j).toString(), "ISS-WIP", desc.get(j).toString(), doc.get(j).toString());  
 
-                // component (child) serial numbers of raw material consumed
+               
+               // component (child) serial numbers of raw material consumed
                if (serialkeys != null && serialkeys.containsKey(child.get(j).toString())) {
-                   childserial = serialkeys.get(child.get(j).toString());
+                   childserial = serialkeys.get(child.get(j).toString())[0];
+                   childserialwh = serialkeys.get(child.get(j).toString())[1];
+                   childserialloc = serialkeys.get(child.get(j).toString())[2];
                } else {
                    childserial = "";
+                   childserialwh = wh.get(j).toString();
+                   childserialloc = loc.get(j).toString();
                }
                
                // lot number defined as parent FG serial number
                 
                // process tran_hist
                OVData.TRHistIssDiscrete(BlueSeerUtils.mysqlDateFormat.parse(date), child.get(j).toString(), (-1 * qty * bsParseDouble(qtyper.get(j).toString())), op, "ISS-WIP", 0, 0, csite, 
-                       loc.get(j).toString(), wh.get(j).toString(), expire, "", "", item + ":" + op, 0, "", "", serial, cref, "", "", "", "", childserial, program, userid);
+                       childserialloc, childserialwh, expire, "", "", item + ":" + op, 0, "", "", serial, cref, "", "", "", "", childserial, program, userid);
 
                // update inventory
-               OVData.UpdateInventoryDiscrete(child.get(j).toString(), csite, loc.get(j).toString(), wh.get(j).toString(), childserial, "", bsParseDouble(qtyper.get(j).toString()) * qty * -1);    
+               OVData.UpdateInventoryDiscrete(child.get(j).toString(), csite, childserialloc, childserialwh, childserial, "", bsParseDouble(qtyper.get(j).toString()) * qty * -1);    
             }
 
 
@@ -14225,7 +14239,7 @@ return mystring;
     }
       
       
-    public static boolean loadTranHistByTable(JTable mytable, LinkedHashMap<String,String> serialkeys) {
+    public static boolean loadTranHistByTable(JTable mytable, LinkedHashMap<String,String[]> serialkeys) {
           
           /*
           Field count must be 20 fields...and must be in this exact order:

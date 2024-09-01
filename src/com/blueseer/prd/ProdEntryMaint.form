@@ -67,7 +67,7 @@
                           <Group type="102" alignment="1" attributes="0">
                               <Group type="103" groupAlignment="1" attributes="0">
                                   <Component id="ddbom" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="tbpart" max="32767" attributes="0"/>
+                                  <Component id="tbitem" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="btLookUpItemDesc" min="-2" pref="27" max="-2" attributes="0"/>
@@ -121,7 +121,7 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="103" groupAlignment="3" attributes="0">
-                                      <Component id="tbpart" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="tbitem" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Component id="btLookUpItemDesc" min="-2" max="-2" attributes="0"/>
@@ -252,9 +252,9 @@
                 <Property name="name" type="java.lang.String" value="lblref" noResource="true"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="tbpart">
+            <Component class="javax.swing.JTextField" name="tbitem">
               <Events>
-                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbpartFocusLost"/>
+                <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="tbitemFocusLost"/>
               </Events>
             </Component>
             <Component class="com.toedter.calendar.JDateChooser" name="dcexpire">

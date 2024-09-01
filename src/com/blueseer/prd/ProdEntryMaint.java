@@ -28,6 +28,7 @@ package com.blueseer.prd;
 import bsmf.MainFrame;
 import static bsmf.MainFrame.tags;
 import com.blueseer.inv.invData;
+import static com.blueseer.inv.invData.getWHLOCfromSerialNumber;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
@@ -81,7 +82,7 @@ public class ProdEntryMaint extends javax.swing.JPanel {
                 "Part", "Type", "Operation", "Qty", "Date", "Location", "SerialNo", "Reference", "Site", "Userid", "ProdLine", "AssyCell", "Rmks", "PackCell", "PackDate", "AssyDate", "ExpireDate", "Program", "WH", "BOM"
             });
     
-    LinkedHashMap<String,String> serialkeys = null; 
+    LinkedHashMap<String,String[]> serialkeys = null; 
     javax.swing.JTable transtable = new javax.swing.JTable();
     
     /**
@@ -195,7 +196,7 @@ public class ProdEntryMaint extends javax.swing.JPanel {
         java.util.Date now = new java.util.Date();
         dcdate.setDate(now);
         ddop.removeAllItems();
-        tbpart.setText("");
+        tbitem.setText("");
         tbreference.setText("");
         tbserialno.setText("");
         tbqty.setText("");
@@ -256,19 +257,19 @@ public class ProdEntryMaint extends javax.swing.JPanel {
     public void setItemInfo() {
         ddop.removeAllItems();
         dcexpire.setDate(null);
-        if (! tbpart.getText().isEmpty()) {
-            if (! OVData.isValidItem(tbpart.getText())) {
-               bsmf.MainFrame.show(getMessageTag(1021,tbpart.getText()));
-               tbpart.setForeground(Color.red);
+        if (! tbitem.getText().isEmpty()) {
+            if (! OVData.isValidItem(tbitem.getText())) {
+               bsmf.MainFrame.show(getMessageTag(1021,tbitem.getText()));
+               tbitem.setForeground(Color.red);
             } else {
-            tbpart.setForeground(Color.black);
+            tbitem.setForeground(Color.black);
              Calendar calfrom = Calendar.getInstance();
-             int days = invData.getItemExpireDays(tbpart.getText());
+             int days = invData.getItemExpireDays(tbitem.getText());
              if (days > 0) {
              calfrom.add(Calendar.DATE, days);
              dcexpire.setDate(calfrom.getTime());
              }
-            ArrayList myops = OVData.getOperationsByItem(tbpart.getText());
+            ArrayList myops = OVData.getOperationsByItem(tbitem.getText());
             for (int i = 0; i < myops.size(); i++) {
                 ddop.addItem(myops.get(i));
             }
@@ -283,7 +284,7 @@ public class ProdEntryMaint extends javax.swing.JPanel {
             ddbom.removeAllItems();
             ddbom.insertItemAt("", 0);
             String primary = "";
-            ArrayList<String[]> boms = invData.getBOMsByItemSite(tbpart.getText());
+            ArrayList<String[]> boms = invData.getBOMsByItemSite(tbitem.getText());
             for (String[] wh : boms) {
                 ddbom.addItem(wh[0]);
                 if (wh[1].equals("1")) {
@@ -333,7 +334,7 @@ public class ProdEntryMaint extends javax.swing.JPanel {
                 int column = target.getSelectedColumn();
                 if ( column == 0) {
                     ludialog.dispose();
-                    tbpart.setText(target.getValueAt(row,1).toString());
+                    tbitem.setText(target.getValueAt(row,1).toString());
                     setItemInfo();
                     
                 }
@@ -351,8 +352,8 @@ public class ProdEntryMaint extends javax.swing.JPanel {
         String[] m = null;
         String prodline = "";
         String expire = "";
-        String loc = OVData.getLocationByItem(tbpart.getText());
-        String wh = OVData.getWarehouseByItem(tbpart.getText());
+        String loc = OVData.getLocationByItem(tbitem.getText());
+        String wh = OVData.getWarehouseByItem(tbitem.getText());
         
         
         
@@ -363,7 +364,7 @@ public class ProdEntryMaint extends javax.swing.JPanel {
         String op = (ddop.getSelectedItem() == null) ? "0" : ddop.getSelectedItem().toString();
         transtable.setModel(transmodel);
         
-            transmodel.addRow(new Object[]{tbpart.getText(), 
+            transmodel.addRow(new Object[]{tbitem.getText(), 
                 "ISS-WIP", 
                 op, 
                 tbqty.getText(), 
@@ -386,7 +387,7 @@ public class ProdEntryMaint extends javax.swing.JPanel {
                 });
         
         // now let's load transaction
-        if (! OVData.loadTranHistByTable(transtable, serialkeys)) {
+        if (! OVData.loadTranHistByTable(transtable, serialkeys)) { 
             m = new String[]{"1", getMessageTag(1010,"loadTranHist")};
         } else {
             initvars(null);
@@ -421,7 +422,7 @@ public class ProdEntryMaint extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         tbserialno = new javax.swing.JTextField();
         tbreference = new javax.swing.JTextField();
-        tbpart = new javax.swing.JTextField();
+        tbitem = new javax.swing.JTextField();
         dcexpire = new com.toedter.calendar.JDateChooser();
         jLabel3 = new javax.swing.JLabel();
         btLookUpItemDesc = new javax.swing.JButton();
@@ -473,9 +474,9 @@ public class ProdEntryMaint extends javax.swing.JPanel {
 
         tbreference.setName("lblref"); // NOI18N
 
-        tbpart.addFocusListener(new java.awt.event.FocusAdapter() {
+        tbitem.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
-                tbpartFocusLost(evt);
+                tbitemFocusLost(evt);
             }
         });
 
@@ -540,7 +541,7 @@ public class ProdEntryMaint extends javax.swing.JPanel {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(ddbom, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(tbpart))
+                            .addComponent(tbitem))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btLookUpItemDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(15, 15, 15))
@@ -581,7 +582,7 @@ public class ProdEntryMaint extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(tbpart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(tbitem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel4))
                             .addComponent(btLookUpItemDesc))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -668,16 +669,19 @@ public class ProdEntryMaint extends javax.swing.JPanel {
         }
         
         // need to iterate through all components that are serialized
-        ArrayList<String> comps = getpsmstrcompSerialized(tbpart.getText());
-        serialkeys = new LinkedHashMap<String,String>();
-        for (String s : comps) {
-            String serial = bsmf.MainFrame.input("Enter Serial Number of component: " + s);
-            if (serialkeys.containsKey(s)) {
-                serialkeys.replace(s, serial);
+        ArrayList<String> comps = getpsmstrcompSerialized(tbitem.getText());
+        serialkeys = new LinkedHashMap<String,String[]>();
+        for (String c : comps) {
+            String serial = bsmf.MainFrame.input("Enter Serial Number of component: " + c);
+            String[] v = getWHLOCfromSerialNumber(c,serial);
+            String[] values = new String[]{serial,v[0],v[1]};
+            if (serialkeys.containsKey(c)) {
+                serialkeys.replace(c, values);
             } else {
-                serialkeys.put(s, serial);
+                serialkeys.put(c, values);
             }
         }
+        
         
         
         setPanelComponentState(this, false);
@@ -685,9 +689,9 @@ public class ProdEntryMaint extends javax.swing.JPanel {
         
     }//GEN-LAST:event_btsubmitActionPerformed
 
-    private void tbpartFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbpartFocusLost
+    private void tbitemFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tbitemFocusLost
               setItemInfo();
-    }//GEN-LAST:event_tbpartFocusLost
+    }//GEN-LAST:event_tbitemFocusLost
 
     private void btLookUpItemDescActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLookUpItemDescActionPerformed
         lookUpFrameItemDesc();
@@ -721,7 +725,7 @@ public class ProdEntryMaint extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea taremarks;
-    private javax.swing.JTextField tbpart;
+    private javax.swing.JTextField tbitem;
     private javax.swing.JTextField tbqty;
     private javax.swing.JTextField tbreference;
     private javax.swing.JTextField tbserialno;

@@ -1956,6 +1956,45 @@ public class invData {
         return lines;
     }
     
+    public static String[] getWHLOCfromSerialNumber(String item, String serial) {
+        String[] r = null ;
+        try{
+    Connection con = null;
+        if (ds != null) {
+          con = ds.getConnection();
+        } else {
+          con = DriverManager.getConnection(url + db, user, pass);  
+        }
+    Statement st = con.createStatement();
+    ResultSet res = null;
+    try{
+     
+        res = st.executeQuery("select tr_wh, tr_loc from tran_mstr " +
+            " where tr_item = " + "'" + item + "'" + " AND " +
+            " tr_serial = " + "'" + serial + "'" + ";");
+       while (res.next()) {
+        r = new String[]{res.getString("tr_wh"), res.getString("tr_loc")};                    
+        }
+
+    }
+    catch (SQLException s){
+        MainFrame.bslog(s);
+    } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+          }
+    }
+    catch (Exception e){
+    MainFrame.bslog(e);
+    }
+        
+        return r;
+    }
     
     public static void updateCurrentItemCost(String item) {
         calcCost cur = new calcCost();
