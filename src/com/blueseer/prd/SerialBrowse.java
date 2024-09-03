@@ -357,7 +357,6 @@ public class SerialBrowse extends javax.swing.JPanel {
     
     public void initvars(String[] arg) {
      
-        
         java.util.Date now = new java.util.Date();
         dcfrom.setDate(now);
         dcto.setDate(now);
@@ -378,12 +377,6 @@ public class SerialBrowse extends javax.swing.JPanel {
         for (Object site : sites) {
             ddsite.addItem(site);
         }
-        
-       
-        
-        
-          
-          
     }
     /**
      * This method is called from within the constructor to initialize the form.
