@@ -227,7 +227,7 @@ public class rcvData {
             
         invData.tran_mstr tm = new invData.tran_mstr(null,
                 "", // id
-                rv.rv_id(), // site
+                rv.rv_site(), // site
                 z.rvd_item(),
                 z.rvd_qty(),
                 setDateDB(new java.util.Date()), //entdate

@@ -337,3 +337,4 @@ BillBrowse,,com.blueseer.ord.BillBrowse,JMenuItem,bilb
 InventoryBrowse,,com.blueseer.inv.InventoryBrowse,JMenuItem,invr
 InventoryValuation,,com.blueseer.inv.InventoryValuation,JMenuItem,invv
 test,,com.blueseer.utl.test,JMenuItem,testx
+SerialBrowse,,com.blueseer.prd.SerialBrowse,JMenuItem,serb

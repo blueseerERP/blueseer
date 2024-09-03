@@ -31,6 +31,7 @@ PurRptGroup,POs By PO Date,poByOrdDateRange,0,L8
 PurRptGroup,POs By Vendor,poByVendRange,1,L8
 PurRptGroup,POs By Vend / PO Date,poByVendOrdDateRange,2,L8
 PurRptGroup,POs By PO Detail By Vend,poDetailByVendRange,3,L8
+PurRptGroup,Transactions By Vend By Date,tranByVendDateRange,4,L8
 ARRptGroup,AR Entries by Customer,AREntriesByCust,0,L2
 ARRptGroup,AR Aging by Customer,ARAgingByCust,1,L7
 ARRptGroup,AR Aging Detail by Customer,ARAgingDetailByCust,2,L2

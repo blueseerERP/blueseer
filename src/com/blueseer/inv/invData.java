@@ -1757,6 +1757,158 @@ public class invData {
     return rows;
     }
     
+    public static tran_mstr getTranMstr(String id) {
+        tran_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from tran_mstr where tr_id = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());   
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, id);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new tran_mstr(m);
+                } else {   
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};        
+                        r = new tran_mstr(m, res.getString("tr_id"), 
+                            res.getString("tr_site"),
+                            res.getString("tr_item"),
+                            res.getDouble("tr_qty"),    
+                            res.getString("tr_ent_date"),
+                            res.getString("tr_eff_date"),
+                            res.getString("tr_userid"),
+                            res.getString("tr_ref"),
+                            res.getString("tr_addrcode"), 
+                            res.getString("tr_type"),
+                            res.getString("tr_datetime"),
+                            res.getString("tr_rmks"),
+                            res.getString("tr_nbr"),
+                            res.getString("tr_misc1"),
+                            res.getString("tr_lot"),
+                            res.getString("tr_serial"),
+                            res.getString("tr_program"),
+                            res.getDouble("tr_amt"),
+                            res.getDouble("tr_mtl"),
+                            res.getDouble("tr_lbr"),
+                            res.getDouble("tr_bdn"),
+                            res.getDouble("tr_ovh"),
+                            res.getDouble("tr_out"),
+                            res.getString("tr_batch"),
+                            res.getString("tr_op"),
+                            res.getString("tr_loc"),
+                            res.getString("tr_wh"),
+                            res.getString("tr_expire"),
+                            res.getString("tr_cc"),
+                            res.getString("tr_wc"),
+                            res.getString("tr_wf"),
+                            res.getString("tr_prodline"),
+                            res.getString("tr_timestamp"),
+                            res.getString("tr_actcell"),
+                            res.getInt("tr_export"),
+                            res.getString("tr_order"),
+                            res.getInt("tr_line"),
+                            res.getString("tr_po"),
+                            res.getDouble("tr_price"),
+                            res.getDouble("tr_cost"),
+                            res.getString("tr_acct"),
+                            res.getString("tr_terms"),
+                            res.getString("tr_pack"),
+                            res.getString("tr_curr"),
+                            res.getString("tr_pack_date"),
+                            res.getString("tr_assy_date"),
+                            res.getString("tr_uom"),
+                            res.getDouble("tr_base_qty"),
+                            res.getString("tr_bom")
+                                    );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new tran_mstr(m);
+        }
+        return r;
+    }
+    
+    public static tran_mstr getTranMstrBySerial(String serial, String lot) {
+        tran_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from tran_mstr where tr_serial = ? and tr_lot = ?;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());   
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setString(1, serial);
+        ps.setString(2, lot);
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new tran_mstr(m);
+                } else {   
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};        
+                        r = new tran_mstr(m, res.getString("tr_id"), 
+                            res.getString("tr_site"),
+                            res.getString("tr_item"),
+                            res.getDouble("tr_qty"),    
+                            res.getString("tr_ent_date"),
+                            res.getString("tr_eff_date"),
+                            res.getString("tr_userid"),
+                            res.getString("tr_ref"),
+                            res.getString("tr_addrcode"), 
+                            res.getString("tr_type"),
+                            res.getString("tr_datetime"),
+                            res.getString("tr_rmks"),
+                            res.getString("tr_nbr"),
+                            res.getString("tr_misc1"),
+                            res.getString("tr_lot"),
+                            res.getString("tr_serial"),
+                            res.getString("tr_program"),
+                            res.getDouble("tr_amt"),
+                            res.getDouble("tr_mtl"),
+                            res.getDouble("tr_lbr"),
+                            res.getDouble("tr_bdn"),
+                            res.getDouble("tr_ovh"),
+                            res.getDouble("tr_out"),
+                            res.getString("tr_batch"),
+                            res.getString("tr_op"),
+                            res.getString("tr_loc"),
+                            res.getString("tr_wh"),
+                            res.getString("tr_expire"),
+                            res.getString("tr_cc"),
+                            res.getString("tr_wc"),
+                            res.getString("tr_wf"),
+                            res.getString("tr_prodline"),
+                            res.getString("tr_timestamp"),
+                            res.getString("tr_actcell"),
+                            res.getInt("tr_export"),
+                            res.getString("tr_order"),
+                            res.getInt("tr_line"),
+                            res.getString("tr_po"),
+                            res.getDouble("tr_price"),
+                            res.getDouble("tr_cost"),
+                            res.getString("tr_acct"),
+                            res.getString("tr_terms"),
+                            res.getString("tr_pack"),
+                            res.getString("tr_curr"),
+                            res.getString("tr_pack_date"),
+                            res.getString("tr_assy_date"),
+                            res.getString("tr_uom"),
+                            res.getDouble("tr_base_qty"),
+                            res.getString("tr_bom")
+                                    );
+                    }
+                }
+            }
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new tran_mstr(m);
+        }
+        return r;
+    }
+    
+    
     public static String[] inventoryAdjustmentTransaction(tran_mstr tm, in_mstr in, gl_pair gv) {
         String[] m = new String[2];
         Connection bscon = null;

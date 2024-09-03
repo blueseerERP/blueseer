@@ -786,6 +786,125 @@ public class PurRptPicker extends javax.swing.JPanel {
                
     }
     
+    /* Transactions by Vend / Date range */
+    public void tranByVendDateRange (boolean input) {
+        
+        if (input) { // input...draw variable input panel
+           resetVariables();
+           hidePanels();
+           showPanels(new String[]{"dc", "tb1"});
+           lbdate1.setText(getClassLabelTag("lblfrompodate", this.getClass().getSimpleName()));
+           lbdate2.setText(getClassLabelTag("lbltopodate", this.getClass().getSimpleName()));
+           lbdate1.setText(getClassLabelTag("lblfromvend", this.getClass().getSimpleName()));
+           lbdate2.setText(getClassLabelTag("lbltovend", this.getClass().getSimpleName()));
+           java.util.Date now = new java.util.Date();
+           dcdate1.setDate(now);
+           dcdate2.setDate(now);
+         } else { // output...fill report
+            // colect variables from input
+            String fromvend = tbkey1.getText();
+            String tovend = tbkey2.getText();
+            String fromdate = BlueSeerUtils.setDateFormat(dcdate1.getDate());
+            String todate = BlueSeerUtils.setDateFormat(dcdate2.getDate());
+            // cleanup variables
+          
+            if (fromvend.isEmpty()) {
+                  fromvend = bsmf.MainFrame.lowchar;
+            }
+            if (tovend.isEmpty()) {
+                  tovend = bsmf.MainFrame.hichar;
+            }
+            if (fromdate.isEmpty()) {
+                  fromdate = bsmf.MainFrame.lowdate;
+            }
+            if (todate.isEmpty()) {
+                  todate = bsmf.MainFrame.hidate;
+            }
+            
+            
+            // create and fill tablemodel
+            // column 1 is always 'select' and always type ImageIcon
+            // the remaining columns are whatever you require
+             javax.swing.table.DefaultTableModel mymodel = mymodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
+              new String[]{getGlobalColumnTag("id"),
+                  getGlobalColumnTag("code"),
+                  getGlobalColumnTag("name"),
+                  getGlobalColumnTag("item"), 
+                  getGlobalColumnTag("description"), 
+                  getGlobalColumnTag("type"),
+                  getGlobalColumnTag("date"), 
+                  getGlobalColumnTag("qty")})
+              {
+              @Override  
+              public Class getColumnClass(int col) {  
+                if (col == 7)       
+                    return Double.class;  
+                else return String.class;  //other columns accept String values  
+              }  
+                }; 
+            
+      try{
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{   
+                res = st.executeQuery(" select tr_id, tr_addrcode, tr_item, tr_type, tr_eff_date, tr_qty, " +
+                        " vd_name, it_desc " +
+                        " FROM  tran_mstr inner join item_mstr on it_item = tr_item " +
+                        " inner join vd_mstr on vd_addr = tr_addrcode " +
+                        " where tr_eff_date >= " + "'" + fromdate + "'" + 
+                        " and tr_eff_date <= " + "'" + todate + "'" +
+                        " and tr_addrcode >= " + "'" + fromvend + "'" +   
+                        " and tr_addrcode <= " + "'" + tovend + "'" +  
+                        " order by tr_id desc ;");
+               
+                
+                    while (res.next()) {
+                        mymodel.addRow(new Object[] {
+                                   res.getString("tr_id"),
+                                   res.getString("tr_addrcode"),
+                                   res.getString("vd_name"),
+                                   res.getString("tr_item"),
+                                   res.getString("it_desc"),
+                                   res.getString("tr_type"),
+                                   res.getString("tr_eff_date"),
+                                   res.getDouble("tr_qty")
+                        });
+                    }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+              } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+      
+      // now assign tablemodel to table
+            tablereport.setModel(mymodel);
+            tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+            Enumeration<TableColumn> en = tablereport.getColumnModel().getColumns();
+              while (en.hasMoreElements()) {
+                 TableColumn tc = en.nextElement();
+                 if (mymodel.getColumnClass(tc.getModelIndex()).getSimpleName().equals("ImageIcon")) {
+                     continue;
+                 }
+                 tc.setCellRenderer(new PurRptPicker.renderer1());
+             }
+        } // else run report
+               
+    }
+   
     
     
     /* CUSTOM FUNCTIONS END */
