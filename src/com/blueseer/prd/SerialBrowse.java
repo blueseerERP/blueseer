@@ -478,7 +478,7 @@ public class SerialBrowse extends javax.swing.JPanel {
         });
 
         jLabel4.setText("To Date");
-        jLabel4.setName("lbltovend"); // NOI18N
+        jLabel4.setName("lbltodate"); // NOI18N
 
         btRun.setText("Run");
         btRun.setName("btrun"); // NOI18N
@@ -492,13 +492,13 @@ public class SerialBrowse extends javax.swing.JPanel {
         jLabel5.setName("lblsite"); // NOI18N
 
         jLabel1.setText("From Date");
-        jLabel1.setName("lblfromvend"); // NOI18N
+        jLabel1.setName("lblfromdate"); // NOI18N
 
         jLabel3.setText("To Serial");
-        jLabel3.setName("lbltoreceiver"); // NOI18N
+        jLabel3.setName("lbltoserial"); // NOI18N
 
         jLabel6.setText("From Serial");
-        jLabel6.setName("lblfromreceiver"); // NOI18N
+        jLabel6.setName("lblfromserial"); // NOI18N
 
         btprint.setText("Print/PDF");
         btprint.setName("btprintpdf"); // NOI18N

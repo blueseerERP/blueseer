@@ -272,7 +272,7 @@
             <Component class="javax.swing.JLabel" name="jLabel4">
               <Properties>
                 <Property name="text" type="java.lang.String" value="To Date"/>
-                <Property name="name" type="java.lang.String" value="lbltovend" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="lbltodate" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="btRun">
@@ -293,13 +293,13 @@
             <Component class="javax.swing.JLabel" name="jLabel1">
               <Properties>
                 <Property name="text" type="java.lang.String" value="From Date"/>
-                <Property name="name" type="java.lang.String" value="lblfromvend" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="lblfromdate" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>
                 <Property name="text" type="java.lang.String" value="To Serial"/>
-                <Property name="name" type="java.lang.String" value="lbltoreceiver" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="lbltoserial" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JComboBox" name="ddsite">
@@ -312,7 +312,7 @@
             <Component class="javax.swing.JLabel" name="jLabel6">
               <Properties>
                 <Property name="text" type="java.lang.String" value="From Serial"/>
-                <Property name="name" type="java.lang.String" value="lblfromreceiver" noResource="true"/>
+                <Property name="name" type="java.lang.String" value="lblfromserial" noResource="true"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="tbserialfrom">
