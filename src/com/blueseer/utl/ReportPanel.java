@@ -612,7 +612,7 @@ public int[] mywidth;
             if (TableReport.getName() != null && TableReport.getName().compareTo("EDIPartnerDocBrowse") == 0) {
                  mypanel = "EDIPartnerDocMaint";
                 if (! checkperms(mypanel)) { return; }
-               args = new String[]{TableReport.getValueAt(row, 1).toString(),TableReport.getValueAt(row, 2).toString(),TableReport.getValueAt(row, 7).toString(), TableReport.getValueAt(row, 8).toString()};
+               args = new String[]{TableReport.getValueAt(row, 1).toString(),TableReport.getValueAt(row, 2).toString(),TableReport.getValueAt(row, 7).toString(), TableReport.getValueAt(row, 8).toString(), TableReport.getValueAt(row, 6).toString()};
                reinitpanels(mypanel, true, args);
             }
              if (TableReport.getName() != null && TableReport.getName().compareTo("ShiftBrowse") == 0) {
