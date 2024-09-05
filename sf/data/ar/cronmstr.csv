@@ -1,1 +1,2 @@
-edijob,EDI loader task/job,edigroup,com.blueseer.crn.jobSys,edi,1,0 0/30 * * * ?,0,0,,202301010000,admin
+edijob,EDI loader task/job,edigroup,com.blueseer.crn.jobSys,edi,1,0 0/30 * * * ?,0,0,,202301010000,admin,1000
+billjob,Billing Processor task/job,sysgroup,com.blueseer.crn.jobSys,billing,1,0 00 23 * * ?,0,0,,202301010000,admin,1000

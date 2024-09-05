@@ -304,7 +304,8 @@ CREATE TABLE "edi_mstr" (
   "edi_fa_required" tinyint(1) NOT NULL DEFAULT '0',
   "edi_envelopeall" tinyint(1) NOT NULL DEFAULT '0',
   "edi_una" tinyint(1) NOT NULL DEFAULT '0',
-  "edi_ung" tinyint(1) NOT NULL DEFAULT '0'
+  "edi_ung" tinyint(1) NOT NULL DEFAULT '0',
+  "edi_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -574,7 +575,8 @@ CREATE TABLE "cron_mstr" (
   "cron_modflag" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',
   "cron_lastrun" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "cron_lastmod" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "cron_userid" varchar(30) NOT NULL COLLATE NOCASE DEFAULT ''
+  "cron_userid" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "cron_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -587,7 +589,8 @@ CREATE TABLE "cron_log" (
   "crl_desc" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
   "crl_ts" timestamp NOT NULL DEFAULT (datetime('now','localtime')),
   "crl_ref" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "crl_status" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
+  "crl_status" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "crl_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -602,7 +605,8 @@ CREATE TABLE "edi_file" (
   "edf_partner" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
   "edf_filetype" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
   "edf_doctype" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
-  "edf_status" varchar(15) NOT NULL COLLATE NOCASE DEFAULT ''
+  "edf_status" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edf_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -632,7 +636,8 @@ CREATE TABLE "as2_mstr" (
   "as2_signalgo" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "as2_micalgo" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "as2_contenttype" varchar(70) NOT NULL COLLATE NOCASE DEFAULT '',
-  "as2_sysas2id" varchar(50) NOT NULL COLLATE NOCASE DEFAULT ''
+  "as2_sysas2id" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "as2_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -657,7 +662,8 @@ CREATE TABLE "api_mstr" (
   "api_char1" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
   "api_char2" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
   "api_char3" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
-  "api_notes" varchar(1000) NOT NULL COLLATE NOCASE DEFAULT ''
+  "api_notes" varchar(1000) NOT NULL COLLATE NOCASE DEFAULT '',
+  "api_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -707,7 +713,8 @@ CREATE TABLE "as2_log" (
   "as2l_status" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
   "as2l_messg" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
   "as2l_datetime" varchar(16) NOT NULL COLLATE NOCASE DEFAULT '',
-  "as2l_mdn" varchar(100) NOT NULL COLLATE NOCASE DEFAULT ''
+  "as2l_mdn" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "as2l_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -722,7 +729,8 @@ CREATE TABLE "api_log" (
   "apil_error" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
   "apil_ts" timestamp NOT NULL DEFAULT (datetime('now','localtime')),
   "apil_file" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
-  "apil_mdn" varchar(50) NOT NULL COLLATE NOCASE DEFAULT ''
+  "apil_mdn" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "apil_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -739,7 +747,8 @@ CREATE TABLE "map_mstr" (
   "map_outfiletype" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "map_source" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
   "map_package" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
-  "map_internal" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0'
+  "map_internal" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "map_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -752,7 +761,8 @@ CREATE TABLE "dfs_mstr" (
   "dfs_filetype" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
   "dfs_delimiter" varchar(1) NOT NULL COLLATE NOCASE DEFAULT '',
   "dfs_misc" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
-  "dfs_suppressemptytag" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0'
+  "dfs_suppressemptytag" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "dfs_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -767,7 +777,8 @@ CREATE TABLE "edpd_partner" (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE "edp_partner" (
   "edp_id" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
-  "edp_desc" varchar(50) NOT NULL COLLATE NOCASE DEFAULT ''
+  "edp_desc" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edp_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -792,7 +803,8 @@ CREATE TABLE "edi_log" (
   "elg_order" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "elg_map" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
   "elg_ackfile" varchar(60) NOT NULL COLLATE NOCASE DEFAULT '',
-  "elg_ack" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0'
+  "elg_ack" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',
+  "elg_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 CREATE TABLE "edi_idx" (
   "edx_id" INTEGER PRIMARY KEY,
@@ -830,7 +842,8 @@ CREATE TABLE "edi_idx" (
   "edx_outsegdelim" int(9) NOT NULL COLLATE NOCASE DEFAULT '0',
   "edx_outelmdelim" int(9) NOT NULL COLLATE NOCASE DEFAULT '0',
   "edx_outsubdelim" int(9) NOT NULL COLLATE NOCASE DEFAULT '0',
-  "edx_status" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
+  "edx_status" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "edx_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -840,7 +853,8 @@ CREATE TABLE "edi_xref" (
   "exr_tpaddr" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "exr_ovaddr" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "exr_gsid" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
-  "exr_type" varchar(15) NOT NULL COLLATE NOCASE DEFAULT ''
+  "exr_type" varchar(15) NOT NULL COLLATE NOCASE DEFAULT '',
+  "exr_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -860,7 +874,8 @@ CREATE TABLE "edi_attr" (
   "exa_doc" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
   "exa_dir" tinyint(1) NOT NULL COLLATE NOCASE DEFAULT '0',
   "exa_key" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
-  "exa_value" varchar(50) NOT NULL COLLATE NOCASE DEFAULT ''
+  "exa_value" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
+  "exa_site" varchar(50) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -2985,7 +3000,8 @@ CREATE TABLE "pks_mstr" (
   "pks_create" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
   "pks_standard" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
   "pks_external" tinyint(1) NOT NULL DEFAULT '0',
-  "pks_keyid" varchar(100) NOT NULL COLLATE NOCASE DEFAULT ''
+  "pks_keyid" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
+  "pks_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 CREATE TABLE "dfs_det" (
   "dfsd_id" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
@@ -3005,7 +3021,8 @@ CREATE TABLE "dfs_det" (
 CREATE TABLE "wkf_mstr" (
   "wkf_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "wkf_desc" varchar(100) NOT NULL COLLATE NOCASE DEFAULT '',
-  "wkf_enabled" tinyint(1) NOT NULL DEFAULT '0'
+  "wkf_enabled" tinyint(1) NOT NULL DEFAULT '0',
+  "wkf_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 CREATE TABLE "wkf_det" (
   "wkfd_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
@@ -3025,7 +3042,8 @@ CREATE TABLE "wkf_log" (
   "wkfl_ts" timestamp NOT NULL DEFAULT (datetime('now','localtime')),
   "wkfl_ref" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "wkfl_status" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
-  "wkfl_messg" varchar(200) NOT NULL COLLATE NOCASE DEFAULT ''
+  "wkfl_messg" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
+  "wkfl_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 CREATE TABLE "wkfd_log" (
   "wkfdl_id" INTEGER PRIMARY KEY,
@@ -3034,7 +3052,8 @@ CREATE TABLE "wkfd_log" (
   "wkfdl_ts" timestamp NOT NULL DEFAULT (datetime('now','localtime')),
   "wkfdl_ref" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "wkfdl_status" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
-  "wkfdl_messg" varchar(200) NOT NULL COLLATE NOCASE DEFAULT ''
+  "wkfdl_messg" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
+  "wkfdl_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 CREATE TABLE "po_tax" (
   "pot_nbr" varchar(8) NOT NULL,

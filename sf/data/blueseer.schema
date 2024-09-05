@@ -29,7 +29,8 @@ CREATE TABLE IF NOT EXISTS `exp_mstr` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `edp_partner` (
   `edp_id` varchar(15)  NOT NULL DEFAULT '',
-  `edp_desc` varchar(50)  NOT NULL DEFAULT ''
+  `edp_desc` varchar(50)  NOT NULL DEFAULT '',
+  `edp_site` varchar(10)  NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `edpd_partner` (
   `edpd_parent` varchar(15)  NOT NULL DEFAULT '',
@@ -61,7 +62,8 @@ CREATE TABLE IF NOT EXISTS `as2_mstr` (
   `as2_signalgo` varchar(30)  NOT NULL DEFAULT '',
   `as2_micalgo` varchar(30)  NOT NULL DEFAULT '',
   `as2_contenttype` varchar(70)  NOT NULL DEFAULT '',
-  `as2_sysas2id` varchar(50)  NOT NULL DEFAULT ''
+  `as2_sysas2id` varchar(50)  NOT NULL DEFAULT '',
+  `as2_site` varchar(10)  NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `api_mstr` (
   `api_id` varchar(30)  NOT NULL DEFAULT '',
@@ -83,7 +85,8 @@ CREATE TABLE IF NOT EXISTS `api_mstr` (
   `api_char1` varchar(100) NOT NULL DEFAULT '',
   `api_char2` varchar(100) NOT NULL DEFAULT '',
   `api_char3` varchar(100) NOT NULL DEFAULT '',
-  `api_notes` varchar(1000) NOT NULL DEFAULT ''
+  `api_notes` varchar(1000) NOT NULL DEFAULT '',
+  `api_site` varchar(10) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `api_det` (
   `apid_id` varchar(30)  NOT NULL DEFAULT '',
@@ -125,7 +128,8 @@ CREATE TABLE IF NOT EXISTS `map_mstr` (
   `map_outfiletype` varchar(30)  NOT NULL DEFAULT '',
   `map_source` varchar(200)  NOT NULL DEFAULT '',
   `map_package` varchar(30)  NOT NULL DEFAULT '',
-  `map_internal` tinyint(1) NOT NULL DEFAULT '0'
+  `map_internal` tinyint(1) NOT NULL DEFAULT '0',
+  `map_site` varchar(10) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `dfs_mstr` (
   `dfs_id` varchar(30)  NOT NULL DEFAULT '',
@@ -135,7 +139,8 @@ CREATE TABLE IF NOT EXISTS `dfs_mstr` (
   `dfs_filetype` varchar(15)  NOT NULL DEFAULT '',
   `dfs_delimiter` int(4)  NOT NULL DEFAULT '0',
   `dfs_misc` varchar(50)  NOT NULL DEFAULT '',
-  `dfs_suppressemptytag` tinyint(1)  NOT NULL DEFAULT '0'
+  `dfs_suppressemptytag` tinyint(1)  NOT NULL DEFAULT '0',
+  `dfs_site` varchar(10)  NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `ap_ctrl` (
   `apc_bank` varchar(10)  NOT NULL DEFAULT '',
@@ -380,7 +385,8 @@ CREATE TABLE IF NOT EXISTS `edi_mstr` (
   `edi_fa_required` tinyint(1) NOT NULL DEFAULT '0',
   `edi_envelopeall` tinyint(1) NOT NULL DEFAULT '0',
   `edi_una` tinyint(1) NOT NULL DEFAULT '0',
-  `edi_ung` tinyint(1) NOT NULL DEFAULT '0'
+  `edi_ung` tinyint(1) NOT NULL DEFAULT '0',
+  `edi_site` varchar(10) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `cms_det` (
   `cms_code` varchar(10) NOT NULL  DEFAULT '',
@@ -595,7 +601,8 @@ CREATE TABLE IF NOT EXISTS `cron_mstr` (
   `cron_modflag` tinyint(1) NOT NULL  DEFAULT '0',
   `cron_lastrun` varchar(30) NOT NULL  DEFAULT '',
   `cron_lastmod` varchar(30) NOT NULL  DEFAULT '',
-  `cron_userid` varchar(30) NOT NULL  DEFAULT ''
+  `cron_userid` varchar(30) NOT NULL  DEFAULT '',
+  `cron_site` varchar(10) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `cron_log` (
   `crl_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -605,7 +612,8 @@ CREATE TABLE IF NOT EXISTS `cron_log` (
   `crl_desc` varchar(200) NOT NULL  DEFAULT '',
   `crl_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `crl_ref` varchar(30) NOT NULL  DEFAULT '',
-  `crl_status` varchar(10) NOT NULL  DEFAULT ''
+  `crl_status` varchar(10) NOT NULL  DEFAULT '',
+  `crl_site` varchar(10) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `edi_file` (
   `edf_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -617,8 +625,9 @@ CREATE TABLE IF NOT EXISTS `edi_file` (
   `edf_partner` varchar(15) NOT NULL  DEFAULT '',
   `edf_filetype` varchar(15) NOT NULL  DEFAULT '',
   `edf_doctype` varchar(15) NOT NULL  DEFAULT '',
-  `edf_status` varchar(15) NOT NULL  DEFAULT '')
-ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `edf_status` varchar(15) NOT NULL  DEFAULT '',
+  `edf_site` varchar(10) NOT NULL  DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `as2_log` (
   `as2l_logid` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `as2l_parent` int(12) NOT NULL DEFAULT '0',
@@ -627,8 +636,9 @@ CREATE TABLE IF NOT EXISTS `as2_log` (
   `as2l_status` varchar(10) NOT NULL  DEFAULT '',
   `as2l_messg` varchar(200) NOT NULL  DEFAULT '',
   `as2l_datetime` varchar(16) NOT NULL DEFAULT '',
-  `as2l_mdn` varchar(100) NOT NULL  DEFAULT '')
-ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `as2l_mdn` varchar(100) NOT NULL  DEFAULT '',
+  `as2l_site` varchar(10) NOT NULL  DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `api_log` (
   `apil_logid` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `apil_comkey` int(12) NOT NULL DEFAULT '0',
@@ -639,8 +649,9 @@ CREATE TABLE IF NOT EXISTS `api_log` (
   `apil_error` varchar(200) NOT NULL  DEFAULT '',
   `apil_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `apil_file` varchar(100) NOT NULL  DEFAULT '',
-  `apil_mdn` varchar(100) NOT NULL  DEFAULT '')
-ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `apil_mdn` varchar(100) NOT NULL  DEFAULT '',
+  `apil_site` varchar(10) NOT NULL  DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `edi_log` (
   `elg_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `elg_comkey` int(12) NOT NULL DEFAULT '0',
@@ -661,8 +672,9 @@ CREATE TABLE IF NOT EXISTS `edi_log` (
   `elg_order` varchar(30) NOT NULL  DEFAULT '',
   `elg_map` varchar(50) NOT NULL  DEFAULT '',
   `elg_ackfile` varchar(60) NOT NULL  DEFAULT '',
-  `elg_ack` tinyint(1) NOT NULL  DEFAULT '0') 
-ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `elg_ack` tinyint(1) NOT NULL  DEFAULT '0',
+  `elg_site` varchar(10) NOT NULL  DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `edi_idx` (
   `edx_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `edx_comkey` int(12) NOT NULL DEFAULT '0',
@@ -699,8 +711,9 @@ CREATE TABLE IF NOT EXISTS `edi_idx` (
   `edx_outsegdelim` int(9) NOT NULL DEFAULT '0',
   `edx_outelmdelim` int(9) NOT NULL DEFAULT '0',
   `edx_outsubdelim` int(9) NOT NULL DEFAULT '0',
-  `edx_status` varchar(10) NOT NULL DEFAULT '')
-ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `edx_status` varchar(10) NOT NULL DEFAULT '',
+  `edx_site` varchar(10) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `edi_stds` (
   `eds_doc` varchar(15) NOT NULL  DEFAULT '',
   `eds_gs` varchar(15) NOT NULL  DEFAULT '',
@@ -712,7 +725,8 @@ CREATE TABLE IF NOT EXISTS `edi_xref` (
   `exr_tpaddr` varchar(30) NOT NULL  DEFAULT '',
   `exr_ovaddr` varchar(30) NOT NULL  DEFAULT '',
   `exr_gsid` varchar(15) NOT NULL  DEFAULT '',
-  `exr_type` varchar(15) NOT NULL  DEFAULT ''
+  `exr_type` varchar(15) NOT NULL  DEFAULT '',
+  `exr_site` varchar(10) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `edi_attr` (
   `exa_sndid` varchar(15) NOT NULL  DEFAULT '',
@@ -720,7 +734,8 @@ CREATE TABLE IF NOT EXISTS `edi_attr` (
   `exa_doc` varchar(10) NOT NULL  DEFAULT '',
   `exa_dir` tinyint(1) NOT NULL  DEFAULT '0',
   `exa_key` varchar(50) NOT NULL  DEFAULT '',
-  `exa_value` varchar(50) NOT NULL  DEFAULT ''
+  `exa_value` varchar(50) NOT NULL  DEFAULT '',
+  `exa_site` varchar(10) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `eeo_det` (
   `eeod_id` int(11) NOT NULL DEFAULT '0',
@@ -2265,7 +2280,8 @@ CREATE TABLE IF NOT EXISTS `pks_mstr` (
   `pks_create` varchar(50)  DEFAULT '',
   `pks_standard` varchar(50)  DEFAULT '',
   `pks_external` tinyint(1)  DEFAULT '0',
-  `pks_keyid` varchar(100)  DEFAULT ''
+  `pks_keyid` varchar(100)  DEFAULT '',
+  `pks_site` varchar(100)  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `user_mstr` (
   `user_id` varchar(10) NOT NULL  DEFAULT '',
@@ -2617,7 +2633,8 @@ CREATE TABLE `dfs_det` (
 CREATE TABLE IF NOT EXISTS `wkf_mstr` (
   `wkf_id` varchar(30) NOT NULL,
   `wkf_desc` varchar(100)  NOT NULL DEFAULT '',
-  `wkf_enabled` tinyint(1)  NOT NULL DEFAULT '0'
+  `wkf_enabled` tinyint(1)  NOT NULL DEFAULT '0',
+  `wkf_site` varchar(10)  NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `wkf_det` (
   `wkfd_id` varchar(30) NOT NULL,
@@ -2637,7 +2654,8 @@ CREATE TABLE IF NOT EXISTS `wkf_log` (
   `wkfl_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `wkfl_ref` varchar(30) NOT NULL  DEFAULT '',
   `wkfl_status` varchar(10) NOT NULL  DEFAULT '',
-  `wkfl_messg` varchar(200) NOT NULL  DEFAULT ''
+  `wkfl_messg` varchar(200) NOT NULL  DEFAULT '',
+  `wkfl_site` varchar(10) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `wkfd_log` (
   `wkfdl_id` int(12) NOT NULL PRIMARY KEY AUTO_INCREMENT,
@@ -2646,7 +2664,8 @@ CREATE TABLE IF NOT EXISTS `wkfd_log` (
   `wkfdl_ts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `wkfdl_ref` varchar(30) NOT NULL  DEFAULT '',
   `wkfdl_status` varchar(10) NOT NULL  DEFAULT '',
-  `wkfdl_messg` varchar(200) NOT NULL  DEFAULT ''
+  `wkfdl_messg` varchar(200) NOT NULL  DEFAULT '',
+  `wkfdl_site` varchar(10) NOT NULL  DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `as2_meta` (
   `as2m_id` varchar(30) NOT NULL DEFAULT '',

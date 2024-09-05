@@ -1,3 +1,3 @@
-bsCertStore,BlueSeer Key Store .p12 for Testing,store,,,,edi/certs/bscerts.p12,,,,,,0,
-bsPGPRing,BlueSeer PGP Key Ring (.skr / .pkr) for Testing,store,,,,edi/certs/bsPGPring,,,,,,0,
-bstest,BlueSeer Test PublicKey/Cert for Testing,keypair,bstest,,bsCertStore,,,,,,X.509,0,
+bsCertStore,BlueSeer Key Store .p12 for Testing,store,,,,edi/certs/bscerts.p12,,,,,,0,,1000
+bsPGPRing,BlueSeer PGP Key Ring (.skr / .pkr) for Testing,store,,,,edi/certs/bsPGPring,,,,,,0,,1000
+bstest,BlueSeer Test PublicKey/Cert for Testing,keypair,bstest,,bsCertStore,,,,,,X.509,0,,1000

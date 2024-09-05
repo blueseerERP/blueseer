@@ -1,38 +1,38 @@
-IDOCorders05,SAP ORDERS IDOC,generic,850idoc,FF,0,,0
-IDOCshpmnt02,SAP SHIPMENT IDOC,generic,856idoc,FF,0,,0
-IDOCinvoic02,SAP INVOICE IDOC,generic,810idoc,FF,0,,0
-X12856,X12 Advance Shipping Notice,generic,856x12,X12,0,,0
-X12850,X12 Purchase Order,generic,850x12,X12,0,,0
-X12855,X12 Order Acknowledgment,generic,855x12,X12,0,,0
-X12810,X12 Invoice,generic,810x12,X12,0,,0
-X12820,X12 Payment Order/Remittance Advice,generic,820x12,X12,0,,0
-X12824,X12 Application Advice,generic,824x12,X12,0,,0
-X12864,X12 Text Message,generic,864x12,X12,0,,0
-X12830,X12 Planning Schedule,generic,830x12,X12,0,,0
-X12862,X12 Shipping Schedule,generic,862x12,X12,0,,0
-X12204,X12 Motor Carrier Load Tender,generic,204x12,X12,0,,0
-X12214,X12 Carrier Shipment Status,generic,214x12,X12,0,,0
-X12990,X12 Response to Load Tender,generic,990x12,X12,0,,0
-X12812,X12 Credit / Debit Adjustment,generic,812x12,X12,0,,0
-X12940,X12 Warehouse Shipping Order,generic,940x12,X12,0,,0
-X12943,X12 Warehouse Stock Transfer Shipment Advice,generic,943x12,X12,0,,0
-X12944,X12 Warehouse Stock Transfer Receipt Advice,generic,944x12,X12,0,,0
-X12945,X12 Warehouse Shipping Advice,generic,945x12,X12,0,,0
-X12997,X12 Functional Acknowledgment,generic,997x12,X12,0,,0
-X12270,X12 Eligibility Coverage or Benefit Inquiry,generic,270x12,X12,0,,0
-X12271,X12 Eligibility Coverage or Benefit Information,generic,271x12,X12,0,,0
-X12834,X12 Benefit Enrollment and Maintenance,generic,834x12,X12,0,,0
-X12835,X12 Health Care Claim Payment/Advice,generic,835x12,X12,0,,0
-X12837,X12 Health Care Claim,generic,837x12,X12,0,,0
-DB,System Database I/O,generic,DB,DB,0,,0
-CSVGenericOrder,Comma Delimited Order,generic,850csv,CSV,44,,0
-CSVGenericInvoice,Comma Delimited Invoice,generic,810csv,CSV,44,,0
-CSVD365Order,Comma Delimited Order,generic,850csv,CSV,44,,0
-XMLGenericOrder,XML Generic Order,generic,850xml,XML,0,,0
-cXMLOrder,cXML Business Order,generic,850xml,XML,0,,0
-JSONGenericOrder,JSON Generic Order,generic,850json,JSON,0,,0
-UNEorders,EDIFACT Purchase Order,generic,850une,UNE,0,,0
-UNEdesadv,EDIFACT Shipping Advice,generic,856une,UNE,0,,0
-UNEinvoic,EDIFACT Invoice,generic,810une,UNE,0,,0
-UNEordrsp,EDIFACT Order Response,generic,855une,UNE,0,,0
-XMLD365OrderV2,D365 Sales Order Entity V2 import,generic,850xml,XML,0,,1
+IDOCorders05,SAP ORDERS IDOC,generic,850idoc,FF,0,,0,1000
+IDOCshpmnt02,SAP SHIPMENT IDOC,generic,856idoc,FF,0,,0,1000
+IDOCinvoic02,SAP INVOICE IDOC,generic,810idoc,FF,0,,0,1000
+X12856,X12 Advance Shipping Notice,generic,856x12,X12,0,,0,1000
+X12850,X12 Purchase Order,generic,850x12,X12,0,,0,1000
+X12855,X12 Order Acknowledgment,generic,855x12,X12,0,,0,1000
+X12810,X12 Invoice,generic,810x12,X12,0,,0,1000
+X12820,X12 Payment Order/Remittance Advice,generic,820x12,X12,0,,0,1000
+X12824,X12 Application Advice,generic,824x12,X12,0,,0,1000
+X12864,X12 Text Message,generic,864x12,X12,0,,0,1000
+X12830,X12 Planning Schedule,generic,830x12,X12,0,,0,1000
+X12862,X12 Shipping Schedule,generic,862x12,X12,0,,0,1000
+X12204,X12 Motor Carrier Load Tender,generic,204x12,X12,0,,0,1000
+X12214,X12 Carrier Shipment Status,generic,214x12,X12,0,,0,1000
+X12990,X12 Response to Load Tender,generic,990x12,X12,0,,0,1000
+X12812,X12 Credit / Debit Adjustment,generic,812x12,X12,0,,0,1000
+X12940,X12 Warehouse Shipping Order,generic,940x12,X12,0,,0,1000
+X12943,X12 Warehouse Stock Transfer Shipment Advice,generic,943x12,X12,0,,0,1000
+X12944,X12 Warehouse Stock Transfer Receipt Advice,generic,944x12,X12,0,,0,1000
+X12945,X12 Warehouse Shipping Advice,generic,945x12,X12,0,,0,1000
+X12997,X12 Functional Acknowledgment,generic,997x12,X12,0,,0,1000
+X12270,X12 Eligibility Coverage or Benefit Inquiry,generic,270x12,X12,0,,0,1000
+X12271,X12 Eligibility Coverage or Benefit Information,generic,271x12,X12,0,,0,1000
+X12834,X12 Benefit Enrollment and Maintenance,generic,834x12,X12,0,,0,1000
+X12835,X12 Health Care Claim Payment/Advice,generic,835x12,X12,0,,0,1000
+X12837,X12 Health Care Claim,generic,837x12,X12,0,,0,1000
+DB,System Database I/O,generic,DB,DB,0,,0,1000
+CSVGenericOrder,Comma Delimited Order,generic,850csv,CSV,44,,0,1000
+CSVGenericInvoice,Comma Delimited Invoice,generic,810csv,CSV,44,,0,1000
+CSVD365Order,Comma Delimited Order,generic,850csv,CSV,44,,0,1000
+XMLGenericOrder,XML Generic Order,generic,850xml,XML,0,,0,1000
+cXMLOrder,cXML Business Order,generic,850xml,XML,0,,0,1000
+JSONGenericOrder,JSON Generic Order,generic,850json,JSON,0,,0,1000
+UNEorders,EDIFACT Purchase Order,generic,850une,UNE,0,,0,1000
+UNEdesadv,EDIFACT Shipping Advice,generic,856une,UNE,0,,0,1000
+UNEinvoic,EDIFACT Invoice,generic,810une,UNE,0,,0,1000
+UNEordrsp,EDIFACT Order Response,generic,855une,UNE,0,,0,1000
+XMLD365OrderV2,D365 Sales Order Entity V2 import,generic,850xml,XML,0,,1,1000
