@@ -349,6 +349,11 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
         
         headerlist.setModel(listmodel);
         
+        ddsite.removeAllItems();
+        OVData.getSiteList().stream().forEach((s) -> ddsite.addItem(s));  
+        ddsite.insertItemAt("", 0);
+        ddsite.setSelectedIndex(0);
+        
        isLoad = false;
     }
     
@@ -483,7 +488,8 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
                 ddmicalgo.getSelectedItem().toString(),
                 ddcontenttype.getSelectedItem().toString(),
                 String.valueOf(BlueSeerUtils.boolToInt(cbenabled.isSelected())),
-                tbsysas2id.getText()
+                tbsysas2id.getText(),
+                ddsite.getSelectedItem().toString()
                 );
         return x;
     }
@@ -556,6 +562,7 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
         ddcontenttype.setSelectedItem(x.as2_contenttype());
         cbenabled.setSelected(BlueSeerUtils.ConvertStringToBool(String.valueOf(x.as2_enabled())));
         tbsysas2id.setText(x.as2_sysas2id());
+        ddsite.setSelectedItem(x.as2_site());
         getAttributes(x.as2_id());
         setAction(x.m());
     }
@@ -694,6 +701,8 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
         jLabel15 = new javax.swing.JLabel();
         tbsysas2id = new javax.swing.JTextField();
         jLabel21 = new javax.swing.JLabel();
+        ddsite = new javax.swing.JComboBox<>();
+        jLabel22 = new javax.swing.JLabel();
         btadd = new javax.swing.JButton();
         btdelete = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -892,6 +901,8 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
 
         jLabel21.setText("System AS2 ID");
 
+        jLabel22.setText("Site");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -909,14 +920,11 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(tbas2id, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(119, 119, 119)
-                                .addComponent(jLabel16)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(ddclass, 0, 1, Short.MAX_VALUE))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(ddcontenttype, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
                                 .addComponent(tbkey, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btlookup, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -926,9 +934,17 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
                                 .addComponent(btclear)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(cbdebug))
-                            .addComponent(tbdesc)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                            .addComponent(tbdesc, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addComponent(tbas2id, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel16))
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addComponent(tbsysas2id, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel22))
                                     .addGroup(jPanel3Layout.createSequentialGroup()
                                         .addComponent(tburl, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -939,14 +955,11 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
                                         .addComponent(jLabel17)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(ddclass, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(ddsite, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(tbport)
                                     .addComponent(ddprotocol, 0, 100, Short.MAX_VALUE))))
-                        .addGap(38, 38, 38))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(ddcontenttype, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tbsysas2id, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(38, 38, 38))))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -986,12 +999,14 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbsysas2id, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel21))
+                    .addComponent(jLabel21)
+                    .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel22))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ddcontenttype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel15))
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         btadd.setText("Add");
@@ -1295,6 +1310,7 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JComboBox<String> ddprotocol;
     private javax.swing.JComboBox<String> ddsignalgo;
     private javax.swing.JComboBox<String> ddsigncert;
+    private javax.swing.JComboBox<String> ddsite;
     private javax.swing.JList<String> headerlist;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -1310,6 +1326,7 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
