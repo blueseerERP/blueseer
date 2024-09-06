@@ -566,6 +566,7 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddactions.addItem("DecryptFile");
         ddactions.addItem("EncryptFile");
         ddactions.addItem("FileMatchMove");
+        ddactions.addItem("ForEachDir");
         
         for (int i = 0; i < ddactions.getItemCount(); i++) {
             
@@ -701,6 +702,13 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
                 x.add(new String[]{"destination filename", ""});
                 x.add(new String[]{"overwrite", ""}); 
                 kvs.put("FileMatchMove", x);
+            }
+            if (i == 18) {
+                ArrayList<String[]> x = new ArrayList<String[]>();
+                x.add(new String[]{"filter", ""});
+                x.add(new String[]{"destination dir", ""});
+                x.add(new String[]{"overwrite", ""}); 
+                kvs.put("ForEachDir", x);
             }
         }
         

@@ -825,6 +825,67 @@ public class EDI {
     return sb.toString();
 }
 
+    public static String runEDIForSite(String[] args, String site, Path[] paths) {
+    
+        StringBuilder sb = new StringBuilder();
+        try {
+     
+            boolean isDebug = false;
+            if (args != null && args.length > 0) {
+                if (args[0].equals("-debug")) {
+                    isDebug = true;
+                }
+            }
+           
+            String inArch = cleanDirString(EDData.getEDIInArch()); 
+            String ErrorDir = cleanDirString(EDData.getEDIErrorDir()); 
+            
+               
+            for (Path p : paths) {
+           //   for (int i = 0; i < listOfFiles.length; i++) {
+              if (Files.exists(p)) {
+                sb.append("EDILoad:  processing file " + p).append("\n");
+                  if(p.toFile().length() == 0) { 
+                  p.toFile().delete();
+                  } else { 
+                 String[] m = EDI.processFile(p.toString(),"","","", isDebug, false, 0, 0);
+                 
+                 // show error if exists...usually malformed envelopes
+                    if (m[0].equals("1")) {
+                        sb.append(m[1]).append("\n");
+                        // now move to error folder
+                        Path errortarget = FileSystems.getDefault().getPath(ErrorDir + p.getFileName());
+                         Files.move(p, errortarget, StandardCopyOption.REPLACE_EXISTING);
+                         continue;  // bale from here
+                    }
+                    
+                    // if delete set in control panel...remove file and continue;
+                         if (EDData.isEDIDeleteFlag()) {
+                          Files.delete(p);
+                         }
+                    
+                    // now archive file
+                         if (! inArch.isEmpty() && ! EDData.isEDIDeleteFlag() && EDData.isEDIArchFlag() ) {
+                         Path target = FileSystems.getDefault().getPath(inArch + p.getFileName());
+                        // bsmf.MainFrame.show(movefrom.toString() + "  /  " + target.toString());
+                         Files.move(p, target, StandardCopyOption.REPLACE_EXISTING);
+                          // now remove from list
+                         }
+                 
+                  
+                  }
+                }
+              }
+       } catch (IOException ex) {
+          ex.printStackTrace();
+       } catch (ClassNotFoundException ex) {
+          ex.printStackTrace();
+       }
+    
+    return sb.toString();
+}
+
+    
     public static String runEDIsingle(String[] args, String filecontent) {
     
         StringBuilder sb = new StringBuilder();
