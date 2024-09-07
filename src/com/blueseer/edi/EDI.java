@@ -825,7 +825,7 @@ public class EDI {
     return sb.toString();
 }
 
-    public static String runEDIForSite(String[] args, String site, Path[] paths) {
+    public static String runEDIForSite(String[] args, String site, File[] files) {
     
         StringBuilder sb = new StringBuilder();
         try {
@@ -839,9 +839,12 @@ public class EDI {
            
             String inArch = cleanDirString(EDData.getEDIInArch()); 
             String ErrorDir = cleanDirString(EDData.getEDIErrorDir()); 
-            
-               
-            for (Path p : paths) {
+                           
+            for (File f : files) {
+                if (! f.isFile()) {
+                    continue;
+                }
+                Path p = f.toPath();
            //   for (int i = 0; i < listOfFiles.length; i++) {
               if (Files.exists(p)) {
                 sb.append("EDILoad:  processing file " + p).append("\n");

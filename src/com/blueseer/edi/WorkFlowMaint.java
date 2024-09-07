@@ -310,6 +310,12 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
         setddactions();
         tbkvKey.setText("");
         tbkvValue.setText("");
+        
+        ddsite.removeAllItems();
+        OVData.getSiteList().stream().forEach((s) -> ddsite.addItem(s));  
+        ddsite.insertItemAt("", 0);
+        ddsite.setSelectedIndex(0);
+        
        isLoad = false;
     }
     
@@ -438,7 +444,8 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
         wkf_mstr x = new wkf_mstr(null, 
                 tbkey.getText(),
                 tbdesc.getText(),
-                String.valueOf(BlueSeerUtils.boolToInt(cbenabled.isSelected()))
+                String.valueOf(BlueSeerUtils.boolToInt(cbenabled.isSelected())),
+                ddsite.getSelectedItem().toString()
                 );
         return x;
     }
@@ -523,6 +530,7 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
     public void updateForm() {
         tbkey.setText(x.wkf_id());
         tbdesc.setText(x.wkf_desc());
+        ddsite.setSelectedItem(x.wkf_site());
         cbenabled.setSelected(BlueSeerUtils.ConvertStringToBool(x.wkf_enabled()));
         setAction(x.m());
         
@@ -566,7 +574,8 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddactions.addItem("DecryptFile");
         ddactions.addItem("EncryptFile");
         ddactions.addItem("FileMatchMove");
-        ddactions.addItem("ForEachDir");
+        ddactions.addItem("AS2ToTranslate");
+        ddactions.addItem("AS2Outbound");
         
         for (int i = 0; i < ddactions.getItemCount(); i++) {
             
@@ -705,10 +714,14 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
             if (i == 18) {
                 ArrayList<String[]> x = new ArrayList<String[]>();
+                kvs.put("AS2ToTranslate", x);
+            }
+            if (i == 19) {
+                ArrayList<String[]> x = new ArrayList<String[]>();
                 x.add(new String[]{"filter", ""});
                 x.add(new String[]{"destination dir", ""});
                 x.add(new String[]{"overwrite", ""}); 
-                kvs.put("ForEachDir", x);
+                kvs.put("AS2Outbound", x);
             }
         }
         
@@ -746,6 +759,8 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
         cbenabled = new javax.swing.JCheckBox();
         btnew = new javax.swing.JButton();
         btrun = new javax.swing.JButton();
+        ddsite = new javax.swing.JComboBox<>();
+        jLabel5 = new javax.swing.JLabel();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         keyvaluetable = new javax.swing.JTable();
@@ -919,6 +934,8 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
+        jLabel5.setText("Site:");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -929,7 +946,8 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel1)
-                            .addComponent(jLabel2))
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel5))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -943,7 +961,8 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnew)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btclear))))
+                                .addComponent(btclear))
+                            .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(btrun, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
@@ -963,6 +982,10 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tbdesc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbenabled)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1316,10 +1339,12 @@ public class WorkFlowMaint extends javax.swing.JPanel implements IBlueSeerT {
     private javax.swing.JButton btupdate;
     private javax.swing.JCheckBox cbenabled;
     private javax.swing.JComboBox<String> ddactions;
+    private javax.swing.JComboBox<String> ddsite;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
