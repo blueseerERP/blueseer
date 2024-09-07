@@ -63,7 +63,9 @@ CREATE TABLE IF NOT EXISTS `as2_mstr` (
   `as2_micalgo` varchar(30)  NOT NULL DEFAULT '',
   `as2_contenttype` varchar(70)  NOT NULL DEFAULT '',
   `as2_sysas2id` varchar(50)  NOT NULL DEFAULT '',
-  `as2_site` varchar(10)  NOT NULL DEFAULT ''
+  `as2_site` varchar(10)  NOT NULL DEFAULT '',
+  `as2_inwkf` varchar(30)  NOT NULL DEFAULT '',
+  `as2_outwkf` varchar(30)  NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `api_mstr` (
   `api_id` varchar(30)  NOT NULL DEFAULT '',

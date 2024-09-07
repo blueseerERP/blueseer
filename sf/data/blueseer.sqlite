@@ -637,7 +637,9 @@ CREATE TABLE "as2_mstr" (
   "as2_micalgo" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
   "as2_contenttype" varchar(70) NOT NULL COLLATE NOCASE DEFAULT '',
   "as2_sysas2id" varchar(50) NOT NULL COLLATE NOCASE DEFAULT '',
-  "as2_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT ''
+  "as2_site" varchar(10) NOT NULL COLLATE NOCASE DEFAULT '',
+  "as2_inwkf" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "as2_outwkf" varchar(30) NOT NULL COLLATE NOCASE DEFAULT ''
 );
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
