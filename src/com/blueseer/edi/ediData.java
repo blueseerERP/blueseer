@@ -2611,7 +2611,7 @@ public class ediData {
     
     
     
-    public static ArrayList getMapMstrList() {
+    public static ArrayList<String> getMapMstrList() {
        ArrayList mylist = new ArrayList();
         try{
             Connection con = null;
@@ -2643,7 +2643,40 @@ public class ediData {
         
     }
     
-    public static ArrayList getMapMstrList(String indoctype) {
+    public static ArrayList<String> getWkfMstrList() {
+       ArrayList mylist = new ArrayList();
+        try{
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                res = st.executeQuery("select wkf_id from wkf_mstr order by wkf_id ; ");
+               while (res.next()) {
+                   mylist.add(res.getString("wkf_id"));
+                }
+           }
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return mylist;
+        
+    }
+    
+    
+    public static ArrayList<String> getMapMstrList(String indoctype) {
        ArrayList mylist = new ArrayList();
         try{
             Connection con = null;
@@ -2682,7 +2715,7 @@ public class ediData {
     }
     
     
-    public static ArrayList getMapStructList() {
+    public static ArrayList<String> getMapStructList() {
        ArrayList mylist = new ArrayList();
         try{
             Connection con = null;
@@ -2885,8 +2918,8 @@ public class ediData {
         return x;
     }
     
-    public static ArrayList<String[]> getAS2WkflIn(String site) {
-       ArrayList<String[]> mylist = new ArrayList<String[]>();
+    public static ArrayList<String> getAS2WkflIn(String site) {
+       ArrayList<String> mylist = new ArrayList<String>();
         try{
             Connection con = null;
             if (ds != null) {
@@ -2898,13 +2931,13 @@ public class ediData {
             ResultSet res = null;
             try{
                 if (site.toLowerCase().equals("all")) {
-                res = st.executeQuery("select as2_id, as2_indir, from as2_mstr where as2_enabled = '1' order by as2_id ; ");
+                res = st.executeQuery("select as2_id from as2_mstr where as2_enabled = '1' order by as2_id ; ");
                 } else {
-                 res = st.executeQuery("select as2_id, as2_indir, from as2_mstr where as2_enabled = '1' AND " +
+                 res = st.executeQuery("select as2_id from as2_mstr where as2_enabled = '1' AND " +
                          " as2_site = " + "'" + site + "'" + " order by as2_id ; ");   
                 }
                 while (res.next()) {
-                   mylist.add(new String[]{res.getString("as2_id"),res.getString("as2_indir")});
+                   mylist.add(res.getString("as2_id"));
                 }
            }
             catch (SQLException s) {
@@ -4134,9 +4167,9 @@ public class ediData {
     public static String[] wkfaction_as2ToTranslate(wkf_mstr wkf, wkf_det wkfd, ArrayList<wkfd_meta> list) {
        
         String messg = "";
-        ArrayList<String[]> as2list = getAS2WkflIn("all");  // list of all as2 inbounds that are 'enabled'
-        for (String[] s : as2list) {
-        as2_mstr as2 = getAS2Mstr(new String[]{s[0]});
+        ArrayList<String> as2list = getAS2WkflIn("all");  // list of all as2 inbounds that are 'enabled'
+        for (String s : as2list) {
+        as2_mstr as2 = getAS2Mstr(new String[]{s});
             if (as2.as2_inwkf().equals(wkf.wkf_id)) {  // if as2 ID is assigned this executing workflow id then fire
                 File folder = new File(as2.as2_outdir());
                 File[] listOfFiles = folder.listFiles();

@@ -354,6 +354,18 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
         ddsite.insertItemAt("", 0);
         ddsite.setSelectedIndex(0);
         
+        ddinworkflow.removeAllItems();
+        ddoutworkflow.removeAllItems();
+        ArrayList<String> ids = ediData.getWkfMstrList();
+        for (String id : ids) {
+        ddinworkflow.addItem(id);
+        ddoutworkflow.addItem(id);
+        }
+        ddinworkflow.insertItemAt("", 0);
+        ddinworkflow.setSelectedIndex(0);
+        ddoutworkflow.insertItemAt("", 0);
+        ddoutworkflow.setSelectedIndex(0);
+        
        isLoad = false;
     }
     
