@@ -2298,8 +2298,9 @@ CREATE TABLE IF NOT EXISTS `user_mstr` (
   `user_cell` varchar(15)  DEFAULT '',
   `user_root` tinyint(1) NOT NULL DEFAULT '0',
   `user_rmks` varchar(500) NOT NULL  DEFAULT '',
-  `user_role` varchar(30) NOT NULL  DEFAULT '') 
-ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `user_role` varchar(30) NOT NULL  DEFAULT '',
+  `user_allowedsites` varchar(200) NOT NULL  DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 CREATE TABLE IF NOT EXISTS `vd_mstr` (
   `vd_addr` varchar(30) NOT NULL  DEFAULT '',
   `vd_site` varchar(10)  DEFAULT '',

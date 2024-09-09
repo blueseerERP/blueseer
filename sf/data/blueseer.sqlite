@@ -2712,7 +2712,9 @@ CREATE TABLE "user_mstr" (
   "user_cell" varchar(15) COLLATE NOCASE DEFAULT '',
   "user_root" tinyint(1) NOT NULL DEFAULT '0',
   "user_rmks" varchar(500) NOT NULL COLLATE NOCASE DEFAULT '',
-  "user_role" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '');
+  "user_role" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "user_allowedsites" varchar(200) NOT NULL COLLATE NOCASE DEFAULT ''
+);
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
