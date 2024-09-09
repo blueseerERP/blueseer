@@ -397,7 +397,7 @@ public class ShipperMaintSerial extends javax.swing.JPanel implements IBlueSeer 
         
         
         ddsite.removeAllItems();
-        ArrayList mylist = OVData.getSiteList();
+        ArrayList mylist = OVData.getSiteList(bsmf.MainFrame.userid);
         for (int i = 0; i < mylist.size(); i++) {
             ddsite.addItem(mylist.get(i));
         }

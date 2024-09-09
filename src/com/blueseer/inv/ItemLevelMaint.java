@@ -114,7 +114,7 @@ public class ItemLevelMaint extends javax.swing.JPanel {
         btlevel.setEnabled(true);
         btmrp.setEnabled(true);
         ddsite.removeAllItems();
-        ArrayList<String>  mylist = OVData.getSiteList();
+        ArrayList<String>  mylist = OVData.getSiteList(bsmf.MainFrame.userid);
         for (String code : mylist) {
             ddsite.addItem(code);
         }

@@ -233,8 +233,8 @@ public class admData {
         String sqlSelect = "SELECT * FROM  user_mstr where user_id = ?";
         String sqlInsert = "insert into user_mstr (user_id, user_site, user_lname, "
                         + " user_fname, user_mname, user_email, user_phone, user_cell, " 
-                        + " user_rmks, user_passwd ) "
-                        + " values (?,?,?,?,?,?,?,?,?,?); "; 
+                        + " user_rmks, user_passwd, user_allowedsites ) "
+                        + " values (?,?,?,?,?,?,?,?,?,?,?); "; 
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
              PreparedStatement ps = con.prepareStatement(sqlSelect);) {
              ps.setString(1, x.user_id);
@@ -251,6 +251,7 @@ public class admData {
             psi.setString(8, x.user_cell);
             psi.setString(9, x.user_rmks);
             psi.setString(10, x.user_passwd); 
+            psi.setString(11, x.user_allowedsites); 
             int rows = psi.executeUpdate();
             m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.addRecordSuccess};
             } else {
@@ -271,11 +272,11 @@ public class admData {
         String[] m ;
         String sql = "update user_mstr set user_site = ?, user_lname = ?, user_fname = ?, "
                 + " user_mname = ?, user_email = ?, user_phone = ?, user_cell = ?, "
-                + " user_rmks = ?, user_passwd = ? "          
+                + " user_rmks = ?, user_passwd = ?, user_allowedsites = ? "          
                 + " where user_id = ? ; ";
         try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
 	PreparedStatement ps = con.prepareStatement(sql)) {
-        ps.setString(10, x.user_id);
+        ps.setString(11, x.user_id);
             ps.setString(1, x.user_site);
             ps.setString(2, x.user_lname);
             ps.setString(3, x.user_fname);
@@ -284,7 +285,8 @@ public class admData {
             ps.setString(6, x.user_phone); 
             ps.setString(7, x.user_cell);
             ps.setString(8, x.user_rmks);
-            ps.setString(9, x.user_passwd);     
+            ps.setString(9, x.user_passwd);   
+            ps.setString(10, x.user_allowedsites); 
         int rows = ps.executeUpdate();
         m = new String[] {BlueSeerUtils.SuccessBit, BlueSeerUtils.updateRecordSuccess};
         } catch (SQLException s) {
@@ -317,7 +319,8 @@ public class admData {
                             res.getString("user_phone"),
                             res.getString("user_cell"),
                             res.getString("user_rmks"),
-                            res.getString("user_passwd")
+                            res.getString("user_passwd"),
+                            res.getString("user_allowedsites")
                         );
                     }
                 }
@@ -2646,9 +2649,9 @@ public class admData {
 
     public record user_mstr(String[] m, String user_id, String user_site, String user_lname, 
                        String user_fname, String user_mname, String user_email, String user_phone, 
-                       String user_cell, String user_rmks, String user_passwd) {
+                       String user_cell, String user_rmks, String user_passwd, String user_allowedsites) {
         public user_mstr(String[] m) {
-            this(m, "", "", "", "", "", "", "", "", "", ""
+            this(m, "", "", "", "", "", "", "", "", "", "", ""
                     );
         }
     }

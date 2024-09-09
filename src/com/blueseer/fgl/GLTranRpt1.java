@@ -254,7 +254,7 @@ public class GLTranRpt1 extends javax.swing.JPanel {
             ddacctto.setSelectedIndex(ddacctto.getItemCount() - 1);
         
         ddsite.removeAllItems();
-        ArrayList sites = OVData.getSiteList();
+        ArrayList sites = OVData.getSiteList(bsmf.MainFrame.userid);
         for (Object site : sites) {
             ddsite.addItem(site);
         }  

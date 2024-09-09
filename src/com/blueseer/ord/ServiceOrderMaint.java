@@ -360,7 +360,7 @@ public class ServiceOrderMaint extends javax.swing.JPanel implements IBlueSeer {
         ddtype.setSelectedIndex(0);
         
         ddsite.removeAllItems();
-        ArrayList<String> site = OVData.getSiteList();
+        ArrayList<String> site = OVData.getSiteList(bsmf.MainFrame.userid);
         for (int i = 0; i < site.size(); i++) {
             ddsite.addItem(site.get(i));
         }

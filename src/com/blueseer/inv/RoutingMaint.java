@@ -308,7 +308,7 @@ public class RoutingMaint extends javax.swing.JPanel implements IBlueSeerT {
         cbmilestone.setSelected(false);
         
         ddsite.removeAllItems();
-        ArrayList<String>mylist = OVData.getSiteList();
+        ArrayList<String>mylist = OVData.getSiteList(bsmf.MainFrame.userid);
         for (String code : mylist) {
             ddsite.addItem(code);
         }

@@ -351,7 +351,7 @@ public class ExpenseBrowse extends javax.swing.JPanel {
         ddtovend.setSelectedIndex(ddfromvend.getItemCount() - 1);
         
         ddsite.removeAllItems();
-        ArrayList<String> mylist = OVData.getSiteList();
+        ArrayList<String> mylist = OVData.getSiteList(bsmf.MainFrame.userid);
         for (int i = 0; i < mylist.size(); i++) {
             ddsite.addItem(mylist.get(i));
         }

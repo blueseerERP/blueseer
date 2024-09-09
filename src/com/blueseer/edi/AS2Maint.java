@@ -350,7 +350,7 @@ public class AS2Maint extends javax.swing.JPanel implements IBlueSeerT {
         headerlist.setModel(listmodel);
         
         ddsite.removeAllItems();
-        OVData.getSiteList().stream().forEach((s) -> ddsite.addItem(s));  
+        OVData.getSiteList(bsmf.MainFrame.userid).stream().forEach((s) -> ddsite.addItem(s));  
         ddsite.insertItemAt("", 0);
         ddsite.setSelectedIndex(0);
         

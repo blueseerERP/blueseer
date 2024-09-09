@@ -226,7 +226,7 @@ public class InventoryBrowse extends javax.swing.JPanel {
         
         ArrayList<String> sites = new ArrayList();
         ddsite.removeAllItems();
-        sites = OVData.getSiteList();
+        sites = OVData.getSiteList(bsmf.MainFrame.userid);
         for (String code : sites) {
             ddsite.addItem(code);
         }

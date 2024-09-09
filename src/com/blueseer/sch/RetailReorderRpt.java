@@ -428,7 +428,7 @@ public class RetailReorderRpt extends javax.swing.JPanel {
         ddtoitem.setSelectedIndex(ddtoitem.getItemCount() - 1);
         
        ddsite.removeAllItems();
-       ArrayList<String> mylist = OVData.getSiteList();
+       ArrayList<String> mylist = OVData.getSiteList(bsmf.MainFrame.userid);
         for (String code : mylist) {
             ddsite.addItem(code);
         }

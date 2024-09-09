@@ -247,7 +247,7 @@ public class IncomeStatementRpt1 extends javax.swing.JPanel {
         datelabel.setText(startend.get(0).toString() + " To " + startend.get(1).toString());
         
         ddsite.removeAllItems();
-        ArrayList sites = OVData.getSiteList();
+        ArrayList sites = OVData.getSiteList(bsmf.MainFrame.userid);
         for (Object site : sites) {
             ddsite.addItem(site);
         }

@@ -508,7 +508,7 @@ public class CashTranBrowse extends javax.swing.JPanel {
         
        
         ddsite.removeAllItems();
-        ArrayList<String> mylist = OVData.getSiteList();
+        ArrayList<String> mylist = OVData.getSiteList(bsmf.MainFrame.userid);
         for (String code : mylist) {
             ddsite.addItem(code);
         }

@@ -581,7 +581,7 @@ public class ARAgingView extends javax.swing.JPanel {
         ddtocust.setSelectedIndex(ddtocust.getItemCount() - 1);
         
         ddsite.removeAllItems();
-        ArrayList<String> sites = OVData.getSiteList();
+        ArrayList<String> sites = OVData.getSiteList(bsmf.MainFrame.userid);
         for (int i = 0; i < sites.size(); i++) {
             ddsite.addItem(sites.get(i));
         }

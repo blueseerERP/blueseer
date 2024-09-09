@@ -286,7 +286,7 @@ public class BankMaint extends javax.swing.JPanel implements IBlueSeerT {
         cbactive.setSelected(false);
         
         ddsite.removeAllItems();
-        OVData.getSiteList().stream().forEach((s) -> ddsite.addItem(s));
+        OVData.getSiteList(bsmf.MainFrame.userid).stream().forEach((s) -> ddsite.addItem(s));
         ddsite.setSelectedItem(OVData.getDefaultSite());
         
         ddcurr.removeAllItems();

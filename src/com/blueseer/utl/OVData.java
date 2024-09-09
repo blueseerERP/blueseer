@@ -126,6 +126,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSetMetaData;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Locale;
@@ -9993,8 +9994,10 @@ return outvalue;
         
     }
           
-    public static ArrayList<String> getSiteList() {
+    public static ArrayList<String> getSiteList(String userid) {
            ArrayList<String> myarray = new ArrayList<String>();
+           String[] sites = null;
+           boolean allsites = false;
          try{
             
             Connection con = null;
@@ -10006,11 +10009,27 @@ return outvalue;
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
-
-                res = st.executeQuery("select site_site from site_mstr;" );
+                res = st.executeQuery("select site_site, user_allowedsites from site_mstr " +
+                        " inner join user_mstr on user_id = " + "'" + userid + "'" + ";" );
+               int i = 0; 
+               
                while (res.next()) {
-                myarray.add(res.getString("site_site"));                    
+                if (i == 0) {
+                    if (res.getString("user_allowedsites").equals("*")) {
+                        allsites = true;
+                    } else {
+                      sites = res.getString("user_allowedsites").split(",");
+                    }
+                }   
+                if (allsites) {
+                myarray.add(res.getString("site_site"));  
                 }
+                
+                if (sites != null && sites.length >= 1 && Arrays.stream(sites).anyMatch(res.getString("site_site")::equals) ) {
+                  myarray.add(res.getString("site_site"));
+                }
+                i++;
+               }
                
            }
             catch (SQLException s){
@@ -10028,7 +10047,47 @@ return outvalue;
         return myarray;
         
     }
-                
+    
+    public static ArrayList<String> getSiteListAll() {
+           ArrayList<String> myarray = new ArrayList<String>();
+           String[] sites = null;
+           boolean allsites = false;
+         try{
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                res = st.executeQuery("select site_site from site_mstr " + ";" );
+               int i = 0; 
+               
+               while (res.next()) {
+                   myarray.add(res.getString("site_site"));
+               }
+               
+           }
+            catch (SQLException s){
+                MainFrame.bslog(s);
+                 bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+        }
+        return myarray;
+        
+    }
+     
+    
     public static ArrayList<String> getUOMList() {
            ArrayList myarray = new ArrayList();
          try{

@@ -381,7 +381,7 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddcountry.setSelectedIndex(0);
        
         ddsite.removeAllItems();
-        ArrayList<String> sites = OVData.getSiteList();
+        ArrayList<String> sites = OVData.getSiteList(bsmf.MainFrame.userid);
         for (String code : sites) {
             ddsite.addItem(code);
         }

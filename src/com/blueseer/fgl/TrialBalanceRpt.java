@@ -402,7 +402,7 @@ public class TrialBalanceRpt extends javax.swing.JPanel {
         detailpanel.setVisible(false);
         
         ddsite.removeAllItems();
-        ArrayList sites = OVData.getSiteList();
+        ArrayList sites = OVData.getSiteList(bsmf.MainFrame.userid);
         for (Object site : sites) {
             ddsite.addItem(site);
         }

@@ -56,6 +56,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -2038,12 +2039,24 @@ public class invData {
         try{
         // allocate, custitemonly, site, currency, sites, currencies, uoms, 
         // states, warehouses, locations, customers, taxcodes, carriers, statuses    
+            String[] sites = null;
+            boolean allsites = false;
+            res = st.executeQuery("select user_allowedsites from user_mstr where user_id = " + "'" + bsmf.MainFrame.userid + "'" + ";");
+            while (res.next()) {
+              if (res.getString("user_allowedsites").equals("*")) {
+                  allsites = true;
+              } else {
+                  sites = res.getString("user_allowedsites").split(",");
+              }
+            }
             res = st.executeQuery("select site_site from site_mstr;");
             while (res.next()) {
-                String[] s = new String[2];
-               s[0] = "sites";
-               s[1] = res.getString("site_site");
-               lines.add(s);
+               if (allsites || Arrays.stream(sites).anyMatch(res.getString("site_site")::equals)) {
+                 String[] s = new String[2];
+                 s[0] = "sites";
+                 s[1] = res.getString("site_site");
+                 lines.add(s);
+               }
             }
             
             res = st.executeQuery("select ov_site, ov_currency from ov_mstr;" );
@@ -2971,11 +2984,25 @@ public class invData {
                     myarray.add(arr); 
                     }
 
-                    res = st.executeQuery("select site_site from site_mstr order by site_site ;" );
-                    while (res.next()) {
-                    String[] arr = new String[]{"site",res.getString("site_site")};
-                    myarray.add(arr); 
-                    }
+            String[] sites = null;
+            boolean allsites = false;
+            res = st.executeQuery("select user_allowedsites from user_mstr where user_id = " + "'" + bsmf.MainFrame.userid + "'" + ";");
+            while (res.next()) {
+              if (res.getString("user_allowedsites").equals("*")) {
+                  allsites = true;
+              } else {
+                  sites = res.getString("user_allowedsites").split(",");
+              }
+            }
+            res = st.executeQuery("select site_site from site_mstr;");
+            while (res.next()) {
+               if (allsites || Arrays.stream(sites).anyMatch(res.getString("site_site")::equals)) {
+                 String[] s = new String[2];
+                 s[0] = "sites";
+                 s[1] = res.getString("site_site");
+                 myarray.add(s);
+               }
+            }
 
                     res = st.executeQuery("select uom_id from uom_mstr order by uom_id ;" );
                     while (res.next()) {
@@ -3046,6 +3073,26 @@ public class invData {
                 ResultSet res = null;
                 try{
                 
+            String[] sites = null;
+            boolean allsites = false;
+            res = st.executeQuery("select user_allowedsites from user_mstr where user_id = " + "'" + bsmf.MainFrame.userid + "'" + ";");
+            while (res.next()) {
+              if (res.getString("user_allowedsites").equals("*")) {
+                  allsites = true;
+              } else {
+                  sites = res.getString("user_allowedsites").split(",");
+              }
+            }
+            res = st.executeQuery("select site_site from site_mstr;");
+            while (res.next()) {
+               if (allsites || Arrays.stream(sites).anyMatch(res.getString("site_site")::equals)) {
+                 String[] s = new String[2];
+                 s[0] = "sites";
+                 s[1] = res.getString("site_site");
+                 myarray.add(s);
+               }
+            } 
+                    
                     
                 // get default bom for item    
                 ArrayList<String> boms = new ArrayList<String>();
@@ -3193,12 +3240,24 @@ public class invData {
                defaultsite = s[1];
             }
             
-             res = st.executeQuery("select site_site from site_mstr;");
+            String[] sites = null;
+            boolean allsites = false;
+            res = st.executeQuery("select user_allowedsites from user_mstr where user_id = " + "'" + bsmf.MainFrame.userid + "'" + ";");
             while (res.next()) {
-                String[] s = new String[2];
-               s[0] = "sites";
-               s[1] = res.getString("site_site");
-               lines.add(s);
+              if (res.getString("user_allowedsites").equals("*")) {
+                  allsites = true;
+              } else {
+                  sites = res.getString("user_allowedsites").split(",");
+              }
+            }
+            res = st.executeQuery("select site_site from site_mstr;");
+            while (res.next()) {
+               if (allsites || Arrays.stream(sites).anyMatch(res.getString("site_site")::equals)) {
+                 String[] s = new String[2];
+                 s[0] = "sites";
+                 s[1] = res.getString("site_site");
+                 lines.add(s);
+               }
             }
             
            
@@ -3263,12 +3322,24 @@ public class invData {
                defaultsite = s[1];
             }
             
-             res = st.executeQuery("select site_site from site_mstr;");
+            String[] sites = null;
+            boolean allsites = false;
+            res = st.executeQuery("select user_allowedsites from user_mstr where user_id = " + "'" + bsmf.MainFrame.userid + "'" + ";");
             while (res.next()) {
-                String[] s = new String[2];
-               s[0] = "sites";
-               s[1] = res.getString("site_site");
-               lines.add(s);
+              if (res.getString("user_allowedsites").equals("*")) {
+                  allsites = true;
+              } else {
+                  sites = res.getString("user_allowedsites").split(",");
+              }
+            }
+            res = st.executeQuery("select site_site from site_mstr;");
+            while (res.next()) {
+               if (allsites || Arrays.stream(sites).anyMatch(res.getString("site_site")::equals)) {
+                 String[] s = new String[2];
+                 s[0] = "sites";
+                 s[1] = res.getString("site_site");
+                 lines.add(s);
+               }
             }
             
              res = st.executeQuery("select wh_id from wh_mstr order by wh_id;");

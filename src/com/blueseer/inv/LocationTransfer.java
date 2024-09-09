@@ -209,7 +209,7 @@ public class LocationTransfer extends javax.swing.JPanel {
          ArrayList<String> sites = new ArrayList();
         ddsitefrom.removeAllItems();
         ddsiteto.removeAllItems();
-        sites = OVData.getSiteList();
+        sites = OVData.getSiteList(bsmf.MainFrame.userid);
         for (String code : sites) {
             ddsitefrom.addItem(code);
             ddsiteto.addItem(code);

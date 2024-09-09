@@ -115,7 +115,7 @@ public class DemdToPlanMaint extends javax.swing.JPanel {
         MainProgressBar.setVisible(true);
         
           ddsite.removeAllItems();
-        ArrayList<String> mylist = OVData.getSiteList();
+        ArrayList<String> mylist = OVData.getSiteList(bsmf.MainFrame.userid);
         for (String code : mylist) {
             ddsite.addItem(code);
         }

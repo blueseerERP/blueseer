@@ -330,7 +330,7 @@ public class CFODriverWindow extends javax.swing.JPanel {
         
         
         ddstatus.removeAllItems();
-        ArrayList sites = OVData.getSiteList();
+        ArrayList sites = OVData.getSiteList(bsmf.MainFrame.userid);
         for (Object site : sites) {
             ddstatus.addItem(site);
         }

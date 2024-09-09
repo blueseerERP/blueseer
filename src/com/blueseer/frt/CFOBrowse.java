@@ -335,7 +335,7 @@ public class CFOBrowse extends javax.swing.JPanel {
         detailpanel.setVisible(false);
         
         ddstatus.removeAllItems();
-        ArrayList sites = OVData.getSiteList();
+        ArrayList sites = OVData.getSiteList(bsmf.MainFrame.userid);
         for (Object site : sites) {
             ddstatus.addItem(site);
         }

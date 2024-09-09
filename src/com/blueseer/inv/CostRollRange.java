@@ -108,7 +108,7 @@ public class CostRollRange extends javax.swing.JPanel {
     public void initvars(String[] arg) {
          btroll.setEnabled(true);
        ddsite.removeAllItems();
-       ArrayList<String>  mylist = OVData.getSiteList();
+       ArrayList<String>  mylist = OVData.getSiteList(bsmf.MainFrame.userid);
         for (String code : mylist) {
             ddsite.addItem(code);
         }

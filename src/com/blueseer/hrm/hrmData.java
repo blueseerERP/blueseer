@@ -40,6 +40,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  *
@@ -623,12 +624,24 @@ public class hrmData {
                defaultsite = s[1];
             }
             
-             res = st.executeQuery("select site_site from site_mstr;");
+            String[] sites = null;
+            boolean allsites = false;
+            res = st.executeQuery("select user_allowedsites from user_mstr where user_id = " + "'" + bsmf.MainFrame.userid + "'" + ";");
             while (res.next()) {
-                String[] s = new String[2];
-               s[0] = "sites";
-               s[1] = res.getString("site_site");
-               lines.add(s);
+              if (res.getString("user_allowedsites").equals("*")) {
+                  allsites = true;
+              } else {
+                  sites = res.getString("user_allowedsites").split(",");
+              }
+            }
+            res = st.executeQuery("select site_site from site_mstr;");
+            while (res.next()) {
+               if (allsites || Arrays.stream(sites).anyMatch(res.getString("site_site")::equals)) {
+                 String[] s = new String[2];
+                 s[0] = "sites";
+                 s[1] = res.getString("site_site");
+                 lines.add(s);
+               }
             }
             
             res = st.executeQuery("select shf_id from shift_mstr;");

@@ -151,7 +151,7 @@ public class ScrapMaint extends javax.swing.JPanel {
         dceffdate.setEnabled(false);
         
         ddsite.removeAllItems();
-        ArrayList<String> mylist = OVData.getSiteList();
+        ArrayList<String> mylist = OVData.getSiteList(bsmf.MainFrame.userid);
         for (String code : mylist) {
             ddsite.addItem(code);
         }

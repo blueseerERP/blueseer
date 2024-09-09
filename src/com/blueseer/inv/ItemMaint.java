@@ -444,7 +444,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
        for (String[] code : mylist) {
             if (code[0].equals("prodline"))
             ddprodcode.addItem(code[1]);
-            if (code[0].equals("site"))
+            if (code[0].equals("sites"))
             ddsite.addItem(code[1]);
             if (code[0].equals("uom"))
             dduom.addItem(code[1]);

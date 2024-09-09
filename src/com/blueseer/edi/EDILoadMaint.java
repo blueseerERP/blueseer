@@ -837,7 +837,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
     tafile.setFont(new Font("monospaced", Font.PLAIN, 12));
     
     ddsite.removeAllItems();
-    OVData.getSiteList().stream().forEach((s) -> ddsite.addItem(s));  
+    OVData.getSiteList(bsmf.MainFrame.userid).stream().forEach((s) -> ddsite.addItem(s));  
     ddsite.insertItemAt("", 0);
     ddsite.setSelectedIndex(0);
     

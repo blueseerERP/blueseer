@@ -1069,7 +1069,7 @@ public class PayRollMaint extends javax.swing.JPanel {
         
         ArrayList<String> mylist = new ArrayList<String>();
         ddsite.removeAllItems();
-        mylist = OVData.getSiteList();
+        mylist = OVData.getSiteList(bsmf.MainFrame.userid);
         for (String code : mylist) {
             ddsite.addItem(code);
         }

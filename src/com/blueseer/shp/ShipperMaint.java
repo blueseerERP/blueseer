@@ -414,7 +414,7 @@ public class ShipperMaint extends javax.swing.JPanel {
         
          ddsite.removeAllItems();
          
-        mylist = OVData.getSiteList();
+        mylist = OVData.getSiteList(bsmf.MainFrame.userid);
         for (String code : mylist) {
             ddsite.addItem(code);
         }

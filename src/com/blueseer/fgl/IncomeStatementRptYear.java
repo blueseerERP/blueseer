@@ -400,7 +400,7 @@ public class IncomeStatementRptYear extends javax.swing.JPanel {
        
         
         ddsite.removeAllItems();
-        ArrayList sites = OVData.getSiteList();
+        ArrayList sites = OVData.getSiteList(bsmf.MainFrame.userid);
         for (Object site : sites) {
             ddsite.addItem(site);
         }

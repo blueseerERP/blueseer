@@ -202,7 +202,7 @@ public class ProdEntryMaint extends javax.swing.JPanel {
         tbqty.setText("");
         ddbom.removeAllItems();
         
-        ArrayList<String> sites = OVData.getSiteList();
+        ArrayList<String> sites = OVData.getSiteList(bsmf.MainFrame.userid);
         ddsite.removeAllItems();
         for (String code : sites) {
             ddsite.addItem(code);

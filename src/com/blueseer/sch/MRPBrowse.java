@@ -491,7 +491,7 @@ public class MRPBrowse extends javax.swing.JPanel {
          PanelDetail.setVisible(false);
          
           ddsite.removeAllItems();
-       ArrayList<String>  mylist = OVData.getSiteList();
+       ArrayList<String>  mylist = OVData.getSiteList(bsmf.MainFrame.userid);
         for (String code : mylist) {
             ddsite.addItem(code);
         }

@@ -371,7 +371,7 @@ public class ExpenseMaint extends javax.swing.JPanel implements IBlueSeerT {
         ddvend.setSelectedIndex(0);
           
         ddsite.removeAllItems();
-        ArrayList mylist = OVData.getSiteList();
+        ArrayList mylist = OVData.getSiteList(bsmf.MainFrame.userid);
         for (int i = 0; i < mylist.size(); i++) {
             ddsite.addItem(mylist.get(i));
         }

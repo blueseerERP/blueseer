@@ -2021,7 +2021,7 @@ public class CashTran extends javax.swing.JPanel {
             ddrexpentity.setSelectedIndex(0);
             
         ddrexpsite.removeAllItems();
-        ArrayList<String> mylist = OVData.getSiteList();
+        ArrayList<String> mylist = OVData.getSiteList(bsmf.MainFrame.userid);
         for (String code : mylist) {
             ddrexpsite.addItem(code);
         }

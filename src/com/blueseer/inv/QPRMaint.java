@@ -353,7 +353,7 @@ public class QPRMaint extends javax.swing.JPanel implements IBlueSeer {
         dditem.setSelectedIndex(0);
        
         ddsite.removeAllItems();
-        ArrayList<String> mylist = OVData.getSiteList();
+        ArrayList<String> mylist = OVData.getSiteList(bsmf.MainFrame.userid);
         for (String code : mylist) {
             ddsite.addItem(code);
         }
