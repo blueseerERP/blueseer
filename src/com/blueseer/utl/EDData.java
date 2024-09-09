@@ -4137,8 +4137,8 @@ public class EDData {
                                 " edx_ackfile, edx_ack, " +
                                 " edx_segdelim, edx_elmdelim, edx_subdelim, " +
                                 " edx_outsegdelim, edx_outelmdelim, edx_outsubdelim, " + 
-                                " edx_status )" +
-                                " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,? ) ";
+                                " edx_status, edx_site )" +
+                                " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,? ) ";
                             ps = con.prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS );    
                             ps.setString(1, c[22]);
                             ps.setString(2, c[0]); // sender
@@ -4174,6 +4174,7 @@ public class EDData {
                             ps.setInt(32, Integer.valueOf(c[36].toString()));
                             ps.setInt(33, Integer.valueOf(c[37].toString()));       
                             ps.setString(34, "success");  // status 
+                            ps.setString(35, c[39]); 
                             ps.executeUpdate();
             
                 

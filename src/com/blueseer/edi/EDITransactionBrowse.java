@@ -239,6 +239,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     " left outer join edi_log on elg_comkey = edx_comkey and elg_severity = 'error' " +
                     " where edx_sender >= " + "'" + ddtradeid.getSelectedItem().toString() + "'" +
                     " AND edx_sender <= " + "'" + ddtradeid.getSelectedItem().toString() + "'" +
+                    " AND edx_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +        
                     " AND edx_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
                     " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + " order by edx_id desc ;" ) ;
                     }
@@ -251,7 +252,8 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     " left outer join edi_log on elg_comkey = edx_comkey and elg_severity = 'error' " +
                     " where " +
                     " edx_indoctype >= " + "'" + dddoc.getSelectedItem().toString() + "'" +
-                    " AND edx_indoctype <= " + "'" + dddoc.getSelectedItem().toString() + "'" +        
+                    " AND edx_indoctype <= " + "'" + dddoc.getSelectedItem().toString() + "'" +    
+                    " AND edx_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +         
                     " AND edx_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
                     " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + " order by edx_id desc ;" ) ;
                     }
@@ -265,7 +267,8 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     " where edx_sender >= " + "'" + ddtradeid.getSelectedItem().toString() + "'" +
                     " AND edx_sender <= " + "'" + ddtradeid.getSelectedItem().toString() + "'" +
                     " AND edx_indoctype >= " + "'" + dddoc.getSelectedItem().toString() + "'" +
-                    " AND edx_indoctype <= " + "'" + dddoc.getSelectedItem().toString() + "'" +        
+                    " AND edx_indoctype <= " + "'" + dddoc.getSelectedItem().toString() + "'" +    
+                    " AND edx_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +         
                     " AND edx_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
                     " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + " order by edx_id desc ;" ) ;
                     }
@@ -278,7 +281,9 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     " FROM edi_idx  " +
                     " left outer join edi_log on elg_comkey = edx_comkey and elg_severity = 'error' " +
                     " where edx_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
-                    " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + " order by edx_id desc ;" ) ;
+                    " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + 
+                    " AND edx_site = " + "'" + ddsite.getSelectedItem().toString() + "'" + 
+                    " order by edx_id desc ;" ) ;
                     }
                     
                     if (! tbref.getText().isEmpty()) {
@@ -288,6 +293,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     " FROM edi_idx  " +
                     " left outer join edi_log on elg_comkey = edx_comkey and elg_severity = 'error' " +
                     " where edx_ref like " + "'%" + tbref.getText() + "%'" +
+                    " AND edx_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +         
                     " order by edx_id desc ;" ) ;
                     }
                     
@@ -408,6 +414,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     " AND edf_partner <= " + "'" + ddtradeid.getSelectedItem().toString() + "'" +        
                     " AND edf_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
                     " AND edf_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + 
+                    " AND edf_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +         
                     " order by edf_id desc ;" ) ;
                     }
                     
@@ -417,7 +424,8 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     " edf_doctype >= " + "'" + dddoc.getSelectedItem().toString() + "'" +
                     " AND edf_doctype <= " + "'" + dddoc.getSelectedItem().toString() + "'" +        
                     " AND edf_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
-                    " AND edf_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + 
+                    " AND edf_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" +
+                    " AND edf_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +         
                     " order by edf_id desc ;" ) ;
                     }
                     
@@ -429,6 +437,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     " AND edf_doctype <= " + "'" + dddoc.getSelectedItem().toString() + "'" +        
                     " AND edf_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
                     " AND edf_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + 
+                    " AND edf_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +         
                     " order by edf_id desc ;" ) ;
                     }
                     
@@ -436,6 +445,7 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                     res = st.executeQuery("SELECT * FROM edi_file  " +
                     " where edf_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
                     " AND edf_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + 
+                    " AND edf_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +         
                     " order by edf_id desc ;" ) ;
                     }
                     
@@ -676,6 +686,11 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
         btclearstatus.setEnabled(false);
         tafile.setText("");
         tafile.setFont(new Font("monospaced", Font.PLAIN, 12));
+        
+        ddsite.removeAllItems();
+        OVData.getSiteList(bsmf.MainFrame.userid).stream().forEach((s) -> ddsite.addItem(s));  
+        ddsite.setSelectedItem(OVData.getDefaultSite());
+        
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -721,6 +736,8 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
         ddtradeid = new javax.swing.JComboBox<>();
         dddoc = new javax.swing.JComboBox<>();
         ddoutdoctype = new javax.swing.JComboBox<>();
+        ddsite = new javax.swing.JComboBox<>();
+        jLabel10 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
@@ -882,7 +899,9 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
             }
         });
 
-        jLabel9.setText("Out Document Type");
+        jLabel10.setText("Out DocType");
+
+        jLabel9.setText("Site:");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -891,26 +910,28 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(22, 22, 22)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel6)
-                            .addComponent(jLabel3)))
+                        .addGap(25, 25, 25)
+                        .addComponent(jLabel6))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jLabel5)))
+                        .addComponent(jLabel5))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(dcfrom, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
-                    .addComponent(dcto, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
-                    .addComponent(ddtradeid, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(31, 31, 31)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(rbFileLog)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(rbDocLog))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(dcfrom, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
+                            .addComponent(dcto, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE))
+                        .addGap(31, 31, 31)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(rbFileLog)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(rbDocLog))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(btRun)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -920,25 +941,29 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btreprocess)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btclearstatus))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel9))
+                                .addComponent(btclearstatus)
+                                .addGap(69, 69, 69)
+                                .addComponent(jLabel1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(ddoutdoctype, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(dddoc, 0, 91, Short.MAX_VALUE))
-                                .addGap(27, 27, 27)
-                                .addComponent(jLabel7)
+                                .addComponent(tbsegdelim, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(69, 69, 69)
-                        .addComponent(jLabel1)
+                                .addComponent(lbsegdelim, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(ddtradeid, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(27, 27, 27)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel10)
+                            .addComponent(jLabel4))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(tbsegdelim, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(ddoutdoctype, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(dddoc, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel7)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbsegdelim, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(24, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
@@ -960,25 +985,27 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
                         .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jLabel6)
-                        .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(rbFileLog)
-                        .addComponent(rbDocLog)))
-                .addGap(6, 6, 6)
+                        .addComponent(rbDocLog))
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jLabel6)
+                        .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(jLabel3)
                     .addComponent(jLabel4)
+                    .addComponent(dddoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7)
                     .addComponent(tbref, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ddtradeid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(dddoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ddoutdoctype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9))
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(jLabel3)
+                    .addComponent(ddtradeid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ddoutdoctype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jLabel8.setText("Total Errors:");
@@ -1336,9 +1363,11 @@ public class EDITransactionBrowse extends javax.swing.JPanel {
     private com.toedter.calendar.JDateChooser dcto;
     private javax.swing.JComboBox<String> dddoc;
     private javax.swing.JComboBox<String> ddoutdoctype;
+    private javax.swing.JComboBox<String> ddsite;
     private javax.swing.JComboBox<String> ddtradeid;
     private javax.swing.JPanel detailpanel;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
