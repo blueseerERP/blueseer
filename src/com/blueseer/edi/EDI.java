@@ -194,8 +194,8 @@ public class EDI {
     
     
     public static String[] initEDIControl() {   
-        String[] controlarray = new String[39];
-             /*  39 elements consisting of:
+        String[] controlarray = new String[40];
+             /*  40 elements consisting of:
             c[0] = senderid;
             c[1] = doctype;
             c[2] = map;
@@ -235,9 +235,10 @@ public class EDI {
             c[36] = outeledelim
             c[37] = outsubdelim
             c[38] = message
+            c[39] = site
             
               */
-               for (int i = 0; i < 39; i++) {
+               for (int i = 0; i < 40; i++) {
                    controlarray[i] = (i == 4 || i == 5 || i == 6 || i == 31 || i == 32 || i == 33 || i == 34 || i == 35 || i == 36 || i == 37 ||
                            i == 9 || i == 10 || i == 11) ? "0" : "";
                 }
@@ -758,7 +759,7 @@ public class EDI {
     return m;
     }
     
-    public static String runEDI(String[] args, String[] files) {
+    public static String runEDI(String[] args, String[] files, String site) {
     
         StringBuilder sb = new StringBuilder();
         try {
@@ -784,7 +785,7 @@ public class EDI {
                   if(file.length() == 0) { 
                   file.delete();
                   } else { 
-                 String[] m = EDI.processFile(inDir + f,"","","", isDebug, false, 0, 0);
+                 String[] m = EDI.processFile(inDir + f,"","","", isDebug, false, 0, 0, site);
                  
                  // show error if exists...usually malformed envelopes
                     if (m[0].equals("1")) {
@@ -851,7 +852,7 @@ public class EDI {
                   if(p.toFile().length() == 0) { 
                   p.toFile().delete();
                   } else { 
-                 String[] m = EDI.processFile(p.toString(),"","","", isDebug, false, 0, 0);
+                 String[] m = EDI.processFile(p.toString(),"","","", isDebug, false, 0, 0, site);
                  
                  // show error if exists...usually malformed envelopes
                     if (m[0].equals("1")) {
@@ -889,7 +890,7 @@ public class EDI {
 }
 
     
-    public static String runEDIsingle(String[] args, String filecontent) {
+    public static String runEDIsingle(String[] args, String filecontent, String site) {
     
         StringBuilder sb = new StringBuilder();
         try {
@@ -920,7 +921,7 @@ public class EDI {
                   if(file.length() == 0) { 
                   file.delete();
                   } else { 
-                 String[] m = EDI.processFile(inDir + f,"","","", isDebug, false, 0, 0);
+                 String[] m = EDI.processFile(inDir + f,"","","", isDebug, false, 0, 0, site);
                  
                  // show error if exists...usually malformed envelopes
                     if (m[0].equals("1")) {
@@ -961,7 +962,7 @@ public class EDI {
 }
 
     
-    public static String[] processFile(String infile, String map, String outfile, String isOverride, boolean isDebug, boolean reprocess, int comkey, int idxnbr) throws FileNotFoundException, IOException, ClassNotFoundException {
+    public static String[] processFile(String infile, String map, String outfile, String isOverride, boolean isDebug, boolean reprocess, int comkey, int idxnbr, String site) throws FileNotFoundException, IOException, ClassNotFoundException {
         
         if (isDebug) {
             GlobalDebug = true;
@@ -1011,6 +1012,7 @@ public class EDI {
                     c[26] = file.getParent(); // indir
                     c[28] = editype[0];
                     c[30] = String.valueOf(isDebug);
+                    c[39] = site;
                     
          // create batch file of incoming file
          

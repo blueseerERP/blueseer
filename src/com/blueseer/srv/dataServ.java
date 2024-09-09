@@ -188,9 +188,9 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
                 // process specific app (id)
                 if (id.equals("runEDI")) { // run EDI engine with list of files
                   String[] files = sb.toString().split(",",-1);
-                  response.getWriter().println(runEDI(null, files));
+                  response.getWriter().println(runEDI(null, files, ""));
                 } else if (id.equals("runEDIsingle")) { 
-                  response.getWriter().println(runEDIsingle(null,sb.toString())); 
+                  response.getWriter().println(runEDIsingle(null,sb.toString(),"")); 
                 } else if (id.equals("getFilesOfDir")) { 
                   String dir = request.getHeader("dir");
                   response.getWriter().println(getFilesOfDir(dir)); 

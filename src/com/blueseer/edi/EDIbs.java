@@ -257,7 +257,7 @@ public static void main(String args[]) throws IOException {
       // case of single input and output file    
     if (! infile.isEmpty() && ! outfile.isEmpty() ) {
         try {
-            EDI.processFile(infile, map, outfile, isOverride, isDebug, false, 0, 0); 
+            EDI.processFile(infile, map, outfile, isOverride, isDebug, false, 0, 0, ""); 
         } catch (IOException ex) {
            ex.printStackTrace();
         } catch (ClassNotFoundException ex) {
@@ -282,7 +282,7 @@ public static void main(String args[]) throws IOException {
                   if(listOfFiles[i].length() == 0) { 
                   listOfFiles[i].delete();
                   } else { 
-                  EDI.processFile(listOfFiles[i].getName(), map, "", isOverride, isDebug, false, 0, 0);
+                  EDI.processFile(listOfFiles[i].getName(), map, "", isOverride, isDebug, false, 0, 0, "");
                   }
                 }
               }

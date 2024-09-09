@@ -159,7 +159,7 @@ public static void runTranslation(String[] args) {
                   if(listOfFiles[i].length() == 0) { 
                   listOfFiles[i].delete();
                   } else { 
-                 String[] m = EDI.processFile(inDir + listOfFiles[i].getName(),"","","", isDebug, false, 0, 0);
+                 String[] m = EDI.processFile(inDir + listOfFiles[i].getName(),"","","", isDebug, false, 0, 0, "");
                  
                  // show error if exists...usually malformed envelopes
                     if (m[0].equals("1")) {
@@ -209,7 +209,7 @@ public static String[] runTranslationSingleFile(Path targetfilepath) {
                   if(targetfilepath.toFile().length() == 0) { 
                   targetfilepath.toFile().delete();
                   } else { 
-                 m = EDI.processFile(targetfilepath.toString(),"","","", isDebug, false, 0, 0);
+                 m = EDI.processFile(targetfilepath.toString(),"","","", isDebug, false, 0, 0, "");
                  
                  // show error if exists...usually malformed envelopes
                     if (m[0].equals("1")) {

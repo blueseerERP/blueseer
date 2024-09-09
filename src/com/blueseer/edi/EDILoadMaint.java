@@ -207,7 +207,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
          
         @Override
         public Void doInBackground() throws IOException, FileNotFoundException, ClassNotFoundException {
-            EDI.processFile(this.filepath,"","","", this.isdebug, false, 0, 0);
+            EDI.processFile(this.filepath,"","","", this.isdebug, false, 0, 0, ddsite.getSelectedItem().toString());
             return null;
         }
  
@@ -651,7 +651,7 @@ public class EDILoadMaint extends javax.swing.JPanel {
                  if ( (boolean) mymodel.getValueAt(i, 1) ) {
                     String infile = inDir + mymodel.getValueAt(i,0).toString();
                     tafile.append("FilePath: " + infile  + "\n");
-                    String[] m = EDI.processFile(infile,"","","", cbdebug.isSelected(), false, 0, 0);
+                    String[] m = EDI.processFile(infile,"","","", cbdebug.isSelected(), false, 0, 0, ddsite.getSelectedItem().toString());
                     
                     // show error if exists...usually malformed envelopes
                     if (m[0].equals("1")) {
@@ -835,6 +835,12 @@ public class EDILoadMaint extends javax.swing.JPanel {
     tablereport.getColumnModel().getColumn(0).setCellRenderer(new SomeRenderer()); 
     tablereport.setModel(mymodel);
     tafile.setFont(new Font("monospaced", Font.PLAIN, 12));
+    
+    ddsite.removeAllItems();
+    OVData.getSiteList().stream().forEach((s) -> ddsite.addItem(s));  
+    ddsite.insertItemAt("", 0);
+    ddsite.setSelectedIndex(0);
+    
     //getFiles();        
     }
     
@@ -862,6 +868,8 @@ public class EDILoadMaint extends javax.swing.JPanel {
         lbcount = new javax.swing.JLabel();
         cbdebug = new javax.swing.JCheckBox();
         cbno = new javax.swing.JCheckBox();
+        ddsite = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -951,6 +959,8 @@ public class EDILoadMaint extends javax.swing.JPanel {
 
         cbno.setText("No Delete/Archive");
 
+        jLabel2.setText("Site");
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -964,11 +974,15 @@ public class EDILoadMaint extends javax.swing.JPanel {
                         .addComponent(btrefresh)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btProcess)
-                        .addGap(74, 74, 74)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbdebug)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cbno)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 70, Short.MAX_VALUE)
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lbcount, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -989,7 +1003,9 @@ public class EDILoadMaint extends javax.swing.JPanel {
                         .addComponent(jLabel1)
                         .addComponent(btProcess)
                         .addComponent(cbdebug)
-                        .addComponent(cbno)))
+                        .addComponent(cbno)
+                        .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel2)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
                 .addComponent(btmanual)
                 .addContainerGap())
@@ -1100,7 +1116,9 @@ public class EDILoadMaint extends javax.swing.JPanel {
     private javax.swing.JCheckBox cbdebug;
     private javax.swing.JCheckBox cbno;
     private javax.swing.JCheckBox cbtoggle;
+    private javax.swing.JComboBox<String> ddsite;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

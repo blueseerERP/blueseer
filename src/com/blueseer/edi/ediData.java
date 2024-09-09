@@ -4167,7 +4167,17 @@ public class ediData {
     public static String[] wkfaction_as2ToTranslate(wkf_mstr wkf, wkf_det wkfd, ArrayList<wkfd_meta> list) {
        
         String messg = "";
-        ArrayList<String> as2list = getAS2WkflIn("all");  // list of all as2 inbounds that are 'enabled'
+        String site = "";
+        
+        for (wkfd_meta m : list) {
+            if (m.wkfdm_key().equals("site") && ! m.wkfdm_value.isBlank()) {
+                site = m.wkfdm_value();
+            }
+        }
+        if (site.equals("*")) {
+            site = "all";
+        }
+        ArrayList<String> as2list = getAS2WkflIn(site);  // list of all as2 inbounds that are 'enabled'
         for (String s : as2list) {
         as2_mstr as2 = getAS2Mstr(new String[]{s});
             if (as2.as2_inwkf().equals(wkf.wkf_id)) {  // if as2 ID is assigned this executing workflow id then fire

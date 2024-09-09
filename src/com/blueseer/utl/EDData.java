@@ -3503,7 +3503,7 @@ public class EDData {
               
                  // controlarray in this order : senderid, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
                 
-                        st.executeUpdate("insert into edi_log ( elg_comkey, elg_idxnbr, elg_severity, elg_desc, elg_isa, elg_doc, elg_map, elg_file, elg_batch, elg_ctrlnum, elg_gsctrlnum, elg_stctrlnum, elg_ref ) "
+                        st.executeUpdate("insert into edi_log ( elg_comkey, elg_idxnbr, elg_severity, elg_desc, elg_isa, elg_doc, elg_map, elg_file, elg_batch, elg_ctrlnum, elg_gsctrlnum, elg_stctrlnum, elg_ref, elg_site ) "
                             + " values ( " 
                             + "'" + c[22] + "'" + ","    
                             + "'" + c[16] + "'" + ","
@@ -3517,7 +3517,8 @@ public class EDData {
                             + "'" + c[4] + "'" + ","
                             + "'" + c[5] + "'" + ","
                             + "'" + c[6] + "'" + ","
-                            + "'" + c[7] + "'"
+                            + "'" + c[7] + "'" + ","
+                            + "'" + c[39] + "'"        
                             + ")"
                             + ";");
             } catch (SQLException s) {
@@ -3543,8 +3544,8 @@ public class EDData {
             }
             try {
                 String[] c = control;
-                String sqlInsert = "insert into edi_log ( elg_comkey, elg_idxnbr, elg_severity, elg_desc, elg_isa, elg_doc, elg_map, elg_file, elg_batch, elg_ctrlnum, elg_gsctrlnum, elg_stctrlnum, elg_ref ) "
-                            + " values ( ?,?,?,?,?,?,?,?,?,?,?,?,?); " ; 
+                String sqlInsert = "insert into edi_log ( elg_comkey, elg_idxnbr, elg_severity, elg_desc, elg_isa, elg_doc, elg_map, elg_file, elg_batch, elg_ctrlnum, elg_gsctrlnum, elg_stctrlnum, elg_ref, elg_site ) "
+                            + " values ( ?,?,?,?,?,?,?,?,?,?,?,?,?,?); " ; 
                 ps = con.prepareStatement(sqlInsert);
                 // controlarray in this order : senderid, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
                 
@@ -3562,6 +3563,7 @@ public class EDData {
                             ps.setString(11, c[5]);
                             ps.setString(12, c[6]);
                             ps.setString(13, c[7]);
+                            ps.setString(14, c[39]);
                             ps.executeUpdate();
                 }  
             } catch (SQLException s) {
@@ -3590,13 +3592,14 @@ public class EDData {
                 
                 String[] c = control;
               
-                        st.executeUpdate("insert into edi_file ( edf_comkey, edf_file, edf_batch, edf_dir, edf_status ) "
+                        st.executeUpdate("insert into edi_file ( edf_comkey, edf_file, edf_batch, edf_dir, edf_status, edf_site ) "
                             + " values ( " 
                             + "'" + c[22] + "'" + ","    
                             + "'" + c[3] + "'" + ","
                             + "'" + c[24] + "'" + ","        
                             + "'" + c[26] + "'" + ","
-                            + "'" + "info" + "'"  
+                            + "'" + "info" + "'" + ","
+                            + "'" + c[39] + "'"
                             + ")"
                             + ";");
             } catch (SQLException s) {

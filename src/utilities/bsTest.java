@@ -57,7 +57,7 @@ public class bsTest {
    @Test
    public void testEDI_850x12() {
       try {
-          m = EDI.processFile("edi/sampledata/ACME_850.txt","","","", false, false, 0, 0);
+          m = EDI.processFile("edi/sampledata/ACME_850.txt","","","", false, false, 0, 0, "");
           if (m[0].equals("0")) {
               System.out.println("sample 850x12...   pass");
           } else {
@@ -73,7 +73,7 @@ public class bsTest {
    @Test
    public void testEDI_850json() {
       try {
-          m = EDI.processFile("edi/sampledata/ACME_JSON_order.txt","","","", false, false, 0, 0);
+          m = EDI.processFile("edi/sampledata/ACME_JSON_order.txt","","","", false, false, 0, 0, "");
           if (m[0].equals("0")) {
               System.out.println("sample 850json...  pass");
           } else {
@@ -89,7 +89,7 @@ public class bsTest {
    @Test
    public void testEDI_850xml() {
       try {
-          m = EDI.processFile("edi/sampledata/ACME_XML_order.xml","","","", false, false, 0, 0);
+          m = EDI.processFile("edi/sampledata/ACME_XML_order.xml","","","", false, false, 0, 0, "");
           if (m[0].equals("0")) {
               System.out.println("sample 850xml...   pass");
           } else {
@@ -105,7 +105,7 @@ public class bsTest {
    @Test
    public void testEDI_856Idoc() {
       try {
-          m = EDI.processFile("edi/sampledata/ACME_IDOC_SHIPMNT02out.txt","","","", false, false, 0, 0);
+          m = EDI.processFile("edi/sampledata/ACME_IDOC_SHIPMNT02out.txt","","","", false, false, 0, 0, "");
           if (m[0].equals("0")) {
               System.out.println("sample 856idoc...  pass");
           } else {
@@ -121,7 +121,7 @@ public class bsTest {
    @Test
    public void testEDI_850Idoc() {
       try {
-          m = EDI.processFile("edi/sampledata/ACME_IDOC_INVOIC02out.txt","","","", false, false, 0, 0);
+          m = EDI.processFile("edi/sampledata/ACME_IDOC_INVOIC02out.txt","","","", false, false, 0, 0, "");
           if (m[0].equals("0")) {
               System.out.println("sample 810idoc...  pass");
           } else {
@@ -137,7 +137,7 @@ public class bsTest {
    @Test
    public void testEDI_850csv() {
       try {
-          m = EDI.processFile("edi/sampledata/ACME_CSV_order.csv","","","", false, false, 0, 0);
+          m = EDI.processFile("edi/sampledata/ACME_CSV_order.csv","","","", false, false, 0, 0, "");
           if (m[0].equals("0")) {
               System.out.println("sample 850csv...   pass");
           } else {
@@ -153,7 +153,7 @@ public class bsTest {
    @Test
    public void testEDI_850une() {
       try {
-          m = EDI.processFile("edi/sampledata/ACME_EDIFACT_ORDERS.txt","","","", false, false, 0, 0);
+          m = EDI.processFile("edi/sampledata/ACME_EDIFACT_ORDERS.txt","","","", false, false, 0, 0, "");
           if (m[0].equals("0")) {
               System.out.println("sample 850une...   pass");
           } else {
