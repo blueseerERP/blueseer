@@ -62,6 +62,8 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -176,7 +178,7 @@ public class UserMaint extends javax.swing.JPanel implements IBlueSeerT {
         Component[] components = panel.getComponents();
         
             for (Component component : components) {
-                if (component instanceof JLabel || component instanceof JTable ) {
+                if (component instanceof JLabel || component instanceof JTable || component instanceof JMenu || component instanceof JMenuItem) {
                     continue;
                 }
                 if (component instanceof JPanel) {

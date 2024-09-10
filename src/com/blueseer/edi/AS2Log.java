@@ -38,6 +38,7 @@ import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.EDData.updateEDIFileLogStatusManual;
+import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.Component;
 import java.io.IOException;
@@ -200,6 +201,7 @@ public class AS2Log extends javax.swing.JPanel {
                     " left outer join as2_mstr on as2_id = as2l_id " +        
                     " where as2l_datetime >= " + "'" + dfdate.format(dcfrom.getDate()) + "000000" + "'" +
                     " AND as2l_datetime <= " + "'" + dfdate.format(dcto.getDate())  + "235959" + "'" + 
+                    " AND as2l_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +         
                     " order by as2l_datetime desc ;" ) ;
                     } else {
                     res = st.executeQuery("SELECT * FROM as2_log  " +
@@ -208,6 +210,7 @@ public class AS2Log extends javax.swing.JPanel {
                     " AND as2l_id <= " + "'" + tbas2id.getText() + "'" +        
                     " AND as2l_datetime >= " + "'" + dfdate.format(dcfrom.getDate()) + "000000" + "'" +
                     " AND as2l_datetime <= " + "'" + dfdate.format(dcto.getDate())  + "235959" + "'" + 
+                    " AND as2l_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +         
                     " order by as2l_datetime desc ;" ) ;    
                     }
                     
@@ -395,6 +398,10 @@ public class AS2Log extends javax.swing.JPanel {
         bthidetext.setEnabled(false);
         detailpanel.setVisible(false);
         textpanel.setVisible(false);
+        
+        ddsite.removeAllItems();
+        OVData.getSiteList(bsmf.MainFrame.userid).stream().forEach((s) -> ddsite.addItem(s));  
+        ddsite.setSelectedItem(OVData.getDefaultSite());
           
     }
     
@@ -432,6 +439,8 @@ public class AS2Log extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
         bthidetext = new javax.swing.JButton();
         lbsegdelim = new javax.swing.JLabel();
+        ddsite = new javax.swing.JComboBox<>();
+        jLabel1 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         tbtoterrors = new javax.swing.JLabel();
@@ -541,6 +550,8 @@ public class AS2Log extends javax.swing.JPanel {
             }
         });
 
+        jLabel1.setText("Site:");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -555,10 +566,17 @@ public class AS2Log extends javax.swing.JPanel {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(tbas2id, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(31, 31, 31)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(54, 54, 54))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                        .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btRun)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btdetail)
@@ -566,7 +584,7 @@ public class AS2Log extends javax.swing.JPanel {
                         .addComponent(bthidetext)
                         .addGap(371, 371, 371)
                         .addComponent(lbsegdelim, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(12, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -579,7 +597,9 @@ public class AS2Log extends javax.swing.JPanel {
                         .addComponent(btRun)
                         .addComponent(btdetail)
                         .addComponent(bthidetext)
-                        .addComponent(lbsegdelim, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(lbsegdelim, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel6)
@@ -647,7 +667,7 @@ public class AS2Log extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE))
                 .addGap(41, 41, 41)
                 .addComponent(tablepanel, javax.swing.GroupLayout.DEFAULT_SIZE, 367, Short.MAX_VALUE))
         );
@@ -719,7 +739,9 @@ public class AS2Log extends javax.swing.JPanel {
     private javax.swing.ButtonGroup buttonGroup1;
     private com.toedter.calendar.JDateChooser dcfrom;
     private com.toedter.calendar.JDateChooser dcto;
+    private javax.swing.JComboBox<String> ddsite;
     private javax.swing.JPanel detailpanel;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

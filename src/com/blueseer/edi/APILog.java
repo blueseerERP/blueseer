@@ -38,6 +38,7 @@ import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getGlobalProgTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import static com.blueseer.utl.EDData.updateEDIFileLogStatusManual;
+import com.blueseer.utl.OVData;
 import java.awt.Color;
 import java.awt.Component;
 import java.io.IOException;
@@ -77,40 +78,14 @@ import jcifs.smb.SmbException;
 public class APILog extends javax.swing.JPanel {
  
     
-    javax.swing.table.DefaultTableModel docmodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Select", "IdxNbr", "ComKey", "SenderID", "ReceiverID", "TimeStamp", "InFileType", "InDocType", "InBatch", "Reference", "OutFileType", "OutDocType", "OutBatch", "InView", "OutView",  "Status"})
+    javax.swing.table.DefaultTableModel modeltable = new javax.swing.table.DefaultTableModel(new Object[][]{},
+                        new String[]{"Select", "LogID", "PartnerID", "Method", "TimeStamp", "File", "MDN", "Status"})
             {
                       @Override  
                       public Class getColumnClass(int col) {  
-                        if (col == 0 || col == 13 || col == 14 || col == 15)  {     
+                        if (col == 0 || col == 7 )  {     
                             return ImageIcon.class; 
-                        } else if (col == 1 || col == 2) {
-                            return Integer.class;
-                        } else {
-                            return String.class;
-                        }  //other columns accept String values  
-                      }
-                      
-                    @Override
-                    public boolean isCellEditable(int row, int column)
-                    {
-                       // make read only fields except column 0,13,14
-                        if (column == 0 || column == 13 || column == 14 || column == 15) {                            
-                           return false;
-                        } else {
-                           return true; 
-                        }
-                    }
-                        };
-                
-    javax.swing.table.DefaultTableModel filemodel = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"Select", "LogID", "ComKey", "Partner", "FileType", "DocType", "TimeStamp", "File", "Dir", "View", "Status"})
-            {
-                      @Override  
-                      public Class getColumnClass(int col) {  
-                        if (col == 0 || col == 9 || col == 10)  {     
-                            return ImageIcon.class; 
-                        } else if (col == 1 || col == 2) {
+                        } else if (col == 1) {
                             return Integer.class;
                         } else {
                             return String.class;
@@ -120,7 +95,7 @@ public class APILog extends javax.swing.JPanel {
                     public boolean isCellEditable(int row, int column)
                     {
                         // make read only fields except column 0,13,14
-                        if (column == 0 || column == 9 || column == 10) {                            
+                        if (column == 0 || column == 7) {                            
                            return false;
                         } else {
                            return true; 
@@ -128,8 +103,6 @@ public class APILog extends javax.swing.JPanel {
                     }
                         };
     
-    javax.swing.table.DefaultTableModel modeldetail = new javax.swing.table.DefaultTableModel(new Object[][]{},
-                        new String[]{"LogID", "ComKey", "Severity", "Desc", "TimeStamp"});
     
    
     
@@ -194,133 +167,11 @@ public class APILog extends javax.swing.JPanel {
     }
     
     
-    public void getDocLogView() {
-     
-       DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
-             
-        docmodel.setNumRows(0);
-        tafile.setText("");
-        try {
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            Statement st2 = con.createStatement();
-            ResultSet res = null;
-            ResultSet resdetail = null;
-            try {
-
-                int i = 0;
-
-                String dir = "0";
-               
-                tablereport.setModel(docmodel);
-                tablereport.getColumnModel().getColumn(13).setMaxWidth(50);
-                tablereport.getColumnModel().getColumn(14).setMaxWidth(50);
-                tablereport.getColumnModel().getColumn(15).setMaxWidth(50);
-                
-              //   tablereport.getColumnModel().getColumn(8).setCellRenderer(new EDITransactionBrowse.DocViewRenderer()); 
-              //   tablereport.getColumnModel().getColumn(12).setCellRenderer(new EDITransactionBrowse.DocViewRenderer()); 
-              
-               //  tablereport.getColumnModel().getColumn(7).setCellRenderer(new EDITransactionBrowse.SomeRenderer()); 
-                
-                    
-                    if (tbapiid.getText().isEmpty()) {
-                    res = st.executeQuery("SELECT * FROM edi_idx  " +
-                    " where edx_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
-                    " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + " order by edx_id desc ;" ) ;
-                    } else {
-                     res = st.executeQuery("SELECT * FROM edi_idx  " +
-                    " where edx_sender >= " + "'" + tbapiid.getText() + "'" +
-                    " AND edx_sender <= " + "'" + tbapiid.getText() + "'" +
-                    " AND edx_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
-                    " AND edx_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + " order by edx_id desc ;" ) ;
-                    }
-                    
-                 
-                    
-                
-                
-                ImageIcon statusImage = null;
-                while (res.next()) {
-                    
-                    if (res.getString("edx_status").equals("success")) {
-                      statusImage = BlueSeerUtils.clickcheck;
-                    }  else {
-                      statusImage = BlueSeerUtils.clicknocheck;
-                    }
-                    if (res.getString("edx_ack").equals("1")) {
-                      statusImage = BlueSeerUtils.clickcheckblue; 
-                    }
-                    // now check detail log...if 'any' errors....set status to clicknocheck...unless last is 'success'
-                    resdetail = st2.executeQuery("select elg_severity from edi_log " +
-                        " where elg_comkey = " + "'" + res.getInt("edx_comkey") + "'" 
-                       // + " and elg_idxnbr = " + "'" + res.getInt("edx_id") + "'"
-                        +  " order by elg_id;");
-                    while (resdetail.next()) {
-                        if (resdetail.getString("elg_severity").equals("error")) {
-                           statusImage = BlueSeerUtils.clicknocheck; 
-                        }
-                        if (resdetail.getString("elg_severity").equals("success")) {
-                           statusImage = BlueSeerUtils.clickcheck; 
-                        }
-                    }
-                    
-                    i++;
-                    
-                 //   "Select", "IdxNbr", "ComKey", "SenderID", "ReceiverID", "TimeStamp", "InFileType", "InDocType", "InBatch", "OutFileType", "OutDocType", "OutBatch",  "Status"                     
-                    docmodel.addRow(new Object[]{BlueSeerUtils.clickbasket,
-                        res.getInt("edx_id"),
-                        res.getInt("edx_comkey"),
-                        res.getString("edx_sender"),
-                        res.getString("edx_receiver"),
-                        res.getString("edx_ts"),
-                        res.getString("edx_infiletype"),
-                        res.getString("edx_indoctype"),
-                        res.getString("edx_inbatch"),
-                        res.getString("edx_ref"), 
-                        res.getString("edx_outfiletype"),
-                        res.getString("edx_outdoctype"),
-                        res.getString("edx_outbatch"),
-                        BlueSeerUtils.clickleftdoc,
-                        BlueSeerUtils.clickrightdoc,
-                        statusImage
-                    });
-                }
-                
-                tbtot.setText(String.valueOf(i));
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (resdetail != null) {
-                    resdetail.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                if (st2 != null) {
-                    st2.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-   }
-    
     public void getFileLogView() {
      
        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
              
-        filemodel.setNumRows(0);
+        modeltable.setNumRows(0);
         tafile.setText("");
         try {
             Connection con = null;
@@ -335,51 +186,47 @@ public class APILog extends javax.swing.JPanel {
 
                 int i = 0;
 
-               
-                tablereport.setModel(filemodel);
                //  tablereport.getColumnModel().getColumn(8).setCellRenderer(new EDITransactionBrowse.SomeRenderer()); 
               //   tablereport.getColumnModel().getColumn(7).setCellRenderer(new EDITransactionBrowse.FileViewRenderer()); 
                  tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-                 tablereport.getColumnModel().getColumn(1).setMaxWidth(100);
-                 tablereport.getColumnModel().getColumn(2).setMaxWidth(100);
-                 tablereport.getColumnModel().getColumn(9).setMaxWidth(50);
-                 tablereport.getColumnModel().getColumn(10).setMaxWidth(50);
+                 tablereport.getColumnModel().getColumn(7).setMaxWidth(100);
                  
                     
                     if (tbapiid.getText().isEmpty()) {
-                    res = st.executeQuery("SELECT * FROM edi_file  " +
-                    " where edf_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
-                    " AND edf_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + 
-                    " order by edf_id desc ;" ) ;
+                    res = st.executeQuery("SELECT * FROM api_log  " +
+                    " where apil_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
+                    " AND apil_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + 
+                    " AND apil_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +         
+                    " order by apil_logid desc ;" ) ;
                     } else {
-                    res = st.executeQuery("SELECT * FROM edi_file  " +
-                    " where edf_partner >= " + "'" + tbapiid.getText() + "'" +
-                    " AND edf_partner <= " + "'" + tbapiid.getText() + "'" +        
-                    " AND edf_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
-                    " AND edf_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + 
-                    " order by edf_id desc ;" ) ;    
+                    res = st.executeQuery("SELECT * FROM api_log  " +
+                    " where apil_id >= " + "'" + tbapiid.getText() + "'" +
+                    " AND apil_id <= " + "'" + tbapiid.getText() + "'" +        
+                    " AND apil_ts >= " + "'" + dfdate.format(dcfrom.getDate()) + " 00:00:00" + "'" +
+                    " AND apil_ts <= " + "'" + dfdate.format(dcto.getDate())  + " 23:59:59" + "'" + 
+                    " AND apil_site = " + "'" + ddsite.getSelectedItem().toString() + "'" +        
+                    " order by apil_logid desc ;" ) ;    
                     }
                     
               
                 ImageIcon statusImage = null;
                 while (res.next()) {
                     i++;
-                  if (res.getString("edf_status").equals("success")) {
+                  if (res.getString("apil_status").equals("success")) {
                       statusImage = BlueSeerUtils.clickcheck;
-                  }  else {
+                  }  else if (res.getString("apil_status").equals("passive")) {
+                      statusImage = BlueSeerUtils.clickcheckyellow;
+                  } else {
                       statusImage = BlueSeerUtils.clicknocheck;
                   }
                  //   "Select", "IdxNbr", "ComKey", "SenderID", "ReceiverID", "TimeStamp", "InFileType", "InDocType", "InBatch", "OutFileType", "OutDocType", "OutBatch",  "Status"                     
-                    filemodel.addRow(new Object[]{BlueSeerUtils.clickbasket,
-                        res.getInt("edf_id"),
-                        res.getInt("edf_comkey"),
-                        res.getString("edf_partner"),
-                        res.getString("edf_filetype"),
-                        res.getString("edf_doctype"),
-                        res.getString("edf_ts"),
-                        res.getString("edf_file"),
-                        res.getString("edf_dir"),
-                        BlueSeerUtils.clickfind, 
+                   modeltable.addRow(new Object[]{BlueSeerUtils.clickbasket,
+                        res.getInt("apil_logid"),
+                        res.getString("apil_id"),
+                        res.getString("apil_method"),
+                        res.getString("apil_ts"),
+                        res.getString("apil_file"),
+                        res.getString("apil_mdn"),
                         statusImage
                     });
                 }
@@ -460,66 +307,6 @@ public class APILog extends javax.swing.JPanel {
        }
     }
     
-    public void getdetail(String comkey, String idxkey) {
-      
-         modeldetail.setNumRows(0);
-        
-         DecimalFormat df = new DecimalFormat("#0.00", new DecimalFormatSymbols(Locale.US));
-        
-        try {
-
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                int i = 0;
-                String blanket = "";
-                if (idxkey.equals("0")) {
-                 res = st.executeQuery("select elg_id, elg_comkey, elg_idxnbr, elg_severity, elg_desc, elg_ts from edi_log " +
-                        " where elg_comkey = " + "'" + comkey + "'" +
-                        ";");   
-                } else {
-                 res = st.executeQuery("select elg_id, elg_comkey, elg_idxnbr, elg_severity, elg_desc, elg_ts from edi_log " +
-                        " where elg_comkey = " + "'" + comkey + "'" +
-                        " and elg_idxnbr = " + "'" + idxkey + "'" +
-                        ";");   
-                }
-                
-                while (res.next()) {
-                   modeldetail.addRow(new Object[]{ 
-                      res.getString("elg_id"), 
-                      res.getString("elg_comkey"),
-                      res.getString("elg_severity"),
-                      res.getString("elg_desc"),
-                      res.getString("elg_ts")
-                      });
-                }
-               
-                tabledetail.setModel(modeldetail);
-                this.repaint();
-
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-                if (res != null) {
-                    res.close();
-                }
-                if (st != null) {
-                    st.close();
-                }
-                con.close();
-            }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-
-    }
     
     public void initvars(String[] arg) {
        
@@ -539,10 +326,9 @@ public class APILog extends javax.swing.JPanel {
        dcfrom.setDate(now);
         dcto.setDate(now);
                
-        docmodel.setNumRows(0);
-        modeldetail.setNumRows(0);
-        tablereport.setModel(filemodel);
-        tabledetail.setModel(modeldetail);
+        modeltable.setNumRows(0);
+       
+        tablereport.setModel(modeltable);
         
         tablereport.getTableHeader().setReorderingAllowed(false);
         tabledetail.getTableHeader().setReorderingAllowed(false);
@@ -559,6 +345,10 @@ public class APILog extends javax.swing.JPanel {
         bthidetext.setEnabled(false);
         detailpanel.setVisible(false);
         textpanel.setVisible(false);
+        
+        ddsite.removeAllItems();
+        OVData.getSiteList(bsmf.MainFrame.userid).stream().forEach((s) -> ddsite.addItem(s));  
+        ddsite.setSelectedItem(OVData.getDefaultSite());
           
     }
     /**
@@ -594,6 +384,8 @@ public class APILog extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
         bthidetext = new javax.swing.JButton();
         lbsegdelim = new javax.swing.JLabel();
+        ddsite = new javax.swing.JComboBox<>();
+        jLabel1 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         tbtoterrors = new javax.swing.JLabel();
@@ -703,6 +495,8 @@ public class APILog extends javax.swing.JPanel {
             }
         });
 
+        jLabel1.setText("Site:");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -718,9 +512,14 @@ public class APILog extends javax.swing.JPanel {
                     .addComponent(tbapiid, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(31, 31, 31)
+                            .addComponent(dcto, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(dcfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel1)))
+                        .addGap(3, 3, 3)
+                        .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btRun)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btdetail)
@@ -741,7 +540,9 @@ public class APILog extends javax.swing.JPanel {
                         .addComponent(btRun)
                         .addComponent(btdetail)
                         .addComponent(bthidetext)
-                        .addComponent(lbsegdelim, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(lbsegdelim, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel6)
@@ -832,30 +633,6 @@ public class APILog extends javax.swing.JPanel {
 
     private void tablereportMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablereportMouseClicked
         
-        int row = tablereport.rowAtPoint(evt.getPoint());
-        int col = tablereport.columnAtPoint(evt.getPoint());
-       
-        if ( col == 0) {
-                getdetail(tablereport.getValueAt(row, 2).toString(), "0");
-                btdetail.setEnabled(true);
-                detailpanel.setVisible(true);
-        }
-        if ( col == 15) {
-                String ackfile = EDData.getEDIAckFileFromEDIIDX(tablereport.getValueAt(row, 1).toString());
-                if (! ackfile.isEmpty()) {
-                 // read output or mdn here
-                     
-                    
-                     tafile.setCaretPosition(0);
-                     textpanel.setVisible(true);
-                     bthidetext.setEnabled(true);
-                }
-        }
-        
-       
-          
-       
-      
     }//GEN-LAST:event_tablereportMouseClicked
 
     private void bthidetextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bthidetextActionPerformed
@@ -876,7 +653,9 @@ public class APILog extends javax.swing.JPanel {
     private javax.swing.ButtonGroup buttonGroup1;
     private com.toedter.calendar.JDateChooser dcfrom;
     private com.toedter.calendar.JDateChooser dcto;
+    private javax.swing.JComboBox<String> ddsite;
     private javax.swing.JPanel detailpanel;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
