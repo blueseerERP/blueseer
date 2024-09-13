@@ -3464,5 +3464,12 @@ CREATE TABLE "usr_log" (
   "usrl_ref" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
   "usrl_messg" varchar(80) NOT NULL COLLATE NOCASE DEFAULT ''
 ); 
+CREATE TABLE "usr_meta" (
+  "usrm_id" varchar(30) NOT NULL COLLATE NOCASE DEFAULT '',
+  "usrm_type" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "usrm_key" varchar(80) NOT NULL COLLATE NOCASE DEFAULT '',
+  "usrm_value" varchar(200) NOT NULL COLLATE NOCASE DEFAULT '',
+  "usrm_ref" varchar(200) NOT NULL COLLATE NOCASE DEFAULT ''
+);
 
 End Transaction;

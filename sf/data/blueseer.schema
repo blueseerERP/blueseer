@@ -3010,3 +3010,10 @@ CREATE TABLE IF NOT EXISTS `usr_log` (
   `usrl_ref` varchar(80) NOT NULL  DEFAULT '',
   `usrl_messg` varchar(80) NOT NULL  DEFAULT '') 
 ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+CREATE TABLE IF NOT EXISTS `usr_meta` (
+  `usrm_id` varchar(30) NOT NULL DEFAULT '',
+  `usrm_type` varchar(80) NOT NULL DEFAULT '',
+  `usrm_key` varchar(80) NOT NULL DEFAULT '',
+  `usrm_value` varchar(200) NOT NULL DEFAULT '',
+  `usrm_ref` varchar(200) NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
