@@ -40,6 +40,7 @@ import com.blueseer.srv.ShipperServ;
 import com.blueseer.srv.WorkOrdServ;
 import com.blueseer.srv.dataServ;
 import com.blueseer.srv.dataServFIN;
+import com.blueseer.srv.webServ;
 import static com.blueseer.utl.BlueSeerUtils.isParsableToInt;
 import java.io.IOException;
 import java.util.Locale;
@@ -128,6 +129,7 @@ public class apiServer {
         WebAppContext webapp = new WebAppContext();
         webapp.setContextPath("/bsweb");
         webapp.setResourceBase("web/");
+        webapp.addServlet(webServ.class, "/webServ/*"); 
         webapp.setWelcomeFiles(new String[]{"index.html"});
        
         
@@ -171,11 +173,11 @@ public class apiServer {
         response.getWriter().println("RemoteHost=" + request.getRemoteHost() + "<br>");
         response.getWriter().println("RequestURI=" + request.getRequestURI() + "<br>");
         for (String header : HEADERS) {
-        String ip = request.getHeader(header);
-        if (ip != null && ip.length() != 0 && ! "unknown".equalsIgnoreCase(ip)) {
-            response.getWriter().println("info: " + header + "=" + ip + "<br>");
+            String ip = request.getHeader(header);
+            if (ip != null && ip.length() != 0 && ! "unknown".equalsIgnoreCase(ip)) {
+                response.getWriter().println("info: " + header + "=" + ip + "<br>");
+            }
         }
-    }
         
     }
 }

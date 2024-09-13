@@ -380,8 +380,7 @@ public class OVData {
         return nbr;
         
     }
-    
-    
+        
     public static int getNextNbr(String countername) {
        int nbr = 0;
         try{
@@ -11745,6 +11744,66 @@ return autosource;
 
 }
 
+    public static boolean isValidUserSession(String user, String pass, String ip, String session) {
+
+    boolean isvalidIP = false;
+    boolean isvalidSession = false;
+    boolean isvalidUserPass = false;
+    
+    try{
+
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            int i = 0;
+            try{
+                // check user / pass
+                res = st.executeQuery("SELECT user_id, user_passwd FROM  user_mstr where user_id = " + "'" + user + "'" + ";");
+                    while (res.next()) {
+                        i++;
+                        String key = bsmf.MainFrame.PassWord("1", res.getString("user_passwd").toCharArray());
+                            if (key.compareTo(pass) == 0) {
+                                isvalidUserPass = true;
+                            }
+                    }
+                
+                // check IP / session
+                res = st.executeQuery("select * from usr_meta where usrm_id = 'access' AND "
+                        + " usrm_key = " + "'" + user + "'"
+                        + ";");
+                while (res.next()) {
+                    if (res.getString("usrm_type").equals("ip") && 
+                            res.getString("usrm_value").equals(ip)) {
+                        isvalidIP = true;
+                    }
+                    if (res.getString("usrm_type").equals("session") && 
+                            res.getString("usrm_value").equals(session)) {
+                        isvalidSession = true;
+                    }
+                }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    
+   return (isvalidSession && isvalidIP && isvalidUserPass) ? true : false;
+}
+
+    
     public static boolean isValidCustomer(String key) {
 
    boolean isgood = false;

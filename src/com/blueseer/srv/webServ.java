@@ -53,6 +53,7 @@ import static com.blueseer.fgl.fglData.getAccountActivityYear;
 import static com.blueseer.fgl.fglData.getAccountBalanceReport;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.confirmServerAuth;
+import static com.blueseer.utl.BlueSeerUtils.confirmServerSession;
 import static com.blueseer.utl.BlueSeerUtils.createMessageJSON;
 import com.blueseer.utl.OVData;
 import java.io.BufferedReader;
@@ -84,8 +85,20 @@ import org.apache.commons.io.IOUtils;
  *
  * @author terryva
  */
-public class dataServFIN extends HttpServlet {
+public class webServ extends HttpServlet {
     
+    private static final String[] HEADERS = {
+            "X-Forwarded-For",
+            "Proxy-Client-IP",
+            "WL-Proxy-Client-IP",
+            "HTTP_X_FORWARDED_FOR",
+            "HTTP_X_FORWARDED",
+            "HTTP_X_CLUSTER_CLIENT_IP",
+            "HTTP_CLIENT_IP",
+            "HTTP_FORWARDED_FOR",
+            "HTTP_FORWARDED",
+            "HTTP_VIA",
+            "REMOTE_ADDR" };
         
 @Override
 protected void doGet(HttpServletRequest request, HttpServletResponse response) 
@@ -93,101 +106,27 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         
     response.setContentType("text/plain");
         
-    if (! confirmServerAuth(request)) {
+    if (! confirmServerSession(request)) {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.getWriter().println("br549 authorization failed");
         return;
     }
     
-        
-    if (request.getParameter("id") == null || request.getParameter("id").isEmpty()) {
-      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-      response.getWriter().println(HttpServletResponse.SC_BAD_REQUEST + ": missing id");  
-      return;
+    response.setContentType("text/html");
+    response.setStatus(HttpServletResponse.SC_OK);
+    response.getWriter().println("session=" + request.getSession(true).getId() + "<br>");
+    response.getWriter().println("RemoteAddr=" + request.getRemoteAddr() + "<br>");
+    response.getWriter().println("RemoteHost=" + request.getRemoteHost() + "<br>");
+    response.getWriter().println("RequestURI=" + request.getRequestURI() + "<br>");
+    for (String header : HEADERS) {
+        String ip = request.getHeader(header);
+        if (ip != null && ip.length() != 0 && ! "unknown".equalsIgnoreCase(ip)) {
+            response.getWriter().println("info: " + header + "=" + ip + "<br>");
+        }
     }
-        
-        String id = request.getParameter("id");
-        
-        response.setStatus(HttpServletResponse.SC_OK);
-        
-        
-        
-        if (id.equals("getAccountBalanceReport")) {
-           String[] keys = new String[]{
-               request.getParameter("year"), 
-               request.getParameter("period"), 
-               request.getParameter("site"), 
-               request.getParameter("iscc"), 
-               request.getParameter("intype"), 
-               request.getParameter("fromacct"), 
-               request.getParameter("toacct")  
-           }; 
-           
-           for (String k : keys) {
-               if (k == null) {
-                   response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                   response.getWriter().println(HttpServletResponse.SC_BAD_REQUEST + ": missing param");  
-                   return;
-               }
-           }
-           
-           String r = getAccountBalanceReport(keys);
-           
-           if (r == null || r.isBlank()) {
-             response.getWriter().println("no return for: " + String.join(",",keys));   
-           } else {
-             response.getWriter().println(r);   
-           }
-        } 
-        
-         if (id.equals("getAccountActivityYear")) {
-           String[] keys = new String[]{
-               request.getParameter("year"), 
-               request.getParameter("site"), 
-               request.getParameter("fromacct"), 
-               request.getParameter("toacct")  
-           }; 
-           
-           for (String k : keys) {
-               if (k == null) {
-                   response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                   response.getWriter().println(HttpServletResponse.SC_BAD_REQUEST + ": missing param");  
-                   return;
-               }
-           }
-           
-           String r = getAccountActivityYear(keys);
-           
-           if (r == null || r.isBlank()) {
-             response.getWriter().println("no return for: " + String.join(",",keys));   
-           } else {
-             response.getWriter().println(r);   
-           }
-        } 
-        
-        if (id.equals("setStandardCosts")) {
-           String[] keys = new String[]{
-               request.getParameter("site"), 
-               request.getParameter("item") 
-           }; 
-           
-           for (String k : keys) {
-               if (k == null) {
-                   response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                   response.getWriter().println(HttpServletResponse.SC_BAD_REQUEST + ": missing param");  
-                   return;
-               }
-           }
-           
-           String r = getAccountActivityYear(keys);
-           
-           if (r == null || r.isBlank()) {
-             response.getWriter().println("no return for: " + String.join(",",keys));   
-           } else {
-             response.getWriter().println(r);   
-           }
-        } 
-        
+    response.setStatus(HttpServletResponse.SC_ACCEPTED);
+    response.getWriter().println(HttpServletResponse.SC_ACCEPTED + ": Good job! " + "\n" + getHeaders(request));  
+                  
         
     }
 
