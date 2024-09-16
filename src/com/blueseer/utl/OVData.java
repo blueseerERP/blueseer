@@ -11845,7 +11845,7 @@ return autosource;
 }
 
     
-    public static boolean isValidUserLogin(String userid, String pass, String ip, String session) {
+    public static boolean isValidUserLogin(String userid, String passwd, String ip, String session) {
 
     boolean isvalidIP = false;
     boolean isvalidUserPass = false;
@@ -11867,7 +11867,7 @@ return autosource;
                     while (res.next()) {
                         i++;
                         String key = bsmf.MainFrame.PassWord("1", res.getString("user_passwd").toCharArray());
-                            if (key.compareTo(pass) == 0) {
+                            if (key.compareTo(passwd) == 0) {
                                 isvalidUserPass = true;
                             }
                     }
