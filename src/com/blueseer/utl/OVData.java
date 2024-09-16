@@ -11845,7 +11845,7 @@ return autosource;
 }
 
     
-    public static boolean isValidUserLogin(String user, String pass, String ip, String session) {
+    public static boolean isValidUserLogin(String userid, String pass, String ip, String session) {
 
     boolean isvalidIP = false;
     boolean isvalidUserPass = false;
@@ -11863,7 +11863,7 @@ return autosource;
             int i = 0;
             try{
                 // check user / pass
-                res = st.executeQuery("SELECT user_id, user_passwd FROM  user_mstr where user_id = " + "'" + user + "'" + ";");
+                res = st.executeQuery("SELECT user_id, user_passwd FROM  user_mstr where user_id = " + "'" + userid + "'" + ";");
                     while (res.next()) {
                         i++;
                         String key = bsmf.MainFrame.PassWord("1", res.getString("user_passwd").toCharArray());
@@ -11874,7 +11874,7 @@ return autosource;
                 
                 // check IP / session
                 res = st.executeQuery("select * from usr_meta where usrm_id = 'access' AND "
-                        + " usrm_key = " + "'" + user + "'"
+                        + " usrm_key = " + "'" + userid + "'"
                         + ";");
                 while (res.next()) {
                     if (res.getString("usrm_type").equals("ip") && 
@@ -11886,7 +11886,7 @@ return autosource;
          if (isvalidUserPass) {
              st.executeUpdate("insert into usr_meta values ( " +
                      " 'access', 'session', " +
-                     "'" + user + "'" + "," +
+                     "'" + userid + "'" + "," +
                      "'" + session + "'" + "," +
                      "''" + // usrm_ref ...to be used for expiry 
                      ");");
