@@ -130,7 +130,7 @@ public class apiServer {
         webapp.setContextPath("/bsweb");
         webapp.setResourceBase("web/");
         webapp.addServlet(webServ.class, "/webServ/*"); 
-        webapp.setWelcomeFiles(new String[]{"index.html"});
+        webapp.setWelcomeFiles(new String[]{"login.html"});
        
         
         ContextHandlerCollection contexts = new ContextHandlerCollection();

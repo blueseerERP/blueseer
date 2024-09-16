@@ -32,7 +32,9 @@ import com.blueseer.adm.admData;
 import com.blueseer.adm.admData.change_log;
 import static com.blueseer.edi.EDI.edilog;
 import static com.blueseer.utl.OVData.getCodeValueByCodeKey;
+import static com.blueseer.utl.OVData.isValidUserLogin;
 import static com.blueseer.utl.OVData.isValidUserSession;
+import static com.blueseer.utl.OVData.killUserSession;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -90,6 +92,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -2538,19 +2541,72 @@ public class BlueSeerUtils {
     }
     
     public static boolean confirmServerSession(HttpServletRequest httpRequest) {
+        String cookievalue = "";
+        String ip = httpRequest.getRemoteAddr();
+        Cookie[] cookies = httpRequest.getCookies(); 
+            if (cookies != null) {
+                for (Cookie c : cookies) {
+                    if (c.getName().equals("bscookie")) {
+                     cookievalue = c.getValue();
+                     break;
+                    }
+                }
+            }
+            Base64 b = new Base64(); 
+            String credentials = new String(b.decode(cookievalue), Charset.forName("UTF-8"));
+            final String[] v = credentials.split(":", 3); // user:sessionid:sessionIP            
+            if (v != null && v.length == 3) {
+                if (! ip.equals(v[2])) {  // if cookie IP does not match current Request Session ID...bail
+                    return false;
+                } else {
+                    return isValidUserSession(ip, v[0], v[1]);
+                }
+            }            
+        
+        return false;
+    }
+    
+    public static boolean killServerSession(HttpServletRequest httpRequest) {
+        String cookievalue = "";
+        String ip = httpRequest.getRemoteAddr();
+        Cookie[] cookies = httpRequest.getCookies(); 
+            if (cookies != null) {
+                for (Cookie c : cookies) {
+                    if (c.getName().equals("bscookie")) {
+                     cookievalue = c.getValue();
+                     break;
+                    }
+                }
+            }
+            Base64 b = new Base64(); 
+            String credentials = new String(b.decode(cookievalue), Charset.forName("UTF-8"));
+            final String[] v = credentials.split(":", 3); // user:sessionid:sessionIP            
+            if (v != null && v.length == 3) {
+                if (! ip.equals(v[2])) {  // if cookie IP does not match current Request Session ID...bail
+                    return false;
+                } else {
+                    return killUserSession(ip, v[0], v[1]);
+                }
+            }            
+        
+        return false;
+    }
+    
+    
+    public static boolean confirmServerLogin(HttpServletRequest httpRequest, String sessionid) {
         final String authorization = httpRequest.getHeader("Authorization");
         if (authorization != null && authorization.toLowerCase().startsWith("basic")) {
             String base64Credentials = authorization.substring("Basic".length()).trim();
             Base64 b = new Base64(); 
+            String ip = httpRequest.getRemoteAddr();
             String credentials = new String(b.decode(base64Credentials), Charset.forName("UTF-8"));
             final String[] v = credentials.split(":", 2);
-            if (v != null && v.length == 4) {    
-                return isValidUserSession(v[0], v[1], v[2], v[3]);
+            if (v != null && v.length == 2) {    
+                return isValidUserLogin(v[0], v[1], ip, sessionid);
             }            
         }
         return false;
     }
-    
     
 }
 

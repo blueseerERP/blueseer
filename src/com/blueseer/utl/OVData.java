@@ -11744,10 +11744,110 @@ return autosource;
 
 }
 
-    public static boolean isValidUserSession(String user, String pass, String ip, String session) {
+    public static boolean isValidUserSession(String ip, String userid, String session) {
 
+        System.out.println("HERE: " + ip + " / " + userid + " / " + session);
     boolean isvalidIP = false;
     boolean isvalidSession = false;
+    
+    try{
+
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            int i = 0;
+            try{
+                
+                // check IP / session
+                res = st.executeQuery("select * from usr_meta where usrm_id = 'access' AND "
+                        + " usrm_key = " + "'" + userid + "'"
+                        + ";");
+                while (res.next()) {
+                    if (res.getString("usrm_type").equals("ip") && 
+                            res.getString("usrm_value").equals(ip)) {
+                        isvalidIP = true;
+                    }
+                    if (res.getString("usrm_type").equals("session") && 
+                            res.getString("usrm_value").equals(session)) {
+                        isvalidSession = true;
+                    }
+                }
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    
+   return (isvalidSession && isvalidIP) ? true : false;
+}
+
+    public static boolean killUserSession(String ip, String userid, String session) {
+    try{
+
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            int i = 0;
+            boolean valid = false;
+            try{
+                
+                
+                res = st.executeQuery("select * from usr_meta where usrm_id = 'access' AND usrm_type = 'session' AND "
+                        + " usrm_key = " + "'" + userid + "'" + " AND " 
+                        + " usrm_value = " + "'" + session + "'"        
+                        + ";");
+                while (res.next()) {
+                    valid = true;
+                }
+                
+                if (valid) {
+                    // this currently deletes all sessions for users
+                    // the actual session is passed...may use in the future to target specific session
+                    st.executeUpdate("delete from usr_meta " +
+                        " where usrm_id = 'access' AND usrm_type = 'session' AND "
+                        + " usrm_key = " + "'" + userid + "'"
+                        + ";");
+                }
+                
+
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+        } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+        }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+    }
+    
+   return true;
+}
+
+    
+    public static boolean isValidUserLogin(String user, String pass, String ip, String session) {
+
+    boolean isvalidIP = false;
     boolean isvalidUserPass = false;
     
     try{
@@ -11781,12 +11881,17 @@ return autosource;
                             res.getString("usrm_value").equals(ip)) {
                         isvalidIP = true;
                     }
-                    if (res.getString("usrm_type").equals("session") && 
-                            res.getString("usrm_value").equals(session)) {
-                        isvalidSession = true;
-                    }
                 }
 
+         if (isvalidUserPass) {
+             st.executeUpdate("insert into usr_meta values ( " +
+                     " 'access', 'session', " +
+                     "'" + user + "'" + "," +
+                     "'" + session + "'" + "," +
+                     "''" + // usrm_ref ...to be used for expiry 
+                     ");");
+         }       
+                
        }
         catch (SQLException s){
              MainFrame.bslog(s);
@@ -11800,7 +11905,8 @@ return autosource;
         MainFrame.bslog(e);
     }
     
-   return (isvalidSession && isvalidIP && isvalidUserPass) ? true : false;
+  //  return (isvalidIP && isvalidUserPass) ? true : false;
+   return (isvalidUserPass) ? true : false;
 }
 
     

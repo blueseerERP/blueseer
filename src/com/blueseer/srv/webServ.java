@@ -53,8 +53,11 @@ import static com.blueseer.fgl.fglData.getAccountActivityYear;
 import static com.blueseer.fgl.fglData.getAccountBalanceReport;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.confirmServerAuth;
+import static com.blueseer.utl.BlueSeerUtils.confirmServerLogin;
 import static com.blueseer.utl.BlueSeerUtils.confirmServerSession;
 import static com.blueseer.utl.BlueSeerUtils.createMessageJSON;
+import static com.blueseer.utl.BlueSeerUtils.killServerSession;
+import com.blueseer.utl.EDData;
 import com.blueseer.utl.OVData;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -74,11 +77,13 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.transform.TransformerException;
 import org.apache.commons.io.IOUtils;
+import org.bouncycastle.util.encoders.Base64;
 
 
 /**
@@ -104,30 +109,76 @@ public class webServ extends HttpServlet {
 protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
-    response.setContentType("text/plain");
-        
-    if (! confirmServerSession(request)) {
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.getWriter().println("br549 authorization failed");
+    
+    response.setContentType("text/html");
+    String sessionid = "";
+    if (request.getSession() == null) {
+        sessionid = request.getSession(true).getId();
+    } else {
+        sessionid = request.getSession().getId();
+    }
+    
+/*
+    if (request.getHeader("mycookie").isBlank()) {
+        response.addCookie(new Cookie("mycookie", request.getSession(true).getId()));
+    } else {
+        response.getWriter().println("mycookie --> " + request.getHeader("mycookie"));
+    }
+    */
+ 
+    String prog = "";
+    if (request.getHeader("Prog") != null && ! request.getHeader("Prog").isBlank()) {
+        prog = request.getHeader("Prog");
+    } 
+    
+    // kill session
+    if (request.getHeader("kill") != null) {
+        killServerSession(request);
         return;
     }
     
-    response.setContentType("text/html");
-    response.setStatus(HttpServletResponse.SC_OK);
-    response.getWriter().println("session=" + request.getSession(true).getId() + "<br>");
-    response.getWriter().println("RemoteAddr=" + request.getRemoteAddr() + "<br>");
-    response.getWriter().println("RemoteHost=" + request.getRemoteHost() + "<br>");
-    response.getWriter().println("RequestURI=" + request.getRequestURI() + "<br>");
-    for (String header : HEADERS) {
-        String ip = request.getHeader(header);
-        if (ip != null && ip.length() != 0 && ! "unknown".equalsIgnoreCase(ip)) {
-            response.getWriter().println("info: " + header + "=" + ip + "<br>");
+    // if login
+    if (request.getHeader("Pass") != null && ! request.getHeader("Pass").isBlank()) {
+        if (! confirmServerLogin(request, sessionid)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().println("br549 authorization failed");
+            response.getWriter().println("session=" + sessionid + "<br>");
+            response.getWriter().println("RemoteAddr=" + request.getRemoteAddr() + "<br>");
+            response.getWriter().println("RemoteHost=" + request.getRemoteHost() + "<br>");
+            response.getWriter().println("RequestURI=" + request.getRequestURI() + "<br>");
+            response.getWriter().println(getHeaders(request));
+            Cookie[] cookies = request.getCookies(); 
+            if (cookies != null) {
+                for (Cookie c : cookies) {
+                    response.getWriter().println("cookie --> " + c.getName() + " / " + c.getValue());
+                }
+            }
+        } else {
+            String cookiecontent = request.getHeader("User") + ":" + sessionid + ":" + request.getRemoteAddr();
+            Cookie c = new Cookie("bscookie", Base64.toBase64String(cookiecontent.getBytes()));
+            c.setHttpOnly(true);
+            response.addCookie(c);
+        }
+    } else { // must be session
+        if (! confirmServerSession(request)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().println("br549x authorization failed");
+            response.getWriter().println("session=" + sessionid + "<br>");
+            response.getWriter().println("RemoteAddr=" + request.getRemoteAddr() + "<br>");
+            response.getWriter().println("RemoteHost=" + request.getRemoteHost() + "<br>");
+            response.getWriter().println("RequestURI=" + request.getRequestURI() + "<br>");
+            response.getWriter().println(getHeaders(request));
+            Cookie[] cookies = request.getCookies(); 
+            if (cookies != null) {
+                for (Cookie c : cookies) {
+                    response.getWriter().println("cookie --> " + c.getName() + " / " + c.getValue());
+                }
+            }
+        } else {
+           response.setStatus(HttpServletResponse.SC_OK);
+           response.getWriter().println(getData(prog));
         }
     }
-    response.setStatus(HttpServletResponse.SC_ACCEPTED);
-    response.getWriter().println(HttpServletResponse.SC_ACCEPTED + ": Good job! " + "\n" + getHeaders(request));  
-                  
-        
     }
 
  @Override
@@ -149,5 +200,21 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
     return requestHeaders.toString();
 }
 
+    private String getData(String prog) {     
+        String r = "bad request: " + prog;
+        switch (prog) {
+            case "getPartnerCount" :
+            ArrayList<String> list = EDData.getEDIPartners();
+            r = String.valueOf(list.size());
+            r = r +",,,";
+            break; 
+            
+        default:
+            r = "Unknown Data Request";
+        }
+        
+        
+        return r;
+    }
 
 }
