@@ -56,6 +56,7 @@ import static com.blueseer.utl.BlueSeerUtils.confirmServerAuth;
 import static com.blueseer.utl.BlueSeerUtils.confirmServerLogin;
 import static com.blueseer.utl.BlueSeerUtils.confirmServerSession;
 import static com.blueseer.utl.BlueSeerUtils.createMessageJSON;
+import static com.blueseer.utl.BlueSeerUtils.getSiteFromSessionCookie;
 import static com.blueseer.utl.BlueSeerUtils.killServerSession;
 import com.blueseer.utl.EDData;
 import com.blueseer.utl.OVData;
@@ -70,6 +71,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -154,7 +156,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
                 }
             }
         } else {
-            String cookiecontent = request.getHeader("User") + ":" + sessionid + ":" + request.getRemoteAddr();
+            String cookiecontent = request.getHeader("User") + "," + sessionid + "," + request.getRemoteAddr() + "," + OVData.getDefaultSiteForUserid(request.getHeader("User"));
             Cookie c = new Cookie("bscookie", Base64.toBase64String(cookiecontent.getBytes()));
             c.setHttpOnly(true);
             response.addCookie(c);
@@ -176,7 +178,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
             }
         } else {
            response.setStatus(HttpServletResponse.SC_OK);
-           response.getWriter().println(getData(prog));
+           response.getWriter().println(getData(prog, request));
         }
     }
     }
@@ -200,14 +202,20 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
     return requestHeaders.toString();
 }
 
-    private String getData(String prog) {     
+    private String getData(String prog, HttpServletRequest request) {     
         String r = "bad request: " + prog;
+        String site = getSiteFromSessionCookie(request);
+        
         switch (prog) {
             case "getPartnerCount" :
             ArrayList<String> list = EDData.getEDIPartners();
             r = String.valueOf(list.size());
             r = r +",,,";
             break; 
+            
+            case "getEDIDocTrans" :
+            r = h_getEDIDocTrans(request, site);
+            break;
             
         default:
             r = "Unknown Data Request";
@@ -217,4 +225,20 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         return r;
     }
 
+    private String h_getEDIDocTrans(HttpServletRequest request, String site) {
+        String fromdate = "";
+        String todate = "";
+        String today = BlueSeerUtils.bsdate.format(new Date());
+        if (request.getHeader("fromdate") != null && ! request.getHeader("fromdate").isBlank()) {
+                fromdate = BlueSeerUtils.convertDateFormat("yyyyMMdd", request.getHeader("fromdate"));
+        } else {
+            fromdate = today;
+        }   
+        if (request.getHeader("todate") != null && ! request.getHeader("todate").isBlank()) {
+            todate = BlueSeerUtils.convertDateFormat("yyyyMMdd", request.getHeader("todate"));
+        } else {
+            todate = today;
+        }
+        return EDData.get_edi_idx_JSON(site, fromdate, todate);
+    }
 }

@@ -968,8 +968,28 @@ public class EDI {
             GlobalDebug = true;
         }
         
-        if (GlobalDebug)
+        if (GlobalDebug) {
         System.out.println("processFile: entering function with file :" + infile);
+        }
+        
+        // always need a site
+        if (site.isBlank()) {
+            site = OVData.getDefaultSite();
+            if (GlobalDebug) {
+            System.out.println("Site parameter blank...using default :" + site);
+            }
+        }
+        
+        // lets check to see if outfile contains a directory path...as if called from EDIbs with -of qualf
+        Path outdirpath = null;
+        Path path = Paths.get(outfile);
+        if (path.getParent() != null) {
+            outdirpath = path.getParent();
+            outfile = path.getFileName().toString();
+        }
+        
+       
+        
         
         String[] m = new String[]{"0",""};
         String[] c = null;  // control values to pass to map and log
@@ -1009,6 +1029,11 @@ public class EDI {
                     c[13] = "";
                     c[16] = "0";  // initial idxnbr
                     c[22] = String.valueOf(comkey);
+                    
+                    if (outdirpath != null && Files.exists(outdirpath)) {
+                        c[27] = cleanDirString(outdirpath.toString()); // set outdir if called from EDIbs with -of
+                    }
+                    
                     c[26] = file.getParent(); // indir
                     c[28] = editype[0];
                     c[30] = String.valueOf(isDebug);
@@ -1301,7 +1326,6 @@ public class EDI {
                     c[11] = String.valueOf((int) u);
                     c[12] = isOverride;
                     c[13] = String.join("+", unb);
-                    c[15] = "0"; // inbound
                     
                 }
                 // UNG may not be there...needs revisiting
@@ -1420,16 +1444,15 @@ public class EDI {
                    
                     c[0] = isa[6].trim(); // senderid
                     c[21] = isa[8].trim(); // receiverid
-                    c[2] = map;
-                    c[3] = infile;
+                  //  c[2] = map;
+                  //  c[3] = infile;
                     c[4] = isa[13]; //isactrlnbr
-                    c[8] = outfile;
+                  //  c[8] = outfile;
                     c[9] = String.valueOf((int) s);
                     c[10] = String.valueOf((int) e);
                     c[11] = String.valueOf((int) u);
-                    c[12] = isOverride;
+                  //  c[12] = isOverride;
                     c[13] = new String(cbuf,i,105);
-                    c[15] = "0"; // inbound
                     
                 }
                 if (i > 1 && cbuf[i-1] == s && cbuf[i] == 'G' && cbuf[i+1] == 'S') {
@@ -2845,6 +2868,8 @@ public class EDI {
     
         String[] c = (String[]) isa.getValue()[6];
         
+        
+        
        // ArrayList d = (ArrayList) isa.getValue()[5];
         Map<Integer, ArrayList> d = (HashMap<Integer, ArrayList>)isa.getValue()[5];
         
@@ -2979,11 +3004,14 @@ public class EDI {
             String[] defaults = EDData.getEDITPDefaultsX(c[1], gs02, gs03, c[2]);
             c[29] = defaults[15]; // defines outputfiletype
             
-            if (GlobalDebug)   
+            if (GlobalDebug)  { 
             System.out.println("Entering Map " + map + " with: " +  c[1] + "/" + gs02 + "/" + gs03);    
-
+            }
+            
             messages.add(new String[]{"info","Found Map: " + map + " with " + c[1] + "/" + gs02 + "/" + gs03});
             messages.add(new String[]{"info","Using Map: " + map + " for docID: " + c[6]});
+            
+            
             
                // at this point I should have a doc set (ST to SE) and a map ...now call map to operate on doc 
                 URLClassLoader cl = null;
@@ -3441,7 +3469,7 @@ public class EDI {
             if (m[0].isBlank()) { // if not error
                 m = VoucherTransaction("receipt", list, ap, false);
             } 
-            System.out.println("HERE: " + m[0] + "/" + m[1]);
+            
             return m;
      }
         
@@ -3727,7 +3755,7 @@ public class EDI {
             if (m[0].isBlank()) { // if not error
                 m = addCFOTransaction(list, x, null, null);
             } 
-            System.out.println("HERE: " + m[0] + "/" + m[1]);
+            
             return m;
      }
      

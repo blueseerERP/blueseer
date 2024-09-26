@@ -2554,8 +2554,9 @@ public class BlueSeerUtils {
             }
             Base64 b = new Base64(); 
             String credentials = new String(b.decode(cookievalue), Charset.forName("UTF-8"));
-            final String[] v = credentials.split(":", 3); // user:sessionid:sessionIP            
-            if (v != null && v.length == 3) {
+            System.out.println("credentials: -- > " + credentials);
+            final String[] v = credentials.split(",", 4); // user:sessionid:sessionIP:site            
+            if (v != null && v.length == 4) {
                 if (! ip.equals(v[2])) {  // if cookie IP does not match current Request Session ID...bail
                     return false;
                 } else {
@@ -2565,6 +2566,29 @@ public class BlueSeerUtils {
         
         return false;
     }
+    
+    public static String getSiteFromSessionCookie(HttpServletRequest httpRequest) {
+        String cookievalue = "";
+        String site = "";
+        Cookie[] cookies = httpRequest.getCookies(); 
+            if (cookies != null) {
+                for (Cookie c : cookies) {
+                    if (c.getName().equals("bscookie")) {
+                     cookievalue = c.getValue();
+                     break;
+                    }
+                }
+            }
+            Base64 b = new Base64(); 
+            String credentials = new String(b.decode(cookievalue), Charset.forName("UTF-8"));
+            final String[] v = credentials.split(",", 4); // user:sessionid:sessionIP:site            
+            if (v != null && v.length == 4) {
+               site = v[3]; 
+            }            
+        
+        return site;
+    }
+    
     
     public static boolean killServerSession(HttpServletRequest httpRequest) {
         String cookievalue = "";
@@ -2580,8 +2604,8 @@ public class BlueSeerUtils {
             }
             Base64 b = new Base64(); 
             String credentials = new String(b.decode(cookievalue), Charset.forName("UTF-8"));
-            final String[] v = credentials.split(":", 3); // user:sessionid:sessionIP            
-            if (v != null && v.length == 3) {
+            final String[] v = credentials.split(",", 4); // user:sessionid:sessionIP:site            
+            if (v != null && v.length == 4) {
                 if (! ip.equals(v[2])) {  // if cookie IP does not match current Request Session ID...bail
                     return false;
                 } else {

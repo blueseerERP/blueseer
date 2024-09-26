@@ -4181,7 +4181,7 @@ public class ediData {
         for (String s : as2list) {
         as2_mstr as2 = getAS2Mstr(new String[]{s});
             if (as2.as2_inwkf().equals(wkf.wkf_id)) {  // if as2 ID is assigned this executing workflow id then fire
-                File folder = new File(as2.as2_outdir());
+                File folder = new File(as2.as2_indir());
                 File[] listOfFiles = folder.listFiles();
                 if (listOfFiles != null) {
                    messg = runEDIForSite(null, wkf.wkf_site(), listOfFiles); 

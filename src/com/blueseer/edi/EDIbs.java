@@ -75,23 +75,23 @@ public static void main(String args[]) throws IOException {
     tags = ResourceBundle.getBundle("resources.bs", Locale.getDefault());
     // lets process the arguments
     String[] vs = checkargs(args);
-    String infile = vs[0].toString();
-    String outfile = vs[1].toString();
-    String indir = vs[2].toString();
-    String outdir = vs[3].toString();
-    String map = vs[4].toString();
-    String isOverride = vs[5].toString();
+    String infile = vs[0];
+    String outfile = vs[1];
+    String indir = vs[2];
+    String outdir = vs[3];
+    String map = vs[4];
+    String isOverride = vs[5];
     String[] doctypes = vs[6].split(",");
-    String prog = vs[7].toString();
-    String archdir = vs[8].toString();
-    
+    String prog = vs[7];
+    String archdir = vs[8];
+    String site = vs[9];
     String myargs = String.join(",", args);
     
    
     switch (prog) {
         
         case "single" :
-            processSingle(infile, outfile, map, isOverride);
+            processSingle(infile, outfile, map, isOverride, site);
             break;
         case "multiple" :
             processMultiple(indir, outdir, map, isOverride);
@@ -130,9 +130,9 @@ public static void main(String args[]) throws IOException {
 
 
  public static String[] checkargs(String[] args) {
-        List<String> legitargs = Arrays.asList("-if", "-of", "-id", "-od", "-m", "-x", "-ff", "-fd", "-ad", "-td", "-tf", "-e", "-debug", "-ftp", "-pd", "-pdr" );
+        List<String> legitargs = Arrays.asList("-if", "-of", "-id", "-od", "-m", "-x", "-ff", "-fd", "-ad", "-td", "-tf", "-e", "-debug", "-ftp", "-pd", "-pdr", "-site" );
      
-        String[] vals = new String[9]; // last element is the program type (single or mulitiple)
+        String[] vals = new String[10]; // last element is now 'site'
         Arrays.fill(vals, "");
         
         String myargs = String.join(",", args);
@@ -174,7 +174,7 @@ public static void main(String args[]) throws IOException {
               
               
               
-               if ( (args.length > i+1 && args[i+1] != null) || (args[i].toString().equals("-x")) || (args[i].toString().equals("-ff") || (args[i].toString().equals("-fd"))) ) {
+               if ( (args.length > i+1 && args[i+1] != null) || (args[i].toString().equals("-x")) || (args[i].toString().equals("-debug")) || (args[i].toString().equals("-ff") || (args[i].toString().equals("-fd"))) ) {
                 
                  switch (args[i].toString().toLowerCase()) {
         
@@ -233,6 +233,9 @@ public static void main(String args[]) throws IOException {
                     case "-debug" :
                         isDebug = true; 
                         break;  
+                    case "-site" :
+                        vals[9] = args[i+1]; 
+                        break;      
                     case "-ftp" :
                         vals[4] = args[i+1];
                         vals[7] = "ftpClient"; 
@@ -253,11 +256,11 @@ public static void main(String args[]) throws IOException {
         return vals;
     }
 
- public static void processSingle(String infile, String outfile, String map, String isOverride) {
+ public static void processSingle(String infile, String outfile, String map, String isOverride, String thissite) {
       // case of single input and output file    
     if (! infile.isEmpty() && ! outfile.isEmpty() ) {
         try {
-            EDI.processFile(infile, map, outfile, isOverride, isDebug, false, 0, 0, ""); 
+            EDI.processFile(infile, map, outfile, isOverride, isDebug, false, 0, 0, thissite); 
         } catch (IOException ex) {
            ex.printStackTrace();
         } catch (ClassNotFoundException ex) {

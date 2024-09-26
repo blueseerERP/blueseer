@@ -55,11 +55,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSetMetaData;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -740,7 +742,7 @@ public class EDData {
     public static String[] getEDITPDefaults(String doctype, String gssndid, String gsrcvid) {
            
                     
-             String[] mystring = new String[]{"","","","","","","0","0","0","","","","","","","","","","","","","","","",""};
+             String[] mystring = new String[]{"","","","","","","0","0","0","","","","","","","","","","","","0","","","",""};
         try{
             Class.forName(driver);
             Connection con = null;
@@ -806,7 +808,7 @@ public class EDData {
     public static String[] getEDITPDefaults(String doctype, String gssndid, String gsrcvid, String outdoctype) {
            
                     
-             String[] mystring = new String[]{"","","","","","","0","0","0","","","","","","","","","","","","","","","",""};
+             String[] mystring = new String[]{"","","","","","","0","0","0","","","","","","","","","","","","0","","","",""};
         try{
             Class.forName(driver);
             Connection con = null;
@@ -874,7 +876,7 @@ public class EDData {
     public static String[] getEDITPDefaultsMapTester(String gssndid, String gsrcvid, String outdoctype) {
            
                     
-             String[] mystring = new String[]{"","","","","","","0","0","0","","","","","","","","","","","","","","","",""};
+             String[] mystring = new String[]{"","","","","","","0","0","0","","","","","","","","","","","","0","","","",""};
         try{
             Class.forName(driver);
             Connection con = null;
@@ -940,7 +942,7 @@ public class EDData {
     public static String[] getEDITPDefaultsX(String doctype, String gssndid, String gsrcvid, String map) {
            
                     
-             String[] mystring = new String[]{"","","","","","","0","0","0","","","","","","","","","","","","","","","",""};
+             String[] mystring = new String[]{"","","","","","","0","0","0","","","","","","","","","","","","0","","","",""};
         try{
             Class.forName(driver);
             Connection con = null;
@@ -5496,6 +5498,62 @@ public class EDData {
           return myreturn;
       }
       
-    
+      // JSON return data
+    public static String get_edi_idx_JSON(String site, String fromdate, String todate) {
+       
+        String x = ""; 
+        
+        try{
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                
+               res = st.executeQuery("SELECT edx_id, edx_sender, edx_receiver, edx_ts, edx_indoctype, edx_outdoctype, edx_infile, " +
+                   " coalesce(elg_severity,'success') as detstatus " +
+                    " FROM edi_idx  " +
+                    " left outer join edi_log on elg_comkey = edx_comkey and elg_severity = 'error' " +
+                    " where edx_site = " + "'" + site + "'" +        
+                    " AND edx_ts >= " + "'" + fromdate + " 00:00:00" + "'" +
+                    " AND edx_ts <= " + "'" + todate  + " 23:59:59" + "'" + " order by edx_id desc ;" ) ;
+                   
+                   org.json.simple.JsonArray json = new org.json.simple.JsonArray();
+                    ResultSetMetaData rsmd = res.getMetaData(); 
+                    while (res.next()) {
+                        int numColumns = rsmd.getColumnCount();
+                        LinkedHashMap<String, Object> jsonOrderedMap = new LinkedHashMap<String, Object>();
+                          for (int i=1; i<=numColumns; i++) {
+                            String column_name = OVData.ediColumnLabels.get(rsmd.getColumnName(i)); 
+                            jsonOrderedMap.put(column_name, res.getObject(rsmd.getColumnName(i)));
+                          }
+                          json.add(jsonOrderedMap);
+                    }
+                    x = json.toJson();
+                    
+              
+                    
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+           } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               if (con != null) con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+        return x;
+        
+         } 
+ 
+      
     
 }

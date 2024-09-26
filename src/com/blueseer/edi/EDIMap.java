@@ -306,6 +306,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         stctrl = c[6];
         ref = c[7];
         outfile = c[8];
+        outdir = c[27];  // in case edibs uses -of with embedded file/path directory
         sd = delimConvertIntToStr(c[9]);
         ed = delimConvertIntToStr(c[10]);
         ud = delimConvertIntToStr(c[11]);
@@ -325,15 +326,24 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         
        
         
-        if (c[0].equals("MapTester")) {
+        if (c[0].equals("MapTester") || ! c[12].isBlank()) {
            // throw new UserDefinedException("Houston...we have a problem"); 
            // c values override lookup below for map tester
           
            ediData.map_mstr x = getMapMstr(new String[]{c[2]});
            outsender = c[0];
            outreceiver = c[21];
-           outputdoctype = c[15];
-           outputfiletype = c[29];
+           if (! c[15].isBlank()) {
+               outputdoctype = c[15];
+           } else {
+               outputdoctype = x.map_outdoctype();
+           }
+           if (! c[29].isBlank()) {
+              outputfiletype = c[29];
+           } else {
+              outputfiletype = x.map_outfiletype();
+              c[29] = x.map_outfiletype();
+           }
            
            if (outsender.isBlank()) {
                throw new UserDefinedException("Missing outsender in c[0]"); 
@@ -405,7 +415,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
     
     public void setOutPutEnvelopeStrings(String[] c) {         
          if ( ! isOverride) {  // if not override...use internal partner / doc lookup for envelope info
-           
+            
            if (c[29].toUpperCase().equals("X12")) {  
              if (c[0].equals("MapTester")) {
                 envelope = EDI.generateEnvelope(c[1], c[13], c[21], c[14], c[2]);  //override use of c[13] from mapper ddsenderenvelope
@@ -429,7 +439,9 @@ public abstract class EDIMap {  // took out the implements EDIMapi
            GE = envelope[2];
            IEA = envelope[3];
            filename = envelope[4];
-           outfile = filename;  
+           if (outfile.isBlank()) { // if ran from edibs with -of...outfile will already be set as complete path
+             outfile = filename;  
+           }
            isactrl = envelope[5];
            gsctrl = envelope[6];
            stctrl = String.format("%04d", 1);
@@ -462,6 +474,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
            }
            
            
+           
            if (c[29].toUpperCase().equals("X12")) { 
            ST = "ST" + ed + EDData.getEDIDocTypeFromBSDoc(outputdoctype) + ed + stctrl ;
            SE = "SE" + ed + String.valueOf(segcount) + ed + stctrl;  
@@ -491,11 +504,12 @@ public abstract class EDIMap {  // took out the implements EDIMapi
              xsetISA(9,""); // set date to now
              xsetISA(10,"");  // set time to now
 
-           
+             /*
              header = "";
              detail = "";
              trailer = "";
              content = "";
+             */
            }
 
      }
@@ -780,14 +794,28 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         // get TP/Doc defaults
         String[] tp = EDData.getEDITPDefaultsX(doctype, outsender, outreceiver, map );
         
+        // override
+        if (! c[12].isBlank()) {
+            tp = EDData.getEDITPDefaults(doctype, outsender, outreceiver );
+        }
+        
+        
         if (tp == null || tp.length < 18) {
             setError("tp defaults is null or empty for: " + doctype + "/" + outsender + "/" + outreceiver);
             return error;  
         }
         
         if (GlobalDebug) {
-        System.out.println("Getting tp defaults for: " + doctype + "/" + outsender + "/" + outreceiver);
-        System.out.println("Value of tp defaults found: " + String.join(",", tp));
+            int j = 0;
+            for (String g : c) {
+                System.out.println("Control c array values (packagePayLoad): " + j + " " + g);
+                j++;
+            }  
+            if (! c[12].isBlank()) {
+                System.out.println("override detected in c[12]...using 3 (indoc,snd,rcv) key TP entry instead of 4 (indoc,snd,rcv,map");
+            }
+            System.out.println("Getting tp defaults for: " + doctype + "/" + outsender + "/" + outreceiver + "/" + map);
+            System.out.println("Value of tp defaults found: " + String.join(",", tp));
         }
         
         
@@ -798,9 +826,11 @@ public abstract class EDIMap {  // took out the implements EDIMapi
          int filenumber = OVData.getNextNbr("edifile");
          String batchfile = "X" + String.format("%07d", filenumber);
          String outfilemulti = "";
-        if (outfile.isEmpty()) {
+        if (outfile.isBlank()) {
             outfile = tp[10] + String.format("%07d", filenumber) + "." + tp[11];
         }
+        
+        
         
         if (c[29].toUpperCase().equals("X12") || c[29].toUpperCase().equals("UNE")) {
            setOutPutEnvelopeStrings(c);
@@ -858,12 +888,18 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         c[7] = ref;
         c[15] = tp[14];
         c[25] = batchfile;
-        if (tp[20].equals("0")) { // if single package
-            c[8] = outfile;
-        } else {
-            c[8] = outfilemulti;    
+        if (c[8].isBlank()) { // may not be blank if ran from edibs with -of qual
+            if (tp[20].equals("0")) { // if single package
+                c[8] = outfile;
+            } else {
+                c[8] = outfilemulti;    
+            }
         }
-        c[27] = outdir;
+        
+        if (c[27].isBlank()) {  // outdir may not be blank if ran from edibs with -of qual
+          c[27] = outdir;
+        }
+        
         // c[29] ...(outboundfiletype) should be defined at first available getTPDefaults prior to mapping
         c[6] = stctrl;
         c[5] = gsctrl;
@@ -876,9 +912,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         c[36] = tp[6];
         c[37] = tp[8];
 
-     if (GlobalDebug)
-     System.out.println("Value of c within EDIMap class: " + String.join(",", c));
-
+    
         // error handling
         if (batchfile.isEmpty()) {
             setError("batch file is empty");
@@ -888,10 +922,12 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             setError("out file is empty");
             return error;
         }
-        if (tp[15].isEmpty()) {
+        if (outputfiletype.isEmpty()) {
             setError("out file type is unknown");
             return error;
         }
+        
+        
         try {
             // Write output batch file
             EDI.writeFile(content, cleanDirString(EDData.getEDIBatchDir()), batchfile);
@@ -936,8 +972,13 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         c[36] = "0";
         c[37] = "0";
 
-     if (GlobalDebug)
-     System.out.println("Value of c within EDIMap class: " + String.join(",", c));
+     if (GlobalDebug) {
+        int j = 0;
+            for (String g : c) {
+                System.out.println("Control c array values (isDBWrite): " + j + " " + g);
+                j++;
+            } 
+     }
 
      }
     
@@ -1179,7 +1220,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
             if (x[5].equals("groupend")) {
                   continue;
             }
-          //  System.out.println("HERE: " + rawSegmentLM + "/" + rawGroupHeadLM + "/" + x[0] + "/" + x[1]);
+            
             if (rawSegmentLM.equals(x[0]) && rawGroupHeadLM.equals(x[1])) {
                 segment = x;
                 break;

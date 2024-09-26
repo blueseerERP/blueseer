@@ -178,12 +178,22 @@ import org.json.JSONObject;
 public class OVData { 
     
    public static String major = "7.0"; 
-   public static String minor = "16";
+   public static String minor = "17";
     
    public static String[] states = {"AB","AL","AK","AZ","AR","BC","CA","CO","CT","DE","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","MB","ME","MD","MA","MI","MN","MS","MO","MT","NE","NL","NV","NH","NJ","NL","NM","NY","NC","ND","NS","OH","OK","ON","OR","PA","PE","QC","RI","SC","SD","SE","TN","TX","UT","VT","VA","WA","WV","WI","WY" };
    public static String[] countries = {"Afghanistan","Albania","Algeria","Andorra","Angola","Antigua & Deps","Argentina","Armenia","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bhutan","Bolivia","Bosnia Herzegovina","Botswana","Brazil","Brunei","Bulgaria","Burkina","Burundi","Cambodia","Cameroon","Canada","Cape Verde","Central African Rep","Chad","Chile","China","Colombia","Comoros","Congo","Congo {Democratic Rep}","Costa Rica","Croatia","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","East Timor","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Ethiopia","Fiji","Finland","France","Gabon","Gambia","Georgia","Germany","Ghana","Greece","Grenada","Guatemala","Guinea","Guinea-Bissau","Guyana","Haiti","Honduras","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland {Republic}","Israel","Italy","Ivory Coast","Jamaica","Japan","Jordan","Kazakhstan","Kenya","Kiribati","Korea North","Korea South","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Macedonia","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique","Myanmar, {Burma}","Namibia","Nauru","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria","Norway","Oman","Pakistan","Palau","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Qatar","Romania","Russian Federation","Rwanda","St Kitts & Nevis","St Lucia","Saint Vincent & the Grenadines","Samoa","San Marino","Sao Tome & Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","Spain","Sri Lanka","Sudan","Suriname","Swaziland","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Togo","Tonga","Trinidad & Tobago","Tunisia","Turkey","Turkmenistan","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom", "USA","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Yemen","Zambia","Zimbabwe" }; 
   
-  
+   static final Map<String, String> ediColumnLabels = Map.of(
+    "edx_id", "Index", 
+    "edx_comkey", "CommIndex",
+    "edx_indoctype", "Source Type",
+    "edx_sender", "Sender ID",
+    "edx_receiver", "Receiver ID",
+    "edx_ts", "TimeStamp",
+    "edx_outdoctype", "Result Type",
+    "edx_infile", "File",
+    "detstatus", "Status"
+);
    
     public static void updatecounter(String countername, int counterid) {
         try{
@@ -8897,9 +8907,9 @@ public class OVData {
             Statement st = con.createStatement();
             ResultSet res = null;
             try {
-            res = st.executeQuery("select siteu_site from siteu_mstr where siteu_userid = " + "'" + myuser.toString() + "';" );
+            res = st.executeQuery("select user_site from user_mstr where user_id = " + "'" + myuser + "';" );
            while (res.next()) {
-            myitem = res.getString("siteu_site");                    
+            myitem = res.getString("user_site");                    
             }
 
        }
