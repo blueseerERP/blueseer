@@ -27,16 +27,16 @@ VendorMenu,VendPriceMaint,5,JMenuItem,Mantenimiento del precio del proveedor,,,,
 VendorMenu,VendPriceRpt1,6,JMenuItem,Búsqueda de precios de proveedores,,,,1,1
 VendorMenu,VenRptPicker,7,JMenuItem,Selector de informes de proveedores,,,,1,1
 VendorMenu,VendControl,8,JMenuItem,Control de proveedores,,,,1,1
-Freight,CFOMaint,1,JMenuItem,Freight Order Maintenance,,,,1,1
-Freight,CFOBrowse,2,JMenuItem,Freight Order Report,,,,1,1
-Freight,CFOSchedule,3,JMenuItem,Freight Order Schedule,,,,1,1
-Freight,VehicleMaint,4,JMenuItem,Vehicle Management,,,,1,1
-Freight,VehicleBrowse,5,JMenuItem,Vehicle Browse,,1,,1,1
-Freight,DriverMaint,6,JMenuItem,Driver Management,,,,1,1
-Freight,DriverBrowse,7,JMenuItem,Driver Browse,,1,,1,1
-Freight,BrokerMaint,8,JMenuItem,Broker Management,,,,1,1
-Freight,BrokerBrowse,9,JMenuItem,Broker Browse,,1,,1,1
-Freight,CFOControl,10,JMenuItem,Freight Control,,,,1,1
+Transporte,CFOMaint,1,JMenuItem,Mantenimiento de órdenes de transporte,,,,1,1
+Transporte,CFOBrowse,2,JMenuItem,Informe de orden de carga,,,,1,1
+Transporte,CFOSchedule,3,JMenuItem,Horario de órdenes de carga,,,,1,1
+Transporte,VehicleMaint,4,JMenuItem,Gestión de vehículos,,,,1,1
+Transporte,VehicleBrowse,5,JMenuItem,Exploración de vehículos,,1,,1,1
+Transporte,DriverMaint,6,JMenuItem,Gestión de conductores,,,,1,1
+Transporte,DriverBrowse,7,JMenuItem,Navegador de controladores,,1,,1,1
+Transporte,BrokerMaint,8,JMenuItem,Gestión de corredores,,,,1,1
+Transporte,BrokerBrowse,9,JMenuItem,Exploración del corredor,,1,,1,1
+Transporte,CFOControl,10,JMenuItem,Control de carga,,,,1,1
 EDI,EDILoad,1,JMenuItem,EDI Load,,,,1,1
 EDI,EDILog,2,JMenuItem,EDI Log,,,,1,1
 EDI,EDIPartnerMaint,3,JMenuItem,EDI Partner Maintenance,,,,1,1

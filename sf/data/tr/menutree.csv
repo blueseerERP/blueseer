@@ -27,16 +27,16 @@ VendorMenu,VendPriceMaint,5,JMenuItem,Satıcı Fiyatı Bakımı,,,,1,1
 VendorMenu,VendPriceRpt1,6,JMenuItem,Satıcı Fiyatına Göz Atın,,,,1,1
 VendorMenu,VenRptPicker,7,JMenuItem,Satıcı Raporu Seçici,,,,1,1
 VendorMenu,VendControl,8,JMenuItem,Satıcı Kontrolü,,,,1,1
-Freight,CFOMaint,1,JMenuItem,Freight Order Maintenance,,,,1,1
-Freight,CFOBrowse,2,JMenuItem,Freight Order Report,,,,1,1
-Freight,CFOSchedule,3,JMenuItem,Freight Order Schedule,,,,1,1
-Freight,VehicleMaint,4,JMenuItem,Vehicle Management,,,,1,1
-Freight,VehicleBrowse,5,JMenuItem,Vehicle Browse,,1,,1,1
-Freight,DriverMaint,6,JMenuItem,Driver Management,,,,1,1
-Freight,DriverBrowse,7,JMenuItem,Driver Browse,,1,,1,1
-Freight,BrokerMaint,8,JMenuItem,Broker Management,,,,1,1
-Freight,BrokerBrowse,9,JMenuItem,Broker Browse,,1,,1,1
-Freight,CFOControl,10,JMenuItem,Freight Control,,,,1,1
+Navlun,CFOMaint,1,JMenuItem,Freight Order Maintenance,,,,1,1
+Navlun,CFOBrowse,2,JMenuItem,Freight Order Report,,,,1,1
+Navlun,CFOSchedule,3,JMenuItem,Freight Order Schedule,,,,1,1
+Navlun,VehicleMaint,4,JMenuItem,Vehicle Management,,,,1,1
+Navlun,VehicleBrowse,5,JMenuItem,Vehicle Browse,,1,,1,1
+Navlun,DriverMaint,6,JMenuItem,Driver Management,,,,1,1
+Navlun,DriverBrowse,7,JMenuItem,Driver Browse,,1,,1,1
+Navlun,BrokerMaint,8,JMenuItem,Broker Management,,,,1,1
+Navlun,BrokerBrowse,9,JMenuItem,Broker Browse,,1,,1,1
+Navlun,CFOControl,10,JMenuItem,Freight Control,,,,1,1
 EDI,EDILoad,1,JMenuItem,EDI Load,,,,1,1
 EDI,EDILog,2,JMenuItem,EDI Log,,,,1,1
 EDI,EDIPartnerMaint,3,JMenuItem,EDI Partner Maintenance,,,,1,1
@@ -305,7 +305,7 @@ root,Adres,2,JMenu,Adres,,,,1,1
 root,Satın alma,3,JMenu,Satın alma,,,,1,1
 root,Emir,4,JMenu,Emir,,,,1,1
 root,Nakliye,5,JMenu,Nakliye,,,,1,1
-root,finans,6,JMenu,finans,,,,1,1
+root,Finans,6,JMenu,Finans,,,,1,1
 root,Envanter,7,JMenu,Envanter,,,,1,1
 root,Mühendislik,8,JMenu,Mühendislik,,,,1,1
 root,Kalite,9,JMenu,Kalite,,,,1,1

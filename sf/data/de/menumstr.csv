@@ -1,6 +1,6 @@
 EDI,,,JMenu,
 Maschinenbau,,,JMenu,
-Die Anschrift,,,JMenu, 
+Anschrift,,,JMenu, 
 Admin,,,JMenu, 
 Finanzen,,,JMenu, 
 HR,,,JMenu, 
@@ -10,7 +10,7 @@ Einkauf,,,JMenu,
 Qualität,,,JMenu, 
 Versand,,,JMenu, 
 Hilfe,,,JMenu, 
-Frach,,,JMenu, 
+Fracht,,,JMenu, 
 CustomerMenu,,,JMenu, 
 CustomerReports,,,JMenu, 
 VendorMenu,,,JMenu,
@@ -81,8 +81,6 @@ CustXrefBrowse,,com.blueseer.ctr.CustXrefRpt,JMenuItem,cuxb
 DefaultMaint,,com.blueseer.adm.DefaultMaint,JMenuItem,defm
 DeptBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,depb
 DeptMaint,,com.blueseer.fgl.DeptMaint,JMenuItem,depm
-EDILoad,,com.blueseer.edi.EDILoadMaint,JMenuItem,edip
-EDILog,,com.blueseer.edi.EDITransactionBrowse,JMenuItem,edil
 CarrierMaint,,com.blueseer.frt.CarrierMaint,JMenuItem,carm
 CarrierBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,carb
 GenCodeBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,genb

@@ -81,8 +81,6 @@ CustXrefBrowse,,com.blueseer.ctr.CustXrefRpt,JMenuItem,cuxb
 DefaultMaint,,com.blueseer.adm.DefaultMaint,JMenuItem,defm
 DeptBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,depb
 DeptMaint,,com.blueseer.fgl.DeptMaint,JMenuItem,depm
-EDILoad,,com.blueseer.edi.EDILoadMaint,JMenuItem,edip
-EDILog,,com.blueseer.edi.EDITransactionBrowse,JMenuItem,edil
 CarrierMaint,,com.blueseer.frt.CarrierMaint,JMenuItem,carm
 CarrierBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,carb
 GenCodeBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,genb
@@ -314,3 +312,12 @@ BillMaint,,com.blueseer.ord.BillMaint,JMenuItem,bill
 BillBrowse,,com.blueseer.ord.BillBrowse,JMenuItem,bilb
 InventoryBrowse,,com.blueseer.inv.InventoryBrowse,JMenuItem,invr
 InventoryValuation,,com.blueseer.inv.InventoryValuation,JMenuItem,invv
+CFOMaint,,com.blueseer.frt.CFOMaint,JMenuItem,cfom
+VehicleMaint,,com.blueseer.frt.VehicleMaint,JMenuItem,vehm
+DriverMaint,,com.blueseer.frt.DriverMaint,JMenuItem,drvm
+BrokerMaint,,com.blueseer.frt.BrokerMaint,JMenuItem,brkm
+CFOBrowse,,com.blueseer.frt.CFOBrowse,JMenuItem,cfob
+CFODriverWindow,,com.blueseer.frt.CFODriverWindow,JMenuItem,cfow
+VehicleBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,vehb
+DriverBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,drvb
+BrokerBrowse,,com.blueseer.utl.ReportPanel,JMenuItem,brkb
