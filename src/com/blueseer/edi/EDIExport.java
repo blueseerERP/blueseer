@@ -178,6 +178,11 @@ public class EDIExport extends javax.swing.JPanel {
        tbnbrfrom.setText("");
        tbnbrto.setText("");
        cboverride.setSelected(false);
+       
+       ddsite.removeAllItems();
+       OVData.getSiteList(bsmf.MainFrame.userid).stream().forEach((s) -> ddsite.addItem(s));
+       ddsite.setSelectedItem(OVData.getDefaultSite());
+       
        isLoad = false;
        
     }
@@ -186,14 +191,14 @@ public class EDIExport extends javax.swing.JPanel {
         setPanelComponentState(this, true);
     }
     
-    public void executeTask(String x, ArrayList<String> y) { 
+    public void executeTask(String x, ArrayList<String> y, String site) { 
       
         class Task extends SwingWorker<String[], Void> { 
        
           String[] key = null;
           
         
-          public Task(String x, ArrayList<String> y) { 
+          public Task(String x, ArrayList<String> y, String site) { 
              
           }
            
@@ -212,7 +217,7 @@ public class EDIExport extends javax.swing.JPanel {
                  message = exportPurchaseOrders(y);
             }
             if (x.equals("Order Acknowledgement")) {
-                 message = exportACKs(y);
+                 message = exportACKs(y, site);
             }
             
             
@@ -235,7 +240,7 @@ public class EDIExport extends javax.swing.JPanel {
     }  
       
        BlueSeerUtils.startTask(new String[]{"","Running..."});
-       Task z = new Task(x,y);  
+       Task z = new Task(x,y,site);  
        z.execute();
        
        
@@ -321,7 +326,7 @@ public class EDIExport extends javax.swing.JPanel {
         return m;
     }
     
-    public String[] exportACKs(ArrayList<String> list) {
+    public String[] exportACKs(ArrayList<String> list, String site) {
         String[] m = new String[]{"", ""};
         int l_error = 0;
         int g_error = 0;
@@ -370,6 +375,7 @@ public class EDIExport extends javax.swing.JPanel {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         cboverride = new javax.swing.JCheckBox();
+        ddsite = new javax.swing.JComboBox<>();
 
         setBackground(new java.awt.Color(0, 102, 204));
 
@@ -428,32 +434,37 @@ public class EDIExport extends javax.swing.JPanel {
                         .addGap(20, 20, 20)
                         .addComponent(jScrollPane1)))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel2)
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(cboverride)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btcommit))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(tbnbrto, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(cboverride)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel5))
+                                .addComponent(btcommit))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(tbnbrfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel4)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(dcfrom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(dcto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addGap(38, 38, 38))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(tbnbrto, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel5))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(tbnbrfrom, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jLabel4)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(dcfrom, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(dcto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(38, 38, 38))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -462,7 +473,9 @@ public class EDIExport extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(dddoctype, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
-                .addGap(33, 33, 33)
+                .addGap(7, 7, 7)
+                .addComponent(ddsite, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -524,7 +537,7 @@ public class EDIExport extends javax.swing.JPanel {
         }
         setPanelComponentState(this, false);
         tacomments.setText("");
-        executeTask(dddoctype.getSelectedItem().toString(), list);
+        executeTask(dddoctype.getSelectedItem().toString(), list, ddsite.getSelectedItem().toString());
     }//GEN-LAST:event_btcommitActionPerformed
 
     private void dddoctypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dddoctypeActionPerformed
@@ -537,6 +550,7 @@ public class EDIExport extends javax.swing.JPanel {
     private com.toedter.calendar.JDateChooser dcfrom;
     private com.toedter.calendar.JDateChooser dcto;
     private javax.swing.JComboBox dddoctype;
+    private javax.swing.JComboBox<String> ddsite;
     private javax.swing.JFileChooser fc;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

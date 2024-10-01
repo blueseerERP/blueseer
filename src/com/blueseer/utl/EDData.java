@@ -4169,12 +4169,12 @@ public class EDData {
                             ps.setString(25, c[8]);       // outfile
                             ps.setString(26, "");  // ack file   ...need to do
                             ps.setString(27, "0");  // ack yes or no 1 or 0        ....need to do
-                            ps.setInt(28, Integer.valueOf(c[9].toString()));
-                            ps.setInt(29, Integer.valueOf(c[10].toString()));
-                            ps.setInt(30, Integer.valueOf(c[11].toString()));
-                            ps.setInt(31, Integer.valueOf(c[35].toString()));
-                            ps.setInt(32, Integer.valueOf(c[36].toString()));
-                            ps.setInt(33, Integer.valueOf(c[37].toString()));       
+                            ps.setInt(28, Integer.valueOf(c[9]));
+                            ps.setInt(29, Integer.valueOf(c[10]));
+                            ps.setInt(30, Integer.valueOf(c[11]));
+                            ps.setInt(31, Integer.valueOf(c[35]));
+                            ps.setInt(32, Integer.valueOf(c[36]));
+                            ps.setInt(33, Integer.valueOf(c[37]));       
                             ps.setString(34, "success");  // status 
                             ps.setString(35, c[39]); 
                             ps.executeUpdate();

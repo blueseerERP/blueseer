@@ -380,7 +380,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         }
         
         String[] tp = EDData.getEDITPDefaultsX(c[1], outsender, outreceiver, map );
-    //    bsmf.MainFrame.show(outputdoctype + "/" + outsender + "/" + outreceiver );
+    //    bsmf.MainFrame.show(c[1] + "/" + outsender + "/" + outreceiver + "/" + map );
     //    bsmf.MainFrame.show(tp[14] + "/" + tp[15] + "/" + tp[16] + "/" + tp[17] );
         
         osd = EDI.escapeDelimiter(delimConvertIntToStr(tp[7]));
@@ -417,6 +417,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
          if ( ! isOverride) {  // if not override...use internal partner / doc lookup for envelope info
             
            if (c[29].toUpperCase().equals("X12")) {  
+            // System.out.println("HERE:  " + c[1] + "/" + c[13] + "/" + c[21] + "/" + c[14] + "/" + c[2]);
              if (c[0].equals("MapTester")) {
                 envelope = EDI.generateEnvelope(c[1], c[13], c[21], c[14], c[2]);  //override use of c[13] from mapper ddsenderenvelope
              }  else {
@@ -831,6 +832,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         }
         
         
+       // System.out.println("HERE: " + c[29]);
         
         if (c[29].toUpperCase().equals("X12") || c[29].toUpperCase().equals("UNE")) {
            setOutPutEnvelopeStrings(c);
@@ -995,7 +997,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         ArrayList<String> lines = getDSFasString(osf);
 
         if (lines == null || lines.size() == 0) {
-            setError("Structure File (dsf) not available: " + osf);
+            setError("Structure File (dsf) not available (osf): " + osf);
             return;
         }
         
@@ -1037,7 +1039,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         ArrayList<String> lines = getDSFasString(osf);
 
         if (lines == null || lines.size() == 0) {
-            setError("Structure File (dsf) not available: " + osf);
+            setError("Structure File (dsf) not available (readOSFTreeType): " + osf);
             return;
         }	
         for (String line : lines) {
@@ -1076,7 +1078,7 @@ public abstract class EDIMap {  // took out the implements EDIMapi
         LinkedHashMap<Integer, String[]> z = new LinkedHashMap<Integer, String[]>();
         
         if (! isf.equals("DB") && (lines == null || lines.size() == 0)) {
-            setError("Structure File (dsf) not available: " + isf);
+            setError("Structure File (dsf) not available (isf): " + isf);
             return;
         }
         

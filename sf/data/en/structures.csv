@@ -11483,3 +11483,1737 @@ XMLD365OrderV2,SalesOrderLineEntity,Document:SalesOrderHeaderV2Entity,0,0,0,SALE
 XMLD365OrderV2,SalesOrderLineEntity,Document:SalesOrderHeaderV2Entity,0,0,0,SALESTAXGROUPCODE,SALESTAXGROUPCODE,0,100,-,O,F
 XMLD365OrderV2,SalesOrderLineEntity,Document:SalesOrderHeaderV2Entity,0,0,0,SALESTAXITEMGROUPCODE,SALESTAXITEMGROUPCODE,0,100,-,O,F
 XMLD365OrderV2,SalesOrderLineEntity,Document:SalesOrderHeaderV2Entity,0,0,0,SALESUNITSYMBOL,SALESUNITSYMBOL,0,100,-,O,F
+X12855,ST,,1,0,1,landmark,Transaction Set Header,2,2,-,M,F
+X12855,ST,,1,0,0,e01,Transaction Set Identifier Code,3,3,-,M/Z,F
+X12855,ST,,1,0,0,e02,Transaction Set Control Number,4,9,-,M,F
+X12855,ST,,1,0,0,e03,Implementation Convention Reference,1,35,-,O/Z,F
+X12855,BAK,,1,0,1,landmark,Beginning Segment for Purchase Order Acknowledgment,3,3,-,M,F
+X12855,BAK,,1,0,0,e01,Transaction Set Purpose Code,2,2,-,M,F
+X12855,BAK,,1,0,0,e02,Acknowledgment Type,2,2,-,M,F
+X12855,BAK,,1,0,0,e03,Purchase Order Number,1,22,-,M,F
+X12855,BAK,,1,0,0,e04,Date,8,8,-,M/Z,F
+X12855,BAK,,1,0,0,e05,Release Number,1,30,-,O,F
+X12855,BAK,,1,0,0,e06,Request Reference Number,1,45,-,O,F
+X12855,BAK,,1,0,0,e07,Contract Number,1,30,-,O,F
+X12855,BAK,,1,0,0,e08,Reference Identification,1,50,-,O/Z,F
+X12855,BAK,,1,0,0,e09,Date,8,8,-,O/Z,F
+X12855,BAK,,1,0,0,e10,Transaction Type Code,2,2,-,O,F
+X12855,CUR,,1,0,1,landmark,Currency,3,3,-,O,F
+X12855,CUR,,1,0,0,e01,Entity Identifier Code,2,3,-,M,F
+X12855,CUR,,1,0,0,e02,Currency Code,3,3,-,M,F
+X12855,CUR,,1,0,0,e03,Exchange Rate,4,10,-,O,F
+X12855,CUR,,1,0,0,e04,Entity Identifier Code,2,3,-,O,F
+X12855,CUR,,1,0,0,e05,Currency Code,3,3,-,O,F
+X12855,CUR,,1,0,0,e06,Currency Market/Exchange Code,3,3,-,O,F
+X12855,CUR,,1,0,0,e07,Date/Time Qualifier,3,3,-,X,F
+X12855,CUR,,1,0,0,e08,Date,8,8,-,O,F
+X12855,CUR,,1,0,0,e09,Time,4,8,-,O,F
+X12855,CUR,,1,0,0,e10,Date/Time Qualifier,3,3,-,X,F
+X12855,CUR,,1,0,0,e11,Date,8,8,-,X,F
+X12855,CUR,,1,0,0,e12,Time,4,8,-,X,F
+X12855,CUR,,1,0,0,e13,Date/Time Qualifier,3,3,-,X,F
+X12855,CUR,,1,0,0,e14,Date,8,8,-,X,F
+X12855,CUR,,1,0,0,e15,Time,4,8,-,X,F
+X12855,CUR,,1,0,0,e16,Date/Time Qualifier,3,3,-,X,F
+X12855,CUR,,1,0,0,e17,Date,8,8,-,X,F
+X12855,CUR,,1,0,0,e18,Time,4,8,-,X,F
+X12855,CUR,,1,0,0,e19,Date/Time Qualifier,3,3,-,X,F
+X12855,CUR,,1,0,0,e20,Date,8,8,-,X,F
+X12855,CUR,,1,0,0,e21,Time,4,8,-,X,F
+X12855,REF,,99999,0,1,landmark,Reference Information,3,3,-,O,F
+X12855,REF,,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12855,REF,,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12855,REF,,1,0,0,e03,Description,1,80,-,X,F
+X12855,PER,,3,0,1,landmark,Administrative Communications Contact,3,3,-,O,F
+X12855,PER,,1,0,0,e01,Contact Function Code,2,2,-,M,F
+X12855,PER,,1,0,0,e02,Name,1,60,-,O,F
+X12855,PER,,1,0,0,e03,Communication Number Qualifier,2,2,-,X,F
+X12855,PER,,1,0,0,e04,Communication Number,1,256,-,X,F
+X12855,PER,,1,0,0,e05,Communication Number Qualifier,2,2,-,X,F
+X12855,PER,,1,0,0,e06,Communication Number,1,256,-,X,F
+X12855,PER,,1,0,0,e07,Communication Number Qualifier,2,2,-,X,F
+X12855,PER,,1,0,0,e08,Communication Number,1,256,-,X,F
+X12855,PER,,1,0,0,e09,Contact Inquiry Reference,1,20,-,O,F
+X12855,TAX,,99999,0,1,landmark,Tax Reference,3,3,-,O,F
+X12855,TAX,,1,0,0,e01,Tax Identification Number,1,20,-,X,F
+X12855,TAX,,1,0,0,e02,Location Qualifier,1,2,-,X,F
+X12855,TAX,,1,0,0,e03,Location Identifier,1,30,-,X,F
+X12855,TAX,,1,0,0,e04,Location Qualifier,1,2,-,X,F
+X12855,TAX,,1,0,0,e05,Location Identifier,1,30,-,X,F
+X12855,TAX,,1,0,0,e06,Location Qualifier,1,2,-,X,F
+X12855,TAX,,1,0,0,e07,Location Identifier,1,30,-,X,F
+X12855,TAX,,1,0,0,e08,Location Qualifier,1,2,-,X,F
+X12855,TAX,,1,0,0,e09,Location Identifier,1,30,-,X,F
+X12855,TAX,,1,0,0,e10,Location Qualifier,1,2,-,X,F
+X12855,TAX,,1,0,0,e11,Location Identifier,1,30,-,X,F
+X12855,TAX,,1,0,0,e12,Tax Exempt Code,1,1,-,O,F
+X12855,TAX,,1,0,0,e13,Customs Entry Type Group Code,1,1,-,O,F
+X12855,FOB,,99999,0,1,landmark,F.O.B. Related Instructions,3,3,-,O,F
+X12855,FOB,,1,0,0,e01,Shipment Method of Payment,2,2,-,M/Z,F
+X12855,FOB,,1,0,0,e02,Location Qualifier,1,2,-,X/Z,F
+X12855,FOB,,1,0,0,e03,Description,1,80,-,O,F
+X12855,FOB,,1,0,0,e04,Transportation Terms Qualifier Code,2,2,-,O,F
+X12855,FOB,,1,0,0,e05,Transportation Terms Code,3,3,-,X,F
+X12855,FOB,,1,0,0,e06,Location Qualifier,1,2,-,X/Z,F
+X12855,FOB,,1,0,0,e07,Description,1,80,-,O,F
+X12855,FOB,,1,0,0,e08,Risk of Loss Code,2,2,-,O/Z,F
+X12855,FOB,,1,0,0,e09,Description,1,80,-,X,F
+X12855,CTP,,99999,0,1,landmark,Pricing Information,3,3,-,O,F
+X12855,CTP,,1,0,0,e01,Class of Trade Code,2,2,-,O,F
+X12855,CTP,,1,0,0,e02,Price Identifier Code,3,3,-,X,F
+X12855,CTP,,1,0,0,e03,Unit Price,1,17,-,X,F
+X12855,CTP,,1,0,0,e04,Quantity,1,15,-,X,F
+X12855,CTP,,1,0,0,e06,Price Multiplier Qualifier,3,3,-,O,F
+X12855,CTP,,1,0,0,e07,Multiplier,1,10,-,X/Z,F
+X12855,CTP,,1,0,0,e08,Monetary Amount,1,18,-,O/Z,F
+X12855,CTP,,1,0,0,e09,Basis of Unit Price Code,2,2,-,O,F
+X12855,CTP,,1,0,0,e10,Condition Value,1,10,-,O,F
+X12855,CTP,,1,0,0,e11,Multiple Price Quantity,1,2,-,O,F
+X12855,PAM,,10,0,1,landmark,Period Amount,3,3,-,O,F
+X12855,PAM,,1,0,0,e01,Quantity Qualifier,2,2,-,X,F
+X12855,PAM,,1,0,0,e02,Quantity,1,15,-,X,F
+X12855,PAM,,1,0,0,e04,Amount Qualifier Code,1,3,-,X,F
+X12855,PAM,,1,0,0,e05,Monetary Amount,1,18,-,X,F
+X12855,PAM,,1,0,0,e06,Unit of Time Period or Interval,2,2,-,X,F
+X12855,PAM,,1,0,0,e07,Date/Time Qualifier,3,3,-,X,F
+X12855,PAM,,1,0,0,e08,Date,8,8,-,X,F
+X12855,PAM,,1,0,0,e09,Time,4,8,-,X,F
+X12855,PAM,,1,0,0,e10,Date/Time Qualifier,3,3,-,X/Z,F
+X12855,PAM,,1,0,0,e11,Date,8,8,-,X,F
+X12855,PAM,,1,0,0,e12,Time,4,8,-,X,F
+X12855,PAM,,1,0,0,e13,Percent Qualifier,1,2,-,X,F
+X12855,PAM,,1,0,0,e14,Percentage as Decimal,1,10,-,X,F
+X12855,PAM,,1,0,0,e15,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12855,CSH,,1,0,1,landmark,Sales Requirements,3,3,-,O,F
+X12855,CSH,,1,0,0,e01,Sales Requirement Code,1,2,-,O,F
+X12855,CSH,,1,0,0,e02,Action Code,1,2,-,O,F
+X12855,CSH,,1,0,0,e03,Amount,1,15,-,X/Z,F
+X12855,CSH,,1,0,0,e04,Account Number,1,35,-,O/Z,F
+X12855,CSH,,1,0,0,e05,Date,8,8,-,O/Z,F
+X12855,CSH,,1,0,0,e06,Agency Qualifier Code,2,2,-,X/Z,F
+X12855,CSH,,1,0,0,e07,Special Services Code,2,10,-,X,F
+X12855,CSH,,1,0,0,e08,Product/Service Substitution Code,1,2,-,O,F
+X12855,CSH,,1,0,0,e09,Percentage as Decimal,1,10,-,X,F
+X12855,CSH,,1,0,0,e10,Percent Qualifier,1,2,-,X,F
+X12855,SAC,,25,1,1,landmark,Service Promotion Allowance or Charge Information,3,3,-,O,F
+X12855,SAC,,1,0,0,e01,Allowance or Charge Indicator,1,1,-,M/Z,F
+X12855,SAC,,1,0,0,e02,Service Promotion Allowance or Charge Code,4,4,-,X,F
+X12855,SAC,,1,0,0,e03,Agency Qualifier Code,2,2,-,X,F
+X12855,SAC,,1,0,0,e04,Agency Service Promotion Allowance or Charge Code,1,10,-,X,F
+X12855,SAC,,1,0,0,e05,Amount,1,15,-,O/Z,F
+X12855,SAC,,1,0,0,e06,Allowance/Charge Percent Qualifier,1,1,-,X,F
+X12855,SAC,,1,0,0,e07,Percent Decimal Format,1,6,-,X,F
+X12855,SAC,,1,0,0,e08,Rate,1,9,-,O/Z,F
+X12855,SAC,,1,0,0,e09,Unit or Basis for Measurement Code,2,2,-,X,F
+X12855,SAC,,1,0,0,e10,Quantity,1,15,-,X/Z,F
+X12855,SAC,,1,0,0,e11,Quantity,1,15,-,O,F
+X12855,SAC,,1,0,0,e12,Allowance or Charge Method of Handling Code,2,2,-,O,F
+X12855,SAC,,1,0,0,e13,Reference Identification,1,50,-,X/Z,F
+X12855,SAC,,1,0,0,e14,Option Number,1,20,-,O/Z,F
+X12855,SAC,,1,0,0,e15,Description,1,80,-,X,F
+X12855,SAC,,1,0,0,e16,Language Code,2,3,-,O/Z,F
+X12855,CUR,SAC,1,0,1,landmark,Currency,3,3,-,O,F
+X12855,CUR,SAC,1,0,0,e01,Entity Identifier Code,2,3,-,M,F
+X12855,CUR,SAC,1,0,0,e02,Currency Code,3,3,-,M,F
+X12855,CUR,SAC,1,0,0,e03,Exchange Rate,4,10,-,O,F
+X12855,CUR,SAC,1,0,0,e04,Entity Identifier Code,2,3,-,O,F
+X12855,CUR,SAC,1,0,0,e05,Currency Code,3,3,-,O,F
+X12855,CUR,SAC,1,0,0,e06,Currency Market/Exchange Code,3,3,-,O,F
+X12855,CUR,SAC,1,0,0,e07,Date/Time Qualifier,3,3,-,X,F
+X12855,CUR,SAC,1,0,0,e08,Date,8,8,-,O,F
+X12855,CUR,SAC,1,0,0,e09,Time,4,8,-,O,F
+X12855,CUR,SAC,1,0,0,e10,Date/Time Qualifier,3,3,-,X,F
+X12855,CUR,SAC,1,0,0,e11,Date,8,8,-,X,F
+X12855,CUR,SAC,1,0,0,e12,Time,4,8,-,X,F
+X12855,CUR,SAC,1,0,0,e13,Date/Time Qualifier,3,3,-,X,F
+X12855,CUR,SAC,1,0,0,e14,Date,8,8,-,X,F
+X12855,CUR,SAC,1,0,0,e15,Time,4,8,-,X,F
+X12855,CUR,SAC,1,0,0,e16,Date/Time Qualifier,3,3,-,X,F
+X12855,CUR,SAC,1,0,0,e17,Date,8,8,-,X,F
+X12855,CUR,SAC,1,0,0,e18,Time,4,8,-,X,F
+X12855,CUR,SAC,1,0,0,e19,Date/Time Qualifier,3,3,-,X,F
+X12855,CUR,SAC,1,0,0,e20,Date,8,8,-,X,F
+X12855,CUR,SAC,1,0,0,e21,Time,4,8,-,X,F
+X12855,SAC,,0,0,0,groupend,,0,0,,,F
+X12855,ITD,,5,0,1,landmark,Terms of Sale/Deferred Terms of Sale,3,3,-,O,F
+X12855,ITD,,1,0,0,e01,Terms Type Code,2,2,-,O,F
+X12855,ITD,,1,0,0,e02,Terms Basis Date Code,1,2,-,O,F
+X12855,ITD,,1,0,0,e03,Terms Discount Percent,1,6,-,O,F
+X12855,ITD,,1,0,0,e04,Terms Discount Due Date,8,8,-,X,F
+X12855,ITD,,1,0,0,e05,Terms Discount Days Due,1,3,-,X,F
+X12855,ITD,,1,0,0,e06,Terms Net Due Date,8,8,-,O,F
+X12855,ITD,,1,0,0,e07,Terms Net Days,1,3,-,O,F
+X12855,ITD,,1,0,0,e08,Terms Discount Amount,1,10,-,O,F
+X12855,ITD,,1,0,0,e09,Terms Deferred Due Date,8,8,-,O,F
+X12855,ITD,,1,0,0,e10,Deferred Amount Due,1,10,-,X,F
+X12855,ITD,,1,0,0,e11,Percent of Invoice Payable,1,5,-,X,F
+X12855,ITD,,1,0,0,e12,Description,1,80,-,O,F
+X12855,ITD,,1,0,0,e13,Day of Month,1,2,-,X,F
+X12855,ITD,,1,0,0,e14,Payment Method Type Code,1,2,-,O,F
+X12855,ITD,,1,0,0,e15,Percentage as Decimal,1,10,-,O/Z,F
+X12855,DIS,,20,0,1,landmark,Discount Detail,3,3,-,O,F
+X12855,DIS,,1,0,0,e01,Discount Terms Type Code,3,3,-,M,F
+X12855,DIS,,1,0,0,e02,Discount Base Qualifier,2,2,-,M,F
+X12855,DIS,,1,0,0,e03,Discount Base Value,1,10,-,M,F
+X12855,DIS,,1,0,0,e04,Discount Control Limit Qualifier,2,3,-,M,F
+X12855,DIS,,1,0,0,e05,Discount Control Limit,1,10,-,M/Z,F
+X12855,DIS,,1,0,0,e06,Discount Control Limit,1,10,-,O/Z,F
+X12855,INC,,1,0,1,landmark,Installment Information,3,3,-,O,F
+X12855,INC,,1,0,0,e01,Terms Type Code,2,2,-,M,F
+X12855,INC,,1,0,0,e03,Quantity,1,15,-,M/Z,F
+X12855,INC,,1,0,0,e04,Quantity,1,15,-,O/Z,F
+X12855,INC,,1,0,0,e05,Monetary Amount,1,18,-,X,F
+X12855,INC,,1,0,0,e06,Amount Qualifier Code,1,3,-,X,F
+X12855,DTM,,10,0,1,landmark,Date/Time Reference,3,3,-,O,F
+X12855,DTM,,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12855,DTM,,1,0,0,e02,Date,8,8,-,X,F
+X12855,DTM,,1,0,0,e03,Time,4,8,-,X,F
+X12855,DTM,,1,0,0,e04,Time Code,2,2,-,O,F
+X12855,DTM,,1,0,0,e05,Date Time Period Format Qualifier,2,3,-,X,F
+X12855,DTM,,1,0,0,e06,Date Time Period,1,35,-,X,F
+X12855,LDT,,12,0,1,landmark,Lead Time,3,3,-,O,F
+X12855,LDT,,1,0,0,e01,Lead Time Code,2,2,-,M,F
+X12855,LDT,,1,0,0,e02,Quantity,1,15,-,M,F
+X12855,LDT,,1,0,0,e03,Unit of Time Period or Interval,2,2,-,M,F
+X12855,LDT,,1,0,0,e04,Date,8,8,-,O/Z,F
+X12855,LIN,,5,0,1,landmark,Item Identification,3,3,-,O,F
+X12855,LIN,,1,0,0,e01,Assigned Identification,1,20,-,O/Z,F
+X12855,LIN,,1,0,0,e02,Product/Service ID Qualifier,2,2,-,M,F
+X12855,LIN,,1,0,0,e03,Product/Service ID,1,48,-,M,F
+X12855,LIN,,1,0,0,e04,Product/Service ID Qualifier,2,2,-,X,F
+X12855,LIN,,1,0,0,e05,Product/Service ID,1,48,-,X,F
+X12855,LIN,,1,0,0,e06,Product/Service ID Qualifier,2,2,-,X,F
+X12855,LIN,,1,0,0,e07,Product/Service ID,1,48,-,X,F
+X12855,LIN,,1,0,0,e08,Product/Service ID Qualifier,2,2,-,X,F
+X12855,LIN,,1,0,0,e09,Product/Service ID,1,48,-,X,F
+X12855,LIN,,1,0,0,e10,Product/Service ID Qualifier,2,2,-,X,F
+X12855,LIN,,1,0,0,e11,Product/Service ID,1,48,-,X,F
+X12855,LIN,,1,0,0,e12,Product/Service ID Qualifier,2,2,-,X,F
+X12855,LIN,,1,0,0,e13,Product/Service ID,1,48,-,X,F
+X12855,LIN,,1,0,0,e14,Product/Service ID Qualifier,2,2,-,X,F
+X12855,LIN,,1,0,0,e15,Product/Service ID,1,48,-,X,F
+X12855,LIN,,1,0,0,e16,Product/Service ID Qualifier,2,2,-,X,F
+X12855,LIN,,1,0,0,e17,Product/Service ID,1,48,-,X,F
+X12855,LIN,,1,0,0,e18,Product/Service ID Qualifier,2,2,-,X,F
+X12855,LIN,,1,0,0,e19,Product/Service ID,1,48,-,X,F
+X12855,LIN,,1,0,0,e20,Product/Service ID Qualifier,2,2,-,X,F
+X12855,LIN,,1,0,0,e21,Product/Service ID,1,48,-,X,F
+X12855,LIN,,1,0,0,e22,Product/Service ID Qualifier,2,2,-,X,F
+X12855,LIN,,1,0,0,e23,Product/Service ID,1,48,-,X,F
+X12855,LIN,,1,0,0,e24,Product/Service ID Qualifier,2,2,-,X,F
+X12855,LIN,,1,0,0,e25,Product/Service ID,1,48,-,X,F
+X12855,LIN,,1,0,0,e26,Product/Service ID Qualifier,2,2,-,X,F
+X12855,LIN,,1,0,0,e27,Product/Service ID,1,48,-,X,F
+X12855,LIN,,1,0,0,e28,Product/Service ID Qualifier,2,2,-,X,F
+X12855,LIN,,1,0,0,e29,Product/Service ID,1,48,-,X,F
+X12855,LIN,,1,0,0,e30,Product/Service ID Qualifier,2,2,-,X,F
+X12855,LIN,,1,0,0,e31,Product/Service ID,1,48,-,X,F
+X12855,SI,,99999,0,1,landmark,Service Characteristic Identification,2,2,-,O,F
+X12855,SI,,1,0,0,e01,Agency Qualifier Code,2,2,-,M,F
+X12855,SI,,1,0,0,e02,Service Characteristics Qualifier,2,3,-,M,F
+X12855,SI,,1,0,0,e03,Product/Service ID,1,48,-,M,F
+X12855,SI,,1,0,0,e04,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,,1,0,0,e05,Product/Service ID,1,48,-,X,F
+X12855,SI,,1,0,0,e06,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,,1,0,0,e07,Product/Service ID,1,48,-,X,F
+X12855,SI,,1,0,0,e08,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,,1,0,0,e09,Product/Service ID,1,48,-,X,F
+X12855,SI,,1,0,0,e10,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,,1,0,0,e11,Product/Service ID,1,48,-,X,F
+X12855,SI,,1,0,0,e12,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,,1,0,0,e13,Product/Service ID,1,48,-,X,F
+X12855,SI,,1,0,0,e14,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,,1,0,0,e15,Product/Service ID,1,48,-,X,F
+X12855,SI,,1,0,0,e16,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,,1,0,0,e17,Product/Service ID,1,48,-,X,F
+X12855,SI,,1,0,0,e18,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,,1,0,0,e19,Product/Service ID,1,48,-,X,F
+X12855,SI,,1,0,0,e20,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,,1,0,0,e21,Product/Service ID,1,48,-,X,F
+X12855,PID,,200,0,1,landmark,Product/Item Description,3,3,-,O,F
+X12855,PID,,1,0,0,e01,Item Description Type,1,1,-,M,F
+X12855,PID,,1,0,0,e02,Product/Process Characteristic Code,2,3,-,O,F
+X12855,PID,,1,0,0,e03,Agency Qualifier Code,2,2,-,X/Z,F
+X12855,PID,,1,0,0,e04,Product Description Code,1,12,-,X/Z,F
+X12855,PID,,1,0,0,e05,Description,1,80,-,X,F
+X12855,PID,,1,0,0,e06,Surface/Layer/Position Code,2,2,-,O,F
+X12855,PID,,1,0,0,e07,Source Subqualifier,1,15,-,O,F
+X12855,PID,,1,0,0,e08,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12855,PID,,1,0,0,e09,Language Code,2,3,-,O/Z,F
+X12855,MEA,,40,0,1,landmark,Measurements,3,3,-,O,F
+X12855,MEA,,1,0,0,e01,Measurement Reference ID Code,2,2,-,O,F
+X12855,MEA,,1,0,0,e02,Measurement Qualifier,1,3,-,O,F
+X12855,MEA,,1,0,0,e03,Measurement Value,1,20,-,X,F
+X12855,MEA,,1,0,0,e05,Range Minimum,1,20,-,X,F
+X12855,MEA,,1,0,0,e06,Range Maximum,1,20,-,X,F
+X12855,MEA,,1,0,0,e07,Measurement Significance Code,2,2,-,O,F
+X12855,MEA,,1,0,0,e08,Measurement Attribute Code,2,2,-,X,F
+X12855,MEA,,1,0,0,e09,Surface/Layer/Position Code,2,2,-,O,F
+X12855,MEA,,1,0,0,e10,Measurement Method or Device,2,4,-,O,F
+X12855,MEA,,1,0,0,e11,Code List Qualifier Code,1,3,-,X/Z,F
+X12855,MEA,,1,0,0,e12,Industry Code,1,30,-,X/Z,F
+X12855,PWK,,25,0,1,landmark,Paperwork,3,3,-,O,F
+X12855,PWK,,1,0,0,e01,Report Type Code,2,2,-,M,F
+X12855,PWK,,1,0,0,e02,Report Transmission Code,1,2,-,O,F
+X12855,PWK,,1,0,0,e03,Report Copies Needed,1,2,-,O,F
+X12855,PWK,,1,0,0,e04,Entity Identifier Code,2,3,-,O,F
+X12855,PWK,,1,0,0,e05,Identification Code Qualifier,1,2,-,X,F
+X12855,PWK,,1,0,0,e06,Identification Code,2,80,-,X,F
+X12855,PWK,,1,0,0,e07,Description,1,80,-,O,F
+X12855,PWK,,1,0,0,e09,Request Category Code,1,2,-,O,F
+X12855,PKG,,25,0,1,landmark,Marking Packaging Loading,3,3,-,O,F
+X12855,PKG,,1,0,0,e01,Item Description Type,1,1,-,X,F
+X12855,PKG,,1,0,0,e02,Packaging Characteristic Code,1,5,-,O,F
+X12855,PKG,,1,0,0,e03,Agency Qualifier Code,2,2,-,X,F
+X12855,PKG,,1,0,0,e04,Packaging Description Code,1,7,-,X/Z,F
+X12855,PKG,,1,0,0,e05,Description,1,80,-,X,F
+X12855,PKG,,1,0,0,e06,Unit Load Option Code,2,2,-,X,F
+X12855,TD1,,2,0,1,landmark,Carrier Details (Quantity and Weight),3,3,-,O,F
+X12855,TD1,,1,0,0,e01,Packaging Code,3,5,-,O,F
+X12855,TD1,,1,0,0,e02,Lading Quantity,1,7,-,X,F
+X12855,TD1,,1,0,0,e03,Commodity Code Qualifier,1,1,-,O,F
+X12855,TD1,,1,0,0,e04,Commodity Code,1,30,-,X,F
+X12855,TD1,,1,0,0,e05,Lading Description,1,50,-,O,F
+X12855,TD1,,1,0,0,e06,Weight Qualifier,1,2,-,O,F
+X12855,TD1,,1,0,0,e07,Weight,1,10,-,X,F
+X12855,TD1,,1,0,0,e08,Unit or Basis for Measurement Code,2,2,-,X,F
+X12855,TD1,,1,0,0,e09,Volume,1,8,-,X,F
+X12855,TD1,,1,0,0,e10,Unit or Basis for Measurement Code,2,2,-,X,F
+X12855,TD5,,12,0,1,landmark,Carrier Details (Routing Sequence/Transit Time),3,3,-,O,F
+X12855,TD5,,1,0,0,e01,Routing Sequence Code,1,2,-,O,F
+X12855,TD5,,1,0,0,e02,Identification Code Qualifier,1,2,-,X,F
+X12855,TD5,,1,0,0,e03,Identification Code,2,80,-,X,F
+X12855,TD5,,1,0,0,e04,Transportation Method/Type Code,1,2,-,X,F
+X12855,TD5,,1,0,0,e05,Routing,1,35,-,X,F
+X12855,TD5,,1,0,0,e06,Shipment/Order Status Code,2,2,-,X,F
+X12855,TD5,,1,0,0,e07,Location Qualifier,1,2,-,O,F
+X12855,TD5,,1,0,0,e08,Location Identifier,1,30,-,X,F
+X12855,TD5,,1,0,0,e09,Transit Direction Code,2,2,-,O,F
+X12855,TD5,,1,0,0,e10,Transit Time Direction Qualifier,2,2,-,O,F
+X12855,TD5,,1,0,0,e11,Transit Time,1,4,-,X,F
+X12855,TD5,,1,0,0,e12,Service Level Code,2,2,-,X,F
+X12855,TD5,,1,0,0,e13,Service Level Code,2,2,-,X,F
+X12855,TD5,,1,0,0,e14,Service Level Code,2,2,-,O,F
+X12855,TD5,,1,0,0,e15,Country Code,2,3,-,O/Z,F
+X12855,TD3,,12,0,1,landmark,Carrier Details (Equipment),3,3,-,O,F
+X12855,TD3,,1,0,0,e01,Equipment Description Code,2,2,-,X,F
+X12855,TD3,,1,0,0,e02,Equipment Initial,1,4,-,O,F
+X12855,TD3,,1,0,0,e03,Equipment Number,1,15,-,X,F
+X12855,TD3,,1,0,0,e04,Weight Qualifier,1,2,-,O,F
+X12855,TD3,,1,0,0,e05,Weight,1,10,-,X,F
+X12855,TD3,,1,0,0,e06,Unit or Basis for Measurement Code,2,2,-,X,F
+X12855,TD3,,1,0,0,e07,Ownership Code,1,1,-,O,F
+X12855,TD3,,1,0,0,e08,Seal Status Code,2,2,-,O,F
+X12855,TD3,,1,0,0,e09,Seal Number,2,15,-,O,F
+X12855,TD3,,1,0,0,e10,Equipment Type,4,4,-,X,F
+X12855,TD4,,5,0,1,landmark,Carrier Details (Special Handling or Hazardous Materials or Both),3,3,-,O,F
+X12855,TD4,,1,0,0,e01,Special Handling Code,2,3,-,X,F
+X12855,TD4,,1,0,0,e02,Hazardous Material Code Qualifier,1,1,-,X,F
+X12855,TD4,,1,0,0,e03,Hazardous Material Class Code,1,4,-,X,F
+X12855,TD4,,1,0,0,e04,Description,1,80,-,X,F
+X12855,TD4,,1,0,0,e05,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12855,MAN,,10,0,1,landmark,Marks and Numbers Information,3,3,-,O,F
+X12855,MAN,,1,0,0,e01,Marks and Numbers Qualifier,1,2,-,M/Z,F
+X12855,MAN,,1,0,0,e02,Marks and Numbers,1,48,-,M/Z,F
+X12855,MAN,,1,0,0,e03,Marks and Numbers,1,48,-,O,F
+X12855,MAN,,1,0,0,e04,Marks and Numbers Qualifier,1,2,-,X,F
+X12855,MAN,,1,0,0,e05,Marks and Numbers,1,48,-,X/Z,F
+X12855,MAN,,1,0,0,e06,Marks and Numbers,1,48,-,O,F
+X12855,TXI,,99999,0,1,landmark,Tax Information,3,3,-,O,F
+X12855,TXI,,1,0,0,e01,Tax Type Code,2,2,-,M,F
+X12855,TXI,,1,0,0,e02,Monetary Amount,1,18,-,X/Z,F
+X12855,TXI,,1,0,0,e03,Percentage as Decimal,1,10,-,X/Z,F
+X12855,TXI,,1,0,0,e04,Tax Jurisdiction Code Qualifier,2,2,-,X,F
+X12855,TXI,,1,0,0,e05,Tax Jurisdiction Code,1,10,-,X,F
+X12855,TXI,,1,0,0,e06,Tax Exempt Code,1,1,-,X,F
+X12855,TXI,,1,0,0,e07,Relationship Code,1,1,-,O/Z,F
+X12855,TXI,,1,0,0,e08,Dollar Basis For Percent,1,9,-,O,F
+X12855,TXI,,1,0,0,e09,Tax Identification Number,1,20,-,O,F
+X12855,TXI,,1,0,0,e10,Assigned Identification,1,20,-,O,F
+X12855,CTB,,99999,0,1,landmark,Restrictions/Conditions,3,3,-,O,F
+X12855,CTB,,1,0,0,e01,Restrictions/Conditions Qualifier,2,2,-,M,F
+X12855,CTB,,1,0,0,e02,Description,1,80,-,X,F
+X12855,CTB,,1,0,0,e03,Quantity Qualifier,2,2,-,X,F
+X12855,CTB,,1,0,0,e04,Quantity,1,15,-,X,F
+X12855,CTB,,1,0,0,e05,Amount Qualifier Code,1,3,-,X,F
+X12855,CTB,,1,0,0,e06,Amount,1,15,-,X,F
+X12855,N9,,1000,1,1,landmark,Extended Reference Information,2,2,-,O,F
+X12855,N9,,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12855,N9,,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12855,N9,,1,0,0,e03,Free-form Description,1,45,-,X,F
+X12855,N9,,1,0,0,e04,Date,8,8,-,O,F
+X12855,N9,,1,0,0,e05,Time,4,8,-,X,F
+X12855,N9,,1,0,0,e06,Time Code,2,2,-,O/Z,F
+X12855,DTM,N9,99999,0,1,landmark,Date/Time Reference,3,3,-,O,F
+X12855,DTM,N9,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12855,DTM,N9,1,0,0,e02,Date,8,8,-,X,F
+X12855,DTM,N9,1,0,0,e03,Time,4,8,-,X,F
+X12855,DTM,N9,1,0,0,e04,Time Code,2,2,-,O,F
+X12855,DTM,N9,1,0,0,e05,Date Time Period Format Qualifier,2,3,-,X,F
+X12855,DTM,N9,1,0,0,e06,Date Time Period,1,35,-,X,F
+X12855,MTX,N9,99999,0,1,landmark,Text,3,3,-,O,F
+X12855,MTX,N9,1,0,0,e01,Note Reference Code,3,3,-,O,F
+X12855,MTX,N9,1,0,0,e02,Textual Data,1,4096,-,X,F
+X12855,MTX,N9,1,0,0,e03,Textual Data,1,4096,-,O,F
+X12855,MTX,N9,1,0,0,e04,Printer Carriage Control Code,2,2,-,X,F
+X12855,MTX,N9,1,0,0,e05,Number,1,9,-,O/Z,F
+X12855,MTX,N9,1,0,0,e06,Language Code,2,3,-,O,F
+X12855,PWK,N9,99999,0,1,landmark,Paperwork,3,3,-,O,F
+X12855,PWK,N9,1,0,0,e01,Report Type Code,2,2,-,M,F
+X12855,PWK,N9,1,0,0,e02,Report Transmission Code,1,2,-,O,F
+X12855,PWK,N9,1,0,0,e03,Report Copies Needed,1,2,-,O,F
+X12855,PWK,N9,1,0,0,e04,Entity Identifier Code,2,3,-,O,F
+X12855,PWK,N9,1,0,0,e05,Identification Code Qualifier,1,2,-,X,F
+X12855,PWK,N9,1,0,0,e06,Identification Code,2,80,-,X,F
+X12855,PWK,N9,1,0,0,e07,Description,1,80,-,O,F
+X12855,PWK,N9,1,0,0,e09,Request Category Code,1,2,-,O,F
+X12855,EFI,N9,99999,0,1,landmark,Electronic Format Identification,3,3,-,O,F
+X12855,EFI,N9,1,0,0,e01,Security Level Code,2,2,-,M,F
+X12855,EFI,N9,1,0,0,e02,Free-form Message Text,1,264,-,O,F
+X12855,EFI,N9,1,0,0,e03,Security Technique Code,2,2,-,O,F
+X12855,EFI,N9,1,0,0,e04,Version Identifier,1,30,-,X,F
+X12855,EFI,N9,1,0,0,e05,Program Identifier,1,30,-,O,F
+X12855,EFI,N9,1,0,0,e06,Version Identifier,1,30,-,X,F
+X12855,EFI,N9,1,0,0,e07,Interchange Format,1,30,-,O,F
+X12855,EFI,N9,1,0,0,e08,Version Identifier,1,30,-,X,F
+X12855,EFI,N9,1,0,0,e09,Compression Technique,1,30,-,O,F
+X12855,EFI,N9,1,0,0,e10,Drawing Sheet Size Code,2,2,-,O,F
+X12855,EFI,N9,1,0,0,e11,File Name,1,64,-,O,F
+X12855,EFI,N9,1,0,0,e12,Block Type,1,4,-,O,F
+X12855,EFI,N9,1,0,0,e13,Record Length,1,15,-,O,F
+X12855,EFI,N9,1,0,0,e14,Block Length,1,5,-,O,F
+X12855,EFI,N9,1,0,0,e15,Version Identifier,1,30,-,X,F
+X12855,EFI,N9,1,0,0,e16,Filter ID Code,3,3,-,X,F
+X12855,N9,,0,0,0,groupend,,0,0,,,F
+X12855,N1,,200,1,1,landmark,Party Identification,2,2,-,O,F
+X12855,N1,,1,0,0,e01,Entity Identifier Code,2,3,-,M,F
+X12855,N1,,1,0,0,e02,Name,1,60,-,X,F
+X12855,N1,,1,0,0,e03,Identification Code Qualifier,1,2,-,X,F
+X12855,N1,,1,0,0,e04,Identification Code,2,80,-,X,F
+X12855,N1,,1,0,0,e05,Entity Relationship Code,2,2,-,O,F
+X12855,N1,,1,0,0,e06,Entity Identifier Code,2,3,-,O,F
+X12855,N2,N1,2,0,1,landmark,Additional Name Information,2,2,-,O,F
+X12855,N2,N1,1,0,0,e01,Name,1,60,-,M,F
+X12855,N2,N1,1,0,0,e02,Name,1,60,-,O,F
+X12855,IN2,N1,99999,0,1,landmark,Individual Name Structure Components,3,3,-,O,F
+X12855,IN2,N1,1,0,0,e01,Name Component Qualifier,2,2,-,M,F
+X12855,IN2,N1,1,0,0,e02,Name,1,60,-,M,F
+X12855,IN2,N1,1,0,0,e03,Name,1,60,-,O,F
+X12855,N3,N1,2,0,1,landmark,Party Location,2,2,-,O,F
+X12855,N3,N1,1,0,0,e01,Address Information,1,55,-,M,F
+X12855,N3,N1,1,0,0,e02,Address Information,1,55,-,O,F
+X12855,N4,N1,1,0,1,landmark,Geographic Location,2,2,-,O,F
+X12855,N4,N1,1,0,0,e01,City Name,2,30,-,O,F
+X12855,N4,N1,1,0,0,e02,State or Province Code,2,2,-,X,F
+X12855,N4,N1,1,0,0,e03,Postal Code,3,15,-,O,F
+X12855,N4,N1,1,0,0,e04,Country Code,2,3,-,X,F
+X12855,N4,N1,1,0,0,e05,Location Qualifier,1,2,-,X,F
+X12855,N4,N1,1,0,0,e06,Location Identifier,1,30,-,O,F
+X12855,N4,N1,1,0,0,e07,Country Subdivision Code,1,3,-,X,F
+X12855,NX2,N1,99999,0,1,landmark,Location ID Component,3,3,-,O,F
+X12855,NX2,N1,1,0,0,e01,Address Component Qualifier,2,2,-,M,F
+X12855,NX2,N1,1,0,0,e02,Address Information,1,55,-,M,F
+X12855,NX2,N1,1,0,0,e03,County Designator,5,5,-,O,F
+X12855,NX2,N1,1,0,0,e04,Address Component Qualifier,2,2,-,X/Z,F
+X12855,NX2,N1,1,0,0,e05,Address Information,1,55,-,X,F
+X12855,REF,N1,12,0,1,landmark,Reference Information,3,3,-,O,F
+X12855,REF,N1,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12855,REF,N1,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12855,REF,N1,1,0,0,e03,Description,1,80,-,X,F
+X12855,PER,N1,99999,0,1,landmark,Administrative Communications Contact,3,3,-,O,F
+X12855,PER,N1,1,0,0,e01,Contact Function Code,2,2,-,M,F
+X12855,PER,N1,1,0,0,e02,Name,1,60,-,O,F
+X12855,PER,N1,1,0,0,e03,Communication Number Qualifier,2,2,-,X,F
+X12855,PER,N1,1,0,0,e04,Communication Number,1,256,-,X,F
+X12855,PER,N1,1,0,0,e05,Communication Number Qualifier,2,2,-,X,F
+X12855,PER,N1,1,0,0,e06,Communication Number,1,256,-,X,F
+X12855,PER,N1,1,0,0,e07,Communication Number Qualifier,2,2,-,X,F
+X12855,PER,N1,1,0,0,e08,Communication Number,1,256,-,X,F
+X12855,PER,N1,1,0,0,e09,Contact Inquiry Reference,1,20,-,O,F
+X12855,SI,N1,99999,0,1,landmark,Service Characteristic Identification,2,2,-,O,F
+X12855,SI,N1,1,0,0,e01,Agency Qualifier Code,2,2,-,M,F
+X12855,SI,N1,1,0,0,e02,Service Characteristics Qualifier,2,3,-,M,F
+X12855,SI,N1,1,0,0,e03,Product/Service ID,1,48,-,M,F
+X12855,SI,N1,1,0,0,e04,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,N1,1,0,0,e05,Product/Service ID,1,48,-,X,F
+X12855,SI,N1,1,0,0,e06,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,N1,1,0,0,e07,Product/Service ID,1,48,-,X,F
+X12855,SI,N1,1,0,0,e08,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,N1,1,0,0,e09,Product/Service ID,1,48,-,X,F
+X12855,SI,N1,1,0,0,e10,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,N1,1,0,0,e11,Product/Service ID,1,48,-,X,F
+X12855,SI,N1,1,0,0,e12,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,N1,1,0,0,e13,Product/Service ID,1,48,-,X,F
+X12855,SI,N1,1,0,0,e14,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,N1,1,0,0,e15,Product/Service ID,1,48,-,X,F
+X12855,SI,N1,1,0,0,e16,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,N1,1,0,0,e17,Product/Service ID,1,48,-,X,F
+X12855,SI,N1,1,0,0,e18,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,N1,1,0,0,e19,Product/Service ID,1,48,-,X,F
+X12855,SI,N1,1,0,0,e20,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,N1,1,0,0,e21,Product/Service ID,1,48,-,X,F
+X12855,FOB,N1,1,0,1,landmark,F.O.B. Related Instructions,3,3,-,O,F
+X12855,FOB,N1,1,0,0,e01,Shipment Method of Payment,2,2,-,M/Z,F
+X12855,FOB,N1,1,0,0,e02,Location Qualifier,1,2,-,X/Z,F
+X12855,FOB,N1,1,0,0,e03,Description,1,80,-,O,F
+X12855,FOB,N1,1,0,0,e04,Transportation Terms Qualifier Code,2,2,-,O,F
+X12855,FOB,N1,1,0,0,e05,Transportation Terms Code,3,3,-,X,F
+X12855,FOB,N1,1,0,0,e06,Location Qualifier,1,2,-,X/Z,F
+X12855,FOB,N1,1,0,0,e07,Description,1,80,-,O,F
+X12855,FOB,N1,1,0,0,e08,Risk of Loss Code,2,2,-,O/Z,F
+X12855,FOB,N1,1,0,0,e09,Description,1,80,-,X,F
+X12855,TD1,N1,2,0,1,landmark,Carrier Details (Quantity and Weight),3,3,-,O,F
+X12855,TD1,N1,1,0,0,e01,Packaging Code,3,5,-,O,F
+X12855,TD1,N1,1,0,0,e02,Lading Quantity,1,7,-,X,F
+X12855,TD1,N1,1,0,0,e03,Commodity Code Qualifier,1,1,-,O,F
+X12855,TD1,N1,1,0,0,e04,Commodity Code,1,30,-,X,F
+X12855,TD1,N1,1,0,0,e05,Lading Description,1,50,-,O,F
+X12855,TD1,N1,1,0,0,e06,Weight Qualifier,1,2,-,O,F
+X12855,TD1,N1,1,0,0,e07,Weight,1,10,-,X,F
+X12855,TD1,N1,1,0,0,e08,Unit or Basis for Measurement Code,2,2,-,X,F
+X12855,TD1,N1,1,0,0,e09,Volume,1,8,-,X,F
+X12855,TD1,N1,1,0,0,e10,Unit or Basis for Measurement Code,2,2,-,X,F
+X12855,TD5,N1,12,0,1,landmark,Carrier Details (Routing Sequence/Transit Time),3,3,-,O,F
+X12855,TD5,N1,1,0,0,e01,Routing Sequence Code,1,2,-,O,F
+X12855,TD5,N1,1,0,0,e02,Identification Code Qualifier,1,2,-,X,F
+X12855,TD5,N1,1,0,0,e03,Identification Code,2,80,-,X,F
+X12855,TD5,N1,1,0,0,e04,Transportation Method/Type Code,1,2,-,X,F
+X12855,TD5,N1,1,0,0,e05,Routing,1,35,-,X,F
+X12855,TD5,N1,1,0,0,e06,Shipment/Order Status Code,2,2,-,X,F
+X12855,TD5,N1,1,0,0,e07,Location Qualifier,1,2,-,O,F
+X12855,TD5,N1,1,0,0,e08,Location Identifier,1,30,-,X,F
+X12855,TD5,N1,1,0,0,e09,Transit Direction Code,2,2,-,O,F
+X12855,TD5,N1,1,0,0,e10,Transit Time Direction Qualifier,2,2,-,O,F
+X12855,TD5,N1,1,0,0,e11,Transit Time,1,4,-,X,F
+X12855,TD5,N1,1,0,0,e12,Service Level Code,2,2,-,X,F
+X12855,TD5,N1,1,0,0,e13,Service Level Code,2,2,-,X,F
+X12855,TD5,N1,1,0,0,e14,Service Level Code,2,2,-,O,F
+X12855,TD5,N1,1,0,0,e15,Country Code,2,3,-,O/Z,F
+X12855,TD3,N1,12,0,1,landmark,Carrier Details (Equipment),3,3,-,O,F
+X12855,TD3,N1,1,0,0,e01,Equipment Description Code,2,2,-,X,F
+X12855,TD3,N1,1,0,0,e02,Equipment Initial,1,4,-,O,F
+X12855,TD3,N1,1,0,0,e03,Equipment Number,1,15,-,X,F
+X12855,TD3,N1,1,0,0,e04,Weight Qualifier,1,2,-,O,F
+X12855,TD3,N1,1,0,0,e05,Weight,1,10,-,X,F
+X12855,TD3,N1,1,0,0,e06,Unit or Basis for Measurement Code,2,2,-,X,F
+X12855,TD3,N1,1,0,0,e07,Ownership Code,1,1,-,O,F
+X12855,TD3,N1,1,0,0,e08,Seal Status Code,2,2,-,O,F
+X12855,TD3,N1,1,0,0,e09,Seal Number,2,15,-,O,F
+X12855,TD3,N1,1,0,0,e10,Equipment Type,4,4,-,X,F
+X12855,TD4,N1,5,0,1,landmark,Carrier Details (Special Handling or Hazardous Materials or Both),3,3,-,O,F
+X12855,TD4,N1,1,0,0,e01,Special Handling Code,2,3,-,X,F
+X12855,TD4,N1,1,0,0,e02,Hazardous Material Code Qualifier,1,1,-,X,F
+X12855,TD4,N1,1,0,0,e03,Hazardous Material Class Code,1,4,-,X,F
+X12855,TD4,N1,1,0,0,e04,Description,1,80,-,X,F
+X12855,TD4,N1,1,0,0,e05,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12855,PKG,N1,25,0,1,landmark,Marking Packaging Loading,3,3,-,O,F
+X12855,PKG,N1,1,0,0,e01,Item Description Type,1,1,-,X,F
+X12855,PKG,N1,1,0,0,e02,Packaging Characteristic Code,1,5,-,O,F
+X12855,PKG,N1,1,0,0,e03,Agency Qualifier Code,2,2,-,X,F
+X12855,PKG,N1,1,0,0,e04,Packaging Description Code,1,7,-,X/Z,F
+X12855,PKG,N1,1,0,0,e05,Description,1,80,-,X,F
+X12855,PKG,N1,1,0,0,e06,Unit Load Option Code,2,2,-,X,F
+X12855,MTX,N1,99999,0,1,landmark,Text,3,3,-,O,F
+X12855,MTX,N1,1,0,0,e01,Note Reference Code,3,3,-,O,F
+X12855,MTX,N1,1,0,0,e02,Textual Data,1,4096,-,X,F
+X12855,MTX,N1,1,0,0,e03,Textual Data,1,4096,-,O,F
+X12855,MTX,N1,1,0,0,e04,Printer Carriage Control Code,2,2,-,X,F
+X12855,MTX,N1,1,0,0,e05,Number,1,9,-,O/Z,F
+X12855,MTX,N1,1,0,0,e06,Language Code,2,3,-,O,F
+X12855,N1,,0,0,0,groupend,,0,0,,,F
+X12855,ADV,,99999,1,1,landmark,Advertising Demographic Information,3,3,-,O,F
+X12855,ADV,,1,0,0,e01,Agency Qualifier Code,2,2,-,M,F
+X12855,ADV,,1,0,0,e02,Service Characteristics Qualifier,2,3,-,M,F
+X12855,ADV,,1,0,0,e03,Range Minimum,1,20,-,O,F
+X12855,ADV,,1,0,0,e04,Range Maximum,1,20,-,O,F
+X12855,ADV,,1,0,0,e05,Category,1,6,-,O,F
+X12855,ADV,,1,0,0,e06,Service Characteristics Qualifier,2,3,-,X,F
+X12855,ADV,,1,0,0,e07,Measurement Value,1,20,-,X,F
+X12855,DTM,ADV,99999,0,1,landmark,Date/Time Reference,3,3,-,O,F
+X12855,DTM,ADV,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12855,DTM,ADV,1,0,0,e02,Date,8,8,-,X,F
+X12855,DTM,ADV,1,0,0,e03,Time,4,8,-,X,F
+X12855,DTM,ADV,1,0,0,e04,Time Code,2,2,-,O,F
+X12855,DTM,ADV,1,0,0,e05,Date Time Period Format Qualifier,2,3,-,X,F
+X12855,DTM,ADV,1,0,0,e06,Date Time Period,1,35,-,X,F
+X12855,MTX,ADV,99999,0,1,landmark,Text,3,3,-,O,F
+X12855,MTX,ADV,1,0,0,e01,Note Reference Code,3,3,-,O,F
+X12855,MTX,ADV,1,0,0,e02,Textual Data,1,4096,-,X,F
+X12855,MTX,ADV,1,0,0,e03,Textual Data,1,4096,-,O,F
+X12855,MTX,ADV,1,0,0,e04,Printer Carriage Control Code,2,2,-,X,F
+X12855,MTX,ADV,1,0,0,e05,Number,1,9,-,O/Z,F
+X12855,MTX,ADV,1,0,0,e06,Language Code,2,3,-,O,F
+X12855,ADV,,0,0,0,groupend,,0,0,,,F
+X12855,PO1,,100000,1,1,landmark,Baseline Item Data,3,3,-,O,F
+X12855,PO1,,1,0,0,e01,Assigned Identification,1,20,-,O,F
+X12855,PO1,,1,0,0,e02,Quantity,1,15,-,X/Z,F
+X12855,PO1,,1,0,0,e03,Unit or Basis for Measurement Code,2,2,-,O,F
+X12855,PO1,,1,0,0,e04,Unit Price,1,17,-,X,F
+X12855,PO1,,1,0,0,e05,Basis of Unit Price Code,2,2,-,O,F
+X12855,PO1,,1,0,0,e06,Product/Service ID Qualifier,2,2,-,X,F
+X12855,PO1,,1,0,0,e07,Product/Service ID,1,48,-,X,F
+X12855,PO1,,1,0,0,e08,Product/Service ID Qualifier,2,2,-,X,F
+X12855,PO1,,1,0,0,e09,Product/Service ID,1,48,-,X,F
+X12855,PO1,,1,0,0,e10,Product/Service ID Qualifier,2,2,-,X,F
+X12855,PO1,,1,0,0,e11,Product/Service ID,1,48,-,X,F
+X12855,PO1,,1,0,0,e12,Product/Service ID Qualifier,2,2,-,X,F
+X12855,PO1,,1,0,0,e13,Product/Service ID,1,48,-,X,F
+X12855,PO1,,1,0,0,e14,Product/Service ID Qualifier,2,2,-,X,F
+X12855,PO1,,1,0,0,e15,Product/Service ID,1,48,-,X,F
+X12855,PO1,,1,0,0,e16,Product/Service ID Qualifier,2,2,-,X,F
+X12855,PO1,,1,0,0,e17,Product/Service ID,1,48,-,X,F
+X12855,PO1,,1,0,0,e18,Product/Service ID Qualifier,2,2,-,X,F
+X12855,PO1,,1,0,0,e19,Product/Service ID,1,48,-,X,F
+X12855,PO1,,1,0,0,e20,Product/Service ID Qualifier,2,2,-,X,F
+X12855,PO1,,1,0,0,e21,Product/Service ID,1,48,-,X,F
+X12855,PO1,,1,0,0,e22,Product/Service ID Qualifier,2,2,-,X,F
+X12855,PO1,,1,0,0,e23,Product/Service ID,1,48,-,X,F
+X12855,PO1,,1,0,0,e24,Product/Service ID Qualifier,2,2,-,X,F
+X12855,PO1,,1,0,0,e25,Product/Service ID,1,48,-,X,F
+X12855,LIN,PO1,99999,0,1,landmark,Item Identification,3,3,-,O,F
+X12855,LIN,PO1,1,0,0,e01,Assigned Identification,1,20,-,O/Z,F
+X12855,LIN,PO1,1,0,0,e02,Product/Service ID Qualifier,2,2,-,M,F
+X12855,LIN,PO1,1,0,0,e03,Product/Service ID,1,48,-,M,F
+X12855,LIN,PO1,1,0,0,e04,Product/Service ID Qualifier,2,2,-,X,F
+X12855,LIN,PO1,1,0,0,e05,Product/Service ID,1,48,-,X,F
+X12855,LIN,PO1,1,0,0,e06,Product/Service ID Qualifier,2,2,-,X,F
+X12855,LIN,PO1,1,0,0,e07,Product/Service ID,1,48,-,X,F
+X12855,LIN,PO1,1,0,0,e08,Product/Service ID Qualifier,2,2,-,X,F
+X12855,LIN,PO1,1,0,0,e09,Product/Service ID,1,48,-,X,F
+X12855,LIN,PO1,1,0,0,e10,Product/Service ID Qualifier,2,2,-,X,F
+X12855,LIN,PO1,1,0,0,e11,Product/Service ID,1,48,-,X,F
+X12855,LIN,PO1,1,0,0,e12,Product/Service ID Qualifier,2,2,-,X,F
+X12855,LIN,PO1,1,0,0,e13,Product/Service ID,1,48,-,X,F
+X12855,LIN,PO1,1,0,0,e14,Product/Service ID Qualifier,2,2,-,X,F
+X12855,LIN,PO1,1,0,0,e15,Product/Service ID,1,48,-,X,F
+X12855,LIN,PO1,1,0,0,e16,Product/Service ID Qualifier,2,2,-,X,F
+X12855,LIN,PO1,1,0,0,e17,Product/Service ID,1,48,-,X,F
+X12855,LIN,PO1,1,0,0,e18,Product/Service ID Qualifier,2,2,-,X,F
+X12855,LIN,PO1,1,0,0,e19,Product/Service ID,1,48,-,X,F
+X12855,LIN,PO1,1,0,0,e20,Product/Service ID Qualifier,2,2,-,X,F
+X12855,LIN,PO1,1,0,0,e21,Product/Service ID,1,48,-,X,F
+X12855,LIN,PO1,1,0,0,e22,Product/Service ID Qualifier,2,2,-,X,F
+X12855,LIN,PO1,1,0,0,e23,Product/Service ID,1,48,-,X,F
+X12855,LIN,PO1,1,0,0,e24,Product/Service ID Qualifier,2,2,-,X,F
+X12855,LIN,PO1,1,0,0,e25,Product/Service ID,1,48,-,X,F
+X12855,LIN,PO1,1,0,0,e26,Product/Service ID Qualifier,2,2,-,X,F
+X12855,LIN,PO1,1,0,0,e27,Product/Service ID,1,48,-,X,F
+X12855,LIN,PO1,1,0,0,e28,Product/Service ID Qualifier,2,2,-,X,F
+X12855,LIN,PO1,1,0,0,e29,Product/Service ID,1,48,-,X,F
+X12855,LIN,PO1,1,0,0,e30,Product/Service ID Qualifier,2,2,-,X,F
+X12855,LIN,PO1,1,0,0,e31,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1,99999,0,1,landmark,Service Characteristic Identification,2,2,-,O,F
+X12855,SI,PO1,1,0,0,e01,Agency Qualifier Code,2,2,-,M,F
+X12855,SI,PO1,1,0,0,e02,Service Characteristics Qualifier,2,3,-,M,F
+X12855,SI,PO1,1,0,0,e03,Product/Service ID,1,48,-,M,F
+X12855,SI,PO1,1,0,0,e04,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1,1,0,0,e05,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1,1,0,0,e06,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1,1,0,0,e07,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1,1,0,0,e08,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1,1,0,0,e09,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1,1,0,0,e10,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1,1,0,0,e11,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1,1,0,0,e12,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1,1,0,0,e13,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1,1,0,0,e14,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1,1,0,0,e15,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1,1,0,0,e16,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1,1,0,0,e17,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1,1,0,0,e18,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1,1,0,0,e19,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1,1,0,0,e20,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1,1,0,0,e21,Product/Service ID,1,48,-,X,F
+X12855,CUR,PO1,1,0,1,landmark,Currency,3,3,-,O,F
+X12855,CUR,PO1,1,0,0,e01,Entity Identifier Code,2,3,-,M,F
+X12855,CUR,PO1,1,0,0,e02,Currency Code,3,3,-,M,F
+X12855,CUR,PO1,1,0,0,e03,Exchange Rate,4,10,-,O,F
+X12855,CUR,PO1,1,0,0,e04,Entity Identifier Code,2,3,-,O,F
+X12855,CUR,PO1,1,0,0,e05,Currency Code,3,3,-,O,F
+X12855,CUR,PO1,1,0,0,e06,Currency Market/Exchange Code,3,3,-,O,F
+X12855,CUR,PO1,1,0,0,e07,Date/Time Qualifier,3,3,-,X,F
+X12855,CUR,PO1,1,0,0,e08,Date,8,8,-,O,F
+X12855,CUR,PO1,1,0,0,e09,Time,4,8,-,O,F
+X12855,CUR,PO1,1,0,0,e10,Date/Time Qualifier,3,3,-,X,F
+X12855,CUR,PO1,1,0,0,e11,Date,8,8,-,X,F
+X12855,CUR,PO1,1,0,0,e12,Time,4,8,-,X,F
+X12855,CUR,PO1,1,0,0,e13,Date/Time Qualifier,3,3,-,X,F
+X12855,CUR,PO1,1,0,0,e14,Date,8,8,-,X,F
+X12855,CUR,PO1,1,0,0,e15,Time,4,8,-,X,F
+X12855,CUR,PO1,1,0,0,e16,Date/Time Qualifier,3,3,-,X,F
+X12855,CUR,PO1,1,0,0,e17,Date,8,8,-,X,F
+X12855,CUR,PO1,1,0,0,e18,Time,4,8,-,X,F
+X12855,CUR,PO1,1,0,0,e19,Date/Time Qualifier,3,3,-,X,F
+X12855,CUR,PO1,1,0,0,e20,Date,8,8,-,X,F
+X12855,CUR,PO1,1,0,0,e21,Time,4,8,-,X,F
+X12855,PO3,PO1,25,0,1,landmark,Additional Item Detail,3,3,-,O,F
+X12855,PO3,PO1,1,0,0,e01,Change Reason Code,2,2,-,M,F
+X12855,PO3,PO1,1,0,0,e02,Date,8,8,-,O,F
+X12855,PO3,PO1,1,0,0,e03,Price Identifier Code,3,3,-,X,F
+X12855,PO3,PO1,1,0,0,e04,Unit Price,1,17,-,O,F
+X12855,PO3,PO1,1,0,0,e05,Basis of Unit Price Code,2,2,-,X,F
+X12855,PO3,PO1,1,0,0,e06,Quantity,1,15,-,M,F
+X12855,PO3,PO1,1,0,0,e07,Unit or Basis for Measurement Code,2,2,-,M,F
+X12855,PO3,PO1,1,0,0,e08,Description,1,80,-,O,F
+X12855,CTP,PO1,99999,0,1,landmark,Pricing Information,3,3,-,O,F
+X12855,CTP,PO1,1,0,0,e01,Class of Trade Code,2,2,-,O,F
+X12855,CTP,PO1,1,0,0,e02,Price Identifier Code,3,3,-,X,F
+X12855,CTP,PO1,1,0,0,e03,Unit Price,1,17,-,X,F
+X12855,CTP,PO1,1,0,0,e04,Quantity,1,15,-,X,F
+X12855,CTP,PO1,1,0,0,e06,Price Multiplier Qualifier,3,3,-,O,F
+X12855,CTP,PO1,1,0,0,e07,Multiplier,1,10,-,X/Z,F
+X12855,CTP,PO1,1,0,0,e08,Monetary Amount,1,18,-,O/Z,F
+X12855,CTP,PO1,1,0,0,e09,Basis of Unit Price Code,2,2,-,O,F
+X12855,CTP,PO1,1,0,0,e10,Condition Value,1,10,-,O,F
+X12855,CTP,PO1,1,0,0,e11,Multiple Price Quantity,1,2,-,O,F
+X12855,PAM,PO1,10,0,1,landmark,Period Amount,3,3,-,O,F
+X12855,PAM,PO1,1,0,0,e01,Quantity Qualifier,2,2,-,X,F
+X12855,PAM,PO1,1,0,0,e02,Quantity,1,15,-,X,F
+X12855,PAM,PO1,1,0,0,e04,Amount Qualifier Code,1,3,-,X,F
+X12855,PAM,PO1,1,0,0,e05,Monetary Amount,1,18,-,X,F
+X12855,PAM,PO1,1,0,0,e06,Unit of Time Period or Interval,2,2,-,X,F
+X12855,PAM,PO1,1,0,0,e07,Date/Time Qualifier,3,3,-,X,F
+X12855,PAM,PO1,1,0,0,e08,Date,8,8,-,X,F
+X12855,PAM,PO1,1,0,0,e09,Time,4,8,-,X,F
+X12855,PAM,PO1,1,0,0,e10,Date/Time Qualifier,3,3,-,X/Z,F
+X12855,PAM,PO1,1,0,0,e11,Date,8,8,-,X,F
+X12855,PAM,PO1,1,0,0,e12,Time,4,8,-,X,F
+X12855,PAM,PO1,1,0,0,e13,Percent Qualifier,1,2,-,X,F
+X12855,PAM,PO1,1,0,0,e14,Percentage as Decimal,1,10,-,X,F
+X12855,PAM,PO1,1,0,0,e15,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12855,MEA,PO1,40,0,1,landmark,Measurements,3,3,-,O,F
+X12855,MEA,PO1,1,0,0,e01,Measurement Reference ID Code,2,2,-,O,F
+X12855,MEA,PO1,1,0,0,e02,Measurement Qualifier,1,3,-,O,F
+X12855,MEA,PO1,1,0,0,e03,Measurement Value,1,20,-,X,F
+X12855,MEA,PO1,1,0,0,e05,Range Minimum,1,20,-,X,F
+X12855,MEA,PO1,1,0,0,e06,Range Maximum,1,20,-,X,F
+X12855,MEA,PO1,1,0,0,e07,Measurement Significance Code,2,2,-,O,F
+X12855,MEA,PO1,1,0,0,e08,Measurement Attribute Code,2,2,-,X,F
+X12855,MEA,PO1,1,0,0,e09,Surface/Layer/Position Code,2,2,-,O,F
+X12855,MEA,PO1,1,0,0,e10,Measurement Method or Device,2,4,-,O,F
+X12855,MEA,PO1,1,0,0,e11,Code List Qualifier Code,1,3,-,X/Z,F
+X12855,MEA,PO1,1,0,0,e12,Industry Code,1,30,-,X/Z,F
+X12855,PID,PO1,1000,1,1,landmark,Product/Item Description,3,3,-,O,F
+X12855,PID,PO1,1,0,0,e01,Item Description Type,1,1,-,M,F
+X12855,PID,PO1,1,0,0,e02,Product/Process Characteristic Code,2,3,-,O,F
+X12855,PID,PO1,1,0,0,e03,Agency Qualifier Code,2,2,-,X/Z,F
+X12855,PID,PO1,1,0,0,e04,Product Description Code,1,12,-,X/Z,F
+X12855,PID,PO1,1,0,0,e05,Description,1,80,-,X,F
+X12855,PID,PO1,1,0,0,e06,Surface/Layer/Position Code,2,2,-,O,F
+X12855,PID,PO1,1,0,0,e07,Source Subqualifier,1,15,-,O,F
+X12855,PID,PO1,1,0,0,e08,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12855,PID,PO1,1,0,0,e09,Language Code,2,3,-,O/Z,F
+X12855,MEA,PO1:PID,10,0,1,landmark,Measurements,3,3,-,O,F
+X12855,MEA,PO1:PID,1,0,0,e01,Measurement Reference ID Code,2,2,-,O,F
+X12855,MEA,PO1:PID,1,0,0,e02,Measurement Qualifier,1,3,-,O,F
+X12855,MEA,PO1:PID,1,0,0,e03,Measurement Value,1,20,-,X,F
+X12855,MEA,PO1:PID,1,0,0,e05,Range Minimum,1,20,-,X,F
+X12855,MEA,PO1:PID,1,0,0,e06,Range Maximum,1,20,-,X,F
+X12855,MEA,PO1:PID,1,0,0,e07,Measurement Significance Code,2,2,-,O,F
+X12855,MEA,PO1:PID,1,0,0,e08,Measurement Attribute Code,2,2,-,X,F
+X12855,MEA,PO1:PID,1,0,0,e09,Surface/Layer/Position Code,2,2,-,O,F
+X12855,MEA,PO1:PID,1,0,0,e10,Measurement Method or Device,2,4,-,O,F
+X12855,MEA,PO1:PID,1,0,0,e11,Code List Qualifier Code,1,3,-,X/Z,F
+X12855,MEA,PO1:PID,1,0,0,e12,Industry Code,1,30,-,X/Z,F
+X12855,PID,,0,0,0,groupend,,0,0,,,F
+X12855,PWK,PO1,25,0,1,landmark,Paperwork,3,3,-,O,F
+X12855,PWK,PO1,1,0,0,e01,Report Type Code,2,2,-,M,F
+X12855,PWK,PO1,1,0,0,e02,Report Transmission Code,1,2,-,O,F
+X12855,PWK,PO1,1,0,0,e03,Report Copies Needed,1,2,-,O,F
+X12855,PWK,PO1,1,0,0,e04,Entity Identifier Code,2,3,-,O,F
+X12855,PWK,PO1,1,0,0,e05,Identification Code Qualifier,1,2,-,X,F
+X12855,PWK,PO1,1,0,0,e06,Identification Code,2,80,-,X,F
+X12855,PWK,PO1,1,0,0,e07,Description,1,80,-,O,F
+X12855,PWK,PO1,1,0,0,e09,Request Category Code,1,2,-,O,F
+X12855,PO4,PO1,99999,0,1,landmark,Item Physical Details,3,3,-,O,F
+X12855,PO4,PO1,1,0,0,e01,Pack,1,6,-,O,F
+X12855,PO4,PO1,1,0,0,e02,Size,1,8,-,X,F
+X12855,PO4,PO1,1,0,0,e03,Unit or Basis for Measurement Code,2,2,-,X,F
+X12855,PO4,PO1,1,0,0,e04,Packaging Code,3,5,-,X,F
+X12855,PO4,PO1,1,0,0,e05,Weight Qualifier,1,2,-,O,F
+X12855,PO4,PO1,1,0,0,e06,Gross Weight per Pack,1,9,-,X,F
+X12855,PO4,PO1,1,0,0,e07,Unit or Basis for Measurement Code,2,2,-,X,F
+X12855,PO4,PO1,1,0,0,e08,Gross Volume per Pack,1,9,-,X,F
+X12855,PO4,PO1,1,0,0,e09,Unit or Basis for Measurement Code,2,2,-,X,F
+X12855,PO4,PO1,1,0,0,e10,Length,1,8,-,X,F
+X12855,PO4,PO1,1,0,0,e11,Width,1,8,-,X,F
+X12855,PO4,PO1,1,0,0,e12,Height,1,8,-,X,F
+X12855,PO4,PO1,1,0,0,e13,Unit or Basis for Measurement Code,2,2,-,X,F
+X12855,PO4,PO1,1,0,0,e14,Inner Pack,1,6,-,O,F
+X12855,PO4,PO1,1,0,0,e15,Surface/Layer/Position Code,2,2,-,O/Z,F
+X12855,PO4,PO1,1,0,0,e16,Assigned Identification,1,20,-,X/Z,F
+X12855,PO4,PO1,1,0,0,e17,Assigned Identification,1,20,-,O/Z,F
+X12855,PO4,PO1,1,0,0,e18,Number,1,9,-,O/Z,F
+X12855,REF,PO1,99999,0,1,landmark,Reference Information,3,3,-,O,F
+X12855,REF,PO1,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12855,REF,PO1,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12855,REF,PO1,1,0,0,e03,Description,1,80,-,X,F
+X12855,PER,PO1,3,0,1,landmark,Administrative Communications Contact,3,3,-,O,F
+X12855,PER,PO1,1,0,0,e01,Contact Function Code,2,2,-,M,F
+X12855,PER,PO1,1,0,0,e02,Name,1,60,-,O,F
+X12855,PER,PO1,1,0,0,e03,Communication Number Qualifier,2,2,-,X,F
+X12855,PER,PO1,1,0,0,e04,Communication Number,1,256,-,X,F
+X12855,PER,PO1,1,0,0,e05,Communication Number Qualifier,2,2,-,X,F
+X12855,PER,PO1,1,0,0,e06,Communication Number,1,256,-,X,F
+X12855,PER,PO1,1,0,0,e07,Communication Number Qualifier,2,2,-,X,F
+X12855,PER,PO1,1,0,0,e08,Communication Number,1,256,-,X,F
+X12855,PER,PO1,1,0,0,e09,Contact Inquiry Reference,1,20,-,O,F
+X12855,SAC,PO1,25,1,1,landmark,Service Promotion Allowance or Charge Information,3,3,-,O,F
+X12855,SAC,PO1,1,0,0,e01,Allowance or Charge Indicator,1,1,-,M/Z,F
+X12855,SAC,PO1,1,0,0,e02,Service Promotion Allowance or Charge Code,4,4,-,X,F
+X12855,SAC,PO1,1,0,0,e03,Agency Qualifier Code,2,2,-,X,F
+X12855,SAC,PO1,1,0,0,e04,Agency Service Promotion Allowance or Charge Code,1,10,-,X,F
+X12855,SAC,PO1,1,0,0,e05,Amount,1,15,-,O/Z,F
+X12855,SAC,PO1,1,0,0,e06,Allowance/Charge Percent Qualifier,1,1,-,X,F
+X12855,SAC,PO1,1,0,0,e07,Percent Decimal Format,1,6,-,X,F
+X12855,SAC,PO1,1,0,0,e08,Rate,1,9,-,O/Z,F
+X12855,SAC,PO1,1,0,0,e09,Unit or Basis for Measurement Code,2,2,-,X,F
+X12855,SAC,PO1,1,0,0,e10,Quantity,1,15,-,X/Z,F
+X12855,SAC,PO1,1,0,0,e11,Quantity,1,15,-,O,F
+X12855,SAC,PO1,1,0,0,e12,Allowance or Charge Method of Handling Code,2,2,-,O,F
+X12855,SAC,PO1,1,0,0,e13,Reference Identification,1,50,-,X/Z,F
+X12855,SAC,PO1,1,0,0,e14,Option Number,1,20,-,O/Z,F
+X12855,SAC,PO1,1,0,0,e15,Description,1,80,-,X,F
+X12855,SAC,PO1,1,0,0,e16,Language Code,2,3,-,O/Z,F
+X12855,CUR,PO1:SAC,1,0,1,landmark,Currency,3,3,-,O,F
+X12855,CUR,PO1:SAC,1,0,0,e01,Entity Identifier Code,2,3,-,M,F
+X12855,CUR,PO1:SAC,1,0,0,e02,Currency Code,3,3,-,M,F
+X12855,CUR,PO1:SAC,1,0,0,e03,Exchange Rate,4,10,-,O,F
+X12855,CUR,PO1:SAC,1,0,0,e04,Entity Identifier Code,2,3,-,O,F
+X12855,CUR,PO1:SAC,1,0,0,e05,Currency Code,3,3,-,O,F
+X12855,CUR,PO1:SAC,1,0,0,e06,Currency Market/Exchange Code,3,3,-,O,F
+X12855,CUR,PO1:SAC,1,0,0,e07,Date/Time Qualifier,3,3,-,X,F
+X12855,CUR,PO1:SAC,1,0,0,e08,Date,8,8,-,O,F
+X12855,CUR,PO1:SAC,1,0,0,e09,Time,4,8,-,O,F
+X12855,CUR,PO1:SAC,1,0,0,e10,Date/Time Qualifier,3,3,-,X,F
+X12855,CUR,PO1:SAC,1,0,0,e11,Date,8,8,-,X,F
+X12855,CUR,PO1:SAC,1,0,0,e12,Time,4,8,-,X,F
+X12855,CUR,PO1:SAC,1,0,0,e13,Date/Time Qualifier,3,3,-,X,F
+X12855,CUR,PO1:SAC,1,0,0,e14,Date,8,8,-,X,F
+X12855,CUR,PO1:SAC,1,0,0,e15,Time,4,8,-,X,F
+X12855,CUR,PO1:SAC,1,0,0,e16,Date/Time Qualifier,3,3,-,X,F
+X12855,CUR,PO1:SAC,1,0,0,e17,Date,8,8,-,X,F
+X12855,CUR,PO1:SAC,1,0,0,e18,Time,4,8,-,X,F
+X12855,CUR,PO1:SAC,1,0,0,e19,Date/Time Qualifier,3,3,-,X,F
+X12855,CUR,PO1:SAC,1,0,0,e20,Date,8,8,-,X,F
+X12855,CUR,PO1:SAC,1,0,0,e21,Time,4,8,-,X,F
+X12855,SAC,,0,0,0,groupend,,0,0,,,F
+X12855,IT8,PO1,1,0,1,landmark,Conditions of Sale,3,3,-,O,F
+X12855,IT8,PO1,1,0,0,e01,Sales Requirement Code,1,2,-,X,F
+X12855,IT8,PO1,1,0,0,e02,Action Code,1,2,-,X,F
+X12855,IT8,PO1,1,0,0,e03,Amount,1,15,-,X/Z,F
+X12855,IT8,PO1,1,0,0,e04,Account Number,1,35,-,O/Z,F
+X12855,IT8,PO1,1,0,0,e05,Date,8,8,-,X/Z,F
+X12855,IT8,PO1,1,0,0,e06,Agency Qualifier Code,2,2,-,O,F
+X12855,IT8,PO1,1,0,0,e07,Product/Service Substitution Code,1,2,-,X,F
+X12855,IT8,PO1,1,0,0,e08,Product/Service ID Qualifier,2,2,-,X,F
+X12855,IT8,PO1,1,0,0,e09,Product/Service ID,1,48,-,X,F
+X12855,IT8,PO1,1,0,0,e10,Product/Service ID Qualifier,2,2,-,X,F
+X12855,IT8,PO1,1,0,0,e11,Product/Service ID,1,48,-,X,F
+X12855,IT8,PO1,1,0,0,e12,Product/Service ID Qualifier,2,2,-,X,F
+X12855,IT8,PO1,1,0,0,e13,Product/Service ID,1,48,-,X,F
+X12855,IT8,PO1,1,0,0,e14,Product/Service ID Qualifier,2,2,-,X,F
+X12855,IT8,PO1,1,0,0,e15,Product/Service ID,1,48,-,X,F
+X12855,IT8,PO1,1,0,0,e16,Product/Service ID Qualifier,2,2,-,X,F
+X12855,IT8,PO1,1,0,0,e17,Product/Service ID,1,48,-,X,F
+X12855,IT8,PO1,1,0,0,e18,Product/Service ID Qualifier,2,2,-,X,F
+X12855,IT8,PO1,1,0,0,e19,Product/Service ID,1,48,-,X,F
+X12855,IT8,PO1,1,0,0,e20,Product/Service ID Qualifier,2,2,-,X,F
+X12855,IT8,PO1,1,0,0,e21,Product/Service ID,1,48,-,X,F
+X12855,IT8,PO1,1,0,0,e22,Product/Service ID Qualifier,2,2,-,X,F
+X12855,IT8,PO1,1,0,0,e23,Product/Service ID,1,48,-,X,F
+X12855,IT8,PO1,1,0,0,e24,Product/Service ID Qualifier,2,2,-,X,F
+X12855,IT8,PO1,1,0,0,e25,Product/Service ID,1,48,-,X,F
+X12855,IT8,PO1,1,0,0,e26,Product/Service ID Qualifier,2,2,-,X,F
+X12855,IT8,PO1,1,0,0,e27,Product/Service ID,1,48,-,X,F
+X12855,CSH,PO1,99999,0,1,landmark,Sales Requirements,3,3,-,O,F
+X12855,CSH,PO1,1,0,0,e01,Sales Requirement Code,1,2,-,O,F
+X12855,CSH,PO1,1,0,0,e02,Action Code,1,2,-,O,F
+X12855,CSH,PO1,1,0,0,e03,Amount,1,15,-,X/Z,F
+X12855,CSH,PO1,1,0,0,e04,Account Number,1,35,-,O/Z,F
+X12855,CSH,PO1,1,0,0,e05,Date,8,8,-,O/Z,F
+X12855,CSH,PO1,1,0,0,e06,Agency Qualifier Code,2,2,-,X/Z,F
+X12855,CSH,PO1,1,0,0,e07,Special Services Code,2,10,-,X,F
+X12855,CSH,PO1,1,0,0,e08,Product/Service Substitution Code,1,2,-,O,F
+X12855,CSH,PO1,1,0,0,e09,Percentage as Decimal,1,10,-,X,F
+X12855,CSH,PO1,1,0,0,e10,Percent Qualifier,1,2,-,X,F
+X12855,ITD,PO1,2,0,1,landmark,Terms of Sale/Deferred Terms of Sale,3,3,-,O,F
+X12855,ITD,PO1,1,0,0,e01,Terms Type Code,2,2,-,O,F
+X12855,ITD,PO1,1,0,0,e02,Terms Basis Date Code,1,2,-,O,F
+X12855,ITD,PO1,1,0,0,e03,Terms Discount Percent,1,6,-,O,F
+X12855,ITD,PO1,1,0,0,e04,Terms Discount Due Date,8,8,-,X,F
+X12855,ITD,PO1,1,0,0,e05,Terms Discount Days Due,1,3,-,X,F
+X12855,ITD,PO1,1,0,0,e06,Terms Net Due Date,8,8,-,O,F
+X12855,ITD,PO1,1,0,0,e07,Terms Net Days,1,3,-,O,F
+X12855,ITD,PO1,1,0,0,e08,Terms Discount Amount,1,10,-,O,F
+X12855,ITD,PO1,1,0,0,e09,Terms Deferred Due Date,8,8,-,O,F
+X12855,ITD,PO1,1,0,0,e10,Deferred Amount Due,1,10,-,X,F
+X12855,ITD,PO1,1,0,0,e11,Percent of Invoice Payable,1,5,-,X,F
+X12855,ITD,PO1,1,0,0,e12,Description,1,80,-,O,F
+X12855,ITD,PO1,1,0,0,e13,Day of Month,1,2,-,X,F
+X12855,ITD,PO1,1,0,0,e14,Payment Method Type Code,1,2,-,O,F
+X12855,ITD,PO1,1,0,0,e15,Percentage as Decimal,1,10,-,O/Z,F
+X12855,DIS,PO1,20,0,1,landmark,Discount Detail,3,3,-,O,F
+X12855,DIS,PO1,1,0,0,e01,Discount Terms Type Code,3,3,-,M,F
+X12855,DIS,PO1,1,0,0,e02,Discount Base Qualifier,2,2,-,M,F
+X12855,DIS,PO1,1,0,0,e03,Discount Base Value,1,10,-,M,F
+X12855,DIS,PO1,1,0,0,e04,Discount Control Limit Qualifier,2,3,-,M,F
+X12855,DIS,PO1,1,0,0,e05,Discount Control Limit,1,10,-,M/Z,F
+X12855,DIS,PO1,1,0,0,e06,Discount Control Limit,1,10,-,O/Z,F
+X12855,INC,PO1,1,0,1,landmark,Installment Information,3,3,-,O,F
+X12855,INC,PO1,1,0,0,e01,Terms Type Code,2,2,-,M,F
+X12855,INC,PO1,1,0,0,e03,Quantity,1,15,-,M/Z,F
+X12855,INC,PO1,1,0,0,e04,Quantity,1,15,-,O/Z,F
+X12855,INC,PO1,1,0,0,e05,Monetary Amount,1,18,-,X,F
+X12855,INC,PO1,1,0,0,e06,Amount Qualifier Code,1,3,-,X,F
+X12855,TAX,PO1,99999,0,1,landmark,Tax Reference,3,3,-,O,F
+X12855,TAX,PO1,1,0,0,e01,Tax Identification Number,1,20,-,X,F
+X12855,TAX,PO1,1,0,0,e02,Location Qualifier,1,2,-,X,F
+X12855,TAX,PO1,1,0,0,e03,Location Identifier,1,30,-,X,F
+X12855,TAX,PO1,1,0,0,e04,Location Qualifier,1,2,-,X,F
+X12855,TAX,PO1,1,0,0,e05,Location Identifier,1,30,-,X,F
+X12855,TAX,PO1,1,0,0,e06,Location Qualifier,1,2,-,X,F
+X12855,TAX,PO1,1,0,0,e07,Location Identifier,1,30,-,X,F
+X12855,TAX,PO1,1,0,0,e08,Location Qualifier,1,2,-,X,F
+X12855,TAX,PO1,1,0,0,e09,Location Identifier,1,30,-,X,F
+X12855,TAX,PO1,1,0,0,e10,Location Qualifier,1,2,-,X,F
+X12855,TAX,PO1,1,0,0,e11,Location Identifier,1,30,-,X,F
+X12855,TAX,PO1,1,0,0,e12,Tax Exempt Code,1,1,-,O,F
+X12855,TAX,PO1,1,0,0,e13,Customs Entry Type Group Code,1,1,-,O,F
+X12855,FOB,PO1,99999,0,1,landmark,F.O.B. Related Instructions,3,3,-,O,F
+X12855,FOB,PO1,1,0,0,e01,Shipment Method of Payment,2,2,-,M/Z,F
+X12855,FOB,PO1,1,0,0,e02,Location Qualifier,1,2,-,X/Z,F
+X12855,FOB,PO1,1,0,0,e03,Description,1,80,-,O,F
+X12855,FOB,PO1,1,0,0,e04,Transportation Terms Qualifier Code,2,2,-,O,F
+X12855,FOB,PO1,1,0,0,e05,Transportation Terms Code,3,3,-,X,F
+X12855,FOB,PO1,1,0,0,e06,Location Qualifier,1,2,-,X/Z,F
+X12855,FOB,PO1,1,0,0,e07,Description,1,80,-,O,F
+X12855,FOB,PO1,1,0,0,e08,Risk of Loss Code,2,2,-,O/Z,F
+X12855,FOB,PO1,1,0,0,e09,Description,1,80,-,X,F
+X12855,SDQ,PO1,500,0,1,landmark,Destination Quantity,3,3,-,O,F
+X12855,SDQ,PO1,1,0,0,e01,Unit or Basis for Measurement Code,2,2,-,M,F
+X12855,SDQ,PO1,1,0,0,e02,Identification Code Qualifier,1,2,-,O,F
+X12855,SDQ,PO1,1,0,0,e03,Identification Code,2,80,-,M,F
+X12855,SDQ,PO1,1,0,0,e04,Quantity,1,15,-,M,F
+X12855,SDQ,PO1,1,0,0,e05,Identification Code,2,80,-,X,F
+X12855,SDQ,PO1,1,0,0,e06,Quantity,1,15,-,X,F
+X12855,SDQ,PO1,1,0,0,e07,Identification Code,2,80,-,X,F
+X12855,SDQ,PO1,1,0,0,e08,Quantity,1,15,-,X,F
+X12855,SDQ,PO1,1,0,0,e09,Identification Code,2,80,-,X,F
+X12855,SDQ,PO1,1,0,0,e10,Quantity,1,15,-,X,F
+X12855,SDQ,PO1,1,0,0,e11,Identification Code,2,80,-,X,F
+X12855,SDQ,PO1,1,0,0,e12,Quantity,1,15,-,X,F
+X12855,SDQ,PO1,1,0,0,e13,Identification Code,2,80,-,X,F
+X12855,SDQ,PO1,1,0,0,e14,Quantity,1,15,-,X,F
+X12855,SDQ,PO1,1,0,0,e15,Identification Code,2,80,-,X,F
+X12855,SDQ,PO1,1,0,0,e16,Quantity,1,15,-,X,F
+X12855,SDQ,PO1,1,0,0,e17,Identification Code,2,80,-,X,F
+X12855,SDQ,PO1,1,0,0,e18,Quantity,1,15,-,X,F
+X12855,SDQ,PO1,1,0,0,e19,Identification Code,2,80,-,X,F
+X12855,SDQ,PO1,1,0,0,e20,Quantity,1,15,-,X,F
+X12855,SDQ,PO1,1,0,0,e21,Identification Code,2,80,-,X,F
+X12855,SDQ,PO1,1,0,0,e22,Quantity,1,15,-,X,F
+X12855,SDQ,PO1,1,0,0,e23,Location Identifier,1,30,-,O/Z,F
+X12855,DTM,PO1,10,0,1,landmark,Date/Time Reference,3,3,-,O,F
+X12855,DTM,PO1,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12855,DTM,PO1,1,0,0,e02,Date,8,8,-,X,F
+X12855,DTM,PO1,1,0,0,e03,Time,4,8,-,X,F
+X12855,DTM,PO1,1,0,0,e04,Time Code,2,2,-,O,F
+X12855,DTM,PO1,1,0,0,e05,Date Time Period Format Qualifier,2,3,-,X,F
+X12855,DTM,PO1,1,0,0,e06,Date Time Period,1,35,-,X,F
+X12855,LDT,PO1,12,0,1,landmark,Lead Time,3,3,-,O,F
+X12855,LDT,PO1,1,0,0,e01,Lead Time Code,2,2,-,M,F
+X12855,LDT,PO1,1,0,0,e02,Quantity,1,15,-,M,F
+X12855,LDT,PO1,1,0,0,e03,Unit of Time Period or Interval,2,2,-,M,F
+X12855,LDT,PO1,1,0,0,e04,Date,8,8,-,O/Z,F
+X12855,TD1,PO1,1,0,1,landmark,Carrier Details (Quantity and Weight),3,3,-,O,F
+X12855,TD1,PO1,1,0,0,e01,Packaging Code,3,5,-,O,F
+X12855,TD1,PO1,1,0,0,e02,Lading Quantity,1,7,-,X,F
+X12855,TD1,PO1,1,0,0,e03,Commodity Code Qualifier,1,1,-,O,F
+X12855,TD1,PO1,1,0,0,e04,Commodity Code,1,30,-,X,F
+X12855,TD1,PO1,1,0,0,e05,Lading Description,1,50,-,O,F
+X12855,TD1,PO1,1,0,0,e06,Weight Qualifier,1,2,-,O,F
+X12855,TD1,PO1,1,0,0,e07,Weight,1,10,-,X,F
+X12855,TD1,PO1,1,0,0,e08,Unit or Basis for Measurement Code,2,2,-,X,F
+X12855,TD1,PO1,1,0,0,e09,Volume,1,8,-,X,F
+X12855,TD1,PO1,1,0,0,e10,Unit or Basis for Measurement Code,2,2,-,X,F
+X12855,TD5,PO1,12,0,1,landmark,Carrier Details (Routing Sequence/Transit Time),3,3,-,O,F
+X12855,TD5,PO1,1,0,0,e01,Routing Sequence Code,1,2,-,O,F
+X12855,TD5,PO1,1,0,0,e02,Identification Code Qualifier,1,2,-,X,F
+X12855,TD5,PO1,1,0,0,e03,Identification Code,2,80,-,X,F
+X12855,TD5,PO1,1,0,0,e04,Transportation Method/Type Code,1,2,-,X,F
+X12855,TD5,PO1,1,0,0,e05,Routing,1,35,-,X,F
+X12855,TD5,PO1,1,0,0,e06,Shipment/Order Status Code,2,2,-,X,F
+X12855,TD5,PO1,1,0,0,e07,Location Qualifier,1,2,-,O,F
+X12855,TD5,PO1,1,0,0,e08,Location Identifier,1,30,-,X,F
+X12855,TD5,PO1,1,0,0,e09,Transit Direction Code,2,2,-,O,F
+X12855,TD5,PO1,1,0,0,e10,Transit Time Direction Qualifier,2,2,-,O,F
+X12855,TD5,PO1,1,0,0,e11,Transit Time,1,4,-,X,F
+X12855,TD5,PO1,1,0,0,e12,Service Level Code,2,2,-,X,F
+X12855,TD5,PO1,1,0,0,e13,Service Level Code,2,2,-,X,F
+X12855,TD5,PO1,1,0,0,e14,Service Level Code,2,2,-,O,F
+X12855,TD5,PO1,1,0,0,e15,Country Code,2,3,-,O/Z,F
+X12855,TD3,PO1,12,0,1,landmark,Carrier Details (Equipment),3,3,-,O,F
+X12855,TD3,PO1,1,0,0,e01,Equipment Description Code,2,2,-,X,F
+X12855,TD3,PO1,1,0,0,e02,Equipment Initial,1,4,-,O,F
+X12855,TD3,PO1,1,0,0,e03,Equipment Number,1,15,-,X,F
+X12855,TD3,PO1,1,0,0,e04,Weight Qualifier,1,2,-,O,F
+X12855,TD3,PO1,1,0,0,e05,Weight,1,10,-,X,F
+X12855,TD3,PO1,1,0,0,e06,Unit or Basis for Measurement Code,2,2,-,X,F
+X12855,TD3,PO1,1,0,0,e07,Ownership Code,1,1,-,O,F
+X12855,TD3,PO1,1,0,0,e08,Seal Status Code,2,2,-,O,F
+X12855,TD3,PO1,1,0,0,e09,Seal Number,2,15,-,O,F
+X12855,TD3,PO1,1,0,0,e10,Equipment Type,4,4,-,X,F
+X12855,TD4,PO1,5,0,1,landmark,Carrier Details (Special Handling or Hazardous Materials or Both),3,3,-,O,F
+X12855,TD4,PO1,1,0,0,e01,Special Handling Code,2,3,-,X,F
+X12855,TD4,PO1,1,0,0,e02,Hazardous Material Code Qualifier,1,1,-,X,F
+X12855,TD4,PO1,1,0,0,e03,Hazardous Material Class Code,1,4,-,X,F
+X12855,TD4,PO1,1,0,0,e04,Description,1,80,-,X,F
+X12855,TD4,PO1,1,0,0,e05,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12855,ACK,PO1,104,1,1,landmark,Line Item Acknowledgment,3,3,-,O,F
+X12855,ACK,PO1,1,0,0,e01,Line Item Status Code,2,2,-,M,F
+X12855,ACK,PO1,1,0,0,e02,Quantity,1,15,-,X,F
+X12855,ACK,PO1,1,0,0,e03,Unit or Basis for Measurement Code,2,2,-,X,F
+X12855,ACK,PO1,1,0,0,e04,Date/Time Qualifier,3,3,-,O,F
+X12855,ACK,PO1,1,0,0,e05,Date,8,8,-,X,F
+X12855,ACK,PO1,1,0,0,e06,Request Reference Number,1,45,-,O,F
+X12855,ACK,PO1,1,0,0,e07,Product/Service ID Qualifier,2,2,-,X,F
+X12855,ACK,PO1,1,0,0,e08,Product/Service ID,1,48,-,X,F
+X12855,ACK,PO1,1,0,0,e09,Product/Service ID Qualifier,2,2,-,X,F
+X12855,ACK,PO1,1,0,0,e10,Product/Service ID,1,48,-,X,F
+X12855,ACK,PO1,1,0,0,e11,Product/Service ID Qualifier,2,2,-,X,F
+X12855,ACK,PO1,1,0,0,e12,Product/Service ID,1,48,-,X,F
+X12855,ACK,PO1,1,0,0,e13,Product/Service ID Qualifier,2,2,-,X,F
+X12855,ACK,PO1,1,0,0,e14,Product/Service ID,1,48,-,X,F
+X12855,ACK,PO1,1,0,0,e15,Product/Service ID Qualifier,2,2,-,X,F
+X12855,ACK,PO1,1,0,0,e16,Product/Service ID,1,48,-,X,F
+X12855,ACK,PO1,1,0,0,e17,Product/Service ID Qualifier,2,2,-,X,F
+X12855,ACK,PO1,1,0,0,e18,Product/Service ID,1,48,-,X,F
+X12855,ACK,PO1,1,0,0,e19,Product/Service ID Qualifier,2,2,-,X,F
+X12855,ACK,PO1,1,0,0,e20,Product/Service ID,1,48,-,X,F
+X12855,ACK,PO1,1,0,0,e21,Product/Service ID Qualifier,2,2,-,X,F
+X12855,ACK,PO1,1,0,0,e22,Product/Service ID,1,48,-,X,F
+X12855,ACK,PO1,1,0,0,e23,Product/Service ID Qualifier,2,2,-,X,F
+X12855,ACK,PO1,1,0,0,e24,Product/Service ID,1,48,-,X,F
+X12855,ACK,PO1,1,0,0,e25,Product/Service ID Qualifier,2,2,-,X,F
+X12855,ACK,PO1,1,0,0,e26,Product/Service ID,1,48,-,X,F
+X12855,ACK,PO1,1,0,0,e27,Agency Qualifier Code,2,2,-,X,F
+X12855,ACK,PO1,1,0,0,e28,Source Subqualifier,1,15,-,X,F
+X12855,ACK,PO1,1,0,0,e29,Industry Code,1,30,-,X/Z,F
+X12855,DTM,PO1:ACK,1,0,1,landmark,Date/Time Reference,3,3,-,O,F
+X12855,DTM,PO1:ACK,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12855,DTM,PO1:ACK,1,0,0,e02,Date,8,8,-,X,F
+X12855,DTM,PO1:ACK,1,0,0,e03,Time,4,8,-,X,F
+X12855,DTM,PO1:ACK,1,0,0,e04,Time Code,2,2,-,O,F
+X12855,DTM,PO1:ACK,1,0,0,e05,Date Time Period Format Qualifier,2,3,-,X,F
+X12855,DTM,PO1:ACK,1,0,0,e06,Date Time Period,1,35,-,X,F
+X12855,ACK,,0,0,0,groupend,,0,0,,,F
+X12855,MAN,PO1,10,0,1,landmark,Marks and Numbers Information,3,3,-,O,F
+X12855,MAN,PO1,1,0,0,e01,Marks and Numbers Qualifier,1,2,-,M/Z,F
+X12855,MAN,PO1,1,0,0,e02,Marks and Numbers,1,48,-,M/Z,F
+X12855,MAN,PO1,1,0,0,e03,Marks and Numbers,1,48,-,O,F
+X12855,MAN,PO1,1,0,0,e04,Marks and Numbers Qualifier,1,2,-,X,F
+X12855,MAN,PO1,1,0,0,e05,Marks and Numbers,1,48,-,X/Z,F
+X12855,MAN,PO1,1,0,0,e06,Marks and Numbers,1,48,-,O,F
+X12855,AMT,PO1,1,0,1,landmark,Monetary Amount Information,3,3,-,O,F
+X12855,AMT,PO1,1,0,0,e01,Amount Qualifier Code,1,3,-,M,F
+X12855,AMT,PO1,1,0,0,e02,Monetary Amount,1,18,-,M,F
+X12855,AMT,PO1,1,0,0,e03,Credit/Debit Flag Code,1,1,-,O,F
+X12855,CTB,PO1,99999,0,1,landmark,Restrictions/Conditions,3,3,-,O,F
+X12855,CTB,PO1,1,0,0,e01,Restrictions/Conditions Qualifier,2,2,-,M,F
+X12855,CTB,PO1,1,0,0,e02,Description,1,80,-,X,F
+X12855,CTB,PO1,1,0,0,e03,Quantity Qualifier,2,2,-,X,F
+X12855,CTB,PO1,1,0,0,e04,Quantity,1,15,-,X,F
+X12855,CTB,PO1,1,0,0,e05,Amount Qualifier Code,1,3,-,X,F
+X12855,CTB,PO1,1,0,0,e06,Amount,1,15,-,X,F
+X12855,TXI,PO1,99999,0,1,landmark,Tax Information,3,3,-,O,F
+X12855,TXI,PO1,1,0,0,e01,Tax Type Code,2,2,-,M,F
+X12855,TXI,PO1,1,0,0,e02,Monetary Amount,1,18,-,X/Z,F
+X12855,TXI,PO1,1,0,0,e03,Percentage as Decimal,1,10,-,X/Z,F
+X12855,TXI,PO1,1,0,0,e04,Tax Jurisdiction Code Qualifier,2,2,-,X,F
+X12855,TXI,PO1,1,0,0,e05,Tax Jurisdiction Code,1,10,-,X,F
+X12855,TXI,PO1,1,0,0,e06,Tax Exempt Code,1,1,-,X,F
+X12855,TXI,PO1,1,0,0,e07,Relationship Code,1,1,-,O/Z,F
+X12855,TXI,PO1,1,0,0,e08,Dollar Basis For Percent,1,9,-,O,F
+X12855,TXI,PO1,1,0,0,e09,Tax Identification Number,1,20,-,O,F
+X12855,TXI,PO1,1,0,0,e10,Assigned Identification,1,20,-,O,F
+X12855,QTY,PO1,99999,1,1,landmark,Quantity Information,3,3,-,O,F
+X12855,QTY,PO1,1,0,0,e01,Quantity Qualifier,2,2,-,M,F
+X12855,QTY,PO1,1,0,0,e02,Quantity,1,15,-,X,F
+X12855,QTY,PO1,1,0,0,e04,Free-form Information,1,30,-,X/Z,F
+X12855,SI,PO1:QTY,99999,0,1,landmark,Service Characteristic Identification,2,2,-,O,F
+X12855,SI,PO1:QTY,1,0,0,e01,Agency Qualifier Code,2,2,-,M,F
+X12855,SI,PO1:QTY,1,0,0,e02,Service Characteristics Qualifier,2,3,-,M,F
+X12855,SI,PO1:QTY,1,0,0,e03,Product/Service ID,1,48,-,M,F
+X12855,SI,PO1:QTY,1,0,0,e04,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:QTY,1,0,0,e05,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:QTY,1,0,0,e06,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:QTY,1,0,0,e07,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:QTY,1,0,0,e08,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:QTY,1,0,0,e09,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:QTY,1,0,0,e10,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:QTY,1,0,0,e11,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:QTY,1,0,0,e12,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:QTY,1,0,0,e13,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:QTY,1,0,0,e14,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:QTY,1,0,0,e15,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:QTY,1,0,0,e16,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:QTY,1,0,0,e17,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:QTY,1,0,0,e18,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:QTY,1,0,0,e19,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:QTY,1,0,0,e20,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:QTY,1,0,0,e21,Product/Service ID,1,48,-,X,F
+X12855,QTY,,0,0,0,groupend,,0,0,,,F
+X12855,PKG,PO1,200,1,1,landmark,Marking Packaging Loading,3,3,-,O,F
+X12855,PKG,PO1,1,0,0,e01,Item Description Type,1,1,-,X,F
+X12855,PKG,PO1,1,0,0,e02,Packaging Characteristic Code,1,5,-,O,F
+X12855,PKG,PO1,1,0,0,e03,Agency Qualifier Code,2,2,-,X,F
+X12855,PKG,PO1,1,0,0,e04,Packaging Description Code,1,7,-,X/Z,F
+X12855,PKG,PO1,1,0,0,e05,Description,1,80,-,X,F
+X12855,PKG,PO1,1,0,0,e06,Unit Load Option Code,2,2,-,X,F
+X12855,MEA,PO1:PKG,99999,0,1,landmark,Measurements,3,3,-,O,F
+X12855,MEA,PO1:PKG,1,0,0,e01,Measurement Reference ID Code,2,2,-,O,F
+X12855,MEA,PO1:PKG,1,0,0,e02,Measurement Qualifier,1,3,-,O,F
+X12855,MEA,PO1:PKG,1,0,0,e03,Measurement Value,1,20,-,X,F
+X12855,MEA,PO1:PKG,1,0,0,e05,Range Minimum,1,20,-,X,F
+X12855,MEA,PO1:PKG,1,0,0,e06,Range Maximum,1,20,-,X,F
+X12855,MEA,PO1:PKG,1,0,0,e07,Measurement Significance Code,2,2,-,O,F
+X12855,MEA,PO1:PKG,1,0,0,e08,Measurement Attribute Code,2,2,-,X,F
+X12855,MEA,PO1:PKG,1,0,0,e09,Surface/Layer/Position Code,2,2,-,O,F
+X12855,MEA,PO1:PKG,1,0,0,e10,Measurement Method or Device,2,4,-,O,F
+X12855,MEA,PO1:PKG,1,0,0,e11,Code List Qualifier Code,1,3,-,X/Z,F
+X12855,MEA,PO1:PKG,1,0,0,e12,Industry Code,1,30,-,X/Z,F
+X12855,PKG,,0,0,0,groupend,,0,0,,,F
+X12855,SCH,PO1,200,1,1,landmark,Line Item Schedule,3,3,-,O,F
+X12855,SCH,PO1,1,0,0,e01,Quantity,1,15,-,M,F
+X12855,SCH,PO1,1,0,0,e02,Unit or Basis for Measurement Code,2,2,-,M,F
+X12855,SCH,PO1,1,0,0,e03,Entity Identifier Code,2,3,-,O,F
+X12855,SCH,PO1,1,0,0,e04,Name,1,60,-,X,F
+X12855,SCH,PO1,1,0,0,e05,Date/Time Qualifier,3,3,-,M,F
+X12855,SCH,PO1,1,0,0,e06,Date,8,8,-,M,F
+X12855,SCH,PO1,1,0,0,e07,Time,4,8,-,O,F
+X12855,SCH,PO1,1,0,0,e08,Date/Time Qualifier,3,3,-,X,F
+X12855,SCH,PO1,1,0,0,e09,Date,8,8,-,X,F
+X12855,SCH,PO1,1,0,0,e10,Time,4,8,-,X,F
+X12855,SCH,PO1,1,0,0,e11,Request Reference Number,1,45,-,O,F
+X12855,SCH,PO1,1,0,0,e12,Assigned Identification,1,20,-,O/Z,F
+X12855,TD1,PO1:SCH,2,0,1,landmark,Carrier Details (Quantity and Weight),3,3,-,O,F
+X12855,TD1,PO1:SCH,1,0,0,e01,Packaging Code,3,5,-,O,F
+X12855,TD1,PO1:SCH,1,0,0,e02,Lading Quantity,1,7,-,X,F
+X12855,TD1,PO1:SCH,1,0,0,e03,Commodity Code Qualifier,1,1,-,O,F
+X12855,TD1,PO1:SCH,1,0,0,e04,Commodity Code,1,30,-,X,F
+X12855,TD1,PO1:SCH,1,0,0,e05,Lading Description,1,50,-,O,F
+X12855,TD1,PO1:SCH,1,0,0,e06,Weight Qualifier,1,2,-,O,F
+X12855,TD1,PO1:SCH,1,0,0,e07,Weight,1,10,-,X,F
+X12855,TD1,PO1:SCH,1,0,0,e08,Unit or Basis for Measurement Code,2,2,-,X,F
+X12855,TD1,PO1:SCH,1,0,0,e09,Volume,1,8,-,X,F
+X12855,TD1,PO1:SCH,1,0,0,e10,Unit or Basis for Measurement Code,2,2,-,X,F
+X12855,TD5,PO1:SCH,12,0,1,landmark,Carrier Details (Routing Sequence/Transit Time),3,3,-,O,F
+X12855,TD5,PO1:SCH,1,0,0,e01,Routing Sequence Code,1,2,-,O,F
+X12855,TD5,PO1:SCH,1,0,0,e02,Identification Code Qualifier,1,2,-,X,F
+X12855,TD5,PO1:SCH,1,0,0,e03,Identification Code,2,80,-,X,F
+X12855,TD5,PO1:SCH,1,0,0,e04,Transportation Method/Type Code,1,2,-,X,F
+X12855,TD5,PO1:SCH,1,0,0,e05,Routing,1,35,-,X,F
+X12855,TD5,PO1:SCH,1,0,0,e06,Shipment/Order Status Code,2,2,-,X,F
+X12855,TD5,PO1:SCH,1,0,0,e07,Location Qualifier,1,2,-,O,F
+X12855,TD5,PO1:SCH,1,0,0,e08,Location Identifier,1,30,-,X,F
+X12855,TD5,PO1:SCH,1,0,0,e09,Transit Direction Code,2,2,-,O,F
+X12855,TD5,PO1:SCH,1,0,0,e10,Transit Time Direction Qualifier,2,2,-,O,F
+X12855,TD5,PO1:SCH,1,0,0,e11,Transit Time,1,4,-,X,F
+X12855,TD5,PO1:SCH,1,0,0,e12,Service Level Code,2,2,-,X,F
+X12855,TD5,PO1:SCH,1,0,0,e13,Service Level Code,2,2,-,X,F
+X12855,TD5,PO1:SCH,1,0,0,e14,Service Level Code,2,2,-,O,F
+X12855,TD5,PO1:SCH,1,0,0,e15,Country Code,2,3,-,O/Z,F
+X12855,TD3,PO1:SCH,12,0,1,landmark,Carrier Details (Equipment),3,3,-,O,F
+X12855,TD3,PO1:SCH,1,0,0,e01,Equipment Description Code,2,2,-,X,F
+X12855,TD3,PO1:SCH,1,0,0,e02,Equipment Initial,1,4,-,O,F
+X12855,TD3,PO1:SCH,1,0,0,e03,Equipment Number,1,15,-,X,F
+X12855,TD3,PO1:SCH,1,0,0,e04,Weight Qualifier,1,2,-,O,F
+X12855,TD3,PO1:SCH,1,0,0,e05,Weight,1,10,-,X,F
+X12855,TD3,PO1:SCH,1,0,0,e06,Unit or Basis for Measurement Code,2,2,-,X,F
+X12855,TD3,PO1:SCH,1,0,0,e07,Ownership Code,1,1,-,O,F
+X12855,TD3,PO1:SCH,1,0,0,e08,Seal Status Code,2,2,-,O,F
+X12855,TD3,PO1:SCH,1,0,0,e09,Seal Number,2,15,-,O,F
+X12855,TD3,PO1:SCH,1,0,0,e10,Equipment Type,4,4,-,X,F
+X12855,TD4,PO1:SCH,5,0,1,landmark,Carrier Details (Special Handling or Hazardous Materials or Both),3,3,-,O,F
+X12855,TD4,PO1:SCH,1,0,0,e01,Special Handling Code,2,3,-,X,F
+X12855,TD4,PO1:SCH,1,0,0,e02,Hazardous Material Code Qualifier,1,1,-,X,F
+X12855,TD4,PO1:SCH,1,0,0,e03,Hazardous Material Class Code,1,4,-,X,F
+X12855,TD4,PO1:SCH,1,0,0,e04,Description,1,80,-,X,F
+X12855,TD4,PO1:SCH,1,0,0,e05,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12855,REF,PO1:SCH,99999,0,1,landmark,Reference Information,3,3,-,O,F
+X12855,REF,PO1:SCH,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12855,REF,PO1:SCH,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12855,REF,PO1:SCH,1,0,0,e03,Description,1,80,-,X,F
+X12855,SCH,,0,0,0,groupend,,0,0,,,F
+X12855,N9,PO1,1000,1,1,landmark,Extended Reference Information,2,2,-,O,F
+X12855,N9,PO1,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12855,N9,PO1,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12855,N9,PO1,1,0,0,e03,Free-form Description,1,45,-,X,F
+X12855,N9,PO1,1,0,0,e04,Date,8,8,-,O,F
+X12855,N9,PO1,1,0,0,e05,Time,4,8,-,X,F
+X12855,N9,PO1,1,0,0,e06,Time Code,2,2,-,O/Z,F
+X12855,DTM,PO1:N9,99999,0,1,landmark,Date/Time Reference,3,3,-,O,F
+X12855,DTM,PO1:N9,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12855,DTM,PO1:N9,1,0,0,e02,Date,8,8,-,X,F
+X12855,DTM,PO1:N9,1,0,0,e03,Time,4,8,-,X,F
+X12855,DTM,PO1:N9,1,0,0,e04,Time Code,2,2,-,O,F
+X12855,DTM,PO1:N9,1,0,0,e05,Date Time Period Format Qualifier,2,3,-,X,F
+X12855,DTM,PO1:N9,1,0,0,e06,Date Time Period,1,35,-,X,F
+X12855,MTX,PO1:N9,99999,0,1,landmark,Text,3,3,-,O,F
+X12855,MTX,PO1:N9,1,0,0,e01,Note Reference Code,3,3,-,O,F
+X12855,MTX,PO1:N9,1,0,0,e02,Textual Data,1,4096,-,X,F
+X12855,MTX,PO1:N9,1,0,0,e03,Textual Data,1,4096,-,O,F
+X12855,MTX,PO1:N9,1,0,0,e04,Printer Carriage Control Code,2,2,-,X,F
+X12855,MTX,PO1:N9,1,0,0,e05,Number,1,9,-,O/Z,F
+X12855,MTX,PO1:N9,1,0,0,e06,Language Code,2,3,-,O,F
+X12855,PWK,PO1:N9,99999,0,1,landmark,Paperwork,3,3,-,O,F
+X12855,PWK,PO1:N9,1,0,0,e01,Report Type Code,2,2,-,M,F
+X12855,PWK,PO1:N9,1,0,0,e02,Report Transmission Code,1,2,-,O,F
+X12855,PWK,PO1:N9,1,0,0,e03,Report Copies Needed,1,2,-,O,F
+X12855,PWK,PO1:N9,1,0,0,e04,Entity Identifier Code,2,3,-,O,F
+X12855,PWK,PO1:N9,1,0,0,e05,Identification Code Qualifier,1,2,-,X,F
+X12855,PWK,PO1:N9,1,0,0,e06,Identification Code,2,80,-,X,F
+X12855,PWK,PO1:N9,1,0,0,e07,Description,1,80,-,O,F
+X12855,PWK,PO1:N9,1,0,0,e09,Request Category Code,1,2,-,O,F
+X12855,EFI,PO1:N9,99999,0,1,landmark,Electronic Format Identification,3,3,-,O,F
+X12855,EFI,PO1:N9,1,0,0,e01,Security Level Code,2,2,-,M,F
+X12855,EFI,PO1:N9,1,0,0,e02,Free-form Message Text,1,264,-,O,F
+X12855,EFI,PO1:N9,1,0,0,e03,Security Technique Code,2,2,-,O,F
+X12855,EFI,PO1:N9,1,0,0,e04,Version Identifier,1,30,-,X,F
+X12855,EFI,PO1:N9,1,0,0,e05,Program Identifier,1,30,-,O,F
+X12855,EFI,PO1:N9,1,0,0,e06,Version Identifier,1,30,-,X,F
+X12855,EFI,PO1:N9,1,0,0,e07,Interchange Format,1,30,-,O,F
+X12855,EFI,PO1:N9,1,0,0,e08,Version Identifier,1,30,-,X,F
+X12855,EFI,PO1:N9,1,0,0,e09,Compression Technique,1,30,-,O,F
+X12855,EFI,PO1:N9,1,0,0,e10,Drawing Sheet Size Code,2,2,-,O,F
+X12855,EFI,PO1:N9,1,0,0,e11,File Name,1,64,-,O,F
+X12855,EFI,PO1:N9,1,0,0,e12,Block Type,1,4,-,O,F
+X12855,EFI,PO1:N9,1,0,0,e13,Record Length,1,15,-,O,F
+X12855,EFI,PO1:N9,1,0,0,e14,Block Length,1,5,-,O,F
+X12855,EFI,PO1:N9,1,0,0,e15,Version Identifier,1,30,-,X,F
+X12855,EFI,PO1:N9,1,0,0,e16,Filter ID Code,3,3,-,X,F
+X12855,N9,,0,0,0,groupend,,0,0,,,F
+X12855,N1,PO1,200,1,1,landmark,Party Identification,2,2,-,O,F
+X12855,N1,PO1,1,0,0,e01,Entity Identifier Code,2,3,-,M,F
+X12855,N1,PO1,1,0,0,e02,Name,1,60,-,X,F
+X12855,N1,PO1,1,0,0,e03,Identification Code Qualifier,1,2,-,X,F
+X12855,N1,PO1,1,0,0,e04,Identification Code,2,80,-,X,F
+X12855,N1,PO1,1,0,0,e05,Entity Relationship Code,2,2,-,O,F
+X12855,N1,PO1,1,0,0,e06,Entity Identifier Code,2,3,-,O,F
+X12855,N2,PO1:N1,2,0,1,landmark,Additional Name Information,2,2,-,O,F
+X12855,N2,PO1:N1,1,0,0,e01,Name,1,60,-,M,F
+X12855,N2,PO1:N1,1,0,0,e02,Name,1,60,-,O,F
+X12855,IN2,PO1:N1,99999,0,1,landmark,Individual Name Structure Components,3,3,-,O,F
+X12855,IN2,PO1:N1,1,0,0,e01,Name Component Qualifier,2,2,-,M,F
+X12855,IN2,PO1:N1,1,0,0,e02,Name,1,60,-,M,F
+X12855,IN2,PO1:N1,1,0,0,e03,Name,1,60,-,O,F
+X12855,N3,PO1:N1,2,0,1,landmark,Party Location,2,2,-,O,F
+X12855,N3,PO1:N1,1,0,0,e01,Address Information,1,55,-,M,F
+X12855,N3,PO1:N1,1,0,0,e02,Address Information,1,55,-,O,F
+X12855,N4,PO1:N1,1,0,1,landmark,Geographic Location,2,2,-,O,F
+X12855,N4,PO1:N1,1,0,0,e01,City Name,2,30,-,O,F
+X12855,N4,PO1:N1,1,0,0,e02,State or Province Code,2,2,-,X,F
+X12855,N4,PO1:N1,1,0,0,e03,Postal Code,3,15,-,O,F
+X12855,N4,PO1:N1,1,0,0,e04,Country Code,2,3,-,X,F
+X12855,N4,PO1:N1,1,0,0,e05,Location Qualifier,1,2,-,X,F
+X12855,N4,PO1:N1,1,0,0,e06,Location Identifier,1,30,-,O,F
+X12855,N4,PO1:N1,1,0,0,e07,Country Subdivision Code,1,3,-,X,F
+X12855,NX2,PO1:N1,99999,0,1,landmark,Location ID Component,3,3,-,O,F
+X12855,NX2,PO1:N1,1,0,0,e01,Address Component Qualifier,2,2,-,M,F
+X12855,NX2,PO1:N1,1,0,0,e02,Address Information,1,55,-,M,F
+X12855,NX2,PO1:N1,1,0,0,e03,County Designator,5,5,-,O,F
+X12855,NX2,PO1:N1,1,0,0,e04,Address Component Qualifier,2,2,-,X/Z,F
+X12855,NX2,PO1:N1,1,0,0,e05,Address Information,1,55,-,X,F
+X12855,REF,PO1:N1,12,0,1,landmark,Reference Information,3,3,-,O,F
+X12855,REF,PO1:N1,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12855,REF,PO1:N1,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12855,REF,PO1:N1,1,0,0,e03,Description,1,80,-,X,F
+X12855,PER,PO1:N1,3,0,1,landmark,Administrative Communications Contact,3,3,-,O,F
+X12855,PER,PO1:N1,1,0,0,e01,Contact Function Code,2,2,-,M,F
+X12855,PER,PO1:N1,1,0,0,e02,Name,1,60,-,O,F
+X12855,PER,PO1:N1,1,0,0,e03,Communication Number Qualifier,2,2,-,X,F
+X12855,PER,PO1:N1,1,0,0,e04,Communication Number,1,256,-,X,F
+X12855,PER,PO1:N1,1,0,0,e05,Communication Number Qualifier,2,2,-,X,F
+X12855,PER,PO1:N1,1,0,0,e06,Communication Number,1,256,-,X,F
+X12855,PER,PO1:N1,1,0,0,e07,Communication Number Qualifier,2,2,-,X,F
+X12855,PER,PO1:N1,1,0,0,e08,Communication Number,1,256,-,X,F
+X12855,PER,PO1:N1,1,0,0,e09,Contact Inquiry Reference,1,20,-,O,F
+X12855,SI,PO1:N1,99999,0,1,landmark,Service Characteristic Identification,2,2,-,O,F
+X12855,SI,PO1:N1,1,0,0,e01,Agency Qualifier Code,2,2,-,M,F
+X12855,SI,PO1:N1,1,0,0,e02,Service Characteristics Qualifier,2,3,-,M,F
+X12855,SI,PO1:N1,1,0,0,e03,Product/Service ID,1,48,-,M,F
+X12855,SI,PO1:N1,1,0,0,e04,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:N1,1,0,0,e05,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:N1,1,0,0,e06,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:N1,1,0,0,e07,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:N1,1,0,0,e08,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:N1,1,0,0,e09,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:N1,1,0,0,e10,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:N1,1,0,0,e11,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:N1,1,0,0,e12,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:N1,1,0,0,e13,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:N1,1,0,0,e14,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:N1,1,0,0,e15,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:N1,1,0,0,e16,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:N1,1,0,0,e17,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:N1,1,0,0,e18,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:N1,1,0,0,e19,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:N1,1,0,0,e20,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:N1,1,0,0,e21,Product/Service ID,1,48,-,X,F
+X12855,DTM,PO1:N1,1,0,1,landmark,Date/Time Reference,3,3,-,O,F
+X12855,DTM,PO1:N1,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12855,DTM,PO1:N1,1,0,0,e02,Date,8,8,-,X,F
+X12855,DTM,PO1:N1,1,0,0,e03,Time,4,8,-,X,F
+X12855,DTM,PO1:N1,1,0,0,e04,Time Code,2,2,-,O,F
+X12855,DTM,PO1:N1,1,0,0,e05,Date Time Period Format Qualifier,2,3,-,X,F
+X12855,DTM,PO1:N1,1,0,0,e06,Date Time Period,1,35,-,X,F
+X12855,FOB,PO1:N1,1,0,1,landmark,F.O.B. Related Instructions,3,3,-,O,F
+X12855,FOB,PO1:N1,1,0,0,e01,Shipment Method of Payment,2,2,-,M/Z,F
+X12855,FOB,PO1:N1,1,0,0,e02,Location Qualifier,1,2,-,X/Z,F
+X12855,FOB,PO1:N1,1,0,0,e03,Description,1,80,-,O,F
+X12855,FOB,PO1:N1,1,0,0,e04,Transportation Terms Qualifier Code,2,2,-,O,F
+X12855,FOB,PO1:N1,1,0,0,e05,Transportation Terms Code,3,3,-,X,F
+X12855,FOB,PO1:N1,1,0,0,e06,Location Qualifier,1,2,-,X/Z,F
+X12855,FOB,PO1:N1,1,0,0,e07,Description,1,80,-,O,F
+X12855,FOB,PO1:N1,1,0,0,e08,Risk of Loss Code,2,2,-,O/Z,F
+X12855,FOB,PO1:N1,1,0,0,e09,Description,1,80,-,X,F
+X12855,SCH,PO1:N1,200,0,1,landmark,Line Item Schedule,3,3,-,O,F
+X12855,SCH,PO1:N1,1,0,0,e01,Quantity,1,15,-,M,F
+X12855,SCH,PO1:N1,1,0,0,e02,Unit or Basis for Measurement Code,2,2,-,M,F
+X12855,SCH,PO1:N1,1,0,0,e03,Entity Identifier Code,2,3,-,O,F
+X12855,SCH,PO1:N1,1,0,0,e04,Name,1,60,-,X,F
+X12855,SCH,PO1:N1,1,0,0,e05,Date/Time Qualifier,3,3,-,M,F
+X12855,SCH,PO1:N1,1,0,0,e06,Date,8,8,-,M,F
+X12855,SCH,PO1:N1,1,0,0,e07,Time,4,8,-,O,F
+X12855,SCH,PO1:N1,1,0,0,e08,Date/Time Qualifier,3,3,-,X,F
+X12855,SCH,PO1:N1,1,0,0,e09,Date,8,8,-,X,F
+X12855,SCH,PO1:N1,1,0,0,e10,Time,4,8,-,X,F
+X12855,SCH,PO1:N1,1,0,0,e11,Request Reference Number,1,45,-,O,F
+X12855,SCH,PO1:N1,1,0,0,e12,Assigned Identification,1,20,-,O/Z,F
+X12855,TD1,PO1:N1,2,0,1,landmark,Carrier Details (Quantity and Weight),3,3,-,O,F
+X12855,TD1,PO1:N1,1,0,0,e01,Packaging Code,3,5,-,O,F
+X12855,TD1,PO1:N1,1,0,0,e02,Lading Quantity,1,7,-,X,F
+X12855,TD1,PO1:N1,1,0,0,e03,Commodity Code Qualifier,1,1,-,O,F
+X12855,TD1,PO1:N1,1,0,0,e04,Commodity Code,1,30,-,X,F
+X12855,TD1,PO1:N1,1,0,0,e05,Lading Description,1,50,-,O,F
+X12855,TD1,PO1:N1,1,0,0,e06,Weight Qualifier,1,2,-,O,F
+X12855,TD1,PO1:N1,1,0,0,e07,Weight,1,10,-,X,F
+X12855,TD1,PO1:N1,1,0,0,e08,Unit or Basis for Measurement Code,2,2,-,X,F
+X12855,TD1,PO1:N1,1,0,0,e09,Volume,1,8,-,X,F
+X12855,TD1,PO1:N1,1,0,0,e10,Unit or Basis for Measurement Code,2,2,-,X,F
+X12855,TD5,PO1:N1,12,0,1,landmark,Carrier Details (Routing Sequence/Transit Time),3,3,-,O,F
+X12855,TD5,PO1:N1,1,0,0,e01,Routing Sequence Code,1,2,-,O,F
+X12855,TD5,PO1:N1,1,0,0,e02,Identification Code Qualifier,1,2,-,X,F
+X12855,TD5,PO1:N1,1,0,0,e03,Identification Code,2,80,-,X,F
+X12855,TD5,PO1:N1,1,0,0,e04,Transportation Method/Type Code,1,2,-,X,F
+X12855,TD5,PO1:N1,1,0,0,e05,Routing,1,35,-,X,F
+X12855,TD5,PO1:N1,1,0,0,e06,Shipment/Order Status Code,2,2,-,X,F
+X12855,TD5,PO1:N1,1,0,0,e07,Location Qualifier,1,2,-,O,F
+X12855,TD5,PO1:N1,1,0,0,e08,Location Identifier,1,30,-,X,F
+X12855,TD5,PO1:N1,1,0,0,e09,Transit Direction Code,2,2,-,O,F
+X12855,TD5,PO1:N1,1,0,0,e10,Transit Time Direction Qualifier,2,2,-,O,F
+X12855,TD5,PO1:N1,1,0,0,e11,Transit Time,1,4,-,X,F
+X12855,TD5,PO1:N1,1,0,0,e12,Service Level Code,2,2,-,X,F
+X12855,TD5,PO1:N1,1,0,0,e13,Service Level Code,2,2,-,X,F
+X12855,TD5,PO1:N1,1,0,0,e14,Service Level Code,2,2,-,O,F
+X12855,TD5,PO1:N1,1,0,0,e15,Country Code,2,3,-,O/Z,F
+X12855,TD3,PO1:N1,12,0,1,landmark,Carrier Details (Equipment),3,3,-,O,F
+X12855,TD3,PO1:N1,1,0,0,e01,Equipment Description Code,2,2,-,X,F
+X12855,TD3,PO1:N1,1,0,0,e02,Equipment Initial,1,4,-,O,F
+X12855,TD3,PO1:N1,1,0,0,e03,Equipment Number,1,15,-,X,F
+X12855,TD3,PO1:N1,1,0,0,e04,Weight Qualifier,1,2,-,O,F
+X12855,TD3,PO1:N1,1,0,0,e05,Weight,1,10,-,X,F
+X12855,TD3,PO1:N1,1,0,0,e06,Unit or Basis for Measurement Code,2,2,-,X,F
+X12855,TD3,PO1:N1,1,0,0,e07,Ownership Code,1,1,-,O,F
+X12855,TD3,PO1:N1,1,0,0,e08,Seal Status Code,2,2,-,O,F
+X12855,TD3,PO1:N1,1,0,0,e09,Seal Number,2,15,-,O,F
+X12855,TD3,PO1:N1,1,0,0,e10,Equipment Type,4,4,-,X,F
+X12855,TD4,PO1:N1,5,0,1,landmark,Carrier Details (Special Handling or Hazardous Materials or Both),3,3,-,O,F
+X12855,TD4,PO1:N1,1,0,0,e01,Special Handling Code,2,3,-,X,F
+X12855,TD4,PO1:N1,1,0,0,e02,Hazardous Material Code Qualifier,1,1,-,X,F
+X12855,TD4,PO1:N1,1,0,0,e03,Hazardous Material Class Code,1,4,-,X,F
+X12855,TD4,PO1:N1,1,0,0,e04,Description,1,80,-,X,F
+X12855,TD4,PO1:N1,1,0,0,e05,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12855,QTY,PO1:N1,99999,0,1,landmark,Quantity Information,3,3,-,O,F
+X12855,QTY,PO1:N1,1,0,0,e01,Quantity Qualifier,2,2,-,M,F
+X12855,QTY,PO1:N1,1,0,0,e02,Quantity,1,15,-,X,F
+X12855,QTY,PO1:N1,1,0,0,e04,Free-form Information,1,30,-,X/Z,F
+X12855,PKG,PO1:N1,25,0,1,landmark,Marking Packaging Loading,3,3,-,O,F
+X12855,PKG,PO1:N1,1,0,0,e01,Item Description Type,1,1,-,X,F
+X12855,PKG,PO1:N1,1,0,0,e02,Packaging Characteristic Code,1,5,-,O,F
+X12855,PKG,PO1:N1,1,0,0,e03,Agency Qualifier Code,2,2,-,X,F
+X12855,PKG,PO1:N1,1,0,0,e04,Packaging Description Code,1,7,-,X/Z,F
+X12855,PKG,PO1:N1,1,0,0,e05,Description,1,80,-,X,F
+X12855,PKG,PO1:N1,1,0,0,e06,Unit Load Option Code,2,2,-,X,F
+X12855,N1,,0,0,0,groupend,,0,0,,,F
+X12855,SLN,PO1,1000,1,1,landmark,Subline Item Detail,3,3,-,O,F
+X12855,SLN,PO1,1,0,0,e01,Assigned Identification,1,20,-,M/Z,F
+X12855,SLN,PO1,1,0,0,e02,Assigned Identification,1,20,-,O/Z,F
+X12855,SLN,PO1,1,0,0,e03,Relationship Code,1,1,-,M/Z,F
+X12855,SLN,PO1,1,0,0,e04,Quantity,1,15,-,X,F
+X12855,SLN,PO1,1,0,0,e06,Unit Price,1,17,-,X,F
+X12855,SLN,PO1,1,0,0,e07,Basis of Unit Price Code,2,2,-,O,F
+X12855,SLN,PO1,1,0,0,e08,Relationship Code,1,1,-,O/Z,F
+X12855,SLN,PO1,1,0,0,e09,Product/Service ID Qualifier,2,2,-,X,F
+X12855,SLN,PO1,1,0,0,e10,Product/Service ID,1,48,-,X,F
+X12855,SLN,PO1,1,0,0,e11,Product/Service ID Qualifier,2,2,-,X,F
+X12855,SLN,PO1,1,0,0,e12,Product/Service ID,1,48,-,X,F
+X12855,SLN,PO1,1,0,0,e13,Product/Service ID Qualifier,2,2,-,X,F
+X12855,SLN,PO1,1,0,0,e14,Product/Service ID,1,48,-,X,F
+X12855,SLN,PO1,1,0,0,e15,Product/Service ID Qualifier,2,2,-,X,F
+X12855,SLN,PO1,1,0,0,e16,Product/Service ID,1,48,-,X,F
+X12855,SLN,PO1,1,0,0,e17,Product/Service ID Qualifier,2,2,-,X,F
+X12855,SLN,PO1,1,0,0,e18,Product/Service ID,1,48,-,X,F
+X12855,SLN,PO1,1,0,0,e19,Product/Service ID Qualifier,2,2,-,X,F
+X12855,SLN,PO1,1,0,0,e20,Product/Service ID,1,48,-,X,F
+X12855,SLN,PO1,1,0,0,e21,Product/Service ID Qualifier,2,2,-,X,F
+X12855,SLN,PO1,1,0,0,e22,Product/Service ID,1,48,-,X,F
+X12855,SLN,PO1,1,0,0,e23,Product/Service ID Qualifier,2,2,-,X,F
+X12855,SLN,PO1,1,0,0,e24,Product/Service ID,1,48,-,X,F
+X12855,SLN,PO1,1,0,0,e25,Product/Service ID Qualifier,2,2,-,X,F
+X12855,SLN,PO1,1,0,0,e26,Product/Service ID,1,48,-,X,F
+X12855,SLN,PO1,1,0,0,e27,Product/Service ID Qualifier,2,2,-,X,F
+X12855,SLN,PO1,1,0,0,e28,Product/Service ID,1,48,-,X,F
+X12855,MTX,PO1:SLN,99999,0,1,landmark,Text,3,3,-,O,F
+X12855,MTX,PO1:SLN,1,0,0,e01,Note Reference Code,3,3,-,O,F
+X12855,MTX,PO1:SLN,1,0,0,e02,Textual Data,1,4096,-,X,F
+X12855,MTX,PO1:SLN,1,0,0,e03,Textual Data,1,4096,-,O,F
+X12855,MTX,PO1:SLN,1,0,0,e04,Printer Carriage Control Code,2,2,-,X,F
+X12855,MTX,PO1:SLN,1,0,0,e05,Number,1,9,-,O/Z,F
+X12855,MTX,PO1:SLN,1,0,0,e06,Language Code,2,3,-,O,F
+X12855,SI,PO1:SLN,99999,0,1,landmark,Service Characteristic Identification,2,2,-,O,F
+X12855,SI,PO1:SLN,1,0,0,e01,Agency Qualifier Code,2,2,-,M,F
+X12855,SI,PO1:SLN,1,0,0,e02,Service Characteristics Qualifier,2,3,-,M,F
+X12855,SI,PO1:SLN,1,0,0,e03,Product/Service ID,1,48,-,M,F
+X12855,SI,PO1:SLN,1,0,0,e04,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:SLN,1,0,0,e05,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:SLN,1,0,0,e06,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:SLN,1,0,0,e07,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:SLN,1,0,0,e08,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:SLN,1,0,0,e09,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:SLN,1,0,0,e10,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:SLN,1,0,0,e11,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:SLN,1,0,0,e12,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:SLN,1,0,0,e13,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:SLN,1,0,0,e14,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:SLN,1,0,0,e15,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:SLN,1,0,0,e16,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:SLN,1,0,0,e17,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:SLN,1,0,0,e18,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:SLN,1,0,0,e19,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:SLN,1,0,0,e20,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:SLN,1,0,0,e21,Product/Service ID,1,48,-,X,F
+X12855,PID,PO1:SLN,1000,0,1,landmark,Product/Item Description,3,3,-,O,F
+X12855,PID,PO1:SLN,1,0,0,e01,Item Description Type,1,1,-,M,F
+X12855,PID,PO1:SLN,1,0,0,e02,Product/Process Characteristic Code,2,3,-,O,F
+X12855,PID,PO1:SLN,1,0,0,e03,Agency Qualifier Code,2,2,-,X/Z,F
+X12855,PID,PO1:SLN,1,0,0,e04,Product Description Code,1,12,-,X/Z,F
+X12855,PID,PO1:SLN,1,0,0,e05,Description,1,80,-,X,F
+X12855,PID,PO1:SLN,1,0,0,e06,Surface/Layer/Position Code,2,2,-,O,F
+X12855,PID,PO1:SLN,1,0,0,e07,Source Subqualifier,1,15,-,O,F
+X12855,PID,PO1:SLN,1,0,0,e08,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12855,PID,PO1:SLN,1,0,0,e09,Language Code,2,3,-,O/Z,F
+X12855,PO3,PO1:SLN,25,0,1,landmark,Additional Item Detail,3,3,-,O,F
+X12855,PO3,PO1:SLN,1,0,0,e01,Change Reason Code,2,2,-,M,F
+X12855,PO3,PO1:SLN,1,0,0,e02,Date,8,8,-,O,F
+X12855,PO3,PO1:SLN,1,0,0,e03,Price Identifier Code,3,3,-,X,F
+X12855,PO3,PO1:SLN,1,0,0,e04,Unit Price,1,17,-,O,F
+X12855,PO3,PO1:SLN,1,0,0,e05,Basis of Unit Price Code,2,2,-,X,F
+X12855,PO3,PO1:SLN,1,0,0,e06,Quantity,1,15,-,M,F
+X12855,PO3,PO1:SLN,1,0,0,e07,Unit or Basis for Measurement Code,2,2,-,M,F
+X12855,PO3,PO1:SLN,1,0,0,e08,Description,1,80,-,O,F
+X12855,MEA,PO1:SLN,99999,0,1,landmark,Measurements,3,3,-,O,F
+X12855,MEA,PO1:SLN,1,0,0,e01,Measurement Reference ID Code,2,2,-,O,F
+X12855,MEA,PO1:SLN,1,0,0,e02,Measurement Qualifier,1,3,-,O,F
+X12855,MEA,PO1:SLN,1,0,0,e03,Measurement Value,1,20,-,X,F
+X12855,MEA,PO1:SLN,1,0,0,e05,Range Minimum,1,20,-,X,F
+X12855,MEA,PO1:SLN,1,0,0,e06,Range Maximum,1,20,-,X,F
+X12855,MEA,PO1:SLN,1,0,0,e07,Measurement Significance Code,2,2,-,O,F
+X12855,MEA,PO1:SLN,1,0,0,e08,Measurement Attribute Code,2,2,-,X,F
+X12855,MEA,PO1:SLN,1,0,0,e09,Surface/Layer/Position Code,2,2,-,O,F
+X12855,MEA,PO1:SLN,1,0,0,e10,Measurement Method or Device,2,4,-,O,F
+X12855,MEA,PO1:SLN,1,0,0,e11,Code List Qualifier Code,1,3,-,X/Z,F
+X12855,MEA,PO1:SLN,1,0,0,e12,Industry Code,1,30,-,X/Z,F
+X12855,CTP,PO1:SLN,25,0,1,landmark,Pricing Information,3,3,-,O,F
+X12855,CTP,PO1:SLN,1,0,0,e01,Class of Trade Code,2,2,-,O,F
+X12855,CTP,PO1:SLN,1,0,0,e02,Price Identifier Code,3,3,-,X,F
+X12855,CTP,PO1:SLN,1,0,0,e03,Unit Price,1,17,-,X,F
+X12855,CTP,PO1:SLN,1,0,0,e04,Quantity,1,15,-,X,F
+X12855,CTP,PO1:SLN,1,0,0,e06,Price Multiplier Qualifier,3,3,-,O,F
+X12855,CTP,PO1:SLN,1,0,0,e07,Multiplier,1,10,-,X/Z,F
+X12855,CTP,PO1:SLN,1,0,0,e08,Monetary Amount,1,18,-,O/Z,F
+X12855,CTP,PO1:SLN,1,0,0,e09,Basis of Unit Price Code,2,2,-,O,F
+X12855,CTP,PO1:SLN,1,0,0,e10,Condition Value,1,10,-,O,F
+X12855,CTP,PO1:SLN,1,0,0,e11,Multiple Price Quantity,1,2,-,O,F
+X12855,PAM,PO1:SLN,10,0,1,landmark,Period Amount,3,3,-,O,F
+X12855,PAM,PO1:SLN,1,0,0,e01,Quantity Qualifier,2,2,-,X,F
+X12855,PAM,PO1:SLN,1,0,0,e02,Quantity,1,15,-,X,F
+X12855,PAM,PO1:SLN,1,0,0,e04,Amount Qualifier Code,1,3,-,X,F
+X12855,PAM,PO1:SLN,1,0,0,e05,Monetary Amount,1,18,-,X,F
+X12855,PAM,PO1:SLN,1,0,0,e06,Unit of Time Period or Interval,2,2,-,X,F
+X12855,PAM,PO1:SLN,1,0,0,e07,Date/Time Qualifier,3,3,-,X,F
+X12855,PAM,PO1:SLN,1,0,0,e08,Date,8,8,-,X,F
+X12855,PAM,PO1:SLN,1,0,0,e09,Time,4,8,-,X,F
+X12855,PAM,PO1:SLN,1,0,0,e10,Date/Time Qualifier,3,3,-,X/Z,F
+X12855,PAM,PO1:SLN,1,0,0,e11,Date,8,8,-,X,F
+X12855,PAM,PO1:SLN,1,0,0,e12,Time,4,8,-,X,F
+X12855,PAM,PO1:SLN,1,0,0,e13,Percent Qualifier,1,2,-,X,F
+X12855,PAM,PO1:SLN,1,0,0,e14,Percentage as Decimal,1,10,-,X,F
+X12855,PAM,PO1:SLN,1,0,0,e15,Yes/No Condition or Response Code,1,1,-,O/Z,F
+X12855,ACK,PO1:SLN,104,0,1,landmark,Line Item Acknowledgment,3,3,-,O,F
+X12855,ACK,PO1:SLN,1,0,0,e01,Line Item Status Code,2,2,-,M,F
+X12855,ACK,PO1:SLN,1,0,0,e02,Quantity,1,15,-,X,F
+X12855,ACK,PO1:SLN,1,0,0,e03,Unit or Basis for Measurement Code,2,2,-,X,F
+X12855,ACK,PO1:SLN,1,0,0,e04,Date/Time Qualifier,3,3,-,O,F
+X12855,ACK,PO1:SLN,1,0,0,e05,Date,8,8,-,X,F
+X12855,ACK,PO1:SLN,1,0,0,e06,Request Reference Number,1,45,-,O,F
+X12855,ACK,PO1:SLN,1,0,0,e07,Product/Service ID Qualifier,2,2,-,X,F
+X12855,ACK,PO1:SLN,1,0,0,e08,Product/Service ID,1,48,-,X,F
+X12855,ACK,PO1:SLN,1,0,0,e09,Product/Service ID Qualifier,2,2,-,X,F
+X12855,ACK,PO1:SLN,1,0,0,e10,Product/Service ID,1,48,-,X,F
+X12855,ACK,PO1:SLN,1,0,0,e11,Product/Service ID Qualifier,2,2,-,X,F
+X12855,ACK,PO1:SLN,1,0,0,e12,Product/Service ID,1,48,-,X,F
+X12855,ACK,PO1:SLN,1,0,0,e13,Product/Service ID Qualifier,2,2,-,X,F
+X12855,ACK,PO1:SLN,1,0,0,e14,Product/Service ID,1,48,-,X,F
+X12855,ACK,PO1:SLN,1,0,0,e15,Product/Service ID Qualifier,2,2,-,X,F
+X12855,ACK,PO1:SLN,1,0,0,e16,Product/Service ID,1,48,-,X,F
+X12855,ACK,PO1:SLN,1,0,0,e17,Product/Service ID Qualifier,2,2,-,X,F
+X12855,ACK,PO1:SLN,1,0,0,e18,Product/Service ID,1,48,-,X,F
+X12855,ACK,PO1:SLN,1,0,0,e19,Product/Service ID Qualifier,2,2,-,X,F
+X12855,ACK,PO1:SLN,1,0,0,e20,Product/Service ID,1,48,-,X,F
+X12855,ACK,PO1:SLN,1,0,0,e21,Product/Service ID Qualifier,2,2,-,X,F
+X12855,ACK,PO1:SLN,1,0,0,e22,Product/Service ID,1,48,-,X,F
+X12855,ACK,PO1:SLN,1,0,0,e23,Product/Service ID Qualifier,2,2,-,X,F
+X12855,ACK,PO1:SLN,1,0,0,e24,Product/Service ID,1,48,-,X,F
+X12855,ACK,PO1:SLN,1,0,0,e25,Product/Service ID Qualifier,2,2,-,X,F
+X12855,ACK,PO1:SLN,1,0,0,e26,Product/Service ID,1,48,-,X,F
+X12855,ACK,PO1:SLN,1,0,0,e27,Agency Qualifier Code,2,2,-,X,F
+X12855,ACK,PO1:SLN,1,0,0,e28,Source Subqualifier,1,15,-,X,F
+X12855,ACK,PO1:SLN,1,0,0,e29,Industry Code,1,30,-,X/Z,F
+X12855,SAC,PO1:SLN,10,1,1,landmark,Service Promotion Allowance or Charge Information,3,3,-,O,F
+X12855,SAC,PO1:SLN,1,0,0,e01,Allowance or Charge Indicator,1,1,-,M/Z,F
+X12855,SAC,PO1:SLN,1,0,0,e02,Service Promotion Allowance or Charge Code,4,4,-,X,F
+X12855,SAC,PO1:SLN,1,0,0,e03,Agency Qualifier Code,2,2,-,X,F
+X12855,SAC,PO1:SLN,1,0,0,e04,Agency Service Promotion Allowance or Charge Code,1,10,-,X,F
+X12855,SAC,PO1:SLN,1,0,0,e05,Amount,1,15,-,O/Z,F
+X12855,SAC,PO1:SLN,1,0,0,e06,Allowance/Charge Percent Qualifier,1,1,-,X,F
+X12855,SAC,PO1:SLN,1,0,0,e07,Percent Decimal Format,1,6,-,X,F
+X12855,SAC,PO1:SLN,1,0,0,e08,Rate,1,9,-,O/Z,F
+X12855,SAC,PO1:SLN,1,0,0,e09,Unit or Basis for Measurement Code,2,2,-,X,F
+X12855,SAC,PO1:SLN,1,0,0,e10,Quantity,1,15,-,X/Z,F
+X12855,SAC,PO1:SLN,1,0,0,e11,Quantity,1,15,-,O,F
+X12855,SAC,PO1:SLN,1,0,0,e12,Allowance or Charge Method of Handling Code,2,2,-,O,F
+X12855,SAC,PO1:SLN,1,0,0,e13,Reference Identification,1,50,-,X/Z,F
+X12855,SAC,PO1:SLN,1,0,0,e14,Option Number,1,20,-,O/Z,F
+X12855,SAC,PO1:SLN,1,0,0,e15,Description,1,80,-,X,F
+X12855,SAC,PO1:SLN,1,0,0,e16,Language Code,2,3,-,O/Z,F
+X12855,CUR,PO1:SLN:SAC,1,0,1,landmark,Currency,3,3,-,O,F
+X12855,CUR,PO1:SLN:SAC,1,0,0,e01,Entity Identifier Code,2,3,-,M,F
+X12855,CUR,PO1:SLN:SAC,1,0,0,e02,Currency Code,3,3,-,M,F
+X12855,CUR,PO1:SLN:SAC,1,0,0,e03,Exchange Rate,4,10,-,O,F
+X12855,CUR,PO1:SLN:SAC,1,0,0,e04,Entity Identifier Code,2,3,-,O,F
+X12855,CUR,PO1:SLN:SAC,1,0,0,e05,Currency Code,3,3,-,O,F
+X12855,CUR,PO1:SLN:SAC,1,0,0,e06,Currency Market/Exchange Code,3,3,-,O,F
+X12855,CUR,PO1:SLN:SAC,1,0,0,e07,Date/Time Qualifier,3,3,-,X,F
+X12855,CUR,PO1:SLN:SAC,1,0,0,e08,Date,8,8,-,O,F
+X12855,CUR,PO1:SLN:SAC,1,0,0,e09,Time,4,8,-,O,F
+X12855,CUR,PO1:SLN:SAC,1,0,0,e10,Date/Time Qualifier,3,3,-,X,F
+X12855,CUR,PO1:SLN:SAC,1,0,0,e11,Date,8,8,-,X,F
+X12855,CUR,PO1:SLN:SAC,1,0,0,e12,Time,4,8,-,X,F
+X12855,CUR,PO1:SLN:SAC,1,0,0,e13,Date/Time Qualifier,3,3,-,X,F
+X12855,CUR,PO1:SLN:SAC,1,0,0,e14,Date,8,8,-,X,F
+X12855,CUR,PO1:SLN:SAC,1,0,0,e15,Time,4,8,-,X,F
+X12855,CUR,PO1:SLN:SAC,1,0,0,e16,Date/Time Qualifier,3,3,-,X,F
+X12855,CUR,PO1:SLN:SAC,1,0,0,e17,Date,8,8,-,X,F
+X12855,CUR,PO1:SLN:SAC,1,0,0,e18,Time,4,8,-,X,F
+X12855,CUR,PO1:SLN:SAC,1,0,0,e19,Date/Time Qualifier,3,3,-,X,F
+X12855,CUR,PO1:SLN:SAC,1,0,0,e20,Date,8,8,-,X,F
+X12855,CUR,PO1:SLN:SAC,1,0,0,e21,Time,4,8,-,X,F
+X12855,SAC,,0,0,0,groupend,,0,0,,,F
+X12855,SLN,,0,0,0,groupend,,0,0,,,F
+X12855,DTM,PO1:SLN,10,0,1,landmark,Date/Time Reference,3,3,-,O,F
+X12855,DTM,PO1:SLN,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12855,DTM,PO1:SLN,1,0,0,e02,Date,8,8,-,X,F
+X12855,DTM,PO1:SLN,1,0,0,e03,Time,4,8,-,X,F
+X12855,DTM,PO1:SLN,1,0,0,e04,Time Code,2,2,-,O,F
+X12855,DTM,PO1:SLN,1,0,0,e05,Date Time Period Format Qualifier,2,3,-,X,F
+X12855,DTM,PO1:SLN,1,0,0,e06,Date Time Period,1,35,-,X,F
+X12855,PO4,PO1:SLN,1,0,1,landmark,Item Physical Details,3,3,-,O,F
+X12855,PO4,PO1:SLN,1,0,0,e01,Pack,1,6,-,O,F
+X12855,PO4,PO1:SLN,1,0,0,e02,Size,1,8,-,X,F
+X12855,PO4,PO1:SLN,1,0,0,e03,Unit or Basis for Measurement Code,2,2,-,X,F
+X12855,PO4,PO1:SLN,1,0,0,e04,Packaging Code,3,5,-,X,F
+X12855,PO4,PO1:SLN,1,0,0,e05,Weight Qualifier,1,2,-,O,F
+X12855,PO4,PO1:SLN,1,0,0,e06,Gross Weight per Pack,1,9,-,X,F
+X12855,PO4,PO1:SLN,1,0,0,e07,Unit or Basis for Measurement Code,2,2,-,X,F
+X12855,PO4,PO1:SLN,1,0,0,e08,Gross Volume per Pack,1,9,-,X,F
+X12855,PO4,PO1:SLN,1,0,0,e09,Unit or Basis for Measurement Code,2,2,-,X,F
+X12855,PO4,PO1:SLN,1,0,0,e10,Length,1,8,-,X,F
+X12855,PO4,PO1:SLN,1,0,0,e11,Width,1,8,-,X,F
+X12855,PO4,PO1:SLN,1,0,0,e12,Height,1,8,-,X,F
+X12855,PO4,PO1:SLN,1,0,0,e13,Unit or Basis for Measurement Code,2,2,-,X,F
+X12855,PO4,PO1:SLN,1,0,0,e14,Inner Pack,1,6,-,O,F
+X12855,PO4,PO1:SLN,1,0,0,e15,Surface/Layer/Position Code,2,2,-,O/Z,F
+X12855,PO4,PO1:SLN,1,0,0,e16,Assigned Identification,1,20,-,X/Z,F
+X12855,PO4,PO1:SLN,1,0,0,e17,Assigned Identification,1,20,-,O/Z,F
+X12855,PO4,PO1:SLN,1,0,0,e18,Number,1,9,-,O/Z,F
+X12855,TAX,PO1:SLN,3,0,1,landmark,Tax Reference,3,3,-,O,F
+X12855,TAX,PO1:SLN,1,0,0,e01,Tax Identification Number,1,20,-,X,F
+X12855,TAX,PO1:SLN,1,0,0,e02,Location Qualifier,1,2,-,X,F
+X12855,TAX,PO1:SLN,1,0,0,e03,Location Identifier,1,30,-,X,F
+X12855,TAX,PO1:SLN,1,0,0,e04,Location Qualifier,1,2,-,X,F
+X12855,TAX,PO1:SLN,1,0,0,e05,Location Identifier,1,30,-,X,F
+X12855,TAX,PO1:SLN,1,0,0,e06,Location Qualifier,1,2,-,X,F
+X12855,TAX,PO1:SLN,1,0,0,e07,Location Identifier,1,30,-,X,F
+X12855,TAX,PO1:SLN,1,0,0,e08,Location Qualifier,1,2,-,X,F
+X12855,TAX,PO1:SLN,1,0,0,e09,Location Identifier,1,30,-,X,F
+X12855,TAX,PO1:SLN,1,0,0,e10,Location Qualifier,1,2,-,X,F
+X12855,TAX,PO1:SLN,1,0,0,e11,Location Identifier,1,30,-,X,F
+X12855,TAX,PO1:SLN,1,0,0,e12,Tax Exempt Code,1,1,-,O,F
+X12855,TAX,PO1:SLN,1,0,0,e13,Customs Entry Type Group Code,1,1,-,O,F
+X12855,ADV,PO1:SLN,99999,0,1,landmark,Advertising Demographic Information,3,3,-,O,F
+X12855,ADV,PO1:SLN,1,0,0,e01,Agency Qualifier Code,2,2,-,M,F
+X12855,ADV,PO1:SLN,1,0,0,e02,Service Characteristics Qualifier,2,3,-,M,F
+X12855,ADV,PO1:SLN,1,0,0,e03,Range Minimum,1,20,-,O,F
+X12855,ADV,PO1:SLN,1,0,0,e04,Range Maximum,1,20,-,O,F
+X12855,ADV,PO1:SLN,1,0,0,e05,Category,1,6,-,O,F
+X12855,ADV,PO1:SLN,1,0,0,e06,Service Characteristics Qualifier,2,3,-,X,F
+X12855,ADV,PO1:SLN,1,0,0,e07,Measurement Value,1,20,-,X,F
+X12855,QTY,PO1:SLN,99999,1,1,landmark,Quantity Information,3,3,-,O,F
+X12855,QTY,PO1:SLN,1,0,0,e01,Quantity Qualifier,2,2,-,M,F
+X12855,QTY,PO1:SLN,1,0,0,e02,Quantity,1,15,-,X,F
+X12855,QTY,PO1:SLN,1,0,0,e04,Free-form Information,1,30,-,X/Z,F
+X12855,SI,PO1:SLN:QTY,99999,0,1,landmark,Service Characteristic Identification,2,2,-,O,F
+X12855,SI,PO1:SLN:QTY,1,0,0,e01,Agency Qualifier Code,2,2,-,M,F
+X12855,SI,PO1:SLN:QTY,1,0,0,e02,Service Characteristics Qualifier,2,3,-,M,F
+X12855,SI,PO1:SLN:QTY,1,0,0,e03,Product/Service ID,1,48,-,M,F
+X12855,SI,PO1:SLN:QTY,1,0,0,e04,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:SLN:QTY,1,0,0,e05,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:SLN:QTY,1,0,0,e06,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:SLN:QTY,1,0,0,e07,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:SLN:QTY,1,0,0,e08,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:SLN:QTY,1,0,0,e09,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:SLN:QTY,1,0,0,e10,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:SLN:QTY,1,0,0,e11,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:SLN:QTY,1,0,0,e12,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:SLN:QTY,1,0,0,e13,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:SLN:QTY,1,0,0,e14,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:SLN:QTY,1,0,0,e15,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:SLN:QTY,1,0,0,e16,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:SLN:QTY,1,0,0,e17,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:SLN:QTY,1,0,0,e18,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:SLN:QTY,1,0,0,e19,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:SLN:QTY,1,0,0,e20,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:SLN:QTY,1,0,0,e21,Product/Service ID,1,48,-,X,F
+X12855,QTY,,0,0,0,groupend,,0,0,,,F
+X12855,SLN,,0,0,0,groupend,,0,0,,,F
+X12855,N9,PO1:SLN,99999,1,1,landmark,Extended Reference Information,2,2,-,O,F
+X12855,N9,PO1:SLN,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12855,N9,PO1:SLN,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12855,N9,PO1:SLN,1,0,0,e03,Free-form Description,1,45,-,X,F
+X12855,N9,PO1:SLN,1,0,0,e04,Date,8,8,-,O,F
+X12855,N9,PO1:SLN,1,0,0,e05,Time,4,8,-,X,F
+X12855,N9,PO1:SLN,1,0,0,e06,Time Code,2,2,-,O/Z,F
+X12855,DTM,PO1:SLN:N9,99999,0,1,landmark,Date/Time Reference,3,3,-,O,F
+X12855,DTM,PO1:SLN:N9,1,0,0,e01,Date/Time Qualifier,3,3,-,M,F
+X12855,DTM,PO1:SLN:N9,1,0,0,e02,Date,8,8,-,X,F
+X12855,DTM,PO1:SLN:N9,1,0,0,e03,Time,4,8,-,X,F
+X12855,DTM,PO1:SLN:N9,1,0,0,e04,Time Code,2,2,-,O,F
+X12855,DTM,PO1:SLN:N9,1,0,0,e05,Date Time Period Format Qualifier,2,3,-,X,F
+X12855,DTM,PO1:SLN:N9,1,0,0,e06,Date Time Period,1,35,-,X,F
+X12855,MTX,PO1:SLN:N9,99999,0,1,landmark,Text,3,3,-,O,F
+X12855,MTX,PO1:SLN:N9,1,0,0,e01,Note Reference Code,3,3,-,O,F
+X12855,MTX,PO1:SLN:N9,1,0,0,e02,Textual Data,1,4096,-,X,F
+X12855,MTX,PO1:SLN:N9,1,0,0,e03,Textual Data,1,4096,-,O,F
+X12855,MTX,PO1:SLN:N9,1,0,0,e04,Printer Carriage Control Code,2,2,-,X,F
+X12855,MTX,PO1:SLN:N9,1,0,0,e05,Number,1,9,-,O/Z,F
+X12855,MTX,PO1:SLN:N9,1,0,0,e06,Language Code,2,3,-,O,F
+X12855,N9,,0,0,0,groupend,,0,0,,,F
+X12855,SLN,,0,0,0,groupend,,0,0,,,F
+X12855,N1,PO1:SLN,10,1,1,landmark,Party Identification,2,2,-,O,F
+X12855,N1,PO1:SLN,1,0,0,e01,Entity Identifier Code,2,3,-,M,F
+X12855,N1,PO1:SLN,1,0,0,e02,Name,1,60,-,X,F
+X12855,N1,PO1:SLN,1,0,0,e03,Identification Code Qualifier,1,2,-,X,F
+X12855,N1,PO1:SLN,1,0,0,e04,Identification Code,2,80,-,X,F
+X12855,N1,PO1:SLN,1,0,0,e05,Entity Relationship Code,2,2,-,O,F
+X12855,N1,PO1:SLN,1,0,0,e06,Entity Identifier Code,2,3,-,O,F
+X12855,N2,PO1:SLN:N1,2,0,1,landmark,Additional Name Information,2,2,-,O,F
+X12855,N2,PO1:SLN:N1,1,0,0,e01,Name,1,60,-,M,F
+X12855,N2,PO1:SLN:N1,1,0,0,e02,Name,1,60,-,O,F
+X12855,IN2,PO1:SLN:N1,99999,0,1,landmark,Individual Name Structure Components,3,3,-,O,F
+X12855,IN2,PO1:SLN:N1,1,0,0,e01,Name Component Qualifier,2,2,-,M,F
+X12855,IN2,PO1:SLN:N1,1,0,0,e02,Name,1,60,-,M,F
+X12855,IN2,PO1:SLN:N1,1,0,0,e03,Name,1,60,-,O,F
+X12855,N3,PO1:SLN:N1,2,0,1,landmark,Party Location,2,2,-,O,F
+X12855,N3,PO1:SLN:N1,1,0,0,e01,Address Information,1,55,-,M,F
+X12855,N3,PO1:SLN:N1,1,0,0,e02,Address Information,1,55,-,O,F
+X12855,N4,PO1:SLN:N1,1,0,1,landmark,Geographic Location,2,2,-,O,F
+X12855,N4,PO1:SLN:N1,1,0,0,e01,City Name,2,30,-,O,F
+X12855,N4,PO1:SLN:N1,1,0,0,e02,State or Province Code,2,2,-,X,F
+X12855,N4,PO1:SLN:N1,1,0,0,e03,Postal Code,3,15,-,O,F
+X12855,N4,PO1:SLN:N1,1,0,0,e04,Country Code,2,3,-,X,F
+X12855,N4,PO1:SLN:N1,1,0,0,e05,Location Qualifier,1,2,-,X,F
+X12855,N4,PO1:SLN:N1,1,0,0,e06,Location Identifier,1,30,-,O,F
+X12855,N4,PO1:SLN:N1,1,0,0,e07,Country Subdivision Code,1,3,-,X,F
+X12855,NX2,PO1:SLN:N1,99999,0,1,landmark,Location ID Component,3,3,-,O,F
+X12855,NX2,PO1:SLN:N1,1,0,0,e01,Address Component Qualifier,2,2,-,M,F
+X12855,NX2,PO1:SLN:N1,1,0,0,e02,Address Information,1,55,-,M,F
+X12855,NX2,PO1:SLN:N1,1,0,0,e03,County Designator,5,5,-,O,F
+X12855,NX2,PO1:SLN:N1,1,0,0,e04,Address Component Qualifier,2,2,-,X/Z,F
+X12855,NX2,PO1:SLN:N1,1,0,0,e05,Address Information,1,55,-,X,F
+X12855,REF,PO1:SLN:N1,12,0,1,landmark,Reference Information,3,3,-,O,F
+X12855,REF,PO1:SLN:N1,1,0,0,e01,Reference Identification Qualifier,2,3,-,M,F
+X12855,REF,PO1:SLN:N1,1,0,0,e02,Reference Identification,1,50,-,X,F
+X12855,REF,PO1:SLN:N1,1,0,0,e03,Description,1,80,-,X,F
+X12855,PER,PO1:SLN:N1,3,0,1,landmark,Administrative Communications Contact,3,3,-,O,F
+X12855,PER,PO1:SLN:N1,1,0,0,e01,Contact Function Code,2,2,-,M,F
+X12855,PER,PO1:SLN:N1,1,0,0,e02,Name,1,60,-,O,F
+X12855,PER,PO1:SLN:N1,1,0,0,e03,Communication Number Qualifier,2,2,-,X,F
+X12855,PER,PO1:SLN:N1,1,0,0,e04,Communication Number,1,256,-,X,F
+X12855,PER,PO1:SLN:N1,1,0,0,e05,Communication Number Qualifier,2,2,-,X,F
+X12855,PER,PO1:SLN:N1,1,0,0,e06,Communication Number,1,256,-,X,F
+X12855,PER,PO1:SLN:N1,1,0,0,e07,Communication Number Qualifier,2,2,-,X,F
+X12855,PER,PO1:SLN:N1,1,0,0,e08,Communication Number,1,256,-,X,F
+X12855,PER,PO1:SLN:N1,1,0,0,e09,Contact Inquiry Reference,1,20,-,O,F
+X12855,SI,PO1:SLN:N1,99999,0,1,landmark,Service Characteristic Identification,2,2,-,O,F
+X12855,SI,PO1:SLN:N1,1,0,0,e01,Agency Qualifier Code,2,2,-,M,F
+X12855,SI,PO1:SLN:N1,1,0,0,e02,Service Characteristics Qualifier,2,3,-,M,F
+X12855,SI,PO1:SLN:N1,1,0,0,e03,Product/Service ID,1,48,-,M,F
+X12855,SI,PO1:SLN:N1,1,0,0,e04,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:SLN:N1,1,0,0,e05,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:SLN:N1,1,0,0,e06,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:SLN:N1,1,0,0,e07,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:SLN:N1,1,0,0,e08,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:SLN:N1,1,0,0,e09,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:SLN:N1,1,0,0,e10,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:SLN:N1,1,0,0,e11,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:SLN:N1,1,0,0,e12,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:SLN:N1,1,0,0,e13,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:SLN:N1,1,0,0,e14,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:SLN:N1,1,0,0,e15,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:SLN:N1,1,0,0,e16,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:SLN:N1,1,0,0,e17,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:SLN:N1,1,0,0,e18,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:SLN:N1,1,0,0,e19,Product/Service ID,1,48,-,X,F
+X12855,SI,PO1:SLN:N1,1,0,0,e20,Service Characteristics Qualifier,2,3,-,X,F
+X12855,SI,PO1:SLN:N1,1,0,0,e21,Product/Service ID,1,48,-,X,F
+X12855,N1,,0,0,0,groupend,,0,0,,,F
+X12855,SLN,,0,0,0,groupend,,0,0,,,F
+X12855,PO1,,0,0,0,groupend,,0,0,,,F
+X12855,CTT,,1,1,1,landmark,Transaction Totals,3,3,-,O,F
+X12855,CTT,,1,0,0,e01,Number of Line Items,1,6,-,M,F
+X12855,CTT,,1,0,0,e02,Hash Total,1,10,-,O,F
+X12855,CTT,,1,0,0,e03,Weight,1,10,-,X,F
+X12855,CTT,,1,0,0,e04,Unit or Basis for Measurement Code,2,2,-,X,F
+X12855,CTT,,1,0,0,e05,Volume,1,8,-,X,F
+X12855,CTT,,1,0,0,e06,Unit or Basis for Measurement Code,2,2,-,X,F
+X12855,CTT,,1,0,0,e07,Description,1,80,-,O,F
+X12855,AMT,CTT,1,0,1,landmark,Monetary Amount Information,3,3,-,O,F
+X12855,AMT,CTT,1,0,0,e01,Amount Qualifier Code,1,3,-,M,F
+X12855,AMT,CTT,1,0,0,e02,Monetary Amount,1,18,-,M,F
+X12855,AMT,CTT,1,0,0,e03,Credit/Debit Flag Code,1,1,-,O,F
+X12855,CTT,,0,0,0,groupend,,0,0,,,F
+X12855,SE,,1,0,1,landmark,Transaction Set Trailer,2,2,-,M,F
+X12855,SE,,1,0,0,e01,Number of Included Segments,1,10,-,M,F
+X12855,SE,,1,0,0,e02,Transaction Set Control Number,4,9,-,M,F

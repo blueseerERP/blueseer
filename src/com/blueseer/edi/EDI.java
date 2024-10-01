@@ -45,8 +45,11 @@ import static com.blueseer.frt.frtData.addCFOTransaction;
 import static com.blueseer.frt.frtData.getCFOPrevious;
 import com.blueseer.ord.ordData;
 import static com.blueseer.ord.ordData.addOrderTransaction;
+import com.blueseer.ord.ordData.so_mstr;
 import com.blueseer.pur.purData;
+import com.blueseer.pur.purData.po_mstr;
 import com.blueseer.shp.shpData;
+import com.blueseer.shp.shpData.ship_mstr;
 import com.blueseer.utl.EDData;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
@@ -3879,40 +3882,42 @@ public class EDI {
         // errorcode = 2 ... any catch error below ...try running from command line to see trace dump
         // errorcode = 3 ... error in map...see edi log
         
-        String billto = "";
-        String doctype = "856";
+        
+        String doctype = "856db";
         String map = "";
         ArrayList<String[]> messages = new ArrayList<String[]>();
          
-        // lets determine the billto of this shipper
-        billto = shpData.getShipperBillto(shipper);
+        
+        ship_mstr sh = shpData.getShipMstr(new String[]{shipper});
         
         
-        messages.add(new String[]{"info","exporting shipper: " + shipper + " for billto: " + billto});
+        messages.add(new String[]{"info","exporting shipper: " + shipper + " for billto: " + sh.sh_cust()});
         
         int comkey = OVData.getNextNbr("edilog");
         
         String[] c = initEDIControl();   
         
         c[1] = doctype;
-        c[2] = map;
+        c[2] = "";
         c[3] = "";
         c[4] = "";
         c[5] = "";
         c[6] = "";
         c[7] = shipper;
         c[15] = "0"; // dir out
-        c[12] = "0"; // is override
+        c[12] = ""; // is override
         c[22] = String.valueOf(comkey);
         c[28] = "DB";
         c[17] = "0";
         c[18] = "999999";
         c[19] = "0";
         c[20] = "999999";
+        c[29] = "X12";
+        c[39] = sh.sh_site();
         
         // get Delimiters from Cust Defaults
         
-        String[] ids = EDData.getEDIXrefOut(billto, "SH");
+        String[] ids = EDData.getEDIXrefOut(sh.sh_cust(), "SH");
         messages.add(new String[]{"info","edi_xref: " + ids[0] + "/" + ids[1] + "/" + ids[2] + "/" + ids[3] + "/" + ids[4]});
         
         String[] defaults = EDData.getEDITPDefaults(doctype, EDData.getEDIgsid(), ids[1]  ); //810, ourGS, theirsGS
@@ -3935,9 +3940,11 @@ public class EDI {
         messages.add(new String[]{"info","searching for map with: " + c[1] + "/" + defaults[2] + "/" + defaults[5]});
         map = EDData.getEDIMap(c[1], defaults[2], defaults[5]);
         
+        c[2] = map;
+        
         if (map.isEmpty()) {
             errorcode = 1;
-            messages.add(new String[]{"error","856: map String is empty for billto/gs02/gs03/doc: " + billto + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
+            messages.add(new String[]{"error","856: map String is empty for billto/gs02/gs03/doc: " + sh.sh_cust() + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
             EDData.writeEDILogMulti(c, messages);
             messages.clear();  // clear message here
             return errorcode;
@@ -3945,7 +3952,7 @@ public class EDI {
           
         if (! BlueSeerUtils.isEDIClassFile(map)) {
             errorcode = 1;
-            messages.add(new String[]{"error","856: unable to locate compiled map (" + map + ") billto/gs02/gs03/doc: " + billto + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
+            messages.add(new String[]{"error","856: unable to locate compiled map (" + map + ") billto/gs02/gs03/doc: " + sh.sh_cust() + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
             EDData.writeEDILogMulti(c, messages);
             messages.clear();  // clear message here
             return errorcode;
@@ -4010,39 +4017,40 @@ public class EDI {
         // errorcode = 2 ... any catch error below ...try running from command line to see trace dump
         // errorcode = 3 ... error in map...see edi log
         
-        String billto = "";
-        String doctype = "855";
+        
+        String doctype = "855db";
         String map = "";
         ArrayList<String[]> messages = new ArrayList<String[]>();
          
         // lets determine the billto of this shipper
-        billto = ordData.getSOOrderBillto(order);
+        so_mstr so = ordData.getOrderMstr(new String[]{order});
         
-        
-        messages.add(new String[]{"info","exporting ack(855): " + order + " for billto: " + billto});
+        messages.add(new String[]{"info","exporting ack(855): " + order + " for billto: " + so.so_cust()});
         
         int comkey = OVData.getNextNbr("edilog");
         
         String[] c = initEDIControl();   
         
         c[1] = doctype;
-        c[2] = map;
+        c[2] = "";
         c[3] = "";
         c[4] = "";
         c[5] = "";
         c[6] = "";
         c[7] = order;
         c[15] = "0"; // dir out
-        c[12] = "0"; // is override
+        c[12] = ""; // is override
         c[22] = String.valueOf(comkey);
         c[28] = "DB";
         c[17] = "0";
         c[18] = "999999";
         c[19] = "0";
         c[20] = "999999";
+        c[29] = "X12";
+        c[39] = so.so_site();
         
         // get Delimiters from Cust Defaults
-        String[] ids = EDData.getEDIXrefOut(billto, "PR");
+        String[] ids = EDData.getEDIXrefOut(so.so_cust(), "PR");
         messages.add(new String[]{"info","edi_xref: " + ids[0] + "/" + ids[1] + "/" + ids[2] + "/" + ids[3] + "/" + ids[4]});
         // tpid, gsid, tpaddr, ovaddr, type
         
@@ -4063,9 +4071,11 @@ public class EDI {
         messages.add(new String[]{"info","searching for map with: " + c[1] + "/" + defaults[2] + "/" + defaults[5]});
         map = EDData.getEDIMap(c[1], defaults[2], defaults[5]);
         
+        c[2] = map;
+        
         if (map.isEmpty()) {
             errorcode = 1;
-            messages.add(new String[]{"error","855 map string is empty for billto/gs02/gs03/doc: " + billto + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
+            messages.add(new String[]{"error","855 map string is empty for billto/gs02/gs03/doc: " + so.so_cust() + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
             EDData.writeEDILogMulti(c, messages);
             messages.clear();  // clear message here
             return errorcode;
@@ -4073,7 +4083,7 @@ public class EDI {
           
          if (! BlueSeerUtils.isEDIClassFile(map)) {
             errorcode = 1;
-            messages.add(new String[]{"error","855: unable to locate compiled map (" + map + ") billto/gs02/gs03/doc: " + billto + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
+            messages.add(new String[]{"error","855: unable to locate compiled map (" + map + ") billto/gs02/gs03/doc: " + so.so_cust() + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
             EDData.writeEDILogMulti(c, messages);
             messages.clear();  // clear message here
             return errorcode;
@@ -4137,40 +4147,40 @@ public class EDI {
         // errorcode = 2 ... any catch error below ...try running from command line to see trace dump
         // errorcode = 3 ... error in map...see edi log
         
-        String billto = "";
-        String doctype = "810";
+        
+        String doctype = "810db";
         String map = "";
         ArrayList<String[]> messages = new ArrayList<String[]>();
          
-        // lets determine the billto of this shipper
-        billto = shpData.getShipperBillto(shipper);
+        ship_mstr sh = shpData.getShipMstr(new String[]{shipper});
         
         
-        messages.add(new String[]{"info","exporting invoice: " + shipper + " for billto: " + billto});
+        messages.add(new String[]{"info","exporting invoice: " + shipper + " for billto: " + sh.sh_cust()});
         
         int comkey = OVData.getNextNbr("edilog");
         
         String[] c = initEDIControl();   
         
         c[1] = doctype;
-        c[2] = map;
+        c[2] = "";
         c[3] = "";
         c[4] = "";
         c[5] = "";
         c[6] = "";
         c[7] = shipper;
         c[15] = "0"; // dir out
-        c[12] = "0"; // is override
+        c[12] = ""; // is override
         c[22] = String.valueOf(comkey);
         c[28] = "DB";
         c[17] = "0";
         c[18] = "999999";
         c[19] = "0";
         c[20] = "999999";
-        
+        c[29] = "X12";
+        c[39] = sh.sh_site();
         // get Delimiters from Cust Defaults
         
-        String[] ids = EDData.getEDIXrefOut(billto, "PY");
+        String[] ids = EDData.getEDIXrefOut(sh.sh_cust(), "PY");
         messages.add(new String[]{"info","edi_xref: " + ids[0] + "/" + ids[1] + "/" + ids[2] + "/" + ids[3] + "/" + ids[4]});
         
         String[] defaults = EDData.getEDITPDefaults(doctype, EDData.getEDIgsid(), ids[1]  ); //810, ourGS, theirsGS
@@ -4190,9 +4200,11 @@ public class EDI {
         messages.add(new String[]{"info","searching for map with: " + c[1] + "/" + defaults[2] + "/" + defaults[5]});
         map = EDData.getEDIMap(c[1], defaults[2], defaults[5]);
         
+        c[2] = map;
+        
           if (map.isEmpty()) {
             errorcode = 1;
-            messages.add(new String[]{"error","810: map variable is empty for billto/gs02/gs03/doc: " + billto + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
+            messages.add(new String[]{"error","810: map variable is empty for billto/gs02/gs03/doc: " + sh.sh_cust() + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
             EDData.writeEDILogMulti(c, messages);
             messages.clear();  // clear message here
             return errorcode;
@@ -4200,7 +4212,7 @@ public class EDI {
           
         if (! BlueSeerUtils.isEDIClassFile(map)) {
             errorcode = 1;
-            messages.add(new String[]{"error","810: unable to locate compiled map (" + map + ") billto/gs02/gs03/doc: " + billto + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
+            messages.add(new String[]{"error","810: unable to locate compiled map (" + map + ") billto/gs02/gs03/doc: " + sh.sh_cust() + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
             EDData.writeEDILogMulti(c, messages);
             messages.clear();  // clear message here
             return errorcode;
@@ -4263,40 +4275,40 @@ public class EDI {
         // errorcode = 2 ... any catch error below ...try running from command line to see trace dump
         // errorcode = 3 ... error in map...see edi log
         
-        String vendor = "";
-        String doctype = "850";
+        
+        String doctype = "850db";
         String map = "";
         ArrayList<String[]> messages = new ArrayList<String[]>();
          
-        // lets determine the billto of this shipper
-        vendor = purData.getPOVendor(po);
+       
+        po_mstr pom = purData.getPOMstr(new String[]{po});
         
-        
-        messages.add(new String[]{"info","exporting Purchase Order: " + po + " for billto: " + vendor});
+        messages.add(new String[]{"info","exporting Purchase Order: " + po + " for billto: " + pom.po_vend()});
         
         int comkey = OVData.getNextNbr("edilog");
         
         String[] c = initEDIControl();   
         
         c[1] = doctype;
-        c[2] = map;
+        c[2] = "";
         c[3] = "";
         c[4] = "";
         c[5] = "";
         c[6] = "";
         c[7] = po;
         c[15] = "0"; // dir out
-        c[12] = "0"; // is override
+        c[12] = ""; // is override
         c[22] = String.valueOf(comkey);
         c[28] = "DB";
         c[17] = "0";
         c[18] = "999999";
         c[19] = "0";
         c[20] = "999999";
-        
+        c[29] = "X12";
+        c[39] = pom.po_site();
         // get Delimiters from Cust Defaults
         
-        String[] ids = EDData.getEDIXrefOut(vendor, "VN");
+        String[] ids = EDData.getEDIXrefOut(pom.po_vend(), "VN");
         messages.add(new String[]{"info","edi_xref: " + ids[0] + "/" + ids[1] + "/" + ids[2] + "/" + ids[3] + "/" + ids[4]});
         
         String[] defaults = EDData.getEDITPDefaults(doctype, EDData.getEDIgsid(), ids[1]  ); //810, ourGS, theirsGS
@@ -4316,9 +4328,11 @@ public class EDI {
         messages.add(new String[]{"info","searching for map with: " + c[1] + "/" + defaults[2] + "/" + defaults[5]});
         map = EDData.getEDIMap(c[1], defaults[2], defaults[5]);
         
+        c[2] = map;
+        
           if (map.isEmpty()) {
             errorcode = 1;
-            messages.add(new String[]{"error","850o: map variable is empty for billto/gs02/gs03/doc: " + vendor + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
+            messages.add(new String[]{"error","850o: map variable is empty for billto/gs02/gs03/doc: " + pom.po_vend() + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
             EDData.writeEDILogMulti(c, messages);
             messages.clear();  // clear message here
             return errorcode;
@@ -4326,7 +4340,7 @@ public class EDI {
         
         if (! BlueSeerUtils.isEDIClassFile(map)) {
             errorcode = 1;
-            messages.add(new String[]{"error","850o: unable to locate compiled map (" + map + ") billto/gs02/gs03/doc: " + vendor + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
+            messages.add(new String[]{"error","850o: unable to locate compiled map (" + map + ") billto/gs02/gs03/doc: " + pom.po_vend() + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
             EDData.writeEDILogMulti(c, messages);
             messages.clear();  // clear message here
             return errorcode;

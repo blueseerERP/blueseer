@@ -11,12 +11,12 @@ bs850ToDB,Purchase Order to Database,generic,X12850,850db,850x12,X12,850x12,DB,e
 bs810ToDB,Invoice to Database,generic,X12810,810db,810x12,X12,810x12,DB,edi/maps/bs810ToDB.java,,1,1000
 bs204ToDB,Freight Order to Database,generic,X12204,204db,204x12,X12,204x12,DB,edi/maps/bs204ToDB.java,,1,1000
 bs855ToDB,Acknowledgment Order to Database,generic,X12855,855db,855x12,X12,855x12,DB,edi/maps/bs855ToDB.java,,1,1000
-bsDBTo850,Database to Purchase Order,generic,850db,X12850,850db,DB,850x12,X12,edi/maps/bsDBTo850.java,,1,1000
-bsDBTo856,Database to ASN,generic,856db,X12856,856db,DB,856x12,X12,edi/maps/bsDBTo856.java,,1,1000
-bsDBTo810,Database to Invoice,generic,810db,X12810,810db,DB,810x12,X12,edi/maps/bsDBTo810.java,,1,1000
-bsDBTo210,Database to Freight Invoice,generic,210db,X12210,210db,DB,210x12,X12,edi/maps/bsDBTo210.java,,1,1000
-bsDBTo855,Database to Acknowledgement,generic,855db,X12855,855db,DB,855x12,X12,bsDBTo855.java,,1,1000
-bsDBTo990,Database to Freight Acknowledgement,generic,990db,X12990,990db,DB,990x12,X12,edi/maps/bsDBTo990.java,,1,1000
+bsDBTo850,Database to Purchase Order,generic,DB,X12850,850db,DB,850x12,X12,edi/maps/bsDBTo850.java,,1,1000
+bsDBTo856,Database to ASN,generic,DB,X12856,856db,DB,856x12,X12,edi/maps/bsDBTo856.java,,1,1000
+bsDBTo810,Database to Invoice,generic,DB,X12810,810db,DB,810x12,X12,edi/maps/bsDBTo810.java,,1,1000
+bsDBTo210,Database to Freight Invoice,generic,DB,X12210,210db,DB,210x12,X12,edi/maps/bsDBTo210.java,,1,1000
+bsDBTo855,Database to Acknowledgement,generic,DB,X12855,855db,DB,855x12,X12,edi/maps/bsDBTo855.java,,1,1000
+bsDBTo990,Database to Freight Acknowledgement,generic,DB,X12990,990db,DB,990x12,X12,edi/maps/bsDBTo990.java,,1,1000
 bsCSVTo850,CSV to Purchase Order,generic,CSVGenericOrder,X12850,850csv,CSV,850x12,X12,edi/maps/bsCSVTo850.java,,0,1000
 bsUNEordersToIDOC,UNE EDIFACT ORDERS to IDOC,generic,UNEorders,IDOCorders05,850une,UNE,850idoc,FF,edi/maps/bsUNEordersToiDOC.java,,0,1000
 bsIDOCToUNEorders,SAP IDOC ORDERS05 To EDIFACT orders,,IDOCorders05,UNEorders,850idoc,FF,850une,UNE,edi/maps/bsIDOCToUNEorders.java,,0,1000

@@ -577,6 +577,56 @@ public class shpData {
         ps.close();
     }
     
+    public static ship_mstr getShipMstr(String[] x) {
+        ship_mstr r = null;
+        String[] m = new String[2];
+        String sql = "select * from ship_mstr where sh_id = ? ;";
+        try (Connection con = (ds == null ? DriverManager.getConnection(url + db, user, pass) : ds.getConnection());
+	PreparedStatement ps = con.prepareStatement(sql);) {
+        ps.setInt(1, bsParseInt(x[0]));
+             try (ResultSet res = ps.executeQuery();) {
+                if (! res.isBeforeFirst()) {
+                m = new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.noRecordFound};
+                r = new ship_mstr(m);
+                } else {
+                    while(res.next()) {
+                        m = new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess};
+                     
+                        r = new ship_mstr(m, 
+                                res.getString("sh_id"), 
+                                res.getString("sh_cust"),
+                                res.getString("sh_ship"), 
+                                res.getInt("sh_pallets"),
+                                res.getInt("sh_boxes"), 
+                                res.getString("sh_shipvia"),
+                                res.getString("sh_shipdate"), 
+                                res.getString("sh_po_date"),
+                                res.getString("sh_ref"), 
+                                res.getString("sh_po"),
+                                res.getString("sh_rmks"), 
+                                res.getString("sh_userid"),
+                                res.getString("sh_site"),
+                                res.getString("sh_curr"),
+                                res.getString("sh_wh"),
+                                res.getString("sh_cust_terms"),
+                                res.getString("sh_taxcode"),
+                                res.getString("sh_ar_acct"),
+                                res.getString("sh_ar_cc"),
+                                res.getString("sh_type"),
+                                res.getString("sh_so"),
+                                res.getString("sh_shipfrom")
+                            );
+                    }
+                }
+            } 
+        } catch (SQLException s) {   
+	       MainFrame.bslog(s);  
+               m = new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())}; 
+               r = new ship_mstr(m);
+        }
+        return r;
+    }
+   
     
     public static ship_mstr createShipMstrJRT(String nbr, String site, String bol, String billto, String shipto, String so, String po, String ref, String shipdate, String orddate, String remarks, String shipvia, String shiptype, String taxcode, String shipfrom) {
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
@@ -1887,6 +1937,53 @@ public class shpData {
          return billto;
      }
 
+    public static String getShipperSite(String shipper) {
+         String billto = "";
+          try{
+
+        Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+        Statement st = con.createStatement();
+        ResultSet res = null;
+        try{
+            
+           java.util.Date now = new java.util.Date();
+            DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat dftime = new SimpleDateFormat("HH:mm:ss");
+            String mydate = dfdate.format(now);
+
+
+
+                  res = st.executeQuery("select sh_site from ship_mstr where sh_id = " + "'" + shipper + "'" +";");
+                while (res.next()) {
+                    billto = res.getString("sh_site");
+                }
+       }
+        catch (SQLException s){
+             MainFrame.bslog(s);
+
+        } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+    }
+    catch (Exception e){
+        MainFrame.bslog(e);
+
+    }
+         return billto;
+     }
+
+    
     public static String getShipperRef(String shipper) {
          String billto = "";
           try{

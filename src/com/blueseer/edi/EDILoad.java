@@ -57,6 +57,7 @@ public static void main(String[] args) {
     String[] vs = checkargs(args);  
     String prog = vs[0];
     String[] doctypes = null;
+    String site = vs[2];
     if (vs[1] != null && ! vs[1].isEmpty()) {
      doctypes = vs[1].split(",");
     }
@@ -67,7 +68,7 @@ public static void main(String[] args) {
             runTranslation(args);
             break;
         case "exportFromDB" :
-            runExport(doctypes);
+            runExport(doctypes, site);
             break;
         default:
             System.out.println("Unable to process arguments " + myargs);
@@ -78,7 +79,7 @@ public static void main(String[] args) {
 }
 
 public static String[] checkargs(String[] args) {
-        List<String> legitargs = Arrays.asList("-i", "-o", "-debug");
+        List<String> legitargs = Arrays.asList("-i", "-o", "-debug", "-site");
      
         String[] vals = new String[9]; // last element is the program type (single or mulitiple)
         Arrays.fill(vals, "");
@@ -109,6 +110,9 @@ public static String[] checkargs(String[] args) {
                         vals[1] = args[i+1];
                         vals[0] = "exportFromDB"; 
                         break;  
+                    case "-site" :
+                        vals[2] = args[i+1];
+                        break;     
                     case "-debug" :
                         isDebug = true; 
                         break; 
@@ -247,7 +251,7 @@ public static String[] runTranslationSingleFile(Path targetfilepath) {
     return m;
 }
 
-public static void runExport(String[] docs) {
+public static void runExport(String[] docs, String site) {
         if (docs == null) {
             System.out.println("no doc list for -o exports");
             return;

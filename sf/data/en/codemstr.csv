@@ -134,6 +134,8 @@ edidoctype,837xml,XML CLAIM,1
 edixreftype,BT,bill-to,1
 edixreftype,ST,ship-to,1
 edixreftype,PY,payer,1
+edixreftype,PR,ACK xref,1
+edixreftype,SH,ASN xref,1
 edixreftype,VN,vendor,1
 edixreftype,SM,204 code,1
 edixreftype,IM,210 code,1
