@@ -89,14 +89,20 @@ import com.blueseer.utl.EDData;
         e.setDetLine(i-1,getInput(i,"PO1",1));
 
         //override incoming UOM with what is available in UOM Maintenance
-        if (getInput(i,"P01",3).equals("CS")) {
+        if (getInput(i,"PO1",3).equals("CS")) {
             uom = "CA";
         } else {
          uom = OVData.getUOMByItem(item);
         }
 
+        if (uom.isBlank()) {
+        uom = getInput(i,"PO1",3);  // take whatever is there
+        }
+
+        e.setDetUOM(i-1,uom);
+
         if (useInternalPrice) {
-        listprice = invData.getItemPriceFromCust(e.getOVBillTo(), item, uom, cusData.getCustCurrency(e.getOVBillTo()));
+        listprice = invData.getItemPriceFromCust(e.getOVBillTo(), item, uom, cusData.getCustCurrency(e.getOVBillTo()),"LIST",getInput(i,"PO1",2));
         discount = invData.getItemDiscFromCust(e.getOVBillTo());
         netprice = listprice;
         if (discount != 0) {

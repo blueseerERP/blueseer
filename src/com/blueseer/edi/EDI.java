@@ -3520,11 +3520,12 @@ public class EDI {
         ArrayList<ordData.sod_det> detail = new ArrayList<ordData.sod_det>();
         String uom;
         for (int j = 0; j < e.getDetCount(); j++ ) {
-           if (e.getDetUOM(j).isEmpty()) {
+           if (e.getDetUOM(j).isBlank()) {
                uom = OVData.getUOMByItem(e.getDetItem(j));  
            } else { 
                uom = e.getDetUOM(j);
            }
+          // System.out.println("HERE: " + uom + "/" + e.getDetItem(j) + "/" + e.getDetUOM(j));
         ordData.sod_det sod = new ordData.sod_det(null, 
                 String.valueOf(sonbr),
                 j + 1,
