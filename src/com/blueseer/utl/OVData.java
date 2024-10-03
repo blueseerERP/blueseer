@@ -13265,7 +13265,7 @@ public static Double simulateCost(String site, String item, String opvar,
          return billto;
      }
 
-    public static ArrayList getOrderWHSource(int order) {
+    public static ArrayList getOrderWHSource(String order) {
          ArrayList<String> wh = new ArrayList<String>();
           try{
 
@@ -16193,7 +16193,7 @@ return mystring;
                  }
                  
                  if (i > 0 && ! status.isEmpty() && isSourced == 0) {
-                       int error = EDI.Create940(order);
+                       int error = EDI.Create940(String.valueOf(order));
                        if (error == 0) {
                           bsmf.MainFrame.show(getMessageTag(1125));
                           updateOrderSourceFlag(order); 
@@ -16228,149 +16228,7 @@ return mystring;
             MainFrame.bslog(e);
         }
        }  
-       
-    public static void quoteFreightOrder(String order) {
-            
-           try {
-
-            
-            Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-            Statement st = con.createStatement();
-            ResultSet res = null;
-            try {
-                int isQuoted = 0;
-                int isTendered = 0; 
-                String status = "";
-                 /* check to see if order number exists */
-                 res = st.executeQuery("select fo_nbr, fo_status, fo_isquoted, fo_istendered from fo_mstr where fo_nbr = " + "'" + order + "'" + ";");
-                 int i = 0;
-                 while (res.next()) {
-                     i++;
-                     status = res.getString("fo_status");
-                     isQuoted = res.getInt("fo_isquoted");
-                     isTendered = res.getInt("fo_istendered"); 
-                 }
-                 
-                 if (isQuoted == 1) {
-                     bsmf.MainFrame.show("Order is already quoted");
-                     return;
-                 }
-                  if (isTendered == 1) {
-                     bsmf.MainFrame.show("Order is already tendered");
-                     return;
-                 }
-                 
-                 if (i > 0 && ! status.isEmpty() && isQuoted == 0 && isTendered == 0) {
-                       int error = EDI.Create219(order, "quote");
-                       if (error == 0) {
-                          bsmf.MainFrame.show("Order has been sent for Quote");
-                          updateFreightOrderQuoteFlag(order); 
-                       }
-                       if (error == 1)
-                           bsmf.MainFrame.show("Missing WH/Doctype/Dir Record in cmedi_mstr");
-
-                       if (error == 2)
-                           bsmf.MainFrame.show("Unable to retrieve wh from order");
-
-                       if (error == 3)
-                           bsmf.MainFrame.show("ClassDef and/or Invocation error");
-                      
-                 } else {
-                     bsmf.MainFrame.show("Order does not exist");
-                     return;
-                 }
-              
-             
-            } catch (SQLException s) {
-                MainFrame.bslog(s);
-                bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-            } finally {
-            if (res != null) {
-                res.close();
-            }
-            if (st != null) {
-                st.close();
-            }
-            con.close();
-        }
-        } catch (Exception e) {
-            MainFrame.bslog(e);
-        }
-       }  
-             
-    public static void tenderFreightOrder(String order) {
-
-       try {
-
-
-        Connection con = null;
-            if (ds != null) {
-              con = ds.getConnection();
-            } else {
-              con = DriverManager.getConnection(url + db, user, pass);  
-            }
-        Statement st = con.createStatement();
-        ResultSet res = null;
-        try {
-            int isTendered = 0; 
-            String status = "";
-             /* check to see if order number exists */
-             res = st.executeQuery("select fo_nbr, fo_status, fo_isquoted, fo_istendered from fo_mstr where fo_nbr = " + "'" + order + "'" + ";");
-             int i = 0;
-             while (res.next()) {
-                 i++;
-                 status = res.getString("fo_status");
-                 isTendered = res.getInt("fo_istendered"); 
-             }
-
-              if (isTendered == 1) {
-                 bsmf.MainFrame.show("Order is already tendered");
-                 return;
-             }
-
-             if (i > 0 && ! status.isEmpty() && isTendered == 0) {
-                   int error = EDI.Create204(order);
-                   if (error == 0) {
-                      bsmf.MainFrame.show("Order has been sent for Tendering");
-                      updateFreightOrderTenderFlag(order); 
-                   }
-                   if (error == 1)
-                       bsmf.MainFrame.show("Missing WH/Doctype/Dir Record in cmedi_mstr");
-
-                   if (error == 2)
-                       bsmf.MainFrame.show("Unable to retrieve wh from order");
-
-                   if (error == 3)
-                       bsmf.MainFrame.show("ClassDef and/or Invocation error");
-
-             } else {
-                 bsmf.MainFrame.show("Order does not exist");
-                 return;
-             }
-
-
-        } catch (SQLException s) {
-            MainFrame.bslog(s);
-            bsmf.MainFrame.show(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()));
-        } finally {
-            if (res != null) {
-                res.close();
-            }
-            if (st != null) {
-                st.close();
-            }
-            con.close();
-        }
-    } catch (Exception e) {
-        MainFrame.bslog(e);
-    }
-   }  
-
+    
     public static void unconfirmShipment(String shipper, Date effdate) {
 
        try {

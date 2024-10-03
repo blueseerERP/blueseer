@@ -2400,12 +2400,12 @@ public class FOMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_ddshipperActionPerformed
 
     private void btquoteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btquoteActionPerformed
-        OVData.quoteFreightOrder(freightorder.getText());
+       // OVData.quoteFreightOrder(freightorder.getText());
         initvars(new String[] {freightorder.getText()});
     }//GEN-LAST:event_btquoteActionPerformed
 
     private void bttenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttenderActionPerformed
-        OVData.tenderFreightOrder(freightorder.getText());
+       // OVData.tenderFreightOrder(freightorder.getText());
         initvars(new String[]{freightorder.getText()});
     }//GEN-LAST:event_bttenderActionPerformed
 

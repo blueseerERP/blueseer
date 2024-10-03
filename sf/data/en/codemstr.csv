@@ -141,6 +141,7 @@ edixreftype,SM,204 code,1
 edixreftype,IM,210 code,1
 edixreftype,QM,214 code,1
 edixreftype,GF,990 code,1
+edixreftype,OW,940 code,1
 trantype,ISS-SALES,,1
 trantype,ISS-SCRAP,,1
 trantype,WIP-ISFG,,1

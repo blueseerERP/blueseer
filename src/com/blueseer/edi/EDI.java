@@ -42,6 +42,7 @@ import com.blueseer.fap.fapData;
 import static com.blueseer.fap.fapData.VoucherTransaction;
 import com.blueseer.frt.frtData;
 import static com.blueseer.frt.frtData.addCFOTransaction;
+import com.blueseer.frt.frtData.cfo_mstr;
 import static com.blueseer.frt.frtData.getCFOPrevious;
 import com.blueseer.ord.ordData;
 import static com.blueseer.ord.ordData.addOrderTransaction;
@@ -3891,7 +3892,8 @@ public class EDI {
         ship_mstr sh = shpData.getShipMstr(new String[]{shipper});
         
         
-        messages.add(new String[]{"info","exporting shipper: " + shipper + " for billto: " + sh.sh_cust()});
+        messages.add(new String[]{"info","exporting: " + doctype + " shipper: " + shipper + " for billto: " + sh.sh_cust()});
+        
         
         int comkey = OVData.getNextNbr("edilog");
         
@@ -3916,9 +3918,12 @@ public class EDI {
         c[39] = sh.sh_site();
         
         // get Delimiters from Cust Defaults
-        
         String[] ids = EDData.getEDIXrefOut(sh.sh_cust(), "SH");
+        if (ids[0].isBlank()) {
+        messages.add(new String[]{"error","855 no edi_xref found for keys(billto/type): " + sh.sh_cust() + "/" + "SH"} );
+        } else {
         messages.add(new String[]{"info","edi_xref: " + ids[0] + "/" + ids[1] + "/" + ids[2] + "/" + ids[3] + "/" + ids[4]});
+        }  
         
         String[] defaults = EDData.getEDITPDefaults(doctype, EDData.getEDIgsid(), ids[1]  ); //810, ourGS, theirsGS
         messages.add(new String[]{"info","edi_mstr (id,doc): " + defaults[18] + "/" + defaults[19]});
@@ -4013,10 +4018,6 @@ public class EDI {
     public static int Create855(String order)  {
         int errorcode = 0;
         // errorcode = 0 ... clean exit
-        // errorcode = 1 ... no record found in getEDIXrefOut/getEDITPDefaults
-        // errorcode = 2 ... any catch error below ...try running from command line to see trace dump
-        // errorcode = 3 ... error in map...see edi log
-        
         
         String doctype = "855db";
         String map = "";
@@ -4025,7 +4026,8 @@ public class EDI {
         // lets determine the billto of this shipper
         so_mstr so = ordData.getOrderMstr(new String[]{order});
         
-        messages.add(new String[]{"info","exporting ack(855): " + order + " for billto: " + so.so_cust()});
+        messages.add(new String[]{"info","exporting: " + doctype + " order: " + order + " for billto: " + so.so_cust()});
+        
         
         int comkey = OVData.getNextNbr("edilog");
         
@@ -4051,7 +4053,11 @@ public class EDI {
         
         // get Delimiters from Cust Defaults
         String[] ids = EDData.getEDIXrefOut(so.so_cust(), "PR");
+        if (ids[0].isBlank()) {
+        messages.add(new String[]{"error","855 no edi_xref found for keys(billto/type): " + so.so_cust() + "/" + "PR"} );
+        } else {
         messages.add(new String[]{"info","edi_xref: " + ids[0] + "/" + ids[1] + "/" + ids[2] + "/" + ids[3] + "/" + ids[4]});
+        }        
         // tpid, gsid, tpaddr, ovaddr, type
         
         String[] defaults = EDData.getEDITPDefaults(doctype, EDData.getEDIgsid(), ids[1]  ); //810, ourGS, theirsGS
@@ -4155,7 +4161,7 @@ public class EDI {
         ship_mstr sh = shpData.getShipMstr(new String[]{shipper});
         
         
-        messages.add(new String[]{"info","exporting invoice: " + shipper + " for billto: " + sh.sh_cust()});
+        messages.add(new String[]{"info","exporting: " + doctype + " invoice: " + shipper + " for billto: " + sh.sh_cust()});
         
         int comkey = OVData.getNextNbr("edilog");
         
@@ -4179,9 +4185,12 @@ public class EDI {
         c[29] = "X12";
         c[39] = sh.sh_site();
         // get Delimiters from Cust Defaults
-        
         String[] ids = EDData.getEDIXrefOut(sh.sh_cust(), "PY");
+        if (ids[0].isBlank()) {
+        messages.add(new String[]{"error","810 no edi_xref found for keys(billto/type): " + sh.sh_cust() + "/" + "PY"} );
+        } else {
         messages.add(new String[]{"info","edi_xref: " + ids[0] + "/" + ids[1] + "/" + ids[2] + "/" + ids[3] + "/" + ids[4]});
+        }    
         
         String[] defaults = EDData.getEDITPDefaults(doctype, EDData.getEDIgsid(), ids[1]  ); //810, ourGS, theirsGS
         messages.add(new String[]{"info","edi_mstr (id,doc): " + defaults[18] + "/" + defaults[19]});
@@ -4283,7 +4292,7 @@ public class EDI {
        
         po_mstr pom = purData.getPOMstr(new String[]{po});
         
-        messages.add(new String[]{"info","exporting Purchase Order: " + po + " for billto: " + pom.po_vend()});
+        messages.add(new String[]{"info","exporting: " + doctype + " order: " + po + " for vendor: " + pom.po_vend()});
         
         int comkey = OVData.getNextNbr("edilog");
         
@@ -4307,10 +4316,12 @@ public class EDI {
         c[29] = "X12";
         c[39] = pom.po_site();
         // get Delimiters from Cust Defaults
-        
         String[] ids = EDData.getEDIXrefOut(pom.po_vend(), "VN");
+        if (ids[0].isBlank()) {
+        messages.add(new String[]{"error","855 no edi_xref found for keys(billto/type): " + pom.po_vend() + "/" + "VN"} );
+        } else {
         messages.add(new String[]{"info","edi_xref: " + ids[0] + "/" + ids[1] + "/" + ids[2] + "/" + ids[3] + "/" + ids[4]});
-        
+        }  
         String[] defaults = EDData.getEDITPDefaults(doctype, EDData.getEDIgsid(), ids[1]  ); //810, ourGS, theirsGS
         messages.add(new String[]{"info","edi_mstr (id,doc): " + defaults[18] + "/" + defaults[19]});
         messages.add(new String[]{"info","edi_mstr (sndISA/GS,rcvISA/GS): " + defaults[0] + "/" + defaults[2] + "/" + defaults[3] + "/" + defaults[5]});
@@ -4395,233 +4406,55 @@ public class EDI {
        return errorcode; 
          
      }
-    
-    
-    public static int Create940(int nbr)  {
-        int errorcode = 0;
        
-        // errorcode = 0 ... clean exit
-        // errorcode = 1 ... no record found in wh_mstr for wh doctype
-        // errorcode = 2 ... unable to retrieve wh from order
-        // errorcode = 3 ... any catch error below ...try running from command line to see trace dump
-        // errorcode = 4 ... shipper does not exist
-        
-        
-        ArrayList<String> wh = new ArrayList();
-        String doctype = "940";
-        String map = "";
-        String[] control = null;
-        
-        // lets determine the warehouse or warehouses for this order
-        wh = OVData.getOrderWHSource(nbr);
-        if (wh.size() == 0) {
-            return 2;
-        }
-        
-         
-        for (String w : wh) {   
-        
-        map = EDData.getEDIMap(w, doctype, "");
-        
-         String[] c_in = initEDIControl();   // controlarray in this order : entity, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
-       
-        c_in[0] = w;
-        c_in[1] = doctype;
-        c_in[2] = map;
-        c_in[3] = "";
-        c_in[4] = "";
-        c_in[5] = "";
-        c_in[6] = "";
-        c_in[7] = String.valueOf(nbr);
-        c_in[15] = "0"; // dir out
-        c_in[12] = "0"; // is override
-        
-        // get Delimiters from Cust Defaults
-        String[] defaults = EDData.getEDITPDefaults(doctype, w, "");
-        c_in[9] = defaults[7]; 
-        c_in[10] = defaults[6]; 
-        c_in[11] = defaults[8]; 
-        
-        
-        if (map.isEmpty()) {
-            EDData.writeEDILog(c_in, "error", "no edi_mstr map for " + w + " / " + doctype);
-            errorcode = 1;
-                   continue;
-        } 
-        
-         // Mapdata method call below requires two parameters (ArrayList, String[]) ...doc and c
-        ArrayList doc = new ArrayList();
-        doc.add(nbr);
-                   
-                      try {
-                    Class cls = Class.forName(map);
-                    Object obj = cls.getDeclaredConstructor().newInstance();
-                    Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class, ArrayList.class);
-               
-                    
-                    Object envelope = method.invoke(obj, doc, c_in); // envelope array holds in this order (isa, gs, ge, iea, filename, isactrlnum, gsctrlnum, stctrlnum)
-                    String[] c_out = (String[])envelope;
-                    
-                    EDData.writeEDILog(c_out, "INFO", "Export"); 
-                    EDData.CreateFreightEDIRecs(c_in, String.valueOf(nbr));
-                    
-
-                    } catch (IllegalAccessException | ClassNotFoundException |
-                             InstantiationException | NoSuchMethodException |
-                            InvocationTargetException ex) {
-                        EDData.writeEDILog(c_in, "error", "unable to find map class or invocation error for " + w + " / " + doctype);
-                        clearStaticVariables();
-                        errorcode = 3;
-                        edilog(ex);
-                    }
-                    
-                    
-           
-        }  // each warehouse to receive 940
-        
-        // now lets set the order issourced flag if errorcode still equals 0
-        if (errorcode == 0) {
-           // EDData.updateOrderSourceFlag(nbr);
-        }
-        
-        return errorcode;
-     }
-     
-    public static int Create219(String nbr, String type)  {
-        int errorcode = 0;
-       
-        // errorcode = 0 ... clean exit
-        // errorcode = 1 ... no record found in wh_mstr for wh doctype
-        // errorcode = 2 ... unable to retrieve carriers from order
-        // errorcode = 3 ... any catch error below ...try running from command line to see trace dump
-        // errorcode = 4 ... shipper does not exist
-        
-        
-        ArrayList<String> cars = new ArrayList();
-        String doctype = "219";
-        String map = "";
-        
-        // lets determine the list of carriers to quote for this freight order
-        // first we need the proposed carrier or carrier list to send quote to
-        cars = OVData.getfreightlist();
-        if (cars.size() == 0) {
-            return 2;
-        }
-        
-         
-        for (String ca : cars) {   
-            
-        
-        map = EDData.getEDIMap(ca, doctype, ""); 
-        String[] c_in = initEDIControl();   // controlarray in this order : entity, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
-        
-        c_in[0] = ca;
-        c_in[1] = doctype;
-        c_in[2] = map;
-        c_in[3] = "";
-        c_in[4] = "";
-        c_in[5] = "";
-        c_in[6] = "";
-        c_in[7] = nbr;
-        c_in[15] = "0"; // dir out
-        c_in[12] = "0"; // is override
-        
-        // get Delimiters from Cust Defaults
-        String[] defaults = EDData.getEDITPDefaults(ca, doctype, "");
-        c_in[9] = defaults[7]; 
-        c_in[10] = defaults[6]; 
-        c_in[11] = defaults[8]; 
-        
-        if (map.isEmpty()) {
-            EDData.writeEDILog(c_in, "error", "no edi_mstr map for " + ca + " / " + doctype);
-            errorcode = 1;
-                   continue;
-        } 
-        
-         // Mapdata method call below requires two parameters (ArrayList, String[]) ...doc and c
-        ArrayList doc = new ArrayList();
-        doc.add(nbr);
-        
-                    try {
-                     Class cls = Class.forName(map);
-                    Object obj = cls.getDeclaredConstructor().newInstance();
-                    Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class, ArrayList.class);
-               
-                    
-                    Object envelope = method.invoke(obj, doc, c_in); // envelope array holds in this order (isa, gs, ge, iea, filename, isactrlnum, gsctrlnum, stctrlnum)
-                    String[] c_out = (String[])envelope;
-                    
-                    EDData.writeEDILog(c_out, "INFO", "Export"); 
-                    EDData.CreateFreightEDIRecs(c_in, nbr);
-
-                    } catch (IllegalAccessException | ClassNotFoundException |
-                             InstantiationException | NoSuchMethodException |
-                            InvocationTargetException ex) {
-                        EDData.writeEDILog(c_in, "error", "unable to find map class or invocation error for " + ca + " / " + doctype);
-                        clearStaticVariables();
-                        errorcode = 3;
-                        edilog(ex);
-                    }
-        
-                   
-        
-                   
-           
-        }  // each warehouse to receive 940
-        
-        // now lets set the order issourced flag if errorcode still equals 0
-        if (errorcode == 0) {
-           // EDData.updateOrderSourceFlag(nbr);
-        }
-        
-        return errorcode;
-     }
-    
-    public static int Create990(String nbr)  {
+   
+    public static int Create940(String nbr)  {
         int errorcode = 0;
         // errorcode = 0 ... clean exit
-        // errorcode = 1 ... no record found in getEDIXrefOut/getEDITPDefaults
-        // errorcode = 2 ... any catch error below ...try running from command line to see trace dump
-        // errorcode = 3 ... error in map...see edi log
         
-        String tp = "";
-        String doctype = "990db";
+        String doctype = "940db";
         String map = "";
         ArrayList<String[]> messages = new ArrayList<String[]>();
          
         // lets determine the billto of this shipper
-        tp = frtData.getCFOCust(nbr);
+        
+        so_mstr so = ordData.getOrderMstr(new String[]{nbr});
         
         
-        messages.add(new String[]{"info","exporting 990 response: " + nbr + " for partner: " + tp});
+        messages.add(new String[]{"info","exporting: " + doctype + " order: " + nbr + " for billto: " + so.so_wh()});
         
         int comkey = OVData.getNextNbr("edilog");
         
         String[] c = initEDIControl();   
         
         c[1] = doctype;
-        c[2] = map;
+        c[2] = "";
         c[3] = "";
         c[4] = "";
         c[5] = "";
         c[6] = "";
         c[7] = nbr;
-        c[15] = "990x12"; // outdoctype
-        c[12] = "0"; // is override
+        c[15] = "0"; // dir out
+        c[12] = ""; // is override
         c[22] = String.valueOf(comkey);
         c[28] = "DB";
-        c[29] = "X12";
         c[17] = "0";
         c[18] = "999999";
         c[19] = "0";
         c[20] = "999999";
+        c[29] = "X12";
+        c[39] = so.so_site();
         
         // get Delimiters from Cust Defaults
+        String[] ids = EDData.getEDIXrefOut(so.so_wh(), "OW");
+        if (ids[0].isBlank()) {
+        messages.add(new String[]{"error","940 no edi_xref found for keys(billto/type): " + so.so_wh() + "/" + "OW"} );
+        } else {
+        messages.add(new String[]{"info","edi_xref: " + ids[0] + "/" + ids[1] + "/" + ids[2] + "/" + ids[3] + "/" + ids[4]});
+        }        
+        // tpid, gsid, tpaddr, ovaddr, type
         
-        String[] ids = EDData.getEDIXrefOut(tp, "GF");
-        messages.add(new String[]{"info","edi_xref: " + ids[0] + "/" + ids[1] + "/" + ids[2] + "/" + ids[3] + "/" + ids[4] + " with lookup key: " + tp + "/GF" });
-        
-        String[] defaults = EDData.getEDITPDefaults(doctype, EDData.getEDIgsid(), ids[1]  ); //990db, ourGS, theirsGS
+        String[] defaults = EDData.getEDITPDefaults(doctype, EDData.getEDIgsid(), ids[1]  ); //810, ourGS, theirsGS
         messages.add(new String[]{"info","edi_mstr (id,doc): " + defaults[18] + "/" + defaults[19]});
         messages.add(new String[]{"info","edi_mstr (sndISA/GS,rcvISA/GS): " + defaults[0] + "/" + defaults[2] + "/" + defaults[3] + "/" + defaults[5]});
         
@@ -4638,21 +4471,24 @@ public class EDI {
         messages.add(new String[]{"info","searching for map with: " + c[1] + "/" + defaults[2] + "/" + defaults[5]});
         map = EDData.getEDIMap(c[1], defaults[2], defaults[5]);
         
-          if (map.isEmpty()) {
+        c[2] = map;
+        
+        if (map.isEmpty()) {
             errorcode = 1;
-            messages.add(new String[]{"error","990: map variable is empty for partner/gs02/gs03/doc: " + tp + "/" + defaults[2] + "/" + defaults[5] + "/" + c[1]});
+            messages.add(new String[]{"error","940 map string is empty for billto/gs02/gs03/doc: " + so.so_wh() + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
             EDData.writeEDILogMulti(c, messages);
             messages.clear();  // clear message here
             return errorcode;
         } 
           
-        if (! BlueSeerUtils.isEDIClassFile(map)) {
+         if (! BlueSeerUtils.isEDIClassFile(map)) {
             errorcode = 1;
-            messages.add(new String[]{"error","990: unable to locate compiled map (" + map + ") billto/gs02/gs03/doc: " + tp + "/" + defaults[2] + "/" + defaults[5] + "/" + c[1]});
+            messages.add(new String[]{"error","940: unable to locate compiled map (" + map + ") billto/gs02/gs03/doc: " + so.so_wh() + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
             EDData.writeEDILogMulti(c, messages);
             messages.clear();  // clear message here
             return errorcode;
         }     
+          
         messages.add(new String[]{"info","using map: " + map});
        
         
@@ -4703,32 +4539,154 @@ public class EDI {
        return errorcode; 
          
      }
-      
+    
+    
+    public static int Create990(String nbr)  {
+        int errorcode = 0;
+        // errorcode = 0 ... clean exit
+        
+        String doctype = "990db";
+        String map = "";
+        ArrayList<String[]> messages = new ArrayList<String[]>();
+         
+        // lets determine the billto of this shipper
+        cfo_mstr fo = frtData.getCFOMstr(new String[]{nbr});
+        
+        messages.add(new String[]{"info","exporting: " + doctype + " order: " + nbr + " for billto: " + fo.cfo_cust()});
+        
+        int comkey = OVData.getNextNbr("edilog");
+        
+        String[] c = initEDIControl();   
+        
+        c[1] = doctype;
+        c[2] = "";
+        c[3] = "";
+        c[4] = "";
+        c[5] = "";
+        c[6] = "";
+        c[7] = nbr;
+        c[15] = "0"; // dir out
+        c[12] = ""; // is override
+        c[22] = String.valueOf(comkey);
+        c[28] = "DB";
+        c[17] = "0";
+        c[18] = "999999";
+        c[19] = "0";
+        c[20] = "999999";
+        c[29] = "X12";
+        c[39] = fo.cfo_site();
+        
+        // get Delimiters from Cust Defaults
+        String[] ids = EDData.getEDIXrefOut(fo.cfo_cust(), "GF");
+        if (ids[0].isBlank()) {
+        messages.add(new String[]{"error","990 no edi_xref found for keys(billto/type): " + fo.cfo_cust() + "/" + "PR"} );
+        } else {
+        messages.add(new String[]{"info","edi_xref: " + ids[0] + "/" + ids[1] + "/" + ids[2] + "/" + ids[3] + "/" + ids[4]});
+        }        
+        // tpid, gsid, tpaddr, ovaddr, type
+        
+        String[] defaults = EDData.getEDITPDefaults(doctype, EDData.getEDIgsid(), ids[1]  ); //810, ourGS, theirsGS
+        messages.add(new String[]{"info","edi_mstr (id,doc): " + defaults[18] + "/" + defaults[19]});
+        messages.add(new String[]{"info","edi_mstr (sndISA/GS,rcvISA/GS): " + defaults[0] + "/" + defaults[2] + "/" + defaults[3] + "/" + defaults[5]});
+        
+        c[9] = defaults[7]; 
+        c[10] = defaults[6]; 
+        c[11] = defaults[8]; 
+        
+        c[0] = defaults[2];
+        c[21] = defaults[5];
+        
+        int idxnbr = EDData.writeEDIIDX(c);
+        c[16] = String.valueOf(idxnbr);
+        
+        messages.add(new String[]{"info","searching for map with: " + c[1] + "/" + defaults[2] + "/" + defaults[5]});
+        map = EDData.getEDIMap(c[1], defaults[2], defaults[5]);
+        
+        c[2] = map;
+        
+        if (map.isEmpty()) {
+            errorcode = 1;
+            messages.add(new String[]{"error","990 map string is empty for billto/gs02/gs03/doc: " + fo.cfo_cust() + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
+            EDData.writeEDILogMulti(c, messages);
+            messages.clear();  // clear message here
+            return errorcode;
+        } 
+          
+         if (! BlueSeerUtils.isEDIClassFile(map)) {
+            errorcode = 1;
+            messages.add(new String[]{"error","990: unable to locate compiled map (" + map + ") billto/gs02/gs03/doc: " + fo.cfo_cust() + "/" + defaults[2] + "/" + defaults[5] + " / " + c[1]});
+            EDData.writeEDILogMulti(c, messages);
+            messages.clear();  // clear message here
+            return errorcode;
+        }     
+          
+        messages.add(new String[]{"info","using map: " + map});
+       
+        
+        // Mapdata method call below requires two parameters (ArrayList, String[]) ...doc and c
+        ArrayList doc = new ArrayList();
+        doc.add(nbr);
+        
+        
+         // call map 
+        try {
+        URLClassLoader cl = getEDIClassLoader();  
+        Class cls = Class.forName(map,true,cl); 
+        Object obj = cls.getDeclaredConstructor().newInstance();
+        Method method = cls.getDeclaredMethod("Mapdata", ArrayList.class, String[].class, ArrayList.class);
+        Object oc = method.invoke(obj, doc, c, messages);
+        String[] oString = (String[]) oc;
+        messages.add(new String[]{oString[0], oString[1]});
+        EDData.updateEDIIDX(idxnbr, c); 
+        if (oString[0].equals("error")) {
+            errorcode = 3;
+        }
+        } catch (InvocationTargetException ex) {
+        errorcode = 2;    
+        if (c[12].isEmpty()) {
+        messages.add(new String[]{"error", "invocation exception in map class " + map + "/" + c[0] + " / " + c[1]});    
+        clearStaticVariables();
+        }
+        edilog(ex); 
+        } catch (ClassNotFoundException ex) {
+        errorcode = 2;    
+        if (c[12].isEmpty()) {
+        messages.add(new String[]{"error", "Map Class not found " + map + "/" + c[0] + " / " + c[1]});        
+        }
+        edilog(ex); 
+        } catch (IllegalAccessException |
+             InstantiationException | NoSuchMethodException ex
+            ) {
+        errorcode = 2;    
+        if (c[12].isEmpty()) {
+        messages.add(new String[]{"error", "IllegalAccess|Instantiation|NoSuchMethod " + map + "/" + c[0] + " / " + c[1]});        
+       }
+        edilog(ex);
+       } finally {
+          EDData.writeEDILogMulti(c, messages);
+          messages.clear();  // clear message here...and at 997...and at end   
+       }
+         
+       return errorcode; 
+         
+     }
+          
     public static int Create204(String nbr)  {
         int errorcode = 0;
-       
-        // errorcode = 0 ... clean exit
-        // errorcode = 1 ... no record found in wh_mstr for wh doctype
-        // errorcode = 2 ... unable to retrieve carriers from order
-        // errorcode = 3 ... any catch error below ...try running from command line to see trace dump
-        // errorcode = 4 ... shipper does not exist
         
         
-        
-        String doctype = "204";
+        String doctype = "204db";
         String map = "";
-      
+        ArrayList<String[]> messages = new ArrayList<String[]>();
+         
+        cfo_mstr fo = frtData.getCFOMstr(new String[]{nbr});
         
-         String ca = OVData.getFreightOrderCarrierAssigned(nbr);
-       
-            
+        messages.add(new String[]{"info","exporting: " + doctype + " order: " + nbr + " for billto: " + fo.cfo_cust()});
         
-        map = EDData.getEDIMap(ca, doctype, "");
-        
+        int comkey = OVData.getNextNbr("edilog"); 
         
          String[] c_in = initEDIControl();   // controlarray in this order : entity, doctype, map, filename, isacontrolnum, gsctrlnum, stctrlnum, ref ; 
         
-        c_in[0] = ca;
         c_in[1] = doctype;
         c_in[2] = map;
         c_in[3] = "";
@@ -4738,23 +4696,64 @@ public class EDI {
         c_in[7] = nbr;
         c_in[15] = "0"; // dir out
         c_in[12] = "0"; // is override
+        c_in[22] = String.valueOf(comkey);
+        c_in[28] = "DB";
+        c_in[17] = "0";
+        c_in[18] = "999999";
+        c_in[19] = "0";
+        c_in[20] = "999999";
+        c_in[29] = "X12";
+        c_in[39] = fo.cfo_site();
         
         // get Delimiters from Cust Defaults
-        String[] defaults = EDData.getEDITPDefaults(ca, doctype, "");
+        String[] ids = EDData.getEDIXrefOut(fo.cfo_cust(), "SM");
+        if (ids[0].isBlank()) {
+        messages.add(new String[]{"error","204 no edi_xref found for keys(billto/type): " + fo.cfo_cust() + "/" + "SM"} );
+        } else {
+        messages.add(new String[]{"info","edi_xref: " + ids[0] + "/" + ids[1] + "/" + ids[2] + "/" + ids[3] + "/" + ids[4]});
+        }    
+        
+        String[] defaults = EDData.getEDITPDefaults(doctype, EDData.getEDIgsid(), ids[1]  ); //810, ourGS, theirsGS
+        messages.add(new String[]{"info","edi_mstr (id,doc): " + defaults[18] + "/" + defaults[19]});
+        messages.add(new String[]{"info","edi_mstr (sndISA/GS,rcvISA/GS): " + defaults[0] + "/" + defaults[2] + "/" + defaults[3] + "/" + defaults[5]});
+        
         c_in[9] = defaults[7]; 
         c_in[10] = defaults[6]; 
         c_in[11] = defaults[8]; 
         
+        c_in[0] = defaults[2];
+        c_in[21] = defaults[5];
         
-        if (map.isEmpty()) {
-            EDData.writeEDILog(c_in, "error", "no edi_mstr map for " + c_in + " / " + doctype);
+        int idxnbr = EDData.writeEDIIDX(c_in);
+        c_in[16] = String.valueOf(idxnbr);
+        
+        messages.add(new String[]{"info","searching for map with: " + c_in[1] + "/" + defaults[2] + "/" + defaults[5]});
+        map = EDData.getEDIMap(c_in[1], defaults[2], defaults[5]);
+        
+        c_in[2] = map;
+        
+          if (map.isEmpty()) {
             errorcode = 1;
+            messages.add(new String[]{"error","204: map variable is empty for billto/gs02/gs03/doc: " + fo.cfo_cust() + "/" + defaults[2] + "/" + defaults[5] + " / " + c_in[1]});
+            EDData.writeEDILogMulti(c_in, messages);
+            messages.clear();  // clear message here
             return errorcode;
         } 
+          
+        if (! BlueSeerUtils.isEDIClassFile(map)) {
+            errorcode = 1;
+            messages.add(new String[]{"error","204: unable to locate compiled map (" + map + ") billto/gs02/gs03/doc: " + fo.cfo_cust() + "/" + defaults[2] + "/" + defaults[5] + " / " + c_in[1]});
+            EDData.writeEDILogMulti(c_in, messages);
+            messages.clear();  // clear message here
+            return errorcode;
+        }     
+        messages.add(new String[]{"info","using map: " + map});
+       
         
-         // Mapdata method call below requires two parameters (ArrayList, String[]) ...doc and c
+        // Mapdata method call below requires two parameters (ArrayList, String[]) ...doc and c
         ArrayList doc = new ArrayList();
         doc.add(nbr);
+        
         
         
                     try {
