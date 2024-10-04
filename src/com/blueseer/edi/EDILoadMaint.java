@@ -305,7 +305,11 @@ public class EDILoadMaint extends javax.swing.JPanel {
                     }
                     break;
                 case "processSingleFile":
-                    message = processSingleFilePost(key[0]);
+                    if (bsmf.MainFrame.remoteDB) {
+                        message = processSingleFilePost(key[0]);
+                    } else {
+                        message = processSingleFile(key[0]); 
+                    }
                     break;    
                 case "getFiles":
                     ArrayList<String[]> arr = new ArrayList<String[]>();
@@ -689,6 +693,33 @@ public class EDILoadMaint extends javax.swing.JPanel {
             tafile.append(getMessageTag(1121,String.valueOf(j)) + "\n");
             
             getFiles();
+            x[0] = "0";
+            x[1] = "processing complete";
+            
+       } catch (IOException ex) {
+           ex.printStackTrace();
+          tafile.append(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()) + "\n");
+         
+       }  catch (ClassNotFoundException ex) {
+          tafile.append(getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName()) + "\n");
+       }
+        
+        return x;
+    }
+    
+    public String[] processSingleFile(String filepath) {
+       String[] x = new String[2];
+       tafile.setText("");
+       try {
+                    
+            tafile.append("FilePath: " + filepath  + "\n");
+            String[] m = EDI.processFile(filepath,"","","", cbdebug.isSelected(), false, 0, 0, ddsite.getSelectedItem().toString());
+
+            // show error if exists...usually malformed envelopes
+            if (m[0].equals("1")) {
+               tafile.append(m[1]  + "\n");
+            }
+            tafile.append(getMessageTag(1121,"1") + "\n");
             x[0] = "0";
             x[1] = "processing complete";
             

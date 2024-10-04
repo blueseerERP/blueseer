@@ -65,7 +65,7 @@ import com.blueseer.utl.BlueSeerUtils;
             sumamtTDS = (sumamt * 100);
             
             // trailer
-         mapSegment("TDS","e01",formatNumber(sumamtTDS,"2"));
+         mapSegment("TDS","e01",formatNumber(sumamtTDS,"0"));
          commitSegment("TDS");
          
          mapSegment("ISS","e01",snum(sumqty));
