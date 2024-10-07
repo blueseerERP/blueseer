@@ -25,6 +25,9 @@ SOFTWARE.
  */
 package com.blueseer.inv;
 
+import bsmf.MainFrame;
+import static bsmf.MainFrame.bslog;
+import static bsmf.MainFrame.db;
 import com.blueseer.utl.OVData;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -34,9 +37,16 @@ import javax.swing.SwingWorker;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import static bsmf.MainFrame.driver;
+import static bsmf.MainFrame.ds;
+import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
+import static bsmf.MainFrame.url;
+import static bsmf.MainFrame.user;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Component;
+import java.sql.Connection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -137,11 +147,14 @@ public class CostRollRange extends javax.swing.JPanel {
        
       
         ArrayList<String> items = invData.getItemRange(ddsite.getSelectedItem().toString(), fromitem, toitem);
+       
+       
         
           for (String p : items) {
-          OVData.setStandardCosts(ddsite.getSelectedItem().toString(), p);
+          OVData.setStandardCosts(ddsite.getSelectedItem().toString(), p); 
           talog.append("Rolling Cost for: " + p + " \n");
           }
+        
           
             return null;
            

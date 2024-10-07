@@ -12778,15 +12778,16 @@ return myarray;
         for (Double d : costcur) {
            totalcost += d;
         }
-        try {
-
-
+        
         Connection con = null;
-        if (ds != null) {
-          con = ds.getConnection();
-        } else {
-          con = DriverManager.getConnection(url + db, user, pass);  
-        }
+        try {
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+
+        
         Statement st = con.createStatement();
         ResultSet res = null;
         Statement st2 = con.createStatement();

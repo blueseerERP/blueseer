@@ -199,6 +199,13 @@ public class calcCost {
              mylist.add(upperbdncost);
              mylist.add(upperovhcost);
              mylist.add(upperoutcost);
+             if (bscon != null) {
+            try {
+                bscon.close();
+            } catch (SQLException ex) {
+                MainFrame.bslog(ex);
+            }
+          }
              return mylist;
          }
            
