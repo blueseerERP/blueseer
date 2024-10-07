@@ -2257,7 +2257,12 @@ public class apiUtils {
         
         // save MDN file if present
         try {
-        MimeMultipart mpr  = new MimeMultipart(new ByteArrayDataSource(indata, entity.getContentType().getValue()));
+        Header h = entity.getContentType();
+        String mdncontenttype = "multipart/form-data";
+        if (h != null) {
+            mdncontenttype = h.getValue();
+        }
+        MimeMultipart mpr  = new MimeMultipart(new ByteArrayDataSource(indata, mdncontenttype));
         for (int z = 0; z < mpr.getCount(); z++) {
             MimeBodyPart mbpr = (MimeBodyPart) mpr.getBodyPart(z);
             if (mbpr.getContentType().contains("disposition")) {
@@ -2281,6 +2286,8 @@ public class apiUtils {
                 }
             }
         }
+        
+        
         } catch (MessagingException ex) {
            logdet.add(new String[]{parentkey, "error", " Messaging error; Bad MDN Boundary " + ex.getMessage()}); 
           writeAS2LogDetail(logdet);
