@@ -164,7 +164,7 @@ public class AS2Serv extends HttpServlet {
     
    
     public static mdn processRequest(HttpServletRequest request, boolean isDebug) throws IOException {
-       
+        String defaultsite = OVData.getDefaultSite();
         BufferedWriter output = null;
         String[] elementals = new String[]{"","","","","",""};
         HashMap<String, String> returnheaders = new HashMap<String, String>();
@@ -181,7 +181,7 @@ public class AS2Serv extends HttpServlet {
             
         // if null content
         if (content == null) {
-            writeAS2LogStop(new String[]{"0","unknown","in","error","null content",now,""});
+            writeAS2LogStop(new String[]{"0","unknown","in","error","null content",now,"",defaultsite});
            // return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "null content");
             return createMDN("3000", elementals, returnheaders, isDebug);
         }
@@ -208,7 +208,7 @@ public class AS2Serv extends HttpServlet {
                 }
         } else {
             // header info unrecognizable...bail out
-            writeAS2LogStop(new String[]{"0","unknown","in","error","http header tags unrecognizable",now,""});
+            writeAS2LogStop(new String[]{"0","unknown","in","error","http header tags unrecognizable",now,"", defaultsite});
             // return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "http header tags unrecognizable");
             return createMDN("3005", elementals, returnheaders, isDebug);
         }
@@ -243,7 +243,7 @@ public class AS2Serv extends HttpServlet {
         
         
         if (inHM == null || inHM.isEmpty()) {
-          writeAS2LogStop(new String[]{"0","unknown","in","error","There are zero http headers",now,""});
+          writeAS2LogStop(new String[]{"0","unknown","in","error","There are zero http headers",now,"", defaultsite});
             return createMDN("3007", elementals, returnheaders, isDebug);   
         }
         
@@ -271,7 +271,7 @@ public class AS2Serv extends HttpServlet {
             receiver = inHM.get("as2-to");
             elementals[1] = receiver;
         } else {
-            writeAS2LogStop(new String[]{"0","unknown","in","error","AS2 receiver ID unrecognized",now,""});
+            writeAS2LogStop(new String[]{"0","unknown","in","error","AS2 receiver ID unrecognized",now,"", defaultsite});
             return createMDN("3100", elementals, returnheaders, isDebug); 
         }
         
@@ -284,18 +284,18 @@ public class AS2Serv extends HttpServlet {
             
             info = getAS2InfoByIDs(sender , receiver);
             if (info == null) {
-              writeAS2LogStop(new String[]{"0","unknown","in","error","AS2 sender / receiver unknown with keys: " + sender + "/" + receiver,now,""});  
+              writeAS2LogStop(new String[]{"0","unknown","in","error","AS2 sender / receiver unknown with keys: " + sender + "/" + receiver,now,"",defaultsite});  
               //return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "AS2 sender ID unknown with keys: " + sender + "/" + receiver);    
             return createMDN("3200", elementals, returnheaders, isDebug);
             } 
         } else {
-            writeAS2LogStop(new String[]{"0","unknown","in","error","AS2 sender ID unrecognized",now,""});
+            writeAS2LogStop(new String[]{"0","unknown","in","error","AS2 sender ID unrecognized",now,"",info[22]});
             // return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "AS2 sender ID unrecognized"); 
             return createMDN("3200", elementals, returnheaders, isDebug);
         }
         
         if (info == null) { 
-              writeAS2LogStop(new String[]{"0","unknown","in","error","unable to find sender / receiver keys: " + sender + "/" + receiver,now,""});
+              writeAS2LogStop(new String[]{"0","unknown","in","error","unable to find sender / receiver keys: " + sender + "/" + receiver,now,"",info[22]});
               return createMDN("3300", elementals, returnheaders, isDebug);   
         }
         
@@ -323,7 +323,7 @@ public class AS2Serv extends HttpServlet {
         boolean isEncrypted = apiUtils.isEncrypted(content);
         
         if (! isEncrypted && info[9].equals("1")) {
-           writeAS2LogStop(new String[]{"0","unknown","in","error","Encryption is required for this partner " + sender + "/" + receiver,now,""}); 
+           writeAS2LogStop(new String[]{"0","unknown","in","error","Encryption is required for this partner " + sender + "/" + receiver,now,"", info[22]}); 
            return createMDN("3400", elementals, returnheaders, isDebug);
         }
          
@@ -334,7 +334,7 @@ public class AS2Serv extends HttpServlet {
           systemEncKey = getSystemEncKey();   
           finalContent = apiUtils.decryptData(content, apiUtils.getPrivateKey(getSystemEncKey()) );
            if (finalContent == null) {
-             writeAS2LogStop(new String[]{"0","unknown","in","error","Unable to decrypt...possible incorrect public key " + sender + "/" + receiver,now,""}); 
+             writeAS2LogStop(new String[]{"0","unknown","in","error","Unable to decrypt...possible incorrect public key " + sender + "/" + receiver,now,"", info[22]}); 
              return createMDN("3003", elementals, returnheaders, isDebug);
            }  
          } else {

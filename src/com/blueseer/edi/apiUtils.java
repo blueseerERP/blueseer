@@ -2011,7 +2011,7 @@ public class apiUtils {
         String contenttype = tp[21];
         
         
-        int parent = writeAS2Log(new String[]{"0",as2id,"out",""," Init as2 outbound for partner: " + as2id + "/" + as2From + "/" + as2To,now,""}); 
+        int parent = writeAS2Log(new String[]{"0",as2id,"out",""," Init as2 outbound for partner: " + as2id + "/" + as2From + "/" + as2To,now,"",tp[23]}); 
         String parentkey = String.valueOf(parent);
         logdet.add(new String[]{parentkey, "info", "processing as2 for relationship " + as2From + "/" + as2To});
         logdet.add(new String[]{parentkey, "info", "Sending to URL / Port / Path = " + url});

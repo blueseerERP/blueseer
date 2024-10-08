@@ -3877,7 +3877,7 @@ public class EDData {
                 
                       if (dbtype.equals("sqlite")) {
                         st.executeUpdate("insert into as2_log ( as2l_parent, as2l_id, as2l_dir, " +
-                                " as2l_status, as2l_messg, as2l_datetime, as2l_mdn ) " 
+                                " as2l_status, as2l_messg, as2l_datetime, as2l_mdn, as2l_site ) " 
                             + " values ( " 
                             + "'" + c[0] + "'" + ","  // parent master...master record has '0'
                             + "'" + c[1] + "'" + ","  // partner id
@@ -3885,12 +3885,13 @@ public class EDData {
                             + "'" + c[3] + "'" + "," // status
                             + "'" + c[4] + "'" + ","  // messg
                             + "'" + c[5] + "'" + ","  // ts
-                            + "'" + c[6] + "'" // mdn
+                            + "'" + c[6] + "'" + ","  // mdn        
+                            + "'" + c[7] + "'" // site
                             + ")"
                             + ";");
                       } else {
                           st.executeUpdate("insert into as2_log ( as2l_parent, as2l_id, as2l_dir, " +
-                                " as2l_status, as2l_messg, as2l_datetime, as2l_mdn ) " 
+                                " as2l_status, as2l_messg, as2l_datetime, as2l_mdn, as2l_site ) " 
                             + " values ( " 
                             + "'" + c[0] + "'" + ","  // parent master...master record has '0'...else has master record as2l_logid
                             + "'" + c[1] + "'" + ","  // partner id
@@ -3898,7 +3899,8 @@ public class EDData {
                             + "'" + c[3] + "'" + "," // status
                             + "'" + c[4] + "'" + ","  // messg
                             + "'" + c[5] + "'" + ","  // ts
-                            + "'" + c[6] + "'" // mdn
+                            + "'" + c[6] + "'" + ","  // mdn
+                            + "'" + c[7] + "'" // site
                             + ")"
                             + ";", Statement.RETURN_GENERATED_KEYS);
                       }
@@ -3937,7 +3939,7 @@ public class EDData {
                 
                       if (dbtype.equals("sqlite")) {
                         st.executeUpdate("insert into as2_log ( as2l_parent, as2l_id, as2l_dir, " +
-                                " as2l_status, as2l_messg, as2l_datetime, as2l_mdn ) " 
+                                " as2l_status, as2l_messg, as2l_datetime, as2l_mdn, as2l_site ) " 
                             + " values ( " 
                             + "'" + c[0] + "'" + ","  // parent master...master record has '0'
                             + "'" + c[1] + "'" + ","  // partner id
@@ -3945,12 +3947,13 @@ public class EDData {
                             + "'" + c[3] + "'" + "," // status
                             + "'" + c[4] + "'" + ","  // messg
                             + "'" + c[5] + "'" + ","  // ts
-                            + "'" + c[6] + "'" // mdn
+                            + "'" + c[6] + "'" + ","  // mdn
+                            + "'" + c[7] + "'" // site
                             + ")"
                             + ";");
                       } else {
                           st.executeUpdate("insert into as2_log ( as2l_parent, as2l_id, as2l_dir, " +
-                                " as2l_status, as2l_messg, as2l_datetime, as2l_mdn ) " 
+                                " as2l_status, as2l_messg, as2l_datetime, as2l_mdn, as2l_site ) " 
                             + " values ( " 
                             + "'" + c[0] + "'" + ","  // parent master...master record has '0'...else has master record as2l_logid
                             + "'" + c[1] + "'" + ","  // partner id
@@ -3958,7 +3961,8 @@ public class EDData {
                             + "'" + c[3] + "'" + "," // status
                             + "'" + c[4] + "'" + ","  // messg
                             + "'" + c[5] + "'" + ","  // ts
-                            + "'" + c[6] + "'" // mdn
+                            + "'" + c[6] + "'" + ","  // mdn
+                            + "'" + c[7] + "'" // site
                             + ")"
                             + ";", Statement.RETURN_GENERATED_KEYS);
                       }
