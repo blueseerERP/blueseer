@@ -367,7 +367,7 @@ public class AS2Serv extends HttpServlet {
         elementals[3] = filename;
         elementals[4] = messageid;
         elementals[5] = mic;
-        int parent = writeAS2Log(new String[]{"0",sender,"in","success"," Init as2 inbound for partner: " + info[0] + "/" + sender + "/" + receiver,now,""}); 
+        int parent = writeAS2Log(new String[]{"0",sender,"in","success"," Init as2 inbound for partner: " + info[0] + "/" + sender + "/" + receiver,now,"", defaultsite}); 
         String parentkey = String.valueOf(parent);
         logdet.add(new String[]{parentkey, "info", "processing as2 for relationship " + sender + "/" + receiver});
         logdet.add(new String[]{parentkey, "info", "Incoming AS2 Message ID = " + messageid});

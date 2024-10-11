@@ -7,6 +7,7 @@
     <property name="build.dir" location="../build" />
     <property name="dist.dir" location="../dist" />
     <property name="test.dir" location="../../wip/test" />
+    <property name="install.dir" location="c:\blueseer\dist" />
     <property name="lib.dir" location="../lib" />
     <property name="classpath.property" 
 	    value="dist/" />
@@ -68,7 +69,7 @@
                 <attribute name="Main-Class" value="bsmf" />
             </manifest>
         </jar>
-	<!--	<copy file="${dist.dir}\blueseer.jar" todir="${test.dir}" overwrite="true"/> -->
+	<copy file="${dist.dir}\blueseer.jar" todir="${install.dir}" overwrite="true"/> 
     </target>
 
     <!-- refresh test database - windows -->

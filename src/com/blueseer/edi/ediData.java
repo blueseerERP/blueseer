@@ -3088,8 +3088,7 @@ public class ediData {
         }
         return x;
     }
-    
-    
+            
     public static String getKeyStorePass(String id) {
         String x = "";
         String sql = "select pks_storepass from pks_mstr where pks_type = 'store' and pks_id = ?";
