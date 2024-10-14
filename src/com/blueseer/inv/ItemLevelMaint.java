@@ -219,7 +219,7 @@ public class ItemLevelMaint extends javax.swing.JPanel {
         }
 
         if (OVData.isInvCtrlDemdToPlan())
-        OVData.createPlanFromDemand(ddsite.getSelectedItem().toString());
+        OVData.createPlanFromDemand(ddsite.getSelectedItem().toString(), "", "");
         
            /* 
             Random random = new Random();

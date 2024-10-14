@@ -20283,13 +20283,22 @@ MainFrame.bslog(e);
     return recnumber;
    }
 
-    public static int createPlanFromDemand(String site) {
+    public static int createPlanFromDemand(String site, String fromorder, String toorder) {
 
     int recnumber = 0;
     
     DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
     Calendar cal = Calendar.getInstance();
     cal.getTime();
+    
+    if (fromorder.isBlank()) {
+        fromorder = bsmf.MainFrame.lownbr;
+    }
+    if (toorder.isBlank()) {
+        toorder = bsmf.MainFrame.hinbr;
+    }
+    
+    
    // int wk = getForecastWeek(cal.getTime());
    // ArrayList<Date> dates = OVData.getForecastDates(String.valueOf(cal.get(Calendar.YEAR)));
      try{
@@ -20331,6 +20340,8 @@ MainFrame.bslog(e);
                   " inner join item_mstr on it_item = sod_item " +
                   " left outer join plan_mstr on plan_site = so_site and plan_item = sod_item and plan_order = sod_nbr and plan_line = sod_line " +
                   " where so_site = " + "'" + site + "'" +
+                  " and so_nbr >= " + "'" + fromorder + "'" +  
+                  " and so_nbr <= " + "'" + toorder + "'" +        
                   " and so_status = " + "'" + getGlobalProgTag("open") + "'" +
                   " and so_plan = '1' " +        
                   " and it_plan = '1' " + 
