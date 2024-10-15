@@ -2054,7 +2054,7 @@ public class apiUtils {
         certs = new JcaCertStore(certList);
         
         JcaSimpleSignerInfoGeneratorBuilder jSig = new JcaSimpleSignerInfoGeneratorBuilder().setProvider("BC");
-        SignerInfoGenerator sig = jSig.build("SHA1withRSA", privateKey, certificate);
+        SignerInfoGenerator sig = jSig.build("SHA256withRSA", privateKey, certificate);
         gen.addCertificates(certs);
         gen.addSignerInfoGenerator(sig);
       //  messagePart.setHeader("Content-Type", "text/plain");
@@ -2488,14 +2488,13 @@ public class apiUtils {
             mbp2.setHeader("Content-Type", "message/disposition-notification");
             mbp2.setHeader("Content-Transfer-Encoding", "7bit");
             
-           // mpInner.addBodyPart(mbp);
+            mpInner.addBodyPart(mbp);
             mpInner.addBodyPart(mbp2);
             ContentType ct = new ContentType(mpInner.getContentType());
             String boundary = ct.getParameter("boundary");
            
             ByteArrayOutputStream bOut = new ByteArrayOutputStream();
             mpInner.writeTo(bOut);
-          // mbp2.writeTo(bOut);
             bOut.flush();
             bOut.close();
             byte[] data = bOut.toByteArray();
