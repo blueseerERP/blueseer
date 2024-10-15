@@ -2488,14 +2488,14 @@ public class apiUtils {
             mbp2.setHeader("Content-Type", "message/disposition-notification");
             mbp2.setHeader("Content-Transfer-Encoding", "7bit");
             
-            mpInner.addBodyPart(mbp);
+           // mpInner.addBodyPart(mbp);
             mpInner.addBodyPart(mbp2);
             ContentType ct = new ContentType(mpInner.getContentType());
             String boundary = ct.getParameter("boundary");
            
             ByteArrayOutputStream bOut = new ByteArrayOutputStream();
-          //  mpInner.writeTo(bOut);
-          mbp2.writeTo(bOut);
+            mpInner.writeTo(bOut);
+          // mbp2.writeTo(bOut);
             bOut.flush();
             bOut.close();
             byte[] data = bOut.toByteArray();
