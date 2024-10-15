@@ -2494,7 +2494,8 @@ public class apiUtils {
             String boundary = ct.getParameter("boundary");
            
             ByteArrayOutputStream bOut = new ByteArrayOutputStream();
-            mpInner.writeTo(bOut);
+            // mpInner.writeTo(bOut);
+            mbp2.writeTo(bOut);
             bOut.flush();
             bOut.close();
             byte[] data = bOut.toByteArray();
@@ -2533,11 +2534,11 @@ public class apiUtils {
            mpInner = bundleit(z, receiver, messageid, mic, "processed");
            ContentType ct = new ContentType(mpInner.getContentType());
            boundary = ct.getParameter("boundary");
-            mbp.setContent(mpInner);
-            mbp.addHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+           // mbp.setContent(mpInner);
+           // mbp.addHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
            //  mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
-            mp.addBodyPart(mbp);
-            
+           // mp.addBodyPart(mbp);
+           
             
         } catch (MessagingException ex) {
             bslog(ex);

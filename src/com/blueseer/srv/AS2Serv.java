@@ -108,6 +108,7 @@ import java.util.Map;
 import javax.mail.BodyPart;
 import javax.mail.MessagingException;
 import javax.mail.Part;
+import javax.mail.internet.ContentType;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
@@ -148,11 +149,11 @@ public class AS2Serv extends HttpServlet {
             response.getWriter().println("BlueSeer AS2 server response:  no valid AS2 payload provided");
         } else {
             
-            response.setContentType("text/plain");
+           // response.setContentType("multipart/report");
             mdn thismdn = processRequest(request, isDebug);
-            /*
+           
             response.setContentType("multipart/report; report-type=disposition-notification; boundary=" + "\"" + thismdn.boundary() + "\"");
-            */
+            
             if (thismdn.headers() != null) {
                 for (Map.Entry<String, String> z : thismdn.headers().entrySet()) {
                     response.setHeader(z.getKey(), z.getValue());
