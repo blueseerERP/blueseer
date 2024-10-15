@@ -2586,13 +2586,16 @@ public class apiUtils {
                 """.formatted(filename, subject, sender, receiver, now);
         try {
            
-         /*
+         
            mpInner = bundleit(z, receiver, messageid, mic, "processed");
            ContentType ct = new ContentType(mpInner.getContentType());
            boundary = ct.getParameter("boundary");
-           */
+           
+         /*
            mymmpx = bundleitNew(z, receiver, messageid, mic, "processed");
            mpInner = mymmpx.mmp();
+         */
+           
            // mbp.setContent(mpInner);
            // mbp.addHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
            //  mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
@@ -2603,8 +2606,8 @@ public class apiUtils {
             bslog(ex);
         }
         
-      //  return new mmpx(mp, boundary);
-        return mymmpx;
+        return new mmpx(mp, boundary);
+      //  return mymmpx;
     }
         
     public static mmpx code2000(String sender, String receiver, String subject, String filename, String messageid, String mic) {
