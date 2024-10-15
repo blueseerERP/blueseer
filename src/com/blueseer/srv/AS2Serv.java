@@ -152,7 +152,7 @@ public class AS2Serv extends HttpServlet {
            // response.setContentType("multipart/report");
             mdn thismdn = processRequest(request, isDebug);
            
-            response.setContentType("multipart/signed; protocol=application/pkcs7-signature; micalg=sha1; boundary=" + "\"" + thismdn.boundary() + "\"");
+            response.setContentType("multipart/signed; protocol=" + "\"" + "application/pkcs7-signature" + "\"" + "; " + " micalg=sha1; boundary=" + "\"" + thismdn.boundary() + "\"");
             
             if (thismdn.headers() != null) {
                 for (Map.Entry<String, String> z : thismdn.headers().entrySet()) {
