@@ -2515,6 +2515,61 @@ public class apiUtils {
         return mp;
     }
       
+    public static mmpx bundleitNew(String z, String receiver, String messageid, String mic, String status) {
+        MimeBodyPart mbp = new MimeBodyPart();
+        MimeBodyPart mbp2 = new MimeBodyPart();
+        MimeBodyPart mbp3 = new MimeBodyPart();
+        MimeMultipart mp = new MimeMultipart();
+        MimeMultipart mpInner = new MimeMultipart();
+        String boundary = "";
+        boolean unsigned = false;
+        
+        try {
+            mbp.setText(z);
+            mbp.setHeader("Content-Type", "text/plain");
+            mbp.setHeader("Content-Transfer-Encoding", "7bit");
+            
+            String y = """
+                       Reporting-UA: BlueSeer Software
+                       Original-Recipient: rfc822; %s
+                       Final-Recipient: rfc822; %s
+                       Original-Message-ID: %s
+                       Disposition: automatic-action/MDN-sent-automatically; %s
+                       Received-Content-MIC: %s, sha1
+                       """.formatted(receiver, receiver, messageid, status, mic);
+            
+            mbp2.setText(y);
+            mbp2.setHeader("Content-Type", "message/disposition-notification");
+            mbp2.setHeader("Content-Transfer-Encoding", "7bit");
+            
+            mpInner.addBodyPart(mbp);
+            mpInner.addBodyPart(mbp2);
+            ContentType ct = new ContentType(mpInner.getContentType());
+            boundary = ct.getParameter("boundary");
+           
+            ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+            mpInner.writeTo(bOut);
+            bOut.flush();
+            bOut.close();
+            byte[] data = bOut.toByteArray();
+            try {
+                mp = signMDNnew(data, getSystemSignKey(), boundary); 
+            } catch (Exception ex) {
+                bslog(ex);
+            }
+            
+          //  mp.addBodyPart(mbp);
+          //  mp.addBodyPart(mbp2);
+          //  mp.addBodyPart(mbp3);
+            
+            
+        } catch (Exception ex) {
+            bslog(ex);
+        } 
+        return new mmpx(mp, boundary);
+    }
+     
+    
     public static mmpx code1000(String sender, String receiver, String subject, String filename, String messageid, String mic) {
         MimeBodyPart mbp = new MimeBodyPart();
         String boundary = "";
@@ -2529,17 +2584,21 @@ public class apiUtils {
                 Note: The origin and integrity of the message have been verified.
                 """.formatted(filename, subject, sender, receiver, now);
         try {
-           // mbp.setText(z);
+           
+         /*
            mpInner = bundleit(z, receiver, messageid, mic, "processed");
            ContentType ct = new ContentType(mpInner.getContentType());
            boundary = ct.getParameter("boundary");
+           */
+           mmpx mymmpx = bundleitNew(z, receiver, messageid, mic, "processed");
+           mpInner = mymmpx.mmp();
            // mbp.setContent(mpInner);
            // mbp.addHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
            //  mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
            // mp.addBodyPart(mbp);
            
             
-        } catch (MessagingException ex) {
+        } catch (Exception ex) {
             bslog(ex);
         }
         
