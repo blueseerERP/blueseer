@@ -2026,17 +2026,52 @@ public class apiUtils {
         messagePart.setHeader("Content-Transfer-Encoding", "binary");
         MimeMultipart signedContent = gen.generate(messagePart);
         
-      //  System.out.println("signed stuff: ");
-      //  System.out.println(new String(messagePart.getInputStream().readAllBytes()));
-        MimeBodyPart mbp = new MimeBodyPart();
-        mbp.setContent(signedContent);
-       // mbp.setHeader("Content-Type", signedContent.getContentType());
+      
+       // MimeBodyPart mbp = new MimeBodyPart();
+       // mbp.setContent(signedContent);
+       
+        MimeBodyPart mbp = gen.generateEncapsulated(messagePart);
         mbp.setHeader("Content-Type", "message/disposition-notification");
-      //  mbp.addHeader("Content-Type", "multipart/signed; protocol=\"application/pkcs7-signature\"; boundary=" + "\"" + newboundary + "\"" + "; micalg=sha1");
-      //  mbp.addHeader("Content-Disposition", "attachment; filename=smime.p7m");
-        
+      
      
         return mbp;
+    }
+    
+    public static MimeMultipart signMDNnew(byte[] messg, String keyuser, String boundary) throws Exception {
+        MimeBodyPart messagePart = new MimeBodyPart();
+            messagePart.removeHeader("Content-Type");
+            messagePart.removeHeader("Content-Disposition");
+            InputStream targetStream = new ByteArrayInputStream(messg);
+            ByteArrayDataSource ds = new ByteArrayDataSource(targetStream, "text/plain");
+            messagePart.setDataHandler(new DataHandler(ds));
+        
+        SMIMESignedGenerator gen = new SMIMESignedGenerator(false ? SMIMESignedGenerator.RFC3851_MICALGS : SMIMESignedGenerator.RFC5751_MICALGS);
+        X509Certificate certificate = getPublicKeyAsCert(keyuser);
+        PrivateKey privateKey = getPrivateKey(keyuser);
+        
+        List<X509Certificate> certList = new ArrayList<X509Certificate>();
+        certList.add(certificate);
+        certs = new JcaCertStore(certList);
+        
+        JcaSimpleSignerInfoGeneratorBuilder jSig = new JcaSimpleSignerInfoGeneratorBuilder().setProvider("BC");
+        SignerInfoGenerator sig = jSig.build("SHA1withRSA", privateKey, certificate);
+        gen.addCertificates(certs);
+        gen.addSignerInfoGenerator(sig);
+      //  messagePart.setHeader("Content-Type", "text/plain");
+     //   messagePart.setHeader("Content-Transfer-Encoding", "binary");
+          messagePart.addHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+           
+        MimeMultipart signedContent = gen.generate(messagePart);
+        
+      
+       // MimeBodyPart mbp = new MimeBodyPart();
+       // mbp.setContent(signedContent);
+       
+      //  MimeBodyPart mbp = gen.generateEncapsulated(messagePart);
+      //  mbp.setHeader("Content-Type", "message/disposition-notification");
+      
+     
+        return signedContent;
     }
     
     
@@ -2430,13 +2465,15 @@ public class apiUtils {
     public static MimeMultipart bundleit(String z, String receiver, String messageid, String mic, String status) {
         MimeBodyPart mbp = new MimeBodyPart();
         MimeBodyPart mbp2 = new MimeBodyPart();
+        MimeBodyPart mbp3 = new MimeBodyPart();
         MimeMultipart mp = new MimeMultipart();
+        MimeMultipart mpInner = new MimeMultipart();
         boolean unsigned = false;
         
         try {
             mbp.setText(z);
-          //  mbp.setHeader("Content-Type", "text/plain; charset=us-ascii");
-          //  mbp.setHeader("Content-Transfer-Encoding", "7bit");
+            mbp.setHeader("Content-Type", "text/plain");
+            mbp.setHeader("Content-Transfer-Encoding", "7bit");
             
             String y = """
                        Reporting-UA: BlueSeer Software
@@ -2447,15 +2484,29 @@ public class apiUtils {
                        Received-Content-MIC: %s, sha1
                        """.formatted(receiver, receiver, messageid, status, mic);
             
+            mbp2.setText(y);
+            mbp2.setHeader("Content-Type", "message/disposition-notification");
+            mbp2.setHeader("Content-Transfer-Encoding", "7bit");
             
+            mpInner.addBodyPart(mbp);
+            mpInner.addBodyPart(mbp2);
+            ContentType ct = new ContentType(mpInner.getContentType());
+            String boundary = ct.getParameter("boundary");
+           
+            ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+            mpInner.writeTo(bOut);
+            bOut.flush();
+            bOut.close();
+            byte[] data = bOut.toByteArray();
             try {
-                mbp2 = signMDN(y.getBytes("ISO-8859-1"), getSystemSignKey()); 
+                mp = signMDNnew(data, getSystemSignKey(), boundary); 
             } catch (Exception ex) {
                 bslog(ex);
             }
             
-            mp.addBodyPart(mbp);
-            mp.addBodyPart(mbp2);
+          //  mp.addBodyPart(mbp);
+          //  mp.addBodyPart(mbp2);
+          //  mp.addBodyPart(mbp3);
             
             
         } catch (Exception ex) {
@@ -2468,6 +2519,7 @@ public class apiUtils {
         MimeBodyPart mbp = new MimeBodyPart();
         String boundary = "";
         MimeMultipart mp = new MimeMultipart();
+        MimeMultipart mpInner = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         String z = """
@@ -2478,7 +2530,7 @@ public class apiUtils {
                 """.formatted(filename, subject, sender, receiver, now);
         try {
            // mbp.setText(z);
-           MimeMultipart mpInner = bundleit(z, receiver, messageid, mic, "processed");
+           mpInner = bundleit(z, receiver, messageid, mic, "processed");
            ContentType ct = new ContentType(mpInner.getContentType());
            boundary = ct.getParameter("boundary");
             mbp.setContent(mpInner);
@@ -2491,7 +2543,8 @@ public class apiUtils {
             bslog(ex);
         }
         
-        return new mmpx(mp, boundary);
+      //  return new mmpx(mp, boundary);
+        return new mmpx(mpInner, boundary);
     }
         
     public static mmpx code2000(String sender, String receiver, String subject, String filename, String messageid, String mic) {
