@@ -150,6 +150,7 @@ public class AS2Serv extends HttpServlet {
             
             //response.setContentType("text/plain");
             mdn thismdn = processRequest(request, isDebug);
+            /*
             response.setContentType("multipart/report; report-type=disposition-notification; boundary=" + "\"" + thismdn.boundary() + "\"");
             
             if (thismdn.headers() != null) {
@@ -157,6 +158,7 @@ public class AS2Serv extends HttpServlet {
                     response.setHeader(z.getKey(), z.getValue());
                 }
             } 
+            */
             response.setStatus(thismdn.status());
             response.getWriter().println(thismdn.message());
         }
