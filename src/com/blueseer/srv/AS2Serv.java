@@ -159,6 +159,8 @@ public class AS2Serv extends HttpServlet {
                     response.setHeader(z.getKey(), z.getValue());
                 }
             } 
+            response.setHeader("Content-Transfer-Encoding", "binary");
+            
             
             response.setStatus(thismdn.status());
             response.getWriter().println(thismdn.message());
