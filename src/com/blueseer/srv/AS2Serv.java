@@ -148,7 +148,7 @@ public class AS2Serv extends HttpServlet {
             response.getWriter().println("BlueSeer AS2 server response:  no valid AS2 payload provided");
         } else {
             
-            //response.setContentType("text/plain");
+            response.setContentType("text/plain");
             mdn thismdn = processRequest(request, isDebug);
             /*
             response.setContentType("multipart/report; report-type=disposition-notification; boundary=" + "\"" + thismdn.boundary() + "\"");
