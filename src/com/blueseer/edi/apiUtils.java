@@ -2606,7 +2606,7 @@ public class apiUtils {
             bslog(ex);
         }
         
-        return new mmpx(mp, boundary);
+        return new mmpx(mpInner, boundary);
       //  return mymmpx;
     }
         
