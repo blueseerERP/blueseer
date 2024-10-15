@@ -2571,6 +2571,7 @@ public class apiUtils {
      
     
     public static mmpx code1000(String sender, String receiver, String subject, String filename, String messageid, String mic) {
+        mmpx mymmpx = null;
         MimeBodyPart mbp = new MimeBodyPart();
         String boundary = "";
         MimeMultipart mp = new MimeMultipart();
@@ -2590,7 +2591,7 @@ public class apiUtils {
            ContentType ct = new ContentType(mpInner.getContentType());
            boundary = ct.getParameter("boundary");
            */
-           mmpx mymmpx = bundleitNew(z, receiver, messageid, mic, "processed");
+           mymmpx = bundleitNew(z, receiver, messageid, mic, "processed");
            mpInner = mymmpx.mmp();
            // mbp.setContent(mpInner);
            // mbp.addHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
@@ -2603,7 +2604,7 @@ public class apiUtils {
         }
         
       //  return new mmpx(mp, boundary);
-        return new mmpx(mpInner, boundary);
+        return mymmpx;
     }
         
     public static mmpx code2000(String sender, String receiver, String subject, String filename, String messageid, String mic) {
