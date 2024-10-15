@@ -2494,8 +2494,7 @@ public class apiUtils {
             String boundary = ct.getParameter("boundary");
            
             ByteArrayOutputStream bOut = new ByteArrayOutputStream();
-            // mpInner.writeTo(bOut);
-            mbp2.writeTo(bOut);
+            mpInner.writeTo(bOut);
             bOut.flush();
             bOut.close();
             byte[] data = bOut.toByteArray();
