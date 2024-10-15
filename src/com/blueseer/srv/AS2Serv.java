@@ -152,13 +152,13 @@ public class AS2Serv extends HttpServlet {
             mdn thismdn = processRequest(request, isDebug);
             /*
             response.setContentType("multipart/report; report-type=disposition-notification; boundary=" + "\"" + thismdn.boundary() + "\"");
-            
+            */
             if (thismdn.headers() != null) {
                 for (Map.Entry<String, String> z : thismdn.headers().entrySet()) {
                     response.setHeader(z.getKey(), z.getValue());
                 }
             } 
-            */
+            
             response.setStatus(thismdn.status());
             response.getWriter().println(thismdn.message());
         }
