@@ -2065,7 +2065,8 @@ public class apiUtils {
           messagePart.addHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
            
         MimeMultipart signedContent = gen.generate(messagePart);
-        
+        System.out.println("HERE IS WHAT IS BEING SIGNED: ");
+        System.out.println(new String (messagePart.getInputStream().readAllBytes()));
       
        // MimeBodyPart mbp = new MimeBodyPart();
        // mbp.setContent(signedContent);
