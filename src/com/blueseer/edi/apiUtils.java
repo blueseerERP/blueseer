@@ -1794,7 +1794,8 @@ public class apiUtils {
             } catch (CMSException ex) {
                 bslog(ex);
             }
-            /*
+            
+            
             AttributeTable attributes = signer.getSignedAttributes();
             Attribute attribute = attributes.get(CMSAttributes.messageDigest);
             DEROctetString digest = (DEROctetString) attribute.getAttrValues().getObjectAt(0);
@@ -1803,7 +1804,8 @@ public class apiUtils {
             System.out.println(Hex.toHexString(digest.getOctets()));
             System.out.println("signer hex string:");
             System.out.println(Hex.toHexString(signer.getContentDigest()));
-            */
+            
+            
         } catch ( CMSException | OperatorCreationException | CertificateException ex) {
             bslog(ex);
         }
@@ -1824,8 +1826,8 @@ public class apiUtils {
            
            if (mbp.getInputStream() != null && ! mbp.getContentType().contains("signature")) { // must be non sig file
             //  System.out.println("verifyMDNSignature is NOT signature bodypart: " + j);
-            //  System.out.println("verifyMDNSignature mpb number: " + j);
-            //  System.out.println(new String (mbp.getInputStream().readAllBytes()));
+              System.out.println("verifyMDNSignature mpb number: " + j);
+              System.out.println(new String (mbp.getInputStream().readAllBytes()));
               ByteArrayOutputStream aos = new ByteArrayOutputStream();
               mp.getBodyPart(0).writeTo(aos);
               aos.close(); 
@@ -1835,8 +1837,8 @@ public class apiUtils {
            if (mbp.getInputStream() != null && mbp.getContentType().contains("signature")) { // must be sig
               
             //  System.out.println("verifyMDNSignature is signature bodypart: " + j);
-            //  System.out.println("verifyMDNSignature mpb number: " + j);
-            //  System.out.println(new String (Base64.encode(mbp.getInputStream().readAllBytes())));
+              System.out.println("verifyMDNSignature mpb number: " + j);
+              System.out.println(new String (Base64.encode(mbp.getInputStream().readAllBytes())));
               Signature = IOUtils.toByteArray((InputStream) mbp.getContent());
            }
         }
@@ -2019,7 +2021,7 @@ public class apiUtils {
         certs = new JcaCertStore(certList);
         
         JcaSimpleSignerInfoGeneratorBuilder jSig = new JcaSimpleSignerInfoGeneratorBuilder().setProvider("BC");
-        SignerInfoGenerator sig = jSig.build("SHA1withRSA", privateKey, certificate);
+        SignerInfoGenerator sig = jSig.build("SHA1WithRSA", privateKey, certificate);
         gen.addCertificates(certs);
         gen.addSignerInfoGenerator(sig);
         messagePart.setHeader("Content-Type", "text/plain");
@@ -2054,7 +2056,7 @@ public class apiUtils {
         certs = new JcaCertStore(certList);
         
         JcaSimpleSignerInfoGeneratorBuilder jSig = new JcaSimpleSignerInfoGeneratorBuilder().setProvider("BC");
-        SignerInfoGenerator sig = jSig.build("SHA256withRSA", privateKey, certificate);
+        SignerInfoGenerator sig = jSig.build("SHA1WithRSA", privateKey, certificate);
         gen.addCertificates(certs);
         gen.addSignerInfoGenerator(sig);
       //  messagePart.setHeader("Content-Type", "text/plain");
@@ -3037,11 +3039,19 @@ public class apiUtils {
         }
         
          if (isDebug && mbp != null) { 
+             
+             // compare hash values
+             System.out.println("HERE:  VERIFY MDN");
+             verifyMDNSignature(mbp.getInputStream().readAllBytes(), mbp.getContentType());
+             
             String debugfile = "debugMDN." + now + "." + Long.toHexString(System.currentTimeMillis());
             Path pathinput = FileSystems.getDefault().getPath("temp" + "/" + debugfile);
             try (FileOutputStream stream = new FileOutputStream(pathinput.toFile())) {
             stream.write(mbp.getInputStream().readAllBytes());
             }
+            
+            
+            
         }
         
         return x; 

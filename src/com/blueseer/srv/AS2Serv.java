@@ -388,7 +388,7 @@ public class AS2Serv extends HttpServlet {
             return createMDN("2005", elementals, returnheaders, isDebug);
         }
         
-        if (isDebug) 
+        if (isDebug && mp.isComplete()) 
         System.out.println("MimeMultipart count=" + mp.getCount() + "/" + mp.getContentType());
         
         // if signed...should have a parent mp with two sub-mps (one the file and the other the sig)
