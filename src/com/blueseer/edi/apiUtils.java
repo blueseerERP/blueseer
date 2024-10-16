@@ -1789,6 +1789,7 @@ public class apiUtils {
                 return x;
             }
             X509CertificateHolder certHolder = certIt.next();
+            
             try {
                 x = signer.verify(new JcaSimpleSignerInfoVerifierBuilder().build(certHolder));
             } catch (CMSException ex) {
@@ -1834,6 +1835,7 @@ public class apiUtils {
               FileWHeadersBytes = aos.toByteArray();
              // FileWHeadersBytes = IOUtils.toByteArray(mbp.getInputStream());
            }
+           /*
            if (mbp.getInputStream() != null && mbp.getContentType().contains("signature")) { // must be sig
               
             //  System.out.println("verifyMDNSignature is signature bodypart: " + j);
@@ -1841,6 +1843,10 @@ public class apiUtils {
               System.out.println(new String (Base64.encode(mbp.getInputStream().readAllBytes())));
              // Signature = IOUtils.toByteArray((InputStream) mbp.getContent());
               Signature = mbp.getInputStream().readAllBytes();
+           }
+           */
+           if (mbp.getInputStream() != null && mbp.getContentType().contains("pkcs7-signature")) { // must be sig
+            Signature = IOUtils.toByteArray((InputStream) mbp.getContent());
            }
         }
         if (FileWHeadersBytes != null && Signature != null) {  
@@ -2065,8 +2071,12 @@ public class apiUtils {
           messagePart.addHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
            
         MimeMultipart signedContent = gen.generate(messagePart);
-        System.out.println("HERE IS WHAT IS BEING SIGNED: ");
-        System.out.println(new String (messagePart.getInputStream().readAllBytes()));
+        System.out.println("HERE IS WHAT IS BEING SIGNED bodypart0: ");
+        System.out.println(new String (signedContent.getBodyPart(0).getInputStream().readAllBytes()));
+        //System.out.println(new String (messagePart.getInputStream().readAllBytes()));
+        System.out.println("HERE IS WHAT IS BEING SIGNED bodypart1: ");
+        //System.out.println(new String (signedContent.getBodyPart(1).getInputStream().readAllBytes()));
+        System.out.println(new String (Base64.encode(signedContent.getBodyPart(1).getInputStream().readAllBytes())));
       
        // MimeBodyPart mbp = new MimeBodyPart();
        // mbp.setContent(signedContent);
