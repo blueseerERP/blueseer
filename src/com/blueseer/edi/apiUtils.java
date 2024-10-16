@@ -1839,7 +1839,8 @@ public class apiUtils {
             //  System.out.println("verifyMDNSignature is signature bodypart: " + j);
               System.out.println("verifyMDNSignature mpb number: " + j);
               System.out.println(new String (Base64.encode(mbp.getInputStream().readAllBytes())));
-              Signature = IOUtils.toByteArray((InputStream) mbp.getContent());
+             // Signature = IOUtils.toByteArray((InputStream) mbp.getContent());
+              Signature = mbp.getInputStream().readAllBytes();
            }
         }
         if (FileWHeadersBytes != null && Signature != null) {  
