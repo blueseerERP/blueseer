@@ -693,7 +693,7 @@ public class ItemMaint extends javax.swing.JPanel implements IBlueSeerT  {
             expire = setDateDB(dcexpire.getDate());
         }
         item_mstr x = new item_mstr(null, 
-                tbkey.getText().toString(),
+                tbkey.getText(),
                 tbdesc.getText().toUpperCase(),
                 bsParseInt(tblotsize.getText()),
                 bsParseDouble(tbsellprice.getText()),

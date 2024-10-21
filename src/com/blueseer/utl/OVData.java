@@ -18073,6 +18073,7 @@ return mystring;
     }    
         
     public static void printBOMJasper(String item, String bom, String matcost, String opcost, String curcost) {
+        
         try{
              
             try (Connection con = DriverManager.getConnection(url + db, user, pass)) {

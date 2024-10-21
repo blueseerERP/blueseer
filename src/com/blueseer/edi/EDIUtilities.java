@@ -35,6 +35,7 @@ import static com.blueseer.edi.EDI.generate997;
 import static com.blueseer.edi.apiUtils.calculateMIC;
 import static com.blueseer.edi.apiUtils.hashdigest;
 import static com.blueseer.edi.apiUtils.hashdigestString;
+import static com.blueseer.edi.apiUtils.verifySignatureView;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import java.awt.Component;
@@ -317,6 +318,9 @@ public class EDIUtilities extends javax.swing.JPanel {
                 }
                 if (util.equals("6")) {
                     create997(b);
+                }
+                if (util.equals("7")) {
+                    verifyHashSignature(b);
                 }
             } else { // no period to split...must be blank or malformed selection element
                resetVariables();
@@ -900,6 +904,28 @@ public class EDIUtilities extends javax.swing.JPanel {
         }
     }
     
+    public void verifyHashSignature(boolean input) {
+        taoutput.setText("");
+        String mic = "";
+        String[] x = new String[]{"","","","","",""};
+        if (! tainput.getText().isEmpty()) {
+            try { 
+                x = verifySignatureView(tainput.getText().getBytes(), "text/plain");
+            } catch (MessagingException ex) {
+                Logger.getLogger(EDIUtilities.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(EDIUtilities.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            taoutput.setText("boolean: " + x[0] + "\n" + 
+                    "Sig hex: " + x[1] + "\n" +  
+                    "Data hex: " + x[2] + "\n" +
+                    "Sig tostring: " + x[3] + "\n" +
+                    "ByteCount FilewHeaders: " + x[4] + "\n" +
+                    "ByteCount signature: " + x[5] + "\n");
+         }
+    }
+    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -959,7 +985,7 @@ public class EDIUtilities extends javax.swing.JPanel {
         jPanel1.setName("panelmain"); // NOI18N
         jPanel1.setPreferredSize(new java.awt.Dimension(1103, 625));
 
-        ddtable.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1.  determine hex value of delimiters in X12 file", "2.  convert delimiter from original to newline in X12 file", "3.  count occurrences of hex character", "4.  get SHA-1 MIC/Digest of content", "5.  decrypt PGP file with passphrase and keyfile", "6.  create 997 from inbound envelope" }));
+        ddtable.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "1.  determine hex value of delimiters in X12 file", "2.  convert delimiter from original to newline in X12 file", "3.  count occurrences of hex character", "4.  get SHA-1 MIC/Digest of content", "5.  decrypt PGP file with passphrase and keyfile", "6.  create 997 from inbound envelope", "7.  verify hash signature" }));
         ddtable.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ddtableActionPerformed(evt);

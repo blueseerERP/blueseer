@@ -40,6 +40,7 @@ import static com.blueseer.edi.apiUtils.createMDN;
 import static com.blueseer.edi.apiUtils.hashdigest;
 import com.blueseer.edi.apiUtils.mdn;
 import static com.blueseer.edi.apiUtils.verifySignature;
+import static com.blueseer.edi.apiUtils.verifySignatureView;
 import static com.blueseer.edi.ediData.getAS2InfoByIDs;
 import com.blueseer.inv.invData;
 import com.blueseer.sch.schData;
@@ -159,7 +160,7 @@ public class AS2Serv extends HttpServlet {
                     response.setHeader(z.getKey(), z.getValue());
                 }
             } 
-            response.setHeader("Content-Transfer-Encoding", "binary");
+            response.setHeader("Content-Transfer-Encoding", "7bit");
             
             
             response.setStatus(thismdn.status());
@@ -381,15 +382,19 @@ public class AS2Serv extends HttpServlet {
         
         // establish mimemultipart format of decrypted data
         MimeMultipart mp  = new MimeMultipart(new ByteArrayDataSource(finalContent, request.getContentType()));
-           
+        
+        if (isDebug && mp.isComplete()) {
+        System.out.println("request ContentType=" + request.getContentType());
+        }
         
         if (mp.getContentType().isEmpty()) {
             //return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "MimeMultipart is incomplete " + sender + "/" + receiver);  
             return createMDN("2005", elementals, returnheaders, isDebug);
         }
         
-        if (isDebug && mp.isComplete()) 
+        if (isDebug && mp.isComplete()) {
         System.out.println("MimeMultipart count=" + mp.getCount() + "/" + mp.getContentType());
+        }
         
         // if signed...should have a parent mp with two sub-mps (one the file and the other the sig)
         for (int i = 0; i < mp.getCount(); i++) {
@@ -399,6 +404,7 @@ public class AS2Serv extends HttpServlet {
                       
             if (isDebug)
             System.out.println("here--> level 1 mp count: " + i + " contentType: " + contentType);
+            
             
             // if signed...mpsub should have two parts (one the file and the other the sig)
             MimeMultipart mpsub = new MimeMultipart(new ByteArrayDataSource(finalContent, contentType));
@@ -463,12 +469,30 @@ public class AS2Serv extends HttpServlet {
                // return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "Signature content is null" + sender + "/" + receiver);
                return createMDN("2015", elementals, returnheaders, isDebug);
            } else {
-             validSignature = verifySignature(FileWHeadersBytes, Signature);  
+             validSignature = verifySignature(FileWHeadersBytes, Signature); 
            }
 
 
-           if (isDebug)
-            System.out.println("validSignature: " + validSignature);    
+           if (isDebug) {
+            System.out.println("validSignature: " + validSignature);
+            System.out.println("ByteCount FileWHeadersBytes: " + String.valueOf(FileWHeadersBytes.length)); 
+            System.out.println("ByteCount Signature: " + String.valueOf(Signature.length)); 
+            
+            String debugfile = "FileWHeadersBytes." + now + "." + Long.toHexString(System.currentTimeMillis());
+            Path pathinput = FileSystems.getDefault().getPath("temp" + "/" + debugfile);
+            try (FileOutputStream stream = new FileOutputStream(pathinput.toFile())) {
+            stream.write(FileWHeadersBytes);
+            }
+            
+            debugfile = "Signature." + now + "." + Long.toHexString(System.currentTimeMillis());
+            pathinput = FileSystems.getDefault().getPath("temp" + "/" + debugfile);
+            try (FileOutputStream stream = new FileOutputStream(pathinput.toFile())) {
+            stream.write( new String(Base64.encode(Signature)).getBytes());
+            }
+            
+            
+            
+           }
 
            if (! validSignature) {
              // return new mdn(HttpServletResponse.SC_BAD_REQUEST, null, "Signature could not be validated " + sender + "/" + receiver); 
