@@ -2244,8 +2244,8 @@ public class apiUtils {
         gen.addSignerInfoGenerator(sig);
       //  messagePart.setHeader("Content-Type", "text/plain");
      //   messagePart.setHeader("Content-Transfer-Encoding", "binary");
-      //  messagePart.addHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + "--" + boundary + "\"");
-        messagePart.addHeader("Content-Type", "application/EDI; report-type=disposition-notification; boundary=" + "\"" + "--" + boundary + "\"");
+        messagePart.addHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + "--" + boundary + "\"");
+       // messagePart.addHeader("Content-Type", "application/EDI; report-type=disposition-notification; boundary=" + "\"" + "--" + boundary + "\"");
         
        // messagePart.addHeader("Content-Type", "multipart/signed; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
       //  messagePart.setHeader("Content-Disposition", "attachment; filename=" + filename);
