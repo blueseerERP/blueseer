@@ -126,7 +126,6 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.io.Charsets;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -145,8 +144,6 @@ import org.bouncycastle.asn1.DEROctetString;
 import org.bouncycastle.asn1.cms.Attribute;
 import org.bouncycastle.asn1.cms.AttributeTable;
 import org.bouncycastle.asn1.cms.CMSAttributes;
-import org.bouncycastle.asn1.pkcs.PrivateKeyInfo;
-import org.bouncycastle.asn1.pkcs.RSAPrivateKey;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.X500NameBuilder;
 import org.bouncycastle.asn1.x500.style.RFC4519Style;
@@ -167,14 +164,12 @@ import org.bouncycastle.cms.CMSEnvelopedDataGenerator;
 import org.bouncycastle.cms.CMSException;
 import org.bouncycastle.cms.CMSProcessableByteArray;
 import org.bouncycastle.cms.CMSSignedData;
-import org.bouncycastle.cms.CMSSignedDataGenerator;
 import org.bouncycastle.cms.CMSTypedData;
 import org.bouncycastle.cms.KeyTransRecipientInformation;
 import org.bouncycastle.cms.RecipientInformation;
 import org.bouncycastle.cms.SignerInfoGenerator;
 import org.bouncycastle.cms.SignerInformation;
 import org.bouncycastle.cms.SignerInformationStore;
-import org.bouncycastle.cms.jcajce.JcaSignerInfoGeneratorBuilder;
 import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoGeneratorBuilder;
 import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoVerifierBuilder;
 import org.bouncycastle.cms.jcajce.JceCMSContentEncryptorBuilder;
@@ -1821,6 +1816,13 @@ public class apiUtils {
         byte[] Signature = null;
         MimeMultipart mp = new MimeMultipart(new ByteArrayDataSource(data, contentType));
         
+        
+        System.out.println("MP Count: " + mp.getCount());
+        System.out.println("MP ContentType: " + mp.getContentType() + "   /   " + contentType);
+        System.out.println("data size: " + data.length);
+        
+        
+        
         if (mp.getCount() < 2 ) { // ...must not be a signature...signed MDN required
             // need logging verbiage here
             return new String[]{"false","MP count is less than 2","","","",""};
@@ -1830,11 +1832,14 @@ public class apiUtils {
                     MimeBodyPart mbp = (MimeBodyPart) mp.getBodyPart(j); 
                     
                     if (! mbp.getContentType().contains("smime.p7s")) { // must be non sig file
-                 
                     
+                    ContentType ct = new ContentType(mbp.getContentType());
+                    System.out.println("HERE IS verify mbp BOUNDARY: " + ct.getParameter("boundary"));
+
                     /*
                         // must be multiPart...need to get 2nd body of multipart
                     MimeMultipart mpInner = new MimeMultipart(new ByteArrayDataSource(mbp.getInputStream().readAllBytes(), contentType));
+                    
                     ByteArrayOutputStream aos = new ByteArrayOutputStream();
                     mpInner.getBodyPart(0).writeTo(aos);
                     aos.close(); 
@@ -1846,13 +1851,15 @@ public class apiUtils {
                       aos.close(); 
                       FileWHeadersBytes = aos.toByteArray();
                      
-                    //  FileWHeadersBytes = mbp.getInputStream().readAllBytes();
+                  //  FileWHeadersBytes = mbp.getRawInputStream().readAllBytes();
                     }
                     
                     if (mbp.getContentType().contains("smime.p7s")) { // must be sig
                         Signature = IOUtils.toByteArray((InputStream) mbp.getContent());
                     }
                } // for each mpsub (should be two if signed) 
+        
+        System.out.println("FileWHeaderBytes size: " + FileWHeadersBytes.length);
         
         /*
         for (int j = 0; j < mp.getCount(); j++) {
@@ -2237,7 +2244,8 @@ public class apiUtils {
         gen.addSignerInfoGenerator(sig);
       //  messagePart.setHeader("Content-Type", "text/plain");
      //   messagePart.setHeader("Content-Transfer-Encoding", "binary");
-        messagePart.addHeader("Content-Type", "multipart/EDI; report-type=disposition-notification; boundary=" + "\"" + "--" + boundary + "\"");
+      //  messagePart.addHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + "--" + boundary + "\"");
+        messagePart.addHeader("Content-Type", "application/EDI; report-type=disposition-notification; boundary=" + "\"" + "--" + boundary + "\"");
         
        // messagePart.addHeader("Content-Type", "multipart/signed; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
       //  messagePart.setHeader("Content-Disposition", "attachment; filename=" + filename);
@@ -2246,6 +2254,16 @@ public class apiUtils {
         byte[] messagePartBytes = messagePart.getInputStream().readAllBytes();
         
         MimeMultipart signedContent = gen.generate(messagePart);
+       
+        //MimeBodyPart xxx = gen.generateEncapsulated(messagePart);
+        //MimeMultipart xxxmmp = new MimeMultipart();
+        //xxxmmp.addBodyPart(xxx);
+                
+        ContentType ct = new ContentType(messagePart.getContentType());
+        System.out.println("HERE IS messagePart BOUNDARY before signing: " + ct.getParameter("boundary"));
+        
+        ContentType ct2 = new ContentType(signedContent.getContentType());
+        System.out.println("HERE IS messagePart BOUNDARY after signing: " + ct2.getParameter("boundary"));
         
         
         System.out.println("HERE IS WHAT IS BEING SIGNED bodypart0: ");
@@ -2278,6 +2296,14 @@ public class apiUtils {
                 System.out.println("MY TEST signedContent: " + ji + " = " + j);
                 ji++;
             }
+            MessageDigest md = MessageDigest.getInstance("SHA-1");
+            md.update(signedContent.getBodyPart(0).getInputStream().readAllBytes());
+            byte[] digest = md.digest();
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : digest) {
+                hexString.append(String.format("%02x", b));
+            }
+            System.out.println("Java Security Digest: " + hexString.toString());
             // HERE...to here
             
            
@@ -2332,6 +2358,7 @@ public class apiUtils {
         MimeMultipart signedContent = gen.generate(messagePart);
         
         
+           
         System.out.println("HERE IS WHAT IS BEING SIGNED bodypart0: ");
         System.out.println(new String (signedContent.getBodyPart(0).getInputStream().readAllBytes()));
         //System.out.println(new String (messagePart.getInputStream().readAllBytes()));
@@ -2801,8 +2828,7 @@ public class apiUtils {
             bOut.close();
             byte[] data = bOut.toByteArray();
             try {
-               // mp = signMDNexp(data, getSystemSignKey(), boundary); 
-               mp = signMDNexp(y.getBytes(), getSystemSignKey(), boundary); 
+               mp = signMDNnew(data, getSystemSignKey(), boundary); 
             } catch (Exception ex) {
                 bslog(ex);
             }
@@ -2833,6 +2859,7 @@ public class apiUtils {
         MimeMultipart mpInner = new MimeMultipart();
         LocalDateTime localDateTime = LocalDateTime.now();
         String now = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        now = "00000";
         String z = """
                 The message <%s> with subject <%s> has been received.  
                 Message was sent from: <%s>  to:  <%s>
