@@ -3339,7 +3339,7 @@ public class apiUtils {
         
         
         if (mbp != null) {
-        
+            headers.put("Message-ID", "BlueSeer-unique." + now + "." + Long.toHexString(System.currentTimeMillis()));
             x = new mdn(HttpServletResponse.SC_OK, headers, new String(mbp.getInputStream().readAllBytes()), boundary);
         } else {
             x = new mdn(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null, "problem creating MIME structure for MDN");
