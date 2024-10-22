@@ -93,6 +93,7 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.Security;
+import java.security.Signature;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
@@ -1833,8 +1834,8 @@ public class apiUtils {
                     
                     if (! mbp.getContentType().contains("smime.p7s")) { // must be non sig file
                     
-                    ContentType ct = new ContentType(mbp.getContentType());
-                    System.out.println("HERE IS verify mbp BOUNDARY: " + ct.getParameter("boundary"));
+                  //  ContentType ct = new ContentType(mbp.getContentType());
+                 //   System.out.println("HERE IS verify mbp BOUNDARY: " + ct.getParameter("boundary"));
 
                     /*
                         // must be multiPart...need to get 2nd body of multipart
@@ -1859,7 +1860,7 @@ public class apiUtils {
                     }
                } // for each mpsub (should be two if signed) 
         
-        System.out.println("FileWHeaderBytes size: " + FileWHeadersBytes.length);
+      //  System.out.println("FileWHeaderBytes size: " + FileWHeadersBytes.length);
         
         /*
         for (int j = 0; j < mp.getCount(); j++) {
@@ -1891,6 +1892,7 @@ public class apiUtils {
         }
         
         */
+        /*
         String  now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
         String debugfile = "FileWHeadersBytesMDN." + now + "." + Long.toHexString(System.currentTimeMillis());
             Path pathinput = FileSystems.getDefault().getPath("temp" + "/" + debugfile);
@@ -1904,7 +1906,7 @@ public class apiUtils {
             stream.write(Signature);
             }
             
-            
+        */    
         
         if (FileWHeadersBytes == null || Signature == null) {
             return new String[]{"false","plaintext or signedData is null","","","",""};
@@ -1932,6 +1934,7 @@ public class apiUtils {
             } catch (CMSException ex) {
                 bslog(ex);
             }
+            
             
             
             AttributeTable attributes = signer.getSignedAttributes();
@@ -2231,21 +2234,21 @@ public class apiUtils {
         List<X509Certificate> certList = new ArrayList<X509Certificate>();
         certList.add(certificate);
         Store certs = new JcaCertStore(certList);
-        
+        /*
         System.out.println("HERE IS certificate serial number: " + keyuser + "->"  + certificate.getSerialNumber());
         System.out.println("HERE IS certificate signature: " + keyuser + "->"  + certificate.getSignature());
         System.out.println("HERE IS certificate AlgName: " + keyuser + "->"  + certificate.getSigAlgName());
         System.out.println("HERE IS privatekey algorithm: " + keyuser + "->"  + privateKey.getAlgorithm());
         System.out.println("HERE IS privatekey format: "  + keyuser + "->" + privateKey.getFormat());
-       
+       */
         JcaSimpleSignerInfoGeneratorBuilder jSig = new JcaSimpleSignerInfoGeneratorBuilder().setProvider("BC");
         SignerInfoGenerator sig = jSig.build("SHA1WithRSA", privateKey, certificate);
         gen.addCertificates(certs);
         gen.addSignerInfoGenerator(sig);
       //  messagePart.setHeader("Content-Type", "text/plain");
      //   messagePart.setHeader("Content-Transfer-Encoding", "binary");
-        messagePart.addHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + "--" + boundary + "\"");
-       // messagePart.addHeader("Content-Type", "application/EDI; report-type=disposition-notification; boundary=" + "\"" + "--" + boundary + "\"");
+     //   messagePart.addHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + "--" + boundary + "\"");
+        messagePart.addHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
         
        // messagePart.addHeader("Content-Type", "multipart/signed; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
       //  messagePart.setHeader("Content-Disposition", "attachment; filename=" + filename);
@@ -2259,27 +2262,24 @@ public class apiUtils {
         //MimeMultipart xxxmmp = new MimeMultipart();
         //xxxmmp.addBodyPart(xxx);
                 
-        ContentType ct = new ContentType(messagePart.getContentType());
-        System.out.println("HERE IS messagePart BOUNDARY before signing: " + ct.getParameter("boundary"));
-        
-        ContentType ct2 = new ContentType(signedContent.getContentType());
-        System.out.println("HERE IS messagePart BOUNDARY after signing: " + ct2.getParameter("boundary"));
-        
-        
+       
+        /*
         System.out.println("HERE IS WHAT IS BEING SIGNED bodypart0: ");
         System.out.println(new String (signedContent.getBodyPart(0).getInputStream().readAllBytes()));
         //System.out.println(new String (messagePart.getInputStream().readAllBytes()));
         System.out.println("HERE IS WHAT IS BEING SIGNED bodypart1: ");
         //System.out.println(new String (signedContent.getBodyPart(1).getInputStream().readAllBytes()));
         System.out.println(new String (Base64.encode(signedContent.getBodyPart(1).getInputStream().readAllBytes())));
-      
+      */
+        
+        /*
         String  now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
         String debugfile = "signedContentMDN." + now + "." + Long.toHexString(System.currentTimeMillis());
             Path pathinput = FileSystems.getDefault().getPath("temp" + "/" + debugfile);
             try (FileOutputStream stream = new FileOutputStream(pathinput.toFile())) {
             signedContent.writeTo(stream);
             }
-        
+        */
         // HERE...take this out
             ByteArrayOutputStream yy = new ByteArrayOutputStream();
             signedContent.writeTo(yy);
@@ -2297,17 +2297,29 @@ public class apiUtils {
                 ji++;
             }
             MessageDigest md = MessageDigest.getInstance("SHA-1");
-            md.update(signedContent.getBodyPart(0).getInputStream().readAllBytes());
+            md.update(messagePartBytes);
             byte[] digest = md.digest();
             StringBuilder hexString = new StringBuilder();
             for (byte b : digest) {
                 hexString.append(String.format("%02x", b));
             }
             System.out.println("Java Security Digest: " + hexString.toString());
+            
+            
+            Signature signature = Signature.getInstance("SHA1withRSA");
+            signature.initSign(privateKey);
+            signature.update(messagePartBytes);
+            byte[] signatureBytes = signature.sign();
+            signature.initVerify(certificate);
+            signature.update(messagePartBytes);
+            boolean isVerified = signature.verify(signatureBytes);
+            
+            System.out.println("Java Signature boolean: " + isVerified);
+            System.out.println(new String (Base64.encode(signatureBytes)));
+      
             // HERE...to here
             
-           
-        
+            
        // MimeBodyPart mbp = new MimeBodyPart();
        // mbp.setContent(signedContent);
        
@@ -2317,92 +2329,7 @@ public class apiUtils {
      
         return signedContent;
     }
-    
-    public static MimeMultipart signMDNexp(byte[] messg, String keyuser, String boundary) throws Exception {
-        MimeBodyPart messagePart = new MimeBodyPart();
-            messagePart.removeHeader("Content-Type");
-            messagePart.removeHeader("Content-Disposition");
-            InputStream targetStream = new ByteArrayInputStream(messg);
-          //  ByteArrayDataSource ds = new ByteArrayDataSource(targetStream, "multipart/signed; protocol=\"application/pkcs7-signature\"; micalg=sha-1;");
-          ByteArrayDataSource ds = new ByteArrayDataSource(targetStream, "text/plain");  
-          messagePart.setDataHandler(new DataHandler(ds));
-            
-        SMIMESignedGenerator gen = new SMIMESignedGenerator(false ? SMIMESignedGenerator.RFC3851_MICALGS : SMIMESignedGenerator.RFC5751_MICALGS);
-        X509Certificate certificate = getPublicKeyAsCert(keyuser);
-        PrivateKey privateKey = getPrivateKey(keyuser);
-        
-        List<X509Certificate> certList = new ArrayList<X509Certificate>();
-        certList.add(certificate);
-        Store certs = new JcaCertStore(certList);
-        
-        System.out.println("HERE IS certificate serial number: " + keyuser + "->"  + certificate.getSerialNumber());
-        System.out.println("HERE IS certificate signature: " + keyuser + "->"  + certificate.getSignature());
-        System.out.println("HERE IS certificate AlgName: " + keyuser + "->"  + certificate.getSigAlgName());
-        System.out.println("HERE IS privatekey algorithm: " + keyuser + "->"  + privateKey.getAlgorithm());
-        System.out.println("HERE IS privatekey format: "  + keyuser + "->" + privateKey.getFormat());
-       
-        JcaSimpleSignerInfoGeneratorBuilder jSig = new JcaSimpleSignerInfoGeneratorBuilder().setProvider("BC");
-        SignerInfoGenerator sig = jSig.build("SHA1WithRSA", privateKey, certificate);
-        gen.addCertificates(certs);
-        gen.addSignerInfoGenerator(sig);
-        messagePart.setHeader("Content-Type", "message/disposition-notification");
-     //   messagePart.setHeader("Content-Transfer-Encoding", "binary");
-     //   messagePart.addHeader("Content-Type", "multipart/EDI; report-type=disposition-notification; boundary=" + "\"" + "--" + boundary + "\"");
-        
-       // messagePart.addHeader("Content-Type", "multipart/signed; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
-      //  messagePart.setHeader("Content-Disposition", "attachment; filename=" + filename);
-        messagePart.setHeader("Content-Transfer-Encoding", "binary");  
-        
-        byte[] messagePartBytes = messagePart.getInputStream().readAllBytes();
-        
-        MimeMultipart signedContent = gen.generate(messagePart);
-        
-        
-           
-        System.out.println("HERE IS WHAT IS BEING SIGNED bodypart0: ");
-        System.out.println(new String (signedContent.getBodyPart(0).getInputStream().readAllBytes()));
-        //System.out.println(new String (messagePart.getInputStream().readAllBytes()));
-        System.out.println("HERE IS WHAT IS BEING SIGNED bodypart1: ");
-        //System.out.println(new String (signedContent.getBodyPart(1).getInputStream().readAllBytes()));
-        System.out.println(new String (Base64.encode(signedContent.getBodyPart(1).getInputStream().readAllBytes())));
-      
-        String  now = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-        String debugfile = "signedContentMDN." + now + "." + Long.toHexString(System.currentTimeMillis());
-            Path pathinput = FileSystems.getDefault().getPath("temp" + "/" + debugfile);
-            try (FileOutputStream stream = new FileOutputStream(pathinput.toFile())) {
-            signedContent.writeTo(stream);
-            }
-        
-        // HERE...take this out
-            ByteArrayOutputStream yy = new ByteArrayOutputStream();
-            signedContent.writeTo(yy);
-            yy.flush();
-            yy.close();
-            System.out.println("messg byte length: " + messg.length);
-            System.out.println("messagePart byte length: " + messagePartBytes.length);
-            System.out.println("signedContent byte length: " + yy.toByteArray().length);
-            String contentType = "multipart/signed; protocol=\"application/pkcs7-signature\"; micalg=sha-1;";
-            String[] jj = verifySignatureView(yy.toByteArray(), contentType);
-            int ji = 0;
-            System.out.println("MY TEST signedContent: content type = " + contentType);
-            for (String j : jj) {
-                System.out.println("MY TEST signedContent: " + ji + " = " + j);
-                ji++;
-            }
-            // HERE...to here
-            
-           
-        
-       // MimeBodyPart mbp = new MimeBodyPart();
-       // mbp.setContent(signedContent);
-       
-      //  MimeBodyPart mbp = gen.generateEncapsulated(messagePart);
-      //  mbp.setHeader("Content-Type", "message/disposition-notification");
-      
      
-        return signedContent;
-    }
-    
     
     public static boolean isEncrypted(byte[] encryptedData) {
             CMSEnvelopedData envelopedData;
@@ -3263,8 +3190,7 @@ public class apiUtils {
         MimeBodyPart mbp = new MimeBodyPart();
         
         String z;
-        LocalDateTime localDateTime = LocalDateTime.now();
-        String now = localDateTime.format(DateTimeFormatter.ISO_DATE);
+        
         String boundary = "";
         mmpx mymmpx = null;
         
@@ -3370,22 +3296,6 @@ public class apiUtils {
             x = new mdn(HttpServletResponse.SC_OK, headers, new String(mbp.getInputStream().readAllBytes()), boundary);
         } else {
             x = new mdn(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null, "problem creating MIME structure for MDN");
-        }
-        
-         if (isDebug && mbp != null) { 
-             
-             // compare hash values
-             System.out.println("HERE:  VERIFY MDN");
-             verifyMDNSignature(mbp.getInputStream().readAllBytes(), "multipart/signed; protocol=\"application/pkcs7-signature\"; micalg=sha-1;");
-             
-            String debugfile = "debugMDN." + now + "." + Long.toHexString(System.currentTimeMillis());
-            Path pathinput = FileSystems.getDefault().getPath("temp" + "/" + debugfile);
-            try (FileOutputStream stream = new FileOutputStream(pathinput.toFile())) {
-            stream.write(mbp.getInputStream().readAllBytes());
-            }
-            
-            
-            
         }
         
         return x; 

@@ -160,11 +160,22 @@ public class AS2Serv extends HttpServlet {
                     response.setHeader(z.getKey(), z.getValue());
                 }
             } 
-            response.setHeader("Content-Transfer-Encoding", "7bit");
-            
-            
+            response.setHeader("Content-Transfer-Encoding", "7bit");            
             response.setStatus(thismdn.status());
             response.getWriter().println(thismdn.message());
+            
+            
+            if (isDebug) { 
+            LocalDateTime localDateTime = LocalDateTime.now();
+            String now = localDateTime.format(DateTimeFormatter.ISO_DATE);
+            String debugfile = "debugMDN." + now + "." + Long.toHexString(System.currentTimeMillis());
+            Path pathinput = FileSystems.getDefault().getPath("temp" + "/" + debugfile);
+            try (FileOutputStream stream = new FileOutputStream(pathinput.toFile())) {
+            stream.write(thismdn.message().getBytes());
+            }
+        }
+            
+            
         }
     }
     
@@ -402,9 +413,9 @@ public class AS2Serv extends HttpServlet {
             String contentType = bodyPart.getContentType();
            
                       
-            if (isDebug)
+            if (isDebug) {
             System.out.println("here--> level 1 mp count: " + i + " contentType: " + contentType);
-            
+            }
             
             // if signed...mpsub should have two parts (one the file and the other the sig)
             MimeMultipart mpsub = new MimeMultipart(new ByteArrayDataSource(finalContent, contentType));
