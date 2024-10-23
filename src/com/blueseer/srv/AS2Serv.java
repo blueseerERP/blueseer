@@ -162,7 +162,7 @@ public class AS2Serv extends HttpServlet {
             } 
             response.setHeader("Content-Transfer-Encoding", "7bit");            
             response.setStatus(thismdn.status());
-            response.getWriter().println(thismdn.message());
+            response.getWriter().print(thismdn.message());
             
             
             if (isDebug) { 
