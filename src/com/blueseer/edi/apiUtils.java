@@ -3455,7 +3455,9 @@ public class apiUtils {
         
         
         if (mbp != null) {
-          //  headers.put("Message-ID", "BlueSeer-unique." + now + "." + Long.toHexString(System.currentTimeMillis()));
+            headers.put("Message-ID", "BlueSeer-unique." + "." + Long.toHexString(System.currentTimeMillis()));
+            headers.put("Subject", "your requested MDN Response");            
+            headers.put("AS2-Version", "1.2");
             x = new mdn(HttpServletResponse.SC_OK, headers, new String(mbp.getInputStream().readAllBytes(), StandardCharsets.UTF_8), boundary);
         } else {
             x = new mdn(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, null, "problem creating MIME structure for MDN");
