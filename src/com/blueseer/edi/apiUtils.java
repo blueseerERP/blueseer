@@ -167,12 +167,14 @@ import org.bouncycastle.cms.CMSEnvelopedDataGenerator;
 import org.bouncycastle.cms.CMSException;
 import org.bouncycastle.cms.CMSProcessableByteArray;
 import org.bouncycastle.cms.CMSSignedData;
+import org.bouncycastle.cms.CMSSignedDataGenerator;
 import org.bouncycastle.cms.CMSTypedData;
 import org.bouncycastle.cms.KeyTransRecipientInformation;
 import org.bouncycastle.cms.RecipientInformation;
 import org.bouncycastle.cms.SignerInfoGenerator;
 import org.bouncycastle.cms.SignerInformation;
 import org.bouncycastle.cms.SignerInformationStore;
+import org.bouncycastle.cms.jcajce.JcaSignerInfoGeneratorBuilder;
 import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoGeneratorBuilder;
 import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoVerifierBuilder;
 import org.bouncycastle.cms.jcajce.JceCMSContentEncryptorBuilder;
@@ -1812,7 +1814,7 @@ public class apiUtils {
         return x;
 }
     
-    public static String[] verifySignatureView(byte[] data, String contentType) throws MessagingException, IOException  {
+    public static String[] verifySignatureView(byte[] data, String contentType, CMSSignedData cs) throws MessagingException, IOException  {
         boolean x = false;
         String[] r = new String[]{"false","","","","",""};
 
@@ -1920,8 +1922,10 @@ public class apiUtils {
         
         try {
           //  byte[] newdata = Arrays.copyOf(FileWHeadersBytes, FileWHeadersBytes.length - 4);
-            
             CMSSignedData s = new CMSSignedData(new CMSProcessableByteArray(FileWHeadersBytes), Signature);
+            if (cs != null) {
+                s = cs;
+            }
             
             
             // ContentInfo conInf = signed.getContentInfo();
@@ -2318,6 +2322,7 @@ public class apiUtils {
             }
         */
         // HERE...take this out
+        /*
             ByteArrayOutputStream yy = new ByteArrayOutputStream();
             signedContent.writeTo(yy);
             yy.flush();
@@ -2326,7 +2331,7 @@ public class apiUtils {
             System.out.println("messagePart byte length: " + messagePartBytes.length);
             System.out.println("signedContent byte length: " + yy.toByteArray().length);
             String contentType = "multipart/signed; protocol=\"application/pkcs7-signature\"; micalg=sha-1;";
-            String[] jj = verifySignatureView(yy.toByteArray(), contentType);
+            String[] jj = verifySignatureView(yy.toByteArray(), contentType, null);
             int ji = 0;
             System.out.println("MY TEST signedContent: content type = " + contentType);
             for (String j : jj) {
@@ -2353,7 +2358,7 @@ public class apiUtils {
             
             System.out.println("Java Signature boolean: " + isVerified);
             System.out.println(new String (Base64.encode(signatureBytes)));
-      
+      */
             // HERE...to here
             
             
@@ -2404,8 +2409,8 @@ public class apiUtils {
       //  messagePart.setHeader("Content-Disposition", "attachment; filename=" + filename);
         messagePart.setHeader("Content-Transfer-Encoding", "binary");  
         
-    //    mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
-        mbp.setHeader("Content-Type", "text/plain; report-type=disposition-notification;");
+        mbp.setHeader("Content-Type", "multipart/report; report-type=disposition-notification; boundary=" + "\"" + boundary + "\"");
+      //  mbp.setHeader("Content-Type", "text/plain; report-type=disposition-notification;");
         mbp.setHeader("Content-Transfer-Encoding", "binary");
       //  byte[] messagePartBytes = messagePart.getInputStream().readAllBytes();
         // byte[] newdata = Arrays.copyOf(messagePartBytes, messagePartBytes.length - 2);
@@ -2417,6 +2422,20 @@ public class apiUtils {
             
         MimeMultipart signedContent = gen.generate(mbp);
        
+        CMSSignedData signedData = null;
+        if (mbp.getInputStream() != null) {
+        byte[] data = mbp.getInputStream().readAllBytes();
+        ContentSigner signer = new JcaContentSignerBuilder("SHA1withRSA").build(privateKey);
+        CMSSignedDataGenerator generator = new CMSSignedDataGenerator();
+        generator.addSignerInfoGenerator(new JcaSignerInfoGeneratorBuilder(new JcaDigestCalculatorProviderBuilder().setProvider("BC").build()).build(signer, (X509Certificate) certificate));
+        signedData = generator.generate(new CMSProcessableByteArray(data), true);
+        FileOutputStream out = new FileOutputStream("c:\\blueseer\\temp\\newcontent.txt");
+        out.write(signedData.getEncoded());
+        out.close();
+        }
+        
+        
+        
         //MimeBodyPart xxx = gen.generateEncapsulated(messagePart);
         //MimeMultipart xxxmmp = new MimeMultipart();
         //xxxmmp.addBodyPart(xxx);
@@ -2448,7 +2467,7 @@ public class apiUtils {
             System.out.println("mbp byte length: " + mbp.getInputStream().readAllBytes().length);
             System.out.println("signedContent byte length: " + yy.toByteArray().length);
             String contentType = "multipart/signed; protocol=\"application/pkcs7-signature\"; micalg=sha-1;";
-            String[] jj = verifySignatureView(yy.toByteArray(), contentType);
+            String[] jj = verifySignatureView(yy.toByteArray(), contentType, null);
             int ji = 0;
             System.out.println("MY TEST signedContent: content type = " + contentType);
             for (String j : jj) {
@@ -2867,7 +2886,7 @@ public class apiUtils {
         
       // remove file if successful
       if (isSuccess) {
-      //  Files.deleteIfExists(as2filepath);
+        Files.deleteIfExists(as2filepath);
         r.append("\n").append("status__pass");
       } 
         
@@ -2881,9 +2900,10 @@ public class apiUtils {
         MimeBodyPart mbp = new MimeBodyPart();
         MimeBodyPart mbp2 = new MimeBodyPart();
         MimeBodyPart mbp3 = new MimeBodyPart();
-        MimeMultipart mp = new MimeMultipart();
         MimeMultipart mpInner = new MimeMultipart();
         boolean unsigned = false;
+        
+      
         
         try {
             mbp.setText(z);
@@ -2907,18 +2927,18 @@ public class apiUtils {
             mpInner.addBodyPart(mbp2);
             ContentType ct = new ContentType(mpInner.getContentType());
             String boundary = ct.getParameter("boundary");
-           
+            
             ByteArrayOutputStream bOut = new ByteArrayOutputStream();
             mpInner.writeTo(bOut);
             bOut.flush();
             bOut.close();
             byte[] data = bOut.toByteArray();
-           
+            
             
             try {
-              // mp = signMDNnew(data, getSystemSignKey(), boundary); 
-              mbp3.setContent(mpInner);
-              mp = signMDNexp(mbp2, getSystemSignKey(), boundary); 
+               mpInner = signMDNnew(data, getSystemSignKey(), boundary); 
+             // mbp3.setContent(mpInner);
+             // mpInner = signMDNexp(mbp3, getSystemSignKey(), boundary); 
             } catch (Exception ex) {
                 bslog(ex);
             }
@@ -2936,7 +2956,7 @@ public class apiUtils {
         
         
         
-        return mp;
+        return mpInner;
     }
       
      

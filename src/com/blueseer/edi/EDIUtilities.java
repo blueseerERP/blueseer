@@ -910,7 +910,7 @@ public class EDIUtilities extends javax.swing.JPanel {
         String[] x = new String[]{"","","","","",""};
         if (! tainput.getText().isEmpty()) {
             try { 
-                x = verifySignatureView(tainput.getText().getBytes(), "text/plain");
+                x = verifySignatureView(tainput.getText().getBytes(), "text/plain",null);
             } catch (MessagingException ex) {
                 Logger.getLogger(EDIUtilities.class.getName()).log(Level.SEVERE, null, ex);
             } catch (IOException ex) {
