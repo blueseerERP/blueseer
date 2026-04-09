@@ -13366,8 +13366,8 @@ return myarray;
                          (res.getDouble("wc_run_rate") * res.getDouble("wf_run_hours") * res.getDouble("wc_run_crew") )  );
                 burden += ( ((res.getDouble("wc_bdn_rate") * res.getDouble("wf_setup_hours")) / res.getDouble("it_lotsize") ) +
                         (res.getDouble("wc_bdn_rate") * res.getDouble("wf_run_hours") )  );  
-               }
-
+               }              
+               
             // now do the matl for this operation
            res2 = st2.executeQuery("select ps_qty_per, itc_total from pbm_mstr " + 
                 " inner join bom_mstr on bom_id = ps_bom and bom_primary = '1' " +
@@ -13721,7 +13721,6 @@ return myarray;
          Double outside = 0.0;
          Double total = 0.0;
          Double prevcost = 0.0;
-         Double stdopcost = 0.0;
          String op = "";
          String cell = "";
          String cc = "";
@@ -13763,12 +13762,6 @@ return myarray;
            while (res.next()) {
                i++;
 
-               if (i == 1) {
-                   stdopcost = res.getDouble("itr_total");
-               } else {
-                   stdopcost = res.getDouble("itr_total") - prevcost;
-               }
-               prevcost = res.getDouble("itr_total");
 
                op = res.getString("wf_op");
                cell = res.getString("wf_cell");
@@ -13822,7 +13815,7 @@ return myarray;
                    res.getString("wf_run_hours") + "," +
                    res.getString("it_lotsize") + "," +
                    String.valueOf(total) + "," +
-                   String.valueOf(stdopcost) + "," +
+                   String.valueOf(labor + burden + material + ovh + outside) + "," +
                    stdcost
                    ;
            myarray.add(mystring);

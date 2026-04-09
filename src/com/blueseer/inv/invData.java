@@ -3757,6 +3757,64 @@ public class invData {
         return jsonarray.toString(); 
     }
    
+    public static String getItemRoutingBrowseView(String item) {
+        JSONArray jsonarray = new JSONArray();
+        try {
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+                
+                res = st.executeQuery("SELECT it_wf, wf_desc, it_item, itr_total, itr_op, itr_lbr_top, itr_ovh_top, itr_bdn_top, itr_out_top, itr_mtl_top " +
+                        " FROM  item_mstr  " +
+                        " inner join itemr_cost on itr_item = it_item and itr_routing = item_mstr.it_wf " +
+                        " inner join wf_mstr on wf_id = it_wf and wf_op = itr_op " +
+                        " where it_item = " + "'" + item + "'" + 
+                        " order by it_item desc ;");
+                int i = 0;
+                double opcost = 0.00;
+                double prevcost = 0.00;
+                
+                while (res.next()) {  
+                   i++;
+                    opcost = (res.getDouble("itr_lbr_top") + res.getDouble("itr_ovh_top") + + res.getDouble("itr_bdn_top") + + res.getDouble("itr_out_top"));
+                    
+                    JSONArray rowArray = new JSONArray(); 
+                        rowArray.put(res.getString("it_item"));
+                        rowArray.put(res.getString("it_wf"));
+                        rowArray.put(res.getString("wf_desc"));
+                        rowArray.put(res.getString("itr_op"));
+                        rowArray.put(bsNumber(opcost));  
+                        rowArray.put(res.getString("itr_mtl_top"));
+                        rowArray.put(res.getString("itr_total")); 
+                        jsonarray.put(rowArray);
+                        
+                        prevcost = res.getDouble("itr_total");
+                }
+               
+                
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return jsonarray.toString(); 
+    }
+   
     
     public static String getQPRPrintData(String key) {
         JSONArray jsonarray = new JSONArray();

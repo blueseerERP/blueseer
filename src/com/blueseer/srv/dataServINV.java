@@ -83,6 +83,7 @@ import static com.blueseer.inv.invData.getItemPrice;
 import static com.blueseer.inv.invData.getItemPriceFromCust;
 import static com.blueseer.inv.invData.getItemQOHTotal;
 import static com.blueseer.inv.invData.getItemQtyByWarehouseAndLocation;
+import static com.blueseer.inv.invData.getItemRoutingBrowseView;
 import static com.blueseer.inv.invData.getItemWFOPandDESC;
 import static com.blueseer.inv.invData.getLocationListByWarehouse;
 import static com.blueseer.inv.invData.getLocationMaintInit;
@@ -921,6 +922,12 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
         response.getWriter().print(getInvValuationBrowseView(it));  
         break;
         }
+        
+        case "getItemRoutingBrowseView" : {
+        response.getWriter().print(getItemRoutingBrowseView(request.getHeader("param1")));  
+        break;
+        }
+        
         
         case "getItemDataInit" : {
             response.getWriter().print(HashMapStringStringArrToJson(getItemDataInit(

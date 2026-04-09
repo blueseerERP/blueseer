@@ -494,7 +494,7 @@ public class PayRollBrowse extends javax.swing.JPanel {
         list.add(new String[]{"param4",ddempto.getSelectedItem().toString()});
         
         try {
-                jsonString = sendServerPost(list, "", null, "dataServINV"); 
+                jsonString = sendServerPost(list, "", null, "dataServFIN"); 
             } catch (IOException ex) {
                 bslog(ex);
                 return new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getMessageTag(1010, "getPayRollBrowseView")};
@@ -557,7 +557,7 @@ public class PayRollBrowse extends javax.swing.JPanel {
             list.add(new String[]{"param1", empnbr});
             list.add(new String[]{"param2", checknbr});
             try {
-                jsonString = sendServerPost(list, "", null, "dataServPUR"); 
+                jsonString = sendServerPost(list, "", null, "dataServFIN"); 
             } catch (IOException ex) {
                 bslog(ex);
                 return new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getMessageTag(1010, "getDetail")};

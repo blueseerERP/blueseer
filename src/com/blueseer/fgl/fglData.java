@@ -3805,6 +3805,268 @@ public class fglData {
         return jsonarray.toString(); 
     }
    
+    public static String getPayRollMaintView(String[] keys) {
+        JSONArray jsonarray = new JSONArray();
+        try {
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            Statement st2 = con.createStatement();
+            ResultSet res2 = null;
+            try {  
+                 
+                    res = st.executeQuery("SELECT sum(t.tothrs) as 't.tothrs',  " +
+                           " t.emp_nbr as 't.emp_nbr', e.emp_lname as 'e.emp_lname', e.emp_fname as 'e.emp_fname', e.emp_mname as 'e.emp_mname', e.emp_jobtitle as 'e.emp_jobtitle', " +
+                           " e.emp_supervisor as 'e.emp_supervisor', e.emp_type as 'e.emp_type', e.emp_shift as 'e.emp_shift', e.emp_profile as 'e.emp_profile', e.emp_dept as 'e.emp_dept', e.emp_rate as 'e.emp_rate' " +
+                           "  FROM  time_clock t inner join emp_mstr e on e.emp_nbr = t.emp_nbr and emp_type <> 'Salary' " +
+                              " where t.indate >= " + "'" + keys[0] + "'" +
+                               " and t.indate <= " + "'" + keys[1] + "'" + 
+                               " and t.emp_nbr >= " + "'" + keys[2] + "'" +
+                               " and t.emp_nbr <= " + "'" + keys[3] + "'" +        
+                                " and t.ispaid =  " + "'" + keys[4] + "'" +      
+                                " group by t.emp_nbr, e.emp_lname, e.emp_fname, e.emp_mname, e.emp_jobtitle, e.emp_supervisor, e.emp_type, e.emp_shift, e.emp_profile, e.emp_dept, e.emp_rate " +       
+                                " order by t.emp_nbr " +      
+                               ";" );
+                    double amount = 0.0;
+                    double hours = 0.0;
+                    while (res.next()) {  
+                    amount = res.getDouble("t.tothrs") * res.getDouble("e.emp_rate"); 
+                          
+                    JSONArray rowArray = new JSONArray();
+                        rowArray.put("select");
+                        rowArray.put(res.getString("t.emp_nbr"));
+                        rowArray.put(res.getString("e.emp_lname"));
+                        rowArray.put(res.getString("e.emp_fname"));
+                        rowArray.put(res.getString("e.emp_mname"));
+                        rowArray.put(res.getString("e.emp_dept"));
+                        rowArray.put(res.getString("e.emp_shift"));
+                        rowArray.put(res.getString("e.emp_supervisor"));
+                        rowArray.put(res.getString("e.emp_type"));
+                        rowArray.put(res.getString("e.emp_profile"));
+                        rowArray.put(res.getString("e.emp_jobtitle"));
+                        rowArray.put(bsNumber(res.getDouble("e.emp_rate")));                         
+                        rowArray.put(bsNumber(res.getDouble("t.tothrs"))); 
+                        rowArray.put(amount);
+                        rowArray.put(keys[5]);
+                        jsonarray.put(rowArray);
+                }
+                    
+                if (keys[6].equals("1")) {  // add salary
+                    res = st.executeQuery("SELECT * from emp_mstr " +
+                              " where emp_type = 'Salary' " +
+                               " and emp_active = '1' " +
+                              " and emp_nbr >= " + "'" + keys[2] + "'" +
+                              " and emp_nbr <= " + "'" + keys[3] + "'" +
+                               ";" );
+                    while (res.next()) {
+                         amount = 0;
+                         hours = 0;
+                         java.util.Date paydate = OVData.getPayWindowForSalary(res.getString("emp_payfrequency"), parseDate(keys[5]));
+                         if (paydate == null ) {
+                             continue;
+                         }
+                        
+                         if (res.getString("emp_payfrequency").equals("monthly")) {
+                             amount = res.getDouble("emp_rate") * 40 * 4; 
+                             hours = 160;
+                         }
+                         if (res.getString("emp_payfrequency").equals("bi-monthly")) {
+                             amount = res.getDouble("emp_rate") * 40 * 2; 
+                             hours = 160;
+                         }
+                         if (res.getString("emp_payfrequency").equals("weekly")) {
+                             amount = res.getDouble("emp_rate") * 40; 
+                             hours = 40;
+                         }
+                         
+                         // now confirm that it hasn't been paid already
+                           res2 = st2.executeQuery("select pyd_paydate from pay_det where pyd_empnbr =  " + "'" + res.getString("emp_nbr") + "'" +
+                                   " and pyd_paydate = " + "'" + keys[5] + "'" + ";");
+                           int z = 0;
+                           while (res2.next()) {
+                            z++; 
+                           }
+                           if (z > 0)
+                               continue;
+                           
+                           JSONArray rowArray = new JSONArray();
+                        rowArray.put("select");
+                        rowArray.put(res.getString("emp_nbr"));
+                        rowArray.put(res.getString("emp_lname"));
+                        rowArray.put(res.getString("emp_fname"));
+                        rowArray.put(res.getString("emp_mname"));
+                        rowArray.put(res.getString("emp_dept"));
+                        rowArray.put(res.getString("emp_shift"));
+                        rowArray.put(res.getString("emp_supervisor"));
+                        rowArray.put(res.getString("emp_type"));
+                        rowArray.put(res.getString("emp_profile"));
+                        rowArray.put(res.getString("emp_jobtitle"));
+                        rowArray.put(bsNumber(res.getDouble("emp_rate")));                         
+                        rowArray.put(hours); 
+                        rowArray.put(amount);
+                        rowArray.put(keys[5]);
+                        jsonarray.put(rowArray);
+                         
+                    } // while
+                }    
+               
+                
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (res2 != null) {
+                    res2.close();
+                }
+                if (st2 != null) {
+                    st2.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return jsonarray.toString(); 
+    }
+   
+    public static String getPayRollMaintDetView(String empnbr, String fromdate, String todate, boolean isnew) {
+        JSONArray jsonarray = new JSONArray();
+        try {
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {  
+                 String ispaid = isnew ? "0" : "1";
+                res = st.executeQuery("SELECT t.tothrs as 't.tothrs', t.recid as 't.recid', " +
+                           " t.emp_nbr as 't.emp_nbr', e.emp_lname as 'e.emp_lname', e.emp_fname as 'e.emp_fname', " +
+                           " e.emp_dept as 'e.emp_dept', t.code_id as 't.code_id', t.indate as 't.indate', t.intime as 't.intime', " +
+                           " t.intime_adj as 't.intime_adj', t.outdate as 't.outdate', t.outtime as 't.outtime', " +
+                           " t.outtime_adj as 't.outtime_adj' FROM  time_clock t inner join emp_mstr e on e.emp_nbr = t.emp_nbr" +
+                              " where t.emp_nbr = " + "'" + empnbr + "'" +
+                              " and t.indate >= " + "'" + fromdate + "'" +
+                               " and t.indate <= " + "'" + todate + "'" + 
+                               " and t.ispaid =  " + "'" + ispaid + "'" +       
+                               " order by e.emp_nbr, t.indate" +
+                               ";" );
+                  
+                    while (res.next()) {  
+                     
+                    JSONArray rowArray = new JSONArray();
+                        rowArray.put(res.getString("t.recid"));
+                        rowArray.put(res.getString("t.emp_nbr"));
+                        rowArray.put(res.getString("e.emp_lname"));
+                        rowArray.put(res.getString("e.emp_fname"));
+                        rowArray.put(res.getString("e.emp_dept"));
+                        rowArray.put(res.getString("t.code_id"));
+                        rowArray.put(res.getString("t.indate"));
+                        rowArray.put(res.getString("t.intime"));
+                        rowArray.put(res.getString("t.intime_adj"));
+                        rowArray.put(res.getString("t.outdate"));
+                        rowArray.put(res.getString("t.outtime"));
+                        rowArray.put(res.getString("t.outtime_adj"));
+                        rowArray.put(bsNumber(res.getDouble("t.tothrs")));
+                        jsonarray.put(rowArray);
+                }
+               
+                
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return jsonarray.toString(); 
+    }
+   
+    public static ArrayList<String[]> getPaymentBatch(String batch) {
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<>();
+            list.add(new String[]{"id", "getPaymentBatch"});
+            list.add(new String[]{"param1", batch});
+            try {
+                return jsonToArrayListStringArray(sendServerPost(list, "", null, "dataServFIN"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return null;
+            }
+    }
+    ArrayList<String[]> myarray = new ArrayList();
+         try{
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try{
+                int i = 0;
+                res = st.executeQuery(" select * from pay_mstr p inner join pay_det d on d.pyd_id = p.py_id " +
+                              " where p.py_id = " + "'" + batch + "'" + ";");
+                    while (res.next()) {
+                        i++;
+                        myarray.add(new String[]{res.getString("pyd_id"),
+                                            res.getString("pyd_empnbr"),
+                                            res.getString("pyd_emplname"),
+                                            res.getString("pyd_empfname"),
+                                            res.getString("pyd_empmname"),
+                                            res.getString("pyd_empdept"),
+                                            res.getString("pyd_empshift"),
+                                            res.getString("pyd_empsupervisor"),
+                                            res.getString("pyd_emptype"),
+                                            res.getString("pyd_payprofile"),
+                                            res.getString("pyd_empjobtitle"),
+                                            res.getString("pyd_emprate").replace('.',defaultDecimalSeparator),
+                                            res.getString("pyd_tothours").replace('.',defaultDecimalSeparator),
+                                            res.getString("pyd_payamt").replace('.',defaultDecimalSeparator),
+                                            res.getString("pyd_paydate")});
+                    }
+                    
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+                 bsmf.MainFrame.show(getMessageTag(1016,Thread.currentThread().getStackTrace()[1].getMethodName()));
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+        return myarray;
+    }
+    
     public static ArrayList<String[]> get_pie_EmpPayByDate(String fromdate, String todate) {
     if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
             ArrayList<String[]> list = new ArrayList<>();

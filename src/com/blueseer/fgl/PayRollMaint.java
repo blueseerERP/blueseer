@@ -27,6 +27,7 @@ SOFTWARE.
 package com.blueseer.fgl;
 
 import bsmf.MainFrame;
+import static bsmf.MainFrame.bslog;
 import com.blueseer.shp.*;
 import com.blueseer.utl.OVData;
 import com.blueseer.utl.BlueSeerUtils;
@@ -69,6 +70,7 @@ import static bsmf.MainFrame.reinitpanels;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import com.blueseer.adm.admData;
 import com.blueseer.hrm.hrmData;
 import static com.blueseer.utl.BlueSeerUtils.bsParseDouble;
 import static com.blueseer.utl.BlueSeerUtils.callDialog;
@@ -76,6 +78,7 @@ import static com.blueseer.utl.BlueSeerUtils.cleanDirString;
 import static com.blueseer.utl.BlueSeerUtils.currformatDouble;
 import static com.blueseer.utl.BlueSeerUtils.getClassLabelTag;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
+import static com.blueseer.utl.BlueSeerUtils.jsonToData;
 import static com.blueseer.utl.BlueSeerUtils.luModel;
 import static com.blueseer.utl.BlueSeerUtils.luTable;
 import static com.blueseer.utl.BlueSeerUtils.lual;
@@ -83,6 +86,7 @@ import static com.blueseer.utl.BlueSeerUtils.ludialog;
 import static com.blueseer.utl.BlueSeerUtils.luinput;
 import static com.blueseer.utl.BlueSeerUtils.luml;
 import static com.blueseer.utl.BlueSeerUtils.lurb1;
+import static com.blueseer.utl.BlueSeerUtils.sendServerPost;
 import com.blueseer.utl.DTData;
 import com.blueseer.utl.EDData;
 import java.awt.Image;
@@ -103,11 +107,13 @@ import java.util.Locale;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -132,13 +138,21 @@ import org.jfree.data.general.DefaultPieDataset;
  */
 public class PayRollMaint extends javax.swing.JPanel {
  
-    String exoincfilepath = OVData.getSystemTempDirectory() + "/" + "chartexpinc.jpg";
-    String buysellfilepath = OVData.getSystemTempDirectory() + "/" + "chartbuysell.jpg";
+    public String rsData; 
+    Object[][] roData;
+    ArrayList<String[]> initDataSets = new ArrayList<>();
+    ArrayList<String[]> batchlist = null;
+    String defaultSite = "";
+    String defaultCurrency = "";
+    String empfilepath = "";
+    String buysellfilepath = "";
+    String exoincfilepath = "";
+    
     double expenses = 0;
     double inventory = 0;
     boolean isnew = false;
     
-     javax.swing.table.DefaultTableModel mymodel =  new javax.swing.table.DefaultTableModel(new Object[][]{},
+     javax.swing.table.DefaultTableModel mymodel =  new javax.swing.table.DefaultTableModel(new Object[][]{}, 
                       new String[]{"select", 
                           "RecID", 
                           "EmpID", 
@@ -158,10 +172,12 @@ public class PayRollMaint extends javax.swing.JPanel {
                        {
                       @Override  
                       public Class getColumnClass(int col) {  
-                        if (col == 0)       
-                            return ImageIcon.class;  
-                        else return String.class;  //other columns accept String values  
-                      }  
+                        if (col == 0) {      
+                            return ImageIcon.class;
+                        } else if (col == 12 || col == 13 || col == 14) {
+                            return Double.class;
+                        } else return String.class;  //other columns accept String values  
+                      }
                         }; 
     
                 
@@ -233,7 +249,7 @@ public class PayRollMaint extends javax.swing.JPanel {
     }
     
      
-        class Task extends SwingWorker<String[], Void> {
+    class Task extends SwingWorker<String[], Void> {
         /*
          * Main task. Executed in background thread.
          */
@@ -284,7 +300,7 @@ public class PayRollMaint extends javax.swing.JPanel {
     }  
                  
     
-      public String[] addPayRoll() {
+    public String[] addPayRoll() {
         String[] message = new String[2];
         
           try {
@@ -443,6 +459,92 @@ public class PayRollMaint extends javax.swing.JPanel {
         
         
         return message;
+    }
+    
+    public void executeTask(String x, String[] y) { 
+      
+        class Task extends SwingWorker<String[], Void> {
+         
+          String action = "";
+          String[] key = null;
+          
+          public Task(String action, String[] key) { 
+              this.action = action;
+              this.key = key;
+          }     
+            
+        @Override
+        public String[] doInBackground() throws Exception {
+            String[] message = new String[2];
+            message[0] = "";
+            message[1] = "";
+            
+            rsData = "";
+            
+            
+            switch(this.action) {
+                case "dataInit":
+                    message = getInitialization();
+                    break;   
+                    
+                case "getPaymentBatchNew":
+                    message = getPaymentBatchNew(key[0]);
+                    break;       
+                
+                case "getBrowseView":
+                    message = getBrowseView();
+                    break; 
+                    
+                case "getBrowseDetView":
+                    message = getBrowseDetView(key[0],key[1],key[2]);
+                    break;
+                    
+                                    
+                default:
+                    message = new String[]{"1", "unknown action"};
+            }
+            
+            
+            
+            
+            return message;
+        }
+ 
+        
+       public void done() {
+            try {
+            String[] message = get();
+           
+            BlueSeerUtils.endTask(message);
+            
+            
+            if (this.action.equals("dataInit")) {
+                    done_Initialization();
+            }
+            
+            if (this.action.equals("getPaymentBatchNew")) {
+                    done_getPaymentBatchNew();
+            }
+            
+            if (this.action.equals("getBrowseView")) {
+                done_getBrowseView();
+            }
+            
+            if (this.action.equals("getBrowseDetView")) {
+                done_getBrowseDetView();
+            }
+            
+            } catch (Exception e) {
+                MainFrame.bslog(e);
+            } 
+           
+        }
+    }  
+      
+       BlueSeerUtils.startTask(new String[]{"","Running..."});
+       Task z = new Task(x, y); 
+       z.execute(); 
+       
     }
     
     
@@ -823,7 +925,7 @@ public class PayRollMaint extends javax.swing.JPanel {
         return myreturn;
     }
     
-     public boolean processNACHAFile(String batch) throws MalformedURLException, SmbException, IOException {
+    public boolean processNACHAFile(String batch) throws MalformedURLException, SmbException, IOException {
         boolean myreturn = true;
          try{
             Connection con = null;
@@ -1075,20 +1177,9 @@ public class PayRollMaint extends javax.swing.JPanel {
         modeldetail.setNumRows(0);
         tablereport.setModel(mymodel);
         tabledetail.setModel(modeldetail);
-        
-        
         tablereport.getTableHeader().setReorderingAllowed(false);
-        tabledetail.getTableHeader().setReorderingAllowed(false);
-        
-        // tablereport.getColumnModel().getColumn(0).setCellRenderer(new ButtonRenderer());
-         tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
-       //  tablereport.getColumnModel().getColumn(8).setCellRenderer(new ButtonRenderer());
-       //  tablereport.getColumnModel().getColumn(7).setMaxWidth(100);
-                //          ReportPanel.TableReport.getColumn("CallID").setCellEditor(
-                    //       new ButtonEditor(new JCheckBox()));
-        
-        
-        
+        tabledetail.getTableHeader().setReorderingAllowed(false);        
+        tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
         btdetail.setEnabled(false);
         detailpanel.setVisible(false);
         chartpanel.setVisible(false);
@@ -1142,6 +1233,62 @@ public class PayRollMaint extends javax.swing.JPanel {
         return myreturn;
     }
     
+    public void setPanelComponentState(Object myobj, boolean b) {
+        JPanel panel = null;
+        JTabbedPane tabpane = null;
+        if (myobj instanceof JPanel) {
+            panel = (JPanel) myobj;
+        } else if (myobj instanceof JTabbedPane) {
+           tabpane = (JTabbedPane) myobj; 
+        } else {
+            return;
+        }
+        
+        if (panel != null) {
+        panel.setEnabled(b);
+        Component[] components = panel.getComponents();
+        
+            for (Component component : components) {
+                 // start reset background colors
+                if (component instanceof JTextField) {
+                    if (((JTextField) component).isEditable()) {
+                     component.setBackground(Color.WHITE);
+                    } else {
+                     component.setBackground(bsmf.MainFrame.nonEditableColor);   
+                    }
+                }
+                if (component instanceof JComboBox) {
+                     component.setBackground(bsmf.MainFrame.ddbgcolor);
+                }
+                // end reset background colors
+                if (component instanceof JLabel || component instanceof JTable ) {
+                    continue;
+                }
+                if (component instanceof JPanel) {
+                    setPanelComponentState((JPanel) component, b);
+                }
+                if (component instanceof JTabbedPane) {
+                    setPanelComponentState((JTabbedPane) component, b);
+                }
+                
+                component.setEnabled(b);
+            }
+        }
+            if (tabpane != null) {
+                tabpane.setEnabled(b);
+                Component[] componentspane = tabpane.getComponents();
+                for (Component component : componentspane) {
+                    if (component instanceof JLabel || component instanceof JTable ) {
+                        continue;
+                    }
+                    if (component instanceof JPanel) {
+                        setPanelComponentState((JPanel) component, b);
+                    }
+                    component.setEnabled(b);
+                }
+            }
+    } 
+    
     public void setLanguageTags(Object myobj) {
        JPanel panel = null;
         JTabbedPane tabpane = null;
@@ -1189,26 +1336,258 @@ public class PayRollMaint extends javax.swing.JPanel {
     
     public void initvars(String[] arg) {
        
-         clearAll(); 
-         disableAll();
+       //  clearAll(); 
+       //  disableAll();
+       executeTask("dataInit", null);  
          
-         
-          if (arg != null && arg.length > 0) {
-            boolean gotIt = getPaymentBatch(arg[0].toString());
-            if (gotIt) {
-              tbid.setEditable(false);
-              tbid.setForeground(Color.blue);
-             } 
+        if (arg != null && arg.length > 0) {
+            executeTask("getPaymentBatchNew", arg); 
         } else {
               disableAll();
               tbid.setEnabled(true);
               tbid.setEditable(true);
-              
-          }
-         
+          }         
            btnew.setEnabled(true);
            btlookup.setEnabled(true);
     }
+    
+    public String[] getInitialization() {
+        initDataSets = admData.getInitMinimum(this.getClass().getName(), bsmf.MainFrame.userid, "banks,employees");
+        if (initDataSets.isEmpty()) {
+           return new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.dataInitError}; 
+        } else {
+           return new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getRecordSuccess}; 
+        }
+    }  
+    
+    public void done_Initialization() {
+        setPanelComponentState(this, true);
+        isnew = false;
+        
+        cbsalary.setSelected(true);
+        tbid.setText("");
+        tbcomments.setText("");
+        tbchecknbr.setText("");
+        tbtotpayroll.setText("0");
+        java.util.Date now = new java.util.Date();
+        Calendar cal = new GregorianCalendar();
+        cal.set(Calendar.DAY_OF_YEAR, 1);
+        java.util.Date firstday = cal.getTime();
+        
+        dcfrom.setDate(firstday);
+        dcto.setDate(now);
+        dcpay.setDate(now);
+               
+        mymodel.setNumRows(0);
+        modeldetail.setNumRows(0);
+        tablereport.setModel(mymodel);
+        tabledetail.setModel(modeldetail);
+        tablereport.getTableHeader().setReorderingAllowed(false);
+        tabledetail.getTableHeader().setReorderingAllowed(false);        
+        tablereport.getColumnModel().getColumn(0).setMaxWidth(100);
+        btdetail.setEnabled(false);
+        detailpanel.setVisible(false);
+        chartpanel.setVisible(false);
+
+        
+        ddsite.removeAllItems();
+        ddbank.removeAllItems();
+        ddempfrom.removeAllItems();
+        ddempto.removeAllItems();
+        
+        String tempdir = "";
+        
+        for (String[] s : initDataSets) {
+            
+            if (s[0].equals("sites")) {
+              ddsite.addItem(s[1]); 
+            }
+            if (s[0].equals("banks")) {
+              ddbank.addItem(s[1]); 
+            }
+            if (s[0].equals("site")) {
+              defaultSite = s[1]; 
+            }
+            
+            if (s[0].equals("currency")) {
+              defaultCurrency = s[1]; 
+            }
+            if (s[0].equals("tempdir")) {
+              tempdir = s[1]; 
+            }
+            if (s[0].equals("employees")) {
+              ddempfrom.addItem(s[1]); 
+              ddempto.addItem(s[1]);
+            }
+        }
+        if (ddsite.getItemCount() > 0) {
+            ddsite.setSelectedItem(defaultSite);
+        }
+        
+        empfilepath = tempdir + "/" + "chartexpinc.jpg";
+        buysellfilepath = tempdir + "/" + "chartbuysell.jpg";
+        
+        if (ddempto.getItemCount() > 0) {
+        ddempto.setSelectedIndex(ddempto.getItemCount() - 1);
+        }
+        
+        tablereport.getColumnModel().getColumn(12).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(defaultCurrency)));
+        tablereport.getColumnModel().getColumn(13).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(defaultCurrency)));
+        tablereport.getColumnModel().getColumn(14).setCellRenderer(BlueSeerUtils.NumberRenderer.getCurrencyRenderer(BlueSeerUtils.getCurrencyLocale(defaultCurrency)));
+         
+    }
+    
+    public String[] getBrowseView() {
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+        String ispaid = isnew ? "0" : "1";
+        String jsonString = null; 
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) { 
+        ArrayList<String[]> list = new ArrayList<String[]>();
+        list.add(new String[]{"id","getPayRollMaintView"});
+        list.add(new String[]{"param1",dfdate.format(dcfrom.getDate())});
+        list.add(new String[]{"param2",dfdate.format(dcto.getDate())});
+        list.add(new String[]{"param3",ddempfrom.getSelectedItem().toString()});
+        list.add(new String[]{"param4",ddempto.getSelectedItem().toString()});
+        list.add(new String[]{"param5",ispaid});
+        list.add(new String[]{"param6",dfdate.format(dcpay.getDate())});
+        
+        try {
+                jsonString = sendServerPost(list, "", null, "dataServFIN"); 
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getMessageTag(1010, "getPayRollMaintView")};
+            }
+        } else {
+            jsonString = fglData.getPayRollMaintView(new String[]{
+                dfdate.format(dcfrom.getDate()),
+                dfdate.format(dcto.getDate()),
+                ddempfrom.getSelectedItem().toString(), 
+                ddempto.getSelectedItem().toString(),
+                ispaid,
+                dfdate.format(dcpay.getDate())
+            });
+        }
+      
+      if (jsonString == null) {
+          return new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getMessageTag(1010, "getPayRollMaintView return jsonString is null")};
+      }
+        
+      roData = jsonToData(jsonString);
+       
+      return new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getMessageTag(1125)};
+    }
+
+    public String[] getPaymentBatchNew(String batch) {
+        tbid.setText(batch);
+        batchlist = null;
+        batchlist = fglData.getPaymentBatch(batch);       
+      return new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getMessageTag(1125)};
+    }
+    
+    public void done_getPaymentBatchNew() {
+        double amount = 0.0;
+        if (batchlist != null && ! batchlist.isEmpty()) {
+            for (String[] s : batchlist) {
+                amount += bsParseDouble(s[13]); 
+                          mymodel.addRow(new Object []{BlueSeerUtils.clickflag, s[0],
+                                            s[1],
+                                            s[2],
+                                            s[3],
+                                            s[4],
+                                            s[5],
+                                            s[6],
+                                            s[7],
+                                            s[8],
+                                            s[9],
+                                            s[10],
+                                            s[11],
+                                            s[12],
+                                            s[13],
+                                            s[14]
+                                            } );
+            }
+            
+            tbtotpayroll.setText(String.valueOf(currformatDouble(amount)));
+            btcommit.setEnabled(false);
+            btrun.setEnabled(false);
+            tbid.setEditable(false);
+            tbid.setForeground(Color.blue);
+        } else {
+            tbid.setForeground(Color.red);
+        }
+        
+    }
+
+    public void done_getBrowseView() {
+        setPanelComponentState(this, true);
+        int i = 0;
+        double totamt = 0;
+        mymodel.setNumRows(0);
+        if (roData != null) {
+        for (Object[] rowData : roData) {
+            roData[i][12] = bsParseDouble(roData[i][12].toString());
+            roData[i][13] = bsParseDouble(roData[i][13].toString());
+            roData[i][14] = bsParseDouble(roData[i][14].toString());
+            totamt += bsParseDouble(roData[i][14].toString());
+            i++;
+            mymodel.addRow(rowData);
+        }
+        }  
+        
+         tbtotpayroll.setText(String.valueOf(currformatDouble(totamt)));
+          if (totamt > 0) {
+              btcommit.setEnabled(true);
+          } else {
+              btcommit.setEnabled(false);
+          } 
+        
+        
+              
+        roData = null;
+    }  
+    
+    public String[] getBrowseDetView(String empnbr, String fromdate, String todate) {
+      
+        String jsonString = null;
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<>();
+            list.add(new String[]{"id", "getPayRollMaintDetView"});
+            list.add(new String[]{"param1", empnbr});
+            list.add(new String[]{"param2", fromdate});
+            list.add(new String[]{"param3", todate});
+            list.add(new String[]{"param4", BlueSeerUtils.boolToString(isnew)});
+            try {
+                jsonString = sendServerPost(list, "", null, "dataServFIN"); 
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getMessageTag(1010, "getDetail")};
+            }
+        } else {
+            jsonString = fglData.getPayRollMaintDetView(empnbr, fromdate, todate, isnew); 
+        }        
+        roData = jsonToData(jsonString);
+        
+        return new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getMessageTag(1125)};
+      
+    }
+   
+    public void done_getBrowseDetView() {
+      modeldetail.setNumRows(0);
+       int i = 0;  
+       if (roData != null) {
+        if (roData.length > 0) {
+            for (Object[] rowData : roData) {
+                roData[i][12] = bsParseDouble(roData[i][12].toString());
+                modeldetail.addRow(rowData);
+                i++;
+            } 
+        }
+       }
+       roData = null;
+    }
+    
+    
+    
     
     public void lookUpFrame() {
         
@@ -1681,14 +2060,14 @@ public class PayRollMaint extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btrunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btrunActionPerformed
+        mymodel.setNumRows(0);
+        setPanelComponentState(this, false);
+        executeTask("getBrowseView", null);    
+        
+        /*
         DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");   
         java.util.Date now = new java.util.Date();
         
-      
-        
-         // if lastdayofmonth >= today and less than nowplus7   --- monthly
-         // if 15th >= today and less than nowplus7  --- midmonth
-         
          mymodel.setRowCount(0);
          try{
             Connection con = null;
@@ -1830,16 +2209,17 @@ public class PayRollMaint extends javax.swing.JPanel {
         }
         
        
-        double totamt = 0; 
-                 for (int j = 0; j < tablereport.getRowCount(); j++) {
-                  totamt += bsParseDouble(tablereport.getValueAt(j, 14).toString()); 
-                 }
-                 tbtotpayroll.setText(String.valueOf(currformatDouble(totamt)));
+         double totamt = 0; 
+         for (int j = 0; j < tablereport.getRowCount(); j++) {
+          totamt += bsParseDouble(tablereport.getValueAt(j, 14).toString()); 
+         }
+         tbtotpayroll.setText(String.valueOf(currformatDouble(totamt)));
           if (totamt > 0) {
               btcommit.setEnabled(true);
           } else {
               btcommit.setEnabled(false);
-          }      
+          } 
+          */
     }//GEN-LAST:event_btrunActionPerformed
 
     private void btdetailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btdetailActionPerformed
@@ -1853,12 +2233,13 @@ public class PayRollMaint extends javax.swing.JPanel {
         int row = tablereport.rowAtPoint(evt.getPoint());
         int col = tablereport.columnAtPoint(evt.getPoint());
         if ( col == 0) {
-                getdetail(tablereport.getValueAt(row, 2).toString(), dfdate.format(dcfrom.getDate()), dfdate.format(dcto.getDate()) );
+               // getdetail(tablereport.getValueAt(row, 2).toString(), dfdate.format(dcfrom.getDate()), dfdate.format(dcto.getDate()) );
+                executeTask("getBrowseDetView", new String[]{tablereport.getValueAt(row, 2).toString(), dfdate.format(dcfrom.getDate()), dfdate.format(dcto.getDate()) });
                 btdetail.setEnabled(true);
                 detailpanel.setVisible(true);
-                 chartpanel.setVisible(true);
+                chartpanel.setVisible(true);
                 getDeductions(tablereport.getValueAt(row, 2).toString(), bsParseDouble(tablereport.getValueAt(row, 14).toString()));
-                 getEarnings(tablereport.getValueAt(row, 2).toString(), tablereport.getValueAt(row, 9).toString(), dfdate.format(dcfrom.getDate()).toString(), dfdate.format(dcto.getDate()).toString(), bsParseDouble(tablereport.getValueAt(row, 14).toString()));
+                getEarnings(tablereport.getValueAt(row, 2).toString(), tablereport.getValueAt(row, 9).toString(), dfdate.format(dcfrom.getDate()).toString(), dfdate.format(dcto.getDate()).toString(), bsParseDouble(tablereport.getValueAt(row, 14).toString()));
                         
         }
     }//GEN-LAST:event_tablereportMouseClicked
@@ -1897,13 +2278,8 @@ public class PayRollMaint extends javax.swing.JPanel {
     }//GEN-LAST:event_btnewActionPerformed
 
     private void tbidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbidActionPerformed
-          boolean gotIt = getPaymentBatch(tbid.getText());
-        if (gotIt) {
-          tbid.setEditable(false);
-          tbid.setForeground(Color.blue);
-        } else {
-            tbid.setForeground(Color.red);
-        }
+        batchlist = null;  
+        executeTask("getPaymentBatchNew", new String[]{tbid.getText()});
     }//GEN-LAST:event_tbidActionPerformed
 
     private void btclearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btclearActionPerformed
