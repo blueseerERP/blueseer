@@ -4856,7 +4856,7 @@ public class OrderMaint extends javax.swing.JPanel implements IBlueSeerV {
     }//GEN-LAST:event_btcopyActionPerformed
 
     private void btchangelogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btchangelogActionPerformed
-        callChangeDialog(tbkey.getText(), this.getClass().getSimpleName());
+        callChangeDialog(ponbr.getText(), this.getClass().getSimpleName());
     }//GEN-LAST:event_btchangelogActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

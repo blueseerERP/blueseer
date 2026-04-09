@@ -59,7 +59,7 @@ public class PayControl extends javax.swing.JPanel implements IBlueSeerc {
     String defaultSite = "";
     String defaultCurrency = "";
     boolean canUpdate = false;
-    private static ArrayList<String> accounts = null;
+    private static ArrayList<String> accounts = new ArrayList<>();
     private static pay_ctrl x = null;
     
     public PayControl() {
