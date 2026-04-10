@@ -140,6 +140,8 @@ public class PayRollMaint extends javax.swing.JPanel {
  
     public String rsData; 
     Object[][] roData;
+    Object[][] roDeductions;
+    Object[][] roEarnings;
     ArrayList<String[]> initDataSets = new ArrayList<>();
     ArrayList<String[]> batchlist = null;
     String defaultSite = "";
@@ -268,7 +270,7 @@ public class PayRollMaint extends javax.swing.JPanel {
             
              switch(this.type) {
                 case "add":
-                    message = addPayRoll();
+                    message = addPayRollnew();
                     break;
                 default:
                     message = new String[]{"1", "unknown action"};
@@ -299,6 +301,42 @@ public class PayRollMaint extends javax.swing.JPanel {
         }
     }  
                  
+    
+    public String[] addPayRollnew() {
+       String[] message = new String[2];
+       DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+       ArrayList<String[]> list = new ArrayList<>();
+       for (int j = 0; j < tablereport.getRowCount(); j++) {
+           list.add(new String[]{tablereport.getValueAt(j, 0).toString(),
+           tablereport.getValueAt(j, 1).toString(),
+           tablereport.getValueAt(j, 2).toString(),
+           tablereport.getValueAt(j, 3).toString(),
+           tablereport.getValueAt(j, 4).toString(),
+           tablereport.getValueAt(j, 5).toString(),
+           tablereport.getValueAt(j, 6).toString(),
+           tablereport.getValueAt(j, 7).toString(),
+           tablereport.getValueAt(j, 8).toString(),
+           tablereport.getValueAt(j, 9).toString(),
+           tablereport.getValueAt(j, 10).toString(),
+           tablereport.getValueAt(j, 11).toString(),
+           tablereport.getValueAt(j, 12).toString(),
+           tablereport.getValueAt(j, 13).toString(),
+           tablereport.getValueAt(j, 14).toString()});
+       }
+       
+       message = fglData.addPayRoll(list, new String[]{tbid.getText(),
+           ddsite.getSelectedItem().toString(),
+           tbcomments.getText().replace("'", ""),
+           bsmf.MainFrame.userid,
+           dfdate.format(dcfrom.getDate()),
+           dfdate.format(dcto.getDate()),
+           dfdate.format(dcpay.getDate()),
+           ddbank.getSelectedItem().toString(),
+           tbchecknbr.getText()
+        });
+       
+       return message;
+    }
     
     public String[] addPayRoll() {
         String[] message = new String[2];
@@ -398,19 +436,19 @@ public class PayRollMaint extends javax.swing.JPanel {
                               
                          // now do deductions detail
                          getDeductions(tablereport.getValueAt(j, 2).toString(), bsParseDouble(tablereport.getValueAt(j, 14).toString()));
-                         // "EmpID", "type", "code", "desc", "rate", "amt"
+                        // "EmpID", "type", "code", "profile", "profline", "desc", "rate", "amt"
                               for (int e = 0; e < modeldeduct.getRowCount() ; e++) {
                                       st.executeUpdate("insert into pay_line "
                                 + "(pyl_id, pyl_empnbr, pyl_type, pyl_code, pyl_profile, pyl_profile_line, pyl_checknbr, pyl_desc, pyl_rate, pyl_amt ) "
                                 + " values ( " 
                                 + "'" + tbid.getText().toString() + "'" + ","
-                                + "'" + modeldeduct.getValueAt(e, 0).toString() + "'" + ","
-                                + "'" + modeldeduct.getValueAt(e, 1).toString() + "'" + ","
-                                + "'" + modeldeduct.getValueAt(e, 2).toString() + "'" + ","
-                                + "'" + modeldeduct.getValueAt(e, 3).toString() + "'" + ","
-                                + "'" + modeldeduct.getValueAt(e, 4).toString() + "'" + ","        
+                                + "'" + modeldeduct.getValueAt(e, 0).toString() + "'" + "," // emp
+                                + "'" + modeldeduct.getValueAt(e, 1).toString() + "'" + ","  // type
+                                + "'" + modeldeduct.getValueAt(e, 2).toString() + "'" + "," // blank
+                                + "'" + modeldeduct.getValueAt(e, 3).toString() + "'" + "," // paypd_parentcode
+                                + "'" + modeldeduct.getValueAt(e, 4).toString() + "'" + ","  //    paypd_id    
                                 + "'" + String.valueOf(checknbr) + "'" + ","  // checknumber  
-                                + "'" + modeldeduct.getValueAt(e, 5).toString() + "'" + ","
+                                + "'" + modeldeduct.getValueAt(e, 5).toString() + "'" + "," // paypd_desc
                                 + "'" + modeldeduct.getValueAt(e, 6).toString().replace(defaultDecimalSeparator, '.') + "'" + ","
                                 + "'" + modeldeduct.getValueAt(e, 7).toString().replace(defaultDecimalSeparator, '.') + "'" 
                                 + ")"
@@ -499,6 +537,14 @@ public class PayRollMaint extends javax.swing.JPanel {
                     message = getBrowseDetView(key[0],key[1],key[2]);
                     break;
                     
+                case "getEarningsView":
+                    message = getEarningsView(key[0],key[1],key[2], key[3], key[4]);
+                    break;
+                    
+                case "getDeductionsView":
+                    message = getDeductionsView(key[0],key[1],key[2], key[3], key[4]);
+                    break;    
+                    
                                     
                 default:
                     message = new String[]{"1", "unknown action"};
@@ -532,6 +578,14 @@ public class PayRollMaint extends javax.swing.JPanel {
             
             if (this.action.equals("getBrowseDetView")) {
                 done_getBrowseDetView();
+            }
+            
+            if (this.action.equals("getEarningsView")) {
+                done_getEarningsView();
+            }
+            
+            if (this.action.equals("getDeductionsView")) {
+                done_getDeductionsView();
             }
             
             } catch (Exception e) {
@@ -716,7 +770,7 @@ public class PayRollMaint extends javax.swing.JPanel {
                     html += "<tr><td align='right'>" + res.getString("paypd_desc") + ":" + "</td><td>" + currformatDouble(deductamt) + "</td></tr>";
                 // doc.insertString(doc.getLength(), res.getString("paypd_desc") + ":\t", null );
                 // doc.insertString(doc.getLength(), currformatDouble(amount * res.getDouble("paypd_amt")) + "\n", null );
-                // "EmpID", "type", "code", "desc", "rate", "amt"
+                // "EmpID", "type", "code", "profile", "profline", "desc", "rate", "amt"
                  modeldeduct.addRow(new Object []{empnbr,
                                             "deduction",
                                             "",
@@ -1586,6 +1640,128 @@ public class PayRollMaint extends javax.swing.JPanel {
        roData = null;
     }
     
+    public String[] getEarningsView(String empnbr, String emptype, String fromdate, String todate, String amount) {
+      
+        String jsonString = null;
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<>();
+            list.add(new String[]{"id", "getEarningsView"});
+            list.add(new String[]{"param1", empnbr});
+            list.add(new String[]{"param2", emptype});
+            list.add(new String[]{"param3", fromdate});
+            list.add(new String[]{"param4", todate});
+            list.add(new String[]{"param5", amount});
+            try {
+                jsonString = sendServerPost(list, "", null, "dataServFIN"); 
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getMessageTag(1010, "getDetail")};
+            }
+        } else {
+            jsonString = fglData.getEarningsView(new String[]{empnbr, emptype, fromdate, todate, amount}); 
+        }        
+        roEarnings = jsonToData(jsonString);
+        
+        return new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getMessageTag(1125)};
+      
+    }
+   
+    public void done_getEarningsView() {
+      modelearnings.setNumRows(0);
+      jtpEarnings.setText("");
+      jtpEarnings.setContentType("text/html");
+          
+       int i = 0;  
+       if (roEarnings != null) {
+        if (roEarnings.length > 0) {
+            
+            String html = "<html><body><table><tr><td align='right' style='color:blue;font-size:20px;'>Earnings:</td><td></td></tr></table>";
+            String codedesc = "";
+            html += "<table>";
+            for (Object[] rowData : roEarnings) {
+                roEarnings[i][5] = bsParseDouble(roEarnings[i][5].toString());
+                modelearnings.addRow(rowData);
+                i++;
+                
+                codedesc = roEarnings[i][2].toString();
+                if (codedesc.equals("00") || codedesc.equals("77")) {
+                    codedesc = "Compensation (" + codedesc + "):";
+                } else {
+                    codedesc = roEarnings[i][3].toString();
+                }
+               
+                html += "<tr><td align='right'>" + codedesc + ":" + "</td><td>" + currformatDouble(bsParseDouble(roEarnings[i][5].toString())) + "</td></tr>";  
+                
+                
+            } 
+            html += "</table></body></html>";
+            jtpEarnings.setText(html);
+        }
+       }
+       roEarnings = null;
+    }
+    
+    public String[] getDeductionsView(String empnbr, String emptype, String fromdate, String todate, String amount) {
+      
+        String jsonString = null;
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<>();
+            list.add(new String[]{"id", "getDeductionsView"});
+            list.add(new String[]{"param1", empnbr});
+            list.add(new String[]{"param2", emptype});
+            list.add(new String[]{"param3", fromdate});
+            list.add(new String[]{"param4", todate});
+            list.add(new String[]{"param5", amount});
+            try {
+                jsonString = sendServerPost(list, "", null, "dataServFIN"); 
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, BlueSeerUtils.getMessageTag(1010, "getDetail")};
+            }
+        } else {
+            jsonString = fglData.getDeductionsView(new String[]{empnbr, emptype, fromdate, todate, amount}); 
+        }        
+        roDeductions = jsonToData(jsonString);
+        
+        return new String[]{BlueSeerUtils.SuccessBit, BlueSeerUtils.getMessageTag(1125)};
+      
+    }
+   
+    public void done_getDeductionsView() {
+      modeldeduct.setNumRows(0);
+      jtpDeductions.setText("");
+      jtpDeductions.setContentType("text/html");
+      StyledDocument doc = jtpDeductions.getStyledDocument();
+      SimpleAttributeSet keyWord = new SimpleAttributeSet();
+      StyleConstants.setForeground(keyWord, Color.RED);
+      StyleConstants.setBackground(keyWord, Color.YELLOW);
+      StyleConstants.setBold(keyWord, true);
+      double empexception = 0;
+      double deductamt = 0;
+          
+       int i = 0;  
+       if (roDeductions != null) {
+        if (roDeductions.length > 0) {
+            
+            String html = "<html><body><table><tr><td align='right' style='color:blue;font-size:20px;'>Deductions:</td><td></td></tr></table>";
+            html += "<table>";
+            for (Object[] rowData : roDeductions) {
+                roDeductions[i][7] = bsParseDouble(roDeductions[i][7].toString());
+                modeldeduct.addRow(rowData);
+                i++; 
+               
+                html += "<tr><td align='right'>" + roDeductions[i][5].toString() + ":" + "</td><td>" + currformatDouble(bsParseDouble(roDeductions[i][7].toString())) + "</td></tr>";
+                
+                
+            } 
+            html += "</table></body></html>";
+            jtpDeductions.setText(html);
+        }
+       }
+       roDeductions = null;
+    }
+    
+    
     
     
     
@@ -2238,9 +2414,13 @@ public class PayRollMaint extends javax.swing.JPanel {
                 btdetail.setEnabled(true);
                 detailpanel.setVisible(true);
                 chartpanel.setVisible(true);
-                getDeductions(tablereport.getValueAt(row, 2).toString(), bsParseDouble(tablereport.getValueAt(row, 14).toString()));
-                getEarnings(tablereport.getValueAt(row, 2).toString(), tablereport.getValueAt(row, 9).toString(), dfdate.format(dcfrom.getDate()).toString(), dfdate.format(dcto.getDate()).toString(), bsParseDouble(tablereport.getValueAt(row, 14).toString()));
-                        
+               // getDeductions(tablereport.getValueAt(row, 2).toString(), bsParseDouble(tablereport.getValueAt(row, 14).toString()));
+                executeTask("getDeductionsView", new String[]{tablereport.getValueAt(row, 2).toString(), tablereport.getValueAt(row, 9).toString(), dfdate.format(dcfrom.getDate()), dfdate.format(dcto.getDate()), tablereport.getValueAt(row, 14).toString() });
+               
+              //  getEarnings(tablereport.getValueAt(row, 2).toString(), tablereport.getValueAt(row, 9).toString(), dfdate.format(dcfrom.getDate()).toString(), dfdate.format(dcto.getDate()).toString(), bsParseDouble(tablereport.getValueAt(row, 14).toString()));
+                executeTask("getEarningsView", new String[]{tablereport.getValueAt(row, 2).toString(), tablereport.getValueAt(row, 9).toString(), dfdate.format(dcfrom.getDate()), dfdate.format(dcto.getDate()), tablereport.getValueAt(row, 14).toString() });
+               
+                       
         }
     }//GEN-LAST:event_tablereportMouseClicked
 

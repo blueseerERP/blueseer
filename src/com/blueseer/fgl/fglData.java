@@ -2846,6 +2846,367 @@ public class fglData {
     
     
     // misc functions
+    
+    public static String[] addPayRoll(ArrayList<String[]> detlist, String[] params) {
+        
+        // params = batch, site, comments, userid, fromdate, todate, paydate, bank, startchecknbr 
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> xlist = new ArrayList<>();
+            xlist.add(new String[]{"id","addPayRoll"});
+            xlist.add(new String[]{"param1", String.join(",", params)});
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                String jsonString = objectMapper.writeValueAsString(detlist);
+                return jsonToStringArray(sendServerPost(xlist, jsonString, null, "dataServFIN"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};
+            }
+        } 
+        
+        String[] message = new String[2];
+        
+          try {
+        java.util.Date now = new java.util.Date();
+        DateFormat dfdate = new SimpleDateFormat("yyyy-MM-dd");
+            Connection con = null;
+            if (ds != null) {
+            con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            Statement st2 = con.createStatement();
+            try {
+                
+                boolean proceed = true;
+                int i = 0;
+                double deductamt = 0.00;
+                
+                if (proceed) {
+                    st.executeUpdate("insert into pay_mstr "
+                        + "(py_id, py_site, py_desc, py_userid, py_startdate, py_enddate, py_paydate, py_status, py_comments, py_bank, py_nachasent ) "
+                        + " values ( " + "'" + params[0] + "'" + ","
+                        + "'" + params[1] + "'" + ","
+                        + "'" + params[2] + "'" + ","
+                        + "'" + params[3] + "'" + ","        
+                        + "'" + params[4] + "'" + ","
+                        + "'" + params[5] + "'" + ","
+                        + "'" + params[6] + "'" + ","  
+                        + "'" + "" + "'" + ","
+                        + "'" + params[2] + "'" + ","
+                        + "'" + params[7] + "'" + ","    
+                        + "'" + "0" + "'"        
+                        + ")"
+                        + ";");
+
+                  //    "select", "RecID", "EmpID", "LastName", "FirstName", "MidName", "Dept", "Shift", "Supervisor", "Type", "Profile", "JobTitle", "Rate", "tothrs", "Amount", paydate
+                   
+                    int checknbr = Integer.parseInt(params[8]);
+                    String paydate = "";
+                    for (String[] s : detlist) {
+                        if (s[15].isEmpty()) {
+                            paydate = params[6];
+                        } else {
+                            paydate = s[15];
+                        }
+                        st.executeUpdate("insert into pay_det "
+                            + "(pyd_id, pyd_empnbr, pyd_emplname, pyd_empfname, pyd_empmname, pyd_empdept, pyd_empshift, pyd_empsupervisor, pyd_emptype, "
+                            + "pyd_payprofile, pyd_empjobtitle, pyd_emprate,  pyd_status, pyd_checknbr, pyd_tothours, pyd_payamt, pyd_paydate ) "
+                            + " values ( " 
+                            + "'" + params[0] + "'" + ","
+                            + "'" + s[2] + "'" + ","
+                            + "'" + s[3] + "'" + ","
+                            + "'" + s[4] + "'" + ","
+                            + "'" + s[5] + "'" + ","
+                            + "'" + s[6] + "'" + ","
+                            + "'" + s[7] + "'" + ","
+                            + "'" + s[8] + "'" + ","
+                            + "'" + s[9] + "'" + ","
+                            + "'" + s[10] + "'" + ","
+                            + "'" + s[11] + "'" + "," 
+                            + "'" + s[12].replace(defaultDecimalSeparator, '.') + "'" + ","  // rate    
+                            + "'" + "paid" + "'" + ","    // status
+                            + "'" + String.valueOf(checknbr) + "'" + ","  // checknumber   
+                            + "'" + s[13].replace(defaultDecimalSeparator, '.') + "'" + ","  // tothours  
+                            + "'" + s[14].replace(defaultDecimalSeparator, '.') + "'" + ","  // pay amount     
+                            + "'" + paydate + "'"   // paydate  
+                            + ")"
+                            + ";");
+                        
+                         // now do earnings detail
+                        if (! s[9].equals("Salary")) { 
+                            res = st2.executeQuery("SELECT sum(t.tothrs) as 't.tothrs', t.code_id as 't.code_id', " +
+                              " t.emp_nbr as 't.emp_nbr',  " +
+                              " e.emp_rate as 'e.emp_rate', clc_desc " +
+                              "  FROM  time_clock t inner join emp_mstr e on e.emp_nbr = t.emp_nbr inner join clock_code on clc_code = t.code_id " +
+                                 " where t.emp_nbr = "  + "'" + s[2] + "'" +
+                              " and t.indate >= " + "'" + params[4] + "'" +
+                              " and t.indate <= " + "'" + params[5] + "'" + 
+                                   " group by t.code_id, t.emp_nbr, e.emp_rate, clc_desc " +       
+                                   " order by t.code_id " +      
+                                  ";" );
+
+                           while (res.next()) {
+                               st.executeUpdate("insert into pay_line "
+                                   + "(pyl_id, pyl_empnbr, pyl_type, pyl_code, pyl_profile, pyl_profile_line, pyl_checknbr, pyl_desc, pyl_rate, pyl_amt ) "
+                                   + " values ( " 
+                                   + "'" + params[0] + "'" + ","
+                                   + "'" + res.getString("t.emp_nbr") + "'" + ","
+                                   + "'" + "earnings" + "'" + ","
+                                   + "'" + res.getString("t.code_id") + "'" + ","
+                                   + "''" + ","  // profile  
+                                   + "'0'" + ","  // profileline          
+                                   + "'" + String.valueOf(checknbr) + "'" + ","  // checknumber  
+                                   + "'" + res.getString("clc_desc") + "'" + ","
+                                   + "'" + res.getString("e.emp_rate").replace(defaultDecimalSeparator, '.') + "'" + ","
+                                   + "'" + currformatDouble(res.getDouble("t.tothrs") * res.getDouble("e.emp_rate")).replace(defaultDecimalSeparator, '.') + "'" 
+                                   + ")"
+                                   + ";");
+                           } 
+                        } else {
+                            st.executeUpdate("insert into pay_line "
+                                   + "(pyl_id, pyl_empnbr, pyl_type, pyl_code, pyl_profile, pyl_profile_line, pyl_checknbr, pyl_desc, pyl_rate, pyl_amt ) "
+                                   + " values ( " 
+                                   + "'" + params[0] + "'" + ","
+                                   + "'" + s[2] + "'" + ","
+                                   + "'" + "earnings" + "'" + ","
+                                   + "'" + "44" + "'" + ","
+                                   + "''" + ","  // profile  
+                                   + "'0'" + ","  // profileline          
+                                   + "'" + String.valueOf(checknbr) + "'" + ","  // checknumber  
+                                   + "'" + "Salary" + "'" + ","
+                                   + "'" + s[14].replace(defaultDecimalSeparator, '.') + "'" + ","
+                                   + "'" + s[14].replace(defaultDecimalSeparator, '.') + "'" 
+                                   + ")"
+                                   + ";");
+                        }
+                       
+                              
+                         // now do deductions detail
+                         res = st2.executeQuery("SELECT paypd_desc, paypd_id, paypd_parentcode, paypd_amt, paypd_amttype from pay_profdet inner join " +
+                             " emp_mstr on emp_profile = paypd_parentcode " +
+                              " where emp_nbr = " + "'" + s[2] + "'" +
+                              " order by paypd_desc " +        
+                               ";" );
+                        
+                        while (res.next()) {
+                            if (res.getString("paypd_amttype").equals("percent")) {
+                                deductamt = bsParseDouble(s[14]) * (res.getDouble("paypd_amt") / 100);
+                            } else {
+                                deductamt = res.getDouble("paypd_amt");   
+                            }
+                          st.executeUpdate("insert into pay_line "
+                                + "(pyl_id, pyl_empnbr, pyl_type, pyl_code, pyl_profile, pyl_profile_line, pyl_checknbr, pyl_desc, pyl_rate, pyl_amt ) "
+                                + " values ( " 
+                                + "'" + params[0] + "'" + ","
+                                + "'" + res.getString("t.emp_nbr") + "'" + ","
+                                + "'" + "deductions" + "'" + ","
+                                + "'" + "" + "'" + ","
+                                + "'" + res.getString("paypd_parentcode") + "'" + ","
+                                + "'" + res.getString("paypd_id") + "'" + ","     
+                                + "'" + String.valueOf(checknbr) + "'" + ","  // checknumber  
+                                + "'" + res.getString("paypd_desc") + "'" + "," 
+                                + "'" + res.getString("paypd_amt").replace(defaultDecimalSeparator, '.') + "'" + ","
+                                + "'" + bsNumber(deductamt) + "'" 
+                                + ")"
+                                + ";");  
+                        } 
+                          
+                        st.executeUpdate("update time_clock set " +
+                        " ispaid = '1', " +
+                        " checknbr = " + "'" +  checknbr  + "'" + 
+                              " where emp_nbr = " + "'" + s[2] + "'" +
+                              "and indate >= " + "'" + params[4] + "'" +
+                               "and indate <= " + "'" + params[5] + "'" + 
+                               ";" );
+
+                          checknbr++;
+                       
+                    }
+                    
+                    // params = batch, site, comments, userid, fromdate, todate, paydate, bank, startchecknbr 
+
+                    // now lets do journal entries
+                    fglData.glEntryFromPayRoll(params[0], dfdate.parse(params[6]));
+                    
+                     // autopost
+        if (OVData.isAutoPost()) {
+            fglData.PostGL();
+        } 
+        
+             message = new String[]{"0", "PayRoll has been committed"};         
+                     
+                     
+           
+             
+             
+                    // btQualProbAdd.setEnabled(false);
+                } // if proceed
+            } catch (SQLException s) {
+                MainFrame.bslog(s);
+                message = new String[]{"1", "Cannot commit PayRoll"};
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                if (st2 != null) {
+                    st2.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        
+        
+        return message;
+    }
+    
+    public static String getEarningsView(String[] keys) {
+        JSONArray jsonarray = new JSONArray();
+        try {
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            
+            try{
+                if (! keys[1].equals("Salary")) {
+                    res = st.executeQuery("SELECT sum(t.tothrs) as 't.tothrs', t.code_id as 't.code_id', " +
+                               " t.emp_nbr as 't.emp_nbr',  " +
+                               " e.emp_rate as 'e.emp_rate', clc_desc " +
+                               "  FROM  time_clock t inner join emp_mstr e on e.emp_nbr = t.emp_nbr inner join clock_code on clc_code = t.code_id " +
+                                  " where t.emp_nbr = "  + "'" + keys[0] + "'" +
+                               " and t.indate >= " + "'" + keys[2] + "'" +
+                               " and t.indate <= " + "'" + keys[3] + "'" + 
+                                    " group by t.code_id, t.emp_nbr, e.emp_rate, clc_desc " +       
+                                    " order by t.code_id " +      
+                                   ";" );
+                        while (res.next()) {
+                            JSONArray rowArray = new JSONArray(); 
+                            rowArray.put(res.getString("t.emp_nbr"));
+                            rowArray.put("earnings");
+                            rowArray.put(res.getString("t.code_id"));
+                            rowArray.put(res.getString("clc_desc"));
+                            rowArray.put(res.getString("e.emp_rate"));
+                            rowArray.put(currformatDouble(res.getDouble("t.tothrs") * res.getDouble("e.emp_rate")));
+                            jsonarray.put(rowArray);
+                        }
+                } else {
+                    JSONArray rowArray = new JSONArray(); 
+                            rowArray.put(keys[0]);
+                            rowArray.put("earnings");
+                            rowArray.put("");
+                            rowArray.put("Salary");
+                            rowArray.put(keys[4]);
+                            rowArray.put(keys[4]);
+                            jsonarray.put(rowArray);
+                }
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+             } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+       return jsonarray.toString(); 
+    }
+    
+    public static String getDeductionsView(String[] keys) {
+        JSONArray jsonarray = new JSONArray();
+        try {
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            
+            try{
+                res = st.executeQuery("SELECT paypd_desc, paypd_id, paypd_parentcode, paypd_amt, paypd_amttype from pay_profdet inner join " +
+                             " emp_mstr on emp_profile = paypd_parentcode " +
+                              " where emp_nbr = " + "'" + keys[0] + "'" +
+                              " order by paypd_desc " +        
+                               ";" );
+                double deductamt = 0.00;
+                while (res.next()) {
+                    if (res.getString("paypd_amttype").equals("percent")) {
+                     deductamt = bsParseDouble(keys[4]) * (res.getDouble("paypd_amt") / 100);
+                    } else {
+                     deductamt = res.getDouble("paypd_amt");   
+                    }
+                    JSONArray rowArray = new JSONArray(); 
+                            rowArray.put(keys[0]);
+                            rowArray.put("deductions");
+                            rowArray.put("");
+                            rowArray.put(res.getString("paypd_parentcode")); 
+                            rowArray.put(res.getString("paypd_id")); 
+                            rowArray.put(res.getString("paypd_desc")); 
+                            rowArray.put(res.getString("paypd_amt"));
+                            rowArray.put(bsNumber(deductamt)); 
+                            jsonarray.put(rowArray);
+                }
+                
+                 // now get specific employee deductions
+                res = st.executeQuery("SELECT empx_desc, empx_amt, empx_amttype from emp_exception " +
+                              " where empx_nbr = " + "'" + keys[0] + "'" +
+                              " order by empx_desc " +        
+                               ";" );
+                double empexception = 0.00;
+                while (res.next()) {
+                    if (res.getString("empx_amttype").equals("percent")) {
+                      empexception =  (bsParseDouble(keys[4]) * res.getDouble("empx_amt") / 100);
+                    } else {
+                      empexception = res.getDouble("empx_amt");  
+                    }
+                    JSONArray rowArray = new JSONArray(); 
+                            rowArray.put(keys[0]);
+                            rowArray.put("deductions");
+                            rowArray.put("");
+                            rowArray.put(""); 
+                            rowArray.put(""); 
+                            rowArray.put(res.getString("empx_desc")); 
+                            rowArray.put(res.getString("empx_amt"));
+                            rowArray.put(bsNumber(deductamt)); 
+                            jsonarray.put(rowArray);
+                }
+                
+                
+           }
+            catch (SQLException s){
+                 MainFrame.bslog(s);
+             } finally {
+               if (res != null) res.close();
+               if (st != null) st.close();
+               con.close();
+            }
+        }
+        catch (Exception e){
+            MainFrame.bslog(e);
+            
+        }
+       return jsonarray.toString(); 
+    }
+    
     public static int getGLTranCount() {
         if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
             ArrayList<String[]> list = new ArrayList<String[]>();
