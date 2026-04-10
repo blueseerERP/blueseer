@@ -725,6 +725,25 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
       break;
     } 
     
+    case "getEarningsView" : { 
+      response.getWriter().print(fglData.getEarningsView(new String[]{request.getHeader("param1"), 
+                    request.getHeader("param2"),
+                    request.getHeader("param3"),
+                    request.getHeader("param4"),
+                    request.getHeader("param5")})); 
+      break;
+    }  
+    
+    case "getDeductionsView" : { 
+      response.getWriter().print(fglData.getDeductionsView(new String[]{request.getHeader("param1"), 
+                    request.getHeader("param2"),
+                    request.getHeader("param3"),
+                    request.getHeader("param4"),
+                    request.getHeader("param5")})); 
+      break;
+    }  
+    
+    
     case "get_pie_EmpPayByDate" : { 
       response.getWriter().print(ArrayListStringArrayToJson(get_pie_EmpPayByDate(request.getHeader("param1"), 
                     request.getHeader("param2"))));
