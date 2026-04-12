@@ -5423,6 +5423,66 @@ public class ediData {
         return x;
     }
 
+    public static String[] updateEDIExport(String key, String keytype) {
+        if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
+            ArrayList<String[]> list = new ArrayList<String[]>();
+            list.add(new String[]{"id", "updateEDIExport"});
+            list.add(new String[]{"param1", key});
+            list.add(new String[]{"param2", keytype});
+            try {
+                return jsonToStringArray(sendServerPost(list, "", null, "dataServEDI"));
+            } catch (IOException ex) {
+                bslog(ex);
+                return new String[]{BlueSeerUtils.ErrorBit, getMessageTag(1016, Thread.currentThread().getStackTrace()[1].getMethodName())};
+            }
+        }
+        
+        String[] x = new String[]{"1",""}; // default failure '1'
+        try {
+            
+            Connection con = null;
+            if (ds != null) {
+              con = ds.getConnection();
+            } else {
+              con = DriverManager.getConnection(url + db, user, pass);  
+            }
+            Statement st = con.createStatement();
+            ResultSet res = null;
+            try {
+
+                if (keytype.equals("invoice")) { 
+                st.executeUpdate(" update ship_mstr set sh_export_810 = " + "'0'" +
+                                  " where sh_id = " + "'" + key + "'" + ";" );
+                x = new String[]{"0","invoice export updated"};
+                }
+                if (keytype.equals("asn")) { 
+                st.executeUpdate(" update ship_mstr set sh_export_856 = " + "'0'" +
+                                  " where sh_id = " + "'" + key + "'" + ";" );
+                x = new String[]{"0","asn export updated"};
+                }
+                if (keytype.equals("all")) { 
+                st.executeUpdate(" update ship_mstr set sh_export_856 = '0', sh_export_810 = '0' " +
+                                  " where sh_id = " + "'" + key + "'" + ";" );
+                x = new String[]{"0","all edi export updated for this key"};
+                }
+            } 
+            catch (SQLException s) {
+                MainFrame.bslog(s);
+            } finally {
+                if (res != null) {
+                    res.close();
+                }
+                if (st != null) {
+                    st.close();
+                }
+                con.close();
+            }
+        } catch (Exception e) {
+            MainFrame.bslog(e);
+        }
+        return x;
+    }
+
     public static boolean deleteEDIMeta(String id, String type, String key, String value) {
         if (bsmf.MainFrame.remoteDB && ! bsmf.MainFrame.isSSHConnected) {
             ArrayList<String[]> list = new ArrayList<String[]>();

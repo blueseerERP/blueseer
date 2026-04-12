@@ -111,7 +111,7 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
     
     if (! confirmServerAuthAPI(request, authServ.hmuser)) {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.getWriter().println(" br549edipost authorization failed");
+        response.getWriter().println(" dataServEDI authorization failed");
         return;
     }
     

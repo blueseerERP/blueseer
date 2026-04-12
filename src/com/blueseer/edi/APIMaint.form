@@ -883,7 +883,7 @@
                 <Component class="javax.swing.JButton" name="btupdateparam">
                   <Properties>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/images/change.png"/>
+                      <Image iconType="3" name="/images/save.png"/>
                     </Property>
                     <Property name="toolTipText" type="java.lang.String" value="Update Element"/>
                   </Properties>
@@ -921,7 +921,7 @@
             <Component class="javax.swing.JButton" name="btupdatedetail">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/images/change.png"/>
+                  <Image iconType="3" name="/images/save.png"/>
                 </Property>
                 <Property name="toolTipText" type="java.lang.String" value="Update Row"/>
               </Properties>

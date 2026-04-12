@@ -29,7 +29,6 @@ package com.blueseer.edi;
 import com.blueseer.utl.*;
 import static bsmf.MainFrame.tags;
 import static com.blueseer.edi.EDI.edilog;
-import static com.blueseer.edi.EDI.packageEnvelopes;
 import com.blueseer.utl.BlueSeerUtils;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
 import java.awt.Component;

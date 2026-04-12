@@ -1440,7 +1440,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
 
         jLabel20.setText("Value");
 
-        btupdateparam.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/change.png"))); // NOI18N
+        btupdateparam.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/save.png"))); // NOI18N
         btupdateparam.setToolTipText("Update Element");
         btupdateparam.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1497,7 +1497,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
                         .addComponent(btupdateparam, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(cbkv))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 116, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -1515,7 +1515,7 @@ public class APIMaint extends javax.swing.JPanel implements IBlueSeerT {
             }
         });
 
-        btupdatedetail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/change.png"))); // NOI18N
+        btupdatedetail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/save.png"))); // NOI18N
         btupdatedetail.setToolTipText("Update Row");
         btupdatedetail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

@@ -34,6 +34,7 @@ import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
 import static bsmf.MainFrame.url;
 import static bsmf.MainFrame.user;
+import static com.blueseer.edi.ediData.updateEDIExport;
 import static com.blueseer.frt.frtData.addUpdateCFOCtrl;
 import com.blueseer.frt.frtData.frt_ctrl;
 import static com.blueseer.frt.frtData.getCFOCtrl;
@@ -212,39 +213,7 @@ public class EDIExportReset extends javax.swing.JPanel  {
     }
     
     public String[] updateRecord(String[] x) {
-     String[] m = new String[]{"0",""};
-            try{
-             Connection con = null;
-                 if (ds != null) {
-                   con = ds.getConnection();
-                 } else {
-                   con = DriverManager.getConnection(url + db, user, pass);  
-                 }
-             Statement st = con.createStatement();
-             try{
-                if (cbinvoice.isSelected()) { 
-                st.executeUpdate(" update ship_mstr set sh_export_810 = " + "'0'" +
-                                  " where sh_id = " + "'" + x[0] + "'" + ";" );
-                }
-                if (cbasn.isSelected()) { 
-                st.executeUpdate(" update ship_mstr set sh_export_856 = " + "'0'" +
-                                  " where sh_id = " + "'" + x[0] + "'" + ";" );
-                }
-             }
-             catch (SQLException s){
-                  MainFrame.bslog(s);
-             } finally {
-
-                 if (st != null) {
-                     st.close();
-                 }
-                 con.close();
-             }
-         }
-         catch (Exception e){
-             MainFrame.bslog(e);
-         }
-
+     String[] m = updateEDIExport(x[0], x[1]);
      return m;
     }
       
@@ -326,7 +295,19 @@ public class EDIExportReset extends javax.swing.JPanel  {
         if (! validateInput(dbaction.update)) {
            return;
        }
-        executeTask(dbaction.update, new String[]{tbkey.getText()});
+        String keytype = "";
+        if (cbasn.isSelected()) {
+            keytype = "asn";
+        }
+        if (cbinvoice.isSelected()) {
+            keytype = "invoice";
+        }
+        
+        if (cbinvoice.isSelected() && cbasn.isSelected()) {
+            keytype = "all";
+        }
+        
+        executeTask(dbaction.update, new String[]{tbkey.getText(), keytype});
     }//GEN-LAST:event_btupdateActionPerformed
 
 

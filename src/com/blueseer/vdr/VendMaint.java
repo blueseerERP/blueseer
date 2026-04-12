@@ -349,6 +349,9 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerV {
         tableattachment.getTableHeader().setReorderingAllowed(false);
         tableattachment.getColumnModel().getColumn(0).setMaxWidth(100);
         
+        contactmodel.setRowCount(0);
+        contacttable.setModel(contactmodel);
+        
        java.util.Date now = new java.util.Date();
         DateFormat dtf = new SimpleDateFormat("yyyy-MM-dd");
         tbdateadded.setText(dtf.format(now));
