@@ -284,7 +284,7 @@ public class VendPriceMaint extends javax.swing.JPanel implements IBlueSeerV {
        isLoad = true;
        
        if (init) {
-        initDataSets = admData.getInitMinimum(this.getClass().getName(), bsmf.MainFrame.userid, "currencies,items,uoms");
+        initDataSets = admData.getInitMinimum(this.getClass().getName(), bsmf.MainFrame.userid, "currencies,pitems,uoms");
         }
        
        tbkey.setText("");

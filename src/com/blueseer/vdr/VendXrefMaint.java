@@ -287,7 +287,7 @@ public class VendXrefMaint extends javax.swing.JPanel implements IBlueSeerV {
     public void setComponentDefaultValues(boolean init) {
        isLoad = true;
          if (init) {
-        initDataSets = admData.getInitMinimum(this.getClass().getName(), bsmf.MainFrame.userid, "vendors,items");
+        initDataSets = admData.getInitMinimum(this.getClass().getName(), bsmf.MainFrame.userid, "vendors,pitems");
         }
         
         ddvend.removeAllItems();
