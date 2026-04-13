@@ -378,7 +378,11 @@ protected void doGet(HttpServletRequest request, HttpServletResponse response)
           }
         
         case "getVprMstr" : { 
-            String[] key = new String[]{request.getHeader("param1")}; 
+            String[] key = new String[]{request.getHeader("param1"),
+            request.getHeader("param2"),
+            request.getHeader("param3"),
+            request.getHeader("param4"),
+            request.getHeader("param5")}; 
             venData.vpr_mstr x = getVprMstr(key);
             ObjectMapper objectMapper = new ObjectMapper();
             String r = objectMapper.writeValueAsString(x);

@@ -2086,7 +2086,7 @@ public class VendMaint extends javax.swing.JPanel implements IBlueSeerV {
     }//GEN-LAST:event_btupdateActionPerformed
 
     private void btnewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnewActionPerformed
-        if (OVData.isAutoVend()) {
+        if (autovend) {
           newAction("vendor");
         } else {
            newAction("");

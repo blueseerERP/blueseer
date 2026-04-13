@@ -26,14 +26,8 @@ SOFTWARE.
 package com.blueseer.vdr;
 
 import bsmf.MainFrame;
-import static bsmf.MainFrame.db;
-import static bsmf.MainFrame.pass;
 import static bsmf.MainFrame.tags;
-import static bsmf.MainFrame.url;
-import static bsmf.MainFrame.user;
 import com.blueseer.adm.admData;
-import com.blueseer.ctr.*;
-import com.blueseer.ord.*;
 import com.blueseer.utl.BlueSeerUtils;
 import com.blueseer.utl.BlueSeerUtils.dbaction;
 import static com.blueseer.utl.BlueSeerUtils.getMessageTag;
@@ -42,11 +36,6 @@ import static com.blueseer.vdr.venData.addUpdateVDCtrl;
 import static com.blueseer.vdr.venData.getVDCtrl;
 import com.blueseer.vdr.venData.vd_ctrl;
 import java.awt.Component;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -223,8 +212,8 @@ public class VendControl extends javax.swing.JPanel implements IBlueSeerc {
     }
     
     public void initvars(String[] arg) {
-            setComponentDefaultValues(initDataSets == null);
-            executeTask(dbaction.get, null);
+        setComponentDefaultValues(initDataSets == null);
+        executeTask(dbaction.get, new String[]{""});
     }
     
     public String[] updateRecord(String[] x) {
